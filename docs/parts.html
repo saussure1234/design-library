@@ -1,0 +1,76 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
+<title>パーツカタログ｜実装済み 1 型</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:"Noto Sans JP",sans-serif;background:#F1F1F1;color:#111}
+header{position:sticky;top:0;z-index:9;background:#fff;border-bottom:1px solid #DDD;padding:14px 18px}
+.in{max-width:1500px;margin:0 auto}h1{margin:0 0 4px;font-size:17px;font-weight:900}
+p.s{margin:0 0 10px;font-size:12.5px;color:#555;line-height:1.7}
+.f{border:1px solid #D5D5D5;background:#fff;border-radius:999px;padding:5px 13px;font:700 12px/1 inherit;cursor:pointer;margin:0 5px 5px 0}
+.f.on{background:#111;color:#fff;border-color:#111}
+#q{border:1px solid #D5D5D5;border-radius:999px;padding:6px 14px;font-size:12.5px;width:220px;margin-right:8px;font-family:inherit}
+.grid{max-width:1500px;margin:0 auto;padding:18px;display:grid;gap:18px;grid-template-columns:repeat(auto-fill,minmax(420px,1fr))}
+.p{background:#fff;border:1px solid #DDD;border-radius:10px;overflow:hidden;display:flex;flex-direction:column}
+.p[hidden]{display:none}
+.p__frame{position:relative;height:330px;background:#fff;border-bottom:1px solid #EEE;overflow:hidden}
+.p__frame iframe{width:1440px;height:1100px;border:0;transform:scale(.29);transform-origin:0 0;pointer-events:none}
+.p__zoom{position:absolute;right:8px;bottom:8px;display:flex;gap:6px;opacity:0;transition:opacity .15s}
+.p__frame:hover .p__zoom{opacity:1}
+.p__zoom button{border:0;background:rgba(17,17,17,.86);color:#fff;font:700 11px/1 inherit;padding:7px 11px;border-radius:5px;cursor:pointer}
+.p__body{padding:12px 14px 16px}
+.p__top{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.id{font-family:ui-monospace,monospace;font-size:11px;font-weight:700;background:#EFEFEF;border:0;border-radius:4px;padding:4px 8px;cursor:pointer}
+.id.ok{background:#00B220;color:#fff}
+.ok,.ng{font-size:10.5px;font-weight:700;padding:3px 7px;border-radius:4px}
+.ok{background:#E9F7EB;color:#0A7A21} .ng{background:#FFF1E5;color:#B85C00}
+h3{margin:0 0 4px;font-size:14.5px;font-weight:900}
+.int{margin:0 0 8px;font-size:12px;color:#555;line-height:1.7}
+.lbl{margin:8px 0 2px;font-size:10.5px;font-weight:900;color:#888;letter-spacing:.06em}
+ul{margin:0;padding-left:1.1em;font-size:11.5px;color:#555;line-height:1.75}
+.avoid{color:#96603A}
+.refs{margin:0;display:flex;gap:5px;flex-wrap:wrap}
+.ref{font-family:ui-monospace,monospace;font-size:10.5px;background:#EEF4FF;color:#0F62FE;padding:3px 7px;border-radius:4px;text-decoration:none}
+dialog{border:0;padding:0;width:min(96vw,1480px);height:92vh;border-radius:10px;overflow:hidden}
+dialog.sp{width:404px}
+dialog::backdrop{background:rgba(0,0,0,.8)}
+dialog iframe{width:100%;height:100%;border:0}
+</style></head><body>
+<header><div class="in">
+<h1>パーツカタログ｜実装済み 1 型</h1>
+<p class="s">これは<strong>実際に動くHTML</strong>です（スクショではありません）。<strong>IDをクリックでコピー</strong>→「このIDで組んで」と指示すれば、そのままLPに載ります。<br>枠にカーソルを乗せると<strong>PC / スマホ</strong>で原寸確認できます。</p>
+<div><input id="q" placeholder="名前・IDで検索"><button class="f on" data-f="all">すべて</button><button class="f" data-f="hero">ファーストビュー</button></div>
+</div></header>
+<div class="grid"><article class="p" data-type="hero" data-q="hero/hero-split-diag 写真2枚を斜めの継ぎ目で並走させるヒーロー">
+  <div class="p__frame"><iframe src="./p/hero__hero-split-diag.html" loading="lazy" title="写真2枚を斜めの継ぎ目で並走させるヒーロー"></iframe>
+    <div class="p__zoom"><button class="wide" data-src="./p/hero__hero-split-diag.html">PCで見る</button><button class="narrow" data-src="./p/hero__hero-split-diag.html">スマホで見る</button></div>
+  </div>
+  <div class="p__body">
+    <div class="p__top"><button class="id" data-id="hero/hero-split-diag">hero/hero-split-diag</button><span class="ok">検証済</span></div>
+    <h3>写真2枚を斜めの継ぎ目で並走させるヒーロー</h3>
+    <p class="int">対象レンジが広い（小学生〜高校生など）ことを、1枚の絵で一目で伝える</p>
+    <p class="lbl">向く</p><ul class="when"><li>ターゲットが2層あり、カルーセルにせず1画面で同時に見せたいとき</li><li>写真が2枚しかなく、どちらも主役として扱いたいとき</li></ul>
+    <p class="lbl">向かない</p><ul class="avoid"><li>写真が1枚しかない</li><li>2枚の色温度が大きく違う（継ぎ目が事故になる）</li></ul>
+    
+  </div>
+</article></div>
+<dialog id="d"><iframe id="di" title="プレビュー"></iframe></dialog>
+<script>
+var d=document.getElementById('d'), di=document.getElementById('di');
+document.querySelectorAll('.p__zoom button').forEach(function(b){b.addEventListener('click',function(){
+  d.className = b.classList.contains('narrow') ? 'sp' : '';
+  di.src=b.dataset.src; d.showModal();});});
+d.addEventListener('close',function(){di.src='about:blank'});
+d.addEventListener('click',function(e){if(e.target===d) d.close()});
+document.querySelectorAll('.id').forEach(function(b){b.addEventListener('click',function(){
+  navigator.clipboard.writeText(b.dataset.id);b.classList.add('ok');setTimeout(function(){b.classList.remove('ok')},900);});});
+function apply(){
+  var t=document.querySelector('.f.on').dataset.f, q=document.getElementById('q').value.trim().toLowerCase();
+  document.querySelectorAll('.p').forEach(function(c){
+    c.hidden = !((t==='all'||c.dataset.type===t) && (!q||c.dataset.q.toLowerCase().indexOf(q)>=0));
+  });
+}
+document.querySelectorAll('.f').forEach(function(f){f.addEventListener('click',function(){
+  document.querySelectorAll('.f').forEach(function(o){o.classList.remove('on')});f.classList.add('on');apply();});});
+document.getElementById('q').addEventListener('input',apply);
+</script></body></html>
