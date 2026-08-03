@@ -1,18 +1,28 @@
 /* hero/hero-split-diag — 写真2枚を斜めの継ぎ目で並走させるヒーロー */
 .hd{position:relative;z-index:5;background:var(--c-bg)}
-.hd__in{display:flex;align-items:center;justify-content:space-between;gap:var(--s4);height:76px}
+.hd__in{display:flex;align-items:center;justify-content:space-between;gap:var(--s4);height:68px}
 .hd__logo img{height:30px;width:auto}
 .hd__cta{padding:11px 22px;font-size:var(--fs-sm)}
 
+/* order で PC/SP の並びを切り替える
+   PC : 見出し → 数字+CTA → 写真 → 注記
+   SP : 見出し → 写真 → 数字+CTA → 注記   （写真をCTAより上に置く） */
 .hsd{display:flex;flex-direction:column}
-.hsd__copy{padding-block:clamp(28px,4.4vw,56px) clamp(24px,3.4vw,40px)}
-.hsd__h{margin-top:var(--s5);font-family:var(--f-disp);font-weight:900;color:var(--c-ink);
-  font-size:clamp(26px,4vw,var(--fs-3xl));line-height:1.42;letter-spacing:.004em}
+.hsd__head {order:1}
+.hsd__meta {order:2}
+.hsd__lanes{order:3}
+.hsd__foot {order:4}
+
+.hsd__head{padding-block:clamp(18px,2.8vw,38px) 0}
+.hsd__eyebrow{text-wrap:balance}
+.hsd__h{margin-top:var(--s4);font-family:var(--f-disp);font-weight:900;color:var(--c-ink);
+  font-size:clamp(22px,3.9vw,var(--fs-3xl));line-height:1.42;letter-spacing:.004em}
 .hsd__h em{font-style:normal;color:var(--c-primary-d)}
 .hsd__h .sml{display:block;font-size:.56em;color:var(--c-ink2);margin-bottom:var(--s2)}
 
+.hsd__meta{padding-block:clamp(16px,2.2vw,30px)}
 .hsd__row{display:flex;align-items:flex-end;justify-content:space-between;
-  gap:var(--s5) var(--s7);flex-wrap:wrap;margin-top:clamp(20px,3vw,var(--s6))}
+  gap:var(--s5) var(--s7);flex-wrap:wrap}
 .hsd__facts{display:flex;gap:clamp(24px,4vw,var(--s7))}
 .hsd__fact b{display:block;font-family:var(--f-num);font-weight:900;line-height:1;color:var(--c-ink);
   font-size:clamp(26px,3.2vw,42px);font-variant-numeric:tabular-nums}
@@ -23,27 +33,50 @@
 .btn__arw{width:20px;height:9px;flex:none}
 .btn__arw svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.8}
 
-/* 写真帯：PCは縦の斜め継ぎ目 */
-.hsd__lanes{position:relative;width:100%;height:clamp(300px,44vh,440px);overflow:hidden;background:var(--c-bg2)}
-.hsd__lane{position:absolute;inset:0;margin:0}
+/* 写真帯：PCは縦の斜め継ぎ目。
+   ★ レーンの箱は「見える幅」に合わせる。帯の全幅に伸ばすと
+      写真が細長い枠に cover され、極端に拡大されてしまう。 */
+.hsd__lanes{position:relative;width:100%;height:clamp(340px,34vw,520px);
+  overflow:hidden;background:var(--c-bg2)}
+.hsd__lane{position:absolute;top:0;bottom:0;margin:0}
 .hsd__lane img{width:100%;height:100%;object-fit:cover}
-.hsd__lane--a{clip-path:polygon(0 0, 51.5% 0, 45.5% 100%, 0 100%)}
-.hsd__lane--b{clip-path:polygon(53.5% 0, 100% 0, 100% 100%, 47.5% 100%)}
-.hsd__lane--a img{object-position:50% 26%}
-.hsd__lane--b img{object-position:58% 30%}
-.hsd__note{padding-block:var(--s4) var(--s6);font-size:var(--fs-note);color:var(--c-ink3);line-height:1.8}
+.hsd__lane--a{left:0;width:50%;                                   /* 実寸 0〜50% */
+  clip-path:polygon(0 0, 92.4% 0, 84.4% 100%, 0 100%)}            /* 継ぎ目 46.2%→42.2% */
+.hsd__lane--b{right:0;width:58%;                                  /* 実寸 42〜100% */
+  clip-path:polygon(10% 0, 100% 0, 100% 100%, 3.1% 100%)}         /* 継ぎ目 47.8%→43.8% */
+.hsd__lane--a img{object-position:var(--pos-a,42% 50%)}
+.hsd__lane--b img{object-position:var(--pos-b,50% 68%)}
 
-/* SP：横の斜め継ぎ目で上下2段に */
+.hsd__foot{padding-block:var(--s4) var(--s6)}
+.hsd__note{font-size:var(--fs-note);color:var(--c-ink3);line-height:1.8}
+
+/* ───────── SP ───────── */
 @media(max-width:900px){
-  .hd__in{height:62px}
+  .hd__in{height:60px}
   .hd__cta{display:none}
+
+  .hsd__lanes{order:2}
+  .hsd__meta {order:3}
+
+  .hsd__head{padding-block:var(--s5) 0}
+  .hsd__h{line-height:1.5}
+  .hsd__meta{padding-block:var(--s5)}
   .hsd__row{gap:var(--s5)}
   .hsd__facts{gap:var(--s6)}
-  .hsd__cta{align-self:stretch}
+  .hsd__cta{align-self:stretch;width:100%}
   .hsd__cta .btn{width:100%}
-  .hsd__lanes{height:clamp(340px,62vw,440px)}
-  .hsd__lane--a{clip-path:polygon(0 0, 100% 0, 100% 46%, 0 54%)}
-  .hsd__lane--b{clip-path:polygon(0 58%, 100% 50%, 100% 100%, 0 100%)}
-  .hsd__lane--a img{object-position:50% 22%}
-  .hsd__lane--b img{object-position:56% 34%}
+  .hsd__ctanote{text-align:center}
+
+  /* 写真は上下2段。箱も上下に分ける（左右に伸ばさない） */
+  .hsd__lanes{margin-top:var(--s5);height:clamp(400px,104vw,600px)}
+  .hsd__lane{left:0;right:0;width:auto;top:auto;bottom:auto}
+  .hsd__lane--a{top:0;height:54%;
+    clip-path:polygon(0 0, 100% 0, 100% 89%, 0 100%)}
+  .hsd__lane--b{bottom:0;height:54%;
+    clip-path:polygon(0 11%, 100% 0, 100% 100%, 0 100%)}
+  .hsd__lane--a img{object-position:var(--pos-a-sp,40% 46%)}
+  .hsd__lane--b img{object-position:var(--pos-b-sp,44% 72%)}
+}
+@media(max-width:420px){
+  .hsd__h{font-size:clamp(21px,5.7vw,26px)}
 }
