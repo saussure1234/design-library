@@ -1,0 +1,49 @@
+/* hero/hero-split-diag — 写真2枚を斜めの継ぎ目で並走させるヒーロー */
+.hd{position:relative;z-index:5;background:var(--c-bg)}
+.hd__in{display:flex;align-items:center;justify-content:space-between;gap:var(--s4);height:76px}
+.hd__logo img{height:30px;width:auto}
+.hd__cta{padding:11px 22px;font-size:var(--fs-sm)}
+
+.hsd{display:flex;flex-direction:column}
+.hsd__copy{padding-block:clamp(28px,4.4vw,56px) clamp(24px,3.4vw,40px)}
+.hsd__h{margin-top:var(--s5);font-family:var(--f-disp);font-weight:900;color:var(--c-ink);
+  font-size:clamp(26px,4vw,var(--fs-3xl));line-height:1.42;letter-spacing:.004em}
+.hsd__h em{font-style:normal;color:var(--c-primary-d)}
+.hsd__h .sml{display:block;font-size:.56em;color:var(--c-ink2);margin-bottom:var(--s2)}
+
+.hsd__row{display:flex;align-items:flex-end;justify-content:space-between;
+  gap:var(--s5) var(--s7);flex-wrap:wrap;margin-top:clamp(20px,3vw,var(--s6))}
+.hsd__facts{display:flex;gap:clamp(24px,4vw,var(--s7))}
+.hsd__fact b{display:block;font-family:var(--f-num);font-weight:900;line-height:1;color:var(--c-ink);
+  font-size:clamp(26px,3.2vw,42px);font-variant-numeric:tabular-nums}
+.hsd__fact b i{font-style:normal;font-size:.44em;margin-left:2px;font-family:var(--f-sans)}
+.hsd__fact span{display:block;margin-top:var(--s2);font-size:var(--fs-sm);font-weight:700;color:var(--c-ink2);line-height:1.55}
+.hsd__cta{display:flex;flex-direction:column;gap:var(--s3);align-items:flex-start}
+.hsd__ctanote{font-size:var(--fs-sm);color:var(--c-ink3);line-height:1.6}
+.btn__arw{width:20px;height:9px;flex:none}
+.btn__arw svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.8}
+
+/* 写真帯：PCは縦の斜め継ぎ目 */
+.hsd__lanes{position:relative;width:100%;height:clamp(300px,44vh,440px);overflow:hidden;background:var(--c-bg2)}
+.hsd__lane{position:absolute;inset:0;margin:0}
+.hsd__lane img{width:100%;height:100%;object-fit:cover}
+.hsd__lane--a{clip-path:polygon(0 0, 51.5% 0, 45.5% 100%, 0 100%)}
+.hsd__lane--b{clip-path:polygon(53.5% 0, 100% 0, 100% 100%, 47.5% 100%)}
+.hsd__lane--a img{object-position:50% 26%}
+.hsd__lane--b img{object-position:58% 30%}
+.hsd__note{padding-block:var(--s4) var(--s6);font-size:var(--fs-note);color:var(--c-ink3);line-height:1.8}
+
+/* SP：横の斜め継ぎ目で上下2段に */
+@media(max-width:900px){
+  .hd__in{height:62px}
+  .hd__cta{display:none}
+  .hsd__row{gap:var(--s5)}
+  .hsd__facts{gap:var(--s6)}
+  .hsd__cta{align-self:stretch}
+  .hsd__cta .btn{width:100%}
+  .hsd__lanes{height:clamp(340px,62vw,440px)}
+  .hsd__lane--a{clip-path:polygon(0 0, 100% 0, 100% 46%, 0 54%)}
+  .hsd__lane--b{clip-path:polygon(0 58%, 100% 50%, 100% 100%, 0 100%)}
+  .hsd__lane--a img{object-position:50% 22%}
+  .hsd__lane--b img{object-position:56% 34%}
+}

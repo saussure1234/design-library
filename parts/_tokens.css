@@ -1,0 +1,47 @@
+/* =========================================================
+   トークン契約 v1
+   すべてのパーツは「ここに定義された変数だけ」を使う。
+   案件ごとに :root を差し替えれば、全パーツが即座に着替える。
+   ここに無い色・サイズをパーツ内で直書きしたら契約違反。
+   ========================================================= */
+:root{
+  /* --- 色 --- */
+  --c-primary:#00B220;      /* 主色（CTA・強調） */
+  --c-primary-d:#05A81F;    /* 主色の押下/hover */
+  --c-primary-l:#E8F7EA;    /* 主色の淡色（面） */
+  --c-accent:#FF9301;       /* 差し色（1箇所だけ効かせる） */
+  --c-ink:#111111;          /* 見出し */
+  --c-ink2:#333333;         /* 本文 */
+  --c-ink3:#707070;         /* 補足・注記 */
+  --c-bg:#FFFFFF;           /* 地 */
+  --c-bg2:#F7F8F7;          /* 交互に敷く面 */
+  --c-line:#E3E3E3;         /* 罫 */
+  --c-on-primary:#FFFFFF;   /* 主色の上に乗る文字 */
+
+  /* --- 書体 --- */
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-disp:var(--f-sans);   /* 見出し用に別書体を当てる場合はここだけ変える */
+  --f-num:"Helvetica Neue",Arial,var(--f-sans);
+
+  /* --- 文字サイズ（PC基準・clampはパーツ側で組む） --- */
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+  --fs-lg:21px;   --fs-xl:28px; --fs-2xl:38px;  --fs-3xl:50px; --fs-4xl:64px;
+  --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+
+  /* --- 余白 --- */
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px;
+  --s6:36px; --s7:52px; --s8:76px; --s9:110px;
+  --sec-y:clamp(56px,7vw,110px);   /* セクションの上下 */
+
+  /* --- 形 --- */
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --shadow:0 6px 24px rgba(17,17,17,.08);
+
+  /* --- 動き --- */
+  --e:cubic-bezier(.23,1,.32,1);
+  --d:.5s;
+
+  /* --- 版面 --- */
+  --w-max:1120px;
+  --w-gut:clamp(18px,4vw,32px);
+}

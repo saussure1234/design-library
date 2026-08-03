@@ -1,0 +1,35 @@
+<header class="hd">
+  <div class="wrap hd__in">
+    <p class="hd__logo"><a href="{{home}}"><img src="{{logo}}" alt="{{brand}}"></a></p>
+    <a class="btn btn--sm hd__cta" href="{{ctaHref}}">{{ctaLabel}}</a>
+  </div>
+</header>
+
+<section class="hsd">
+  <div class="hsd__copy">
+    <div class="wrap">
+      <p class="h-eyebrow fx" data-fx="left">{{eyebrow}}</p>
+      <h1 class="hsd__h fx" data-fx="fadeup" data-d="70">{{headline}}</h1>
+      <div class="hsd__row">
+        <ul class="hsd__facts">
+          {{#facts}}<li class="hsd__fact fx" data-fx="fadeup" data-d="{{.d}}">
+            <b>{{.n}}<i>{{.unit}}</i></b><span>{{.label}}</span>
+          </li>{{/facts}}
+        </ul>
+        <div class="hsd__cta fx" data-fx="fadeup" data-d="260">
+          <a class="btn" href="{{ctaHref}}">{{ctaLabel}}
+            <span class="btn__arw"><svg viewBox="0 0 22 10" aria-hidden="true"><path d="M0 5h19M15 1l4 4-4 4"/></svg></span>
+          </a>
+          {{?ctaNote}}<p class="hsd__ctanote">{{ctaNote}}</p>{{/ctaNote}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hsd__lanes fx" data-fx="clip" data-d="120">
+    <figure class="hsd__lane hsd__lane--a"><img src="{{photoA}}" alt="{{photoAAlt}}"></figure>
+    <figure class="hsd__lane hsd__lane--b"><img src="{{photoB}}" alt="{{photoBAlt}}"></figure>
+  </div>
+
+  {{?note}}<div class="wrap"><p class="hsd__note">{{note}}</p></div>{{/note}}
+</section>
