@@ -1,0 +1,29 @@
+{
+  "id": "overlap/seam-erased",
+  "name": "2カラムの継ぎ目を、またぐ面で覆って消す",
+  "ordinary": "左テキスト・右写真の50/50グリッドにして、間にgapの余白を取る",
+  "actual": "白いカードを写真の左端に約20px食い込ませる。角丸0・枠線0・影0で、純白と黒の明度差だけで手前に見せる（odrive_s05）。写真を100vwの断ち落とし帯（高さ450px）にし、白カードを版面の左マージンぴったり x≒30px まで寄せて写真の左半分に乗せる（unico_s06）。セクション高の85%ある濃紺の正円を写真の右端にまたがせ、円の左3割が写真・右7割が背景に乗って継ぎ目が円の下に完全に消える（ogawa_s05）。見出しの背後の淡グラデ帯を、写真の円弧の下へ潜らせて始点／終点を見せない（koran_s06／s07／s08）。",
+  "css": "/* カードで写真に食い込ませる（影ゼロ） */\n.wrap{display:grid; grid-template-columns:1fr 1fr; align-items:center}\n.wrap .card{grid-area:1/1; z-index:2; background:#fff;\n  border-radius:0; box-shadow:none; padding:26px 30px; margin-right:-20px}\n.wrap figure{grid-area:1/2; z-index:1}\n\n/* 全幅断ち落としの帯＋左マージンまで寄せたカード */\n.photo{width:100vw; margin-left:calc(50% - 50vw); height:450px; object-fit:cover; display:block}\n.band{position:relative}\n.band .card{position:absolute; left:30px; top:145px; width:41%;\n  background:#fff; border-radius:20px; padding:36px; box-shadow:0 8px 34px rgba(0,0,0,.10)}\n\n/* 正円で継ぎ目を隠す */\n.disc{width:400px; aspect-ratio:1; border-radius:50%; background:#1b3a55;\n  margin-left:-140px; align-self:center; position:relative; z-index:2;\n  display:grid; place-content:center; color:#fff}\n\n/* 帯の端を写真の弧の下へ潜らせ、始点を見せない */\nh2{position:relative; z-index:0; width:min(58%,640px);\n  background:linear-gradient(90deg,#e8f0d5,#d3ebe9);\n  margin-left:-160px; padding:10px 24px 12px 180px}\nfigure{position:relative; z-index:2}",
+  "appliesTo": ["about", "value", "voice", "member", "features"],
+  "impact": 3,
+  "effort": 2,
+  "why": "分割線が要素の下に消えるので2カラムが「分断」でなく1枚の絵になる。帯の端が見えないと「写真の下から続いている」と読め、断絶が完全に消える",
+  "params": [
+    "食い込み量（20px〜写真幅の30%）",
+    "覆う形（矩形カード／正円／グラデ帯）",
+    "隠す端（始点／終点／両方）"
+  ],
+  "avoid": "左右が対等な比較（料金プランの並列など）で、分断そのものが情報のとき",
+  "sources": ["odrive_s05", "unico_s06", "ogawa_s05", "koran_s06", "koran_s07", "koran_s08"],
+  "notes": [
+    "矩形カード版（odrive_s05型）は、地が濃色であることが実は成立条件。純白のカードを白地の上に置くと、写真に食い込んだ部分が『写真が欠けている』ようにしか見えない。デモの①②は地を --c-ink（黒）にして初めて『白いカードが手前にある』と読める。白地のページで使うなら、カードの側に --c-bg2 など地と差のある面色を当てる。",
+    "影・枠線・角丸をすべて0にするのが肝。影を1つ足すと『浮いた板』になって、継ぎ目を消すどころか層が増える。手前に見せる仕事は純白と写真の明度差だけに任せる。例外は⑤の断ち落とし版で、カードが写真の上に完全に乗るためこれだけは影が要る。",
+    "食い込み量は20px〜写真幅の30%。0pxだと継ぎ目が縦の線としてはっきり残り、30%を超えると写真が『カードの背景』に落ちて主役が入れ替わる。デモの②に0px／30%を並べた。",
+    "実装は grid-area を重ねる方式が確実。grid-template-columns:1fr 1fr のまま、カードに grid-area:1/1、写真に grid-area:1/2 を与えて、カード側に負の margin-right を足す。position:absolute で重ねると高さが取れず、カードが写真より高いときに崩れる。",
+    "正円版（ogawa_s05型）が最も強い。矩形は角があるので『どこまでがカードか』が分かるが、円は境目が一点も見えない。円の直径はセクション高の80〜90%、写真への食い込みは円の直径の30〜35%。",
+    "帯版（koran_s06型）は『端を見せない』ことが全て。デモの④に、帯の左端が見えている状態と、左端をアーチ写真の弧の下へ潜らせた状態を並べた。端が見えると帯は『見出しの背景色』にしか見えず、端が消えると『写真の裏から続く1枚の面』になる。潜らせる位置は写真の直線の辺ではなく弧が効いている高さを選ぶ。直線の辺だと、ただ隣接しているのと区別が付かない。",
+    "断ち落とし版（unico_s06型）で width:100vw; margin-left:calc(50% - 50vw) を使うと、スクロールバーの分だけ横スクロールが出る環境がある。親に overflow-x:clip を置くか、デモのように margin-inline:calc(var(--w-gut) * -1) で版面の外側までに留めるのが安全。",
+    "狭幅では2カラムが1カラムに落ちるので、食い込みの向きを『左右』から『上下』に切り替える。カードに負の margin-top を与えて写真の下辺に潜らせれば、同じ効果が縦でも出る。帯版も同じで、帯の左端でなく上端を写真の下へ潜らせる（デモの@media 640px以下）。"
+  ],
+  "demoNotes": "①50/50＋gapの普通版と、白カードを20px食い込ませたこの工夫版（地は黒＝odrive_s05の条件）。②食い込み量 0px／写真幅の30%。③覆う形を正円にした版。④帯の左端が見える状態と、アーチ写真の弧の下へ潜らせた状態の対比。⑤断ち落としの帯＋版面の左マージンまで寄せたカード（この形だけ影あり）。"
+}

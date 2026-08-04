@@ -131,7 +131,7 @@
   display:block; width:56px; height:calc(var(--v) / 300 * 110px);
   background:var(--c-primary);
 }
-.tq-rdg__bar--base{ background:var(--c-line) }
+.tq-rdg__bar--base{ background:color-mix(in srgb, var(--c-ink) 25%, transparent) }
 .tq-rdg__val{
   position:absolute; left:0; right:0; bottom:calc(var(--v) / 300 * 110px + 4px);
   font-family:var(--f-num); font-size:var(--fs-sm); font-weight:700; color:var(--c-ink);
@@ -149,13 +149,13 @@
 /* --- ③ 県タイルの地図 -------------------------------------- */
 .tq-rdg__map{
   position:relative;
-  display:grid; grid-template-columns:repeat(10,1fr); grid-auto-rows:20px; gap:2px;
+  display:grid; grid-template-columns:repeat(10,1fr); grid-auto-rows:24px; gap:2px;
   background:var(--c-bg2); padding:var(--s4); border-radius:var(--r-m);
 }
 .tq-rdg__pref{
   position:relative;
   background:var(--c-ink); color:var(--c-on-primary);
-  font-size:9px; line-height:20px; text-align:center;
+  font-size:9px; line-height:24px; text-align:center;
   border-radius:2px;
 }
 .tq-rdg__pref--on{ background:var(--c-primary) }
@@ -185,18 +185,19 @@
   display:block; width:100%; aspect-ratio:16/10; object-fit:cover;
   background:var(--c-primary-l);
 }
-.tq-rdg__tiles > i:nth-child(7n+1){ background:var(--c-primary) }
-.tq-rdg__tiles > i:nth-child(7n+2){ background:var(--c-accent) }
-.tq-rdg__tiles > i:nth-child(7n+3){ background:var(--c-ink3) }
-.tq-rdg__tiles > i:nth-child(7n+4){ background:var(--c-primary-d) }
-.tq-rdg__tiles > i:nth-child(7n+5){ background:var(--c-primary-l) }
-.tq-rdg__tiles > i:nth-child(7n+6){ background:var(--c-bg2) }
-.tq-rdg__tiles > i:nth-child(7n+7){ background:var(--c-line) }
+/* 列数7と互いに素な5周期にすると、色が縦に揃わず斜めに散る */
+.tq-rdg__tiles > i:nth-child(5n+1){ background:var(--c-primary) }
+.tq-rdg__tiles > i:nth-child(5n+2){ background:var(--c-accent) }
+.tq-rdg__tiles > i:nth-child(5n+3){ background:var(--c-ink3) }
+.tq-rdg__tiles > i:nth-child(5n+4){ background:var(--c-primary-l) }
+.tq-rdg__tiles > i:nth-child(5n+5){ background:var(--c-bg2) }
 .tq-rdg__over{
   position:absolute; inset:0; z-index:2; display:grid; place-items:center;
   padding:var(--s4); text-align:center;
   font-family:var(--f-disp); font-size:clamp(var(--fs-md),2.6vw,var(--fs-xl)); font-weight:700;
   color:var(--c-on-primary); text-shadow:0 1px 12px color-mix(in srgb, var(--c-ink) 60%, transparent);
+  background:radial-gradient(ellipse 62% 46% at 50% 50%,
+    color-mix(in srgb, var(--c-ink) 62%, transparent), transparent 76%);
 }
 .tq-rdg__one{ position:relative }
 .tq-rdg__one img{

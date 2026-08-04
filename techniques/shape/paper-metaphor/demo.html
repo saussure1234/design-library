@@ -26,7 +26,7 @@
 :root{
   --tq-pap-pitch:26px;                  /* 綴じ穴の間隔 */
   --tq-pap-dot:8px;                     /* 綴じ穴の直径 */
-  --tq-pap-gutter:clamp(76px,13%,150px);/* 綴じ代の幅（ここから右がコンテンツ） */
+  --tq-pap-gutter:clamp(62px,7%,100px); /* 綴じ代の幅（ここから右がコンテンツ） */
   --tq-pap-tilt:6deg;                   /* 二つ折りの倒し角 */
 }
 
@@ -89,7 +89,7 @@
   content:""; position:absolute; inset:0; z-index:0;
   background:var(--c-bg); border-radius:var(--r-l);
   box-shadow:var(--shadow);
-  transform:rotate(1.2deg);
+  transform:rotate(1.8deg);
 }
 .tq-pap__sheet{
   position:relative; z-index:1;
@@ -102,8 +102,10 @@
 .tq-pap__sheet::before{
   content:""; position:absolute; z-index:2;
   left:var(--s5); top:var(--s6); bottom:var(--s5); width:var(--tq-pap-dot);
+  /* circle を省くと ellipse 扱いになり、8px×26px のタイルの中で穴が縦長に潰れる */
   background:
-    radial-gradient(var(--c-ink) calc(var(--tq-pap-dot)/2 - .5px), transparent calc(var(--tq-pap-dot)/2))
+    radial-gradient(circle,
+      var(--c-ink) calc(var(--tq-pap-dot)/2 - .5px), transparent calc(var(--tq-pap-dot)/2))
     0 0 / var(--tq-pap-dot) var(--tq-pap-pitch) repeat-y;
 }
 /* 綴じ穴の右に縦罫1本。そこから右がコンテンツ領域 */
@@ -126,7 +128,9 @@
 }
 
 /* --- ③ 二つ折りパンフの見開き ------------------------------- */
-.tq-pap__spreadwrap{ position:relative; padding-bottom:var(--s5) }
+/* 3Dで手前に倒すと、近い側の辺が箱の外へ広がる（perspective 900px・6度で約30px）。
+   その分の余白を左右に取っておかないと横スクロールが出る。 */
+.tq-pap__spreadwrap{ position:relative; padding:0 36px var(--s5) }
 .tq-pap__spreadwrap::after{     /* 下端の落ち影 */
   content:""; position:absolute; z-index:0; left:8%; right:8%; bottom:var(--s2); height:24px;
   background:radial-gradient(ellipse 50% 50% at 50% 50%,
@@ -136,20 +140,25 @@
 .tq-pap__spread{
   position:relative; z-index:1;
   display:flex; align-items:stretch;
-  perspective:1600px;
+  perspective:900px;     /* 1600px だと倒したことが読めない。900px前後が下限 */
 }
 .tq-pap__page{
   flex:1 1 0; min-width:0;
-  background:var(--c-bg); padding:var(--s5) var(--s4);
+  padding:var(--s5) var(--s4);
   backface-visibility:hidden;
 }
+/* 折り目に近いほど暗くする。これが無いと角度だけでは紙に見えない */
 .tq-pap__page--l{
   transform:rotateY(var(--tq-pap-tilt)); transform-origin:right center;
   border-radius:var(--r-s) 0 0 var(--r-s);
+  background:linear-gradient(90deg,
+    var(--c-bg) 72%, color-mix(in srgb, var(--c-ink) 7%, var(--c-bg)));
 }
 .tq-pap__page--r{
   transform:rotateY(calc(var(--tq-pap-tilt) * -1)); transform-origin:left center;
   border-radius:0 var(--r-s) var(--r-s) 0;
+  background:linear-gradient(270deg,
+    var(--c-bg) 72%, color-mix(in srgb, var(--c-ink) 7%, var(--c-bg)));
 }
 .tq-pap__gutter{      /* 折り目 */
   flex:0 0 18px;
@@ -177,7 +186,7 @@
 .tq-pap__spreadwrap--flat::after{ display:none }
 .tq-pap__spread--flat{ perspective:none }
 .tq-pap__spread--flat .tq-pap__page--l,
-.tq-pap__spread--flat .tq-pap__page--r{ transform:none }
+.tq-pap__spread--flat .tq-pap__page--r{ transform:none; background:var(--c-bg) }
 .tq-pap__spread--flat .tq-pap__gutter{ background:var(--c-line) }
 
 @media (max-width:520px){
@@ -188,6 +197,7 @@
   .tq-pap__page{ padding:var(--s4) var(--s3) }
   .tq-pap__rows li{ font-size:11px; grid-template-columns:auto 1fr; gap:var(--s2) }
   .tq-pap__gutter{ flex-basis:12px }
+  .tq-pap__spreadwrap{ padding:0 20px var(--s4) }
 }
 </style>
 

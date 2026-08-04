@@ -26,8 +26,8 @@
 :root{
   --tq-tls-a1:-4deg;   /* 奇数枚目の傾き */
   --tq-tls-a2:3deg;    /* 偶数枚目の傾き（必ず逆向き） */
-  --tq-tls-ovx:22px;   /* 重なり：横 */
-  --tq-tls-ovy:-16px;  /* 重なり：縦（上に引き上げて角を重ねる） */
+  --tq-tls-ovx:26px;   /* 重なり：横 */
+  --tq-tls-ovy:-38px;  /* 重なり：縦（上に引き上げて角を重ねる） */
 }
 
 .tq-tls{
@@ -134,8 +134,12 @@
 .tq-tls__chart dd{ margin:0; color:var(--c-ink3) }
 
 @media (max-width:640px){
+  /* 1カラムになると組の横幅＝画面幅。重なり量と写真幅を詰めないと
+     回転とtranslateのぶんが画面外に出る */
+  :root{ --tq-tls-ovx:14px }
   .tq-tls__scene{ grid-template-columns:1fr; justify-items:center; gap:var(--s5) }
   .tq-tls__group{ width:100% }
+  .tq-tls__ph{ width:64% }
   .tq-tls__grid{ grid-template-columns:1fr 1fr }
   .tq-tls__grid img:nth-child(3){ display:none }
 }

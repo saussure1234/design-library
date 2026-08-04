@@ -21,9 +21,13 @@
   }
 }
 
-/* 直径＝この工夫のパラメータ。色・余白・書体はトークンのみ。 */
+/* 直径＝この工夫のパラメータ。色・余白・書体はトークンのみ。
+   パディングは「%」ではなく直径からの calc で出す。%パディングは自分の幅ではなく
+   “親の幅”に対して解決されるので、flex/grid の子に置くと円が楕円に潰れる。 */
 :root{
-  --tq-cac-d:min(30vw,185px);   /* 3カラムの円（現物実測 185px） */
+  /* 3カラムの円（現物実測 185px）。min() だけで持つと375px幅で112pxまで縮み、
+     3行が入らずに縦へ伸びて楕円になる。下限を clamp で押さえる。 */
+  --tq-cac-d:clamp(172px,30vw,185px);
   --tq-cac-big:min(46vw,420px); /* 情報量が多いときの大円（版面の4割） */
 }
 
@@ -60,13 +64,17 @@
 .tq-cac__txt{ margin:var(--s3) 0 0; font-size:var(--fs-note); color:var(--c-ink2); line-height:var(--lh-body) }
 
 /* --- ② この工夫：正円＋1pxのヘアラインだけ ------------------ */
+/* align-items を既定の stretch のままにすると、行の中で一番高い円に合わせて
+   全部が引き伸ばされ aspect-ratio が無視される（＝楕円になる） */
 .tq-cac__circles{
   display:flex; flex-wrap:wrap; gap:var(--s5); justify-content:center;
+  align-items:flex-start;
 }
 .tq-cac__circle{
   width:var(--tq-cac-d); aspect-ratio:1; border-radius:50%;
   background:var(--c-bg); border:1px solid var(--c-line); box-shadow:none;
-  display:grid; place-content:center; text-align:center; padding:8%;
+  display:grid; place-content:center; text-align:center;
+  padding:calc(var(--tq-cac-d) * .09);
 }
 /* 円が浮いて見えないよう、地は交互面に置く（現物も淡い地の上） */
 .tq-cac__ground{ background:var(--c-bg2); border-radius:var(--r-s); padding:var(--s6) var(--s4) }
@@ -83,10 +91,13 @@
 }
 .tq-cac__info{
   width:var(--tq-cac-big); aspect-ratio:1; border-radius:50%;
-  margin-left:calc(-1 * var(--s8));
+  /* 枠外へ抜く量より内側パディングを大きく取らないと、文字まで一緒に切れる */
+  margin-left:calc(-1 * var(--s7));
   color:var(--c-on-primary);
   background:radial-gradient(120% 120% at 30% 20%,var(--c-ink2),var(--c-ink));
-  display:flex; align-items:center; padding-left:16%; padding-right:8%;
+  display:flex; align-items:center; align-self:center;
+  padding-left:calc(var(--tq-cac-big) * .24);
+  padding-right:calc(var(--tq-cac-big) * .08);
 }
 .tq-cac__info dl{ margin:0; font-size:var(--fs-note); line-height:var(--lh-body) }
 .tq-cac__info dt{ color:var(--c-line); float:left; clear:left; width:4.5em }
@@ -108,7 +119,10 @@
 }
 @media (max-width:600px){
   .tq-cac__stage{ grid-template-columns:1fr; padding:var(--s5) var(--s4); justify-items:center }
-  .tq-cac__info{ margin-left:0; width:min(80vw,320px); padding-left:12%; padding-right:12% }
+  .tq-cac__info{
+    --tq-cac-big:min(80vw,320px); margin-left:0;
+    padding-left:calc(var(--tq-cac-big) * .12); padding-right:calc(var(--tq-cac-big) * .12);
+  }
 }
 </style>
 

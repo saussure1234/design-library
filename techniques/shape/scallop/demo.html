@@ -22,9 +22,16 @@
 
 /* 山数・重なり率＝この工夫のパラメータ。色・余白・書体はトークンのみ。 */
 :root{
-  --tq-sca-overlap:-38%;   /* 上の円との重なり（約4割） */
+  /* 上の円との重なり。%マージンは「幅」に対して解決されるので、
+     上の円の高さの約4割にするには 上の円の幅比(86%)×0.4 ≒ 34% を指定する */
+  --tq-sca-overlap:-34%;
   --tq-sca-ring:11%;       /* 内側点線リングのインセット（谷より内側に収まる値） */
   --tq-sca-stroke:1.2;     /* 線だけの周年章のstroke幅 */
+  /* 印の直径。パディングは「%」ではなく直径からの calc で出す。
+     %パディングは自分の幅ではなく“親の幅”に対して解決されるため、
+     flex/grid の子に置くと min-width:auto と噛み合ってバッジが破裂する。 */
+  --tq-sca-d:min(38vw,160px);
+  --tq-sca-ph:min(70vw,300px);   /* 写真の幅 */
 }
 
 .tq-sca{
@@ -50,9 +57,10 @@
 
 /* --- バッジの基本形 ----------------------------------------- */
 .tq-sca__badge{
-  position:relative; width:min(38vw,148px); aspect-ratio:1;
+  position:relative; width:var(--tq-sca-d); aspect-ratio:1;
   background:var(--c-primary); color:var(--c-on-primary);
-  display:grid; place-content:center; text-align:center; padding:16%;
+  display:grid; place-content:center; text-align:center;
+  padding:calc(var(--tq-sca-d) * .15);
 }
 .tq-sca__badge b{ display:block; font-size:var(--fs-md); font-weight:700; line-height:var(--lh-tight) }
 .tq-sca__badge span{
@@ -81,7 +89,7 @@
 
 /* --- 線だけの周年章（写真を透かす） ------------------------- */
 .tq-sca__photo{
-  position:relative; width:min(70vw,300px); aspect-ratio:4/3; overflow:hidden;
+  position:relative; width:var(--tq-sca-ph); aspect-ratio:4/3; overflow:hidden;
   border-radius:var(--r-m); background:var(--c-line);
 }
 .tq-sca__photo img{ display:block; width:100%; height:100%; object-fit:cover }
@@ -94,19 +102,21 @@
 
 /* 写真の角に食い込ませて矩形を隠す */
 .tq-sca__onphoto{
-  position:absolute; right:8%; bottom:-6%; z-index:2;
-  width:44%; aspect-ratio:1; clip-path:url(#tq-sca-clip16);
+  position:absolute; right:8%; bottom:var(--s3); z-index:2;
+  width:calc(var(--tq-sca-ph) * .44); aspect-ratio:1; clip-path:url(#tq-sca-clip16);
   background:var(--c-primary); color:var(--c-on-primary);
-  display:grid; place-content:center; text-align:center; padding:12%;
+  display:grid; place-content:center; text-align:center;
+  padding:calc(var(--tq-sca-ph) * .066);
 }
 .tq-sca__onphoto b{ font-size:var(--fs-sm); font-weight:700; line-height:var(--lh-tight) }
-.tq-sca__phwrap{ position:relative; width:min(70vw,300px); padding-bottom:var(--s5) }
+/* 印が写真の下辺を越える分だけ、下に余白を確保しておく */
+.tq-sca__phwrap{ position:relative; width:var(--tq-sca-ph); padding-bottom:var(--s7) }
 .tq-sca__phwrap .tq-sca__photo{ width:100% }
 
 /* --- 受け皿：上の円と縦に約40%重ねて連ねる ------------------ */
 .tq-sca__stack{ width:min(40vw,180px); display:flex; flex-direction:column; align-items:center }
 .tq-sca__cap-top{
-  width:78%; aspect-ratio:1; border-radius:50%; overflow:hidden;
+  width:86%; aspect-ratio:1; border-radius:50%; overflow:hidden;
   border:1px solid var(--c-primary); background:var(--c-bg);
 }
 .tq-sca__cap-top img{ display:block; width:100%; height:100%; object-fit:cover }
@@ -121,7 +131,8 @@
 .tq-sca__stack--plain .tq-sca__dish{ clip-path:none; border-radius:50%; margin-top:var(--s3) }
 
 /* --- 避ける：山数の違うスカラップを混ぜる ------------------- */
-.tq-sca__mix .tq-sca__badge{ width:min(28vw,110px) }
+/* 直径の変数を差し替えるだけで、幅もパディングも一緒に縮む */
+.tq-sca__mix .tq-sca__badge{ --tq-sca-d:min(28vw,116px) }
 </style>
 
 <svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
@@ -150,7 +161,7 @@
         <div class="tq-sca__badge tq-sca__badge--ring">
           <span>TARGET</span>
           <b>0〜00</b>
-          <small>補足のテキストが<br>入ります</small>
+          <small>補足のテキスト<br>が入ります</small>
         </div>
       </div>
       <div>
@@ -158,7 +169,7 @@
         <div class="tq-sca__badge tq-sca__badge--box">
           <span>TARGET</span>
           <b>0〜00</b>
-          <small>補足のテキストが<br>入ります</small>
+          <small>補足のテキスト<br>が入ります</small>
         </div>
       </div>
       <div>
@@ -166,7 +177,7 @@
         <div class="tq-sca__badge tq-sca__badge--s16 tq-sca__badge--dot">
           <span>TARGET</span>
           <b>0〜00</b>
-          <small>補足のテキストが<br>入ります</small>
+          <small>補足のテキスト<br>が入ります</small>
         </div>
       </div>
     </div>

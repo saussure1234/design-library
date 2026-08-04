@@ -85,7 +85,9 @@
    自動配置（セルの並び）には一切干渉しない。 */
 .tq-rmm__own{
   position:absolute; inset:0;
-  grid-column:2; grid-row:1/-1; z-index:2; pointer-events:none;
+  /* 絶対配置のグリッド子は、片側だけ線を書くと反対側がコンテナの端まで伸びる。
+     必ず 2/3 のように両端を書く。 */
+  grid-column:2/3; grid-row:1/-1; z-index:2; pointer-events:none;
   outline:var(--tq-rmm-outline) solid var(--c-accent);
   outline-offset:calc(var(--tq-rmm-outline) * -1);
   border-radius:0;               /* ← ここが工夫：器が12pxでも枠は直角 */

@@ -1,0 +1,26 @@
+{
+  "id": "overlap/callout-bites",
+  "name": "吹き出し・注釈箱を対象に噛ませ、尻尾か1px線で刺す",
+  "ordinary": "ステップ名は写真の上に見出しとして置く／実績は図の下に凡例として一覧にする",
+  "actual": "白地・紺枠3pxの吹き出しが写真円の上端に約15px重なり、三角の尻尾が円の内側に刺さる。吹き出しの左端は円の輪郭より外へ出る（sho_kidsduo_s08）。塾名＋実績の白い小箱を地図の上下左右に置き、一部は地図タイルの上に乗せ、各箱から1px級の細線を伸ばして対応する県のタイルに接続する（sho_risu_s05）。",
+  "css": "/* 対象に噛ませて尻尾を内側へ刺す */\n.balloon{position:absolute; top:-16px; left:36%; z-index:3;\n  background:#fff; border:3px solid #12569e; border-radius:10px; padding:2px 12px}\n.balloon::after{content:''; position:absolute; left:14px; bottom:-11px;\n  width:14px; height:14px; background:#fff;\n  border-left:3px solid #12569e; border-bottom:3px solid #12569e;\n  transform:skewX(-25deg)}                   /* 斜めに歪ませると手描き感が出る */\n\n/* 引き出し線で図と数字を直結 */\n.callout{position:absolute; z-index:2; background:#fff; border-radius:4px;\n  padding:6px 10px; box-shadow:0 1px 3px rgba(0,0,0,.15)}\n.callout::after{content:\"\"; position:absolute; left:50%; top:100%;\n  width:1px; height:34px; background:#0d8ea3}",
+  "appliesTo": ["features", "voice", "access", "value"],
+  "impact": 3,
+  "effort": 2,
+  "why": "外から刺すことで静止画が発話しているように読め、引き出し線は図と数字を直結して「どこの話か」を読み替える手間を消す",
+  "params": [
+    "噛ませ量 10〜20px",
+    "尻尾の刺し先（対象の内側へ入れる）",
+    "引き出し線 1px×24〜40px"
+  ],
+  "avoid": "吹き出しが5個以上になる図（線が交差して読めなくなる）",
+  "sources": ["sho_kidsduo_s08", "sho_risu_s05"],
+  "notes": [
+    "尻尾は border-left + border-bottom を付けた正方形を skewX(-25deg) で歪めるのが最短。三角形（border-trick）だと枠線付きの吹き出しに繋げられないが、この方法なら枠線がそのまま尻尾の輪郭になる。bottom:-11px（=辺長14pxの約8割）にすると、尻尾の白い面が吹き出しの下枠を隠して1つの形に見える。",
+    "尻尾の【付け根の位置】が肝。demoは吹き出しの left:36px に置き、尻尾の先端が写真円の内側へ入るようにした。吹き出し本体の左端は円の輪郭より外に出したまま（left:74px／円は88pxから）。この“本体は外・尻尾は内”の非対称が、外から話しかけている感じを作る。付け根を吹き出しの中央に置くと、ただのラベルに戻る。",
+    "噛ませ量は10〜20px。demoは112pxの円に対して16px（14%）。20pxを超えると円の情報（顔）を隠し始め、10px未満だと“たまたま近い”に見える。",
+    "引き出し線は疑似要素1つ（width:1px; height:28〜40px）で足りる。線の色は主色にして、箱の中の数字と同じ色にしないこと（数字は --c-ink、線は --c-primary）。線と数字が同色だと図の一部に見えて、指している感じが消える。",
+    "箱の一部は【図の縁に半分かける】と効きが上がる。demoは4箱のうち2つを図の上辺・下辺にまたがせた。全部を図の内側に置くと図の装飾に見え、全部を外に置くと凡例に戻る。",
+    "箱は4つまで。5つ以上になると線が交差して、どの箱がどこを指すのか追えなくなる。数が要るときは箱を減らして図側に番号を振る方式に切り替える。"
+  ]
+}

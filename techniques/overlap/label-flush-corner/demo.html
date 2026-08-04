@@ -1,0 +1,232 @@
+<style>
+/* ==========================================================
+   overlap/label-flush-corner — ラベルを角に余白ゼロ・角丸ゼロで密着させる
+   トークン未読込でも見えるようフォールバックを置く。
+   :where() で優先度0にしてあるので、_tokens.css があれば必ずそちらが勝つ。
+   ========================================================== */
+:where(:root){
+  --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-num:"Helvetica Neue",Arial,var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px; --fs-lg:21px;
+  --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px; --s8:76px;
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --shadow:0 6px 24px rgba(17,17,17,.08);
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+
+.tq-lfc{
+  font-family:var(--f-sans); color:var(--c-ink2); background:var(--c-bg);
+  max-width:var(--w-max); margin:0 auto; padding:var(--s6) var(--w-gut);
+}
+.tq-lfc *{ box-sizing:border-box; }
+.tq-lfc__ttl{ margin:0 0 var(--s2); font-size:var(--fs-md); font-weight:700;
+  color:var(--c-ink); line-height:var(--lh-tight); }
+.tq-lfc__lead{ margin:0 0 var(--s6); font-size:var(--fs-sm); line-height:var(--lh-body); color:var(--c-ink3); }
+.tq-lfc__sec{ margin-top:var(--s7); }
+.tq-lfc__row{ display:grid; gap:var(--s5); grid-template-columns:repeat(auto-fit,minmax(min(258px,100%),1fr)); }
+.tq-lfc__row--3{ gap:var(--s5) var(--s4); grid-template-columns:repeat(auto-fit,minmax(min(212px,100%),1fr)); }
+.tq-lfc__fig{ margin:0; height:100%; display:flex; flex-direction:column; }
+.tq-lfc__cap{ margin:var(--s3) 0 0; padding-top:var(--s3); margin-top:auto;
+  font-size:var(--fs-note); line-height:var(--lh-tight); color:var(--c-ink3); }
+.tq-lfc__cap b{ display:block; margin-bottom:2px; color:var(--c-ink); font-size:var(--fs-sm); }
+.tq-lfc__note{ margin:var(--s4) 0 0; font-size:var(--fs-note); line-height:var(--lh-body); color:var(--c-ink3); }
+
+/* ---- カード ---- */
+.tq-lfc__card{ background:var(--c-bg); }
+.tq-lfc__ph{ position:relative; display:block; }   /* ← ラベルの基準は必ず写真 */
+.tq-lfc__ph img{ display:block; width:100%; aspect-ratio:4/3; object-fit:cover; background:var(--c-bg2); }
+.tq-lfc__body{ padding:var(--s3) 0 0; }
+.tq-lfc__h{ margin:0 0 var(--s2); font-size:var(--fs-sm); font-weight:700;
+  color:var(--c-ink); line-height:var(--lh-head); }
+.tq-lfc__meta{ margin:0; font-size:var(--fs-note); color:var(--c-ink3); line-height:var(--lh-tight); }
+
+/* ---- ①-A 普通：キャプションの上に、余白を取った角丸ラベル ---- */
+.tq-lfc__tag-loose{
+  display:inline-block; margin:var(--s4) 0 var(--s2);
+  padding:var(--s1) var(--s3); border-radius:var(--r-s);
+  background:var(--c-accent); color:var(--c-on-primary);
+  font-size:var(--fs-note); font-weight:700; letter-spacing:.02em; line-height:var(--lh-tight);
+}
+
+/* ---- ①-B この工夫：角にツラで密着。inset:0 / border-radius:0 / margin:0 ---- */
+.tq-lfc__tag{
+  position:absolute; z-index:2; right:0; bottom:0;      /* insetは必ず0 */
+  margin:0; border-radius:0;                            /* 角丸を消すのが肝 */
+  padding:3px var(--s2);
+  background:var(--c-accent); color:var(--c-on-primary);
+  font-size:10px; font-weight:700; letter-spacing:.08em; line-height:1.4;
+}
+.tq-lfc__tag--bl{ right:auto; left:0; }
+.tq-lfc__tag--tl{ right:auto; bottom:auto; left:0; top:0; }
+
+/* 写真と本文の境目にまたがせつつ、左辺には密着させる版 */
+.tq-lfc__tag--seam{ right:auto; left:0; bottom:-10px; }
+.tq-lfc__body--seam{ padding-top:var(--s5); }
+
+/* 氏名の黒ベタ白抜き札（写真の左端にツラ） */
+.tq-lfc__name{
+  position:absolute; z-index:2; left:0; bottom:22%;
+  margin:0; border-radius:0; padding:var(--s1) var(--s3) var(--s1) var(--s2);
+  background:var(--c-ink); color:var(--c-on-primary);
+  font-size:var(--fs-note); font-weight:700; letter-spacing:.04em; line-height:1.4;
+}
+.tq-lfc__dept{
+  position:absolute; z-index:2; left:0; bottom:calc(22% + 26px);
+  margin:0; border-radius:0; padding:2px var(--s2);
+  background:var(--c-bg); color:var(--c-ink2);
+  font-size:10px; letter-spacing:.04em; line-height:1.4;
+}
+
+/* 対角のもう1点（順位プレート） */
+.tq-lfc__rank{
+  position:absolute; z-index:2; left:0; bottom:-8px;
+  width:30px; margin:0; border-radius:0; padding:var(--s1) 0 var(--s2);
+  text-align:center; color:var(--c-on-primary); background:var(--c-ink);
+  font-family:var(--f-num); font-size:9px; letter-spacing:.06em; line-height:1;
+}
+.tq-lfc__rank b{ display:block; font-size:26px; line-height:.9; margin-top:2px; }
+
+/* ---- ③ 字の作り。10px級・字間.06〜.08em の欧文大文字 ---- */
+.tq-lfc__tag--big{ font-size:14px; letter-spacing:0; padding:var(--s2) var(--s3); }
+.tq-lfc__tag--round{ border-radius:var(--r-s); right:var(--s3); bottom:var(--s3); }
+
+@media (max-width:420px){
+  .tq-lfc__row--3{ gap:var(--s5); }
+}
+</style>
+
+<div class="tq-lfc">
+
+  <p class="tq-lfc__ttl">① 同じタグを「キャプションの上に置く」か「写真の角にツラで密着させるか」</p>
+  <p class="tq-lfc__lead">
+    はみ出させない別解。ラベルを写真の角に余白ゼロ・角丸ゼロで置くと、写真の輪郭がそのままラベルの枠になる。
+    枠線も余白も1つも増やさずに、情報だけ1つ増える。
+  </p>
+
+  <div class="tq-lfc__row">
+    <figure class="tq-lfc__fig">
+      <div class="tq-lfc__card">
+        <span class="tq-lfc__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></span>
+        <div class="tq-lfc__body">
+          <span class="tq-lfc__tag-loose">CATEGORY</span>
+          <p class="tq-lfc__h">見出しがここに入ります。見出しがここに入ります。</p>
+          <p class="tq-lfc__meta">0000.00.00</p>
+        </div>
+      </div>
+      <p class="tq-lfc__cap"><b>普通</b>キャプションの上に16px前後の余白を取った角丸ラベル。行が1つ増え、写真とは別の部品に見える。</p>
+    </figure>
+
+    <figure class="tq-lfc__fig">
+      <div class="tq-lfc__card">
+        <span class="tq-lfc__ph">
+          <img src="../../../docs/demo/ph_a.jpg" alt="">
+          <span class="tq-lfc__tag">CATEGORY</span>
+        </span>
+        <div class="tq-lfc__body">
+          <p class="tq-lfc__h">見出しがここに入ります。見出しがここに入ります。</p>
+          <p class="tq-lfc__meta">0000.00.00</p>
+        </div>
+      </div>
+      <p class="tq-lfc__cap"><b>この工夫</b>右下の角にツラで密着。写真の2辺がラベルの枠を兼ねるので、行も余白も増えない。</p>
+    </figure>
+  </div>
+
+  <!-- ② 角の選び方 -->
+  <section class="tq-lfc__sec">
+    <p class="tq-lfc__ttl">② 密着させる角は3通り。左下／右下／対角2点</p>
+    <p class="tq-lfc__lead">対角に2点置くと釣り合う。同じ辺に2つ並べると、ただのタグの列に戻る。</p>
+    <div class="tq-lfc__row tq-lfc__row--3">
+
+      <figure class="tq-lfc__fig">
+        <div class="tq-lfc__card">
+          <span class="tq-lfc__ph">
+            <img src="../../../docs/demo/ph_b.jpg" alt="">
+            <span class="tq-lfc__tag tq-lfc__tag--bl">INTERVIEW</span>
+          </span>
+          <div class="tq-lfc__body"><p class="tq-lfc__h">見出しがここに入ります。</p></div>
+        </div>
+        <p class="tq-lfc__cap"><b>左下</b>読み始めの角。いちばん素直で、写真が縦に強いときに向く。</p>
+      </figure>
+
+      <figure class="tq-lfc__fig">
+        <div class="tq-lfc__card">
+          <span class="tq-lfc__ph">
+            <img src="../../../docs/demo/ph_b.jpg" alt="">
+            <span class="tq-lfc__tag">INTERVIEW</span>
+          </span>
+          <div class="tq-lfc__body"><p class="tq-lfc__h">見出しがここに入ります。</p></div>
+        </div>
+        <p class="tq-lfc__cap"><b>右下</b>視線の抜け際に置く。見出しの読み出しを1文字も邪魔しない。</p>
+      </figure>
+
+      <figure class="tq-lfc__fig">
+        <div class="tq-lfc__card">
+          <span class="tq-lfc__ph">
+            <img src="../../../docs/demo/ph_b.jpg" alt="">
+            <span class="tq-lfc__rank">No<b>1</b></span>
+            <span class="tq-lfc__tag">INTERVIEW</span>
+          </span>
+          <div class="tq-lfc__body"><p class="tq-lfc__h">見出しがここに入ります。</p></div>
+        </div>
+        <p class="tq-lfc__cap"><b>対角2点</b>左下に順位プレート、右下にカテゴリ。左のプレートだけ下辺を8px越える。</p>
+      </figure>
+
+    </div>
+  </section>
+
+  <!-- ③ 変化形 -->
+  <section class="tq-lfc__sec">
+    <p class="tq-lfc__ttl">③ 変化形。境目にまたがせる／左端にツラで札を生やす</p>
+    <p class="tq-lfc__lead">
+      いずれも「左辺に密着」は崩さない。密着している辺があるから、札がカードの縁から生えているように見える。
+    </p>
+    <div class="tq-lfc__row tq-lfc__row--3">
+
+      <figure class="tq-lfc__fig">
+        <div class="tq-lfc__card">
+          <span class="tq-lfc__ph">
+            <img src="../../../docs/demo/ph_a.jpg" alt="">
+            <span class="tq-lfc__tag tq-lfc__tag--seam">STUDENT</span>
+          </span>
+          <div class="tq-lfc__body tq-lfc__body--seam">
+            <p class="tq-lfc__h">見出しがここに入ります。</p>
+          </div>
+        </div>
+        <p class="tq-lfc__cap"><b>境目にまたがる</b>写真と本文の継ぎ目にかかりつつ、左だけカード左辺に密着。</p>
+      </figure>
+
+      <figure class="tq-lfc__fig">
+        <div class="tq-lfc__card">
+          <span class="tq-lfc__ph">
+            <img src="../../../docs/demo/ph_b.jpg" alt="">
+            <span class="tq-lfc__dept">所属がここに</span>
+            <span class="tq-lfc__name">氏名 太郎</span>
+          </span>
+          <div class="tq-lfc__body"><p class="tq-lfc__h">見出しがここに入ります。</p></div>
+        </div>
+        <p class="tq-lfc__cap"><b>黒ベタ白抜きの札</b>左端にツラで接するので、札が写真の縁から生えて見える。</p>
+      </figure>
+
+      <figure class="tq-lfc__fig">
+        <div class="tq-lfc__card">
+          <span class="tq-lfc__ph">
+            <img src="../../../docs/demo/ph_b.jpg" alt="">
+            <span class="tq-lfc__tag tq-lfc__tag--big tq-lfc__tag--round">CATEGORY</span>
+          </span>
+          <div class="tq-lfc__body"><p class="tq-lfc__h">見出しがここに入ります。</p></div>
+        </div>
+        <p class="tq-lfc__cap"><b>崩れる例</b>14px・字間0・角丸あり・余白12px。1つ戻すだけで「写真の上に置いたタグ」に落ちる。</p>
+      </figure>
+
+    </div>
+    <p class="tq-lfc__note">
+      効かせているのは3つだけ。<code>inset</code> を 0 にする／<code>border-radius</code> を 0 にする／文字を9〜11px・
+      <code>letter-spacing</code> .06〜.08em の欧文大文字にする。写真の四隅に顔や手元があるときは使わない。
+    </p>
+  </section>
+
+</div>

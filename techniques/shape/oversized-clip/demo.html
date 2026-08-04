@@ -22,7 +22,10 @@
 
 /* はみ出し量・断つ位置＝この工夫のパラメータ。色・余白・書体はトークンのみ。 */
 :root{
-  --tq-osc-circle:circle(52% at 50% 42%); /* 版面を超える大円 */
+  /* 版面を超える大円。circle() の%は「幅」ではなく参照ボックスの対角から出るので、
+     正方形なら50%でちょうど内接する。50%を超えると左右が直線になって弧が消えるため、
+     弧を見せたまま上下だけを枠で断つには 46% 前後が上限。 */
+  --tq-osc-circle:circle(46% at 50% 40%);
   --tq-osc-cut:22%;                       /* 下辺を直線で断つ量 */
   --tq-osc-rail:10%;                      /* 柱の幅（画面の10%） */
   --tq-osc-ball:280px;                    /* 柱の中に置く円の直径 */
@@ -73,8 +76,10 @@
   position:absolute; inset:0 auto 0 0; width:var(--tq-osc-rail);
   overflow:hidden; background:var(--c-bg2);
 }
+/* 円の右端が柱の中に入る位置まで左へ逃がすと、弧が弧として読める。
+   中心まで柱に入れてしまうと、見えるのは弧でなく縦帯になる。 */
 .tq-osc__rail::after{
-  content:""; position:absolute; left:calc(-1 * var(--tq-osc-ball) / 2); top:var(--s5);
+  content:""; position:absolute; left:calc(-1 * var(--tq-osc-ball) * .66); top:var(--s4);
   width:var(--tq-osc-ball); aspect-ratio:1;
   border-radius:50%; background:var(--c-ink);
 }
@@ -118,18 +123,18 @@
 /* --- ④ 装飾を面の縁で断つ ----------------------------------- */
 .tq-osc__cards{ display:grid; gap:var(--s4); grid-template-columns:repeat(auto-fit,minmax(160px,1fr)) }
 .tq-osc__card{
-  position:relative; overflow:hidden;
+  position:relative; overflow:hidden; min-height:190px;
   background:var(--c-primary-l); border-radius:var(--r-m);
   padding:var(--s5) var(--s5) var(--s6);
 }
 .tq-osc__card h4{ margin:0; font-size:var(--fs-sm); font-weight:700; color:var(--c-ink) }
 .tq-osc__card p{ margin:var(--s2) 0 0; font-size:var(--fs-note); color:var(--c-ink3); line-height:var(--lh-body) }
 .tq-osc__mark{
-  position:absolute; width:60px; height:60px; color:var(--c-primary); opacity:.5; pointer-events:none;
+  position:absolute; width:96px; height:96px; color:var(--c-primary); opacity:.5; pointer-events:none;
 }
-/* 断つ：カードの下辺・右辺からはみ出させる */
-.tq-osc__card--cut .tq-osc__mark{ left:var(--s5); bottom:calc(-1 * var(--s5) - var(--s1)) }
-.tq-osc__card--cut .tq-osc__mark--2{ left:auto; right:calc(-1 * var(--s5)); bottom:auto; top:var(--s3) }
+/* 断つ：カードの下辺・右辺からはみ出させる（3〜4割を切り落とす） */
+.tq-osc__card--cut .tq-osc__mark{ left:var(--s5); bottom:calc(-1 * var(--s6)) }
+.tq-osc__card--cut .tq-osc__mark--2{ left:auto; right:calc(-1 * var(--s6)); bottom:auto; top:var(--s4) }
 /* 普通：丸ごと収める */
 .tq-osc__card--whole .tq-osc__mark{ right:var(--s4); bottom:var(--s4); left:auto }
 .tq-osc__mark svg{ display:block; width:100%; height:100% }
@@ -154,7 +159,7 @@
         <img class="tq-osc__ph tq-osc__ph--full" src="../../../docs/demo/ph_a.jpg" alt="">
       </div>
       <div>
-        <p class="tq-osc__cap">この工夫：大円＋下辺を22%カット</p>
+        <p class="tq-osc__cap">この工夫：見えている面より大きい円＋下辺を22%カット</p>
         <div class="tq-osc__cut"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
       </div>
     </div>

@@ -1,0 +1,195 @@
+<style>
+/* ==========================================================
+   overlap/frame-ignores-grid — 表・グリッドの罫に従わない枠や矢印を1つだけ載せる
+   :where(:root) はトークン未読込時のフォールバック（優先度0）。
+   ========================================================== */
+:where(:root){
+  --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-num:"Helvetica Neue",Arial,var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px; --fs-lg:21px; --fs-xl:28px;
+  --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px; --s8:76px;
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --shadow:0 6px 24px rgba(17,17,17,.08);
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+
+.tq-fig{
+  font-family:var(--f-sans); color:var(--c-ink2); background:var(--c-bg);
+  max-width:var(--w-max); margin:0 auto; padding:var(--s6) var(--w-gut);
+}
+.tq-fig, .tq-fig *{ box-sizing:border-box; }
+.tq-fig :where(p,figure,figcaption){ margin:0; }
+.tq-fig__h{ font-size:var(--fs-md); font-weight:700; color:var(--c-ink); line-height:var(--lh-tight); margin:0 0 var(--s2); }
+.tq-fig__lead{ font-size:var(--fs-sm); line-height:var(--lh-body); color:var(--c-ink3); margin:0 0 var(--s5); }
+.tq-fig__row{ display:grid; gap:var(--s6) var(--s5); grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr)); }
+.tq-fig__cap{ font-size:var(--fs-note); line-height:var(--lh-head); color:var(--c-ink3); margin:var(--s3) 0 0; }
+.tq-fig__cap b{ display:block; color:var(--c-ink); font-size:var(--fs-sm); margin-bottom:2px; }
+
+/* 枠が突き抜けるので、舞台にもコンテナにも overflow:hidden を付けない */
+.tq-fig__stage{
+  position:relative; overflow:visible; box-sizing:border-box;
+  padding:var(--s5) var(--s4);
+}
+
+/* --- 比較表（共通） --- */
+.tq-fig__table{
+  position:relative; overflow:visible;            /* 角丸コンテナだが切らない */
+  display:grid; grid-template-columns:76px 1fr 1fr;
+  background:var(--c-bg2); border-radius:var(--r-m);
+  font-size:var(--fs-note); line-height:var(--lh-head);
+}
+.tq-fig__table > *{ padding:var(--s3) var(--s2); box-sizing:border-box; text-align:center; }
+.tq-fig__hd{ font-weight:700; color:var(--c-ink); font-size:var(--fs-sm); }
+.tq-fig__rh{ color:var(--c-ink3); text-align:left; display:grid; align-content:center; }
+.tq-fig__cell{ color:var(--c-ink2); }
+.tq-fig__cell b{ display:block; color:var(--c-ink); font-size:var(--fs-sm); margin-bottom:2px; }
+/* 行の横罫。枠の下をそのまま通過させる */
+.tq-fig__table > *:nth-child(n+4){ border-top:1px solid var(--c-line); }
+
+/* --- A｜普通：強調したい列にセル背景を敷く --- */
+.tq-fig__table--plain .tq-fig__own{ background:var(--c-primary-l); }
+
+/* --- B｜この工夫：罫に従わない枠を1列だけに ---
+   セルの疑似要素ではなく、列ぜんぶを覆う1枚を abs-pos + grid区画で置く。
+   inset の上下を負値にして、1行目より上・最終行より下へ突き抜けさせる。 */
+.tq-fig__table > .tq-fig__ownframe{
+  position:absolute; z-index:2; pointer-events:none;
+  grid-column:2 / 3; grid-row:1 / 5;
+  inset:-16px 0 -14px;                                 /* 上に16px・下に14px突き抜ける */
+  padding:0;
+  border:2px solid var(--c-accent);
+  border-radius:0;                                     /* 角丸0＝表の角丸に馴染ませない */
+}
+
+/* --- C｜2つの枠の境界に矢印を跨がせる --- */
+.tq-fig__blocks{ position:relative; display:grid; grid-template-columns:1fr 1fr; gap:var(--s5); align-items:center; }
+.tq-fig__block{
+  border-radius:var(--r-s); padding:var(--s5) var(--s3); text-align:center;
+  font-size:var(--fs-sm); color:var(--c-ink2); background:var(--c-bg);
+}
+.tq-fig__block--from{ border:1px dashed var(--c-ink3); }
+.tq-fig__block--to{ border:2px solid var(--c-primary); color:var(--c-ink); font-weight:700; }
+.tq-fig__arrow{
+  position:absolute; z-index:2; left:50%; top:50%;
+  transform:translate(-50%,-50%);
+  width:0; height:0; border-top:7px solid transparent; border-bottom:7px solid transparent;
+  border-left:11px solid var(--c-ink);
+}
+.tq-fig__arrow::after{
+  content:''; position:absolute; left:-36px; top:-2px;   /* 軸を伸ばして両方の枠に乗せる */
+  width:36px; height:4px; background:var(--c-ink);
+}
+
+/* --- D｜罫を越えて隣のセルへ入る装飾 --- */
+.tq-fig__cells{ display:grid; grid-template-columns:1fr 1fr; }
+.tq-fig__cell2{
+  position:relative; overflow:visible; padding:var(--s4) var(--s4) var(--s8);
+  border-right:1px solid var(--c-line); border-bottom:1px solid var(--c-line);
+  font-size:var(--fs-sm); color:var(--c-ink2); line-height:var(--lh-head);
+}
+.tq-fig__cell2:nth-child(2){ border-right:0; }
+.tq-fig__ring{
+  position:absolute; z-index:2; right:-38px; bottom:-38px;   /* 縦罫と横罫の両方を越える */
+  width:76px; height:76px; border-radius:50%;
+  border:1px solid var(--c-accent); color:var(--c-accent);
+  display:grid; place-content:center; text-align:center;
+  font-size:10px; line-height:1.2; background:var(--c-bg);
+}
+
+@media (max-width:420px){
+  .tq-fig__table{ grid-template-columns:56px 1fr 1fr; }
+  .tq-fig__table > *{ padding:var(--s3) 4px; }
+  .tq-fig__blocks{ gap:var(--s6); }
+  .tq-fig__ring{ width:64px; height:64px; right:-32px; }
+}
+</style>
+
+<div class="tq-fig">
+
+  <p class="tq-fig__h">枠だけがグリッドに従わない</p>
+  <p class="tq-fig__lead">
+    左上は強調したい列にセル背景を敷いた普通。右上は同じ表に、行罫にも角丸にも従わない枠を1列だけ載せた。
+    枠は1行目より上・最終行より下へ14〜16px突き抜け、行の横罫はその下をそのまま通過する。
+    「表の一部」ではなく「表に貼った付箋」に見えるので、視線が最初にそこへ行く。
+  </p>
+
+  <div class="tq-fig__row">
+
+    <figure>
+      <div class="tq-fig__stage">
+        <div class="tq-fig__table tq-fig__table--plain">
+          <div class="tq-fig__rh"></div>
+          <div class="tq-fig__hd tq-fig__own">自社サービス</div>
+          <div class="tq-fig__hd">他社サービス</div>
+
+          <div class="tq-fig__rh">項目01</div>
+          <div class="tq-fig__cell tq-fig__own"><b>対応しています</b>補足テキスト</div>
+          <div class="tq-fig__cell">対応していません</div>
+
+          <div class="tq-fig__rh">項目02</div>
+          <div class="tq-fig__cell tq-fig__own"><b>対応しています</b>補足テキスト</div>
+          <div class="tq-fig__cell">条件つきで対応</div>
+
+          <div class="tq-fig__rh">項目03</div>
+          <div class="tq-fig__cell tq-fig__own"><b>対応しています</b>補足テキスト</div>
+          <div class="tq-fig__cell">対応していません</div>
+        </div>
+      </div>
+      <p class="tq-fig__cap"><b>普通</b>強調したい列はセルに背景色を敷く。行罫にも角丸にも従うので、色が付いていても「表の一部」のまま。</p>
+    </figure>
+
+    <figure>
+      <div class="tq-fig__stage">
+        <div class="tq-fig__table tq-fig__table--own">
+          <div class="tq-fig__rh"></div>
+          <div class="tq-fig__hd tq-fig__own">自社サービス</div>
+          <div class="tq-fig__hd">他社サービス</div>
+
+          <div class="tq-fig__rh">項目01</div>
+          <div class="tq-fig__cell"><b>対応しています</b>補足テキスト</div>
+          <div class="tq-fig__cell">対応していません</div>
+
+          <div class="tq-fig__rh">項目02</div>
+          <div class="tq-fig__cell"><b>対応しています</b>補足テキスト</div>
+          <div class="tq-fig__cell">条件つきで対応</div>
+
+          <div class="tq-fig__rh">項目03</div>
+          <div class="tq-fig__cell"><b>対応しています</b>補足テキスト</div>
+          <div class="tq-fig__cell">対応していません</div>
+
+          <div class="tq-fig__ownframe"></div>
+        </div>
+      </div>
+      <p class="tq-fig__cap"><b>この工夫｜罫を無視する枠</b>2pxの枠が上下に突き抜け、角丸は0のまま。行の横罫は枠の下を素通りする。1列だけだから効く。</p>
+    </figure>
+
+    <figure>
+      <div class="tq-fig__stage">
+        <div class="tq-fig__blocks">
+          <div class="tq-fig__block tq-fig__block--from">変更前の状態</div>
+          <div class="tq-fig__block tq-fig__block--to">変更後の状態</div>
+          <div class="tq-fig__arrow"></div>
+        </div>
+      </div>
+      <p class="tq-fig__cap"><b>境界をまたぐ矢印</b>破線枠から実線枠へ向かう矢印を2つの枠の境界の上に重ねる。「隣にある2つ」でなく「移動する1つ」として読める。</p>
+    </figure>
+
+    <figure>
+      <div class="tq-fig__stage">
+        <div class="tq-fig__cells">
+          <div class="tq-fig__cell2">
+            本文がここに入ります。<br>セルの中身は普通に組みます。
+            <div class="tq-fig__ring">円周の<br>装飾</div>
+          </div>
+          <div class="tq-fig__cell2">本文がここに入ります。<br>左のセルの装飾だけが罫を越えます。</div>
+        </div>
+      </div>
+      <p class="tq-fig__cap"><b>罫を越える装飾</b>1pxの罫でセルを切りつつ、円の装飾だけが縦罫を越えて隣のセルへ入る。罫は消さずに、越える物を1つだけ置く。</p>
+    </figure>
+
+  </div>
+</div>

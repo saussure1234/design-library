@@ -1,0 +1,33 @@
+{
+  "id": "overlap/badge-half-out",
+  "name": "バッジ・ピル・操作ボタンを枠の辺に半分だけ噛ませる",
+  "ordinary": "タグやバッジはカードの内側に、余白を取った角丸ラベルとして置く",
+  "actual": "要素の中心を辺の線上に置き、半分を外へ出す。カテゴリピルがカード上辺を半分またぎ、下半分だけが淡い地色に乗る（meisei-kg_s13）。丸バッジがアーチ写真の上辺をまたぎ、カードの紫2pxの枠線がバッジの左と下で途切れる（sho_peppy_s01／sho_novakid_s04）。45°回転の菱形NEWがサムネ左上角から上と左へ1/3出て、カードの矩形を破る（lumiarch_s06／s08）。カルーセルの矢印がパネルの左辺・右辺の上に半分だけ乗る（sho_risu_s05）。「10min」ピルが時計円の輪郭線を分断して下へぶら下がる（sho_kidsduo_s08）。順位プレートは写真の下辺を8px越えてキャプション帯にかかる（odrive_s12）。",
+  "css": ".card{position:relative; overflow:visible}       /* 必須。hiddenで全部死ぬ */\n\n/* 上辺に半分噛ませる（ピル） */\n.tag{position:absolute; top:0; left:14px; translate:0 -50%;   /* 辺の線上に中心 */\n  z-index:3; border-radius:999px; padding:4px 12px;\n  font-size:11px; background:#7fc9ae; color:#fff}\n\n/* 角から菱形で突き出す（NEW） */\n.badge{position:absolute; top:-8px; left:-8px; z-index:3;\n  width:30px; height:30px; background:#0b57d0;\n  transform:rotate(45deg); display:grid; place-items:center}\n.badge span{transform:rotate(-45deg); color:#fff; font-size:8px; font-weight:700}\n\n/* 操作部を面の左右の縁に噛ませる */\n.arrow{position:absolute; top:50%; translate:-50% -50%; z-index:3;\n  width:34px; height:56px; background:#12a6bd; border-radius:4px}\n.arrow--prev{left:0}\n.arrow--next{left:100%}\n\n/* 円の輪郭を分断してぶら下げる */\n.clock{overflow:visible}\n.pill{position:absolute; left:50%; bottom:-14px; translate:-50% 0; z-index:3;\n  background:#12569e; color:#fff; border-radius:999px;\n  padding:4px 14px; white-space:nowrap}",
+  "appliesTo": ["features", "price", "member", "voice", "cta"],
+  "impact": 3,
+  "effort": 1,
+  "why": "枠線が途切れることでバッジが「後から貼られた印章」になり、カードが箱でなく重なった紙に見える。操作部を縁に噛ませるとパネル全体が動く対象だと直感できる",
+  "params": [
+    "はみ出し比率 1/3〜1/2",
+    "形（ピル／正円／45°菱形／矩形プレート）",
+    "噛ませる辺（上辺／左右辺／角）"
+  ],
+  "avoid": "一覧の全カードに同じ付け方をするとき（1件だけ・1カードに1点だから浮き上がる）",
+  "sources": [
+    "meisei-kg_s13", "sho_peppy_s01", "sho_novakid_s04", "sho_novakid_s06",
+    "lumiarch_s06", "lumiarch_s08", "hanamaru_s07", "sho_risu_s05",
+    "sho_kidsduo_s08", "odrive_s12", "musashino_s01"
+  ],
+  "notes": [
+    "書き方は1つだけ覚えればよい。「辺に inset:0 で寄せて、自分の半分だけ逆へ translate する」。上辺なら top:0; translate:0 -50%、左辺なら left:0; translate:-50% 0、右辺なら left:100%; translate:-50% 0。left:100% を使うのがコツで、right:0 では要素の幅が変わったときに噛み具合がずれる。",
+    "カード側の overflow:visible が必須。hidden にすると、はみ出した分が辺の線でスパッと切れて『印章』でも『後から貼った』でもなくなり、ただ角の欠けたラベルになる。",
+    "正円バッジ（sho_novakid_s04型）は、枠線を途切れさせることが仕事。デモでは box-shadow:0 0 0 4px var(--c-bg) を掛けている。これは影ではなく『地色のリング』で、カードの2px枠線をバッジの周りで断つためのもの。影として blur を入れると意味が変わるので入れない。",
+    "45°菱形（lumiarch_s06型）だけは角に噛ませる。top/left をともに -9px 前後にして上と左へ1/3ずつ出すと、カードの矩形そのものが破れる。中の文字は逆回転（rotate(-45deg)）で戻す。",
+    "矩形プレート（odrive_s12型）の越え量は8px前後。写真の下辺からキャプション帯へわずかに掛かるだけでよく、20px以上出すと『帯の上に置いた別の要素』になる。位置は写真のラッパを position:relative にして bottom:-8px で取る。カード全体を基準にすると、カードの高さが変わるたびにずれる。",
+    "操作部を縁に噛ませる（sho_risu_s05型）と、矢印が『面の中のボタン』でなく『この面ごと動かすつまみ』になる。デモの③に内側版と噛ませ版を並べたが、変えているのは left の値だけ。",
+    "円の輪郭を分断するピル（sho_kidsduo_s08型）は、行を1つも増やさずに情報を1つ足せる手。円が閉じた図形でなくなるので、円の中の図（時計・グラフ）と外のラベルが同じ1つの部品として読める。",
+    "いちばん壊れやすい使い方は『一覧の全カードに同じ付け方をする』こと。デモの④で3枚全部に付けた版と1枚だけに付けた版を並べたが、全部に付けると単なる見出し位置の規則になり、視線を引く力がゼロになる。1カードに1点、一覧なら1件だけ。"
+  ],
+  "demoNotes": "①同じ文言・同じ色のタグで『内側に余白を取る／中心を辺の線上に置く』の対比。②形の4通り（ピル・上辺／正円・上辺／45°菱形・角／矩形プレート・写真の下辺）。③操作部を内側に置いた場合と左右の縁に噛ませた場合、および円の輪郭を分断するピルの有無。④全カードに付けた場合と1件だけに付けた場合の対比。"
+}

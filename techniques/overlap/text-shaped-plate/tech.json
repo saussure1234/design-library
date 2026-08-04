@@ -1,0 +1,26 @@
+{
+  "id": "overlap/text-shaped-plate",
+  "name": "白い下地を行の形に切って写真に載せる",
+  "ordinary": "コメントは写真の外の白い余白に置き、写真とは重ねない",
+  "actual": "縦組みテキストの背後の白面が写真の左上に食い込み、写真の上端より数px上から始まる。白面の下辺は各行の長さに従って段違い（階段状）になり、その段の下から写真が現れる。矩形の白箱ではないので「貼り付けた感」が消え、写真とコメントが1枚の絵になる。",
+  "css": ".quote{position:absolute; top:-10px; left:0; z-index:2;\n  writing-mode:vertical-rl; line-height:2.0}\n.quote span{                                  /* 行ごとに分けず1本のspanでよい */\n  background:#fff; padding:.5em .35em;\n  box-decoration-break:clone;\n  -webkit-box-decoration-break:clone}         /* ← これが無いと矩形の白箱に戻る */",
+  "appliesTo": ["voice", "about", "hero"],
+  "impact": 3,
+  "effort": 2,
+  "why": "白の輪郭が文字の形そのものになるため、写真の上に貼った感じが消えて1枚の絵として読める",
+  "params": [
+    "padding .35〜.6em（白の張り出し量）",
+    "縦組み／横組み",
+    "行長を意図的に不揃いにする"
+  ],
+  "avoid": "全行が同じ長さの文章（段差が出ず、ただの白い矩形になる）",
+  "sources": ["shoei_s11"],
+  "notes": [
+    "効いているのは box-decoration-break:clone ではなく【背景をインラインのspanに敷くこと】。白をp（ブロック）に敷くと最長行に合わせた1つの矩形になる。demoの3枚目がその対比で、位置も文字も同じなのに段差が消えて付箋に戻る。cloneは“各行にpaddingを付け直す”ための保険で、外すと行頭・行末のpaddingが1回しか付かず段差の幅が不揃いになる。",
+    "白面を1枚につなげるか、行ごとに分けるかは padding の【行間方向】で決まる。縦組み(vertical-rl)では左右paddingが行間を埋め、横組みでは上下paddingが埋める。demoは縦=padding:.5em .55em（line-height:2.0）、横=padding:.7em .5em（line-height:1.8）でつながる値にした。paddingが行の余白より小さいと行ごとに白が切れて“ラベルの列”に見える。",
+    "元CSSの `padding:.5em .35em` は縦組みで .35em が行間方向。line-height 2.0 だと白面が切れて分離するので、つなげたいなら .5em 以上に上げること（元サイトは切れない設計の line-height だった）。",
+    "白面を写真の上端より上から始めるのが仕上げ。demoは舞台に padding-top:14px を入れ、写真をその下から始めて、白面だけ舞台の天から出るようにした。写真の内側だけに収めると、途端に“写真の上のキャプション”に戻る。",
+    "行長は意図的に不揃いにする。3行なら長・中・短の順に短くしていくと階段がいちばん読める。自動折返しに任せると全行が同じ長さになりやすいので、<br>で切って長さを設計する。",
+    "文字色は写真の明暗に関係なく --c-ink のままでよい（下地が白なので）。この技の利点は素材のコントラストに左右されないこと。逆にいえば白面が要るので、写真の情報量を落としたくない場合は overlap/translucent-veil の方を使う。"
+  ]
+}

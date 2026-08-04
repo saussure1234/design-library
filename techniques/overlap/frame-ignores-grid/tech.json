@@ -1,0 +1,27 @@
+{
+  "id": "overlap/frame-ignores-grid",
+  "name": "表・グリッドの罫に従わない枠や矢印を1つだけ載せる",
+  "ordinary": "強調したい列はセルに背景色を敷く／矢印や注釈は図の外側に置く",
+  "actual": "中央列を囲うピンク2pxの矩形が、表の1行目より上・最終行より下まで12〜16pxはみ出し、角丸コンテナの外まで突き抜ける。行の横罫はこの枠の下をそのまま通過する（sho_globalcrown_s12）。破線枠から実線枠へ向かう矢印を、2つの枠の境界線の上に重ねて置く＝ブロックが動く関係に見える（sho_atama_s08）。1pxの金の罫でセルを切りつつ、円周文字と星が縦罫を越えて隣のセルへ入り込む（yugao_s10）。",
+  "css": ".table{overflow:visible}\n.own{position:relative}\n.own::after{content:''; position:absolute; inset:-16px 0 -14px;  /* 上下に突き抜ける */\n  border:2px solid #ff2d78; border-radius:0; pointer-events:none}\n\n/* 2つの枠の境界に矢印を跨がせる */\n.arrow{position:absolute; left:50%; translate:-50% 0; z-index:2;\n  width:0; height:0; border-left:6px solid transparent;\n  border-right:6px solid transparent; border-bottom:10px solid #111}\n.arrow::after{content:''; position:absolute; left:-2px; top:8px;\n  width:4px; height:26px; background:#111}\n\n/* 罫を越えて隣のセルへ入る装飾 */\n.cell{position:relative; overflow:visible;\n  border-right:1px solid #e6ddc9; border-bottom:1px solid #e6ddc9}\n.cell .ring{position:absolute; left:-46px; z-index:2}",
+  "appliesTo": ["price", "features", "value"],
+  "impact": 3,
+  "effort": 1,
+  "why": "枠がグリッドに従わないので「表の一部」でなく「表に貼った付箋」に見え、視線が最初にそこへ行く。矢印が枠を跨ぐと「隣にある2つ」でなく「移動・伸長する1つ」として読める",
+  "params": [
+    "突き抜け量 12〜16px",
+    "対象（自社列／比較行／セル装飾）",
+    "角丸は0にする（表の角丸に馴染ませない）"
+  ],
+  "avoid": "比較表で複数列を同時に強調したいとき（1列だけだから効く）",
+  "sources": ["sho_globalcrown_s12", "sho_atama_s08", "yugao_s10"],
+  "notes": [
+    "枠はセルの疑似要素ではなく【列ぜんぶを覆う1枚】として置くのが正解。セルごとの ::after にすると行ごとに枠が切れるし、行の高さがまちまちだと calc(300% + 30px) のような脆い式が要る。demoでは表（display:grid, position:relative）の中に空div を1つ置き、`position:absolute; grid-column:2/3; grid-row:1/5; inset:-16px 0 -14px;` で列の区画にぴったり重ねた。abs-pos なので自動配置を邪魔しない。",
+    "abs-pos + グリッド区画では inset を必ず4辺とも書くこと。書かないと静的位置に落ちて縮む。またグリッド線は grid-row:1/5 のように終端まで書く（終端 auto は padding端まで伸びてしまう）。",
+    "行罫との重ね順に注意。demoは `.tq-fig__table > *:nth-child(n+4){border-top:...}` で横罫を引いているが、この詳細度(0,2,0)が枠のクラス(0,1,0)より高いので、枠にも横罫が付いてしまう。`.tq-fig__table > .tq-fig__ownframe` と2段にして詳細度を揃え、後から書いて勝たせた。",
+    "枠の角丸は0にする。表コンテナが角丸12pxでも枠は直角のままにすることで「あとから貼った」感じが出る。角丸を合わせた瞬間に表の一部に戻る。突き抜け量は上下で少しずらす（demoは上16px／下14px）と、機械的でなく手で貼った印象になる。",
+    "親（表・カード・セクション）に overflow:hidden があると全部消える。角丸クリップが要る表では、背景と角丸を内側の要素に持たせ、枠は clip されない層に置く。",
+    "矢印は2つの枠の【境界の上】に置くこと。demoは枠間のギャップを24pxにして、矢印の全長を47px（軸36px＋頭11px）にした。ギャップより矢印を長くしないと両方の枠に乗らず、単なる区切り記号に見える。",
+    "強調する列は必ず1つに絞る。2列以上に同じ枠を付けると、突き抜けが版ズレに見えて逆効果になる（比較表で複数列を推したい場合はこの技を使わない）。"
+  ]
+}

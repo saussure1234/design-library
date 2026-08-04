@@ -21,6 +21,7 @@
   font-family:var(--f-sans); color:var(--c-ink2); background:var(--c-bg);
   max-width:var(--w-max); margin:0 auto; padding:var(--s6) var(--w-gut);
 }
+.tq-tsp, .tq-tsp *{ box-sizing:border-box; }
 .tq-tsp :where(p,figure,figcaption){ margin:0; }
 .tq-tsp__h{ font-size:var(--fs-md); font-weight:700; color:var(--c-ink); line-height:var(--lh-tight); margin:0 0 var(--s2); }
 .tq-tsp__lead{ font-size:var(--fs-sm); line-height:var(--lh-body); color:var(--c-ink3); margin:0 0 var(--s5); }
@@ -61,11 +62,11 @@
 .tq-tsp__stage--h .tq-tsp__ph{ height:260px; }
 .tq-tsp__hquote{
   position:absolute; z-index:2; left:var(--s4); bottom:var(--s5); max-width:78%;
-  font-size:var(--fs-base); line-height:2.0; color:var(--c-ink); letter-spacing:.02em;
+  font-size:var(--fs-base); line-height:1.8; color:var(--c-ink); letter-spacing:.02em;
 }
 .tq-tsp__hquote span{
   background:var(--c-bg);
-  padding:.55em .5em;      /* 横組みでは上下paddingが行間を埋める */
+  padding:.7em .5em;       /* 横組みでは上下paddingが行間を埋める */
   box-decoration-break:clone; -webkit-box-decoration-break:clone;
 }
 
@@ -88,7 +89,7 @@
   <p class="tq-tsp__lead">
     左は写真の外にコメントを置いた普通。中央は同じ文字列を写真の上に重ね、白い下地を行ごとに切った。
     白面の下辺が行の長さに従って階段状になるので「貼り付けた感」が消え、写真とコメントが1枚の絵になる。
-    仕掛けは box-decoration-break:clone だけ。右はそれを外した場合で、ただの白い矩形に戻る。
+    仕掛けは背景をインラインのspanに敷き box-decoration-break:clone を足すだけ。右はブロック側に敷いた場合で、ただの白い矩形に戻る。
   </p>
 
   <div class="tq-tsp__row">
@@ -112,9 +113,9 @@
     <figure>
       <div class="tq-tsp__stage">
         <img class="tq-tsp__ph" src="../../../docs/demo/ph_a.jpg" alt="">
-        <p class="tq-tsp__quote tq-tsp__quote--slice"><span>コメントがここに入ります<br>2行目は少し短く<br>3行目はもっと短い</span></p>
+        <p class="tq-tsp__quote tq-tsp__quote--box"><span>コメントがここに入ります<br>2行目は少し短く<br>3行目はもっと短い</span></p>
       </div>
-      <p class="tq-tsp__cap"><b>cloneを外すと</b>同じHTMLでも box-decoration-break:slice だと白は1つの矩形になり、写真に貼った付箋に戻る。効いているのはこの1行だけ。</p>
+      <p class="tq-tsp__cap"><b>白をブロックに敷くと</b>同じ位置・同じ文字でも、白をpタグ側に敷くと最長行に合わせた1つの矩形になる。段差が消え、写真に貼った付箋に戻る。</p>
     </figure>
 
     <figure>

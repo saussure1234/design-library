@@ -1,0 +1,439 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>/* =========================================================
+   トークン契約 v1
+   すべてのパーツは「ここに定義された変数だけ」を使う。
+   案件ごとに :root を差し替えれば、全パーツが即座に着替える。
+   ここに無い色・サイズをパーツ内で直書きしたら契約違反。
+   ========================================================= */
+:root{
+  /* --- 色 --- */
+  --c-primary:#00B220;      /* 主色（CTA・強調） */
+  --c-primary-d:#05A81F;    /* 主色の押下/hover */
+  --c-primary-l:#E8F7EA;    /* 主色の淡色（面） */
+  --c-accent:#FF9301;       /* 差し色（1箇所だけ効かせる） */
+  --c-ink:#111111;          /* 見出し */
+  --c-ink2:#333333;         /* 本文 */
+  --c-ink3:#707070;         /* 補足・注記 */
+  /* 地は「階段」にする。セクションごとに必ず1段動かす。
+     同じ明るさが続くと面が消える（＝最頻の指摘「薄すぎて見えない」の正体） */
+  --c-bg:#FFFFFF;           /* base   L255  カード・面 */
+  --c-bg2:#F0F3F0;          /* tint   L241  1段落とす */
+  --c-bg3:#E4F1E8;          /* accent L238  主色寄りの淡色 */
+  --c-dark:#0E3113;         /* dark   L39   句読点。1ページに2回まで */
+  --c-on-dark:#FFFFFF;      /* dark の上の文字（14.3:1） */
+  --c-line:#E3E3E3;         /* 罫 */
+  --c-on-primary:#FFFFFF;   /* 主色の上に乗る文字 */
+
+  /* --- 書体 --- */
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-disp:var(--f-sans);   /* 見出し用に別書体を当てる場合はここだけ変える */
+  --f-num:"Helvetica Neue",Arial,var(--f-sans);
+
+  /* --- 文字サイズ（PC基準・clampはパーツ側で組む） --- */
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+  --fs-lg:21px;   --fs-xl:28px; --fs-2xl:38px;  --fs-3xl:50px; --fs-4xl:64px;
+  --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+
+  /* --- 余白 --- */
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px;
+  --s6:36px; --s7:52px; --s8:76px; --s9:110px;
+  --sec-y:clamp(56px,7vw,110px);   /* セクションの上下 */
+
+  /* --- 形 --- */
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --shadow:0 6px 24px rgba(14,49,19,.10), 0 1px 2px rgba(14,49,19,.06);
+  --shadow-lg:0 12px 32px rgba(14,49,19,.16);
+
+  /* --- 動き --- */
+  --e:cubic-bezier(.23,1,.32,1);
+  --d:.5s;
+
+  /* --- 版面 --- */
+  --w-max:1120px;
+  --w-gut:clamp(18px,4vw,32px);
+}
+
+/* =========================================================
+   基盤 v1  — リセット + 版面 + スクロール表示
+   IntersectionObserver も GSAP も使わない（scroll位置 + class）
+   JSが死んでも .fx-on が付かず、中身は最初から見えている
+   ========================================================= */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;font-family:var(--f-sans);color:var(--c-ink2);background:var(--c-bg);
+  line-height:var(--lh-body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img,svg,video{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit}
+h1,h2,h3,h4,p,ul,ol,figure,dl,dd{margin:0}
+ul,ol{padding:0;list-style:none}
+:where(a,button,input,textarea,select):focus-visible{
+  outline:3px solid var(--c-primary);outline-offset:3px;border-radius:var(--r-s)}
+
+/* 版面 */
+.wrap{width:100%;max-width:var(--w-max);margin-inline:auto;padding-inline:var(--w-gut)}
+.sec{padding-block:var(--sec-y)}
+.sec--alt{background:var(--c-bg2)}
+/* 地の階段。kit の tone で切り替える */
+.tone-base{background:var(--c-bg)}
+.tone-tint{background:var(--c-bg2)}
+.tone-accent{background:var(--c-bg3)}
+.tone-dark{background:var(--c-dark);color:#D9E3DB}
+.tone-dark .h-lead,.tone-dark h2,.tone-dark h3{color:var(--c-on-dark)}
+.tone-dark .h-eyebrow{color:#8FD6A0}
+/* 面は必ず地から浮かせる。白の上の白は最頻の指摘 */
+.card,.panel,[class*="__card"],[class*="__panel"]{box-shadow:var(--shadow)}
+.nb{white-space:nowrap}          /* 日本語の改行制御。必ず <wbr> と併用 */
+
+/* 見出しの型（案件をまたいで共通の骨） */
+.h-eyebrow{display:flex;align-items:center;gap:var(--s3);
+  font-size:var(--fs-sm);font-weight:700;color:var(--c-primary);letter-spacing:.08em}
+.h-eyebrow::before{content:"";width:28px;height:2px;background:currentColor;flex:none}
+.h-lead{font-family:var(--f-disp);font-weight:900;color:var(--c-ink);
+  font-size:clamp(24px,3.4vw,var(--fs-2xl));line-height:var(--lh-head);letter-spacing:.01em}
+.h-sub{margin-top:var(--s4);font-size:var(--fs-base);color:var(--c-ink3)}
+
+/* ボタン */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--s3);
+  background:var(--c-primary);color:var(--c-on-primary);font-weight:700;font-size:var(--fs-md);
+  padding:18px 34px;border-radius:var(--r-s);border:0;cursor:pointer;
+  transition:background .16s var(--e),transform .16s var(--e)}
+.btn:active{transform:scale(.97)}
+@media(hover:hover) and (pointer:fine){.btn:hover{background:var(--c-primary-d)}}
+.btn--ghost{background:transparent;color:var(--c-primary);box-shadow:inset 0 0 0 2px currentColor}
+.btn--accent{background:var(--c-accent)}
+
+/* ── スクロール表示 ───────────────────────────────
+   .fx を付けた要素が、画面に入ったら .hh-in が付いて現れる。
+   親（body）に .fx-on が無い間は「最初から見えている」＝失敗しても安全。
+   data-fx で出方を指定：fadeup / fadeblur / left / right / scale / clip / mask
+   data-d で遅延（ms）を指定：<div class="fx" data-fx="left" data-d="120">
+   ─────────────────────────────────────────────── */
+.fx-on .fx{opacity:0;will-change:opacity,transform,filter,clip-path;
+  transition:opacity var(--d) var(--e),transform var(--d) var(--e),
+             filter var(--d) var(--e),clip-path var(--d) var(--e)}
+.fx-on .fx[data-fx="fadeup"],
+.fx-on .fx:not([data-fx]){transform:translateY(26px)}
+.fx-on .fx[data-fx="fadeblur"]{filter:blur(10px);transform:translateY(14px)}
+.fx-on .fx[data-fx="left"]{transform:translateX(-44px)}
+.fx-on .fx[data-fx="right"]{transform:translateX(44px)}
+.fx-on .fx[data-fx="scale"]{transform:scale(.94)}
+.fx-on .fx[data-fx="clip"]{clip-path:inset(0 100% 0 0)}
+.fx-on .fx[data-fx="mask"]{clip-path:inset(100% 0 0 0)}
+.fx-on .fx.hh-in{opacity:1;transform:none;filter:none;clip-path:inset(0 0 0 0)}
+
+/* 常時動くもの（うるさくならない程度に） */
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.floaty{animation:floaty 4.5s var(--e) infinite}
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .fx-on .fx{opacity:1!important;transform:none!important;filter:none!important;clip-path:none!important;transition:none!important}
+  .floaty{animation:none}
+  *{animation-duration:.001s!important}
+}
+
+body{padding:0;margin:0;background:var(--c-bg)}</style></head>
+<body><style>
+/* ============================================================
+   type/vertical-rail-head
+   和文見出しを縦組みにし、90°倒した極小欧文を並走させて左端に柱を立てる
+   ============================================================ */
+
+/* トークン未読込でも見えるようにするフォールバック。
+   @layer に入れてあるので、_tokens.css（レイヤ外）が有ればそちらが勝つ。 */
+@layer tq-fallback{
+  :root{
+    --c-primary:#00B220; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+    --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+    --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+    --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    --f-disp:var(--f-sans);
+    --f-num:"Helvetica Neue",Arial,var(--f-sans);
+    --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+    --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px; --fs-3xl:50px;
+    --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+    --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  }
+}
+
+/* この工夫が要求する値。トークン契約に無いものだけここで宣言する。
+   （色は全てトークンから引く／色相の指定は --c-primary の差し替えで行う） */
+:root{
+  /* 現物（meisei-kg_s07）実測：欧文ラベルは 9〜10px。契約の最小級数 12px より
+     小さいことがこの工夫の本体なので、専用の値として持つ。 */
+  --tq-vrail-fs-micro:9px;
+  --tq-vrail-fs-micro-l:10px;
+  /* 和文縦見出しの字間。現物は 1文字の送り ÷ 級数 ≒ 1.3〜1.45（＝約0.28em） */
+  --tq-vrail-ls-ttl:.28em;
+  --tq-vrail-ls-wide:.45em;   /* ogawa：見出し列だけ開ける量 */
+  --tq-vrail-ls-micro:.32em;  /* 極小欧文の字間 */
+  --tq-vrail-ls-upright:.25em;/* 正立で積むときの字間 */
+  --tq-vrail-h-min:200px;     /* 柱として成立する最小の高さ */
+}
+
+.tq-vrail{
+  font-family:var(--f-sans); color:var(--c-ink2);
+  line-height:var(--lh-head); -webkit-text-size-adjust:100%;
+  padding:var(--s5); background:var(--c-bg);
+}
+.tq-vrail *{ box-sizing:border-box }
+
+/* --- デモの枠組み ------------------------------------------- */
+.tq-vrail__lead{
+  margin:0 0 var(--s6); font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-vrail__sec{ margin-top:var(--s7) }
+.tq-vrail__sec:first-of-type{ margin-top:0 }
+.tq-vrail__secttl{
+  margin:0 0 var(--s5); font-size:var(--fs-sm); font-weight:700; color:var(--c-ink);
+}
+.tq-vrail__cap{
+  display:flex; align-items:center; gap:var(--s2);
+  margin:0 0 var(--s4); font-size:var(--fs-note); font-weight:700;
+  color:var(--c-ink3); letter-spacing:.04em;
+}
+.tq-vrail__cap::before{
+  content:""; width:var(--s5); height:1px; background:var(--c-line); flex:0 0 auto;
+}
+.tq-vrail__note{
+  margin:var(--s4) 0 0; font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-vrail__pair{
+  display:grid; gap:var(--s6);
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+}
+.tq-vrail__quad{
+  display:grid; gap:var(--s6) var(--s5);
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+}
+.tq-vrail__box{
+  border:1px solid var(--c-line); border-radius:var(--r-s);
+  padding:var(--s5); background:var(--c-bg);
+}
+.tq-vrail__boxttl{
+  margin:0 0 var(--s5); padding-bottom:var(--s2);
+  border-bottom:1px solid var(--c-line);
+  font-size:var(--fs-note); font-weight:700; color:var(--c-ink3); letter-spacing:.04em;
+}
+.tq-vrail__body{
+  margin:var(--s4) 0 0; font-size:var(--fs-note); color:var(--c-ink2);
+  line-height:var(--lh-body); max-width:34em;
+}
+
+/* ============================================================
+   ここからが工夫の本体
+   ============================================================ */
+
+/* --- 柱（縦組み見出し＋並走する極小欧文） ------------------- */
+.tq-vrail__rail{
+  display:inline-flex; flex-direction:row-reverse;  /* 先に書いた欧文が右へ来る */
+  align-items:flex-start; gap:var(--s1);
+  min-height:var(--tq-vrail-h-min);
+}
+.tq-vrail__ttl{
+  margin:0;
+  writing-mode:vertical-rl;
+  font-family:var(--f-disp); font-weight:700; color:var(--c-ink);
+  font-feature-settings:"palt" 1;
+  font-size:clamp(var(--fs-lg),2.4vw,var(--fs-xl));
+  letter-spacing:var(--tq-vrail-ls-ttl);
+  line-height:2.2;                 /* 縦組みでは「列の幅」になる */
+}
+.tq-vrail__label{
+  margin:0;
+  writing-mode:vertical-rl;
+  text-orientation:sideways;       /* 90°倒す */
+  font-family:var(--f-num); font-weight:700;
+  font-size:var(--tq-vrail-fs-micro);
+  letter-spacing:var(--tq-vrail-ls-micro);
+  color:var(--c-primary);
+  line-height:1;
+}
+
+/* 欧文を主にして縦柱にし、和文を正立で右肩に添える（頌栄型） */
+.tq-vrail__rail--enmain .tq-vrail__ttl{
+  font-family:var(--f-num); font-weight:400;
+  text-orientation:upright;        /* 欧文を正立で積む */
+  font-size:clamp(var(--fs-2xl),5vw,var(--fs-3xl));
+  letter-spacing:.02em; line-height:1.15;
+}
+.tq-vrail__rail--enmain .tq-vrail__label{
+  font-family:var(--f-sans);
+  text-orientation:upright;        /* 和文も正立＝ルビ扱い */
+  letter-spacing:var(--tq-vrail-ls-upright);
+  color:var(--c-primary);
+}
+
+/* --- 原稿用紙の柱：2列の縦組みに点線縦罫を計3本通す（リニエ型） --- */
+.tq-vrail__ms{
+  display:inline-flex; flex-direction:row-reverse;
+  align-items:stretch;   /* 高さは内容なり。min-height を掛けると列が途中で折れて柱が太る */
+}
+/* 罫は列に付ける。列が増減しても本数が「列数＋1」で保たれる */
+.tq-vrail__col--head{ border-right:1px dotted var(--c-line) }   /* ①いちばん外（右） */
+.tq-vrail__ms .tq-vrail__col{
+  writing-mode:vertical-rl;
+  /* 縦組みでは <p> の既定マージン（1em）が左右に付く。柱が太るので必ず消す */
+  margin:0;
+  border-left:1px dotted var(--c-line);    /* ②行間 ③いちばん外（左） */
+  padding-left:var(--s3); padding-right:var(--s3);
+  font-family:var(--f-disp); font-weight:700; color:var(--c-ink);
+  font-feature-settings:"palt" 1;
+  font-size:clamp(var(--fs-lg),2.2vw,var(--fs-xl));
+  letter-spacing:.1em; line-height:1.5;
+}
+.tq-vrail__ms .tq-vrail__label{
+  align-self:flex-start; margin-left:var(--s2);
+  font-family:var(--f-sans); text-orientation:mixed;
+  font-size:var(--tq-vrail-fs-micro-l); letter-spacing:.18em;
+}
+
+/* --- 本文まで縦組みにし、最右列（＝見出し）だけ字間を開ける（ogawa型） --- */
+.tq-vrail__flow{
+  writing-mode:vertical-rl;
+  height:260px; max-height:56vw;
+  font-size:var(--fs-note); line-height:2.1; color:var(--c-ink2);
+  font-feature-settings:"palt" 1;
+}
+.tq-vrail__flow > p{ margin:0 var(--s3) 0 0 }   /* 縦組みでは block マージン＝左右 */
+.tq-vrail__flow > h4{
+  margin:0; font-size:var(--fs-lg); font-weight:700; color:var(--c-ink);
+  letter-spacing:var(--tq-vrail-ls-wide); line-height:1.9;
+}
+
+/* --- 写真の左に柱を立てる（適用例） ------------------------- */
+.tq-vrail__stage{
+  display:flex; align-items:flex-start; gap:var(--s5);
+  background:var(--c-bg2); border-radius:var(--r-m); padding:var(--s5);
+}
+.tq-vrail__stage .tq-vrail__rail{ flex:0 0 auto; min-height:0 }
+.tq-vrail__ph{
+  flex:1 1 0; min-width:0;
+  display:block; width:100%; aspect-ratio:16/10; object-fit:cover;
+  border-radius:var(--r-l);
+}
+
+/* --- 比較用「普通」：横組み見出し＋上に小さく英字 ----------- */
+.tq-vrail__plain{ min-height:var(--tq-vrail-h-min) }
+.tq-vrail__plain .tq-vrail__label{
+  writing-mode:horizontal-tb; display:block; margin:0 0 var(--s2);
+  letter-spacing:.18em;
+}
+.tq-vrail__plain h3{
+  margin:0; font-family:var(--f-disp); font-weight:700; color:var(--c-ink);
+  font-size:clamp(var(--fs-lg),2.4vw,var(--fs-xl)); letter-spacing:.02em;
+  line-height:var(--lh-head);
+}
+
+/* --- 狭いときは柱を1本に落とす ------------------------------ */
+@media (max-width:420px){
+  .tq-vrail__rail{ min-height:0 }
+  .tq-vrail__ms .tq-vrail__col{ padding-left:var(--s2); padding-right:var(--s2) }
+}
+</style>
+
+<div class="tq-vrail">
+  <p class="tq-vrail__lead">
+    見出しを縦組みにして左端に立て、そのすぐ横に90°倒した極小の欧文を並走させる。
+    横組みばかりの版面に細い縦の柱が2本立ち、左の余白が「余り」ではなく構造として読める。
+  </p>
+
+  <!-- ① 普通 / この工夫 -->
+  <section class="tq-vrail__sec">
+    <h3 class="tq-vrail__secttl">① 同じ見出し・同じ欧文ラベルで、組み方だけを変える</h3>
+    <div class="tq-vrail__pair">
+
+      <div>
+        <p class="tq-vrail__cap">普通：横組み＋英字を上に小さく添える</p>
+        <div class="tq-vrail__box tq-vrail__plain">
+          <p class="tq-vrail__label">INTRODUCTION</p>
+          <h3>見出しが入ります</h3>
+          <p class="tq-vrail__body">
+            本文テキストが入ります。本文テキストが入ります。本文テキストが入ります。
+          </p>
+        </div>
+        <p class="tq-vrail__note">左上に固まるだけで、左の余白はただの空きに見える。</p>
+      </div>
+
+      <div>
+        <p class="tq-vrail__cap">この工夫：縦組み＋90°倒した欧文を並走</p>
+        <div class="tq-vrail__box">
+          <div class="tq-vrail__rail">
+            <p class="tq-vrail__label">INTRODUCTION</p>
+            <h3 class="tq-vrail__ttl">見出しが入ります</h3>
+          </div>
+        </div>
+        <p class="tq-vrail__note">級数比は約3倍。欧文だけ色を振り、和文は黒のまま置く。</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ② 4つの型 -->
+  <section class="tq-vrail__sec">
+    <h3 class="tq-vrail__secttl">② 柱の組み方は4通り</h3>
+    <div class="tq-vrail__quad">
+
+      <div class="tq-vrail__box">
+        <p class="tq-vrail__boxttl">1／和文が主・欧文を倒して並走</p>
+        <div class="tq-vrail__rail">
+          <p class="tq-vrail__label">INTRODUCTION</p>
+          <h4 class="tq-vrail__ttl">見出しが入ります</h4>
+        </div>
+      </div>
+
+      <div class="tq-vrail__box">
+        <p class="tq-vrail__boxttl">2／欧文が主・和文を正立でルビ扱い</p>
+        <div class="tq-vrail__rail tq-vrail__rail--enmain">
+          <p class="tq-vrail__label">ラベル</p>
+          <h4 class="tq-vrail__ttl">NEWS</h4>
+        </div>
+      </div>
+
+      <div class="tq-vrail__box">
+        <p class="tq-vrail__boxttl">3／2列＋点線縦罫3本（原稿用紙）</p>
+        <div class="tq-vrail__ms">
+          <p class="tq-vrail__label">ラベルが入ります</p>
+          <p class="tq-vrail__col tq-vrail__col--head">見出しの一行目が</p>
+          <p class="tq-vrail__col">ここに入ります</p>
+        </div>
+      </div>
+
+      <div class="tq-vrail__box">
+        <p class="tq-vrail__boxttl">4／本文まで縦組み・見出し列だけ字間0.45em</p>
+        <div class="tq-vrail__flow">
+          <h4>見出しが入ります</h4>
+          <p>本文テキストが入ります。本文テキストが入ります。本文テキストが入ります。本文テキストが入ります。</p>
+        </div>
+      </div>
+
+    </div>
+    <p class="tq-vrail__note">
+      1と2は主従の逆転だけの違い。3は柱そのものを罫で描く型、4は見出し列の字間だけ広げて柱に見せる型。
+    </p>
+  </section>
+
+  <!-- ③ 適用例 -->
+  <section class="tq-vrail__sec">
+    <h3 class="tq-vrail__secttl">③ 写真の左に柱を立てる</h3>
+    <div class="tq-vrail__stage">
+      <div class="tq-vrail__rail">
+        <p class="tq-vrail__label">INTRODUCTION</p>
+        <h4 class="tq-vrail__ttl">見出しが入ります</h4>
+      </div>
+      <img class="tq-vrail__ph" src="../demo/ph_a.jpg" alt="">
+    </div>
+    <p class="tq-vrail__note">
+      柱の幅は合わせて 60〜70px 程度。写真を大きく取ったまま、左端に版面の背骨が立つ。
+    </p>
+  </section>
+
+</div>
+</body></html>

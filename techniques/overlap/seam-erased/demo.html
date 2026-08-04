@@ -1,0 +1,259 @@
+<style>
+/* ==========================================================
+   overlap/seam-erased — 2カラムの継ぎ目を、またぐ面で覆って消す
+   トークン未読込でも見えるようフォールバックを置く。
+   :where() で優先度0にしてあるので、_tokens.css があれば必ずそちらが勝つ。
+   ========================================================== */
+:where(:root){
+  --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-num:"Helvetica Neue",Arial,var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px; --fs-lg:21px; --fs-xl:28px;
+  --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px; --s8:76px;
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --shadow:0 6px 24px rgba(17,17,17,.08);
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+
+.tq-sme{
+  font-family:var(--f-sans); color:var(--c-ink2); background:var(--c-bg);
+  max-width:var(--w-max); margin:0 auto; padding:var(--s6) var(--w-gut);
+  overflow-x:clip;                       /* 断ち落としの帯が横スクロールを出さないように */
+}
+.tq-sme *{ box-sizing:border-box; }
+.tq-sme__ttl{ margin:0 0 var(--s2); font-size:var(--fs-md); font-weight:700;
+  color:var(--c-ink); line-height:var(--lh-tight); }
+.tq-sme__lead{ margin:0 0 var(--s6); font-size:var(--fs-sm); line-height:var(--lh-body); color:var(--c-ink3); }
+.tq-sme__sec{ margin-top:var(--s7); }
+.tq-sme__cap{ margin:var(--s3) 0 0; font-size:var(--fs-note); line-height:var(--lh-tight); color:var(--c-ink3); }
+.tq-sme__cap b{ display:block; margin-bottom:2px; color:var(--c-ink); font-size:var(--fs-sm); }
+.tq-sme__note{ margin:var(--s4) 0 0; font-size:var(--fs-note); line-height:var(--lh-body); color:var(--c-ink3); }
+.tq-sme__fig{ margin:0 0 var(--s6); }
+
+/* ---- 共通のパーツ ---- */
+.tq-sme__h{ margin:0 0 var(--s3); font-size:var(--fs-lg); font-weight:700;
+  color:var(--c-ink); line-height:var(--lh-tight); }
+.tq-sme__p{ margin:0; font-size:var(--fs-note); line-height:var(--lh-body); color:var(--c-ink2); }
+.tq-sme__ph{ display:block; width:100%; height:100%; object-fit:cover; background:var(--c-bg2); }
+
+/* ---- ①②の舞台。純白のカードが見えるよう、地は濃色にする（odrive_s05の条件） ---- */
+.tq-sme__grid, .tq-sme__wrap{ background:var(--c-ink); padding:var(--s6); }
+.tq-sme__grid .tq-sme__h{ color:var(--c-bg); }
+.tq-sme__grid .tq-sme__p{ color:var(--c-line); }
+
+/* ---- ①-A 普通：50/50グリッド＋gapの余白 ---- */
+.tq-sme__grid{
+  display:grid; grid-template-columns:1fr 1fr; gap:var(--s6); align-items:center;
+}
+.tq-sme__grid figure{ margin:0; aspect-ratio:4/3; }
+.tq-sme__box{ padding:var(--s5) 0; }
+
+/* ---- ①-B この工夫：白いカードを写真の左端に食い込ませる ---- */
+.tq-sme__wrap{ display:grid; grid-template-columns:1fr 1fr; align-items:center; }
+.tq-sme__wrap > .tq-sme__card{
+  grid-area:1/1; z-index:2;
+  background:var(--c-bg); border-radius:0; box-shadow:none;   /* 角丸0・影0が肝 */
+  padding:var(--s5) var(--s6);
+  margin-right:-20px;                                         /* 食い込み量 */
+}
+.tq-sme__wrap > figure{ grid-area:1/2; z-index:1; margin:0; aspect-ratio:4/3; }
+
+/* ---- ② 食い込み量の3段 ---- */
+.tq-sme__wrap--0  > .tq-sme__card{ margin-right:0; }
+.tq-sme__wrap--30 > .tq-sme__card{ margin-right:-30%; }
+
+/* ---- ③ 覆う形：正円 ---- */
+.tq-sme__discrow{ display:grid; grid-template-columns:1fr auto; align-items:center; }
+.tq-sme__discrow figure{ margin:0; aspect-ratio:16/11; z-index:1; }
+.tq-sme__disc{
+  position:relative; z-index:2; justify-self:start;
+  width:min(46vw,300px); aspect-ratio:1; border-radius:50%;
+  background:var(--c-ink); color:var(--c-on-primary);
+  margin-left:min(-16vw,-110px);
+  display:grid; place-content:center; text-align:center; padding:var(--s5);
+}
+.tq-sme__disc .tq-sme__h{ color:var(--c-on-primary); font-size:var(--fs-base); }
+.tq-sme__disc .tq-sme__p{ color:var(--c-on-primary); }
+
+/* ---- ④ 覆う形：グラデ帯の端をアーチ写真の下へ潜らせる ---- */
+.tq-sme__band{ position:relative; display:grid; grid-template-columns:auto 1fr; align-items:start; gap:0; }
+.tq-sme__band figure{
+  position:relative; z-index:2; margin:0;
+  width:min(42vw,260px); aspect-ratio:3/4; overflow:hidden;
+  border-radius:999px 999px var(--r-m) var(--r-m);
+}
+.tq-sme__bandtxt{ position:relative; padding-top:var(--s7); }   /* 帯を弧が効いている高さに置く */
+.tq-sme__bandtxt .tq-sme__h{
+  position:relative; z-index:0;
+  background:linear-gradient(90deg,var(--c-primary-l),var(--c-bg2));
+  margin-left:-90px; padding:var(--s3) var(--s5) var(--s3) 110px;
+}
+.tq-sme__bandtxt .tq-sme__p{ padding-left:var(--s5); }
+/* 比較用：帯の始点を見せる */
+.tq-sme__band--shown .tq-sme__bandtxt .tq-sme__h{ margin-left:var(--s5); padding-left:var(--s5); }
+
+/* ---- ⑤ 全幅の断ち落とし帯＋左マージンまで寄せたカード ---- */
+.tq-sme__bleed{ position:relative; margin-inline:calc(var(--w-gut) * -1); }
+.tq-sme__bleed > .tq-sme__ph{ height:clamp(240px,32vw,450px); }
+.tq-sme__bleed .tq-sme__card{
+  position:absolute; left:var(--w-gut); top:50%; translate:0 -50%;
+  width:min(41%,420px); min-width:220px;
+  background:var(--c-bg); border-radius:var(--r-l); padding:var(--s6);
+  box-shadow:var(--shadow);
+}
+
+@media (max-width:640px){
+  .tq-sme__grid, .tq-sme__wrap{ grid-template-columns:1fr; }
+  .tq-sme__wrap > .tq-sme__card{ grid-area:auto; margin-right:0; margin-top:-30px;
+    padding:var(--s5) var(--s5) 0; }
+  .tq-sme__wrap > figure{ grid-area:auto; order:-1; }
+  .tq-sme__wrap--0 > .tq-sme__card{ margin-top:0; }
+  .tq-sme__wrap--30 > .tq-sme__card{ margin-top:-64px; }
+  .tq-sme__discrow{ grid-template-columns:1fr; }
+  .tq-sme__disc{ width:min(70vw,260px); margin-left:0; margin-top:min(-18vw,-64px);
+    justify-self:center; }
+  .tq-sme__band{ grid-template-columns:1fr; }
+  .tq-sme__band figure{ width:min(56vw,200px); margin:0 auto; }
+  .tq-sme__bandtxt{ padding-top:0; }
+  /* 狭幅では帯の「上端」をアーチの下へ潜らせる。文字は覆われない位置まで下げる */
+  .tq-sme__bandtxt .tq-sme__h{ margin-left:0; margin-top:-40px;
+    padding:calc(var(--s6) + var(--s2)) var(--s4) var(--s4); }
+  .tq-sme__band--shown .tq-sme__bandtxt .tq-sme__h{ margin-top:var(--s4); margin-left:0;
+    padding:var(--s4); }
+  .tq-sme__bleed .tq-sme__card{ position:static; translate:none; width:auto;
+    margin:calc(var(--s7) * -1) var(--w-gut) 0; }
+}
+</style>
+
+<div class="tq-sme">
+
+  <p class="tq-sme__ttl">① 分割線を残すか、要素の下に消すか</p>
+  <p class="tq-sme__lead">
+    左は左テキスト・右写真の50/50グリッドで、間に36pxのgapを取ったもの。
+    右は同じ2つを重ね、白いカードを写真の左端に20px食い込ませたもの。角丸0・枠線0・影0で、
+    純白と写真の明度差だけで手前に見せている。
+  </p>
+
+  <figure class="tq-sme__fig">
+    <div class="tq-sme__grid">
+      <div class="tq-sme__box">
+        <p class="tq-sme__h">見出しがここに入ります</p>
+        <p class="tq-sme__p">本文のテキストが数行入ります。本文のテキストが数行入ります。本文のテキストが数行入ります。</p>
+      </div>
+      <figure><img class="tq-sme__ph" src="../../../docs/demo/ph_a.jpg" alt=""></figure>
+    </div>
+    <p class="tq-sme__cap"><b>普通</b>gapの余白が縦の分割線として残り、左右が「2つの別々のもの」に見える。</p>
+  </figure>
+
+  <figure class="tq-sme__fig">
+    <div class="tq-sme__wrap">
+      <div class="tq-sme__card">
+        <p class="tq-sme__h">見出しがここに入ります</p>
+        <p class="tq-sme__p">本文のテキストが数行入ります。本文のテキストが数行入ります。本文のテキストが数行入ります。</p>
+      </div>
+      <figure><img class="tq-sme__ph" src="../../../docs/demo/ph_a.jpg" alt=""></figure>
+    </div>
+    <p class="tq-sme__cap"><b>この工夫</b>継ぎ目がカードの下に消え、2カラムが1枚の絵になる。影を付けないので「浮いた板」にならない。</p>
+  </figure>
+
+  <!-- ② 食い込み量 -->
+  <section class="tq-sme__sec">
+    <p class="tq-sme__ttl">② 食い込み量は20px〜写真幅の30%</p>
+    <p class="tq-sme__lead">0pxだと継ぎ目が残り、30%まで入れると写真が「カードの背景」に変わる。</p>
+
+    <figure class="tq-sme__fig">
+      <div class="tq-sme__wrap tq-sme__wrap--0">
+        <div class="tq-sme__card">
+          <p class="tq-sme__h">見出しがここに入ります</p>
+          <p class="tq-sme__p">本文のテキストが数行入ります。本文のテキストが数行入ります。</p>
+        </div>
+        <figure><img class="tq-sme__ph" src="../../../docs/demo/ph_b.jpg" alt=""></figure>
+      </div>
+      <p class="tq-sme__cap"><b>0px</b>接しているだけ。継ぎ目が縦の線としてはっきり見える。</p>
+    </figure>
+
+    <figure class="tq-sme__fig">
+      <div class="tq-sme__wrap tq-sme__wrap--30">
+        <div class="tq-sme__card">
+          <p class="tq-sme__h">見出しがここに入ります</p>
+          <p class="tq-sme__p">本文のテキストが数行入ります。本文のテキストが数行入ります。</p>
+        </div>
+        <figure><img class="tq-sme__ph" src="../../../docs/demo/ph_b.jpg" alt=""></figure>
+      </div>
+      <p class="tq-sme__cap"><b>写真幅の30%</b>上限。写真は「面の一部」になり、主役はカードの文章に移る。</p>
+    </figure>
+  </section>
+
+  <!-- ③ 正円で隠す -->
+  <section class="tq-sme__sec">
+    <p class="tq-sme__ttl">③ 覆う形を変える。正円にすると継ぎ目が円の下に完全に消える</p>
+    <p class="tq-sme__lead">円の左3割が写真・右7割が背景に乗る。矩形と違って「どこが境目か」が一点も見えない。</p>
+    <figure class="tq-sme__fig">
+      <div class="tq-sme__discrow">
+        <figure><img class="tq-sme__ph" src="../../../docs/demo/ph_a.jpg" alt=""></figure>
+        <div class="tq-sme__disc">
+          <p class="tq-sme__h">見出しが入ります</p>
+          <p class="tq-sme__p">本文のテキストが数行入ります。本文のテキストが入ります。</p>
+        </div>
+      </div>
+      <p class="tq-sme__cap"><b>正円</b>セクション高の85%ある円を写真の右端にまたがせる。円の下で継ぎ目が消える。</p>
+    </figure>
+  </section>
+
+  <!-- ④ 帯の端を潜らせる -->
+  <section class="tq-sme__sec">
+    <p class="tq-sme__ttl">④ 見出しの背後の帯は、始点を写真の弧の下へ潜らせる</p>
+    <p class="tq-sme__lead">
+      同じ帯・同じ見出し。左は帯の左端が見えている状態、右は左端をアーチ写真の下へ潜らせた状態。
+      端が見えないと「写真の下から続いている」と読め、断絶が完全に消える。
+    </p>
+
+    <figure class="tq-sme__fig">
+      <div class="tq-sme__band tq-sme__band--shown">
+        <figure><img class="tq-sme__ph" src="../../../docs/demo/ph_b.jpg" alt=""></figure>
+        <div class="tq-sme__bandtxt">
+          <p class="tq-sme__h">見出しがここに入ります</p>
+          <p class="tq-sme__p">本文のテキストが数行入ります。本文のテキストが数行入ります。</p>
+        </div>
+      </div>
+      <p class="tq-sme__cap"><b>普通</b>帯の始点と終点が両方見える。帯が「見出しの背景色」にしか見えない。</p>
+    </figure>
+
+    <figure class="tq-sme__fig">
+      <div class="tq-sme__band">
+        <figure><img class="tq-sme__ph" src="../../../docs/demo/ph_b.jpg" alt=""></figure>
+        <div class="tq-sme__bandtxt">
+          <p class="tq-sme__h">見出しがここに入ります</p>
+          <p class="tq-sme__p">本文のテキストが数行入ります。本文のテキストが数行入ります。</p>
+        </div>
+      </div>
+      <p class="tq-sme__cap"><b>この工夫</b>始点が写真の弧の下に隠れる。帯が写真の裏から続く1枚の面に見える。</p>
+    </figure>
+  </section>
+
+  <!-- ⑤ 断ち落とし帯 -->
+  <section class="tq-sme__sec">
+    <p class="tq-sme__ttl">⑤ 写真を断ち落としの帯にして、カードを版面の左マージンまで寄せる</p>
+    <p class="tq-sme__lead">
+      写真側に版面の概念をなくすと、継ぎ目そのものが存在しなくなる。カードの左端は版面の左マージンにぴったり合わせる。
+    </p>
+    <figure class="tq-sme__fig">
+      <div class="tq-sme__bleed">
+        <img class="tq-sme__ph" src="../../../docs/demo/ph_a.jpg" alt="">
+        <div class="tq-sme__card">
+          <p class="tq-sme__h">見出しがここに入ります</p>
+          <p class="tq-sme__p">本文のテキストが数行入ります。本文のテキストが数行入ります。</p>
+        </div>
+      </div>
+      <p class="tq-sme__cap"><b>断ち落とし＋左マージン寄せ</b>この形だけは影を付けてよい。写真の上に完全に乗るので、影がないと沈む。</p>
+    </figure>
+    <p class="tq-sme__note">
+      使わない場面：左右が対等な比較（料金プランの並列など）で、分断そのものが情報のとき。
+      継ぎ目を消すと「どちらか一方の話」に見えてしまう。
+    </p>
+  </section>
+
+</div>

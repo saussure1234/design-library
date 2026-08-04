@@ -30,8 +30,10 @@
   --tq-obk-shift-y:10px;    /* ②版ズレ：縦（6〜10px＝手仕事） */
   --tq-obk-ring:14px;       /* ②二重輪郭：リングのはみ出し */
   --tq-obk-echo:1.8;        /* ③エコー：拡大率 */
-  /* D字（本体と同じ半径。エコーは同じ半径のまま拡大して敷く） */
-  --tq-obk-d:var(--r-l) var(--r-pill) var(--r-pill) var(--r-l) / var(--r-l) 50% 50% var(--r-l);
+  /* D字（本体と同じ半径。エコーは同じ半径のまま拡大して敷く）。
+     水平半径は 9999px ではなく 50%。9999px にすると border-radius の丸め規則が働いて
+     全半径が同率で縮み、D字が崩れる（詳細は shape/full-side-arc）。 */
+  --tq-obk-d:var(--r-l) 50% 50% var(--r-l) / var(--r-l) 50% 50% var(--r-l);
 }
 
 .tq-obk{
@@ -99,7 +101,11 @@
 }
 
 /* --- ② 版ズレ（同じマスクの色ベタを背面に） ----------------- */
-.tq-obk__prints{ display:grid; gap:var(--s5); grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); isolation:isolate }
+/* 一番大きくずらした版が下辺を越えるので、その分の余白を確保しておく */
+.tq-obk__prints{
+  display:grid; gap:var(--s5); isolation:isolate; padding-bottom:var(--s7);
+  grid-template-columns:repeat(auto-fit,minmax(140px,200px));
+}
 .tq-obk__print{ position:relative }
 .tq-obk__print img{
   display:block; position:relative; width:100%; aspect-ratio:1/1; object-fit:cover;
