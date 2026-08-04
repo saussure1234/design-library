@@ -19,11 +19,11 @@ from PIL import Image, ImageChops
 
 Image.MAX_IMAGE_PIXELS = None
 
-MAX_H = 30000          # これ以上長いページは切る
+MAX_H = 22000          # これ以上長いページは切る
 NAV_TIMEOUT = 45       # 読み込みを待つ上限（秒）
 SITE_TIMEOUT = 260     # 1サイトにかける上限（秒）
 STABLE_TRIES = 3       # 「まだ動いている」判定のやり直し回数
-STABLE_WAIT = 0.7      # 2回撮る間隔（秒）
+STABLE_WAIT = 0.55      # 2回撮る間隔（秒）
 STABLE_DIFF = 0.004    # 差がこの割合を超えたら動いているとみなす
 
 
@@ -65,9 +65,9 @@ JS_WAKE = """
   const sleep = ms => new Promise(r => setTimeout(r, ms));
   const step = Math.max(320, Math.round(window.innerHeight * 0.55));
   const h = () => document.documentElement.scrollHeight;
-  for (let y = 0; y < h(); y += step) { window.scrollTo(0, y); await sleep(130); }
-  window.scrollTo(0, h()); await sleep(500);
-  window.scrollTo(0, 0);   await sleep(500);
+  for (let y = 0; y < h(); y += step) { window.scrollTo(0, y); await sleep(95); }
+  window.scrollTo(0, h()); await sleep(380);
+  window.scrollTo(0, 0);   await sleep(380);
   return h();
 })()"""
 
@@ -102,7 +102,7 @@ JS_SETTLE = """
     if (cs.visibility === 'hidden' && el.offsetHeight > 0)
       el.style.setProperty('visibility','visible','important');
   });
-  await new Promise(r => setTimeout(r, 450));
+  await new Promise(r => setTimeout(r, 340));
   return 1;
 })()"""
 
@@ -141,16 +141,16 @@ class Shooter:
         self.port, self.out = port, out
         self.w, self.h, self.mobile, self.quality = w, h, mobile, quality
 
-    async def shot_viewport(self, ws):
-        r = await cdp(ws, "Page.captureScreenshot", {"format": "png"})
+    async def shot_viewport(self, ws, q=88):
+        r = await cdp(ws, "Page.captureScreenshot", {"format": "jpeg", "quality": q})
         return Image.open(io.BytesIO(base64.b64decode(r["data"]))).convert("RGB")
 
     async def wait_stable(self, ws):
         """同じ画面を2回撮って、違えばまだ動いている。落ち着くまで待つ"""
-        prev = await self.shot_viewport(ws)
+        prev = await self.shot_viewport(ws, 40)
         for _ in range(STABLE_TRIES):
             await asyncio.sleep(STABLE_WAIT)
-            cur = await self.shot_viewport(ws)
+            cur = await self.shot_viewport(ws, 40)
             if diff_ratio(prev, cur) <= STABLE_DIFF:
                 return True
             prev = cur
@@ -208,7 +208,7 @@ class Shooter:
                 while y < full:
                     await cdp(ws, "Runtime.evaluate",
                               {"expression": f"({JS_SCROLL_TO})({y})"})
-                    await asyncio.sleep(.30 if first else .20)
+                    await asyncio.sleep(.26 if first else .13)
                     if first:
                         calm = await self.wait_stable(ws)
                     tile = await self.shot_viewport(ws)
