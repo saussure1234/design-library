@@ -21,8 +21,8 @@ Image.MAX_IMAGE_PIXELS = None
 
 MAX_H = 30000          # これ以上長いページは切る
 NAV_TIMEOUT = 45       # 読み込みを待つ上限（秒）
-SITE_TIMEOUT = 150     # 1サイトにかける上限（秒）
-STABLE_TRIES = 4       # 「まだ動いている」判定のやり直し回数
+SITE_TIMEOUT = 260     # 1サイトにかける上限（秒）
+STABLE_TRIES = 3       # 「まだ動いている」判定のやり直し回数
 STABLE_WAIT = 0.7      # 2回撮る間隔（秒）
 STABLE_DIFF = 0.004    # 差がこの割合を超えたら動いているとみなす
 
@@ -189,11 +189,18 @@ class Shooter:
                 await cdp(ws, "Runtime.evaluate", {"expression": JS_READY, "awaitPromise": True})
                 await cdp(ws, "Runtime.evaluate", {"expression": JS_WAKE, "awaitPromise": True})
                 await cdp(ws, "Runtime.evaluate", {"expression": JS_SETTLE, "awaitPromise": True})
-                calm = await self.wait_stable(ws)
 
                 m = await cdp(ws, "Page.getLayoutMetrics")
                 css = m.get("cssContentSize") or m.get("contentSize")
                 full = min(int(css["height"]), MAX_H)
+                # 1画面ぶんしか無い＝まだ描けていない可能性。一度だけ待って測り直す
+                if full <= self.h + 8:
+                    await asyncio.sleep(2.5)
+                    await cdp(ws, "Runtime.evaluate", {"expression": JS_READY, "awaitPromise": True})
+                    m = await cdp(ws, "Page.getLayoutMetrics")
+                    css = m.get("cssContentSize") or m.get("contentSize")
+                    full = min(int(css["height"]), MAX_H)
+                calm = True
 
                 # タイルを貼る（実際にスクロールするので、出てくる要素も写る）
                 sheet = Image.new("RGB", (self.w, full), "white")
@@ -201,9 +208,9 @@ class Shooter:
                 while y < full:
                     await cdp(ws, "Runtime.evaluate",
                               {"expression": f"({JS_SCROLL_TO})({y})"})
-                    await asyncio.sleep(.32 if first else .22)
+                    await asyncio.sleep(.30 if first else .20)
                     if first:
-                        await self.wait_stable(ws)
+                        calm = await self.wait_stable(ws)
                     tile = await self.shot_viewport(ws)
                     sheet.paste(tile, (0, y))
                     if first:
