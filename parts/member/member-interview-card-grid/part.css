@@ -4,14 +4,14 @@
    接頭辞は .mig__ で固定。色・寸法は _tokens.css の変数のみ。
    ========================================================= */
 
-.mig{position:relative;overflow:hidden;background:var(--c-primary)}
+.mig{position:relative;overflow:hidden;background:var(--c-bg3)}
 
 /* 背景の裏文字：カード列の後ろから覗かせる。色差ではなく地色＋白の透過で作る */
 .mig__ghost{
   position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
   z-index:0;pointer-events:none;user-select:none;white-space:nowrap;
   font-family:var(--f-disp);font-weight:900;line-height:1;letter-spacing:.02em;
-  color:var(--c-on-primary);opacity:.1;
+  color:var(--c-ink);opacity:.1;
   font-size:clamp(calc(var(--fs-2xl) * 2.2), 24vw, calc(var(--fs-4xl) * 4));
 }
 
@@ -19,9 +19,9 @@
 
 /* ── 見出し ─────────────────────────────── */
 .mig__head{max-width:36em;margin-bottom:clamp(var(--s6), 4vw, var(--s7))}
-.mig__eyebrow{color:var(--c-on-primary);opacity:.85}      /* 主色の面に乗るので反転 */
-.mig__h{color:var(--c-on-primary)}
-.mig__lead{margin-top:var(--s4);color:var(--c-on-primary);opacity:.88;
+.mig__eyebrow{color:var(--c-ink);opacity:.85}      /* 主色の面に乗るので反転 */
+.mig__h{color:var(--c-ink)}
+.mig__lead{margin-top:var(--s4);color:var(--c-ink);opacity:.88;
   font-size:var(--fs-base);line-height:var(--lh-body)}
 
 /* ── カード列 ───────────────────────────── */
@@ -69,13 +69,13 @@
 .mig__abroad li + li{margin-top:var(--s2)}
 .mig__abroad li::before{content:"";position:absolute;left:0;
   top:calc(var(--fs-sm) * var(--lh-head) / 2);transform:translateY(-50%);
-  width:var(--s1);height:var(--s1);border-radius:var(--r-pill);background:var(--c-primary)}
+  width:var(--s1);height:var(--s1);border-radius:var(--r-pill);background:var(--c-bg3)}
 
 /* コメント：margin-top:auto で全カードの下端に揃える */
 .mig__comment{margin-top:auto;font-size:var(--fs-sm);line-height:var(--lh-body);color:var(--c-ink2)}
 
 .mig__note{margin-top:var(--s5);font-size:var(--fs-note);
-  color:var(--c-on-primary);opacity:.75}
+  color:var(--c-ink);opacity:.75}
 
 /* ── レスポンシブ ───────────────────────── */
 @media (max-width:900px){

@@ -1,0 +1,221 @@
+<style>
+/* ==========================================================
+   overlap/translucent-veil — 半透明の面を重ね、写真を切らずに文字面と保留領域を作る
+   :where(:root) はトークン未読込時のフォールバック（優先度0）。
+   透過色は 16進直書きせず color-mix(in srgb, <トークン> N%, transparent) で作る。
+   ========================================================== */
+:where(:root){
+  --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-num:"Helvetica Neue",Arial,var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px; --fs-lg:21px; --fs-xl:28px;
+  --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --shadow:0 6px 24px rgba(17,17,17,.08);
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+
+.tq-tvl{
+  font-family:var(--f-sans); color:var(--c-ink2); background:var(--c-bg);
+  max-width:var(--w-max); margin:0 auto; padding:var(--s6) var(--w-gut);
+}
+.tq-tvl :where(p,figure,figcaption){ margin:0; }
+.tq-tvl__h{ font-size:var(--fs-md); font-weight:700; color:var(--c-ink); line-height:var(--lh-tight); margin:0 0 var(--s2); }
+.tq-tvl__lead{ font-size:var(--fs-sm); line-height:var(--lh-body); color:var(--c-ink3); margin:0 0 var(--s5); }
+.tq-tvl__row{ display:grid; gap:var(--s5); grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr)); }
+.tq-tvl__cap{ font-size:var(--fs-note); line-height:var(--lh-head); color:var(--c-ink3); margin:var(--s3) 0 0; }
+.tq-tvl__cap b{ display:block; color:var(--c-ink); font-size:var(--fs-sm); margin-bottom:2px; }
+.tq-tvl__fig--wide{ grid-column:1 / -1; }
+
+.tq-tvl__stage{
+  position:relative; height:240px; box-sizing:border-box; overflow:hidden;
+  border:1px solid var(--c-line); border-radius:var(--r-m);
+}
+
+/* --- A｜普通：白の文字ボックスと写真をトリミングで左右に分ける --- */
+.tq-tvl__split{ display:grid; grid-template-columns:1fr 1fr; height:100%; }
+.tq-tvl__split .tq-tvl__box{
+  background:var(--c-bg2); padding:var(--s5);
+  display:flex; flex-direction:column; justify-content:center; gap:var(--s2);
+}
+.tq-tvl__split img{ width:100%; height:100%; object-fit:cover; display:block; }
+.tq-tvl__ttl{ font-size:var(--fs-md); font-weight:700; color:var(--c-ink); line-height:var(--lh-tight); }
+.tq-tvl__sub{ font-size:var(--fs-note); color:var(--c-ink3); line-height:var(--lh-head); }
+
+/* --- B｜写真を切らずに文字面を作る（境界は縦の直線1本だけ） --- */
+.tq-tvl__stage--veil{ background:url("../../../docs/demo/ph_a.jpg") center/cover; }
+.tq-tvl__veil{
+  width:52%; height:100%; box-sizing:border-box; padding:var(--s5);
+  background:color-mix(in srgb, var(--c-primary) 86%, transparent);   /* .86＝読ませる濃さ */
+  color:var(--c-on-primary);
+  display:flex; flex-direction:column; justify-content:center; gap:var(--s2);
+}
+.tq-tvl__veil .tq-tvl__ttl,
+.tq-tvl__veil .tq-tvl__sub{ color:var(--c-on-primary); }
+
+/* --- C｜デュオトーンにして片側へ溶かす --- */
+.tq-tvl__stage--duo{
+  background:
+    linear-gradient(90deg,
+      color-mix(in srgb, var(--c-primary) 15%, transparent) 0%,
+      var(--c-primary) 58%),
+    url("../../../docs/demo/ph_b.jpg") left center/cover;
+  background-blend-mode:multiply;
+  display:flex; align-items:center; justify-content:flex-end;
+  padding:var(--s5);
+}
+.tq-tvl__duotext{ width:56%; color:var(--c-on-primary); display:flex; flex-direction:column; gap:var(--s2); }
+.tq-tvl__duotext .tq-tvl__ttl, .tq-tvl__duotext .tq-tvl__sub{ color:var(--c-on-primary); }
+
+/* --- D｜またいだ部分だけ下地を透かすバッジ（.38） --- */
+.tq-tvl__stage--badge{
+  background:linear-gradient(120deg, var(--c-primary) 0%, var(--c-primary-d) 100%);
+  display:grid; place-items:center; padding:0 var(--s5) 0 var(--s7);
+  overflow:visible;
+}
+.tq-tvl__card{
+  position:relative; width:100%; background:var(--c-bg);
+  border-radius:0 var(--r-l) var(--r-l) 0; padding:var(--s5) var(--s5) var(--s5) var(--s6);
+  box-sizing:border-box;
+}
+.tq-tvl__date{
+  position:absolute; left:-36px; top:50%; transform:translateY(-50%);
+  width:72px; height:72px; border-radius:50%;
+  background:color-mix(in srgb, var(--c-ink) 38%, transparent);    /* .38＝下地を透かす */
+  color:var(--c-on-primary); font-family:var(--f-num);
+  display:grid; place-content:center; text-align:center; line-height:1.2;
+}
+.tq-tvl__date b{ display:block; font-size:var(--fs-lg); }
+.tq-tvl__date span{ font-size:10px; }
+
+/* --- E｜範囲だけ沈めて注記を重ねる（.62） --- */
+.tq-tvl__stage--table{ height:auto; overflow:visible; border:0; }
+.tq-tvl__table{
+  position:relative; display:grid; grid-template-columns:64px repeat(4,1fr);
+  grid-template-rows:auto auto auto 64px;      /* 注記を重ねる行だけ高さを確保 */
+  gap:2px; font-size:var(--fs-note); line-height:var(--lh-tight);
+}
+.tq-tvl__table > *{ padding:var(--s3) var(--s2); text-align:center; box-sizing:border-box; }
+.tq-tvl__th{ background:var(--c-primary-l); color:var(--c-ink); font-weight:700; }
+.tq-tvl__rh{ background:var(--c-bg); color:var(--c-ink3); display:grid; place-content:center; }
+.tq-tvl__cell{ background:var(--c-bg2); color:var(--c-ink2); }
+/* セルと同じ区画に重ねる。position:absolute + inset:0 にすること。
+   ・普通のグリッドアイテムにすると自動配置がその区画を「使用済み」にして最終行が押し出される
+   ・inset を書かないと静的位置（＝コンテナ左上）に落ちて縦1列になる
+   ・abs-pos では終端が auto だと padding端まで伸びるので grid-row は 4/5 と閉じる */
+.tq-tvl__tentative{
+  position:absolute; inset:0; grid-column:2 / 6; grid-row:4 / 5; z-index:2;
+  background:color-mix(in srgb, var(--c-bg) 62%, transparent);      /* .62＝沈める */
+  border-radius:var(--r-s); outline:1px dashed var(--c-ink3); outline-offset:-1px;
+  display:grid; place-content:center; pointer-events:none;
+}
+.tq-tvl__tentative .tq-tvl__note{
+  color:var(--c-ink); font-weight:700; text-align:center;
+}
+.tq-tvl__tentative .tq-tvl__note small{ display:block; font-weight:400; color:var(--c-ink3); }
+
+@media (max-width:420px){
+  .tq-tvl__stage{ height:220px; }
+  .tq-tvl__veil{ width:64%; padding:var(--s4); }
+  .tq-tvl__duotext{ width:64%; }
+  .tq-tvl__stage--badge{ padding:0 var(--s4) 0 var(--s6); }
+  .tq-tvl__table{ grid-template-columns:46px repeat(4,1fr); }
+  .tq-tvl__table > *{ padding:var(--s3) 2px; }
+}
+</style>
+
+<div class="tq-tvl">
+
+  <p class="tq-tvl__h">写真を切らずに、薄めて文字面を作る</p>
+  <p class="tq-tvl__lead">
+    左上は写真と文字をトリミングで左右に分けた普通。右上は1枚の写真の上に不透明度.86の面を重ねただけで、
+    下の写真が薄く透けたまま文字が読める。境界は縦の直線1本しかない。
+    不透明度を .38／.62／.86 と変えると、透かす・沈める・読ませるを1つの仕掛けで作り分けられる。
+  </p>
+
+  <div class="tq-tvl__row">
+
+    <figure>
+      <div class="tq-tvl__stage">
+        <div class="tq-tvl__split">
+          <div class="tq-tvl__box">
+            <p class="tq-tvl__ttl">見出しがここに入ります</p>
+            <p class="tq-tvl__sub">補足テキストがここに入ります</p>
+          </div>
+          <img src="../../../docs/demo/ph_a.jpg" alt="">
+        </div>
+      </div>
+      <p class="tq-tvl__cap"><b>普通</b>左に文字ボックス・右に写真。写真は枠に閉じ込められ、人物と文章は別々の部屋にいる。</p>
+    </figure>
+
+    <figure>
+      <div class="tq-tvl__stage tq-tvl__stage--veil">
+        <div class="tq-tvl__veil">
+          <p class="tq-tvl__ttl">見出しがここに入ります</p>
+          <p class="tq-tvl__sub">補足テキストがここに入ります</p>
+        </div>
+      </div>
+      <p class="tq-tvl__cap"><b>この工夫｜.86で読ませる</b>写真は1枚のまま、左52%に半透明の面を重ねる。下の写真が薄く透け、文章と人物が同じ空間にいるように読める。</p>
+    </figure>
+
+    <figure>
+      <div class="tq-tvl__stage tq-tvl__stage--duo">
+        <div class="tq-tvl__duotext">
+          <p class="tq-tvl__ttl">見出しがここに入ります</p>
+          <p class="tq-tvl__sub">本文がここに入ります。写真をセクションの地そのものにして、右へいくほどベタ色へ溶かしています。</p>
+        </div>
+      </div>
+      <p class="tq-tvl__cap"><b>デュオトーンで溶かす</b>multiplyで写真を1色に染め、58%より右はベタ。写真の終わりと面の始まりの境目が消える。</p>
+    </figure>
+
+    <figure>
+      <div class="tq-tvl__stage tq-tvl__stage--badge">
+        <div class="tq-tvl__card">
+          <p class="tq-tvl__ttl">見出しがここに入ります</p>
+          <p class="tq-tvl__sub">補足テキストがここに入ります</p>
+          <div class="tq-tvl__date"><b>00</b><span>0000</span></div>
+        </div>
+      </div>
+      <p class="tq-tvl__cap"><b>.38で下地を透かす</b>日付の円をカードの左辺から半分外に出す。1つの円の中に「カードの上」と「背景の上」の2色が同居し、前後関係がその場で証明される。</p>
+    </figure>
+
+    <figure class="tq-tvl__fig--wide">
+      <div class="tq-tvl__stage tq-tvl__stage--table">
+        <div class="tq-tvl__table">
+          <div class="tq-tvl__rh"></div>
+          <div class="tq-tvl__th">区分01</div>
+          <div class="tq-tvl__th">区分02</div>
+          <div class="tq-tvl__th">区分03</div>
+          <div class="tq-tvl__th">区分04</div>
+
+          <div class="tq-tvl__rh">0000年</div>
+          <div class="tq-tvl__cell">項目テキスト</div>
+          <div class="tq-tvl__cell">項目テキスト</div>
+          <div class="tq-tvl__cell">項目テキスト</div>
+          <div class="tq-tvl__cell">項目テキスト</div>
+
+          <div class="tq-tvl__rh">0000年</div>
+          <div class="tq-tvl__cell">項目テキスト</div>
+          <div class="tq-tvl__cell">項目テキスト</div>
+          <div class="tq-tvl__cell">項目テキスト</div>
+          <div class="tq-tvl__cell">項目テキスト</div>
+
+          <div class="tq-tvl__rh">0000年</div>
+          <div class="tq-tvl__cell">項目テキスト</div>
+          <div class="tq-tvl__cell">項目テキスト</div>
+          <div class="tq-tvl__cell">項目テキスト</div>
+          <div class="tq-tvl__cell">項目テキスト</div>
+
+          <div class="tq-tvl__tentative">
+            <p class="tq-tvl__note">未確定の範囲です<small>内容は変更となる可能性があります</small></p>
+          </div>
+        </div>
+      </div>
+      <p class="tq-tvl__cap"><b>.62で沈める</b>最終行の2〜5列目だけを破線で囲み、白を62%かけて沈めて注記を重ねる。1列目は囲みの外で通常の濃さのまま残すので、「どこまでが未確定か」が一目で分かる。</p>
+    </figure>
+
+  </div>
+</div>

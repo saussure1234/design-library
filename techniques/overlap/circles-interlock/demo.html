@@ -1,0 +1,179 @@
+<style>
+/* ==========================================================
+   overlap/circles-interlock — 円どうしを食い込ませ、欠けさせて噛み合わせる
+   :where(:root) はトークン未読込時のフォールバック（優先度0）。
+   ========================================================== */
+:where(:root){
+  --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-num:"Helvetica Neue",Arial,var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px; --fs-lg:21px; --fs-xl:28px;
+  --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --shadow:0 6px 24px rgba(17,17,17,.08);
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+
+.tq-cil{
+  font-family:var(--f-sans); color:var(--c-ink2); background:var(--c-bg);
+  max-width:var(--w-max); margin:0 auto; padding:var(--s6) var(--w-gut);
+}
+.tq-cil :where(p,figure,figcaption){ margin:0; }
+.tq-cil__h{ font-size:var(--fs-md); font-weight:700; color:var(--c-ink); line-height:var(--lh-tight); margin:0 0 var(--s2); }
+.tq-cil__lead{ font-size:var(--fs-sm); line-height:var(--lh-body); color:var(--c-ink3); margin:0 0 var(--s5); }
+.tq-cil__row{ display:grid; gap:var(--s5); grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr)); }
+.tq-cil__cap{ font-size:var(--fs-note); line-height:var(--lh-head); color:var(--c-ink3); margin:var(--s3) 0 0; }
+.tq-cil__cap b{ display:block; color:var(--c-ink); font-size:var(--fs-sm); margin-bottom:2px; }
+
+.tq-cil__stage{
+  position:relative; height:330px; box-sizing:border-box; overflow:visible;
+  background:var(--c-bg2); border:1px solid var(--c-line); border-radius:var(--r-m);
+  display:grid; place-items:center; padding:var(--s4);
+}
+
+/* --- A｜普通：等間隔に並べ、線でつなぐ --- */
+.tq-cil__even{ position:relative; display:flex; gap:36px; align-items:center; }
+.tq-cil__even::before{
+  content:""; position:absolute; z-index:0; left:0; right:0; top:50%;
+  height:1px; background:var(--c-line);
+}
+.tq-cil__even span{
+  position:relative; z-index:1; width:84px; height:84px; border-radius:50%;
+  background:var(--c-primary-l); border:3px solid var(--c-primary);
+  display:grid; place-content:center; text-align:center;
+  font-size:var(--fs-note); color:var(--c-ink); line-height:var(--lh-tight);
+}
+
+/* --- B｜2円を噛み合わせる（写真の円＋時計の円） --- */
+.tq-cil__pair{ position:relative; width:200px; height:120px; }
+.tq-cil__photo{
+  position:absolute; z-index:2; right:0; top:0;
+  width:112px; height:112px; object-fit:cover; display:block; box-sizing:border-box;
+  border-radius:50%; border:4px solid var(--c-primary);
+}
+.tq-cil__clock{
+  position:absolute; z-index:1; right:82px; top:24px;   /* 直径の約27%を食い込ませる */
+  width:92px; height:92px; box-sizing:border-box;
+  border-radius:50%; border:4px solid var(--c-primary);
+  background:conic-gradient(from 180deg, var(--c-accent) 0 25%, var(--c-bg) 0);
+}
+.tq-cil__clock b{
+  position:absolute; left:50%; bottom:-11px; transform:translateX(-50%);
+  background:var(--c-primary); color:var(--c-on-primary);
+  font-size:var(--fs-note); font-weight:700; line-height:1;
+  padding:4px 10px; border-radius:var(--r-pill); white-space:nowrap;
+}
+
+/* --- C｜中心の円を“まとめ”にして周りへ食い込ませる --- */
+.tq-cil__tri{ position:relative; width:300px; height:280px; }
+.tq-cil__tri > *{
+  position:absolute; width:110px; height:110px; border-radius:50%;
+  display:grid; place-content:center; text-align:center;
+  font-size:var(--fs-note); line-height:var(--lh-tight); padding:var(--s2); box-sizing:border-box;
+}
+.tq-cil__n1{ left:95px;  top:3px;   background:var(--c-primary-l); color:var(--c-ink); }
+.tq-cil__n2{ left:31px;  top:145px; background:var(--c-primary);   color:var(--c-on-primary); }
+.tq-cil__n3{ left:159px; top:145px; background:var(--c-ink2);      color:var(--c-on-primary); }
+.tq-cil__hub{
+  left:95px; top:88px; z-index:2;                       /* まとめ役を常に上 */
+  background:var(--c-accent); color:var(--c-ink); font-weight:700;
+}
+
+/* --- D｜リングに埋め、欠けの向きを中心方向に揃える --- */
+.tq-cil__ring{
+  position:relative; width:240px; height:240px; border-radius:50%;
+  background:var(--c-primary-l);
+}
+.tq-cil__dot{
+  position:absolute; z-index:1; left:50%; top:50%; width:60px; height:60px;
+  margin:-30px 0 0 -30px; border-radius:50%; background:var(--c-primary);
+}
+.tq-cil__dot--a{ transform:rotate(0deg)   translateY(-84px); }
+.tq-cil__dot--b{ transform:rotate(130deg) translateY(-84px); }
+.tq-cil__dot--c{ transform:rotate(230deg) translateY(-84px); }
+.tq-cil__hole{
+  position:absolute; z-index:2; inset:52px; border-radius:50%;   /* この円盤が3つの円を弧で食う */
+  background:var(--c-bg);
+  display:grid; place-content:center; text-align:center;
+  font-size:var(--fs-sm); font-weight:700; color:var(--c-ink); line-height:var(--lh-tight);
+}
+/* 文字は欠けていない外側の帯に置く（半径95px相当） */
+.tq-cil__lbl{
+  position:absolute; z-index:3; width:60px; text-align:center;
+  font-size:10px; color:var(--c-on-primary); line-height:1.3;
+}
+.tq-cil__lbl--a{ left:90px;  top:12px;  }
+.tq-cil__lbl--b{ left:163px; top:168px; }
+.tq-cil__lbl--c{ left:17px;  top:168px; }
+
+@media (max-width:420px){
+  .tq-cil__stage{ height:300px; }
+  .tq-cil__even{ gap:14px; }
+  .tq-cil__even span{ width:74px; height:74px; }
+  .tq-cil__tri{ transform:scale(.92); }
+}
+</style>
+
+<div class="tq-cil">
+
+  <p class="tq-cil__h">円は並べない。食い込ませて噛み合わせる</p>
+  <p class="tq-cil__lead">
+    左上は等間隔＋線でつないだ普通の関係図。残り3つは円どうしを直径の20〜30%だけ食い込ませ、
+    重なった側を隠している。線を1本も引いていないのに「まとめ」「所属」「同時に起きる」の関係が読める。
+  </p>
+
+  <div class="tq-cil__row">
+
+    <figure>
+      <div class="tq-cil__stage">
+        <div class="tq-cil__even">
+          <span>項目<br>01</span>
+          <span>項目<br>02</span>
+          <span>項目<br>03</span>
+        </div>
+      </div>
+      <p class="tq-cil__cap"><b>普通</b>円は等間隔に並べ、線でつないで関係を示す。線を読まないと関係が分からず、3つは別々のものに見える。</p>
+    </figure>
+
+    <figure>
+      <div class="tq-cil__stage">
+        <div class="tq-cil__pair">
+          <img class="tq-cil__photo" src="../../../docs/demo/ph_a.jpg" alt="">
+          <div class="tq-cil__clock"><b>00分</b></div>
+        </div>
+      </div>
+      <p class="tq-cil__cap"><b>この工夫｜2円を噛ませる</b>時計の円を写真の円へ30px食い込ませ、重なった右側は写真の下に隠す。「この場面＝この時間」が線なしで1かたまりになる。</p>
+    </figure>
+
+    <figure>
+      <div class="tq-cil__stage">
+        <div class="tq-cil__tri">
+          <div class="tq-cil__n1">項目 01</div>
+          <div class="tq-cil__n2">項目 02</div>
+          <div class="tq-cil__n3">項目 03</div>
+          <div class="tq-cil__hub">まとめの<br>言葉</div>
+        </div>
+      </div>
+      <p class="tq-cil__cap"><b>中心の円がまとめ役</b>中央の円が3つすべての縁へ25px食い込み、重なった側は必ず中央が上。3項目が中央に属していることが形で伝わる。</p>
+    </figure>
+
+    <figure>
+      <div class="tq-cil__stage">
+        <div class="tq-cil__ring">
+          <div class="tq-cil__dot tq-cil__dot--a"></div>
+          <div class="tq-cil__dot tq-cil__dot--b"></div>
+          <div class="tq-cil__dot tq-cil__dot--c"></div>
+          <div class="tq-cil__hole">中心の<br>言葉</div>
+          <span class="tq-cil__lbl tq-cil__lbl--a">項目01</span>
+          <span class="tq-cil__lbl tq-cil__lbl--b">項目02</span>
+          <span class="tq-cil__lbl tq-cil__lbl--c">項目03</span>
+        </div>
+      </div>
+      <p class="tq-cil__cap"><b>欠けの向きを揃える</b>手前の白い円盤が3つの円の内側を弧で食う。欠け方が3つとも中心方向に揃うので、輪に埋まっているように見える。</p>
+    </figure>
+
+  </div>
+</div>

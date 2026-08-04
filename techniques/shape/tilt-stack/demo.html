@@ -1,0 +1,229 @@
+<style>
+/* ============================================================
+   shape/tilt-stack
+   写真を±数度で逆向きに傾け、角を重ねて階段状に組む
+   ============================================================ */
+
+@layer tq-fallback{
+  :root{
+    --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA;
+    --c-accent:#FF9301;
+    --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+    --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3;
+    --c-on-primary:#FFFFFF;
+    --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    --f-disp:var(--f-sans); --f-num:"Helvetica Neue",Arial,var(--f-sans);
+    --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+    --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+    --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+    --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+    --shadow:0 6px 24px rgba(17,17,17,.08);
+  }
+}
+
+/* この工夫のパラメータ。角度と重なり量だけを持つ。 */
+:root{
+  --tq-tls-a1:-4deg;   /* 奇数枚目の傾き */
+  --tq-tls-a2:3deg;    /* 偶数枚目の傾き（必ず逆向き） */
+  --tq-tls-ovx:22px;   /* 重なり：横 */
+  --tq-tls-ovy:-16px;  /* 重なり：縦（上に引き上げて角を重ねる） */
+}
+
+.tq-tls{
+  font-family:var(--f-sans); color:var(--c-ink2);
+  line-height:var(--lh-head); -webkit-text-size-adjust:100%;
+  padding:var(--s5); background:var(--c-bg);
+}
+.tq-tls *{box-sizing:border-box}
+
+/* --- デモの見出し・注記 ------------------------------------ */
+.tq-tls__lead{
+  margin:0 0 var(--s6); font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-tls__sec{ margin-top:var(--s7) }
+.tq-tls__sec:first-of-type{ margin-top:0 }
+.tq-tls__secttl{
+  margin:0 0 var(--s4); font-size:var(--fs-sm); font-weight:700; color:var(--c-ink);
+}
+.tq-tls__cap{
+  display:flex; align-items:center; gap:var(--s2);
+  margin:0 0 var(--s3); font-size:var(--fs-note); font-weight:700;
+  color:var(--c-ink3); letter-spacing:.04em;
+}
+.tq-tls__cap::before{
+  content:""; width:var(--s5); height:1px; background:var(--c-line); flex:0 0 auto;
+}
+.tq-tls__note{
+  margin:var(--s3) 0 0; font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-tls__pair{
+  display:grid; gap:var(--s5);
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  align-items:start;
+}
+
+/* --- ① 普通：水平のまま等間隔のグリッド --------------------- */
+.tq-tls__grid{
+  display:grid; gap:var(--s3); grid-template-columns:repeat(3,1fr);
+}
+.tq-tls__grid img{
+  display:block; width:100%; aspect-ratio:4/3; object-fit:cover;
+  border-radius:var(--r-m); background:var(--c-bg2);
+}
+
+/* --- ② この工夫：±数度で逆向きに傾け、角を重ねて階段状に ----- */
+.tq-tls__scene{
+  display:grid; grid-template-columns:1fr auto 1fr; gap:var(--s6);
+  align-items:center; padding:var(--s5) var(--s2);
+}
+.tq-tls__group{ display:flex; flex-direction:column; align-items:flex-start }
+.tq-tls__ph{
+  display:block; width:72%; aspect-ratio:4/3; object-fit:cover;
+  border-radius:var(--r-m); background:var(--c-bg2);
+  box-shadow:0 10px 22px color-mix(in srgb, var(--c-ink) 14%, transparent);
+}
+.tq-tls__ph:nth-child(odd){ transform:rotate(var(--tq-tls-a1)) }
+.tq-tls__ph:nth-child(even){
+  align-self:flex-end;
+  transform:rotate(var(--tq-tls-a2)) translate(var(--tq-tls-ovx),var(--tq-tls-ovy));
+}
+/* 右側の組は傾きも重なりも鏡像にする */
+.tq-tls__group--r{ align-items:flex-end }
+.tq-tls__group--r .tq-tls__ph:nth-child(odd){
+  transform:rotate(calc(var(--tq-tls-a1) * -1));
+}
+.tq-tls__group--r .tq-tls__ph:nth-child(even){
+  align-self:flex-start;
+  transform:rotate(calc(var(--tq-tls-a2) * -1))
+            translate(calc(var(--tq-tls-ovx) * -1),var(--tq-tls-ovy));
+}
+/* 同じ画面に置く正円（矩形でも可）。傾いた写真との対比がこの工夫を成立させる */
+.tq-tls__ring{
+  width:132px; height:132px; border-radius:var(--r-pill);
+  border:14px solid var(--c-primary-l);
+  display:grid; place-items:center; text-align:center;
+  font-size:var(--fs-note); font-weight:700; color:var(--c-ink);
+  line-height:var(--lh-tight); padding:var(--s2);
+}
+
+/* --- ③ 避ける ---------------------------------------------- */
+/* 重なりはそのままに、傾きだけ同じ向きに揃えてしまった場合 */
+.tq-tls__same .tq-tls__ph:nth-child(even){
+  transform:rotate(var(--tq-tls-a1)) translate(var(--tq-tls-ovx),var(--tq-tls-ovy));
+}
+/* 1枚だけ水平のまま残してしまった場合 */
+.tq-tls__flat .tq-tls__ph:nth-child(even){
+  transform:translate(var(--tq-tls-ovx),var(--tq-tls-ovy));
+}
+.tq-tls__pair--gap{ margin-top:var(--s6) }
+/* 文字入りの図を傾けた場合 */
+.tq-tls__chart{
+  width:80%; padding:var(--s4); background:var(--c-bg2); border-radius:var(--r-m);
+  box-shadow:0 10px 22px color-mix(in srgb, var(--c-ink) 14%, transparent);
+  transform:rotate(var(--tq-tls-a1));
+}
+.tq-tls__chart--flat{ transform:none }
+.tq-tls__chart dl{
+  display:grid; grid-template-columns:auto 1fr; gap:var(--s2) var(--s3);
+  margin:0; font-size:var(--fs-note);
+}
+.tq-tls__chart dt{ font-weight:700; color:var(--c-ink); white-space:nowrap }
+.tq-tls__chart dd{ margin:0; color:var(--c-ink3) }
+
+@media (max-width:640px){
+  .tq-tls__scene{ grid-template-columns:1fr; justify-items:center; gap:var(--s5) }
+  .tq-tls__group{ width:100% }
+  .tq-tls__grid{ grid-template-columns:1fr 1fr }
+  .tq-tls__grid img:nth-child(3){ display:none }
+}
+</style>
+
+<div class="tq-tls">
+
+  <p class="tq-tls__lead">
+    写真を2枚1組にし、−4度と＋3度で逆向きに傾ける。上の1枚の右下角と下の1枚の左上角を数十px重ねて階段状にずらす。
+    左右に置く組は傾きを鏡像にする。水平な写真を1枚も残さないのが条件。
+  </p>
+
+  <!-- ① 普通 -->
+  <section class="tq-tls__sec">
+    <h3 class="tq-tls__secttl">① 普通：水平のまま等間隔のグリッドに並べる</h3>
+    <div class="tq-tls__grid">
+      <img src="../../../docs/demo/ph_a.jpg" alt="">
+      <img src="../../../docs/demo/ph_b.jpg" alt="">
+      <img src="../../../docs/demo/ph_a.jpg" alt="">
+    </div>
+    <p class="tq-tls__note">整っているぶん、記録写真のアーカイブに見える。1枚ずつが独立した資料として読まれる。</p>
+  </section>
+
+  <!-- ② この工夫 -->
+  <section class="tq-tls__sec">
+    <h3 class="tq-tls__secttl">② この工夫：逆向きに傾け、角を重ね、左右で鏡像にする</h3>
+    <div class="tq-tls__scene">
+      <div class="tq-tls__group">
+        <img class="tq-tls__ph" src="../../../docs/demo/ph_a.jpg" alt="">
+        <img class="tq-tls__ph" src="../../../docs/demo/ph_b.jpg" alt="">
+      </div>
+      <div class="tq-tls__ring">見出しが<br>ここに<br>入ります</div>
+      <div class="tq-tls__group tq-tls__group--r">
+        <img class="tq-tls__ph" src="../../../docs/demo/ph_b.jpg" alt="">
+        <img class="tq-tls__ph" src="../../../docs/demo/ph_a.jpg" alt="">
+      </div>
+    </div>
+    <p class="tq-tls__note">
+      水平な写真が1枚も無くなるので、記録写真がアーカイブでなくスナップの束に見える。
+      中央の正円だけが水平・幾何のまま残るので、傾きが偶然でなく意図だと分かる。
+    </p>
+  </section>
+
+  <!-- ③ 避ける -->
+  <section class="tq-tls__sec">
+    <h3 class="tq-tls__secttl">③ 避ける</h3>
+    <div class="tq-tls__pair">
+      <div>
+        <p class="tq-tls__cap">全部同じ向きに傾けるだけ</p>
+        <div class="tq-tls__group tq-tls__same">
+          <img class="tq-tls__ph" src="../../../docs/demo/ph_a.jpg" alt="">
+          <img class="tq-tls__ph" src="../../../docs/demo/ph_b.jpg" alt="">
+        </div>
+        <p class="tq-tls__note">同じ向きだと2枚が平行のまま。ただ斜めに置いた版面で、束の感じは出ない。</p>
+      </div>
+      <div>
+        <p class="tq-tls__cap">1枚だけ水平に残す</p>
+        <div class="tq-tls__group tq-tls__flat">
+          <img class="tq-tls__ph" src="../../../docs/demo/ph_a.jpg" alt="">
+          <img class="tq-tls__ph" src="../../../docs/demo/ph_b.jpg" alt="">
+        </div>
+        <p class="tq-tls__note">水平が1枚混ざると、傾きが意図でなく「ズレた」に見える。</p>
+      </div>
+    </div>
+
+    <div class="tq-tls__pair tq-tls__pair--gap">
+      <div>
+        <p class="tq-tls__cap">文字入りの図・図表は傾けない</p>
+        <div class="tq-tls__chart">
+          <dl>
+            <dt>項目</dt><dd>内容がここに入ります</dd>
+            <dt>項目</dt><dd>内容がここに入ります</dd>
+            <dt>項目</dt><dd>内容がここに入ります</dd>
+          </dl>
+        </div>
+      </div>
+      <div>
+        <p class="tq-tls__cap">図表は水平のまま（正しい扱い）</p>
+        <div class="tq-tls__chart tq-tls__chart--flat">
+          <dl>
+            <dt>項目</dt><dd>内容がここに入ります</dd>
+            <dt>項目</dt><dd>内容がここに入ります</dd>
+            <dt>項目</dt><dd>内容がここに入ります</dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+    <p class="tq-tls__note">傾けてよいのは写真だけ。読ませる要素を傾けると、装飾のために可読性を落としたことになる。</p>
+  </section>
+
+</div>

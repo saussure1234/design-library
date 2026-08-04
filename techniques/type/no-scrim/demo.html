@@ -1,0 +1,151 @@
+<style>
+/* トークンのフォールバック。:where() で詰めているので、
+   _tokens.css が読み込まれていればそちらが必ず勝つ。 */
+:where(:root){
+  --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-disp:var(--f-sans); --f-num:"Helvetica Neue",Arial,var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+  --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px; --fs-3xl:50px; --fs-4xl:64px;
+  --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px; --s8:76px; --s9:110px;
+  --sec-y:clamp(56px,7vw,110px);
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --shadow:0 6px 24px rgba(17,17,17,.08);
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+:where(body){margin:0}
+
+.tq-nosc{
+  /* 見出しに当てる明朝。案件では :root の --f-disp を差し替える */
+  --f-disp:"Noto Serif JP","Hiragino Mincho ProN","Yu Mincho",serif;
+  /* デモ用の見本画像を実写の濃さに近づける。4枚すべてに同じ値を掛けており、工夫の一部ではない */
+  --tq-sim:brightness(.62) saturate(1.25);
+  font-family:var(--f-sans); color:var(--c-ink2); background:var(--c-bg);
+  padding-block:var(--s7);
+}
+.tq-nosc *{box-sizing:border-box}
+.tq-nosc__wrap{max-width:var(--w-max); margin-inline:auto; padding-inline:var(--w-gut)}
+.tq-nosc__note{
+  margin:0 0 var(--s6); padding:var(--s3) var(--s4);
+  background:var(--c-bg2); border-radius:var(--r-s);
+  font-size:var(--fs-note); line-height:var(--lh-head); color:var(--c-ink3);
+}
+.tq-nosc__grid{display:grid; grid-template-columns:1fr 1fr; gap:var(--s6)}
+.tq-nosc__grid>*{min-width:0}
+.tq-nosc__tag{
+  display:inline-block; margin:0 0 var(--s4);
+  font-size:var(--fs-note); letter-spacing:.08em; line-height:1;
+  padding:var(--s2) var(--s3); border-radius:var(--r-pill);
+  background:var(--c-bg2); color:var(--c-ink3);
+}
+.tq-nosc__tag--on{background:var(--c-primary-l); color:var(--c-primary-d)}
+.tq-nosc__cap{margin:var(--s4) 0 0; font-size:var(--fs-sm); line-height:var(--lh-head); color:var(--c-ink3)}
+
+/* ============ 舞台 ============ */
+.tq-nosc__stage{
+  position:relative; margin:0; aspect-ratio:4/3;
+  overflow:hidden; border-radius:var(--r-m); background:var(--c-line);
+}
+.tq-nosc__stage img{
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:cover; display:block; filter:var(--tq-sim);
+}
+
+/* ============ 普通：全面に黒の半透明スクリム＋太ゴシック ============ */
+.tq-nosc__scrim{position:absolute; inset:0; background:color-mix(in srgb, var(--c-ink) 45%, transparent)}
+.tq-nosc__h{
+  position:absolute; left:0; right:0; top:50%; transform:translateY(-50%);
+  margin:0; padding-inline:var(--s5); text-align:center; color:var(--c-bg);
+}
+.tq-nosc__h--gothic{
+  font-family:var(--f-sans); font-weight:800;
+  font-size:clamp(20px,2.4vw,28px); letter-spacing:.02em; line-height:var(--lh-tight);
+}
+
+/* ============ 工夫：オーバーレイ無し。明朝＋影だけで浮かせる ============ */
+.tq-nosc__h--serif{
+  font-family:var(--f-disp); font-weight:400;
+  font-size:clamp(20px,2.4vw,28px); letter-spacing:.08em; line-height:1.6;
+  text-shadow:
+    0 2px 12px color-mix(in srgb, var(--c-ink) 45%, transparent),
+    0 0 2px color-mix(in srgb, var(--c-ink) 25%, transparent);
+}
+
+/* ============ 工夫：スクリムを足すとしても文字の行だけに限定する ============ */
+.tq-nosc__h--low{top:auto; bottom:var(--s5); transform:none}
+.tq-nosc__hemline{
+  position:absolute; inset:auto 0 0 0; height:38%;
+  background:linear-gradient(transparent, color-mix(in srgb, var(--c-ink) 28%, transparent));
+}
+
+/* ============ 工夫：縦組みを被写体の隙間へ流す ============ */
+.tq-nosc__vert{
+  position:absolute; left:7%; top:9%; margin:0;
+  writing-mode:vertical-rl; text-orientation:mixed;
+  font-family:var(--f-disp); font-weight:400; color:var(--c-bg);
+  font-size:clamp(15px,1.7vw,19px); letter-spacing:.16em; line-height:2.2;
+  text-shadow:
+    0 2px 12px color-mix(in srgb, var(--c-ink) 45%, transparent),
+    0 0 2px color-mix(in srgb, var(--c-ink) 25%, transparent);
+}
+
+@media (max-width:820px){
+  .tq-nosc__grid{grid-template-columns:1fr; gap:var(--s7)}
+}
+</style>
+
+<section class="tq-nosc">
+  <div class="tq-nosc__wrap">
+
+    <p class="tq-nosc__note">※ デモの写真は淡い見本画像なので、実写の濃さに近づけるため4枚とも img に同じ filter を掛けている（工夫の一部ではない）。4枚の違いは文字の載せ方だけ。</p>
+
+    <div class="tq-nosc__grid">
+
+      <!-- ============ 普通 ============ -->
+      <div>
+        <p class="tq-nosc__tag">普通の場合</p>
+        <figure class="tq-nosc__stage">
+          <img src="../../../docs/demo/ph_a.jpg" alt="">
+          <div class="tq-nosc__scrim"></div>
+          <h3 class="tq-nosc__h tq-nosc__h--gothic">見出しがここに<br>入ります</h3>
+        </figure>
+        <p class="tq-nosc__cap">太ゴシックの白見出し＋全面に黒の半透明スクリム。読めるが、写真の色は一段濁って灰色に寄る。</p>
+      </div>
+
+      <!-- ============ 工夫1 ============ -->
+      <div>
+        <p class="tq-nosc__tag tq-nosc__tag--on">この工夫（明朝＋影だけ）</p>
+        <figure class="tq-nosc__stage">
+          <img src="../../../docs/demo/ph_a.jpg" alt="">
+          <h3 class="tq-nosc__h tq-nosc__h--serif">見出しがここに<br>入ります</h3>
+        </figure>
+        <p class="tq-nosc__cap">オーバーレイを一切敷かず、text-shadow のぼかし12px・不透明度45%だけで浮かせる。写真の色が濁らず、明朝の細い線が地の騒がしさを鎮める。</p>
+      </div>
+
+      <!-- ============ 工夫2 ============ -->
+      <div>
+        <p class="tq-nosc__tag tq-nosc__tag--on">この工夫（敷くなら文字の行だけ）</p>
+        <figure class="tq-nosc__stage">
+          <img src="../../../docs/demo/ph_a.jpg" alt="">
+          <div class="tq-nosc__hemline"></div>
+          <h3 class="tq-nosc__h tq-nosc__h--serif tq-nosc__h--low">見出しがここに<br>入ります</h3>
+        </figure>
+        <p class="tq-nosc__cap">どうしても足りないときも、下端38%だけにグラデを掛けて文字の行に限定する。写真の上2/3は素のまま残る。</p>
+      </div>
+
+      <!-- ============ 工夫3 ============ -->
+      <div>
+        <p class="tq-nosc__tag tq-nosc__tag--on">この工夫（被写体の隙間へ流す）</p>
+        <figure class="tq-nosc__stage">
+          <img src="../../../docs/demo/ph_b.jpg" alt="">
+          <p class="tq-nosc__vert">見出しがここに<br>入ります</p>
+        </figure>
+        <p class="tq-nosc__cap">明るい写真はそのまま使い、縦組みを被写体の縦の隙間へ流して文字と被写体を重ねない。暗さを足さずに読める場所を探す方法。</p>
+      </div>
+
+    </div>
+  </div>
+</section>

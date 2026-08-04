@@ -1,0 +1,31 @@
+{
+  "id": "type/vertical-edge-tab",
+  "name": "縦組みのCTA・ナビを版面の外（画面端）へ貼り付けて断ち落とす",
+  "ordinary": "資料請求ボタンは横組みで、ヘッダー右か画面下部の固定バーに置く。",
+  "actual": "画面右端に「資料請求」「教室説明会」の縦組みタブを fixed で貼り、左側だけ角丸・右は画面外へ数px切る。明星小は逆に一覧の左の綴じ代列へ幅56px×高さ120pxの縦ピル（「もっと見る」＋下端に白丸矢印）を置き、CTAを一覧の下から左の柱へ移した。追手門は右端14pxに「PAGE TO TOP」を90°倒し、下端から1px×64pxの縦線を伸ばして黒の段差をまたがせる。リニエは同じ縦ピルを円の輪郭にまたがせて境界を分断する使い方もしている。",
+  "css": ".side{position:fixed; right:0; top:32%; display:grid; gap:10px; z-index:5}\n.side a{writing-mode:vertical-rl; padding:18px 10px; border-radius:8px 0 0 8px; letter-spacing:.18em; background:#fff; box-shadow:0 2px 10px rgba(0,0,0,.08)}\n.v-more{writing-mode:vertical-rl; width:56px; height:120px; border-radius:999px; background:#8c2b30; color:#fff; display:grid; place-items:center; padding-bottom:16px; position:relative}\n.v-more::after{content:\"→\"; position:absolute; bottom:10px; width:22px; height:22px; border-radius:50%; background:#fff; color:#8c2b30; display:grid; place-items:center; font-size:10px}\n.to-top{position:absolute; right:14px; writing-mode:vertical-rl; font-size:9px; letter-spacing:.2em; color:#8a8a8a}\n.to-top::after{content:''; display:block; width:1px; height:64px; background:#555; margin:10px auto 0}",
+  "appliesTo": ["cta", "nav", "news", "footer"],
+  "impact": 2,
+  "effort": 2,
+  "why": "縦組みと端の断ち落としを組めば、版面の中身を1pxも削らずに常設導線を置ける。",
+  "avoid": "モバイル（幅を食って本文に被る）。SPでは下部バーへ切り替える前提で使う。",
+  "params": [
+    "貼る辺(右/左/一覧の綴じ代)",
+    "はみ出し量(0〜14px)",
+    "角丸を内側だけにするか",
+    "fixed か absolute か"
+  ],
+  "sources": ["linie_s01", "gakugei_s01", "meisei-kg_s10", "meisei-es_s09", "odrive_s13", "linie_s03"],
+  "notes": [
+    "「切れている」ことを見せるのは right:-Npx ではなく、切る側の overflow:hidden。デモでは画面に見立てた箱に overflow:hidden を掛けている。本番は body 側で切れるので、タブ自身には right:0（または負値）と border-radius の片側指定だけで足りる。",
+    "はみ出し量ぶん padding-right を足しておかないと、文字が端に寄って読めなくなる。padding-right:calc(基準 + はみ出し量) にすると、はみ出し量を変えても文字位置が動かない。",
+    "角丸は内側（左）だけ。四隅を丸めると『浮いているボタン』に見えて、端に貼り付いている感じが消える。現物（linie_s01・gakugei_s01）はどれも左2箇所だけ。",
+    "綴じ代の縦ピル（meisei-es_s09）は実測で幅56px・高さ120px、下端に直径22px前後の白丸矢印。矢印を入れる分だけ padding-bottom を確保しないと文字が中央に来ず、丸に重なる。丸の中の矢印だけは writing-mode:horizontal-tb に戻す必要がある（戻さないと矢印が倒れる）。",
+    "odrive_s13 の縦線は、footer 本体と最下部の帯（わずかに明るい黒）の境界をまたぐ位置に置かれている。線が2つの面を貫くので『版面がここで終わる』ことが線1本で分かる。色の段差はデモでは color-mix(in srgb, var(--c-bg) 8%, var(--c-ink)) で作った。",
+    "SP の切り替えは『既定で下部バーを display:none → メディアクエリで display:grid、同時に端タブを display:none』の順で書く。逆順にすると後勝ちで下部バーが出なくなる（実装時に踏んだ）。",
+    "linie_s03 の応用は、端ではなく円の輪郭にまたがせる型。断ち落とす対象が『画面の端』でなく『図形の境界』に変わっただけで、原理は同じ。",
+    "z-index はタブ側にだけ与える。写真やカードに z-index を振ると、fixed のタブが下に潜って消えることがある。",
+    "縦タブは意外に背が高い（4文字で約110px）。2段重ねると 240px 前後になるので、top は 12〜15% までにしないと短いビューポートで下のタブが切れる。ラベルは4文字までが実用線。"
+  ],
+  "demoNotes": "①同じ2つの導線を『ヘッダー右の横ボタン』と『右端の縦タブ＋10px断ち落とし』で対比。②貼る辺3通り（画面右端／一覧の綴じ代の縦ピル／右端14pxのPAGE TO TOP＋段差をまたぐ縦線）。③円の輪郭にまたがせる応用と、520px未満で下部バーへ入れ替わる挙動。画面幅を狭めると③右のステージでタブが消える。"
+}

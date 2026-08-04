@@ -1,0 +1,26 @@
+{
+  "id": "overlap/circles-interlock",
+  "name": "円どうしを食い込ませ、欠けさせて噛み合わせる",
+  "ordinary": "円は等間隔に並べ、中心の円と線でつないだ関係図にする",
+  "actual": "直径100pxの円形写真（紺の太リング付き）の左下に、やや小さい時計の円を25px重ね、時計の右側は写真円の下に隠れて見えない（sho_kidsduo_s08）。直径150pxの黄円が上の水色円と右下の紫円の縁に明確に食い込み、重なった側は黄が上に来て下の円を隠す（sho_kimini_s05）。太い白のドーナツの上に臙脂の円を3つ置くが、各円は内側の白い円盤に手前から覆われ、円周の内側寄りが弧で欠ける＝3つとも欠け方が中心方向に揃う（meisei-kg_s05）。",
+  "css": "/* 2円を噛み合わせる */\n.photo{position:relative; z-index:2; width:100px; aspect-ratio:1;\n  border-radius:50%; border:4px solid #12569e; overflow:hidden}\n.clock{position:absolute; z-index:1; left:-58px; bottom:6px;\n  width:82px; aspect-ratio:1; border-radius:50%; border:4px solid #12569e;\n  background:conic-gradient(#f5b731 0 25%,#fff 0)}\n\n/* 中心の円を\"まとめ\"にする */\n.hub{position:absolute; left:50%; top:50%; translate:-50% -50%; z-index:2;\n  width:150px; aspect-ratio:1; border-radius:50%; background:#f5d928;\n  display:grid; place-items:center; text-align:center; padding:16px}\n\n/* リングに埋め込んで欠けさせる（欠けを中心方向に揃える） */\n.ring{position:relative; width:230px; aspect-ratio:1; border-radius:50%; background:#fff}\n.dot{position:absolute; z-index:1; width:76px; aspect-ratio:1;\n  border-radius:50%; background:#7b2230}\n.hole{position:absolute; z-index:2; inset:38px; border-radius:50%; background:#fff}",
+  "appliesTo": ["features", "value", "price", "access"],
+  "impact": 3,
+  "effort": 2,
+  "why": "別情報の2円が物理的に噛み合うと1かたまりに見え、線を引かずに「まとめ」「所属」「同時に起きる」の関係が伝わる",
+  "params": [
+    "食い込み量（直径の15〜30%）",
+    "欠けの向き（中心方向に揃える）",
+    "前後（まとめ役を常に上）"
+  ],
+  "avoid": "円の中に長い日本語テキストを入れる必要があるとき（欠けと文字が競合する）",
+  "sources": ["sho_kidsduo_s08", "sho_kimini_s05", "meisei-kg_s05"],
+  "notes": [
+    "食い込み量は「直径の何%か」で持つと崩れない。demoは 112px の写真円に対して 30px（27%）、110px の円に対して 25px（23%）。15%未満だと“ぶつかった事故”、35%を超えると下の円の情報が読めなくなる。20〜27%が安全域。",
+    "リング版（meisei-kg_s05）は、外側の円盤と内側の円盤【2枚】で挟むのが実装。dot（z-index:1）を置いてから hole（z-index:2）を inset で被せると、3つの円が同時に・同じ深さで・中心方向にだけ欠ける。欠けを1つずつ clip-path で作ると角度がばらつくので、必ず1枚の円盤で一括して食わせる。",
+    "この demo の寸法：リング直径240px／dot 60px／dot中心は半径84px／hole は inset:52px（＝半径68px）。dotは中心から54〜114pxを占めるので、内側14pxが弧で欠け、外側6pxがリングの内側に収まる。この「外側を6pxだけ残す」が、埋まって見えるか浮いて見えるかの分かれ目。",
+    "文字は【欠けていない側】に置く。demoではラベルを半径95px相当（外側の帯）に絞って配置した。円の中央に置くと hole に食われて消える。円の中に2行以上入れたくなったら、この技ではなく普通の円グリッドに戻す。",
+    "dotの角度配置は rotate→translateY の組み合わせが最短：`left:50%; top:50%; margin:-30px 0 0 -30px;` で中心合わせ→`transform:rotate(θ) translateY(-84px)`。ラベルだけは回転させたくないので、dotの子にせず ring の直下に別要素で置いて座標を直書きした（回転を打ち消す二重rotateより読みやすい）。",
+    "時計の円は conic-gradient 1本で足りる。`conic-gradient(from 180deg, accent 0 25%, bg 0)` の最後の `0` は直前の停止位置に丸められるので、25%以降がベタになる。from の角度で扇の向きを変えられるので、【隠れる側に扇が来ないよう】from を回すこと（demoは重なる右側を避けて180degにした）。"
+  ]
+}

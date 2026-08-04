@@ -118,7 +118,11 @@ def build(kit_path, out_path):
             data.update(s.get("inline", {}))
         html, css, meta = load_part(pid)
         css_chunks.append(f"/* ===== {pid} ===== */\n{css}")
-        html_chunks.append(f"<!-- {pid} -->\n" + render(html, data))
+        body = render(html, data)
+        tone = s.get("tone") if isinstance(s, dict) else None
+        if tone:
+            body = f'<div class="tone-{tone}">\n{body}\n</div>'
+        html_chunks.append(f"<!-- {pid} ({tone or 'base'}) -->\n" + body)
         used.append(f"{pid} ({meta.get('name', '')})")
 
     page = f"""<!DOCTYPE html>

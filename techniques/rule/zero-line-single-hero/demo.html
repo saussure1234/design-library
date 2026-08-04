@@ -1,0 +1,389 @@
+<style>
+/* ============================================================
+   rule/zero-line-single-hero
+   セクション内の線をゼロにして、唯一の「形」か「色」を1つに絞る
+   ============================================================ */
+
+@layer tq-fallback{
+  :root{
+    --c-primary:#00B220; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+    --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+    --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3;
+    --c-on-primary:#FFFFFF;
+    --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    --f-disp:var(--f-sans);
+    --f-num:"Helvetica Neue",Arial,var(--f-sans);
+    --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+    --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+    --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+    --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+    --shadow:0 6px 24px rgba(17,17,17,.08);
+  }
+}
+
+:root{
+  --tq-zls-ash:#E9E9EF;     /* 面その1（2〜3階調しか使わない） */
+  --tq-zls-ash2:#F3F3F7;    /* 面その2 */
+  --tq-zls-cream:#F8F4EB;   /* 弧の写真を置く地（yugao_s01 実測） */
+  --tq-zls-navy:#1B2540;    /* 濃紺の正円（ogawa_s05） */
+  --tq-zls-lime:#A1ED73;    /* 蛍光グリーンのベタ地（gakugei_s07 実測） */
+  --tq-zls-dark:#111214;    /* 黒に近い地（odrive_s09 実測） */
+  --tq-zls-red:#E2231A;     /* 暗い地の上の日付1行 */
+  /* 版面の刻み。工夫の本体なのでここで宣言する */
+  --tq-zls-gap:40px;        /* カラム間 40〜45px。区切りはこの余白と写真の矩形が担う */
+  --tq-zls-dot:12px;        /* 差し色の白い円1点 */
+  --tq-zls-fs-arrow:18px;   /* リンクを担う矢印グリフ1文字 */
+  --tq-zls-fs-date:10px;    /* 暗い地の上の日付一行 */
+}
+
+.tq-zls{
+  font-family:var(--f-sans); color:var(--c-ink2);
+  line-height:var(--lh-head); -webkit-text-size-adjust:100%;
+  padding:var(--s5); background:var(--c-bg);
+}
+.tq-zls *{ box-sizing:border-box }
+
+/* --- デモの見出し・注記 ------------------------------------ */
+.tq-zls__lead{
+  margin:0 0 var(--s5); font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-zls__sec{ margin-top:var(--s7) }
+.tq-zls__sec:first-of-type{ margin-top:0 }
+.tq-zls__secttl{
+  margin:0 0 var(--s4); font-size:var(--fs-sm); font-weight:700; color:var(--c-ink);
+}
+.tq-zls__cap{
+  display:flex; align-items:center; gap:var(--s2);
+  margin:0 0 var(--s3); font-size:var(--fs-note); font-weight:700;
+  color:var(--c-ink3); letter-spacing:.04em;
+}
+.tq-zls__cap::before{
+  content:""; width:var(--s5); height:1px; background:var(--c-line); flex:0 0 auto;
+}
+.tq-zls__note{
+  margin:var(--s3) 0 0; font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-zls__pair{
+  display:grid; gap:var(--s5);
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+}
+
+/* === ① 普通：カード＋枠線＋影＋キャプション ================ */
+.tq-zls__stage{ background:var(--tq-zls-ash); padding:var(--s5) }
+.tq-zls__cols{
+  display:grid; gap:var(--tq-zls-gap);
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+}
+.tq-zls__card{
+  background:var(--c-bg); border:1px solid var(--c-line);
+  border-radius:var(--r-m); box-shadow:var(--shadow); padding:var(--s3);
+}
+.tq-zls__card img{
+  display:block; width:100%; aspect-ratio:4/3; object-fit:cover;
+  border-radius:var(--r-s);
+}
+.tq-zls__figcap{
+  margin:var(--s2) 0 0; padding-top:var(--s2);
+  border-top:1px solid var(--c-line);
+  font-size:var(--fs-note); color:var(--c-ink3);
+}
+.tq-zls__cttl{
+  margin:var(--s2) 0 0; font-size:var(--fs-sm); font-weight:700; color:var(--c-ink);
+}
+.tq-zls__cbtn{
+  display:inline-block; margin-top:var(--s2); padding:var(--s1) var(--s3);
+  border:1px solid var(--c-line); border-radius:var(--r-s);
+  font-size:var(--fs-note); color:var(--c-ink2);
+}
+
+/* === この工夫：罫・枠・角丸・影・キャプションを全部ゼロに ==== */
+.tq-zls__col{ background:none; border:0; box-shadow:none; padding:0 }
+.tq-zls__col img{
+  display:block; width:100%; aspect-ratio:4/3; object-fit:cover;
+  border-radius:0; box-shadow:none;
+}
+.tq-zls__ttl{
+  margin:var(--s3) 0 0; font-size:var(--fs-sm); font-weight:700; color:var(--c-ink);
+}
+.tq-zls__p{
+  margin:var(--s2) 0 0; font-size:var(--fs-note); line-height:var(--lh-body);
+}
+/* リンクは右下の矢印グリフ1つで足りる */
+.tq-zls__more{
+  display:block; margin-top:var(--s3); text-align:right;
+  font-size:var(--tq-zls-fs-arrow); line-height:1;
+  text-decoration:none; color:var(--c-ink);
+}
+/* 差し色は12pxの白い円1点まで */
+.tq-zls__dot{
+  width:var(--tq-zls-dot); height:var(--tq-zls-dot); border-radius:50%;
+  background:var(--c-bg); display:inline-block; margin-left:var(--s3);
+  vertical-align:middle;
+}
+
+/* === ② 主役にするものを1つだけ選ぶ ======================== */
+.tq-zls__quad{
+  display:grid; gap:var(--s4);
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+}
+.tq-zls__slotttl{
+  margin:0 0 var(--s2); font-size:var(--fs-note); font-weight:700; color:var(--c-ink3);
+}
+
+/* A：写真の弧だけ（yugao_s01） */
+.tq-zls__hero--arc{
+  background:var(--tq-zls-cream); padding:var(--s5) var(--s4);
+}
+.tq-zls__hero--arc img{
+  display:block; width:100%; aspect-ratio:16/9; object-fit:cover;
+  border-radius:50% 50% 0 0 / 14% 14% 0 0;
+  box-shadow:none;
+}
+
+/* B：濃紺の正円だけ（ogawa_s05） */
+.tq-zls__hero--circle{
+  position:relative; background:var(--tq-zls-ash2); overflow:hidden;
+  aspect-ratio:16/12;
+}
+.tq-zls__hero--circle img{
+  display:block; width:72%; height:100%; object-fit:cover; border-radius:0;
+}
+.tq-zls__circle{
+  position:absolute; right:-12%; top:50%; translate:0 -50%;
+  width:74%; aspect-ratio:1; border-radius:50%;
+  background:var(--tq-zls-navy); color:var(--c-on-primary);
+  display:flex; flex-direction:column; justify-content:center;
+  padding-left:13%; padding-right:26%;
+}
+.tq-zls__circle p{ margin:0; font-size:var(--fs-note); line-height:var(--lh-head) }
+.tq-zls__circle p + p{ margin-top:var(--s2); opacity:.8 }
+
+/* C：写真の片側だけを大きく丸めた形（r-reha_s07） */
+.tq-zls__hero--leaf{ background:var(--tq-zls-ash2); padding:var(--s5) var(--s4) }
+.tq-zls__hero--leaf img{
+  display:block; width:100%; aspect-ratio:1/1; object-fit:cover;
+  border-radius:0 50% 50% 0 / 0 50% 50% 0;
+}
+
+/* D：地の彩度だけ（gakugei_s07） */
+.tq-zls__hero--vivid{
+  background:var(--tq-zls-lime); padding:var(--s5) var(--s4);
+  color:var(--c-ink);
+}
+/* .tq-zls__col img{width:100%} より詳細度を上げないと、ロゴが幅いっぱいに伸びる */
+.tq-zls img.tq-zls__mark{ display:block; width:auto; height:26px; aspect-ratio:auto }
+.tq-zls__hero--vivid .tq-zls__ttl{ margin-top:var(--s3) }
+
+/* === ③ 3カラム・カラム間40px・矢印1文字 ==================== */
+.tq-zls__vivid{
+  background:var(--tq-zls-lime); padding:var(--s6) var(--s5); color:var(--c-ink);
+}
+.tq-zls__vivid .tq-zls__cols{ grid-template-columns:repeat(auto-fit,minmax(180px,1fr)) }
+.tq-zls__vivid .tq-zls__ttl{ font-size:var(--fs-sm) }
+
+/* === ④ 効かない条件：同型の情報が多数並ぶ一覧 ============== */
+.tq-zls__dense{
+  background:var(--tq-zls-dark); padding:var(--s5); color:var(--c-bg);
+}
+.tq-zls__dense .tq-zls__cols{
+  grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:var(--s3);
+}
+.tq-zls__dense img{ aspect-ratio:16/10 }
+.tq-zls__date{
+  margin:var(--s2) 0 0; font-family:var(--f-num); font-size:var(--tq-zls-fs-date);
+  letter-spacing:.06em; color:var(--tq-zls-red);
+}
+.tq-zls__dense .tq-zls__ttl{ color:var(--c-bg); margin-top:var(--s1) }
+.tq-zls__dense--wide .tq-zls__cols{ gap:var(--tq-zls-gap) }
+</style>
+
+<div class="tq-zls">
+  <p class="tq-zls__lead">
+    罫・枠・角丸・影・キャプションを全部ゼロにし、面は2〜3階調だけに絞る。
+    残った1つ（写真の弧／濃紺の正円／地の彩度）が自動的に主役になる。
+  </p>
+
+  <!-- ① 普通 / この工夫 -->
+  <section class="tq-zls__sec">
+    <h3 class="tq-zls__secttl">① 同じ3カラムで、囲いを足すか全部抜くかを変える</h3>
+    <div class="tq-zls__pair">
+
+      <div>
+        <p class="tq-zls__cap">普通：白カード＋枠線＋影＋キャプション</p>
+        <div class="tq-zls__stage">
+          <div class="tq-zls__cols">
+            <article class="tq-zls__card">
+              <img src="../../../docs/demo/ph_a.jpg" alt="">
+              <p class="tq-zls__figcap">写真のキャプション</p>
+              <h4 class="tq-zls__cttl">見出しが入ります</h4>
+              <span class="tq-zls__cbtn">詳しく見る</span>
+            </article>
+            <article class="tq-zls__card">
+              <img src="../../../docs/demo/ph_b.jpg" alt="">
+              <p class="tq-zls__figcap">写真のキャプション</p>
+              <h4 class="tq-zls__cttl">見出しが入ります</h4>
+              <span class="tq-zls__cbtn">詳しく見る</span>
+            </article>
+          </div>
+        </div>
+        <p class="tq-zls__note">枠・影・キャプション罫・ボタン枠で、矩形が1カラムに4つある。どれが主役か決まらない。</p>
+      </div>
+
+      <div>
+        <p class="tq-zls__cap">この工夫：線ゼロ。区切りは40pxの余白と写真の矩形だけ</p>
+        <div class="tq-zls__stage">
+          <div class="tq-zls__cols">
+            <article class="tq-zls__col">
+              <img src="../../../docs/demo/ph_a.jpg" alt="">
+              <h4 class="tq-zls__ttl">見出しが入ります</h4>
+              <p class="tq-zls__p">本文テキストが入ります。本文テキストが入ります。</p>
+              <span class="tq-zls__more">→</span>
+            </article>
+            <article class="tq-zls__col">
+              <img src="../../../docs/demo/ph_b.jpg" alt="">
+              <h4 class="tq-zls__ttl">見出しが入ります</h4>
+              <p class="tq-zls__p">本文テキストが入ります。本文テキストが入ります。</p>
+              <span class="tq-zls__more">→</span>
+            </article>
+          </div>
+        </div>
+        <p class="tq-zls__note">矩形は写真だけ。リンクは右下の「→」1文字で足りる。</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ② 主役の選び方 -->
+  <section class="tq-zls__sec">
+    <h3 class="tq-zls__secttl">② 残す1つを何にするか：形か、彩度か（4通り）</h3>
+    <div class="tq-zls__quad">
+
+      <div>
+        <p class="tq-zls__slotttl">A／写真の弧だけ</p>
+        <div class="tq-zls__hero--arc">
+          <img src="../../../docs/demo/ph_a.jpg" alt="">
+        </div>
+      </div>
+
+      <div>
+        <p class="tq-zls__slotttl">B／濃紺の正円だけ</p>
+        <div class="tq-zls__hero--circle">
+          <img src="../../../docs/demo/ph_b.jpg" alt="">
+          <div class="tq-zls__circle">
+            <p>見出しが<br>入ります</p>
+            <p>本文テキストが<br>入ります。</p>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <p class="tq-zls__slotttl">C／写真の片側を大きく丸めた形だけ</p>
+        <div class="tq-zls__hero--leaf">
+          <img src="../../../docs/demo/ph_a.jpg" alt="">
+        </div>
+      </div>
+
+      <div>
+        <p class="tq-zls__slotttl">D／地の彩度だけ</p>
+        <div class="tq-zls__hero--vivid">
+          <img class="tq-zls__mark" src="../../../docs/demo/logo.svg" alt="">
+          <h4 class="tq-zls__ttl">見出しが入ります</h4>
+          <p class="tq-zls__p">本文テキストが入ります。本文テキストが入ります。</p>
+        </div>
+      </div>
+
+    </div>
+    <p class="tq-zls__note">4枚とも、枠・影・キャプション・角丸カードは1つも無い。主役は必ず1枚につき1つ。</p>
+  </section>
+
+  <!-- ③ 地の色を強くする版 -->
+  <section class="tq-zls__sec">
+    <h3 class="tq-zls__secttl">③ 地の色が十分強いときは、囲うと逆に情報が分断される</h3>
+    <div class="tq-zls__vivid">
+      <div class="tq-zls__cols">
+        <article class="tq-zls__col">
+          <img class="tq-zls__mark" src="../../../docs/demo/logo.svg" alt="">
+          <h4 class="tq-zls__ttl">見出しが入ります<span class="tq-zls__dot"></span></h4>
+          <p class="tq-zls__p">本文テキストが入ります。本文テキストが入ります。本文テキストが入ります。</p>
+          <span class="tq-zls__more">→</span>
+        </article>
+        <article class="tq-zls__col">
+          <img class="tq-zls__mark" src="../../../docs/demo/logo.svg" alt="">
+          <h4 class="tq-zls__ttl">見出しが入ります</h4>
+          <p class="tq-zls__p">本文テキストが入ります。本文テキストが入ります。本文テキストが入ります。</p>
+          <span class="tq-zls__more">→</span>
+        </article>
+        <article class="tq-zls__col">
+          <img class="tq-zls__mark" src="../../../docs/demo/logo.svg" alt="">
+          <h4 class="tq-zls__ttl">見出しが入ります</h4>
+          <p class="tq-zls__p">本文テキストが入ります。本文テキストが入ります。本文テキストが入ります。</p>
+          <span class="tq-zls__more">→</span>
+        </article>
+      </div>
+    </div>
+    <p class="tq-zls__note">
+      黒の線画と本文を地に直に置く。カラム間 40px の余白だけが区切りで、白カードは1枚も無い。
+      差し色は 12px の白い円1点まで。
+    </p>
+  </section>
+
+  <!-- ④ 効かない条件 -->
+  <section class="tq-zls__sec">
+    <h3 class="tq-zls__secttl">④ 同型の情報が多数並ぶ一覧では、何が1単位か読めなくなる</h3>
+    <div class="tq-zls__pair">
+
+      <div>
+        <p class="tq-zls__cap">×：同型を詰めて並べる（gap 12px）</p>
+        <div class="tq-zls__dense">
+          <div class="tq-zls__cols">
+            <article class="tq-zls__col">
+              <img src="../../../docs/demo/ph_a.jpg" alt="">
+              <p class="tq-zls__date">2026.09.12UP</p>
+              <h4 class="tq-zls__ttl">見出しがここに…</h4>
+            </article>
+            <article class="tq-zls__col">
+              <img src="../../../docs/demo/ph_b.jpg" alt="">
+              <p class="tq-zls__date">2026.09.05UP</p>
+              <h4 class="tq-zls__ttl">見出しがここに…</h4>
+            </article>
+            <article class="tq-zls__col">
+              <img src="../../../docs/demo/ph_a.jpg" alt="">
+              <p class="tq-zls__date">2026.08.30UP</p>
+              <h4 class="tq-zls__ttl">見出しがここに…</h4>
+            </article>
+          </div>
+        </div>
+        <p class="tq-zls__note">線が無いぶん、隣の写真と本文がどこで切れるか分からない。</p>
+      </div>
+
+      <div>
+        <p class="tq-zls__cap">○：同じ線ゼロのまま、カラム間を40pxに開ける</p>
+        <div class="tq-zls__dense tq-zls__dense--wide">
+          <div class="tq-zls__cols">
+            <article class="tq-zls__col">
+              <img src="../../../docs/demo/ph_a.jpg" alt="">
+              <p class="tq-zls__date">2026.09.12UP</p>
+              <h4 class="tq-zls__ttl">見出しがここに…</h4>
+            </article>
+            <article class="tq-zls__col">
+              <img src="../../../docs/demo/ph_b.jpg" alt="">
+              <p class="tq-zls__date">2026.09.05UP</p>
+              <h4 class="tq-zls__ttl">見出しがここに…</h4>
+            </article>
+            <article class="tq-zls__col">
+              <img src="../../../docs/demo/ph_a.jpg" alt="">
+              <p class="tq-zls__date">2026.08.30UP</p>
+              <h4 class="tq-zls__ttl">見出しがここに…</h4>
+            </article>
+          </div>
+        </div>
+        <p class="tq-zls__note">枠を戻すのではなく、余白の量で1単位を作る。40〜45px が現物の値。</p>
+      </div>
+
+    </div>
+  </section>
+
+</div>

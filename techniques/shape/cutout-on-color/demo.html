@@ -1,0 +1,243 @@
+<style>
+/* ============================================================
+   shape/cutout-on-color
+   背景を抜いた人物を濃い色面に枠なしで直置きし、下端を水平に断つ
+   ============================================================ */
+
+@layer tq-fallback{
+  :root{
+    --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA;
+    --c-accent:#FF9301;
+    --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+    --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3;
+    --c-on-primary:#FFFFFF;
+    --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    --f-disp:var(--f-sans);
+    --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+    --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+    --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+    --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+    --shadow:0 6px 24px rgba(17,17,17,.08);
+  }
+}
+
+/* この工夫のパラメータ。
+   ・切り抜きの輪郭（本番は素材側のPNG。ここでは同じ形をCSSマスクで再現している）
+   ・水平に切る高さ＝色面の下端。torso の縦半径を変えると腰上／膝上が切り替わる */
+:root{
+  /* 腰の上で断つ＝寄りの構図（頭が大きく、胴が短い） */
+  --tq-cut-hx:22%; --tq-cut-hy:15%; --tq-cut-hp:15%;   /* 頭：横半径・縦半径・中心 */
+  --tq-cut-bx:46%; --tq-cut-by:52%; --tq-cut-bp:78%;   /* 胴：横半径・縦半径・中心 */
+}
+
+.tq-cut{
+  font-family:var(--f-sans); color:var(--c-ink2);
+  line-height:var(--lh-head); -webkit-text-size-adjust:100%;
+  padding:var(--s5); background:var(--c-bg);
+}
+.tq-cut *{box-sizing:border-box}
+
+/* --- デモの見出し・注記 ------------------------------------ */
+.tq-cut__lead{
+  margin:0 0 var(--s6); font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-cut__sec{ margin-top:var(--s7) }
+.tq-cut__sec:first-of-type{ margin-top:0 }
+.tq-cut__secttl{
+  margin:0 0 var(--s4); font-size:var(--fs-sm); font-weight:700; color:var(--c-ink);
+}
+.tq-cut__cap{
+  display:flex; align-items:center; gap:var(--s2);
+  margin:0 0 var(--s3); font-size:var(--fs-note); font-weight:700;
+  color:var(--c-ink3); letter-spacing:.04em;
+}
+.tq-cut__cap::before{
+  content:""; width:var(--s5); height:1px; background:var(--c-line); flex:0 0 auto;
+}
+.tq-cut__note{
+  margin:var(--s3) 0 0; font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-cut__pair{
+  display:grid; gap:var(--s5);
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+}
+
+/* --- 色面 --------------------------------------------------- */
+.tq-cut__plane{
+  position:relative; overflow:hidden;
+  background:var(--c-primary);
+  min-height:360px; padding:var(--s6) var(--s5) var(--s5);
+}
+.tq-cut__plane--pale{ background:var(--c-primary-l) }
+.tq-cut__ttl{
+  position:relative; z-index:2; margin:0 auto; max-width:18em; text-align:center;
+  font-family:var(--f-disp); font-size:var(--fs-md); font-weight:700;
+  line-height:var(--lh-head); color:var(--c-on-primary);
+}
+.tq-cut__body{
+  position:relative; z-index:2; margin:var(--s4) auto 0; max-width:20em; text-align:center;
+  font-size:var(--fs-sm); line-height:var(--lh-body); color:var(--c-on-primary);
+}
+.tq-cut__plane--pale .tq-cut__ttl,
+.tq-cut__plane--pale .tq-cut__body{ color:var(--c-ink) }
+
+/* --- ① 普通：角丸の矩形写真をカードとして置く ---------------- */
+.tq-cut__card{
+  position:absolute; bottom:var(--s5); width:34%; max-width:170px; height:110px;
+  object-fit:cover; border-radius:var(--r-m);
+  box-shadow:var(--shadow);
+}
+.tq-cut__card--l{ left:var(--s4) }
+.tq-cut__card--r{ right:var(--s4) }
+
+/* --- ② この工夫：背景を抜いた人物を枠なしで直置きする -------- */
+/* 本番は素材側で輪郭を切り抜き＋下辺だけ水平カットしたPNGを使う。
+   ここでは同じ形になるよう CSSマスク（頭＋胴の2レイヤ）で再現している。
+   マスクは不透明かどうかしか見ないので、色は --c-ink を流用してトークン契約のまま書ける。 */
+.tq-cut__fig{
+  position:absolute; bottom:0; width:30%; max-width:150px; height:215px;
+  object-fit:cover; object-position:center 30%;
+  /* 枠・角丸・影・フィルタは一切なし */
+  border-radius:0; box-shadow:none; filter:none;
+  -webkit-mask-image:
+    radial-gradient(var(--tq-cut-hx) var(--tq-cut-hy) at 50% var(--tq-cut-hp), var(--c-ink) 99%, transparent 100%),
+    radial-gradient(var(--tq-cut-bx) var(--tq-cut-by) at 50% var(--tq-cut-bp), var(--c-ink) 99%, transparent 100%);
+          mask-image:
+    radial-gradient(var(--tq-cut-hx) var(--tq-cut-hy) at 50% var(--tq-cut-hp), var(--c-ink) 99%, transparent 100%),
+    radial-gradient(var(--tq-cut-bx) var(--tq-cut-by) at 50% var(--tq-cut-bp), var(--c-ink) 99%, transparent 100%);
+}
+.tq-cut__fig--l{ left:1% }
+.tq-cut__fig--r{ right:1% }
+/* 膝の上で断つ＝引きの構図（頭が小さく上に、胴が長い） */
+.tq-cut__fig--knee{
+  --tq-cut-hx:15%; --tq-cut-hy:10%; --tq-cut-hp:9%;
+  --tq-cut-bx:36%; --tq-cut-by:62%; --tq-cut-bp:70%;
+}
+
+/* --- ③ 効果が消える例：切り抜きに枠・角丸・影を足す ---------- */
+.tq-cut__fig--framed{
+  background:var(--c-bg);
+  border-radius:var(--r-m);
+  box-shadow:var(--shadow);
+  -webkit-mask-image:none; mask-image:none;
+  height:150px;
+}
+
+@media (max-width:520px){
+  .tq-cut__plane{ min-height:300px }
+  .tq-cut__fig{ height:170px; width:34% }
+  .tq-cut__card{ height:84px; width:38% }
+}
+</style>
+
+<div class="tq-cut">
+
+  <p class="tq-cut__lead">
+    濃い色面の全面ベタに、背景を抜いた人物だけを置く。枠・角丸・影・フィルタは一切なし。
+    胴体の途中で水平にスパッと断って半身にし、色面の下端に立たせる。
+  </p>
+
+  <!-- ① 普通 / この工夫 -->
+  <section class="tq-cut__sec">
+    <h3 class="tq-cut__secttl">① 同じ色面・同じ写真で、写真の置き方だけを変える</h3>
+    <div class="tq-cut__pair">
+      <div>
+        <p class="tq-cut__cap">普通：角丸の矩形写真をカードとして左右に置く</p>
+        <div class="tq-cut__plane">
+          <p class="tq-cut__ttl">見出しがここに入ります</p>
+          <p class="tq-cut__body">本文がここに入ります。本文がここに入ります。</p>
+          <img class="tq-cut__card tq-cut__card--l" src="../../../docs/demo/ph_a.jpg" alt="">
+          <img class="tq-cut__card tq-cut__card--r" src="../../../docs/demo/ph_b.jpg" alt="">
+        </div>
+        <p class="tq-cut__note">写真は「色面の上に置かれた素材」として読まれる。矩形・角丸・影が全部その合図になっている。</p>
+      </div>
+      <div>
+        <p class="tq-cut__cap">この工夫：背景を抜いて枠なしで直置き・下端を水平に断つ</p>
+        <div class="tq-cut__plane">
+          <p class="tq-cut__ttl">見出しがここに入ります</p>
+          <p class="tq-cut__body">本文がここに入ります。本文がここに入ります。</p>
+          <img class="tq-cut__fig tq-cut__fig--l" src="../../../docs/demo/ph_a.jpg" alt="">
+          <img class="tq-cut__fig tq-cut__fig--r" src="../../../docs/demo/ph_b.jpg" alt="">
+        </div>
+        <p class="tq-cut__note">矩形が消えるので、写真が「その場にいる人」として読める。下端は色面の下端と一致した水平の直線。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ② 水平に切る高さ -->
+  <section class="tq-cut__sec">
+    <h3 class="tq-cut__secttl">② 水平に切る高さで距離感が変わる</h3>
+    <div class="tq-cut__pair">
+      <div>
+        <p class="tq-cut__cap">腰の上で断つ（近い・話しかけられている）</p>
+        <div class="tq-cut__plane">
+          <p class="tq-cut__ttl">見出しがここに入ります</p>
+          <img class="tq-cut__fig tq-cut__fig--l" src="../../../docs/demo/ph_a.jpg" alt="">
+          <img class="tq-cut__fig tq-cut__fig--r" src="../../../docs/demo/ph_b.jpg" alt="">
+        </div>
+      </div>
+      <div>
+        <p class="tq-cut__cap">膝の上で断つ（引き・その場にいる）</p>
+        <div class="tq-cut__plane">
+          <p class="tq-cut__ttl">見出しがここに入ります</p>
+          <img class="tq-cut__fig tq-cut__fig--l tq-cut__fig--knee" src="../../../docs/demo/ph_a.jpg" alt="">
+          <img class="tq-cut__fig tq-cut__fig--r tq-cut__fig--knee" src="../../../docs/demo/ph_b.jpg" alt="">
+        </div>
+      </div>
+    </div>
+    <p class="tq-cut__note">切る位置は素材側で決めるのが本筋。CSSで再現するならマスクの縦半径だけを変える。</p>
+  </section>
+
+  <!-- ③ 地の色 -->
+  <section class="tq-cut__sec">
+    <h3 class="tq-cut__secttl">③ 地の色は濃いほど効く</h3>
+    <div class="tq-cut__pair">
+      <div>
+        <p class="tq-cut__cap">濃い色面</p>
+        <div class="tq-cut__plane">
+          <p class="tq-cut__ttl">見出しがここに入ります</p>
+          <img class="tq-cut__fig tq-cut__fig--l" src="../../../docs/demo/ph_a.jpg" alt="">
+          <img class="tq-cut__fig tq-cut__fig--r" src="../../../docs/demo/ph_b.jpg" alt="">
+        </div>
+      </div>
+      <div>
+        <p class="tq-cut__cap">淡い色面</p>
+        <div class="tq-cut__plane tq-cut__plane--pale">
+          <p class="tq-cut__ttl">見出しがここに入ります</p>
+          <img class="tq-cut__fig tq-cut__fig--l" src="../../../docs/demo/ph_a.jpg" alt="">
+          <img class="tq-cut__fig tq-cut__fig--r" src="../../../docs/demo/ph_b.jpg" alt="">
+        </div>
+      </div>
+    </div>
+    <p class="tq-cut__note">
+      淡い地だと写真と地の明度差が足りず、輪郭が消えて「浮いている人」に見えない。
+      ただし濃い地は髪の毛の切り抜き品質をそのまま暴くので、粗い素材では使わない。
+    </p>
+  </section>
+
+  <!-- ④ 効果が消える例 -->
+  <section class="tq-cut__sec">
+    <h3 class="tq-cut__secttl">④ 避ける：切り抜いても枠・角丸・影を足すと元に戻る</h3>
+    <div class="tq-cut__pair">
+      <div>
+        <p class="tq-cut__cap">この工夫（枠・角丸・影なし）</p>
+        <div class="tq-cut__plane">
+          <img class="tq-cut__fig tq-cut__fig--l" src="../../../docs/demo/ph_a.jpg" alt="">
+          <img class="tq-cut__fig tq-cut__fig--r" src="../../../docs/demo/ph_b.jpg" alt="">
+        </div>
+      </div>
+      <div>
+        <p class="tq-cut__cap">枠・角丸・影を足した場合</p>
+        <div class="tq-cut__plane">
+          <img class="tq-cut__fig tq-cut__fig--l tq-cut__fig--framed" src="../../../docs/demo/ph_a.jpg" alt="">
+          <img class="tq-cut__fig tq-cut__fig--r tq-cut__fig--framed" src="../../../docs/demo/ph_b.jpg" alt="">
+        </div>
+      </div>
+    </div>
+    <p class="tq-cut__note">影が付いた瞬間に「色面の上に置かれた板」に戻る。切り抜きは輪郭だけで成立させる。</p>
+  </section>
+
+</div>

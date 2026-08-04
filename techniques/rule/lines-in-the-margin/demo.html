@@ -1,0 +1,296 @@
+<style>
+/* ============================================================
+   rule/lines-in-the-margin
+   余白は囲わず、切れっぱなしの細線で埋める
+   ============================================================ */
+
+@layer tq-fallback{
+  :root{
+    --c-primary:#00B220; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+    --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+    --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3;
+    --c-on-primary:#FFFFFF;
+    --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    --f-disp:var(--f-sans);
+    --f-num:"Helvetica Neue",Arial,var(--f-sans);
+    --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+    --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+    --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+    --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  }
+}
+
+:root{
+  --tq-lim-cream:#F3F1E1;   /* 斜線を置く地（tanq_s10 実測） */
+  --tq-lim-ink:#3B3A35;     /* 斜線1本目：濃グレー */
+  --tq-lim-beige:#B9AD86;   /* 斜線2本目：ベージュ */
+  --tq-lim-brick:#C46A5A;   /* 斜線3本目：赤茶 */
+  --tq-lim-gold:#C9AD6A;    /* 接線と四芒星（musashino_s08） */
+  --tq-lim-paper:#FFFFFF;   /* 手描き線画を散らす地（meisei-kg_s07） */
+  --tq-lim-doodle:#222222;  /* 手描き線画の線 */
+  /* 線の寸法。工夫の本体なのでここで宣言する */
+  --tq-lim-len1:180px;      /* 斜線の長さ 96〜180px。3本とも違えるのが要点 */
+  --tq-lim-len2:140px;
+  --tq-lim-len3:96px;
+  --tq-lim-tan:110px;       /* 接線の長さ */
+  --tq-lim-deg:-45deg;      /* 斜線の角度 */
+  --tq-lim-tandeg:-38deg;   /* 接線の角度 */
+}
+
+.tq-lim{
+  font-family:var(--f-sans); color:var(--c-ink2);
+  line-height:var(--lh-head); -webkit-text-size-adjust:100%;
+  padding:var(--s5); background:var(--c-bg);
+}
+.tq-lim *{ box-sizing:border-box }
+
+/* --- デモの見出し・注記 ------------------------------------ */
+.tq-lim__lead{
+  margin:0 0 var(--s5); font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-lim__sec{ margin-top:var(--s7) }
+.tq-lim__sec:first-of-type{ margin-top:0 }
+.tq-lim__secttl{
+  margin:0 0 var(--s4); font-size:var(--fs-sm); font-weight:700; color:var(--c-ink);
+}
+.tq-lim__cap{
+  display:flex; align-items:center; gap:var(--s2);
+  margin:0 0 var(--s3); font-size:var(--fs-note); font-weight:700;
+  color:var(--c-ink3); letter-spacing:.04em;
+}
+.tq-lim__cap::before{
+  content:""; width:var(--s5); height:1px; background:var(--c-line); flex:0 0 auto;
+}
+.tq-lim__cap--gap{ margin-top:var(--s6) }
+.tq-lim__note{
+  margin:var(--s3) 0 0; font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-lim__pair{
+  display:grid; gap:var(--s5);
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+}
+
+/* === ① 45°の斜線3本 ======================================== */
+.tq-lim__stage{
+  position:relative; overflow:hidden;
+  background:var(--tq-lim-cream);
+  padding:var(--s7) var(--s5);
+  display:flex; justify-content:center;
+}
+/* 単独で置くときは版面を絞る。面が広すぎると斜線と主役が離れて関係が切れる */
+.tq-lim__stage--solo{ max-width:540px }
+/* 主役（六角に切り抜いた写真） */
+.tq-lim__hex{
+  position:relative; z-index:1;
+  width:100%; max-width:190px; aspect-ratio:1/1.06;
+  clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
+  background:var(--tq-lim-beige);
+  padding:5px;
+}
+.tq-lim__hex img{
+  display:block; width:100%; height:100%; object-fit:cover;
+  clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);
+}
+/* 斜線：長さと色を変えて平行に走らせ、両端は唐突に途切れさせる */
+.tq-lim__slash{
+  position:absolute; height:1px; z-index:0;
+  rotate:var(--tq-lim-deg); transform-origin:50% 50%;
+}
+.tq-lim__slash--1{
+  width:var(--tq-lim-len1); background:var(--tq-lim-ink);
+  right:8%; top:18%;
+}
+.tq-lim__slash--2{
+  width:var(--tq-lim-len2); background:var(--tq-lim-beige);
+  left:2%; top:56%;
+}
+.tq-lim__slash--3{
+  width:var(--tq-lim-len3); background:var(--tq-lim-brick);
+  left:6%; bottom:12%;
+}
+/* 比較用：余白に薄い装飾パターンを敷いた版 */
+.tq-lim__stage--pattern{
+  background-color:var(--tq-lim-cream);
+  background-image:
+    repeating-linear-gradient(45deg,var(--tq-lim-beige) 0 1px,transparent 1px 11px);
+}
+/* 比較用：囲ってしまった版（斜線を四角に閉じる） */
+.tq-lim__box{
+  position:absolute; inset:12% 8%; z-index:0;
+  border:1px solid var(--tq-lim-ink);
+}
+
+/* === ② 接線1本＋端に四芒星1つ ============================== */
+.tq-lim__stage--white{ background:var(--c-bg) }
+.tq-lim__round{
+  position:relative; z-index:1;
+  width:100%; max-width:210px; aspect-ratio:1;
+}
+.tq-lim__round img{
+  display:block; width:100%; height:100%; object-fit:cover; border-radius:50%;
+}
+/* 円の外を通る接線のような細線を1本 */
+.tq-lim__round::before{
+  content:""; position:absolute; z-index:0;
+  right:-16%; top:6%;
+  width:var(--tq-lim-tan); height:1px;
+  background:var(--tq-lim-gold);
+  rotate:var(--tq-lim-tandeg);
+}
+/* 端に小さな四芒星を1つ添えて、余白の空きすぎを止める */
+.tq-lim__round::after{
+  content:"✦"; position:absolute; z-index:0;
+  left:8%; bottom:6%;
+  color:var(--tq-lim-gold); font-size:11px; line-height:1;
+}
+.tq-lim__round--bare::before,
+.tq-lim__round--bare::after{ content:none }
+
+/* === ③ 手描き線画を余白に散らす ============================ */
+.tq-lim__scene{
+  position:relative; overflow:hidden;
+  background:var(--tq-lim-paper);
+  padding:var(--s6) var(--s5); min-height:230px;
+  display:flex; align-items:center; justify-content:center;
+}
+.tq-lim__ellipse{
+  position:relative; z-index:1;
+  width:100%; max-width:300px; aspect-ratio:3/2;
+}
+.tq-lim__ellipse img{
+  display:block; width:100%; height:100%; object-fit:cover; border-radius:50%;
+}
+/* 塗り無し・線幅1pxの線画。写真の中身と呼応するモチーフを選ぶ */
+.tq-lim__doodle{
+  position:absolute; z-index:0; height:auto;
+  stroke:var(--tq-lim-doodle); stroke-width:1; fill:none;
+  vector-effect:non-scaling-stroke;
+}
+/* 密度の高い面での検証用 */
+.tq-lim__dense{ position:relative; z-index:1; max-width:420px }
+.tq-lim__doodle--swing{ left:3%; bottom:8%; width:22%; max-width:96px }
+.tq-lim__doodle--tree{ right:4%; top:10%; width:16%; max-width:70px }
+.tq-lim__doodle--gym{ right:20%; top:14%; width:20%; max-width:86px }
+.tq-lim__scene--bare .tq-lim__doodle{ display:none }
+</style>
+
+<div class="tq-lim">
+  <p class="tq-lim__lead">
+    余白を囲わない。主役の背後に1px幅の45°斜線を3本、長さと色を変えて平行に走らせ、
+    両端は唐突に途切れさせる。囲いでないので張力だけが残る。
+  </p>
+
+  <!-- ① 斜線3本 -->
+  <section class="tq-lim__sec">
+    <h3 class="tq-lim__secttl">① 同じ余白を、パターン／囲い／切れっぱなしの斜線で埋め比べる</h3>
+    <div class="tq-lim__pair">
+
+      <div>
+        <p class="tq-lim__cap">普通A：薄い装飾パターンを敷く</p>
+        <div class="tq-lim__stage tq-lim__stage--pattern">
+          <div class="tq-lim__hex"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+        </div>
+        <p class="tq-lim__note">面全体が均質に埋まり、余白が「テクスチャ」になって速度が出ない。</p>
+      </div>
+
+      <div>
+        <p class="tq-lim__cap">普通B：線で囲って枠を作る</p>
+        <div class="tq-lim__stage">
+          <span class="tq-lim__box"></span>
+          <div class="tq-lim__hex"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+        </div>
+        <p class="tq-lim__note">線が閉じた瞬間に「囲い」になり、中と外に分かれて張力が消える。</p>
+      </div>
+
+    </div>
+
+    <p class="tq-lim__cap tq-lim__cap--gap">この工夫：長さも色も違う斜線3本、両端は切れっぱなし</p>
+    <div class="tq-lim__stage tq-lim__stage--solo">
+      <span class="tq-lim__slash tq-lim__slash--1"></span>
+      <span class="tq-lim__slash tq-lim__slash--2"></span>
+      <span class="tq-lim__slash tq-lim__slash--3"></span>
+      <div class="tq-lim__hex"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+    </div>
+    <p class="tq-lim__note">
+      180px（濃グレー）／140px（ベージュ）／96px（赤茶）。同じ角度で平行に走るが、
+      どれも端が唐突に切れているので囲いにならず、静止した面に速度だけが足される。
+    </p>
+  </section>
+
+  <!-- ② 接線＋四芒星 -->
+  <section class="tq-lim__sec">
+    <h3 class="tq-lim__secttl">② 円やロゴの外には、接線のような細線を1本と星1つ</h3>
+    <div class="tq-lim__pair">
+
+      <div>
+        <p class="tq-lim__cap">普通：円だけを置く</p>
+        <div class="tq-lim__stage tq-lim__stage--white">
+          <div class="tq-lim__round tq-lim__round--bare"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+        </div>
+        <p class="tq-lim__note">円の周りの余白が「空きすぎ」に見えて、面が止まる。</p>
+      </div>
+
+      <div>
+        <p class="tq-lim__cap">この工夫：110pxの接線を -38deg で1本＋✦1つ</p>
+        <div class="tq-lim__stage tq-lim__stage--white">
+          <div class="tq-lim__round"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+        </div>
+        <p class="tq-lim__note">線は円に触れず、接するように外を通り過ぎる。反対側の星1つで余白が釣り合う。</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ③ 手描き線画 -->
+  <section class="tq-lim__sec">
+    <h3 class="tq-lim__secttl">③ 人物や場所が主役なら、写真の中身の続きを余白に描く</h3>
+    <div class="tq-lim__pair">
+
+      <div>
+        <p class="tq-lim__cap">普通：写真だけを置く</p>
+        <div class="tq-lim__scene tq-lim__scene--bare">
+          <div class="tq-lim__ellipse"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+        </div>
+      </div>
+
+      <div>
+        <p class="tq-lim__cap">この工夫：塗り無し・線幅1pxの線画を余白に散らす</p>
+        <div class="tq-lim__scene">
+          <svg class="tq-lim__doodle tq-lim__doodle--swing" viewBox="0 0 80 70" aria-hidden="true">
+            <path d="M8 68 L26 14 L44 68 M26 14 L62 14 M52 68 L62 14 L72 68 M34 16 L34 46 M50 16 L50 46 M30 46 H54"></path>
+          </svg>
+          <svg class="tq-lim__doodle tq-lim__doodle--tree" viewBox="0 0 60 80" aria-hidden="true">
+            <path d="M30 78 V46 M30 46 C10 44 6 26 18 18 C20 6 40 4 44 16 C56 20 54 42 30 46Z M30 58 L18 50 M30 62 L44 52"></path>
+          </svg>
+          <svg class="tq-lim__doodle tq-lim__doodle--gym" viewBox="0 0 90 70" aria-hidden="true">
+            <path d="M6 66 V26 L45 6 L84 26 V66 M6 40 H84 M24 66 V40 M45 66 V40 M66 66 V40 M45 6 V26"></path>
+          </svg>
+          <div class="tq-lim__ellipse"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+        </div>
+      </div>
+
+    </div>
+    <p class="tq-lim__note">
+      線画は塗りを持たず、線幅は1pxのまま（vector-effect:non-scaling-stroke で拡大しても太らない）。
+      写真に写っている場所の「続き」を余白に描くので、装飾でなく画面の延長として読める。
+    </p>
+  </section>
+
+  <!-- ④ 効かない条件 -->
+  <section class="tq-lim__sec">
+    <h3 class="tq-lim__secttl">④ 情報密度が高い面では、斜線が読解の邪魔になる</h3>
+    <div class="tq-lim__stage tq-lim__stage--solo">
+      <span class="tq-lim__slash tq-lim__slash--1"></span>
+      <span class="tq-lim__slash tq-lim__slash--2"></span>
+      <span class="tq-lim__slash tq-lim__slash--3"></span>
+      <div class="tq-lim__dense">
+        <p class="tq-lim__note">本文テキストが入ります。本文テキストが入ります。本文テキストが入ります。本文テキストが入ります。本文テキストが入ります。本文テキストが入ります。本文テキストが入ります。本文テキストが入ります。本文テキストが入ります。</p>
+      </div>
+    </div>
+    <p class="tq-lim__note">斜線は「空いている面」のためのもの。文字が詰まった面では、線が行を横切って読みを止める。</p>
+  </section>
+
+</div>

@@ -1,0 +1,319 @@
+<style>
+/* ==========================================================
+   overlap/grows-from-behind — 装飾や写真を枠の「裏」から生やし、根元を隠す
+   トークン未読込でも見えるようフォールバックを置く。
+   :where() で優先度0にしてあるので、_tokens.css があれば必ずそちらが勝つ。
+   ========================================================== */
+:where(:root){
+  --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-num:"Helvetica Neue",Arial,var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px; --fs-lg:21px; --fs-xl:28px;
+  --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px; --s8:76px;
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --shadow:0 6px 24px rgba(17,17,17,.08);
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+
+.tq-gfb{
+  font-family:var(--f-sans); color:var(--c-ink2); background:var(--c-bg);
+  max-width:var(--w-max); margin:0 auto; padding:var(--s6) var(--w-gut);
+}
+.tq-gfb *{ box-sizing:border-box; }
+.tq-gfb__ttl{ margin:0 0 var(--s2); font-size:var(--fs-md); font-weight:700;
+  color:var(--c-ink); line-height:var(--lh-tight); }
+.tq-gfb__lead{ margin:0 0 var(--s5); font-size:var(--fs-sm); line-height:var(--lh-body); color:var(--c-ink3); }
+.tq-gfb__sec{ margin-top:var(--s7); }
+.tq-gfb__row{ display:grid; gap:var(--s5); grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr)); }
+.tq-gfb__row--3{ gap:var(--s4); grid-template-columns:repeat(auto-fit,minmax(min(210px,100%),1fr)); }
+.tq-gfb__fig{ margin:0; }
+.tq-gfb__cap{ margin:var(--s3) 0 0; font-size:var(--fs-note); line-height:var(--lh-tight); color:var(--c-ink3); }
+.tq-gfb__cap b{ display:block; margin-bottom:2px; color:var(--c-ink); font-size:var(--fs-sm); }
+.tq-gfb__note{ margin:var(--s4) 0 0; font-size:var(--fs-note); line-height:var(--lh-body); color:var(--c-ink3); }
+
+/* ---- 舞台。装飾がはみ出す分の余白を先に確保しておく ---- */
+.tq-gfb__stage{ position:relative; padding-top:calc(var(--s8) + var(--s6)); }
+
+/* ---- 本体カード。必ず手前（z-index:1）に置く ---- */
+.tq-gfb__card{
+  position:relative; z-index:1;                 /* ← 本体が手前 */
+  background:var(--c-primary-l); border-radius:var(--r-m);
+  padding:var(--s5); min-height:132px;
+}
+.tq-gfb__tag{
+  display:inline-block; font-size:var(--fs-note); color:var(--c-ink3);
+  letter-spacing:.06em; margin:0 0 var(--s2);
+}
+.tq-gfb__h{ margin:0 0 var(--s2); font-size:var(--fs-base); font-weight:700;
+  color:var(--c-ink); line-height:var(--lh-tight); }
+.tq-gfb__p{ margin:0; font-size:var(--fs-note); line-height:var(--lh-body); color:var(--c-ink2); }
+
+/* ---- 装飾（遊具に見立てた組み立て） ---- */
+.tq-gfb__deco{
+  position:absolute; z-index:0;                 /* ← 0。手前に出さない */
+  pointer-events:none;
+  width:min(46%,168px); aspect-ratio:11/7;
+}
+.tq-gfb__deco i{ position:absolute; display:block; }
+.tq-gfb__deco .p1, .tq-gfb__deco .p2{
+  bottom:0; width:9px; height:74%; border-radius:var(--r-pill);
+  background:var(--c-accent);
+}
+.tq-gfb__deco .p1{ left:6%; }
+.tq-gfb__deco .p2{ right:6%; }
+.tq-gfb__deco .bar{
+  left:2%; right:2%; top:24%; height:9px; border-radius:var(--r-pill);
+  background:var(--c-primary);
+}
+.tq-gfb__deco .seat{
+  right:8%; top:0; width:34%; aspect-ratio:4/5; overflow:hidden;
+  clip-path:url(#tq-gfb-figure);
+}
+.tq-gfb__deco .seat img{ position:absolute; left:-140%; top:-71%; width:380%; max-width:none; display:block; }
+
+/* ①-A 普通：カードの外の余白に置き、重ねない */
+.tq-gfb__stage--apart .tq-gfb__deco{ right:0; top:0; }
+/* ①-B この工夫：同じ位置から42%だけ下げてカードの裏に潜らせる */
+.tq-gfb__stage--behind .tq-gfb__deco{ right:0; top:0; transform:translateY(42%); }
+
+/* ---- ② 位置は同じ。z-index だけを入れ替える ---- */
+.tq-gfb__stage--front .tq-gfb__deco{ right:0; top:0; transform:translateY(42%); z-index:2; }
+
+/* ---- ③ 生やす辺を変える ---- */
+.tq-gfb__stage--s{ padding:var(--s8) var(--s7) 0; }
+.tq-gfb__stage--s .tq-gfb__card{ min-height:112px; }
+.tq-gfb__stage--s .tq-gfb__deco{ width:min(52%,132px); }
+.tq-gfb__edge-t .tq-gfb__deco{ left:50%; top:0; transform:translate(-50%,25%); }
+.tq-gfb__edge-l .tq-gfb__deco{ left:0; top:calc(var(--s8) + var(--s2)); transform:rotate(-8deg); }
+.tq-gfb__edge-c .tq-gfb__deco{ right:0; top:0; transform:translateY(26%); }
+
+/* ---- ④ CTAの正円の裏から頭だけ覗かせる ---- */
+.tq-gfb__cta{
+  position:relative; display:flex; justify-content:center; align-items:flex-end;
+  min-height:180px; padding-top:var(--s7);
+}
+.tq-gfb__btn{
+  position:relative; z-index:2;                 /* ボタンが手前 */
+  width:120px; aspect-ratio:1; border-radius:50%;
+  background:var(--c-primary); color:var(--c-on-primary);
+  display:grid; place-content:center; text-align:center;
+  font-size:var(--fs-note); font-weight:700; line-height:var(--lh-tight);
+}
+.tq-gfb__peek{
+  position:absolute; z-index:1;                 /* ← ボタンの裏 */
+  left:50%; bottom:76px; translate:-50% 0;
+  display:flex; pointer-events:none;
+}
+.tq-gfb__peek span{
+  display:block; width:38px; aspect-ratio:1; border-radius:50%; overflow:hidden;
+  position:relative; background:var(--c-bg2); margin:0 -3px;
+}
+.tq-gfb__peek span:nth-child(2){ width:44px; margin-bottom:var(--s2); }
+.tq-gfb__peek img{ width:100%; height:100%; object-fit:cover; display:block; }
+.tq-gfb__cta--front .tq-gfb__peek{ z-index:3; }
+
+/* ---- ⑤ アーチの角に半分だけ掛ける ---- */
+.tq-gfb__arcwrap{ position:relative; padding-top:var(--s5); }
+.tq-gfb__arch{
+  position:relative; z-index:1; overflow:hidden;
+  width:min(100%,190px); margin:0 auto; aspect-ratio:3/4;
+  border-radius:999px 999px var(--r-m) var(--r-m);
+}
+.tq-gfb__arch img{ width:100%; height:100%; object-fit:cover; display:block; }
+.tq-gfb__ribbon{
+  position:absolute; z-index:0;                 /* ← アーチの裏 */
+  left:50%; top:var(--s7); translate:26px 0;
+  width:70px; height:34px; border-radius:var(--r-pill) var(--r-s) var(--r-pill) var(--r-s);
+  background:var(--c-accent); rotate:-14deg;
+}
+.tq-gfb__arcwrap--front .tq-gfb__ribbon{ z-index:2; }
+
+.tq-gfb__defs{ position:absolute; width:0; height:0; overflow:hidden; }
+</style>
+
+<svg class="tq-gfb__defs" aria-hidden="true" focusable="false">
+  <defs>
+    <clipPath id="tq-gfb-figure" clipPathUnits="objectBoundingBox">
+      <ellipse cx="0.5" cy="0.155" rx="0.185" ry="0.148"/>
+      <ellipse cx="0.5" cy="0.50" rx="0.34" ry="0.235"/>
+      <rect x="0.355" y="0.46" width="0.29" height="0.54" rx="0.10" ry="0.06"/>
+    </clipPath>
+  </defs>
+</svg>
+
+<div class="tq-gfb">
+
+  <p class="tq-gfb__ttl">① 装飾を「横に置く」のでなく「裏から生やす」</p>
+  <p class="tq-gfb__lead">
+    左右で装飾の部品も大きさも同じ。左は空いた余白に置いて要素同士を重ねない置き方、
+    右は同じ装飾をカード上辺の裏に回して、支柱の下端をカードに飲ませている。
+    根元が消えると、カードの上辺が「線」でなく「地面」に見える。
+  </p>
+
+  <div class="tq-gfb__row">
+    <figure class="tq-gfb__fig">
+      <div class="tq-gfb__stage tq-gfb__stage--apart">
+        <span class="tq-gfb__deco" aria-hidden="true">
+          <i class="p1"></i><i class="p2"></i><i class="bar"></i>
+          <i class="seat"><img src="../../../docs/demo/ph_b.jpg" alt=""></i>
+        </span>
+        <div class="tq-gfb__card">
+          <p class="tq-gfb__tag">CATEGORY</p>
+          <p class="tq-gfb__h">見出しがここに入ります</p>
+          <p class="tq-gfb__p">本文のテキストが1〜2行入ります。本文のテキストが入ります。</p>
+        </div>
+      </div>
+      <p class="tq-gfb__cap"><b>普通</b>装飾はカードの外の余白へ。要素は2つとも全部見えているが、面は前後に分かれない。</p>
+    </figure>
+
+    <figure class="tq-gfb__fig">
+      <div class="tq-gfb__stage tq-gfb__stage--behind">
+        <span class="tq-gfb__deco" aria-hidden="true">
+          <i class="p1"></i><i class="p2"></i><i class="bar"></i>
+          <i class="seat"><img src="../../../docs/demo/ph_b.jpg" alt=""></i>
+        </span>
+        <div class="tq-gfb__card">
+          <p class="tq-gfb__tag">CATEGORY</p>
+          <p class="tq-gfb__h">見出しがここに入ります</p>
+          <p class="tq-gfb__p">本文のテキストが1〜2行入ります。本文のテキストが入ります。</p>
+        </div>
+      </div>
+      <p class="tq-gfb__cap"><b>この工夫</b>支柱の下端がカードに隠れて途切れる。占める面積は小さいのに層が1枚増える。</p>
+    </figure>
+  </div>
+
+  <!-- ② z-index -->
+  <section class="tq-gfb__sec">
+    <p class="tq-gfb__ttl">② 変えているのは z-index だけ。手前に出した瞬間に「ただの重なり」に戻る</p>
+    <p class="tq-gfb__lead">位置・大きさ・角度は完全に同じ。装飾側を 0 にするか 2 にするかだけの違い。</p>
+    <div class="tq-gfb__row">
+      <figure class="tq-gfb__fig">
+        <div class="tq-gfb__stage tq-gfb__stage--front">
+          <span class="tq-gfb__deco" aria-hidden="true">
+            <i class="p1"></i><i class="p2"></i><i class="bar"></i>
+            <i class="seat"><img src="../../../docs/demo/ph_b.jpg" alt=""></i>
+          </span>
+          <div class="tq-gfb__card">
+            <p class="tq-gfb__tag">CATEGORY</p>
+            <p class="tq-gfb__h">見出しがここに入ります</p>
+            <p class="tq-gfb__p">本文のテキストが1〜2行入ります。本文のテキストが入ります。</p>
+          </div>
+        </div>
+        <p class="tq-gfb__cap"><b>装飾 z-index:2（手前）</b>支柱がカードの上に乗り、見出しの領域まで奪う。装飾が増えただけに見える。</p>
+      </figure>
+
+      <figure class="tq-gfb__fig">
+        <div class="tq-gfb__stage tq-gfb__stage--behind">
+          <span class="tq-gfb__deco" aria-hidden="true">
+            <i class="p1"></i><i class="p2"></i><i class="bar"></i>
+            <i class="seat"><img src="../../../docs/demo/ph_b.jpg" alt=""></i>
+          </span>
+          <div class="tq-gfb__card">
+            <p class="tq-gfb__tag">CATEGORY</p>
+            <p class="tq-gfb__h">見出しがここに入ります</p>
+            <p class="tq-gfb__p">本文のテキストが1〜2行入ります。本文のテキストが入ります。</p>
+          </div>
+        </div>
+        <p class="tq-gfb__cap"><b>装飾 z-index:0（裏）</b>カードの中身は1文字も邪魔されない。露出は上の3〜4割だけ。</p>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ③ 生やす辺 -->
+  <section class="tq-gfb__sec">
+    <p class="tq-gfb__ttl">③ 生やす辺を変える。上辺・左右辺・角の3通り</p>
+    <p class="tq-gfb__lead">覗かせる量はどれも装飾の20〜40%。それ以上出すと「裏から生えた」ではなく「隣に置いた」に戻る。</p>
+    <div class="tq-gfb__row tq-gfb__row--3">
+      <figure class="tq-gfb__fig">
+        <div class="tq-gfb__stage tq-gfb__stage--s tq-gfb__edge-t">
+          <span class="tq-gfb__deco" aria-hidden="true">
+            <i class="p1"></i><i class="p2"></i><i class="bar"></i>
+            <i class="seat"><img src="../../../docs/demo/ph_b.jpg" alt=""></i>
+          </span>
+          <div class="tq-gfb__card"><p class="tq-gfb__h">見出し</p><p class="tq-gfb__p">本文が入ります。</p></div>
+        </div>
+        <p class="tq-gfb__cap"><b>上辺</b>いちばん素直。上辺が地面になる。</p>
+      </figure>
+      <figure class="tq-gfb__fig">
+        <div class="tq-gfb__stage tq-gfb__stage--s tq-gfb__edge-l">
+          <span class="tq-gfb__deco" aria-hidden="true">
+            <i class="p1"></i><i class="p2"></i><i class="bar"></i>
+            <i class="seat"><img src="../../../docs/demo/ph_b.jpg" alt=""></i>
+          </span>
+          <div class="tq-gfb__card"><p class="tq-gfb__h">見出し</p><p class="tq-gfb__p">本文が入ります。</p></div>
+        </div>
+        <p class="tq-gfb__cap"><b>左辺</b>版面の外側へ逃がせる。傾けると効きが強い。</p>
+      </figure>
+      <figure class="tq-gfb__fig">
+        <div class="tq-gfb__stage tq-gfb__stage--s tq-gfb__edge-c">
+          <span class="tq-gfb__deco" aria-hidden="true">
+            <i class="p1"></i><i class="p2"></i><i class="bar"></i>
+            <i class="seat"><img src="../../../docs/demo/ph_b.jpg" alt=""></i>
+          </span>
+          <div class="tq-gfb__card"><p class="tq-gfb__h">見出し</p><p class="tq-gfb__p">本文が入ります。</p></div>
+        </div>
+        <p class="tq-gfb__cap"><b>角</b>2辺に同時に噛むので、いちばん奥行きが出る。</p>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ④⑤ 応用 -->
+  <section class="tq-gfb__sec">
+    <p class="tq-gfb__ttl">④ 相手はカードでなくてよい。ボタンの裏・アーチの角でも同じ手が効く</p>
+    <p class="tq-gfb__lead">
+      左2つはCTAの正円の裏から3点の頭だけを覗かせた版、右2つはアーチの右上角にリボンを半分だけ掛けた版。
+      それぞれ「裏／手前」を並べてある。
+    </p>
+    <div class="tq-gfb__row tq-gfb__row--3">
+
+      <figure class="tq-gfb__fig">
+        <div class="tq-gfb__cta tq-gfb__cta--front">
+          <span class="tq-gfb__peek" aria-hidden="true">
+            <span><img src="../../../docs/demo/ph_a.jpg" alt=""></span>
+            <span><img src="../../../docs/demo/ph_b.jpg" alt=""></span>
+            <span><img src="../../../docs/demo/ph_a.jpg" alt=""></span>
+          </span>
+          <span class="tq-gfb__btn">お問い<br>合わせ</span>
+        </div>
+        <p class="tq-gfb__cap"><b>手前に出すと</b>丸が3つ並んだだけ。ボタンが埋もれる。</p>
+      </figure>
+
+      <figure class="tq-gfb__fig">
+        <div class="tq-gfb__cta">
+          <span class="tq-gfb__peek" aria-hidden="true">
+            <span><img src="../../../docs/demo/ph_a.jpg" alt=""></span>
+            <span><img src="../../../docs/demo/ph_b.jpg" alt=""></span>
+            <span><img src="../../../docs/demo/ph_a.jpg" alt=""></span>
+          </span>
+          <span class="tq-gfb__btn">お問い<br>合わせ</span>
+        </div>
+        <p class="tq-gfb__cap"><b>裏から覗かせると</b>頭だけが出て、ボタンが手前の主役のまま残る。</p>
+      </figure>
+
+      <figure class="tq-gfb__fig">
+        <div class="tq-gfb__arcwrap tq-gfb__arcwrap--front">
+          <span class="tq-gfb__ribbon" aria-hidden="true"></span>
+          <div class="tq-gfb__arch"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+        </div>
+        <p class="tq-gfb__cap"><b>手前に出すと</b>写真に貼ったシールに見える。</p>
+      </figure>
+
+      <figure class="tq-gfb__fig">
+        <div class="tq-gfb__arcwrap">
+          <span class="tq-gfb__ribbon" aria-hidden="true"></span>
+          <div class="tq-gfb__arch"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+        </div>
+        <p class="tq-gfb__cap"><b>裏に回すと</b>角に半分だけ掛かって浮く。</p>
+      </figure>
+
+    </div>
+    <p class="tq-gfb__note">
+      根元が隠れると意味が分からなくなるもの（アイコン、ロゴマーク、図解の矢印）には使わない。
+      「何かが続いている」と読ませられる形＝棒・支柱・人・帯・リボンだけが対象になる。
+    </p>
+  </section>
+
+</div>

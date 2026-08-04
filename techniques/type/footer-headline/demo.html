@@ -1,0 +1,144 @@
+<style>
+/* トークンのフォールバック。:where() で詰めているので、
+   _tokens.css が読み込まれていればそちらが必ず勝つ。 */
+:where(:root){
+  --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-disp:var(--f-sans); --f-num:"Helvetica Neue",Arial,var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+  --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px; --fs-3xl:50px; --fs-4xl:64px;
+  --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px; --s8:76px; --s9:110px;
+  --sec-y:clamp(56px,7vw,110px);
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --shadow:0 6px 24px rgba(17,17,17,.08);
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+:where(body){margin:0}
+
+.tq-fhead{font-family:var(--f-sans); color:var(--c-ink2); background:var(--c-bg)}
+.tq-fhead *{box-sizing:border-box}
+.tq-fhead__wrap{max-width:var(--w-max); margin-inline:auto; padding-inline:var(--w-gut)}
+.tq-fhead__lead{max-width:var(--w-max); margin:0 auto; padding:var(--s7) var(--w-gut) 0}
+.tq-fhead__tag{
+  display:inline-block; margin:0 0 var(--s4);
+  font-size:var(--fs-note); letter-spacing:.08em; line-height:1;
+  padding:var(--s2) var(--s3); border-radius:var(--r-pill);
+  background:var(--c-bg2); color:var(--c-ink3);
+}
+.tq-fhead__tag--on{background:var(--c-primary-l); color:var(--c-primary-d)}
+.tq-fhead__cap{
+  max-width:var(--w-max); margin:0 auto; padding:var(--s4) var(--w-gut) var(--s7);
+  font-size:var(--fs-sm); line-height:var(--lh-head); color:var(--c-ink3);
+}
+
+/* ============ フッター共通のリンク列 ============ */
+.tq-fhead__nav{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:var(--s5) var(--s4);
+}
+.tq-fhead__nav h3{margin:0 0 var(--s3); font-size:var(--fs-sm); font-weight:700; color:var(--c-ink); line-height:var(--lh-head)}
+.tq-fhead__nav ul{margin:0; padding:0; list-style:none}
+.tq-fhead__nav li{margin-top:var(--s2); font-size:var(--fs-sm); color:var(--c-ink3); line-height:var(--lh-head)}
+.tq-fhead__foot{
+  display:flex; flex-wrap:wrap; align-items:center; gap:var(--s4) var(--s5);
+  margin-top:var(--s7); padding-top:var(--s5); border-top:1px solid var(--c-line);
+  font-size:var(--fs-note); color:var(--c-ink3);
+}
+
+/* ============ 普通：ロゴ＋会社名から始める ============ */
+.tq-fhead__f1{background:var(--c-bg2); padding-block:var(--s7)}
+.tq-fhead__brand{display:flex; align-items:center; gap:var(--s3); margin-bottom:var(--s6)}
+.tq-fhead__brand img{height:30px; width:auto; display:block}
+.tq-fhead__brand span{font-size:var(--fs-base); font-weight:700; color:var(--c-ink)}
+
+/* ============ 工夫A：最上段に極大の一行コピー、ロゴは下段へ ============ */
+.tq-fhead__f2{background:var(--c-bg2); padding-block:var(--s7)}
+.tq-fhead__slogan{
+  margin:0 0 var(--s7); text-align:center;
+  font-family:var(--f-disp); font-weight:700; color:var(--c-primary-d);
+  font-size:clamp(30px,5.6vw,80px); letter-spacing:.02em; line-height:1.4;
+}
+.tq-fhead__logo-b{margin-top:var(--s6); text-align:center}
+.tq-fhead__logo-b img{height:26px; width:auto; display:inline-block}
+
+/* ============ 工夫B：左揃えの極太1語（暗い面） ============ */
+.tq-fhead__f3{background:var(--c-ink); color:var(--c-bg); padding-block:var(--s7)}
+.tq-fhead__word{
+  margin:0 0 var(--s6);
+  font-family:var(--f-num); font-weight:800;
+  font-size:clamp(36px,5.5vw,60px); letter-spacing:-.02em; line-height:1;
+}
+.tq-fhead__f3 .tq-fhead__nav h3{color:var(--c-bg); font-size:var(--fs-base); letter-spacing:.02em}
+.tq-fhead__f3 .tq-fhead__nav li{color:var(--c-line)}
+.tq-fhead__f3 .tq-fhead__foot{border-top-color:color-mix(in srgb, var(--c-bg) 25%, transparent); color:var(--c-line)}
+.tq-fhead__sub{display:block; margin-top:var(--s1); font-family:var(--f-sans); font-size:var(--fs-note); font-weight:400; color:var(--c-ink3)}
+</style>
+
+<section class="tq-fhead">
+
+  <!-- ============ 普通 ============ -->
+  <p class="tq-fhead__lead"><span class="tq-fhead__tag">普通の場合</span></p>
+  <footer class="tq-fhead__f1">
+    <div class="tq-fhead__wrap">
+      <div class="tq-fhead__brand">
+        <img src="../../../docs/demo/logo.svg" alt="">
+        <span>会社名がここに入ります</span>
+      </div>
+      <div class="tq-fhead__nav">
+        <div><h3>カテゴリ</h3><ul><li>リンク項目</li><li>リンク項目</li><li>リンク項目</li></ul></div>
+        <div><h3>カテゴリ</h3><ul><li>リンク項目</li><li>リンク項目</li><li>リンク項目</li></ul></div>
+        <div><h3>カテゴリ</h3><ul><li>リンク項目</li><li>リンク項目</li></ul></div>
+        <div><h3>カテゴリ</h3><ul><li>リンク項目</li><li>リンク項目</li></ul></div>
+      </div>
+      <div class="tq-fhead__foot">
+        <span>〒000-0000 住所がここに入ります</span>
+        <span>© 0000</span>
+      </div>
+    </div>
+  </footer>
+  <p class="tq-fhead__cap">ロゴ＋会社名から始め、その下に住所とリンク列。最後に見る面に残るのは「どこの会社か」だけで、締めにならない。</p>
+
+  <!-- ============ 工夫A ============ -->
+  <p class="tq-fhead__lead"><span class="tq-fhead__tag tq-fhead__tag--on">この工夫（中央・極大の一行）</span></p>
+  <footer class="tq-fhead__f2">
+    <div class="tq-fhead__wrap">
+      <p class="tq-fhead__slogan">ここに一行のコピー。</p>
+      <div class="tq-fhead__nav">
+        <div><h3>カテゴリ</h3><ul><li>リンク項目</li><li>リンク項目</li><li>リンク項目</li></ul></div>
+        <div><h3>カテゴリ</h3><ul><li>リンク項目</li><li>リンク項目</li><li>リンク項目</li></ul></div>
+        <div><h3>カテゴリ</h3><ul><li>リンク項目</li><li>リンク項目</li></ul></div>
+        <div><h3>カテゴリ</h3><ul><li>リンク項目</li><li>リンク項目</li></ul></div>
+      </div>
+      <div class="tq-fhead__logo-b"><img src="../../../docs/demo/logo.svg" alt=""></div>
+      <div class="tq-fhead__foot">
+        <span>〒000-0000 住所がここに入ります</span>
+        <span>© 0000</span>
+      </div>
+    </div>
+  </footer>
+  <p class="tq-fhead__cap">最上段は一行のコピーだけ。下のリンク（13px）に対して約5倍の級数で、画面幅の6割を占める。ロゴは高さ26pxで下段に落とし、主従を逆にしている。</p>
+
+  <!-- ============ 工夫B ============ -->
+  <p class="tq-fhead__lead"><span class="tq-fhead__tag tq-fhead__tag--on">この工夫（左揃え・極太1語）</span></p>
+  <footer class="tq-fhead__f3">
+    <div class="tq-fhead__wrap">
+      <h2 class="tq-fhead__word">MENU</h2>
+      <div class="tq-fhead__nav">
+        <div><h3>ITEM<span class="tq-fhead__sub">リンク項目</span></h3></div>
+        <div><h3>ITEM<span class="tq-fhead__sub">リンク項目</span></h3></div>
+        <div><h3>ITEM<span class="tq-fhead__sub">リンク項目</span></h3></div>
+        <div><h3>ITEM<span class="tq-fhead__sub">リンク項目</span></h3></div>
+        <div><h3>ITEM<span class="tq-fhead__sub">リンク項目</span></h3></div>
+      </div>
+      <div class="tq-fhead__foot">
+        <span>© 0000</span>
+        <span>リンク項目</span>
+      </div>
+    </div>
+  </footer>
+  <p class="tq-fhead__cap">キャッチが無い場合の型。索引語そのものを42〜60pxの極太にし、直下のリンク13pxに対して3倍以上。フッターが第二の入口になる。</p>
+
+</section>

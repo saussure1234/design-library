@@ -1,0 +1,26 @@
+{
+  "id": "overlap/translucent-veil",
+  "name": "半透明の面を重ね、写真を切らずに文字面と保留領域を作る",
+  "ordinary": "左に白のテキストボックス・右に写真を並べる／注釈は表の下に1行足す",
+  "actual": "1本の帯の左半分に rgba(126,192,222,.86) を重ね、下の写真（PCに向かう学生）が薄く透けたまま白文字を載せる。トリミングで分けるのでなく「薄める」ことで文字面を作り、境界は縦の直線1本だけ（kobe-wu_s07）。写真をセクション背景そのものにしてオレンジのデュオトーンにし、右へいくほど #b8740f のベタに溶かして本文をそこに乗せる（buddies_s10）。表の3行目の2〜6列目だけを1px破線で横断的に囲み、中に rgba(255,255,255,.62) を掛けて沈め、中央に「実施イメージです」を重ねる。1列目だけは囲みの外で通常の濃さのまま残す（tanq_s05）。日付の円を rgba(...,.38) にしてカード左辺から半分外に出すと、1つの円の中に「カードの上」と「背景の上」の2色が同居する（kobe-wu_s04）。",
+  "css": "/* 写真を切らずに文字面を作る（境界は縦線1本） */\n.row{position:relative; min-height:300px; background:url(photo.jpg) center/cover}\n.row__text{width:50%; height:100%; padding:40px; color:#fff;\n  background:rgba(126,192,222,.86)}\n\n/* デュオトーンで片側へ溶かす */\n.sec{background:linear-gradient(90deg,rgba(184,116,15,.15) 0%,#b8740f 58%),\n                url(portrait.jpg) left center/cover;\n     background-blend-mode:multiply}\n\n/* 範囲だけ沈めて注記を重ねる（未確定・準備中） */\n.tentative{position:relative; grid-column:2/7; border-radius:10px;\n  outline:1px dashed #9aa2a8; outline-offset:-1px}\n.tentative::before{content:\"\"; position:absolute; inset:0; background:rgba(255,255,255,.62)}\n.tentative .note{position:absolute; inset:0; display:grid; place-content:center; text-align:center}\n\n/* またいだ部分だけ下地を透かす */\n.date{position:absolute; left:-36px; top:50%; translate:0 -50%;\n  width:72px; aspect-ratio:1; border-radius:50%;\n  background:rgba(125,145,155,.38); color:#fff;\n  display:grid; place-content:center; text-align:center}\n\n/* 面を敷かない版：影だけで明るい写真に白抜きを乗せる */\nfigcaption{position:absolute; left:10px; bottom:8px; color:#fff;\n  text-shadow:0 1px 4px rgba(0,0,0,.65)}",
+  "appliesTo": ["about", "voice", "value", "price", "access", "hero"],
+  "impact": 3,
+  "effort": 1,
+  "why": "写真の枠が消えるので人物と文章が同じ空間にいるように読める。またいだ部分だけ色が変わることで重なりの前後関係がその場で証明される",
+  "params": [
+    "不透明度（.38 透かす／.62 沈める／.86 読ませる／0 影のみ）",
+    "覆う範囲（カラム半分／表の一部セル／バッジ1点）",
+    "blend-mode（multiplyでデュオトーン）"
+  ],
+  "avoid": "写真のコントラストが高く .86 でも文字が読めない素材（その場合は面でなくスクリムに戻す）",
+  "sources": ["kobe-wu_s07", "buddies_s10", "tanq_s05", "kobe-wu_s04", "odrive_s08"],
+  "notes": [
+    "トークン運用では rgba() を直書きできないので、透過色は color-mix(in srgb, var(--c-primary) 86%, transparent) で作る。不透明度がそのまま第2引数のパーセントになるので、.38／.62／.86 の使い分けはそのまま 38%／62%／86% と書ける。--c-* を差し替えるだけで案件の色に着替わる。",
+    "🚨 表の一部だけ沈める版（tanq_s05）は position:absolute + inset:0 + grid-column/grid-row を【4つとも】書く必要がある。(1) 普通のグリッドアイテムにすると自動配置がその区画を使用済みと見なし、同じ行のセルが次の行へ押し出される。(2) inset を書かないと abs-pos の静的位置（コンテナ左上）に落ちて縦1列に潰れる。(3) abs-pos では終端 auto が padding端まで伸びるので grid-row:4/5 と閉じる。demoはこの3つ全部を踏んだ。",
+    "沈める行は高さが足りないと注記が下のセル文字と噛み合って読めなくなる。demoは grid-template-rows の最終行だけ 64px を確保した。囲む範囲の1列目（年・区分などの見出し列）を【囲みの外に残す】のが tanq_s05 の肝で、これがあるから「どこまでが未確定か」が一目で分かる。",
+    "デュオトーンは background に gradient と url を重ねて background-blend-mode:multiply。gradientの左端を 15% 程度の薄い同色にすると写真が残り、58%あたりでベタに到達させると写真の終わりが分からなくなる。multiply なので写真は必ず暗くなる＝白文字前提。明るい仕上げにしたいときは screen に変える。",
+    ".38 のバッジは「またいだ部分だけ色が変わる」ことが証明になるので、透過色は下地2色の【中間より濃い】色を選ぶ。demoは --c-ink3 38% では差が出ず、--c-ink 38% に変えて白カード上＝中間グレー／濃い背景上＝暗色、とはっきり分かれるようにした。",
+    "面を敷かない選択肢（odrive_s08）も同じ引き出しに入れておく。不透明度0＝背景なしで text-shadow だけ、というのは明るい写真の隅にキャプションを置くときの最小コスト版。写真のコントラストが高くて .86 でも読めない素材のときは、面でなくこのスクリム側に倒す。"
+  ]
+}

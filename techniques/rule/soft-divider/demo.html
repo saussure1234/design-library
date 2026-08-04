@@ -1,0 +1,337 @@
+<style>
+/* ============================================================
+   rule/soft-divider
+   区切りに実線を使わず、点線・ドット・小記号の列に置き換える
+   ============================================================ */
+
+@layer tq-fallback{
+  :root{
+    --c-primary:#00B220; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+    --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+    --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3;
+    --c-on-primary:#FFFFFF;
+    --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    --f-disp:var(--f-sans);
+    --f-num:"Helvetica Neue",Arial,var(--f-sans);
+    --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+    --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+    --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+    --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  }
+}
+
+:root{
+  /* 現物から採った地と記号の色（案件では :root で差し替え） */
+  --tq-soft-cream:#F8F4EB;   /* yugao_s10 の地 */
+  --tq-soft-gold:#C8BDA6;    /* 中黒5つ */
+  --tq-soft-plum:#7B2D2D;    /* meisei-kg_s03 の地 */
+  --tq-soft-peach:#FFD6C8;   /* 濃い地の上のドット点線 */
+  --tq-soft-paper:#F4F4F4;   /* linie_s06 の地 */
+  --tq-soft-gray:#C9C9C9;    /* 破線 */
+  --tq-soft-ivory:#FBF5E5;   /* sho_kidsduo_s08 の地 */
+  --tq-soft-navy:#12569E;    /* ▼3連 */
+  --tq-soft-sky1:#8DC6D7;    /* kobe-wu_s05 の地（グラデ） */
+  --tq-soft-sky2:#B0D3E7;
+  --tq-soft-deep:#0D6F8C;    /* 四芒星の1個目だけ濃色 */
+  --tq-soft-olive:#F5F6E8;   /* musashino_s07 の地 */
+  --tq-soft-rule:#C9B98A;    /* 実線＋中央の菱形 */
+  --tq-soft-mint1:#A5DDF4;   /* ikeda_s03 のカード（グラデ） */
+  --tq-soft-mint2:#A7D396;
+  /* 記号列の刻み。工夫の本体なのでここで宣言する */
+  --tq-soft-track:.4em;      /* 中黒の字間（params: .4〜.6em） */
+  --tq-soft-dot:3px;         /* ドットの直径 */
+  --tq-soft-gap:8px;         /* ドットの間隔 */
+}
+
+.tq-sft{
+  font-family:var(--f-sans); color:var(--c-ink2);
+  line-height:var(--lh-head); -webkit-text-size-adjust:100%;
+  padding:var(--s5); background:var(--c-bg);
+}
+.tq-sft *{ box-sizing:border-box }
+
+/* --- デモの見出し・注記 ------------------------------------ */
+.tq-sft__lead{
+  margin:0 0 var(--s5); font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-sft__sec{ margin-top:var(--s7) }
+.tq-sft__sec:first-of-type{ margin-top:0 }
+.tq-sft__secttl{
+  margin:0 0 var(--s4); font-size:var(--fs-sm); font-weight:700; color:var(--c-ink);
+}
+.tq-sft__cap{
+  display:flex; align-items:center; gap:var(--s2);
+  margin:0 0 var(--s3); font-size:var(--fs-note); font-weight:700;
+  color:var(--c-ink3); letter-spacing:.04em;
+}
+.tq-sft__cap::before{
+  content:""; width:var(--s5); height:1px; background:var(--c-line); flex:0 0 auto;
+}
+.tq-sft__note{
+  margin:var(--s3) 0 0; font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-sft__pair{
+  display:grid; gap:var(--s5);
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+}
+.tq-sft__grid{
+  display:grid; gap:var(--s5);
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+}
+.tq-sft__stage{ padding:var(--s5); }
+.tq-sft__name{
+  margin:0 0 var(--s3); font-size:var(--fs-note); font-weight:700;
+  color:var(--c-ink3); letter-spacing:.04em;
+}
+.tq-sft__p{
+  margin:0; font-size:var(--fs-note); line-height:var(--lh-body);
+}
+.tq-sft__h{
+  margin:0; font-family:var(--f-disp); font-size:var(--fs-lg);
+  line-height:var(--lh-head); letter-spacing:.04em;
+}
+
+/* === ① 実線（普通）とドット列の対比 ======================== */
+.tq-sft__stage--cream{ background:var(--tq-soft-cream); color:var(--c-ink2) }
+.tq-sft__stage--cream .tq-sft__h{ color:var(--tq-soft-plum) }
+
+/* 普通：1pxの実線 */
+.tq-sft__solid{
+  height:1px; background:var(--tq-soft-gold); margin:var(--s4) 0; border:0;
+}
+
+/* A：中黒5つ（字間 .4em）。文字なので級数と字間だけで密度を決める */
+.tq-sft__dots{
+  margin:var(--s4) 0; font-size:var(--fs-note); color:var(--tq-soft-gold);
+  letter-spacing:var(--tq-soft-track); line-height:1;
+}
+.tq-sft__dots::before{ content:"・・・・・" }
+
+/* === ② 記号列のバリエーション ============================== */
+
+/* B：直径3px・間隔8pxのドット点線（濃い地の上） */
+.tq-sft__stage--plum{ background:var(--tq-soft-plum); color:var(--c-on-primary) }
+.tq-sft__stage--plum .tq-sft__name{ color:var(--tq-soft-peach) }
+.tq-sft__ddot{
+  border:0; height:var(--tq-soft-dot); margin:var(--s5) 0;
+  background-image:radial-gradient(
+    circle closest-side,
+    var(--tq-soft-peach) 99%, transparent 100%);
+  background-size:calc(var(--tq-soft-dot) + var(--tq-soft-gap)) 100%;
+  background-repeat:repeat-x;
+  opacity:.55;
+}
+
+/* C：1pxの破線（白に近い地の上） */
+.tq-sft__stage--paper{ background:var(--tq-soft-paper) }
+.tq-sft__dash{
+  border:0; border-top:1px dashed var(--tq-soft-gray);
+  margin:var(--s5) 0 0; padding-top:var(--s5);
+}
+
+/* D：▼3連で「次へ」を送る */
+.tq-sft__stage--ivory{ background:var(--tq-soft-ivory) }
+.tq-sft__arrow{
+  display:grid; gap:var(--s1); justify-items:center; margin:var(--s4) 0;
+}
+.tq-sft__arrow i{
+  width:0; height:0;
+  border:5px solid transparent;
+  border-top:7px solid var(--tq-soft-navy);
+  border-bottom:0;
+}
+
+/* E：四芒星8個、左端1個だけ濃色にして起点を示す */
+.tq-sft__stage--sky{
+  background:linear-gradient(100deg,var(--tq-soft-sky1),var(--tq-soft-sky2));
+  color:var(--c-ink);
+}
+.tq-sft__sparks{
+  display:flex; gap:var(--s1); justify-content:center; margin:var(--s4) 0;
+}
+.tq-sft__sparks i{
+  width:9px; height:9px; background:var(--c-on-primary);
+  clip-path:polygon(50% 0,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0 50%,40% 40%);
+}
+.tq-sft__sparks i:first-child{ background:var(--tq-soft-deep) }
+
+/* F：実線を残すなら中央に菱形を1つ挟む */
+.tq-sft__stage--olive{ background:var(--tq-soft-olive); text-align:center }
+.tq-sft__diaru{
+  position:relative; width:56%; height:1px; margin:var(--s4) auto;
+  background:var(--tq-soft-rule);
+}
+.tq-sft__diaru::after{
+  content:""; position:absolute; left:50%; top:-3px; translate:-50% 0;
+  width:5px; height:7px; background:var(--tq-soft-rule);
+  clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);
+}
+
+/* G：花と点を交互に並べた高さ12pxのオーナメント行 */
+.tq-sft__stage--mint{
+  background:linear-gradient(160deg,var(--tq-soft-mint1),var(--tq-soft-mint2));
+  color:var(--c-bg); border-radius:var(--r-m);
+}
+.tq-sft__orn{
+  display:flex; align-items:center; justify-content:center;
+  gap:var(--s2); height:12px; margin:var(--s4) 0;
+  color:var(--c-on-primary); opacity:.55;
+}
+/* 花：4枚の花弁を radial-gradient で置く（currentColorで色を拾う） */
+.tq-sft__orn i{
+  width:10px; height:10px; flex:0 0 auto;
+  background:
+    radial-gradient(circle 2.6px at 50% 18%, currentColor 99%, transparent 100%),
+    radial-gradient(circle 2.6px at 50% 82%, currentColor 99%, transparent 100%),
+    radial-gradient(circle 2.6px at 18% 50%, currentColor 99%, transparent 100%),
+    radial-gradient(circle 2.6px at 82% 50%, currentColor 99%, transparent 100%);
+}
+.tq-sft__orn b{
+  width:3px; height:3px; flex:0 0 auto; border-radius:50%;
+  background:currentColor;
+}
+
+/* === ③ 効かなくなる条件 ==================================== */
+.tq-sft__list{ margin:0; padding:0; list-style:none }
+.tq-sft__list li{ font-size:var(--fs-note); line-height:var(--lh-body) }
+</style>
+
+<div class="tq-sft">
+  <p class="tq-sft__lead">
+    直線の罫を1本も置かず、区切りを離散した記号の列に置き換える。
+    実線より弱いので上下が割れず、分節したまま1つの塊として読める。
+  </p>
+
+  <!-- ① 実線 / 記号列 -->
+  <section class="tq-sft__sec">
+    <h3 class="tq-sft__secttl">① 同じ位置で、実線を中黒5つに置き換える</h3>
+    <div class="tq-sft__pair">
+
+      <div>
+        <p class="tq-sft__cap">普通：1pxの実線</p>
+        <div class="tq-sft__stage tq-sft__stage--cream">
+          <p class="tq-sft__h">見出しがここに入ります</p>
+          <hr class="tq-sft__solid">
+          <p class="tq-sft__p">本文テキストが入ります。本文テキストが入ります。本文テキストが入ります。本文テキストが入ります。</p>
+        </div>
+        <p class="tq-sft__note">線が端から端まで通るので、見出しと本文が別ブロックに割れる。</p>
+      </div>
+
+      <div>
+        <p class="tq-sft__cap">この工夫：中黒5つ・字間.4em</p>
+        <div class="tq-sft__stage tq-sft__stage--cream">
+          <p class="tq-sft__h">見出しがここに入ります</p>
+          <p class="tq-sft__dots"></p>
+          <p class="tq-sft__p">本文テキストが入ります。本文テキストが入ります。本文テキストが入ります。本文テキストが入ります。</p>
+        </div>
+        <p class="tq-sft__note">点が5つ並ぶだけ。間があいて見出しと本文は分節されるが、切れてはいない。</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ② 記号列のバリエーション -->
+  <section class="tq-sft__sec">
+    <h3 class="tq-sft__secttl">② 置き換えの型は6つ。地の濃さと目的で選ぶ</h3>
+    <div class="tq-sft__grid">
+
+      <div>
+        <p class="tq-sft__name">B／3pxドット・間隔8px</p>
+        <div class="tq-sft__stage tq-sft__stage--plum">
+          <p class="tq-sft__p">本文テキストが入ります。本文テキストが入ります。</p>
+          <hr class="tq-sft__ddot">
+          <p class="tq-sft__p">本文テキストが入ります。本文テキストが入ります。</p>
+        </div>
+      </div>
+
+      <div>
+        <p class="tq-sft__name">C／1pxの破線</p>
+        <div class="tq-sft__stage tq-sft__stage--paper">
+          <p class="tq-sft__h">見出しがここに</p>
+          <div class="tq-sft__dash">
+            <p class="tq-sft__p">本文テキストが入ります。本文テキストが入ります。本文テキストが入ります。</p>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <p class="tq-sft__name">D／▼3連で次へ送る</p>
+        <div class="tq-sft__stage tq-sft__stage--ivory">
+          <p class="tq-sft__p">ステップ1のテキストが入ります。</p>
+          <p class="tq-sft__arrow"><i></i><i></i><i></i></p>
+          <p class="tq-sft__p">ステップ2のテキストが入ります。</p>
+        </div>
+      </div>
+
+      <div>
+        <p class="tq-sft__name">E／四芒星8個・左端1個だけ濃色</p>
+        <div class="tq-sft__stage tq-sft__stage--sky">
+          <p class="tq-sft__sparks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></p>
+          <p class="tq-sft__h">見出しがここに</p>
+          <p class="tq-sft__p">本文テキストが入ります。本文テキストが入ります。</p>
+        </div>
+      </div>
+
+      <div>
+        <p class="tq-sft__name">F／実線＋中央の菱形</p>
+        <div class="tq-sft__stage tq-sft__stage--olive">
+          <p class="tq-sft__h">MISSION</p>
+          <div class="tq-sft__diaru"></div>
+          <p class="tq-sft__p">本文テキストが入ります。<br>本文テキストが入ります。</p>
+        </div>
+      </div>
+
+      <div>
+        <p class="tq-sft__name">G／花と点を交互（高さ12px）</p>
+        <div class="tq-sft__stage tq-sft__stage--mint">
+          <p class="tq-sft__h">見出しがここに</p>
+          <p class="tq-sft__orn"><i></i><b></b><i></i><b></b><i></i><b></b><i></i></p>
+          <ul class="tq-sft__list">
+            <li>項目が入ります</li>
+            <li>項目が入ります</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ③ 効かなくなる条件 -->
+  <section class="tq-sft__sec">
+    <h3 class="tq-sft__secttl">③ 項目数が多い一覧では、記号が増えすぎて騒がしくなる</h3>
+    <div class="tq-sft__pair">
+
+      <div>
+        <p class="tq-sft__cap">×：8項目すべての間に記号列を挟む</p>
+        <div class="tq-sft__stage tq-sft__stage--cream">
+          <p class="tq-sft__p">項目が入ります</p><p class="tq-sft__dots"></p>
+          <p class="tq-sft__p">項目が入ります</p><p class="tq-sft__dots"></p>
+          <p class="tq-sft__p">項目が入ります</p><p class="tq-sft__dots"></p>
+          <p class="tq-sft__p">項目が入ります</p><p class="tq-sft__dots"></p>
+          <p class="tq-sft__p">項目が入ります</p><p class="tq-sft__dots"></p>
+          <p class="tq-sft__p">項目が入ります</p>
+        </div>
+        <p class="tq-sft__note">記号が増えるほど「点の列」が主役になり、項目より目立つ。</p>
+      </div>
+
+      <div>
+        <p class="tq-sft__cap">○：一覧の中は余白だけ、塊の変わり目に1本</p>
+        <div class="tq-sft__stage tq-sft__stage--cream">
+          <p class="tq-sft__p">項目が入ります</p>
+          <p class="tq-sft__p">項目が入ります</p>
+          <p class="tq-sft__p">項目が入ります</p>
+          <p class="tq-sft__dots"></p>
+          <p class="tq-sft__p">項目が入ります</p>
+          <p class="tq-sft__p">項目が入ります</p>
+          <p class="tq-sft__p">項目が入ります</p>
+        </div>
+        <p class="tq-sft__note">記号列は「塊が変わる所」にだけ置く。3〜8個という個数の上限も同じ理由。</p>
+      </div>
+
+    </div>
+  </section>
+
+</div>

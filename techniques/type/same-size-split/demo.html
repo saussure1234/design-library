@@ -1,0 +1,256 @@
+<style>
+/* ============================================================
+   type/same-size-split
+   級数を変えず、太さと色だけで1行の見出しを前半・後半に割る
+   ============================================================ */
+
+@layer tq-fallback{
+  :root{
+    --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+    --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+    --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+    --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    --f-disp:var(--f-sans);
+    --f-num:"Helvetica Neue",Arial,var(--f-sans);
+    --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+    --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+    --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+    --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  }
+}
+
+/* 契約に無い値だけ宣言。色はトークン（＋color-mix）から作る。 */
+:root{
+  --tq-ssplit-fs:clamp(22px,3vw,34px);   /* 割る見出しの級数（前半・後半で共通） */
+  --tq-ssplit-fs-card:var(--fs-lg);      /* カード見出し用 */
+  --tq-ssplit-fade:45%;                  /* 薄い側を地に近づける量 */
+  --tq-ssplit-weak:color-mix(in srgb, var(--c-ink) var(--tq-ssplit-fade), var(--c-bg));
+}
+
+.tq-ssplit{
+  font-family:var(--f-sans); color:var(--c-ink2);
+  line-height:var(--lh-head); -webkit-text-size-adjust:100%;
+  padding:var(--s5); background:var(--c-bg);
+}
+.tq-ssplit *{ box-sizing:border-box }
+
+/* --- デモの枠組み ------------------------------------------- */
+.tq-ssplit__lead{ margin:0 0 var(--s6); font-size:var(--fs-note); color:var(--c-ink3); line-height:var(--lh-body) }
+.tq-ssplit__sec{ margin-top:var(--s7) }
+.tq-ssplit__sec:first-of-type{ margin-top:0 }
+.tq-ssplit__secttl{ margin:0 0 var(--s5); font-size:var(--fs-sm); font-weight:700; color:var(--c-ink) }
+.tq-ssplit__cap{
+  display:flex; align-items:center; gap:var(--s2);
+  margin:0 0 var(--s4); font-size:var(--fs-note); font-weight:700; color:var(--c-ink3); letter-spacing:.04em;
+}
+.tq-ssplit__cap::before{ content:""; width:var(--s5); height:1px; background:var(--c-line); flex:0 0 auto }
+.tq-ssplit__note{ margin:var(--s4) 0 0; font-size:var(--fs-note); color:var(--c-ink3); line-height:var(--lh-body) }
+.tq-ssplit__pair{ display:grid; gap:var(--s6); grid-template-columns:repeat(auto-fit,minmax(260px,1fr)) }
+.tq-ssplit__stack{ display:grid; gap:var(--s5) }
+.tq-ssplit__box{ border:1px solid var(--c-line); border-radius:var(--r-s); padding:var(--s5); min-width:0 }
+
+/* ============================================================
+   工夫の本体：級数はそのまま、太さと色だけで割る
+   ============================================================ */
+.tq-ssplit__ttl{
+  margin:0; font-family:var(--f-num);
+  font-size:var(--tq-ssplit-fs); line-height:1.25; letter-spacing:.01em;
+}
+.tq-ssplit__ttl b{ font-weight:800; color:var(--c-primary) }   /* 前半：太く・濃く */
+.tq-ssplit__ttl span{ font-weight:400; color:var(--tq-ssplit-weak) }  /* 後半：細く・薄く */
+
+/* 色だけで割る（ウェイトは揃える） */
+.tq-ssplit__ttl--hue b{ font-weight:700; color:var(--c-ink) }
+.tq-ssplit__ttl--hue span{ font-weight:700; color:var(--c-primary) }
+
+/* 太さだけで割る（色は揃える） */
+.tq-ssplit__ttl--weight b{ font-weight:800; color:var(--c-ink) }
+.tq-ssplit__ttl--weight span{ font-weight:400; color:var(--c-ink) }
+
+/* 明朝＋スモールキャップスで黒／金（武蔵野型） */
+.tq-ssplit__ttl--serif{
+  font-family:var(--f-disp); font-variant:small-caps; letter-spacing:.06em; font-weight:400;
+}
+.tq-ssplit__ttl--serif b{ font-weight:400; color:var(--c-ink) }
+.tq-ssplit__ttl--serif span{ font-weight:400; color:var(--c-accent) }
+
+/* 割る位置が語の切れ目と合っていない悪い例 */
+.tq-ssplit__ttl--bad b{ color:var(--c-primary) }
+
+/* --- 比較用「普通」：1色1ウェイト＋和文サブを下に ---------- */
+.tq-ssplit__plain{
+  margin:0; font-family:var(--f-num); font-weight:800; color:var(--c-primary);
+  font-size:var(--tq-ssplit-fs); line-height:1.25; letter-spacing:.01em;
+}
+.tq-ssplit__sub{
+  margin:var(--s2) 0 0; font-size:var(--fs-note); font-weight:700; color:var(--c-ink3); letter-spacing:.08em;
+}
+
+/* --- 行の高さが変わらないことの検証 -------------------------- */
+.tq-ssplit__cards{
+  display:grid; gap:var(--s4);
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+}
+.tq-ssplit__card{
+  border:1px solid var(--c-line); border-radius:var(--r-s); padding:var(--s4);
+  background:var(--c-bg2);
+}
+.tq-ssplit__card .tq-ssplit__ttl{ font-size:var(--tq-ssplit-fs-card) }
+.tq-ssplit__card .tq-ssplit__plain{ font-size:var(--tq-ssplit-fs-card) }
+.tq-ssplit__rule{
+  height:1px; background:var(--c-primary); margin:var(--s3) 0;
+}
+.tq-ssplit__card p{ margin:0; font-size:var(--fs-note); color:var(--c-ink2); line-height:var(--lh-body) }
+
+/* --- 一覧の文脈 --------------------------------------------- */
+.tq-ssplit__rows{ margin:var(--s5) 0 0; padding:0; list-style:none }
+.tq-ssplit__rows li{
+  display:flex; gap:var(--s3); align-items:baseline;
+  padding:var(--s3) 0; border-bottom:1px solid var(--c-line);
+  font-size:var(--fs-note); color:var(--c-ink2);
+}
+.tq-ssplit__rows em{
+  flex:0 0 auto; font-style:normal; font-family:var(--f-num); color:var(--c-ink3);
+}
+</style>
+
+<div class="tq-ssplit">
+  <p class="tq-ssplit__lead">
+    級数を1pxも変えずに、太さ（400↔800）と明度だけで1行の見出しを前半・後半に割る。
+    行の高さが最後まで変わらないので、カード見出しのように整列が要る場所でも強弱が作れる。
+  </p>
+
+  <!-- ① 普通 / この工夫 -->
+  <section class="tq-ssplit__sec">
+    <h3 class="tq-ssplit__secttl">① 同じ1行を、1色1ウェイトで組むか、途中で重さを切り替えるか</h3>
+    <div class="tq-ssplit__pair">
+
+      <div>
+        <p class="tq-ssplit__cap">普通：1色1ウェイト＋和文サブを下に</p>
+        <div class="tq-ssplit__box">
+          <p class="tq-ssplit__plain">2026 EVENT SCHEDULE</p>
+          <p class="tq-ssplit__sub">和文のサブが入ります</p>
+        </div>
+        <p class="tq-ssplit__note">語の関係（年＋催し ／ 一覧）が読み取れず、行が2行になる。</p>
+      </div>
+
+      <div>
+        <p class="tq-ssplit__cap">この工夫：級数はそのまま、途中で重さと明度を落とす</p>
+        <div class="tq-ssplit__box">
+          <p class="tq-ssplit__ttl"><b>2026 EVENT</b> <span>SCHEDULE</span></p>
+          <p class="tq-ssplit__sub">和文のサブが入ります</p>
+        </div>
+        <p class="tq-ssplit__note">1行のまま「何の／一覧」に割れる。行の高さは左とまったく同じ。</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ② 割り方の型 -->
+  <section class="tq-ssplit__sec">
+    <h3 class="tq-ssplit__secttl">② 割る手がかりは3通り（どれも級数は同じ）</h3>
+    <div class="tq-ssplit__stack">
+
+      <div class="tq-ssplit__box">
+        <p class="tq-ssplit__cap">1／太さだけ（400↔800・色は同じ）</p>
+        <p class="tq-ssplit__ttl tq-ssplit__ttl--weight"><b>2026 EVENT</b> <span>SCHEDULE</span></p>
+      </div>
+
+      <div class="tq-ssplit__box">
+        <p class="tq-ssplit__cap">2／色だけ（ウェイトは同じ）</p>
+        <p class="tq-ssplit__ttl tq-ssplit__ttl--hue"><b>見出しの前半</b><span>の後半</span></p>
+      </div>
+
+      <div class="tq-ssplit__box">
+        <p class="tq-ssplit__cap">3／明朝＋スモールキャップスで黒／金</p>
+        <p class="tq-ssplit__ttl tq-ssplit__ttl--serif"><b>Our</b> <span>Philosophy</span></p>
+      </div>
+
+      <div class="tq-ssplit__box">
+        <p class="tq-ssplit__cap">この工夫（太さ＋明度の両方）</p>
+        <p class="tq-ssplit__ttl"><b>2026 EVENT</b> <span>SCHEDULE</span></p>
+      </div>
+
+    </div>
+    <p class="tq-ssplit__note">
+      2は和文でも成立する。ウェイトを揃えたまま後半だけ色を変えると、強調ではなく「そこが主語」の指定として読める。
+    </p>
+  </section>
+
+  <!-- ③ 行の高さが変わらない -->
+  <section class="tq-ssplit__sec">
+    <h3 class="tq-ssplit__secttl">③ 行の高さが変わらない＝カードが揃う</h3>
+    <div class="tq-ssplit__stack">
+
+      <div>
+        <p class="tq-ssplit__cap">普通：サブを下に足すと、1枚だけ行が増えて下端がずれる</p>
+        <div class="tq-ssplit__cards">
+          <div class="tq-ssplit__card">
+            <p class="tq-ssplit__plain">項目A</p>
+            <p class="tq-ssplit__sub">補足のラベル</p>
+            <div class="tq-ssplit__rule"></div>
+            <p>本文テキストが入ります。</p>
+          </div>
+          <div class="tq-ssplit__card">
+            <p class="tq-ssplit__plain">項目B</p>
+            <div class="tq-ssplit__rule"></div>
+            <p>本文テキストが入ります。</p>
+          </div>
+          <div class="tq-ssplit__card">
+            <p class="tq-ssplit__plain">項目C</p>
+            <div class="tq-ssplit__rule"></div>
+            <p>本文テキストが入ります。</p>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <p class="tq-ssplit__cap">この工夫：同じ1行の中で割るので、3枚とも罫の位置が揃う</p>
+        <div class="tq-ssplit__cards">
+          <div class="tq-ssplit__card">
+            <p class="tq-ssplit__ttl"><b>項目A</b><span>／補足</span></p>
+            <div class="tq-ssplit__rule"></div>
+            <p>本文テキストが入ります。</p>
+          </div>
+          <div class="tq-ssplit__card">
+            <p class="tq-ssplit__ttl"><b>項目B</b><span>／補足</span></p>
+            <div class="tq-ssplit__rule"></div>
+            <p>本文テキストが入ります。</p>
+          </div>
+          <div class="tq-ssplit__card">
+            <p class="tq-ssplit__ttl"><b>項目C</b><span>／補足</span></p>
+            <div class="tq-ssplit__rule"></div>
+            <p>本文テキストが入ります。</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ④ 割る位置 -->
+  <section class="tq-ssplit__sec">
+    <h3 class="tq-ssplit__secttl">④ 割る位置は語の切れ目に合わせる</h3>
+    <div class="tq-ssplit__pair">
+
+      <div>
+        <p class="tq-ssplit__cap">悪い：語の途中で割る</p>
+        <div class="tq-ssplit__box">
+          <p class="tq-ssplit__ttl tq-ssplit__ttl--bad"><b>2026 EV</b><span>ENT SCHEDULE</span></p>
+        </div>
+        <p class="tq-ssplit__note">読み違いを生む。重さの切り替わりが語の境目でないと、別の単語に見える。</p>
+      </div>
+
+      <div>
+        <p class="tq-ssplit__cap">良い：語の切れ目で割る</p>
+        <div class="tq-ssplit__box">
+          <p class="tq-ssplit__ttl"><b>2026 EVENT</b> <span>SCHEDULE</span></p>
+        </div>
+        <p class="tq-ssplit__note">「2026年の催し」と「その一覧」に自然に割れる。</p>
+      </div>
+
+    </div>
+  </section>
+
+</div>

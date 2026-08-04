@@ -1,0 +1,29 @@
+{
+  "id": "rule/lines-in-the-margin",
+  "name": "余白は囲わず、切れっぱなしの細線で埋める",
+  "ordinary": "余白は空けたままにするか、薄い装飾パターンを敷いて埋める",
+  "actual": "主役の背後に1px幅の45°斜線を3本、長さと色（濃グレー／ベージュ／赤茶）を変えて平行に走らせ、両端は唐突に途切れさせる。囲いでないので張力だけが残る。円やロゴの外には接線のような110pxの細線を rotate(-38deg) で1本引き、端に小さな四芒星を1つ添えて余白の空きすぎを止める。人物や場所が主役なら、塗り無し・線幅1pxの手描き線画（ブランコ、木、落書き）を余白に散らし、写真の中身の続きを余白に描く。",
+  "css": ".slash{position:absolute;width:180px;height:1px;background:#3b3a35;transform:rotate(-45deg);z-index:0}\n.slash:nth-child(2){background:#b9ad86;width:140px}\n.slash:nth-child(3){background:#c46a5a;width:96px}\n/* 接線＋星 */\n.ph-wrap::before{content:\"\";position:absolute;right:-6%;top:12%;width:110px;height:1px;background:#c9ad6a;rotate:-38deg}\n.spark::after{content:\"✦\";color:#c9ad6a;font-size:11px;position:absolute;left:8%;bottom:6%}\n/* 手描き線画 */\n.doodle{position:absolute;stroke:#222;stroke-width:1;fill:none;vector-effect:non-scaling-stroke}\n.doodle.swing{left:6%;bottom:8%;width:14%}\n.doodle.gym{right:8%;top:12%;width:18%}",
+  "params": [
+    "角度45deg／-38deg",
+    "本数1〜3",
+    "長さ96〜180px",
+    "線画のモチーフ（写真の中身と呼応させる）"
+  ],
+  "appliesTo": ["voice", "member", "hero", "value"],
+  "impact": 2,
+  "effort": 2,
+  "why": "線が途中で切れていると囲いにならず、静止した面に速度と張力だけが足される",
+  "avoid": "情報密度が高いセクション（斜線が読解の邪魔になる）",
+  "sources": ["tanq_s10", "musashino_s08", "meisei-kg_s07"],
+  "notes": [
+    "tanq_s10 を拡大すると、斜線は主役（六角に切った写真）の背後を通り、写真に隠れる側でも端で切れる側でも、どこにも接点や角を作らない。線が2本交わって角ができた瞬間に囲いとして読まれるので、平行に走らせるのが条件。",
+    "3本の長さを 180 / 140 / 96px と全部変えているのが効いている。同じ長さで揃えると『罫線パターン』に戻って速度が消える。色も濃グレー／ベージュ／赤茶と3色で、彩度の低い順に長い。",
+    "demo ①では、同じ余白を（A）薄い装飾パターンで埋めた版、（B）線で囲った版、（C）切れっぱなしの斜線3本、の3通りで比べた。Aは面が均質に埋まって速度が出ず、Bは中と外に分かれて張力が消える。差が出るのは『閉じているかどうか』であって線の量ではない。",
+    "musashino_s08 の接線は円に触れていない。触れさせると『円の一部』になって外の余白が死ぬので、円の外を通り過ぎる位置に置く。反対側（左下）に置く ✦ 1つは、線が片側に寄って傾いた重心を戻すための錘。線と星は必ず対角に置く。",
+    "meisei-kg_s07 の線画は、写真に写っている場所の続き（ブランコ・木・遊具）を余白に描いたもの。無関係なアイコンを散らすと装飾になるが、写真の中身と呼応していると画面の延長として読める。モチーフ選びがこの手法の8割。",
+    "実装：斜線は幅だけ持つ1pxの矩形を rotate するのが最も軽い。transform-origin を 50% 50% にしておくと、指定した left/top が回転後も見た目の中心になるので配置を追いやすい。線画SVGは vector-effect:non-scaling-stroke を付けないと、幅を%指定した瞬間に線が太る。",
+    "avoid の再現は demo ④。斜線を敷いたまま本文を流すと、行間を線が横切って読みが止まる。斜線は『空いている面』のためのもので、文字が入る面には持ち込まない。"
+  ],
+  "demoNotes": "①同じ余白を、装飾パターン／囲い枠／切れっぱなしの斜線3本で埋め比べた。②円だけの版と、110pxの接線1本＋対角の✦を足した版を対比。③写真だけの版と、写真の中身に呼応する1px線画（ブランコ・木・遊具）を余白に散らした版を対比。④本文が詰まった面に同じ斜線を敷いて、効かなくなる条件を見せた。"
+}

@@ -1,0 +1,272 @@
+<style>
+/* ============================================================
+   type/unit-demote
+   数字だけ残して単位・小数・ラベルの級数を半分以下に落とす
+   ============================================================ */
+
+@layer tq-fallback{
+  :root{
+    --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+    --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+    --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+    --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    --f-disp:var(--f-sans);
+    --f-num:"Helvetica Neue",Arial,var(--f-sans);
+    --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+    --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px; --fs-3xl:50px; --fs-4xl:64px;
+    --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+    --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  }
+}
+
+/* 契約に無い値だけ宣言。色はすべてトークン（＋color-mix）から作る。 */
+:root{
+  --tq-unit-fs:clamp(46px,9vw,90px);  /* 主役の数字。契約の最大 --fs-4xl:64px を超える */
+  --tq-unit-sub:.55em;                /* 小数・単位の比率（0.5〜0.6em） */
+  --tq-unit-pre:.11em;                /* 「より」などの前置き */
+  --tq-unit-tail:.42em;               /* 「/1レッスン」などの後置き */
+  --tq-unit-fs-label:13px;            /* 懐に食い込ませるラベル */
+  --tq-unit-fs-era:9px;               /* 年号など極小の従 */
+}
+
+.tq-unit{
+  font-family:var(--f-sans); color:var(--c-ink2);
+  line-height:var(--lh-head); -webkit-text-size-adjust:100%;
+  padding:var(--s5); background:var(--c-bg);
+}
+.tq-unit *{ box-sizing:border-box }
+
+/* --- デモの枠組み ------------------------------------------- */
+.tq-unit__lead{ margin:0 0 var(--s6); font-size:var(--fs-note); color:var(--c-ink3); line-height:var(--lh-body) }
+.tq-unit__sec{ margin-top:var(--s7) }
+.tq-unit__sec:first-of-type{ margin-top:0 }
+.tq-unit__secttl{ margin:0 0 var(--s5); font-size:var(--fs-sm); font-weight:700; color:var(--c-ink) }
+.tq-unit__cap{
+  display:flex; align-items:center; gap:var(--s2);
+  margin:0 0 var(--s4); font-size:var(--fs-note); font-weight:700; color:var(--c-ink3); letter-spacing:.04em;
+}
+.tq-unit__cap::before{ content:""; width:var(--s5); height:1px; background:var(--c-line); flex:0 0 auto }
+.tq-unit__note{ margin:var(--s4) 0 0; font-size:var(--fs-note); color:var(--c-ink3); line-height:var(--lh-body) }
+.tq-unit__pair{ display:grid; gap:var(--s6); grid-template-columns:repeat(auto-fit,minmax(240px,1fr)) }
+.tq-unit__quad{ display:grid; gap:var(--s6) var(--s5); grid-template-columns:repeat(auto-fit,minmax(210px,1fr)) }
+.tq-unit__box{ border:1px solid var(--c-line); border-radius:var(--r-s); padding:var(--s5); min-width:0 }
+.tq-unit__boxttl{
+  margin:0 0 var(--s5); padding-bottom:var(--s2); border-bottom:1px solid var(--c-line);
+  font-size:var(--fs-note); font-weight:700; color:var(--c-ink3); letter-spacing:.04em;
+}
+.tq-unit__lbl{ margin:0 0 var(--s2); font-size:var(--fs-sm); font-weight:700; color:var(--c-ink) }
+
+/* ============================================================
+   工夫の本体：数字だけ残して、それ以外を落とす
+   ============================================================ */
+.tq-unit__stat{
+  position:relative; margin:0;
+  font-family:var(--f-num); font-weight:800; color:var(--c-ink);
+  font-size:var(--tq-unit-fs); line-height:1; letter-spacing:-.02em;
+  font-variant-numeric:tabular-nums;   /* 桁がずれない */
+}
+.tq-unit__stat .tq-unit__sub{   /* 小数・単位 */
+  font-size:var(--tq-unit-sub); vertical-align:baseline; letter-spacing:0;
+}
+.tq-unit__stat .tq-unit__pre{   /* 「より」など、数字の上に置く前置き */
+  display:block; font-size:var(--tq-unit-pre); font-weight:700; letter-spacing:.06em;
+  color:var(--c-ink3); margin-bottom:var(--s1);
+}
+.tq-unit__stat .tq-unit__tail{  /* 「／1レッスン」など、数字の後ろに置く単位 */
+  font-size:var(--tq-unit-tail); font-weight:700; color:var(--c-ink3); letter-spacing:.02em;
+}
+.tq-unit__stat--brand{ color:var(--c-primary) }
+
+/* 数字も従も同じ1色にして、級数だけで主従を作る（武蔵野型） */
+.tq-unit__year{
+  margin:0; font-family:var(--f-disp); font-weight:400; color:var(--c-accent);
+  font-size:var(--fs-2xl); line-height:1; letter-spacing:.02em;
+  font-variant-numeric:tabular-nums;
+}
+.tq-unit__era{
+  margin:var(--s1) 0 0; font-size:var(--tq-unit-fs-era); letter-spacing:.06em; color:var(--c-accent);
+}
+
+/* 4枚並べる箱の中では主役の数字を一段落とす（狭い列でも溢れないように） */
+.tq-unit__quad .tq-unit__stat{ font-size:clamp(38px,5.4vw,64px) }
+
+/* ラベルを数字の懐へ食い込ませ、小さい方を濃くする（セイハ型）
+   padding-left はラベルの居場所。ラベル幅より少し狭くすると、右端が数字の懐へ食い込む。 */
+.tq-unit__stat--counter{
+  padding-left:.6em;
+  color:color-mix(in srgb, var(--c-primary) 34%, var(--c-bg));
+}
+.tq-unit__counterlbl{
+  position:absolute; left:0; bottom:22%;
+  font-family:var(--f-num); font-size:var(--tq-unit-fs-label); font-weight:700;
+  letter-spacing:.2em; color:var(--c-primary);
+}
+
+/* --- 比較用「普通」：全部同じ級数で1行に組む --------------- */
+.tq-unit__plain{
+  margin:0; font-family:var(--f-num); font-weight:800; color:var(--c-ink);
+  font-size:var(--fs-2xl); line-height:1.1; letter-spacing:0;
+}
+.tq-unit__plain small{ font-size:1em; font-weight:800 }
+
+/* --- tnum の有無 -------------------------------------------- */
+.tq-unit__nums{ margin:0; padding:0; list-style:none; font-family:var(--f-num); font-weight:800 }
+.tq-unit__nums li{ font-size:var(--fs-2xl); line-height:1.15; color:var(--c-ink) }
+.tq-unit__nums--tnum li{ font-variant-numeric:tabular-nums }
+.tq-unit__nums--prop li{ font-variant-numeric:proportional-nums }
+
+/* --- 棒グラフの上に置く例（Kimini型） ----------------------- */
+.tq-unit__bars{ display:flex; align-items:flex-end; gap:var(--s5); height:var(--s9,110px) }
+.tq-unit__bar{ flex:1 1 0; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100% }
+.tq-unit__bar > p{ margin:0 0 var(--s2); font-family:var(--f-num); font-weight:800; font-size:var(--fs-lg); line-height:1; color:var(--c-primary) }
+.tq-unit__bar > p .tq-unit__sub{ font-size:var(--tq-unit-sub); font-weight:700 }
+.tq-unit__bar span{ display:block; width:100%; background:var(--c-primary); border-radius:var(--r-s) var(--r-s) 0 0 }
+.tq-unit__bar--a > p{ color:var(--c-ink3) }
+.tq-unit__bar--a span{ background:var(--c-line); height:38% }
+.tq-unit__bar--b span{ height:78% }
+.tq-unit__bar em{ display:block; margin-top:var(--s2); font-style:normal; font-size:var(--fs-note); color:var(--c-ink3) }
+
+/* --- 使ってはいけない例：単位も数字と同じ重さで組む -------- */
+.tq-unit__bad .tq-unit__sub{ color:var(--c-ink3) }
+.tq-unit__same{
+  margin:0; font-family:var(--f-num); font-weight:800; color:var(--c-ink);
+  font-size:var(--fs-2xl); line-height:1.15; letter-spacing:0;
+}
+</style>
+
+<div class="tq-unit">
+  <p class="tq-unit__lead">
+    数字だけを大きいまま残し、小数・単位・前置き・ラベルの級数を半分以下に落とす。
+    単位が落ちると数字は「文字」ではなく「図形」として読まれ、グラフの棒と同じ速度で届く。
+  </p>
+
+  <!-- ① 普通 / この工夫 -->
+  <section class="tq-unit__sec">
+    <h3 class="tq-unit__secttl">① 同じ数値を、級数の付け方だけ変える</h3>
+    <div class="tq-unit__pair">
+
+      <div>
+        <p class="tq-unit__cap">普通：全部同じ級数で1行に組む</p>
+        <div class="tq-unit__box">
+          <p class="tq-unit__lbl">項目名がここに入ります</p>
+          <p class="tq-unit__plain">95.3%</p>
+          <p class="tq-unit__plain">月々3,076円（税込）／1レッスン</p>
+        </div>
+        <p class="tq-unit__note">数字と単位が同じ重さなので、どこを見ればよいか決まらない。</p>
+      </div>
+
+      <div>
+        <p class="tq-unit__cap">この工夫：小数・単位を0.55em、前置きを0.11emに落とす</p>
+        <div class="tq-unit__box">
+          <p class="tq-unit__lbl">項目名がここに入ります</p>
+          <p class="tq-unit__stat">95<span class="tq-unit__sub">.3%</span></p>
+          <p class="tq-unit__stat tq-unit__stat--brand">
+            <span class="tq-unit__pre">より</span>3,076<span class="tq-unit__sub">円</span><span class="tq-unit__tail">／1レッスン</span>
+          </p>
+        </div>
+        <p class="tq-unit__note">「95」と「3,076」だけが図形として立つ。単位は消していないので情報は落ちていない。</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ② 型 -->
+  <section class="tq-unit__sec">
+    <h3 class="tq-unit__secttl">② 落とし方は4通り</h3>
+    <div class="tq-unit__quad">
+
+      <div class="tq-unit__box">
+        <p class="tq-unit__boxttl">1／小数・単位を0.55em</p>
+        <p class="tq-unit__stat">95<span class="tq-unit__sub">.3%</span></p>
+      </div>
+
+      <div class="tq-unit__box">
+        <p class="tq-unit__boxttl">2／前置き・単位で3段の級数差</p>
+        <p class="tq-unit__stat tq-unit__stat--brand">
+          <span class="tq-unit__pre">より</span>2,930<span class="tq-unit__sub">円</span><span class="tq-unit__tail">／1レッスン</span>
+        </p>
+      </div>
+
+      <div class="tq-unit__box">
+        <p class="tq-unit__boxttl">3／同じ1色のまま級数だけで主従</p>
+        <p class="tq-unit__year">1924</p>
+        <p class="tq-unit__era">年号がここに入ります</p>
+      </div>
+
+      <div class="tq-unit__box">
+        <p class="tq-unit__boxttl">4／ラベルを数字の懐へ・小さい方を濃く</p>
+        <p class="tq-unit__stat tq-unit__stat--counter">
+          <span class="tq-unit__counterlbl">VALUE</span>03
+        </p>
+      </div>
+
+    </div>
+    <p class="tq-unit__note">
+      3は色を1色に固定し、級数だけで主従を作る型。4は逆に、小さい方を濃くして数字を面（地）に回している。
+    </p>
+  </section>
+
+  <!-- ③ 棒グラフの上／tnum -->
+  <section class="tq-unit__sec">
+    <h3 class="tq-unit__secttl">③ グラフの上に置く／桁を揃える</h3>
+    <div class="tq-unit__pair">
+
+      <div>
+        <p class="tq-unit__cap">単位「点」だけ6割にして棒の上へ</p>
+        <div class="tq-unit__box">
+          <div class="tq-unit__bars">
+            <div class="tq-unit__bar tq-unit__bar--a">
+              <p>198<span class="tq-unit__sub">点</span></p><span></span>
+            </div>
+            <div class="tq-unit__bar tq-unit__bar--b">
+              <p>469<span class="tq-unit__sub">点</span></p><span></span>
+            </div>
+          </div>
+          <p class="tq-unit__note">棒の高さと数字の大きさが同じ向きに効く。</p>
+        </div>
+      </div>
+
+      <div>
+        <p class="tq-unit__cap">tabular-nums（左）と proportional（右）</p>
+        <div class="tq-unit__box">
+          <div class="tq-unit__pair">
+            <ul class="tq-unit__nums tq-unit__nums--tnum">
+              <li>111</li><li>999</li><li>1024</li>
+            </ul>
+            <ul class="tq-unit__nums tq-unit__nums--prop">
+              <li>111</li><li>999</li><li>1024</li>
+            </ul>
+          </div>
+          <p class="tq-unit__note">左は桁の幅が揃い、右は「1」が細くて縦の線が合わない。数字を並べるときは tnum を入れる。</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ④ 使ってはいけない場合 -->
+  <section class="tq-unit__sec">
+    <h3 class="tq-unit__secttl">④ 単位そのものが訴求のときは、落としてはいけない</h3>
+    <div class="tq-unit__pair">
+
+      <div>
+        <p class="tq-unit__cap">落とした場合（訴求が消える）</p>
+        <div class="tq-unit__box tq-unit__bad">
+          <p class="tq-unit__stat">3<span class="tq-unit__sub">ヶ月で</span></p>
+          <p class="tq-unit__note">「3」だけが立ち、肝心の「ヶ月で」が読まれない。</p>
+        </div>
+      </div>
+
+      <div>
+        <p class="tq-unit__cap">落とさない場合</p>
+        <div class="tq-unit__box">
+          <p class="tq-unit__same">たった3ヶ月で</p>
+          <p class="tq-unit__note">単位が売りなら、数字と同じ重さのまま組む。</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</div>

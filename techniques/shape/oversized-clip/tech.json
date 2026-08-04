@@ -1,0 +1,28 @@
+{
+  "id": "shape/oversized-clip",
+  "name": "円や装飾を版面より大きくし、面や画面の縁で断つ",
+  "ordinary": "円や飾りは全体が収まるサイズにして丸ごと見せる／写真の上に長方形の半透明スクリムを敷く",
+  "actual": "版面の高さを超える大円で写真をマスクし、下辺だけ水平に直線カット。幅72px（画面の10%）の柱の中に直径280pxの円を置き、弧の一部だけを覗かせる。文字を読ませる霞ませレイヤーも長方形でなく画面幅108%の白い楕円1枚にして、四隅にだけ写真を濃く残す。草花の線画やスパークルもカード端・面の下辺で切り落とし、丸ごと見せない。",
+  "css": "/* 大円で抜き、下辺だけ直線で断つ */\n.photo{clip-path:circle(52% at 50% 42%)}\n.photo img{clip-path:inset(0 0 22% 0)}\n/* 細帯で巨大円を窓抜き */\n.rail{position:absolute;inset:0 auto 0 0;width:10%;overflow:hidden;background:#e4e9f0}\n.rail::after{content:\"\";position:absolute;left:-140px;top:25px;width:280px;aspect-ratio:1;\n             border-radius:50%;background:#12304c}\n/* 矩形スクリムの代わりに画面幅級の楕円 */\nsection{position:relative;overflow:hidden}\nsection::before{content:'';position:absolute;left:-4%;top:-12%;width:108%;height:125%;\n  border-radius:50%;background:rgba(255,255,255,.85);backdrop-filter:blur(4px);z-index:1}\nsection .inner{position:relative;z-index:2}\n/* 装飾は面の縁で断つ */\n.panel{position:relative;overflow:hidden}\n.panel::after{content:\"\";position:absolute;left:24px;bottom:-26px;width:60px;height:60px;\n  background:url(sparkle.svg) center/contain no-repeat;opacity:.5}",
+  "params": [
+    "はみ出し量",
+    "断つ辺（下辺／画面端／柱の幅）",
+    "楕円の不透明度"
+  ],
+  "appliesTo": ["hero", "value", "access", "features", "footer"],
+  "impact": 3,
+  "effort": 2,
+  "why": "全体が見えない弧のほうが円そのものより大きさを想像させ、矩形のベタがけと違って四隅に写真の情報量が残る",
+  "avoid": "親に overflow:hidden を付け忘れると横スクロールが出る",
+  "sources": ["yugao_s08", "ogawa_s10", "ogawa_s12", "sho_hanamaru_s11", "ikeda_s03", "kobe-wu_s07"],
+  "notes": [
+    "現物 ogawa_s10 は左端の柱が実測 約72px（720px幅の10%）で、その中に見えているのは直径280px級の円の左寄りの弧だけ。円の中心は柱の外にあり、円としては半分も見えていない。にもかかわらず（というより、だからこそ）画面外に大きな図形があると感じさせる。",
+    "sho_hanamaru_s11 の白い霞ませレイヤーは矩形ではなく画面幅を超える楕円1枚。中央の文字の可読性は矩形ベタと同等なのに、四隅の子どもたちの表情がはっきり残る。demo③はこの2つを同じ写真・同じ不透明度(85%)で並べてあり、差は形だけ。",
+    "実装で判明：clip-path は1要素に1つしか効かないので、『大円で抜く＋下辺を直線で断つ』は2階層に分ける必要がある。外側の div に circle()、内側の img に inset() を掛ける（定義のCSSがこの形になっているのはそのため）。1要素で済ませたい場合は mask を併用するが、階層を分けるほうが読みやすい。",
+    "yugao_s08 の circle(52% at 50% 42%) は、中心が上に42%寄っているのが要点。50%（中央）にすると円が枠にちょうど収まってしまい『大きな円の一部』に見えなくなる。中心をずらすことで弧が枠外へ抜ける。",
+    "楕円スクリムの色は color-mix(in srgb, var(--c-bg) 85%, transparent) と書けばトークンだけで済む（rgba 直書きが不要になる）。backdrop-filter:blur(4px) は無くても成立するが、写真が細かい柄のときだけ効く。",
+    "装飾（ikeda_s03 の線画・スパークル）は、丸ごと見えていると『置いたアイコン』、切れていると『面の外へ世界が続いている合図』になる。切る量は要素サイズの3〜4割が目安で、半分以上切ると何の形か読めなくなる。",
+    "avoid のとおり overflow:hidden が生命線。柱・カード・セクションそれぞれ、はみ出させる側の親に必ず付ける。特に width:108% の楕円は付け忘れると即座に横スクロールが出る。"
+  ],
+  "demoNotes": "①角丸12px／円で丸ごと／大円＋下辺22%カット の3枚、②柱の中の円を「丸ごと120px」と「直径280pxを幅10%の柱で断つ」で対比、③矩形スクリムと108%楕円スクリムを同じ写真・同じ85%で対比、④カード内の飾りを丸ごと／縁で断つで対比、で構成。"
+}

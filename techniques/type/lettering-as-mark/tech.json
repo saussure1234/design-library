@@ -1,0 +1,36 @@
+{
+  "id": "type/lettering-as-mark",
+  "name": "見出しをフォントで組まず作字し、並べても高さを揃えない",
+  "ordinary": "カラム見出しは同じ書体・同じ級数で組み、上端も下端も揃える。",
+  "actual": "花まるは画面幅の半分を占める巨大な和文見出しを書体でなく矩形タイルの集合で作り、1画を2〜4枚に割って1〜2pxの目地（親の地色が透ける）を走らせ、文字とモザイク地紋を兼ねさせる。学藝の森は3カラムの見出しを、屋根型の線を乗せた「子ども」、字間0.5emで3行に割った「大人／の CoE」、角丸楕円の判子＋「学藝センター」と全部違う作りにし、級数も占有高さもバラバラのまま下の本文の頭の位置だけ揃えている。",
+  "css": ".tiles{display:grid; grid-template-columns:repeat(48,8px); grid-auto-rows:8px; gap:2px}\n.tiles i{grid-area:var(--r)/var(--c)/span var(--rs)/span var(--cs); background:#f0a0bd}\n.tiles i.g{background:#d8d8d8}\n/* 高さを揃えず下端だけ合わせる */\n.cols{display:grid; grid-template-columns:repeat(3,1fr); align-items:start}\n.cols h3{min-height:150px; display:grid; align-content:end; justify-items:center}\n.h-coe{letter-spacing:.5em; line-height:1.15; font-size:34px}\n.h-kids{font-size:40px}",
+  "appliesTo": [
+    "hero",
+    "features",
+    "section-head"
+  ],
+  "impact": 3,
+  "effort": 3,
+  "why": "見出しを図として扱うと、3本が同じ書式の並列でなく別々のプロジェクトだと一目で伝わる。",
+  "avoid": "検索・読み上げが要る見出し（タイル化は読めないので aria-label が必須）。",
+  "params": [
+    "タイルのマス(8px)と目地(1〜2px)",
+    "揃える基準(本文の頭だけ)",
+    "作字の装飾(屋根線/判子/字間0.5em)"
+  ],
+  "sources": [
+    "hanamaru_s04",
+    "gakugei_s07"
+  ],
+  "notes": [
+    "原案CSSの .cols{align-items:start} は間違い。start にすると見出しが中身の高さまで縮み、下端も本文の頭も揃わなくなる。正しくは各カラムをdivで包まず、見出し3本を1行目・本文3本を2行目に置いた1つのグリッドにすること。1行目の高さが一番高い見出しで決まり、本文の頭は自動で揃う。デモはこの形に直した。",
+    "揃えるのは本文の頭「だけ」。見出しの上端・下端・級数・書体は全部バラバラでよく、むしろ揃えると効果が消える。デモは本文の上に破線（検証用ガイド）を引いて、そこだけが一直線であることを見せている。",
+    "1文字は12×12のマス。grid-template-columns:repeat(12,var(--u)) と grid-template-rows:repeat(12,var(--u)) を両方明示しないと、画数の少ない字（し など）だけ行数が減って隣と背が揃わない。",
+    "目地は gap:2px で作る。マス目をまたぐタイル（span 3 など）は間のgapを飲み込んで1本の画に見えるので、1画を2〜4枚に割った境目にだけ目地が現れる。この「割り方」が作字そのもの。",
+    "タイルの色は2色。主色の淡いほう（デモは color-mix(in srgb, var(--c-primary) 45%, var(--c-bg))）と --c-line のグレーを不規則に混ぜると、文字であると同時にモザイクの地紋に見える。3色以上使うと文字が崩れて読めなくなる。",
+    "マス目 --u は clamp(5px,1.5vw,9px) で可変にした。1文字＝12マス＋目地なので、9pxなら1字130px・3字で約415px、5pxなら1字82px・3字で約260px。375pxでも溢れない。",
+    "タイル作字は読めないので、外側に role=\"img\" + aria-label=\"見出し\" を付け、タイル自体は aria-hidden にする。SEOで拾わせたい語には使わない。",
+    "作り分けの引き出しは3つ。屋根型の線を乗せる（SVGのpolyline1本）／字間0.5emで行に割り極小の欧文を脇に置く／円の判子＋2行。同じ語でも作りが違えば別々のプロジェクトに見える、が狙い。",
+    "デモは techniques/type/lettering-as-mark/demo.html。A＝タイル作字（普通＝同じ語を書体で組む。級数はマス目から calc(var(--u)*12) で作って寸法を合わせてある）、B＝3本の作りをそろえず本文の頭だけ揃える（普通＝同じ書式で上下とも揃える）。"
+  ]
+}

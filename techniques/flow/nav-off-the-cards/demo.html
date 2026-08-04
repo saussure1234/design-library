@@ -79,7 +79,7 @@
 /* 進捗はドットでなく横バー */
 .tq-noff__bars{display:flex; gap:var(--s2); margin-top:var(--s5)}
 .tq-noff__bars i{display:block; width:56px; height:3px; background:var(--c-ink3)}
-.tq-noff__bars i.is-on{background:var(--c-primary)}
+.tq-noff__bars i.tq-noff__bar--on{background:var(--c-primary)}
 
 .tq-noff__rail{
   /* 「3.5枚ぶん」で割ると、幅がいくつでも4枚目がちょうど半分だけ見える */
@@ -108,7 +108,7 @@
   border-color:var(--c-bg); color:var(--c-bg);
 }
 .tq-noff__dark .tq-noff__bars i{background:var(--c-ink3)}
-.tq-noff__dark .tq-noff__bars i.is-on{background:var(--c-bg)}
+.tq-noff__dark .tq-noff__bars i.tq-noff__bar--on{background:var(--c-bg)}
 
 @media (max-width:560px){
   .tq-noff__grid{grid-template-columns:1fr}
@@ -177,7 +177,7 @@
           <h3 class="tq-noff__t">見出しがここに入ります</h3>
         </article>
       </div>
-      <div class="tq-noff__bars"><i class="is-on"></i><i></i><i></i></div>
+      <div class="tq-noff__bars"><i class="tq-noff__bar--on"></i><i></i><i></i></div>
       <p class="tq-noff__cap">塗りなし・1px枠の正円を見出しと同じ行の右端へ。カードの上には何も重ならないので、右端の断ち切りがそのまま読める。進捗は幅56pxの横バーで、現在位置だけ色が変わる。</p>
     </div>
 
@@ -215,7 +215,7 @@
           <h3 class="tq-noff__t">見出しがここに入ります</h3>
         </article>
       </div>
-      <div class="tq-noff__bars"><i class="is-on"></i><i></i><i></i></div>
+      <div class="tq-noff__bars"><i class="tq-noff__bar--on"></i><i></i><i></i></div>
       <p class="tq-noff__cap">暗い面や写真に重なる位置では枠と文字を白にし、直径を34pxまで上げる。位置は見出し行の右端のまま。</p>
     </div>
   </div>

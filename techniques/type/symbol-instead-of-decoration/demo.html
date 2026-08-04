@@ -1,0 +1,290 @@
+<style>
+/* ============================================================
+   type/symbol-instead-of-decoration
+   罫や枠の代わりに記号（＝・&・（）・傍点）を組版要素として使う
+   ============================================================ */
+
+@layer tq-fallback{
+  :root{
+    --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+    --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+    --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+    --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    --f-disp:var(--f-sans);
+    --f-num:"Helvetica Neue",Arial,var(--f-sans);
+    --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+    --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px; --fs-3xl:50px;
+    --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+    --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  }
+}
+
+/* 契約に無い値だけ宣言。色はトークン（＋color-mix）から作る。 */
+:root{
+  --tq-symbol-fs-amp:46px;   /* 接続子の & （--fs-2xl:38 と --fs-3xl:50 の間） */
+  --tq-symbol-fs-name:11px;  /* 名前の上に置く極小欧文 */
+  --tq-symbol-ls-thin:.3em;  /* 細字小見出しの字間 */
+  /* 接続子は「読ませない」ので地色寄りに置く */
+  --tq-symbol-faint:color-mix(in srgb, var(--c-accent) 24%, var(--c-bg));
+  --tq-symbol-dot:color-mix(in srgb, var(--c-primary) 55%, var(--c-bg));
+}
+
+.tq-symbol{
+  font-family:var(--f-sans); color:var(--c-ink2);
+  line-height:var(--lh-head); -webkit-text-size-adjust:100%;
+  padding:var(--s5); background:var(--c-bg);
+}
+.tq-symbol *{ box-sizing:border-box }
+
+/* --- デモの枠組み ------------------------------------------- */
+.tq-symbol__lead{ margin:0 0 var(--s6); font-size:var(--fs-note); color:var(--c-ink3); line-height:var(--lh-body) }
+.tq-symbol__sec{ margin-top:var(--s7) }
+.tq-symbol__sec:first-of-type{ margin-top:0 }
+.tq-symbol__secttl{ margin:0 0 var(--s5); font-size:var(--fs-sm); font-weight:700; color:var(--c-ink) }
+.tq-symbol__cap{
+  display:flex; align-items:center; gap:var(--s2);
+  margin:0 0 var(--s4); font-size:var(--fs-note); font-weight:700; color:var(--c-ink3); letter-spacing:.04em;
+}
+.tq-symbol__cap::before{ content:""; width:var(--s5); height:1px; background:var(--c-line); flex:0 0 auto }
+.tq-symbol__note{ margin:var(--s4) 0 0; font-size:var(--fs-note); color:var(--c-ink3); line-height:var(--lh-body) }
+.tq-symbol__pair{ display:grid; gap:var(--s6); grid-template-columns:repeat(auto-fit,minmax(260px,1fr)) }
+.tq-symbol__quad{ display:grid; gap:var(--s6) var(--s5); grid-template-columns:repeat(auto-fit,minmax(220px,1fr)) }
+.tq-symbol__box{
+  border:1px solid var(--c-line); border-radius:var(--r-s); padding:var(--s5);
+  min-width:0; text-align:center;
+}
+.tq-symbol__boxttl{
+  margin:0 0 var(--s5); padding-bottom:var(--s2); border-bottom:1px solid var(--c-line);
+  font-size:var(--fs-note); font-weight:700; color:var(--c-ink3); letter-spacing:.04em; text-align:left;
+}
+
+/* ============================================================
+   1／＝ … 言い換えの関係を1文字で名指しする（花まる型）
+   ============================================================ */
+.tq-symbol__thin{
+  margin:0; font-size:var(--fs-lg); font-weight:400; color:var(--c-ink);
+  letter-spacing:var(--tq-symbol-ls-thin); line-height:var(--lh-head);
+}
+.tq-symbol__eq{
+  display:block; margin:var(--s3) 0; color:var(--c-ink);
+  font-size:var(--fs-lg); line-height:1;
+}
+.tq-symbol__eq::before{ content:"=" }
+.tq-symbol__fat{
+  margin:0; font-size:var(--fs-2xl); font-weight:800; color:var(--c-primary);
+  letter-spacing:0; line-height:1.4;
+}
+
+/* ============================================================
+   2／& … 接続子。読ませずに「並列」だけ伝える（Buddies型）
+   ============================================================ */
+.tq-symbol__amp{
+  display:flex; align-items:center; justify-content:center; gap:var(--s2);
+  margin:0;
+}
+.tq-symbol__name{ display:grid; justify-items:center; line-height:1.2; white-space:nowrap }
+.tq-symbol__name em{
+  font-style:normal; font-family:var(--f-disp);
+  font-size:var(--tq-symbol-fs-name); font-weight:700; letter-spacing:.08em; color:var(--c-accent);
+}
+.tq-symbol__name b{ font-size:var(--fs-md); font-weight:800; color:var(--c-ink) }
+.tq-symbol__name b span{ font-size:var(--fs-note); font-weight:700 }
+.tq-symbol__amp i{
+  font-style:normal; font-family:var(--f-disp);
+  font-size:var(--tq-symbol-fs-amp); line-height:1; color:var(--tq-symbol-faint);
+  flex:0 0 auto;
+}
+
+/* ============================================================
+   3／（ ） … 括弧を文字から離して囲みの代役にする（リニエ型）
+   ============================================================ */
+.tq-symbol__paren{
+  display:inline-block; margin:0;
+  font-size:var(--fs-note); font-weight:700; letter-spacing:var(--tq-symbol-ls-thin);
+  color:var(--c-primary);
+}
+.tq-symbol__paren::before{ content:"（ " }
+.tq-symbol__paren::after{ content:" ）" }
+.tq-symbol__parenh{
+  margin:var(--s3) 0 0; font-size:var(--fs-xl); font-weight:700; color:var(--c-ink);
+  letter-spacing:.06em;
+}
+
+/* ============================================================
+   4／傍点・破線 … 強調と下線を洋物テンプレから外す（リニエ型）
+   ============================================================ */
+.tq-symbol__dash{
+  margin:0; font-size:var(--fs-lg); font-weight:700; color:var(--c-ink); line-height:2.1;
+}
+.tq-symbol__dash span{
+  border-bottom:2px dashed var(--c-line); padding-bottom:.4em;
+}
+.tq-symbol__emph{
+  font-style:normal;      /* <em> の斜体を戻す。和文に斜体は掛けない */
+  -webkit-text-emphasis:dot var(--tq-symbol-dot);
+  text-emphasis:dot var(--tq-symbol-dot);
+  -webkit-text-emphasis-position:over right;
+  text-emphasis-position:over right;
+}
+
+/* ============================================================
+   比較用「普通」：罫・ピル・色替え
+   ============================================================ */
+.tq-symbol__plainlbl{
+  display:inline-block; margin:0 0 var(--s3); padding:var(--s1) var(--s4);
+  border-radius:var(--r-pill); background:var(--c-primary); color:var(--c-on-primary);
+  font-size:var(--fs-note); font-weight:700; letter-spacing:.04em;
+}
+.tq-symbol__plainrule{
+  height:1px; background:var(--c-line); margin:var(--s4) auto; width:var(--s7);
+}
+.tq-symbol__plainh{
+  margin:0; font-size:var(--fs-lg); font-weight:700; color:var(--c-ink); line-height:var(--lh-head);
+}
+.tq-symbol__plainem{ color:var(--c-primary) }
+.tq-symbol__plaintxt{
+  margin:var(--s3) 0 0; font-size:var(--fs-lg); font-weight:700; color:var(--c-ink); line-height:2.1;
+}
+.tq-symbol__plaintxt u{ text-decoration:underline; text-underline-offset:.3em }
+
+/* --- 混ぜた悪い例 ------------------------------------------- */
+.tq-symbol__mix .tq-symbol__eq{ color:var(--c-accent) }
+.tq-symbol__mix .tq-symbol__thin{ letter-spacing:.16em }
+</style>
+
+<div class="tq-symbol">
+  <p class="tq-symbol__lead">
+    枠・罫・ピル・色替えを足す代わりに、記号を1文字だけ組版要素として置く。
+    記号は「イコール」「並列」「囲み」「強調」という関係そのものを名指しできるので、説明文も装飾も要らなくなる。
+  </p>
+
+  <!-- ① 普通 / この工夫 -->
+  <section class="tq-symbol__sec">
+    <h3 class="tq-symbol__secttl">① 同じ2つの文の関係を、罫で渡すか、記号で名指しするか</h3>
+    <div class="tq-symbol__pair">
+
+      <div>
+        <p class="tq-symbol__cap">普通：ピルのラベル＋細い罫＋色替えの強調</p>
+        <div class="tq-symbol__box">
+          <span class="tq-symbol__plainlbl">ラベル</span>
+          <p class="tq-symbol__plainh">上の文がここに入ります</p>
+          <div class="tq-symbol__plainrule"></div>
+          <p class="tq-symbol__plainh">
+            下の文がここに入ります。<span class="tq-symbol__plainem">強調したい語</span>を含みます
+          </p>
+        </div>
+        <p class="tq-symbol__note">罫は「区切り」しか言えないので、2文がどういう関係なのかは書かないと伝わらない。</p>
+      </div>
+
+      <div>
+        <p class="tq-symbol__cap">この工夫：間に「＝」を1文字だけ置く</p>
+        <div class="tq-symbol__box">
+          <p class="tq-symbol__thin">上の文がここに入ります</p>
+          <span class="tq-symbol__eq"></span>
+          <p class="tq-symbol__fat">下の文がここに<br>入ります</p>
+        </div>
+        <p class="tq-symbol__note">「言い換え」だと1文字で分かる。上は細字＋字間0.3em、下は極太＋字間0で、級数比は約2倍。</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ② 記号の型 -->
+  <section class="tq-symbol__sec">
+    <h3 class="tq-symbol__secttl">② 使える記号は4通り。それぞれ言える関係が違う</h3>
+    <div class="tq-symbol__quad">
+
+      <div class="tq-symbol__box">
+        <p class="tq-symbol__boxttl">＝／言い換え</p>
+        <p class="tq-symbol__thin">上の文</p>
+        <span class="tq-symbol__eq"></span>
+        <p class="tq-symbol__fat">下の文</p>
+      </div>
+
+      <div class="tq-symbol__box">
+        <p class="tq-symbol__boxttl">&amp;／並列（読ませない）</p>
+        <p class="tq-symbol__amp">
+          <span class="tq-symbol__name"><em>Name</em><b>名前<span>さん</span></b></span>
+          <i>&amp;</i>
+          <span class="tq-symbol__name"><em>Name</em><b>名前<span>さん</span></b></span>
+        </p>
+      </div>
+
+      <div class="tq-symbol__box">
+        <p class="tq-symbol__boxttl">（ ）／囲みの代役</p>
+        <p class="tq-symbol__paren">SERVICE</p>
+        <p class="tq-symbol__parenh">見出しが入ります</p>
+      </div>
+
+      <div class="tq-symbol__box">
+        <p class="tq-symbol__boxttl">傍点・破線／強調と下線</p>
+        <p class="tq-symbol__dash">
+          <span><em class="tq-symbol__emph">強調したい語</em>を含む一行が入ります。</span>
+        </p>
+      </div>
+
+    </div>
+    <p class="tq-symbol__note">
+      &amp; は地色寄りの色に落として「読ませない」のが要点。濃くすると3つ目の名前に見えてしまう。
+      （ ）は文字から半角ぶん離すと、枠でも罫でもない「囲い」として働く。
+    </p>
+  </section>
+
+  <!-- ③ 下線と強調の置き換え -->
+  <section class="tq-symbol__sec">
+    <h3 class="tq-symbol__secttl">③ 下線と強調を、洋物テンプレから外す</h3>
+    <div class="tq-symbol__pair">
+
+      <div>
+        <p class="tq-symbol__cap">普通：実線の下線＋色替えの強調</p>
+        <div class="tq-symbol__box">
+          <p class="tq-symbol__plaintxt"><u><span class="tq-symbol__plainem">強調したい語</span>を含む一行が入ります。</u></p>
+          <p class="tq-symbol__plaintxt"><u>二行目がここに入ります。</u></p>
+        </div>
+      </div>
+
+      <div>
+        <p class="tq-symbol__cap">この工夫：破線の下線＋傍点</p>
+        <div class="tq-symbol__box">
+          <p class="tq-symbol__dash"><span><em class="tq-symbol__emph">強調したい語</em>を含む一行が入ります。</span></p>
+          <p class="tq-symbol__dash"><span>二行目がここに入ります。</span></p>
+        </div>
+      </div>
+
+    </div>
+    <p class="tq-symbol__note">
+      傍点は和文の強調記号なので、色を足さずに強調できる。行間は 2.0 以上取らないと点が上の行に触れる。
+    </p>
+  </section>
+
+  <!-- ④ 混ぜない -->
+  <section class="tq-symbol__sec">
+    <h3 class="tq-symbol__secttl">④ 1画面に2種類以上を混ぜない</h3>
+    <div class="tq-symbol__pair">
+
+      <div>
+        <p class="tq-symbol__cap">悪い：＝と（ ）と傍点を同じ面に混ぜる</p>
+        <div class="tq-symbol__box tq-symbol__mix">
+          <p class="tq-symbol__paren">LABEL</p>
+          <p class="tq-symbol__thin">上の文がここに入ります</p>
+          <span class="tq-symbol__eq"></span>
+          <p class="tq-symbol__dash"><span><em class="tq-symbol__emph">下の文</em>がここに入ります</span></p>
+        </div>
+        <p class="tq-symbol__note">記号が模様に見えて、どれがどの関係を指しているか読めなくなる。</p>
+      </div>
+
+      <div>
+        <p class="tq-symbol__cap">良い：この面で使う記号は「＝」1種類だけ</p>
+        <div class="tq-symbol__box">
+          <p class="tq-symbol__thin">上の文がここに入ります</p>
+          <span class="tq-symbol__eq"></span>
+          <p class="tq-symbol__fat">下の文がここに<br>入ります</p>
+        </div>
+        <p class="tq-symbol__note">1種類に絞ると、記号が装飾ではなく関係の名前として読める。</p>
+      </div>
+
+    </div>
+  </section>
+
+</div>

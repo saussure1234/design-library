@@ -1,0 +1,39 @@
+{
+  "id": "shape/paper-metaphor",
+  "name": "セクションの器を紙の実物（ルーズリーフ・二つ折りパンフ）に見立てる",
+  "ordinary": "お知らせ一覧やスケジュールは白い角丸カードのグリッドで素直に並べる",
+  "actual": "①ルーズリーフ＝白い角丸パネルの左内側に直径7〜8pxの黒丸を26px間隔で12〜13個、上端から下端まで縦一列に打ち、右に縦罫1本を通してそこから右をコンテンツ領域にする。②二つ折り＝左右の白パネルを中央の折り目に向かって6度ずつ内側に倒し、折り目に縦のグラデ影、下端に落ち影を敷く。中の日付・イベント名ごと傾く。",
+  "css": "/* ①綴じ穴 */\n.sheet{position:relative;background:#fff;border-radius:24px;\n       box-shadow:0 14px 34px rgba(0,0,0,.08);padding-left:150px}\n.sheet::before{content:'';position:absolute;left:26px;top:44px;bottom:26px;width:8px;\n  background:radial-gradient(#111 3.5px,transparent 4px) 0 0/8px 26px repeat-y}\n/* ②二つ折りの見開き */\n.spread{perspective:1600px;display:flex}\n.page-l{transform:rotateY(6deg);transform-origin:right center}\n.page-r{transform:rotateY(-6deg);transform-origin:left center}\n.gutter{width:18px;background:linear-gradient(90deg,rgba(0,0,0,.12),transparent 40%,transparent 60%,rgba(0,0,0,.12))}",
+  "params": [
+    "穴の数と間隔（26px）",
+    "傾き角（4〜8度）",
+    "影の強さ"
+  ],
+  "appliesTo": [
+    "news",
+    "features",
+    "access",
+    "value",
+    "price"
+  ],
+  "impact": 3,
+  "effort": 2,
+  "why": "「おたより」「配られた紙」という中身と器の形が一致し、枠線を1本も引かずに領域が確定して情報量の多さが苦にならない",
+  "avoid": "硬いBtoB商材（紙メタファーが幼く見える）",
+  "sources": [
+    "meisei-es_s09",
+    "meisei-kg_s10",
+    "meikei_s05"
+  ],
+  "notes": [
+    "現物実測（720px幅の書き出し）：meisei-kg_s10 は綴じ穴の間隔が約24px・13個、meisei-es_s09 は約17px・19個。つまり穴の個数は決め打ちではなく、パネルの高さに合わせて上端から下端まで打ち切っている。定義の『26px間隔・12〜13個』は meisei-kg_s10 側の値。実装では repeat-y に任せて個数を自動にするのが正しい（demoはこの方式）。",
+    "meisei-es_s09 では紙が1枚ではなく、後ろにもう1枚が少し回転して覗いている＝束になっている合図。これを足すと『1枚の紙』から『配られた紙の束』に読み替わる。demo は inset:0 の ::before を rotate(1.2deg) するだけで再現している（translate を足すと横に溢れるので回転だけにする）。",
+    "実装で判明：綴じ穴の右の縦罫は、穴の帯とは別要素にせずコンテンツ側の border-left で引くのが安い。パネルの padding-left を綴じ代の幅にし、中身に border-left:1px を引くだけで『そこから右がコンテンツ領域』が確定する。",
+    "綴じ代の幅は px 固定にすると375pxで本文が潰れる。clamp(76px,13%,150px) にすると現物の150pxを保ったまま狭い幅でも成立する。穴そのものの間隔と直径は px 固定でよい（紙の実物としての寸法なので、幅で変えると紙に見えなくなる）。",
+    "meikei_s05（二つ折り）：左右のページは中央の折り目に向かって内側に倒れ、折り目には縦のグラデ影、紙全体の下端に楕円の落ち影がある。中の日付・イベント名も一緒に傾いており、これが『中身ごと紙になっている』決め手。perspective は親に、rotateY は各ページに、transform-origin は折り目側に置く。",
+    "傾き角は6度が現物。8度を超えると遠い側のページの文字が読みにくくなり、4度を切ると平置きと区別がつかない。375px幅では文字が細るので4度に落としている。",
+    "トークン契約のため、影は rgba 直書きをやめて color-mix(in srgb, var(--c-ink) 10%, transparent) で作った。落ち影は radial-gradient の楕円＋blur。",
+    "比較として『折らない見開き』を並べてある。同じ2カラムでも、倒していないとただの2カラムに見えて紙にならない＝効いているのは角度と折り目の影だけ、というのが分かる。"
+  ],
+  "demoNotes": "①普通の白い角丸カード4枚のグリッド、②ルーズリーフ（綴じ穴 repeat-y ＋縦罫1本＋後ろに束の1枚）、③二つ折り見開きを『折らない平置き』と『6度ずつ内側に倒す』で対比。中身は日付＋見出しの中立文言。"
+}

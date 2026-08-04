@@ -1,0 +1,221 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>arch-top-only</title>
+<link rel="stylesheet" href="../../../parts/_tokens.css">
+<style>*{margin:0}body{background:#fff}</style>
+</head><body>
+<style>
+/* ============================================================
+   shape/arch-top-only
+   写真の上辺だけを弧にする（浅い天幕〜半円アーチ）
+   ============================================================ */
+
+/* トークンが読み込まれていない環境用のフォールバック。
+   @layer に入れてあるので、_tokens.css（レイヤ外）が有ればそちらが勝つ。 */
+@layer tq-fallback{
+  :root{
+    --c-primary:#00B220; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+    --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+    --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3;
+    --c-on-primary:#FFFFFF;
+    --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    --f-disp:var(--f-sans);
+    --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+    --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+    --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+    --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  }
+}
+
+/* この工夫のパラメータ。
+   色・余白・書体はすべてトークンを参照する。ここで宣言するのは
+   「弧の深さ」＝この工夫の本体そのもの（トークン契約の角丸スケールの外側にある値）だけ。 */
+:root{
+  --tq-arch-rise:var(--r-m);  /* 天幕の起伏＝12px（現物 380×165 の実測値） */
+  --tq-arch-deep:45%;         /* 半円アーチの垂直半径（42〜48%） */
+  --tq-arch-fade:72%;         /* 下端フェードの開始位置 */
+}
+
+.tq-arch{
+  font-family:var(--f-sans); color:var(--c-ink2);
+  line-height:var(--lh-head); -webkit-text-size-adjust:100%;
+  padding:var(--s5); background:var(--c-bg);
+}
+.tq-arch *{box-sizing:border-box}
+
+/* --- デモの見出し・注記 ------------------------------------ */
+.tq-arch__lead{
+  margin:0 0 var(--s6); font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-arch__sec{ margin-top:var(--s7) }
+.tq-arch__sec:first-of-type{ margin-top:0 }
+.tq-arch__secttl{
+  margin:0 0 var(--s4); font-size:var(--fs-sm); font-weight:700; color:var(--c-ink);
+}
+.tq-arch__cap{
+  display:flex; align-items:center; gap:var(--s2);
+  margin:0 0 var(--s3); font-size:var(--fs-note); font-weight:700;
+  color:var(--c-ink3); letter-spacing:.04em;
+}
+.tq-arch__cap::before{
+  content:""; width:var(--s5); height:1px; background:var(--c-line); flex:0 0 auto;
+}
+.tq-arch__note{
+  margin:var(--s3) 0 0; font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-arch__pair{
+  display:grid; gap:var(--s5);
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+}
+
+/* --- 写真の基本形 ------------------------------------------- */
+.tq-arch__ph{
+  display:block; width:100%; height:auto; object-fit:cover;
+  background:var(--c-bg2);
+}
+
+/* ① 普通：四隅一律の角丸 */
+.tq-arch__ph--plain{ aspect-ratio:380/165; border-radius:var(--r-m) }
+
+/* ② 浅い天幕：左右と下辺は直線、上辺だけを弧に
+      水平半径50%（＝幅の半分の楕円）× 垂直半径12px。
+      垂直半径をpxで持つと、写真の高さが変わっても起伏は12pxのまま。 */
+.tq-arch__ph--tent{
+  aspect-ratio:380/165;
+  border-radius:50% 50% 0 0 / var(--tq-arch-rise) var(--tq-arch-rise) 0 0;
+}
+
+/* ③ 半円アーチ：比率3:4の縦長・垂直半径45% */
+.tq-arch__ph--arch{
+  aspect-ratio:3/4;
+  object-position:center 32%;
+  border-radius:var(--r-pill) var(--r-pill) 0 0 / var(--tq-arch-deep) var(--tq-arch-deep) 0 0;
+}
+
+/* ④ 下端を地に溶かして枠を消す（マスクは不透明色なら何でもよいので --c-ink を流用） */
+.tq-arch__ph--fade{
+  -webkit-mask-image:linear-gradient(var(--c-ink) var(--tq-arch-fade),transparent);
+          mask-image:linear-gradient(var(--c-ink) var(--tq-arch-fade),transparent);
+}
+
+/* ⑤ 避ける例：被写体の頭が上端に寄っているカット */
+.tq-arch__ph--badcrop{ object-position:center top }
+
+/* --- スクエア群の中に1枚だけアーチ -------------------------- */
+.tq-arch__row{
+  display:grid; gap:var(--s3);
+  grid-template-columns:repeat(5,1fr);
+  align-items:end;
+}
+.tq-arch__row img{
+  display:block; width:100%; aspect-ratio:3/4; object-fit:cover;
+  object-position:center 32%; border-radius:var(--r-m); background:var(--c-bg2);
+}
+.tq-arch__row img.is-hero{
+  border-radius:var(--r-pill) var(--r-pill) 0 0 / var(--tq-arch-deep) var(--tq-arch-deep) 0 0;
+}
+@media (max-width:560px){
+  .tq-arch__row{ grid-template-columns:repeat(3,1fr) }
+  .tq-arch__row li:nth-child(n+4){ display:none }
+}
+.tq-arch__row{ list-style:none; margin:0; padding:0 }
+
+/* --- 固定幅で弧を作り込む場合（path） ----------------------- */
+.tq-arch__fixed{ overflow-x:auto; padding-bottom:var(--s2) }
+.tq-arch__fixed figure{ margin:0; width:380px }
+.tq-arch__ph--path{
+  width:380px; height:165px;
+  clip-path:path("M0,14 Q190,-2 380,14 L380,165 L0,165 Z");
+  border-radius:0;
+}
+
+/* --- 名前・肩書き ------------------------------------------- */
+.tq-arch__name{
+  margin:var(--s3) 0 0; font-size:var(--fs-sm); font-weight:700; color:var(--c-ink);
+  text-align:center;
+}
+.tq-arch__role{
+  margin:var(--s1) 0 0; font-size:var(--fs-note); color:var(--c-ink3);
+  text-align:center;
+}
+</style>
+
+<div class="tq-arch">
+  <p class="tq-arch__lead">
+    左右と下辺は直線のまま、上辺だけを弧にする。浅い天幕（起伏12px）から半円アーチ（垂直半径45%）まで、
+    深さを変えるだけで「わずかに柔らかい長方形」から「開口部」までを作り分けられる。
+  </p>
+
+  <!-- ① 普通 / 天幕 -->
+  <section class="tq-arch__sec">
+    <h3 class="tq-arch__secttl">① 同じ写真で、上辺だけを変える</h3>
+    <div class="tq-arch__pair">
+      <div>
+        <p class="tq-arch__cap">普通：四隅一律の角丸12px</p>
+        <img class="tq-arch__ph tq-arch__ph--plain" src="../../../docs/demo/ph_a.jpg" alt="">
+        <p class="tq-arch__note">四隅が同じなので、写真は「置かれた四角」のまま。</p>
+      </div>
+      <div>
+        <p class="tq-arch__cap">この工夫：上辺だけ起伏12pxの天幕</p>
+        <img class="tq-arch__ph tq-arch__ph--tent" src="../../../docs/demo/ph_a.jpg" alt="">
+        <p class="tq-arch__note">下辺と左右は直角のまま。上辺の12pxだけで天幕の張りが出る。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ② 深さの段階 -->
+  <section class="tq-arch__sec">
+    <h3 class="tq-arch__secttl">② 垂直半径を深くすると天幕から半円アーチになる</h3>
+    <div class="tq-arch__pair">
+      <div>
+        <p class="tq-arch__cap">半円アーチ（垂直半径45%・比率3:4）</p>
+        <img class="tq-arch__ph tq-arch__ph--arch" src="../../../docs/demo/ph_b.jpg" alt="">
+        <p class="tq-arch__name">名前が入ります</p>
+        <p class="tq-arch__role">肩書きが入ります</p>
+      </div>
+      <div>
+        <p class="tq-arch__cap">半円アーチ＋下端72%からフェード</p>
+        <img class="tq-arch__ph tq-arch__ph--arch tq-arch__ph--fade" src="../../../docs/demo/ph_b.jpg" alt="">
+        <p class="tq-arch__name">名前が入ります</p>
+        <p class="tq-arch__role">肩書きが入ります</p>
+      </div>
+      <div>
+        <p class="tq-arch__cap">避ける：頭が上端に寄ったカット</p>
+        <img class="tq-arch__ph tq-arch__ph--arch tq-arch__ph--badcrop" src="../../../docs/demo/ph_b.jpg" alt="">
+        <p class="tq-arch__note">弧が被写体の上部を削る。アーチにするカットは、頭上に画面高の3割ほど余白があるものを選ぶ。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ③ 1枚だけアーチ -->
+  <section class="tq-arch__sec">
+    <h3 class="tq-arch__secttl">③ 周囲がスクエアなら、1枚だけアーチにすると主役が決まる</h3>
+    <ul class="tq-arch__row">
+      <li><img src="../../../docs/demo/ph_a.jpg" alt=""></li>
+      <li><img src="../../../docs/demo/ph_b.jpg" alt=""></li>
+      <li><img class="is-hero" src="../../../docs/demo/ph_a.jpg" alt=""></li>
+      <li><img src="../../../docs/demo/ph_b.jpg" alt=""></li>
+      <li><img src="../../../docs/demo/ph_a.jpg" alt=""></li>
+    </ul>
+    <p class="tq-arch__note">大きさ・枠線・影は5枚とも同じ。上辺の形が1枚だけ違うことだけで序列がつく。</p>
+  </section>
+
+  <!-- ④ 固定幅で弧を作り込む -->
+  <section class="tq-arch__sec">
+    <h3 class="tq-arch__secttl">④ 弧の頂点を厳密に決めたい場合は path()（固定幅・横スクロールで確認）</h3>
+    <div class="tq-arch__fixed">
+      <figure>
+        <img class="tq-arch__ph tq-arch__ph--path" src="../../../docs/demo/ph_a.jpg" alt="">
+      </figure>
+    </div>
+    <p class="tq-arch__note">
+      path() は座標が固定なので、幅が変わる枠では使えない。可変幅では border-radius の楕円指定を使う。
+    </p>
+  </section>
+
+</div>
+
+</body></html>

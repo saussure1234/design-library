@@ -1,0 +1,23 @@
+{
+  "id": "shape/circle-as-container",
+  "name": "テキストの器を矩形カードでなく正円にする",
+  "ordinary": "3カラムの白い角丸カード（影付き）に見出しと本文を入れる",
+  "actual": "直径185pxの白い正円を3つ並べ、囲みは1pxのヘアライン1本のみ、影も塗りの段差もなし。テキストは円の中に中央揃え。イラストを入れる場合は腕やノートPCを円の縁で断ち切る。住所・営業情報のように情報量が多い時は円を版面の4割（46vw）まで大きくし、左端を画面外へ抜いて中身は左揃えで流し込む。",
+  "css": ".circle{width:min(30vw,320px);aspect-ratio:1;border-radius:50%;background:#fff;\n        border:1px solid #C9B98A;box-shadow:none;\n        display:grid;place-content:center;text-align:center;padding:8%}\n/* 情報量が多いとき：大円＋左端を画面外へ、中は左揃え */\n.info{width:46vw;aspect-ratio:1;border-radius:50%;margin-left:-7vw;color:#fff;\n      background:radial-gradient(120% 120% at 30% 20%,#26405f,#152a44);\n      display:flex;align-items:center;padding-left:16%}\n/* イラストを円の縁で断つ */\n.node{position:relative;width:190px;aspect-ratio:1;border-radius:50%;overflow:hidden}\n.node img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top}",
+  "params": ["直径", "中央揃え／左揃え", "ヘアラインかベタ塗りか"],
+  "appliesTo": ["features", "value", "access", "price"],
+  "impact": 3,
+  "effort": 1,
+  "why": "円は行末が自然に短くなるので中央揃えの3行が収まりよく見え、事務情報の面まで絵として成立する",
+  "avoid": "本文が5行を超える場合（はみ出すか字が小さくなりすぎる）",
+  "sources": ["musashino_s07", "sho_kimini_s05", "ogawa_s12"],
+  "notes": [
+    "現物 musashino_s07 の円は実測 直径約185px。見出し（MISSION/VISION/VALUE・欧文・字間広め）＋本文3行が入って余白がちょうど残る大きさで、これより小さいと3行が入らず、大きいと中央に空洞ができる。円は上下がセクションの縁で少し切れており、丸ごと収めていないのも効いている。",
+    "囲みは1pxのヘアライン1本だけ・影なしが条件。影を付けると『円いカード』になって、器が円である必然が消える。musashino は金のヘアライン、地は淡いベージュ。demoでは --c-line のヘアライン＋ --c-bg2 の地に置き換えてある（白地に白円だと輪郭しか見えないため、地は交互面にする）。",
+    "実装で判明：display:grid + place-content:center + padding:8% だと、本文が増えたぶんは素直に円の外へはみ出す。これは欠点ではなく『5行を超えたら使うな』という avoid が視覚的に検知できるということなので、overflow:hidden で隠さないほうがよい（demo②はその状態を見せている）。",
+    "ogawa_s12 の大円は実測 直径約375px＝画面幅の52%。定義の46vwより一回り大きい。中央揃えを捨てて左揃えで流し込み、左端を画面外へ抜くのが要点で、これをやらないと『大きな円の中央に小さな表がある』間の抜けた面になる。",
+    "円の直径は min(30vw,185px) のように vw と px の min で持つ。固定pxだと375px幅で3つが縦積みになったとき画面をはみ出し、vwだけだと1100px幅で巨大になる。",
+    "写真も同じ正円で抜くと器と絵が同じ文法になる（ogawa_s12・sho_kimini_s05）。人物やイラストは object-position:top で顔を上に寄せ、腕やノートPCが円の縁で断たれるのを許容する。断たれた要素が円の外へ続いている感じが出る。"
+  ],
+  "demoNotes": "①同じ文言・同じ地で「白い角丸カード＋影」と「直径185pxの正円＋ヘアライン・影なし」を対比、②3行と6行を並べて avoid（5行超）が実際にはみ出すことを見せる、③大円（46vw）＋左端を枠外へ＋左揃え＋正円の写真2枚、で構成。"
+}

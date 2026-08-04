@@ -1,0 +1,39 @@
+{
+  "id": "type/per-line-plate",
+  "name": "見出しを行ごとに独立した面へ載せ、段差・しっぽ・ベタ影で「声」にする",
+  "ordinary": "見出し2行を1枚の帯や1つの吹き出しにまとめ、下に細い罫を引く。",
+  "actual": "やまのみは2行を行ごとに文字幅ぴったりのクリーム地の角丸16pxへ入れ、1px金枠＋右下4pxのベタ影、1行目の右下だけにしっぽを付け、2行目は14px左へずらして短く切る。嘉瀬は「しぜん、／じゆう、／そうぞう。」を縦組みにして幅48pxの緑の角丸帯3本に分け、右から左へ 0/28/56px と下端を階段状に下げ、帯の上端を写真の上辺に乗り出させている。",
+  "css": "/* 横組み・吹き出し */\n.line{display:inline-block; background:#fffdf5; border:1px solid #d8b56a; border-radius:16px; padding:10px 22px; box-shadow:4px 4px 0 #f0e6cf}\n.line+.line{margin-left:14px; margin-top:10px}\n/* 縦組み・柱 */\n.bands{display:flex; flex-direction:row-reverse; gap:10px; align-items:flex-start}\n.band{writing-mode:vertical-rl; text-orientation:upright; background:#2f9b52; color:#fff; border-radius:8px; padding:20px 10px; font-size:26px}\n.bands .band:nth-child(2){margin-top:28px}\n.bands .band:nth-child(3){margin-top:56px}",
+  "appliesTo": [
+    "hero",
+    "section-head",
+    "value",
+    "voice"
+  ],
+  "impact": 2,
+  "effort": 1,
+  "why": "1行＝1枚の面にすると見出しが文章でなく発話に見え、行の長さの差がそのまま図形のリズムになる。",
+  "avoid": "実績・料金など事実を伝える見出し（声色が付くと軽く見える）。",
+  "params": [
+    "向き(横=吹き出し / 縦=柱)",
+    "段差(14〜56px)",
+    "ベタ影(4〜6px)",
+    "しっぽ・枠の有無"
+  ],
+  "sources": [
+    "yamanomi_s05",
+    "yamanomi_s07",
+    "kase_s01"
+  ],
+  "notes": [
+    "原案CSSの display:inline-block は罠。幅が足りていると2枚が横に並んでしまい「1行＝1枚」に見えない。display:block + width:fit-content にすると、必ず改行しつつ文字幅ぴったりに縮む。デモはこちらで書いた（原案の margin-left:14px も、2枚が縦に積まれて初めて段差として効く）。",
+    "段差は「2行目を14px左へ」だが、負のマージンで親からはみ出すと折り返しやすい。デモは1行目に margin-left:14px を足して同じ相対関係を作っている。左に余白が確保できる版面なら2行目を負のマージンで出すほうが、左端が階段状に開いて強い。",
+    "ベタ影は box-shadow の第3引数（ぼかし）を0にするのが肝。ぼかしを入れた瞬間にカードのドロップシャドウになり、紙を切って置いた感じが消える。トークンの --shadow は用途が違うので使わず、4px 4px 0 を直接書く（デモは var(--s1) var(--s1) 0）。",
+    "しっぽは1行目の右下1箇所だけ。両方の行に付けると2人が喋っているように見える。1px枠がある場合は、枠色の三角と地色の三角を1px ずらして重ねる（::before/::after）。三角は border-width:11px 0 0 9px の形で右下向きになる。",
+    "枠と影の色は主色でなく差し色側の薄い階調。デモは color-mix(in srgb, var(--c-accent) 55%, var(--c-bg)) を枠、22%を影にした。主色で枠を引くとCTAと同じ強さになって、見出しがボタンに見える。",
+    "縦組みの柱は writing-mode:vertical-rl + text-orientation:upright。upright を落とすと「、」「。」が横倒しになって和文に見えない。並びは flex-direction:row-reverse にして、DOMの1本目が右端＝読み始めになるようにする（縦組みは右から左）。",
+    "階段は 0/28/56px。等間隔で下げるのが要点で、ランダムに散らすと崩れに見える。狭い画面では段差を 0/18/36px に縮めないと3本目が写真の下端を突き抜ける。",
+    "柱の上端を写真の上辺から出す（デモは top:-18px）と、帯が写真の付属物でなく前面の別レイヤーに見える。ただし絶対配置なので、親に上マージンを取っておかないと直前の要素へ重なる。",
+    "デモは techniques/type/per-line-plate/demo.html。A＝横組みの吹き出し（普通＝1枚の帯＋罫）、B＝縦組みの柱3本（普通＝1本の横帯）。Bは左右で同じ写真・同じ3語を使い、載せ方だけを変えてある。"
+  ]
+}

@@ -1,0 +1,247 @@
+<style>
+/* ============================================================
+   type/two-tier-latin-jp
+   欧文と和文を2段に組み、級数・太さ・色の主従をわざと逆転させる
+   ============================================================ */
+
+@layer tq-fallback{
+  :root{
+    --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+    --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+    --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+    --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    --f-disp:var(--f-sans);
+    --f-num:"Helvetica Neue",Arial,var(--f-sans);
+    --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+    --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px; --fs-3xl:50px; --fs-4xl:64px;
+    --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+    --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  }
+}
+
+/* 契約に無い値だけ宣言。色はすべてトークンから引く。 */
+:root{
+  --tq-2tier-fs-ja:11px;      /* 従の和文（契約の最小 --fs-note:12px を下回る） */
+  --tq-2tier-fs-en-sub:9px;   /* ::after で敷く極小欧文 */
+  --tq-2tier-fs-eyebrow:7px;  /* 右肩に積む極小欧文 */
+  --tq-2tier-w-eyebrow:36px;  /* 右肩の欧文を数行で折るための幅（padding と同じ値を使う） */
+}
+
+.tq-2tier{
+  font-family:var(--f-sans); color:var(--c-ink2);
+  line-height:var(--lh-head); -webkit-text-size-adjust:100%;
+  padding:var(--s5); background:var(--c-bg);
+}
+.tq-2tier *{ box-sizing:border-box }
+
+/* --- デモの枠組み ------------------------------------------- */
+.tq-2tier__lead{ margin:0 0 var(--s6); font-size:var(--fs-note); color:var(--c-ink3); line-height:var(--lh-body) }
+.tq-2tier__sec{ margin-top:var(--s7) }
+.tq-2tier__sec:first-of-type{ margin-top:0 }
+.tq-2tier__secttl{ margin:0 0 var(--s5); font-size:var(--fs-sm); font-weight:700; color:var(--c-ink) }
+.tq-2tier__cap{
+  display:flex; align-items:center; gap:var(--s2);
+  margin:0 0 var(--s4); font-size:var(--fs-note); font-weight:700; color:var(--c-ink3); letter-spacing:.04em;
+}
+.tq-2tier__cap::before{ content:""; width:var(--s5); height:1px; background:var(--c-line); flex:0 0 auto }
+.tq-2tier__note{ margin:var(--s4) 0 0; font-size:var(--fs-note); color:var(--c-ink3); line-height:var(--lh-body) }
+.tq-2tier__pair{ display:grid; gap:var(--s6); grid-template-columns:repeat(auto-fit,minmax(260px,1fr)) }
+.tq-2tier__quad{ display:grid; gap:var(--s6) var(--s5); grid-template-columns:repeat(auto-fit,minmax(230px,1fr)) }
+.tq-2tier__box{ border:1px solid var(--c-line); border-radius:var(--r-s); padding:var(--s5); min-width:0 }
+.tq-2tier__boxttl{
+  margin:0 0 var(--s5); padding-bottom:var(--s2); border-bottom:1px solid var(--c-line);
+  font-size:var(--fs-note); font-weight:700; color:var(--c-ink3); letter-spacing:.04em;
+}
+
+/* ============================================================
+   ① 2段組み・主従の逆転（頌栄型）
+   最も大きい文字が最も薄く・最も細い
+   ============================================================ */
+.tq-2tier__tier{ margin:0 }
+.tq-2tier__tier .tq-2tier__en{
+  display:block; margin:0;
+  font-family:var(--f-num); font-weight:300;
+  font-size:clamp(var(--fs-xl),4vw,var(--fs-3xl));
+  letter-spacing:.2em; line-height:1; color:var(--c-ink3);
+}
+.tq-2tier__tier .tq-2tier__ja{
+  display:block; margin:var(--s2) 0 0;
+  font-size:var(--tq-2tier-fs-ja); font-weight:700; letter-spacing:.12em;
+  color:var(--c-primary); line-height:var(--lh-head);
+}
+
+/* 明朝・スモールキャップスで格を出す版（武蔵野型：和文が上、欧文が下） */
+.tq-2tier__tier--serif .tq-2tier__en{
+  font-family:var(--f-disp); font-variant:small-caps; font-weight:400;
+  letter-spacing:.06em; color:var(--c-accent);
+  font-size:clamp(var(--fs-xl),3.4vw,var(--fs-2xl));
+}
+.tq-2tier__tier--serif .tq-2tier__ja{
+  margin:0 0 var(--s2); color:var(--c-ink); letter-spacing:.04em;
+}
+
+/* ============================================================
+   ② 和文が主・欧文が従を1要素で完結させる（嘉瀬型）
+   ============================================================ */
+.tq-2tier__nav{
+  display:flex; flex-wrap:wrap; gap:var(--s5) var(--s6);
+  margin:0; padding:0; list-style:none;
+}
+.tq-2tier__nav a{
+  display:grid; justify-items:center; line-height:1.2;
+  font-size:var(--fs-sm); font-weight:700; color:var(--c-ink); text-decoration:none;
+}
+.tq-2tier__nav a::after{
+  content:attr(data-en);
+  font-family:var(--f-num); font-size:var(--tq-2tier-fs-en-sub);
+  letter-spacing:.18em; text-transform:lowercase; color:var(--c-primary);
+  margin-top:var(--s1);
+}
+
+/* 枠・下線・アイコン・区切り罫を一切置かないナビ（巴里夕顔型） */
+.tq-2tier__nav--bare a{
+  font-family:var(--f-disp); font-weight:400; font-size:var(--fs-xl);
+  letter-spacing:.04em; color:var(--c-accent);
+}
+.tq-2tier__nav--bare a::after{
+  font-family:var(--f-sans); font-size:var(--tq-2tier-fs-en-sub);
+  letter-spacing:.24em; color:var(--c-ink2); text-transform:none;
+  margin-top:var(--s2);
+}
+
+/* ============================================================
+   ③ 極小欧文を見出しの右肩に積む（学藝型・比1:5）
+   ============================================================ */
+.tq-2tier__shoulder{
+  position:relative; display:inline-block; padding-right:calc(var(--tq-2tier-w-eyebrow) + var(--s3));
+}
+.tq-2tier__shoulder h4{
+  margin:0; font-size:clamp(var(--fs-lg),2.6vw,var(--fs-xl)); font-weight:700;
+  color:var(--c-ink); letter-spacing:.06em; line-height:var(--lh-head);
+  white-space:nowrap;   /* <br> で折る位置を決めるので、勝手に折らせない */
+}
+.tq-2tier__eyebrow{
+  position:absolute; right:0; top:var(--s1);
+  width:var(--tq-2tier-w-eyebrow);
+  margin:0; font-family:var(--f-num);
+  font-size:var(--tq-2tier-fs-eyebrow); line-height:1.7; text-align:center;
+  font-weight:700; letter-spacing:.06em; color:var(--c-ink2);
+}
+
+/* --- 比較用「普通」：和文を大きく太く、英字を小さく添える --- */
+.tq-2tier__plain{ margin:0 }
+.tq-2tier__plain .tq-2tier__en{
+  display:block; font-family:var(--f-num); font-size:var(--fs-note); font-weight:700;
+  letter-spacing:.18em; color:var(--c-ink3); margin:0 0 var(--s2);
+}
+.tq-2tier__plain .tq-2tier__ja{
+  display:block; font-family:var(--f-disp); font-size:var(--fs-2xl); font-weight:700;
+  color:var(--c-ink); letter-spacing:.02em; line-height:1.2; margin:0;
+}
+
+/* --- 見出しの下に続く中身 ----------------------------------- */
+.tq-2tier__body{ margin:var(--s5) 0 0; font-size:var(--fs-note); color:var(--c-ink2); line-height:var(--lh-body); max-width:34em }
+.tq-2tier__ph{ display:block; width:100%; aspect-ratio:16/9; object-fit:cover; border-radius:var(--r-m); margin-top:var(--s4) }
+</style>
+
+<div class="tq-2tier">
+  <p class="tq-2tier__lead">
+    「大きい＝重要」という既定を外し、いちばん大きい文字をいちばん薄く・細くする。
+    大きさが「どこに何があるか」の指定、色が「どれから読むか」の指定として、別々に働くようになる。
+  </p>
+
+  <!-- ① 普通 / この工夫 -->
+  <section class="tq-2tier__sec">
+    <h3 class="tq-2tier__secttl">① 同じ2語で、級数・太さ・色の主従だけを入れ替える</h3>
+    <div class="tq-2tier__pair">
+
+      <div>
+        <p class="tq-2tier__cap">普通：和文を大きく太く、英字を上に小さく</p>
+        <div class="tq-2tier__box">
+          <p class="tq-2tier__plain">
+            <span class="tq-2tier__en">SECTION</span>
+            <span class="tq-2tier__ja">見出しが入ります</span>
+          </p>
+          <p class="tq-2tier__body">本文テキストが入ります。本文テキストが入ります。本文テキストが入ります。</p>
+        </div>
+        <p class="tq-2tier__note">英字は「飾り」にしか見えず、読む順は和文の1通りしかない。</p>
+      </div>
+
+      <div>
+        <p class="tq-2tier__cap">この工夫：欧文を最大・最薄・最細に、和文を極小・濃色・太に</p>
+        <div class="tq-2tier__box">
+          <p class="tq-2tier__tier">
+            <span class="tq-2tier__en">SECTION</span>
+            <span class="tq-2tier__ja">見出しが入ります</span>
+          </p>
+          <p class="tq-2tier__body">本文テキストが入ります。本文テキストが入ります。本文テキストが入ります。</p>
+        </div>
+        <p class="tq-2tier__note">最も大きい文字が最も薄い。場所は欧文が決め、読む順は色の濃い和文が決める。</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ② 型 -->
+  <section class="tq-2tier__sec">
+    <h3 class="tq-2tier__secttl">② 組み方は4通り</h3>
+    <div class="tq-2tier__quad">
+
+      <div class="tq-2tier__box">
+        <p class="tq-2tier__boxttl">1／欧文が主・薄い（比 約4倍）</p>
+        <p class="tq-2tier__tier">
+          <span class="tq-2tier__en">NEWS</span>
+          <span class="tq-2tier__ja">見出しが入ります</span>
+        </p>
+      </div>
+
+      <div class="tq-2tier__box">
+        <p class="tq-2tier__boxttl">2／和文が主・欧文は ::after で1要素に</p>
+        <ul class="tq-2tier__nav">
+          <li><a href="#" data-en="ABOUT">項目名</a></li>
+          <li><a href="#" data-en="SERVICE">項目名</a></li>
+          <li><a href="#" data-en="CONTACT">項目名</a></li>
+        </ul>
+      </div>
+
+      <div class="tq-2tier__box">
+        <p class="tq-2tier__boxttl">3／明朝＋スモールキャップスで格を出す</p>
+        <p class="tq-2tier__tier tq-2tier__tier--serif">
+          <span class="tq-2tier__ja">見出しが入ります</span>
+          <span class="tq-2tier__en">Our Philosophy</span>
+        </p>
+      </div>
+
+      <div class="tq-2tier__box">
+        <p class="tq-2tier__boxttl">4／7px×4行を右肩に積む（比 約1:5）</p>
+        <div class="tq-2tier__shoulder">
+          <h4>見出しが<br>入ります</h4>
+          <p class="tq-2tier__eyebrow">Label of the section</p>
+        </div>
+      </div>
+
+    </div>
+    <p class="tq-2tier__note">
+      2は擬似要素なので markup が1行で済み、ナビ全体に同じ規則をかけられる。
+      4は欧文を読ませず、記号として右肩に置いているだけ。
+    </p>
+  </section>
+
+  <!-- ③ 罫も枠もアイコンも無いナビ -->
+  <section class="tq-2tier__sec">
+    <h3 class="tq-2tier__secttl">③ 2段の主従だけでナビを組む（枠・下線・アイコン・区切り罫なし）</h3>
+    <div class="tq-2tier__box">
+      <ul class="tq-2tier__nav tq-2tier__nav--bare">
+        <li><a href="#" data-en="項目の説明">Menu</a></li>
+        <li><a href="#" data-en="項目の説明">News</a></li>
+        <li><a href="#" data-en="項目の説明">Recruit</a></li>
+      </ul>
+      <img class="tq-2tier__ph" src="../../../docs/demo/ph_b.jpg" alt="">
+    </div>
+    <p class="tq-2tier__note">
+      26pxの欧文と8pxの和文が縦に2段あるだけで、区切りが要らない。装飾を1つも足していないのに項目の境目が読める。
+    </p>
+  </section>
+
+</div>

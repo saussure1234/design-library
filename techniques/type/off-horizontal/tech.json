@@ -1,0 +1,39 @@
+{
+  "id": "type/off-horizontal",
+  "name": "文字を水平から2〜17°外し、マーカーや線の一部として読ませる",
+  "ordinary": "ラベルは角丸ピルに白抜きで水平に置き、矢印の上には水平のままキャプションを添える。",
+  "actual": "Novakidは「2倍速でスキルアップ」の黄緑の帯（border-radius:2px＝ほぼ角丸ゼロ）ごと-2.5°回し、端をマーカーで引いたような形に崩す。スマイルゼミは矢印線と同じ-17°でラベルを回し、1行目14px濃茶／2行目26pxティール太字と2行の中でも級数と色を切り替える。atama+は文字を回さず、2px×10〜12pxの短線を±20°で3本、要素の真上に浮かせて（＼｜／）下を指す。",
+  "css": ".marker{display:inline-block; background:#a9f0a0; border-radius:2px; padding:.35em 1em; transform:rotate(-2.5deg); font-weight:700}\n.on-line{display:inline-block; transform:rotate(-17deg); transform-origin:left bottom}\n.on-line b{display:block; font-size:26px; color:#00a5b5}\n.on-line span{font-size:14px; color:#4a3a35}\n.focus{display:flex; justify-content:center; gap:6px; margin-bottom:4px}\n.focus i{width:2px; height:12px; background:#0a93a8; display:block}\n.focus i:first-child{transform:rotate(22deg)}\n.focus i:last-child{transform:rotate(-22deg)}",
+  "appliesTo": [
+    "features",
+    "value",
+    "price",
+    "voice",
+    "cta"
+  ],
+  "impact": 2,
+  "effort": 1,
+  "why": "水平から外れた文字はUIの部品でなく人が後から書き足した注記に見え、図解の中では線の一部として読める。",
+  "avoid": "価格・実績など正確さが要る情報（傾けると信頼が落ちる）。",
+  "params": [
+    "角度(帯は2〜3° / 線沿いは図の角度そのまま)",
+    "集中線の本数(2〜3)と長さ(10〜12px)",
+    "マーカー色と角丸(2px)"
+  ],
+  "sources": [
+    "sho_novakid_s04",
+    "sho_smilezemi_s15",
+    "sho_atama_s09"
+  ],
+  "notes": [
+    "原案CSSの集中線は回転の符号が逆。現物（sho_atama_s09を拡大して確認）は左が ＼・右が ／ で下に収束する。CSSのrotateは正が時計回りなので、縦棒を ＼ にするのは負の角度。正しくは first-child{rotate(-20deg)} / last-child{rotate(20deg)}。デモはこちらで書いた。",
+    "3つは別々の工夫でなく「水平から外す」の3段階。帯ごと2〜3°＝装飾を崩す／図の角度に合わせる＝文字を図の部品にする／文字は回さず線だけ傾ける＝文字を1字も足さずに指す。B→Cの順で回転量が文字から線へ移っていく。",
+    "帯を回すときは角丸を落とすのが肝。--r-s(6px)以上の角丸を付けたまま回すと「傾いたピル」に見えてバグに見える。デモは calc(var(--r-s)/3)=2px。トークンに2pxが無いので割って作った。",
+    "マーカー色は主色そのものだと濃すぎて白抜きになってしまう。color-mix(in srgb, var(--c-primary) 30%, var(--c-bg)) 前後まで薄めて、文字は --c-ink のまま黒で乗せると蛍光ペンに見える。",
+    "線に沿わせるラベルは transform-origin:left bottom が必須。既定の center だと回した瞬間に左端が線から浮いて、位置合わせをやり直すことになる。左下を線上の1点に固定してから角度を当てる。",
+    "デモBは矢印と同じ -17°。角度は figure 側の傾きをそのまま写すだけで、見た目の良い角度を別に探さない。図の角度が変われば文字の角度も変える。",
+    "集中線は要素の「真上」に置き、間隔6px・高さ12px。要素の左右に置くと（＼ラベル／の形）指す力が落ちて、ただの飾り括弧になる。",
+    "回転させた要素は行送りの計算から外れるので、親に高さを与えるか position:absolute で置く。デモBは fig を height:200px の相対配置にして、ラベルを絶対配置している。375pxでも図を max-width:300px に固定しているので崩れない。",
+    "デモは techniques/type/off-horizontal/demo.html。A＝マーカー帯、B＝矢印に沿わせる、C＝集中線。各ブロックとも左が普通・右がこの工夫で、Bは線・図形を完全に同一にしてラベルの角度だけを変えてある。"
+  ]
+}

@@ -1,0 +1,260 @@
+<style>
+/* ============================================================
+   shape/notch-index
+   カードの角を階段状に切り欠き、その凹みに番号を落とす
+   ============================================================ */
+
+@layer tq-fallback{
+  :root{
+    --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA;
+    --c-accent:#FF9301;
+    --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+    --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3;
+    --c-on-primary:#FFFFFF;
+    --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    --f-disp:var(--f-sans); --f-num:"Helvetica Neue",Arial,var(--f-sans);
+    --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+    --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+    --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+    --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+    --shadow:0 6px 24px rgba(17,17,17,.08);
+  }
+}
+
+/* この工夫のパラメータ。切り欠きの寸法と逆Rの半径だけを持つ。 */
+:root{
+  --tq-nti-nw:22%;      /* 切り欠きの横（カード幅比・現物実測 約20%） */
+  --tq-nti-nh:58px;     /* 切り欠きの縦（現物実測 カード高の約19%＝58px） */
+  --tq-nti-fillet:14px; /* 内側の角の逆R */
+}
+
+.tq-nti{
+  font-family:var(--f-sans); color:var(--c-ink2);
+  line-height:var(--lh-head); -webkit-text-size-adjust:100%;
+  padding:var(--s5); background:var(--c-bg);
+}
+.tq-nti *{box-sizing:border-box}
+
+/* --- デモの見出し・注記 ------------------------------------ */
+.tq-nti__lead{
+  margin:0 0 var(--s6); font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-nti__sec{ margin-top:var(--s7) }
+.tq-nti__sec:first-of-type{ margin-top:0 }
+.tq-nti__secttl{
+  margin:0 0 var(--s4); font-size:var(--fs-sm); font-weight:700; color:var(--c-ink);
+}
+.tq-nti__cap{
+  display:flex; align-items:center; gap:var(--s2);
+  margin:0 0 var(--s3); font-size:var(--fs-note); font-weight:700;
+  color:var(--c-ink3); letter-spacing:.04em;
+}
+.tq-nti__cap::before{
+  content:""; width:var(--s5); height:1px; background:var(--c-line); flex:0 0 auto;
+}
+.tq-nti__note{
+  margin:var(--s3) 0 0; font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-nti__row{
+  display:grid; gap:var(--s4);
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+}
+.tq-nti__block + .tq-nti__block{ margin-top:var(--s6) }
+
+/* --- カードの土台 ------------------------------------------- */
+.tq-nti__card{
+  position:relative; min-height:210px;
+  padding:calc(var(--tq-nti-nh) + var(--s3)) var(--s4) var(--s5);
+}
+.tq-nti__txt{
+  position:relative; z-index:1; margin:0;
+  font-size:var(--fs-sm); font-weight:700; color:var(--c-ink); line-height:var(--lh-head);
+}
+.tq-nti__ph{
+  position:relative; z-index:1; display:block; width:100%; margin-top:var(--s4);
+  aspect-ratio:4/3; object-fit:cover; border-radius:var(--r-m); background:var(--c-bg2);
+}
+.tq-nti__num{
+  font-family:var(--f-num); font-weight:700; font-size:22px; line-height:1;
+  color:var(--c-primary);
+}
+
+/* ① 普通A：番号をカードの中の左上に置く */
+.tq-nti__card--inside{
+  background:var(--c-primary-l); border-radius:var(--r-l);
+  padding-top:var(--s5);
+}
+.tq-nti__card--inside .tq-nti__num{
+  display:block; margin:0 0 var(--s2);
+}
+
+/* ② 普通B：カードの上に丸バッジで乗せる */
+.tq-nti__card--badge{
+  background:var(--c-primary-l); border-radius:var(--r-l);
+  padding-top:var(--s5); margin-top:20px;
+}
+.tq-nti__badge{
+  position:absolute; z-index:2; left:var(--s4); top:-20px;
+  width:40px; height:40px; border-radius:var(--r-pill);
+  background:var(--c-primary); color:var(--c-on-primary);
+  display:grid; place-items:center;
+}
+.tq-nti__badge .tq-nti__num{ color:var(--c-on-primary); font-size:var(--fs-md) }
+
+/* ③ この工夫：左上を四角く切り欠き、その凹みに番号を落とす
+      clip-path を使わず「上の帯」と「本体」の2枚で組む。
+      clip-path + border-radius の併用で角が甘くなるブラウザを避けられる。 */
+.tq-nti__card--notch{ background:transparent }
+.tq-nti__card--notch::before{      /* 切り欠きの右側に残る帯＝インデックスタブ */
+  content:""; position:absolute; z-index:0;
+  left:var(--tq-nti-nw); right:0; top:0; height:var(--tq-nti-nh);
+  background:var(--c-primary-l);
+  border-radius:var(--r-s) var(--r-l) 0 0;
+}
+.tq-nti__card--notch::after{       /* 切り欠きより下＝カード本体 */
+  content:""; position:absolute; z-index:0;
+  left:0; right:0; top:var(--tq-nti-nh); bottom:0;
+  background:var(--c-primary-l);
+  border-radius:var(--r-s) 0 var(--r-l) var(--r-l);
+}
+/* 切り欠きが本体と出会う内側の角を逆Rで丸める。
+   角の R×R の正方形を地色で置き、その正方形の“角側”だけを丸めると凹んだ弧になる。 */
+.tq-nti__fillet{
+  position:absolute; z-index:0;
+  left:calc(var(--tq-nti-nw) - var(--tq-nti-fillet));
+  top:calc(var(--tq-nti-nh) - var(--tq-nti-fillet));
+  width:var(--tq-nti-fillet); height:var(--tq-nti-fillet);
+  background:var(--c-primary-l);
+  border-radius:var(--tq-nti-fillet) 0 0 0;
+}
+.tq-nti__card--sharp .tq-nti__fillet{ display:none }   /* 逆Rなし（角のまま） */
+
+/* 番号は切り欠きの中に落とす＝カードの外にも中にも属さない位置 */
+.tq-nti__card--notch .tq-nti__num{
+  position:absolute; z-index:2; left:0; top:0;
+  width:var(--tq-nti-nw); height:var(--tq-nti-nh);
+  display:flex; align-items:center; justify-content:center;
+  padding-right:var(--s2);
+}
+
+/* --- 逆Rの効きを見る拡大用 ---------------------------------- */
+.tq-nti__zoom{ --tq-nti-fillet:22px; --tq-nti-nh:78px }
+.tq-nti__zoom .tq-nti__num{ font-size:30px }
+
+@media (max-width:520px){
+  .tq-nti__card{ min-height:180px }
+}
+</style>
+
+<div class="tq-nti">
+
+  <p class="tq-nti__lead">
+    カード左上を横22%・縦58pxほど四角く切り欠き、その凹みに「01」を入れる。
+    番号がカードの外にも中にも属さない位置に座るので、「STEP」の文字を足さずに手順として読める。
+  </p>
+
+  <!-- ① 3つの置き方を比べる -->
+  <section class="tq-nti__sec">
+    <h3 class="tq-nti__secttl">① 番号の置き場所を3通りで比べる</h3>
+
+    <div class="tq-nti__block">
+      <p class="tq-nti__cap">普通A：番号をカードの中の左上に置く</p>
+      <div class="tq-nti__row">
+        <div class="tq-nti__card tq-nti__card--inside">
+          <span class="tq-nti__num">01</span>
+          <p class="tq-nti__txt">見出しがここに入ります</p>
+          <img class="tq-nti__ph" src="../../../docs/demo/ph_a.jpg" alt="">
+        </div>
+        <div class="tq-nti__card tq-nti__card--inside">
+          <span class="tq-nti__num">02</span>
+          <p class="tq-nti__txt">見出しがここに入ります</p>
+          <img class="tq-nti__ph" src="../../../docs/demo/ph_b.jpg" alt="">
+        </div>
+        <div class="tq-nti__card tq-nti__card--inside">
+          <span class="tq-nti__num">03</span>
+          <p class="tq-nti__txt">見出しがここに入ります</p>
+          <img class="tq-nti__ph" src="../../../docs/demo/ph_a.jpg" alt="">
+        </div>
+      </div>
+      <p class="tq-nti__note">番号は見出しの一部として読まれる。並列の3枚か手順の3枚かは、文字を読むまで分からない。</p>
+    </div>
+
+    <div class="tq-nti__block">
+      <p class="tq-nti__cap">普通B：カードの上に丸バッジで乗せる</p>
+      <div class="tq-nti__row">
+        <div class="tq-nti__card tq-nti__card--badge">
+          <span class="tq-nti__badge"><span class="tq-nti__num">01</span></span>
+          <p class="tq-nti__txt">見出しがここに入ります</p>
+          <img class="tq-nti__ph" src="../../../docs/demo/ph_a.jpg" alt="">
+        </div>
+        <div class="tq-nti__card tq-nti__card--badge">
+          <span class="tq-nti__badge"><span class="tq-nti__num">02</span></span>
+          <p class="tq-nti__txt">見出しがここに入ります</p>
+          <img class="tq-nti__ph" src="../../../docs/demo/ph_b.jpg" alt="">
+        </div>
+        <div class="tq-nti__card tq-nti__card--badge">
+          <span class="tq-nti__badge"><span class="tq-nti__num">03</span></span>
+          <p class="tq-nti__txt">見出しがここに入ります</p>
+          <img class="tq-nti__ph" src="../../../docs/demo/ph_a.jpg" alt="">
+        </div>
+      </div>
+      <p class="tq-nti__note">バッジは「カードに貼られた別部品」。数を増やすと丸が増えるだけで、順番の形にはならない。</p>
+    </div>
+
+    <div class="tq-nti__block">
+      <p class="tq-nti__cap">この工夫：角を切り欠き、その凹みに番号を落とす</p>
+      <div class="tq-nti__row">
+        <div class="tq-nti__card tq-nti__card--notch">
+          <span class="tq-nti__fillet"></span>
+          <span class="tq-nti__num">01</span>
+          <p class="tq-nti__txt">見出しがここに入ります</p>
+          <img class="tq-nti__ph" src="../../../docs/demo/ph_a.jpg" alt="">
+        </div>
+        <div class="tq-nti__card tq-nti__card--notch">
+          <span class="tq-nti__fillet"></span>
+          <span class="tq-nti__num">02</span>
+          <p class="tq-nti__txt">見出しがここに入ります</p>
+          <img class="tq-nti__ph" src="../../../docs/demo/ph_b.jpg" alt="">
+        </div>
+        <div class="tq-nti__card tq-nti__card--notch">
+          <span class="tq-nti__fillet"></span>
+          <span class="tq-nti__num">03</span>
+          <p class="tq-nti__txt">見出しがここに入ります</p>
+          <img class="tq-nti__ph" src="../../../docs/demo/ph_a.jpg" alt="">
+        </div>
+      </div>
+      <p class="tq-nti__note">カードが書類のインデックスタブの形になる。順番の存在が数字でなく形そのもので分かる。</p>
+    </div>
+  </section>
+
+  <!-- ② 逆Rの有無 -->
+  <section class="tq-nti__sec">
+    <h3 class="tq-nti__secttl">② 内側の角：逆Rで丸めるか、角のまま残すか</h3>
+    <div class="tq-nti__row tq-nti__zoom">
+      <div>
+        <p class="tq-nti__cap">角のまま（現物に近い）</p>
+        <div class="tq-nti__card tq-nti__card--notch tq-nti__card--sharp">
+          <span class="tq-nti__fillet"></span>
+          <span class="tq-nti__num">01</span>
+          <p class="tq-nti__txt">見出しがここに入ります</p>
+        </div>
+      </div>
+      <div>
+        <p class="tq-nti__cap">逆R 22px（インデックスタブ感が強い）</p>
+        <div class="tq-nti__card tq-nti__card--notch">
+          <span class="tq-nti__fillet"></span>
+          <span class="tq-nti__num">01</span>
+          <p class="tq-nti__txt">見出しがここに入ります</p>
+        </div>
+      </div>
+    </div>
+    <p class="tq-nti__note">
+      逆Rは「角のR×Rの正方形を地色で置き、その正方形の角側だけを丸める」だけで作れる。
+      切り欠きが浅いと逆Rが潰れるので、半径は切り欠きの縦の1/3以下に収める。
+    </p>
+  </section>
+
+</div>

@@ -1,0 +1,273 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="/techniques/shape/organic-freeform/"><link rel="stylesheet" href="/parts/_tokens.css"><style>*{margin:0;padding:0}body{background:#fff}</style><title>shape/organic-freeform</title></head><body>
+<style>
+/* ============================================================
+   shape/organic-freeform
+   直角ゼロの自由曲線・ちぎり紙でヒーローを抜く
+   ============================================================ */
+
+/* トークンが読み込まれていない環境用のフォールバック。
+   @layer に入れてあるので、_tokens.css（レイヤ外）が有ればそちらが勝つ。 */
+@layer tq-fallback{
+  :root{
+    --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA;
+    --c-accent:#FF9301;
+    --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+    --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3;
+    --c-on-primary:#FFFFFF;
+    --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    --f-disp:var(--f-sans);
+    --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+    --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+    --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+    --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+    --shadow:0 6px 24px rgba(17,17,17,.08);
+  }
+}
+
+/* この工夫のパラメータ。色・余白・書体はトークンを参照する。 */
+:root{
+  --tq-orgf-ghost-x:6px;    /* 版ズレの横方向 */
+  --tq-orgf-ghost-y:10px;   /* 版ズレの縦方向 */
+}
+
+.tq-orgf{
+  font-family:var(--f-sans); color:var(--c-ink2);
+  line-height:var(--lh-head); -webkit-text-size-adjust:100%;
+  padding:var(--s5); background:var(--c-bg); position:relative;
+}
+.tq-orgf *{box-sizing:border-box}
+
+/* clipPath の定義置き場。display:none にすると参照が切れる環境があるので
+   0×0 の絶対配置で置く。 */
+.tq-orgf__defs{position:absolute;width:0;height:0;overflow:hidden;pointer-events:none}
+
+/* --- デモの見出し・注記 ------------------------------------ */
+.tq-orgf__lead{
+  margin:0 0 var(--s6); font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-orgf__sec{ margin-top:var(--s7) }
+.tq-orgf__sec:first-of-type{ margin-top:0 }
+.tq-orgf__secttl{
+  margin:0 0 var(--s4); font-size:var(--fs-sm); font-weight:700; color:var(--c-ink);
+}
+.tq-orgf__cap{
+  display:flex; align-items:center; gap:var(--s2);
+  margin:0 0 var(--s3); font-size:var(--fs-note); font-weight:700;
+  color:var(--c-ink3); letter-spacing:.04em;
+}
+.tq-orgf__cap::before{
+  content:""; width:var(--s5); height:1px; background:var(--c-line); flex:0 0 auto;
+}
+.tq-orgf__note{
+  margin:var(--s3) 0 0; font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-orgf__stack > * + *{ margin-top:var(--s6) }
+
+/* --- ヒーローの枠 ------------------------------------------- */
+.tq-orgf__hero{
+  position:relative; margin:0;
+  aspect-ratio:16/6;
+}
+.tq-orgf__hero img{
+  display:block; width:100%; height:100%; object-fit:cover;
+  background:var(--c-bg2); position:relative; z-index:1;
+}
+
+/* ① 普通：画面幅いっぱいの長方形（四隅とも直角、または一律の角丸） */
+.tq-orgf__hero--plain img{ border-radius:var(--r-m) }
+
+/* ② この工夫：四隅とも直角が無い1枚のマスク
+      objectBoundingBox の clipPath なので幅が変わっても形が保たれる */
+.tq-orgf__hero--free img{ clip-path:url(#tq-orgf-smooth) }
+
+/* ③ ちぎり縁：上辺だけを毛羽立った破れ紙の縁に置き換えたパス */
+.tq-orgf__hero--tear img{ clip-path:url(#tq-orgf-tear) }
+
+/* ④ 版ズレ：同じ形の色ベタを数px外側にずらして敷く */
+.tq-orgf__ghost{
+  position:absolute; inset:0; z-index:0;
+  background:var(--c-primary);
+  clip-path:url(#tq-orgf-tear);
+  transform:translate(var(--tq-orgf-ghost-x),var(--tq-orgf-ghost-y));
+}
+.tq-orgf__ghostbox{ padding-bottom:var(--tq-orgf-ghost-y) }
+
+/* ヒーローに乗せる文言 */
+.tq-orgf__copy{
+  position:absolute; z-index:2; left:6%; bottom:22%; margin:0;
+  color:var(--c-on-primary); font-family:var(--f-disp);
+  font-size:clamp(var(--fs-md),3.2vw,var(--fs-2xl)); font-weight:700;
+  line-height:var(--lh-tight); text-shadow:0 1px 10px rgba(17,17,17,.35);
+}
+
+/* --- 小物も有機シェイプの塊にする --------------------------- */
+.tq-orgf__bar{
+  display:flex; align-items:center; justify-content:space-between; gap:var(--s4);
+  padding:var(--s3) var(--s4); border:1px solid var(--c-line); border-radius:var(--r-m);
+  background:var(--c-bg);
+}
+.tq-orgf__nav{
+  display:flex; gap:var(--s4); margin:0; padding:0; list-style:none;
+  font-size:var(--fs-sm); font-weight:700; color:var(--c-ink);
+}
+.tq-orgf__nav li{ white-space:nowrap }
+/* 普通：同じ大きさの丸アイコンを3つ並べる */
+.tq-orgf__dots{ display:flex; gap:var(--s2); flex:0 0 auto }
+.tq-orgf__dots i{
+  display:block; width:22px; height:22px; border-radius:var(--r-pill);
+  background:var(--c-ink3);
+}
+/* この工夫：6つの有機シェイプを重ねた塊。border-radius の8値指定だけで作れる */
+.tq-orgf__blob{
+  position:relative; width:86px; height:52px; flex:0 0 auto;
+}
+.tq-orgf__blob i{
+  position:absolute; display:block;
+  border-radius:62% 38% 44% 56% / 48% 62% 38% 52%;
+}
+.tq-orgf__blob i:nth-child(1){ left:0;   top:6px;  width:36px; height:34px; background:var(--c-primary); transform:rotate(-12deg) }
+.tq-orgf__blob i:nth-child(2){ left:16px;top:0;    width:32px; height:30px; background:var(--c-accent);   transform:rotate(18deg) }
+.tq-orgf__blob i:nth-child(3){ left:30px;top:14px; width:34px; height:32px; background:var(--c-primary-d);transform:rotate(-24deg) }
+.tq-orgf__blob i:nth-child(4){ left:48px;top:2px;  width:28px; height:26px; background:var(--c-primary-l);transform:rotate(8deg) }
+.tq-orgf__blob i:nth-child(5){ left:58px;top:18px; width:28px; height:28px; background:var(--c-ink3);     transform:rotate(-6deg) }
+.tq-orgf__blob i:nth-child(6){ left:12px;top:20px; width:26px; height:24px; background:var(--c-bg2);      transform:rotate(30deg) }
+
+/* --- 避ける例：固定px の path() ----------------------------- */
+.tq-orgf__fixed{ overflow-x:auto; padding-bottom:var(--s2) }
+.tq-orgf__fixed figure{ margin:0; width:720px }
+.tq-orgf__ph--path{
+  display:block; width:720px; height:300px; object-fit:cover; background:var(--c-bg2);
+  clip-path:path("M0,72 C200,8 500,4 720,44 L720,300 C520,352 220,342 0,306 Z");
+}
+.tq-orgf__shrink{ width:46%; min-width:200px }
+.tq-orgf__shrink .tq-orgf__ph--path{ width:100%; height:190px }
+
+@media (max-width:640px){
+  .tq-orgf__hero{ aspect-ratio:4/3 }
+  .tq-orgf__bar{ flex-wrap:wrap }
+  .tq-orgf__nav{ font-size:var(--fs-note); gap:var(--s3) }
+}
+</style>
+
+<div class="tq-orgf">
+
+  <svg class="tq-orgf__defs" viewBox="0 0 1 1" aria-hidden="true" focusable="false">
+    <defs>
+      <!-- 上辺＝左から右へゆるく持ち上がる弧／下辺＝うねる曲線／左辺＝斜めに落ちる。四隅とも直角なし -->
+      <clipPath id="tq-orgf-smooth" clipPathUnits="objectBoundingBox">
+        <path d="M0,0.18C0.28,0.055 0.44,0.012 0.64,0.02C0.8,0.026 0.92,0.055 1,0.095L1,0.62C0.995,0.8 0.9,0.86 0.74,0.925C0.56,0.998 0.34,0.905 0.06,0.965Z"/>
+      </clipPath>
+      <!-- 同じ輪郭のまま、上辺だけを毛羽立った破れ紙の縁に置き換えたもの -->
+      <clipPath id="tq-orgf-tear" clipPathUnits="objectBoundingBox">
+        <path d="M0,0.18L0.019,0.17L0.037,0.174L0.056,0.156L0.074,0.14L0.092,0.144L0.107,0.123L0.126,0.116L0.14,0.125L0.16,0.126L0.175,0.111L0.188,0.092L0.204,0.096L0.22,0.082L0.236,0.072L0.252,0.078L0.266,0.075L0.281,0.07L0.293,0.065L0.31,0.074L0.323,0.066L0.335,0.049L0.348,0.045L0.363,0.054L0.377,0.053L0.392,0.053L0.403,0.025L0.417,0.046L0.43,0.045L0.444,0.02L0.455,0.036L0.468,0.016L0.483,0.038L0.494,0.014L0.506,0.012L0.52,0.029L0.534,0.022L0.548,0.012L0.561,0.01L0.573,0.009L0.585,0.012L0.601,0.031L0.614,0.014L0.626,0.012L0.641,0.029L0.653,0.01L0.661,0.014L0.671,0.029L0.681,0.017L0.693,0.012L0.704,0.017L0.713,0.021L0.723,0.037L0.735,0.028L0.742,0.019L0.754,0.039L0.761,0.023L0.773,0.037L0.782,0.024L0.79,0.044L0.797,0.033L0.809,0.025L0.817,0.031L0.826,0.033L0.833,0.044L0.843,0.035L0.849,0.034L0.86,0.048L0.865,0.051L0.873,0.061L0.881,0.04L0.888,0.053L0.896,0.048L0.903,0.06L0.913,0.057L0.919,0.075L0.926,0.07L0.931,0.058L0.941,0.057L0.948,0.077L0.953,0.062L0.96,0.076L0.967,0.075L0.971,0.071L0.979,0.091L0.984,0.093L0.991,0.097L0.995,0.088L1,0.095L1,0.62C0.995,0.8 0.9,0.86 0.74,0.925C0.56,0.998 0.34,0.905 0.06,0.965Z"/>
+      </clipPath>
+    </defs>
+  </svg>
+
+  <p class="tq-orgf__lead">
+    上辺は左から右へゆるく持ち上がる弧、下辺はうねる曲線、左辺は斜めに落ちる。四隅とも直角が無い1枚のマスクで写真を抜く。
+    形が紙のコラージュになるので、地の色・写真・文言を変えないまま画面の質だけが変わる。
+  </p>
+
+  <!-- ① 普通 / 自由曲線 -->
+  <section class="tq-orgf__sec">
+    <h3 class="tq-orgf__secttl">① 同じ写真・同じ文言で、輪郭だけを変える</h3>
+    <div class="tq-orgf__stack">
+      <div>
+        <p class="tq-orgf__cap">普通：画面幅いっぱいの長方形</p>
+        <figure class="tq-orgf__hero tq-orgf__hero--plain">
+          <img src="../../../docs/demo/ph_a.jpg" alt="">
+          <p class="tq-orgf__copy">見出しがここに<br>入ります</p>
+        </figure>
+        <p class="tq-orgf__note">四隅が直角なので、写真は「ページに貼られた画像」として読まれる。</p>
+      </div>
+      <div>
+        <p class="tq-orgf__cap">この工夫：直角ゼロの自由曲線1枚</p>
+        <figure class="tq-orgf__hero tq-orgf__hero--free">
+          <img src="../../../docs/demo/ph_a.jpg" alt="">
+          <p class="tq-orgf__copy">見出しがここに<br>入ります</p>
+        </figure>
+        <p class="tq-orgf__note">
+          上辺の弧・下辺のうねり・左辺の傾きで、四隅がひとつも直角にならない。
+          clipPathUnits="objectBoundingBox" なので座標は 0〜1。幅が 1100px でも 375px でも同じ形になる。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ② ちぎり縁＋版ズレ -->
+  <section class="tq-orgf__sec">
+    <h3 class="tq-orgf__secttl">② 紙のコラージュに寄せる：上辺をちぎり縁にし、同じ形の色ベタを版ズレのようにはみ出させる</h3>
+    <div class="tq-orgf__stack">
+      <div>
+        <p class="tq-orgf__cap">ちぎり縁だけ</p>
+        <figure class="tq-orgf__hero tq-orgf__hero--tear">
+          <img src="../../../docs/demo/ph_b.jpg" alt="">
+        </figure>
+      </div>
+      <div>
+        <p class="tq-orgf__cap">ちぎり縁＋版ズレ（6px / 10px）</p>
+        <div class="tq-orgf__ghostbox">
+          <figure class="tq-orgf__hero tq-orgf__hero--tear">
+            <span class="tq-orgf__ghost"></span>
+            <img src="../../../docs/demo/ph_b.jpg" alt="">
+            <p class="tq-orgf__copy">見出しがここに<br>入ります</p>
+          </figure>
+        </div>
+        <p class="tq-orgf__note">
+          版ズレは同じ clipPath を色ベタに当てて数px ずらすだけ。ズレ量を 20px 以上にすると印刷事故に見えるので 6〜12px に留める。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ③ 小物も有機シェイプの塊に -->
+  <section class="tq-orgf__sec">
+    <h3 class="tq-orgf__secttl">③ 小物も有機シェイプの塊に置き換えると、ナビと同じ視覚量の絵になる</h3>
+    <div class="tq-orgf__stack">
+      <div>
+        <p class="tq-orgf__cap">普通：同じ大きさの丸アイコンを並べる</p>
+        <div class="tq-orgf__bar">
+          <ul class="tq-orgf__nav"><li>項目</li><li>項目</li><li>項目</li><li>項目</li></ul>
+          <span class="tq-orgf__dots"><i></i><i></i><i></i></span>
+        </div>
+      </div>
+      <div>
+        <p class="tq-orgf__cap">この工夫：6つの有機シェイプを重ねた塊</p>
+        <div class="tq-orgf__bar">
+          <ul class="tq-orgf__nav"><li>項目</li><li>項目</li><li>項目</li><li>項目</li></ul>
+          <span class="tq-orgf__blob"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+        </div>
+        <p class="tq-orgf__note">
+          小物は border-radius の8値指定（例 62% 38% 44% 56% / 48% 62% 38% 52%）だけで作れる。マスクを用意しなくてよい。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ④ 避ける例 -->
+  <section class="tq-orgf__sec">
+    <h3 class="tq-orgf__secttl">④ 避ける：clip-path:path() は px 座標なので可変幅で崩れる</h3>
+    <div class="tq-orgf__fixed">
+      <figure>
+        <img class="tq-orgf__ph--path" src="../../../docs/demo/ph_a.jpg" alt="">
+      </figure>
+    </div>
+    <p class="tq-orgf__note">↑ 720px ちょうどのときだけ意図どおり（横スクロールの箱に隔離してある）。</p>
+    <div class="tq-orgf__shrink">
+      <figure>
+        <img class="tq-orgf__ph--path" src="../../../docs/demo/ph_a.jpg" alt="">
+      </figure>
+    </div>
+    <p class="tq-orgf__note">
+      ↑ 同じ path() のまま枠を狭めると、パスは 720×300 の座標のままなので写真の右側と下側がそのまま切り落とされる。
+      可変幅では objectBoundingBox の clipPath か、mask-size:cover のマスク画像で組む。
+    </p>
+  </section>
+
+</div>
+
+</body></html>

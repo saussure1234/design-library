@@ -1,0 +1,234 @@
+<style>
+/* ============================================================
+   type/size-gap-inline
+   見出しと極小リンクを同じ1行にベースライン揃えで置く（級数比4〜6倍）
+   ============================================================ */
+
+@layer tq-fallback{
+  :root{
+    --c-primary:#00B220; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+    --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+    --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+    --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    --f-disp:var(--f-sans);
+    --f-num:"Helvetica Neue",Arial,var(--f-sans);
+    --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+    --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px; --fs-3xl:50px; --fs-4xl:64px;
+    --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+    --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  }
+}
+
+/* 契約に無い値だけ宣言。色はすべてトークンから引く。 */
+:root{
+  --tq-sgap-fs-h:clamp(32px,5.6vw,84px);  /* 見出し（契約の最大 --fs-4xl:64px を超える） */
+  --tq-sgap-fs-link:9px;                  /* 極小リンク（契約の最小 --fs-note:12px を下回る） */
+  --tq-sgap-gap:14px;                     /* 密着型の間隔＝リンク1文字分 */
+  --tq-sgap-pad:6px;                      /* 下線を文字幅より左右6pxずつ長くする */
+}
+
+.tq-sgap{
+  font-family:var(--f-sans); color:var(--c-ink2);
+  line-height:var(--lh-head); -webkit-text-size-adjust:100%;
+  padding:var(--s5); background:var(--c-bg);
+}
+.tq-sgap *{ box-sizing:border-box }
+
+/* --- デモの枠組み ------------------------------------------- */
+.tq-sgap__lead{ margin:0 0 var(--s6); font-size:var(--fs-note); color:var(--c-ink3); line-height:var(--lh-body) }
+.tq-sgap__sec{ margin-top:var(--s7) }
+.tq-sgap__sec:first-of-type{ margin-top:0 }
+.tq-sgap__secttl{ margin:0 0 var(--s5); font-size:var(--fs-sm); font-weight:700; color:var(--c-ink) }
+.tq-sgap__cap{
+  display:flex; align-items:center; gap:var(--s2);
+  margin:0 0 var(--s4); font-size:var(--fs-note); font-weight:700; color:var(--c-ink3); letter-spacing:.04em;
+}
+.tq-sgap__cap::before{ content:""; width:var(--s5); height:1px; background:var(--c-line); flex:0 0 auto }
+.tq-sgap__note{ margin:var(--s4) 0 0; font-size:var(--fs-note); color:var(--c-ink3); line-height:var(--lh-body) }
+.tq-sgap__stack{ display:grid; gap:var(--s7) }
+.tq-sgap__box{ border:1px solid var(--c-line); border-radius:var(--r-s); padding:var(--s5) }
+
+/* ============================================================
+   工夫の本体：見出しと極小リンクを同じ1行に置く
+   ============================================================ */
+.tq-sgap__head{
+  display:flex; align-items:baseline; gap:var(--tq-sgap-gap);
+  margin:0 0 var(--s4);
+}
+.tq-sgap__head--spread{ justify-content:space-between }
+
+.tq-sgap__head h3,
+.tq-sgap__head h4{
+  margin:0; font-family:var(--f-num); font-weight:800; color:var(--c-ink);
+  font-size:var(--tq-sgap-fs-h); line-height:1; letter-spacing:-.02em;
+  white-space:nowrap;
+}
+.tq-sgap__head a{
+  flex:0 0 auto;
+  font-family:var(--f-num); font-size:var(--tq-sgap-fs-link); font-weight:700;
+  letter-spacing:.18em; color:var(--c-ink); text-decoration:none;
+  border-bottom:1px solid currentColor;
+  padding:0 var(--tq-sgap-pad) var(--s1);   /* ← 下線が文字幅より6pxずつ長くなる */
+  white-space:nowrap;
+}
+
+/* 級数比を素の倍率のまま見せる列。狭い画面では箱の中だけ横スクロールさせ、
+   ページ本体には横スクロールを出さない。 */
+.tq-sgap__scroll{ overflow-x:auto; -webkit-overflow-scrolling:touch }
+.tq-sgap__scroll .tq-sgap__head{ width:max-content; min-width:100% }
+
+/* 級数比のつまみ */
+.tq-sgap__head--x2 h4{ font-size:calc(var(--tq-sgap-fs-link) * 2) }
+.tq-sgap__head--x4 h4{ font-size:calc(var(--tq-sgap-fs-link) * 4) }
+.tq-sgap__head--x6 h4{ font-size:calc(var(--tq-sgap-fs-link) * 6) }
+.tq-sgap__head--x9 h4{ font-size:calc(var(--tq-sgap-fs-link) * 9) }
+
+/* 下線のはみ出し無し（比較用） */
+.tq-sgap__head--flush a{ padding-left:0; padding-right:0 }
+
+/* 崩れる例：見出しが2行に折れるとベースラインが合わない */
+.tq-sgap__head--wrap h4{ white-space:normal; line-height:1.05 }
+
+/* --- 一覧（この工夫が置かれる文脈） -------------------------- */
+.tq-sgap__grid{
+  display:grid; gap:var(--s4);
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+}
+.tq-sgap__card p{ margin:var(--s2) 0 0; font-size:var(--fs-note); color:var(--c-ink2); line-height:var(--lh-body) }
+.tq-sgap__card span{ display:block; font-family:var(--f-num); font-size:var(--fs-note); color:var(--c-ink3) }
+.tq-sgap__ph{ display:block; width:100%; aspect-ratio:4/3; object-fit:cover; border-radius:var(--r-s) }
+
+/* --- 比較用「普通」：一覧の下に横長ボタン ------------------- */
+.tq-sgap__plainh{
+  margin:0 0 var(--s4); font-family:var(--f-num); font-weight:800; color:var(--c-ink);
+  font-size:var(--fs-xl); line-height:1.1; letter-spacing:.01em;
+}
+.tq-sgap__plainbtn{
+  display:block; margin:var(--s5) auto 0; max-width:22em; padding:var(--s3) var(--s5);
+  border:1px solid var(--c-ink); border-radius:var(--r-pill);
+  text-align:center; font-size:var(--fs-sm); font-weight:700;
+  color:var(--c-ink); text-decoration:none;
+}
+
+/* --- 狭いとき：見出しを縮めて1行を守る --------------------- */
+@media (max-width:420px){
+  :root{ --tq-sgap-gap:10px }
+}
+</style>
+
+<div class="tq-sgap">
+  <p class="tq-sgap__lead">
+    「一覧を見る」を見出しの下や一覧の後ろに置かず、見出しと同じ1行へベースライン揃えで畳む。
+    級数比が4〜6倍あるので、隣り合った瞬間に見出しの大きさが相対値として立ち上がる。
+  </p>
+
+  <!-- ① 普通 / この工夫 -->
+  <section class="tq-sgap__sec">
+    <h3 class="tq-sgap__secttl">① 同じ見出し・同じ導線で、置き方だけを変える</h3>
+    <div class="tq-sgap__stack">
+
+      <div class="tq-sgap__box">
+        <p class="tq-sgap__cap">普通：見出しは中くらい、導線は一覧の下に横長ボタン</p>
+        <p class="tq-sgap__plainh">PROJECT</p>
+        <div class="tq-sgap__grid">
+          <div class="tq-sgap__card"><img class="tq-sgap__ph" src="../../../docs/demo/ph_a.jpg" alt="">
+            <p><span>2026.00.00</span>見出しが入ります</p></div>
+          <div class="tq-sgap__card"><img class="tq-sgap__ph" src="../../../docs/demo/ph_b.jpg" alt="">
+            <p><span>2026.00.00</span>見出しが入ります</p></div>
+          <div class="tq-sgap__card"><img class="tq-sgap__ph" src="../../../docs/demo/ph_a.jpg" alt="">
+            <p><span>2026.00.00</span>見出しが入ります</p></div>
+        </div>
+        <a class="tq-sgap__plainbtn" href="#">一覧を見る</a>
+        <p class="tq-sgap__note">見出しの上下と、ボタンの上下で、余白が2箇所ぶん要る。</p>
+      </div>
+
+      <div class="tq-sgap__box">
+        <p class="tq-sgap__cap">この工夫：84px と 9px を同じ1行に置く</p>
+        <div class="tq-sgap__head">
+          <h3>PROJECT</h3>
+          <a href="#">VIEW MORE</a>
+        </div>
+        <div class="tq-sgap__grid">
+          <div class="tq-sgap__card"><img class="tq-sgap__ph" src="../../../docs/demo/ph_a.jpg" alt="">
+            <p><span>2026.00.00</span>見出しが入ります</p></div>
+          <div class="tq-sgap__card"><img class="tq-sgap__ph" src="../../../docs/demo/ph_b.jpg" alt="">
+            <p><span>2026.00.00</span>見出しが入ります</p></div>
+          <div class="tq-sgap__card"><img class="tq-sgap__ph" src="../../../docs/demo/ph_a.jpg" alt="">
+            <p><span>2026.00.00</span>見出しが入ります</p></div>
+        </div>
+        <p class="tq-sgap__note">上下の余白を一切使わずに見出しと導線が1行に畳まれ、そのぶん見出しを大きくできる。</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ② 密着 / 両端 -->
+  <section class="tq-sgap__sec">
+    <h3 class="tq-sgap__secttl">② 離し方は2通り</h3>
+    <div class="tq-sgap__stack">
+
+      <div class="tq-sgap__box">
+        <p class="tq-sgap__cap">密着型：gap は 14px（リンク1文字分）だけ</p>
+        <div class="tq-sgap__head">
+          <h4>STUDENT</h4>
+          <a href="#">VIEW MORE</a>
+        </div>
+      </div>
+
+      <div class="tq-sgap__box">
+        <p class="tq-sgap__cap">両端型：同じ1行の両端へ振る（space-between）</p>
+        <div class="tq-sgap__head tq-sgap__head--spread">
+          <h4>PROJECT</h4>
+          <a href="#">VIEW MORE</a>
+        </div>
+      </div>
+
+    </div>
+    <p class="tq-sgap__note">
+      密着型は「見出しに付いている導線」、両端型は「行そのものが導線の帯」に見える。どちらも行数は1行のまま。
+    </p>
+  </section>
+
+  <!-- ③ 級数比 -->
+  <section class="tq-sgap__sec">
+    <h3 class="tq-sgap__secttl">③ 級数比を動かす（リンクは9pxのまま固定）</h3>
+    <div class="tq-sgap__box tq-sgap__scroll">
+      <div class="tq-sgap__head tq-sgap__head--x2"><h4>SECTION</h4><a href="#">VIEW MORE</a></div>
+      <div class="tq-sgap__head tq-sgap__head--x4"><h4>SECTION</h4><a href="#">VIEW MORE</a></div>
+      <div class="tq-sgap__head tq-sgap__head--x6"><h4>SECTION</h4><a href="#">VIEW MORE</a></div>
+      <div class="tq-sgap__head tq-sgap__head--x9"><h4>SECTION</h4><a href="#">VIEW MORE</a></div>
+    </div>
+    <p class="tq-sgap__note">
+      2倍では「小さめのリンク」にしか見えない。4倍を超えたあたりから、リンクが級数の物差しとして働き始める。
+    </p>
+  </section>
+
+  <!-- ④ 下線と、崩れる条件 -->
+  <section class="tq-sgap__sec">
+    <h3 class="tq-sgap__secttl">④ 下線のはみ出しと、崩れる条件</h3>
+    <div class="tq-sgap__stack">
+
+      <div class="tq-sgap__box">
+        <p class="tq-sgap__cap">下線を文字幅ぴったりで引く（弱い）</p>
+        <div class="tq-sgap__head tq-sgap__head--x4 tq-sgap__head--flush"><h4>SECTION</h4><a href="#">VIEW MORE</a></div>
+        <p class="tq-sgap__cap">下線を左右6pxずつ長く引く（この工夫）</p>
+        <div class="tq-sgap__head tq-sgap__head--x4"><h4>SECTION</h4><a href="#">VIEW MORE</a></div>
+        <p class="tq-sgap__note">下線が文字より長いと、9pxでも「押せる帯」として認識できる。</p>
+      </div>
+
+      <div class="tq-sgap__box">
+        <p class="tq-sgap__cap">崩れる例：見出しが2行に折れるとき</p>
+        <div class="tq-sgap__head tq-sgap__head--x4 tq-sgap__head--wrap">
+          <h4>LONG SECTION TITLE</h4>
+          <a href="#">VIEW MORE</a>
+        </div>
+        <p class="tq-sgap__note">
+          ベースラインは最終行に合うので、リンクが見出しの下端まで落ちる。1行に収まる語だけに使う。
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+</div>

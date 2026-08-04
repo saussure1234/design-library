@@ -25,7 +25,9 @@
 .tq-xrule *{box-sizing:border-box}
 .tq-xrule__wrap{max-width:var(--w-max); margin-inline:auto; padding-inline:var(--w-gut)}
 .tq-xrule__grid{
-  display:grid; grid-template-columns:repeat(auto-fit,minmax(420px,1fr)); gap:var(--s7) var(--s5);
+  /* min() の引数は 100% が先。minmax(420px,…) や min(420px,100%) だとトラック最小が
+     420px のまま残り、375px で横に溢れる */
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr)); gap:var(--s7) var(--s5);
 }
 
 .tq-xrule__tag{
@@ -47,7 +49,8 @@
 
 /* ============ 白場＋写真パネル ============ */
 .tq-xrule__stage{position:relative; background:var(--c-bg); overflow:hidden}
-.tq-xrule__top{padding:var(--s6) var(--s5) var(--s5)}
+/* 見出しは罫より前面。実物も、罫は大きな文字の裏を通って見えなくなる */
+.tq-xrule__top{position:relative; z-index:3; padding:var(--s6) var(--s5) var(--s5)}
 .tq-xrule__big{
   margin:0; font-family:var(--f-disp); font-weight:800;
   font-size:var(--fs-2xl); line-height:1; letter-spacing:.01em; color:var(--c-ink);
@@ -74,7 +77,7 @@
 }
 
 /* --- 普通：等間隔・セクション内で止まる（写真には触れない） --- */
-.tq-xrule__rules--even .tq-xrule__rule{height:26%}
+.tq-xrule__rules--even .tq-xrule__rule{height:21%}
 .tq-xrule__rules--even .tq-xrule__rule:nth-child(1){left:10%; animation-delay:0s}
 .tq-xrule__rules--even .tq-xrule__rule:nth-child(2){left:25%; animation-delay:.06s}
 .tq-xrule__rules--even .tq-xrule__rule:nth-child(3){left:40%; animation-delay:.12s}
@@ -99,7 +102,7 @@
 
 @media (max-width:560px){
   .tq-xrule__top{padding:var(--s5) var(--s4) var(--s4)}
-  .tq-xrule__big{font-size:var(--fs-xl)}
+  .tq-xrule__big{font-size:var(--fs-lg)}   /* 2行に折れると写真の上辺に被るので1行に収める */
 }
 </style>
 

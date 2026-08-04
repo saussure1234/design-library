@@ -1,0 +1,43 @@
+{
+  "id": "type/line-shape-control",
+  "name": "和文の行の形をブラウザに任せず、両端揃えか手動改行で決める",
+  "ordinary": "本文は左揃えでコンテナ幅に自然折返しさせ、行末のギザギザは自然に見せる。",
+  "actual": "We are Buddiesは幅230px（約22em）の狭いカラムでも justify＋inter-ideograph＋palt で右端を揃え、行間2.1の正確な矩形にして隣の角丸写真と同じ「面」にする。明星小は逆に1文＝1段落で必ず改行し、行送りを字送りの2.4倍、ブロック間を2.6em空けて詩のように組む。小川ぶどう園は明朝＋字間0.28emで意味の切れ目に手で改行を入れ、円の中で2行に収める。",
+  "css": "/* 矩形にする */\n.block{text-align:justify; text-justify:inter-ideograph; line-break:strict; font-feature-settings:\"palt\" 1; letter-spacing:.08em; line-height:2.1; max-width:22em}\n/* 行を手で決める */\n.poem p{font-size:13px; line-height:2.4; letter-spacing:.08em; margin:0}\n.poem p+p{margin-top:0}\n.poem+.poem{margin-top:2.6em}\n/* 折返し位置の固定（Safariでも効く） */\n.nb{display:inline-block}\nh2.mincho{font-family:\"Yu Mincho\",serif; letter-spacing:.28em; line-height:1.9}",
+  "appliesTo": [
+    "value",
+    "voice",
+    "about",
+    "features",
+    "hero"
+  ],
+  "impact": 2,
+  "effort": 1,
+  "why": "行末の形は文字ブロックの輪郭そのもので、揃えれば写真と並ぶ面になり、手で切れば語りの速度になる。",
+  "avoid": "文字数が可変のCMS流し込み（手動改行は破綻する）。",
+  "params": [
+    "矩形にするか波打たせるか",
+    "1行の字数(18〜24)",
+    "行送り(2.1〜2.4)",
+    "字間(0.08〜0.28em)"
+  ],
+  "sources": [
+    "buddies_s04",
+    "buddies_s05",
+    "meisei-es_s02",
+    "sho_hanamaru_s11",
+    "ogawa_s05"
+  ],
+  "notes": [
+    "3つは同じ問いの答え違い。A＝右端を揃えて面にする／B＝1文で切って語りにする／C＝折返し位置だけ固定する。同じページでAとBを混ぜると「揃っていないほう」がミスに見えるので、面（説明）と語り（主張）でセクションを分けて使う。",
+    "デモAは左右で完全に同じ文を置き、text-align だけを変えてある。効いていることが分かるように版面の右端へ破線のガイド（--c-line）を1本立てた。ガイドは工夫の一部ではなく検証用。",
+    "写真は align-self:stretch で文字ブロックと同じ高さまで伸ばしている。aspect-ratio で高さを決めると、揃えた右端と写真の下端が合わず「面が2つ並んでいる」ように見えない。",
+    "justify で最終行は左揃えのまま残る（これは仕様）。矩形に見せたいときは最終行がほぼ埋まる字数まで本文を詰めるのが現実的で、text-align-last:justify は字間が開きすぎて不自然になる。",
+    "text-justify:inter-ideograph はIE系の遺産でChrome/Safariは無視するが、和文では text-align:justify だけで行が伸びるので実害はない。line-break:strict と palt を必ずセットにして、約物が行頭に来るのと字間の間延びを同時に抑える。",
+    "22em は「幅230px」の正体。案件の本文級数が変わっても em で書いておけば1行の字数（約20字）が保たれる。px で書くと級数を上げた瞬間に1行が短くなって行の形が崩れる。",
+    "詩組みは p+p{margin-top:0} が要点。行送り2.4で十分に間が空いているので、段落マージンを足すと文の切れ目とブロックの切れ目が同じ強さになって、話題の変わり目（2.6em＋罫）が読めなくなる。",
+    "Cの手動改行はメモリの「日本語LPの改行制御」と同じ作法。auto-phrase はSafariが未対応なので使わず、意味の塊を span.nb{display:inline-block} で包み、その境目にだけ <wbr> を置く。wbr が無いと塊が割れずに画面外へ溢れる。",
+    "デモCは円の幅を320px、文字を28px＋字間0.28emにして「1行7字」に設計してある。普通の側は6字目の途中で折り返し（見出しの文章こ／こに入ります）、工夫の側は6字＋7字で割れる。字数と幅の関係が崩れると差が出ないので、実装時は必ず現物の級数で確認する。",
+    "デモは techniques/type/line-shape-control/demo.html。A＝両端揃えで矩形、B＝1文1段落の詩組み、C＝nb+wbr で折返し固定（明朝・字間0.28em・円の中）。Cのブロックだけ --f-disp をローカルに明朝へ差し替えている（案件では :root 側で当てる）。"
+  ]
+}

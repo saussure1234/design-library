@@ -1,0 +1,29 @@
+{
+  "id": "rule/soft-divider",
+  "name": "区切りに実線を使わず、点線・ドット・小記号の列に置き換える",
+  "ordinary": "段落やブロックの間に1pxの実線を引く",
+  "actual": "直線の罫を1本も置かず、区切りを離散した記号列で作る。中黒5つ（字間.4em）、直径1.5px・間隔8pxのドット点線、紺の▼3連（縦に積んでステップを送る）、四芒星8個を等間隔で並べ左端1個だけ濃色にして起点を示す、花と点を交互に並べた高さ12pxのオーナメント行など。実線より弱いので上下が割れず1つの塊として読める。実線を残すなら中央に5×7pxの菱形を1つ挟んで飾りに変える。",
+  "css": ".dots::before{content:\"・・・・・\";letter-spacing:.4em;color:#c8bda6;font-size:11px;display:block;margin:18px 0}\n.sep{border:0;border-top:2px dotted rgba(255,214,200,.55);margin:34px 0}\n.body{border-top:1px dashed #c9c9c9;padding-top:20px;margin-top:26px}\n/* ▼3連で次へ送る */\n.arrow{display:grid;gap:6px;justify-items:center;margin:10px 0}\n.arrow i{width:0;height:0;border:6px solid transparent;border-top:8px solid #12569e}\n/* 四芒星8個、1個目だけ濃色 */\n.sparkles{display:flex;gap:6px}\n.sparkles i{width:9px;height:9px;background:#fff;clip-path:polygon(50% 0,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0 50%,40% 40%)}\n.sparkles i:first-child{background:#0d6f8c}\n/* 実線を残すなら中央に菱形 */\n.rule{position:relative;width:56%;height:1px;margin:14px auto;background:#c9b98a}\n.rule::after{content:\"\";position:absolute;left:50%;top:-3px;translate:-50% 0;width:5px;height:7px;background:#c9b98a;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}\n/* オーナメント行 */\n.orn{border:0;height:12px;background:url(flower-dot.svg) repeat-x center/auto 12px;opacity:.55;margin:10px 0}",
+  "params": [
+    "記号の種類（・／ドット／▼／四芒星／花）",
+    "個数3〜8",
+    "字間.4〜.6em",
+    "1個だけ色を変えるか"
+  ],
+  "appliesTo": ["value", "features", "flow", "voice", "hero"],
+  "impact": 2,
+  "effort": 1,
+  "why": "離散した点列は実線より弱く「切る」に至らないので、分節しつつ上下を1つの塊のまま読ませられる",
+  "avoid": "項目数が多い一覧（記号が増えすぎて騒がしくなる）",
+  "sources": ["linie_s06", "meisei-kg_s03", "yugao_s08", "yugao_s10", "kobe-wu_s05", "sho_kidsduo_s08", "ikeda_s03", "musashino_s07"],
+  "notes": [
+    "現物の地の色を実測して demo に反映：yugao_s10 #F8F4EB（中黒＋金）、meisei-kg_s03 #7B2D2D（濃い地＋ペールピーチのドット）、linie_s06 #F4F4F4（破線）、sho_kidsduo_s08 #FBF5E5（紺の▼）、kobe-wu_s05 は #8DC6D7→#B0D3E7 のグラデ（四芒星）、musashino_s07 #F5F6E8（実線＋菱形）、ikeda_s03 は #A5DDF4→#A7D396 のグラデカード（花＋点）。地が濃いほど記号を細く・淡くしている。",
+    "kobe-wu_s05 を拡大して数えると四芒星はちょうど8個、左端1個だけが濃いティール（#0D6F8C）で残り7個が白。『起点を示す1個』が入ることで、ただの飾り列が『左から右へ』の列に変わる。個数の上限が8なのはこの読み順が保てる限界。",
+    "ドット点線を border-top:Npx dotted で作ると、ドットの直径＝線幅、間隔＝直径と固定され、間隔8pxのような指定ができない。demo では radial-gradient + background-size:calc(直径+間隔) の repeat-x に置き換えて、直径と間隔を独立に指定できるようにした。",
+    "▼3連は border で作った三角。border-bottom:0 を足さないと、下向き三角の下に透明な余白が残って gap が2倍に見える。縦に積むときの gap は4〜6pxで、詰めるほど『送る』速度が上がる。",
+    "オーナメント行（ikeda_s03）は外部SVG画像を repeat-x する実装だが、demo では画像を持ち込めないので radial-gradient 4つで4弁の花を組み、currentColor で色を拾わせた。花と点を交互にするのは密度に強弱を付けるためで、同じ記号の等間隔にすると点線と区別が付かなくなる。",
+    "実線を残す版（musashino_s07）は、罫の長さを幅いっぱいにせず 56% に絞っているのが効いている。中央の 5×7px の菱形と合わせて『線』ではなく『飾り』として読まれる。",
+    "avoid の再現は demo ③。同じ記号列でも、項目ごとに挟むと記号の総量が本文を上回って列そのものが主役になる。塊の変わり目にだけ置く、が運用ルール。"
+  ],
+  "demoNotes": "①実線／中黒5つを横並びで対比。②置き換えの型を6つ（ドット点線・破線・▼3連・四芒星8個・実線＋菱形・花と点のオーナメント）、それぞれ現物と同じ地の色の上に置いた。③項目ごとに挟んだ場合／塊の変わり目にだけ置いた場合を対比して、効かなくなる条件を見せた。"
+}

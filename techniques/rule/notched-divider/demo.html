@@ -1,0 +1,321 @@
+<style>
+/* ============================================================
+   rule/notched-divider
+   区切り罫の中央だけを折ってV字にし、罫に「下へ」の方向を持たせる
+   ============================================================ */
+
+@layer tq-fallback{
+  :root{
+    --c-primary:#00B220; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+    --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+    --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3;
+    --c-on-primary:#FFFFFF;
+    --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    --f-disp:var(--f-sans);
+    --f-num:"Helvetica Neue",Arial,var(--f-sans);
+    --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+    --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+    --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+    --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  }
+}
+
+:root{
+  --tq-notch-ink:#3B3A35;    /* 濃い罫（tanq_s10 実測） */
+  --tq-notch-pale:#D8DDE3;   /* 淡い罫（tanq_s08 実測） */
+  --tq-notch-panel:#EFF3F6;  /* 価格カードの面（tanq_s08 実測） */
+  --tq-notch-cream:#F8F4EB;  /* 明朝見出しの地（tanq_s10 実測） */
+  --tq-notch-dark:#2E3338;   /* コース名ピル */
+  --tq-notch-g1:#1EAEDE;     /* グラデ地の検証用 */
+  --tq-notch-g2:#8ED8C4;
+  /* 切り欠きの寸法。工夫の本体なのでここで宣言する */
+  --tq-notch-w:18px;   /* 切り欠き幅（params: 18〜24px）。深さは常にこの半分になる */
+}
+
+.tq-nch{
+  font-family:var(--f-sans); color:var(--c-ink2);
+  line-height:var(--lh-head); -webkit-text-size-adjust:100%;
+  padding:var(--s5); background:var(--c-bg);
+}
+.tq-nch *{ box-sizing:border-box }
+
+/* --- デモの見出し・注記 ------------------------------------ */
+.tq-nch__lead{
+  margin:0 0 var(--s5); font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-nch__sec{ margin-top:var(--s7) }
+.tq-nch__sec:first-of-type{ margin-top:0 }
+.tq-nch__secttl{
+  margin:0 0 var(--s4); font-size:var(--fs-sm); font-weight:700; color:var(--c-ink);
+}
+.tq-nch__cap{
+  display:flex; align-items:center; gap:var(--s2);
+  margin:0 0 var(--s3); font-size:var(--fs-note); font-weight:700;
+  color:var(--c-ink3); letter-spacing:.04em;
+}
+.tq-nch__cap::before{
+  content:""; width:var(--s5); height:1px; background:var(--c-line); flex:0 0 auto;
+}
+.tq-nch__note{
+  margin:var(--s3) 0 0; font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-nch__pair{
+  display:grid; gap:var(--s5);
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+}
+
+/* === 罫（まっすぐ） ========================================= */
+.tq-nch__flat{
+  height:1px; background:var(--tq-notch-pale); margin:var(--s4) 0;
+}
+.tq-nch__flat--ink{ background:var(--tq-notch-ink) }
+
+/* === 罫（中央だけV字に折る） ================================
+   3分割の flex で作る：左の線 ─ 幅18pxの切り欠き ─ 右の線。
+   地の色でマスクしないので、透過でもグラデでも同じ実装で通る。 */
+.tq-nch__rule{
+  display:flex; align-items:flex-start; margin:var(--s4) 0;
+  color:var(--tq-notch-pale);   /* 罫色はここで決める（currentColor を拾う） */
+}
+.tq-nch__rule::before,
+.tq-nch__rule::after{
+  content:""; flex:1 1 auto; height:1px; background:currentColor;
+}
+/* 派生値は :root ではなくこの要素の上で宣言する。
+   :root に置くと --tq-notch-w を子孫で上書きしても再計算されない（④で幅を振れなくなる）。 */
+.tq-nch__notch{
+  --tq-notch-s:calc(var(--tq-notch-w) * .7071);   /* 45°回す正方形の一辺 = w/√2 */
+  --tq-notch-d:calc(var(--tq-notch-w) / 2);       /* 深さ＝幅の半分 */
+  flex:0 0 var(--tq-notch-w); height:var(--tq-notch-d); position:relative;
+}
+/* 一辺 w/√2 の正方形を45°回し、右辺と下辺だけを残すとV字になる。
+   このとき深さは必ず幅の半分になる（18px → 9px）。 */
+.tq-nch__notch::before{
+  content:""; position:absolute;
+  left:50%; top:calc(var(--tq-notch-s) / -2);
+  width:var(--tq-notch-s); height:var(--tq-notch-s);
+  border-right:1px solid currentColor;
+  border-bottom:1px solid currentColor;
+  translate:-50% 0; rotate:45deg;
+}
+.tq-nch__rule--ink{ color:var(--tq-notch-ink) }
+
+/* === SVGで作る版（背景が透過・グラデのとき） ================ */
+.tq-nch__svg{
+  display:block; width:100%; max-width:240px; height:auto;
+  margin:var(--s4) auto; color:var(--tq-notch-ink);
+}
+.tq-nch__svg--on-grad{ color:var(--c-on-primary) }
+
+/* === ② 使いどころ A：ラベルと見出しの間 ==================== */
+.tq-nch__stage{
+  background:var(--tq-notch-cream); padding:var(--s6) var(--s5); text-align:center;
+}
+.tq-nch__label{
+  margin:0; font-size:var(--fs-note); font-weight:700; color:var(--tq-notch-ink);
+  letter-spacing:.08em;
+}
+.tq-nch__lead2{
+  margin:0; font-family:var(--f-disp); font-size:var(--fs-lg);
+  color:var(--tq-notch-ink); line-height:var(--lh-head); letter-spacing:.06em;
+}
+.tq-nch__rulewrap{ max-width:240px; margin-inline:auto }
+
+/* === ② 使いどころ B：説明文とプラン行の間 ================== */
+.tq-nch__card{
+  background:var(--tq-notch-panel); border-radius:var(--r-m);
+  padding:var(--s5) var(--s4); text-align:center;
+}
+.tq-nch__pill{
+  display:inline-block; padding:var(--s1) var(--s3); border-radius:var(--r-s);
+  background:var(--tq-notch-g1); color:var(--c-on-primary);
+  font-size:var(--fs-note); font-weight:700;
+}
+.tq-nch__ttl{
+  margin:var(--s4) 0 0; font-size:var(--fs-md); font-weight:700;
+  color:var(--c-ink); line-height:var(--lh-head);
+}
+.tq-nch__desc{
+  margin:var(--s3) 0 0; font-size:var(--fs-note); color:var(--c-ink3);
+}
+.tq-nch__plans{
+  display:grid; gap:var(--s3);
+  grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  margin-top:var(--s4);
+}
+.tq-nch__plan{
+  display:block; padding:var(--s2) var(--s4); border-radius:var(--r-pill);
+  background:var(--tq-notch-dark); color:var(--c-on-primary);
+  font-size:var(--fs-note);
+}
+.tq-nch__rows{ margin:var(--s4) 0 0; padding:0; list-style:none }
+.tq-nch__rows li{
+  padding:var(--s2) 0; border-top:1px solid var(--c-bg);
+  font-size:var(--fs-note); color:var(--c-ink2);
+}
+
+/* === ③ 背景が透過・グラデのとき ============================ */
+.tq-nch__grad{
+  background:linear-gradient(100deg,var(--tq-notch-g1),var(--tq-notch-g2));
+  padding:var(--s6) var(--s5); border-radius:var(--r-m);
+  color:var(--c-on-primary);
+}
+.tq-nch__gradttl{
+  margin:0; font-size:var(--fs-md); font-weight:700; text-align:center;
+}
+.tq-nch__gradp{
+  margin:0; font-size:var(--fs-note); text-align:center; opacity:.9;
+}
+/* 地の色で塗りつぶすやり方は、グラデの上では破綻する（③右で見せる） */
+.tq-nch__badrule{
+  position:relative; height:1px; background:var(--c-on-primary); margin:var(--s4) 0;
+}
+.tq-nch__badrule::after{
+  content:""; position:absolute; left:50%; top:-1px; translate:-50% 0;
+  width:var(--tq-notch-w); height:calc(var(--tq-notch-w) / 2);
+  background:var(--c-bg);
+  clip-path:polygon(0 0,100% 0,50% 100%);
+}
+
+/* ④ 幅を振る */
+.tq-nch__w24{ --tq-notch-w:24px }
+.tq-nch__w32{ --tq-notch-w:32px }
+</style>
+
+<div class="tq-nch">
+  <p class="tq-nch__lead">
+    水平罫を、幅の中央1点だけ 9px 下へ折る。幅18pxの三角の切り欠きが吹き出しの尻尾のように働き、
+    罫自身が「この下に続く」と言うので、矢印アイコンも誘導文も要らない。
+  </p>
+
+  <!-- ① 普通 / この工夫 -->
+  <section class="tq-nch__sec">
+    <h3 class="tq-nch__secttl">① 同じ位置の罫で、中央を折るかどうかだけを変える</h3>
+    <div class="tq-nch__pair">
+
+      <div>
+        <p class="tq-nch__cap">普通：まっすぐな1pxの水平罫</p>
+        <div class="tq-nch__stage">
+          <p class="tq-nch__label">上のラベルが入ります</p>
+          <div class="tq-nch__rulewrap"><div class="tq-nch__flat tq-nch__flat--ink"></div></div>
+          <p class="tq-nch__lead2">見出しがここに入ります<br>2行程度の長さ</p>
+        </div>
+        <p class="tq-nch__note">罫が上下を対等に切るので、ラベルと見出しが別ブロックに割れる。</p>
+      </div>
+
+      <div>
+        <p class="tq-nch__cap">この工夫：中央だけ下へ 9px 折る</p>
+        <div class="tq-nch__stage">
+          <p class="tq-nch__label">上のラベルが入ります</p>
+          <div class="tq-nch__rulewrap">
+            <div class="tq-nch__rule tq-nch__rule--ink"><span class="tq-nch__notch"></span></div>
+          </div>
+          <p class="tq-nch__lead2">見出しがここに入ります<br>2行程度の長さ</p>
+        </div>
+        <p class="tq-nch__note">同じ1本の罫が「下へ」の記号になり、分節したまま上下が1つの塊として読める。</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ② もう一つの使いどころ：説明文とプラン行の間 -->
+  <section class="tq-nch__sec">
+    <h3 class="tq-nch__secttl">② 分けたいが切り離したくない所に置く（説明文 → プラン行）</h3>
+    <div class="tq-nch__pair">
+
+      <div>
+        <p class="tq-nch__cap">普通：まっすぐな罫</p>
+        <div class="tq-nch__card">
+          <span class="tq-nch__pill">ラベル</span>
+          <p class="tq-nch__ttl">見出しがここに<br>2行で入ります</p>
+          <p class="tq-nch__desc">説明のテキストが1行入ります</p>
+          <div class="tq-nch__flat"></div>
+          <div class="tq-nch__plans">
+            <span class="tq-nch__plan">コース名 ›</span>
+            <span class="tq-nch__plan">コース名 ›</span>
+          </div>
+          <ul class="tq-nch__rows">
+            <li>項目が入ります</li>
+            <li>項目が入ります</li>
+          </ul>
+        </div>
+      </div>
+
+      <div>
+        <p class="tq-nch__cap">この工夫：切り欠き入りの罫</p>
+        <div class="tq-nch__card">
+          <span class="tq-nch__pill">ラベル</span>
+          <p class="tq-nch__ttl">見出しがここに<br>2行で入ります</p>
+          <p class="tq-nch__desc">説明のテキストが1行入ります</p>
+          <div class="tq-nch__rule"><span class="tq-nch__notch"></span></div>
+          <div class="tq-nch__plans">
+            <span class="tq-nch__plan">コース名 ›</span>
+            <span class="tq-nch__plan">コース名 ›</span>
+          </div>
+          <ul class="tq-nch__rows">
+            <li>項目が入ります</li>
+            <li>項目が入ります</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+    <p class="tq-nch__note">
+      罫色を淡く（#D8DDE3）しても方向は消えない。効いているのは濃さではなく「折れている」という形。
+    </p>
+  </section>
+
+  <!-- ③ SVGで作る -->
+  <section class="tq-nch__sec">
+    <h3 class="tq-nch__secttl">③ 背景が透過・グラデのときはSVGで作る</h3>
+    <div class="tq-nch__pair">
+
+      <div>
+        <p class="tq-nch__cap">×：地の色で三角に塗って切り欠く</p>
+        <div class="tq-nch__grad">
+          <p class="tq-nch__gradttl">見出しがここに入ります</p>
+          <div class="tq-nch__badrule"></div>
+          <p class="tq-nch__gradp">説明のテキストが1行入ります</p>
+        </div>
+        <p class="tq-nch__note">白い三角がグラデの上に露出して、切り欠きでなく「白い付箋」に見える。</p>
+      </div>
+
+      <div>
+        <p class="tq-nch__cap">○：SVGのpathで1本の折れ線として描く</p>
+        <div class="tq-nch__grad">
+          <p class="tq-nch__gradttl">見出しがここに入ります</p>
+          <svg class="tq-nch__svg tq-nch__svg--on-grad" viewBox="0 0 240 12" aria-hidden="true">
+            <path d="M0 2H108l12 8 12-8h108" fill="none" stroke="currentColor" stroke-width="1"></path>
+          </svg>
+          <p class="tq-nch__gradp">説明のテキストが1行入ります</p>
+        </div>
+        <p class="tq-nch__note">塗りが1つも無いので、地が何色でもグラデでも写真でもそのまま乗る。</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ④ 寸法 -->
+  <section class="tq-nch__sec">
+    <h3 class="tq-nch__secttl">④ 幅を振る（18px／24px／32px）。深さは常に幅の半分になる</h3>
+    <div class="tq-nch__stage">
+      <div class="tq-nch__rulewrap">
+        <div class="tq-nch__rule tq-nch__rule--ink"><span class="tq-nch__notch"></span></div>
+      </div>
+      <div class="tq-nch__rulewrap tq-nch__w24">
+        <div class="tq-nch__rule tq-nch__rule--ink"><span class="tq-nch__notch"></span></div>
+      </div>
+      <div class="tq-nch__rulewrap tq-nch__w32">
+        <div class="tq-nch__rule tq-nch__rule--ink"><span class="tq-nch__notch"></span></div>
+      </div>
+    </div>
+    <p class="tq-nch__note">
+      45°の折れなので、幅を決めれば深さは自動で決まる。現物（tanq_s08／s10）の実測も 18×9 前後で、
+      これを超えると「切り欠き」ではなく「吹き出しの尻尾」として強く出すぎる。
+    </p>
+  </section>
+
+</div>

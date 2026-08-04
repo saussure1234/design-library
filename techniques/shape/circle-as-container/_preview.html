@@ -1,0 +1,220 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>circle-as-container</title>
+<link rel="stylesheet" href="../../../parts/_tokens.css">
+<style>*{margin:0}body{background:#fff}</style>
+</head><body>
+<style>
+/* ============================================================
+   shape/circle-as-container
+   テキストの器を矩形カードでなく正円にする
+   ============================================================ */
+
+@layer tq-fallback{
+  :root{
+    --c-primary:#00B220; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+    --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+    --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3;
+    --c-on-primary:#FFFFFF;
+    --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    --f-disp:var(--f-sans); --f-num:"Helvetica Neue",Arial,var(--f-sans);
+    --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+    --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+    --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px; --s8:76px;
+    --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+    --shadow:0 6px 24px rgba(17,17,17,.08);
+  }
+}
+
+/* 直径＝この工夫のパラメータ。色・余白・書体はトークンのみ。 */
+:root{
+  --tq-cac-d:min(30vw,185px);   /* 3カラムの円（現物実測 185px） */
+  --tq-cac-big:min(46vw,420px); /* 情報量が多いときの大円（版面の4割） */
+}
+
+.tq-cac{
+  font-family:var(--f-sans); color:var(--c-ink2);
+  line-height:var(--lh-head); -webkit-text-size-adjust:100%;
+  padding:var(--s5); background:var(--c-bg);
+}
+.tq-cac *{box-sizing:border-box}
+
+/* --- デモの見出し・注記 ------------------------------------ */
+.tq-cac__lead{ margin:0 0 var(--s6); font-size:var(--fs-note); color:var(--c-ink3); line-height:var(--lh-body) }
+.tq-cac__sec{ margin-top:var(--s7) }
+.tq-cac__sec:first-of-type{ margin-top:0 }
+.tq-cac__secttl{ margin:0 0 var(--s4); font-size:var(--fs-sm); font-weight:700; color:var(--c-ink) }
+.tq-cac__cap{
+  display:flex; align-items:center; gap:var(--s2);
+  margin:0 0 var(--s4); font-size:var(--fs-note); font-weight:700;
+  color:var(--c-ink3); letter-spacing:.04em;
+}
+.tq-cac__cap::before{ content:""; width:var(--s5); height:1px; background:var(--c-line); flex:0 0 auto }
+.tq-cac__note{ margin:var(--s3) 0 0; font-size:var(--fs-note); color:var(--c-ink3); line-height:var(--lh-body) }
+
+/* --- ① 普通：白い角丸カード（影付き） ---------------------- */
+.tq-cac__cards{ display:grid; gap:var(--s4); grid-template-columns:repeat(auto-fit,minmax(180px,1fr)) }
+.tq-cac__card{
+  background:var(--c-bg); border-radius:var(--r-m); box-shadow:var(--shadow);
+  padding:var(--s5); text-align:center;
+}
+.tq-cac__ttl{
+  margin:0; font-family:var(--f-num); font-size:var(--fs-md); font-weight:700;
+  letter-spacing:.12em; color:var(--c-ink);
+}
+.tq-cac__txt{ margin:var(--s3) 0 0; font-size:var(--fs-note); color:var(--c-ink2); line-height:var(--lh-body) }
+
+/* --- ② この工夫：正円＋1pxのヘアラインだけ ------------------ */
+.tq-cac__circles{
+  display:flex; flex-wrap:wrap; gap:var(--s5); justify-content:center;
+}
+.tq-cac__circle{
+  width:var(--tq-cac-d); aspect-ratio:1; border-radius:50%;
+  background:var(--c-bg); border:1px solid var(--c-line); box-shadow:none;
+  display:grid; place-content:center; text-align:center; padding:8%;
+}
+/* 円が浮いて見えないよう、地は交互面に置く（現物も淡い地の上） */
+.tq-cac__ground{ background:var(--c-bg2); border-radius:var(--r-s); padding:var(--s6) var(--s4) }
+/* 避ける：本文が5行を超えると円からはみ出す */
+.tq-cac__circle--over{ border-color:var(--c-accent) }
+
+/* --- ③ 情報量が多いとき：大円＋左端を画面外へ --------------- */
+.tq-cac__stage{
+  position:relative; overflow:hidden; border-radius:var(--r-s);
+  background:var(--c-bg2);
+  display:grid; gap:var(--s4); align-items:center;
+  grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);
+  padding:var(--s6) var(--s5) var(--s6) 0;
+}
+.tq-cac__info{
+  width:var(--tq-cac-big); aspect-ratio:1; border-radius:50%;
+  margin-left:calc(-1 * var(--s8));
+  color:var(--c-on-primary);
+  background:radial-gradient(120% 120% at 30% 20%,var(--c-ink2),var(--c-ink));
+  display:flex; align-items:center; padding-left:16%; padding-right:8%;
+}
+.tq-cac__info dl{ margin:0; font-size:var(--fs-note); line-height:var(--lh-body) }
+.tq-cac__info dt{ color:var(--c-line); float:left; clear:left; width:4.5em }
+.tq-cac__info dd{ margin:0 0 0 4.5em }
+.tq-cac__infottl{
+  margin:0 0 var(--s3); font-size:var(--fs-md); font-weight:700; color:var(--c-on-primary);
+}
+.tq-cac__eyebrow{
+  margin:0 0 var(--s1); font-family:var(--f-num); font-size:var(--fs-note);
+  letter-spacing:.14em; color:var(--c-line);
+}
+.tq-cac__stagephotos{ display:grid; gap:var(--s4); justify-items:center }
+.tq-cac__node{
+  position:relative; width:min(34vw,190px); aspect-ratio:1;
+  border-radius:50%; overflow:hidden; background:var(--c-line);
+}
+.tq-cac__node img{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:top;
+}
+@media (max-width:600px){
+  .tq-cac__stage{ grid-template-columns:1fr; padding:var(--s5) var(--s4); justify-items:center }
+  .tq-cac__info{ margin-left:0; width:min(80vw,320px); padding-left:12%; padding-right:12% }
+}
+</style>
+
+<div class="tq-cac">
+  <p class="tq-cac__lead">
+    見出しと本文の器を、白い角丸カードではなく正円にする。囲みは1pxのヘアライン1本だけで、
+    影も塗りの段差も付けない。円は行末が自然に短くなるので、中央揃えの3行が収まりよく見える。
+  </p>
+
+  <!-- ① 対比 -->
+  <section class="tq-cac__sec">
+    <h3 class="tq-cac__secttl">① 同じ文言・同じ地で、器の形だけを変える</h3>
+
+    <p class="tq-cac__cap">普通：3カラムの白い角丸カード（影付き）</p>
+    <div class="tq-cac__ground">
+      <div class="tq-cac__cards">
+        <article class="tq-cac__card">
+          <h4 class="tq-cac__ttl">MISSION</h4>
+          <p class="tq-cac__txt">本文がここに入ります。<br>本文がここに入ります。<br>本文がここに入ります。</p>
+        </article>
+        <article class="tq-cac__card">
+          <h4 class="tq-cac__ttl">VISION</h4>
+          <p class="tq-cac__txt">本文がここに入ります。<br>本文がここに入ります。<br>本文がここに入ります。</p>
+        </article>
+        <article class="tq-cac__card">
+          <h4 class="tq-cac__ttl">VALUE</h4>
+          <p class="tq-cac__txt">本文がここに入ります。<br>本文がここに入ります。<br>本文がここに入ります。</p>
+        </article>
+      </div>
+    </div>
+
+    <p class="tq-cac__cap" style="margin-top:var(--s6)">この工夫：直径185pxの正円＋1pxのヘアライン・影なし</p>
+    <div class="tq-cac__ground">
+      <div class="tq-cac__circles">
+        <article class="tq-cac__circle">
+          <h4 class="tq-cac__ttl">MISSION</h4>
+          <p class="tq-cac__txt">本文がここに入ります。<br>本文がここに入ります。<br>本文がここに入ります。</p>
+        </article>
+        <article class="tq-cac__circle">
+          <h4 class="tq-cac__ttl">VISION</h4>
+          <p class="tq-cac__txt">本文がここに入ります。<br>本文がここに入ります。<br>本文がここに入ります。</p>
+        </article>
+        <article class="tq-cac__circle">
+          <h4 class="tq-cac__ttl">VALUE</h4>
+          <p class="tq-cac__txt">本文がここに入ります。<br>本文がここに入ります。<br>本文がここに入ります。</p>
+        </article>
+      </div>
+    </div>
+    <p class="tq-cac__note">
+      文言も地も同じ。円は上下左右に余白が自然にできるので、影で浮かせなくても面として立つ。
+    </p>
+  </section>
+
+  <!-- ② 避ける -->
+  <section class="tq-cac__sec">
+    <h3 class="tq-cac__secttl">② 避ける：本文が5行を超えると成立しない</h3>
+    <div class="tq-cac__ground">
+      <div class="tq-cac__circles">
+        <article class="tq-cac__circle">
+          <h4 class="tq-cac__ttl">3行</h4>
+          <p class="tq-cac__txt">本文がここに入ります。<br>本文がここに入ります。<br>本文がここに入ります。</p>
+        </article>
+        <article class="tq-cac__circle tq-cac__circle--over">
+          <h4 class="tq-cac__ttl">6行</h4>
+          <p class="tq-cac__txt">本文がここに入ります。<br>本文がここに入ります。<br>本文がここに入ります。<br>本文がここに入ります。<br>本文がここに入ります。<br>本文がここに入ります。</p>
+        </article>
+      </div>
+    </div>
+    <p class="tq-cac__note">
+      右は行が円の外へはみ出す。字を詰めて収めると級数が落ちすぎるので、5行を超える内容は円に入れない。
+    </p>
+  </section>
+
+  <!-- ③ 情報量が多いとき -->
+  <section class="tq-cac__sec">
+    <h3 class="tq-cac__secttl">③ 情報量が多い時：円を版面の4割まで大きくし、左端を画面外へ抜いて中は左揃え</h3>
+    <div class="tq-cac__stage">
+      <div class="tq-cac__info">
+        <div>
+          <p class="tq-cac__eyebrow">INFORMATION</p>
+          <h4 class="tq-cac__infottl">見出しがここに入ります</h4>
+          <dl>
+            <dt>住所</dt><dd>住所がここに入ります</dd>
+            <dt>TEL</dt><dd>000-0000-0000</dd>
+            <dt>営業時間</dt><dd>00:00〜00:00</dd>
+            <dt>定休日</dt><dd>曜日が入ります</dd>
+          </dl>
+        </div>
+      </div>
+      <div class="tq-cac__stagephotos">
+        <div class="tq-cac__node"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+        <div class="tq-cac__node"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+      </div>
+    </div>
+    <p class="tq-cac__note">
+      中身は左揃えのまま流し込み、円の左端を枠外へ抜く。中央揃えを諦めるかわりに、
+      事務情報の面まで絵として成立する。写真も同じ正円で抜き、被写体を円の縁で断つ。
+    </p>
+  </section>
+
+</div>
+
+</body></html>

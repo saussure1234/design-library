@@ -1,0 +1,257 @@
+<style>
+/* ============================================================
+   shape/radius-mismatch
+   器と中身で角丸をわざと揃えない
+   ============================================================ */
+
+@layer tq-fallback{
+  :root{
+    --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA;
+    --c-accent:#FF9301;
+    --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+    --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3;
+    --c-on-primary:#FFFFFF;
+    --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    --f-disp:var(--f-sans);
+    --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+    --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+    --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+    --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+    --shadow:0 6px 24px rgba(17,17,17,.08);
+  }
+}
+
+/* この工夫のパラメータ＝「揃えない側」の半径だけ。
+   器の半径はトークンのスケール（--r-m / --r-l）をそのまま使う。 */
+:root{
+  --tq-rmm-hard:2px;        /* 器が大角丸のとき、中のCTAだけをほぼ直角にする値 */
+  --tq-rmm-outline:3px;     /* 強調枠の太さ */
+}
+
+.tq-rmm{
+  font-family:var(--f-sans); color:var(--c-ink2);
+  line-height:var(--lh-head); -webkit-text-size-adjust:100%;
+  padding:var(--s5); background:var(--c-bg);
+}
+.tq-rmm *{box-sizing:border-box}
+
+/* --- デモの見出し・注記 ------------------------------------ */
+.tq-rmm__lead{
+  margin:0 0 var(--s6); font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-rmm__sec{ margin-top:var(--s7) }
+.tq-rmm__sec:first-of-type{ margin-top:0 }
+.tq-rmm__secttl{
+  margin:0 0 var(--s4); font-size:var(--fs-sm); font-weight:700; color:var(--c-ink);
+}
+.tq-rmm__cap{
+  display:flex; align-items:center; gap:var(--s2);
+  margin:0 0 var(--s3); font-size:var(--fs-note); font-weight:700;
+  color:var(--c-ink3); letter-spacing:.04em;
+}
+.tq-rmm__cap::before{
+  content:""; width:var(--s5); height:1px; background:var(--c-line); flex:0 0 auto;
+}
+.tq-rmm__note{
+  margin:var(--s3) 0 0; font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-rmm__pair{
+  display:grid; gap:var(--s5);
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+}
+
+/* --- ① 比較表：器は角丸／自社行の強調枠は直角 --------------- */
+.tq-rmm__table{
+  position:relative;
+  display:grid; grid-template-columns:1fr 1.15fr 1.15fr;
+  grid-template-rows:repeat(4,auto);   /* -1 を効かせるため行も明示する */
+  background:var(--c-bg2);
+  border-radius:var(--r-m);      /* 器＝角丸（現物は16px） */
+  overflow:hidden;
+  font-size:var(--fs-note);
+}
+.tq-rmm__cell{
+  padding:var(--s3) var(--s2); border-bottom:1px solid var(--c-line);
+  line-height:var(--lh-head);
+}
+.tq-rmm__cell:nth-last-child(-n+3){ border-bottom:0 }
+.tq-rmm__cell--h{ font-weight:700; color:var(--c-ink); text-align:center }
+.tq-rmm__cell--l{ color:var(--c-ink3); font-weight:700 }
+/* 自社列を囲む強調枠。塗りを持たない outline なので中身の罫に触らない。
+   position:absolute にしておくと、グリッド行列で位置を指定できるのに
+   自動配置（セルの並び）には一切干渉しない。 */
+.tq-rmm__own{
+  position:absolute; inset:0;
+  grid-column:2; grid-row:1/-1; z-index:2; pointer-events:none;
+  outline:var(--tq-rmm-outline) solid var(--c-accent);
+  outline-offset:calc(var(--tq-rmm-outline) * -1);
+  border-radius:0;               /* ← ここが工夫：器が12pxでも枠は直角 */
+}
+.tq-rmm__own--same{ border-radius:var(--r-m) }   /* 普通：器と同じ角丸で揃える */
+
+/* --- ② 大角丸カードの中で、CTAだけほぼ直角 ------------------ */
+.tq-rmm__card{
+  background:var(--c-bg2); border-radius:var(--r-l);   /* 器＝大角丸 */
+  padding:var(--s5); text-align:center;
+}
+.tq-rmm__cardttl{
+  margin:0; font-family:var(--f-disp); font-size:var(--fs-md); font-weight:700;
+  color:var(--c-ink); line-height:var(--lh-head);
+}
+.tq-rmm__cardtxt{
+  margin:var(--s3) 0 var(--s5); font-size:var(--fs-sm); line-height:var(--lh-body);
+}
+.tq-rmm__btn{
+  display:inline-block; padding:14px 30px; font-size:var(--fs-sm); font-weight:700;
+  color:var(--c-on-primary); background:var(--c-primary); text-decoration:none;
+}
+.tq-rmm__btn--pill{ border-radius:var(--r-pill) }         /* 普通：ピル型 */
+.tq-rmm__btn--same{ border-radius:var(--r-l) }            /* 普通：器と同じ角丸 */
+.tq-rmm__btn--hard{ border-radius:var(--tq-rmm-hard) }    /* この工夫：ほぼ直角 */
+
+/* --- ③ 避ける：もともとバラついている面 --------------------- */
+.tq-rmm__row{
+  display:grid; gap:var(--s3); grid-template-columns:repeat(4,1fr);
+}
+.tq-rmm__chip{
+  background:var(--c-bg2); padding:var(--s4) var(--s2); text-align:center;
+  font-size:var(--fs-note); color:var(--c-ink3);
+}
+.tq-rmm__row--tidy .tq-rmm__chip{ border-radius:var(--r-m) }
+.tq-rmm__row--tidy .tq-rmm__chip:nth-child(3){
+  border-radius:0; outline:var(--tq-rmm-outline) solid var(--c-accent);
+  outline-offset:calc(var(--tq-rmm-outline) * -1); color:var(--c-ink);
+}
+.tq-rmm__row--messy .tq-rmm__chip:nth-child(1){ border-radius:var(--r-s) }
+.tq-rmm__row--messy .tq-rmm__chip:nth-child(2){ border-radius:var(--r-l) }
+.tq-rmm__row--messy .tq-rmm__chip:nth-child(3){
+  border-radius:0; outline:var(--tq-rmm-outline) solid var(--c-accent);
+  outline-offset:calc(var(--tq-rmm-outline) * -1); color:var(--c-ink);
+}
+.tq-rmm__row--messy .tq-rmm__chip:nth-child(4){ border-radius:var(--r-pill) }
+
+@media (max-width:520px){
+  .tq-rmm__table{ font-size:11px }
+  .tq-rmm__cell{ padding:var(--s2) var(--s1) }
+  .tq-rmm__btn{ padding:12px 20px }
+  .tq-rmm__row{ grid-template-columns:repeat(2,1fr) }
+}
+</style>
+
+<div class="tq-rmm">
+
+  <p class="tq-rmm__lead">
+    器と中身で角丸をわざと揃えない。丸と角が同じ場所で衝突するので、色を強くしなくても「後から足された異物」として強調が一段効く。
+  </p>
+
+  <!-- ① 比較表 -->
+  <section class="tq-rmm__sec">
+    <h3 class="tq-rmm__secttl">① 器は角丸のまま、強調枠だけを直角にする</h3>
+    <div class="tq-rmm__pair">
+      <div>
+        <p class="tq-rmm__cap">普通：器と強調枠の角丸を揃える</p>
+        <div class="tq-rmm__table">
+          <span class="tq-rmm__own tq-rmm__own--same"></span>
+          <div class="tq-rmm__cell tq-rmm__cell--h"></div>
+          <div class="tq-rmm__cell tq-rmm__cell--h">自社</div>
+          <div class="tq-rmm__cell tq-rmm__cell--h">他社</div>
+          <div class="tq-rmm__cell tq-rmm__cell--l">項目</div>
+          <div class="tq-rmm__cell">内容がここに入ります</div>
+          <div class="tq-rmm__cell">内容がここに入ります</div>
+          <div class="tq-rmm__cell tq-rmm__cell--l">項目</div>
+          <div class="tq-rmm__cell">内容がここに入ります</div>
+          <div class="tq-rmm__cell">内容がここに入ります</div>
+          <div class="tq-rmm__cell tq-rmm__cell--l">項目</div>
+          <div class="tq-rmm__cell">内容がここに入ります</div>
+          <div class="tq-rmm__cell">内容がここに入ります</div>
+        </div>
+        <p class="tq-rmm__note">形が揃っているので、枠は「表の一部」として溶ける。強めたければ色をさらに強くするしかない。</p>
+      </div>
+      <div>
+        <p class="tq-rmm__cap">この工夫：器は角丸12px、強調枠は角丸ゼロ</p>
+        <div class="tq-rmm__table">
+          <span class="tq-rmm__own"></span>
+          <div class="tq-rmm__cell tq-rmm__cell--h"></div>
+          <div class="tq-rmm__cell tq-rmm__cell--h">自社</div>
+          <div class="tq-rmm__cell tq-rmm__cell--h">他社</div>
+          <div class="tq-rmm__cell tq-rmm__cell--l">項目</div>
+          <div class="tq-rmm__cell">内容がここに入ります</div>
+          <div class="tq-rmm__cell">内容がここに入ります</div>
+          <div class="tq-rmm__cell tq-rmm__cell--l">項目</div>
+          <div class="tq-rmm__cell">内容がここに入ります</div>
+          <div class="tq-rmm__cell">内容がここに入ります</div>
+          <div class="tq-rmm__cell tq-rmm__cell--l">項目</div>
+          <div class="tq-rmm__cell">内容がここに入ります</div>
+          <div class="tq-rmm__cell">内容がここに入ります</div>
+        </div>
+        <p class="tq-rmm__note">丸い器の中で1本だけ直角。色は同じでも、枠が後から重ねた別物として立ち上がる。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ② 大角丸カードの中の直角CTA -->
+  <section class="tq-rmm__sec">
+    <h3 class="tq-rmm__secttl">② 逆向き：大角丸の器の中で、CTAだけをほぼ直角にする</h3>
+    <div class="tq-rmm__pair">
+      <div>
+        <p class="tq-rmm__cap">普通：ピル型のCTA</p>
+        <div class="tq-rmm__card">
+          <p class="tq-rmm__cardttl">見出しがここに入ります</p>
+          <p class="tq-rmm__cardtxt">説明文がここに入ります。</p>
+          <a class="tq-rmm__btn tq-rmm__btn--pill" href="#">ボタンの文言</a>
+        </div>
+      </div>
+      <div>
+        <p class="tq-rmm__cap">普通：器と同じ角丸24pxのCTA</p>
+        <div class="tq-rmm__card">
+          <p class="tq-rmm__cardttl">見出しがここに入ります</p>
+          <p class="tq-rmm__cardtxt">説明文がここに入ります。</p>
+          <a class="tq-rmm__btn tq-rmm__btn--same" href="#">ボタンの文言</a>
+        </div>
+      </div>
+      <div>
+        <p class="tq-rmm__cap">この工夫：器24px／CTAだけ2px</p>
+        <div class="tq-rmm__card">
+          <p class="tq-rmm__cardttl">見出しがここに入ります</p>
+          <p class="tq-rmm__cardtxt">説明文がここに入ります。</p>
+          <a class="tq-rmm__btn tq-rmm__btn--hard" href="#">ボタンの文言</a>
+        </div>
+      </div>
+    </div>
+    <p class="tq-rmm__note">
+      ピルと大角丸は器に馴染んで「面の一部」に見える。2pxのボタンだけが硬く、押せる要素として分離する。
+    </p>
+  </section>
+
+  <!-- ③ 避ける -->
+  <section class="tq-rmm__sec">
+    <h3 class="tq-rmm__secttl">③ 避ける：まわりの角丸がもともとバラついている面</h3>
+    <div class="tq-rmm__pair">
+      <div>
+        <p class="tq-rmm__cap">まわりが揃っている → 直角が「意図」に見える</p>
+        <div class="tq-rmm__row tq-rmm__row--tidy">
+          <div class="tq-rmm__chip">項目</div>
+          <div class="tq-rmm__chip">項目</div>
+          <div class="tq-rmm__chip">項目</div>
+          <div class="tq-rmm__chip">項目</div>
+        </div>
+      </div>
+      <div>
+        <p class="tq-rmm__cap">まわりがバラバラ → 同じ直角が「事故」に見える</p>
+        <div class="tq-rmm__row tq-rmm__row--messy">
+          <div class="tq-rmm__chip">項目</div>
+          <div class="tq-rmm__chip">項目</div>
+          <div class="tq-rmm__chip">項目</div>
+          <div class="tq-rmm__chip">項目</div>
+        </div>
+      </div>
+    </div>
+    <p class="tq-rmm__note">
+      工夫が効くのは「他が全部同じ半径」という前提があるから。前提が崩れている面では、まず半径を揃えるほうが先。
+    </p>
+  </section>
+
+</div>

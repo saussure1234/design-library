@@ -1,0 +1,30 @@
+{
+  "id": "type/oversize-bleed",
+  "name": "極大タイポを版面の外へ断ち落とす（薄くすれば地紋、濃くすれば主役）",
+  "ordinary": "見出しは画面内に収めて両端に余白を残し、背景は無地のままにする。",
+  "actual": "巴里夕顔は「PARIS YUGAO」を字面高さ約150px（セクション高の4割）で敷き左右とも画面端で切断、色は地#F7F1E6に対し#E8DDC8（明度差3〜6%）で写真の下へ潜らせる。追手門は黒地#101012に#26262aで210pxの\"TEACHER\"を2行敷き、上下端で「C」「TEA」しか見えない状態に断つ。明星幼稚園は逆に淡ピンク帯へ濃い臙脂96pxの「MEISEI KINDERGARTEN」を字間0.14emで組み最後のNを右端で切る。unicoは赤の「YOUR TALENT」を画面幅の7割・line-height:.82 で写真の外の白場に置き上端を切る。",
+  "css": ".sec{position:relative; overflow:hidden}\n.sec > *{position:relative; z-index:1}\n/* 地紋として敷く（明度差3〜6%） */\n.ghost{position:absolute; font:900 clamp(80px,18vw,210px)/.8 Helvetica,Arial,sans-serif; letter-spacing:-.02em; white-space:nowrap; color:#efe7d8; user-select:none; pointer-events:none; z-index:0}\n.ghost.t{top:-120px; left:180px}\n.ghost.b{bottom:-130px; left:-40px}\n/* 主役のまま端で切る */\n.bleed{font-size:clamp(56px,11vw,140px); font-weight:800; line-height:.82; letter-spacing:-.01em; color:#E8352B; white-space:nowrap; margin-left:6vw}\n.wrap{overflow-x:clip}",
+  "appliesTo": ["hero", "section-head", "value", "features", "footer"],
+  "impact": 3,
+  "effort": 1,
+  "why": "版面より文字が大きいと分かった時点で画面の外にも続きがあるように見え、無地の面に密度が入る。",
+  "avoid": "読ませたい固有名詞を地紋色でやること（誰も読まない）。SPでは1文字も残らないので語を短くする。",
+  "params": [
+    "地との明度差(3〜6%=地紋 / 高コントラスト=主役)",
+    "断つ辺(左右/上下)",
+    "級数(11〜24vw)",
+    "写真の前に出すか背後に潜らせるか"
+  ],
+  "sources": ["yugao_s01", "yugao_s13", "odrive_s05", "meisei-kg_s13", "unico_s02"],
+  "notes": [
+    "地紋色は固定の16進で持たず color-mix(in srgb, var(--c-ink) 3〜7%, 地の色) で作ると、地を差し替えても差が保たれる。実測は yugao_s01 が地 #faf3eb に対し地紋 #e2d3bc、odrive_s05 が地 #0a0b0d に対し #232426。どちらも『地に対して7〜9%動かした色』で、明るい地でも暗い地でも同じ比率だった。",
+    "18%まで濃くすると地紋にも主役にもならず『薄い文字』に見える。デモの③で3/6/18/100%を並べた。使うなら3〜6%か100%のどちらかに寄せる。",
+    "実装で効いているのは overflow:hidden の1行だけ。ただしページ全体には overflow-x:clip を掛けておかないと、はみ出した文字が横スクロールを生む（overflow-x:hidden はスクロール文脈を作ってしまい position:sticky を壊すので clip を使う）。",
+    "地紋を position:absolute にしたら、同じ親の直下の子に `> *{position:relative; z-index:1}` を掛けて中身を必ず前に出す。この2行がセットで、順序を逆にすると地紋が本文の上に乗る。",
+    "写真の下へ潜らせる型（yugao_s01）は、写真を版面いっぱいにすると地紋がまったく見えない。現物の写真幅は版面の7割強で、左右に残る白場でだけ文字が見える。デモでも写真を78%幅・中央寄せにしてある。",
+    "line-height は .8〜.82 まで潰す。1.0 のままだと上下に空きが出て、端で切っているのに『切れていない余白』が残る。",
+    "白抜きの側（黒地）は color-mix(in srgb, var(--c-bg) 9%, var(--c-ink))。明るい地より少しだけ差を広く取らないと、暗部では差が潰れて見えない。",
+    "SP（375px）では1〜2文字しか残らない。地紋なら問題ないが、主役として切る場合は語を短く（8文字前後まで）しないと何の語か読めなくなる。"
+  ],
+  "demoNotes": "①同じ語を『画面内に収める』と『18vwで左右に断つ』で対比。②敷き方3通り＋主役型2種（明るい地に潜らせ写真を前に／黒地に上下2行／淡い帯に濃色で最後の1文字を切る／主役のまま上端で切る）。③地との明度差3・6・18・100%を並べて、地紋と主役の境目を目で確かめられるようにした。"
+}

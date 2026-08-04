@@ -1,0 +1,32 @@
+{
+  "id": "overlap/cutout-breaks-frame",
+  "name": "切り抜き被写体をマスク・カード・グラフの外へ出す",
+  "ordinary": "人物や商品は写真の中／マスクの内側に収め、枠外には何も出さない",
+  "actual": "背景を抜いたPNGを枠の縁にまたがせる。楕円マスクの左上から跳ぶ男子の上半身が白地へ出る（meisei-es_s07）。講師がカード右辺を越え、下辺からも40px下へ出る（hanamaru_s07）。化粧箱が葡萄写真の下辺を越えて4割はみ出す（ogawa_s13）。ドーナツグラフでは1人が「リングの内・オレンジの弧の線上・リングの外」の3層をまたぐ（sho_smilezemi_s03）。階段状の3枚の面に女の子が足を掛け、段の上端線を脚が隠す（sho_smilezemi_s15）。マスクの中身は写真でなくグラデのベタ面でもよく、人物だけ枠外へ出す（sanrio_s06）。切り抜きには影を付けない。",
+  "css": ".stage{position:relative; overflow:visible}         /* hiddenだと成立しない */\n.stage .mask{overflow:hidden; border-radius:50%/40%} /* 楕円・アーチ側だけ切る */\n.stage .cutout{position:absolute; z-index:2; filter:none; pointer-events:none}\n.cutout.tl{top:-2%;   left:22%;  width:14%}\n.cutout.br{right:-4%; bottom:-70px; width:34%}\n\n/* マスクの中身をベタ面にして人物だけ外へ出す版 */\n.mask{background:linear-gradient(160deg,#ffd23f,#8a6bd6 55%,#ff5fa2)}\n.mask img{position:absolute; left:-10%; bottom:0; width:120%}\n\n/* グラフ・図の縁をまたがせる版 */\n.ring{position:relative; overflow:visible; z-index:1}\n.ring .cutout{left:50%; bottom:-70px; translate:-50% 0; width:52%; z-index:2}\n\n/* 円の輪郭線を\"枠\"でなく飾り罫に落とす版 */\n.circ{position:relative; width:200px; aspect-ratio:1;\n  border:1.5px solid #7fa392; border-radius:50%; overflow:visible}\n.circ img{position:absolute; top:-6%; left:-8%; width:120%; max-width:none}",
+  "appliesTo": ["hero", "features", "value", "voice", "member", "price"],
+  "impact": 3,
+  "effort": 2,
+  "why": "マスクの縁が「壁」でなく「奥行きの境目」になり、被写体が読者側へ出てくる。図表に跨がせると数字が図表でなく「その子の話」に変わる",
+  "params": [
+    "はみ出し量（枠の10〜40%）",
+    "またぐ辺の数 1〜3",
+    "マスクの中身（写真／グラデのベタ面／グラフの弧・棒）"
+  ],
+  "avoid": "毛先や輪郭が汚い切り抜き素材しかないとき（縁のジャギーが枠外で全部見える）",
+  "sources": [
+    "meisei-kg_s07", "meisei-es_s07", "hanamaru_s07", "sho_hanamaru_s07", "ogawa_s13",
+    "shoei_s04", "sanrio_s06", "sho_smilezemi_s03", "sho_smilezemi_s15", "hanamaru_s04", "linie_s03"
+  ],
+  "notes": [
+    "成立条件は3つだけで、どれか1つ欠けると効果が丸ごと消える。①舞台（position:relativeの親）を overflow:visible にする ②切るのはマスクの側だけにする ③切り抜きに影を付けない。デモの②に『舞台を overflow:hidden にしただけ』の参考カットを並べたが、はみ出しが全部枠内に戻って普通のカードに見える。",
+    "影を付けないのが最大の勘所。drop-shadow を足すと切り抜きが『枠の上に貼った絵』になり、奥行きが生まれるどころか層が1枚増えるだけになる。現物（meisei-es_s07 / hanamaru_s07 / ogawa_s13）はいずれも完全に影なし。",
+    "はみ出し量は枠の10〜40%。デモで並べると 10%＝足元だけ出て面はまだ『箱』、22%＝標準で被写体が手前に立ったと分かる、38〜40%＝上限で、これを超えると枠のほうが『被写体の飾り』に見えて主従が逆転する。",
+    "またぐ辺を増やすほど強い。1辺（下辺）→2辺（右辺＋下辺）→3辺（meisei-es_s07 の左上・左下・右下）。ただし3辺は舞台の左右にも余白が要るので、段組みの中では2辺が実用上の上限。",
+    "またぐ相手は写真でなくてよい。デモの③に4通り（グラデのベタ面のアーチ／ドーナツグラフ／階段状の面／1.5pxの輪郭線の円）を並べた。輪郭線だけの円をまたがせると、円が『枠』から『飾り罫』に落ちるのが一番はっきり分かる。",
+    "図表にまたがせる（sho_smilezemi_s03型）ときは、被写体をリングの内側・弧の線上・外側の3層に必ず跨がせる。弧の外に置いただけだと『グラフの横に人がいる』で終わり、数字が人の話に変わらない。",
+    "実装上の注意：はみ出しを負の bottom/top で作ると、はみ出した分だけ次の要素と衝突する。舞台に padding（--s6〜--s8）を先に確保してから、負の値ではなくトークンの正の値で位置を決めると、幅が変わっても衝突しない。デモの①はこの方式（stageに padding:var(--s5) 0 var(--s7)）。",
+    "デモの切り抜き素材は、写真素材が jpg しかないため SVG の clipPath（clipPathUnits=objectBoundingBox）で人型に抜いて代用している。案件では背景透過PNGに差し替える。抜きの輪郭が汚い素材しかないときは、この工夫自体を使わない（枠外に出た瞬間にジャギーが全部見える）。"
+  ],
+  "demoNotes": "①同じ写真・同じマスク・同じ被写体で『内側に収める／縁をまたがせる』だけを変えた対比。②はみ出し量 10%／22%／40%＋『舞台を overflow:hidden にした場合』の4連。③またぐ相手の4通り（グラデのベタ面／ドーナツグラフ／階段状の面／1.5pxの輪郭線）。"
+}

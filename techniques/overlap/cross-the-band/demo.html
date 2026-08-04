@@ -1,0 +1,157 @@
+<style>
+/* ==========================================================
+   overlap/cross-the-band — 色面の境界に要素をまたがせ、片側だけはみ出させる
+   :where(:root) はトークン未読込時のフォールバック（優先度0）。
+   ========================================================== */
+:where(:root){
+  --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-num:"Helvetica Neue",Arial,var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px; --fs-lg:21px; --fs-xl:28px;
+  --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --shadow:0 6px 24px rgba(17,17,17,.08);
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+
+.tq-ctb{
+  font-family:var(--f-sans); color:var(--c-ink2); background:var(--c-bg);
+  max-width:var(--w-max); margin:0 auto; padding:var(--s6) var(--w-gut);
+}
+.tq-ctb :where(p,figure,figcaption){ margin:0; }
+.tq-ctb__h{ font-size:var(--fs-md); font-weight:700; color:var(--c-ink); line-height:var(--lh-tight); margin:0 0 var(--s2); }
+.tq-ctb__lead{ font-size:var(--fs-sm); line-height:var(--lh-body); color:var(--c-ink3); margin:0 0 var(--s5); }
+.tq-ctb__row{ display:grid; gap:var(--s5); grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr)); }
+.tq-ctb__fig{ margin:0; }
+.tq-ctb__cap{ font-size:var(--fs-note); line-height:var(--lh-head); color:var(--c-ink3); margin:var(--s3) 0 0; }
+.tq-ctb__cap b{ display:block; color:var(--c-ink); font-size:var(--fs-sm); margin-bottom:2px; }
+
+/* 舞台。overflow は必ず visible（hidden にするとこの技は全部死ぬ） */
+.tq-ctb__stage{
+  position:relative; overflow:visible; height:280px;
+  border:1px solid var(--c-line); border-radius:var(--r-m);
+}
+
+/* --- A / B｜白とミントのハード分割（境界は高さ34%） --- */
+.tq-ctb__stage--band{
+  background:linear-gradient(var(--c-bg) 0 34%, var(--c-primary-l) 34% 100%);
+}
+.tq-ctb__vhead{
+  position:absolute; z-index:2; left:9%; margin:0;
+  writing-mode:vertical-rl; font-size:var(--fs-lg); font-weight:700;
+  line-height:2.0; letter-spacing:.05em; color:var(--c-ink);
+}
+.tq-ctb__vhead--inside{ top:112px; }   /* 普通：境界(95px)より下に収める */
+.tq-ctb__vhead--cross{  top:26px;  }   /* この工夫：境界を文字列の途中が横切る */
+
+.tq-ctb__thumbs{ position:absolute; right:5%; bottom:20px; display:flex; gap:var(--s3); }
+.tq-ctb__thumbs img{
+  width:88px; height:118px; object-fit:cover; display:block;
+  border-radius:var(--r-l); border:3px solid var(--c-bg);
+}
+
+/* --- C｜写真がパネルの天面より上から始まり、右辺は面一 --- */
+.tq-ctb__stage--panel{
+  background:var(--c-primary);
+  display:grid; place-items:center; padding:0 var(--s5);
+}
+.tq-ctb__panel{
+  position:relative; width:100%; height:150px;
+  background:var(--c-bg); border-radius:var(--r-l);
+  padding:var(--s4); box-sizing:border-box;
+}
+.tq-ctb__panel p{ margin:0; max-width:52%; }
+.tq-ctb__ttl{ font-size:var(--fs-base); font-weight:700; color:var(--c-ink); line-height:var(--lh-tight); }
+.tq-ctb__sub{ font-size:var(--fs-note); color:var(--c-ink3); line-height:var(--lh-head); margin:var(--s2) 0 0; }
+.tq-ctb__panelph{
+  position:absolute; z-index:2; top:-40px; right:0;      /* 上だけ40px出す／右は余白ゼロ＝面一 */
+  width:44%; height:150px; object-fit:cover; display:block;
+  border:4px solid var(--c-bg); border-radius:var(--r-l);
+  box-sizing:border-box; box-shadow:var(--shadow);
+}
+
+/* --- D｜同色のまま面をまたぐ“橋” --- */
+.tq-ctb__stage--bridge{
+  background:var(--c-bg);
+  display:flex; align-items:center; justify-content:flex-end; padding:var(--s5);
+}
+.tq-ctb__green{
+  position:relative; z-index:1; width:62%; height:170px;
+  background:var(--c-primary); border-radius:var(--r-l);
+  display:grid; place-items:center; padding:var(--s4); box-sizing:border-box;
+}
+.tq-ctb__green span{ color:var(--c-on-primary); font-size:var(--fs-sm); line-height:var(--lh-head); text-align:center; }
+.tq-ctb__num{
+  position:absolute; z-index:2; top:50%; right:calc(100% - 12px);  /* 緑の左辺を12px越える */
+  transform:translateY(-50%);
+  font-family:var(--f-num); font-weight:800; line-height:1;
+  font-size:clamp(56px,13vw,110px); color:var(--c-primary-l);      /* 越えても色は変えない */
+}
+
+@media (max-width:420px){
+  .tq-ctb__stage{ height:260px; }
+  .tq-ctb__thumbs img{ width:70px; height:96px; }
+  .tq-ctb__vhead{ font-size:var(--fs-md); }
+  .tq-ctb__green{ width:66%; height:150px; }
+}
+</style>
+
+<div class="tq-ctb">
+
+  <p class="tq-ctb__h">色面の境界に、要素の途中を通す</p>
+  <p class="tq-ctb__lead">
+    左上は色面の内側に要素を収めた「普通」。右上は同じ縦組み見出しを上へずらし、白とミントの境目が
+    文字列の途中を横切るようにしただけ。面の切り替えが「壁」ではなく「奥行き」に変わる。
+    下段は、上だけ出して右辺は面一にする非対称パディングと、越えても色を変えない“橋”。
+  </p>
+
+  <div class="tq-ctb__row">
+
+    <figure class="tq-ctb__fig">
+      <div class="tq-ctb__stage tq-ctb__stage--band">
+        <p class="tq-ctb__vhead tq-ctb__vhead--inside">見出しがここに<br>入ります</p>
+        <div class="tq-ctb__thumbs">
+          <img src="../../../docs/demo/ph_a.jpg" alt="">
+          <img src="../../../docs/demo/ph_b.jpg" alt="">
+        </div>
+      </div>
+      <p class="tq-ctb__cap"><b>普通</b>見出しは境界より下、色面の内側に収める。境界線が1本まるごと見え、上下が別の部屋に見える。</p>
+    </figure>
+
+    <figure class="tq-ctb__fig">
+      <div class="tq-ctb__stage tq-ctb__stage--band">
+        <p class="tq-ctb__vhead tq-ctb__vhead--cross">見出しがここに<br>入ります</p>
+        <div class="tq-ctb__thumbs">
+          <img src="../../../docs/demo/ph_a.jpg" alt="">
+          <img src="../../../docs/demo/ph_b.jpg" alt="">
+        </div>
+      </div>
+      <p class="tq-ctb__cap"><b>この工夫｜またぎ</b>見出しの開始位置を86px上げただけ。色の境目が文字列の途中を横切り、面が前後に分かれて見える。</p>
+    </figure>
+
+    <figure class="tq-ctb__fig">
+      <div class="tq-ctb__stage tq-ctb__stage--panel">
+        <div class="tq-ctb__panel">
+          <p class="tq-ctb__ttl">見出しがここに入ります</p>
+          <p class="tq-ctb__sub">補足テキストがここに入ります</p>
+          <img class="tq-ctb__panelph" src="../../../docs/demo/ph_b.jpg" alt="">
+        </div>
+      </div>
+      <p class="tq-ctb__cap"><b>非対称に出す</b>写真はパネルの天面より40px上（地の色の上）から始まり、右辺は余白ゼロで面一。出す辺を1つに絞ると事故に見えない。</p>
+    </figure>
+
+    <figure class="tq-ctb__fig">
+      <div class="tq-ctb__stage tq-ctb__stage--bridge">
+        <div class="tq-ctb__green">
+          <span>見出しがここに入ります</span>
+          <p class="tq-ctb__num">03</p>
+        </div>
+      </div>
+      <p class="tq-ctb__cap"><b>同色のまま越える＝橋</b>淡い方の色のまま緑パネルの左辺を12px越える。色が変わらないので、2つの面を1本でつなぐ橋として読める。</p>
+    </figure>
+
+  </div>
+</div>

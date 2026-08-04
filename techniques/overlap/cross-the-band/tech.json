@@ -1,0 +1,30 @@
+{
+  "id": "overlap/cross-the-band",
+  "name": "色面の境界に要素をまたがせ、片側だけはみ出させる",
+  "ordinary": "要素は色面の内側に収め、上下に余白を取って境界線には触れさせない",
+  "actual": "縦組み見出し2行が白地のy≈85から始まり、ミント面の上辺を越えてy≈320まで下りる＝色の境目が文字列の途中を横切る（linie_s11）。角丸24px＋白フチ4pxの写真が白パネルの天面より40px上（黄の地の上）から始まりパネルの右上角を覆う（yamanomi_s05）。写真3枚が1〜2度ずつ逆向きに傾き、上端は緑面・下端は白い弧側にかかる（linie_s01）。六角カードの下の頂点が斜め境界を越えて隣の写真帯に乗る（tanq_s07）。三角の紙吹雪は必ずタイルの目地をまたぐ位置に置く（tanq_s01）。高さ110pxの「03」が淡ミント#D5FCEFのまま緑パネル#36C29Fの左辺を10px越え、色が変わらないので2面を結ぶ\"橋\"になる（sho_seiha_s08）。上だけ10px出して右辺は余白ゼロで面一、という非対称パディングも同じ手（yamanomi_s07）。",
+  "css": ".band{position:relative; overflow:visible}   /* hiddenにすると全部死ぬ */\n\n/* 縦組み見出しを境界の上から下へ通す */\n.band .vhead{position:absolute; top:-70px; left:74px; z-index:2;\n  writing-mode:vertical-rl; font-size:20px; line-height:2.1; letter-spacing:.05em}\n\n/* 写真をパネルの天面より上から始める */\n.panel{position:relative; background:#fff; border-radius:32px}\n.panel .photo{position:absolute; top:-40px; right:24px; width:46%; z-index:2;\n  border:4px solid #fff; border-radius:24px; box-shadow:0 6px 16px rgba(0,0,0,.06)}\n\n/* 同色のまま面をまたぐ\"橋\" */\n.num{position:absolute; left:12%; top:50%; translate:0 -50%; z-index:2;\n  font-size:120px; font-weight:800; line-height:1; color:#d5fcef}\n.panel--green{position:relative; z-index:1; background:#36C29F}\n\n/* 非対称：上だけ出して右は面一（余白ゼロ） */\n.card{border-radius:96px; overflow:visible;\n  display:grid; grid-template-columns:1fr auto;\n  padding:56px 0 56px 56px}                  /* 右padding 0 = 面一 */\n.card img{margin-top:-10px; border-radius:32px}",
+  "appliesTo": ["hero", "features", "value", "voice", "member", "access"],
+  "impact": 3,
+  "effort": 1,
+  "why": "境界を跨ぐ物が1つあるだけで、面の切り替えが「壁」でなく「奥行き」になる。同色のまま跨がせると2面を結ぶ橋として読める",
+  "params": [
+    "またぎ量 10〜60px",
+    "またぐ要素（縦組み見出し／写真／巨大番号／小さな三角）",
+    "非対称にする辺（上だけ出す＋右は面一 など）"
+  ],
+  "avoid": "親にoverflow:hiddenが要るカルーセル・アコーディオンの内側",
+  "sources": [
+    "linie_s11", "linie_s07", "linie_s01",
+    "yamanomi_s05", "yamanomi_s07",
+    "tanq_s07", "tanq_s01", "meisei-kg_s10", "sho_seiha_s08"
+  ],
+  "notes": [
+    "色面は linear-gradient のハードストップ1本で作れる（linear-gradient(#fff 0 34%, mint 34% 100%)）。要素を増やさないので、またぐ側の重ね順を考えるだけで済む。demoは境界を高さ34%＝linie_s11の実測比（境界155px／全高460px）に合わせた。",
+    "またぎ量の目安は実測で 10〜60px。ただし「見た目の量」より「何を横切るか」が効く。linie_s11 は縦組み見出しの2文字目あたりを境界が通る＝文字の途中で色が変わるのが決め手で、行間や語の切れ目で通すと単なるツートン背景に落ちる。demoでは普通版(top:112px)と工夫版(top:26px)の差を86pxだけにして、位置以外を完全に同じにした。",
+    "yamanomi_s05/s07 型の非対称は「上だけ40px出す／右辺は余白ゼロで面一」。position:absolute の top:-40px; right:0 で書ける。出す辺を1つに絞ることが条件で、四辺すべてから出すと版ズレ（事故）に見える。写真には4px の白フチを付けると、地の色の上に出た部分が切り抜きとして成立する。",
+    "\"橋\"（sho_seiha_s08）は、巨大数字を緑パネルの【子要素】にして right:calc(100% - 12px) で左へ押し出すのが一番安全。子は親の背景より後に描かれるので、z-index:2 を付けるだけで親パネルの上に乗る。親を position:relative（z-index:1）にして、パネル自身が数字より前に来ないようにする。",
+    "色は越えても変えない。淡い方の色（--c-primary-l）のまま濃い面（--c-primary）に乗ると、明度差で形が残ったまま2面がつながって見える。越えた部分だけ白にすると、ただの重なりに戻って橋にならない。",
+    "親の overflow:hidden が最大の敵。border-radius を付けた舞台に overflow:hidden を足した瞬間に全部消えるので、角丸クリップが要るときは背景側（gradient）に角丸を持たせ、またぐ要素は clip されない親に置く。"
+  ]
+}

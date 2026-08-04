@@ -1,0 +1,33 @@
+{
+  "id": "type/unit-demote",
+  "name": "数字だけ残して単位・小数・ラベルの級数を半分以下に落とす",
+  "ordinary": "「95.3%」「469点」「月々3,076円（税込）／1レッスン」を全部同じ級数で1行に組む。",
+  "actual": "スマイルゼミは「95」を90px、「.3%」を50px（55%）でベースライン揃え。Kiminiは「点」「ヶ月」だけ6割。Novakidは9pxの「より」＋28pxの価格＋12pxの「/1レッスン」で3段の級数差を1つの価格塊に同居させる。武蔵野は「1924」を26pxのセリフ数字、「大正13年」を9pxで同じ金茶1色にし色を足さずに主従を作る。セイハは110pxの数字の懐へ13pxの「VALUE」を左下から食い込ませ、小さい方を濃い色にして読ませる。",
+  "css": ".stat{position:relative; font-size:90px; font-weight:800; line-height:1; letter-spacing:-.02em; font-feature-settings:\"tnum\" 1}\n.stat .sub{font-size:.55em; vertical-align:baseline}   /* 小数・単位 */\n.stat .pre{display:block; font-size:.1em; font-weight:700} /* 「より」など */\n.stat .label{position:absolute; left:0; bottom:16px; font-size:13px; letter-spacing:.2em; font-weight:700; color:#2fb894}\n.year{font-family:Cormorant,\"Noto Serif JP\",serif; font-size:2.1rem; line-height:1; color:#b08d3f}\n.era{font-size:.62rem; letter-spacing:.06em; color:#b08d3f}",
+  "appliesTo": ["value", "price", "features", "voice", "about"],
+  "impact": 2,
+  "effort": 1,
+  "why": "単位を落とすと数字が文字でなく図形として読まれ、グラフの棒と同じ速度で届く。",
+  "avoid": "単位自体が訴求の場合（「3ヶ月で」「1レッスンあたり」を売るとき）。",
+  "params": [
+    "従の比率(0.5〜0.6em)",
+    "ラベルを数字の懐に重ねるか下にぶら下げるか",
+    "tnum の有無",
+    "色を1色に揃えるか変えるか"
+  ],
+  "sources": [
+    "sho_smilezemi_s03", "sho_kimini_s04", "sho_novakid_s06",
+    "musashino_s11", "sho_seiha_s08", "tanq_s05"
+  ],
+  "notes": [
+    "従を em で持つのが肝。0.55em にしておけば主の数字を clamp で伸縮させても比が崩れない。px で書くと SP で単位だけ相対的に大きくなる。",
+    "vertical-align:baseline を明示する。小数点や単位を <sup>/<sub> で組むと勝手に持ち上がり、スマイルゼミの『95』と『.3%』が同じ足元に立つ感じが消える。現物はどちらもベースライン揃えだった。",
+    "3段（Novakid型）は em の入れ子に注意。前置き .11em・単位 .55em・後置き .42em はいずれも親（主の数字）に対する比。span を入れ子にすると比が掛け算になって潰れるので、すべて主の直下の兄弟にする。",
+    "font-variant-numeric:tabular-nums（旧 font-feature-settings:'tnum'）は数字を並べるときだけ。1桁の『1』が細いと縦の線が合わないため。デモ③に有無を並べた。単独の大きな数字では逆に字間が空いて見えるので外してよい。",
+    "セイハ型（sho_seiha_s08）の逆転が効くのは、数字を地の色まで薄くしているから。実測で数字は淡いミント、ラベルは彩度の高い緑。数字を濃いままラベルを重ねると、ただ読みにくい重なりになる。デモでは color-mix(in srgb, var(--c-primary) 34%, var(--c-bg)) で薄い側を作った。",
+    "武蔵野型（musashino_s11）は色を1色に固定し級数だけで主従を作る型。年表のように同じ要素が何度も出る場所では、色を足さないほうが列として揃う。",
+    "ラベルを懐へ食い込ませるときは、数字側に padding-left を入れてラベルの居場所を空ける。ただし padding-left はラベル幅より少し狭く（実装値 .6em ＝ラベル幅の7割程度）。広く取るとただ左に並んだだけになり、食い込みが消える。逆に position:absolute だけで padding を入れないと数字の上に完全に重なって読めない。",
+    "『3ヶ月で』のように単位が訴求そのものの場合は落としてはいけない。デモ④で落とした版と落とさない版を並べた。判断は『数字を消しても意味が通るか』で、通るなら単位が主。"
+  ],
+  "demoNotes": "①同じ数値を『全部同じ級数』と『0.55em/0.11emに落とす』で対比。②落とし方4通り（小数・単位／3段の級数差／同じ1色で級数だけ／ラベルを懐へ食い込ませ小さい方を濃く）。③棒グラフの上に置く例と、tabular-nums の有無で桁が揃うかの比較。④単位が訴求のときに落としてはいけない例。"
+}

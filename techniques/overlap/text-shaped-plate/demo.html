@@ -1,0 +1,129 @@
+<style>
+/* ==========================================================
+   overlap/text-shaped-plate — 白い下地を行の形に切って写真に載せる
+   :where(:root) はトークン未読込時のフォールバック（優先度0）。
+   ========================================================== */
+:where(:root){
+  --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-num:"Helvetica Neue",Arial,var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px; --fs-lg:21px; --fs-xl:28px;
+  --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --shadow:0 6px 24px rgba(17,17,17,.08);
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+
+.tq-tsp{
+  font-family:var(--f-sans); color:var(--c-ink2); background:var(--c-bg);
+  max-width:var(--w-max); margin:0 auto; padding:var(--s6) var(--w-gut);
+}
+.tq-tsp :where(p,figure,figcaption){ margin:0; }
+.tq-tsp__h{ font-size:var(--fs-md); font-weight:700; color:var(--c-ink); line-height:var(--lh-tight); margin:0 0 var(--s2); }
+.tq-tsp__lead{ font-size:var(--fs-sm); line-height:var(--lh-body); color:var(--c-ink3); margin:0 0 var(--s5); }
+.tq-tsp__row{ display:grid; gap:var(--s5); grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr)); }
+.tq-tsp__cap{ font-size:var(--fs-note); line-height:var(--lh-head); color:var(--c-ink3); margin:var(--s3) 0 0; }
+.tq-tsp__cap b{ display:block; color:var(--c-ink); font-size:var(--fs-sm); margin-bottom:2px; }
+
+.tq-tsp__stage{
+  position:relative; box-sizing:border-box; padding-top:14px;   /* 白面が写真の上端より上に出る分 */
+  background:var(--c-primary-l); border-radius:var(--r-m); overflow:hidden;
+}
+.tq-tsp__ph{ display:block; width:100%; height:300px; object-fit:cover; }
+
+/* --- A｜普通：写真の外の白い余白にコメントを置く --- */
+.tq-tsp__stage--plain{ padding:var(--s4); display:grid; grid-template-columns:auto 1fr; gap:var(--s4); }
+.tq-tsp__stage--plain .tq-tsp__ph{ height:270px; border-radius:var(--r-s); }
+.tq-tsp__plainquote{
+  writing-mode:vertical-rl; font-size:var(--fs-base); line-height:2.0;
+  color:var(--c-ink); letter-spacing:.02em;
+  background:var(--c-bg); padding:var(--s3); border-radius:var(--r-s);
+}
+
+/* --- B｜この工夫：白い下地が「行の形」になる --- */
+.tq-tsp__quote{
+  position:absolute; z-index:2; top:0; left:var(--s4);
+  writing-mode:vertical-rl; font-size:var(--fs-base); line-height:2.0;
+  color:var(--c-ink); letter-spacing:.02em;
+}
+.tq-tsp__quote span{
+  background:var(--c-bg);
+  padding:.5em .55em;      /* 縦組みでは左右paddingが行間を埋める＝白面がつながる */
+  box-decoration-break:clone;              /* ← 無いと行ごとのpaddingが消えて段差が崩れる */
+  -webkit-box-decoration-break:clone;
+}
+
+/* --- C｜横組み版（行長を不揃いにするのが条件） --- */
+.tq-tsp__stage--h{ padding-top:0; }
+.tq-tsp__stage--h .tq-tsp__ph{ height:260px; }
+.tq-tsp__hquote{
+  position:absolute; z-index:2; left:var(--s4); bottom:var(--s5); max-width:78%;
+  font-size:var(--fs-base); line-height:2.0; color:var(--c-ink); letter-spacing:.02em;
+}
+.tq-tsp__hquote span{
+  background:var(--c-bg);
+  padding:.55em .5em;      /* 横組みでは上下paddingが行間を埋める */
+  box-decoration-break:clone; -webkit-box-decoration-break:clone;
+}
+
+/* --- 比較用：ブロックにまとめて白を敷くと、ただの矩形になる --- */
+.tq-tsp__quote--box{
+  background:var(--c-bg); padding:var(--s3) var(--s2); border-radius:var(--r-s);
+}
+.tq-tsp__quote--box span{ background:none; padding:0; }
+
+@media (max-width:420px){
+  .tq-tsp__ph{ height:260px; }
+  .tq-tsp__stage--plain .tq-tsp__ph{ height:230px; }
+  .tq-tsp__quote, .tq-tsp__hquote, .tq-tsp__plainquote{ font-size:var(--fs-sm); }
+}
+</style>
+
+<div class="tq-tsp">
+
+  <p class="tq-tsp__h">白い下地を、矩形ではなく「行の形」に切る</p>
+  <p class="tq-tsp__lead">
+    左は写真の外にコメントを置いた普通。中央は同じ文字列を写真の上に重ね、白い下地を行ごとに切った。
+    白面の下辺が行の長さに従って階段状になるので「貼り付けた感」が消え、写真とコメントが1枚の絵になる。
+    仕掛けは box-decoration-break:clone だけ。右はそれを外した場合で、ただの白い矩形に戻る。
+  </p>
+
+  <div class="tq-tsp__row">
+
+    <figure>
+      <div class="tq-tsp__stage tq-tsp__stage--plain">
+        <p class="tq-tsp__plainquote">コメントがここに入ります<br>2行目は少し短く<br>3行目はもっと短い</p>
+        <img class="tq-tsp__ph" src="../../../docs/demo/ph_a.jpg" alt="">
+      </div>
+      <p class="tq-tsp__cap"><b>普通</b>コメントは写真の外の余白に置き、写真とは重ねない。白い矩形と写真が別々のパーツとして並ぶ。</p>
+    </figure>
+
+    <figure>
+      <div class="tq-tsp__stage">
+        <img class="tq-tsp__ph" src="../../../docs/demo/ph_a.jpg" alt="">
+        <p class="tq-tsp__quote"><span>コメントがここに入ります<br>2行目は少し短く<br>3行目はもっと短い</span></p>
+      </div>
+      <p class="tq-tsp__cap"><b>この工夫｜行の形に切る</b>白面は写真の上端より14px上から始まり、下辺は行長に従って段違いになる。その段の下から写真が現れる。</p>
+    </figure>
+
+    <figure>
+      <div class="tq-tsp__stage">
+        <img class="tq-tsp__ph" src="../../../docs/demo/ph_a.jpg" alt="">
+        <p class="tq-tsp__quote tq-tsp__quote--slice"><span>コメントがここに入ります<br>2行目は少し短く<br>3行目はもっと短い</span></p>
+      </div>
+      <p class="tq-tsp__cap"><b>cloneを外すと</b>同じHTMLでも box-decoration-break:slice だと白は1つの矩形になり、写真に貼った付箋に戻る。効いているのはこの1行だけ。</p>
+    </figure>
+
+    <figure>
+      <div class="tq-tsp__stage tq-tsp__stage--h">
+        <img class="tq-tsp__ph" src="../../../docs/demo/ph_b.jpg" alt="">
+        <p class="tq-tsp__hquote"><span>コメントがここに入ります。<br>2行目はやや短く、<br>3行目はもっと短い</span></p>
+      </div>
+      <p class="tq-tsp__cap"><b>横組み版</b>横組みでも同じ。ただし全行が同じ長さだと段差が出ず、ただの白い矩形になる。行長を意図的に不揃いにするのが条件。</p>
+    </figure>
+
+  </div>
+</div>

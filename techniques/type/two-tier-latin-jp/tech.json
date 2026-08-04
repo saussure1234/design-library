@@ -1,0 +1,34 @@
+{
+  "id": "type/two-tier-latin-jp",
+  "name": "欧文と和文を2段に組み、級数・太さ・色の主従をわざと逆転させる",
+  "ordinary": "和文見出しを大きく太く置き、英字はその上か下に小さく添える。",
+  "actual": "神戸女子は「Shinjo MAG」を本文の3.5倍・weight300・ティールにし、上の「神女の活動をみる」を11pxのボールド黒に。頌栄は38px・weight300・薄グレー#8a8a90（字間0.2em）の\"COURCE\"の下に11pxの濃い紫で和文を置き、最も大きい文字が最も薄いという逆転をつくる。巴里夕顔のナビは26pxの金セリフ＋真下に8px・字間0.24emの和文だけで、枠・下線・アイコン・区切り罫がいずれもない。嘉瀬は逆に和文を主にし ::after で8pxの小文字欧文を緑で敷く。学藝は7px×4行積みの欧文を34px見出しの右肩に浮かせ、比1:5で装飾記号として読ませる。",
+  "css": ".tier .en{font-size:clamp(28px,4vw,56px); font-weight:300; letter-spacing:.2em; color:#8a8a90; line-height:1}\n.tier .ja{font-size:11px; font-weight:700; letter-spacing:.12em; color:#5b52a3; margin-top:6px}\n/* 和文主・欧文従は1要素で完結させる */\n.nav a{display:grid; justify-items:center; line-height:1.2}\n.nav a::after{content:attr(data-en); font-size:9px; letter-spacing:.18em; color:#3f9a5a; text-transform:lowercase; margin-top:6px}\n/* 極小欧文の積み組み */\n.eyebrow{position:absolute; right:0; top:4px; width:5em; font-size:7px; line-height:1.7; text-align:center; font-weight:700; letter-spacing:.06em}",
+  "appliesTo": ["section-head", "nav", "footer", "features", "value"],
+  "impact": 3,
+  "effort": 1,
+  "why": "「大きい＝重要」を外すと、大きさが場所の指定、色が読む順の指定として別々に働く。",
+  "avoid": "欧文が固有名詞でないとき（意味の無い語を主役にすると空疎に見える）。",
+  "params": [
+    "主にする言語",
+    "級数比(3〜5倍)",
+    "欧文のウェイト(300で軽く / 800で重く)",
+    "従の色を落とす量",
+    "2段組か肩に積むか"
+  ],
+  "sources": [
+    "kobe-wu_s05", "shoei_s08", "musashino_s08", "musashino_s07", "yugao_s15",
+    "yugao_s07", "odrive_s13", "kase_s01", "gakugei_s07"
+  ],
+  "notes": [
+    "逆転を成立させているのは級数差ではなく『3つの軸を全部逆に振ること』。級数（大↔小）・ウェイト（300↔700）・明度（薄↔濃）の3つが同じ向きだと、ただ大きい見出しに戻る。shoei_s08 は38px/weight300/薄グレー 対 11px/weight700/濃い紫で、3軸とも逆。",
+    "musashino_s08 は同じ型を上下逆に使う。和文（小・黒・ゴシック）が上、欧文（大・金・明朝スモールキャップス）が下。上下どちらでも成立するので、上に置くか下に置くかは『読み始めてほしい方を上』で決める。",
+    "薄い側の色は --c-ink3(#707070) 相当が実用線。現物は #8a8a90 で、地が白のとき本文の黒とは十分に差が付き、かつ読めるぎりぎり。これ以上薄くすると大きい文字が地紋（type/oversize-bleed）に変わる。",
+    "和文主・欧文従（kase_s01）は ::after + content:attr(data-en) で1要素にまとめる。markup が増えないので、ナビ全体に一括で規則をかけられる。text-transform:lowercase を足すと欧文の存在感がさらに落ちて『添え物』として安定する。",
+    "yugao_s15 のナビは、枠・下線・アイコン・区切り罫が1つも無い。26pxの欧文と8pxの和文が縦2段に積まれているだけで項目の境目が読める。装飾を足したくなったら、まずこの2段だけで足りていないか確かめる。",
+    "gakugei_s07 の右肩積み（7px×4行）は position:absolute + 固定幅で行を折らせるのが要点。width を指定しないと1行になって『小さいラベル』に戻り、記号として見えなくなる。幅は em ではなく px で持つこと。em にすると、ラベル側（7px）と見出し側の padding-right（16px前後）で基準が変わって幅がずれる（実装時にここで見出しが折れた）。",
+    "欧文が意味を持たない一般語（SECTION、CONTENTS など）のときは、この工夫を使っても空疎になるだけ。固有名詞・ブランド語・章題として通る語に限る。",
+    "デモでは薄い欧文に --c-ink3、濃い和文に --c-primary、金の明朝に --c-accent を当てている。案件の :root を差し替えれば配色が丸ごと入れ替わる。"
+  ],
+  "demoNotes": "①同じ2語で主従を入れ替えて対比。②組み方4通り（欧文が主で薄い／和文が主で欧文は::after／明朝＋スモールキャップス／7px×4行を右肩に積む）。③枠・下線・アイコン・区切り罫を1つも使わずに2段だけで組んだナビ。"
+}

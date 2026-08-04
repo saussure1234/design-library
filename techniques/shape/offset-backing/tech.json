@@ -1,0 +1,28 @@
+{
+  "id": "shape/offset-backing",
+  "name": "同じ形をもう1枚、背後にずらして敷く（背表紙・版ズレ・ゴースト）",
+  "ordinary": "カードは1枚で完結させ、分類色は上端か左端のボーダーで示す",
+  "actual": "3段階で使い分ける。①背表紙＝白カードの左に、上下6pxずつはみ出す角丸の色面を-10pxずらして敷く。②版ズレ＝写真と同じマスクの色ベタを translate(6px,10px) で背面に置く／円形写真なら1pxの金の円弧を inset:-14px で中心を6pxずらし、左下と右上でだけ外へ出す。③ゴースト＝同じマスク形状を約1.8倍に拡大し、背景との差5階調だけの面として画面の上辺・左辺で断ち落とす。",
+  "css": "/* ①背表紙 */\n.card{position:relative;background:#fff;border-radius:14px;box-shadow:0 6px 18px rgba(0,0,0,.06)}\n.card::before{content:\"\";position:absolute;left:-10px;top:-6px;bottom:-6px;width:22px;\n              border-radius:12px 0 0 12px;background:#6E7FB0;z-index:-1}\n/* ②版ズレ／二重輪郭 */\n.ph{position:relative;border-radius:50%;overflow:hidden}\n.ph-wrap::after{content:'';position:absolute;inset:-14px;border:1px solid #c9ad6a;\n                border-radius:50%;translate:-6px 6px;pointer-events:none}\n.ghost{position:absolute;inset:0;background:#5f9c52;transform:translate(6px,10px);z-index:-1}\n/* ③背景エコー（本体と同じ半径を拡大して敷く） */\n.echo{position:absolute;top:-60px;left:-40px;width:460px;height:260px;background:#f3f4f6;\n      border-radius:24px 9999px 9999px 24px / 24px 50% 50% 24px;z-index:0}",
+  "params": [
+    "ずらし量（6〜10px=手仕事／40px超=別の面）",
+    "拡大率（1.0=版ズレ／1.8=エコー）",
+    "色差（5階調=気配／ベタ=版ズレ）"
+  ],
+  "appliesTo": ["features", "voice", "member", "value", "news"],
+  "impact": 3,
+  "effort": 1,
+  "why": "わずかなズレは手仕事・刷り物の手触りになり、拡大したエコーは異形マスクが思いつきでなく設計だと伝える",
+  "avoid": "ずらす方向がカードごとに変わる場合（歪んで見える）",
+  "sources": ["linie_s07", "kase_s01", "musashino_s08", "tanq_s10", "r-reha_s07", "meisei-kg_s10"],
+  "notes": [
+    "linie_s07 を拡大して測ると、白カードの左に見えているのは幅12px前後の色帯で、上下にそれぞれ5〜6pxはみ出している。左に-10pxずらした幅22pxの面の『はみ出した分だけ』が見えている計算と一致する。左端の角だけが丸く、右側はカードの下に隠れているのがポイント。",
+    "r-reha_s07 の背景には、写真と同じD字マスクを1.8倍前後に拡大したごく淡い面が敷いてある。地との差はほぼ無く（5階調程度）、上辺と左辺は画面で断たれている。ここまで薄いと『装飾』として認識されないまま、D字がページの形だという主張だけが残る。",
+    "musashino_s08 の円形写真は、外側に1pxの金のリングが inset:-14px 相当で回っていて、中心が6pxほどずれている。そのため左下と右上でだけリングが写真の外へ出て、それ以外の部分は写真に重なって消える。同心円にすると『枠』になり、ずらすと『もう1版』になる。",
+    "実装で判明：z-index:-1 の疑似要素は、親に背景があるとその下へ潜って消える。親のグリッドに isolation:isolate を付けると疑似要素が親の背景より上・カードより下に固定される（demoはこの方式）。position:relative だけでは stacking context が作られないので、カード自身には z-index を付けないこと。",
+    "背面の形は必ず本体と同じマスクを使い回す。demo②の右（24px,40px）のようにずらしすぎると『2つの別の面』に見え、版ズレのニュアンスが消える。手仕事に見える範囲は6〜10pxで、これは写真の大きさに依らずほぼ固定（拡大縮小しない）。",
+    "clip-path で抜いた形は box-shadow が出ないので、異形の写真に立体感を足す手段はこの『背後にもう1枚』が事実上の唯一解になる。tanq_s10 の六角形も同じ理由で背面に色付きの六角を敷いている。",
+    "avoid のとおり、ずらす向きは列で揃える。demo①の最後に向きをばらした状態を並べてあり、同じ半径・同じ色でも束ねた紙ではなく歪んだ積み方に見えることが分かる。"
+  ],
+  "demoNotes": "①左端4pxボーダー／背表紙／向きバラバラ（避ける）の3種、②版ズレを「敷かない・6px,10px・24px,40px」の3段階、③円形写真のリング有無、④D字4枚の背後に1.8倍のゴーストを敷く／敷かないの対比、で構成。"
+}

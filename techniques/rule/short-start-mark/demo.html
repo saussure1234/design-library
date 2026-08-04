@@ -94,8 +94,8 @@
   margin-bottom:var(--s3);
   background:color-mix(in srgb,var(--c-on-primary) 85%,transparent);
 }
-/* 比較用：全幅の罫を写真の上に渡した場合 */
-.tq-ssm__vcap--rules{border-top:1px solid color-mix(in srgb,var(--c-on-primary) 85%,transparent); padding-top:var(--s3)}
+/* 比較用：全幅の罫を写真の上に渡した場合（起点の線は持たせない） */
+.tq-ssm__vcap--rules{padding-top:var(--s3)}
 .tq-ssm__vcap--rules::before{display:none}
 .tq-ssm__fullrule{
   position:absolute; left:0; right:0; top:var(--s5);
@@ -107,9 +107,11 @@
 .tq-ssm__drop{
   position:absolute; left:50%; top:0;
   width:1px; height:var(--tq-ssm-drop);
+  /* 下端はグラデで消す。現行ブラウザは premultiplied で補間するので
+     transparent でも色が黒へ濁らない */
   background:linear-gradient(
     color-mix(in srgb,var(--c-accent) 90%,var(--c-on-primary)),
-    color-mix(in srgb,var(--c-accent) 0%,transparent));
+    transparent);
 }
 .tq-ssm__drop::after{
   content:""; position:absolute;

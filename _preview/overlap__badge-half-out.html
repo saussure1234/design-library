@@ -1,0 +1,296 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<base href="file:///Users/sohayashi/design-library/techniques/overlap/badge-half-out/">
+<link rel="stylesheet" href="file:///Users/sohayashi/design-library/parts/_tokens.css">
+<style>*{margin:0;padding:0} body{background:#fff}</style>
+<title>overlap/badge-half-out</title></head><body>
+<style>
+/* ==========================================================
+   overlap/badge-half-out — バッジ・ピル・操作ボタンを枠の辺に半分だけ噛ませる
+   トークン未読込でも見えるようフォールバックを置く。
+   :where() で優先度0にしてあるので、_tokens.css があれば必ずそちらが勝つ。
+   ========================================================== */
+:where(:root){
+  --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-num:"Helvetica Neue",Arial,var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px; --fs-lg:21px; --fs-xl:28px;
+  --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px; --s8:76px;
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --shadow:0 6px 24px rgba(17,17,17,.08);
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+
+.tq-bho{
+  font-family:var(--f-sans); color:var(--c-ink2); background:var(--c-bg);
+  max-width:var(--w-max); margin:0 auto; padding:var(--s6) var(--w-gut);
+}
+.tq-bho *{ box-sizing:border-box; }
+.tq-bho__ttl{ margin:0 0 var(--s2); font-size:var(--fs-md); font-weight:700;
+  color:var(--c-ink); line-height:var(--lh-tight); }
+.tq-bho__lead{ margin:0 0 var(--s6); font-size:var(--fs-sm); line-height:var(--lh-body); color:var(--c-ink3); }
+.tq-bho__sec{ margin-top:var(--s7); }
+.tq-bho__row{ display:grid; gap:var(--s5); grid-template-columns:repeat(auto-fit,minmax(min(268px,100%),1fr)); }
+.tq-bho__row--4{ gap:var(--s5) var(--s4); grid-template-columns:repeat(auto-fit,minmax(min(198px,100%),1fr)); }
+.tq-bho__fig{ margin:0; }
+.tq-bho__cap{ margin:var(--s3) 0 0; font-size:var(--fs-note); line-height:var(--lh-tight); color:var(--c-ink3); }
+.tq-bho__cap b{ display:block; margin-bottom:2px; color:var(--c-ink); font-size:var(--fs-sm); }
+.tq-bho__note{ margin:var(--s4) 0 0; font-size:var(--fs-note); line-height:var(--lh-body); color:var(--c-ink3); }
+
+/* ---- カード。overflow は必ず visible。hidden にすると全部死ぬ ---- */
+.tq-bho__card{
+  position:relative; overflow:visible;
+  background:var(--c-bg); border:2px solid var(--c-primary); border-radius:var(--r-m);
+  padding:var(--s5) var(--s4) var(--s4);
+}
+.tq-bho__thumb{ display:block; width:100%; aspect-ratio:16/10; object-fit:cover;
+  border-radius:var(--r-s); background:var(--c-bg2); }
+.tq-bho__h{ margin:var(--s3) 0 var(--s1); font-size:var(--fs-base); font-weight:700;
+  color:var(--c-ink); line-height:var(--lh-tight); }
+.tq-bho__p{ margin:0; font-size:var(--fs-note); line-height:var(--lh-body); color:var(--c-ink3); }
+
+/* ---- ①-A 普通：カードの内側に余白を取った角丸ラベル ---- */
+.tq-bho__tag-in{
+  display:inline-block; margin:0 0 var(--s3);
+  padding:var(--s1) var(--s3); border-radius:var(--r-s);
+  background:var(--c-primary-l); color:var(--c-primary-d);
+  font-size:var(--fs-note); font-weight:700; line-height:var(--lh-tight);
+}
+
+/* ---- ①-B この工夫：中心を辺の線上に置き、半分を外へ ---- */
+.tq-bho__pill{
+  position:absolute; z-index:3; top:0; left:var(--s4); translate:0 -50%;   /* 辺の線上に中心 */
+  padding:var(--s1) var(--s3); border-radius:var(--r-pill);
+  background:var(--c-primary); color:var(--c-on-primary);
+  font-size:var(--fs-note); font-weight:700; line-height:var(--lh-tight); white-space:nowrap;
+}
+
+/* ---- ② 形の4通り ---- */
+.tq-bho__hold{ padding-top:var(--s5); }
+
+/* (a) 正円バッジ。枠線を途切れさせるのが仕事 */
+.tq-bho__circle{
+  position:absolute; z-index:3; top:0; right:var(--s4); translate:0 -50%;
+  width:54px; aspect-ratio:1; border-radius:50%;
+  background:var(--c-ink); color:var(--c-on-primary);
+  display:grid; place-content:center; text-align:center;
+  font-size:9px; font-weight:700; letter-spacing:.06em; line-height:1.25;
+  box-shadow:0 0 0 4px var(--c-bg);              /* 枠線をここで断つ */
+}
+/* (b) 45°の菱形。角から上と左へ1/3出す */
+.tq-bho__diamond{
+  position:absolute; z-index:3; top:-9px; left:-9px;
+  width:34px; height:34px; background:var(--c-accent);
+  transform:rotate(45deg); display:grid; place-items:center;
+}
+.tq-bho__diamond span{ transform:rotate(-45deg); color:var(--c-on-primary);
+  font-size:9px; font-weight:700; letter-spacing:.04em; }
+/* (c) 矩形プレート。写真の下辺を越えてキャプション帯にかかる */
+.tq-bho__plate{
+  position:absolute; z-index:3; left:var(--s3); top:calc(var(--s5) + 62.5%);
+  translate:0 -100%; width:34px; padding:var(--s1) 0 var(--s2);
+  text-align:center; color:var(--c-on-primary); background:var(--c-accent);
+  font-family:var(--f-num); font-size:9px; letter-spacing:.06em; line-height:1;
+}
+.tq-bho__plate b{ display:block; font-size:22px; line-height:.95; margin-top:2px; }
+/* (d) 円の輪郭線を分断して下へぶら下げるピル */
+.tq-bho__clockwrap{ position:relative; display:flex; justify-content:center;
+  padding:var(--s4) 0 var(--s6); }
+.tq-bho__clock{
+  position:relative; overflow:visible; width:104px; aspect-ratio:1; border-radius:50%;
+  border:3px solid var(--c-primary); background:var(--c-bg);
+}
+.tq-bho__clock::after{
+  content:''; position:absolute; inset:9px; border-radius:50%;
+  background:conic-gradient(var(--c-accent) 0 28%, var(--c-bg2) 28% 100%);
+}
+.tq-bho__minpill{
+  position:absolute; z-index:3; left:50%; bottom:-13px; translate:-50% 0;
+  padding:var(--s1) var(--s3); border-radius:var(--r-pill);
+  background:var(--c-ink); color:var(--c-on-primary);
+  font-size:var(--fs-note); font-weight:700; line-height:var(--lh-tight); white-space:nowrap;
+}
+
+/* ---- ③ 操作部を面の左右の縁に噛ませる ---- */
+.tq-bho__panel{
+  position:relative; overflow:visible;
+  background:var(--c-primary-l); border-radius:var(--r-m);
+  padding:var(--s6) var(--s5); text-align:center;
+}
+.tq-bho__panel p{ margin:0; font-size:var(--fs-sm); line-height:var(--lh-body); color:var(--c-ink2); }
+.tq-bho__arrow{
+  position:absolute; z-index:3; top:50%; translate:-50% -50%;
+  width:34px; height:56px; border-radius:var(--r-s);
+  background:var(--c-primary); color:var(--c-on-primary);
+  display:grid; place-content:center; font-size:var(--fs-base); line-height:1;
+}
+.tq-bho__arrow--prev{ left:0; }
+.tq-bho__arrow--next{ left:100%; }
+/* 比較用：内側に収めた操作部 */
+.tq-bho__panel--inside .tq-bho__arrow--prev{ left:var(--s5); translate:0 -50%; }
+.tq-bho__panel--inside .tq-bho__arrow--next{ left:auto; right:var(--s5); translate:0 -50%; }
+
+/* ---- ④ 全カードに付けると効かない ---- */
+.tq-bho__mini{
+  position:relative; overflow:visible;
+  background:var(--c-bg2); border-radius:var(--r-m); padding:var(--s5) var(--s4) var(--s4);
+  min-height:96px;
+}
+.tq-bho__mini .tq-bho__pill{ background:var(--c-accent); }
+.tq-bho__stack{ display:grid; gap:var(--s5); }
+
+@media (max-width:420px){
+  .tq-bho__card{ padding:var(--s5) var(--s3) var(--s3); }
+}
+</style>
+
+<div class="tq-bho">
+
+  <p class="tq-bho__ttl">① 同じタグを「内側に置く」か「辺の線上に中心を置く」か</p>
+  <p class="tq-bho__lead">
+    文言も色も同じタグ。左はカードの内側に余白を取った角丸ラベル、右は中心を上辺の線の上に置いて半分だけ外へ出したもの。
+    枠線が途切れることで、タグが「カードの部品」から「後から貼られた印章」に変わる。
+  </p>
+
+  <div class="tq-bho__row">
+    <figure class="tq-bho__fig">
+      <div class="tq-bho__hold"><div class="tq-bho__card">
+        <span class="tq-bho__tag-in">ラベル</span>
+        <img class="tq-bho__thumb" src="../../../docs/demo/ph_a.jpg" alt="">
+        <p class="tq-bho__h">見出しがここに入ります</p>
+        <p class="tq-bho__p">補足のテキストが1〜2行入ります。</p>
+      </div></div>
+      <p class="tq-bho__cap"><b>普通</b>内側に16px前後の余白を取った角丸ラベル。カードは閉じた箱のまま。</p>
+    </figure>
+
+    <figure class="tq-bho__fig">
+      <div class="tq-bho__hold"><div class="tq-bho__card">
+        <span class="tq-bho__pill">ラベル</span>
+        <img class="tq-bho__thumb" src="../../../docs/demo/ph_a.jpg" alt="">
+        <p class="tq-bho__h">見出しがここに入ります</p>
+        <p class="tq-bho__p">補足のテキストが1〜2行入ります。</p>
+      </div></div>
+      <p class="tq-bho__cap"><b>この工夫</b>中心が上辺の線上。枠線がピルの下で切れ、カードが「重なった紙」に見える。</p>
+    </figure>
+  </div>
+
+  <!-- ② 形の4通り -->
+  <section class="tq-bho__sec">
+    <p class="tq-bho__ttl">② 形は4通り。噛ませる辺と、はみ出し比率1/3〜1/2で決まる</p>
+    <p class="tq-bho__lead">どれも「要素の中心を辺の線の上に置く」だけ。違うのは形と、どの辺に噛ませるか。</p>
+    <div class="tq-bho__row tq-bho__row--4">
+
+      <figure class="tq-bho__fig">
+        <div class="tq-bho__hold"><div class="tq-bho__card">
+          <span class="tq-bho__pill">ピル</span>
+          <img class="tq-bho__thumb" src="../../../docs/demo/ph_a.jpg" alt="">
+          <p class="tq-bho__h">見出し</p>
+        </div></div>
+        <p class="tq-bho__cap"><b>ピル・上辺</b>いちばん軽い。1/2出す。</p>
+      </figure>
+
+      <figure class="tq-bho__fig">
+        <div class="tq-bho__hold"><div class="tq-bho__card">
+          <span class="tq-bho__circle">ROUND<br>BADGE</span>
+          <img class="tq-bho__thumb" src="../../../docs/demo/ph_b.jpg" alt="">
+          <p class="tq-bho__h">見出し</p>
+        </div></div>
+        <p class="tq-bho__cap"><b>正円・上辺</b>枠線がバッジの左右で途切れる。印章の格。</p>
+      </figure>
+
+      <figure class="tq-bho__fig">
+        <div class="tq-bho__hold"><div class="tq-bho__card">
+          <span class="tq-bho__diamond"><span>NEW</span></span>
+          <img class="tq-bho__thumb" src="../../../docs/demo/ph_a.jpg" alt="">
+          <p class="tq-bho__h">見出し</p>
+        </div></div>
+        <p class="tq-bho__cap"><b>45°菱形・角</b>上と左へ1/3出て、矩形そのものを破る。</p>
+      </figure>
+
+      <figure class="tq-bho__fig">
+        <div class="tq-bho__hold"><div class="tq-bho__card">
+          <span class="tq-bho__plate">No<b>1</b></span>
+          <img class="tq-bho__thumb" src="../../../docs/demo/ph_b.jpg" alt="">
+          <p class="tq-bho__h">見出し</p>
+        </div></div>
+        <p class="tq-bho__cap"><b>矩形プレート・写真の下辺</b>8pxだけ越えてキャプション帯にかかる。</p>
+      </figure>
+
+    </div>
+  </section>
+
+  <!-- ③ 操作部・輪郭の分断 -->
+  <section class="tq-bho__sec">
+    <p class="tq-bho__ttl">③ 操作部を縁に噛ませる／円の輪郭を分断してぶら下げる</p>
+    <p class="tq-bho__lead">
+      矢印を面の内側に置くと「面の中のボタン」、縁に半分噛ませると「この面ごと動く」と直感できる。
+      円の輪郭を途中で断つピルも同じ理屈で、円が閉じた図形でなくなる。
+    </p>
+    <div class="tq-bho__row">
+      <figure class="tq-bho__fig">
+        <div class="tq-bho__panel tq-bho__panel--inside">
+          <span class="tq-bho__arrow tq-bho__arrow--prev">‹</span>
+          <span class="tq-bho__arrow tq-bho__arrow--next">›</span>
+          <p>面の中身がここに入ります</p>
+        </div>
+        <p class="tq-bho__cap"><b>普通</b>操作部を内側に収める。矢印は「面の中の部品」に見える。</p>
+      </figure>
+      <figure class="tq-bho__fig">
+        <div class="tq-bho__panel">
+          <span class="tq-bho__arrow tq-bho__arrow--prev">‹</span>
+          <span class="tq-bho__arrow tq-bho__arrow--next">›</span>
+          <p>面の中身がここに入ります</p>
+        </div>
+        <p class="tq-bho__cap"><b>この工夫</b>左右の辺に半分噛ませる。面全体が動く対象だと分かる。</p>
+      </figure>
+    </div>
+
+    <div class="tq-bho__row tq-bho__row--4" style="margin-top:var(--s6)">
+      <figure class="tq-bho__fig">
+        <div class="tq-bho__clockwrap"><div class="tq-bho__clock"></div></div>
+        <p class="tq-bho__cap"><b>普通</b>円は閉じたまま。時間の表示は別の行に置くことになる。</p>
+      </figure>
+      <figure class="tq-bho__fig">
+        <div class="tq-bho__clockwrap"><div class="tq-bho__clock">
+          <span class="tq-bho__minpill">00 min</span>
+        </div></div>
+        <p class="tq-bho__cap"><b>この工夫</b>ピルが輪郭線を分断して下へぶら下がる。行を増やさずに情報が1つ増える。</p>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ④ 使いどころ -->
+  <section class="tq-bho__sec">
+    <p class="tq-bho__ttl">④ 一覧の全カードに同じ付け方をすると、効き目はゼロになる</p>
+    <p class="tq-bho__lead">1件だけ・1カードに1点だから浮き上がる。3枚全部に付けると、それはただの見出し位置の規則になる。</p>
+    <div class="tq-bho__row">
+      <figure class="tq-bho__fig">
+        <div class="tq-bho__stack">
+          <div class="tq-bho__mini"><span class="tq-bho__pill">ラベル</span><p class="tq-bho__p">項目のテキストが入ります。</p></div>
+          <div class="tq-bho__mini"><span class="tq-bho__pill">ラベル</span><p class="tq-bho__p">項目のテキストが入ります。</p></div>
+          <div class="tq-bho__mini"><span class="tq-bho__pill">ラベル</span><p class="tq-bho__p">項目のテキストが入ります。</p></div>
+        </div>
+        <p class="tq-bho__cap"><b>全カードに付ける</b>3つとも同じ強さになり、どれも目立たない。</p>
+      </figure>
+      <figure class="tq-bho__fig">
+        <div class="tq-bho__stack">
+          <div class="tq-bho__mini"><span class="tq-bho__pill">ラベル</span><p class="tq-bho__p">項目のテキストが入ります。</p></div>
+          <div class="tq-bho__mini"><p class="tq-bho__p">項目のテキストが入ります。</p></div>
+          <div class="tq-bho__mini"><p class="tq-bho__p">項目のテキストが入ります。</p></div>
+        </div>
+        <p class="tq-bho__cap"><b>1件だけに付ける</b>同じピルが1個だけで、そのカードに視線が行く。</p>
+      </figure>
+    </div>
+    <p class="tq-bho__note">
+      共通の必須条件は <code>overflow:visible</code>。カード側を hidden にすると、はみ出したバッジが辺の線でスパッと切れて
+      「印章」でも「後から貼った」でもなくなる。正円バッジの <code>box-shadow:0 0 0 4px var(--c-bg)</code> は影ではなく、
+      カードの枠線を断つための地色のリング。
+    </p>
+  </section>
+
+</div>
+
+</body></html>

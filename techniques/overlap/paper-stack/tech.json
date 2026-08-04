@@ -1,0 +1,26 @@
+{
+  "id": "overlap/paper-stack",
+  "name": "背後にもう1枚の紙を数度ずらして重ね、端で断ち落とす",
+  "ordinary": "カードは1枚だけ置き、ドロップシャドウで浮かせて終わり",
+  "actual": "手前の白い紙の上辺から、左が厚く右へ細る楔形にピンクの紙がのぞく＝背面が1.5°傾いていることが形で分かる。右端にも同じピンクが数px見える（meisei-es_s09）。写真の背後に線だけ・中身なしの同型フレームが右上へ14pxずれて重なり、2枚重ねに見える（linie_s05／s06）。2枚のカードが2〜4°ずつ逆向きに傾いて食い込み、左のカードは画面左端で切れて全体が見えない（kase_s01）。幅も高さも違う3枚を階段状に置き、隣同士を8pxだけ重ねて中央だけz-index:2にする（buddies_s05）。",
+  "css": "/* 背後にもう1枚（疑似要素1つで済む） */\n.sheet{position:relative; isolation:isolate; border-radius:14px}\n.sheet::before{content:\"\"; position:absolute; z-index:-1;\n  inset:-16px -10px 24px -4px;              /* 上と左を厚く＝楔形にのぞく */\n  background:#f6dfe2; border-radius:14px; transform:rotate(-1.5deg)}\n\n/* 中身なしの空フレーム版 */\n.photo::before{content:\"\"; position:absolute; z-index:-1;\n  inset:-16px -16px 16px 16px; background:#fff;\n  border:1px solid #dcdcdc; border-radius:14px}\n\n/* 逆向き傾き＋画面端で断ち落とし */\n.deck{overflow:hidden}\n.deck .card{box-shadow:0 10px 24px rgba(0,0,0,.10); border:0}\n.deck .card:nth-child(1){transform:rotate(-3deg); margin-left:-48px}\n.deck .card:nth-child(2){transform:rotate(2deg);  margin-left:-72px; z-index:2}\n\n/* 階段状に8pxだけ重ねる（3枚） */\n.row{display:grid; grid-template-columns:repeat(3,auto)}\n.row > *{margin-left:-8px; border-radius:20px}\n.row > *:nth-child(1){transform:translateY(24px)}\n.row > *:nth-child(2){transform:translateY(64px); z-index:2}",
+  "appliesTo": ["hero", "features", "voice", "member", "news"],
+  "impact": 3,
+  "effort": 1,
+  "why": "紙が複数ある＝続きがあることを、要素を増やさず疑似要素1枚で示せる。重なりが8pxでも前後関係が生まれ、3枚が「並んだ人」でなく「集まった人」に見える",
+  "params": [
+    "回転角 1〜4°（必ず逆向きに）",
+    "ずれ量 8〜16px",
+    "画面端で断ち落とすか"
+  ],
+  "avoid": "傾けた面が長い本文を含むとき（読みづらさが効果に勝つ）",
+  "sources": ["meisei-es_s09", "linie_s05", "linie_s06", "kase_s01", "buddies_s05", "linie_s01"],
+  "notes": [
+    "🚨 元CSSの `.sheet{background:#fff}` ＋ `.sheet::before{z-index:-1}` は動かない。CSSの描画順（CSS2.1 付録E）では【自分の背景】→【負のz-indexの子】の順に描かれるので、負の子は親の背景の“上”に出てしまい、背面の紙が手前の紙を覆う。demoでは白面を子要素 .tq-pst__face に持たせ、::before（背面の紙）→ .face（白面）のDOM順で解決した。どちらも position 付き・z-index auto なので、後のDOMが上に来る。",
+    "z-index:-1 が使えるのは【親が背景を持たない】ときだけ。空フレーム版（linie_s05）は img に疑似要素が付けられないのでラッパーで包み、ラッパーは背景なし・::before に z-index:-1 を与えて写真の下へ潜らせた。この場合は舞台側に isolation:isolate が必須で、付け忘れると枠が舞台の背景より下へ抜けて消える。",
+    "楔形にのぞかせる肝は inset の4辺を全部変えること。demoは inset:-18px -12px 26px -6px（上を最も厚く／下は内側へ引っ込める）＋rotate(-1.5deg)。上辺だけ均等に出すと「ただの二重枠」になり、傾きが伝わらない。左を厚く右を細くすることで、回転していることが形だけで読める。",
+    "断ち落とし版は舞台に overflow:hidden が必要（この技だけは hidden が正しい）。左のカードを left:-56px で舞台の外へ出し、2枚を -3° / +2° と必ず逆向きに傾ける。同じ向きに傾けると「まとめてズレた」＝版ズレに見えて、束ねた感じが出ない。",
+    "階段版の重なりは 8px で十分。ただし写真に4pxの白フチを付けていると重なりの半分がフチに食われるので、白フチを使うなら重なりは12〜16pxに増やす。中央だけ position:relative + z-index:2 にするのが最短（transform だけでは重ね順は変わらない）。",
+    "回転を掛けた面に長い本文を置かない。demoでも傾ける要素は見出し1行＋補足1行に留めた。3行以上の本文が傾くと、読みにくさが「束ねて見える」効果に勝つ。"
+  ]
+}

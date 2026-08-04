@@ -1,0 +1,256 @@
+<style>
+/* ==========================================================
+   overlap/cutout-breaks-frame — 切り抜き被写体をマスク・カード・グラフの外へ出す
+   トークン未読込でも見えるようフォールバックを置く。
+   :where() で優先度0にしてあるので、_tokens.css があれば必ずそちらが勝つ。
+   ========================================================== */
+:where(:root){
+  --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-num:"Helvetica Neue",Arial,var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px; --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+  --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px; --s8:76px;
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --shadow:0 6px 24px rgba(17,17,17,.08);
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+
+.tq-cbf{
+  font-family:var(--f-sans); color:var(--c-ink2); background:var(--c-bg);
+  max-width:var(--w-max); margin:0 auto; padding:var(--s6) var(--w-gut);
+}
+.tq-cbf *{ box-sizing:border-box; }
+.tq-cbf__ttl{ margin:0 0 var(--s2); font-size:var(--fs-md); font-weight:700;
+  color:var(--c-ink); line-height:var(--lh-tight); }
+.tq-cbf__lead{ margin:0 0 var(--s5); font-size:var(--fs-sm); line-height:var(--lh-body); color:var(--c-ink3); }
+.tq-cbf__sec{ margin-top:var(--s7); }
+.tq-cbf__row{ display:grid; gap:var(--s5); grid-template-columns:repeat(auto-fit,minmax(min(272px,100%),1fr)); }
+.tq-cbf__row--4{ gap:var(--s4); grid-template-columns:repeat(auto-fit,minmax(min(196px,100%),1fr)); }
+.tq-cbf__fig{ margin:0; }
+.tq-cbf__cap{ margin:var(--s3) 0 0; font-size:var(--fs-note); line-height:var(--lh-tight); color:var(--c-ink3); }
+.tq-cbf__cap b{ display:block; margin-bottom:2px; color:var(--c-ink); font-size:var(--fs-sm); }
+.tq-cbf__note{ margin:var(--s4) 0 0; font-size:var(--fs-note); line-height:var(--lh-body); color:var(--c-ink3); }
+
+/* ---- 切り抜き素材（デモ用に写真の被写体だけをシルエットで抜いている） ----
+   案件では背景を抜いたPNGに置き換える。影は絶対に付けない。 */
+.tq-cbf__cut{
+  position:absolute; z-index:2; display:block;
+  aspect-ratio:4/5; overflow:hidden;
+  clip-path:url(#tq-cbf-figure);
+  filter:none;                    /* drop-shadow を付けると「貼った絵」に見える */
+  pointer-events:none;
+}
+.tq-cbf__cut img{ position:absolute; left:-140%; top:-71%; width:380%; max-width:none; display:block; }
+
+/* ---- 舞台。ここが hidden だとこの工夫は全部死ぬ ---- */
+.tq-cbf__stage{ position:relative; overflow:visible;
+  padding:var(--s5) 0 var(--s7); }              /* はみ出し分をあらかじめ空けておく */
+.tq-cbf__mask{
+  position:relative; overflow:hidden;            /* 切るのはマスクの側だけ */
+  aspect-ratio:16/10; border-radius:50%/42%; background:var(--c-bg2);
+}
+.tq-cbf__mask img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+/* ①-A 普通：切り抜きを楕円の内側に収める */
+.tq-cbf__stage--in .tq-cbf__cut--a{ left:16%; top:22%; width:13%; }
+.tq-cbf__stage--in .tq-cbf__cut--b{ right:14%; bottom:26%; width:17%; }
+/* ①-B この工夫：同じ被写体を縁にまたがせる（幅・大きさは--inと同じ） */
+.tq-cbf__stage--out .tq-cbf__cut--a{ left:17%; top:0; width:13%; }
+.tq-cbf__stage--out .tq-cbf__cut--b{ right:-3%; bottom:var(--s4); width:17%; }
+
+/* ---- ② はみ出し量の3段 ---- */
+.tq-cbf__box{
+  position:relative; overflow:visible; aspect-ratio:5/4;
+  width:min(100%,240px); margin:0 auto;
+  background:var(--c-primary-l); border-radius:var(--r-m);
+}
+.tq-cbf__box .tq-cbf__cut{ left:50%; translate:-50% 0; width:34%; }
+.tq-cbf__lv1 .tq-cbf__cut{ bottom:-8%; }
+.tq-cbf__lv2 .tq-cbf__cut{ bottom:-22%; }
+.tq-cbf__lv3 .tq-cbf__cut{ bottom:-38%; left:78%; }
+.tq-cbf__hold{ padding-bottom:calc(var(--s8) + var(--s1)); }
+/* ③は形も高さもばらばらなので、下辺を揃えてから並べる */
+.tq-cbf__hold3{
+  min-height:380px; padding:var(--s6) 0 var(--s8);
+  display:flex; align-items:flex-end; justify-content:center;
+}
+.tq-cbf__hold3 > *{ width:100%; }
+
+/* ---- ③ マスクの中身を差し替える ---- */
+/* (a) 中身をグラデのベタ面にして、人物だけ枠外へ出す */
+.tq-cbf__arch{
+  position:relative; overflow:visible; aspect-ratio:3/4;
+  width:min(100%,200px); margin:0 auto;
+  border-radius:var(--r-l) var(--r-l) var(--r-m) var(--r-m);
+}
+.tq-cbf__arch::before{
+  content:''; position:absolute; inset:0; z-index:0;
+  border-radius:999px 999px var(--r-m) var(--r-m);
+  background:linear-gradient(160deg,var(--c-primary-l),var(--c-primary) 58%,var(--c-primary-d));
+}
+.tq-cbf__arch .tq-cbf__cut{ left:46%; translate:-50% 0; bottom:-11%; width:64%; }
+
+/* (b) ドーナツグラフの3層をまたぐ */
+.tq-cbf__ring{
+  position:relative; overflow:visible; width:min(100%,220px); margin:0 auto; aspect-ratio:1;
+  border-radius:50%;
+  background:conic-gradient(var(--c-accent) 0 86%, var(--c-line) 86% 100%);
+}
+.tq-cbf__ring::after{ content:''; position:absolute; inset:15%; border-radius:50%; background:var(--c-bg); }
+.tq-cbf__num{
+  position:absolute; inset:0; z-index:1; display:grid; place-content:center; align-content:center;
+  font-family:var(--f-num); font-weight:700; font-size:var(--fs-2xl); color:var(--c-ink);
+  line-height:1; padding-bottom:22%;
+}
+.tq-cbf__num small{ display:block; font-family:var(--f-sans); font-size:var(--fs-note);
+  font-weight:400; color:var(--c-ink3); margin-top:var(--s1); }
+.tq-cbf__ring .tq-cbf__cut{ left:50%; translate:-50% 0; bottom:-24%; width:44%; }
+
+/* (c) 階段状の面。段の上端線を脚が隠す */
+.tq-cbf__steps{
+  position:relative; overflow:visible; aspect-ratio:5/4;
+  width:min(100%,240px); margin:0 auto;
+  display:flex; align-items:flex-end; gap:2px;
+}
+.tq-cbf__steps span{ flex:1; background:var(--c-primary-l); border-radius:var(--r-s) var(--r-s) 0 0; }
+.tq-cbf__steps span:nth-child(1){ height:26%; }
+.tq-cbf__steps span:nth-child(2){ height:46%; }
+.tq-cbf__steps span:nth-child(3){ height:66%; }
+.tq-cbf__steps .tq-cbf__cut{ left:34%; bottom:34%; width:40%; }
+
+/* (d) 円の輪郭を「枠」でなく飾り罫に落とす */
+.tq-cbf__circ{
+  position:relative; overflow:visible; width:min(100%,200px); margin:0 auto; aspect-ratio:1;
+  border:1.5px solid var(--c-primary); border-radius:50%;
+}
+.tq-cbf__circ .tq-cbf__cut{ left:50%; translate:-50% 0; top:-18%; width:52%; }
+
+/* ---- 参考：舞台を hidden にすると何が起きるか ---- */
+.tq-cbf__stage--clip{ overflow:hidden; }
+
+.tq-cbf__defs{ position:absolute; width:0; height:0; overflow:hidden; }
+
+@media (max-width:420px){
+  .tq-cbf__ring, .tq-cbf__circ{ width:min(100%,190px); }
+}
+</style>
+
+<svg class="tq-cbf__defs" aria-hidden="true" focusable="false">
+  <defs>
+    <clipPath id="tq-cbf-figure" clipPathUnits="objectBoundingBox">
+      <ellipse cx="0.5" cy="0.155" rx="0.185" ry="0.148"/>
+      <ellipse cx="0.5" cy="0.50" rx="0.34" ry="0.235"/>
+      <rect x="0.355" y="0.46" width="0.29" height="0.54" rx="0.10" ry="0.06"/>
+    </clipPath>
+  </defs>
+</svg>
+
+<div class="tq-cbf">
+
+  <p class="tq-cbf__ttl">① 枠の縁を「壁」でなく「奥行きの境目」にする</p>
+  <p class="tq-cbf__lead">
+    左右で使っている写真・マスクの形・被写体の大きさはすべて同じ。違うのは切り抜きを縁の内側に置くか、
+    縁をまたがせるかだけ。またいだ瞬間に、楕円が「写真の形」から「奥にある窓」に変わる。
+  </p>
+
+  <div class="tq-cbf__row">
+    <figure class="tq-cbf__fig">
+      <div class="tq-cbf__stage tq-cbf__stage--in">
+        <div class="tq-cbf__mask"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+        <span class="tq-cbf__cut tq-cbf__cut--a" aria-hidden="true"><img src="../../../docs/demo/ph_b.jpg" alt=""></span>
+        <span class="tq-cbf__cut tq-cbf__cut--b" aria-hidden="true"><img src="../../../docs/demo/ph_b.jpg" alt=""></span>
+      </div>
+      <p class="tq-cbf__cap"><b>普通</b>被写体はマスクの内側に収める。楕円は「写真を切った形」のままで、面は1枚に見える。</p>
+    </figure>
+
+    <figure class="tq-cbf__fig">
+      <div class="tq-cbf__stage tq-cbf__stage--out">
+        <div class="tq-cbf__mask"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+        <span class="tq-cbf__cut tq-cbf__cut--a" aria-hidden="true"><img src="../../../docs/demo/ph_b.jpg" alt=""></span>
+        <span class="tq-cbf__cut tq-cbf__cut--b" aria-hidden="true"><img src="../../../docs/demo/ph_b.jpg" alt=""></span>
+      </div>
+      <p class="tq-cbf__cap"><b>この工夫</b>上辺と右下辺をまたがせる。楕円が奥に下がり、被写体だけが手前の白地に立つ。</p>
+    </figure>
+  </div>
+
+  <!-- ② はみ出し量 -->
+  <section class="tq-cbf__sec">
+    <p class="tq-cbf__ttl">② 出す量は「枠の10〜40%」。40%を超えると枠のほうが飾りになる</p>
+    <p class="tq-cbf__lead">枠の高さに対する、はみ出しの割合だけを変えた3段。</p>
+    <div class="tq-cbf__row tq-cbf__row--4">
+      <figure class="tq-cbf__fig">
+        <div class="tq-cbf__hold"><div class="tq-cbf__box tq-cbf__lv1">
+          <span class="tq-cbf__cut" aria-hidden="true"><img src="../../../docs/demo/ph_a.jpg" alt=""></span>
+        </div></div>
+        <p class="tq-cbf__cap"><b>約10%</b>足元だけ出る。面はまだ「箱」に見える。</p>
+      </figure>
+      <figure class="tq-cbf__fig">
+        <div class="tq-cbf__hold"><div class="tq-cbf__box tq-cbf__lv2">
+          <span class="tq-cbf__cut" aria-hidden="true"><img src="../../../docs/demo/ph_a.jpg" alt=""></span>
+        </div></div>
+        <p class="tq-cbf__cap"><b>約22%</b>標準。被写体が箱の手前に立ったと分かる。</p>
+      </figure>
+      <figure class="tq-cbf__fig">
+        <div class="tq-cbf__hold"><div class="tq-cbf__box tq-cbf__lv3">
+          <span class="tq-cbf__cut" aria-hidden="true"><img src="../../../docs/demo/ph_a.jpg" alt=""></span>
+        </div></div>
+        <p class="tq-cbf__cap"><b>約40%・2辺またぎ</b>右辺と下辺の両方を越える。ここが上限。</p>
+      </figure>
+      <figure class="tq-cbf__fig">
+        <div class="tq-cbf__hold"><div class="tq-cbf__box tq-cbf__lv2" style="overflow:hidden">
+          <span class="tq-cbf__cut" aria-hidden="true"><img src="../../../docs/demo/ph_a.jpg" alt=""></span>
+        </div></div>
+        <p class="tq-cbf__cap"><b>参考：overflow:hidden</b>舞台を切ると全部が枠内に戻り、工夫が丸ごと消える。</p>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ③ マスクの中身 -->
+  <section class="tq-cbf__sec">
+    <p class="tq-cbf__ttl">③ またぐ相手は写真でなくてよい。ベタ面・グラフ・段・輪郭線でも成立する</p>
+    <p class="tq-cbf__lead">
+      枠の中身を変えても手は同じ。図表にまたがせると、数字が「図表の説明」でなく「その人の話」に変わる。
+    </p>
+    <div class="tq-cbf__row tq-cbf__row--4">
+
+      <figure class="tq-cbf__fig">
+        <div class="tq-cbf__hold3"><div class="tq-cbf__arch">
+          <span class="tq-cbf__cut" aria-hidden="true"><img src="../../../docs/demo/ph_b.jpg" alt=""></span>
+        </div></div>
+        <p class="tq-cbf__cap"><b>グラデのベタ面</b>アーチの中身は写真ですらない。人物だけが下辺を越える。</p>
+      </figure>
+
+      <figure class="tq-cbf__fig">
+        <div class="tq-cbf__hold3"><div class="tq-cbf__ring">
+          <p class="tq-cbf__num">00<small>指標名がここに入ります</small></p>
+          <span class="tq-cbf__cut" aria-hidden="true"><img src="../../../docs/demo/ph_a.jpg" alt=""></span>
+        </div></div>
+        <p class="tq-cbf__cap"><b>ドーナツグラフ</b>リングの内・弧の線上・リングの外の3層を1人でまたぐ。</p>
+      </figure>
+
+      <figure class="tq-cbf__fig">
+        <div class="tq-cbf__hold3"><div class="tq-cbf__steps">
+          <span></span><span></span><span></span>
+          <span class="tq-cbf__cut" aria-hidden="true"><img src="../../../docs/demo/ph_b.jpg" alt=""></span>
+        </div></div>
+        <p class="tq-cbf__cap"><b>階段状の面</b>脚が段の上端線を隠すので、段が図でなく足場になる。</p>
+      </figure>
+
+      <figure class="tq-cbf__fig">
+        <div class="tq-cbf__hold3"><div class="tq-cbf__circ">
+          <span class="tq-cbf__cut" aria-hidden="true"><img src="../../../docs/demo/ph_a.jpg" alt=""></span>
+        </div></div>
+        <p class="tq-cbf__cap"><b>1.5pxの輪郭線</b>線をまたがせると、円が枠でなく飾り罫に落ちる。</p>
+      </figure>
+
+    </div>
+    <p class="tq-cbf__note">
+      共通の条件は3つ。舞台側を <code>overflow:visible</code> にする／切るのはマスクの側だけにする／切り抜きに影を付けない。
+      影を付けた瞬間に「上に貼った絵」に見え、奥行きが消える。
+    </p>
+  </section>
+
+</div>

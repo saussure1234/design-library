@@ -1,0 +1,29 @@
+{
+  "id": "type/symbol-instead-of-decoration",
+  "name": "罫や枠の代わりに記号（＝・&・（）・傍点）を組版要素として使う",
+  "ordinary": "見出し間は余白か細い罫で渡し、ラベルはピルや下線、強調は色替えにする。",
+  "actual": "花まるは字間0.3emの黒細字の小見出しの下に「＝」を1文字だけ中央に置き、その下に字間ゼロのピンク極太3行を置いて「言い換え」の関係を記号で示す（上下で級数比約2倍）。We are Buddiesは2人の名前の間に46pxのGeorgiaの&を地色に近い#f3e3cdで置き、読ませずに接続子として働かせる。リニエは「( SERVICE )」と括弧を文字から離して囲みの代役にし、別セクションでは破線の下線＋傍点（text-emphasis）で強調して洋物テンプレ感を消している。",
+  "css": ".eq{display:block; text-align:center; margin:10px 0; color:#ea4b93}\n.eq::before{content:\"=\"}\n.amp{font-family:Georgia,serif; font-size:46px; line-height:1; color:#f3e3cd}\n.label{letter-spacing:.3em; font-size:11px; color:#5B7F6B}\n.label::before{content:\"（ \"} .label::after{content:\" ）\"}\nh2 span{border-bottom:2px dashed #cdd6d0; padding-bottom:.4em}\n.emph{-webkit-text-emphasis:dot #8aa89b; text-emphasis:dot #8aa89b; text-emphasis-position:over right}",
+  "appliesTo": ["section-head", "value", "voice", "member", "features"],
+  "impact": 2,
+  "effort": 1,
+  "why": "記号は関係（イコール・並列・囲み・強調）を1文字で名指しできるので、説明文も枠も足さずに構造が伝わる。",
+  "avoid": "1画面に2種類以上を混ぜること（記号が模様に見えて関係が読めなくなる）。",
+  "params": [
+    "記号の種類(=/&/（）/傍点/破線)",
+    "地色に対する明度差(接続子は地色寄りに)",
+    "上下の級数比(約2倍)"
+  ],
+  "sources": ["hanamaru_s07", "sho_hanamaru_s07", "buddies_s10", "linie_s07", "linie_s03"],
+  "notes": [
+    "現物（hanamaru_s07）を拡大すると、「＝」はピンクではなく上の小見出しと同じ黒。定義のCSSはピンク（#ea4b93）になっているが、実際は『上の細字と同じ色』で、下のピンク極太とは色を分けている。記号は接続する側（上）に属させるほうが関係として読める。",
+    "同じく実測すると上下の級数比は約1.4〜1.8倍で、定義の『約2倍』よりやや小さい。効いているのは級数差より字間の差（上0.3em ↔ 下0em）と太さの差（400 ↔ 800）のほう。",
+    "& を『読ませない』ために地色寄りへ落とすのが要点（buddies_s10 は地 #fdf9ee に対し & が #f3e3cd 前後）。デモでは color-mix(in srgb, var(--c-accent) 24%, var(--c-bg)) で作った。濃くすると3人目の名前に見える。",
+    "&・（ ）はセリフ体で組むと形が持つ。--f-disp をセリフに差し替えて使う前提で、デモでは --f-disp を参照している。ゴシックの & は形が単純すぎて記号に見えない。",
+    "括弧は content:\"（ \" / \" ）\" のように括弧の内側に空白を1つ入れて文字から離す。密着させるとただの注記に見え、囲みの代役にならない。",
+    "傍点は text-emphasis:dot。-webkit- 付きも併記する。行間は 2.0 以上取らないと点が上の行の文字に触れる。<em> を使う場合は font-style:normal で斜体を戻すこと（和文に斜体は掛けない）。",
+    "破線の下線は border-bottom:2px dashed + padding-bottom:.4em。text-decoration:underline dashed でも出るが、下線の位置を .4em 下げる制御が効かないので border で引く。",
+    "1画面1種類の原則はデモ④で確かめられる。＝・（ ）・傍点を同じ面に混ぜると、どれがどの関係を指しているか読めなくなり、記号が模様に見える。"
+  ],
+  "demoNotes": "①同じ2文の関係を『ピル＋罫＋色替え』と『＝1文字』で対比。②記号4通り（＝＝言い換え／&＝並列・読ませない／（ ）＝囲みの代役／傍点・破線＝強調と下線）。③実線下線＋色替え と 破線下線＋傍点 の対比。④2種類以上を混ぜた悪い例と、1種類に絞った良い例。"
+}

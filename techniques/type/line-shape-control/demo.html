@@ -1,0 +1,196 @@
+<style>
+/* トークンのフォールバック。:where() で詰めているので、
+   _tokens.css が読み込まれていればそちらが必ず勝つ。 */
+:where(:root){
+  --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-disp:var(--f-sans); --f-num:"Helvetica Neue",Arial,var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+  --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px; --fs-3xl:50px; --fs-4xl:64px;
+  --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px; --s8:76px; --s9:110px;
+  --sec-y:clamp(56px,7vw,110px);
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --shadow:0 6px 24px rgba(17,17,17,.08);
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+:where(body){margin:0}
+
+.tq-lshape{
+  font-family:var(--f-sans); color:var(--c-ink2); background:var(--c-bg);
+  padding-block:var(--s7);
+}
+.tq-lshape *{box-sizing:border-box}
+.tq-lshape__wrap{max-width:var(--w-max); margin-inline:auto; padding-inline:var(--w-gut)}
+.tq-lshape__blk+.tq-lshape__blk{margin-top:var(--s8); padding-top:var(--s8); border-top:1px solid var(--c-line)}
+.tq-lshape__ttl{
+  margin:0 0 var(--s5); color:var(--c-ink);
+  font-size:var(--fs-md); font-weight:700; line-height:var(--lh-head);
+}
+.tq-lshape__pair{display:grid; grid-template-columns:1fr 1fr; gap:var(--s6)}
+.tq-lshape__pair>*{min-width:0}
+.tq-lshape__tag{
+  display:inline-block; margin:0 0 var(--s4);
+  font-size:var(--fs-note); letter-spacing:.08em; line-height:1;
+  padding:var(--s2) var(--s3); border-radius:var(--r-pill);
+  background:var(--c-bg2); color:var(--c-ink3);
+}
+.tq-lshape__tag--on{background:var(--c-primary-l); color:var(--c-primary-d)}
+.tq-lshape__cap{margin:var(--s4) 0 0; font-size:var(--fs-sm); line-height:var(--lh-head); color:var(--c-ink3)}
+
+/* ============ A：22emの狭いカラムを矩形にする ============ */
+.tq-lshape__row{display:flex; gap:var(--s4); align-items:stretch}
+.tq-lshape__col{
+  position:relative; flex:0 1 22em; max-width:22em;
+  font-size:var(--fs-sm); letter-spacing:.08em; line-height:2.1;
+  color:var(--c-ink2); margin:0;
+}
+/* 行末の形が見えるように、版面の右端に破線のガイドを立てる */
+.tq-lshape__col::after{
+  content:''; position:absolute; top:0; bottom:0; right:0;
+  border-right:1px dashed var(--c-line);
+}
+.tq-lshape__col--ragged{text-align:left}
+.tq-lshape__col--rect{
+  text-align:justify; text-justify:inter-ideograph;
+  line-break:strict; font-feature-settings:"palt" 1;
+}
+/* 文字ブロックと同じ高さまで伸ばして、輪郭の差だけを見えるようにする */
+.tq-lshape__ph{
+  flex:0 0 clamp(96px,26%,150px); align-self:stretch;
+  border-radius:var(--r-l); overflow:hidden; background:var(--c-bg2);
+}
+.tq-lshape__ph img{width:100%; height:100%; object-fit:cover; display:block}
+
+/* ============ B：1文＝1段落で行を手で決める ============ */
+.tq-lshape__field{background:var(--c-bg2); border-radius:var(--r-m); padding:var(--s6) var(--s5)}
+.tq-lshape__run{margin:0; font-size:var(--fs-sm); letter-spacing:.08em; line-height:var(--lh-body); max-width:24em}
+.tq-lshape__poem{max-width:24em}
+.tq-lshape__poem p{margin:0; font-size:var(--fs-sm); letter-spacing:.08em; line-height:2.4}
+.tq-lshape__poem p+p{margin-top:0}
+.tq-lshape__poem+.tq-lshape__poem{margin-top:2.6em; padding-top:2.6em; border-top:1px solid var(--c-line)}
+
+/* ============ C：折返し位置を手で固定する ============ */
+.tq-lshape__disc{
+  /* このブロックだけ --f-disp に明朝を当てた想定。案件では :root 側で差し替える */
+  --f-disp:"Yu Mincho","YuMincho","Hiragino Mincho ProN","Noto Serif JP",serif;
+  width:min(320px,100%); aspect-ratio:1; border-radius:var(--r-pill);
+  background:var(--c-ink); color:var(--c-bg);
+  display:grid; place-content:center; padding:var(--s5);
+}
+.tq-lshape__eyebrow{
+  margin:0 0 var(--s4); font-family:var(--f-num);
+  font-size:var(--fs-note); letter-spacing:.3em; color:var(--c-line);
+}
+.tq-lshape__mincho{
+  margin:0; max-width:265px;
+  font-family:var(--f-disp); font-weight:400;
+  font-size:var(--fs-xl); letter-spacing:.28em; line-height:1.9;
+}
+.tq-lshape__nb{display:inline-block}   /* 語のかたまりを割らせない */
+
+@media (max-width:820px){
+  .tq-lshape__pair{grid-template-columns:1fr; gap:var(--s7)}
+}
+@media (max-width:420px){
+  .tq-lshape__row{flex-wrap:wrap}
+  .tq-lshape__ph{flex:0 0 100%; aspect-ratio:16/10; align-self:auto}
+  /* 級数と幅を同じ比で落として「1行7字」を保つ（円の内側に収まる） */
+  .tq-lshape__mincho{font-size:var(--fs-lg); max-width:200px}
+}
+</style>
+
+<section class="tq-lshape">
+  <div class="tq-lshape__wrap">
+
+    <!-- ============ A ============ -->
+    <div class="tq-lshape__blk">
+      <h2 class="tq-lshape__ttl">A. 22emの狭いカラムでも両端を揃え、写真と同じ「面」にする</h2>
+      <div class="tq-lshape__pair">
+
+        <div>
+          <p class="tq-lshape__tag">普通の場合</p>
+          <div class="tq-lshape__row">
+            <p class="tq-lshape__col tq-lshape__col--ragged">ここには説明のテキストが入ります。行末の形を確かめるための見本の文です。幅は22em、行送りは2.1、字間は0.08emで組んでいます。左右で同じ文を並べています。</p>
+            <div class="tq-lshape__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+          </div>
+          <p class="tq-lshape__cap">左揃えで自然折返し。右端のガイド（破線）から一行ごとに引っ込むので、輪郭が定まらず写真と並ばない。</p>
+        </div>
+
+        <div>
+          <p class="tq-lshape__tag tq-lshape__tag--on">この工夫</p>
+          <div class="tq-lshape__row">
+            <p class="tq-lshape__col tq-lshape__col--rect">ここには説明のテキストが入ります。行末の形を確かめるための見本の文です。幅は22em、行送りは2.1、字間は0.08emで組んでいます。左右で同じ文を並べています。</p>
+            <div class="tq-lshape__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+          </div>
+          <p class="tq-lshape__cap">justify＋inter-ideograph＋palt。右端がガイドに乗り、角丸の写真と同じ矩形の面として並ぶ。</p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ============ B ============ -->
+    <div class="tq-lshape__blk">
+      <h2 class="tq-lshape__ttl">B. 逆に、1文＝1段落で必ず改行して語りの速度にする</h2>
+      <div class="tq-lshape__pair">
+
+        <div>
+          <p class="tq-lshape__tag">普通の場合</p>
+          <div class="tq-lshape__field">
+            <p class="tq-lshape__run">ここに一文が入ります。次の一文がここに入ります。三つ目の一文がここに入ります。四つ目の一文もここに続きます。文はつながったまま、折返しの位置はブラウザが決めます。</p>
+          </div>
+          <p class="tq-lshape__cap">1つの段落に流し込み、行送りは1.9。読める塊ではあるが、どこで息を継ぐかは読み手任せになる。</p>
+        </div>
+
+        <div>
+          <p class="tq-lshape__tag tq-lshape__tag--on">この工夫</p>
+          <div class="tq-lshape__field">
+            <div class="tq-lshape__poem">
+              <p>ここに一文が入ります。</p>
+              <p>次の一文がここに入ります。</p>
+            </div>
+            <div class="tq-lshape__poem">
+              <p>三つ目の一文がここに入ります。</p>
+              <p>四つ目の一文もここに続きます。</p>
+            </div>
+          </div>
+          <p class="tq-lshape__cap">1文＝1段落。行送りを字送りの2.4倍、話題の変わり目だけ2.6em空けて罫を1本。行の切れ目がそのまま読む速度になる。</p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ============ C ============ -->
+    <div class="tq-lshape__blk">
+      <h2 class="tq-lshape__ttl">C. 折返し位置を手で決め、円の中に2行で収める</h2>
+      <div class="tq-lshape__pair">
+
+        <div>
+          <p class="tq-lshape__tag">普通の場合</p>
+          <div class="tq-lshape__disc">
+            <div>
+              <p class="tq-lshape__eyebrow">ABOUT</p>
+              <p class="tq-lshape__mincho">見出しの文章ここに入ります</p>
+            </div>
+          </div>
+          <p class="tq-lshape__cap">明朝＋字間0.28emでも、折返しはブラウザ任せ。語の途中で行が変わり、円の中で2行の形が決まらない。</p>
+        </div>
+
+        <div>
+          <p class="tq-lshape__tag tq-lshape__tag--on">この工夫</p>
+          <div class="tq-lshape__disc">
+            <div>
+              <p class="tq-lshape__eyebrow">ABOUT</p>
+              <p class="tq-lshape__mincho"><span class="tq-lshape__nb">見出しの文章</span><wbr><span class="tq-lshape__nb">ここに入ります</span></p>
+            </div>
+          </div>
+          <p class="tq-lshape__cap">意味の切れ目を inline-block の塊にし、その境目にだけ &lt;wbr&gt; を置く。幅が変わっても割れる場所はここだけ。</p>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>

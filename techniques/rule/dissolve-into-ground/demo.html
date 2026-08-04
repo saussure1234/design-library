@@ -1,0 +1,246 @@
+<style>
+/* ============================================================
+   rule/dissolve-into-ground
+   枠も影も持たせず、地と同系の塗りだけでカードを立てる
+   ============================================================ */
+
+@layer tq-fallback{
+  :root{
+    --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA;
+    --c-accent:#FF9301;
+    --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+    --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+    --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    --f-disp:var(--f-sans); --f-num:"Helvetica Neue",Arial,var(--f-sans);
+    --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+    --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px; --fs-3xl:50px; --fs-4xl:64px;
+    --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px;
+    --s6:36px; --s7:52px; --s8:76px; --s9:110px;
+    --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+    --shadow:0 6px 24px rgba(17,17,17,.08);
+  }
+}
+
+/* この工夫の値（すべてトークンから派生） */
+.tq-dig{
+  /* 地：カードとの明度差が6〜12%に収まる淡色 */
+  --tq-dig-ground:color-mix(in srgb,var(--c-primary) 9%,var(--c-bg));
+  --tq-dig-inset:12px;   /* カード内の罫を左右で止める量 10〜12px */
+  --tq-dig-angle:165deg; /* 地と同じ方向のグラデ */
+  --tq-dig-wash-a:color-mix(in srgb,var(--c-primary) 20%,var(--c-bg));
+  --tq-dig-wash-b:color-mix(in srgb,color-mix(in srgb,var(--c-primary) 58%,var(--c-accent)) 42%,var(--c-bg));
+  --tq-dig-wash-shadow:0 8px 20px color-mix(in srgb,var(--c-primary) 20%,transparent);
+}
+
+.tq-dig{
+  container-type:inline-size;
+  font-family:var(--f-sans); color:var(--c-ink2);
+  line-height:var(--lh-head); -webkit-text-size-adjust:100%;
+  background:var(--c-bg); padding:var(--s5);
+}
+.tq-dig *{box-sizing:border-box}
+
+.tq-dig__lead{margin:0 0 var(--s5); font-size:var(--fs-note); color:var(--c-ink3); line-height:var(--lh-body)}
+.tq-dig__sec{margin-top:var(--s7)}
+.tq-dig__sec:first-of-type{margin-top:0}
+.tq-dig__secttl{margin:0 0 var(--s4); font-size:var(--fs-sm); font-weight:700; color:var(--c-ink)}
+.tq-dig__cap{
+  display:flex; align-items:center; gap:var(--s2);
+  margin:0 0 var(--s3); font-size:var(--fs-note); font-weight:700;
+  color:var(--c-ink3); letter-spacing:.04em;
+}
+.tq-dig__cap::before{content:""; width:var(--s5); height:1px; background:var(--c-line); flex:0 0 auto}
+.tq-dig__note{margin:var(--s3) 0 var(--s6); font-size:var(--fs-note); color:var(--c-ink3); line-height:var(--lh-body)}
+.tq-dig__note:last-child{margin-bottom:0}
+
+/* --- ① 淡色地＋白ベタカード -------------------------------- */
+.tq-dig__ground{background:var(--tq-dig-ground); padding:var(--s5)}
+.tq-dig__grid{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:var(--s3); margin:0; padding:0; list-style:none;
+}
+.tq-dig__card{
+  background:var(--c-bg); border:0; box-shadow:none; border-radius:var(--r-s);
+  padding:var(--s4);
+}
+.tq-dig__card--outlined{border:1px solid var(--c-line); box-shadow:var(--shadow)}
+.tq-dig__cardttl{margin:0 0 var(--s2); font-size:var(--fs-note); font-weight:700; color:var(--c-ink)}
+.tq-dig__cardp{margin:0; font-size:10px; color:var(--c-ink3); line-height:var(--lh-body)}
+
+/* --- ② カード内の罫は左右10〜12px内側で止める --------------- */
+.tq-dig__wide{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:var(--s4)}
+.tq-dig__hr{
+  border:0; border-top:1px solid var(--c-line);
+  margin:10px var(--tq-dig-inset) 20px;   /* 幅いっぱいに引かない */
+}
+.tq-dig__hr--full{margin:10px 0 20px}
+.tq-dig__minicap{margin:0 0 var(--s2); font-size:var(--fs-note); font-weight:700; color:var(--c-ink3); letter-spacing:.04em}
+.tq-dig__stat{margin:0; font-size:var(--fs-lg); font-weight:700; color:var(--c-primary); line-height:1}
+.tq-dig__statsub{margin:var(--s2) 0 0; font-size:10px; color:var(--c-ink3)}
+
+/* --- ③ テクスチャ地に溶かす -------------------------------- */
+.tq-dig__texture{
+  background-image:
+    linear-gradient(color-mix(in srgb,var(--c-bg) 86%,transparent),color-mix(in srgb,var(--c-bg) 86%,transparent)),
+    url("../../../docs/demo/ph_b.jpg");
+  background-size:cover; background-position:center;
+  padding:var(--s6) var(--s5);
+}
+.tq-dig__wash{
+  background-image:linear-gradient(var(--tq-dig-angle),var(--tq-dig-wash-a) 0%,var(--tq-dig-wash-b) 100%);
+  border:0; border-radius:var(--r-m);
+  box-shadow:var(--tq-dig-wash-shadow);
+  padding:var(--s4); text-align:center;
+}
+.tq-dig__washttl{margin:0 0 var(--s1); font-size:var(--fs-note); font-weight:700; color:var(--c-ink)}
+.tq-dig__washsub{margin:0 0 var(--s3); font-size:10px; letter-spacing:.1em; color:var(--c-ink3)}
+.tq-dig__washlist{margin:0; padding:0; list-style:none; font-size:10px; color:var(--c-ink2); line-height:1.9; text-align:left}
+.tq-dig__washlist li::before{content:"✓"; margin-right:.4em; color:var(--c-ink3)}
+.tq-dig__washmore{margin:var(--s3) 0 0; font-size:10px; color:var(--c-ink3); text-align:right}
+/* 普通：白カード＋1pxグレー枠＋グレーの影で地から切り離す */
+.tq-dig__wash--cut{
+  background-image:none; background-color:var(--c-bg);
+  border:1px solid var(--c-line); box-shadow:var(--shadow);
+}
+
+@container (max-width:520px){
+  .tq-dig{padding:var(--s4)}
+  .tq-dig__ground{padding:var(--s4)}
+  .tq-dig__texture{padding:var(--s5) var(--s4)}
+}
+</style>
+
+<div class="tq-dig">
+  <p class="tq-dig__lead">
+    地が淡色ならカードは白ベタで border:0 / box-shadow:none。境界は地との色差だけに任せる。
+    地がテクスチャなら、カードの塗りを地と同じ方向のグラデにして、輪郭は地の色寄りの淡い影だけにする。
+  </p>
+
+  <!-- ① 8枚並べたときの差 -->
+  <section class="tq-dig__sec">
+    <h3 class="tq-dig__secttl">① 同じ8枚を、枠＋影ありと、地との色差だけで比べる</h3>
+
+    <p class="tq-dig__cap">普通：白カードに1pxグレー枠＋グレーの影</p>
+    <div class="tq-dig__ground">
+      <ul class="tq-dig__grid">
+        <li class="tq-dig__card tq-dig__card--outlined"><p class="tq-dig__cardttl">項目名</p><p class="tq-dig__cardp">説明のテキストが入ります。</p></li>
+        <li class="tq-dig__card tq-dig__card--outlined"><p class="tq-dig__cardttl">項目名</p><p class="tq-dig__cardp">説明のテキストが入ります。</p></li>
+        <li class="tq-dig__card tq-dig__card--outlined"><p class="tq-dig__cardttl">項目名</p><p class="tq-dig__cardp">説明のテキストが入ります。</p></li>
+        <li class="tq-dig__card tq-dig__card--outlined"><p class="tq-dig__cardttl">項目名</p><p class="tq-dig__cardp">説明のテキストが入ります。</p></li>
+        <li class="tq-dig__card tq-dig__card--outlined"><p class="tq-dig__cardttl">項目名</p><p class="tq-dig__cardp">説明のテキストが入ります。</p></li>
+        <li class="tq-dig__card tq-dig__card--outlined"><p class="tq-dig__cardttl">項目名</p><p class="tq-dig__cardp">説明のテキストが入ります。</p></li>
+        <li class="tq-dig__card tq-dig__card--outlined"><p class="tq-dig__cardttl">項目名</p><p class="tq-dig__cardp">説明のテキストが入ります。</p></li>
+        <li class="tq-dig__card tq-dig__card--outlined"><p class="tq-dig__cardttl">項目名</p><p class="tq-dig__cardp">説明のテキストが入ります。</p></li>
+      </ul>
+    </div>
+    <p class="tq-dig__note">枠8本＋影8つが増え、一覧が騒がしくなる。地の淡い色も枠に負けて見えなくなる。</p>
+
+    <p class="tq-dig__cap">この工夫：白ベタ・枠0・影0。境界は地との色差だけ</p>
+    <div class="tq-dig__ground">
+      <ul class="tq-dig__grid">
+        <li class="tq-dig__card"><p class="tq-dig__cardttl">項目名</p><p class="tq-dig__cardp">説明のテキストが入ります。</p></li>
+        <li class="tq-dig__card"><p class="tq-dig__cardttl">項目名</p><p class="tq-dig__cardp">説明のテキストが入ります。</p></li>
+        <li class="tq-dig__card"><p class="tq-dig__cardttl">項目名</p><p class="tq-dig__cardp">説明のテキストが入ります。</p></li>
+        <li class="tq-dig__card"><p class="tq-dig__cardttl">項目名</p><p class="tq-dig__cardp">説明のテキストが入ります。</p></li>
+        <li class="tq-dig__card"><p class="tq-dig__cardttl">項目名</p><p class="tq-dig__cardp">説明のテキストが入ります。</p></li>
+        <li class="tq-dig__card"><p class="tq-dig__cardttl">項目名</p><p class="tq-dig__cardp">説明のテキストが入ります。</p></li>
+        <li class="tq-dig__card"><p class="tq-dig__cardttl">項目名</p><p class="tq-dig__cardp">説明のテキストが入ります。</p></li>
+        <li class="tq-dig__card"><p class="tq-dig__cardttl">項目名</p><p class="tq-dig__cardp">説明のテキストが入ります。</p></li>
+      </ul>
+    </div>
+    <p class="tq-dig__note">8枚並べても一覧が静かで、全体が1つの「面」として見える。地とカードの明度差は6〜12%に収める。</p>
+  </section>
+
+  <!-- ② カード内の罫 -->
+  <section class="tq-dig__sec">
+    <h3 class="tq-dig__secttl">② カード内の区切り罫も、カード幅いっぱいに引かず左右10〜12px内側で止める</h3>
+    <div class="tq-dig__ground">
+      <div class="tq-dig__wide">
+        <div class="tq-dig__card">
+          <p class="tq-dig__minicap">普通：幅いっぱい</p>
+          <p class="tq-dig__cardp">本文テキストが入ります。説明が2行ほど続きます。</p>
+          <hr class="tq-dig__hr tq-dig__hr--full">
+          <p class="tq-dig__stat">000</p>
+          <p class="tq-dig__statsub">補足のラベルが入ります</p>
+        </div>
+        <div class="tq-dig__card">
+          <p class="tq-dig__minicap">この工夫：左右12px内側で止める</p>
+          <p class="tq-dig__cardp">本文テキストが入ります。説明が2行ほど続きます。</p>
+          <hr class="tq-dig__hr">
+          <p class="tq-dig__stat">000</p>
+          <p class="tq-dig__statsub">補足のラベルが入ります</p>
+        </div>
+      </div>
+    </div>
+    <p class="tq-dig__note">端まで引くと罫がカードの外形を強調してしまう。内側で止めると、罫は「中の区切り」だけを担う。</p>
+  </section>
+
+  <!-- ③ テクスチャ地に溶かす -->
+  <section class="tq-dig__sec">
+    <h3 class="tq-dig__secttl">③ 地がテクスチャなら、カードの塗りを地と同じ方向のグラデにして溶かしかける</h3>
+
+    <p class="tq-dig__cap">普通：白カード＋1pxグレー枠＋グレーの影で地から切り離す</p>
+    <div class="tq-dig__texture">
+      <ul class="tq-dig__grid">
+        <li class="tq-dig__wash tq-dig__wash--cut">
+          <p class="tq-dig__washttl">項目名が入ります</p>
+          <p class="tq-dig__washsub">Sub Label</p>
+          <ul class="tq-dig__washlist"><li>細目が入ります</li><li>細目が入ります</li></ul>
+          <p class="tq-dig__washmore">View more</p>
+        </li>
+        <li class="tq-dig__wash tq-dig__wash--cut">
+          <p class="tq-dig__washttl">項目名が入ります</p>
+          <p class="tq-dig__washsub">Sub Label</p>
+          <ul class="tq-dig__washlist"><li>細目が入ります</li><li>細目が入ります</li></ul>
+          <p class="tq-dig__washmore">View more</p>
+        </li>
+        <li class="tq-dig__wash tq-dig__wash--cut">
+          <p class="tq-dig__washttl">項目名が入ります</p>
+          <p class="tq-dig__washsub">Sub Label</p>
+          <ul class="tq-dig__washlist"><li>細目が入ります</li><li>細目が入ります</li></ul>
+          <p class="tq-dig__washmore">View more</p>
+        </li>
+        <li class="tq-dig__wash tq-dig__wash--cut">
+          <p class="tq-dig__washttl">項目名が入ります</p>
+          <p class="tq-dig__washsub">Sub Label</p>
+          <ul class="tq-dig__washlist"><li>細目が入ります</li><li>細目が入ります</li></ul>
+          <p class="tq-dig__washmore">View more</p>
+        </li>
+      </ul>
+    </div>
+    <p class="tq-dig__note">白い箱が4つ浮き上がり、地のテクスチャが背景画像として切り離される。</p>
+
+    <p class="tq-dig__cap">この工夫：165degのグラデ＋地の色寄りの淡い影だけ</p>
+    <div class="tq-dig__texture">
+      <ul class="tq-dig__grid">
+        <li class="tq-dig__wash">
+          <p class="tq-dig__washttl">項目名が入ります</p>
+          <p class="tq-dig__washsub">Sub Label</p>
+          <ul class="tq-dig__washlist"><li>細目が入ります</li><li>細目が入ります</li></ul>
+          <p class="tq-dig__washmore">View more</p>
+        </li>
+        <li class="tq-dig__wash">
+          <p class="tq-dig__washttl">項目名が入ります</p>
+          <p class="tq-dig__washsub">Sub Label</p>
+          <ul class="tq-dig__washlist"><li>細目が入ります</li><li>細目が入ります</li></ul>
+          <p class="tq-dig__washmore">View more</p>
+        </li>
+        <li class="tq-dig__wash">
+          <p class="tq-dig__washttl">項目名が入ります</p>
+          <p class="tq-dig__washsub">Sub Label</p>
+          <ul class="tq-dig__washlist"><li>細目が入ります</li><li>細目が入ります</li></ul>
+          <p class="tq-dig__washmore">View more</p>
+        </li>
+        <li class="tq-dig__wash">
+          <p class="tq-dig__washttl">項目名が入ります</p>
+          <p class="tq-dig__washsub">Sub Label</p>
+          <ul class="tq-dig__washlist"><li>細目が入ります</li><li>細目が入ります</li></ul>
+          <p class="tq-dig__washmore">View more</p>
+        </li>
+      </ul>
+    </div>
+    <p class="tq-dig__note">カードが地と同じ色の家族に入るので、輪郭はわずかな明度差と淡い影だけになり、地に溶けかける。</p>
+  </section>
+
+</div>

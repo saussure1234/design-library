@@ -1,0 +1,342 @@
+<style>
+/* ============================================================
+   rule/tail-only
+   囲いは描かず、関係を示す最小の付属物だけ描く
+   ============================================================ */
+
+@layer tq-fallback{
+  :root{
+    --c-primary:#00B220; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+    --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+    --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3;
+    --c-on-primary:#FFFFFF;
+    --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    --f-disp:var(--f-sans);
+    --f-num:"Helvetica Neue",Arial,var(--f-sans);
+    --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+    --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+    --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+    --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+    --shadow:0 6px 24px rgba(17,17,17,.08);
+  }
+}
+
+:root{
+  --tq-tail-paper:#F1F1F1;   /* 吹き出しを置く地（gakugei_s03 実測） */
+  --tq-tail-gold:#C4A35A;    /* 年表の軸線とヒゲ（musashino_s11） */
+  --tq-tail-band:#B89A51;    /* 年表を載せる帯の地 */
+  --tq-tail-card:#FAFAF8;    /* 年表の紙面 */
+  /* 付属物の寸法。工夫の本体なのでここで宣言する */
+  --tq-tail-d1:10px;         /* 尾の丸：10 → 7 → 4px の減衰 */
+  --tq-tail-d2:7px;
+  --tq-tail-d3:4px;
+  --tq-tail-whisker:24px;    /* 軸線から本文へ伸ばすヒゲの長さ */
+  --tq-tail-fs-sm:10px;      /* 年表の年号・本文（トークン最小級数より小さいのでここで宣言） */
+}
+
+.tq-tl{
+  font-family:var(--f-sans); color:var(--c-ink2);
+  line-height:var(--lh-head); -webkit-text-size-adjust:100%;
+  padding:var(--s5); background:var(--c-bg);
+}
+.tq-tl *{ box-sizing:border-box }
+
+/* --- デモの見出し・注記 ------------------------------------ */
+.tq-tl__lead{
+  margin:0 0 var(--s5); font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-tl__sec{ margin-top:var(--s7) }
+.tq-tl__sec:first-of-type{ margin-top:0 }
+.tq-tl__secttl{
+  margin:0 0 var(--s4); font-size:var(--fs-sm); font-weight:700; color:var(--c-ink);
+}
+.tq-tl__cap{
+  display:flex; align-items:center; gap:var(--s2);
+  margin:0 0 var(--s3); font-size:var(--fs-note); font-weight:700;
+  color:var(--c-ink3); letter-spacing:.04em;
+}
+.tq-tl__cap::before{
+  content:""; width:var(--s5); height:1px; background:var(--c-line); flex:0 0 auto;
+}
+.tq-tl__cap--gap{ margin-top:var(--s6) }
+.tq-tl__note{
+  margin:var(--s3) 0 0; font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-tl__pair{
+  display:grid; gap:var(--s5);
+  grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
+}
+
+/* === ① 吹き出し ============================================ */
+.tq-tl__stage{ background:var(--tq-tail-paper); padding:var(--s5) }
+
+/* 普通：角丸枠＋三角の尾 */
+.tq-tl__balloon{
+  position:relative; display:inline-block;
+  background:var(--c-bg); border:1px solid var(--c-line);
+  border-radius:var(--r-m); box-shadow:var(--shadow);
+  padding:var(--s4);
+  margin-top:var(--s5);
+}
+.tq-tl__balloon::after{
+  content:""; position:absolute; left:var(--s5); top:-9px;
+  width:0; height:0; border:8px solid transparent;
+  border-bottom:9px solid var(--c-bg); border-top:0;
+}
+.tq-tl__balloon::before{
+  content:""; position:absolute; left:calc(var(--s5) - 1px); top:-10px;
+  width:0; height:0; border:9px solid transparent;
+  border-bottom:10px solid var(--c-line); border-top:0;
+}
+.tq-tl__h{
+  margin:0; font-size:var(--fs-lg); font-weight:700;
+  color:var(--c-ink); line-height:var(--lh-tight); letter-spacing:.02em;
+}
+.tq-tl__p{
+  margin:var(--s3) 0 0; font-size:var(--fs-note); line-height:var(--lh-body);
+}
+
+/* この工夫：本体を描かず「尾」だけを置く */
+.tq-tl__tailonly{
+  position:relative;
+  padding:48px 0 0 52px;   /* 尾の丸を置くぶんの空気 */
+}
+.tq-tl__tail i{
+  position:absolute; border-radius:50%; background:var(--c-ink);
+}
+.tq-tl__tail i:nth-child(1){ top:4px;  left:4px;  width:var(--tq-tail-d1); height:var(--tq-tail-d1) }
+.tq-tl__tail i:nth-child(2){ top:20px; left:24px; width:var(--tq-tail-d2); height:var(--tq-tail-d2) }
+.tq-tl__tail i:nth-child(3){ top:32px; left:39px; width:var(--tq-tail-d3); height:var(--tq-tail-d3) }
+
+/* === ② 年表 ================================================ */
+.tq-tl__band{ background:var(--tq-tail-band); padding:var(--s5) var(--s4) }
+.tq-tl__sheet{ background:var(--tq-tail-card); padding:var(--s5) var(--s4) }
+
+/* 普通：項目を箱にして軸線に並べる */
+.tq-tl__boxes{
+  display:grid; gap:var(--s3);
+  grid-template-columns:repeat(auto-fit,minmax(110px,1fr));
+}
+.tq-tl__box{
+  background:var(--c-bg); border:1px solid var(--c-line);
+  border-radius:var(--r-s); padding:var(--s3); box-shadow:var(--shadow);
+}
+.tq-tl__year{
+  margin:0; font-family:var(--f-num); font-size:var(--fs-md);
+  font-weight:700; color:var(--tq-tail-gold); line-height:1.1;
+}
+.tq-tl__era{
+  margin:2px 0 0; font-size:var(--tq-tail-fs-sm); color:var(--tq-tail-gold);
+}
+.tq-tl__txt{
+  margin:var(--s2) 0 0; font-size:var(--tq-tail-fs-sm); line-height:1.7; color:var(--c-ink2);
+}
+
+/* この工夫：箱を作らず、軸線1本と24pxのヒゲだけ */
+.tq-tl__axisgrid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  grid-template-rows:auto 1px auto;
+  column-gap:var(--s3);
+}
+.tq-tl__axis{
+  grid-column:1 / -1; grid-row:2;
+  height:1px; background:var(--tq-tail-gold); position:relative;
+}
+/* 起点の丸1つ */
+.tq-tl__axis::before{
+  content:""; position:absolute; left:0; top:50%; translate:0 -50%;
+  width:var(--tq-tail-d1); height:var(--tq-tail-d1);
+  border-radius:50%; background:var(--tq-tail-gold);
+}
+/* 列は明示する。auto-placement に任せると上下の項目が同じ列に積まれる */
+.tq-tl__item{ position:relative }
+.tq-tl__c1{ grid-column:1 }
+.tq-tl__c2{ grid-column:2 }
+.tq-tl__c3{ grid-column:3 }
+.tq-tl__c4{ grid-column:4 }
+.tq-tl__item--up{
+  grid-row:1; padding-bottom:var(--tq-tail-whisker); align-self:end;
+}
+.tq-tl__item--down{
+  grid-row:3; padding-top:var(--tq-tail-whisker);
+}
+/* ヒゲ：軸線の点から24pxの1px縦線を伸ばして本文に触れさせるだけ */
+.tq-tl__item--up::after{
+  content:""; position:absolute; left:0; bottom:0;
+  width:1px; height:var(--tq-tail-whisker); background:var(--tq-tail-gold);
+}
+.tq-tl__item--down::before{
+  content:""; position:absolute; left:0; top:0;
+  width:1px; height:var(--tq-tail-whisker); background:var(--tq-tail-gold);
+}
+
+/* === ③ 効かない条件 ======================================== */
+.tq-tl__busy{
+  position:relative; padding:var(--s5); overflow:hidden;
+}
+.tq-tl__busy img{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0;
+}
+/* 素材写真だけでは「複雑な地」にならないので、散らばった光点を重ねて再現する */
+.tq-tl__busy::after{
+  content:""; position:absolute; inset:0; z-index:0; pointer-events:none;
+  background-image:
+    radial-gradient(circle 5px at 14% 62%, var(--c-on-primary) 99%, transparent 100%),
+    radial-gradient(circle 3px at 27% 24%, var(--c-on-primary) 99%, transparent 100%),
+    radial-gradient(circle 7px at 42% 78%, var(--c-on-primary) 99%, transparent 100%),
+    radial-gradient(circle 4px at 58% 18%, var(--c-on-primary) 99%, transparent 100%),
+    radial-gradient(circle 9px at 71% 52%, var(--c-on-primary) 99%, transparent 100%),
+    radial-gradient(circle 4px at 84% 30%, var(--c-on-primary) 99%, transparent 100%),
+    radial-gradient(circle 6px at 92% 74%, var(--c-on-primary) 99%, transparent 100%),
+    radial-gradient(circle 3px at 8% 20%, var(--c-on-primary) 99%, transparent 100%),
+    radial-gradient(circle 8px at 34% 44%, var(--c-on-primary) 99%, transparent 100%);
+  opacity:.85;
+}
+.tq-tl__busy .tq-tl__tailonly{ position:relative; z-index:1 }
+.tq-tl__busy .tq-tl__h,
+.tq-tl__busy .tq-tl__p{ color:var(--c-on-primary) }
+.tq-tl__busy .tq-tl__tail i{ background:var(--c-on-primary) }
+</style>
+
+<div class="tq-tl">
+  <p class="tq-tl__lead">
+    吹き出しの本体を一切描かず、見出しの左上に直径10→7→4pxの黒丸を3つ斜めに並べて「尾」だけを示す。
+    年表も箱を作らず、横1本の軸線と24pxのヒゲだけで本文に触れさせる。
+  </p>
+
+  <!-- ① 吹き出し -->
+  <section class="tq-tl__sec">
+    <h3 class="tq-tl__secttl">① 同じ発言を、枠ごと描くか／尾だけ描くか</h3>
+    <div class="tq-tl__pair">
+
+      <div>
+        <p class="tq-tl__cap">普通：角丸枠＋三角の尾</p>
+        <div class="tq-tl__stage">
+          <div class="tq-tl__balloon">
+            <h4 class="tq-tl__h">見出しがここに、<br>2行で入ります</h4>
+            <p class="tq-tl__p">本文テキストが入ります。本文テキストが入ります。本文テキストが入ります。本文テキストが入ります。</p>
+          </div>
+        </div>
+        <p class="tq-tl__note">枠・角丸・影・三角の尾で、文字の周りに矩形が1つ増える。文字面が汚れる。</p>
+      </div>
+
+      <div>
+        <p class="tq-tl__cap">この工夫：本体は描かず、尾だけを3つの丸で示す</p>
+        <div class="tq-tl__stage">
+          <div class="tq-tl__tailonly">
+            <span class="tq-tl__tail"><i></i><i></i><i></i></span>
+            <h4 class="tq-tl__h">見出しがここに、<br>2行で入ります</h4>
+            <p class="tq-tl__p">本文テキストが入ります。本文テキストが入ります。本文テキストが入ります。本文テキストが入ります。</p>
+          </div>
+        </div>
+        <p class="tq-tl__note">10→7→4pxと小さくなる丸が斜めに並ぶだけで「これは誰かの声」と読める。囲いは1つも無い。</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ② 年表 -->
+  <section class="tq-tl__sec">
+    <h3 class="tq-tl__secttl">② 同じ年表を、箱で並べるか／軸線とヒゲだけにするか</h3>
+
+    <p class="tq-tl__cap">普通：項目を箱にして並べる</p>
+    <div class="tq-tl__band">
+      <div class="tq-tl__sheet">
+        <div class="tq-tl__boxes">
+          <article class="tq-tl__box">
+            <p class="tq-tl__year">1924</p>
+            <p class="tq-tl__era">年号が入ります</p>
+            <p class="tq-tl__txt">出来事のテキストが<br>2行で入ります</p>
+          </article>
+          <article class="tq-tl__box">
+            <p class="tq-tl__year">1927</p>
+            <p class="tq-tl__era">年号が入ります</p>
+            <p class="tq-tl__txt">出来事のテキストが<br>2行で入ります</p>
+          </article>
+          <article class="tq-tl__box">
+            <p class="tq-tl__year">1929</p>
+            <p class="tq-tl__era">年号が入ります</p>
+            <p class="tq-tl__txt">出来事のテキストが<br>2行で入ります</p>
+          </article>
+          <article class="tq-tl__box">
+            <p class="tq-tl__year">1943</p>
+            <p class="tq-tl__era">年号が入ります</p>
+            <p class="tq-tl__txt">出来事のテキストが<br>2行で入ります</p>
+          </article>
+        </div>
+      </div>
+    </div>
+    <p class="tq-tl__note">項目が増えるほど枠線が増え、画面が格子だらけになる。</p>
+
+    <p class="tq-tl__cap tq-tl__cap--gap">この工夫：軸線1本と24pxのヒゲだけ。本文は白地に直置き</p>
+    <div class="tq-tl__band">
+      <div class="tq-tl__sheet">
+        <div class="tq-tl__axisgrid">
+          <span class="tq-tl__axis"></span>
+
+          <article class="tq-tl__item tq-tl__item--up tq-tl__c1">
+            <p class="tq-tl__year">1924</p>
+            <p class="tq-tl__era">年号が入ります</p>
+            <p class="tq-tl__txt">出来事のテキストが<br>2行で入ります</p>
+          </article>
+          <article class="tq-tl__item tq-tl__item--down tq-tl__c2">
+            <p class="tq-tl__txt">出来事のテキストが<br>2行で入ります</p>
+            <p class="tq-tl__year">1927</p>
+            <p class="tq-tl__era">年号が入ります</p>
+          </article>
+          <article class="tq-tl__item tq-tl__item--up tq-tl__c3">
+            <p class="tq-tl__year">1929</p>
+            <p class="tq-tl__era">年号が入ります</p>
+            <p class="tq-tl__txt">出来事のテキストが<br>2行で入ります</p>
+          </article>
+          <article class="tq-tl__item tq-tl__item--down tq-tl__c4">
+            <p class="tq-tl__txt">出来事のテキストが<br>2行で入ります</p>
+            <p class="tq-tl__year">1943</p>
+            <p class="tq-tl__era">年号が入ります</p>
+          </article>
+        </div>
+      </div>
+    </div>
+    <p class="tq-tl__note">
+      軸線の起点に丸を1つ置くだけで読む向きが決まる。項目が何件に増えても、増えるのは1pxのヒゲ1本だけ。
+    </p>
+  </section>
+
+  <!-- ③ 効かない条件 -->
+  <section class="tq-tl__sec">
+    <h3 class="tq-tl__secttl">③ 背景が複雑だと、付属物が装飾ノイズに埋もれる</h3>
+    <div class="tq-tl__pair">
+
+      <div>
+        <p class="tq-tl__cap">×：写真の上に尾だけを置く</p>
+        <div class="tq-tl__busy">
+          <img src="../../../docs/demo/ph_b.jpg" alt="">
+          <div class="tq-tl__tailonly">
+            <span class="tq-tl__tail"><i></i><i></i><i></i></span>
+            <h4 class="tq-tl__h">見出しがここに、<br>2行で入ります</h4>
+            <p class="tq-tl__p">本文テキストが入ります。本文テキストが入ります。</p>
+          </div>
+        </div>
+        <p class="tq-tl__note">3つの丸が写真の点や光と区別できず、「尾」として読まれない。</p>
+      </div>
+
+      <div>
+        <p class="tq-tl__cap">○：無地の面に戻す</p>
+        <div class="tq-tl__stage">
+          <div class="tq-tl__tailonly">
+            <span class="tq-tl__tail"><i></i><i></i><i></i></span>
+            <h4 class="tq-tl__h">見出しがここに、<br>2行で入ります</h4>
+            <p class="tq-tl__p">本文テキストが入ります。本文テキストが入ります。</p>
+          </div>
+        </div>
+        <p class="tq-tl__note">付属物だけで関係を伝える手法は、地が静かであることが前提条件。</p>
+      </div>
+
+    </div>
+  </section>
+
+</div>
