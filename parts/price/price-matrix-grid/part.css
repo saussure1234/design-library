@@ -1,0 +1,112 @@
+/* ===== price/price-matrix-grid =====
+   白い角丸パネル1枚を縦罫で割り、カードに分割せず「1枚の表」に見せる料金マトリクス。
+   接頭辞 .cmg__ （cost-matrix-grid）。compare 側の .cmx__ とは別物。
+   ------------------------------------------------------------------ */
+
+/* ── 前置き ───────────────────────────────── */
+.cmg__title{margin-top:var(--s4)}
+.cmg__lead{margin-top:var(--s4);max-width:56ch;font-size:var(--fs-base);color:var(--c-ink3)}
+
+/* ── 表の前提を説明する白い帯 ─────────────── */
+.cmg__band{margin-top:var(--s6);background:var(--c-bg);border-radius:var(--r-m);
+  box-shadow:var(--shadow);padding:var(--s5) var(--s6)}
+/* 同じパーツを連続で使うとき、2枚目以降は上の余白を殺して1つの料金ゾーンに見せる */
+.cmg--tight{padding-block-start:0}
+.cmg--tight .cmg__band{margin-top:0}
+.cmg__band-t{font-family:var(--f-disp);font-weight:900;color:var(--c-primary);
+  font-size:clamp(var(--fs-md),2vw,var(--fs-lg));line-height:var(--lh-head)}
+.cmg__band-s{margin-top:var(--s2);font-size:var(--fs-sm);color:var(--c-ink3);line-height:var(--lh-head)}
+
+/* ── パネル（表の本体は1枚） ───────────────── */
+.cmg__panel{margin-top:var(--s6);background:var(--c-bg);border-radius:var(--r-l);
+  box-shadow:var(--shadow);padding:var(--s7) var(--s6)}
+.cmg__band + .cmg__panel{margin-top:var(--s4)}
+
+.cmg__grid{display:grid;gap:0;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr))}
+
+/* ── 列 ───────────────────────────────────── */
+.cmg__col{position:relative;padding-inline:var(--s4);text-align:center}
+
+/* 列を分ける縦罫。ヘッダー上端からパネル下端まで通しで引く */
+.cmg__rule{display:block;position:absolute;inset-block:0;inset-inline-start:0;width:1px;
+  background:color-mix(in srgb,var(--c-primary) 34%,transparent)}
+.cmg__col:first-child .cmg__rule{display:none}
+
+/* ── 列の頭（吹き出しラベル＋プラン名） ───── */
+.cmg__head{padding-bottom:var(--s5)}
+.cmg__tag{display:inline-block;position:relative;margin-bottom:var(--s3);
+  background:var(--c-primary-l);color:var(--c-primary-d);
+  font-size:var(--fs-note);font-weight:700;line-height:var(--lh-tight);letter-spacing:.04em;
+  padding:var(--s2) var(--s4);border-radius:var(--r-pill)}
+.cmg__tag::after{content:"";position:absolute;top:100%;left:50%;translate:-50% 0;
+  width:var(--s3);height:var(--s2);background:var(--c-primary-l);
+  clip-path:polygon(0 0,100% 0,50% 100%)}
+.cmg__plan{font-family:var(--f-disp);font-weight:900;color:var(--c-ink);
+  font-size:clamp(var(--fs-lg),2.4vw,var(--fs-xl));line-height:var(--lh-tight);letter-spacing:.01em}
+.cmg__sub{margin-top:var(--s1);font-size:var(--fs-sm);color:var(--c-ink3);line-height:var(--lh-tight)}
+
+/* ── セル（条件ラベル＋価格を1セットで反復） ─ */
+.cmg__cell{padding-block:var(--s5)}
+.cmg__cell:has(.cmg__cp:empty){display:none}
+.cmg__cl{font-size:var(--fs-sm);color:var(--c-ink3);line-height:var(--lh-tight)}
+.cmg__cp{margin-top:var(--s2);font-family:var(--f-num);font-weight:700;color:var(--c-ink2);
+  font-size:var(--fs-lg);line-height:var(--lh-tight);letter-spacing:.01em}
+
+/* 推し行だけ価格を大きく：視線を縦のプラン比較から横一直線の同条件比較へ切り替える */
+.cmg__grid[data-hi="1"] .cmg__cell:nth-child(2) .cmg__cp,
+.cmg__grid[data-hi="2"] .cmg__cell:nth-child(3) .cmg__cp,
+.cmg__grid[data-hi="3"] .cmg__cell:nth-child(4) .cmg__cp,
+.cmg__grid[data-hi="4"] .cmg__cell:nth-child(5) .cmg__cp,
+.cmg__grid[data-hi="5"] .cmg__cell:nth-child(6) .cmg__cp{
+  font-size:var(--fs-xl);font-weight:900;color:var(--c-ink)}
+
+/* ── キャンペーンセル（1セルだけ紙のように浮かせる） ─ */
+/* 高さが1セル分に近づくよう詰めてある（隣の列と行位置がずれるのを防ぐ） */
+.cmg__cam{position:relative;margin-block:var(--s1);padding:var(--s4) var(--s3) var(--s3);
+  border:1px dashed var(--c-accent);border-radius:var(--r-m);background:var(--c-bg)}
+.cmg__cam[data-on=""]{display:none}
+.cmg__cam-tag{position:absolute;top:0;left:var(--s3);translate:0 -50%;
+  padding-inline:var(--s2);background:var(--c-bg);color:var(--c-accent);
+  font-size:var(--fs-note);font-weight:700;line-height:var(--lh-tight);white-space:nowrap}
+.cmg__cam-old{display:block;font-size:var(--fs-note);color:var(--c-ink3);
+  line-height:var(--lh-tight);text-decoration-line:line-through}
+.cmg__cam-new{display:block;margin-top:var(--s1);font-family:var(--f-num);font-weight:900;
+  color:var(--c-primary);font-size:var(--fs-xl);line-height:var(--lh-tight)}
+.cmg__cam-bubble{position:absolute;right:calc(var(--s2) * -1);bottom:calc(var(--s3) * -1);
+  rotate:-8deg;padding:var(--s2) var(--s3);border-radius:var(--r-pill);
+  background:var(--c-accent);color:var(--c-bg);box-shadow:var(--shadow);
+  font-size:var(--fs-note);font-weight:700;line-height:var(--lh-tight);white-space:nowrap}
+
+/* ── 注記 ─────────────────────────────────── */
+.cmg__notes{margin-top:var(--s5);display:grid;gap:var(--s1)}
+.cmg__notes:empty{display:none}
+.cmg__note{font-size:var(--fs-note);color:var(--c-ink3);line-height:var(--lh-head);
+  padding-left:var(--s4);text-indent:calc(var(--s4) * -1)}
+
+/* ── 900px以下：3列→1列。プランごとにパネルを分け、縦罫は横罫へ ── */
+@media(max-width:900px){
+  .cmg__panel{margin-top:var(--s5);background:none;box-shadow:none;padding:0;border-radius:0}
+  .cmg__band + .cmg__panel{margin-top:var(--s4)}
+  .cmg__grid{grid-template-columns:1fr;gap:var(--s4)}
+
+  .cmg__col{display:flex;flex-direction:column;text-align:left;padding:var(--s5);
+    background:var(--c-bg);border-radius:var(--r-m);box-shadow:var(--shadow)}
+  .cmg__head{order:0;padding-bottom:0}
+  .cmg__rule{order:1;display:block;position:static;width:auto;height:1px;
+    margin-block:var(--s4);align-self:stretch}
+  .cmg__col:first-child .cmg__rule{display:block}
+  .cmg__body{order:2}
+
+  /* 条件×価格を「左ラベル／右価格」の2列行リストへ */
+  .cmg__cell{display:flex;align-items:baseline;justify-content:space-between;
+    gap:var(--s4);padding-block:var(--s3)}
+  .cmg__cp{margin-top:0;text-align:right}
+
+  .cmg__cam{margin-block:var(--s3) var(--s5);padding:var(--s5) var(--s4) var(--s4)}
+  .cmg__cam-bubble{right:0}
+}
+
+@media(max-width:560px){
+  .cmg__band{padding:var(--s5) var(--s5)}
+  .cmg__col{padding:var(--s5) var(--s4)}
+}

@@ -1,0 +1,102 @@
+/* cta/cta-priority-stack — 主副を塗り分けで表すボタン群
+   ページに4回出しても成立させるため、セクションには地を敷かない。
+   白パネル（罫＋影＋上端の主色バー）が自前の地になるので、
+   前後のセクションが白でも --c-bg2 でも同じ見え方で置ける。 */
+
+.cps{position:relative}
+/* 本文の途中に何度も挟む用。セクションの上下を詰める */
+.cps--tight{padding-block:clamp(var(--s6),4.5vw,var(--s8))}
+
+.cps__panel{position:relative;overflow:hidden;
+  display:flex;align-items:center;gap:clamp(var(--s5),3.5vw,var(--s7));
+  padding:clamp(var(--s6),4vw,var(--s8)) clamp(var(--s5),4vw,var(--s7));
+  background:var(--c-bg);border:1px solid var(--c-line);border-radius:var(--r-l);
+  box-shadow:var(--shadow)}
+.cps__panel::before{content:"";position:absolute;left:0;right:0;top:0;
+  height:var(--s1);background:var(--c-primary)}
+
+/* 写真（任意）。PCは右に添え、SPではCTAより上へ回す */
+.cps__ph{flex:0 0 30%;max-width:30%;margin:0;
+  border-radius:var(--r-m);overflow:hidden;aspect-ratio:4/5;background:var(--c-bg2)}
+.cps__ph img{width:100%;height:100%;object-fit:cover}
+
+.cps__body{flex:1 1 auto;min-width:0;
+  display:flex;flex-direction:column;align-items:center;text-align:center}
+.cps__h{margin-top:var(--s3);text-wrap:balance}
+
+/* 主が幅100%でも間延びしないよう、ボタン列そのものに読みやすい幅の上限を置く */
+.cps__stack{width:100%;max-width:40em;margin-top:var(--s5);
+  display:flex;flex-direction:column;align-items:center;gap:var(--s4)}
+
+/* 3本とも形（ピル・アイコン左・丸矢印右）は完全に揃え、
+   差は「塗り・幅・高さ」の3段階だけに限定する。
+   左右パディングは丸矢印の占有幅（右 --s4 + 1.9em）より必ず大きく取る。
+   em基準なので、文字を落とす画面幅でも中央の文字が矢印に潜らない */
+.cps__btn{position:relative;width:100%;
+  border-radius:var(--r-pill);gap:var(--s3);line-height:var(--lh-tight);
+  padding-block:var(--s5);padding-inline:calc(var(--s4) + 2.2em);
+  font-size:clamp(var(--fs-md),1.5vw,var(--fs-lg));font-weight:900;
+  transition:background .16s var(--e),color .16s var(--e),transform .16s var(--e)}
+.cps__btn--main{background:var(--c-primary);color:var(--c-on-primary)}
+.cps__btn--sub{width:80%;font-weight:700;font-size:var(--fs-md);padding-block:var(--s4)}
+.cps__btn--sub1{background:var(--c-primary-l);color:var(--c-primary-d)}
+.cps__btn--sub2{background:var(--c-bg);color:var(--c-primary-d)}
+
+/* 折り返す場合に1文字だけ次行へ落ちないようにする */
+.cps__label{display:block;min-width:0;text-wrap:balance}
+
+.cps__ico{flex:none;display:grid;place-items:center;width:1.4em;height:1.4em}
+.cps__ico svg{width:100%;height:100%;fill:none;stroke:currentColor;
+  stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+
+.cps__arw{position:absolute;right:var(--s4);top:50%;transform:translateY(-50%);
+  flex:none;display:grid;place-items:center;width:1.9em;height:1.9em;
+  border-radius:var(--r-pill);background:var(--c-on-primary);color:var(--c-primary)}
+.cps__arw svg{width:.52em;height:.52em;fill:none;stroke:currentColor;
+  stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.cps__btn--sub .cps__arw{background:var(--c-primary);color:var(--c-on-primary)}
+
+/* 左肩の小タグ（無料／簡単30秒）。傾けない
+   z-index を明示しないと、.fx の will-change で層が上がったボタン面に飲まれる */
+.cps__tag{position:absolute;z-index:1;left:clamp(var(--s5),4vw,var(--s7));top:0;
+  transform:translateY(-50%);white-space:nowrap;
+  padding:var(--s1) var(--s3);border-radius:var(--r-pill);
+  background:var(--c-bg);color:var(--c-accent);border:1px solid currentColor;
+  font-size:var(--fs-note);font-weight:900;line-height:var(--lh-tight)}
+
+/* _base.css の .hh-in は表示後も clip-path:inset(0) を残す。
+   そのままだと「左肩の小タグ」と :focus-visible のリングが切り落とされるので、
+   ボタンだけ解除する（.fx の定義自体は触らない） */
+.fx-on .cps__btn.hh-in{clip-path:none}
+
+.cps__note{margin-top:var(--s4);max-width:36em;
+  font-size:var(--fs-sm);color:var(--c-ink3);line-height:var(--lh-head)}
+
+/* _base.css の .btn:hover は主色濃色ベタ。副1/副2はそれだと潰れるので上書き */
+@media(hover:hover) and (pointer:fine){
+  .cps__btn--sub1:hover{background:var(--c-primary);color:var(--c-on-primary)}
+  .cps__btn--sub1:hover .cps__arw{background:var(--c-on-primary);color:var(--c-primary)}
+  .cps__btn--sub2:hover{background:var(--c-primary-l);color:var(--c-primary-d)}
+}
+
+/* ───────── SP ───────── */
+@media(max-width:900px){
+  .cps__panel{flex-direction:column;gap:var(--s5);
+    padding:var(--s6) var(--s4);border-radius:var(--r-m)}
+  /* 写真はCTAより上（全案件共通の必須条件） */
+  .cps__ph{order:-1;flex:none;width:100%;max-width:100%;aspect-ratio:16/10}
+  .cps__body{width:100%}
+
+  .cps__stack{margin-top:var(--s4);gap:var(--s3)}
+  .cps__btn{padding-block:var(--s4);font-size:var(--fs-md)}
+  .cps__btn--sub{width:100%;padding-block:var(--s3);font-size:var(--fs-base)}
+  .cps__arw{width:1.7em;height:1.7em}
+
+  /* 小タグはボタン内の左端へ吸収する */
+  .cps__tag{position:static;transform:none;order:-1;padding:var(--s1) var(--s2)}
+}
+
+@media(max-width:420px){
+  .cps__panel{padding:var(--s5) var(--s4)}
+  .cps__btn{font-size:var(--fs-base)}
+}

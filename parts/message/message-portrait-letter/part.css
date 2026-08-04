@@ -1,0 +1,97 @@
+/* =========================================================
+   message/message-portrait-letter
+   ポートレート1枚＋500〜800字の「手紙」。読ませることが全ての型。
+   ・カード／枠線／影／色帯は一切使わない。品位は「行長・余白・署名」だけで出す。
+   ・写真を四角い箱として置かない：淡いにじみを下に敷き、輪郭以外を
+     マスクで地色へ溶かして境界を消す（ikeda_s08 の境界処理）。
+   ・PCでは写真＋署名を sticky にして、長い手紙を読む間ずっと顔と名前が視界に残る。
+   ・人物の寄りは案件ごとに違うので --mpl-focus / --mpl-focus-sp を上書きして合わせる。
+   ========================================================= */
+.mpl{
+  --mpl-col:35%;                              /* 写真カラムの幅（PC） */
+  --mpl-gap:clamp(var(--s6),5vw,var(--s8));   /* カラム間のガター */
+  --mpl-measure:32em;                         /* 本文の行長＝およそ30字で折り返す */
+  --mpl-stick:clamp(var(--s5),7vh,var(--s7)); /* sticky の上あき */
+  overflow-x:clip;   /* にじみ・全幅写真が横へ溢れない。clip なので sticky は生きる */
+}
+
+/* ── 版組み ────────────────────────────────────────
+   PC : 右上「見出し＋導入」／左「写真＋署名」（2行ぶんまたぐ）／右下「本文」
+   DOM順がそのままSPの並び（見出し→導入→写真→署名→本文→CTA）になる。 */
+.mpl__grid{display:grid;align-items:start;
+  grid-template-columns:minmax(0,var(--mpl-col)) minmax(0,1fr);
+  column-gap:var(--mpl-gap)}
+.mpl__head {grid-column:2;grid-row:1;min-width:0}
+.mpl__aside{grid-column:1;grid-row:1 / span 2;align-self:stretch;min-width:0}
+.mpl__main {grid-column:2;grid-row:2;min-width:0;
+  margin-top:clamp(var(--s5),2.4vw,var(--s6))}
+.mpl__stick{position:sticky;top:var(--mpl-stick)}
+
+/* ── 見出し・導入 ──
+   導入は本文の約1.4倍で置き、見出しの一部として読ませる（読み始めの段差をつくる）。 */
+.mpl__title{margin-top:var(--s4);max-width:24em}
+.mpl__title::after{content:"";display:block;width:var(--s8);height:2px;
+  margin-top:clamp(var(--s4),1.6vw,var(--s5));
+  border-radius:var(--r-pill);background:var(--c-primary)}
+.mpl__intro{margin-top:clamp(var(--s4),1.8vw,var(--s5));max-width:28em;
+  font-size:clamp(var(--fs-md),1.7vw,var(--fs-lg));font-weight:700;color:var(--c-ink);
+  line-height:var(--lh-body);letter-spacing:.02em}
+
+/* ── 写真：枠を作らず、にじみで境界を消す ── */
+.mpl__figure{position:relative;margin:0}
+.mpl__figure::before{content:"";position:absolute;inset:-9% -13% -6%;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(60% 54% at 32% 26%,var(--c-primary-l),transparent 70%),
+    radial-gradient(58% 52% at 74% 78%,var(--c-bg2),transparent 72%)}
+.mpl__img{position:relative;z-index:1;width:100%;
+  aspect-ratio:3 / 4;object-fit:cover;object-position:var(--mpl-focus,50% 24%);
+  -webkit-mask-image:radial-gradient(72% 78% at 50% 38%,var(--c-ink) 56%,transparent 100%);
+          mask-image:radial-gradient(72% 78% at 50% 38%,var(--c-ink) 56%,transparent 100%)}
+
+/* ── 署名：所属／役職／氏名（大）／ローマ字 の4段 ──
+   罫も囲みも置かない。氏名だけをこの列で唯一大きくして、本文の終わりと釣り合わせる。 */
+.mpl__sign{position:relative;z-index:1;
+  margin-top:clamp(var(--s3),1.4vw,var(--s5));padding-inline-start:var(--s3)}
+.mpl__org{font-size:var(--fs-sm);color:var(--c-ink3);
+  line-height:var(--lh-head);letter-spacing:.08em}
+.mpl__role{margin-top:var(--s1);font-size:var(--fs-sm);font-weight:700;color:var(--c-ink2);
+  line-height:var(--lh-head);letter-spacing:.08em}
+.mpl__name{margin-top:var(--s2);font-family:var(--f-disp);font-weight:900;color:var(--c-ink);
+  font-size:clamp(var(--fs-lg),2vw,var(--fs-xl));
+  line-height:var(--lh-tight);letter-spacing:.14em}
+.mpl__roman{margin-top:var(--s2);font-family:var(--f-num);font-size:var(--fs-note);
+  color:var(--c-ink3);line-height:var(--lh-head);letter-spacing:.26em;text-transform:uppercase}
+
+/* ── 本文：段落ごとに遅延させない（長文のstaggerは読みにくさに直結する） ── */
+.mpl__body{max-width:var(--mpl-measure)}
+.mpl__body p{font-size:clamp(var(--fs-base),1.3vw,var(--fs-md));color:var(--c-ink2);
+  line-height:var(--lh-body);letter-spacing:.04em}
+.mpl__body p + p{margin-top:clamp(var(--s4),1.6vw,var(--s5))}
+.mpl__act{margin-top:clamp(var(--s5),2.6vw,var(--s6))}
+
+/* ───────── 900px以下（SP・タブレット縦）─────────
+   1カラム。順序は「見出し→導入→写真→署名→本文→CTA」。
+   ★ 写真は本文・CTAより必ず上（全案件共通の必須条件）。
+   写真は左右フルブリードにして下端だけ地色へフェードさせ、箱を消す。 */
+@media(max-width:900px){
+  .mpl__grid{display:block}
+  .mpl__stick{position:static}
+  .mpl__aside{margin-top:clamp(var(--s5),6vw,var(--s7))}
+  .mpl__figure{margin-inline:calc(-1 * var(--w-gut))}
+  .mpl__figure::before{inset:0}
+  .mpl__img{aspect-ratio:4 / 5;object-position:var(--mpl-focus-sp,50% 22%);
+    -webkit-mask-image:linear-gradient(to bottom,var(--c-ink) 76%,transparent 100%);
+            mask-image:linear-gradient(to bottom,var(--c-ink) 76%,transparent 100%)}
+  .mpl__sign{margin-top:var(--s3);padding-inline-start:0}
+  .mpl__main{margin-top:clamp(var(--s6),7vw,var(--s7))}
+  .mpl__title,.mpl__intro,.mpl__body{max-width:none}
+  .mpl__intro{font-size:var(--fs-md)}
+  .mpl__body p{font-size:var(--fs-base)}   /* 画面幅そのままで1行20〜24字 */
+  .mpl__act .btn{width:100%}
+}
+
+@media(max-width:420px){
+  .mpl__title::after{width:var(--s7)}
+  .mpl__name{letter-spacing:.08em}
+  .mpl__roman{letter-spacing:.18em}
+}

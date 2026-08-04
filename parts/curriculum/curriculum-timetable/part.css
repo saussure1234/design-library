@@ -1,0 +1,136 @@
+/* curriculum/curriculum-timetable
+   曜日 × 時間コマの開講表。
+   ── DOM は「曜日ごとの塊」（列ごと）にしてある。
+      PC : .ttb__col を display:contents にして、2行(ヘッダ/コマ)×N列 の1枚の表に組み直す。
+      SP : .ttb__col を実体に戻して「曜日ごとの縦リスト」に畳む。
+      DOM を並べ替えずに両方を出せるのがこの構造の肝（表→縦リストの変換にJSは要らない）。
+   ── コマ数は曜日ごとに違ってよい。列の高さは 1fr で揃うので、
+      コマの少ない曜日は下に余白が残る＝「この曜日は少ない」がそのまま図になる。 */
+
+.ttb{
+  /* コマ1行分の高さ。時間行＋但し書き行を必ず確保して、列をまたいだ行のズレを防ぐ */
+  --ttb-line:calc(var(--fs-md) * var(--lh-tight) + var(--s1) + var(--fs-note) * var(--lh-head));
+}
+
+/* ── 見出し ───────────────────────────── */
+.ttb__intro{max-width:44em}
+.ttb__title{margin-top:var(--s4)}
+.ttb__lead{margin-top:var(--s4);font-size:var(--fs-base);color:var(--c-ink2);line-height:var(--lh-body)}
+
+/* ── 表本体 ───────────────────────────── */
+.ttb__panel{margin-top:var(--s6);background:var(--c-bg);
+  border-radius:var(--r-l);box-shadow:var(--shadow);overflow:hidden}
+
+/* 2行（曜日ヘッダ／コマ）× 列数ぶんの列。列数は days の件数で自動 */
+.ttb__grid{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;grid-template-rows:auto 1fr}
+.ttb__col{display:contents}
+
+/* 曜日ヘッダ：横一列にベタで通す。列の境目は白の1pxだけ入れて帯を割る */
+.ttb__day{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:var(--s1);min-width:0;padding:var(--s4) var(--s3);text-align:center;
+  background:var(--c-primary);color:var(--c-on-primary);line-height:var(--lh-head)}
+.ttb__dayName{font-family:var(--f-disp);font-size:var(--fs-lg);font-weight:900;
+  letter-spacing:.04em;overflow-wrap:anywhere}
+.ttb__daySub{font-size:var(--fs-note);font-weight:700;opacity:.88}
+.ttb__daySub:empty{display:none}
+
+/* 曜日の色分け（識別用。1セクションで1色だけ差し込む） */
+.ttb__col[data-tone="accent"] .ttb__day{background:var(--c-accent);color:var(--c-ink)}
+.ttb__col[data-off] .ttb__day{background:var(--c-ink3);color:var(--c-on-primary)}
+
+/* 列の境目 */
+.ttb__col + .ttb__col > .ttb__day{border-left:1px solid var(--c-bg)}
+.ttb__col + .ttb__col > .ttb__stack{border-left:1px solid var(--c-line)}
+
+.ttb__stack{display:flex;flex-direction:column;min-width:0;
+  padding:var(--s3) var(--s4) var(--s5)}
+
+/* ── コマ ─────────────────────────────
+   区切りは横罫1本のみ。縦罫は列の境目だけに任せる */
+.ttb__slots{display:flex;flex-direction:column}
+.ttb__slots:empty{display:none}
+.ttb__slot{display:flex;align-items:center;gap:var(--s3);min-width:0;padding-block:var(--s3)}
+.ttb__slot + .ttb__slot{border-top:1px solid var(--c-line)}
+
+.ttb__no{flex:none;display:grid;place-items:center;
+  width:var(--s5);height:var(--s5);border-radius:var(--r-pill);
+  background:var(--c-primary-l);color:var(--c-primary-d);
+  font-family:var(--f-num);font-size:var(--fs-note);font-weight:700;line-height:1}
+.ttb__col[data-tone="accent"] .ttb__no{background:var(--c-bg2);color:var(--c-ink2)}
+
+/* 時間行＋但し書き行の高さを固定して、列をまたいでコマの行が揃うようにする */
+.ttb__lines{min-width:0;min-height:var(--ttb-line)}
+.ttb__time{display:block;font-family:var(--f-num);font-size:var(--fs-md);font-weight:700;
+  color:var(--c-ink);line-height:var(--lh-tight);letter-spacing:.02em;
+  font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+
+/* 「火・木のみ」等の但し書き。ブランド色は当てない（制限を歓迎の色で言わない）
+   inline-block にすると親の行ボックス（line-height 1.9）が効いて行がズレるので block で置く */
+.ttb__note{display:block;width:fit-content;margin-top:var(--s1);padding-inline:var(--s2);
+  border-radius:var(--r-s);background:var(--c-bg2);color:var(--c-ink3);
+  box-shadow:inset 0 0 0 1px var(--c-line);
+  font-size:var(--fs-note);font-weight:700;line-height:var(--lh-head)}
+.ttb__note:empty{display:none}
+
+/* ── 休校の列：斜線ハッチで「開いていない」を面で言う ── */
+.ttb__col[data-off] > .ttb__stack{justify-content:center;
+  background-color:var(--c-bg2);
+  background-image:repeating-linear-gradient(-45deg,
+    var(--c-line) 0 1px, transparent 1px var(--s2))}
+.ttb__off{display:flex;flex-direction:column;align-items:center;gap:var(--s2);
+  padding-block:var(--s5);text-align:center}
+.ttb__offLabel{display:inline-block;padding:var(--s2) var(--s5);border-radius:var(--r-pill);
+  background:var(--c-bg);box-shadow:inset 0 0 0 1px var(--c-line);
+  color:var(--c-ink3);font-size:var(--fs-md);font-weight:900;line-height:var(--lh-head)}
+.ttb__offNote{font-size:var(--fs-note);color:var(--c-ink3);line-height:var(--lh-head)}
+.ttb__offNote:empty{display:none}
+
+/* ── 表の下：注記／写真／CTA ───────────────── */
+.ttb__foot{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s5);margin-top:var(--s6)}
+.ttb__photo{flex:1 1 calc(var(--s9) * 2);max-width:calc(var(--s9) * 3);margin:0;
+  border-radius:var(--r-m);overflow:hidden;box-shadow:var(--shadow)}
+.ttb__photo img{width:100%;aspect-ratio:4/3;object-fit:cover}
+.ttb__footText{flex:1 1 calc(var(--s9) * 3);min-width:0}
+
+.ttb__notes{display:flex;flex-direction:column;gap:var(--s2)}
+.ttb__notes:empty{display:none}
+.ttb__noteItem{position:relative;padding-left:var(--s5);
+  font-size:var(--fs-note);color:var(--c-ink3);line-height:var(--lh-head)}
+.ttb__noteItem::before{content:"※";position:absolute;left:0;top:0}
+.ttb__cta{margin-top:var(--s5)}
+
+/* ── 900px以下：表を解体して「曜日ごとの縦リスト」へ ──────────── */
+@media (max-width:900px){
+  .ttb__panel{background:transparent;border-radius:0;box-shadow:none;overflow:visible}
+  .ttb__grid{display:flex;flex-direction:column;gap:var(--s4)}
+  /* 列を実体に戻す＝1曜日=1カード */
+  .ttb__col{display:block;background:var(--c-bg);
+    border-radius:var(--r-m);overflow:hidden;box-shadow:var(--shadow)}
+  .ttb__col + .ttb__col > .ttb__day,
+  .ttb__col + .ttb__col > .ttb__stack{border-left:0}
+
+  .ttb__day{flex-direction:row;justify-content:flex-start;align-items:baseline;
+    gap:var(--s3);padding:var(--s3) var(--s4);text-align:left}
+  .ttb__dayName{font-size:var(--fs-md)}
+
+  .ttb__stack{padding:var(--s2) var(--s4) var(--s4)}
+  /* 時間と但し書きを1行に寄せて縦を詰める（行の揃えはもう要らない） */
+  .ttb__lines{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--s2) var(--s3);
+    min-height:0}
+  .ttb__note{margin-top:0}
+
+  .ttb__col[data-off] > .ttb__stack{padding-block:var(--s4)}
+  .ttb__off{flex-direction:row;flex-wrap:wrap;justify-content:center;
+    align-items:baseline;gap:var(--s3);padding-block:var(--s2)}
+
+  /* 写真は必ずCTAより上（DOM順のまま縦積みになる） */
+  .ttb__foot{flex-direction:column;align-items:stretch;gap:var(--s4)}
+  .ttb__photo{max-width:none}
+  .ttb__cta .btn{width:100%}
+}
+
+/* 極小幅：時間の文字だけ一段落として、1コマを必ず1行に収める */
+@media (max-width:420px){
+  .ttb__time{font-size:var(--fs-base)}
+  .ttb__slot{gap:var(--s2)}
+}

@@ -1,0 +1,93 @@
+/* =========================================================
+   member/member-interview-card-grid
+   講師カード一覧：色ベタ地 × 白カード ×（写真＋ネームプレート）
+   接頭辞は .mig__ で固定。色・寸法は _tokens.css の変数のみ。
+   ========================================================= */
+
+.mig{position:relative;overflow:hidden;background:var(--c-primary)}
+
+/* 背景の裏文字：カード列の後ろから覗かせる。色差ではなく地色＋白の透過で作る */
+.mig__ghost{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  z-index:0;pointer-events:none;user-select:none;white-space:nowrap;
+  font-family:var(--f-disp);font-weight:900;line-height:1;letter-spacing:.02em;
+  color:var(--c-on-primary);opacity:.1;
+  font-size:clamp(calc(var(--fs-2xl) * 2.2), 24vw, calc(var(--fs-4xl) * 4));
+}
+
+.mig__in{position:relative;z-index:1}
+
+/* ── 見出し ─────────────────────────────── */
+.mig__head{max-width:36em;margin-bottom:clamp(var(--s6), 4vw, var(--s7))}
+.mig__eyebrow{color:var(--c-on-primary);opacity:.85}      /* 主色の面に乗るので反転 */
+.mig__h{color:var(--c-on-primary)}
+.mig__lead{margin-top:var(--s4);color:var(--c-on-primary);opacity:.88;
+  font-size:var(--fs-base);line-height:var(--lh-body)}
+
+/* ── カード列 ───────────────────────────── */
+.mig__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s5);align-items:stretch}
+
+.mig__card{display:flex;flex-direction:column;height:100%;
+  background:var(--c-bg);border-radius:var(--r-s);overflow:hidden}
+
+/* 写真：縦長・顔を上寄せ */
+.mig__ph{position:relative;margin:0}
+.mig__ph img{width:100%;height:auto;aspect-ratio:3 / 4;object-fit:cover;object-position:top center}
+.mig__ph::after{content:"";position:absolute;inset:auto 0 0 0;height:42%;pointer-events:none;
+  background:linear-gradient(to top,
+    color-mix(in srgb, var(--c-ink) 62%, transparent), transparent)}
+
+/* ネームプレート（黒ベタは使わず --c-ink の透過で作る） */
+.mig__plate{position:absolute;left:var(--s4);right:var(--s4);bottom:var(--s4);
+  display:flex;flex-direction:column;align-items:flex-start;gap:var(--s2);z-index:1}
+.mig__role{font-size:var(--fs-note);font-weight:700;letter-spacing:.06em;
+  line-height:var(--lh-tight);color:var(--c-bg)}
+.mig__name{font-family:var(--f-disp);font-weight:900;font-size:var(--fs-md);
+  line-height:var(--lh-tight);color:var(--c-bg);
+  background:color-mix(in srgb, var(--c-ink) 86%, transparent);
+  padding:var(--s1) var(--s3);border-radius:var(--r-s)}
+
+/* ── カード本文 ─────────────────────────── */
+.mig__body{flex:1;display:flex;flex-direction:column;gap:var(--s4);padding:var(--s5)}
+
+/* スペック表：面を1段落として区切り、ラベル→値で読ませる */
+.mig__spec{background:var(--c-bg2);border-radius:var(--r-s);padding:var(--s4)}
+.mig__row + .mig__row{margin-top:var(--s3);padding-top:var(--s3);border-top:1px solid var(--c-line)}
+.mig__label{font-size:var(--fs-note);font-weight:700;letter-spacing:.08em;
+  line-height:var(--lh-tight);color:var(--c-ink3)}
+.mig__val{margin:0;margin-top:var(--s2)}
+
+/* 英語レベル＝いちばん読ませたいスペックなのでピルで立てる */
+.mig__badges{display:flex;flex-wrap:wrap;gap:var(--s2)}
+.mig__badge{font-family:var(--f-num);font-size:var(--fs-sm);font-weight:700;
+  line-height:var(--lh-tight);color:var(--c-primary-d);background:var(--c-primary-l);
+  border-radius:var(--r-pill);padding:var(--s2) var(--s3)}
+
+/* 海外経験：複数行。行頭の点で行の切れ目を作る */
+.mig__abroad li{position:relative;padding-left:var(--s4);
+  font-size:var(--fs-sm);line-height:var(--lh-head);color:var(--c-ink2)}
+.mig__abroad li + li{margin-top:var(--s2)}
+.mig__abroad li::before{content:"";position:absolute;left:0;
+  top:calc(var(--fs-sm) * var(--lh-head) / 2);transform:translateY(-50%);
+  width:var(--s1);height:var(--s1);border-radius:var(--r-pill);background:var(--c-primary)}
+
+/* コメント：margin-top:auto で全カードの下端に揃える */
+.mig__comment{margin-top:auto;font-size:var(--fs-sm);line-height:var(--lh-body);color:var(--c-ink2)}
+
+.mig__note{margin-top:var(--s5);font-size:var(--fs-note);
+  color:var(--c-on-primary);opacity:.75}
+
+/* ── レスポンシブ ───────────────────────── */
+@media (max-width:900px){
+  .mig__grid{grid-template-columns:repeat(2,1fr);gap:var(--s4)}
+  .mig__ph img{aspect-ratio:4 / 5}          /* 2列だとカードが縦に伸びすぎるので浅くする */
+  .mig__body{gap:var(--s3);padding:var(--s4)}
+  .mig__spec{padding:var(--s3)}
+  .mig__head{margin-bottom:var(--s6)}
+}
+@media (max-width:620px){
+  /* 1列。写真は常にカードの最上部＝テキストより上に置く */
+  .mig__grid{grid-template-columns:1fr;gap:var(--s5)}
+  .mig__ph img{aspect-ratio:4 / 3}
+  .mig__ghost{opacity:.12}
+}

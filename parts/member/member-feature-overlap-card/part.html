@@ -1,0 +1,48 @@
+<section class="mfo sec">
+
+  <div class="wrap mfo__head">
+    <p class="h-eyebrow mfo__eyebrow fx" data-fx="left">{{eyebrow}}</p>
+    <div class="mfo__brow">
+      <p class="mfo__big fx" data-fx="left" data-d="60" aria-hidden="true">{{label}}</p>
+      {{?moreHref}}<a class="mfo__more fx" data-fx="fadeup" data-d="200" href="{{moreHref}}">{{moreLabel}}<span class="mfo__arw" aria-hidden="true"><svg viewBox="0 0 22 10"><path d="M0 5h19M15 1l4 4-4 4"/></svg></span></a>{{/moreHref}}
+    </div>
+    <h2 class="h-lead mfo__lead fx" data-fx="fadeup" data-d="90">{{heading}}</h2>
+  </div>
+
+  <div class="mfo__list">
+    {{#members}}
+    <article class="mfo__item">
+
+      <p class="mfo__ghost fx" data-fx="left" aria-hidden="true">{{.ghost}}</p>
+
+      <figure class="mfo__photo fx" data-fx="fadeup">
+        <img src="{{.photo}}" alt="{{.photoAlt}}" style="--mfo-pos:{{.photoPos}}" loading="lazy" decoding="async">
+      </figure>
+
+      <div class="wrap mfo__cardwrap">
+        <div class="mfo__card fx" data-fx="fadeup" data-d="{{.d}}">
+
+          <p class="mfo__meta">
+            <span class="mfo__chip">{{.chip}}</span>
+            <span class="mfo__career">{{.careerLabel}}<b>{{.careerValue}}</b></span>
+          </p>
+
+          <p class="mfo__id">
+            <span class="mfo__role">{{.role}}</span>
+            <span class="mfo__name">{{.name}}</span>
+          </p>
+
+          <p class="mfo__pull">{{.pull}}</p>
+
+          <div class="mfo__body">{{.comment}}</div>
+
+          <p class="mfo__tags">{{.tags}}</p>
+
+        </div>
+      </div>
+
+    </article>
+    {{/members}}
+  </div>
+
+</section>

@@ -1,0 +1,161 @@
+/* =========================================================
+   gallery/gallery-offset-pair
+   段差オフセット（大判2〜6枚を互い違い）
+   接頭辞は .gop__ で固定。他パーツと衝突させない。
+   ========================================================= */
+
+.gop{
+  /* 段差量：写真高さの25〜40%相当を可変で */
+  --gop-off:clamp(var(--s6),8vw,var(--s9));
+  /* 列の間・行の間 */
+  --gop-gap:clamp(var(--s4),3vw,var(--s6));
+  --gop-row:clamp(var(--s5),5vw,var(--s8));
+  /* 右列を画面端で断ち切る量 */
+  --gop-bleed:clamp(var(--s5),5vw,var(--s8));
+  /* 写真内のキャプション余白 */
+  --gop-pad:clamp(var(--s4),2.6vw,var(--s5));
+  /* 再生ボタンの直径（44〜56px相当をトークンから合成） */
+  --gop-play:clamp(calc(var(--s6) + var(--s2)),5vw,calc(var(--s7) + var(--s1)));
+  /* 写真の下端に敷く暗幕（黒ベタは使わず --c-ink の透過） */
+  --gop-veil:color-mix(in srgb,var(--c-ink) 76%,transparent);
+  --gop-veil-mid:color-mix(in srgb,var(--c-ink) 42%,transparent);
+  --gop-glass:color-mix(in srgb,var(--c-ink) 26%,transparent);
+  --gop-hair:color-mix(in srgb,var(--c-on-primary) 70%,transparent);
+  --gop-sub:color-mix(in srgb,var(--c-on-primary) 82%,transparent);
+  /* 右端の断ち切りをセクション内で完結させる（縦は切らない） */
+  overflow-x:clip;
+}
+
+/* ── 見出し ───────────────────────────────── */
+.gop__head{margin-bottom:clamp(var(--s6),5vw,var(--s8))}
+.gop__h{margin-top:var(--s3)}
+.gop__sub{max-width:38em}
+
+/* ── 版面：左は本文と揃え、右だけ画面端へ抜けて断ち切る ── */
+.gop__stage{
+  --gop-edge:max(var(--w-gut),calc((100% - var(--w-max)) / 2 + var(--w-gut)));
+  padding-inline-start:var(--gop-edge);
+  padding-inline-end:0;
+  margin-inline-end:calc(-1 * var(--gop-bleed));
+}
+
+/* ── 2列。列の中心線は画面中央からわずかに外す ── */
+.gop__list{
+  display:grid;
+  grid-template-columns:1.06fr .94fr;
+  column-gap:var(--gop-gap);
+  row-gap:var(--gop-row);
+  align-items:start;
+}
+
+/* 写真ごとに縦横比を変える＝ずらしが偶然に見える。
+   ただしYouTubeサムネ（16:9）を切りすぎないよう変化幅は 3:2〜16:9 に抑える */
+.gop__item{--gop-ar:3 / 2;min-width:0}
+.gop__item:nth-child(even){
+  --gop-ar:16 / 9;
+  margin-block-start:var(--gop-off);   /* 右列だけ段差を付ける */
+}
+/* 3枚目以降はさらに大小差を付ける（右端の断ち切りは保つ＝左から縮める） */
+.gop__item:nth-child(4n+3){--gop-ar:4 / 3;inline-size:88%}
+.gop__item:nth-child(4n+4){--gop-ar:16 / 10;inline-size:90%;justify-self:end}
+
+/* ── 写真 ───────────────────────────────── */
+.gop__link{display:block;position:relative;border-radius:var(--r-m)}
+.gop__frame{
+  position:relative;display:block;overflow:hidden;
+  aspect-ratio:var(--gop-ar);
+  border-radius:var(--r-m);
+  background:var(--c-bg);
+  box-shadow:var(--shadow);
+}
+.gop__img{
+  width:100%;height:100%;object-fit:cover;
+  transform:scale(1.001);
+  transition:transform .6s var(--e);
+}
+
+/* 下端の暗幕＝キャプションの可読性 */
+.gop__scrim{
+  position:absolute;inset:auto 0 0 0;height:58%;
+  background:linear-gradient(to top,var(--gop-veil) 0%,var(--gop-veil-mid) 46%,transparent 100%);
+  pointer-events:none;
+}
+
+/* ── 写真内・左下：再生ボタン → その下にキャプション ── */
+.gop__body{
+  position:absolute;inset:auto auto var(--gop-pad) var(--gop-pad);
+  display:flex;flex-direction:column;align-items:flex-start;gap:var(--s3);
+  max-width:calc(100% - var(--gop-pad) * 2);
+}
+.gop__play{
+  inline-size:var(--gop-play);block-size:var(--gop-play);
+  display:grid;place-items:center;flex:none;
+  border-radius:var(--r-pill);
+  border:1px solid var(--gop-hair);
+  background:var(--gop-glass);
+  color:var(--c-on-primary);
+  backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
+  transition:background .2s var(--e),border-color .2s var(--e),transform .2s var(--e);
+}
+.gop__play svg{width:42%;height:42%;fill:currentColor}
+
+.gop__cap{display:block;line-height:var(--lh-tight)}
+.gop__meta{
+  display:block;
+  font-size:var(--fs-sm);font-weight:700;letter-spacing:.08em;
+  color:var(--gop-sub);
+}
+.gop__name{
+  display:block;margin-top:var(--s1);
+  font-family:var(--f-disp);font-weight:900;
+  font-size:clamp(var(--fs-md),1.9vw,var(--fs-lg));
+  color:var(--c-on-primary);
+}
+
+/* 読み上げ専用の補足（「YouTubeで再生」など） */
+.gop__sr{
+  position:absolute;width:1px;height:1px;margin:-1px;padding:0;
+  overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0;
+}
+
+/* ── 注記 ───────────────────────────────── */
+.gop__foot{margin-top:clamp(var(--s5),3vw,var(--s6))}
+.gop__note{font-size:var(--fs-note);color:var(--c-ink3);line-height:var(--lh-head)}
+
+/* ── hover ─────────────────────────────── */
+@media(hover:hover) and (pointer:fine){
+  .gop__link:hover .gop__img{transform:scale(1.045)}
+  .gop__link:hover .gop__play{background:var(--c-primary);border-color:var(--c-primary);transform:scale(1.06)}
+}
+.gop__link:active .gop__play{transform:scale(.96)}
+
+/* ── 900px以下：1列。ただし左右へ16pxはみ出させて段差の名残を残す ── */
+@media (max-width:900px){
+  .gop__stage{
+    padding-inline-start:var(--w-gut);
+    padding-inline-end:0;
+    margin-inline-end:0;
+  }
+  .gop__list{
+    grid-template-columns:minmax(0,1fr);
+    row-gap:clamp(var(--s5),6vw,var(--s7));
+  }
+  .gop__item{
+    inline-size:auto;justify-self:stretch;
+    margin-inline:calc(-1 * var(--s4)) var(--w-gut);   /* 左へ16pxはみ出す */
+    margin-block-start:0;
+  }
+  .gop__item:nth-child(even){
+    --gop-ar:16 / 9;
+    margin-inline:var(--s5) calc(-1 * var(--s4));      /* 右へ16pxはみ出す */
+    margin-block-start:0;
+  }
+  /* 3枚目以降も幅は揃え、大小差は縦横比だけで維持する
+     （PC側の inline-size 指定は詳細度が高いのでここで打ち消す） */
+  .gop__item:nth-child(4n+3){--gop-ar:4 / 3;inline-size:auto;justify-self:stretch}
+  .gop__item:nth-child(4n+4){--gop-ar:16 / 10;inline-size:auto;justify-self:stretch}
+}
+
+@media (max-width:560px){
+  .gop{--gop-pad:var(--s4)}
+}

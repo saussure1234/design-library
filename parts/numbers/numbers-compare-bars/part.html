@@ -1,0 +1,33 @@
+<section class="sec sec--alt ncb">
+  <div class="wrap">
+
+    <div class="ncb__head">
+      {{?eyebrow}}<p class="h-eyebrow ncb__eyebrow fx" data-fx="left">{{eyebrow}}</p>{{/eyebrow}}
+      {{?heading}}<h2 class="h-lead ncb__h fx" data-fx="fadeup" data-d="70">{{heading}}</h2>{{/heading}}
+    </div>
+
+    <div class="ncb__card fx" data-fx="fadeup" data-d="120">
+      {{?cardTitle}}<p class="ncb__cardtitle">{{cardTitle}}</p>{{/cardTitle}}
+
+      <ul class="ncb__rows" role="list">
+        {{#rows}}<li class="ncb__row{{?.lead}} ncb__row--lead{{/.lead}} fx" data-fx="fadeup" data-d="{{.d}}">
+          <p class="ncb__label">{{.label}}{{?.sub}}<span class="ncb__sub">{{.sub}}</span>{{/.sub}}</p>
+          <div class="ncb__bars">
+            {{?.basePct}}<div class="ncb__line">
+              <div class="ncb__bar ncb__bar--base" style="--ncb-p:{{.basePct}}">{{?.baseLabel}}<span class="ncb__inbar">{{.baseLabel}}</span>{{/.baseLabel}}</div>
+              <p class="ncb__num ncb__num--base">{{.baseValue}}</p>
+            </div>{{/.basePct}}
+            <div class="ncb__line">
+              <div class="ncb__bar ncb__bar--main" style="--ncb-p:{{.pct}}">{{?.barLabel}}<span class="ncb__inbar">{{.barLabel}}</span>{{/.barLabel}}</div>
+              <p class="ncb__num"><b>{{.value}}</b>{{?.unit}}<i>{{.unit}}</i>{{/.unit}}</p>
+              {{?.badge}}<p class="ncb__badge">{{.badge}}</p>{{/.badge}}
+            </div>
+          </div>
+        </li>{{/rows}}
+      </ul>
+    </div>
+
+    {{?note}}<p class="ncb__note fx" data-fx="fadeup">{{note}}</p>{{/note}}
+
+  </div>
+</section>

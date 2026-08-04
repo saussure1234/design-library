@@ -1,0 +1,116 @@
+<footer class="ftc"{{?anchor}} id="{{anchor}}"{{/anchor}}>
+
+  <!-- 写真ストリップ（任意）。導線帯の“上”に置くので、PCでもSPでも写真はCTAより上になる。
+       photos を渡さなければ中身が空になり、CSS 側（:has）で消える。
+       同じキーの条件ブロックで繰り返しを包むと閉じ判定が壊れるので、条件では包まない -->
+  <div class="ftc__strip">
+    {{#photos}}
+    <figure class="ftc__cut fx" data-fx="fadeup" data-d="{{.d}}">
+      <img src="{{.src}}" alt="{{.alt}}" loading="lazy" decoding="async">
+    </figure>
+    {{/photos}}
+  </div>
+
+  <!-- ── 上段：導線帯 ───────────────────────────────
+       面の色（--c-primary-l）だけで段を分ける。
+       ここと下段の境目に罫線・影・角丸は入れない -->
+  <div class="ftc__band">
+    <div class="wrap ftc__band-in">
+
+      {{?bandEyebrow}}<p class="h-eyebrow ftc__eyebrow fx" data-fx="scale">{{bandEyebrow}}</p>{{/bandEyebrow}}
+      {{?bandHeading}}<h2 class="h-lead ftc__h fx" data-fx="scale" data-d="50">{{bandHeading}}</h2>{{/bandHeading}}
+
+      <div class="ftc__ways">
+
+        {{?telNumber}}
+        <div class="ftc__tel fx" data-fx="scale" data-d="100">
+          {{?telCaption}}<p class="ftc__tel-cap">{{telCaption}}</p>{{/telCaption}}
+          <a class="ftc__tel-num" href="tel:{{telHref}}">
+            <span class="ftc__tel-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6.5 3.5h3l1.5 4-2 1.5a12 12 0 0 0 6 6l1.5-2 4 1.5v3c0 1-.8 1.8-1.8 1.7C10.8 18.8 5.2 13.2 4.8 5.3 4.7 4.3 5.5 3.5 6.5 3.5z"/></svg></span>
+            <span class="ftc__tel-digits">{{telNumber}}</span>
+          </a>
+          {{?telHours}}<p class="ftc__tel-hours">{{telHours}}</p>{{/telHours}}
+        </div>
+        {{/telNumber}}
+
+        {{?ctaLabel}}
+        <div class="ftc__ctabox fx" data-fx="scale" data-d="150">
+          <a class="btn ftc__cta" href="{{ctaHref}}">
+            <span class="ftc__cta-label">{{ctaLabel}}</span>
+            <span class="ftc__arw" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M4.3 2.2 8.1 6l-3.8 3.8"/></svg></span>
+          </a>
+          {{?ctaNote}}<p class="ftc__cta-note">{{ctaNote}}</p>{{/ctaNote}}
+        </div>
+        {{/ctaLabel}}
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 下段：事務フッター ─────────────────────────
+       地を白に落とすだけで段が変わる。動きは付けない -->
+  <div class="ftc__base">
+    <div class="wrap">
+
+      <div class="ftc__cols">
+
+        <div class="ftc__brand">
+          {{?logo}}<img class="ftc__logo" src="{{logo}}" alt="{{logoAlt}}" loading="lazy">{{/logo}}
+          {{?brandNote}}<p class="ftc__brand-note">{{brandNote}}</p>{{/brandNote}}
+        </div>
+
+        <!-- 事業導線（2本）：小さなリンクではなく面を持たせて“行き先”として読ませる -->
+        <nav class="ftc__col" aria-label="{{servicesHeading}}">
+          <p class="h-eyebrow ftc__col-h">{{servicesHeading}}</p>
+          <ul class="ftc__svc">
+            {{#services}}
+            <li>
+              <a class="ftc__svc-a" href="{{.href}}">
+                <span class="ftc__svc-label">{{.label}}</span>
+                <span class="ftc__svc-sub">{{.sub}}</span>
+                <span class="ftc__arw ftc__arw--sm" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M4.3 2.2 8.1 6l-3.8 3.8"/></svg></span>
+              </a>
+            </li>
+            {{/services}}
+          </ul>
+        </nav>
+
+        <!-- ブログ導線＋注目記事 -->
+        <nav class="ftc__col ftc__col--blog" aria-label="{{blogHeading}}">
+          <p class="h-eyebrow ftc__col-h">
+            <a class="ftc__col-h-a" href="{{blogHref}}">{{blogHeading}}</a>
+          </p>
+          {{?postsLabel}}<p class="ftc__posts-label">{{postsLabel}}</p>{{/postsLabel}}
+          <ul class="ftc__posts">
+            {{#posts}}
+            <li>
+              <a class="ftc__post" href="{{.href}}">
+                <span class="ftc__post-dot" aria-hidden="true"></span>
+                <span class="ftc__post-t">{{.title}}</span>
+              </a>
+            </li>
+            {{/posts}}
+          </ul>
+        </nav>
+
+      </div>
+
+      <!-- 法務リンク＋コピーライト（1px の罫は段の境目ではなく下段の内側なので可） -->
+      <div class="ftc__meta">
+        <ul class="ftc__legal">
+          {{#legal}}
+          <li><a class="ftc__legal-a" href="{{.href}}">{{.label}}</a></li>
+          {{/legal}}
+        </ul>
+        {{?copyright}}<p class="ftc__copy">{{copyright}}</p>{{/copyright}}
+      </div>
+
+      <!-- 最下段の細字。商標注記・reCAPTCHA注記など、長くても構わないもの -->
+      <div class="ftc__fine">
+        {{?trademarkNote}}<p class="ftc__note">{{trademarkNote}}</p>{{/trademarkNote}}
+        {{?recaptchaNote}}<p class="ftc__note">{{recaptchaNote}}</p>{{/recaptchaNote}}
+      </div>
+
+    </div>
+  </div>
+</footer>

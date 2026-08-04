@@ -1,0 +1,54 @@
+<section class="sec cps{{?tight}} cps--tight{{/tight}}"{{?anchor}} id="{{anchor}}"{{/anchor}}>
+  <div class="wrap">
+
+    <!-- 地色は前後のセクションに任せ、この白パネルだけで成立させる（同じ見た目で何度でも置ける） -->
+    <div class="cps__panel">
+
+      {{?photo}}
+      <figure class="cps__ph fx" data-fx="scale">
+        <img src="{{photo}}" alt="{{photoAlt}}" loading="lazy">
+      </figure>
+      {{/photo}}
+
+      <div class="cps__body">
+
+        {{?eyebrow}}<p class="h-eyebrow cps__eyebrow fx" data-fx="fadeup">{{eyebrow}}</p>{{/eyebrow}}
+        {{?heading}}<h2 class="h-lead cps__h fx" data-fx="fadeup" data-d="60">{{heading}}</h2>{{/heading}}
+
+        <div class="cps__stack">
+
+          <!-- 主：ベタ塗り・幅100%・いちばん高い -->
+          <a class="btn cps__btn cps__btn--main fx" data-fx="fadeup" data-d="120" href="{{mainHref}}">
+            {{?mainTag}}<span class="cps__tag">{{mainTag}}</span>{{/mainTag}}
+            {{?mainIcon}}<span class="cps__ico" aria-hidden="true">{{mainIcon}}</span>{{/mainIcon}}
+            <span class="cps__label">{{mainLabel}}</span>
+            <span class="cps__arw" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M4.3 2.2 8.1 6l-3.8 3.8"/></svg></span>
+          </a>
+
+          <!-- 副1：同系の淡色ベタ・幅80%・低い -->
+          {{?subLabel}}
+          <a class="btn cps__btn cps__btn--sub cps__btn--sub1 fx" data-fx="fadeup" data-d="160" href="{{subHref}}">
+            {{?subTag}}<span class="cps__tag">{{subTag}}</span>{{/subTag}}
+            {{?subIcon}}<span class="cps__ico" aria-hidden="true">{{subIcon}}</span>{{/subIcon}}
+            <span class="cps__label">{{subLabel}}</span>
+            <span class="cps__arw" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M4.3 2.2 8.1 6l-3.8 3.8"/></svg></span>
+          </a>
+          {{/subLabel}}
+
+          <!-- 副2：白地＋枠・幅80%・低い -->
+          {{?sub2Label}}
+          <a class="btn btn--ghost cps__btn cps__btn--sub cps__btn--sub2 fx" data-fx="fadeup" data-d="200" href="{{sub2Href}}">
+            {{?sub2Icon}}<span class="cps__ico" aria-hidden="true">{{sub2Icon}}</span>{{/sub2Icon}}
+            <span class="cps__label">{{sub2Label}}</span>
+            <span class="cps__arw" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M4.3 2.2 8.1 6l-3.8 3.8"/></svg></span>
+          </a>
+          {{/sub2Label}}
+
+        </div>
+
+        {{?note}}<p class="cps__note fx" data-fx="fadeup" data-d="240">{{note}}</p>{{/note}}
+
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,46 @@
+<section class="sec sec--alt cmg{{?tight}} cmg--tight{{/tight}}"{{?sectionId}} id="{{sectionId}}"{{/sectionId}}>
+  <div class="wrap">
+
+    <div class="cmg__intro">
+      {{?eyebrow}}<p class="h-eyebrow fx" data-fx="left">{{eyebrow}}</p>{{/eyebrow}}
+      {{?headline}}<h2 class="h-lead cmg__title fx" data-fx="fadeup" data-d="70">{{headline}}</h2>{{/headline}}
+      {{?lead}}<p class="cmg__lead fx" data-fx="fadeup" data-d="130">{{lead}}</p>{{/lead}}
+    </div>
+
+    {{?bandTitle}}<div class="cmg__band fx" data-fx="fadeup" data-d="60">
+      <p class="cmg__band-t">{{bandTitle}}</p>
+      {{?bandNote}}<p class="cmg__band-s">{{bandNote}}</p>{{/bandNote}}
+    </div>{{/bandTitle}}
+
+    <div class="cmg__panel fx" data-fx="fadeup" data-d="120">
+      <div class="cmg__grid" data-hi="{{hiRow}}">
+
+        {{#cols}}<div class="cmg__col fx" data-fx="fadeup" data-d="{{.d}}">
+          <span class="cmg__rule fx" data-fx="mask" data-d="{{.d}}" aria-hidden="true"></span>
+
+          <div class="cmg__head">
+            {{?.tag}}<span class="cmg__tag">{{.tag}}</span>{{/.tag}}
+            <p class="cmg__plan">{{.plan}}</p>
+            {{?.sub}}<p class="cmg__sub">{{.sub}}</p>{{/.sub}}
+          </div>
+
+          <dl class="cmg__body">
+            <div class="cmg__cam" data-on="{{.cam}}">
+              <dt class="cmg__cl">{{?.camTag}}<span class="cmg__cam-tag">{{.camTag}}</span>{{/.camTag}}{{.camLabel}}</dt>
+              <dd class="cmg__cam-v">{{?.camOld}}<s class="cmg__cam-old">{{.camOld}}</s>{{/.camOld}}<span class="cmg__cam-new">{{.camNew}}</span>{{?.camBubble}}<span class="cmg__cam-bubble">{{.camBubble}}</span>{{/.camBubble}}</dd>
+            </div>
+            <div class="cmg__cell"><dt class="cmg__cl">{{.l1}}</dt><dd class="cmg__cp">{{.v1}}</dd></div>
+            <div class="cmg__cell"><dt class="cmg__cl">{{.l2}}</dt><dd class="cmg__cp">{{.v2}}</dd></div>
+            <div class="cmg__cell"><dt class="cmg__cl">{{.l3}}</dt><dd class="cmg__cp">{{.v3}}</dd></div>
+            <div class="cmg__cell"><dt class="cmg__cl">{{.l4}}</dt><dd class="cmg__cp">{{.v4}}</dd></div>
+            <div class="cmg__cell"><dt class="cmg__cl">{{.l5}}</dt><dd class="cmg__cp">{{.v5}}</dd></div>
+          </dl>
+        </div>{{/cols}}
+
+      </div>
+    </div>
+
+    <ul class="cmg__notes fx" data-fx="fadeup" data-d="60">{{#notes}}<li class="cmg__note">{{.t}}</li>{{/notes}}</ul>
+
+  </div>
+</section>

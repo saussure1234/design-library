@@ -1,0 +1,115 @@
+/* numbers/numbers-compare-bars — 割合／前後を横バーで1行ずつ積む
+   行＝1単位。左に固定幅ラベル、右にバー、数値はバーの右端の「外」。
+   lead を立てた行だけ差し色＋級数を上げて主役にする。
+   基準バー（basePct）を足すと「受講前→受講後」の比較型になる。 */
+
+/* 値100のときバーが取る幅。残りが数値とふきだしの置き場になる。
+   数値が大きいほど、ここを絞らないと右端からはみ出す。 */
+.ncb{--ncb-span:86%}
+
+/* ── 見出し ───────────────────────────── */
+.ncb__head{text-align:center}
+.ncb__eyebrow{justify-content:center;margin-bottom:var(--s3)}
+.ncb__h{margin-bottom:clamp(20px,3vw,var(--s6))}
+.ncb__h em{font-style:normal;color:var(--c-primary-d)}
+
+/* ── 白カード ─────────────────────────── */
+.ncb__card{background:var(--c-bg);border:1px solid var(--c-line);
+  border-radius:var(--r-l);box-shadow:var(--shadow);
+  padding:clamp(20px,3.2vw,var(--s7)) clamp(14px,3.2vw,var(--s7))}
+
+/* ＼ 一言 ／ の斜線は擬似要素で。em基準なので文字サイズに追従する */
+.ncb__cardtitle{display:flex;align-items:center;justify-content:center;gap:var(--s4);
+  font-family:var(--f-disp);font-weight:900;color:var(--c-ink);
+  font-size:clamp(15px,1.9vw,var(--fs-md));line-height:var(--lh-tight);letter-spacing:.04em;
+  margin-bottom:clamp(16px,2.4vw,var(--s5))}
+.ncb__cardtitle::before,.ncb__cardtitle::after{content:"";flex:none;
+  width:.12em;height:1.5em;background:var(--c-primary);border-radius:var(--r-pill)}
+.ncb__cardtitle::before{transform:rotate(-20deg)}
+.ncb__cardtitle::after{transform:rotate(20deg)}
+
+/* ── 行 ───────────────────────────────── */
+.ncb__rows{display:flex;flex-direction:column;gap:var(--s2)}
+.ncb__row{display:grid;grid-template-columns:clamp(52px,6.4vw,84px) minmax(0,1fr);
+  align-items:center;gap:var(--s4);
+  padding:var(--s2) var(--s3);border-radius:var(--r-m)}
+.ncb__row--lead{background:var(--c-bg2)}
+
+.ncb__label{text-align:right;font-weight:700;color:var(--c-ink);
+  font-size:clamp(13px,1.5vw,var(--fs-md));line-height:var(--lh-tight);
+  font-feature-settings:"palt"}
+.ncb__sub{display:block;margin-top:.15em;font-size:var(--fs-note);font-weight:500;color:var(--c-ink3)}
+
+.ncb__bars{display:flex;flex-direction:column;gap:var(--s1);min-width:0}
+.ncb__line{display:flex;align-items:center;gap:var(--s3);min-width:0}
+
+/* バー長は --ncb-p（0〜100の素の数値）× --ncb-span。
+   min-width は「短い値でもバーとして見える」下限。
+   flex-shrink を1にしてあるのは、数値やふきだしが長すぎたときに
+   バーだけが縮んで受け止め、カードの外へはみ出さないようにするため。 */
+.ncb__bar{flex:0 1 auto;width:calc(var(--ncb-p) * var(--ncb-span) / 100);min-width:var(--s6);
+  height:clamp(18px,2.2vw,var(--s5));border-radius:var(--r-pill);overflow:hidden;
+  display:flex;align-items:center;padding-inline:var(--s3);
+  background:var(--c-primary);color:var(--c-on-primary)}
+.ncb__bar--base{background:var(--c-line);color:var(--c-ink2)}
+.ncb__row--lead .ncb__bar--main{background:var(--c-accent);color:var(--c-ink)}
+.ncb__inbar{font-size:var(--fs-note);font-weight:700;line-height:1;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* 数値。主役と基準で級数差を大きく取るのがこの型の肝 */
+.ncb__num{flex:none;white-space:nowrap;font-family:var(--f-num);font-weight:900;
+  line-height:1;color:var(--c-ink);font-variant-numeric:tabular-nums;
+  font-size:clamp(19px,2.4vw,var(--fs-xl))}
+.ncb__num b{font-weight:inherit}
+.ncb__num i{font-style:normal;font-family:var(--f-sans);font-size:.5em;margin-left:.08em}
+.ncb__num--base{font-size:var(--fs-sm);font-weight:700;color:var(--c-ink3)}
+.ncb__row--lead .ncb__num{color:var(--c-accent);font-size:clamp(28px,4vw,var(--fs-2xl))}
+
+/* 差分ふきだし（任意）。バー領域の外へ出す */
+.ncb__badge{position:relative;flex:none;display:inline-flex;align-items:center;
+  margin-left:var(--s2);padding:var(--s1) var(--s3);border-radius:var(--r-pill);
+  background:var(--c-accent);color:var(--c-ink);font-weight:900;
+  font-size:clamp(11px,1.3vw,var(--fs-sm));line-height:1.5}
+.ncb__badge::before{content:"";position:absolute;left:calc(.46em * -1);top:50%;
+  width:.5em;height:.66em;transform:translateY(-50%);background:var(--c-accent);
+  clip-path:polygon(100% 0,100% 100%,0 50%)}
+
+.ncb__note{margin-top:var(--s4);font-size:var(--fs-note);color:var(--c-ink3);line-height:1.8}
+
+/* ── 動き ─────────────────────────────
+   行に .hh-in が付いた時点でバーが左から伸び、遅れて数値・ふきだしが出る。
+   JSが動かないと .fx-on が付かない＝最初から全部見えている（安全側） */
+.fx-on .ncb__bar{clip-path:inset(0 100% 0 0 round var(--r-pill));
+  transition:clip-path .62s var(--e) .08s}
+.fx-on .ncb__row.hh-in .ncb__bar{clip-path:inset(0 round var(--r-pill))}
+.fx-on .ncb__num{opacity:0;transform:translateX(calc(var(--s2) * -1));
+  transition:opacity .34s var(--e) .5s,transform .34s var(--e) .5s}
+.fx-on .ncb__row.hh-in .ncb__num{opacity:1;transform:none}
+@keyframes ncb-pop{0%{opacity:0;transform:scale(.8)}60%{opacity:1;transform:scale(1.06)}100%{opacity:1;transform:scale(1)}}
+.fx-on .ncb__badge{opacity:0}
+.fx-on .ncb__row.hh-in .ncb__badge{animation:ncb-pop .42s var(--e) .62s both}
+
+/* ── SP：ラベルをバーの上へ、行間を広げて境目を保つ ── */
+@media(max-width:900px){
+  .ncb{--ncb-span:84%}   /* ラベルが上に移り、行の全幅がバーに使える */
+  .ncb__rows{gap:var(--s3)}
+  .ncb__row{grid-template-columns:minmax(0,1fr);gap:var(--s2);padding:var(--s3)}
+  .ncb__label{text-align:left;font-size:var(--fs-sm)}
+  .ncb__sub{display:inline;margin-left:var(--s2)}
+  .ncb__num{font-size:clamp(19px,4.4vw,var(--fs-xl))}
+  .ncb__row--lead .ncb__num{font-size:clamp(25px,6.2vw,var(--fs-xl))}
+  .ncb__note{margin-top:var(--s3)}
+}
+@media(max-width:560px){
+  .ncb{--ncb-span:74%}   /* 数値が相対的に大きくなるぶん、バーの取り分を絞る */
+  .ncb__line{flex-wrap:wrap;gap:var(--s2)}
+  .ncb__bar{padding-inline:var(--s2)}
+  .ncb__badge{font-size:var(--fs-note);margin-left:auto}
+  .ncb__badge::before{display:none}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .fx-on .ncb__bar{clip-path:none!important;transition:none!important}
+  .fx-on .ncb__num{opacity:1!important;transform:none!important;transition:none!important}
+  .fx-on .ncb__badge{opacity:1!important;animation:none!important}
+}

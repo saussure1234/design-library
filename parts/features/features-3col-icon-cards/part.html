@@ -1,0 +1,29 @@
+<section class="sec sec--alt f3c">
+  <div class="wrap">
+
+    <div class="f3c__head">
+      <p class="h-eyebrow f3c__eyebrow fx" data-fx="fadeup">{{eyebrow}}</p>
+      <h2 class="h-lead f3c__h fx" data-fx="fadeup" data-d="70">{{heading}}</h2>
+      {{?lead}}<p class="f3c__lead fx" data-fx="fadeup" data-d="140">{{lead}}</p>{{/lead}}
+    </div>
+
+    <ul class="f3c__grid">
+      {{#items}}<li class="f3c__item fx" data-fx="fadeup" data-d="{{.d}}">
+        <a class="f3c__card" href="{{.href}}">
+          <span class="f3c__no"><i>{{badgeLabel}}</i><b>{{.no}}</b></span>
+          <h3 class="f3c__t">{{.title}}</h3>
+          <p class="f3c__d">{{.desc}}</p>
+          <span class="f3c__more">{{linkLabel}}
+            <span class="f3c__arw"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M1.4 6h8.4M6.2 2.2 10 6l-3.8 3.8"/></svg></span>
+          </span>
+        </a>
+      </li>{{/items}}
+    </ul>
+
+    {{?ctaLabel}}<div class="f3c__cta fx" data-fx="fadeup" data-d="120">
+      <a class="btn f3c__btn" href="{{ctaHref}}">{{ctaLabel}}</a>
+      {{?ctaNote}}<p class="f3c__ctanote">{{ctaNote}}</p>{{/ctaNote}}
+    </div>{{/ctaLabel}}
+
+  </div>
+</section>

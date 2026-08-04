@@ -1,0 +1,49 @@
+<section class="sec mig" aria-labelledby="mig-title">
+  {{?bgWord}}<span class="mig__ghost" aria-hidden="true">{{bgWord}}</span>{{/bgWord}}
+
+  <div class="wrap mig__in">
+
+    <header class="mig__head">
+      <p class="h-eyebrow mig__eyebrow fx" data-fx="left">{{eyebrow}}</p>
+      <h2 id="mig-title" class="h-lead mig__h fx" data-fx="fadeup" data-d="70">{{heading}}</h2>
+      {{?lead}}<p class="mig__lead fx" data-fx="fadeup" data-d="140">{{lead}}</p>{{/lead}}
+    </header>
+
+    <ul class="mig__grid">
+      {{#members}}
+      <li class="mig__card fx" data-fx="fadeup" data-d="{{.d}}">
+
+        <figure class="mig__ph">
+          <img src="{{.photo}}" alt="{{.alt}}" width="600" height="800" loading="lazy">
+          <figcaption class="mig__plate">
+            {{?.role}}<span class="mig__role">{{.role}}</span>{{/.role}}
+            <span class="mig__name">{{.name}}</span>
+          </figcaption>
+        </figure>
+
+        <div class="mig__body">
+          <dl class="mig__spec">
+            <div class="mig__row">
+              <dt class="mig__label">{{labelLevel}}</dt>
+              <dd class="mig__val">
+                <ul class="mig__badges">{{#.levels}}<li class="mig__badge">{{.}}</li>{{/.levels}}</ul>
+              </dd>
+            </div>
+            <div class="mig__row">
+              <dt class="mig__label">{{labelAbroad}}</dt>
+              <dd class="mig__val">
+                <ul class="mig__abroad">{{#.abroad}}<li>{{.}}</li>{{/.abroad}}</ul>
+              </dd>
+            </div>
+          </dl>
+          <p class="mig__comment">{{.comment}}</p>
+        </div>
+
+      </li>
+      {{/members}}
+    </ul>
+
+    {{?note}}<p class="mig__note fx" data-fx="fadeup">{{note}}</p>{{/note}}
+
+  </div>
+</section>

@@ -1,0 +1,59 @@
+<section class="sec sec--alt cmx"{{?sectionId}} id="{{sectionId}}"{{/sectionId}}>
+  <div class="wrap">
+
+    <div class="cmx__intro">
+      {{?eyebrow}}<p class="h-eyebrow fx" data-fx="left">{{eyebrow}}</p>{{/eyebrow}}
+      <h2 class="h-lead cmx__title fx" data-fx="fadeup" data-d="70">{{headline}}</h2>
+      {{?lead}}<p class="cmx__lead fx" data-fx="fadeup" data-d="130">{{lead}}</p>{{/lead}}
+    </div>
+
+    <div class="cmx__grid">
+
+      <div class="cmx__thead">
+        <div class="cmx__hc cmx__hc--item fx" data-fx="fadeup" data-d="0">{{itemHead}}</div>
+
+        <div class="cmx__hc cmx__hc--own fx" data-fx="fadeup" data-d="60">
+          {{?ownBadge}}<span class="cmx__badge">{{ownBadge}}</span>{{/ownBadge}}
+          <span class="cmx__hname">{{ownLabel}}</span>
+          {{?ownNote}}<span class="cmx__hnote">{{ownNote}}</span>{{/ownNote}}
+        </div>
+
+        <div class="cmx__hc fx" data-fx="fadeup" data-d="110">
+          <span class="cmx__hname">{{aLabel}}</span>
+          {{?aNote}}<span class="cmx__hnote">{{aNote}}</span>{{/aNote}}
+        </div>
+
+        <div class="cmx__hc fx" data-fx="fadeup" data-d="160">
+          <span class="cmx__hname">{{bLabel}}</span>
+          {{?bNote}}<span class="cmx__hnote">{{bNote}}</span>{{/bNote}}
+        </div>
+      </div>
+
+      {{#rows}}<div class="cmx__row">
+        <p class="cmx__item fx" data-fx="fadeup" data-d="{{.d}}">{{.item}}</p>
+
+        <div class="cmx__c cmx__c--own fx" data-fx="fadeup" data-d="{{.d}}" data-mark="{{.ownMark}}">
+          <span class="cmx__lab">{{ownLabel}}</span>
+          <p class="cmx__main"><span class="cmx__mk" aria-hidden="true"></span>{{.own}}</p>
+          {{?.ownSub}}<p class="cmx__sub">{{.ownSub}}</p>{{/.ownSub}}
+        </div>
+
+        <div class="cmx__c fx" data-fx="fadeup" data-d="{{.d}}" data-mark="{{.aMark}}">
+          <span class="cmx__lab">{{aLabel}}</span>
+          <p class="cmx__main"><span class="cmx__mk" aria-hidden="true"></span>{{.a}}</p>
+          {{?.aSub}}<p class="cmx__sub">{{.aSub}}</p>{{/.aSub}}
+        </div>
+
+        <div class="cmx__c fx" data-fx="fadeup" data-d="{{.d}}" data-mark="{{.bMark}}">
+          <span class="cmx__lab">{{bLabel}}</span>
+          <p class="cmx__main"><span class="cmx__mk" aria-hidden="true"></span>{{.b}}</p>
+          {{?.bSub}}<p class="cmx__sub">{{.bSub}}</p>{{/.bSub}}
+        </div>
+      </div>{{/rows}}
+
+    </div>
+
+    {{?note}}<p class="cmx__note fx" data-fx="fadeup">{{note}}</p>{{/note}}
+
+  </div>
+</section>

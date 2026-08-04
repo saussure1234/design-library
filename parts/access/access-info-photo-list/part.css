@@ -1,0 +1,177 @@
+/* access/access-info-photo-list
+   拠点タブ＋写真＋情報リスト（JS無しのラジオ切替）
+
+   ── 型の狙い
+   拠点が2〜4件しかないとき、地図も検索も挟まず「写真1枚＋電話＋条件の一覧」を
+   拠点ごとに出し分け、申込直前に必要な事実だけを1画面で確定させる。
+
+   ── 実装メモ
+   1) ラジオは DOM 上で .acp__tabs / .acp__stage より“前”に置く。
+      兄弟結合子(~)で「n番目のラジオ:checked → n番目のタブ／n番目のパネル」を
+      対応させるため。:nth-of-type で総当たりするので拠点ごとの個別CSSは不要（上限4）。
+   2) 非表示パネルは display:none。ここに .fx を入れると、表示切替後も
+      .hh-in が付かず透明のまま残る事故になるので、.fx は常時見えている
+      要素（導入・タブ・ステージ）にだけ付ける。
+   3) 縦罫は引かない。行の区切りは1pxの横罫だけ（参照：ikeda の診療時間表）。 */
+
+.acp{
+  --acp-label:7.5em;                              /* 定義リストのラベル列 */
+  --acp-pad:clamp(var(--s5),3.2vw,var(--s7));     /* パネル内側の余白 */
+}
+
+/* ── 導入 ────────────────────────────────── */
+.acp__head{max-width:46em}
+.acp__title{margin-top:var(--s4)}
+.acp__lead{margin-top:var(--s4);font-size:var(--fs-base);color:var(--c-ink2);
+  line-height:var(--lh-body)}
+
+/* ── タブ（ラジオ＋ラベル） ──────────────────── */
+.acp__switch{position:relative;margin-top:var(--s6)}
+
+/* ラジオは見せない。ただしフォーカスは殺さない（矢印キーで拠点を移動できる） */
+.acp__radio{position:absolute;top:0;left:0;width:1px;height:1px;
+  margin:0;padding:0;border:0;appearance:none;-webkit-appearance:none;
+  clip-path:inset(50%)}
+
+.acp__tabs{display:flex;flex-wrap:wrap;gap:var(--s3)}
+.acp__tab{display:inline-flex;align-items:center;justify-content:center;
+  padding:var(--s3) var(--s6);border-radius:var(--r-pill);cursor:pointer;
+  background:var(--c-bg);color:var(--c-ink2);
+  font-size:var(--fs-base);font-weight:700;line-height:var(--lh-head);
+  box-shadow:inset 0 0 0 1px var(--c-line);
+  transition:background .16s var(--e),color .16s var(--e),box-shadow .16s var(--e)}
+@media(hover:hover) and (pointer:fine){
+  .acp__tab:hover{color:var(--c-primary-d);box-shadow:inset 0 0 0 1px var(--c-primary)}
+}
+
+/* 選択中は「塗り反転」だけで示す（下線は併用しない） */
+.acp__radio:nth-of-type(1):checked ~ .acp__tabs > .acp__tab:nth-child(1),
+.acp__radio:nth-of-type(2):checked ~ .acp__tabs > .acp__tab:nth-child(2),
+.acp__radio:nth-of-type(3):checked ~ .acp__tabs > .acp__tab:nth-child(3),
+.acp__radio:nth-of-type(4):checked ~ .acp__tabs > .acp__tab:nth-child(4){
+  background:var(--c-primary);color:var(--c-on-primary);
+  box-shadow:inset 0 0 0 1px var(--c-primary)}
+
+/* 原稿が on を1つも持たなかったときの保険：先頭を選択中に見せる */
+.acp__switch:not(:has(.acp__radio:checked)) .acp__tabs > .acp__tab:nth-child(1){
+  background:var(--c-primary);color:var(--c-on-primary);
+  box-shadow:inset 0 0 0 1px var(--c-primary)}
+
+/* ラジオ本体が見えないので、フォーカスリングは対応するタブへ移す
+   （値は _base.css の :focus-visible と同じ） */
+.acp__radio:nth-of-type(1):focus-visible ~ .acp__tabs > .acp__tab:nth-child(1),
+.acp__radio:nth-of-type(2):focus-visible ~ .acp__tabs > .acp__tab:nth-child(2),
+.acp__radio:nth-of-type(3):focus-visible ~ .acp__tabs > .acp__tab:nth-child(3),
+.acp__radio:nth-of-type(4):focus-visible ~ .acp__tabs > .acp__tab:nth-child(4){
+  outline:3px solid var(--c-primary);outline-offset:3px}
+
+/* ── パネル ──────────────────────────────── */
+.acp__stage{margin-top:var(--s5)}
+
+.acp__panel{display:none;
+  grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);
+  grid-template-areas:"info shot";
+  background:var(--c-bg);border-radius:var(--r-l);overflow:hidden;
+  box-shadow:var(--shadow);
+  animation:acp-fade .18s var(--e) both}
+
+.acp__radio:nth-of-type(1):checked ~ .acp__stage > .acp__panel:nth-child(1),
+.acp__radio:nth-of-type(2):checked ~ .acp__stage > .acp__panel:nth-child(2),
+.acp__radio:nth-of-type(3):checked ~ .acp__stage > .acp__panel:nth-child(3),
+.acp__radio:nth-of-type(4):checked ~ .acp__stage > .acp__panel:nth-child(4){display:grid}
+
+.acp__switch:not(:has(.acp__radio:checked)) .acp__stage > .acp__panel:nth-child(1){display:grid}
+
+/* 切替は不透明度だけ。高さは動かさない（押すたびに版面が跳ねるのを避ける） */
+@keyframes acp-fade{from{opacity:0}to{opacity:1}}
+
+/* 写真：セルいっぱいに敷く。img を絶対配置にして、行の高さは情報側が決める */
+.acp__shot{grid-area:shot;position:relative;margin:0;align-self:stretch;
+  min-height:calc(var(--s9) * 3);background:var(--c-primary-l)}
+.acp__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.acp__badge{position:absolute;top:var(--s4);right:var(--s4);
+  padding:var(--s1) var(--s4);border-radius:var(--r-pill);
+  background:var(--c-primary);color:var(--c-on-primary);
+  font-size:var(--fs-note);font-weight:700;line-height:var(--lh-head);letter-spacing:.04em}
+
+/* ── 情報側 ──────────────────────────────── */
+.acp__info{grid-area:info;padding:var(--acp-pad)}
+
+.acp__name{font-family:var(--f-disp);font-weight:900;color:var(--c-ink);
+  font-size:clamp(var(--fs-lg),2.4vw,var(--fs-xl));line-height:var(--lh-head)}
+.acp__en{margin-top:var(--s1);font-family:var(--f-num);font-size:var(--fs-note);
+  letter-spacing:.16em;color:var(--c-ink3);line-height:var(--lh-head)}
+.acp__text{margin-top:var(--s4);font-size:var(--fs-base);color:var(--c-ink2);
+  line-height:var(--lh-body)}
+
+/* 電話：このセクションで最大の文字。字間を広めに取る */
+.acp__telbox{display:flex;align-items:baseline;flex-wrap:wrap;gap:var(--s3);
+  margin-top:var(--s5)}
+.acp__tellabel{font-size:var(--fs-sm);font-weight:700;letter-spacing:.1em;color:var(--c-ink3)}
+.acp__tel{font-family:var(--f-num);font-weight:700;color:var(--c-primary);
+  font-size:clamp(var(--fs-xl),3.2vw,var(--fs-2xl));letter-spacing:.05em;
+  line-height:var(--lh-tight);white-space:nowrap}
+@media(hover:hover) and (pointer:fine){.acp__tel:hover{color:var(--c-primary-d)}}
+
+/* 定義リスト：縦罫なし。1pxの横罫だけで行を切る */
+.acp__dl{margin-top:var(--s5);display:grid;
+  grid-template-columns:var(--acp-label) minmax(0,1fr)}
+.acp__dt{padding:var(--s3) var(--s4) var(--s3) 0;
+  font-size:var(--fs-sm);font-weight:700;color:var(--c-ink3);line-height:var(--lh-head)}
+.acp__dd{padding:var(--s3) 0;font-size:var(--fs-base);color:var(--c-ink2);
+  line-height:var(--lh-head);overflow-wrap:anywhere}
+.acp__dt:not(:first-of-type),
+.acp__dd:not(:first-of-type){border-top:1px solid var(--c-line)}
+
+.acp__addr{display:block}
+.acp__pin{display:inline-block;width:1em;height:1em;vertical-align:-.14em;
+  margin-right:var(--s1);color:var(--c-primary)}
+
+/* 地図はボタンにしない（行の中の小さな逃げ道） */
+.acp__map{display:inline-block;margin-top:var(--s2);
+  font-size:var(--fs-sm);color:var(--c-primary-d);
+  text-decoration:underline;text-underline-offset:.24em}
+.acp__map::before{content:"\25B6";margin-right:var(--s1);font-size:.7em;vertical-align:.08em}
+
+.acp__note{margin-top:var(--s5);font-size:var(--fs-note);color:var(--c-ink3);
+  line-height:var(--lh-head)}
+
+/* ───── SP：写真を先頭（＝電話CTAより上）に回す ─────────────────
+   DOM が figure → info の順なので、1列に組み替えるだけで
+   「写真 → 名前 → 電話 → 条件」の順になる。 */
+@media(max-width:900px){
+  .acp__head{max-width:none}
+  .acp__switch{margin-top:var(--s5)}
+
+  .acp__tab{flex:1 1 auto;padding:var(--s3) var(--s4);font-size:var(--fs-sm)}
+
+  .acp__panel{grid-template-columns:minmax(0,1fr);
+    grid-template-areas:"shot" "info";border-radius:var(--r-m)}
+  /* 16:10で切る。幅を明示してから max-height で頭を打つ（幅を明示しないと
+     アスペクト比が優先されて写真が痩せる）。溢れた分は object-fit が切る */
+  .acp__shot{min-height:0;width:100%;aspect-ratio:16/10;max-height:calc(var(--s9) * 3)}
+
+  /* 電話は tel: の塗りブロックへ（親指で押せる高さにする） */
+  .acp__telbox{display:block;margin-top:var(--s5)}
+  .acp__tellabel{display:block}
+  .acp__tel{display:flex;align-items:center;justify-content:center;
+    margin-top:var(--s2);padding:var(--s4) var(--s5);border-radius:var(--r-s);
+    background:var(--c-primary);color:var(--c-on-primary);
+    font-size:var(--fs-xl);letter-spacing:.06em}
+  @media(hover:hover) and (pointer:fine){
+    .acp__tel:hover{background:var(--c-primary-d);color:var(--c-on-primary)}
+  }
+
+  /* 定義リストはラベルを値の上に積む（横スクロールも折りたたみもしない） */
+  .acp__dl{grid-template-columns:minmax(0,1fr)}
+  .acp__dt{padding:var(--s4) 0 0;border-top:1px solid var(--c-line)}
+  .acp__dd{padding:var(--s1) 0 0}
+  .acp__dt:first-of-type{padding-top:var(--s3);border-top:0}
+  .acp__dd:not(:first-of-type){border-top:0}
+}
+
+@media(max-width:420px){
+  .acp__tabs{gap:var(--s2)}
+  .acp__tab{padding:var(--s3)}
+  .acp__tel{font-size:var(--fs-lg)}
+}

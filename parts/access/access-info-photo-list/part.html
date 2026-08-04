@@ -1,0 +1,77 @@
+<section class="sec sec--alt acp"{{?sectionId}} id="{{sectionId}}"{{/sectionId}}>
+  <div class="wrap">
+
+    <div class="acp__head">
+      {{?eyebrow}}<p class="h-eyebrow fx" data-fx="left">{{eyebrow}}</p>{{/eyebrow}}
+      <h2 class="h-lead acp__title fx" data-fx="fadeup" data-d="70">{{headline}}</h2>
+      {{?lead}}<p class="acp__lead fx" data-fx="fadeup" data-d="140">{{lead}}</p>{{/lead}}
+    </div>
+
+    <!-- 切替にJSは使わない。ラジオをDOM上でタブ／パネルより前に置き、
+         :checked と兄弟結合子(~)だけで n番目を開く（上限4拠点） -->
+    <div class="acp__switch">
+
+      {{#locs}}<input class="acp__radio" type="radio" name="acp-{{group}}" id="acp-{{group}}-{{.i}}" aria-label="{{.name}}"{{?.on}} checked{{/.on}}>
+      {{/locs}}
+
+      <div class="acp__tabs">
+        {{#locs}}<label class="acp__tab fx" data-fx="fadeup" data-d="{{.d}}" for="acp-{{group}}-{{.i}}">{{.name}}</label>
+        {{/locs}}
+      </div>
+
+      <div class="acp__stage fx" data-fx="fadeup" data-d="200">
+        {{#locs}}<article class="acp__panel">
+
+          <figure class="acp__shot">
+            <img class="acp__img" src="{{.photo}}" alt="{{.photoAlt}}" loading="lazy" decoding="async">
+            {{?.badge}}<figcaption class="acp__badge">{{.badge}}</figcaption>{{/.badge}}
+          </figure>
+
+          <div class="acp__info">
+
+            <h3 class="acp__name">{{.name}}</h3>
+            {{?.en}}<p class="acp__en">{{.en}}</p>{{/.en}}
+            {{?.body}}<p class="acp__text">{{.body}}</p>{{/.body}}
+
+            {{?.tel}}<p class="acp__telbox">
+              <span class="acp__tellabel">{{labelTel}}</span>
+              <a class="acp__tel" href="tel:{{.telHref}}">{{.tel}}</a>
+            </p>{{/.tel}}
+
+            <dl class="acp__dl">
+
+              {{?.address}}<dt class="acp__dt">{{labelAddress}}</dt>
+              <dd class="acp__dd">
+                <span class="acp__addr"><svg class="acp__pin" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 1.4a4.5 4.5 0 0 0-4.5 4.5c0 3.4 4.5 8.7 4.5 8.7s4.5-5.3 4.5-8.7A4.5 4.5 0 0 0 8 1.4Zm0 6.2a1.7 1.7 0 1 1 0-3.4 1.7 1.7 0 0 1 0 3.4Z"/></svg>{{.address}}</span>
+                {{?.mapUrl}}<a class="acp__map" href="{{.mapUrl}}" target="_blank" rel="noopener">{{mapLabel}}</a>{{/.mapUrl}}
+              </dd>{{/.address}}
+
+              {{?.hours}}<dt class="acp__dt">{{labelHours}}</dt>
+              <dd class="acp__dd">{{.hours}}</dd>{{/.hours}}
+
+              {{?.closed}}<dt class="acp__dt">{{labelClosed}}</dt>
+              <dd class="acp__dd">{{.closed}}</dd>{{/.closed}}
+
+              {{?.target}}<dt class="acp__dt">{{labelTarget}}</dt>
+              <dd class="acp__dd">{{.target}}</dd>{{/.target}}
+
+              {{?.style}}<dt class="acp__dt">{{labelStyle}}</dt>
+              <dd class="acp__dd">{{.style}}</dd>{{/.style}}
+
+              {{?.lesson}}<dt class="acp__dt">{{labelLesson}}</dt>
+              <dd class="acp__dd">{{.lesson}}</dd>{{/.lesson}}
+
+            </dl>
+
+          </div>
+
+        </article>
+        {{/locs}}
+      </div>
+
+    </div>
+
+    {{?note}}<p class="acp__note fx" data-fx="fadeup">{{note}}</p>{{/note}}
+
+  </div>
+</section>

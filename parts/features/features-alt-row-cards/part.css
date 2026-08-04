@@ -1,0 +1,96 @@
+/* features/features-alt-row-cards
+   ブランド淡色の面に白の角丸カードを縦積み。写真とテキストは1枚ごと左右反転。
+   飾りはカードの輪郭に対する「四隅のかぎ括弧線」1種だけ。カード内部には足さない。
+   接頭辞 .arc__ */
+
+.arc{background:var(--c-primary-l)}
+
+/* ── セクションの頭 ── */
+.arc__head{text-align:center;max-width:calc(var(--w-max) * .76);margin-inline:auto}
+.arc__eyebrow{justify-content:center}
+.arc__h{margin-top:var(--s3)}
+.arc__intro{margin-top:var(--s4);font-size:var(--fs-base);color:var(--c-ink2);line-height:var(--lh-body)}
+
+/* ── カードの積み ── */
+.arc__list{margin-top:clamp(var(--s6),4vw,var(--s8));
+  display:flex;flex-direction:column;gap:clamp(var(--s5),2.4vw,var(--s6))}
+
+.arc__card{position:relative;background:var(--c-bg);border-radius:var(--r-l);
+  box-shadow:var(--shadow);padding:clamp(var(--s5),2.4vw,var(--s6))}
+
+/* 四隅から少し飛び出すかぎ括弧線。
+   角丸の枠を1本引き、四隅だけをマスクで残す（マスクは透明度しか見ないので色は何でもよい）。
+   mask 非対応なら枠が一周するだけ＝崩れない。 */
+.arc__frame{position:absolute;inset:calc(var(--s3) * -1);pointer-events:none;
+  color:var(--c-primary);
+  border:3px solid currentColor;
+  border-radius:calc(var(--r-l) + var(--s3));
+  -webkit-mask:
+    linear-gradient(var(--c-ink),var(--c-ink)) left top/var(--s7) var(--s7) no-repeat,
+    linear-gradient(var(--c-ink),var(--c-ink)) right top/var(--s7) var(--s7) no-repeat,
+    linear-gradient(var(--c-ink),var(--c-ink)) left bottom/var(--s7) var(--s7) no-repeat,
+    linear-gradient(var(--c-ink),var(--c-ink)) right bottom/var(--s7) var(--s7) no-repeat;
+  mask:
+    linear-gradient(var(--c-ink),var(--c-ink)) left top/var(--s7) var(--s7) no-repeat,
+    linear-gradient(var(--c-ink),var(--c-ink)) right top/var(--s7) var(--s7) no-repeat,
+    linear-gradient(var(--c-ink),var(--c-ink)) left bottom/var(--s7) var(--s7) no-repeat,
+    linear-gradient(var(--c-ink),var(--c-ink)) right bottom/var(--s7) var(--s7) no-repeat}
+
+/* ── カードの中身：写真 42% / テキスト 58%、偶数枚目で左右反転 ── */
+.arc__inner{display:flex;align-items:center;gap:clamp(var(--s5),3vw,var(--s7))}
+.arc__item:nth-child(even) .arc__inner{flex-direction:row-reverse}
+
+.arc__media{flex:0 0 42%;align-self:stretch;margin:0;
+  display:flex;flex-direction:column;gap:var(--s2);min-width:0}
+.arc__media img{width:100%;flex:1 1 auto;min-height:calc(var(--s9) * 1.9);
+  object-fit:cover;border-radius:var(--r-m)}
+.arc__cap{flex:none;font-size:var(--fs-note);color:var(--c-ink3);line-height:1.7}
+
+/* 写真が無い項目でも成立させる。写真が無いと本文が全幅に伸びて読みにくいので
+   1行の字数を em で頭打ちにし、余りは左右に均等に振る（写真ありの時は効かない）。 */
+.arc__body{flex:1 1 auto;min-width:0;max-width:40em;margin-inline:auto}
+
+.arc__label{display:flex;align-items:center;gap:var(--s2);line-height:1}
+.arc__labelword{font-size:var(--fs-note);font-weight:700;letter-spacing:.16em;color:var(--c-ink3)}
+.arc__num{font-family:var(--f-num);font-weight:700;font-size:var(--fs-lg);line-height:1;
+  color:var(--c-accent);font-variant-numeric:tabular-nums}
+
+.arc__sub{margin-top:var(--s3);font-size:var(--fs-sm);font-weight:700;
+  color:var(--c-primary);line-height:var(--lh-head)}
+.arc__title{margin-top:var(--s2);font-family:var(--f-disp);font-weight:900;color:var(--c-ink);
+  font-size:clamp(var(--fs-lg),1.8vw,var(--fs-xl));line-height:var(--lh-head);letter-spacing:.01em}
+.arc__title em{font-style:normal;color:var(--c-primary)}
+.arc__text{margin-top:var(--s4);font-size:var(--fs-base);color:var(--c-ink2);line-height:var(--lh-body)}
+
+/* CTA はテキスト列の左端に揃える（全カードで同じ位置から始まる） */
+.arc__act{margin-top:var(--s5)}
+.arc__btn{padding:var(--s3) var(--s6);font-size:var(--fs-base);border-radius:var(--r-pill)}
+.arc__arw{width:var(--s5);height:var(--s3);flex:none}
+.arc__arw svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.8}
+
+.arc__note{margin-top:var(--s5);text-align:center;font-size:var(--fs-note);color:var(--c-ink3);line-height:1.8}
+
+/* ───────── SP（写真上・テキスト下の1列。左右反転は解除） ───────── */
+@media(max-width:900px){
+  .arc__head{max-width:none}
+  .arc__list{margin-top:var(--s6);gap:var(--s4)}
+  .arc__card{padding:var(--s5)}
+
+  .arc__inner,
+  .arc__item:nth-child(even) .arc__inner{flex-direction:column;align-items:stretch;gap:var(--s4)}
+
+  .arc__media{flex:none}
+  .arc__media img{flex:none;min-height:0;aspect-ratio:16/10}
+
+  .arc__body{max-width:none}
+  .arc__title{font-size:var(--fs-lg)}
+  .arc__act{margin-top:var(--s4)}
+  .arc__btn{width:100%}
+
+  .arc__frame{inset:calc(var(--s2) * -1);border-radius:calc(var(--r-l) + var(--s2));
+    -webkit-mask-size:var(--s6) var(--s6);mask-size:var(--s6) var(--s6)}
+}
+@media(max-width:520px){
+  .arc__card{padding:var(--s4)}
+  .arc__media img{aspect-ratio:3/2}
+}

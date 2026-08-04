@@ -1,0 +1,36 @@
+<section class="sec sec--alt ttb"{{?sectionId}} id="{{sectionId}}"{{/sectionId}}>
+  <div class="wrap">
+
+    <div class="ttb__intro">
+      {{?eyebrow}}<p class="h-eyebrow fx" data-fx="left">{{eyebrow}}</p>{{/eyebrow}}
+      <h2 class="h-lead ttb__title fx" data-fx="fadeup" data-d="70">{{headline}}</h2>
+      {{?lead}}<p class="ttb__lead fx" data-fx="fadeup" data-d="130">{{lead}}</p>{{/lead}}
+    </div>
+
+    <div class="ttb__panel">
+      <div class="ttb__grid">
+{{#days}}        <div class="ttb__col" data-tone="{{.tone}}"{{?.closed}} data-off="1"{{/.closed}}>
+
+          <h3 class="ttb__day fx" data-fx="fadeup" data-d="{{.d}}">
+            <span class="ttb__dayName">{{.day}}</span><span class="ttb__daySub">{{.sub}}</span>
+          </h3>
+
+          <div class="ttb__stack fx" data-fx="fadeup" data-d="{{.d}}">
+            {{?.closed}}<p class="ttb__off"><span class="ttb__offLabel">{{.closed}}</span><span class="ttb__offNote">{{.closedNote}}</span></p>{{/.closed}}
+            <ol class="ttb__slots">{{#.slots}}<li class="ttb__slot"><span class="ttb__no" aria-hidden="true">{{.i}}</span><span class="ttb__lines"><span class="ttb__time">{{.time}}</span><span class="ttb__note">{{.note}}</span></span></li>{{/.slots}}</ol>
+          </div>
+
+        </div>
+{{/days}}      </div>
+    </div>
+
+    <div class="ttb__foot">
+      {{?photo}}<figure class="ttb__photo fx" data-fx="scale" data-d="60"><img src="{{photo}}" alt="{{photoAlt}}" loading="lazy"></figure>{{/photo}}
+      <div class="ttb__footText">
+        <ul class="ttb__notes">{{#notes}}<li class="ttb__noteItem">{{.}}</li>{{/notes}}</ul>
+        {{?ctaLabel}}<p class="ttb__cta fx" data-fx="fadeup" data-d="120"><a class="btn" href="{{ctaHref}}">{{ctaLabel}}</a></p>{{/ctaLabel}}
+      </div>
+    </div>
+
+  </div>
+</section>

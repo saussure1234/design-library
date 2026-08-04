@@ -1,0 +1,49 @@
+<section class="sec arc">
+  <div class="wrap">
+
+    <header class="arc__head">
+      {{?eyebrow}}<p class="h-eyebrow arc__eyebrow fx" data-fx="left">{{eyebrow}}</p>{{/eyebrow}}
+      <h2 class="h-lead arc__h fx" data-fx="fadeup" data-d="70">{{headline}}</h2>
+      {{?intro}}<p class="arc__intro fx" data-fx="fadeup" data-d="140">{{intro}}</p>{{/intro}}
+    </header>
+
+    <ol class="arc__list">
+      {{#items}}
+      <li class="arc__item fx" data-fx="fadeup" data-d="{{.d}}">
+        <article class="arc__card">
+          <span class="arc__frame fx" data-fx="scale" data-d="200" aria-hidden="true"></span>
+
+          <div class="arc__inner">
+            {{?.photo}}
+            <figure class="arc__media fx" data-fx="scale" data-d="120">
+              <img src="{{.photo}}" alt="{{.photoAlt}}" loading="lazy" decoding="async">
+              {{?.caption}}<figcaption class="arc__cap">{{.caption}}</figcaption>{{/.caption}}
+            </figure>
+            {{/.photo}}
+
+            <div class="arc__body">
+              <p class="arc__label">
+                <span class="arc__labelword">{{.label}}</span><span class="arc__num">{{.i}}</span>
+              </p>
+              {{?.lead}}<p class="arc__sub">{{.lead}}</p>{{/.lead}}
+              <h3 class="arc__title">{{.title}}</h3>
+              <p class="arc__text">{{.text}}</p>
+              {{?.ctaLabel}}
+              <p class="arc__act">
+                <a class="btn arc__btn" href="{{.ctaHref}}">{{.ctaLabel}}
+                  <span class="arc__arw" aria-hidden="true"><svg viewBox="0 0 22 10"><path d="M0 5h19M15 1l4 4-4 4"/></svg></span>
+                </a>
+              </p>
+              {{/.ctaLabel}}
+            </div>
+          </div>
+
+        </article>
+      </li>
+      {{/items}}
+    </ol>
+
+    {{?note}}<p class="arc__note fx" data-fx="fadeup">{{note}}</p>{{/note}}
+
+  </div>
+</section>

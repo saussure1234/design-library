@@ -1,0 +1,125 @@
+/* compare/compare-matrix-symbol
+   記号評価の多列マトリクス（自社列ベタ塗り強調）
+   ── セルに「文章」が入る前提の版。
+      行の高さは CSS Grid の行が最も高いセルに合わせて伸びるので、
+      列ごとに文章量がバラついても自動で揃う。
+      縦罫は引かない（自社列のティント帯が死ぬ）。横罫1pxのみ。 */
+
+.cmx{
+  /* 項目列は他列の 0.5〜0.6 倍。自社列だけ 1.24 倍にして無意識の視線集中を作る */
+  --cmx-cols:minmax(var(--s8),.58fr) 1.24fr 1fr 1fr;
+}
+
+/* ── 見出し ───────────────────────────── */
+.cmx__intro{max-width:44em}
+.cmx__title{margin-top:var(--s4)}
+/* マーカー帯付き見出し。文字は濃いままで、下側だけ差し色を敷く */
+.cmx__title em{font-style:normal;color:var(--c-ink);
+  background:linear-gradient(to top,var(--c-accent) 38%,transparent 38%)}
+.cmx__lead{margin-top:var(--s4);font-size:var(--fs-base);color:var(--c-ink2);line-height:var(--lh-body)}
+
+/* ── 表本体 ───────────────────────────── */
+.cmx__grid{margin-top:var(--s6);display:grid;grid-template-columns:var(--cmx-cols)}
+/* 行は箱を持たない＝子セルがそのまま grid item になる（PC）。
+   SPではここを block に戻して「1項目＝1カード」に畳む。 */
+.cmx__thead,.cmx__row{display:contents}
+
+/* ヘッダ行：ブランド色ベタ＋白文字。行高は本文行より詰める */
+.cmx__hc{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;
+  gap:var(--s1);min-width:0;padding:var(--s3);
+  background:var(--c-primary);color:var(--c-on-primary);line-height:var(--lh-head)}
+.cmx__hc--item{align-items:center;text-align:center;
+  font-size:var(--fs-note);font-weight:700;letter-spacing:.06em;
+  border-top-left-radius:var(--r-m)}
+.cmx__thead>:last-child{border-top-right-radius:var(--r-m)}
+
+.cmx__hname{font-size:var(--fs-sm);font-weight:700}
+.cmx__hnote{font-size:var(--fs-note);font-weight:400;opacity:.86}
+/* 自社ヘッダだけ一段強く。列の始点をチップで明示する */
+.cmx__hc--own{padding-block:var(--s4)}
+.cmx__hc--own .cmx__hname{font-size:var(--fs-md);font-weight:900;letter-spacing:.01em}
+.cmx__badge{display:inline-block;padding:var(--s1) var(--s3);border-radius:var(--r-pill);
+  background:var(--c-bg);color:var(--c-primary-d);
+  font-size:var(--fs-note);font-weight:700;line-height:var(--lh-head)}
+
+/* 項目名の列（左のラベル・レール）。色は付けず、太字と中央寄せだけで見出し列にする
+   ── 表全体を1枚の白い面にして、sec--alt の地の上で四隅の丸みを効かせる */
+.cmx__item{display:flex;align-items:center;justify-content:center;min-width:0;
+  padding:var(--s4) var(--s3);text-align:center;background:var(--c-bg);
+  font-size:var(--fs-sm);font-weight:700;color:var(--c-ink);line-height:var(--lh-head);
+  border-bottom:1px solid var(--c-line)}
+
+/* データセル */
+.cmx__c{position:relative;display:flex;flex-direction:column;justify-content:center;
+  min-width:0;padding:var(--s4) var(--s3);
+  background:var(--c-bg);border-bottom:1px solid var(--c-line)}
+/* 自社列のティント帯：ヘッダ直下から最終行まで、同じ淡色で1本に通る */
+.cmx__c--own{background:var(--c-primary-l)}
+
+.cmx__main{font-size:var(--fs-sm);line-height:var(--lh-head);color:var(--c-ink2);
+  overflow-wrap:anywhere}
+.cmx__c--own .cmx__main{font-size:var(--fs-base);font-weight:700;color:var(--c-ink)}
+.cmx__sub{margin-top:var(--s2);font-size:var(--fs-note);line-height:var(--lh-head);
+  color:var(--c-ink3);overflow-wrap:anywhere}
+.cmx__c--own .cmx__sub{color:var(--c-ink2)}
+
+/* 記号は「形」と「色」の両方で差をつける（色だけに依存させない）。
+   data-mark が空＝記号なしの文章セルになる */
+.cmx__mk{display:none;margin-right:var(--s2);
+  font-size:var(--fs-md);line-height:var(--lh-tight);vertical-align:-.06em;font-weight:700}
+.cmx__c[data-mark="good"] .cmx__mk,
+.cmx__c[data-mark="mid"]  .cmx__mk,
+.cmx__c[data-mark="bad"]  .cmx__mk{display:inline-block}
+.cmx__c[data-mark="good"] .cmx__mk::before{content:"\25CE";color:var(--c-primary-d)}
+.cmx__c[data-mark="mid"]  .cmx__mk::before{content:"\25B3";color:var(--c-ink2)}
+.cmx__c[data-mark="bad"]  .cmx__mk::before{content:"\00D7";color:var(--c-ink3)}
+
+/* 列名。PCでは読み上げ専用（列と値の対応を音声にも残す）、SPでは表に出す */
+.cmx__lab{position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;
+  overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+
+/* 外枠は付けず、四隅だけ丸める */
+.cmx__row:last-child .cmx__item{border-bottom:0;border-bottom-left-radius:var(--r-m)}
+.cmx__row:last-child .cmx__c{border-bottom:0}
+.cmx__row:last-child .cmx__c:last-child{border-bottom-right-radius:var(--r-m)}
+
+.cmx__note{margin-top:var(--s4);text-align:center;
+  font-size:var(--fs-note);color:var(--c-ink3);line-height:var(--lh-head)}
+
+/* ───────── SP：横スクロールにせず「1項目＝1カード」へ分解 ─────────
+   DOMの並びが 項目名 → 自社 → A社 → B社 なので、
+   畳むだけで「項目名＝カード見出し／自社が1行目／競合が2行目以降」になる。 */
+@media(max-width:900px){
+  .cmx__intro{max-width:none}
+  .cmx__grid{display:block;margin-top:var(--s5)}
+  .cmx__thead{display:none}
+
+  .cmx__row{display:block;background:var(--c-bg);
+    border-radius:var(--r-m);box-shadow:var(--shadow);overflow:hidden}
+  .cmx__row+.cmx__row{margin-top:var(--s4)}
+
+  .cmx__item{justify-content:flex-start;text-align:left;
+    padding:var(--s3) var(--s4);background:var(--c-primary);color:var(--c-on-primary);
+    font-size:var(--fs-base);border-bottom:0;border-radius:0}
+  .cmx__c{padding:var(--s4);border-bottom:1px solid var(--c-line);border-radius:0}
+  .cmx__c--own{box-shadow:inset var(--s1) 0 0 var(--c-primary)}
+  .cmx__c:last-child{border-bottom:0}
+
+  /* PC側の「最終行だけ」指定を、同じ強さの指定で打ち消す */
+  .cmx__row:last-child .cmx__item{border-bottom:0;border-bottom-left-radius:0}
+  .cmx__row:last-child .cmx__c{border-bottom:1px solid var(--c-line)}
+  .cmx__row:last-child .cmx__c:last-child{border-bottom:0;border-bottom-right-radius:0}
+
+  .cmx__lab{position:static;display:block;width:auto;height:auto;margin:0 0 var(--s2);
+    overflow:visible;clip-path:none;white-space:normal;
+    font-size:var(--fs-note);font-weight:700;letter-spacing:.06em;
+    color:var(--c-ink3);line-height:var(--lh-head)}
+  .cmx__c--own .cmx__lab{color:var(--c-primary-d)}
+
+  .cmx__note{margin-top:var(--s5);text-align:left}
+}
+
+@media(max-width:420px){
+  .cmx__c{padding:var(--s3) var(--s4)}
+  .cmx__item{font-size:var(--fs-sm)}
+}

@@ -1,0 +1,146 @@
+/* footer/footer-two-tier-cta — 二段構えフッター（導線帯＋事務フッター）
+   段を分けるのは「面の色」だけ。上段=--c-primary-l / 下段=--c-bg。
+   2段の境目には罫線・影・角丸を一切置かない（色の切り替わりだけで段が読める）。
+   罫線を使うのは下段の内側（法務行の上）だけに限定する。 */
+
+.ftc{background:var(--c-bg)}
+
+/* ── 写真ストリップ（任意）───────────────────────
+   全幅・gap 0・断ち切り。高さは px ではなく比率で決めるので、
+   どの画面幅でも 130〜160px 相当に収まる */
+.ftc__strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0}
+.ftc__strip:not(:has(img)){display:none}   /* 写真を渡さなかった場合の保険 */
+.ftc__cut{margin:0;overflow:hidden;aspect-ratio:16/6;background:var(--c-bg2)}
+.ftc__cut img{width:100%;height:100%;object-fit:cover}
+
+/* ── 上段：導線帯 ─────────────────────────────── */
+.ftc__band{background:var(--c-primary-l);padding-block:clamp(var(--s6),4.5vw,var(--s7))}
+.ftc__band-in{display:flex;flex-direction:column;align-items:center;text-align:center}
+.ftc__eyebrow{justify-content:center;color:var(--c-primary-d)}
+.ftc__h{margin-top:var(--s3);text-wrap:balance}
+
+/* TEL と CTA を横並び。どちらか片方だけでも中央で成立する */
+.ftc__ways{width:100%;margin-top:var(--s5);
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:center;
+  gap:var(--s5) clamp(var(--s5),4vw,var(--s7))}
+
+.ftc__tel{min-width:0}
+.ftc__tel-cap{font-size:var(--fs-sm);font-weight:700;color:var(--c-ink2);line-height:var(--lh-head)}
+.ftc__tel-num{display:inline-flex;align-items:center;gap:var(--s2);
+  margin-top:var(--s1);color:var(--c-ink);font-family:var(--f-num);font-weight:900;
+  font-size:clamp(var(--fs-xl),3.2vw,var(--fs-2xl));line-height:var(--lh-tight);letter-spacing:.02em}
+.ftc__tel-ico{flex:none;display:grid;place-items:center;width:.78em;height:.78em;color:var(--c-primary-d)}
+.ftc__tel-ico svg{width:100%;height:100%;fill:none;stroke:currentColor;
+  stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.ftc__tel-digits{white-space:nowrap}
+.ftc__tel-hours{margin-top:var(--s1);font-size:var(--fs-note);color:var(--c-ink3);line-height:var(--lh-head)}
+
+.ftc__ctabox{min-width:0}
+/* 左右パディングは右端の丸矢印（--s4 + 1.9em）より必ず大きく取り、文字が潜らないようにする */
+.ftc__cta{position:relative;border-radius:var(--r-pill);line-height:var(--lh-tight);
+  padding-block:var(--s5);padding-inline:calc(var(--s5) + 2.2em);
+  font-size:clamp(var(--fs-md),1.6vw,var(--fs-lg));font-weight:900;
+  box-shadow:var(--shadow)}
+.ftc__cta-label{display:block;min-width:0;text-wrap:balance}
+.ftc__cta-note{margin-top:var(--s2);font-size:var(--fs-note);color:var(--c-ink3);line-height:var(--lh-head)}
+
+.ftc__arw{position:absolute;right:var(--s4);top:50%;transform:translateY(-50%);
+  flex:none;display:grid;place-items:center;width:1.9em;height:1.9em;
+  border-radius:var(--r-pill);background:var(--c-on-primary);color:var(--c-primary)}
+.ftc__arw svg{width:.52em;height:.52em;fill:none;stroke:currentColor;
+  stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+
+/* _base.css の .hh-in は表示後も clip-path:inset(0) を残すため、
+   絶対配置の丸矢印とフォーカスリングが切れる。導線帯の中だけ解除する */
+.fx-on .ftc__band .fx.hh-in{clip-path:none}
+
+/* ── 下段：事務フッター ───────────────────────── */
+.ftc__base{background:var(--c-bg);padding-block:clamp(var(--s6),3.5vw,var(--s7))}
+
+.ftc__cols{display:grid;
+  grid-template-columns:minmax(0,.85fr) minmax(0,1fr) minmax(0,1.3fr);
+  gap:clamp(var(--s5),3.5vw,var(--s7))}
+
+.ftc__logo{width:min(100%,11em);height:auto}
+.ftc__brand-note{margin-top:var(--s3);font-size:var(--fs-sm);color:var(--c-ink3);line-height:var(--lh-head)}
+
+/* 列見出し（.h-eyebrow の骨を使い、罫の長さだけ詰める） */
+.ftc__col-h{color:var(--c-ink);font-size:var(--fs-sm)}
+.ftc__col-h::before{width:var(--s4);background:var(--c-primary)}
+.ftc__col-h-a{transition:color .16s var(--e)}
+
+/* 事業導線：面を持たせて“行き先”として読ませる（記事リンクとの階層差を作る） */
+.ftc__svc{margin-top:var(--s4);display:grid;gap:var(--s3)}
+.ftc__svc-a{position:relative;display:block;
+  padding:var(--s3) calc(var(--s4) + 1.6em) var(--s3) var(--s4);
+  border:1px solid var(--c-line);border-radius:var(--r-s);background:var(--c-bg);
+  transition:border-color .16s var(--e),background .16s var(--e)}
+.ftc__svc-label{display:block;font-size:var(--fs-base);font-weight:700;color:var(--c-ink);line-height:var(--lh-tight)}
+.ftc__svc-sub{display:block;margin-top:var(--s1);font-size:var(--fs-note);color:var(--c-ink3);line-height:var(--lh-head)}
+.ftc__svc-sub:empty{display:none}
+.ftc__arw--sm{right:var(--s3);width:1.5em;height:1.5em;
+  background:var(--c-primary-l);color:var(--c-primary-d)}
+
+/* 注目記事：面を持たない素のリスト＝事業導線より1段低い */
+.ftc__posts-label{margin-top:var(--s5);font-size:var(--fs-note);font-weight:700;
+  color:var(--c-ink3);letter-spacing:.08em;line-height:var(--lh-head)}
+.ftc__posts{margin-top:var(--s2);display:grid;gap:var(--s2)}
+.ftc__post{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:start;
+  gap:var(--s2);font-size:var(--fs-sm);color:var(--c-ink2);line-height:var(--lh-head);
+  transition:color .16s var(--e)}
+.ftc__post-dot{margin-top:.62em;width:.42em;height:.42em;border-radius:var(--r-pill);
+  background:var(--c-primary);flex:none}
+.ftc__post-t{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+/* 法務リンク＋コピーライト */
+.ftc__meta{margin-top:clamp(var(--s5),3vw,var(--s6));padding-top:var(--s4);
+  border-top:1px solid var(--c-line);
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;
+  gap:var(--s3) var(--s5)}
+.ftc__legal{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s5);
+  font-size:var(--fs-sm);color:var(--c-ink2)}
+.ftc__legal-a{transition:color .16s var(--e)}
+.ftc__copy{font-size:var(--fs-note);color:var(--c-ink3);letter-spacing:.04em}
+
+/* 最下段の細字（商標注記・reCAPTCHA注記）。長文になる前提で行間を確保する */
+.ftc__fine{margin-top:var(--s4);display:grid;gap:var(--s2)}
+.ftc__note{font-size:var(--fs-note);color:var(--c-ink3);line-height:var(--lh-head)}
+.ftc__note a{text-decoration:underline;text-underline-offset:.2em}
+
+@media(hover:hover) and (pointer:fine){
+  .ftc__tel-num:hover{color:var(--c-primary-d)}
+  .ftc__svc-a:hover{border-color:var(--c-primary);background:var(--c-primary-l)}
+  .ftc__svc-a:hover .ftc__arw--sm{background:var(--c-primary);color:var(--c-on-primary)}
+  .ftc__post:hover{color:var(--c-primary-d)}
+  .ftc__post:hover .ftc__post-t{text-decoration:underline;text-underline-offset:.2em}
+  .ftc__legal-a:hover,.ftc__col-h-a:hover{color:var(--c-primary-d)}
+  .ftc__note a:hover{color:var(--c-primary-d)}
+}
+
+/* ───────── 900px以下 ───────── */
+@media(max-width:900px){
+  /* 写真は 2×2。導線帯より上に置いてあるので、SPでも写真がCTAの上に来る */
+  .ftc__strip{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ftc__cut{aspect-ratio:16/9}
+
+  .ftc__band{padding-block:var(--s6)}
+  .ftc__ways{flex-direction:column;gap:var(--s5)}
+  .ftc__ctabox{width:100%}
+  .ftc__cta{width:100%}
+
+  /* 下段は1カラム。ロゴ・法務・コピーライトは中央寄せ、
+     リンクの列と長い注記だけは読みやすさを優先して左のまま */
+  .ftc__cols{grid-template-columns:minmax(0,1fr);gap:var(--s6)}
+  .ftc__brand{text-align:center}
+  .ftc__logo{margin-inline:auto}
+
+  .ftc__meta{flex-direction:column;align-items:center;justify-content:center;text-align:center}
+  .ftc__legal{justify-content:center}
+}
+
+@media(max-width:480px){
+  .ftc__tel-num{font-size:var(--fs-xl)}
+  .ftc__cta{padding-block:var(--s4);padding-inline:calc(var(--s3) + 2.2em);font-size:var(--fs-md)}
+  .ftc__arw{right:var(--s3);width:1.7em;height:1.7em}
+  .ftc__legal{gap:var(--s2) var(--s4)}
+}

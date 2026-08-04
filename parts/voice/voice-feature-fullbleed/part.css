@@ -1,0 +1,158 @@
+/* voice/voice-feature-fullbleed — 1人フィーチャー（片側フルブリード写真）
+   写真は画面の端まで断ち切り、白カードがその縁へ食い込む。
+   食い込んだ白の上に極太の欧文見出しを置くので、写真の明暗に関係なく必ず読める。 */
+.vff{
+  --vff-shot:47%;                                    /* 写真カラムの幅 */
+  --vff-bite:clamp(var(--s5),5vw,var(--s8));         /* 白カードが写真へ食い込む量 */
+  --vff-pad:clamp(var(--s5),2.8vw,var(--s6));        /* カード内側の左右余白 */
+  --vff-out:max(var(--w-gut),calc((100vw - var(--w-max))/2 + var(--s5))); /* 写真と対比させる「余白側」 */
+  overflow:hidden;                                   /* 食い込み・スライドインで横に溢れない */
+}
+
+.vff__head{position:relative;z-index:1}
+.vff__h{margin-top:var(--s4)}
+.vff__sub{max-width:42em}
+
+.vff__list{margin-top:clamp(var(--s6),4.4vw,var(--s8));
+  display:flex;flex-direction:column;gap:clamp(var(--s6),6vw,var(--s9))}
+
+.vff__item{position:relative;display:grid;align-items:stretch;
+  grid-template-columns:minmax(0,var(--vff-shot)) minmax(0,1fr)}
+
+/* ── 写真：グリッドの行いっぱいに伸び、外側は画面の端で断ち切る ── */
+.vff__shot{position:relative;grid-row:1;grid-column:1;margin:0;z-index:0;
+  min-height:clamp(340px,36vw,540px);background:var(--c-line)}
+.vff__shot img{position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;object-position:var(--vff-pos,50% 28%)}
+/* 継ぎ目側だけ暗く落とす。白カードが浮き、連番が読める（黒ベタは使わず ink の透過） */
+.vff__shot::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(to left,var(--c-ink),transparent 44%);opacity:.58}
+
+/* 連番：写真の縁で白カードに半分隠れる＝境界をまたぐ2つ目の要素 */
+.vff__no{position:absolute;top:50%;right:0;transform:translate(8%,-50%);
+  font-family:var(--f-num);font-weight:900;line-height:.78;letter-spacing:-.04em;
+  font-size:clamp(var(--fs-2xl),8.6vw,calc(var(--fs-4xl) * 2));
+  color:var(--c-on-primary);font-variant-numeric:tabular-nums;pointer-events:none}
+
+/* ── テキスト側：右にたっぷり余白を残し、要素はすべて左揃え ── */
+.vff__plate{position:relative;grid-row:1;grid-column:2;z-index:2;align-self:center;
+  min-width:0;padding:var(--s6) var(--vff-out) var(--s6) var(--s3)}
+
+.vff__card{position:relative;background:var(--c-bg);border-radius:var(--r-m);
+  box-shadow:var(--shadow);padding:var(--s6) var(--vff-pad);
+  margin-left:calc(-1 * var(--vff-bite))}
+
+.vff__markrow{display:flex;align-items:flex-end;gap:var(--s4);
+  padding-bottom:var(--s4);margin-bottom:var(--s5);border-bottom:1px solid var(--c-line)}
+.vff__mark{font-family:var(--f-num);font-weight:900;color:var(--c-ink);
+  font-size:clamp(var(--fs-xl),4.6vw,var(--fs-4xl));line-height:.9;letter-spacing:-.02em;
+  margin-left:calc(var(--s3) - var(--vff-pad))}   /* カードの食い込んだ端まで寄せる */
+.vff__more{margin-left:auto;flex:none;display:inline-flex;align-items:center;gap:var(--s2);
+  font-family:var(--f-num);font-size:var(--fs-note);font-weight:700;letter-spacing:.12em;
+  color:var(--c-ink3);padding-bottom:var(--s1);white-space:nowrap;
+  transition:color .16s var(--e)}
+.vff__more svg{width:18px;height:9px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8}
+@media(hover:hover) and (pointer:fine){.vff__more:hover{color:var(--c-primary-d)}}
+
+.vff__meta{display:flex;align-items:center;flex-wrap:wrap;gap:var(--s3)}
+.vff__label{display:inline-block;background:var(--c-primary);color:var(--c-on-primary);
+  font-size:var(--fs-sm);font-weight:700;line-height:1;letter-spacing:.1em;
+  padding:var(--s2) var(--s3);border-radius:var(--r-s)}
+.vff__date{font-family:var(--f-num);font-size:var(--fs-note);color:var(--c-ink3);letter-spacing:.06em}
+
+.vff__title{margin-top:var(--s4);font-family:var(--f-disp);font-weight:900;color:var(--c-ink);
+  font-size:clamp(var(--fs-lg),2.2vw,var(--fs-xl));line-height:var(--lh-head);letter-spacing:.01em}
+
+.vff__text{margin-top:var(--s5)}
+.vff__text:empty{display:none}
+.vff__text p{font-size:var(--fs-base);color:var(--c-ink2);line-height:var(--lh-body)}
+.vff__text p + p{margin-top:var(--s4)}
+
+.vff__who{margin-top:var(--s5);padding-top:var(--s4);border-top:1px solid var(--c-line);
+  display:flex;align-items:baseline;flex-wrap:wrap;gap:var(--s2) var(--s3)}
+.vff__aff{font-size:var(--fs-sm);color:var(--c-ink3)}
+.vff__name{font-size:var(--fs-md);font-weight:700;color:var(--c-ink)}
+
+.vff__tags{margin-top:var(--s3);display:flex;flex-wrap:wrap;gap:var(--s2) var(--s3)}
+.vff__tags:empty{display:none}
+.vff__tags li{font-size:var(--fs-note);color:var(--c-ink3);line-height:1.6}
+.vff__tags li::before{content:"#";color:var(--c-primary)}
+
+/* ── 入れ子の「講師からのコメント」──
+   カードの外に出し、字下げ＋淡色面＋小さい級数で「本体への返信」に見せる */
+.vff__reply{position:relative;background:var(--c-primary-l);border-radius:var(--r-m);
+  padding:var(--s5) clamp(var(--s5),2.6vw,var(--s6));
+  margin:var(--s5) 0 0 calc(var(--s6) - var(--vff-bite))}
+.vff__reply::before{content:"";position:absolute;top:calc(-1 * var(--s3));left:var(--s6);
+  width:calc(var(--s3) * 2);height:var(--s3);background:var(--c-primary-l);
+  clip-path:polygon(50% 0, 100% 100%, 0 100%)}
+.vff__reply__h{display:flex;align-items:center;gap:var(--s2);
+  font-size:var(--fs-sm);font-weight:700;color:var(--c-ink);letter-spacing:.04em}
+.vff__reply__h::before{content:"";width:var(--s4);height:2px;flex:none;
+  background:var(--c-primary);border-radius:var(--r-pill)}
+.vff__reply__t{margin-top:var(--s3)}
+.vff__reply__t p{font-size:var(--fs-sm);color:var(--c-ink2);line-height:var(--lh-body)}
+.vff__reply__t p + p{margin-top:var(--s3)}
+.vff__reply__n{margin-top:var(--s4);text-align:right;
+  font-size:var(--fs-sm);font-weight:700;color:var(--c-ink)}
+
+.vff__foot{margin-top:clamp(var(--s5),3vw,var(--s6))}
+.vff__note{font-size:var(--fs-note);color:var(--c-ink3);line-height:1.8}
+
+/* ── 偶数番めは左右を反転（写真を右の端で断ち切る）── */
+.vff__item:nth-child(even){grid-template-columns:minmax(0,1fr) minmax(0,var(--vff-shot))}
+.vff__item:nth-child(even) .vff__shot{grid-column:2}
+.vff__item:nth-child(even) .vff__shot img{object-position:var(--vff-pos-b,50% 28%)}
+.vff__item:nth-child(even) .vff__shot::after{
+  background-image:linear-gradient(to right,var(--c-ink),transparent 44%)}
+.vff__item:nth-child(even) .vff__no{right:auto;left:0;transform:translate(-8%,-50%)}
+.vff__item:nth-child(even) .vff__plate{grid-column:1;
+  padding-left:var(--vff-out);padding-right:var(--s3)}
+.vff__item:nth-child(even) .vff__card{margin-left:0;margin-right:calc(-1 * var(--vff-bite))}
+.vff__item:nth-child(even) .vff__reply{
+  margin-left:var(--s6);margin-right:calc(-1 * var(--vff-bite))}
+
+/* ───────── SP（900px以下）─────────
+   写真を16:9で上に断ち切り、白カードを写真の下端へ食い込ませて重ねる。
+   ★ 写真はカード（＝CTA・本文）より必ず上。 */
+@media(max-width:900px){
+  .vff{--vff-bite:clamp(var(--s5),5vw,var(--s6))}
+  .vff__list{gap:var(--s8)}
+  .vff__item,
+  .vff__item:nth-child(even){display:block;grid-template-columns:none}
+
+  .vff__shot,
+  .vff__item:nth-child(even) .vff__shot{min-height:0;aspect-ratio:16/9}
+  .vff__shot::after,
+  .vff__item:nth-child(even) .vff__shot::after{
+    background-image:linear-gradient(to top,var(--c-ink),transparent 62%)}
+  .vff__no,
+  .vff__item:nth-child(even) .vff__no{top:auto;right:auto;left:var(--w-gut);
+    bottom:calc(var(--vff-bite) + var(--s4));transform:none;
+    font-size:clamp(var(--fs-2xl),16vw,calc(var(--fs-4xl) * 1.5))}
+
+  .vff__plate,
+  .vff__item:nth-child(even) .vff__plate{padding:0 var(--w-gut)}
+  .vff__card,
+  .vff__item:nth-child(even) .vff__card{
+    margin:calc(-1 * var(--vff-bite)) 0 0;padding:var(--s5)}
+  .vff__mark{margin-left:0;font-size:clamp(var(--fs-xl),9vw,var(--fs-3xl))}
+  .vff__markrow{align-items:center;gap:var(--s3)}
+  .vff__title{font-size:clamp(var(--fs-md),5.2vw,var(--fs-lg))}
+
+  /* タグは折り返さず横スクロールの1行に */
+  .vff__tags{flex-wrap:nowrap;overflow-x:auto;padding-bottom:var(--s2);scrollbar-width:none}
+  .vff__tags li{flex:none}
+
+  .vff__reply,
+  .vff__item:nth-child(even) .vff__reply{margin:var(--s5) 0 0 var(--s4)}
+  .vff__reply::before{left:var(--s5)}
+}
+
+@media(max-width:420px){
+  .vff__card,
+  .vff__item:nth-child(even) .vff__card{padding:var(--s4)}
+  .vff__reply,
+  .vff__item:nth-child(even) .vff__reply{margin-left:var(--s3);padding:var(--s4)}
+  .vff__reply::before{left:var(--s4)}
+}

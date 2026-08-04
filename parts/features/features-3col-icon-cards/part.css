@@ -1,0 +1,102 @@
+/* features/features-3col-icon-cards
+   番号ラベルを「帽子」のようにカード上辺へ半分かぶせて外へ出す整列カード。
+   差別化は (b) ラベル帯 の1つだけ。塗り分け・白い箱は使わない。
+   3項目でも4項目でも余りが出ないグリッド（PC 4列/3列 → 2列 → 1列）。 */
+
+/* ── 見出し（中央寄せ） ───────────────────────────── */
+.f3c__head{display:flex;flex-direction:column;align-items:center;text-align:center}
+.f3c__h{margin-top:var(--s4)}
+.f3c__lead{margin-top:var(--s5);max-width:36em;
+  font-size:var(--fs-base);color:var(--c-ink2);line-height:var(--lh-body)}
+
+/* ── カード群 ───────────────────────────────────
+   auto-fit + minmax。4項目なら4列、3項目なら3列に自然に落ちる。
+   1000px以下は2列に固定するので「最後の1枚が余る」状態は起きない。 */
+.f3c__grid{margin-top:clamp(var(--s7),6vw,var(--s8));
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:var(--s5)}
+/* 文字はカード幅（cqi）で決める。ビューポート幅(vw)で決めると、版面が1120pxで
+   頭打ちになった後も文字だけ育ち、4列時に日本語の見出しが横へ溢れる。
+   padding-top は帽子ぶんの逃げ。_base.css の .fx.hh-in は clip-path:inset(0) を
+   かけるので、.fx の箱から外へ出た帽子は切り落とされる。箱の中で出す。 */
+.f3c__item{display:flex;container-type:inline-size;padding-top:var(--s5)}
+
+.f3c__card{position:relative;width:100%;display:flex;flex-direction:column;
+  padding:var(--s7) var(--s5) var(--s5);          /* 上は帽子ぶんを確保 */
+  background:var(--c-bg);border:1px solid var(--c-line);border-radius:var(--r-l);
+  transition:transform .2s var(--e),box-shadow .2s var(--e),border-color .2s var(--e)}
+
+/* 帽子＝番号ラベル。カード上辺に半分かぶせて外へ出す */
+.f3c__no{position:absolute;top:0;left:50%;transform:translate(-50%,-50%);
+  display:inline-flex;align-items:baseline;gap:var(--s2);
+  padding:var(--s2) var(--s4);border-radius:var(--r-pill);
+  background:var(--c-primary);color:var(--c-on-primary);white-space:nowrap;line-height:1.2}
+.f3c__no i{font-style:normal;font-size:var(--fs-note);font-weight:700;letter-spacing:.14em}
+.f3c__no b{font-family:var(--f-num);font-size:var(--fs-md);font-weight:900;
+  letter-spacing:.02em;font-variant-numeric:tabular-nums}
+
+.f3c__t{font-family:var(--f-disp);font-weight:900;color:var(--c-ink);text-align:center;
+  line-height:var(--lh-tight);letter-spacing:.01em;overflow-wrap:anywhere;
+  font-size:var(--fs-md);                       /* cq非対応ブラウザ用のたたみ台 */
+  font-size:clamp(var(--fs-md),7.2cqi,var(--fs-lg))}
+.f3c__d{margin-top:var(--s3);margin-bottom:var(--s5);text-align:center;
+  color:var(--c-ink2);line-height:var(--lh-body);overflow-wrap:anywhere;
+  font-size:var(--fs-sm);
+  font-size:clamp(var(--fs-sm),5.4cqi,var(--fs-base))}
+
+/* 詳細リンク行はカード下端に揃える */
+.f3c__more{margin-top:auto;padding-top:var(--s4);border-top:1px solid var(--c-line);
+  display:flex;align-items:center;justify-content:center;gap:var(--s3);
+  font-size:var(--fs-sm);font-weight:700;color:var(--c-primary)}
+.f3c__arw{width:26px;height:26px;flex:none;display:grid;place-items:center;
+  border-radius:var(--r-pill);background:var(--c-primary-l);color:var(--c-primary);
+  transition:background .2s var(--e),color .2s var(--e),transform .2s var(--e)}
+.f3c__arw svg{width:12px;height:12px;fill:none;stroke:currentColor;
+  stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+@media(hover:hover) and (pointer:fine){
+  .f3c__card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:var(--c-primary)}
+  .f3c__card:hover .f3c__arw{background:var(--c-primary);color:var(--c-on-primary);transform:translateX(2px)}
+}
+
+/* ── カード直下の単独CTA（ピル） ─────────────────── */
+.f3c__cta{margin-top:clamp(var(--s6),4vw,var(--s7));
+  display:flex;flex-direction:column;align-items:center;gap:var(--s3)}
+.f3c__btn{border-radius:var(--r-pill)}
+.f3c__ctanote{font-size:var(--fs-sm);color:var(--c-ink3);text-align:center}
+
+/* ── 動き ──────────────────────────────────────
+   カード本体は .fx（fadeup / 90msずつ遅延）。帽子だけ60ms遅らせて 0.9→1.0。
+   JSが動かない（.fx-on が付かない）ときは何も起きず、最初から見えている。 */
+@keyframes f3c-pop{
+  from{transform:translate(-50%,-50%) scale(.9);opacity:0}
+  to  {transform:translate(-50%,-50%) scale(1);opacity:1}
+}
+.fx-on .f3c__item.hh-in .f3c__no{animation:f3c-pop .42s var(--e) 60ms both}
+
+/* ── 1000px以下：2列（4項目なら2×2） ─────────────── */
+@media(max-width:1000px){
+  .f3c__grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s3) var(--s5)}
+}
+
+/* ── 900px以下：詰める ─────────────────────────── */
+@media(max-width:900px){
+  .f3c__grid{margin-top:var(--s7);gap:var(--s3) var(--s4)}
+  .f3c__card{padding:var(--s7) var(--s4) var(--s5)}
+  .f3c__lead{margin-top:var(--s4);font-size:var(--fs-sm)}
+  .f3c__more{font-size:var(--fs-note)}
+}
+
+/* ── 560px以下：1列。縦に伸ばさないため帽子を畳んで左揃えの短冊にする ── */
+@media(max-width:560px){
+  .f3c__grid{grid-template-columns:1fr;gap:var(--s4)}
+  .f3c__item{padding-top:0}
+  .f3c__card{padding:var(--s5);border-radius:var(--r-m)}
+  .f3c__no{position:static;transform:none;align-self:flex-start;margin-bottom:var(--s3)}
+  .fx-on .f3c__item.hh-in .f3c__no{animation:none}
+  .f3c__t,.f3c__d{text-align:left}
+  .f3c__d{margin-bottom:var(--s4)}
+  .f3c__more{justify-content:space-between}
+  .f3c__cta{margin-top:var(--s6);align-self:stretch}
+  .f3c__btn{width:100%}
+}

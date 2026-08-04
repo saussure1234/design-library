@@ -1,0 +1,32 @@
+<section class="sec mpl">
+  <div class="wrap mpl__grid">
+
+    <header class="mpl__head">
+      {{?eyebrow}}<p class="h-eyebrow fx" data-fx="left">{{eyebrow}}</p>{{/eyebrow}}
+      <h2 class="h-lead mpl__title fx" data-fx="fadeup" data-d="80">{{heading}}</h2>
+      {{?intro}}<p class="mpl__intro fx" data-fx="fadeup" data-d="160">{{intro}}</p>{{/intro}}
+    </header>
+
+    <div class="mpl__aside">
+      <div class="mpl__stick">
+        <figure class="mpl__figure fx" data-fx="fadeup" data-d="120">
+          <img class="mpl__img" src="{{photo}}" alt="{{photoAlt}}" loading="lazy" decoding="async">
+        </figure>
+        <div class="mpl__sign fx" data-fx="fadeup" data-d="320">
+          {{?signOrg}}<p class="mpl__org">{{signOrg}}</p>{{/signOrg}}
+          {{?signRole}}<p class="mpl__role">{{signRole}}</p>{{/signRole}}
+          <p class="mpl__name"><span class="nb">{{signName}}</span></p>
+          {{?signRoman}}<p class="mpl__roman">{{signRoman}}</p>{{/signRoman}}
+        </div>
+      </div>
+    </div>
+
+    <div class="mpl__main">
+      <div class="mpl__body fx" data-fx="fadeup" data-d="200">
+        {{#paras}}<p>{{.t}}</p>{{/paras}}
+      </div>
+      {{?ctaHref}}<p class="mpl__act fx" data-fx="fadeup" data-d="280"><a class="btn btn--ghost" href="{{ctaHref}}">{{ctaLabel}}</a></p>{{/ctaHref}}
+    </div>
+
+  </div>
+</section>

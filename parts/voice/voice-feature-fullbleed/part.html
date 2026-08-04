@@ -1,0 +1,61 @@
+<section class="sec sec--alt vff">
+
+  <div class="wrap vff__head">
+    <p class="h-eyebrow fx" data-fx="left">{{eyebrow}}</p>
+    <h2 class="h-lead vff__h fx" data-fx="fadeup" data-d="80">{{heading}}</h2>
+    {{?lead}}<p class="h-sub vff__sub fx" data-fx="fadeup" data-d="140">{{lead}}</p>{{/lead}}
+  </div>
+
+  <div class="vff__list">
+    {{#voices}}
+    <article class="vff__item">
+
+      <figure class="vff__shot fx" data-fx="clip">
+        <img src="{{.photo}}" alt="{{.photoAlt}}" loading="lazy" decoding="async">
+        {{?.no}}<span class="vff__no" aria-hidden="true">{{.no}}</span>{{/.no}}
+      </figure>
+
+      <div class="vff__plate">
+
+        <div class="vff__card fx" data-fx="fadeup" data-d="120">
+
+          <p class="vff__markrow">
+            <span class="vff__mark fx" data-fx="right" data-d="240">{{.mark}}</span>
+            {{?.moreHref}}<a class="vff__more" href="{{.moreHref}}">{{.moreLabel}}<svg viewBox="0 0 22 10" aria-hidden="true"><path d="M0 5h19M15 1l4 4-4 4"/></svg></a>{{/.moreHref}}
+          </p>
+
+          <p class="vff__meta">
+            <span class="vff__label">{{.label}}</span>
+            {{?.date}}<span class="vff__date">{{.date}}</span>{{/.date}}
+          </p>
+
+          <h3 class="vff__title">{{.title}}</h3>
+
+          <div class="vff__text">{{#.paras}}<p>{{.t}}</p>{{/.paras}}</div>
+
+          <p class="vff__who">
+            {{?.aff}}<span class="vff__aff">{{.aff}}</span>{{/.aff}}
+            <b class="vff__name">{{.name}}</b>
+          </p>
+
+          <ul class="vff__tags">{{#.tags}}<li>{{.t}}</li>{{/.tags}}</ul>
+
+        </div>
+
+        {{#.reply}}
+        <aside class="vff__reply fx" data-fx="fadeup" data-d="320">
+          <p class="vff__reply__h">{{.head}}</p>
+          <div class="vff__reply__t">{{#.lines}}<p>{{.t}}</p>{{/.lines}}</div>
+          {{?.who}}<p class="vff__reply__n">{{.who}}</p>{{/.who}}
+        </aside>
+        {{/.reply}}
+
+      </div>
+
+    </article>
+    {{/voices}}
+  </div>
+
+  {{?note}}<div class="wrap vff__foot"><p class="vff__note">{{note}}</p></div>{{/note}}
+
+</section>
