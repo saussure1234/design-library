@@ -30,6 +30,21 @@ ul,ol{padding:0;list-style:none}
 .card,.panel,[class*="__card"],[class*="__panel"]{box-shadow:var(--shadow)}
 .nb{white-space:nowrap}          /* 日本語の改行制御。必ず <wbr> と併用 */
 
+/* ── セクション見出し：1系統に統一する ──────────────
+   type/two-tier-latin-jp  欧文ラベルと和文を2段に組み、
+   級数・太さ・色の主従をわざと逆転させる（欧文は極小・和文が主）。
+   検算で「見出しの様式が8系統」と出たため、全セクションこれに揃える。 */
+.sec-head{margin-bottom:var(--sp-el)}
+.sec-head__en{display:flex;align-items:center;gap:var(--s3);
+  font-size:11.5px;font-weight:700;letter-spacing:.14em;color:var(--c-primary);
+  text-transform:uppercase;margin-bottom:var(--s3)}
+.sec-head__en::before{content:"";width:24px;height:2px;background:currentColor;flex:none}
+.sec-head__ja{font-family:var(--f-disp);font-weight:900;color:var(--c-ink);
+  font-size:clamp(23px,3.2vw,34px);line-height:1.42;letter-spacing:.01em}
+.sec-head__sub{margin-top:var(--s4);font-size:var(--fs-base);color:var(--c-ink3);max-width:44em}
+.tone-dark .sec-head__en{color:#8FD6A0}
+.tone-dark .sec-head__ja{color:var(--c-on-dark)}
+
 /* 見出しの型（案件をまたいで共通の骨） */
 .h-eyebrow{display:flex;align-items:center;gap:var(--s3);
   font-size:var(--fs-sm);font-weight:700;color:var(--c-primary);letter-spacing:.08em}
@@ -39,10 +54,19 @@ ul,ol{padding:0;list-style:none}
 .h-sub{margin-top:var(--s4);font-size:var(--fs-base);color:var(--c-ink3)}
 
 /* ボタン */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--s3);
+/* CTAは1形だけ。ピル＋右端に白丸の矢印。
+   検算で「10個・6種類の形」が出たため、形の差で主従を作るのをやめ、
+   大きさだけで主従をつける（.btn--sm が従）。 */
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:var(--s3);
   background:var(--c-primary);color:var(--c-on-primary);font-weight:700;font-size:var(--fs-md);
-  padding:18px 34px;border-radius:var(--r-s);border:0;cursor:pointer;
+  height:72px;padding:0 76px 0 40px;border-radius:var(--r-pill);border:0;cursor:pointer;
   transition:background .16s var(--e),transform .16s var(--e)}
+.btn::after{content:"";position:absolute;right:20px;top:50%;width:32px;height:32px;margin-top:-16px;
+  border-radius:50%;background:var(--c-on-primary);
+  -webkit-mask:no-repeat center/11px 11px url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'><path d='M3 1l5 5-5 5' fill='none' stroke='%23000' stroke-width='2'/></svg>");
+  mask:no-repeat center/11px 11px url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'><path d='M3 1l5 5-5 5' fill='none' stroke='%23000' stroke-width='2'/></svg>")}
+.btn--sm{height:48px;padding:0 24px;font-size:var(--fs-sm)}
+.btn--sm::after{display:none}
 .btn:active{transform:scale(.97)}
 @media(hover:hover) and (pointer:fine){.btn:hover{background:var(--c-primary-d)}}
 .btn--ghost{background:transparent;color:var(--c-primary);box-shadow:inset 0 0 0 2px currentColor}

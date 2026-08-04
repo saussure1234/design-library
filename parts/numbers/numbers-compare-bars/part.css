@@ -1,115 +1,124 @@
-/* numbers/numbers-compare-bars — 割合／前後を横バーで1行ずつ積む
-   行＝1単位。左に固定幅ラベル、右にバー、数値はバーの右端の「外」。
-   lead を立てた行だけ差し色＋級数を上げて主役にする。
-   基準バー（basePct）を足すと「受講前→受講後」の比較型になる。 */
+/* numbers/numbers-compare-bars — 同じ指標を区分ごとに横バーで積む
+   ── 効かせている工夫 ─────────────────────────────
+   color/rival-desaturated : 結論の1本だけが色相を持ち、残りは【同じ明度の無彩色】。
+     ばらけた明度で「薄い＝悪い」と読ませない。差し色を消しても順位は数値が持つ。
+   rule/table-no-grid      : 枠・格子罫・ヘッダ地色を全部消し、線は行の区切り1本だけ。
+     線が減るぶん、面の1段（地→パネル）と数値の位置揃えが表として効く。
+   ───────────────────────────────────────────── */
 
-/* 値100のときバーが取る幅。残りが数値とふきだしの置き場になる。
-   数値が大きいほど、ここを絞らないと右端からはみ出す。 */
-.ncb{--ncb-span:86%}
+.ncb{
+  /* バーの無彩色。--c-accent とほぼ同じ相対輝度（0.42）に合わせてあるので、
+     並べたときに差として残るのは【彩度の有無だけ】になる。
+     ここを薄くすると 100% の行が「悪い数字」に見えるので落とさない。 */
+  --ncb-dim:color-mix(in srgb,var(--c-ink) 36%,var(--c-bg));
+  --ncb-dim-l:color-mix(in srgb,var(--c-ink) 18%,var(--c-bg));  /* 基準バー（比較型） */
+  --ncb-rule:color-mix(in srgb,var(--c-ink) 8%,transparent);    /* 行の区切り1本 */
+  --ncb-numw:var(--s8);   /* 数値の列幅。右端で揃えるための固定列 */
+  --ncb-h:var(--s5);      /* バーの高さ */
+}
 
-/* ── 見出し ───────────────────────────── */
-.ncb__head{text-align:center}
-.ncb__eyebrow{justify-content:center;margin-bottom:var(--s3)}
-.ncb__h{margin-bottom:clamp(20px,3vw,var(--s6))}
-.ncb__h em{font-style:normal;color:var(--c-primary-d)}
+/* ── 見出し ─────────────────────────────
+   .sec-head（欧文ラベル＋和文）をそのまま使う。独自の様式は作らない */
+.ncb__head{max-width:44em}
 
-/* ── 白カード ─────────────────────────── */
-.ncb__card{background:var(--c-bg);border:1px solid var(--c-line);
-  border-radius:var(--r-l);box-shadow:var(--shadow);
-  padding:clamp(20px,3.2vw,var(--s7)) clamp(14px,3.2vw,var(--s7))}
+/* ── バーを載せる面 ───────────────────────
+   枠線も影も持たない。地（tone）から明度を1段だけ落として面を作る。
+   ＝ 線を1本も足さずに①輝度の段差を作るのがこの面の役目 */
+.ncb__chart{background:var(--c-bg2);border-radius:var(--r-l);
+  padding:var(--s7) var(--s6)}
+/* 地がすでに1段落ちているトーンでは、逆に1段上げて段差を保つ */
+.tone-tint .ncb__chart,.tone-accent .ncb__chart{background:var(--c-bg)}
 
-/* ＼ 一言 ／ の斜線は擬似要素で。em基準なので文字サイズに追従する */
+/* ＼ 一言 ／（任意）。斜線は擬似要素。押せる場所ではないので緑は使わない */
 .ncb__cardtitle{display:flex;align-items:center;justify-content:center;gap:var(--s4);
   font-family:var(--f-disp);font-weight:900;color:var(--c-ink);
-  font-size:clamp(15px,1.9vw,var(--fs-md));line-height:var(--lh-tight);letter-spacing:.04em;
-  margin-bottom:clamp(16px,2.4vw,var(--s5))}
+  font-size:var(--fs-md);line-height:var(--lh-tight);letter-spacing:.04em;
+  margin-bottom:var(--s5)}
 .ncb__cardtitle::before,.ncb__cardtitle::after{content:"";flex:none;
-  width:.12em;height:1.5em;background:var(--c-primary);border-radius:var(--r-pill)}
+  width:.12em;height:1.5em;background:var(--c-ink3);border-radius:var(--r-pill)}
 .ncb__cardtitle::before{transform:rotate(-20deg)}
 .ncb__cardtitle::after{transform:rotate(20deg)}
 
-/* ── 行 ───────────────────────────────── */
-.ncb__rows{display:flex;flex-direction:column;gap:var(--s2)}
-.ncb__row{display:grid;grid-template-columns:clamp(52px,6.4vw,84px) minmax(0,1fr);
-  align-items:center;gap:var(--s4);
-  padding:var(--s2) var(--s3);border-radius:var(--r-m)}
-.ncb__row--lead{background:var(--c-bg2)}
+/* ── 行 ───────────────────────────────
+   罫は行と行のあいだの1本だけ。縦罫・外枠・ヘッダ地色は引かない。
+   行の面色も敷かない（主役の行に面を敷くと「2色で塗り分け」に戻る） */
+.ncb__rows{display:flex;flex-direction:column}
+.ncb__row{display:grid;grid-template-columns:var(--s8) minmax(0,1fr);
+  align-items:center;column-gap:var(--s5);padding-block:var(--s4)}
+.ncb__row+.ncb__row{border-top:1px solid var(--ncb-rule)}
+.ncb__row:first-child{padding-top:0}
+.ncb__row:last-child{padding-bottom:0}
 
 .ncb__label{text-align:right;font-weight:700;color:var(--c-ink);
-  font-size:clamp(13px,1.5vw,var(--fs-md));line-height:var(--lh-tight);
-  font-feature-settings:"palt"}
-.ncb__sub{display:block;margin-top:.15em;font-size:var(--fs-note);font-weight:500;color:var(--c-ink3)}
+  font-size:var(--fs-md);line-height:var(--lh-tight);font-feature-settings:"palt"}
+.ncb__sub{display:block;margin-top:var(--s1);font-size:var(--fs-note);font-weight:500;color:var(--c-ink3)}
 
-.ncb__bars{display:flex;flex-direction:column;gap:var(--s1);min-width:0}
-.ncb__line{display:flex;align-items:center;gap:var(--s3);min-width:0}
+/* バー＋数値。数値は固定幅の列に入れて右端で縦に揃える。
+   位置揃えが揃うほど、罫が無くても「表」として読める */
+.ncb__bars{display:flex;flex-direction:column;gap:var(--s2);min-width:0}
+.ncb__line{display:grid;grid-template-columns:minmax(0,1fr) var(--ncb-numw);
+  align-items:center;column-gap:var(--s4);min-width:0}
 
-/* バー長は --ncb-p（0〜100の素の数値）× --ncb-span。
-   min-width は「短い値でもバーとして見える」下限。
-   flex-shrink を1にしてあるのは、数値やふきだしが長すぎたときに
-   バーだけが縮んで受け止め、カードの外へはみ出さないようにするため。 */
-.ncb__bar{flex:0 1 auto;width:calc(var(--ncb-p) * var(--ncb-span) / 100);min-width:var(--s6);
-  height:clamp(18px,2.2vw,var(--s5));border-radius:var(--r-pill);overflow:hidden;
+/* バー長は --ncb-p（0〜100の素の数値）＝ 列幅に対する％。
+   目盛りの溝（トラック）は敷かない。残りを塗ると「もう一つのデータ」に見える */
+.ncb__bar{width:calc(var(--ncb-p) * 1%);min-width:var(--s5);height:var(--ncb-h);
+  border-radius:0 var(--r-s) var(--r-s) 0;overflow:hidden;
   display:flex;align-items:center;padding-inline:var(--s3);
-  background:var(--c-primary);color:var(--c-on-primary)}
-.ncb__bar--base{background:var(--c-line);color:var(--c-ink2)}
-.ncb__row--lead .ncb__bar--main{background:var(--c-accent);color:var(--c-ink)}
+  background:var(--ncb-dim);color:var(--c-ink)}
+.ncb__bar--base{background:var(--ncb-dim-l);color:var(--c-ink2)}
+/* 色相を持つのはここ1本だけ。＝このセクションの差し色は1箇所 */
+.ncb__row--lead .ncb__bar--main{background:var(--c-accent)}
 .ncb__inbar{font-size:var(--fs-note);font-weight:700;line-height:1;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-/* 数値。主役と基準で級数差を大きく取るのがこの型の肝 */
-.ncb__num{flex:none;white-space:nowrap;font-family:var(--f-num);font-weight:900;
-  line-height:1;color:var(--c-ink);font-variant-numeric:tabular-nums;
-  font-size:clamp(19px,2.4vw,var(--fs-xl))}
+/* 数値。色は全行そろえ、主役だけ級数を上げる。
+   ウェイトは全行 900 のまま落とさない（落とすと 100% が弱く見える） */
+.ncb__num{justify-self:end;white-space:nowrap;font-family:var(--f-num);font-weight:900;
+  line-height:1;color:var(--c-ink);font-variant-numeric:tabular-nums;font-size:var(--fs-xl)}
 .ncb__num b{font-weight:inherit}
-.ncb__num i{font-style:normal;font-family:var(--f-sans);font-size:.5em;margin-left:.08em}
+.ncb__num i{font-style:normal;font-family:var(--f-sans);font-size:.5em;
+  color:var(--c-ink3);margin-left:.08em}
 .ncb__num--base{font-size:var(--fs-sm);font-weight:700;color:var(--c-ink3)}
-.ncb__row--lead .ncb__num{color:var(--c-accent);font-size:clamp(28px,4vw,var(--fs-2xl))}
+.ncb__row--lead .ncb__num{font-size:var(--fs-2xl)}
 
-/* 差分ふきだし（任意）。バー領域の外へ出す */
-.ncb__badge{position:relative;flex:none;display:inline-flex;align-items:center;
-  margin-left:var(--s2);padding:var(--s1) var(--s3);border-radius:var(--r-pill);
-  background:var(--c-accent);color:var(--c-ink);font-weight:900;
-  font-size:clamp(11px,1.3vw,var(--fs-sm));line-height:1.5}
-.ncb__badge::before{content:"";position:absolute;left:calc(.46em * -1);top:50%;
-  width:.5em;height:.66em;transform:translateY(-50%);background:var(--c-accent);
-  clip-path:polygon(100% 0,100% 100%,0 50%)}
+/* 差分チップ（任意）。数値の下・右端に揃える。差し色はバーで使い切っている */
+.ncb__badge{grid-column:2;justify-self:end;margin-top:var(--s2);
+  padding:var(--s1) var(--s3);border-radius:var(--r-pill);
+  background:color-mix(in srgb,var(--c-ink) 10%,var(--c-bg));color:var(--c-ink);
+  font-weight:900;font-size:var(--fs-sm);line-height:1.5;white-space:nowrap}
 
-.ncb__note{margin-top:var(--s4);font-size:var(--fs-note);color:var(--c-ink3);line-height:1.8}
+.ncb__note{margin-top:var(--s4);font-size:var(--fs-note);color:var(--c-ink3);line-height:var(--lh-body)}
 
 /* ── 動き ─────────────────────────────
-   行に .hh-in が付いた時点でバーが左から伸び、遅れて数値・ふきだしが出る。
+   行に .hh-in が付いたらバーが左から伸び、遅れて数値が出る。気配の範囲に留める。
    JSが動かないと .fx-on が付かない＝最初から全部見えている（安全側） */
-.fx-on .ncb__bar{clip-path:inset(0 100% 0 0 round var(--r-pill));
-  transition:clip-path .62s var(--e) .08s}
-.fx-on .ncb__row.hh-in .ncb__bar{clip-path:inset(0 round var(--r-pill))}
+.fx-on .ncb__bar{clip-path:inset(0 100% 0 0);transition:clip-path var(--d) var(--e) .08s}
+.fx-on .ncb__row.hh-in .ncb__bar{clip-path:inset(0)}
 .fx-on .ncb__num{opacity:0;transform:translateX(calc(var(--s2) * -1));
-  transition:opacity .34s var(--e) .5s,transform .34s var(--e) .5s}
+  transition:opacity .34s var(--e) .34s,transform .34s var(--e) .34s}
 .fx-on .ncb__row.hh-in .ncb__num{opacity:1;transform:none}
-@keyframes ncb-pop{0%{opacity:0;transform:scale(.8)}60%{opacity:1;transform:scale(1.06)}100%{opacity:1;transform:scale(1)}}
-.fx-on .ncb__badge{opacity:0}
-.fx-on .ncb__row.hh-in .ncb__badge{animation:ncb-pop .42s var(--e) .62s both}
+.fx-on .ncb__badge{opacity:0;transition:opacity .34s var(--e) .46s}
+.fx-on .ncb__row.hh-in .ncb__badge{opacity:1}
 
-/* ── SP：ラベルをバーの上へ、行間を広げて境目を保つ ── */
+/* ── SP：ラベルをバーの上へ。数値の列だけは揃えたまま残す ── */
 @media(max-width:900px){
-  .ncb{--ncb-span:84%}   /* ラベルが上に移り、行の全幅がバーに使える */
-  .ncb__rows{gap:var(--s3)}
-  .ncb__row{grid-template-columns:minmax(0,1fr);gap:var(--s2);padding:var(--s3)}
-  .ncb__label{text-align:left;font-size:var(--fs-sm)}
+  .ncb{--ncb-h:var(--s4)}
+  .ncb__chart{padding:var(--s6) var(--s5)}
+  .ncb__row{grid-template-columns:minmax(0,1fr);row-gap:var(--s2);padding-block:var(--s5)}
+  .ncb__label{text-align:left;font-size:var(--fs-base)}
   .ncb__sub{display:inline;margin-left:var(--s2)}
-  .ncb__num{font-size:clamp(19px,4.4vw,var(--fs-xl))}
-  .ncb__row--lead .ncb__num{font-size:clamp(25px,6.2vw,var(--fs-xl))}
-  .ncb__note{margin-top:var(--s3)}
 }
 @media(max-width:560px){
-  .ncb{--ncb-span:74%}   /* 数値が相対的に大きくなるぶん、バーの取り分を絞る */
-  .ncb__line{flex-wrap:wrap;gap:var(--s2)}
-  .ncb__bar{padding-inline:var(--s2)}
-  .ncb__badge{font-size:var(--fs-note);margin-left:auto}
-  .ncb__badge::before{display:none}
+  .ncb{--ncb-numw:var(--s7)}
+  .ncb__chart{padding:var(--s5) var(--s4)}
+  .ncb__line{column-gap:var(--s3)}
+  .ncb__num{font-size:var(--fs-lg)}
+  .ncb__row--lead .ncb__num{font-size:var(--fs-xl)}
+  .ncb__label{font-size:var(--fs-sm)}
 }
 
 @media(prefers-reduced-motion:reduce){
   .fx-on .ncb__bar{clip-path:none!important;transition:none!important}
   .fx-on .ncb__num{opacity:1!important;transform:none!important;transition:none!important}
-  .fx-on .ncb__badge{opacity:1!important;animation:none!important}
+  .fx-on .ncb__badge{opacity:1!important;transition:none!important}
 }
