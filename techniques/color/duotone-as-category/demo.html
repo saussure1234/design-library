@@ -1,0 +1,208 @@
+<style>
+/* ============================================================
+   color/duotone-as-category
+   写真ごとに違う色を乗算で乗せ、色そのものを分類記号にする
+   ============================================================ */
+
+@layer tq-fallback{
+  :root{
+    --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+    --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3;
+    --c-on-primary:#FFFFFF;
+    --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    --f-disp:var(--f-sans);
+    --f-num:"Helvetica Neue",Arial,var(--f-sans);
+    --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+    --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+    --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+    --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  }
+}
+
+/* この工夫が要求する値（案件では :root で差し替え） */
+:root{
+  --tq-dac-op:.78;      /* 乗算のopacity（.7〜.85） */
+  --tq-dac-ang:160deg;  /* グラデ角度。5枚とも同じにする */
+  /* 色相5種。それぞれ同色相の濃→淡 */
+  --tq-dac-1a:#2e8f8a; --tq-dac-1b:#5fb6ae;   /* 青緑 */
+  --tq-dac-2a:#8f5fd0; --tq-dac-2b:#b98fe0;   /* 紫   */
+  --tq-dac-3a:#4a9b52; --tq-dac-3b:#8bc98d;   /* 緑   */
+  --tq-dac-4a:#e0729a; --tq-dac-4b:#f0a3bd;   /* ピンク */
+  --tq-dac-5a:#e08a2e; --tq-dac-5b:#f0b871;   /* オレンジ */
+  --tq-dac-scrim:rgba(17,17,17,.55);          /* 「普通」用：下端のスクリム */
+}
+
+.tq-dac{
+  font-family:var(--f-sans); color:var(--c-ink);
+  line-height:var(--lh-head); -webkit-text-size-adjust:100%;
+  padding:var(--s5); background:var(--c-bg);
+}
+.tq-dac *{box-sizing:border-box}
+
+.tq-dac__lead{
+  margin:0 0 var(--s5); font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-dac__cap{
+  display:flex; align-items:center; gap:var(--s2);
+  margin:0 0 var(--s3); font-size:var(--fs-note); font-weight:700;
+  color:var(--c-ink3); letter-spacing:.04em;
+}
+.tq-dac__cap::before{
+  content:""; width:var(--s5); height:1px; background:var(--c-line); flex:0 0 auto;
+}
+.tq-dac__note{
+  margin:var(--s3) 0 0; font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-dac__sec{ margin-top:var(--s7) }
+.tq-dac__sec:first-of-type{ margin-top:0 }
+.tq-dac__secttl{ margin:0 0 var(--s4); font-size:var(--fs-sm); font-weight:700 }
+
+/* --- 普通：実色のまま、gapを空けて並べる ------------------- */
+.tq-dac__plain{
+  display:grid; gap:var(--s4);
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+}
+.tq-dac__plaintile{
+  position:relative; overflow:hidden; border-radius:var(--r-s);
+  aspect-ratio:4/3;
+}
+.tq-dac__plaintile img{
+  display:block; width:100%; height:100%; object-fit:cover;
+}
+.tq-dac__plaintile .tq-dac__tx{
+  position:absolute; inset:auto 0 0 0; padding:var(--s3);
+  background:linear-gradient(180deg,transparent,var(--tq-dac-scrim));
+}
+
+/* --- この工夫：5枚グリッド（左1枚大＋右2×2・gap 0） --------- */
+.tq-dac__grid{
+  display:grid; gap:0;
+  grid-template-columns:1.05fr 1fr 1fr;
+  grid-template-rows:repeat(2,minmax(0,1fr));
+  overflow:hidden;
+}
+.tq-dac__tile{
+  position:relative; isolation:isolate; overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+  min-height:130px; padding:var(--s4); text-align:center;
+}
+.tq-dac__tile img{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+  /* 支給写真の色温度を一度そろえてから乗算する */
+  filter:grayscale(1) contrast(.85) brightness(1.06);
+}
+.tq-dac__tile::after{
+  content:""; position:absolute; inset:0;
+  mix-blend-mode:multiply; opacity:var(--tq-dac-op);
+  background:linear-gradient(var(--tq-dac-ang),var(--a),var(--b));
+}
+/* 文字は乗算レイヤより上へ。img は絶対配置のまま残すので > * では当てない */
+.tq-dac__tile > .tq-dac__tx{ position:relative; z-index:1; color:var(--c-on-primary) }
+
+.tq-dac__tile--1{ --a:var(--tq-dac-1a); --b:var(--tq-dac-1b);
+  grid-column:1; grid-row:1/3 }
+.tq-dac__tile--2{ --a:var(--tq-dac-2a); --b:var(--tq-dac-2b) }
+.tq-dac__tile--3{ --a:var(--tq-dac-3a); --b:var(--tq-dac-3b) }
+.tq-dac__tile--4{ --a:var(--tq-dac-4a); --b:var(--tq-dac-4b) }
+.tq-dac__tile--5{ --a:var(--tq-dac-5a); --b:var(--tq-dac-5b) }
+
+.tq-dac__tx{ z-index:1 }
+.tq-dac__ttl{
+  margin:0; font-size:var(--fs-sm); font-weight:700;
+  color:var(--c-on-primary); line-height:var(--lh-head);
+}
+.tq-dac__tile--1 .tq-dac__ttl{ font-size:var(--fs-md) }
+.tq-dac__sub{
+  display:inline-block; margin:var(--s2) 0 0; padding:var(--s1) var(--s2) 0;
+  font-size:var(--fs-note); color:var(--c-on-primary); line-height:var(--lh-head);
+  border-top:1px solid currentColor;
+}
+
+@media (max-width:560px){
+  .tq-dac__grid{
+    grid-template-columns:1fr 1fr;
+    grid-template-rows:auto auto auto;
+  }
+  .tq-dac__tile--1{ grid-column:1/3; grid-row:1 }
+}
+</style>
+
+<div class="tq-dac">
+  <p class="tq-dac__lead">
+    タイルごとに違う色相を乗算で乗せ、写真の実色をほぼ消す。色は装飾ではなくカテゴリの識別子になる。
+  </p>
+
+  <!-- ① 普通 -->
+  <section class="tq-dac__sec">
+    <h3 class="tq-dac__secttl">① 普通：実色のまま並べ、可読性のために下端だけ暗くする</h3>
+    <div class="tq-dac__plain">
+      <div class="tq-dac__plaintile">
+        <img src="../../../docs/demo/ph_a.jpg" alt="">
+        <div class="tq-dac__tx"><p class="tq-dac__ttl">カテゴリ名</p></div>
+      </div>
+      <div class="tq-dac__plaintile">
+        <img src="../../../docs/demo/ph_b.jpg" alt="">
+        <div class="tq-dac__tx"><p class="tq-dac__ttl">カテゴリ名</p></div>
+      </div>
+      <div class="tq-dac__plaintile">
+        <img src="../../../docs/demo/ph_a.jpg" alt="">
+        <div class="tq-dac__tx"><p class="tq-dac__ttl">カテゴリ名</p></div>
+      </div>
+      <div class="tq-dac__plaintile">
+        <img src="../../../docs/demo/ph_b.jpg" alt="">
+        <div class="tq-dac__tx"><p class="tq-dac__ttl">カテゴリ名</p></div>
+      </div>
+    </div>
+    <p class="tq-dac__note">写真の色温度の差がそのまま出る。カテゴリの違いは文字を読むまで分からない。</p>
+  </section>
+
+  <!-- ② この工夫 -->
+  <section class="tq-dac__sec">
+    <h3 class="tq-dac__secttl">② この工夫：色相5種を乗算で乗せ、隙間ゼロで1枚の面にする</h3>
+    <div class="tq-dac__grid">
+      <div class="tq-dac__tile tq-dac__tile--1">
+        <img src="../../../docs/demo/ph_a.jpg" alt="">
+        <div class="tq-dac__tx">
+          <p class="tq-dac__ttl">カテゴリ名が入ります</p>
+          <span class="tq-dac__sub">補足のテキストが入ります</span>
+        </div>
+      </div>
+      <div class="tq-dac__tile tq-dac__tile--2">
+        <img src="../../../docs/demo/ph_b.jpg" alt="">
+        <div class="tq-dac__tx">
+          <p class="tq-dac__ttl">カテゴリ名</p>
+          <span class="tq-dac__sub">補足のテキスト</span>
+        </div>
+      </div>
+      <div class="tq-dac__tile tq-dac__tile--3">
+        <img src="../../../docs/demo/ph_a.jpg" alt="">
+        <div class="tq-dac__tx">
+          <p class="tq-dac__ttl">カテゴリ名</p>
+          <span class="tq-dac__sub">補足のテキスト</span>
+        </div>
+      </div>
+      <div class="tq-dac__tile tq-dac__tile--4">
+        <img src="../../../docs/demo/ph_b.jpg" alt="">
+        <div class="tq-dac__tx">
+          <p class="tq-dac__ttl">カテゴリ名</p>
+          <span class="tq-dac__sub">補足のテキスト</span>
+        </div>
+      </div>
+      <div class="tq-dac__tile tq-dac__tile--5">
+        <img src="../../../docs/demo/ph_a.jpg" alt="">
+        <div class="tq-dac__tx">
+          <p class="tq-dac__ttl">カテゴリ名</p>
+          <span class="tq-dac__sub">補足のテキスト</span>
+        </div>
+      </div>
+    </div>
+    <p class="tq-dac__note">
+      5枚とも同じ2枚の写真を使い回しているが、同じ角度・同じ不透明度の乗算で1枚の色面に揃う。
+      色を覚えれば、次に同じ色が出た時点でどのカテゴリかが分かる。
+    </p>
+  </section>
+
+</div>

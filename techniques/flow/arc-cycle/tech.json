@@ -1,0 +1,33 @@
+{
+  "id": "flow/arc-cycle",
+  "name": "円を三角に置き、外周を回る破線の弧で循環をつくる",
+  "ordinary": "3要素を横一列に並べ、間に同じ直線矢印を1種類だけ置く。",
+  "actual": "3つの円（写真入り・塗り分け）を正三角形に配置し、中心に総括ラベルの円を置く。円と円は円の外側を大きく回る弧で結び、区間ごとに水色破線・濃紺破線と描き分ける。矢羽は小さく、円に触れない位置で終わる。",
+  "css": ".cycle{position:relative;aspect-ratio:1;max-width:420px;margin-inline:auto}\n.cycle>svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:1}\n.cycle__node{position:absolute;width:38%;aspect-ratio:1;border-radius:50%;z-index:2;\n  display:grid;place-items:end center;text-align:center}\n.cycle__core{position:absolute;left:50%;top:50%;translate:-50% -50%;\n  width:30%;aspect-ratio:1;border-radius:50%;background:#f6e96b;z-index:3;display:grid;place-items:center}\n\n<!-- SVG内 -->\n<marker id=\"ah\" viewBox=\"0 0 8 8\" refX=\"6\" refY=\"4\" markerWidth=\"5\" orient=\"auto\">\n  <path d=\"M0 0 L8 4 L0 8\" fill=\"none\" stroke=\"#3aa9dc\" stroke-width=\"1.5\"/></marker>\n<path d=\"M120 90 A140 140 0 0 1 300 150\" fill=\"none\" stroke=\"#3aa9dc\"\n  stroke-width=\"2\" stroke-dasharray=\"7 7\" marker-end=\"url(#ah)\"/>",
+  "params": [
+    "弧の半径＝円配置半径の1.1〜1.4倍",
+    "区間ごとの線色",
+    "破線ピッチ 7 7",
+    "中心円に総括コピーを入れるか"
+  ],
+  "appliesTo": [
+    "value",
+    "features"
+  ],
+  "impact": 2,
+  "effort": 2,
+  "why": "弧が円のリズムに沿って走るので、直線矢印のように図を横切って破綻させず、順路だけが残る。",
+  "avoid": "申込〜開始のように終点がある一方向の工程には合わない。循環しているときだけ。",
+  "sources": [
+    "sho_kimini_s05"
+  ],
+  "notes": [
+    "弧が円に触れるかどうかは弧の半径ではなく「始点・終点の角度」で決まる。デモは円配置半径126・円半径72に対して弧半径175、始点=そのノードの角度+45°、終点=次ノードの角度-45°。この45°の逃げが無いと、半径をいくら大きくしても端が円に刺さる。",
+    "正三角形は中心(200,200)・半径126・-90°/30°/150°で置く。円は width:36% なので left/top は「中心の%−18%」。中心座標と左上座標を別々に手で置くと必ずずれるので、必ず引き算で出す。",
+    "marker の色は path の stroke を継承しない（context-stroke は Safari 非対応）。区間ごとに線色を変えるなら marker も区間の数だけ複製し、id には接頭辞を付ける。デモは tqArcAh1〜3。",
+    "中心円は「ノード半径＋中心円半径 < 配置半径」でないと重なる。デモは 18%+13%=31% < 31.5% でぎりぎり触れない。元CSSの node38%/core30% だとこの条件を満たさず、中心円が3つの円に食い込む。",
+    "破線ピッチ 7 7・線幅2は、420px角の図での見え方。これより小さく使うなら 5 5 に詰めないと点が散って見える。",
+    "3要素が前提。5つを超えると円が小さくなって写真もラベルも入らない。終点のある一方向の工程には使わない（avoid の通り）。",
+    "デモは techniques/flow/arc-cycle/demo.html。左＝横一列＋同じ直線矢印の普通版、右＝この工夫。"
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "id": "space/chrome-not-a-band",
+  "name": "ヘッダー／固定CTAを帯にせず、画面の隅に貼った小板にする（接辺の角丸は0）",
+  "ordinary": "画面幅いっぱいの白ヘッダー帯を置きCTAはその内側に角丸ボタンで収める。固定CTAは画面下部の横長バー",
+  "actual": "buddies_s01=白い板が画面右上から始まり左下角だけ半径24pxで丸まる。橙のCTAは板の右端に食い込み、角丸ゼロのまま画面右端で断ち落とし。odrive_s01=右上隅に56×44pxの黒い正方形だけを余白0で貼り、ロゴは左上に密着、右辺に縦向きのSCROLL。帯状のヘッダーは作らない。peppy_s01=縦書きのタブ2本を右端に固定し、左角だけ12px、右角は0のまま画面外へ半分逃がす。",
+  "css": "header{position:absolute; top:0; right:0; display:flex; background:#fff;\n  border-radius:0 0 0 24px; overflow:hidden}\nheader .cta{background:#F28100; border-radius:0; padding:0 24px}\n.menu-btn{position:absolute; top:0; right:0; width:56px; height:44px; background:#111}\n.scroll{position:absolute; right:8px; bottom:70px; writing-mode:vertical-rl;\n  font-size:9px; letter-spacing:.2em}\n.sidetab{position:fixed; right:0; writing-mode:vertical-rl; border-radius:12px 0 0 12px;\n  padding:16px 10px; color:#fff; font-size:13px; letter-spacing:.06em}\n.sidetab.a{top:28%; background:#4caf50} .sidetab.b{top:52%; background:#f4511e}",
+  "appliesTo": [
+    "hero",
+    "cta",
+    "footer"
+  ],
+  "impact": 3,
+  "effort": 1,
+  "why": "帯が全幅を横断しないので写真の上辺が広く残る。接辺の角丸を0にすると「画面に貼り付いた層」に見え、四隅の小板だけで画面の枠が示せる",
+  "params": [
+    "板の位置（右上 or 四隅）",
+    "内側の角丸 12〜24px",
+    "CTAを板から食み出させるか"
+  ],
+  "avoid": "項目数の多いグローバルナビは板に収まらない。ハンバーガー前提のときだけ",
+  "sources": [
+    "buddies_s01",
+    "odrive_s01",
+    "sho_peppy_s01"
+  ],
+  "notes": [
+    "効いているのは「小さいこと」ではなく「接している辺の角丸を0にすること」。上辺と右辺は画面に接するので0、内側を向いた左下だけ24px。四隅すべてを丸めた瞬間に、画面から浮いた普通のカードに戻る。border-radius:0 0 0 24px の並び（左上/右上/右下/左下）を間違えやすい。",
+    "板に overflow:hidden を掛けておくと、中のCTAが角丸をはみ出さない。ただしCTA自身は border-radius:0 のまま板の右端＝画面の右端に接するので、そこは切られない。",
+    "position:fixed の縦タブは、デモの中では画面に貼り付いてスクロールしても付いてきてしまい、他の見本に重なる。デモは舞台（.tq-plate__hero）を position:relative にして absolute に置き換えた。実装では fixed。",
+    "縦タブは writing-mode:vertical-rl。日本語ならそのまま正立するが、欧文を入れるなら text-orientation:upright が要る。",
+    "定義にある font-size:9px は _tokens.css に該当する変数が無い。--fs-note(12px) に letter-spacing:.2em を足して代用した。9px の微細さが欲しい案件では --fs-note 側を差し替える。",
+    "舞台の背景写真を `.hero > img` で全面に伸ばすと、同じく舞台直下へ絶対配置するロゴ（img）まで inset:0/width:100% を食らって画面いっぱいに伸びる。型セレクタ（0,1,1）がロゴ側のクラス（0,1,0）に勝つため。背景写真は専用クラスで狙う。",
+    "縦タブは縦に長い（7文字＋padding で約100px）。画面高が低いと3本は必ず重なるので、560px以下では2本に減らした。原典も2本。top の % だけ動かしても解決しない。",
+    "板の高さ（44px）はタップ目標の下限とほぼ同じ。これ以上小さくすると押せない。odrive の 56×44px はその下限ぎりぎりを狙った寸法。",
+    "560px以下では板の中の「メニュー」文字を display:none にしてハンバーガーとCTAだけにした。板は右上アンカーなので幅が縮んでも位置は崩れない。逆にグローバルナビの項目を並べる設計だと、この時点で破綻する（avoid のとおり）。",
+    "デモは techniques/space/chrome-not-a-band/demo.html。〈普通＝全幅の白帯〉〈右上の小板＋CTA断ち落とし〉〈四隅の小板だけ〉〈右辺の縦タブ〉の4段。"
+  ]
+}

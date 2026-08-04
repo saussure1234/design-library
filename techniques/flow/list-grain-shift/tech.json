@@ -1,0 +1,37 @@
+{
+  "id": "flow/list-grain-shift",
+  "name": "一覧の途中で札の形を変えて読む順序をつくる",
+  "ordinary": "記事一覧は全件を同じサイズのカードで2〜3カラムに均等に並べる。",
+  "actual": "上位2件だけ写真上・タイトル下の大カードを2列で並べ、3件目以降は「サムネ左120〜150px・本文右」の横長行に切り替える。行の区切りは1pxのヘアラインだけ。抜粋文が付くのは上位だけ。別型は1件だけ縦2行ぶんの倍サイズにして、残り4件を右に2×2で入れる。",
+  "css": ".list{display:grid;grid-template-columns:1fr 1fr;gap:20px}\n.list>*:nth-child(-n+2) h3{font-size:20px}\n.list>*:nth-child(n+3){grid-column:1/-1;display:grid;\n  grid-template-columns:150px 1fr;gap:16px;\n  border-top:1px solid #ececec;padding-top:16px}\n.list>*:nth-child(n+3) h3{font-size:14px}\n.list>*:nth-child(n+3) p{display:none}\n\n/* 1件主役型 */\n.grid{display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:12px}\n.grid>*:first-child{grid-row:span 2}\n.grid>*:first-child h3{font-size:22px}",
+  "params": [
+    "主役の件数 1 or 2",
+    "切替後のサムネ幅 120/150px",
+    "抜粋文を主役だけに出す",
+    "見出しサイズ差 20px→14px"
+  ],
+  "appliesTo": [
+    "features",
+    "value",
+    "voice"
+  ],
+  "impact": 3,
+  "effort": 2,
+  "why": "同じ一覧の中で形が変わるので「まずこの2本」という優先度が説明なしに伝わり、スクロール速度まで変わる。",
+  "avoid": "全件が等価な実績ロゴ・料金プランでは、勝手に順位が付いて誤読になる。",
+  "sources": [
+    "lumiarch_s05",
+    "lumiarch_s08",
+    "lumiarch_s06",
+    "odrive_s07"
+  ],
+  "notes": [
+    "実装上の一番の効き目は「マークアップを1文字も変えずに済む」こと。全件を同じ構造（写真・見出し・抜粋・日付）で吐き、nth-child だけで形を変える。CMSの繰り返し出力にそのまま乗る。デモでは普通版と工夫版に同一のHTMLを使い、CSSだけ差し替えている。",
+    "nth-child(n+3) の行に grid-column:1/-1 を必ず付ける。忘れると横長行が2カラムのままになり、サムネ150pxが半分の幅に潰れて崩れる。",
+    "見出しサイズ差は 20px→14px が原案だが、トークンでは --fs-lg(21px) → --fs-base(15px) が最も近い。差は「1段」ではなく「2段」空けたほうが粒の違いが出る（--fs-md では弱い）。",
+    "区切りのヘアラインは各行の border-top だけ。行間に別の罫を足すと表になって優先度が消える。3件目の行にだけ margin-top を足して、上の大札との間を空けている。",
+    "1件主役型は grid-row:span 2 が右側の行数（2行＝4件）と一致していないと空きマスができる。右が5件以上ならこの型は使わない。",
+    "640px以下では2カラムが成立しないので、主役は全幅、横長行はサムネを104pxに縮める。列数が1になっても「大札／横長行」の粒の差は残るので工夫は死なない。",
+    "デモは techniques/flow/list-grain-shift/demo.html。上から〈普通＝全件同寸〉〈2件主役型〉〈1件主役型〉。"
+  ]
+}

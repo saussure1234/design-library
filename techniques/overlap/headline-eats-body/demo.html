@@ -1,0 +1,220 @@
+<style>
+/* ============================================================
+   overlap/headline-eats-body
+   見出しを本文の上に直接重ね、本文の一部を読めなくする
+   ============================================================ */
+
+/* トークンが読み込まれていない環境用のフォールバック。
+   @layer に入れてあるので、_tokens.css（レイヤ外）が有ればそちらが勝つ。 */
+@layer tq-fallback{
+  :root{
+    --c-primary:#00B220; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+    --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+    --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+    --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    --f-disp:var(--f-sans);
+    --f-num:"Helvetica Neue",Arial,var(--f-sans);
+    --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+    --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px; --fs-3xl:50px; --fs-4xl:64px;
+    --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px; --s8:76px;
+    --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+    --shadow:0 6px 24px rgba(17,17,17,.08);
+  }
+}
+
+/* この工夫が要求する値。トークン契約に無いものはここで宣言する（案件では :root で差し替え） */
+:root{
+  --tq-heb-offset: clamp(20px, 15cqw, 80px);   /* 見出しの左オフセット 60〜100px（狭い幅では縮める） */
+  --tq-heb-fs:     clamp(22px, 8.5cqw, 46px);  /* 見出しの級数。版面幅に紐づけるので cqw で組む */
+  --tq-heb-measure: 380px;                     /* 本文の版面幅。見出しはこれを越えて右へ張り出す */
+  --tq-heb-lh: 2.0;                            /* 本文の行間 1.9〜2.2。見え隠れする量を決める */
+}
+
+.tq-heb{
+  font-family:var(--f-sans); color:var(--c-ink2);
+  line-height:var(--lh-head); -webkit-text-size-adjust:100%;
+  padding:var(--s5); background:var(--c-bg);
+}
+.tq-heb *{ box-sizing:border-box }
+
+/* --- デモの見出し・注記 ------------------------------------ */
+.tq-heb__lead{
+  margin:0 0 var(--s6); font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-heb__sec{ margin-top:var(--s7) }
+.tq-heb__sec:first-of-type{ margin-top:0 }
+.tq-heb__secttl{
+  margin:0 0 var(--s4); font-size:var(--fs-sm); font-weight:700; color:var(--c-ink);
+}
+.tq-heb__cap{
+  display:flex; align-items:center; gap:var(--s2);
+  margin:0 0 var(--s3); font-size:var(--fs-note); font-weight:700;
+  color:var(--c-ink3); letter-spacing:.04em;
+}
+.tq-heb__cap::before{
+  content:""; width:var(--s5); height:1px; background:var(--c-line); flex:0 0 auto;
+}
+.tq-heb__note{
+  margin:var(--s3) 0 0; font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-heb__pair{
+  display:grid; gap:var(--s5);
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+}
+
+/* --- 舞台 --------------------------------------------------- */
+.tq-heb__stage{
+  position:relative;
+  overflow:hidden;                 /* 右へ張り出した分を面の中で断つ */
+  container-type:inline-size;      /* 見出しの級数とオフセットを版面幅に紐づける */
+  background:var(--c-bg2);
+  border-radius:var(--r-s);
+  padding:var(--s5);
+  min-height:260px;
+}
+
+/* 本文。回り込ませない・避けさせない（shape-outside も float も使わない） */
+.tq-heb__body{
+  position:relative; z-index:1;
+  width:min(100%, var(--tq-heb-measure));
+  margin:0;
+  font-size:var(--fs-note);
+  line-height:var(--tq-heb-lh);
+  color:var(--c-ink2);
+}
+
+/* 見出し。本文の上に絶対配置で乗せる。地色を持たせない */
+.tq-heb__h{
+  position:absolute; z-index:2; top:var(--s5); left:var(--tq-heb-offset);
+  margin:0; background:none;
+  width:max-content; max-width:none;   /* 版面幅を越えてよい */
+  font-family:var(--f-disp); font-weight:700;
+  font-size:var(--tq-heb-fs); line-height:1.35;
+  letter-spacing:.02em; color:var(--c-ink);
+}
+
+/* 本文の版面の右端を示す目印（デモ用の補助線） */
+.tq-heb__edge{
+  position:absolute; z-index:0; top:var(--s5); bottom:var(--s5);
+  left:calc(var(--s5) + min(100% - var(--s5) * 2, var(--tq-heb-measure)));
+  width:1px; background:var(--c-line);
+}
+
+/* ── 普通：見出しを上に、余白で離す ── */
+.tq-heb__stage--plain .tq-heb__h{
+  position:static; margin:0 0 var(--s5);
+}
+
+/* ── 1行だけ重ねる版：見出しを1行に畳むだけ。置き方は同じ ── */
+.tq-heb__stage--one .tq-heb__h{ white-space:nowrap }
+
+/* --- 参考：回り込ませた場合（この工夫ではない） -------------- */
+.tq-heb__float{
+  float:left; shape-outside:inset(0 var(--s4) var(--s4) 0);
+  width:min(62%, 300px); margin:0 var(--s4) var(--s3) 0;
+  font-family:var(--f-disp); font-weight:700;
+  font-size:var(--tq-heb-fs); line-height:1.35; color:var(--c-ink);
+}
+.tq-heb__stage--float{ min-height:0 }
+.tq-heb__stage--float .tq-heb__body{ width:100% }
+</style>
+
+<div class="tq-heb">
+  <p class="tq-heb__lead">
+    見出しを本文の「上」に絶対配置で乗せ、本文の1〜3行目を隠す。回り込み（shape-outside）は使わず、本文は素のまま流す。
+    見出しは本文の左端より内側から始まり、本文の版面幅を越えて右へ張り出す。
+  </p>
+
+  <!-- ① 普通 / この工夫 -->
+  <section class="tq-heb__sec">
+    <h3 class="tq-heb__secttl">① 同じ見出し・同じ本文で、置き方だけを変える</h3>
+    <div class="tq-heb__pair">
+
+      <div>
+        <p class="tq-heb__cap">普通：見出しを上に、余白で離す</p>
+        <div class="tq-heb__stage tq-heb__stage--plain">
+          <h4 class="tq-heb__h">重ねてでも<br>読ませたい一文を<br>ここに置きます</h4>
+          <p class="tq-heb__body">
+            本文のテキストがここに入ります。本文のテキストがここに入ります。本文のテキストがここに入ります。
+            本文のテキストがここに入ります。本文のテキストがここに入ります。本文のテキストがここに入ります。
+            本文のテキストがここに入ります。本文のテキストがここに入ります。
+          </p>
+        </div>
+        <p class="tq-heb__note">層は1つ。見出しと本文は上下に並ぶだけで、面は平坦なまま。</p>
+      </div>
+
+      <div>
+        <p class="tq-heb__cap">この工夫：本文の上に直接乗せる</p>
+        <div class="tq-heb__stage">
+          <span class="tq-heb__edge" aria-hidden="true"></span>
+          <h4 class="tq-heb__h">重ねてでも<br>読ませたい一文を<br>ここに置きます</h4>
+          <p class="tq-heb__body">
+            本文のテキストがここに入ります。本文のテキストがここに入ります。本文のテキストがここに入ります。
+            本文のテキストがここに入ります。本文のテキストがここに入ります。本文のテキストがここに入ります。
+            本文のテキストがここに入ります。本文のテキストがここに入ります。
+          </p>
+        </div>
+        <p class="tq-heb__note">
+          本文の1〜3行目が見出しの黒に食われて読めない。細い縦の罫が本文の版面の右端で、見出しはそれを越えて張り出している。
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ② 重ねる行数 -->
+  <section class="tq-heb__sec">
+    <h3 class="tq-heb__secttl">② 重ねる行数で、強さが変わる</h3>
+    <div class="tq-heb__pair">
+
+      <div>
+        <p class="tq-heb__cap">1行だけ重ねる（弱め）</p>
+        <div class="tq-heb__stage tq-heb__stage--one">
+          <h4 class="tq-heb__h">重ねてでも読ませたい一文</h4>
+          <p class="tq-heb__body">
+            本文のテキストがここに入ります。本文のテキストがここに入ります。本文のテキストがここに入ります。
+            本文のテキストがここに入ります。本文のテキストがここに入ります。本文のテキストがここに入ります。
+            本文のテキストがここに入ります。本文のテキストがここに入ります。
+          </p>
+        </div>
+        <p class="tq-heb__note">読めなくなるのは1行だけ。本文の内容がまだ追える。</p>
+      </div>
+
+      <div>
+        <p class="tq-heb__cap">3行重ねる（現物の量）</p>
+        <div class="tq-heb__stage">
+          <h4 class="tq-heb__h">重ねてでも<br>読ませたい一文を<br>ここに置きます</h4>
+          <p class="tq-heb__body">
+            本文のテキストがここに入ります。本文のテキストがここに入ります。本文のテキストがここに入ります。
+            本文のテキストがここに入ります。本文のテキストがここに入ります。本文のテキストがここに入ります。
+            本文のテキストがここに入ります。本文のテキストがここに入ります。
+          </p>
+        </div>
+        <p class="tq-heb__note">本文が「読む対象」から「面の質感」に落ち、見出しだけが立つ。</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ③ 回り込みとの違い -->
+  <section class="tq-heb__sec">
+    <h3 class="tq-heb__secttl">③ 参考：回り込ませると別物になる（この工夫ではない）</h3>
+    <div class="tq-heb__stage tq-heb__stage--float">
+      <p class="tq-heb__body">
+        <span class="tq-heb__float">重ねてでも読ませたい一文を</span>
+        本文のテキストがここに入ります。本文のテキストがここに入ります。本文のテキストがここに入ります。
+        本文のテキストがここに入ります。本文のテキストがここに入ります。本文のテキストがここに入ります。
+        本文のテキストがここに入ります。本文のテキストがここに入ります。本文のテキストがここに入ります。
+        本文のテキストがここに入ります。
+      </p>
+    </div>
+    <p class="tq-heb__note">
+      本文が見出しを避けるので、隠れる文字が1つも無い。層は増えず、雑誌的な段組みになるだけ。
+      この工夫は「避けさせない」ことで層を作っている。
+    </p>
+  </section>
+
+</div>

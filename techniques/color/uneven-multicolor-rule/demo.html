@@ -1,0 +1,132 @@
+<style>
+/* ============================================================
+   color/uneven-multicolor-rule
+   アクセントラインを1色でなく、幅の不均等な多色ストライプにする
+   ============================================================ */
+:root{
+  /* --- _tokens.css フォールバック --- */
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px; --fs-lg:21px; --fs-xl:28px;
+  --lh-tight:1.35; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px;
+  --r-s:6px; --r-m:12px; --r-pill:999px;
+  --c-primary:#00B220; --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+
+  /* --- この工夫の変数 --- */
+  --tq-um-h:6px;            /* ストライプの高さ（param: 3〜6px） */
+  /* 5色を8〜14%の不均等な幅で。等分にしないことが唯一の条件 */
+  --tq-um-stripe:linear-gradient(90deg,
+      #00a0e9 0 8%, #8dc21f 8% 20%, #f39800 20% 34%, #e4007f 34% 44%, #1d2088 44% 56%,
+      #00a0e9 56% 66%, #8dc21f 66% 78%, #f39800 78% 88%, #e4007f 88% 100%);
+  --tq-um-rainbow:linear-gradient(90deg,#ffd400,#00c2b8,#e9407a);
+  --tq-um-p1:#ffd400;       /* 下のベタ面は3色しかない */
+  --tq-um-p2:#f6a8c8;
+  --tq-um-p3:#12b8a6;
+  --tq-um-btn:#2b2b2b;
+}
+
+.tq-um{ font-family:var(--f-sans); color:var(--c-ink); background:var(--c-bg); line-height:var(--lh-body); }
+.tq-um *{ box-sizing:border-box; }
+
+.tq-um__lead{ margin:0 0 var(--s5); font-size:var(--fs-sm); color:var(--c-ink3); line-height:var(--lh-tight); }
+.tq-um__tag{ display:block; margin:0 0 var(--s2); font-size:var(--fs-note); letter-spacing:.08em; color:var(--c-ink3); }
+.tq-um__tag--on{ color:var(--c-ink); font-weight:700; }
+.tq-um__note{ margin:var(--s2) 0 var(--s6); font-size:var(--fs-note); color:var(--c-ink3); line-height:var(--lh-tight); }
+
+.tq-um__row{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:var(--s1); }  /* 面どうしはほぼ隙間なく並べる */
+
+/* ---- 帯（色面） ---- */
+.tq-um__band{ position:relative; padding:var(--s5) var(--s4) var(--s4); text-align:center; }
+.tq-um__band--1{ background:var(--tq-um-p1); }
+.tq-um__band--2{ background:var(--tq-um-p2); }
+.tq-um__band--3{ background:var(--tq-um-p3); }
+
+/* この工夫：上辺6pxに不均等な多色ストライプ。3枚とも同じ列を繰り返す */
+.tq-um__band--multi::before{ content:""; position:absolute; inset:0 0 auto; height:var(--tq-um-h); background:var(--tq-um-stripe); }
+/* 普通の場合：1色のアクセントライン */
+.tq-um__band--single::before{ content:""; position:absolute; inset:0 0 auto; height:var(--tq-um-h); background:var(--c-primary); }
+
+.tq-um__cap{ display:inline-block; margin:0 auto var(--s3); padding:var(--s2) var(--s4); background:var(--c-bg); border-radius:var(--r-s);
+  font-size:var(--fs-sm); font-weight:700; line-height:var(--lh-tight); }
+.tq-um__txt{ margin:0 0 var(--s4); font-size:var(--fs-note); color:var(--c-ink2); line-height:1.8; text-align:left; }
+.tq-um__btn{ display:inline-block; padding:var(--s2) var(--s5); border-radius:var(--r-pill);
+  background:var(--tq-um-btn); color:var(--c-on-primary); font-size:var(--fs-note); text-decoration:none; }
+
+/* ---- 見出し下の罫 ---- */
+.tq-um__heads{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:var(--s5); }
+.tq-um__head{ text-align:center; padding:var(--s5) var(--s4); background:var(--c-bg); border-radius:var(--r-m); }
+.tq-um__h{ margin:0; font-size:var(--fs-lg); font-weight:700; line-height:var(--lh-tight); }
+.tq-um__rule{ display:block; width:64px; height:3px; margin:var(--s3) auto 0; }
+.tq-um__rule--multi{ background:var(--tq-um-rainbow); }
+.tq-um__rule--single{ background:var(--c-primary); }
+
+/* ---- 拡大表示（ストライプの幅が不均等であることの確認用） ---- */
+.tq-um__zoom{ height:26px; border-radius:var(--r-s); background:var(--tq-um-stripe); margin-top:var(--s2); }
+
+@media (max-width:640px){
+  .tq-um__row{ grid-template-columns:1fr; gap:var(--s3); }
+}
+</style>
+
+<section class="tq-um">
+  <p class="tq-um__lead">同じ3色の面に、上辺6pxのラインだけを差し替えた比較。ベタ面は3色しか持たないので、ブランドの色数はこの一列だけが伝える。</p>
+
+  <span class="tq-um__tag">普通の場合：1色のアクセントライン</span>
+  <div class="tq-um__row">
+    <div class="tq-um__band tq-um__band--single tq-um__band--1">
+      <p class="tq-um__cap">見出しがここに入ります</p>
+      <p class="tq-um__txt">説明のテキストがここに入ります。説明のテキストがここに入ります。</p>
+      <a class="tq-um__btn" href="#">テキストが入ります</a>
+    </div>
+    <div class="tq-um__band tq-um__band--single tq-um__band--2">
+      <p class="tq-um__cap">見出しがここに入ります</p>
+      <p class="tq-um__txt">説明のテキストがここに入ります。説明のテキストがここに入ります。</p>
+      <a class="tq-um__btn" href="#">テキストが入ります</a>
+    </div>
+    <div class="tq-um__band tq-um__band--single tq-um__band--3">
+      <p class="tq-um__cap">見出しがここに入ります</p>
+      <p class="tq-um__txt">説明のテキストがここに入ります。説明のテキストがここに入ります。</p>
+      <a class="tq-um__btn" href="#">テキストが入ります</a>
+    </div>
+  </div>
+  <p class="tq-um__note">ラインが1色だと、面の色とは別のもう1色が増えただけに見える。</p>
+
+  <span class="tq-um__tag tq-um__tag--on">この工夫：幅の不均等な多色ストライプ</span>
+  <div class="tq-um__row">
+    <div class="tq-um__band tq-um__band--multi tq-um__band--1">
+      <p class="tq-um__cap">見出しがここに入ります</p>
+      <p class="tq-um__txt">説明のテキストがここに入ります。説明のテキストがここに入ります。</p>
+      <a class="tq-um__btn" href="#">テキストが入ります</a>
+    </div>
+    <div class="tq-um__band tq-um__band--multi tq-um__band--2">
+      <p class="tq-um__cap">見出しがここに入ります</p>
+      <p class="tq-um__txt">説明のテキストがここに入ります。説明のテキストがここに入ります。</p>
+      <a class="tq-um__btn" href="#">テキストが入ります</a>
+    </div>
+    <div class="tq-um__band tq-um__band--multi tq-um__band--3">
+      <p class="tq-um__cap">見出しがここに入ります</p>
+      <p class="tq-um__txt">説明のテキストがここに入ります。説明のテキストがここに入ります。</p>
+      <a class="tq-um__btn" href="#">テキストが入ります</a>
+    </div>
+  </div>
+  <div class="tq-um__zoom" aria-hidden="true"></div>
+  <p class="tq-um__note">拡大するとこの通り、各色は8〜14%で幅が揃っていない。等分のカラーバーに見えないので、色数だけが一目で伝わる。</p>
+
+  <div class="tq-um__heads">
+    <div>
+      <span class="tq-um__tag">普通の場合：見出し下の罫も1色</span>
+      <div class="tq-um__head">
+        <p class="tq-um__h">見出しがここに入ります</p>
+        <span class="tq-um__rule tq-um__rule--single"></span>
+      </div>
+    </div>
+    <div>
+      <span class="tq-um__tag tq-um__tag--on">この工夫：幅64px・3pxの虹色グラデ</span>
+      <div class="tq-um__head">
+        <p class="tq-um__h">見出しがここに入ります</p>
+        <span class="tq-um__rule tq-um__rule--multi"></span>
+      </div>
+    </div>
+  </div>
+</section>

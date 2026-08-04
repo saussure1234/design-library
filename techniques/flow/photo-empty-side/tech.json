@@ -1,0 +1,33 @@
+{
+  "id": "flow/photo-empty-side",
+  "name": "被写体の空いている側だけに文字カードを置き、スクリムを敷かない",
+  "ordinary": "写真の中央にテキストボックスを重ねるか、黒の半透明スクリムを全面に敷いて白文字を載せる。",
+  "actual": "母子が右1/3に寄った写真を選び、object-position で人物側を残す。白カード（幅41%）は壁と机だけの左側にだけ重ね、カード右端と子どもの手の間に約20pxの空きを残して視線がカード→人物へ抜けるようにする。暗幕も透過も一切使わない。",
+  "css": ".hero{position:relative}\n.hero img{width:100%;height:520px;object-fit:cover;object-position:70% center}\n.hero__card{position:absolute;left:4%;top:50%;translate:0 -50%;\n  width:41%;max-width:330px;background:#fff;padding:34px 30px;\n  box-shadow:0 2px 20px rgba(0,0,0,.06)}\n/* スクリム（linear-gradient や rgba黒のオーバーレイ）は敷かない */\n@media(max-width:768px){.hero__card{position:static;width:auto;max-width:none;translate:0}}",
+  "params": [
+    "object-position 60〜75%",
+    "カード幅 38〜45%",
+    "被写体との空き20px以上",
+    "カードを右に置くなら object-position:30%"
+  ],
+  "appliesTo": [
+    "hero",
+    "value",
+    "member"
+  ],
+  "impact": 2,
+  "effort": 1,
+  "why": "重ねる位置を写真の中身で決めているので、暗幕や透過なしでも本文が読め、写真が明るいまま残る。",
+  "avoid": "被写体が中央にいる写真しか無いときは成立しない。素材選びが先。",
+  "sources": [
+    "unico_s06"
+  ],
+  "notes": [
+    "素材選びが先、CSSは後。この工夫は object-position の値ではなく「被写体が寄っている写真を選んだかどうか」で決まる。デモ素材(ph_a)は被写体が中央にあるため 70% では寄らず、aspect-ratio:1.02 で横を大きく切り object-position:0% にして被写体を右65%へ追い出している。実素材が右1/3寄りなら 70% が正しい値。",
+    "空きの計算：カード右端と被写体の間を20px以上あける。デモは left:3% + width:33% で、被写体の左端（約39%）まで約20px。ここでカード幅を41%にすると被写体に噛み、視線がカードで止まる。",
+    "スクリムを敷かない以上、カードは必ず不透明の白（--c-bg）。半透明にした瞬間に写真の柄が本文に乗り、この工夫の意味が消える。影は --shadow だけで十分（境界線は要らない）。",
+    "768px以下で position:static に戻すときは、舞台の aspect-ratio と overflow:hidden も一緒に外す。外し忘れるとカードが舞台の高さに切られて丸ごと消える（実装時に踏んだ）。デモは舞台を aspect-ratio:auto にし、img 側に aspect-ratio:1.3 を移している。",
+    "対比の「普通」側の暗幕は color-mix(in srgb, var(--c-ink) 46%, transparent)。並べると写真の明るさの差がそのまま工夫の効果として出る。",
+    "デモは techniques/flow/photo-empty-side/demo.html。左＝中央配置＋全面スクリムの普通版、右＝この工夫。"
+  ]
+}

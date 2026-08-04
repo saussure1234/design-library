@@ -1,0 +1,192 @@
+<style>
+/* --- トークンのフォールバック（_tokens.css が無い環境でも見えるように） --- */
+:root{
+  --c-primary:#00B220; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-disp:var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px; --fs-lg:21px; --fs-xl:28px;
+  --lh-tight:1.35; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --shadow:0 6px 24px rgba(17,17,17,.08);
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+
+/* =========================================================
+   space/deco-crosses-panel-edge
+   装飾に面の輪郭をまたがせ、外周を2点だけ破る
+   ========================================================= */
+.tq-cross{
+  font-family:var(--f-sans); color:var(--c-ink2);
+  background:var(--c-primary-l);      /* 地。面と色を変えるのが必須条件 */
+  padding-block:var(--s7);
+}
+.tq-cross__inner{ max-width:var(--w-max); margin-inline:auto; padding-inline:var(--w-gut); }
+.tq-cross__tag{
+  display:inline-block; margin:0 0 var(--s5);
+  font-size:var(--fs-note); letter-spacing:.08em; color:var(--c-ink3);
+  background:var(--c-bg); border:1px solid var(--c-line);
+  border-radius:var(--r-pill); padding:var(--s1) var(--s3);
+}
+.tq-cross__tag--on{ color:var(--c-on-primary); background:var(--c-primary); border-color:var(--c-primary); }
+.tq-cross__cap{ font-size:var(--fs-note); color:var(--c-ink3); margin:var(--s5) 0 0; }
+
+/* --- 紙面 --- */
+.tq-cross__sheet{
+  position:relative;
+  overflow:visible;                   /* ← 面側は絶対に hidden にしない */
+  background:var(--c-bg);
+  border-radius:var(--r-l);
+  padding:var(--s6) var(--s6) var(--s6);
+  box-shadow:var(--shadow);
+}
+.tq-cross__h{
+  font-family:var(--f-disp); font-size:var(--fs-lg); line-height:var(--lh-tight);
+  color:var(--c-ink); margin:0 0 var(--s5);
+}
+.tq-cross__grid{
+  list-style:none; margin:0; padding:0;
+  display:grid; grid-template-columns:repeat(3,1fr); gap:var(--s4);
+}
+.tq-cross__card{ min-width:0; }
+/* 画像のクリップは面ではなくカード側で行う（面の overflow は visible のまま） */
+.tq-cross__ph{
+  margin:0 0 var(--s2); border-radius:var(--r-m); overflow:hidden;
+}
+.tq-cross__ph img{ display:block; width:100%; aspect-ratio:4/3; object-fit:cover; }
+.tq-cross__t{ font-size:var(--fs-sm); line-height:var(--lh-tight); color:var(--c-ink2); margin:0; }
+
+/* --- 輪郭をまたぐ装飾 --- */
+.tq-cross__doodle{
+  position:absolute; z-index:3; pointer-events:none; display:block;
+}
+.tq-cross__doodle svg{ display:block; width:100%; height:auto; }
+/* 下辺を半分またぐ */
+.tq-cross__doodle--btm{ bottom:-14px; left:38%; width:34px; color:var(--c-accent); }
+/* 右上を半分またぐ */
+.tq-cross__doodle--top{ top:-8px; right:8%; width:30px; color:var(--c-primary); }
+
+/* 普通：装飾も面の内側に収め、外周は完全に閉じる */
+.tq-cross--plain .tq-cross__doodle--btm{
+  bottom:auto; left:auto; top:var(--s5); right:calc(var(--s5) + 48px);
+}
+.tq-cross--plain .tq-cross__doodle--top{ top:var(--s5); right:var(--s5); }
+
+/* --- 帯＋三角（tanq_s11 の形） --- */
+.tq-cross__band{
+  position:relative; margin-top:var(--s7);
+  background:var(--c-bg); border-radius:var(--r-pill);
+  padding:var(--s4) var(--s6); text-align:center;
+  font-size:var(--fs-md); color:var(--c-ink);
+}
+.tq-cross__tri{
+  position:absolute; width:12px; height:12px; pointer-events:none;
+  background:var(--c-accent);
+  clip-path:polygon(50% 0, 100% 100%, 0 100%);
+  top:-11px; left:12%;
+}
+.tq-cross__tri--l{
+  background:var(--c-primary);
+  clip-path:polygon(0 50%, 100% 0, 100% 100%);
+  top:calc(100% + 8px); left:22%;
+}
+.tq-cross__tri--r{
+  background:var(--c-ink3);
+  clip-path:polygon(100% 50%, 0 0, 0 100%);
+  top:calc(100% + 14px); left:auto; right:18%;
+}
+
+@media (max-width:760px){
+  .tq-cross__sheet{ padding:var(--s5); }
+  .tq-cross__grid{ grid-template-columns:repeat(2,1fr); }
+  .tq-cross__doodle--top{ right:4%; top:-6px; }
+  .tq-cross__doodle--btm{ left:24%; }
+}
+</style>
+
+<!-- 1. 普通：装飾も面の内側。外周は完全に閉じる -->
+<section class="tq-cross tq-cross--plain">
+  <div class="tq-cross__inner">
+    <p class="tq-cross__tag">普通</p>
+    <div class="tq-cross__sheet">
+      <h3 class="tq-cross__h">見出しがここに入ります</h3>
+      <ul class="tq-cross__grid">
+        <li class="tq-cross__card">
+          <figure class="tq-cross__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></figure>
+          <p class="tq-cross__t">説明のテキストがここに入ります</p>
+        </li>
+        <li class="tq-cross__card">
+          <figure class="tq-cross__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></figure>
+          <p class="tq-cross__t">説明のテキストがここに入ります</p>
+        </li>
+        <li class="tq-cross__card">
+          <figure class="tq-cross__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></figure>
+          <p class="tq-cross__t">説明のテキストがここに入ります</p>
+        </li>
+      </ul>
+      <span class="tq-cross__doodle tq-cross__doodle--btm" aria-hidden="true">
+        <svg viewBox="0 0 34 30" fill="currentColor">
+          <path d="M17 15C13 4 3 1 2 8c-1 6 8 9 15 7C24 17 33 14 32 8c-1-7-11-4-15 7z"/>
+          <path d="M16 14h2v14h-2z"/>
+        </svg>
+      </span>
+      <span class="tq-cross__doodle tq-cross__doodle--top" aria-hidden="true">
+        <svg viewBox="0 0 30 28" fill="currentColor">
+          <path d="M15 28C15 16 8 9 0 8c1 12 7 19 15 20z"/>
+          <path d="M15 28c0-14 6-22 15-24-1 13-7 22-15 24z"/>
+        </svg>
+      </span>
+    </div>
+    <p class="tq-cross__cap">四隅の角丸が最後まで閉じていて、面が画像として硬い</p>
+  </div>
+</section>
+
+<!-- 2. この工夫：離れた2点だけ外周をまたぐ -->
+<section class="tq-cross">
+  <div class="tq-cross__inner">
+    <p class="tq-cross__tag tq-cross__tag--on">この工夫｜外周を2点だけ破る</p>
+    <div class="tq-cross__sheet">
+      <h3 class="tq-cross__h">見出しがここに入ります</h3>
+      <ul class="tq-cross__grid">
+        <li class="tq-cross__card">
+          <figure class="tq-cross__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></figure>
+          <p class="tq-cross__t">説明のテキストがここに入ります</p>
+        </li>
+        <li class="tq-cross__card">
+          <figure class="tq-cross__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></figure>
+          <p class="tq-cross__t">説明のテキストがここに入ります</p>
+        </li>
+        <li class="tq-cross__card">
+          <figure class="tq-cross__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></figure>
+          <p class="tq-cross__t">説明のテキストがここに入ります</p>
+        </li>
+      </ul>
+      <!-- 下辺を半分またぐ -->
+      <span class="tq-cross__doodle tq-cross__doodle--btm" aria-hidden="true">
+        <svg viewBox="0 0 34 30" fill="currentColor">
+          <path d="M17 15C13 4 3 1 2 8c-1 6 8 9 15 7C24 17 33 14 32 8c-1-7-11-4-15 7z"/>
+          <path d="M16 14h2v14h-2z"/>
+        </svg>
+      </span>
+      <!-- 右上を半分またぐ -->
+      <span class="tq-cross__doodle tq-cross__doodle--top" aria-hidden="true">
+        <svg viewBox="0 0 30 28" fill="currentColor">
+          <path d="M15 28C15 16 8 9 0 8c1 12 7 19 15 20z"/>
+          <path d="M15 28c0-14 6-22 15-24-1 13-7 22-15 24z"/>
+        </svg>
+      </span>
+    </div>
+    <p class="tq-cross__cap">破っているのは下辺と右上の2点だけ。他の外周は閉じたまま。紙が地の上に「置かれている」に読める</p>
+
+    <!-- 帯の上下へ三角を突き出す -->
+    <div class="tq-cross__band">
+      テキストがここに入ります
+      <span class="tq-cross__tri" aria-hidden="true"></span>
+      <span class="tq-cross__tri tq-cross__tri--l" aria-hidden="true"></span>
+      <span class="tq-cross__tri tq-cross__tri--r" aria-hidden="true"></span>
+    </div>
+    <p class="tq-cross__cap">三角は帯の上辺を1つだけまたぎ、残り2つは余白の上に浮かせる。カードにも文字にも接していない</p>
+  </div>
+</section>

@@ -1,0 +1,35 @@
+{
+  "id": "flow/line-behind-subject",
+  "name": "1本の斜線を人物の背後に通し、両端で色と太さの主従を割る",
+  "ordinary": "左向き矢印と右向き矢印を2本引き、それぞれの横に説明文を添える。",
+  "actual": "右上から左下へ下る太さ3pxの線が、人物の胴で途切れる（背面を通っている）。左端に矢羽。線上の文字は左半分が濃茶＋ティールで大きく太く、右半分は淡いグレーで小さい。同じ1本の両端なのに主従が付き、押したい方向が1つに決まる。",
+  "css": ".stage{position:relative;isolation:isolate}\n.stage__line{position:absolute;left:12%;bottom:210px;width:66%;height:3px;\n  background:#00a5b5;transform:rotate(-17deg);transform-origin:left center;z-index:0}\n.stage__line::before{content:\"\";position:absolute;left:-1px;top:-7px;\n  border:8px solid transparent;border-right-color:#00a5b5}\n.stage__subject{position:relative;z-index:2}   /* 背景透過の切り抜き人物 */\n.stage__main{position:absolute;z-index:3;color:#3b2b22;font-size:26px;font-weight:700}\n.stage__sub {position:absolute;z-index:1;color:#c9ced2;font-size:18px;font-weight:400}",
+  "params": [
+    "角度 -14〜-20deg",
+    "主従の文字サイズ差 約1.4倍",
+    "副の色 #c9ced2",
+    "線の色＝主の強調色と揃える"
+  ],
+  "appliesTo": [
+    "value",
+    "hero",
+    "features"
+  ],
+  "impact": 3,
+  "effort": 2,
+  "why": "線が人物の後ろに回るだけで平面の図に奥行きが出て、色差で「どちらが主張か」が1つに決まる。",
+  "avoid": "背景透過の切り抜き人物素材が無いと成立しない。四角い写真では線が前後関係を作れない。",
+  "sources": [
+    "sho_smilezemi_s15"
+  ],
+  "notes": [
+    "z-index は3段でセットにする。線=0／人物=2／主コピー=3／従コピー=1。どれか1つでも抜けると「背面を通る」が崩れる。舞台に isolation:isolate を必ず付けること。付けないと親側の重なり文脈に漏れて、隣のパーツの上に線が出る。",
+    "元CSSの bottom:210px は固定px。舞台を aspect-ratio で組んで % に置き換えないと、幅が変わった瞬間に線が人物の頭上や足元へずれる。デモは left:8% / bottom:39.5% / width:76% / rotate(-15deg) で、375pxでも1100pxでも交点が動かない。",
+    "効き目の本体は角度ではなく「交点が胴に来ていること」。デモでは人物の下端と高さから逆算して、線が人物の高さの約47%（胴の中央）を通るようにした。角度だけ合わせて交点が頭や脚だと、線が人物を避けているように見えて前後が生まれない。",
+    "切り抜き素材が無いときの代用は SVG の <clipPath> で人物形に抜いた <image>。デモはこれ。ただし実案件では背景透過PNGを用意するのが前提で、四角い写真では成立しない（avoid の通り）。",
+    "従の #c9ced2 はトークンに無い。color-mix(in srgb, var(--c-ink3) 42%, var(--c-bg)) で作る。--c-line(#E3E3E3) を流用すると白地で消える。",
+    "主従差は文字サイズ1.4倍だけでなく、font-weight(700/400)・色(--c-ink+--c-primary / 淡い灰)・z-index(人物の前/後ろ)を同じ向きに3つ重ねる。1つだけだと1.4倍では効かない。",
+    "矢羽は ::before の border トリック。border-right-color だけ塗ると左向きの三角になる。色は必ず線と同じ（主の強調色）に揃える。",
+    "デモは techniques/flow/line-behind-subject/demo.html。左＝矢印2本の普通版、右＝この工夫。"
+  ]
+}

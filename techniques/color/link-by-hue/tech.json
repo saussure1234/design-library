@@ -1,0 +1,23 @@
+{
+  "id": "color/link-by-hue",
+  "name": "引き出し線も番号も使わず、色の一致だけで対応をつくる",
+  "ordinary": "図と説明を線で結ぶ／①②③の番号を振る／ブロックごとに背景色の箱で囲む",
+  "actual": "右の説明3ブロックは囲みも区切り線も無く、見出し左に立つ4pxの縦バーの色が、左の図の対応する円の色（水色／紫／緑）と一致しているだけ。別例では見出し「Career Palette」に5色の横グラデを掛け、右のリスト各行末の直径14pxの丸にそのグラデから1色ずつ順に配って、見出しを色の出典にしている。",
+  "css": ".block{--c:#3aa9dc}.block:nth-child(2){--c:#7b78bd}.block:nth-child(3){--c:#35bfae}\n.block .head{border-left:4px solid var(--c);padding-left:12px}\n.block h3{color:var(--c)} .block li::marker{color:var(--c)}\n/* 見出しをパレットの出所にする */\nh3{background:linear-gradient(90deg,#f5a04a,#ef7fa5,#9a86d8,#6fa8dc,#7fc9ae);-webkit-background-clip:text;background-clip:text;color:transparent}\n.row:nth-child(1) .dot{background:#f5a04a}.row:nth-child(2) .dot{background:#ef7fa5}.row:nth-child(3) .dot{background:#9a86d8}",
+  "appliesTo": ["features", "value", "member"],
+  "impact": 3,
+  "effort": 1,
+  "why": "色だけで図と文章が対応するので、番号・引き出し線・囲みを全部省いても関係が読める",
+  "params": ["紐づける先（図の要素／見出しのグラデ）", "3〜5色の色相", "バー幅4px or 丸14px"],
+  "avoid": "色が唯一の手掛かりになる重要情報（順序や語も併記する）",
+  "sources": ["sho_kimini_s05", "kobe-wu_s07"],
+  "notes": [
+    "sho_kimini_s05 では図の側の円が『ベタ塗りの大きな面』、説明の側が『4pxの細い縦バー』。同じ色でも面積が10倍以上違うので、色だけの対応でも図と文章の主従が崩れない。両方をベタ塗りにすると2つの図に見えてしまう。",
+    "説明ブロック側は囲みも区切り罫も背景色も持たない。持たせた瞬間に『箱で囲む』という別の対応付けが二重にかかり、色の一致が読み取られなくなる。",
+    "円の並び順（左上→右下）と説明の並び順が一致しているので、色に加えて『語の一致（ブロック名＝円の中の文字）』と『順序』の2つの冗長な手掛かりがある。avoid にある通り、色だけに頼らないための最低限の保険がこれ。",
+    "kobe-wu_s07 の別型は、見出し自体を5色グラデで組んで『色の出典』にしてから、各行末の直径14pxの丸へ左から順に1色ずつ配る。行と見出しは離れているのに、パレットの出所が見出しにあるため対応が読める。",
+    "実装上の注意：グラデ見出しは -webkit-background-clip:text と background-clip:text の両方＋color:transparent。未対応環境では文字が消えるので、@supports で囲って通常色にフォールバックさせる。",
+    "1ブロック＝1色を CSS変数（--c）でまとめて持たせ、見出し色・バー・リストマーカーの3箇所が必ず同じ値になるようにする。個別指定にすると増改築で必ずズレる。"
+  ],
+  "demoNotes": "左＝普通（①②③＋引き出し線＋囲み）／右＝この工夫（4pxバーの色だけ）。下段に kobe-wu_s07 型の『見出しグラデを色の出典にする』版を置いた。"
+}

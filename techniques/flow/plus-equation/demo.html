@@ -1,0 +1,135 @@
+<style>
+/* トークンのフォールバック。:where() で詰めているので、
+   _tokens.css が読み込まれていればそちらが必ず勝つ。 */
+:where(:root){
+  --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-disp:var(--f-sans); --f-num:"Helvetica Neue",Arial,var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+  --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+  --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px; --s8:76px;
+  --sec-y:clamp(56px,7vw,110px);
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+
+.tq-plus-eq{font-family:var(--f-sans); color:var(--c-ink2); background:var(--c-bg); padding-block:var(--s7)}
+.tq-plus-eq *{box-sizing:border-box}
+.tq-plus-eq__wrap{max-width:var(--w-max); margin-inline:auto; padding-inline:var(--w-gut)}
+.tq-plus-eq__blk{margin-top:var(--s8)}
+.tq-plus-eq__blk:first-child{margin-top:0}
+.tq-plus-eq__tag{
+  display:inline-block; margin:0 0 var(--s5);
+  font-size:var(--fs-note); letter-spacing:.08em; line-height:1;
+  padding:var(--s2) var(--s3); border-radius:var(--r-pill);
+  background:var(--c-bg2); color:var(--c-ink3);
+}
+.tq-plus-eq__tag--on{background:var(--c-primary-l); color:var(--c-primary-d)}
+.tq-plus-eq__cap{margin:var(--s5) 0 0; font-size:var(--fs-sm); line-height:var(--lh-body); color:var(--c-ink3)}
+
+/* ============ 中身（普通も工夫も同じカード） ============ */
+.tq-plus-eq__card{
+  background:var(--c-bg); border:2px solid color-mix(in srgb, var(--c-primary) 35%, var(--c-bg));
+  border-radius:var(--r-l); padding:var(--s5);
+}
+.tq-plus-eq__eyebrow{margin:0; font-size:var(--fs-sm); font-weight:700; color:var(--c-primary-d)}
+.tq-plus-eq__h{margin:var(--s1) 0 var(--s4); font-family:var(--f-disp); font-weight:700;
+  font-size:var(--fs-lg); line-height:var(--lh-head); color:var(--c-ink)}
+.tq-plus-eq__ph{overflow:hidden; border-radius:var(--r-m); background:var(--c-bg2); aspect-ratio:16/9}
+.tq-plus-eq__ph img{width:100%; height:100%; object-fit:cover; display:block}
+.tq-plus-eq__chips{display:flex; flex-wrap:wrap; gap:var(--s2); margin:var(--s4) 0 0; padding:0; list-style:none}
+.tq-plus-eq__chips li{
+  font-size:var(--fs-note); color:var(--c-ink2); background:var(--c-bg2);
+  border-radius:var(--r-s); padding:var(--s1) var(--s2);
+}
+
+/* ============ 普通：同じ幅のカードを等間隔で左右に置くだけ ============ */
+.tq-plus-eq__plain{display:grid; grid-template-columns:1fr 1fr; gap:var(--s5)}
+
+/* ============ この工夫：手描きの＋でつなぎ、まとめ帯で「＝」を作る ============ */
+.tq-plus-eq__pair{display:grid; grid-template-columns:1fr auto 1fr; gap:var(--s5); align-items:center}
+.tq-plus-eq__plus{width:44px; height:44px; display:block; flex:none}
+/* 手描きSVG。真円・均等線幅にしないこと */
+.tq-plus-eq__plus path{fill:var(--c-primary)}
+.tq-plus-eq__sum{
+  grid-column:1/-1; margin-top:var(--s4);
+  background:var(--c-primary); color:var(--c-on-primary);
+  border-radius:var(--r-pill);
+  display:flex; justify-content:space-between; align-items:center; gap:var(--s4);
+  padding:var(--s4) var(--s5); font-weight:700; font-size:var(--fs-base); line-height:var(--lh-head);
+}
+.tq-plus-eq__sum b{display:flex; align-items:center; gap:var(--s3); min-width:0}
+.tq-plus-eq__sum i{flex:none; width:10px; height:10px; border-radius:50%; background:var(--c-accent)}
+.tq-plus-eq__btn{
+  flex:none; background:var(--c-bg); color:var(--c-primary-d);
+  border-radius:var(--r-pill); padding:var(--s2) var(--s4);
+  font-size:var(--fs-sm); font-weight:700; white-space:nowrap;
+}
+
+@media (max-width:768px){
+  .tq-plus-eq__plain{grid-template-columns:1fr}
+  .tq-plus-eq__pair{grid-template-columns:1fr; justify-items:center}
+  .tq-plus-eq__pair>*{width:100%}
+  .tq-plus-eq__plus{width:38px; height:38px}
+  .tq-plus-eq__sum{flex-direction:column; align-items:flex-start; border-radius:var(--r-l)}
+}
+</style>
+
+<section class="tq-plus-eq">
+  <div class="tq-plus-eq__wrap">
+
+    <div class="tq-plus-eq__blk">
+      <p class="tq-plus-eq__tag">普通の場合</p>
+      <div class="tq-plus-eq__plain">
+        <div class="tq-plus-eq__card">
+          <p class="tq-plus-eq__eyebrow">小見出し</p>
+          <h3 class="tq-plus-eq__h">プランAがここに</h3>
+          <div class="tq-plus-eq__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+          <ul class="tq-plus-eq__chips"><li>項目</li><li>項目</li><li>項目</li></ul>
+        </div>
+        <div class="tq-plus-eq__card">
+          <p class="tq-plus-eq__eyebrow">小見出し</p>
+          <h3 class="tq-plus-eq__h">プランBがここに</h3>
+          <div class="tq-plus-eq__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+          <ul class="tq-plus-eq__chips"><li>項目</li><li>項目</li><li>項目</li></ul>
+        </div>
+      </div>
+      <p class="tq-plus-eq__cap">同じ幅で等間隔に並ぶだけの2枚。「並列＝どちらかを選ぶもの」に読め、両方セットで効くことは文章を読むまで伝わらない。</p>
+    </div>
+
+    <div class="tq-plus-eq__blk">
+      <p class="tq-plus-eq__tag tq-plus-eq__tag--on">この工夫</p>
+      <div class="tq-plus-eq__pair">
+        <div class="tq-plus-eq__card">
+          <p class="tq-plus-eq__eyebrow">小見出し</p>
+          <h3 class="tq-plus-eq__h">プランAがここに</h3>
+          <div class="tq-plus-eq__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+          <ul class="tq-plus-eq__chips"><li>項目</li><li>項目</li><li>項目</li></ul>
+        </div>
+
+        <svg class="tq-plus-eq__plus" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <!-- 線幅にムラを付ける。左右・上下で太さと端の角度を変える -->
+          <path d="M3.6,22.2 C13,19.2 30,18.8 40.4,20.8 C41.6,21 41.4,27.4 40.2,27.6 C29.4,29.8 13.2,29.4 3.9,27.4 C2.6,27.1 2.4,22.5 3.6,22.2 Z"/>
+          <path d="M20.8,3.6 C21.1,2.4 26.2,2.6 26.4,3.8 C28.2,13.4 28,30.8 25.8,40.4 C25.5,41.6 20.2,41.4 20,40.2 C18.6,30.6 19,13.2 20.8,3.6 Z"/>
+        </svg>
+
+        <div class="tq-plus-eq__card">
+          <p class="tq-plus-eq__eyebrow">小見出し</p>
+          <h3 class="tq-plus-eq__h">プランBがここに</h3>
+          <div class="tq-plus-eq__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+          <ul class="tq-plus-eq__chips"><li>項目</li><li>項目</li><li>項目</li></ul>
+        </div>
+
+        <p class="tq-plus-eq__sum">
+          <b><i></i>2つあわせたときの結論がここに入ります</b>
+          <span class="tq-plus-eq__btn">ボタンの文言</span>
+        </p>
+      </div>
+      <p class="tq-plus-eq__cap">間の余白の中央に手描きの＋。さらに両カードの幅いっぱいを丸帯が渡り、3要素で1つの塊＝「＝」の役割を果たす。並列ではなく加算だと、形だけで先に伝わる。</p>
+    </div>
+
+  </div>
+</section>

@@ -1,0 +1,141 @@
+<style>
+/* ============================================================
+   color/whisper-contrast
+   見出しや面を「見えるか見えないか」の差で置く
+   ============================================================ */
+:root{
+  /* --- _tokens.css フォールバック --- */
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-disp:var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px; --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+  --lh-tight:1.35; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px;
+  --r-s:6px; --r-m:12px; --r-pill:999px;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070; --c-bg:#FFFFFF; --c-line:#E3E3E3;
+
+  /* --- この工夫の変数 --- */
+  --tq-wc-h:#dedede;        /* 白地の上の見出し（地とのLの差＝約8〜12） */
+  --tq-wc-sub:#e3d9d9;      /* 見出しよりさらに弱い日本語サブ */
+  --tq-wc-dark:#0a0b0d;     /* 暗い地 */
+  --tq-wc-wedge:#16171a;    /* 地とRGBで12差のくさび */
+  --tq-wc-on-dark:#ffffff;
+  --tq-wc-wedge-shape:polygon(64% 0,100% 0,100% 100%,88% 100%);
+}
+
+.tq-wc{ font-family:var(--f-sans); color:var(--c-ink); background:var(--c-bg); line-height:var(--lh-body); }
+.tq-wc *{ box-sizing:border-box; }
+.tq-wc img{ display:block; width:100%; height:100%; object-fit:cover; }
+
+.tq-wc__lead{ margin:0 0 var(--s5); font-size:var(--fs-sm); color:var(--c-ink3); line-height:var(--lh-tight); }
+.tq-wc__cmp{ display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:var(--s5); margin-bottom:var(--s6); }
+.tq-wc__tag{ display:block; margin-bottom:var(--s2); font-size:var(--fs-note); letter-spacing:.08em; color:var(--c-ink3); }
+.tq-wc__tag--on{ color:var(--c-ink); font-weight:700; }
+.tq-wc__note{ margin:var(--s2) 0 0; font-size:var(--fs-note); color:var(--c-ink3); line-height:var(--lh-tight); }
+
+/* ---- 明るい地 ---- */
+.tq-wc__light{ background:var(--c-bg); border-radius:var(--r-m); padding:var(--s5) var(--s4) var(--s6); }
+.tq-wc__h{ margin:0; font-family:var(--f-disp); font-weight:300; font-size:clamp(24px,3vw,34px); letter-spacing:.15em; line-height:var(--lh-tight); }
+.tq-wc__sub{ margin:var(--s1) 0 var(--s5); font-size:var(--fs-note); letter-spacing:.12em; line-height:var(--lh-tight); }
+/* この工夫：写真より弱いコントラストまで落とす */
+.tq-wc__h--whisper{ color:var(--tq-wc-h); }
+.tq-wc__sub--whisper{ color:var(--tq-wc-sub); }
+/* 普通の場合：はっきり読ませる */
+.tq-wc__h--loud{ color:var(--c-ink); font-weight:700; }
+.tq-wc__sub--loud{ color:var(--c-ink2); }
+
+.tq-wc__cards{ display:grid; grid-template-columns:1fr 1fr; gap:var(--s3); }
+.tq-wc__ph{ aspect-ratio:4/3; border-radius:var(--r-s); overflow:hidden; }
+.tq-wc__cap{ margin:var(--s2) 0 0; font-size:var(--fs-note); color:var(--c-ink2); line-height:var(--lh-tight); }
+.tq-wc__cap b{ display:block; font-size:var(--fs-sm); color:var(--c-ink); }
+
+/* ---- 暗い地 ---- */
+.tq-wc__dark{ position:relative; isolation:isolate; overflow:hidden; background:var(--tq-wc-dark); border-radius:var(--r-m); padding:var(--s5) var(--s4) var(--s6); }
+.tq-wc__dark .tq-wc__h{ color:var(--tq-wc-on-dark); font-weight:700; letter-spacing:.06em; }
+.tq-wc__dark .tq-wc__sub{ color:var(--tq-wc-on-dark); opacity:.7; }
+.tq-wc__dark .tq-wc__cap{ color:var(--tq-wc-on-dark); opacity:.75; }
+.tq-wc__dark .tq-wc__cap b{ color:var(--tq-wc-on-dark); opacity:1; }
+/* この工夫：地とRGBで12差のくさびを潜ませる */
+.tq-wc__dark--wedge::before{ content:""; position:absolute; inset:0; z-index:-1; background:var(--tq-wc-wedge); clip-path:var(--tq-wc-wedge-shape); }
+
+/* ---- 差の見える化（デモ用の目盛り） ---- */
+.tq-wc__swatch{ display:flex; align-items:center; gap:var(--s2); margin-top:var(--s3); font-size:var(--fs-note); color:var(--c-ink3); }
+.tq-wc__chip{ width:20px; height:20px; border-radius:var(--r-s); }
+.tq-wc__chip--bg{ background:var(--c-bg); outline:1px solid var(--c-line); }
+.tq-wc__chip--h{ background:var(--tq-wc-h); }
+.tq-wc__chip--sub{ background:var(--tq-wc-sub); }
+.tq-wc__chip--dark{ background:var(--tq-wc-dark); }
+.tq-wc__chip--wedge{ background:var(--tq-wc-wedge); }
+
+@media (max-width:420px){
+  .tq-wc__cards{ gap:var(--s2); }
+}
+</style>
+
+<section class="tq-wc">
+  <p class="tq-wc__lead">上段＝白地の見出し、下段＝暗い地の面。いずれも左が普通の場合、右がこの工夫。右は「読ませない見出し」「気づかれない面」まで落とすことで、写真と本文が先に目に入る。</p>
+
+  <div class="tq-wc__cmp">
+    <div>
+      <span class="tq-wc__tag">普通の場合：見出しを濃色ではっきり</span>
+      <div class="tq-wc__light">
+        <p class="tq-wc__h tq-wc__h--loud">SECTION TITLE</p>
+        <p class="tq-wc__sub tq-wc__sub--loud">見出しがここに入ります</p>
+        <div class="tq-wc__cards">
+          <div><div class="tq-wc__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div><p class="tq-wc__cap"><b>氏名がここに入ります</b>テキストがここに入ります</p></div>
+          <div><div class="tq-wc__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></div><p class="tq-wc__cap"><b>氏名がここに入ります</b>テキストがここに入ります</p></div>
+        </div>
+      </div>
+      <p class="tq-wc__note">見出しが一番強く、写真より先に読まれる。</p>
+    </div>
+
+    <div>
+      <span class="tq-wc__tag tq-wc__tag--on">この工夫：地との差を8〜12まで詰める</span>
+      <div class="tq-wc__light">
+        <p class="tq-wc__h tq-wc__h--whisper">SECTION TITLE</p>
+        <p class="tq-wc__sub tq-wc__sub--whisper">見出しがここに入ります</p>
+        <div class="tq-wc__cards">
+          <div><div class="tq-wc__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div><p class="tq-wc__cap"><b>氏名がここに入ります</b>テキストがここに入ります</p></div>
+          <div><div class="tq-wc__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></div><p class="tq-wc__cap"><b>氏名がここに入ります</b>テキストがここに入ります</p></div>
+        </div>
+      </div>
+      <p class="tq-wc__note">見出しは背景の一部まで下がり、写真とキャプションが先に立つ。</p>
+      <div class="tq-wc__swatch">
+        <span class="tq-wc__chip tq-wc__chip--bg"></span>地
+        <span class="tq-wc__chip tq-wc__chip--h"></span>見出し
+        <span class="tq-wc__chip tq-wc__chip--sub"></span>サブ
+      </div>
+    </div>
+  </div>
+
+  <div class="tq-wc__cmp">
+    <div>
+      <span class="tq-wc__tag">普通の場合：真っ黒のベタ一色</span>
+      <div class="tq-wc__dark">
+        <p class="tq-wc__h">SECTION TITLE</p>
+        <p class="tq-wc__sub">見出しがここに入ります</p>
+        <div class="tq-wc__cards">
+          <div><div class="tq-wc__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div><p class="tq-wc__cap"><b>見出しがここに入ります</b>テキストがここに入ります</p></div>
+          <div><div class="tq-wc__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></div><p class="tq-wc__cap"><b>見出しがここに入ります</b>テキストがここに入ります</p></div>
+        </div>
+      </div>
+      <p class="tq-wc__note">面が完全に平らで、写真だけが浮いて見える。</p>
+    </div>
+
+    <div>
+      <span class="tq-wc__tag tq-wc__tag--on">この工夫：RGBで12差のくさびを潜ませる</span>
+      <div class="tq-wc__dark tq-wc__dark--wedge">
+        <p class="tq-wc__h">SECTION TITLE</p>
+        <p class="tq-wc__sub">見出しがここに入ります</p>
+        <div class="tq-wc__cards">
+          <div><div class="tq-wc__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div><p class="tq-wc__cap"><b>見出しがここに入ります</b>テキストがここに入ります</p></div>
+          <div><div class="tq-wc__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></div><p class="tq-wc__cap"><b>見出しがここに入ります</b>テキストがここに入ります</p></div>
+        </div>
+      </div>
+      <p class="tq-wc__note">要素としては認識されないのに、平面さだけが消える。</p>
+      <div class="tq-wc__swatch">
+        <span class="tq-wc__chip tq-wc__chip--dark"></span>地
+        <span class="tq-wc__chip tq-wc__chip--wedge"></span>くさび
+      </div>
+    </div>
+  </div>
+</section>

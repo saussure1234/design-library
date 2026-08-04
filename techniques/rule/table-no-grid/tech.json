@@ -1,0 +1,29 @@
+{
+  "id": "rule/table-no-grid",
+  "name": "表の格子罫を全部消し、行は不透明度6%の1本・列は色帯か余白だけにする",
+  "ordinary": "tableにborderを回してセルを全部囲い、ヘッダ行に背景色を敷く",
+  "actual": "縦罫ゼロ・列見出しの下罫もゼロで、列は padding 20px 24px の余白だけで分ける。行の区切りは rgba(0,0,0,.06) の1本のみ、最終行は0。逆に列を見せたいときは、列そのものを上下角丸14pxのパステル縦帯にして gap 5px の白い隙間で並べ、行の罫は1本も引かない。定義リストは罫ゼロのまま grid 120px 1fr・row-gap 38px、ラベルは字間.2emの欧文大文字にして、位置揃えと行間だけで表として読ませる。",
+  "css": "td{border:0;border-bottom:1px solid rgba(0,0,0,.06);padding:20px 24px}\ntr:last-child td{border-bottom:0}\nth{border:0}\n/* 列＝色帯にする版 */\n.table{display:grid;grid-template-columns:repeat(6,1fr);gap:5px}\n.col{background:#cfe6f7;border-radius:14px;padding:12px;display:grid;gap:12px}\n/* 罫ゼロの定義リスト */\ndl{display:grid;grid-template-columns:120px 1fr;row-gap:38px;border:0}\ndt{color:#b79b5c;letter-spacing:.2em;font-size:12px}\ndd{font-family:serif;letter-spacing:.06em}",
+  "params": [
+    "行罫 rgba(0,0,0,.04〜.08)",
+    "セル余白20px 24px",
+    "列帯6色 or 無彩色",
+    "dl row-gap 28〜38px"
+  ],
+  "appliesTo": ["price", "access", "features", "faq"],
+  "impact": 3,
+  "effort": 1,
+  "why": "罫が消えると画面上で唯一の線（差し色の枠やグラフの基準線）が意味を持ち、目が数字へ真っ直ぐ行く",
+  "avoid": "5列以上×10行以上の密な数値表（横方向で視線が迷う）",
+  "sources": ["sho_globalcrown_s12", "yugao_s13", "tanq_s05"],
+  "notes": [
+    "sho_globalcrown_s12 の現物は3列の比較表。縦罫は1本も無く、行の区切りだけがごく淡く入る。その状態で自社列だけを差し色（ピンク）の1px枠で囲っているので、画面上で『閉じた線』はその1つだけになり、視線が確実にそこへ行く。格子罫を残したままこの枠を足しても、線が線に埋もれて効かない。この工夫は“枠を足す”ではなく“他の線を消す”のほうが本体。",
+    "同じ現物では、地がオフホワイト（クリーム）で、強調列だけ白抜き。線に加えて地の明度も1段だけ変えている。線1本＋明度1段の2手で強調しているのが実態。",
+    "yugao_s13 の定義リストは罫が完全にゼロ。ラベル（ADDRESS / TEL / OPEN / CLOSE）は字間の広い欧文大文字で、値より小さく淡い金色。行間が本文よりかなり広く（38px前後）、左端が揃っていることだけで表として読める。row-gap を詰めると途端に『ただの段落』に戻るので、gap がこの工夫の効き所。",
+    "tanq_s05 は列を色帯にした版。上下角丸14px前後のパステル縦帯6本を、白い隙間5px前後で並べている。行の罫は1本も無く、帯の中にはさらに白い小箱（セル）が積まれる。『帯＝列』『白い小箱＝セル』の2階層で、罫を使わずに縦横の関係を作っている。",
+    "tanq_s05 の帯は6色だが、彩度がどれも低く明度も揃っている。色数を増やすときは彩度と明度を揃えるのが条件で、1本だけ濃いと『そこが強調された列』に誤読される。",
+    "🚨実装上の注意：列の左右に1px枠を付ける方法は border-collapse:collapse だと隣接セルの罫と衝突して線が消えたり二重になったりする。border-collapse:separate; border-spacing:0 にしてから、対象列のセルに border-left/right、thead に border-top、最終行に border-bottom を付けると素直に閉じる。",
+    "avoid にあるとおり密な数値表には向かないが、縦に読ませたい列が決まっている場合は、その列だけ地色を1段変えると横方向の迷いは消える（globalcrown の実装がまさにこれ）。"
+  ],
+  "demoNotes": "3セクションとも「普通」を上、「この工夫」を下に縦積みで対比。①全格子罫＋ヘッダ地色 vs 縦罫ゼロ＋行罫1本＋差し色枠1つ、②格子罫の列 vs 角丸14pxの色帯6本＋5px隙間、③2列の囲み表 vs 罫ゼロの dl（120px 1fr / row-gap 38px / dtは字間.2emの欧文大文字）。行罫は color-mix で --c-ink の6%、色帯は --c-primary / --c-accent から6段の淡色を作っている。表は overflow-x:auto のラッパーに入れて375pxでも横スクロールで収まる。"
+}

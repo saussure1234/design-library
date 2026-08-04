@@ -1,0 +1,32 @@
+{
+  "id": "rule/list-hairline-circle",
+  "name": "一覧はカード化せず、極薄罫1本＋線だけの小円で「押せる列」にする",
+  "ordinary": "各項目を白カード＋角丸＋影で囲い、末尾に塗りの「詳しく見る」ボタンを置く",
+  "actual": "背景・枠・角丸ゼロ、項目の下に1px（#ececef〜rgba(0,0,0,.06)）の罫が1本だけ。右端に直径16〜28pxの円を置き、色を持たせるのはこの円だけに集約する。写真の上なら円も1px線のみで右下16px内側に重ねる。テキストリンクは行全幅でなく文字数ぴったりの下線（offset 5px）。送り矢印は円も背景も影も無い1pxの「く」の字20px。送りボタンは版面の外（bottom:-46px の左右両端）へ引き離し、矢印の軸を円の輪郭から突き抜けさせる。",
+  "css": "li{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid #ececef}\nli:last-child{border-bottom:0}\n.go{width:16px;height:16px;border:1px solid currentColor;border-radius:50%;display:grid;place-content:center;font-size:9px}\n/* 写真に重ねる版 */\n.more{position:absolute;right:16px;bottom:16px;width:28px;height:28px;border:1px solid rgba(255,255,255,.9);border-radius:50%;display:grid;place-content:center}\n.more::after{content:\"\";width:10px;height:1px;background:#fff;transform:rotate(-45deg)}\n/* 文字幅ぶんだけの下線 */\na.txt{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:5px}\n/* 箱を持たない送り矢印 */\n.nav{width:20px;height:20px;padding:0;background:none;border:0;border-left:1px solid #fff;border-bottom:1px solid #fff;border-radius:0;transform:rotate(45deg)}\n.nav.next{transform:rotate(-135deg)}\n/* 版面の外へ出す */\n.pager{position:absolute;bottom:-46px;left:0;right:0;display:flex;justify-content:space-between}",
+  "params": [
+    "罫の濃さ（#ececef〜rgba(0,0,0,.06)）",
+    "円径16/28/34px",
+    "円を差し色にするか白1pxにするか",
+    "送りを版面外へ出すか"
+  ],
+  "appliesTo": ["features", "news", "member", "price", "access"],
+  "impact": 2,
+  "effort": 1,
+  "why": "罫を最小にして色を円1点へ反復させると、行が「押せる場所の列」として一目で読め、カード装飾が全部不要になる",
+  "avoid": "項目ごとに行数・要素数が大きく違う一覧（罫だけでは切れ目が読めない）",
+  "sources": [
+    "kobe-wu_s09", "shoei_s03", "shoei_s08", "yugao_s07",
+    "kobe-wu_s07", "odrive_s11", "meikei_s05", "musashino_s11"
+  ],
+  "notes": [
+    "kobe-wu_s09 の現物は学科一覧。行の下に極薄罫、右端に16px前後の線だけの円（中に細い矢印）。円の色＝ブランドのティールで、この一覧の中で有彩色はその円だけ。列見出し（文学部・家政学部…）にだけ短い下罫が付き、項目の罫より少し濃い。『罫の濃さを2段階だけ使い分ける』のが現物の実態で、罫を1種類に統一しているわけではない。",
+    "shoei_s08 では同じ構図で円が“塗り”になっている（濃紺の塗り円＋白矢印）。線の円か塗りの円かは可変で、本質は『色が出るのが円だけ』という状態のほう。塗りにすると押せる感じは強まるが、行の軽さは少し落ちる。",
+    "shoei_s03（NEWS）は右端の円すら無く、日付＋淡色ピルのタグ＋タイトルだけを極薄罫で並べている。円は必須ではなく、『行末に反復する小さな1点』が要る場面だけ足す。",
+    "musashino_s11 の送りボタンが定義どおりで、版面（白いパネル）の下・左右両端に34px前後の輪郭だけの円が置かれ、矢印の軸が円の輪郭を左右へ突き抜けている。円＝ボタンの箱ではなく、円と線が別々の印として読めるのがこの形の効き所。",
+    "🚨実装上の注意：`.pager{position:absolute;bottom:-46px}` は親に overflow:hidden があると消える。親（カルーセルの枠）を overflow:hidden にしがちなので、送りは枠の外側のラッパーに置き、そのラッパーに padding-bottom:46px を持たせて場所を確保する。デモでは .tq-lhc__stagewrap がその役。",
+    "odrive_s11 は暗地なので送りが白い塗り円になっている。地が暗い場合だけは輪郭線の円が沈むので、塗りに切り替えるのが現物の判断。",
+    "text-underline-offset:5px は Safari / Chrome とも対応済み。offset を取らないと日本語の下に線が食い込んで『取り消し線ぎみ』に見えるので、この工夫では offset のほうが本体。"
+  ],
+  "demoNotes": "5セクションすべて左右対比。①カード5枚 vs 極薄罫＋16px円、②写真に塗りボタン vs 28pxの線の円、③行全幅の塗りボタン vs 文字幅の下線、④版面内の丸ボタン vs 版面外(bottom:-46px)の「く」の字、⑤円の中に矢印 vs 軸が輪郭を8px突き抜ける。罫は color-mix で --c-ink の6%、円の色は --c-primary。"
+}

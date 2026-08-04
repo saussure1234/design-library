@@ -1,0 +1,137 @@
+<style>
+/* ==========================================================
+   edge/underlap-next — 次セクションを引き上げてカードを飲ませる
+   :where(:root) はトークン未読込時のフォールバック（優先度0）。
+   ========================================================== */
+:where(:root){
+  --c-primary:#00B220; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+  --lh-tight:1.35; --lh-body:1.9;
+  --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+  --r-s:6px; --r-m:12px; --r-l:24px;
+  --shadow:0 6px 24px rgba(17,17,17,.08);
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+
+.tq-under{
+  font-family:var(--f-sans); color:var(--c-ink2); background:var(--c-bg);
+  max-width:var(--w-max); margin:0 auto; padding:var(--s6) var(--w-gut);
+}
+.tq-under__h{ font-size:var(--fs-md); font-weight:700; color:var(--c-ink); line-height:var(--lh-tight); margin:0 0 var(--s2); }
+.tq-under__h--2{ margin-top:var(--s7); }
+.tq-under__lead{ font-size:var(--fs-sm); line-height:var(--lh-body); color:var(--c-ink3); margin:0 0 var(--s5); }
+.tq-under__row{ display:grid; gap:var(--s5); grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr)); }
+.tq-under__fig{ margin:0; }
+.tq-under__fig--solo{ max-width:520px; }
+.tq-under__cap{ font-size:var(--fs-note); line-height:var(--lh-tight); color:var(--c-ink3); margin:var(--s3) 0 0; }
+.tq-under__cap b{ display:block; color:var(--c-ink); font-size:var(--fs-sm); margin-bottom:2px; }
+
+/* ---- ステージ ---- */
+.tq-under__stage{
+  border:1px solid var(--c-line); border-radius:var(--r-m); overflow:hidden;
+  background:var(--c-bg);
+}
+.tq-under__cards{
+  display:grid; grid-template-columns:repeat(3,1fr); gap:var(--s3);
+  padding:var(--s4) var(--s4) 0;
+}
+.tq-under__card{
+  background:var(--c-bg); border-radius:var(--r-s); overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.tq-under__card img{ width:100%; height:78px; object-fit:cover; display:block; }
+.tq-under__card p{
+  margin:0; padding:var(--s2) var(--s2) var(--s3);
+  font-size:var(--fs-note); line-height:var(--lh-tight); color:var(--c-ink2);
+  min-height:42px; box-sizing:border-box;
+}
+.tq-under__next{
+  background:var(--c-ink); color:var(--c-on-primary);
+  padding:var(--s4); font-size:var(--fs-note); line-height:var(--lh-tight);
+}
+
+/* 普通：カード列が終わってから黒が始まる */
+.tq-under__stage--plain .tq-under__cards{ padding-bottom:var(--s4); }
+
+/* この工夫：カード列を前面に置き、黒面を潜り込ませる */
+.tq-under__stage--under .tq-under__cards{
+  position:relative; z-index:2; margin-bottom:-56px;   /* カード高120pxの約47% */
+}
+.tq-under__stage--under .tq-under__next{ padding-top:76px; }  /* 潜り量+20px */
+
+/* ---- 変奏：輪郭の一致しない面を斜めにずらして覗かせる ---- */
+.tq-under__hero{ position:relative; padding:var(--s4) var(--s4) 34px; }
+.tq-under__hero img{
+  position:relative; z-index:1; display:block; width:100%; height:170px;
+  object-fit:cover; border-radius:var(--r-s) var(--r-s) 50% 50% / var(--r-s) var(--r-s) 14px 14px;
+}
+/* 写真の下辺はゆるい曲線、覗く面は斜めの直線。2本の縁を平行にしないのが肝 */
+.tq-under__peek{
+  position:absolute; z-index:0; left:var(--s4); right:var(--s4); bottom:6px; height:64px;
+  background:linear-gradient(90deg,var(--c-primary-l),var(--c-line));
+  clip-path:polygon(0 0, 100% 0, 100% 66%, 0 100%);
+}
+
+@media (max-width:420px){
+  .tq-under__cards{ gap:var(--s2); padding:var(--s3) var(--s3) 0; }
+  .tq-under__stage--plain .tq-under__cards{ padding-bottom:var(--s3); }
+  .tq-under__card img{ height:60px; }
+  .tq-under__hero img{ height:120px; }
+}
+</style>
+
+<div class="tq-under">
+
+  <p class="tq-under__h">境界を1本の線でなく「段差」にする</p>
+  <p class="tq-under__lead">
+    2つとも同じカード3枚・同じ2色。違うのは、次のセクションの色面をカードの下半分まで引き上げてあるかどうか。
+    引き上げると、カードとカードのあいだのガターからだけ次の色が見え、境界がギザギザの段差になる。
+  </p>
+
+  <div class="tq-under__row">
+
+    <figure class="tq-under__fig">
+      <div class="tq-under__stage tq-under__stage--plain">
+        <div class="tq-under__cards">
+          <div class="tq-under__card"><img src="../../../docs/demo/ph_a.jpg" alt=""><p>テキストが入ります</p></div>
+          <div class="tq-under__card"><img src="../../../docs/demo/ph_b.jpg" alt=""><p>テキストが入ります</p></div>
+          <div class="tq-under__card"><img src="../../../docs/demo/ph_a.jpg" alt=""><p>テキストが入ります</p></div>
+        </div>
+        <div class="tq-under__next">次のセクション</div>
+      </div>
+      <p class="tq-under__cap"><b>普通</b>白のセクションが終わってから黒が始まる。境目は水平線1本。</p>
+    </figure>
+
+    <figure class="tq-under__fig">
+      <div class="tq-under__stage tq-under__stage--under">
+        <div class="tq-under__cards">
+          <div class="tq-under__card"><img src="../../../docs/demo/ph_a.jpg" alt=""><p>テキストが入ります</p></div>
+          <div class="tq-under__card"><img src="../../../docs/demo/ph_b.jpg" alt=""><p>テキストが入ります</p></div>
+          <div class="tq-under__card"><img src="../../../docs/demo/ph_a.jpg" alt=""><p>テキストが入ります</p></div>
+        </div>
+        <div class="tq-under__next">次のセクション</div>
+      </div>
+      <p class="tq-under__cap"><b>この工夫</b>黒面をカード高の約47%まで引き上げる。ガターと左右の余白からだけ黒が上まで届く。</p>
+    </figure>
+
+  </div>
+
+  <p class="tq-under__h tq-under__h--2">変奏：輪郭を一致させずに、斜めにずらして覗かせる</p>
+  <p class="tq-under__lead">
+    逆向きの使い方。写真の下辺はゆるい曲線、覗く面は斜めの直線。2本の縁がどこでも平行にならないので「紙が2枚重なった縁」に見える。
+  </p>
+
+  <figure class="tq-under__fig tq-under__fig--solo">
+    <div class="tq-under__stage">
+      <div class="tq-under__hero">
+        <img src="../../../docs/demo/ph_b.jpg" alt="">
+        <span class="tq-under__peek"></span>
+      </div>
+    </div>
+    <p class="tq-under__cap"><b>ずらして覗かせる</b>下に22px前後ずらし、clip-path で斜めに切る。色差は弱くてよい。</p>
+  </figure>
+
+</div>

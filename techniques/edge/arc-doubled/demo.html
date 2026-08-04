@@ -1,0 +1,108 @@
+<style>
+/* ==========================================================
+   edge/arc-doubled — 弧を2本ずらして重ね、境界を「層」にする
+   :where(:root) はトークン未読込時のフォールバック（優先度0）。
+   ========================================================== */
+:where(:root){
+  --c-primary:#00B220; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px; --fs-lg:21px;
+  --lh-tight:1.35; --lh-body:1.9;
+  --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+  --r-s:6px; --r-m:12px; --r-l:24px;
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+
+.tq-arcdb{
+  font-family:var(--f-sans); color:var(--c-ink2); background:var(--c-bg);
+  max-width:var(--w-max); margin:0 auto; padding:var(--s6) var(--w-gut);
+}
+.tq-arcdb__h{ font-size:var(--fs-md); font-weight:700; color:var(--c-ink); line-height:var(--lh-tight); margin:0 0 var(--s2); }
+.tq-arcdb__lead{ font-size:var(--fs-sm); line-height:var(--lh-body); color:var(--c-ink3); margin:0 0 var(--s5); }
+.tq-arcdb__row{ display:grid; gap:var(--s5); grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr)); }
+.tq-arcdb__fig{ margin:0; }
+.tq-arcdb__cap{ font-size:var(--fs-note); line-height:var(--lh-tight); color:var(--c-ink3); margin:var(--s3) 0 0; }
+.tq-arcdb__cap b{ display:block; color:var(--c-ink); font-size:var(--fs-sm); margin-bottom:2px; }
+
+/* ---- ステージ：上が地、下から弧が生えてくる ---- */
+.tq-arcdb__stage{
+  position:relative; height:200px; overflow:hidden;
+  border:1px solid var(--c-line); border-radius:var(--r-m);
+  background:var(--c-bg);
+}
+/* 弧は1クラス。top と background だけ差し替えるので「同じ形」が保証される。
+   幅240%・高さ340pxで、見えているのは巨大な楕円の頂点付近だけ。
+   端までの落差は約31pxしかなく、ドームでなく「面の縁」に見える。 */
+.tq-arcdb__arc{
+  position:absolute; left:-70%; width:240%; height:340px;
+  border-radius:50% / 100% 100% 0 0;
+}
+.tq-arcdb__arc--back { top:72px;  background:var(--c-accent);    z-index:0; }
+.tq-arcdb__arc--front{ top:120px; background:var(--c-primary-l); z-index:1; }
+.tq-arcdb__arc--solo { top:120px; background:var(--c-primary-l); z-index:1; }
+
+/* 手前の弧をまたぐ要素は position + z-index が必須 */
+.tq-arcdb__on{
+  position:relative; z-index:2;
+  margin:0; padding:0 var(--s4);
+  top:96px; text-align:center;
+  font-size:var(--fs-lg); font-weight:700; color:var(--c-ink);
+  line-height:var(--lh-tight);
+}
+.tq-arcdb__on span{ font-size:var(--fs-note); font-weight:400; display:block; color:var(--c-ink2); margin-top:2px; }
+
+/* ---- ヘアライン版：淡い面の内側に1本だけ平行に走らせる ---- */
+.tq-arcdb__arc--mint{ top:120px; background:var(--c-primary-l); z-index:1; }
+.tq-arcdb__arc--hair{
+  top:120px; background:transparent; z-index:2;
+  border-top:1px solid var(--c-bg);
+  transform:translateY(6px);
+}
+.tq-arcdb__arc--hair2{
+  top:120px; background:transparent; z-index:2;
+  border-top:1px solid var(--c-bg);
+  transform:translateY(15px);
+}
+</style>
+
+<div class="tq-arcdb">
+
+  <p class="tq-arcdb__h">弧を2本にすると、境界そのものから奥行きが出る</p>
+  <p class="tq-arcdb__lead">
+    3つとも同じ形・同じ位置の弧。違うのは本数だけ。1本だと面が持ち上がるだけだが、
+    同じ弧をもう1枚ずらして重ねると面が前後に分かれ、境界が「線」から「層」になる。
+  </p>
+
+  <div class="tq-arcdb__row">
+
+    <figure class="tq-arcdb__fig">
+      <div class="tq-arcdb__stage">
+        <span class="tq-arcdb__arc tq-arcdb__arc--solo"></span>
+        <p class="tq-arcdb__on">見出しがここに<span>補足テキストが入ります</span></p>
+      </div>
+      <p class="tq-arcdb__cap"><b>普通</b>弧は1本。曲線ではあるが面は1枚のまま。</p>
+    </figure>
+
+    <figure class="tq-arcdb__fig">
+      <div class="tq-arcdb__stage">
+        <span class="tq-arcdb__arc tq-arcdb__arc--back"></span>
+        <span class="tq-arcdb__arc tq-arcdb__arc--front"></span>
+        <p class="tq-arcdb__on">見出しがここに<span>補足テキストが入ります</span></p>
+      </div>
+      <p class="tq-arcdb__cap"><b>ベタ2枚 / ずらし48px</b>2色の面が前後に分かれる。見出しは手前の弧をまたいでいる。</p>
+    </figure>
+
+    <figure class="tq-arcdb__fig">
+      <div class="tq-arcdb__stage">
+        <span class="tq-arcdb__arc tq-arcdb__arc--mint"></span>
+        <span class="tq-arcdb__arc tq-arcdb__arc--hair"></span>
+        <span class="tq-arcdb__arc tq-arcdb__arc--hair2"></span>
+        <p class="tq-arcdb__on">見出しがここに<span>補足テキストが入ります</span></p>
+      </div>
+      <p class="tq-arcdb__cap"><b>ベタ＋ヘアライン / ずらし6px</b>面の内側を1pxの弧が平行に走り、境界が波紋に読み替わる。</p>
+    </figure>
+
+  </div>
+</div>

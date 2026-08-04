@@ -1,0 +1,161 @@
+<style>
+/* トークンのフォールバック。:where() で詰めているので、
+   _tokens.css が読み込まれていればそちらが必ず勝つ。 */
+:where(:root){
+  --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-disp:var(--f-sans); --f-num:"Helvetica Neue",Arial,var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+  --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+  --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px; --s8:76px;
+  --sec-y:clamp(56px,7vw,110px);
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --shadow:0 6px 24px rgba(17,17,17,.08);
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+
+/* ============ 土台 ============ */
+.tq-stage{
+  font-family:var(--f-sans); color:var(--c-ink2); background:var(--c-bg);
+  padding-block:var(--s7);
+  overflow-x:clip;
+}
+.tq-stage *{box-sizing:border-box}
+.tq-stage__wrap{max-width:var(--w-max); margin-inline:auto; padding-inline:var(--w-gut)}
+.tq-stage__blk{margin-top:var(--s8)}
+.tq-stage__blk:first-child{margin-top:0}
+
+.tq-stage__tag{
+  display:inline-block; margin:0 0 var(--s4);
+  font-size:var(--fs-note); letter-spacing:.08em; line-height:1;
+  padding:var(--s2) var(--s3); border-radius:var(--r-pill);
+  background:var(--c-bg2); color:var(--c-ink3);
+}
+.tq-stage__tag--on{background:var(--c-primary-l); color:var(--c-primary-d)}
+.tq-stage__cap{
+  margin:var(--s4) 0 0; font-size:var(--fs-sm); line-height:var(--lh-head); color:var(--c-ink3);
+}
+
+/* ============ 舞台（地色） ============ */
+.tq-stage__sec{
+  position:relative; overflow:hidden;
+  background:var(--c-ink); color:var(--c-bg);
+  padding-block:var(--s8);
+}
+.tq-stage__lab{
+  margin:0 0 var(--s3); text-align:center;
+  font-family:var(--f-num); font-size:var(--fs-note); letter-spacing:.28em; color:var(--c-ink3);
+}
+.tq-stage__h{
+  margin:0 0 var(--s6); text-align:center;
+  font-family:var(--f-disp); font-size:var(--fs-2xl); font-weight:800;
+  line-height:var(--lh-tight); letter-spacing:.04em; color:var(--c-bg);
+}
+.tq-stage__p{
+  margin:0 0 var(--s5); font-size:var(--fs-base); line-height:var(--lh-body); letter-spacing:.04em;
+}
+.tq-stage__p:last-child{margin-bottom:0}
+
+.tq-stage__fig{display:block; margin:0}
+.tq-stage__fig img{
+  display:block; width:100%; aspect-ratio:3/4; object-fit:cover; background:var(--c-ink2);
+}
+
+/* 本文カラムの領域を見せるためのデモ用の破線（実装では不要） */
+.tq-stage__body{outline:1px dashed var(--c-ink3); outline-offset:var(--s4)}
+
+/* --- 普通：写真も本文も同じグリッド幅に並べる --- */
+.tq-stage__even{
+  display:grid; grid-template-columns:1fr 2fr 1fr; gap:var(--s5);
+  align-items:center;
+  max-width:var(--w-max); margin-inline:auto; padding-inline:var(--w-gut);
+}
+
+/* --- この工夫：本文を32%まで細くし、余った左右を舞台にする --- */
+.tq-stage__thin > .tq-stage__body{max-width:32%; margin-inline:auto}
+.tq-stage__thin .tq-stage__fig{position:absolute}
+.tq-stage__fig--l{left:2%;  top:34%; width:26%}
+.tq-stage__fig--r{right:8%; top:42%; width:18%}
+
+/* --- 固定幅カラム版：負のオフセットでカラムの外へ出す --- */
+.tq-stage__fixed{max-width:560px; margin-inline:auto; position:relative}
+.tq-stage__fixed .tq-stage__fig{position:absolute; width:150px}
+.tq-stage__fig--cl{left:-190px; bottom:0}
+.tq-stage__fig--cr{right:-190px; top:20px}
+
+@media (max-width:768px){
+  /* 絵はカラムの左右から上下へ逃がす */
+  .tq-stage__even{grid-template-columns:1fr 1fr}
+  .tq-stage__even > .tq-stage__body{grid-column:1 / -1; order:-1}
+  .tq-stage__thin,.tq-stage__fixed{
+    display:grid; grid-template-columns:1fr 1fr; gap:var(--s5) var(--s4);
+    padding-inline:var(--w-gut);
+  }
+  .tq-stage__thin > .tq-stage__body,
+  .tq-stage__fixed > .tq-stage__body{grid-column:1 / -1; max-width:none}
+  .tq-stage__thin .tq-stage__fig,
+  .tq-stage__fixed .tq-stage__fig{position:static; width:100%; inset:auto}
+  .tq-stage__h{font-size:var(--fs-xl)}
+}
+</style>
+
+<section class="tq-stage">
+  <div class="tq-stage__wrap">
+    <p class="tq-stage__tag">普通の場合</p>
+  </div>
+  <div class="tq-stage__sec">
+    <div class="tq-stage__even">
+      <figure class="tq-stage__fig"><img src="../../../docs/demo/ph_a.jpg" alt=""></figure>
+      <div class="tq-stage__body">
+        <p class="tq-stage__lab">CONCEPT</p>
+        <h2 class="tq-stage__h">見出しがここに入ります</h2>
+        <p class="tq-stage__p">ここに本文が入ります。文章は数行で、読み手に伝えたいことを短くまとめた分量です。</p>
+        <p class="tq-stage__p">ここに本文が入ります。写真と本文が同じ列幅に並び、余白は上下左右へ均等に残ります。</p>
+      </div>
+      <figure class="tq-stage__fig"><img src="../../../docs/demo/ph_b.jpg" alt=""></figure>
+    </div>
+  </div>
+  <div class="tq-stage__wrap">
+    <p class="tq-stage__cap">写真も本文も同じグリッドの中に並ぶので、余白は上下左右に均等な「余り」として残る。文章量が少ないと、画面がそのぶん薄く見える。</p>
+  </div>
+
+  <div class="tq-stage__wrap tq-stage__blk">
+    <p class="tq-stage__tag tq-stage__tag--on">この工夫：本文を32%まで細くする</p>
+  </div>
+  <div class="tq-stage__sec tq-stage__thin">
+    <div class="tq-stage__body">
+      <p class="tq-stage__lab">CONCEPT</p>
+      <h2 class="tq-stage__h">見出しがここに入ります</h2>
+      <p class="tq-stage__p">ここに本文が入ります。文章は数行で、読み手に伝えたいことを短くまとめた分量です。</p>
+      <p class="tq-stage__p">ここに本文が入ります。カラムを細くしたぶん、左右に広い余白が生まれます。</p>
+      <p class="tq-stage__p">ここに本文が入ります。その余白は「余りもの」ではなく、絵を置くための場所になります。</p>
+    </div>
+    <figure class="tq-stage__fig tq-stage__fig--l"><img src="../../../docs/demo/ph_a.jpg" alt=""></figure>
+    <figure class="tq-stage__fig tq-stage__fig--r"><img src="../../../docs/demo/ph_b.jpg" alt=""></figure>
+  </div>
+  <div class="tq-stage__wrap">
+    <p class="tq-stage__cap">本文は画面幅の約32%しかない細い中央カラム（破線がその領域）。左右に残った広い余白へ絵を置く。左は画面左端から2%、右は右端から8%。絵と本文は1pxも重ならない。</p>
+  </div>
+
+  <div class="tq-stage__wrap tq-stage__blk">
+    <p class="tq-stage__tag tq-stage__tag--on">この工夫：固定幅カラム＋負のオフセット</p>
+  </div>
+  <div class="tq-stage__sec">
+    <div class="tq-stage__fixed">
+      <div class="tq-stage__body">
+        <p class="tq-stage__p">ここに本文が入ります。カラムの幅を560pxに固定し、絵は負のオフセットでその外へ出します。</p>
+        <p class="tq-stage__p">ここに本文が入ります。カラムが画面中央にあるかぎり、絵は左右の空きマージンに収まります。</p>
+        <p class="tq-stage__p">ここに本文が入ります。絵の位置はカラムの端からの距離で決まるので、画面幅が変わってもカラムに掛かりません。</p>
+      </div>
+      <figure class="tq-stage__fig tq-stage__fig--cl"><img src="../../../docs/demo/ph_b.jpg" alt=""></figure>
+      <figure class="tq-stage__fig tq-stage__fig--cr"><img src="../../../docs/demo/ph_a.jpg" alt=""></figure>
+    </div>
+  </div>
+  <div class="tq-stage__wrap">
+    <p class="tq-stage__cap">カラム幅が固定なら、絵の位置は % ではなく px の負のオフセットで決められる。カラムの外側に出るので、どれだけ画面が広くなっても本文には掛からない。</p>
+  </div>
+
+</section>

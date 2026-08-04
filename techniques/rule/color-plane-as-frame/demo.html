@@ -1,0 +1,267 @@
+<style>
+/* ============================================================
+   rule/color-plane-as-frame
+   隙間ゼロで色面を突き合わせ、色の変わり目を枠の代わりにする
+   ============================================================ */
+
+@layer tq-fallback{
+  :root{
+    --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA;
+    --c-accent:#FF9301;
+    --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+    --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+    --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    --f-disp:var(--f-sans); --f-num:"Helvetica Neue",Arial,var(--f-sans);
+    --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+    --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px; --fs-3xl:50px; --fs-4xl:64px;
+    --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px;
+    --s6:36px; --s7:52px; --s8:76px; --s9:110px;
+    --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+    --shadow:0 6px 24px rgba(17,17,17,.08);
+  }
+}
+
+/* この工夫が要求する値（すべてトークンから派生。案件では色数だけ差し替える） */
+.tq-cpf{
+  --tq-cpf-p1:var(--c-accent);
+  --tq-cpf-p2:color-mix(in srgb,var(--c-accent) 50%,var(--c-primary));
+  --tq-cpf-p3:var(--c-primary);
+  --tq-cpf-p4:color-mix(in srgb,var(--c-primary) 62%,var(--c-ink));
+  --tq-cpf-p5:color-mix(in srgb,var(--c-accent) 68%,var(--c-ink));
+  --tq-cpf-p6:color-mix(in srgb,var(--c-primary) 34%,var(--c-bg));
+  --tq-cpf-label:12px;   /* ラベルを面の下端から入れる距離 */
+  --tq-cpf-bleed:3em;    /* 帯を文字より外へはみ出させる量 2.5〜3em */
+}
+
+.tq-cpf{
+  container-type:inline-size;
+  font-family:var(--f-sans); color:var(--c-ink2);
+  line-height:var(--lh-head); -webkit-text-size-adjust:100%;
+  background:var(--c-bg); padding:var(--s5);
+}
+.tq-cpf *{box-sizing:border-box}
+
+.tq-cpf__lead{margin:0 0 var(--s5); font-size:var(--fs-note); color:var(--c-ink3); line-height:var(--lh-body)}
+.tq-cpf__sec{margin-top:var(--s7)}
+.tq-cpf__sec:first-of-type{margin-top:0}
+.tq-cpf__secttl{margin:0 0 var(--s4); font-size:var(--fs-sm); font-weight:700; color:var(--c-ink)}
+.tq-cpf__cap{
+  display:flex; align-items:center; gap:var(--s2);
+  margin:0 0 var(--s3); font-size:var(--fs-note); font-weight:700;
+  color:var(--c-ink3); letter-spacing:.04em;
+}
+.tq-cpf__cap::before{content:""; width:var(--s5); height:1px; background:var(--c-line); flex:0 0 auto}
+.tq-cpf__note{margin:var(--s3) 0 var(--s6); font-size:var(--fs-note); color:var(--c-ink3); line-height:var(--lh-body)}
+.tq-cpf__note:last-child{margin-bottom:0}
+
+/* --- ① ベタ面の連結 vs gapつきカード ------------------------ */
+.tq-cpf__band{display:grid; grid-template-columns:repeat(3,1fr); gap:0}
+.tq-cpf__cell{
+  border:0; border-radius:0; box-shadow:none;
+  padding:var(--s6) var(--s4); text-align:center; color:var(--c-on-primary);
+}
+.tq-cpf__cell:nth-child(1){background:var(--tq-cpf-p1)}
+.tq-cpf__cell:nth-child(2){background:var(--tq-cpf-p2)}
+.tq-cpf__cell:nth-child(3){background:var(--tq-cpf-p3)}
+.tq-cpf__cellttl{margin:0 0 var(--s2); font-size:var(--fs-md); font-weight:700; line-height:var(--lh-tight)}
+.tq-cpf__cellp{margin:0; font-size:var(--fs-note); line-height:var(--lh-body)}
+
+.tq-cpf__band--boxed{
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:var(--s5); background:var(--c-bg2); padding:var(--s5);
+}
+.tq-cpf__band--boxed .tq-cpf__cell{border-radius:var(--r-m); box-shadow:var(--shadow)}
+
+/* --- ② タイル型：1枚だけ縦2枚ぶんに ------------------------- */
+.tq-cpf__grid{display:grid; grid-template-columns:46% 27% 27%; grid-template-rows:1fr 1fr; gap:0}
+.tq-cpf__grid > :first-child{grid-row:1/3}
+.tq-cpf__tile{position:relative; display:flex; overflow:hidden; min-height:130px; border-radius:0}
+.tq-cpf__tile img{
+  display:block; width:100%; height:100%; object-fit:cover;
+  position:absolute; inset:0;
+}
+.tq-cpf__tile::after{content:""; position:absolute; inset:0}
+.tq-cpf__tile:nth-child(1)::after{background:color-mix(in srgb,var(--tq-cpf-p3) 62%,transparent)}
+.tq-cpf__tile:nth-child(2)::after{background:color-mix(in srgb,var(--tq-cpf-p4) 62%,transparent)}
+.tq-cpf__tile:nth-child(3)::after{background:color-mix(in srgb,var(--tq-cpf-p1) 62%,transparent)}
+.tq-cpf__tile:nth-child(4)::after{background:color-mix(in srgb,var(--tq-cpf-p5) 62%,transparent)}
+.tq-cpf__tile:nth-child(5)::after{background:color-mix(in srgb,var(--tq-cpf-p2) 62%,transparent)}
+.tq-cpf__tilebody{
+  position:relative; z-index:1; flex:1;
+  display:flex; flex-direction:column; justify-content:flex-end; align-items:center;
+  padding:var(--s4) var(--s3) var(--tq-cpf-label); text-align:center; color:var(--c-on-primary);
+}
+.tq-cpf__tilettl{margin:0 0 var(--s1); font-size:var(--fs-note); font-weight:700}
+.tq-cpf__tilesub{margin:0; font-size:10px; letter-spacing:.06em}
+
+.tq-cpf__grid--boxed{
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); grid-template-rows:auto;
+  gap:var(--s4); background:var(--c-bg2); padding:var(--s4);
+}
+.tq-cpf__grid--boxed > :first-child{grid-row:auto}
+.tq-cpf__grid--boxed .tq-cpf__tile{border-radius:var(--r-m); box-shadow:var(--shadow)}
+
+/* --- ③ ラベルは面の中／罫は群の底に1本だけ ------------------ */
+.tq-cpf__steps{display:grid; grid-template-columns:repeat(4,1fr); gap:0; border-bottom:1px solid var(--c-line)}
+.tq-cpf__step{
+  border:0; border-radius:0;
+  display:flex; flex-direction:column; align-items:center; justify-content:flex-end;
+  min-height:96px; padding-bottom:var(--tq-cpf-label); color:var(--c-on-primary);
+}
+.tq-cpf__step:nth-child(1){background:var(--tq-cpf-p1)}
+.tq-cpf__step:nth-child(2){background:var(--tq-cpf-p2)}
+.tq-cpf__step:nth-child(3){background:var(--tq-cpf-p3)}
+.tq-cpf__step:nth-child(4){background:var(--tq-cpf-p4)}
+.tq-cpf__stepno{margin:0 0 var(--s2); font-family:var(--f-num); font-size:var(--fs-lg); line-height:1}
+.tq-cpf__steplabel{margin:0; font-size:10px; letter-spacing:.06em}
+
+.tq-cpf__steps--boxed{border-bottom:0; gap:var(--s3)}
+.tq-cpf__steps--boxed .tq-cpf__step{border-radius:var(--r-m); box-shadow:var(--shadow); padding-bottom:var(--s4)}
+.tq-cpf__steps--boxed .tq-cpf__steplabel{
+  color:var(--c-ink2); background:var(--c-bg); border:1px solid var(--c-line);
+  border-radius:var(--r-pill); padding:2px var(--s3);
+}
+
+/* --- ④ 見出しの帯を写真の弧に食わせる ----------------------- */
+.tq-cpf__hero{position:relative; display:grid; grid-template-columns:1fr 1fr; align-items:center; overflow:hidden}
+.tq-cpf__herobody{padding:var(--s6) 0 var(--s6) var(--s5); position:relative; z-index:0}
+.tq-cpf__heroh{
+  display:inline-block; margin:0 0 var(--s4);
+  padding:.5em var(--tq-cpf-bleed) .5em 2.5em;
+  margin-left:calc(var(--s5) * -1);
+  background:linear-gradient(90deg,
+    color-mix(in srgb,var(--c-primary) 20%,var(--c-bg)),
+    color-mix(in srgb,var(--c-accent) 16%,var(--c-bg)));
+  border-radius:0;
+  font-size:var(--fs-lg); font-weight:700; color:var(--c-ink); line-height:var(--lh-tight);
+}
+.tq-cpf__herop{margin:0; font-size:var(--fs-note); color:var(--c-ink2); line-height:var(--lh-body); padding-right:var(--s4)}
+.tq-cpf__herofig{position:relative; z-index:1; margin:0 0 0 calc(var(--s7) * -1)}
+.tq-cpf__herofig img{
+  display:block; width:100%; height:100%; min-height:220px; object-fit:cover;
+  border-radius:240px 0 0 240px;
+}
+/* 普通：帯を角丸のラベルにして写真と切り離す */
+.tq-cpf__hero--boxed{gap:var(--s5); overflow:visible}
+.tq-cpf__hero--boxed .tq-cpf__heroh{
+  margin-left:0; padding:.4em var(--s4); border-radius:var(--r-pill);
+  background:var(--c-primary-l); font-size:var(--fs-md);
+}
+.tq-cpf__hero--boxed .tq-cpf__herofig{margin-left:0}
+.tq-cpf__hero--boxed .tq-cpf__herofig img{border-radius:var(--r-m)}
+
+@container (max-width:560px){
+  .tq-cpf{padding:var(--s4)}
+  .tq-cpf__band{grid-template-columns:1fr}
+  .tq-cpf__grid{grid-template-columns:1fr 1fr; grid-template-rows:auto}
+  .tq-cpf__grid > :first-child{grid-row:auto; grid-column:1/3}
+  .tq-cpf__steps{grid-template-columns:repeat(2,1fr)}
+  .tq-cpf__hero{grid-template-columns:1fr}
+  .tq-cpf__herofig{margin:0}
+  .tq-cpf__herofig img{border-radius:0; min-height:180px}
+  .tq-cpf__herobody{padding:var(--s5) 0 var(--s5) var(--s5)}
+}
+</style>
+
+<div class="tq-cpf">
+  <p class="tq-cpf__lead">
+    gap:0・border-radius:0・box-shadow:none でベタ面を連結し、区切りは色の変わり目1本だけにする。
+    分割線を引かないので、3色でも全体が1本の横長バンドとして目に入る。
+  </p>
+
+  <!-- ① 面の連結 -->
+  <section class="tq-cpf__sec">
+    <h3 class="tq-cpf__secttl">① 同じ3項目を、gap24px＋角丸＋影と、gap0のベタ面で比べる</h3>
+
+    <p class="tq-cpf__cap">普通：gap24px＋角丸＋影で等間隔に並べる</p>
+    <div class="tq-cpf__band tq-cpf__band--boxed">
+      <div class="tq-cpf__cell"><p class="tq-cpf__cellttl">見出しが入ります</p><p class="tq-cpf__cellp">説明のテキストが1〜2行で入ります。</p></div>
+      <div class="tq-cpf__cell"><p class="tq-cpf__cellttl">見出しが入ります</p><p class="tq-cpf__cellp">説明のテキストが1〜2行で入ります。</p></div>
+      <div class="tq-cpf__cell"><p class="tq-cpf__cellttl">見出しが入ります</p><p class="tq-cpf__cellp">説明のテキストが1〜2行で入ります。</p></div>
+    </div>
+    <p class="tq-cpf__note">3つの独立した箱に見え、隙間と影のぶん色面が弱くなる。</p>
+
+    <p class="tq-cpf__cap">この工夫：gap0・角丸0・影0。区切りは色の変わり目だけ</p>
+    <div class="tq-cpf__band">
+      <div class="tq-cpf__cell"><p class="tq-cpf__cellttl">見出しが入ります</p><p class="tq-cpf__cellp">説明のテキストが1〜2行で入ります。</p></div>
+      <div class="tq-cpf__cell"><p class="tq-cpf__cellttl">見出しが入ります</p><p class="tq-cpf__cellp">説明のテキストが1〜2行で入ります。</p></div>
+      <div class="tq-cpf__cell"><p class="tq-cpf__cellttl">見出しが入ります</p><p class="tq-cpf__cellp">説明のテキストが1〜2行で入ります。</p></div>
+    </div>
+    <p class="tq-cpf__note">全体が1本の帯になる。色の変わり目が枠の役をするので、線は1本も要らない。</p>
+  </section>
+
+  <!-- ② タイル型 -->
+  <section class="tq-cpf__sec">
+    <h3 class="tq-cpf__secttl">② タイルは隙間ゼロ。1枚だけ grid-row:1/3 で高さを倍にして単調さを消す</h3>
+
+    <p class="tq-cpf__cap">普通：同じ大きさのカードを等間隔に</p>
+    <div class="tq-cpf__grid tq-cpf__grid--boxed">
+      <div class="tq-cpf__tile"><img src="../../../docs/demo/ph_a.jpg" alt=""><div class="tq-cpf__tilebody"><p class="tq-cpf__tilettl">項目名が入ります</p><p class="tq-cpf__tilesub">補足が入ります</p></div></div>
+      <div class="tq-cpf__tile"><img src="../../../docs/demo/ph_b.jpg" alt=""><div class="tq-cpf__tilebody"><p class="tq-cpf__tilettl">項目名が入ります</p><p class="tq-cpf__tilesub">補足が入ります</p></div></div>
+      <div class="tq-cpf__tile"><img src="../../../docs/demo/ph_a.jpg" alt=""><div class="tq-cpf__tilebody"><p class="tq-cpf__tilettl">項目名が入ります</p><p class="tq-cpf__tilesub">補足が入ります</p></div></div>
+      <div class="tq-cpf__tile"><img src="../../../docs/demo/ph_b.jpg" alt=""><div class="tq-cpf__tilebody"><p class="tq-cpf__tilettl">項目名が入ります</p><p class="tq-cpf__tilesub">補足が入ります</p></div></div>
+      <div class="tq-cpf__tile"><img src="../../../docs/demo/ph_a.jpg" alt=""><div class="tq-cpf__tilebody"><p class="tq-cpf__tilettl">項目名が入ります</p><p class="tq-cpf__tilesub">補足が入ります</p></div></div>
+    </div>
+    <p class="tq-cpf__note">粒が揃いすぎて、どれから見ればよいか決まらない。</p>
+
+    <p class="tq-cpf__cap">この工夫：46% / 27% / 27%・gap0・左1枚だけ2行ぶん</p>
+    <div class="tq-cpf__grid">
+      <div class="tq-cpf__tile"><img src="../../../docs/demo/ph_a.jpg" alt=""><div class="tq-cpf__tilebody"><p class="tq-cpf__tilettl">項目名が入ります</p><p class="tq-cpf__tilesub">補足が入ります</p></div></div>
+      <div class="tq-cpf__tile"><img src="../../../docs/demo/ph_b.jpg" alt=""><div class="tq-cpf__tilebody"><p class="tq-cpf__tilettl">項目名が入ります</p><p class="tq-cpf__tilesub">補足が入ります</p></div></div>
+      <div class="tq-cpf__tile"><img src="../../../docs/demo/ph_a.jpg" alt=""><div class="tq-cpf__tilebody"><p class="tq-cpf__tilettl">項目名が入ります</p><p class="tq-cpf__tilesub">補足が入ります</p></div></div>
+      <div class="tq-cpf__tile"><img src="../../../docs/demo/ph_b.jpg" alt=""><div class="tq-cpf__tilebody"><p class="tq-cpf__tilettl">項目名が入ります</p><p class="tq-cpf__tilesub">補足が入ります</p></div></div>
+      <div class="tq-cpf__tile"><img src="../../../docs/demo/ph_a.jpg" alt=""><div class="tq-cpf__tilebody"><p class="tq-cpf__tilettl">項目名が入ります</p><p class="tq-cpf__tilesub">補足が入ります</p></div></div>
+    </div>
+    <p class="tq-cpf__note">面が連結して1枚の版になり、倍の高さの1枚が入口になる。ラベルは面の外に出さず、面の中に置く。</p>
+  </section>
+
+  <!-- ③ ラベルは面の中／罫は底に1本 -->
+  <section class="tq-cpf__sec">
+    <h3 class="tq-cpf__secttl">③ ラベルは面の下端12pxに入れ、罫は群全体の底に1本だけ</h3>
+
+    <p class="tq-cpf__cap">普通：ラベルを面の外にピルで出し、面ごとに角丸と影</p>
+    <div class="tq-cpf__steps tq-cpf__steps--boxed">
+      <div class="tq-cpf__step"><p class="tq-cpf__stepno">01</p><p class="tq-cpf__steplabel">ラベル</p></div>
+      <div class="tq-cpf__step"><p class="tq-cpf__stepno">02</p><p class="tq-cpf__steplabel">ラベル</p></div>
+      <div class="tq-cpf__step"><p class="tq-cpf__stepno">03</p><p class="tq-cpf__steplabel">ラベル</p></div>
+      <div class="tq-cpf__step"><p class="tq-cpf__stepno">04</p><p class="tq-cpf__steplabel">ラベル</p></div>
+    </div>
+    <p class="tq-cpf__note">ピルの枠と面の枠が二重になり、4つの面が分断される。</p>
+
+    <p class="tq-cpf__cap">この工夫：ラベルは面の中・罫は群の底に1本</p>
+    <div class="tq-cpf__steps">
+      <div class="tq-cpf__step"><p class="tq-cpf__stepno">01</p><p class="tq-cpf__steplabel">ラベル</p></div>
+      <div class="tq-cpf__step"><p class="tq-cpf__stepno">02</p><p class="tq-cpf__steplabel">ラベル</p></div>
+      <div class="tq-cpf__step"><p class="tq-cpf__stepno">03</p><p class="tq-cpf__steplabel">ラベル</p></div>
+      <div class="tq-cpf__step"><p class="tq-cpf__stepno">04</p><p class="tq-cpf__steplabel">ラベル</p></div>
+    </div>
+    <p class="tq-cpf__note">面が続きものに見え、底の1本だけが「ここまでが1群」を示す。</p>
+  </section>
+
+  <!-- ④ 見出しの帯 -->
+  <section class="tq-cpf__sec">
+    <h3 class="tq-cpf__secttl">④ 見出しの帯も角丸・枠線なし。文字より左右へはみ出させ、端は写真の弧に食わせる</h3>
+
+    <p class="tq-cpf__cap">普通：角丸のラベルにして写真と切り離す</p>
+    <div class="tq-cpf__hero tq-cpf__hero--boxed">
+      <div class="tq-cpf__herobody">
+        <h4 class="tq-cpf__heroh">見出しがここに入ります</h4>
+        <p class="tq-cpf__herop">本文テキストが入ります。説明が3行ほど続きます。本文テキストが入ります。説明が3行ほど続きます。</p>
+      </div>
+      <figure class="tq-cpf__herofig"><img src="../../../docs/demo/ph_b.jpg" alt=""></figure>
+    </div>
+    <p class="tq-cpf__note">ラベルが独立した部品に見え、見出しと写真が別々のものになる。</p>
+
+    <p class="tq-cpf__cap">この工夫：角丸0の帯＋文字の外へ2.5〜3em・端は写真の弧で切りっぱなし</p>
+    <div class="tq-cpf__hero">
+      <div class="tq-cpf__herobody">
+        <h4 class="tq-cpf__heroh">見出しがここに入ります</h4>
+        <p class="tq-cpf__herop">本文テキストが入ります。説明が3行ほど続きます。本文テキストが入ります。説明が3行ほど続きます。</p>
+      </div>
+      <figure class="tq-cpf__herofig"><img src="../../../docs/demo/ph_b.jpg" alt=""></figure>
+    </div>
+    <p class="tq-cpf__note">帯の終わりを写真の弧が決めるので、見出しと写真が1つの面としてつながる。</p>
+  </section>
+
+</div>

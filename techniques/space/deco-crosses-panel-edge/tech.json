@@ -1,0 +1,23 @@
+{
+  "id": "space/deco-crosses-panel-edge",
+  "name": "装飾に面の輪郭をまたがせ、閉じたパネルの外周を2点だけ破る",
+  "ordinary": "イラストは白い面の内側に余白を確保して収め、パネルの角丸の輪郭はきれいに閉じておく",
+  "actual": "meisei-kg_s10=角丸の白い紙面の下辺を紫の蝶が半分またいでピンク地側へ出て、右上の緑の草も上辺から外へ出る。破っているのはその2点だけで他の外周は完全に閉じている。tanq_s11=帯の上辺の外にオレンジの上向き三角が1つ突き出し、帯の下の余白に緑と青の三角が浮く。どれもカードにも文字にも接していない。",
+  "css": ".sheet{position:relative; overflow:visible; background:#fff; border-radius:20px}\n.sheet>.doodle{position:absolute; z-index:3}\n.doodle--btm{bottom:-14px; left:38%; width:34px}\n.doodle--top{top:-8px; right:8%; width:30px}\n.tri{position:absolute; width:12px; height:12px; background:#f39800;\n  clip-path:polygon(50% 0,100% 100%,0 100%); top:-11px; left:12%}\n.tri--l{background:#8dc21f; clip-path:polygon(0 50%,100% 0,100% 100%); top:calc(100% + 8px)}",
+  "appliesTo": ["features", "voice", "value", "access", "footer"],
+  "impact": 2,
+  "effort": 1,
+  "why": "輪郭が完璧に閉じないので紙が「机の上に置かれている」ように見え、四角い面の硬さが外から崩れる",
+  "params": ["破る点数は2〜3点まで", "はみ出し 8〜16px", "またぐ辺（下＋右上など離れた2辺）"],
+  "avoid": "横スクロールや画像クリップで overflow:hidden が要るパネルとは併用できない",
+  "sources": ["meisei-kg_s10", "tanq_s11"],
+  "notes": [
+    "パネル側は overflow:visible のままにする必要がある。中の写真を角丸で切りたい場合は、パネルではなく写真ラッパー個々に border-radius + overflow:hidden を掛ける。デモはこの分離をそのまま実装してある。avoid にある併用不可は『パネル自体に overflow:hidden が要る場合』のこと。",
+    "地色とパネル色のコントラストが必須。meisei-kg_s10 は淡ピンク地に白紙面。トークンでは地を var(--c-primary-l)、面を var(--c-bg) にすると同じ関係が作れる。地と面が同色だと『またいでいる』ことが見えない。",
+    "またぐ辺は離れた2辺（下辺と右上など）にする。隣接する2辺だと1つの角が崩れただけに見え、面全体が置かれている感じにならない。",
+    "はみ出しは 8〜16px。半分だけ出るのが正解で、全部出ると『外に置いた装飾』、少しだけだと『はみ出しミス』に見える。図形の高さのおよそ半分を目安にする。",
+    "z-index はパネルより上（3程度）。ただし本文カードには重ねない。meisei-kg_s10 も tanq_s11 も『カードにも文字にも接していない』のが共通点で、装飾は必ず余白の上を通す。",
+    "三角は clip-path:polygon で作ると1要素で済み、SVG も画像も要らない。向きを変えるだけで別の図形になるので、色と向きを変えて2〜3個散らすのが最小コスト。",
+    "375px では破る点が本文に近づく。デモは SP でパネル下辺の1点だけ残し、上辺の1点は位置を右へ寄せて逃がしている。SPで3点破ると単に散らかって見える。"
+  ]
+}

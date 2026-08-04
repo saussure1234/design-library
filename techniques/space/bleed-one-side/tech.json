@@ -1,0 +1,28 @@
+{
+  "id": "space/bleed-one-side",
+  "name": "写真・パネルを片側だけ画面外へ抜き、内側の2隅だけ角丸にする",
+  "ordinary": "写真もパネルもコンテナ幅の内側に収め、四隅を同じ半径で丸めて中央寄せする",
+  "actual": "musashino_s12=写真が左辺x=0で角丸ゼロのまま切れ、右カラムのテキストだけがグリッドに乗る非対称。shoei_s08=写真が右端を越えて切れ、見えるのは左上・左下の半径24pxだけ、枠線なし＋淡い紫みの影。buddies_s03=右上の写真は右端で断って左2隅だけ28px、左下の写真は左端で断って右2隅だけ28pxの鏡像。odrive_s01=白いテキストカードが画面左辺に余白0で密着し、内側だけ28pxパディング。ogawa_s12=円写真の反復のうち上の1枚だけ右端で弧を切り、下の1枚は切れない完全な円のまま残す。",
+  "css": "figure{width:calc(50vw + 60px); margin-right:calc(50% - 50vw); border-radius:24px 0 0 24px; overflow:hidden; box-shadow:0 12px 30px rgba(80,70,120,.10)}\nfigure.to-left{margin-left:calc(50% - 50vw); margin-right:0; border-radius:0 24px 24px 0}\n/* テキストカードを画面左辺に密着させる場合 */\n.hero-card{margin-left:calc(50% - 50vw); max-width:440px; padding:22px 32px 20px; background:#fff; position:relative; z-index:2}\n/* 反復のうち1枚だけ切る */\n.ph{aspect-ratio:1; border-radius:50%; overflow:hidden; object-fit:cover}\n.ph--cut{margin-right:-8vw} .ph--whole{margin:40px 12vw 0 auto; width:34%}\nsection{overflow:hidden}",
+  "appliesTo": ["hero", "features", "value", "voice", "member"],
+  "impact": 3,
+  "effort": 1,
+  "why": "接する辺の角丸を0にすると「収まりきらなかった」でなく「画面に貼り付いている」に読め、版面を窮屈にせず写真を大きく使える",
+  "params": [
+    "抜く辺（左/右）",
+    "内側の角丸 24〜28px",
+    "はみ出し量（50vw基準 or 8vw）",
+    "反復の何枚目を切るか"
+  ],
+  "avoid": "1セクションで複数要素を同じ側に抜くと版面の軸が消える。抜くのは1要素まで",
+  "sources": ["musashino_s12", "shoei_s08", "buddies_s03", "odrive_s01", "ogawa_s12"],
+  "notes": [
+    "margin-right:calc(50% - 50vw) の 50% は「包含ブロックの幅」に解決される。よって抜く要素は必ず中央寄せコンテナ（max-width:var(--w-max)）の直下の子＝flexアイテムかブロックにする。grid のカラム内に入れると 50% がカラム幅の半分になり、はみ出し量が足りずに端まで届かない。",
+    "figure の width は calc(50vw + 60px)。60px は「版面の中心線を60pxだけ越える」量で、テキスト側とのバランス調整つまみ。テキスト側は flex:1 1 0; min-width:0 にしないと写真に押し出される。",
+    "セクション側の overflow:hidden は必須。付け忘れるとページ全体に横スクロールが出る。100vw はスクロールバー幅を含むため、overflow:hidden が無いと数px分だけ確実に溢れる。",
+    "shoei_s08 の影は淡い紫みだが、トークン契約では色を作れないため var(--shadow) に置換した。実案件で色味を足すなら影だけ例外にせず、トークンに --shadow-tint を追加する形にする。",
+    "375px では flex-direction:column にし、figure は width:auto のまま margin-right の負値だけ残す。列方向でも margin の % は flex コンテナの inline size に解決されるので、同じ calc が PC/SP 共用できる（幅指定を消すだけ）。",
+    "ogawa_s12 の「反復のうち1枚だけ切る」は width 固定＋margin-left:auto＋margin-right:-8vw で実現。over-constrained になるため auto 側が吸収し、右辺だけが 8vw 外へ出る。",
+    "角丸は接する辺側を 0 にするのが肝。両側を丸めると即座に「収まりきらなかった」に見える。デモでも普通版（四隅 --r-l）と並べると差が出る。"
+  ]
+}

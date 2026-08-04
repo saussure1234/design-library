@@ -1,0 +1,207 @@
+<style>
+/* トークンのフォールバック。:where() で詰めているので、
+   _tokens.css が読み込まれていればそちらが必ず勝つ。 */
+:where(:root){
+  --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-disp:var(--f-sans); --f-num:"Helvetica Neue",Arial,var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+  --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+  --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px; --s8:76px;
+  --sec-y:clamp(56px,7vw,110px);
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+
+/* ============ 土台 ============ */
+.tq-istep{
+  font-family:var(--f-sans); color:var(--c-ink2); background:var(--c-bg);
+  padding-block:var(--s7);
+}
+.tq-istep *{box-sizing:border-box}
+.tq-istep__wrap{max-width:var(--w-max); margin-inline:auto; padding-inline:var(--w-gut)}
+.tq-istep__grid{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr)); gap:var(--s7) var(--s5);
+}
+
+.tq-istep__tag{
+  display:inline-block; margin:0;
+  font-size:var(--fs-note); letter-spacing:.08em; line-height:1;
+  padding:var(--s2) var(--s3); border-radius:var(--r-pill);
+  background:var(--c-bg2); color:var(--c-ink3);
+}
+.tq-istep__tag--on{background:var(--c-primary-l); color:var(--c-primary-d)}
+.tq-istep__h{
+  font-family:var(--f-disp); font-size:var(--fs-md); line-height:var(--lh-tight);
+  letter-spacing:.02em; color:var(--c-ink); font-weight:800;
+  margin:var(--s3) 0 var(--s4);
+}
+.tq-istep__cap{
+  margin:var(--s4) 0 0; font-size:var(--fs-sm); line-height:var(--lh-head); color:var(--c-ink3);
+}
+.tq-istep__cap b{color:var(--c-ink2); font-weight:700}
+
+/* ============ フッターの見本（4案で共通の中身） ============ */
+.tq-istep__foot{
+  --tq-main:var(--c-ink2);      /* リンク領域 */
+  --tq-bar:var(--c-ink2);       /* 最下部のコピーライト帯 */
+  --tq-fg:var(--c-on-primary);
+  --tq-fg2:var(--c-ink3);
+  border-radius:var(--r-s); overflow:hidden;
+}
+.tq-istep__main{background:var(--tq-main); color:var(--tq-fg); padding:var(--s6) var(--s5) var(--s6)}
+.tq-istep__ttl{
+  margin:0 0 var(--s5); font-family:var(--f-disp); font-weight:800;
+  font-size:var(--fs-lg); letter-spacing:.06em; line-height:1; color:var(--tq-fg);
+}
+.tq-istep__links{
+  list-style:none; margin:0; padding:0;
+  display:grid; grid-template-columns:repeat(3,1fr); gap:var(--s5) var(--s4);
+}
+.tq-istep__links b{display:block; font-size:var(--fs-sm); letter-spacing:.04em; color:var(--tq-fg)}
+.tq-istep__links span{display:block; margin-top:var(--s1); font-size:var(--fs-note); color:var(--tq-fg2)}
+
+/* 最下段の帯。ここが工夫の本体 */
+.tq-istep__bar{
+  background:var(--tq-bar); color:var(--tq-fg2);
+  border:0;                                   /* 罫は引かない */
+  padding:var(--s5) var(--s6);                /* 目安 22px 40px の細帯 */
+  display:flex; flex-wrap:wrap; gap:var(--s2) var(--s5);
+  align-items:center; justify-content:space-between;
+  font-size:var(--fs-note); letter-spacing:.04em;
+  position:relative; isolation:isolate;
+}
+.tq-istep__bar p{margin:0}
+
+/* --- A. 普通：1pxの罫で切る --- */
+.tq-istep__foot--rule .tq-istep__bar{
+  border-top:1px solid var(--c-ink3);
+}
+
+/* --- B. この工夫：ほぼ見えない明度差だけ（L*で約9の差） --- */
+/* --c-ink(L*≈4.6) を .55 の不透明度で --c-ink2(L*≈21) に重ね、L*≈12 の暗色を作る。
+   トークンだけで L* 差 8〜15 に収めるための重ね方。 */
+.tq-istep__foot--step .tq-istep__bar::before{
+  content:''; position:absolute; inset:0; z-index:-1;
+  background:var(--c-ink); opacity:.55;
+}
+
+/* --- C. 差を付けすぎ：2色に割れる --- */
+.tq-istep__foot--too .tq-istep__bar{background:var(--c-ink3); color:var(--c-ink)}
+
+/* --- D. 明るい面でやると「汚れ」に見える --- */
+.tq-istep__foot--light{
+  --tq-main:var(--c-bg); --tq-bar:var(--c-bg2);
+  --tq-fg:var(--c-ink); --tq-fg2:var(--c-ink3);
+  border:1px solid var(--c-line);
+}
+
+@media (max-width:560px){
+  .tq-istep__links{grid-template-columns:repeat(2,1fr)}
+  .tq-istep__main{padding:var(--s5) var(--s4)}
+  .tq-istep__bar{padding:var(--s4)}
+}
+</style>
+
+<section class="tq-istep">
+  <div class="tq-istep__wrap">
+    <div class="tq-istep__grid">
+
+      <div>
+        <p class="tq-istep__tag">普通の場合</p>
+        <h2 class="tq-istep__h">1pxのグレー罫で区切る</h2>
+        <div class="tq-istep__foot tq-istep__foot--rule">
+          <div class="tq-istep__main">
+            <p class="tq-istep__ttl">メニュー</p>
+            <ul class="tq-istep__links">
+              <li><b>項目名</b><span>説明テキスト</span></li>
+              <li><b>項目名</b><span>説明テキスト</span></li>
+              <li><b>項目名</b><span>説明テキスト</span></li>
+              <li><b>項目名</b><span>説明テキスト</span></li>
+              <li><b>項目名</b><span>説明テキスト</span></li>
+              <li><b>項目名</b><span>説明テキスト</span></li>
+            </ul>
+          </div>
+          <div class="tq-istep__bar">
+            <p>© 0000 サービス名がここに入ります</p>
+            <p>プライバシーポリシー</p>
+          </div>
+        </div>
+        <p class="tq-istep__cap">罫が1本入った瞬間に、暗い面が「上下2枚の板」に分解される。線そのものが暗い面の中で一番明るい要素になる。</p>
+      </div>
+
+      <div>
+        <p class="tq-istep__tag tq-istep__tag--on">この工夫｜明度差 L*≈9</p>
+        <h2 class="tq-istep__h">罫を引かず、ほぼ見えない明度差だけで切る</h2>
+        <div class="tq-istep__foot tq-istep__foot--step">
+          <div class="tq-istep__main">
+            <p class="tq-istep__ttl">メニュー</p>
+            <ul class="tq-istep__links">
+              <li><b>項目名</b><span>説明テキスト</span></li>
+              <li><b>項目名</b><span>説明テキスト</span></li>
+              <li><b>項目名</b><span>説明テキスト</span></li>
+              <li><b>項目名</b><span>説明テキスト</span></li>
+              <li><b>項目名</b><span>説明テキスト</span></li>
+              <li><b>項目名</b><span>説明テキスト</span></li>
+            </ul>
+          </div>
+          <div class="tq-istep__bar">
+            <p>© 0000 サービス名がここに入ります</p>
+            <p>プライバシーポリシー</p>
+          </div>
+        </div>
+        <p class="tq-istep__cap">境目は「見えるか見えないか」。面としては1枚のまま、最下段だけが別レイヤーとして沈む。<b>目を細めると境目が消えるくらいが適正。</b></p>
+      </div>
+
+      <div>
+        <p class="tq-istep__tag">やりすぎ</p>
+        <h2 class="tq-istep__h">明度差を付けすぎる</h2>
+        <div class="tq-istep__foot tq-istep__foot--too">
+          <div class="tq-istep__main">
+            <p class="tq-istep__ttl">メニュー</p>
+            <ul class="tq-istep__links">
+              <li><b>項目名</b><span>説明テキスト</span></li>
+              <li><b>項目名</b><span>説明テキスト</span></li>
+              <li><b>項目名</b><span>説明テキスト</span></li>
+              <li><b>項目名</b><span>説明テキスト</span></li>
+              <li><b>項目名</b><span>説明テキスト</span></li>
+              <li><b>項目名</b><span>説明テキスト</span></li>
+            </ul>
+          </div>
+          <div class="tq-istep__bar">
+            <p>© 0000 サービス名がここに入ります</p>
+            <p>プライバシーポリシー</p>
+          </div>
+        </div>
+        <p class="tq-istep__cap">L*差が20を超えると「暗い面の段差」ではなく「2色のブロック」になる。帯が主張しはじめ、フッターが2セクションに割れる。</p>
+      </div>
+
+      <div>
+        <p class="tq-istep__tag">効かない条件</p>
+        <h2 class="tq-istep__h">明るい面で同じことをする</h2>
+        <div class="tq-istep__foot tq-istep__foot--light">
+          <div class="tq-istep__main">
+            <p class="tq-istep__ttl">メニュー</p>
+            <ul class="tq-istep__links">
+              <li><b>項目名</b><span>説明テキスト</span></li>
+              <li><b>項目名</b><span>説明テキスト</span></li>
+              <li><b>項目名</b><span>説明テキスト</span></li>
+              <li><b>項目名</b><span>説明テキスト</span></li>
+              <li><b>項目名</b><span>説明テキスト</span></li>
+              <li><b>項目名</b><span>説明テキスト</span></li>
+            </ul>
+          </div>
+          <div class="tq-istep__bar">
+            <p>© 0000 サービス名がここに入ります</p>
+            <p>プライバシーポリシー</p>
+          </div>
+        </div>
+        <p class="tq-istep__cap">同じ明度差でも白側では「別レイヤー」に見えず、印刷ムラや汚れに見える。この工夫は暗い面の上でしか成立しない。</p>
+      </div>
+
+    </div>
+  </div>
+</section>

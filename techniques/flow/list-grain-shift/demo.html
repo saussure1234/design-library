@@ -1,0 +1,201 @@
+<style>
+/* トークンのフォールバック。:where() で詰めているので、
+   _tokens.css が読み込まれていればそちらが必ず勝つ。 */
+:where(:root){
+  --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-disp:var(--f-sans); --f-num:"Helvetica Neue",Arial,var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+  --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+  --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px; --s8:76px;
+  --sec-y:clamp(56px,7vw,110px);
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+/* 単体で開いたときだけ効く既定余白の打ち消し（:where で詰めてあるので本体CSSが必ず勝つ） */
+:where(body){margin:0}
+
+.tq-grain{font-family:var(--f-sans); color:var(--c-ink2); background:var(--c-bg); padding-block:var(--s7)}
+.tq-grain *{box-sizing:border-box}
+.tq-grain__wrap{max-width:var(--w-max); margin-inline:auto; padding-inline:var(--w-gut)}
+.tq-grain__blk{margin-top:var(--s8)}
+.tq-grain__blk:first-child{margin-top:0}
+.tq-grain__tag{
+  display:inline-block; margin:0 0 var(--s5);
+  font-size:var(--fs-note); letter-spacing:.08em; line-height:1;
+  padding:var(--s2) var(--s3); border-radius:var(--r-pill);
+  background:var(--c-bg2); color:var(--c-ink3);
+}
+.tq-grain__tag--on{background:var(--c-primary-l); color:var(--c-primary-d)}
+.tq-grain__cap{margin:var(--s5) 0 0; font-size:var(--fs-sm); line-height:var(--lh-head); color:var(--c-ink3)}
+
+/* ============ 札の中身（普通も工夫も同じマークアップ） ============ */
+.tq-grain__it{display:block}
+.tq-grain__ph{aspect-ratio:16/10; overflow:hidden; border-radius:var(--r-s); background:var(--c-bg2)}
+.tq-grain__ph img{width:100%; height:100%; object-fit:cover; display:block}
+.tq-grain__t{
+  margin:var(--s3) 0 var(--s2);
+  font-size:var(--fs-lg); line-height:var(--lh-head); color:var(--c-ink); font-weight:700;
+}
+.tq-grain__ex{margin:0 0 var(--s2); font-size:var(--fs-sm); line-height:var(--lh-body); color:var(--c-ink2)}
+.tq-grain__date{margin:0; font-family:var(--f-num); font-size:var(--fs-note); color:var(--c-ink3); letter-spacing:.04em}
+
+/* ============ 普通：全件おなじ大きさで均等に並べる ============ */
+.tq-grain__even{display:grid; grid-template-columns:1fr 1fr; gap:var(--s5)}
+.tq-grain__even>*,
+.tq-grain__list>*,
+.tq-grain__hero>*{min-width:0}
+.tq-grain__even .tq-grain__t{font-size:var(--fs-md)}
+
+/* ============ この工夫：途中で札の形が変わる ============ */
+.tq-grain__list{display:grid; grid-template-columns:1fr 1fr; gap:var(--s5)}
+/* 上位2件＝写真上・タイトル下の大札 */
+.tq-grain__list>*:nth-child(-n+2) .tq-grain__t{font-size:var(--fs-lg)}
+/* 3件目以降＝サムネ左・本文右の横長行。区切りは1pxのヘアラインだけ */
+.tq-grain__list>*:nth-child(n+3){
+  grid-column:1 / -1;
+  display:grid; grid-template-columns:150px 1fr; column-gap:var(--s4);
+  border-top:1px solid var(--c-line); padding-top:var(--s4);
+}
+.tq-grain__list>*:nth-child(n+3) .tq-grain__t{margin-top:0; font-size:var(--fs-base)}
+.tq-grain__list>*:nth-child(n+3) .tq-grain__ex{display:none}   /* 抜粋文は上位だけ */
+.tq-grain__list>*:nth-child(3){margin-top:var(--s4)}
+
+/* ============ 別型：1件だけ倍サイズ、残りを右に2×2 ============ */
+.tq-grain__hero{display:grid; grid-template-columns:1.15fr 1fr 1fr; gap:var(--s4)}
+.tq-grain__hero>*:first-child{grid-row:span 2}
+.tq-grain__hero>*:first-child .tq-grain__ph{aspect-ratio:1/1}
+.tq-grain__hero>*:first-child .tq-grain__t{font-size:var(--fs-lg)}
+.tq-grain__hero>*:not(:first-child) .tq-grain__t{font-size:var(--fs-sm); margin-top:var(--s2)}
+.tq-grain__hero>*:not(:first-child) .tq-grain__ex{display:none}
+
+@media (max-width:640px){
+  .tq-grain__even{grid-template-columns:1fr}
+  .tq-grain__list{grid-template-columns:1fr}
+  .tq-grain__list>*:nth-child(-n+2){grid-column:1 / -1}
+  .tq-grain__list>*:nth-child(n+3){grid-template-columns:104px 1fr; column-gap:var(--s3)}
+  .tq-grain__hero{grid-template-columns:1fr 1fr}
+  .tq-grain__hero>*:first-child{grid-row:auto; grid-column:1 / -1}
+  .tq-grain__hero>*:first-child .tq-grain__ph{aspect-ratio:16/10}
+}
+</style>
+
+<section class="tq-grain">
+  <div class="tq-grain__wrap">
+
+    <div class="tq-grain__blk">
+      <p class="tq-grain__tag">普通の場合</p>
+      <div class="tq-grain__even">
+        <article class="tq-grain__it">
+          <div class="tq-grain__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+          <h3 class="tq-grain__t">見出しがここに入り、2行程度で収まります</h3>
+          <p class="tq-grain__ex">抜粋文がここに入ります。本文の書き出しを2行ぶんだけ見せます。</p>
+          <p class="tq-grain__date">0000.00.00</p>
+        </article>
+        <article class="tq-grain__it">
+          <div class="tq-grain__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+          <h3 class="tq-grain__t">見出しがここに入り、2行程度で収まります</h3>
+          <p class="tq-grain__ex">抜粋文がここに入ります。本文の書き出しを2行ぶんだけ見せます。</p>
+          <p class="tq-grain__date">0000.00.00</p>
+        </article>
+        <article class="tq-grain__it">
+          <div class="tq-grain__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+          <h3 class="tq-grain__t">見出しがここに入り、2行程度で収まります</h3>
+          <p class="tq-grain__ex">抜粋文がここに入ります。本文の書き出しを2行ぶんだけ見せます。</p>
+          <p class="tq-grain__date">0000.00.00</p>
+        </article>
+        <article class="tq-grain__it">
+          <div class="tq-grain__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+          <h3 class="tq-grain__t">見出しがここに入り、2行程度で収まります</h3>
+          <p class="tq-grain__ex">抜粋文がここに入ります。本文の書き出しを2行ぶんだけ見せます。</p>
+          <p class="tq-grain__date">0000.00.00</p>
+        </article>
+        <article class="tq-grain__it">
+          <div class="tq-grain__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+          <h3 class="tq-grain__t">見出しがここに入り、2行程度で収まります</h3>
+          <p class="tq-grain__ex">抜粋文がここに入ります。本文の書き出しを2行ぶんだけ見せます。</p>
+          <p class="tq-grain__date">0000.00.00</p>
+        </article>
+      </div>
+      <p class="tq-grain__cap">5件が同じ重さで並ぶ。どれから読めばいいのかは示されていない。</p>
+    </div>
+
+    <div class="tq-grain__blk">
+      <p class="tq-grain__tag tq-grain__tag--on">この工夫（2件主役型）</p>
+      <div class="tq-grain__list">
+        <article class="tq-grain__it">
+          <div class="tq-grain__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+          <h3 class="tq-grain__t">見出しがここに入り、2行程度で収まります</h3>
+          <p class="tq-grain__ex">抜粋文がここに入ります。本文の書き出しを2行ぶんだけ見せます。</p>
+          <p class="tq-grain__date">0000.00.00</p>
+        </article>
+        <article class="tq-grain__it">
+          <div class="tq-grain__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+          <h3 class="tq-grain__t">見出しがここに入り、2行程度で収まります</h3>
+          <p class="tq-grain__ex">抜粋文がここに入ります。本文の書き出しを2行ぶんだけ見せます。</p>
+          <p class="tq-grain__date">0000.00.00</p>
+        </article>
+        <article class="tq-grain__it">
+          <div class="tq-grain__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+          <h3 class="tq-grain__t">見出しがここに入り、2行程度で収まります</h3>
+          <p class="tq-grain__ex">抜粋文がここに入ります。本文の書き出しを2行ぶんだけ見せます。</p>
+          <p class="tq-grain__date">0000.00.00</p>
+        </article>
+        <article class="tq-grain__it">
+          <div class="tq-grain__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+          <h3 class="tq-grain__t">見出しがここに入り、2行程度で収まります</h3>
+          <p class="tq-grain__ex">抜粋文がここに入ります。本文の書き出しを2行ぶんだけ見せます。</p>
+          <p class="tq-grain__date">0000.00.00</p>
+        </article>
+        <article class="tq-grain__it">
+          <div class="tq-grain__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+          <h3 class="tq-grain__t">見出しがここに入り、2行程度で収まります</h3>
+          <p class="tq-grain__ex">抜粋文がここに入ります。本文の書き出しを2行ぶんだけ見せます。</p>
+          <p class="tq-grain__date">0000.00.00</p>
+        </article>
+      </div>
+      <p class="tq-grain__cap">上のブロックと中身は1文字も変えていない。3件目から札の形が横長に変わり、抜粋文が消え、見出しが小さくなるだけで「まずこの2本」が伝わる。</p>
+    </div>
+
+    <div class="tq-grain__blk">
+      <p class="tq-grain__tag tq-grain__tag--on">この工夫（1件主役型）</p>
+      <div class="tq-grain__hero">
+        <article class="tq-grain__it">
+          <div class="tq-grain__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+          <h3 class="tq-grain__t">見出しがここに入り、2行程度で収まります</h3>
+          <p class="tq-grain__ex">抜粋文がここに入ります。本文の書き出しを2行ぶんだけ見せます。</p>
+          <p class="tq-grain__date">0000.00.00</p>
+        </article>
+        <article class="tq-grain__it">
+          <div class="tq-grain__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+          <h3 class="tq-grain__t">見出しがここに入ります</h3>
+          <p class="tq-grain__ex">抜粋文がここに入ります。</p>
+          <p class="tq-grain__date">0000.00.00</p>
+        </article>
+        <article class="tq-grain__it">
+          <div class="tq-grain__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+          <h3 class="tq-grain__t">見出しがここに入ります</h3>
+          <p class="tq-grain__ex">抜粋文がここに入ります。</p>
+          <p class="tq-grain__date">0000.00.00</p>
+        </article>
+        <article class="tq-grain__it">
+          <div class="tq-grain__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+          <h3 class="tq-grain__t">見出しがここに入ります</h3>
+          <p class="tq-grain__ex">抜粋文がここに入ります。</p>
+          <p class="tq-grain__date">0000.00.00</p>
+        </article>
+        <article class="tq-grain__it">
+          <div class="tq-grain__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+          <h3 class="tq-grain__t">見出しがここに入ります</h3>
+          <p class="tq-grain__ex">抜粋文がここに入ります。</p>
+          <p class="tq-grain__date">0000.00.00</p>
+        </article>
+      </div>
+      <p class="tq-grain__cap">1件だけ縦2行ぶんの倍サイズにし、残り4件を右に2×2で入れる型。主役が1本のときはこちら。</p>
+    </div>
+
+  </div>
+</section>

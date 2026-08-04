@@ -1,0 +1,174 @@
+<style>
+/* トークンのフォールバック。:where() で詰めているので、
+   _tokens.css が読み込まれていればそちらが必ず勝つ。 */
+:where(:root){
+  --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-disp:var(--f-sans); --f-num:"Helvetica Neue",Arial,var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+  --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+  --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px; --s8:76px;
+  --sec-y:clamp(56px,7vw,110px);
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+
+/* ============ 土台 ============ */
+.tq-vslab{
+  font-family:var(--f-sans); color:var(--c-ink2); background:var(--c-bg);
+  padding-block:var(--s7);
+}
+.tq-vslab *{box-sizing:border-box}
+.tq-vslab__wrap{max-width:var(--w-max); margin-inline:auto; padding-inline:var(--w-gut)}
+.tq-vslab__blk{margin-top:var(--s8)}
+.tq-vslab__blk:first-child{margin-top:0}
+
+.tq-vslab__tag{
+  display:inline-block; margin:0;
+  font-size:var(--fs-note); letter-spacing:.08em; line-height:1;
+  padding:var(--s2) var(--s3); border-radius:var(--r-pill);
+  background:var(--c-bg2); color:var(--c-ink3);
+}
+.tq-vslab__tag--on{background:var(--c-primary-l); color:var(--c-primary-d)}
+.tq-vslab__h{
+  font-family:var(--f-disp); font-size:var(--fs-lg); line-height:var(--lh-tight);
+  letter-spacing:.02em; color:var(--c-ink); font-weight:800;
+  margin:var(--s3) 0 var(--s4);
+}
+.tq-vslab__cap{
+  max-width:var(--w-max); margin:var(--s4) auto 0; padding-inline:var(--w-gut);
+  font-size:var(--fs-sm); line-height:var(--lh-head); color:var(--c-ink3);
+}
+.tq-vslab__cap b{color:var(--c-ink2); font-weight:700}
+
+/* ============ 普通：横並びのグローバルナビ＋全幅ヒーロー ============ */
+.tq-vslab__ordbar{
+  display:flex; align-items:center; gap:var(--s5);
+  padding:var(--s4) var(--w-gut); background:var(--c-bg);
+  border-bottom:1px solid var(--c-line);
+}
+.tq-vslab__ordbar img{display:block; height:26px; width:auto}
+.tq-vslab__ordnav{
+  display:flex; gap:var(--s5); margin-left:auto; flex-wrap:wrap;
+  font-size:var(--fs-sm); color:var(--c-ink2);
+}
+.tq-vslab__ordph{height:clamp(170px,20vw,240px); overflow:hidden; background:var(--c-bg2)}
+.tq-vslab__ordph img{width:100%; height:100%; object-fit:cover; display:block}
+
+/* ============ この工夫：右39%をベタ面の「看板」にする ============ */
+.tq-vslab__hero{
+  position:relative; overflow:hidden;
+  height:min(78vh,620px); min-height:600px;
+  background:var(--c-ink);
+}
+.tq-vslab__hero>img{width:100%; height:100%; object-fit:cover; display:block}
+.tq-vslab__panel{
+  position:absolute; top:0; right:0; z-index:3;
+  width:39%;                      /* 35〜40%。境界が水平でなく垂直の1本になる */
+  height:100%;
+  background:var(--c-accent); color:var(--c-ink);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; gap:var(--s3);
+  padding:var(--s6) var(--s5);
+}
+.tq-vslab__panel img{display:block; height:28px; width:auto}
+.tq-vslab__name{
+  margin:0; font-family:var(--f-disp); font-weight:800;
+  font-size:var(--fs-lg); line-height:var(--lh-tight); letter-spacing:.04em; color:var(--c-ink);
+}
+.tq-vslab__meta{
+  margin:0; font-size:var(--fs-note); line-height:var(--lh-head); color:var(--c-ink2);
+  font-family:var(--f-num);
+}
+.tq-vslab__btns{display:flex; gap:var(--s2); width:100%; justify-content:center}
+.tq-vslab__btn{
+  flex:1 1 0; max-width:170px;
+  display:block; padding:var(--s3) var(--s2); border-radius:var(--r-pill);
+  font-size:var(--fs-sm); font-weight:700; line-height:1.2; text-decoration:none;
+}
+.tq-vslab__btn--w{background:var(--c-bg); color:var(--c-ink)}
+.tq-vslab__btn--k{background:var(--c-ink); color:var(--c-on-primary)}
+.tq-vslab__links{
+  list-style:none; margin:0; padding:0; width:100%;
+  display:flex; flex-direction:column; gap:var(--s2);
+  font-size:var(--fs-sm); color:var(--c-ink); line-height:1.3;
+}
+.tq-vslab__banner{
+  width:100%; max-width:340px;
+  background:var(--c-primary); color:var(--c-on-primary);
+  border-radius:var(--r-l); padding:var(--s3) var(--s4);
+}
+.tq-vslab__banner b{display:block; font-size:var(--fs-base); letter-spacing:.06em}
+.tq-vslab__banner span{display:block; margin-top:var(--s1); font-size:var(--fs-note); opacity:.85}
+
+/* 縦板は必ず横積みに崩れる。PCの絵作りと割り切れないなら使わない */
+@media (max-width:900px){
+  .tq-vslab__hero{height:auto; min-height:0}
+  .tq-vslab__hero>img{height:clamp(180px,42vw,300px)}
+  .tq-vslab__panel{
+    position:static; width:100%; height:auto;
+    padding:var(--s6) var(--w-gut); gap:var(--s4);
+  }
+  .tq-vslab__links{
+    flex-direction:row; flex-wrap:wrap; justify-content:center; gap:var(--s2) var(--s5);
+  }
+}
+</style>
+
+<section class="tq-vslab">
+
+  <div class="tq-vslab__blk">
+    <div class="tq-vslab__wrap">
+      <p class="tq-vslab__tag">普通の場合</p>
+      <h2 class="tq-vslab__h">ヘッダーの下に横並びのナビ、ヒーロー写真は全幅</h2>
+    </div>
+    <div>
+      <div class="tq-vslab__ordbar">
+        <img src="../../../docs/demo/logo.svg" alt="">
+        <nav class="tq-vslab__ordnav">
+          <span>項目名</span><span>項目名</span><span>項目名</span>
+          <span>項目名</span><span>項目名</span><span>お問い合わせ</span>
+        </nav>
+      </div>
+      <div class="tq-vslab__ordph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+    </div>
+    <p class="tq-vslab__cap">情報は横一列に潰れ、写真は全幅。ナビと写真が上下2段に分かれ、リンクを増やすほど横並びが窮屈になる。</p>
+  </div>
+
+  <div class="tq-vslab__blk">
+    <div class="tq-vslab__wrap">
+      <p class="tq-vslab__tag tq-vslab__tag--on">この工夫｜右39%の縦板</p>
+      <h2 class="tq-vslab__h">ヒーローを縦に断ち切り、右をベタ面の「看板」にする</h2>
+    </div>
+    <div class="tq-vslab__hero">
+      <img src="../../../docs/demo/ph_a.jpg" alt="">
+      <div class="tq-vslab__panel">
+        <img src="../../../docs/demo/logo.svg" alt="">
+        <p class="tq-vslab__name">サービス名がここに入ります</p>
+        <p class="tq-vslab__meta">〒000-0000 住所がここに入ります<br>TEL 000-0000-0000　FAX 000-0000-0000</p>
+        <div class="tq-vslab__btns">
+          <a class="tq-vslab__btn tq-vslab__btn--w" href="#">項目名</a>
+          <a class="tq-vslab__btn tq-vslab__btn--k" href="#">お問い合わせ</a>
+        </div>
+        <ul class="tq-vslab__links">
+          <li>項目名がここに入ります</li>
+          <li>項目名がここに入ります</li>
+          <li>項目名がここに入ります</li>
+          <li>項目名がここに入ります</li>
+          <li>項目名がここに入ります</li>
+          <li>項目名がここに入ります</li>
+          <li>項目名がここに入ります</li>
+        </ul>
+        <div class="tq-vslab__banner">
+          <b>バナーの見出しが入ります</b>
+          <span>補足テキストがここに入ります</span>
+        </div>
+      </div>
+    </div>
+    <p class="tq-vslab__cap">面は上端から下端まで貫き、写真の右側に被さる。<b>セクションの境界が水平でなく垂直の1本になり</b>、ヒーローが「写真＋看板」の2枚構成になる。情報量は普通の場合より多いのに静か。</p>
+  </div>
+
+</section>

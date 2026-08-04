@@ -1,0 +1,36 @@
+{
+  "id": "space/margin-as-stage",
+  "name": "本文カラムを画面の32〜40%まで細くし、外側の余白を「絵を置く場所」にする",
+  "ordinary": "写真も本文も同じグリッド幅に並べ、余白は上下左右に均等に残す",
+  "actual": "meisei-es_s02=本文は画面幅の約32%しかない細い中央カラム。左右に残った広い余白に人物の切り抜きを置き、左の子は画面左端から2%、右の子は右端から10%。人物と本文は1pxも重ならない。meisei-kg_s03=本文は幅約420pxの中央カラム、切り抜き写真はその左右の空きマージン（左端から約10px、右端から約30px）に置く。",
+  "css": ".sec{position:relative}\n.sec>.body{max-width:32%; margin-inline:auto}\n.fig-l{position:absolute; left:2%;  top:40%; width:26%}\n.fig-r{position:absolute; right:8%; top:42%; width:18%}\n/* 固定幅カラムなら負のオフセットで外へ */\n.wrap{max-width:560px; margin-inline:auto; position:relative}\n.cut-l{position:absolute; left:-190px; bottom:0; width:150px}\n.cut-r{position:absolute; right:-190px; top:20px; width:150px}\n@media(max-width:768px){.fig-l,.fig-r{position:static; width:60%}}",
+  "appliesTo": [
+    "value",
+    "voice",
+    "features",
+    "hero"
+  ],
+  "impact": 3,
+  "effort": 2,
+  "why": "広い左右マージンが「余りもの」でなく舞台になるので、文章量が少なくても画面が持つ",
+  "params": [
+    "本文幅 32%（420〜560px）",
+    "左右オフセット 2%/8%",
+    "切り抜き写真 or 線画"
+  ],
+  "avoid": "カラムに1pxでも掛けない。重ねた瞬間に読みにくさへ直行する。スマホでは絵を上下へ逃がす",
+  "sources": [
+    "meisei-es_s02",
+    "meisei-kg_s03"
+  ],
+  "notes": [
+    "「32%」は画面幅の32%。中央寄せコンテナ（--w-max 1120px）の中で32%にすると本文が約350pxまで細ってしまう。舞台になる .sec は全幅（コンテナの外）に置き、そこを基準に % を切る。デモの .tq-stage__sec は wrap の外に出してある。",
+    "左右のオフセットも画面基準の % なので、画面が広がるほど絵は外へ逃げる。カラムに掛からない保証はこの一点。逆に固定幅カラム（560px）版は px の負のオフセットで外へ出すので、画面幅が変わってもカラムからの距離が一定。どちらでも成立するが、混ぜると破綻する。",
+    "現物の絵は背景を抜いた切り抜き（人物）。四角い写真をそのまま置くと「小さい写真が2枚浮いている」だけになり、余白が舞台にならない。切り抜き素材が無い場合は線画・図像で代用する。デモは素材の都合で四角い写真のままなので、効果はやや弱く見える。",
+    "絵の top は左右で揃えない（現物は 40% と 42%）。揃えると2枚が対になって「左右対称の飾り」になり、舞台の感じが消える。",
+    "本文カラムの領域が見えないと「掛かっていない」ことが確認できないので、デモでは outline:1px dashed + outline-offset で領域を可視化した。実装では不要。",
+    "position:absolute の絵は親の高さに寄与しない。本文が3行以下だと絵が親からはみ出して切れるので、舞台側に padding-block（デモは --s8）を確保するか min-height を敷く。",
+    "768px以下は絵を position:static に戻し、grid 2列で本文の下へ逃がす。定義の width:60% は2枚並べると溢れるので、2列グリッドに入れて width:100% にした。",
+    "デモは techniques/space/margin-as-stage/demo.html。〈普通＝写真も本文も同じグリッド〉〈本文32%＋%オフセット〉〈固定幅560px＋負のオフセット〉の3段。"
+  ]
+}

@@ -1,0 +1,124 @@
+<style>
+/* ============================================================
+   color/paper-grain-ground
+   地を #fff のベタにせず、紙目ノイズや網点を敷いて罫を省く
+   ============================================================ */
+:root{
+  /* --- _tokens.css フォールバック --- */
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px; --fs-lg:21px;
+  --lh-tight:1.35; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px;
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070; --c-bg:#FFFFFF; --c-line:#E3E3E3;
+
+  /* --- この工夫の変数 --- */
+  --tq-pg-paper:#f7f3ec;        /* 生成りの地 */
+  --tq-pg-grain-op:.32;         /* 紙目の不透明度（param: 4〜50%。50%は粗く出るので実案件は30%前後） */
+  --tq-pg-halftone-bg:#eaf1fb;  /* 淡い青の地 */
+  --tq-pg-halftone:#c9d8ef;     /* 網点の色 */
+  --tq-pg-halftone-step:6px;    /* 網点の間隔 */
+  --tq-pg-fade:linear-gradient(180deg,transparent,rgba(0,0,0,1) 30%); /* 網点帯の上端フェード。下端は clip-path の斜めで終わらせる */
+}
+
+.tq-pg{ font-family:var(--f-sans); color:var(--c-ink); background:var(--c-bg); line-height:var(--lh-body); }
+.tq-pg *{ box-sizing:border-box; }
+.tq-pg img{ display:block; width:100%; height:100%; object-fit:cover; }
+
+.tq-pg__lead{ margin:0 0 var(--s5); font-size:var(--fs-sm); color:var(--c-ink3); line-height:var(--lh-tight); }
+.tq-pg__grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:var(--s5); }
+.tq-pg__tag{ display:block; margin-bottom:var(--s2); font-size:var(--fs-note); letter-spacing:.08em; color:var(--c-ink3); }
+.tq-pg__tag--on{ color:var(--c-ink); font-weight:700; }
+.tq-pg__note{ margin:var(--s2) 0 0; font-size:var(--fs-note); color:var(--c-ink3); line-height:var(--lh-tight); }
+
+.tq-pg__stage{ position:relative; height:250px; overflow:hidden; border-radius:var(--r-m); padding:var(--s5) var(--s4); }
+.tq-pg__inner{ position:relative; z-index:1; display:grid; grid-template-columns:96px minmax(0,1fr); gap:var(--s4); align-items:center; height:100%; }
+.tq-pg__ph{ width:96px; height:120px; border-radius:var(--r-s); overflow:hidden; }
+.tq-pg__h{ margin:0 0 var(--s2); font-size:var(--fs-md); font-weight:700; line-height:var(--lh-tight); }
+.tq-pg__p{ margin:0; font-size:var(--fs-note); color:var(--c-ink2); line-height:1.8; }
+
+/* ---- 1. 普通の場合：#fff のベタ＋罫で仕切る ---- */
+.tq-pg__stage--flat{ background:var(--c-bg); border:1px solid var(--c-line); }
+.tq-pg__stage--flat .tq-pg__ph{ border:1px solid var(--c-line); }
+.tq-pg__stage--flat .tq-pg__h{ padding-bottom:var(--s2); border-bottom:1px solid var(--c-line); }
+.tq-pg__stage--flat .tq-pg__card{ border:1px solid var(--c-line); border-radius:var(--r-s); padding:var(--s3); }
+
+/* ---- 2. 紙目ノイズ ---- */
+.tq-pg__stage--grain{ background:var(--tq-pg-paper); }
+.tq-pg__stage--grain::before{ content:""; position:absolute; inset:0; z-index:0; pointer-events:none;
+  opacity:var(--tq-pg-grain-op); mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+/* 罫は一切引かない。写真の周囲だけ白を残して質感差で面を分ける */
+.tq-pg__stage--grain .tq-pg__ph{ padding:var(--s2); background:var(--c-bg); width:108px; height:132px; border-radius:var(--r-s); }
+.tq-pg__stage--grain .tq-pg__ph span{ display:block; width:100%; height:100%; overflow:hidden; border-radius:var(--r-s); }
+
+/* ---- 3. 網点 ---- */
+.tq-pg__stage--dot{ background:var(--tq-pg-halftone-bg); }
+.tq-pg__halftone{ position:absolute; inset:0; z-index:0; pointer-events:none;
+  background-image:radial-gradient(var(--tq-pg-halftone) 1px,transparent 1.2px);
+  background-size:var(--tq-pg-halftone-step) var(--tq-pg-halftone-step);
+  -webkit-mask-image:var(--tq-pg-fade);
+  mask-image:var(--tq-pg-fade);
+  clip-path:polygon(0 0,100% 0,100% 78%,0 94%); }   /* 下端は斜めに切れて終わる */
+.tq-pg__stage--dot .tq-pg__panel{ position:relative; background:var(--c-bg); border-radius:var(--r-s); padding:var(--s3); }
+/* 落ち影もベタでなく網点の密度で作る */
+.tq-pg__stage--dot .tq-pg__panel::after{ content:""; position:absolute; left:6px; right:-6px; top:8px; bottom:-8px; z-index:-1;
+  background-image:radial-gradient(var(--tq-pg-halftone) 1.4px,transparent 1.6px);
+  background-size:4px 4px; border-radius:var(--r-s); }
+.tq-pg__stage--dot .tq-pg__ph{ border-radius:var(--r-s); }
+
+@media (max-width:420px){
+  .tq-pg__stage{ height:238px; }
+}
+</style>
+
+<section class="tq-pg">
+  <p class="tq-pg__lead">左＝普通の場合（#fffのベタ＋罫で仕切る）。中央・右は罫を1本も引かず、地の質感（紙目／網点）だけで面と要素の輪郭を出している。</p>
+
+  <div class="tq-pg__grid">
+
+    <div>
+      <span class="tq-pg__tag">普通の場合：#fff ベタ＋罫</span>
+      <div class="tq-pg__stage tq-pg__stage--flat">
+        <div class="tq-pg__inner">
+          <div class="tq-pg__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+          <div class="tq-pg__card">
+            <p class="tq-pg__h">見出しがここに入ります</p>
+            <p class="tq-pg__p">説明のテキストがここに入ります。説明のテキストがここに入ります。</p>
+          </div>
+        </div>
+      </div>
+      <p class="tq-pg__note">地が無地なので、要素の切れ目を出すのに罫が4本必要になる。</p>
+    </div>
+
+    <div>
+      <span class="tq-pg__tag tq-pg__tag--on">この工夫A：紙目ノイズの生成り</span>
+      <div class="tq-pg__stage tq-pg__stage--grain">
+        <div class="tq-pg__inner">
+          <div class="tq-pg__ph"><span><img src="../../../docs/demo/ph_b.jpg" alt=""></span></div>
+          <div>
+            <p class="tq-pg__h">見出しがここに入ります</p>
+            <p class="tq-pg__p">説明のテキストがここに入ります。説明のテキストがここに入ります。</p>
+          </div>
+        </div>
+      </div>
+      <p class="tq-pg__note">罫は0本。粒のある地と、写真まわりに残した白の質感差だけで面が分かれる。</p>
+    </div>
+
+    <div>
+      <span class="tq-pg__tag tq-pg__tag--on">この工夫B：6px間隔の網点</span>
+      <div class="tq-pg__stage tq-pg__stage--dot">
+        <span class="tq-pg__halftone" aria-hidden="true"></span>
+        <div class="tq-pg__inner">
+          <div class="tq-pg__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+          <div class="tq-pg__panel">
+            <p class="tq-pg__h">見出しがここに入ります</p>
+            <p class="tq-pg__p">説明のテキストがここに入ります。説明のテキストがここに入ります。</p>
+          </div>
+        </div>
+      </div>
+      <p class="tq-pg__note">パネルの落ち影も網点。下端は網点の帯が斜めに切れて終わる。</p>
+    </div>
+
+  </div>
+</section>

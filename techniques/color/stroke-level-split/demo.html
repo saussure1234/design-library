@@ -1,0 +1,120 @@
+<style>
+/* ============================================================
+   color/stroke-level-split
+   塗り分けの単位を文字でなく画（ストローク）にして、色から意味を抜く
+   ============================================================ */
+:root{
+  /* --- _tokens.css フォールバック --- */
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-disp:var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px; --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+  --lh-tight:1.35; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px;
+  --r-s:6px; --r-m:12px; --r-pill:999px;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070; --c-bg:#FFFFFF; --c-line:#E3E3E3;
+
+  /* --- この工夫の変数 --- */
+  --tq-ss-paper:#faf6ec;   /* 地 */
+  --tq-ss-pink:#e58aa6;    /* 2色のうち濃色（比率3〜4割） */
+  --tq-ss-gray:#dedede;    /* 2色のうち明グレー */
+  --tq-ss-gap:4px;         /* タイルのgap */
+}
+
+.tq-ss{ font-family:var(--f-sans); color:var(--c-ink); background:var(--c-bg); line-height:var(--lh-body); }
+.tq-ss *{ box-sizing:border-box; }
+.tq-ss img{ display:block; width:100%; height:100%; object-fit:cover; }
+
+.tq-ss__lead{ margin:0 0 var(--s5); font-size:var(--fs-sm); color:var(--c-ink3); line-height:var(--lh-tight); }
+.tq-ss__cmp{ display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:var(--s5); }
+.tq-ss__tag{ display:block; margin-bottom:var(--s2); font-size:var(--fs-note); letter-spacing:.08em; color:var(--c-ink3); }
+.tq-ss__tag--on{ color:var(--c-ink); font-weight:700; }
+.tq-ss__note{ margin:var(--s2) 0 0; font-size:var(--fs-note); color:var(--c-ink3); line-height:var(--lh-tight); }
+.tq-ss__sr{ position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
+
+.tq-ss__stage{ position:relative; background:var(--tq-ss-paper); border-radius:var(--r-m); padding:var(--s6) var(--s4); min-height:250px;
+  display:flex; align-items:center; }
+
+/* ---- タイル状に組んだ極太見出し ---- */
+.tq-ss__headline{ position:relative; display:flex; gap:var(--s1); align-items:flex-start; }
+.tq-ss__g{ display:grid; grid-template-columns:repeat(5,1fr); grid-template-rows:repeat(5,1fr); gap:var(--tq-ss-gap);
+  width:clamp(54px,8.6vw,92px); aspect-ratio:1; }
+.tq-ss__t{ background:var(--tq-ss-gray); }
+.tq-ss__t--p{ background:var(--tq-ss-pink); }   /* 単位は文字でなく画。同じ1文字の中に両色が同居する */
+
+/* 画の配置（grid-area: 行始 / 列始 / 行終 / 列終） */
+.tq-ss__a1{ grid-area:1/1/2/6; } .tq-ss__a2{ grid-area:1/2/6/3; } .tq-ss__a3{ grid-area:3/2/4/6; } .tq-ss__a4{ grid-area:5/1/6/6; } .tq-ss__a5{ grid-area:1/4/4/5; }
+.tq-ss__b1{ grid-area:1/1/2/6; } .tq-ss__b2{ grid-area:1/1/6/2; } .tq-ss__b3{ grid-area:1/5/6/6; } .tq-ss__b4{ grid-area:5/1/6/6; } .tq-ss__b5{ grid-area:3/2/4/5; } .tq-ss__b6{ grid-area:2/3/5/4; }
+.tq-ss__c1{ grid-area:1/2/2/6; } .tq-ss__c2{ grid-area:3/1/4/6; } .tq-ss__c3{ grid-area:2/3/6/4; } .tq-ss__c4{ grid-area:5/2/6/5; } .tq-ss__c5{ grid-area:1/1/3/2; }
+.tq-ss__d1{ grid-area:1/1/3/3; } .tq-ss__d2{ grid-area:1/4/3/6; } .tq-ss__d3{ grid-area:4/1/6/6; } .tq-ss__d4{ grid-area:3/3/5/4; }
+
+/* ---- 切り抜き写真が主役として立つ ---- */
+.tq-ss__cut{ position:absolute; right:var(--s4); bottom:var(--s3); width:clamp(96px,17vw,146px); aspect-ratio:3/4;
+  border-radius:var(--r-pill) var(--r-pill) var(--r-m) var(--r-m); overflow:hidden; z-index:1; }
+
+/* ---- 普通の場合：1色に統一し、強調したい語だけ色を変える ---- */
+.tq-ss__plain{ position:relative; z-index:0; margin:0; font-family:var(--f-disp); font-weight:900;
+  font-size:clamp(21px,3.4vw,38px); line-height:1.25; letter-spacing:.02em; color:var(--c-ink); max-width:62%; }
+.tq-ss__plain em{ font-style:normal; color:var(--tq-ss-pink); }
+
+@media (max-width:420px){
+  .tq-ss__stage{ min-height:220px; padding:var(--s5) var(--s3); }
+  .tq-ss__cut{ right:var(--s2); width:88px; }
+  .tq-ss__plain{ max-width:58%; }
+}
+</style>
+
+<section class="tq-ss">
+  <p class="tq-ss__lead">左＝普通の場合（1色の見出し＋強調語だけ色替え）。右＝この工夫。塗り分けの単位を文字でなく画（ストローク）にすると、同じ1文字の中に2色が同居し、どこが強調か読めなくなる。見出しは模様に落ち、切り抜き写真が主役になる。</p>
+
+  <div class="tq-ss__cmp">
+
+    <div>
+      <span class="tq-ss__tag">普通の場合：強調語だけ色を変える</span>
+      <div class="tq-ss__stage">
+        <p class="tq-ss__plain">見出しが<em>ここ</em>に<br>入ります</p>
+        <div class="tq-ss__cut"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+      </div>
+      <p class="tq-ss__note">色が「ここが大事」という意味を持つので、見出しが写真より先に立つ。</p>
+    </div>
+
+    <div>
+      <span class="tq-ss__tag tq-ss__tag--on">この工夫：画（ストローク）単位で2色</span>
+      <div class="tq-ss__stage">
+        <div class="tq-ss__headline" aria-hidden="true">
+          <div class="tq-ss__g">
+            <span class="tq-ss__t tq-ss__t--p tq-ss__a1"></span>
+            <span class="tq-ss__t tq-ss__a2"></span>
+            <span class="tq-ss__t tq-ss__a3"></span>
+            <span class="tq-ss__t tq-ss__t--p tq-ss__a4"></span>
+            <span class="tq-ss__t tq-ss__t--p tq-ss__a5"></span>
+          </div>
+          <div class="tq-ss__g">
+            <span class="tq-ss__t tq-ss__t--p tq-ss__b1"></span>
+            <span class="tq-ss__t tq-ss__b2"></span>
+            <span class="tq-ss__t tq-ss__t--p tq-ss__b3"></span>
+            <span class="tq-ss__t tq-ss__b4"></span>
+            <span class="tq-ss__t tq-ss__b5"></span>
+            <span class="tq-ss__t tq-ss__t--p tq-ss__b6"></span>
+          </div>
+          <div class="tq-ss__g">
+            <span class="tq-ss__t tq-ss__c1"></span>
+            <span class="tq-ss__t tq-ss__t--p tq-ss__c2"></span>
+            <span class="tq-ss__t tq-ss__c3"></span>
+            <span class="tq-ss__t tq-ss__t--p tq-ss__c4"></span>
+            <span class="tq-ss__t tq-ss__c5"></span>
+          </div>
+          <div class="tq-ss__g">
+            <span class="tq-ss__t tq-ss__d1"></span>
+            <span class="tq-ss__t tq-ss__t--p tq-ss__d2"></span>
+            <span class="tq-ss__t tq-ss__d3"></span>
+            <span class="tq-ss__t tq-ss__t--p tq-ss__d4"></span>
+          </div>
+        </div>
+        <span class="tq-ss__sr">見出しがここに入ります</span>
+        <div class="tq-ss__cut"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+      </div>
+      <p class="tq-ss__note">ピンクは3〜4割。文字としての意味は sr-only のテキストが持ち、見た目は地紋として働く。</p>
+    </div>
+
+  </div>
+</section>

@@ -1,0 +1,130 @@
+<style>
+/* トークンのフォールバック。:where() で詰めているので、
+   _tokens.css が読み込まれていればそちらが必ず勝つ。 */
+:where(:root){
+  --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-disp:var(--f-sans); --f-num:"Helvetica Neue",Arial,var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+  --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+  --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px; --s8:76px;
+  --sec-y:clamp(56px,7vw,110px);
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+
+.tq-flanking{font-family:var(--f-sans); color:var(--c-ink2); background:var(--c-bg)}
+.tq-flanking *{box-sizing:border-box}
+.tq-flanking__blk{padding-block:var(--s6)}
+.tq-flanking__tag{
+  display:inline-block; margin:0 auto var(--s4);
+  font-size:var(--fs-note); letter-spacing:.08em; line-height:1;
+  padding:var(--s2) var(--s3); border-radius:var(--r-pill);
+  background:var(--c-bg2); color:var(--c-ink3);
+}
+.tq-flanking__tag--on{background:var(--c-primary-l); color:var(--c-primary-d)}
+.tq-flanking__head{max-width:var(--w-max); margin-inline:auto; padding-inline:var(--w-gut)}
+.tq-flanking__cap{
+  max-width:var(--w-max); margin:var(--s4) auto 0; padding-inline:var(--w-gut);
+  font-size:var(--fs-sm); line-height:var(--lh-body); color:var(--c-ink3);
+}
+
+/* ============ 共通の中身 ============ */
+.tq-flanking__p{margin:0; font-size:var(--fs-base); line-height:var(--lh-body); color:var(--c-on-primary)}
+.tq-flanking__rule{
+  border:0; border-top:2px dotted color-mix(in srgb, var(--c-on-primary) 55%, transparent);
+  margin-block:var(--s5);
+}
+.tq-flanking__ph{border-radius:50%; object-fit:cover; display:block; aspect-ratio:1}
+.tq-flanking__ico{fill:none; stroke-width:1.5; width:34px; height:34px; flex:none}
+
+/* ============ 普通：アイコンを見出しの上に1つ中央置き、写真は本文のあとにまとめて ============ */
+.tq-flanking__plain{background:var(--c-primary); padding-block:var(--s7)}
+.tq-flanking__plain-in{max-width:var(--w-max); margin-inline:auto; padding-inline:var(--w-gut)}
+.tq-flanking__plain-ico{display:block; margin:0 auto var(--s4); stroke:var(--c-on-primary)}
+.tq-flanking__plain-lead{
+  margin:0 0 var(--s5); text-align:center; font-family:var(--f-disp); font-weight:700;
+  font-size:clamp(var(--fs-lg),3.4vw,var(--fs-2xl)); line-height:var(--lh-tight); color:var(--c-on-primary);
+}
+.tq-flanking__plain-ph{display:grid; grid-template-columns:1fr 1fr; gap:var(--s5); margin-top:var(--s6)}
+.tq-flanking__plain-ph img{width:100%; border-radius:var(--r-m); aspect-ratio:16/9; object-fit:cover; display:block}
+
+/* ============ この工夫：本文を中央の細幅に絞り、左右外側に対の素材を置く ============ */
+.tq-flanking__ground{position:relative; background:var(--c-primary); padding-block:var(--s8); overflow:hidden}
+.tq-flanking__body{width:min(560px,46%); margin-inline:auto}     /* 中央だけが読む道になる */
+.tq-flanking__side{display:contents}
+.tq-flanking__l{position:absolute; left:4%;  top:16%; width:130px; z-index:0}
+.tq-flanking__r{position:absolute; right:4%; top:26%; width:150px; z-index:0}   /* 左右で高さをずらす */
+.tq-flanking__lead{
+  display:flex; align-items:center; justify-content:center; gap:var(--s6);
+  margin:var(--s8) auto 0; padding-inline:var(--w-gut);
+  font-family:var(--f-disp); font-weight:700; color:var(--c-on-primary);
+  font-size:clamp(var(--fs-lg),3.4vw,var(--fs-2xl)); line-height:var(--lh-tight); text-align:center;
+}
+.tq-flanking__lead .tq-flanking__ico--a{stroke:var(--c-on-primary)}   /* 左右で線色を変える */
+.tq-flanking__lead .tq-flanking__ico--b{stroke:var(--c-accent)}
+
+@media (max-width:768px){
+  .tq-flanking__body{width:86%}
+  .tq-flanking__side{display:flex; justify-content:center; gap:var(--s5); margin-bottom:var(--s6)}
+  .tq-flanking__l,.tq-flanking__r{position:static; width:90px}
+  .tq-flanking__lead{gap:var(--s4)}
+  .tq-flanking__ico{width:26px; height:26px}
+  .tq-flanking__plain-ph{grid-template-columns:1fr}
+}
+</style>
+
+<section class="tq-flanking">
+
+  <div class="tq-flanking__blk">
+    <div class="tq-flanking__head"><p class="tq-flanking__tag">普通の場合</p></div>
+    <div class="tq-flanking__plain">
+      <div class="tq-flanking__plain-in">
+        <svg class="tq-flanking__ico tq-flanking__plain-ico" viewBox="0 0 34 34" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M17 30c-8 0-13-5-13-12C4 11 10 4 17 4s13 7 13 14c0 7-5 12-13 12Z"/>
+          <path d="M17 30V13"/><path d="M17 19c-4 0-6-2-6-5"/>
+        </svg>
+        <p class="tq-flanking__plain-lead">締めの1行がここに入ります。</p>
+        <p class="tq-flanking__p">本文がここに入ります。面いっぱいの幅で流すと1行が長くなり、どこまでが1つの話なのかが分かりにくくなります。読み終えたあとの着地点も決まらないため、次に何を見ればよいかが残りません。本文がここに入ります。面いっぱいの幅で流すと1行が長くなり、どこまでが1つの話なのかが分かりにくくなります。</p>
+        <div class="tq-flanking__plain-ph">
+          <img src="../../../docs/demo/ph_a.jpg" alt="">
+          <img src="../../../docs/demo/ph_b.jpg" alt="">
+        </div>
+      </div>
+    </div>
+    <p class="tq-flanking__cap">アイコンは中央に1つ、写真は本文のあとにまとめて並ぶ。読む幅も着地点も決まらない。</p>
+  </div>
+
+  <div class="tq-flanking__blk">
+    <div class="tq-flanking__head"><p class="tq-flanking__tag tq-flanking__tag--on">この工夫</p></div>
+    <div class="tq-flanking__ground">
+      <div class="tq-flanking__side">
+        <img class="tq-flanking__ph tq-flanking__l" src="../../../docs/demo/ph_a.jpg" alt="">
+        <img class="tq-flanking__ph tq-flanking__r" src="../../../docs/demo/ph_b.jpg" alt="">
+      </div>
+      <div class="tq-flanking__body">
+        <p class="tq-flanking__p">本文がここに入ります。中央の細幅に絞ると1行が短くなり、話のかたまりが目で追えるようになります。</p>
+        <hr class="tq-flanking__rule">
+        <p class="tq-flanking__p">本文がここに入ります。左右の外側に対の素材が立つので、中央だけが読む道として残ります。</p>
+        <hr class="tq-flanking__rule">
+        <p class="tq-flanking__p">本文がここに入ります。要素を足さずに、読む幅と着地点を同時に決められます。</p>
+      </div>
+      <p class="tq-flanking__lead">
+        <svg class="tq-flanking__ico tq-flanking__ico--a" viewBox="0 0 34 34" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M17 30c-8 0-13-5-13-12C4 11 10 4 17 4s13 7 13 14c0 7-5 12-13 12Z"/>
+          <path d="M17 30V13"/><path d="M17 19c-4 0-6-2-6-5"/>
+        </svg>
+        <span>締めの1行がここに入ります。</span>
+        <svg class="tq-flanking__ico tq-flanking__ico--b" viewBox="0 0 34 34" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M9 30V19c0-2 3-2 3 0v-3c0-2 3-2 3 0v-2c0-2 3-2 3 0v2c0-2 3-2 3 0v3c0-2 3-2 3 0v6c0 4-3 6-7 6Z"/>
+          <path d="M12 19V8c0-2 3-2 3 0"/>
+        </svg>
+      </p>
+    </div>
+    <p class="tq-flanking__cap">本文は中央46%だけ。左右外側に対の素材を高さをずらして置き、締めの1行は線画で挟む。左右対称の印が文字列を囲い込み、中央に縦の通路ができる。</p>
+  </div>
+
+</section>

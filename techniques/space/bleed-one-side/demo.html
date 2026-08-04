@@ -1,0 +1,159 @@
+<style>
+/* --- トークンのフォールバック（_tokens.css が無い環境でも見えるように） --- */
+:root{
+  --c-primary:#00B220; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-disp:var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px; --fs-lg:21px; --fs-xl:28px;
+  --lh-tight:1.35; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px; --s8:76px;
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --shadow:0 6px 24px rgba(17,17,17,.08);
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+
+/* =========================================================
+   space/bleed-one-side
+   片側だけ画面外へ抜き、内側の2隅だけ角丸にする
+   ========================================================= */
+.tq-bleed1{
+  font-family:var(--f-sans); color:var(--c-ink2);
+  background:var(--c-bg); overflow:hidden;
+  padding-block:var(--s7);
+}
+.tq-bleed1--alt{ background:var(--c-bg2); }
+.tq-bleed1__inner{ max-width:var(--w-max); margin-inline:auto; padding-inline:var(--w-gut); }
+
+.tq-bleed1__tag{
+  display:inline-block; margin:0 0 var(--s5);
+  font-size:var(--fs-note); letter-spacing:.08em; color:var(--c-ink3);
+  background:var(--c-bg); border:1px solid var(--c-line);
+  border-radius:var(--r-pill); padding:var(--s1) var(--s3);
+}
+.tq-bleed1__tag--on{
+  color:var(--c-on-primary); background:var(--c-primary); border-color:var(--c-primary);
+}
+
+.tq-bleed1__row{ display:flex; align-items:center; gap:var(--s6); }
+.tq-bleed1__row + .tq-bleed1__row{ margin-top:var(--s6); }
+.tq-bleed1__txt{ flex:1 1 0; min-width:0; }
+.tq-bleed1__h{
+  font-family:var(--f-disp); font-size:var(--fs-xl); line-height:var(--lh-tight);
+  color:var(--c-ink); margin:0 0 var(--s3);
+}
+.tq-bleed1__p{ font-size:var(--fs-base); line-height:var(--lh-body); margin:0; }
+
+/* 抜く写真：右辺へ。接する側（右）の角丸だけ 0 */
+.tq-bleed1__fig{
+  margin:0; flex:0 0 auto;
+  width:calc(50vw + 60px);
+  margin-right:calc(50% - 50vw);
+  border-radius:var(--r-l) 0 0 var(--r-l);
+  overflow:hidden; box-shadow:var(--shadow);
+}
+.tq-bleed1__fig img{ display:block; width:100%; height:clamp(210px,30vw,340px); object-fit:cover; }
+/* 鏡像：左辺へ */
+.tq-bleed1__fig--l{
+  margin-right:0; margin-left:calc(50% - 50vw);
+  border-radius:0 var(--r-l) var(--r-l) 0;
+}
+/* 普通：コンテナ内・四隅同径 */
+.tq-bleed1__fig--plain{
+  flex:0 0 46%; width:auto; margin-inline:0;
+  border-radius:var(--r-l);
+}
+
+/* 反復のうち1枚だけ切る（下の1枚は完全な円のまま残す） */
+.tq-bleed1__circles{ margin-top:var(--s6); }
+.tq-bleed1__ph{ display:block; border-radius:50%; overflow:hidden; }
+.tq-bleed1__ph img{ display:block; width:100%; aspect-ratio:1; object-fit:cover; }
+.tq-bleed1__ph--cut{ width:46%; margin-left:auto; margin-right:-8vw; }
+.tq-bleed1__ph--whole{ width:34%; margin:var(--s6) 12vw 0 auto; }
+.tq-bleed1__cap{
+  font-size:var(--fs-note); color:var(--c-ink3); margin:var(--s2) 0 0;
+}
+
+@media (max-width:760px){
+  .tq-bleed1__row{ flex-direction:column; align-items:stretch; gap:var(--s5); }
+  .tq-bleed1__fig{ width:auto; margin-right:calc(50% - 50vw); }
+  .tq-bleed1__fig--l{ margin-left:calc(50% - 50vw); margin-right:0; }
+  .tq-bleed1__fig--plain{ flex:0 0 auto; width:auto; margin-inline:0; }
+  .tq-bleed1__ph--cut{ width:64%; }
+  .tq-bleed1__ph--whole{ width:46%; margin-right:14vw; }
+}
+</style>
+
+<!-- 1. 普通：コンテナの内側に収め、四隅を同じ半径で丸める -->
+<section class="tq-bleed1">
+  <div class="tq-bleed1__inner">
+    <p class="tq-bleed1__tag">普通</p>
+    <div class="tq-bleed1__row">
+      <div class="tq-bleed1__txt">
+        <h3 class="tq-bleed1__h">見出しがここに入ります</h3>
+        <p class="tq-bleed1__p">説明のテキストがここに入ります。写真もテキストもコンテナ幅の内側に収まり、四隅は同じ半径で丸めています。</p>
+      </div>
+      <figure class="tq-bleed1__fig tq-bleed1__fig--plain">
+        <img src="../../../docs/demo/ph_a.jpg" alt="">
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- 2. この工夫：右辺へ抜き、内側（左）の2隅だけ角丸 -->
+<section class="tq-bleed1 tq-bleed1--alt">
+  <div class="tq-bleed1__inner">
+    <p class="tq-bleed1__tag tq-bleed1__tag--on">この工夫｜右へ抜く</p>
+    <div class="tq-bleed1__row">
+      <div class="tq-bleed1__txt">
+        <h3 class="tq-bleed1__h">見出しがここに入ります</h3>
+        <p class="tq-bleed1__p">説明のテキストがここに入ります。写真だけが画面の右辺を越えて切れ、見えているのは左上・左下の角丸だけです。</p>
+      </div>
+      <figure class="tq-bleed1__fig">
+        <img src="../../../docs/demo/ph_a.jpg" alt="">
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- 3. 鏡像で交互に抜く -->
+<section class="tq-bleed1">
+  <div class="tq-bleed1__inner">
+    <p class="tq-bleed1__tag tq-bleed1__tag--on">この工夫｜右→左の鏡像</p>
+    <div class="tq-bleed1__row">
+      <div class="tq-bleed1__txt">
+        <h3 class="tq-bleed1__h">見出しがここに入ります</h3>
+        <p class="tq-bleed1__p">説明のテキストがここに入ります。</p>
+      </div>
+      <figure class="tq-bleed1__fig">
+        <img src="../../../docs/demo/ph_a.jpg" alt="">
+      </figure>
+    </div>
+    <div class="tq-bleed1__row">
+      <figure class="tq-bleed1__fig tq-bleed1__fig--l">
+        <img src="../../../docs/demo/ph_b.jpg" alt="">
+      </figure>
+      <div class="tq-bleed1__txt">
+        <h3 class="tq-bleed1__h">見出しがここに入ります</h3>
+        <p class="tq-bleed1__p">説明のテキストがここに入ります。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. 反復のうち1枚だけ切る -->
+<section class="tq-bleed1 tq-bleed1--alt">
+  <div class="tq-bleed1__inner">
+    <p class="tq-bleed1__tag tq-bleed1__tag--on">この工夫｜反復の1枚だけ切る</p>
+    <div class="tq-bleed1__circles">
+      <figure class="tq-bleed1__ph tq-bleed1__ph--cut">
+        <img src="../../../docs/demo/ph_a.jpg" alt="">
+      </figure>
+      <figure class="tq-bleed1__ph tq-bleed1__ph--whole">
+        <img src="../../../docs/demo/ph_b.jpg" alt="">
+      </figure>
+    </div>
+    <p class="tq-bleed1__cap">上の1枚だけ右端で弧を切り、下の1枚は完全な円のまま残す</p>
+  </div>
+</section>

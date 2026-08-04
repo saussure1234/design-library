@@ -1,0 +1,135 @@
+<style>
+/* ==========================================================
+   edge/diagonal-bands — 12〜15度の斜めで切り、段ごとに向きを反転
+   :where(:root) はトークン未読込時のフォールバック（優先度0）。
+   ========================================================== */
+:where(:root){
+  --c-primary:#00B220; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+  --lh-tight:1.35; --lh-body:1.9;
+  --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+  --r-s:6px; --r-m:12px; --r-l:24px;
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+
+.tq-diag{
+  font-family:var(--f-sans); color:var(--c-ink2); background:var(--c-bg);
+  max-width:var(--w-max); margin:0 auto; padding:var(--s6) var(--w-gut);
+}
+.tq-diag__h{ font-size:var(--fs-md); font-weight:700; color:var(--c-ink); line-height:var(--lh-tight); margin:0 0 var(--s2); }
+.tq-diag__h--2{ margin-top:var(--s7); }
+.tq-diag__lead{ font-size:var(--fs-sm); line-height:var(--lh-body); color:var(--c-ink3); margin:0 0 var(--s5); }
+.tq-diag__row{ display:grid; gap:var(--s5); grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr)); }
+.tq-diag__fig{ margin:0; }
+.tq-diag__cap{ font-size:var(--fs-note); line-height:var(--lh-tight); color:var(--c-ink3); margin:var(--s3) 0 0; }
+.tq-diag__cap b{ display:block; color:var(--c-ink); font-size:var(--fs-sm); margin-bottom:2px; }
+
+.tq-diag__stage{
+  border:1px solid var(--c-line); border-radius:var(--r-m); overflow:hidden;
+  background:var(--c-bg);
+}
+
+/* ---- 帯 ---- */
+.tq-diag__band{
+  aspect-ratio:2/1;                 /* 高さ＝幅の0.5倍。角度を幅に依存させないための固定 */
+  background-position:center; background-size:cover; background-repeat:no-repeat;
+}
+.tq-diag__band--a{ background-image:url("../../../docs/demo/ph_a.jpg"); }
+.tq-diag__band--b{ background-image:url("../../../docs/demo/ph_b.jpg"); }
+
+/* 普通：水平に積むだけ（境界は水平線） */
+.tq-diag__stage--flat .tq-diag__band + .tq-diag__band{ border-top:1px solid var(--c-bg); }
+
+/* この工夫：上辺だけを斜めに切り、段ごとに向きを反転。下辺はフラットのまま。
+   見えている境界は常に「後ろの段の上辺」なので、下辺の形を考えなくてよい。
+   斜辺 s = 高さの40% = 幅の0.20倍 → atan(0.20) ≒ 11度。
+   送り Δ（= 高さ − 詰め量）は s < Δ ≦ 高さ − s を満たすこと。
+   ここでは 高さ0.5W・s=0.20W・詰め量 -21%（%は幅基準）→ Δ=0.29W。
+   下限を割ると隣り合う斜辺が交差して段が消え、上限を超えると隙間が空く。 */
+.tq-diag__stage--zig .tq-diag__band:nth-child(odd){
+  clip-path:polygon(0 0, 100% 40%, 100% 100%, 0 100%);
+}
+.tq-diag__stage--zig .tq-diag__band:nth-child(even){
+  clip-path:polygon(0 40%, 100% 0, 100% 100%, 0 100%);
+}
+.tq-diag__stage--zig .tq-diag__band:first-child{ clip-path:none; }
+.tq-diag__stage--zig .tq-diag__band + .tq-diag__band{ margin-top:-21%; }
+
+/* ---- 一辺だけ斜め ---- */
+.tq-diag__solo{ position:relative; overflow:hidden; }
+.tq-diag__solo img{ display:block; width:100%; height:150px; object-fit:cover; }
+.tq-diag__wedge{
+  position:absolute; inset:0 auto auto 0; width:100%; height:56px;
+  background:var(--c-bg2);
+  clip-path:polygon(0 0, 44% 0, 0 100%);
+}
+.tq-diag__slot{
+  position:absolute; right:0; bottom:0; width:60%; height:56px;
+  background:var(--c-primary-l);
+  clip-path:polygon(100% 0, 100% 100%, 0 100%);
+}
+</style>
+
+<div class="tq-diag">
+
+  <p class="tq-diag__h">水平線を1本も残さず、段ごとに傾きを反転させる</p>
+  <p class="tq-diag__lead">
+    左は同じ写真を水平に積んだもの。境界のたびに視線が止まる。
+    右は各段の上辺を約11度で斜めに切り、向きを段ごとに逆にした。止まる場所が無くなり、ジグザグのリズムで下へ引きずられる。
+    斜辺は被写体を平気で横切る。
+  </p>
+
+  <div class="tq-diag__row">
+
+    <figure class="tq-diag__fig">
+      <div class="tq-diag__stage tq-diag__stage--flat">
+        <div class="tq-diag__band tq-diag__band--a"></div>
+        <div class="tq-diag__band tq-diag__band--b"></div>
+        <div class="tq-diag__band tq-diag__band--a"></div>
+      </div>
+      <p class="tq-diag__cap"><b>普通</b>水平線で切った帯を3段。境界ごとに視線が止まる。</p>
+    </figure>
+
+    <figure class="tq-diag__fig">
+      <div class="tq-diag__stage tq-diag__stage--zig">
+        <div class="tq-diag__band tq-diag__band--a"></div>
+        <div class="tq-diag__band tq-diag__band--b"></div>
+        <div class="tq-diag__band tq-diag__band--a"></div>
+      </div>
+      <p class="tq-diag__cap"><b>この工夫</b>上辺だけ約11度で斜めに切り、段ごとに反転。斜辺で欠ける分を詰めるので、同じ3枚でも縦が3割ほど縮む。</p>
+    </figure>
+
+  </div>
+
+  <p class="tq-diag__h tq-diag__h--2">単発で使うときは「一辺だけ斜め」に落とす</p>
+  <p class="tq-diag__lead">
+    写真が1点しかないときにジグザグは使えない。左上に直角三角形のくさびを残すか、右下から色面を差し込むか、斜辺を1本だけにする。
+  </p>
+
+  <div class="tq-diag__row">
+
+    <figure class="tq-diag__fig">
+      <div class="tq-diag__stage">
+        <div class="tq-diag__solo">
+          <img src="../../../docs/demo/ph_b.jpg" alt="">
+          <span class="tq-diag__wedge"></span>
+        </div>
+      </div>
+      <p class="tq-diag__cap"><b>左上のくさび</b>前セクションの底を直角三角形で落とす。斜辺は1本だけ。</p>
+    </figure>
+
+    <figure class="tq-diag__fig">
+      <div class="tq-diag__stage">
+        <div class="tq-diag__solo">
+          <img src="../../../docs/demo/ph_a.jpg" alt="">
+          <span class="tq-diag__slot"></span>
+        </div>
+      </div>
+      <p class="tq-diag__cap"><b>右下から差し込む色面</b>次セクションの地色を三角で差し込む。角度を強くしてよい。</p>
+    </figure>
+
+  </div>
+</div>

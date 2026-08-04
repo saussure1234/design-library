@@ -1,0 +1,22 @@
+{
+  "id": "color/single-dark-anchor",
+  "name": "暗い面を画面に1つだけ許し、その中に情報を閉じ込める",
+  "ordinary": "見出しやボタンにアクセント色を複数点入れる",
+  "actual": "背景は明度の高い青みグレー(#eceef1)一色、写真も低彩度で、濃紺(#1a2f4a)の正円1つだけが唯一の暗い面。文字も罫もその円の中に閉じ込められ、円の外の装飾は地図リンクの下線1本だけ。",
+  "css": "section{background:#eceef1}\nsection *{border:0;box-shadow:none}\n.circle{width:min(72vw,420px);aspect-ratio:1;border-radius:50%;background:#1a2f4a;color:#fff;display:grid;place-items:center;text-align:center;padding:40px}\n.circle a{color:#fff;text-decoration:underline;text-underline-offset:3px}",
+  "appliesTo": ["access", "cta", "footer"],
+  "impact": 2,
+  "effort": 1,
+  "why": "暗い面が1つしか無いので、そこが連絡先だと見出しで説明しなくても分かる",
+  "params": ["暗面の形（正円／角丸矩形）", "地の明度（#eceef1前後）"],
+  "avoid": "同一ページに他の濃色セクションがある場合（唯一性が崩れて意味を失う）",
+  "sources": ["ogawa_s12"],
+  "notes": [
+    "ogawa_s12 実測：円は画面幅の約45%（720px幅の画像で直径約320px）で左寄せ。右側は同じ円形にトリミングした写真が2枚、縦にずらして置かれる。写真が円なので、暗い円とだけ形が揃い、他の要素は一切囲われない。",
+    "実測：円の中のテキストは中央揃えでなく左揃え。上から 英字ラベル（極小・字間広め）→ 見出し → 項目名＋値の行 → 下線付きリンク → 注記、の順。円の内側パディングは直径の約14%（それ以下だと文字が弧に当たる）。",
+    "実装メモ：css ヒントは text-align:center だが、現物は左揃え。行数が3行以上ある住所・営業時間では左揃えの方が読める。中央揃えにするのは1〜2行の短いCTA時。",
+    "実装メモ：円の中の文字は clamp() で縮める（円は幅で決まり、文字は縮まないので、375px時に固定pxだと弧からはみ出す）。demo では見出し clamp(15px,1.7vw,21px)、本文 clamp(11px,1.05vw,13px)。",
+    "実装メモ：『暗い面が1つだけ』を担保するため、面の内側以外は section *{border:0;box-shadow:none} で罫と影をまとめて落とした。写真は filter:saturate(.55) で彩度を下げ、円の暗さが唯一の強さになるようにしている。",
+    "対比の作り方：同じ情報を『枠＋バッジ＋ボタン＋色つき項目名』で組んだ版を左に並べると、色の点数が増えるほど視線の順序が決まらなくなることが分かる。"
+  ]
+}

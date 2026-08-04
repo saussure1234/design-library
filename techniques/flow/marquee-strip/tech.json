@@ -1,0 +1,36 @@
+{
+  "id": "flow/marquee-strip",
+  "name": "流れる文字帯を罫や装飾の代わりに使い、語は端で切ったままにする",
+  "ordinary": "タグは静止したチップとして本文の下に折り返して並べる。見出しの上には何も置かないか1本罫を引く。",
+  "actual": "高さ30px程度の黒帯を敷き、左端に「BUZZ KEYWORD」の固定ラベルを貼り、その脇からキーワードが流れる。先頭は「ープワーク」と語の途中から現れ、右端でも切れる。軽い版は9pxの欧文を7回反復して流し、下に1pxのヘアラインを引いて罫そのものを文字に置き換える。",
+  "css": ".ticker{position:relative;display:flex;align-items:center;overflow:hidden;\n  height:30px;background:#111;color:#fff;\n  margin-left:43px;margin-right:calc(50% - 50vw)}\n.ticker__label{position:sticky;left:0;z-index:2;background:#111;flex:0 0 auto;\n  padding:0 18px;font-size:11px;letter-spacing:.12em}\n.ticker__items{display:flex;gap:24px;white-space:nowrap;animation:mq 28s linear infinite}\n@keyframes mq{to{transform:translateX(-50%)}}\n\n/* 罫の代わり版 */\n.rule-ticker{font-size:9px;letter-spacing:.18em;color:#e39aa9;white-space:nowrap;\n  overflow:hidden;border-bottom:1px solid #f1eaea;padding:14px 0}\n@media(prefers-reduced-motion:reduce){.ticker__items{animation:none}}",
+  "params": [
+    "速度 22〜28s",
+    "固定ラベルの有無",
+    "黒帯かヘアラインか",
+    "反復回数（幅の2倍ぶん複製してtranslateX(-50%)）"
+  ],
+  "appliesTo": [
+    "hero",
+    "features",
+    "footer"
+  ],
+  "impact": 2,
+  "effort": 2,
+  "why": "止まっているラベルと動く列を分けることで、端が切れているのが事故でなく仕掛けだと伝わる。",
+  "avoid": "読ませたい情報は入れない。読めないので、装飾と刷り込みだけの用途に限る。",
+  "sources": [
+    "odrive_s01",
+    "meisei-es_s09"
+  ],
+  "notes": [
+    "「先頭が語の途中から現れる」は animation-delay に負の値を入れて作る（デモは -7s / 26s）。これが無いと読み込み直後だけ左端がきれいに揃ってしまい、最初の数秒は工夫が見えない。",
+    "translateX(-50%) を継ぎ目なく回すには、複製2セットの幅がぴったり2倍でなければならない。トラック側に gap を置くと -50% が半個ぶんずれて毎周ガタつく。gap はセットの内側だけに置き、セット自身に padding-right で末尾の1個ぶんの隙間を持たせる（デモの .tq-mq__set）。",
+    "固定ラベルは position:sticky ではなく position:relative + z-index:2 + 帯と同じ background で十分。overflow:hidden の中は横スクロールしないので sticky は効きようがなく、実際に必要なのは「流れてきた語を隠す不透明な蓋」のほう。",
+    "複製した2セット目は aria-hidden=\"true\"。読み上げで同じ語が2回出るのを防ぐ。",
+    "prefers-reduced-motion では animation:none だけにすると端の切れまで消える。transform:translateX(-9%) を残して、止まっていても切れている絵にしている。",
+    "罫の代わり版の欧文は現物9pxだが、トークンの最小が --fs-note(12px) なのでそちらを使用。letter-spacing:.18em を効かせれば12pxでも罫として読める。色は現物がブランドの淡いピンクなので --c-primary（案件ごとの主色）に割り当てた。",
+    "帯の高さ30px、ラベルの line-height:30px は寸法なのでトークン外。色・余白・書体はすべて変数。",
+    "デモは techniques/flow/marquee-strip/demo.html。上から〈普通＝1本罫＋静止チップ〉〈黒帯＋固定ラベル〉〈罫の代わり版〉。"
+  ]
+}

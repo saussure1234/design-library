@@ -1,0 +1,230 @@
+<style>
+/* ============================================================
+   rule/grid-overlay-visible
+   版面のカラムグリッドをヘアラインのまま画面に出す
+   ============================================================ */
+
+@layer tq-fallback{
+  :root{
+    --c-primary:#00B220; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+    --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+    --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3;
+    --c-on-primary:#FFFFFF;
+    --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    --f-disp:var(--f-sans);
+    --f-num:"Helvetica Neue",Arial,var(--f-sans);
+    --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+    --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px; --fs-3xl:50px; --fs-4xl:64px;
+    --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+    --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  }
+}
+
+:root{
+  --tq-gov-blue:#9797C9;    /* 差し色のヘアライン（unico_s01 実測） */
+  --tq-gov-red:#EA3A24;     /* 版面に置く巨大文字の色（unico_s01） */
+  --tq-gov-cream:#F8F4EB;   /* 静かな版の地（yugao_s10 実測） */
+  --tq-gov-hair:#F0EBDD;    /* 静かな版のヘアライン。地より2〜3段暗いだけ */
+  /* 版面の刻み。トークンの余白刻みではなくカラム設計そのものなのでここで宣言する */
+  --tq-gov-margin:30px;     /* 左右の版面余白（params: 30px） */
+  --tq-gov-col:97px;        /* カラム幅（現物実測 97px） */
+  --tq-gov-gut:15px;        /* ガター（params: 15px。左右2本ペアで見せる） */
+  --tq-gov-step:112px;      /* col + gut */
+  --tq-gov-rowh:242px;      /* 静かな版の横罫ピッチ（yugao_s10 実測） */
+  --tq-gov-colw:360px;      /* 静かな版の縦罫ピッチ */
+}
+
+.tq-gov{
+  font-family:var(--f-sans); color:var(--c-ink2);
+  line-height:var(--lh-head); -webkit-text-size-adjust:100%;
+  padding:var(--s5); background:var(--c-bg);
+}
+.tq-gov *{ box-sizing:border-box }
+
+/* --- デモの見出し・注記 ------------------------------------ */
+.tq-gov__lead{
+  margin:0 0 var(--s5); font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-gov__sec{ margin-top:var(--s7) }
+.tq-gov__sec:first-of-type{ margin-top:0 }
+.tq-gov__secttl{
+  margin:0 0 var(--s4); font-size:var(--fs-sm); font-weight:700; color:var(--c-ink);
+}
+.tq-gov__cap{
+  display:flex; align-items:center; gap:var(--s2);
+  margin:0 0 var(--s3); font-size:var(--fs-note); font-weight:700;
+  color:var(--c-ink3); letter-spacing:.04em;
+}
+.tq-gov__cap::before{
+  content:""; width:var(--s5); height:1px; background:var(--c-line); flex:0 0 auto;
+}
+.tq-gov__cap--gap{ margin-top:var(--s6) }
+.tq-gov__note{
+  margin:var(--s3) 0 0; font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+
+/* --- ヒーローの器 ------------------------------------------ */
+.tq-gov__hero{
+  position:relative; overflow:hidden;
+  background:var(--c-bg);
+  border:1px solid var(--c-line);
+  padding:var(--s4) var(--tq-gov-margin) var(--s7);
+  min-height:220px;
+}
+
+/* この工夫の本体。
+   6カラムぶんの境界を、カラム線＋ガター線の2本ペアで全高に引く。
+   background-position/size で左右 30px の版面余白ぶんを外している。 */
+.tq-gov__grid{
+  position:absolute; inset:0; pointer-events:none; z-index:0;
+  background-repeat:no-repeat;
+  background-position:var(--tq-gov-margin) 0;
+  background-size:calc(100% - var(--tq-gov-margin) * 2) 100%;
+  background-image:repeating-linear-gradient(90deg,
+    var(--tq-gov-blue) 0 1px,
+    transparent 1px var(--tq-gov-col),
+    var(--tq-gov-blue) var(--tq-gov-col) calc(var(--tq-gov-col) + 1px),
+    transparent calc(var(--tq-gov-col) + 1px) var(--tq-gov-step));
+}
+
+/* ヘッダとヒーローの中身は線の上に載せない（線が文字を横切るのが要点） */
+.tq-gov__bar{
+  position:relative; z-index:1;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:var(--s4); flex-wrap:wrap;
+  /* 線がラベルの上を通るよう、地を敷かない */
+  background:none;
+}
+.tq-gov__logo{
+  display:flex; align-items:center; gap:var(--s2);
+  font-weight:700; font-size:var(--fs-md); color:var(--tq-gov-red); letter-spacing:.02em;
+}
+.tq-gov__logo img{ width:18px; height:18px; display:block }
+.tq-gov__nav{
+  display:flex; flex-wrap:wrap; gap:var(--s3) var(--s4);
+  font-size:var(--fs-note); color:var(--c-ink);
+}
+.tq-gov__btn{
+  display:inline-block; padding:var(--s2) var(--s4); border-radius:var(--r-pill);
+  background:var(--tq-gov-red); color:var(--c-on-primary); font-size:var(--fs-note);
+}
+.tq-gov__big{
+  position:relative; z-index:1;
+  margin:var(--s6) 0 0;
+  font-family:var(--f-num); font-weight:700;
+  font-size:clamp(38px,11vw,var(--fs-4xl));
+  line-height:1; letter-spacing:-.01em;
+  color:var(--tq-gov-red);
+}
+.tq-gov__sub{
+  position:relative; z-index:1;
+  margin:var(--s4) 0 0; font-size:var(--fs-note); color:var(--c-ink3);
+}
+
+/* 普通の版：グリッドは裏側にあり画面に出ない */
+.tq-gov__hero--plain .tq-gov__grid{ display:none }
+
+/* --- 静かな版：交差だけ見せる ------------------------------- */
+/* 囲みは作らず、縦1本・横1本のヘアラインが交差するところだけを見せる */
+.tq-gov__quiet{
+  position:relative; overflow:hidden;
+  min-height:300px; padding:var(--s6) var(--s5);
+  background-color:var(--tq-gov-cream);
+  background-image:
+    linear-gradient(var(--tq-gov-hair) 1px, transparent 1px),
+    linear-gradient(90deg, var(--tq-gov-hair) 1px, transparent 1px);
+  background-size:100% var(--tq-gov-rowh), var(--tq-gov-colw) 100%;
+}
+.tq-gov__quietin{
+  position:relative; z-index:1;
+  display:grid; gap:var(--s5);
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  max-width:660px;
+}
+.tq-gov__label{
+  margin:0 0 var(--s2); font-family:var(--f-num);
+  font-size:var(--fs-note); letter-spacing:.18em; color:var(--c-ink3);
+}
+.tq-gov__h{
+  margin:0 0 var(--s3); font-family:var(--f-disp);
+  font-size:var(--fs-lg); font-weight:400; color:var(--c-ink);
+  line-height:var(--lh-head);
+}
+.tq-gov__p{
+  margin:0; font-size:var(--fs-note); color:var(--c-ink2); line-height:var(--lh-body);
+}
+.tq-gov__qph{
+  display:block; width:100%; aspect-ratio:4/3; object-fit:cover; border-radius:0;
+}
+</style>
+
+<div class="tq-gov">
+  <p class="tq-gov__lead">
+    版面を決めている6カラムの境界を、そのまま1pxのヘアラインで画面に出す。
+    カラム線とガター線を2本ペアで見せ、ナビの日本語ラベルの上も遠慮なく横切らせる。
+  </p>
+
+  <!-- ① 普通 / この工夫 -->
+  <section class="tq-gov__sec">
+    <h3 class="tq-gov__secttl">① 同じヒーローで、グリッドを出すか出さないかだけを変える</h3>
+
+    <p class="tq-gov__cap">普通：グリッドは実装の裏側にある</p>
+    <div class="tq-gov__hero tq-gov__hero--plain">
+      <span class="tq-gov__grid"></span>
+      <div class="tq-gov__bar">
+        <span class="tq-gov__logo"><img src="../../../docs/demo/logo.svg" alt="">ロゴ</span>
+        <nav class="tq-gov__nav">
+          <span>メニュー項目</span><span>メニュー項目</span><span>メニュー項目</span>
+          <span>メニュー項目</span><span>メニュー項目</span>
+        </nav>
+        <span class="tq-gov__btn">お問い合わせ</span>
+      </div>
+      <p class="tq-gov__big">ACCELERATE</p>
+      <p class="tq-gov__sub">説明のテキストが1行入ります</p>
+    </div>
+    <p class="tq-gov__note">余白の広さに理由が見えないので、「大きく空けただけ」に読める。</p>
+
+    <p class="tq-gov__cap tq-gov__cap--gap">この工夫：カラム境界をヘアラインのまま出す</p>
+    <div class="tq-gov__hero">
+      <span class="tq-gov__grid"></span>
+      <div class="tq-gov__bar">
+        <span class="tq-gov__logo"><img src="../../../docs/demo/logo.svg" alt="">ロゴ</span>
+        <nav class="tq-gov__nav">
+          <span>メニュー項目</span><span>メニュー項目</span><span>メニュー項目</span>
+          <span>メニュー項目</span><span>メニュー項目</span>
+        </nav>
+        <span class="tq-gov__btn">お問い合わせ</span>
+      </div>
+      <p class="tq-gov__big">ACCELERATE</p>
+      <p class="tq-gov__sub">説明のテキストが1行入ります</p>
+    </div>
+    <p class="tq-gov__note">
+      線が文字の上を横切っても隠さない。巨大文字と余白が同じ刻みに乗っていることが見えるので、
+      「作りかけ」ではなく「設計している」画面になる。ガターの2本ペアが版面の呼吸を可視化する。
+    </p>
+  </section>
+
+  <!-- ② 静かな版 -->
+  <section class="tq-gov__sec">
+    <h3 class="tq-gov__secttl">② 静かなトーンでやる：交差だけを見せ、囲みは作らない</h3>
+    <div class="tq-gov__quiet">
+      <div class="tq-gov__quietin">
+        <div>
+          <p class="tq-gov__label">LABEL 01</p>
+          <h4 class="tq-gov__h">見出しがここに入ります</h4>
+          <p class="tq-gov__p">本文テキストが入ります。本文テキストが入ります。本文テキストが入ります。本文テキストが入ります。</p>
+        </div>
+        <div>
+          <img class="tq-gov__qph" src="../../../docs/demo/ph_a.jpg" alt="">
+        </div>
+      </div>
+    </div>
+    <p class="tq-gov__note">
+      地 #F8F4EB に対して罫は2〜3段暗いだけ。縦1本・横1本が交差するだけで、四角い囲いは一度も作っていない。
+      交差点が「ここが版面の節目」と言うので、カードもボーダーも要らない。
+    </p>
+  </section>
+</div>

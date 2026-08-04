@@ -1,0 +1,305 @@
+<style>
+/* ============================================================
+   overlap/bg-type-eaten
+   極大の欧文を背面に敷き、写真やカードに大半を食わせる
+   ============================================================ */
+
+/* トークンが読み込まれていない環境用のフォールバック。
+   @layer に入れてあるので、_tokens.css（レイヤ外）が有ればそちらが勝つ。 */
+@layer tq-fallback{
+  :root{
+    --c-primary:#00B220; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+    --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+    --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+    --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    --f-disp:var(--f-sans);
+    --f-num:"Helvetica Neue",Arial,var(--f-sans);
+    --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+    --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px; --fs-3xl:50px; --fs-4xl:64px;
+    --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px; --s8:76px;
+    --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+    --shadow:0 6px 24px rgba(17,17,17,.08);
+  }
+}
+
+/* この工夫が要求する値。トークン契約に無いものはここで宣言する（案件では :root で差し替え）。
+   いずれも「地の色から明度をわずかだけずらす」ので color-mix で地から作る。
+   明度差そのものが工夫の本体なので、%をそのままパラメータとして持たせている。 */
+:root{
+  --tq-bte-d3 : color-mix(in srgb, var(--c-bg) 3%,  var(--c-ink));  /* 差3%：ほぼ見えない */
+  --tq-bte-d8 : color-mix(in srgb, var(--c-bg) 8%,  var(--c-ink));  /* 差8%：現物の値（#111地に#2a2a2a相当） */
+  --tq-bte-d25: color-mix(in srgb, var(--c-bg) 25%, var(--c-ink));  /* 差25%：やりすぎ＝読めてしまう */
+  --tq-bte-pale: color-mix(in srgb, var(--c-accent) 22%, var(--c-bg2)); /* 明るい地の上の淡色（差8%相当） */
+  /* 欧文の級数。トークンの最大級数(--fs-4xl:64px)より大きい値が工夫の本体なので、ここで宣言する。 */
+  --tq-bte-fs: clamp(52px, 13cqw, 120px);
+  --tq-bte-fs-lg: clamp(58px, 16cqw, 132px);
+  /* セクション上端で断ち切る量 */
+  --tq-bte-cut: clamp(14px, 4cqw, 48px);
+}
+
+.tq-bte{
+  font-family:var(--f-sans); color:var(--c-ink2);
+  line-height:var(--lh-head); -webkit-text-size-adjust:100%;
+  padding:var(--s5); background:var(--c-bg);
+}
+.tq-bte *{ box-sizing:border-box }
+
+/* --- デモの見出し・注記 ------------------------------------ */
+.tq-bte__lead{
+  margin:0 0 var(--s6); font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-bte__sec{ margin-top:var(--s7) }
+.tq-bte__sec:first-of-type{ margin-top:0 }
+.tq-bte__secttl{
+  margin:0 0 var(--s4); font-size:var(--fs-sm); font-weight:700; color:var(--c-ink);
+}
+.tq-bte__cap{
+  display:flex; align-items:center; gap:var(--s2);
+  margin:0 0 var(--s3); font-size:var(--fs-note); font-weight:700;
+  color:var(--c-ink3); letter-spacing:.04em;
+}
+.tq-bte__cap::before{
+  content:""; width:var(--s5); height:1px; background:var(--c-line); flex:0 0 auto;
+}
+.tq-bte__note{
+  margin:var(--s3) 0 0; font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-bte__pair{
+  display:grid; gap:var(--s5);
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+}
+.tq-bte__trio{
+  display:grid; gap:var(--s4);
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+}
+
+/* --- 舞台（セクション相当） -------------------------------- */
+.tq-bte__stage{
+  position:relative;
+  overflow:hidden;                 /* 上端で断ち切るために必須 */
+  container-type:inline-size;      /* 欧文の級数を「セクション幅」に紐づける */
+  padding:var(--s7) var(--s4) var(--s5);
+  border-radius:var(--r-s);
+}
+.tq-bte__stage--dark{ background:var(--c-ink) }
+.tq-bte__stage--light{ background:var(--c-bg2) }
+
+/* 背面に敷く極大の欧文。読ませない前提なので aria-hidden で読み上げからも外す */
+.tq-bte__word{
+  position:absolute; z-index:0; left:0;
+  top:calc(-1 * var(--tq-bte-cut));   /* ← 上端で断つ */
+  margin:0; white-space:nowrap; pointer-events:none; user-select:none;
+  font-family:var(--f-num); font-weight:800; letter-spacing:.02em;
+  line-height:1; font-size:var(--tq-bte-fs);
+  color:var(--tq-bte-d8);
+}
+.tq-bte__word--3{ color:var(--tq-bte-d3) }
+.tq-bte__word--25{ color:var(--tq-bte-d25) }
+
+/* 前に出す側 */
+.tq-bte__h{
+  position:relative; z-index:1;
+  margin:0 0 var(--s4); font-family:var(--f-disp);
+  font-size:var(--fs-lg); font-weight:700; line-height:var(--lh-head);
+  letter-spacing:.02em;
+}
+.tq-bte__stage--dark .tq-bte__h{ color:var(--c-bg) }
+.tq-bte__stage--light .tq-bte__h{ color:var(--c-ink) }
+
+.tq-bte__cards{
+  position:relative; z-index:1;
+  display:grid; grid-template-columns:repeat(3,1fr); gap:var(--s3);
+}
+.tq-bte__card{
+  background:var(--c-bg); border-radius:var(--r-s); overflow:hidden;
+}
+.tq-bte__card img{
+  display:block; width:100%; aspect-ratio:4/3; object-fit:cover;
+}
+.tq-bte__card p{
+  margin:0; padding:var(--s2) var(--s3) var(--s3);
+  font-size:var(--fs-note); line-height:var(--lh-head); color:var(--c-ink2);
+}
+
+/* --- 普通：読める大きさのラベルを見出しの上に置く ----------- */
+.tq-bte__eyebrow{
+  position:relative; z-index:1; margin:0 0 var(--s2);
+  font-family:var(--f-num); font-size:var(--fs-note); font-weight:700;
+  letter-spacing:.14em; color:var(--c-accent);
+}
+
+/* --- ③ 明るい地・淡色版（写真が単語の後半を飲む） ----------- */
+.tq-bte__word--pale{
+  color:var(--tq-bte-pale);
+  font-weight:300; font-style:italic; letter-spacing:0;
+  font-size:var(--tq-bte-fs-lg);
+  top:var(--s5); left:calc(-1 * var(--s2));
+}
+.tq-bte__eat{
+  position:relative; z-index:1;
+  display:grid; grid-template-columns:1fr 1fr; gap:var(--s5);
+  align-items:end; margin-top:var(--s8);
+}
+.tq-bte__eat > *{ min-width:0 }
+.tq-bte__photo{
+  display:block; width:100%; aspect-ratio:1/1; object-fit:cover;
+  border-radius:var(--r-s);
+}
+.tq-bte__sub{
+  margin:var(--s2) 0 0; font-size:var(--fs-note);
+  color:var(--c-ink3); line-height:var(--lh-body);
+}
+
+/* --- ③b ロゴタイプの中ほどをアーチ写真が隠す ---------------- */
+.tq-bte__stage--arch{ padding-top:var(--s6); text-align:center }
+.tq-bte__word--center{
+  left:50%; translate:-50% 0; top:var(--s4);
+  color:var(--tq-bte-pale); font-weight:800; letter-spacing:.06em;
+  font-size:clamp(38px,11cqw,86px);
+}
+.tq-bte__arch{
+  position:relative; z-index:1;
+  width:min(52%,240px); margin:var(--s6) auto 0;
+  aspect-ratio:3/4; object-fit:cover;
+  border-radius:999px 999px var(--r-s) var(--r-s);
+}
+
+/* --- 幅が狭いとき：カードは3列のまま、中身だけ薄くする ------ */
+@container (max-width: 380px){
+  .tq-bte__card p{ display:none }
+  .tq-bte__card img{ aspect-ratio:3/4 }
+}
+</style>
+
+<div class="tq-bte">
+  <p class="tq-bte__lead">
+    背面に敷いた欧文は「読ませるラベル」ではなく「地紋」。上端で断ち切り、さらに写真やカードで単語の後半を隠して、
+    最初から全部は読めない状態にする。地との明度差は 3〜8% だけ。
+  </p>
+
+  <!-- ① 普通 / この工夫 -->
+  <section class="tq-bte__sec">
+    <h3 class="tq-bte__secttl">① 同じセクションで、欧文の扱いだけを変える</h3>
+    <div class="tq-bte__pair">
+
+      <div>
+        <p class="tq-bte__cap">普通：読める大きさで見出しの上に置く</p>
+        <div class="tq-bte__stage tq-bte__stage--dark">
+          <p class="tq-bte__eyebrow">SERVICE</p>
+          <h4 class="tq-bte__h">見出しがここに入ります</h4>
+          <div class="tq-bte__cards">
+            <article class="tq-bte__card"><img src="../../../docs/demo/ph_a.jpg" alt=""><p>項目名が入ります</p></article>
+            <article class="tq-bte__card"><img src="../../../docs/demo/ph_b.jpg" alt=""><p>項目名が入ります</p></article>
+            <article class="tq-bte__card"><img src="../../../docs/demo/ph_a.jpg" alt=""><p>項目名が入ります</p></article>
+          </div>
+        </div>
+        <p class="tq-bte__note">欧文は情報として1行分の高さを取る。読めるが、奥行きは生まれない。</p>
+      </div>
+
+      <div>
+        <p class="tq-bte__cap">この工夫：地に敷き、上端で断ち、カードで食わせる</p>
+        <div class="tq-bte__stage tq-bte__stage--dark">
+          <span class="tq-bte__word" aria-hidden="true">SERVICE</span>
+          <h4 class="tq-bte__h">見出しがここに入ります</h4>
+          <div class="tq-bte__cards">
+            <article class="tq-bte__card"><img src="../../../docs/demo/ph_a.jpg" alt=""><p>項目名が入ります</p></article>
+            <article class="tq-bte__card"><img src="../../../docs/demo/ph_b.jpg" alt=""><p>項目名が入ります</p></article>
+            <article class="tq-bte__card"><img src="../../../docs/demo/ph_a.jpg" alt=""><p>項目名が入ります</p></article>
+          </div>
+        </div>
+        <p class="tq-bte__note">高さは1pxも増えていない。カードの隙間から字画だけが見え、面が2層に割れる。</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ② 明度差の幅 -->
+  <section class="tq-bte__sec">
+    <h3 class="tq-bte__secttl">② 効き目を決めるのは級数ではなく「地との明度差」</h3>
+    <div class="tq-bte__trio">
+
+      <div>
+        <p class="tq-bte__cap">差 3%</p>
+        <div class="tq-bte__stage tq-bte__stage--dark">
+          <span class="tq-bte__word tq-bte__word--3" aria-hidden="true">FEATURE</span>
+          <h4 class="tq-bte__h">見出しがここに</h4>
+          <div class="tq-bte__cards">
+            <article class="tq-bte__card"><img src="../../../docs/demo/ph_a.jpg" alt=""></article>
+            <article class="tq-bte__card"><img src="../../../docs/demo/ph_b.jpg" alt=""></article>
+            <article class="tq-bte__card"><img src="../../../docs/demo/ph_a.jpg" alt=""></article>
+          </div>
+        </div>
+        <p class="tq-bte__note">気配だけ。安全だが、あってもなくても同じになりやすい。</p>
+      </div>
+
+      <div>
+        <p class="tq-bte__cap">差 8%（現物の値）</p>
+        <div class="tq-bte__stage tq-bte__stage--dark">
+          <span class="tq-bte__word" aria-hidden="true">FEATURE</span>
+          <h4 class="tq-bte__h">見出しがここに</h4>
+          <div class="tq-bte__cards">
+            <article class="tq-bte__card"><img src="../../../docs/demo/ph_a.jpg" alt=""></article>
+            <article class="tq-bte__card"><img src="../../../docs/demo/ph_b.jpg" alt=""></article>
+            <article class="tq-bte__card"><img src="../../../docs/demo/ph_a.jpg" alt=""></article>
+          </div>
+        </div>
+        <p class="tq-bte__note">字だと分かるが読む気は起きない。ここが上限。</p>
+      </div>
+
+      <div>
+        <p class="tq-bte__cap">差 25%（やりすぎ）</p>
+        <div class="tq-bte__stage tq-bte__stage--dark">
+          <span class="tq-bte__word tq-bte__word--25" aria-hidden="true">FEATURE</span>
+          <h4 class="tq-bte__h">見出しがここに</h4>
+          <div class="tq-bte__cards">
+            <article class="tq-bte__card"><img src="../../../docs/demo/ph_a.jpg" alt=""></article>
+            <article class="tq-bte__card"><img src="../../../docs/demo/ph_b.jpg" alt=""></article>
+            <article class="tq-bte__card"><img src="../../../docs/demo/ph_a.jpg" alt=""></article>
+          </div>
+        </div>
+        <p class="tq-bte__note">読もうとしてしまい、隠れている部分が「欠け」に見える。破綻。</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ③ 隠し方の2通り -->
+  <section class="tq-bte__sec">
+    <h3 class="tq-bte__secttl">③ 隠し方は2通り。単語の後半を飲むか、中ほどを隠すか</h3>
+    <div class="tq-bte__pair">
+
+      <div>
+        <p class="tq-bte__cap">後半を飲む（明るい地・淡色）</p>
+        <div class="tq-bte__stage tq-bte__stage--light">
+          <span class="tq-bte__word tq-bte__word--pale" aria-hidden="true">program</span>
+          <div class="tq-bte__eat">
+            <div>
+              <h4 class="tq-bte__h">見出しがここに入ります</h4>
+              <p class="tq-bte__sub">補足のテキストが1〜2行入ります。補足のテキストが入ります。</p>
+            </div>
+            <img class="tq-bte__photo" src="../../../docs/demo/ph_b.jpg" alt="">
+          </div>
+        </div>
+        <p class="tq-bte__note">写真が「gram」を飲み、残った「pro」だけが地紋として効く。</p>
+      </div>
+
+      <div>
+        <p class="tq-bte__cap">中ほどを隠す（アーチ写真）</p>
+        <div class="tq-bte__stage tq-bte__stage--light tq-bte__stage--arch">
+          <span class="tq-bte__word tq-bte__word--center" aria-hidden="true">CONCEPT</span>
+          <img class="tq-bte__arch" src="../../../docs/demo/ph_a.jpg" alt="">
+          <p class="tq-bte__sub">補足のテキストが1行入ります。</p>
+        </div>
+        <p class="tq-bte__note">両端の字画だけが残る。中央が抜けるので、語としてはもう読めない。</p>
+      </div>
+
+    </div>
+    <p class="tq-bte__note">
+      どちらも欧文の高さは版面に加算されていない。日本語見出しの位置・級数は3案とも同一で、変えたのは背面の1要素だけ。
+    </p>
+  </section>
+
+</div>

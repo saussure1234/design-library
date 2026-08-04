@@ -1,0 +1,159 @@
+<style>
+/* トークンのフォールバック。:where() で詰めているので、
+   _tokens.css が読み込まれていればそちらが必ず勝つ。 */
+:where(:root){
+  --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-disp:var(--f-sans); --f-num:"Helvetica Neue",Arial,var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+  --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+  --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px; --s8:76px;
+  --sec-y:clamp(56px,7vw,110px);
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+
+.tq-axis-out{font-family:var(--f-sans); color:var(--c-ink2); background:var(--c-bg); padding-block:var(--s7)}
+.tq-axis-out *{box-sizing:border-box}
+.tq-axis-out__wrap{max-width:var(--w-max); margin-inline:auto; padding-inline:var(--w-gut)}
+.tq-axis-out__grid{display:grid; grid-template-columns:1fr 1fr; gap:var(--s7); align-items:start}
+.tq-axis-out__blk{margin:0}
+.tq-axis-out__tag{
+  display:inline-block; margin:0 0 var(--s5);
+  font-size:var(--fs-note); letter-spacing:.08em; line-height:1;
+  padding:var(--s2) var(--s3); border-radius:var(--r-pill);
+  background:var(--c-bg2); color:var(--c-ink3);
+}
+.tq-axis-out__tag--on{background:var(--c-primary-l); color:var(--c-primary-d)}
+.tq-axis-out__cap{margin:var(--s5) 0 0; font-size:var(--fs-sm); line-height:var(--lh-body); color:var(--c-ink3)}
+
+/* 共通の中身 */
+.tq-axis-out__head{
+  text-align:center; padding:var(--s3) var(--s2) var(--s2);
+  font-size:var(--fs-note); line-height:var(--lh-tight); color:var(--c-ink3);
+}
+.tq-axis-out__head b{display:block; margin-top:var(--s1); font-size:var(--fs-sm); color:var(--c-ink)}
+.tq-axis-out__cell{padding:var(--s2); display:grid; place-items:center}
+.tq-axis-out__cell img{
+  width:100%; max-width:88px; aspect-ratio:3/4; object-fit:cover; display:block;
+  border-radius:var(--r-s);
+}
+.tq-axis-out__note{margin:var(--s3) 0 0; font-size:var(--fs-note); color:var(--c-ink3); text-align:right}
+
+/* ============ 普通：年の見出し列を格子の中に入れ、縦罫で区切る ============ */
+.tq-axis-out__table{display:grid; grid-template-columns:auto repeat(3,1fr); border:1px solid var(--c-line)}
+.tq-axis-out__table>*{border-right:1px solid var(--c-line); border-bottom:1px solid var(--c-line)}
+.tq-axis-out__table>*:nth-child(4n){border-right:0}
+.tq-axis-out__th{
+  display:grid; place-items:center; padding:var(--s2) var(--s3);
+  font-size:var(--fs-sm); color:var(--c-ink); background:var(--c-bg2);
+}
+
+/* ============ この工夫：進行の軸を表の外に出し、間に▼を挟む ============ */
+.tq-axis-out__chart{
+  --tq-axis-out-cols:clamp(46px,10%,64px) repeat(3,1fr);
+  position:relative; display:grid; grid-template-columns:var(--tq-axis-out-cols);
+}
+/* 色帯は同じ列組の別レイヤーに敷く。中身の自動配置を邪魔しない */
+.tq-axis-out__bands{
+  position:absolute; inset:0; z-index:0; pointer-events:none;
+  display:grid; grid-template-columns:var(--tq-axis-out-cols);
+}
+.tq-axis-out__band{border-radius:var(--r-m)}   /* 縦罫でなく色帯で列を分ける */
+.tq-axis-out__band--1{grid-column:2; background:color-mix(in srgb, var(--c-primary) 12%, var(--c-bg))}
+.tq-axis-out__band--2{grid-column:3; background:color-mix(in srgb, var(--c-accent)  14%, var(--c-bg))}
+.tq-axis-out__band--3{grid-column:4; background:color-mix(in srgb, var(--c-ink3)    12%, var(--c-bg))}
+.tq-axis-out__chart>.tq-axis-out__head,
+.tq-axis-out__chart>.tq-axis-out__cell,
+.tq-axis-out__chart>.tq-axis-out__year{position:relative; z-index:1}
+
+/* 軸ラベルは色帯の左外・白地に置く */
+.tq-axis-out__year{
+  grid-column:1; z-index:1; padding-right:var(--s4);
+  display:flex; flex-direction:column; align-items:center; justify-content:space-between;
+}
+.tq-axis-out__year b{
+  padding-top:10px; font-size:var(--fs-sm); font-weight:400; color:var(--c-ink2);
+  white-space:nowrap;                     /* 各行の書影の上端に揃える */
+}
+.tq-axis-out__year i{
+  display:block; width:0; height:0; margin-bottom:var(--s3);
+  border:6px solid transparent; border-top:9px solid var(--c-accent);
+}
+
+@media (max-width:768px){
+  .tq-axis-out__grid{grid-template-columns:1fr; gap:var(--s7)}
+  .tq-axis-out__year{padding-right:var(--s2)}
+  .tq-axis-out__year b{font-size:var(--fs-note)}
+}
+</style>
+
+<section class="tq-axis-out">
+  <div class="tq-axis-out__wrap">
+    <div class="tq-axis-out__grid">
+
+      <figure class="tq-axis-out__blk">
+        <p class="tq-axis-out__tag">普通の場合</p>
+        <div class="tq-axis-out__table">
+          <span class="tq-axis-out__th"></span>
+          <div class="tq-axis-out__head">前半<b>分類A</b></div>
+          <div class="tq-axis-out__head">中盤<b>分類B</b></div>
+          <div class="tq-axis-out__head">後半<b>分類C</b></div>
+
+          <span class="tq-axis-out__th">1年目</span>
+          <div class="tq-axis-out__cell"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+          <div class="tq-axis-out__cell"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+          <div class="tq-axis-out__cell"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+
+          <span class="tq-axis-out__th">2年目</span>
+          <div class="tq-axis-out__cell"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+          <div class="tq-axis-out__cell"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+          <div class="tq-axis-out__cell"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+
+          <span class="tq-axis-out__th">3年目</span>
+          <div class="tq-axis-out__cell"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+          <div class="tq-axis-out__cell"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+          <div class="tq-axis-out__cell"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+        </div>
+        <figcaption class="tq-axis-out__cap">軸が格子の中にあるので、全体が「囲われた表」になる。縦罫と横罫が要り、年が進んでいることは文字を読むまで分からない。</figcaption>
+      </figure>
+
+      <figure class="tq-axis-out__blk">
+        <p class="tq-axis-out__tag tq-axis-out__tag--on">この工夫</p>
+        <div class="tq-axis-out__chart">
+          <div class="tq-axis-out__bands" aria-hidden="true">
+            <span class="tq-axis-out__band tq-axis-out__band--1"></span>
+            <span class="tq-axis-out__band tq-axis-out__band--2"></span>
+            <span class="tq-axis-out__band tq-axis-out__band--3"></span>
+          </div>
+
+          <span></span>
+          <div class="tq-axis-out__head">前半<b>分類A</b></div>
+          <div class="tq-axis-out__head">中盤<b>分類B</b></div>
+          <div class="tq-axis-out__head">後半<b>分類C</b></div>
+
+          <div class="tq-axis-out__year"><b>1年目</b><i></i></div>
+          <div class="tq-axis-out__cell"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+          <div class="tq-axis-out__cell"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+          <div class="tq-axis-out__cell"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+
+          <div class="tq-axis-out__year"><b>2年目</b><i></i></div>
+          <div class="tq-axis-out__cell"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+          <div class="tq-axis-out__cell"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+          <div class="tq-axis-out__cell"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+
+          <div class="tq-axis-out__year"><b>3年目</b></div>
+          <div class="tq-axis-out__cell"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+          <div class="tq-axis-out__cell"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+          <div class="tq-axis-out__cell"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+        </div>
+        <p class="tq-axis-out__note">※注記がここに入ります</p>
+        <figcaption class="tq-axis-out__cap">軸を色帯の左外・白地へ出し、年と年の間に▼を1つずつ挟む。ラベルは行の中央でなく各行の上端に揃える。縦罫は1本も無く、列は色帯だけで分かれている。</figcaption>
+      </figure>
+
+    </div>
+  </div>
+</section>

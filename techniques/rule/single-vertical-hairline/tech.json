@@ -1,0 +1,27 @@
+{
+  "id": "rule/single-vertical-hairline",
+  "name": "縦罫1本だけで構造を固定し、カード側の装飾を全部外す",
+  "ordinary": "2カラムや番号付き項目をカード（枠線・影・背景色）で囲って分ける",
+  "actual": "左の見出し列と右の一覧の間に#e6e6e6の縦ヘアラインをセクション上下いっぱいに1本だけ通す。項目内でも「番号52px / 罫1px / 本文1fr」の3カラムgridにして、罫そのものをレイアウトの1列として確保する。カード側は border:0; box-shadow:none; background:transparent、サムネイルも border-radius:0。カードを横に並べるときは border-right:1px solid #f0f0f0 の縦ヘアラインだけで仕切る。",
+  "css": ".wrap{display:grid;grid-template-columns:250px 1fr;gap:56px}\n.col-l{border-right:1px solid #e6e6e6;padding-right:40px}\n.card{background:transparent;border:0;border-radius:0;box-shadow:none;border-right:1px solid #f0f0f0;padding-right:20px}\n.card img{border-radius:0}\n/* 罫を1カラムとして持つ */\n.item{display:grid;grid-template-columns:52px 1px 1fr;column-gap:24px;padding:22px 0}\n.item .rule{background:#d8d2c4}\n.item .no{font-family:serif;font-size:34px;color:#c9ad6a;line-height:1}",
+  "params": [
+    "縦罫の色（#e6e6e6／#d8d2c4）",
+    "左列幅250px or 番号列52px",
+    "padding-right 20〜40px"
+  ],
+  "appliesTo": ["features", "news", "value", "flow"],
+  "impact": 2,
+  "effort": 1,
+  "why": "縦罫が1本あるだけで2カラムの関係が固定されるので、カード側の枠・影・背景色を全部外しても構造が崩れない",
+  "avoid": "1カラムのスマホ表示（縦罫は消して余白に置き換える）",
+  "sources": ["lumiarch_s05", "lumiarch_s08", "musashino_s08", "odrive_s08"],
+  "notes": [
+    "lumiarch_s05 の現物は左250px前後（見出し＋リード＋イラスト）／右が記事フィード。両者の間の縦罫は1本で、セクションの上端から下端まで通っている。右の記事側には枠も影も背景色も無く、サムネイルも角丸0。『縦罫が2カラムを固定しているから、右側は裸で置ける』という関係がはっきり見える。",
+    "同じ現物の記事1件ごとの区切りは横の極薄罫で、縦罫とは濃さが違う（縦罫のほうがわずかに濃い）。縦罫＝構造、横罫＝項目の切れ目、と役割で濃さを分けている。",
+    "musashino_s08 が「罫を1カラムとして確保する」形。番号（セリフ体・金色・34px前後）／縦罫1px／本文 の3列で、罫は項目の高さぶん自動で伸びる。項目ごとに箇条書きの行数が違っても番号と本文の対応が崩れないのはこのため。gridの1pxトラックに空要素を置くのが実装の要点で、border-left で代用すると padding の分だけ位置がずれる。",
+    "musashino_s08 の縦罫は無彩色ではなく、地（オフホワイト）と番号（金）の中間にある温かいグレー（#d8d2c4前後）。無彩色の #e6e6e6 にすると、この面だけ急に事務的になる。縦罫の色は『地と差し色の間』で選ぶのが現物の判断。",
+    "odrive_s08 は横並びカードの版。カード同士の間に薄い縦ヘアライン（#f0f0f0前後）が1本入るだけで、カード自体は完全に裸。写真が角丸0で版面いっぱいまで使えるので、同じ列幅でも中身が大きく見える。",
+    "🚨実装上の注意：スマホで1カラムに落とすとき、縦罫（border-right）を消し忘れると本文の右端に意味不明な線が残る。デモではコンテナクエリ 640px 以下で border-right:0 にして padding-bottom に置き換えている。番号列の3カラムgridはスマホでも維持してよい（52px + 1px + 1fr は375pxでも成立する）。"
+  ],
+  "demoNotes": "3セクションとも「普通」を上、「この工夫」を下に縦積みで対比（2カラム構造は横並びにすると幅が足りないため）。①250px＋縦罫1本、②番号52px/罫1px/本文1fr、③横並びカードを border-right だけで仕切る。縦罫の色は --c-line と、--c-accent を22%混ぜた温かい罫（musashino の #d8d2c4 に相当）の2種類を使い分けている。"
+}

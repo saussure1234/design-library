@@ -1,0 +1,34 @@
+{
+  "id": "flow/axis-outside-the-grid",
+  "name": "進行の軸ラベルを表の外に出し、間に▼を挟む",
+  "ordinary": "左端に「2025年」の見出し列を作り、格子の中に入れて縦罫で区切る。",
+  "actual": "「2025年／2026年／2027年」を色帯の左外の白地に置き、年と年の間に赤い▼（幅12px）を1つずつ挟んで縦の進行を示す。年ラベルは行の中央でなく各行の書影の上端に揃える。表の中に縦罫は1本も無く、列は色帯だけで分かれている。",
+  "css": ".chart{display:grid;grid-template-columns:64px repeat(6,1fr);column-gap:0}\n.years{display:grid;justify-items:end;padding-right:16px}\n.years b{font-size:13px;align-self:start;padding-top:10px;font-weight:400}\n.years i{display:block;width:0;height:0;border:6px solid transparent;\n  border-top:9px solid #e2352c;margin:14px auto}\n.col{background:#eaf4fb}          /* 縦罫でなく色帯で列を分ける */\n.col:nth-child(3){background:#eaf7ee}\n.col:nth-child(4){background:#fdf3e6}",
+  "params": [
+    "▼の色とサイズ（9〜12px）",
+    "列の色帯",
+    "ラベルを上端揃えにする",
+    "軸を横方向に倒す（▶に替える）"
+  ],
+  "appliesTo": [
+    "features",
+    "value",
+    "price"
+  ],
+  "impact": 2,
+  "effort": 1,
+  "why": "軸を格子の外に出すと表が「囲われた表」でなくなり、▼だけで方向が読めるので罫を1本も引かずに済む。",
+  "avoid": "順序のない項目名の軸に▼を使うと、無い進行を読ませてしまう。",
+  "sources": [
+    "tanq_s05"
+  ],
+  "notes": [
+    "色帯を grid-row:1/-1 で列に敷くとき、明示行（grid-template-rows）が無いと -1 が1行目を指して帯の高さが0になる。しかも帯が1行目のセルを占有するので、後続の要素の自動配置が1列ずれる（実装時に踏んだ）。",
+    "その回避として、帯は position:absolute の別レイヤーに出し、列組を custom property（--tq-axis-out-cols）で本体と共有した。中身の自動配置に一切触らないのでこれが一番安全。帯側は inset:0 でよい。",
+    "軸ラベルは flex の縦並び＋justify-content:space-between で、上＝年ラベル、下＝▼。これだけで▼が行の境目に落ちる。年ラベルは行の中央でなく上端（padding-top:10px）に揃えるのが要点で、中央揃えにすると進行ではなく「行見出し」に戻る。",
+    "▼は border-top:9px の三角。差し色（--c-accent）を使い、進行を示す唯一の記号にする。色帯やラベルには差し色を使わない。",
+    "縦罫を1本も引かないぶん、列の見分けは色帯の彩度差だけが担う。混色12〜14%で十分。これ以上濃くすると中身（書影）より帯が目立つ。",
+    "順序のない項目名の軸に▼を使わない（avoid の通り）。横方向に倒す場合は▼を▶に替え、ラベルを列の左端に揃える。",
+    "デモは techniques/flow/axis-outside-the-grid/demo.html。左＝軸を格子の中に入れて縦罫で区切った普通版、右＝この工夫。"
+  ]
+}

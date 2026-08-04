@@ -1,0 +1,196 @@
+<style>
+/* ============================================================
+   color/scatter-small-marks
+   色は面でなく、サイズ不揃いの小片にして境界と人物のまわりに散らす
+   ============================================================ */
+:root{
+  /* --- _tokens.css フォールバック --- */
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px; --fs-lg:21px;
+  --lh-tight:1.35; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px;
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --c-ink:#111111; --c-ink3:#707070; --c-bg:#FFFFFF; --c-line:#E3E3E3;
+  --shadow:0 6px 24px rgba(17,17,17,.08);
+
+  /* --- この工夫の変数 --- */
+  --tq-sm-tri-a:#f43f5e;   /* ピンク */
+  --tq-sm-tri-b:#ffcc00;   /* 黄 */
+  --tq-sm-tri-c:#3ec8e8;   /* 水色 */
+  --tq-sm-tri-d:#57c26a;   /* 緑 */
+  --tq-sm-tri-e:#ff8a1f;   /* 橙 */
+  --tq-sm-doodle:#f19cc4;  /* 塗りのないピンク線 */
+  --tq-sm-doodle-bg:#fbe9f1;
+  --tq-sm-star:#c9a86a;    /* 金 */
+  --tq-sm-paper:#faf4e8;   /* 生成りの地 */
+  --tq-sm-dot:#0a0a0a;     /* 黒い正円 */
+  --tq-sm-flat:#3ec8e8;    /* ← 普通の場合：等間隔の同サイズ */
+}
+
+.tq-sm{ font-family:var(--f-sans); color:var(--c-ink); background:var(--c-bg); line-height:var(--lh-body); }
+.tq-sm *{ box-sizing:border-box; }
+.tq-sm img{ display:block; width:100%; height:100%; object-fit:cover; }
+
+.tq-sm__lead{ margin:0 0 var(--s5); font-size:var(--fs-sm); color:var(--c-ink3); line-height:var(--lh-tight); }
+.tq-sm__grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:var(--s5); }
+.tq-sm__tag{ display:block; margin-bottom:var(--s2); font-size:var(--fs-note); letter-spacing:.08em; color:var(--c-ink3); }
+.tq-sm__tag--on{ color:var(--c-ink); font-weight:700; }
+.tq-sm__note{ margin:var(--s2) 0 0; font-size:var(--fs-note); color:var(--c-ink3); line-height:var(--lh-tight); }
+.tq-sm__stage{ position:relative; height:240px; overflow:hidden; border-radius:var(--r-m); background:var(--c-bg); }
+
+/* ---- 共通：小片は絶対配置 ---- */
+.tq-sm__mark{ position:absolute; }
+
+/* ---- 1. 普通の場合：同サイズのアイコンを等間隔に／ブランド色の帯 ---- */
+.tq-sm__stage--flat{ display:grid; place-items:center; }
+.tq-sm__band{ position:absolute; left:0; right:0; top:0; height:34px; background:var(--tq-sm-flat); }
+.tq-sm__row{ position:absolute; left:0; right:0; bottom:26px; display:flex; justify-content:space-between; padding:0 var(--s5); }
+.tq-sm__icon{ width:14px; height:14px; background:var(--tq-sm-flat); border-radius:var(--r-s); }
+.tq-sm__stage--flat .tq-sm__ph{ width:76%; height:106px; border-radius:var(--r-s); overflow:hidden; }
+
+/* ---- 2. 三角：斜め境界の交点付近に5〜8個 ---- */
+.tq-sm__strip{ position:absolute; inset:0; }
+.tq-sm__strip--u{ clip-path:polygon(0 0,100% 0,100% 30%,0 56%); }
+.tq-sm__strip--d{ clip-path:polygon(0 70%,100% 44%,100% 100%,0 100%); }
+.tq-sm__tri{ width:0; height:0; border-left:8px solid transparent; border-right:8px solid transparent; border-bottom:13px solid var(--tq-sm-tri-a); }
+.tq-sm__tri--s{ border-left-width:5px; border-right-width:5px; border-bottom-width:9px; }
+.tq-sm__tri--l{ border-left-width:10px; border-right-width:10px; border-bottom-width:16px; }
+.tq-sm__tri--b{ border-bottom-color:var(--tq-sm-tri-b); }
+.tq-sm__tri--c{ border-bottom-color:var(--tq-sm-tri-c); }
+.tq-sm__tri--d{ border-bottom-color:var(--tq-sm-tri-d); }
+.tq-sm__tri--e{ border-bottom-color:var(--tq-sm-tri-e); }
+.tq-sm__t1{ left:16%; top:44%; transform:rotate(28deg); }
+.tq-sm__t2{ left:27%; top:56%; transform:rotate(-42deg); }
+.tq-sm__t3{ left:38%; top:39%; transform:rotate(64deg); }
+.tq-sm__t4{ left:51%; top:52%; transform:rotate(-14deg); }
+.tq-sm__t5{ left:63%; top:36%; transform:rotate(38deg); }
+.tq-sm__t6{ left:72%; top:47%; transform:rotate(-70deg); }
+.tq-sm__t7{ left:84%; top:33%; transform:rotate(12deg); }
+
+/* ---- 3. 線画：人物の周囲±30px ---- */
+.tq-sm__stage--doodle{ background:var(--tq-sm-doodle-bg); display:grid; place-items:center; }
+.tq-sm__person{ position:relative; width:118px; height:150px; }   /* 小片を外へ出すので overflow:hidden は掛けない */
+.tq-sm__pmask{ display:block; width:100%; height:100%; border-radius:var(--r-pill) var(--r-pill) var(--r-m) var(--r-m); overflow:hidden; }
+.tq-sm__doodle{ position:absolute; color:var(--tq-sm-doodle); }
+.tq-sm__doodle svg{ width:100%; height:100%; display:block; }
+.tq-sm__doodle svg *{ fill:none; stroke:currentColor; stroke-width:1.5; }
+.tq-sm__d1{ width:26px; height:26px; left:-30px; top:16px; }
+.tq-sm__d2{ width:20px; height:20px; left:-22px; top:96px; transform:rotate(-16deg); }
+.tq-sm__d3{ width:24px; height:24px; right:-28px; top:8px; transform:rotate(12deg); }
+.tq-sm__d4{ width:18px; height:18px; right:-24px; top:62px; }
+.tq-sm__d5{ width:22px; height:22px; right:-14px; bottom:-24px; transform:rotate(20deg); }
+.tq-sm__d6{ width:16px; height:16px; left:14px; top:-26px; }
+
+/* ---- 4. 四芒星：10/16/24/32px の4サイズ ---- */
+.tq-sm__stage--star{ background:var(--tq-sm-paper); display:grid; place-items:center; }
+.tq-sm__star{ background:var(--tq-sm-star);
+  clip-path:polygon(50% 0,58% 42%,100% 50%,58% 58%,50% 100%,42% 58%,0 50%,42% 42%); }
+.tq-sm__star--xs{ width:10px; height:10px; opacity:.5; }
+.tq-sm__star--s{ width:16px; height:16px; opacity:.7; }
+.tq-sm__star--m{ width:24px; height:24px; }
+.tq-sm__star--l{ width:32px; height:32px; }
+.tq-sm__s1{ left:22px; top:18px; }
+.tq-sm__s2{ right:26px; top:26px; }
+.tq-sm__s3{ left:34px; bottom:24px; }
+.tq-sm__s4{ right:40px; bottom:18px; }
+.tq-sm__s5{ left:50%; top:12px; }
+.tq-sm__s6{ left:calc(50% + 62px); top:56px; z-index:2; }   /* 1つは写真の角に重ねる */
+.tq-sm__stage--star .tq-sm__ph{ position:relative; width:150px; height:112px; border-radius:var(--r-s); overflow:hidden; }
+
+/* ---- 5. 黒い正円：写真の裏、左右端は画面外で切る ---- */
+.tq-sm__stage--dot{ background:var(--tq-sm-paper); display:grid; place-items:center; }
+.tq-sm__dot{ border-radius:50%; background:var(--tq-sm-dot); z-index:0; }
+.tq-sm__dot--a{ width:96px; height:96px; left:-42px; top:26px; }
+.tq-sm__dot--b{ width:70px; height:70px; left:78px; top:-18px; }
+.tq-sm__dot--c{ width:110px; height:110px; left:132px; bottom:-46px; }
+.tq-sm__dot--d{ width:84px; height:84px; right:-38px; top:64px; }
+.tq-sm__dot--e{ width:74px; height:74px; right:64px; top:-22px; }
+.tq-sm__dot--f{ width:88px; height:88px; right:88px; bottom:-34px; }
+.tq-sm__stage--dot .tq-sm__ph{ position:relative; z-index:1; width:132px; height:104px; padding:var(--s1) var(--s1) var(--s4); background:var(--c-bg); box-shadow:var(--shadow); }
+.tq-sm__stage--dot .tq-sm__ph span{ display:block; width:100%; height:100%; overflow:hidden; }
+
+@media (max-width:420px){
+  .tq-sm__stage{ height:220px; }
+}
+</style>
+
+<section class="tq-sm">
+  <p class="tq-sm__lead">左上＝普通の場合。以降は同じ「小片で散らす」考え方の4つの型。いずれも色面は作らず、1辺10〜32pxの小片を5〜8個だけ、サイズ・角度を揃えずに置く。</p>
+
+  <div class="tq-sm__grid">
+
+    <div>
+      <span class="tq-sm__tag">普通の場合：帯＋同サイズ・等間隔</span>
+      <div class="tq-sm__stage tq-sm__stage--flat">
+        <span class="tq-sm__band"></span>
+        <div class="tq-sm__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+        <div class="tq-sm__row">
+          <span class="tq-sm__icon"></span><span class="tq-sm__icon"></span><span class="tq-sm__icon"></span>
+          <span class="tq-sm__icon"></span><span class="tq-sm__icon"></span>
+        </div>
+      </div>
+      <p class="tq-sm__note">色が面（帯）になり、等間隔・同サイズなので装飾が規則の列に見える。</p>
+    </div>
+
+    <div>
+      <span class="tq-sm__tag tq-sm__tag--on">型A：三角を斜め境界の交点に5〜8個</span>
+      <div class="tq-sm__stage">
+        <div class="tq-sm__strip tq-sm__strip--u"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+        <div class="tq-sm__strip tq-sm__strip--d"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+        <span class="tq-sm__mark tq-sm__tri tq-sm__t1"></span>
+        <span class="tq-sm__mark tq-sm__tri tq-sm__tri--b tq-sm__tri--s tq-sm__t2"></span>
+        <span class="tq-sm__mark tq-sm__tri tq-sm__tri--c tq-sm__t3"></span>
+        <span class="tq-sm__mark tq-sm__tri tq-sm__tri--d tq-sm__tri--l tq-sm__t4"></span>
+        <span class="tq-sm__mark tq-sm__tri tq-sm__tri--e tq-sm__tri--s tq-sm__t5"></span>
+        <span class="tq-sm__mark tq-sm__tri tq-sm__tri--b tq-sm__t6"></span>
+        <span class="tq-sm__mark tq-sm__tri tq-sm__tri--c tq-sm__tri--s tq-sm__t7"></span>
+      </div>
+      <p class="tq-sm__note">写真は素の色のまま。10〜16pxの三角5色を回転バラバラで、斜めの隙間に沿って散らす。</p>
+    </div>
+
+    <div>
+      <span class="tq-sm__tag tq-sm__tag--on">型B：塗りのない線画を人物の周囲±30pxに</span>
+      <div class="tq-sm__stage tq-sm__stage--doodle">
+        <div class="tq-sm__person">
+          <span class="tq-sm__pmask"><img src="../../../docs/demo/ph_b.jpg" alt=""></span>
+          <span class="tq-sm__doodle tq-sm__d1" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="5.5" r="4"/><circle cx="18.5" cy="12" r="4"/><circle cx="12" cy="18.5" r="4"/><circle cx="5.5" cy="12" r="4"/><circle cx="12" cy="12" r="2"/></svg></span>
+          <span class="tq-sm__doodle tq-sm__d2" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="7" cy="18" r="4"/><path d="M11 18V4l9 3"/></svg></span>
+          <span class="tq-sm__doodle tq-sm__d3" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10.5"/><circle cx="12" cy="12" r="6"/></svg></span>
+          <span class="tq-sm__doodle tq-sm__d4" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 1v22M1 12h22M4 4l16 16M20 4L4 20"/></svg></span>
+          <span class="tq-sm__doodle tq-sm__d5" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="5.5" r="4"/><circle cx="18.5" cy="12" r="4"/><circle cx="12" cy="18.5" r="4"/><circle cx="5.5" cy="12" r="4"/></svg></span>
+          <span class="tq-sm__doodle tq-sm__d6" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M2 18c3-10 6 4 9-6s6 8 11-2"/></svg></span>
+        </div>
+      </div>
+      <p class="tq-sm__note">花・音符・二重丸・波線を線だけで、人物のtop/left基準±30pxに5〜6個。</p>
+    </div>
+
+    <div>
+      <span class="tq-sm__tag tq-sm__tag--on">型C：金の四芒星を10/16/24/32pxで四隅に</span>
+      <div class="tq-sm__stage tq-sm__stage--star">
+        <span class="tq-sm__mark tq-sm__star tq-sm__star--m tq-sm__s1"></span>
+        <span class="tq-sm__mark tq-sm__star tq-sm__star--l tq-sm__s2"></span>
+        <span class="tq-sm__mark tq-sm__star tq-sm__star--xs tq-sm__s3"></span>
+        <span class="tq-sm__mark tq-sm__star tq-sm__star--s tq-sm__s4"></span>
+        <span class="tq-sm__mark tq-sm__star tq-sm__star--xs tq-sm__s5"></span>
+        <div class="tq-sm__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+        <span class="tq-sm__mark tq-sm__star tq-sm__star--s tq-sm__s6"></span>
+      </div>
+      <p class="tq-sm__note">4サイズを混ぜ、小さいものは不透明度も落とす。1つは写真の角に重ねて奥行きを出す。</p>
+    </div>
+
+    <div>
+      <span class="tq-sm__tag tq-sm__tag--on">型D：黒い正円を写真の裏に、端は画面外で切る</span>
+      <div class="tq-sm__stage tq-sm__stage--dot">
+        <span class="tq-sm__mark tq-sm__dot tq-sm__dot--a"></span>
+        <span class="tq-sm__mark tq-sm__dot tq-sm__dot--b"></span>
+        <span class="tq-sm__mark tq-sm__dot tq-sm__dot--c"></span>
+        <span class="tq-sm__mark tq-sm__dot tq-sm__dot--d"></span>
+        <span class="tq-sm__mark tq-sm__dot tq-sm__dot--e"></span>
+        <span class="tq-sm__mark tq-sm__dot tq-sm__dot--f"></span>
+        <div class="tq-sm__ph"><span><img src="../../../docs/demo/ph_b.jpg" alt=""></span></div>
+      </div>
+      <p class="tq-sm__note">直径70〜110pxを不揃いに。左右端の円は枠外で切れ、画面が続いて見える。</p>
+    </div>
+
+  </div>
+</section>

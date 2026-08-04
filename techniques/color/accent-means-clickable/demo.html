@@ -1,0 +1,273 @@
+<style>
+/* ============================================================
+   color/accent-means-clickable
+   彩度のある色を「押せる場所」だけの合図にする
+   ============================================================ */
+
+@layer tq-fallback{
+  :root{
+    --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+    --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3;
+    --c-on-primary:#FFFFFF;
+    --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    --f-disp:var(--f-sans);
+    --f-num:"Helvetica Neue",Arial,var(--f-sans);
+    --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+    --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px; --fs-3xl:50px; --fs-4xl:64px;
+    --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+    --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  }
+}
+
+/* この工夫が要求する値（案件では :root で差し替え） */
+:root{
+  --tq-amc-accent:#e8342a;   /* 押せる場所だけに出す色 */
+  --tq-amc-deep:#8e2b2b;     /* フッターのスローガン／ロゴ／巨大英字 */
+  --tq-amc-soft:#faf2f2;     /* フッターの淡色地（暗色に切り替えない） */
+  --tq-amc-ink:#111111;      /* ナビ・見出し・本文・フッターリンク */
+}
+
+.tq-amc{
+  font-family:var(--f-sans); color:var(--tq-amc-ink);
+  line-height:var(--lh-head); -webkit-text-size-adjust:100%;
+  padding:var(--s5); background:var(--c-bg);
+}
+.tq-amc *{box-sizing:border-box}
+/* この工夫の土台：a要素の既定色をまず全部黒に落とす。
+   :where() で詳細度0にしてあるので、下の .tq-amc__btn 等が素直に上書きできる。 */
+.tq-amc :where(a){ color:var(--tq-amc-ink); text-decoration:none }
+
+.tq-amc__lead{
+  margin:0 0 var(--s5); font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-amc__cap{
+  display:flex; align-items:center; gap:var(--s2);
+  margin:0 0 var(--s3); font-size:var(--fs-note); font-weight:700;
+  color:var(--c-ink3); letter-spacing:.04em;
+}
+.tq-amc__cap::before{
+  content:""; width:var(--s5); height:1px; background:var(--c-line); flex:0 0 auto;
+}
+.tq-amc__note{
+  margin:var(--s3) 0 0; font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-amc__sec{ margin-top:var(--s7) }
+.tq-amc__sec:first-of-type{ margin-top:0 }
+.tq-amc__secttl{ margin:0 0 var(--s4); font-size:var(--fs-sm); font-weight:700 }
+
+.tq-amc__pair{
+  display:grid; gap:var(--s5);
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+}
+
+/* --- ミニページ ------------------------------------------- */
+.tq-amc__page{
+  container-type:inline-size;          /* 巨大タイポを親幅に追従させる */
+  border:1px solid var(--c-line); border-radius:var(--r-s);
+  overflow:hidden; background:var(--c-bg);
+}
+.tq-amc__nav{
+  display:flex; align-items:center; gap:var(--s3);
+  padding:var(--s3) var(--s4); border-bottom:1px solid var(--c-line);
+}
+.tq-amc__logo{
+  font-family:var(--f-num); font-size:var(--fs-md); font-weight:700;
+  letter-spacing:.02em; color:var(--tq-amc-accent);
+}
+.tq-amc__menu{
+  display:flex; flex-wrap:wrap; gap:var(--s3);
+  margin:0 0 0 auto; padding:0; list-style:none;
+}
+.tq-amc__menu a{
+  font-size:10px; color:var(--tq-amc-ink); text-decoration:none;
+}
+.tq-amc__btn{
+  display:inline-block; padding:6px 16px; border-radius:var(--r-pill);
+  background:var(--tq-amc-accent); color:var(--c-on-primary);
+  font-size:10px; font-weight:700; text-decoration:none; white-space:nowrap;
+}
+.tq-amc__giant{
+  margin:0; padding:var(--s5) var(--s4) var(--s3);
+  font-family:var(--f-num); font-weight:800; letter-spacing:-.02em;
+  line-height:.95; color:var(--tq-amc-accent);
+  font-size:44px;                       /* 未対応環境のフォールバック */
+  font-size:clamp(30px,12cqi,64px);
+}
+.tq-amc__body{ padding:0 var(--s4) var(--s5) }
+.tq-amc__h{
+  margin:0 0 var(--s3); font-size:var(--fs-md); font-weight:700;
+  color:var(--tq-amc-ink); line-height:var(--lh-head);
+}
+.tq-amc__p{
+  margin:0; font-size:var(--fs-note); color:var(--tq-amc-ink);
+  line-height:var(--lh-body);
+}
+.tq-amc__ph{
+  display:block; width:100%; aspect-ratio:16/7; object-fit:cover;
+  filter:saturate(.35);                 /* 写真は低彩度で選ぶ／落とす */
+}
+.tq-amc__cta{ margin:var(--s4) 0 0 }
+.tq-amc__cta a{
+  display:inline-block; padding:10px 26px; border-radius:var(--r-s);
+  background:var(--tq-amc-accent); color:var(--c-on-primary);
+  font-size:var(--fs-note); font-weight:700; text-decoration:none;
+}
+.tq-amc__link{
+  margin:var(--s3) 0 0; font-size:var(--fs-note); color:var(--tq-amc-ink);
+}
+
+/* ── 普通：見出し・リード・下線・アイコンにも色を散らす ── */
+.tq-amc__page--scatter .tq-amc__menu a:first-child{ color:var(--tq-amc-accent) }
+.tq-amc__page--scatter .tq-amc__h{ color:var(--tq-amc-accent) }
+.tq-amc__page--scatter .tq-amc__h::before{
+  content:"◆ "; color:var(--tq-amc-accent);
+}
+.tq-amc__page--scatter .tq-amc__p em{
+  font-style:normal; color:var(--tq-amc-accent);
+  border-bottom:2px solid var(--tq-amc-accent);
+}
+.tq-amc__page--scatter .tq-amc__link a{
+  color:var(--tq-amc-accent); text-decoration:underline;
+}
+.tq-amc__page--scatter .tq-amc__ph{ filter:saturate(1) }
+
+/* ── この工夫：色は3点だけ ── */
+.tq-amc__page--rule .tq-amc__p em{ font-style:normal; font-weight:700 }
+
+/* --- フッター（暗色に切り替えず淡色のまま） ----------------- */
+.tq-amc__footer{
+  container-type:inline-size;
+  border:1px solid var(--c-line); border-radius:var(--r-s); overflow:hidden;
+  background:var(--tq-amc-soft); padding:var(--s5) var(--s4) 0;
+}
+.tq-amc__slogan{
+  margin:0 0 var(--s5); font-size:var(--fs-lg); font-weight:700;
+  color:var(--tq-amc-deep); line-height:var(--lh-tight);
+}
+.tq-amc__sitemap{
+  display:grid; gap:var(--s4) var(--s5);
+  grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  margin:0 0 var(--s5); padding:0; list-style:none;
+}
+.tq-amc__sitemap > li > b{
+  display:block; margin-bottom:var(--s2);
+  font-size:var(--fs-note); color:var(--tq-amc-ink);
+}
+.tq-amc__sitemap ul{ margin:0; padding:0; list-style:none }
+.tq-amc__sitemap ul a{
+  display:block; padding:3px 0; font-size:10px;
+  color:var(--tq-amc-ink); text-decoration:none;
+}
+.tq-amc__fbrand{
+  display:flex; align-items:center; gap:var(--s3);
+  padding-top:var(--s4); border-top:1px dashed var(--c-line);
+}
+/* 共有のロゴ素材は緑固定なので、この工夫の規則を壊さないよう無彩色に落とす。
+   実案件ではロゴ自身が差し色を持つ（＝3点のうちの1点になる）。 */
+.tq-amc__fbrand img{ display:block; height:22px; width:auto; filter:grayscale(1) }
+.tq-amc__fbrand b{ font-size:var(--fs-note); color:var(--tq-amc-deep) }
+.tq-amc__fbrand span{ font-size:10px; color:var(--tq-amc-ink) }
+.tq-amc__fgiant{
+  margin:var(--s4) 0 0; padding-bottom:var(--s2);
+  font-family:var(--f-num); font-weight:700; letter-spacing:.18em;
+  color:var(--tq-amc-deep); line-height:1; white-space:nowrap;
+  font-size:22px;                        /* 未対応環境のフォールバック */
+  font-size:clamp(13px,5.2cqi,34px);
+}
+</style>
+
+<div class="tq-amc">
+  <p class="tq-amc__lead">
+    有彩色が出るのは「押せる場所」だけ。ナビの他項目も見出しも本文もリンクも黒に落とし、
+    写真は低彩度に寄せる。
+  </p>
+
+  <!-- ① 普通 / この工夫 -->
+  <section class="tq-amc__sec">
+    <h3 class="tq-amc__secttl">① 同じページで、色を出す場所だけを変える</h3>
+    <div class="tq-amc__pair">
+
+      <div>
+        <p class="tq-amc__cap">普通：見出し・下線・アイコン・リンクにも色</p>
+        <div class="tq-amc__page tq-amc__page--scatter">
+          <nav class="tq-amc__nav">
+            <span class="tq-amc__logo">LOGO</span>
+            <ul class="tq-amc__menu">
+              <li><a href="#">メニュー</a></li>
+              <li><a href="#">メニュー</a></li>
+              <li><a href="#">メニュー</a></li>
+            </ul>
+            <a class="tq-amc__btn" href="#">お問い合わせ</a>
+          </nav>
+          <p class="tq-amc__giant">HEADLINE</p>
+          <img class="tq-amc__ph" src="../../../docs/demo/ph_a.jpg" alt="">
+          <div class="tq-amc__body">
+            <h4 class="tq-amc__h">見出しがここに入ります</h4>
+            <p class="tq-amc__p">本文テキストが入ります。<em>強調したい語</em>を含む2〜3行程度の説明が続きます。本文テキストが入ります。</p>
+            <p class="tq-amc__cta"><a href="#">資料を見る</a></p>
+            <p class="tq-amc__link"><a href="#">関連ページへ</a></p>
+          </div>
+        </div>
+        <p class="tq-amc__note">色が7か所。ボタンが「押す場所」だと分からない。</p>
+      </div>
+
+      <div>
+        <p class="tq-amc__cap">この工夫：ロゴ・巨大タイポ・CTAの3点だけ</p>
+        <div class="tq-amc__page tq-amc__page--rule">
+          <nav class="tq-amc__nav">
+            <span class="tq-amc__logo">LOGO</span>
+            <ul class="tq-amc__menu">
+              <li><a href="#">メニュー</a></li>
+              <li><a href="#">メニュー</a></li>
+              <li><a href="#">メニュー</a></li>
+            </ul>
+            <a class="tq-amc__btn" href="#">お問い合わせ</a>
+          </nav>
+          <p class="tq-amc__giant">HEADLINE</p>
+          <img class="tq-amc__ph" src="../../../docs/demo/ph_a.jpg" alt="">
+          <div class="tq-amc__body">
+            <h4 class="tq-amc__h">見出しがここに入ります</h4>
+            <p class="tq-amc__p">本文テキストが入ります。<em>強調したい語</em>を含む2〜3行程度の説明が続きます。本文テキストが入ります。</p>
+            <p class="tq-amc__cta"><a href="#">資料を見る</a></p>
+            <p class="tq-amc__link"><a href="#">関連ページへ</a></p>
+          </div>
+        </div>
+        <p class="tq-amc__note">色が出ているのは押せる2点＋ブランドの署名1点。押す場所が探さずに分かる。</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ② フッター -->
+  <section class="tq-amc__sec">
+    <h3 class="tq-amc__secttl">② フッターも暗色に切り替えず、色はスローガン／ロゴ／巨大英字の3点だけ</h3>
+    <footer class="tq-amc__footer">
+      <p class="tq-amc__slogan">スローガンが一行で入ります。</p>
+      <ul class="tq-amc__sitemap">
+        <li><b>カテゴリ名</b>
+          <ul><li><a href="#">リンク項目</a></li><li><a href="#">リンク項目</a></li><li><a href="#">リンク項目</a></li></ul>
+        </li>
+        <li><b>カテゴリ名</b>
+          <ul><li><a href="#">リンク項目</a></li><li><a href="#">リンク項目</a></li><li><a href="#">リンク項目</a></li></ul>
+        </li>
+        <li><b>カテゴリ名</b>
+          <ul><li><a href="#">リンク項目</a></li><li><a href="#">リンク項目</a></li><li><a href="#">リンク項目</a></li></ul>
+        </li>
+        <li><b>カテゴリ名</b>
+          <ul><li><a href="#">リンク項目</a></li><li><a href="#">リンク項目</a></li><li><a href="#">リンク項目</a></li></ul>
+        </li>
+      </ul>
+      <div class="tq-amc__fbrand">
+        <img src="../../../docs/demo/logo.svg" alt="">
+        <b>組織名が入ります</b>
+        <span>〒000-0000 住所が入ります／000-0000-0000</span>
+      </div>
+      <p class="tq-amc__fgiant">ORGANIZATION NAME</p>
+    </footer>
+    <p class="tq-amc__note">リンクが最も多い場所ほど色を外す。リンク12本はすべて黒、色は3点だけ。</p>
+  </section>
+
+</div>

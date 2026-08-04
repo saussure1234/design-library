@@ -1,0 +1,28 @@
+{
+  "id": "space/rail-cut-both-ends",
+  "name": "横並びの列を画面端で断ち落とし、矢印なしで「続き」を見せる",
+  "ordinary": "カルーセルはコンテナ幅に収め、3枚を等間隔で中央寄せして端で切れないようにする",
+  "actual": "odrive_s11=版面には3枚ぶん収め、左端x=0と右端に前後のカットを数十pxだけ覗かせて切る。kobe-wu_s04=1枚目には左余白があるのに3枚目だけ右端で切れる非対称。musashino_s11=白い年表パネルの左辺だけ50px空け、右は画面外へ突き抜けて項目文が文字の途中で切れる。kobe-wu_s09=5枚を隙間ゼロで並べ、パネル幅を1要素だけ破って100vwに広げる。",
+  "css": ".rail{display:flex; gap:22px; overflow-x:auto; scroll-snap-type:x mandatory;\n  margin-inline:calc(50% - 50vw); padding-inline:48px}\n.rail>li{flex:0 0 300px; scroll-snap-align:center}\n.rail::-webkit-scrollbar{display:none}\n/* 右だけ切る（左は版面に揃える） */\n.rail--r{margin-left:0; margin-right:calc(50% - 50vw); padding-right:30vw}\n/* 文字が途中で切れるのを許す */\n.rail li p{white-space:nowrap; overflow:hidden}\n/* 隙間ゼロの帯にする場合 */\n.strip{display:flex; gap:0; width:100vw; margin-left:calc(50% - 50vw); height:160px}\n.strip img{flex:1 1 0; min-width:0; height:100%; object-fit:cover}",
+  "appliesTo": ["features", "voice", "member", "access", "value"],
+  "impact": 3,
+  "effort": 1,
+  "why": "端で切れた前後カットが「もっと見る」より雄弁に続きを伝え、静かな一覧に横方向の運動が1本だけ入る",
+  "params": ["覗かせ量 30〜80px", "片端 or 両端", "アイテム幅 300〜420px"],
+  "avoid": "3件以下で完結する一覧では嘘になる。実際に続きがあるときだけ",
+  "sources": ["odrive_s11", "kobe-wu_s04", "musashino_s11", "kobe-wu_s09", "r-reha_s07"],
+  "notes": [
+    "覗かせ量は padding-inline の値そのもの。padding-inline:48px なら左右に48pxずつ前後カットが覗く。指定した「30〜80px」はこのパディング値のこと。padding を 0 にすると1枚目の左辺が画面左端に密着して『切れている』が読めなくなるので、必ず値を入れる。",
+    "margin-inline:calc(50% - 50vw) の 50% は包含ブロック（中央寄せコンテナの content box）幅に解決される。rail はコンテナ直下のブロックとして置くこと。",
+    "odrive_s11 は「版面には3枚ぶん収める」設計。アイテム幅は 300〜420px 固定＋gap 22px で、版面1120pxに3枚（300*3+22*2=944）が入り、余った両側に前後カットが覗く比率になる。",
+    "scroll-snap-align は center より start のほうが端の断ち落としが安定する。デモでは start を採用した。",
+    "実装で判明した最大の落とし穴：padding-inline だけ入れても scroll-padding-inline を同値で入れないと、スナップした瞬間に scrollLeft が 48px 進んで左の覗きが消える。スナップポートは padding box 基準なので、padding-inline:48px には必ず scroll-padding-inline:48px を対にする。",
+    "停止位置（scrollLeft:0）では左端に『前のカット』が存在しない。odrive_s11 のように停止状態でも両端が切れて見えるようにするには、先頭に margin-left:calc(-1 * アイテム幅) を掛けた1枚（前後ループの複製にあたる）を置く。デモはこれを .tq-rail__prev として実装し、scroll-snap-align:none で除外している。",
+    "justify-content:center と overflow-x:auto の併用は禁物。中身が溢れた瞬間に1枚目が左へはみ出し、スクロールしても取り戻せなくなる（375px で firstL=-194px を実測）。SP では justify-content:flex-start に落とす。",
+    "スクロールバーは ::-webkit-scrollbar{display:none} と scrollbar-width:none の両方が要る。片方だけだと Firefox / Safari で見え方が割れる。",
+    "kobe-wu_s04 の非対称版（右だけ切る）は margin-left:0 のまま右だけ負マージン。左端が版面グリッドに揃うので「意図して右へ流している」に読める。左右両方切るより一覧としての起点がはっきりする。",
+    "musashino_s11 の『文字が途中で切れる』は white-space:nowrap + overflow:hidden。省略記号（…）を付けると『省略』になり『続き』に読めなくなるので text-overflow は指定しない。",
+    "この nowrap がアイテム幅を壊す。flex アイテムの自動最小サイズ（min-width:auto）が効いて、指定 300px のカードが本文の1行幅（実測 407px）まで太る。アイテム側に min-width:0 を必ず入れること。入れ忘れると覗かせ量も1画面あたりの枚数も全部ずれる。",
+    "avoid の通り、3件以下では嘘になる。デモは6枚並べている。"
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "id": "flow/zigzag-columns",
+  "name": "2カラムの高さを揃えず上下にずらす",
+  "ordinary": "左右カラムの見出し・本文・写真の高さを揃え、横一直線に並べる。",
+  "actual": "左は「見出し→本文→写真」、右は「写真→見出し→本文」の順で組み、右の写真は左の本文の中ほどの高さから始まる。左右どの要素も水平に揃っていない。視線が左上→右中→左下→右下と折れて進む。",
+  "css": ".zig{display:grid;grid-template-columns:1fr 1fr;column-gap:80px;align-items:start}\n.zig>*:nth-child(odd){padding-top:56px}\n.zig>*:nth-child(even){padding-top:0}\n/* 各カラムを独立フローに保つ。align-items:stretch や grid-auto-rows で揃えない */\n.zig img{width:100%;height:auto;display:block}\n@media(max-width:768px){.zig{grid-template-columns:1fr;row-gap:32px}.zig>*{padding-top:0}}",
+  "params": [
+    "ずらし量 40〜80px",
+    "写真と見出しの順序を左右で入れ替える",
+    "column-gap 60〜90px（狭いとジグザグが読めない）"
+  ],
+  "appliesTo": [
+    "value",
+    "features",
+    "voice"
+  ],
+  "impact": 2,
+  "effort": 1,
+  "why": "要素の頭が水平に揃わないことで、2列組の「表」感が消えて読み進める順序が生まれる。",
+  "avoid": "左右を1対1で対応させたい比較表・Before/Afterでは対応関係が壊れる。",
+  "sources": [
+    "buddies_s04"
+  ],
+  "notes": [
+    "効き目の本体は padding-top のずらしではなく「順序の入れ替え」のほう。左＝見出し→本文→写真、右＝写真→見出し→本文にすると、ずらし量が0でも頭は揃わない。padding-top:56px はその上乗せ。片方だけだと弱いので必ず両方かける。",
+    "align-items:start が命綱。既定の stretch のままだと2つのカラムが同じ高さに伸び、中で高さを配ろうとした瞬間に横並びの表へ戻る。grid-auto-rows や subgrid も同じ理由で禁じ手。",
+    "column-gap は --s8(76px) 前後。--s5(24px) 程度に詰めると、ずれが「ずらし」ではなく「バグ」に見える。逆に普通版（対比用）は --s7(52px) でも成立する。",
+    "デモには比較用の破線ガイドを1本だけ足してある（.tq-zig__stage::before）。普通版は左右とも破線に頭が付き、工夫版は右の写真だけが付く。ずれが意図であることが一目で分かる。実案件では入れない。",
+    "写真のアスペクトも左右で変える（4/3と3/2）と、ずれがさらに読み取りやすい。同じ素材でも object-fit:cover で成立する。",
+    "768px以下は1カラム＋padding-top:0 に戻す。縦一列になった時点でずらしは意味を失い、残すと先頭に無駄な空白が出るだけ。",
+    "デモは techniques/flow/zigzag-columns/demo.html。上＝揃った2カラム、下＝ずらし。"
+  ]
+}

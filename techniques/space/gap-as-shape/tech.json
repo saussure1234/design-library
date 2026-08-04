@@ -1,0 +1,24 @@
+{
+  "id": "space/gap-as-shape",
+  "name": "ガターを詰めて、隙間そのものに形を持たせる",
+  "ordinary": "カード間に32〜48pxの均等ガターを取り、隙間は長方形になる",
+  "actual": "musashino_s07=3つの正円の間隔を約20pxまで詰め、残ったクリーム地が両側から抉られた砂時計形の細い帯になる。円の上端はセクション上辺で切れ、罫は1本も引いていない。kobe-wu_s09は逆に隙間を0にして5枚を1本の帯として読ませる。",
+  "css": ".row{display:flex; justify-content:center; gap:20px; margin-top:-24px}\n.row>li{flex:0 0 30%; aspect-ratio:1; border-radius:50%; overflow:hidden}\nsection{overflow:hidden; background:#faf8f2}   /* 地色＝隙間の色になる */\n/* 隙間を完全に殺す側 */\n.strip{display:flex; gap:0}\n.strip img{flex:1 1 0; min-width:0; object-fit:cover}",
+  "appliesTo": ["value", "features", "member"],
+  "impact": 2,
+  "effort": 1,
+  "why": "円を寄せると隙間が凹形になり、罫を引かなくても分割が読める。ガターが「余り」でなく描かれた形になる",
+  "params": ["間隔 18〜22px", "輪郭は円/弧", "地色", "上端の食い込み -24px"],
+  "avoid": "角丸長方形カードでは隙間が長方形のままで効かない。曲線の輪郭とセットで使う",
+  "sources": ["musashino_s07", "kobe-wu_s09"],
+  "notes": [
+    "砂時計形が読めるのは「円の面が地色と違う」ときだけ。実装して最初に失敗したのが地 var(--c-bg2) ＋ 円 var(--c-bg) の組み合わせで、明度差が 2% 程度しかなく隙間の形がまったく見えなかった。地には var(--c-primary-l) 相当のはっきりした淡色を当てる。musashino_s07 のクリーム地／白円もこのくらいの差がある。",
+    "上端の食い込み -24px は「セクション上辺で円が切れる」ためのもの。ラベルや見出しを円の上に置くとただの詰めになって切れない。円の帯だけを持つラッパーを作り、その padding-top を 0 にして初めて overflow:hidden が上端を切る。",
+    "間隔 20px は固定値であって % ではない。flex の gap を % にすると画面幅で砂時計のくびれ具合が変わり、375px では隙間が消える。gap は px で固定、円側を flex:0 0 30% にする。",
+    "margin-top:-24px でセクション上辺に円の上端を食い込ませると、隙間の帯が上へ抜けて『切り取られた一部』に見える。セクション側の overflow:hidden が必須。",
+    "円のサイズは flex:0 0 30% ＋ aspect-ratio:1。3枚で 90% ＋ gap 40px なので版面をわずかに超える。超えた分は overflow:hidden が処理する（musashino_s07 も両端は版面ぎりぎり）。",
+    "375px では円の直径が約95pxになり、中の本文が入らない。デモは見出し＋2行の短文に絞り、font-size を clamp で落としている。文章量が要るセクションでは使えない技法。",
+    "罫は1本も引かない。円の輪郭に border を足すと『枠のあるカード』に戻り、隙間が形として読めなくなる。",
+    "反対側の極（kobe-wu_s09 の gap:0）も同じ考え方の裏返しなので、デモに3ブロック目として並べた。flex:1 1 0 と min-width:0 の両方を指定しないと写真が縮まずに溢れる。"
+  ]
+}

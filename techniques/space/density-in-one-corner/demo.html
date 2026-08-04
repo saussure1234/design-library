@@ -1,0 +1,155 @@
+<style>
+/* トークンのフォールバック。:where() で詰めているので、
+   _tokens.css が読み込まれていればそちらが必ず勝つ。 */
+:where(:root){
+  --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-disp:var(--f-sans); --f-num:"Helvetica Neue",Arial,var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+  --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+  --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px; --s8:76px;
+  --sec-y:clamp(56px,7vw,110px);
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --shadow:0 6px 24px rgba(17,17,17,.08);
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+
+/* ============ 土台 ============ */
+.tq-corner{
+  font-family:var(--f-sans); color:var(--c-ink2); background:var(--c-bg);
+  padding-block:var(--s7);
+  overflow-x:clip;
+}
+.tq-corner *{box-sizing:border-box}
+.tq-corner__wrap{max-width:var(--w-max); margin-inline:auto; padding-inline:var(--w-gut)}
+.tq-corner__blk{margin-top:var(--s8)}
+.tq-corner__blk:first-child{margin-top:0}
+
+.tq-corner__tag{
+  display:inline-block; margin:0;
+  font-size:var(--fs-note); letter-spacing:.08em; line-height:1;
+  padding:var(--s2) var(--s3); border-radius:var(--r-pill);
+  background:var(--c-bg2); color:var(--c-ink3);
+}
+.tq-corner__tag--on{background:var(--c-primary-l); color:var(--c-primary-d)}
+.tq-corner__h{
+  font-family:var(--f-disp); font-size:var(--fs-xl); line-height:var(--lh-tight);
+  letter-spacing:.02em; color:var(--c-ink); font-weight:800;
+  margin:var(--s3) 0 var(--s5);
+}
+.tq-corner__cap{
+  margin:var(--s4) 0 0; font-size:var(--fs-sm); line-height:var(--lh-head); color:var(--c-ink3);
+}
+
+/* ============ 版面（どの案も同じ大きさ・同じ文字量） ============ */
+/* 注：aspect-ratio に min-height を足すと、Chrome は min-height を比率で幅へ
+   逆算して親より広い箱を作る。高さの下限は media query 側で height に切り替える。 */
+.tq-corner__stage{
+  position:relative; overflow:hidden;
+  aspect-ratio:16/10; max-width:100%;
+  background:var(--c-bg); border:1px solid var(--c-line);
+  display:grid;
+}
+.tq-corner__ttl{
+  margin:0 0 var(--s3);
+  font-family:var(--f-disp); font-size:var(--fs-md); font-weight:700;
+  letter-spacing:.14em; color:var(--c-ink); line-height:var(--lh-tight);
+}
+.tq-corner__txt{
+  margin:0; font-size:var(--fs-sm); line-height:2.1; letter-spacing:.08em; color:var(--c-ink2);
+}
+.tq-corner__meta{
+  margin:0; font-size:var(--fs-note); letter-spacing:.1em; color:var(--c-ink3);
+}
+
+/* --- 普通：中央に寄せ、上下左右の余白を均等に取る --- */
+.tq-corner__stage--even{place-items:center; padding:var(--s6)}
+.tq-corner__stage--even .tq-corner__body{max-width:34ch; text-align:center}
+.tq-corner__stage--even .tq-corner__meta{margin-top:var(--s4)}
+
+/* --- この工夫：密度を右下の1点に沈める --- */
+/* 注：% の padding は「幅」に対して解決されるので、block 方向も幅基準で読む */
+.tq-corner__stage--sink{
+  place-items:end;
+  padding-inline-end:28%;
+  padding-block-end:20%;      /* ＝幅の20%。16/10 の版面で高さの32%にあたる */
+}
+.tq-corner__stage--sink .tq-corner__body{
+  writing-mode:vertical-rl;
+  max-height:min(220px,62%);  /* 縦組みでは max-height が1列の長さを決める */
+}
+/* 縦組みでは block 方向が右→左。meta の margin-block-start が「右へ1列ぶんの空き」になる */
+.tq-corner__stage--sink .tq-corner__ttl{margin:0}
+.tq-corner__stage--sink .tq-corner__meta{margin-block-start:var(--s5)}
+
+/* --- この工夫（横組み版） --- */
+.tq-corner__stage--sinkh{
+  place-items:end;
+  padding-inline-end:28%;
+  padding-block-end:20%;
+}
+.tq-corner__stage--sinkh .tq-corner__body{max-width:24ch}
+.tq-corner__stage--sinkh .tq-corner__meta{margin-top:var(--s5)}
+
+/* 左辺に半分だけ入る大円（沈めた1点の対岸に置く錘） */
+.tq-corner__disc{
+  position:absolute; left:-28%; top:6%; width:39%; aspect-ratio:1;
+  border-radius:var(--r-pill); background:var(--c-ink);
+}
+
+@media (max-width:560px){
+  .tq-corner__stage{aspect-ratio:auto; height:340px}
+  .tq-corner__stage--sink,.tq-corner__stage--sinkh{padding-inline-end:16%; padding-block-end:14%}
+  .tq-corner__stage--sink .tq-corner__body{max-height:min(200px,54%)}
+  .tq-corner__disc{left:-34%; width:44%}
+}
+</style>
+
+<section class="tq-corner">
+  <div class="tq-corner__wrap">
+
+    <div class="tq-corner__blk">
+      <p class="tq-corner__tag">普通の場合</p>
+      <h2 class="tq-corner__h">見出しがここに入ります</h2>
+      <div class="tq-corner__stage tq-corner__stage--even">
+        <div class="tq-corner__body">
+          <p class="tq-corner__ttl">見出し</p>
+          <p class="tq-corner__txt">ここに短い説明が入ります。三行以内に収めた本文です。</p>
+          <p class="tq-corner__meta">補足：〇〇〇〇</p>
+        </div>
+      </div>
+      <p class="tq-corner__cap">中央に寄せ、余白を上下左右へ均等に配る。空きの量は同じでも、どこにも密度が無いので白が「余り」に見え、版面が安く見える。</p>
+    </div>
+
+    <div class="tq-corner__blk">
+      <p class="tq-corner__tag tq-corner__tag--on">この工夫：右下の1点に沈める（縦組み）</p>
+      <h2 class="tq-corner__h">見出しがここに入ります</h2>
+      <div class="tq-corner__stage tq-corner__stage--sink">
+        <div class="tq-corner__disc"></div>
+        <div class="tq-corner__body">
+          <p class="tq-corner__ttl">見出し</p>
+          <p class="tq-corner__txt">ここに短い説明が入ります。三行以内に収めた本文です。</p>
+          <p class="tq-corner__meta">補足：〇〇〇〇</p>
+        </div>
+      </div>
+      <p class="tq-corner__cap">文字量は上とまったく同じ。中央でも上でもなく下へ沈め、右から28%・下から版面幅の20%の位置で止める。補足だけ本文の列から1列ぶん離す。残りは白のまま、左辺に大円が半分だけ入る。</p>
+    </div>
+
+    <div class="tq-corner__blk">
+      <p class="tq-corner__tag tq-corner__tag--on">この工夫：横組みでも成立する</p>
+      <h2 class="tq-corner__h">見出しがここに入ります</h2>
+      <div class="tq-corner__stage tq-corner__stage--sinkh">
+        <div class="tq-corner__body">
+          <p class="tq-corner__ttl">見出し</p>
+          <p class="tq-corner__txt">ここに短い説明が入ります。三行以内に収めた本文です。</p>
+          <p class="tq-corner__meta">補足：〇〇〇〇</p>
+        </div>
+      </div>
+      <p class="tq-corner__cap">効いているのは縦組みそのものではなく「沈める位置」。横組みでも同じ隅・同じ padding なら成立する。縦組みは字面を細くして密度をさらに1点へ集めるための手段。</p>
+    </div>
+
+  </div>
+</section>

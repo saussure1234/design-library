@@ -1,0 +1,23 @@
+{
+  "id": "color/scatter-small-marks",
+  "name": "色は面でなく、サイズ不揃いの小片にして境界と人物のまわりに散らす",
+  "ordinary": "ブランド色の帯やボタンで各セクションに色を入れる／装飾は同サイズのアイコンを等間隔に並べる",
+  "actual": "写真は素の色のまま、加えるのは1辺10〜16pxの三角（ピンク・黄・水色・緑・橙）を回転バラバラで斜め境界の交点付近に5〜8個だけ。別例では塗りのないピンク線の花・音符・二重丸を人物の周囲±30pxに5〜6個、金の四芒星を10/16/24/32pxの4サイズで四隅に散らし1つは写真の角に重ねる、直径70〜110pxの黒い正円を写真の裏に8つ（左右端は画面外で切る）。",
+  "css": ".mark{position:absolute}\n.tri{width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:13px solid #f43f5e;transform:rotate(28deg)}\n.doodle{stroke:#f19cc4;stroke-width:1.5;fill:none} /* インラインSVG、人物のtop/left基準±30px */\n.star{background:#c9a86a;clip-path:polygon(50% 0,58% 42%,100% 50%,58% 58%,50% 100%,42% 58%,0 50%,42% 42%)}\n.star--s{width:10px;height:10px;opacity:.5}.star--l{width:32px;height:32px}\n.dot{width:96px;height:96px;border-radius:50%;background:#0a0a0a;z-index:0}.dot--edge{left:-42px}",
+  "appliesTo": ["hero", "features", "voice", "value"],
+  "impact": 3,
+  "effort": 1,
+  "why": "色面を作らないので写真の情報量が落ちず、サイズを揃えないことで規則性が消えて紙吹雪や光の飛びとして読める",
+  "params": ["形（三角／線画／四芒星／正円）", "サイズ3〜4段", "個数5〜8", "置き場所（境界の交点／人物の周囲／写真の裏）"],
+  "avoid": "情報密度の高いセクション（小片が読み取りのノイズになる）",
+  "sources": ["tanq_s07", "sho_hanamaru_s07", "yugao_s13", "yugao_s06"],
+  "notes": [
+    "tanq_s07 実測：写真は上下2枚が斜めに切られ、間に白の隙間が走る。三角はその隙間に沿って左右に散り、1枚の境界あたり5〜8個。角度は完全にバラバラで、5色（ピンク・黄・水色・緑・橙）を繰り返さない順で置いている。三角は擬似要素でなく実体のspanにした方が位置を1つずつ詰められる。",
+    "sho_hanamaru_s07 実測：線画は人物の切り抜きの外側にだけ出る。花は5弁でなく円を4つ重ねた形、音符は符頭＋旗、ほかに小さな波線とバツ印。線幅は1.5px固定でサイズだけ変える。",
+    "yugao_s13／s06 実測：四芒星は縦横に細く伸びた形（中心の膨らみが42〜58%）。小さいものは opacity を落として遠近を作る。黒い正円は写真より必ず裏（z-index:0）で、左右端の円は親の overflow:hidden で切れることが前提。",
+    "実装メモ：4つの型（三角／線画／四芒星／正円）を1画面に並べ、左上に『帯＋同サイズ等間隔』の普通版を置いて対比させた。効いているのは『色を面にしない』ことと『サイズを揃えない』ことの2点だと分かる並べ方にしている。",
+    "実装メモ：random関数は使わず、位置・角度・サイズはすべて手で個別指定（.tq-sm__t1〜t7 のような連番クラス）。等分・等間隔になった瞬間に効果が消えるため。",
+    "実装メモ：三角は border トリックなので transform:rotate と併用可。clip-path でも作れるが、border 版の方が古い環境で安全。",
+    "落とし穴：人物や写真を丸くトリミングするために overflow:hidden を掛けると、その外側に出す小片が消える。マスク用の内側要素（.tq-sm__pmask）を1枚挟み、小片を置く親には overflow を掛けないこと。"
+  ]
+}

@@ -1,0 +1,314 @@
+<style>
+/* ============================================================
+   rule/single-vertical-hairline
+   縦罫1本だけで構造を固定し、カード側の装飾を全部外す
+   ============================================================ */
+
+@layer tq-fallback{
+  :root{
+    --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA;
+    --c-accent:#FF9301;
+    --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+    --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+    --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    --f-disp:var(--f-sans); --f-num:"Helvetica Neue",Arial,var(--f-sans);
+    --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+    --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px; --fs-3xl:50px; --fs-4xl:64px;
+    --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px;
+    --s6:36px; --s7:52px; --s8:76px; --s9:110px;
+    --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+    --shadow:0 6px 24px rgba(17,17,17,.08);
+  }
+}
+
+/* この工夫の寸法（トークンでは表せないパラメータ） */
+.tq-svh{
+  --tq-svh-col:250px;    /* 左の見出し列 */
+  --tq-svh-no:52px;      /* 番号の列 */
+  --tq-svh-gap:56px;     /* 左右の間 */
+  --tq-svh-pad:40px;     /* 縦罫までの余白 20〜40px */
+  --tq-svh-rule:var(--c-line);                                   /* #e6e6e6 相当 */
+  --tq-svh-rule-l:color-mix(in srgb,var(--c-line) 55%,var(--c-bg)); /* #f0f0f0 相当 */
+  --tq-svh-rule-w:color-mix(in srgb,var(--c-accent) 22%,var(--c-line)); /* 温かい罫 */
+}
+
+.tq-svh{
+  container-type:inline-size;
+  font-family:var(--f-sans); color:var(--c-ink2);
+  line-height:var(--lh-head); -webkit-text-size-adjust:100%;
+  background:var(--c-bg); padding:var(--s5);
+}
+.tq-svh *{box-sizing:border-box}
+.tq-svh :where(a){color:inherit; text-decoration:none}
+
+.tq-svh__lead{margin:0 0 var(--s5); font-size:var(--fs-note); color:var(--c-ink3); line-height:var(--lh-body)}
+.tq-svh__sec{margin-top:var(--s7)}
+.tq-svh__sec:first-of-type{margin-top:0}
+.tq-svh__secttl{margin:0 0 var(--s4); font-size:var(--fs-sm); font-weight:700; color:var(--c-ink)}
+.tq-svh__cap{
+  display:flex; align-items:center; gap:var(--s2);
+  margin:0 0 var(--s3); font-size:var(--fs-note); font-weight:700;
+  color:var(--c-ink3); letter-spacing:.04em;
+}
+.tq-svh__cap::before{content:""; width:var(--s5); height:1px; background:var(--c-line); flex:0 0 auto}
+.tq-svh__note{margin:var(--s3) 0 var(--s6); font-size:var(--fs-note); color:var(--c-ink3); line-height:var(--lh-body)}
+
+/* --- 2カラム：左見出し列と一覧の間に縦ヘアライン1本 ---------- */
+.tq-svh__wrap{display:grid; grid-template-columns:var(--tq-svh-col) 1fr; gap:var(--tq-svh-gap)}
+.tq-svh__col-l{padding-right:var(--tq-svh-pad); border-right:1px solid var(--tq-svh-rule)}
+.tq-svh__h{margin:0 0 var(--s4); font-size:var(--fs-xl); font-weight:700; color:var(--c-ink); line-height:var(--lh-tight)}
+.tq-svh__p{margin:0; font-size:var(--fs-note); color:var(--c-ink2); line-height:var(--lh-body)}
+
+.tq-svh__feed{display:grid; gap:var(--s5); margin:0; padding:0; list-style:none}
+.tq-svh__entry{display:grid; grid-template-columns:110px 1fr; gap:var(--s4); align-items:start}
+.tq-svh__entry img{display:block; width:100%; aspect-ratio:4/3; object-fit:cover; border-radius:0}
+.tq-svh__ttl{margin:0 0 var(--s2); font-size:var(--fs-note); font-weight:700; color:var(--c-ink); line-height:var(--lh-head)}
+.tq-svh__meta{margin:0; font-size:10px; color:var(--c-ink3); letter-spacing:.08em}
+
+/* 普通：カードで囲う */
+.tq-svh__wrap--boxed{grid-template-columns:1fr; gap:var(--s5)}
+.tq-svh__wrap--boxed .tq-svh__col-l{border-right:0; padding-right:0}
+.tq-svh__wrap--boxed .tq-svh__feed{grid-template-columns:1fr; gap:var(--s3)}
+.tq-svh__wrap--boxed .tq-svh__entry{
+  background:var(--c-bg2); border:1px solid var(--c-line);
+  border-radius:var(--r-m); box-shadow:var(--shadow); padding:var(--s3);
+}
+.tq-svh__wrap--boxed .tq-svh__entry img{border-radius:var(--r-s)}
+
+/* --- 罫そのものを1カラムとして確保する（番号52px / 1px / 1fr） -- */
+.tq-svh__items{margin:0; padding:0; list-style:none}
+.tq-svh__item{
+  display:grid; grid-template-columns:var(--tq-svh-no) 1px 1fr;
+  column-gap:var(--s5); padding:var(--s5) 0;
+}
+.tq-svh__item .tq-svh__rule{background:var(--tq-svh-rule-w)}
+.tq-svh__no{
+  font-family:var(--f-num); font-size:34px; line-height:1;
+  color:var(--c-accent); text-align:right;
+}
+.tq-svh__lead2{margin:0 0 var(--s2); font-size:var(--fs-note); color:var(--c-ink2)}
+.tq-svh__big{
+  margin:0 0 var(--s3); font-size:var(--fs-lg); font-weight:700;
+  letter-spacing:.14em; color:var(--c-accent); line-height:1.2;
+}
+.tq-svh__ul{margin:0; padding:0; list-style:none; font-size:var(--fs-note); line-height:var(--lh-body)}
+.tq-svh__ul li::before{content:"●"; font-size:.6em; margin-right:.6em; color:var(--c-ink3); vertical-align:.25em}
+
+/* 普通：番号項目をカードで囲う */
+.tq-svh__item--boxed{
+  grid-template-columns:var(--tq-svh-no) 1fr; column-gap:var(--s4);
+  background:var(--c-bg2); border:1px solid var(--c-line);
+  border-radius:var(--r-m); box-shadow:var(--shadow);
+  padding:var(--s4); margin-bottom:var(--s3);
+}
+
+/* --- 横並びカードは border-right のヘアラインだけで仕切る ----- */
+.tq-svh__cards{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:0; margin:0; padding:0; list-style:none;
+}
+.tq-svh__card{
+  background:transparent; border:0; border-radius:0; box-shadow:none;
+  border-right:1px solid var(--tq-svh-rule-l);
+  padding:0 var(--s5) 0 0; margin-right:var(--s5);
+}
+.tq-svh__card:last-child{border-right:0; padding-right:0; margin-right:0}
+.tq-svh__card img{display:block; width:100%; aspect-ratio:4/3; object-fit:cover; border-radius:0; margin-bottom:var(--s3)}
+
+.tq-svh__cards--boxed{gap:var(--s4)}
+.tq-svh__cards--boxed .tq-svh__card{
+  background:var(--c-bg2); border:1px solid var(--c-line); border-radius:var(--r-m);
+  box-shadow:var(--shadow); padding:var(--s3); margin-right:0; border-right:1px solid var(--c-line);
+}
+.tq-svh__cards--boxed .tq-svh__card img{border-radius:var(--r-s)}
+
+/* --- 1カラム（スマホ）では縦罫を消して余白に置き換える ------- */
+@container (max-width:640px){
+  .tq-svh{padding:var(--s4)}
+  .tq-svh__wrap{grid-template-columns:1fr; gap:var(--s5)}
+  .tq-svh__col-l{border-right:0; padding-right:0; padding-bottom:var(--s5)}
+  .tq-svh__item{grid-template-columns:var(--tq-svh-no) 1px 1fr; column-gap:var(--s4)}
+  .tq-svh__card{border-right:0; padding-right:0; margin-right:0; padding-bottom:var(--s5)}
+}
+</style>
+
+<div class="tq-svh">
+  <p class="tq-svh__lead">
+    見出し列と一覧の間に縦ヘアラインを1本だけ通す。関係が線で固定されるので、
+    カード側は border:0 / box-shadow:none / background:transparent / border-radius:0 まで全部外せる。
+  </p>
+
+  <!-- ① 2カラム -->
+  <section class="tq-svh__sec">
+    <h3 class="tq-svh__secttl">① 左見出し列と一覧の間に、上下いっぱいの縦ヘアライン1本</h3>
+
+    <p class="tq-svh__cap">普通：見出しと一覧を切り離し、項目をカードで囲う</p>
+    <div class="tq-svh__wrap tq-svh__wrap--boxed">
+      <div class="tq-svh__col-l">
+        <h4 class="tq-svh__h">見出し</h4>
+        <p class="tq-svh__p">リード文がここに入ります。2〜3行ほどの説明が続きます。</p>
+      </div>
+      <ul class="tq-svh__feed">
+        <li class="tq-svh__entry">
+          <img src="../../../docs/demo/ph_a.jpg" alt="">
+          <div>
+            <p class="tq-svh__ttl">記事のタイトルがここに入ります。2行程度で折り返します。</p>
+            <p class="tq-svh__meta">0000.00.00</p>
+          </div>
+        </li>
+        <li class="tq-svh__entry">
+          <img src="../../../docs/demo/ph_b.jpg" alt="">
+          <div>
+            <p class="tq-svh__ttl">記事のタイトルがここに入ります。2行程度で折り返します。</p>
+            <p class="tq-svh__meta">0000.00.00</p>
+          </div>
+        </li>
+        <li class="tq-svh__entry">
+          <img src="../../../docs/demo/ph_a.jpg" alt="">
+          <div>
+            <p class="tq-svh__ttl">記事のタイトルがここに入ります。2行程度で折り返します。</p>
+            <p class="tq-svh__meta">0000.00.00</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <p class="tq-svh__note">枠・角丸・影・地色が3回ずつ増え、見出しと一覧の関係は逆に読みにくい。</p>
+
+    <p class="tq-svh__cap">この工夫：縦罫1本＋カード装飾ゼロ・サムネイルも角丸0</p>
+    <div class="tq-svh__wrap">
+      <div class="tq-svh__col-l">
+        <h4 class="tq-svh__h">見出し</h4>
+        <p class="tq-svh__p">リード文がここに入ります。2〜3行ほどの説明が続きます。</p>
+      </div>
+      <ul class="tq-svh__feed">
+        <li class="tq-svh__entry">
+          <img src="../../../docs/demo/ph_a.jpg" alt="">
+          <div>
+            <p class="tq-svh__ttl">記事のタイトルがここに入ります。2行程度で折り返します。</p>
+            <p class="tq-svh__meta">0000.00.00</p>
+          </div>
+        </li>
+        <li class="tq-svh__entry">
+          <img src="../../../docs/demo/ph_b.jpg" alt="">
+          <div>
+            <p class="tq-svh__ttl">記事のタイトルがここに入ります。2行程度で折り返します。</p>
+            <p class="tq-svh__meta">0000.00.00</p>
+          </div>
+        </li>
+        <li class="tq-svh__entry">
+          <img src="../../../docs/demo/ph_a.jpg" alt="">
+          <div>
+            <p class="tq-svh__ttl">記事のタイトルがここに入ります。2行程度で折り返します。</p>
+            <p class="tq-svh__meta">0000.00.00</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <p class="tq-svh__note">線1本で「左＝主題／右＝中身」が固定される。装飾を全部外しても構造は崩れない。</p>
+  </section>
+
+  <!-- ② 罫を1カラムとして持つ -->
+  <section class="tq-svh__sec">
+    <h3 class="tq-svh__secttl">② 罫そのものをレイアウトの1列にする（番号52px / 罫1px / 本文1fr）</h3>
+
+    <p class="tq-svh__cap">普通：番号つき項目をカードで囲う</p>
+    <ul class="tq-svh__items">
+      <li class="tq-svh__item tq-svh__item--boxed">
+        <p class="tq-svh__no">1</p>
+        <div>
+          <p class="tq-svh__lead2">項目の説明が1行で入ります</p>
+          <p class="tq-svh__big">TITLE</p>
+          <ul class="tq-svh__ul"><li>細目が入ります</li><li>細目が入ります</li></ul>
+        </div>
+      </li>
+      <li class="tq-svh__item tq-svh__item--boxed">
+        <p class="tq-svh__no">2</p>
+        <div>
+          <p class="tq-svh__lead2">項目の説明が1行で入ります</p>
+          <p class="tq-svh__big">TITLE</p>
+          <ul class="tq-svh__ul"><li>細目が入ります</li><li>細目が入ります</li></ul>
+        </div>
+      </li>
+    </ul>
+    <p class="tq-svh__note">箱が3つ並ぶだけで、番号と本文の関係は強くならない。</p>
+
+    <p class="tq-svh__cap">この工夫：罫を1列として確保し、箱は持たせない</p>
+    <ul class="tq-svh__items">
+      <li class="tq-svh__item">
+        <p class="tq-svh__no">1</p>
+        <span class="tq-svh__rule"></span>
+        <div>
+          <p class="tq-svh__lead2">項目の説明が1行で入ります</p>
+          <p class="tq-svh__big">TITLE</p>
+          <ul class="tq-svh__ul"><li>細目が入ります</li><li>細目が入ります</li><li>細目が入ります</li></ul>
+        </div>
+      </li>
+      <li class="tq-svh__item">
+        <p class="tq-svh__no">2</p>
+        <span class="tq-svh__rule"></span>
+        <div>
+          <p class="tq-svh__lead2">項目の説明が1行で入ります</p>
+          <p class="tq-svh__big">TITLE</p>
+          <ul class="tq-svh__ul"><li>細目が入ります</li><li>細目が入ります</li><li>細目が入ります</li></ul>
+        </div>
+      </li>
+      <li class="tq-svh__item">
+        <p class="tq-svh__no">3</p>
+        <span class="tq-svh__rule"></span>
+        <div>
+          <p class="tq-svh__lead2">項目の説明が1行で入ります</p>
+          <p class="tq-svh__big">TITLE</p>
+          <ul class="tq-svh__ul"><li>細目が入ります</li><li>細目が入ります</li><li>細目が入ります</li></ul>
+        </div>
+      </li>
+    </ul>
+    <p class="tq-svh__note">罫が項目の高さぶん自動で伸びるので、行数が違っても番号と本文の対応が保たれる。</p>
+  </section>
+
+  <!-- ③ 横並びカード -->
+  <section class="tq-svh__sec">
+    <h3 class="tq-svh__secttl">③ 横に並べるときも、仕切りは border-right の縦ヘアライン1本だけ</h3>
+
+    <p class="tq-svh__cap">普通：gapを空けてカードで囲う</p>
+    <ul class="tq-svh__cards tq-svh__cards--boxed">
+      <li class="tq-svh__card">
+        <img src="../../../docs/demo/ph_a.jpg" alt="">
+        <p class="tq-svh__ttl">見出しがここに入ります</p>
+        <p class="tq-svh__meta">0000.00.00</p>
+      </li>
+      <li class="tq-svh__card">
+        <img src="../../../docs/demo/ph_b.jpg" alt="">
+        <p class="tq-svh__ttl">見出しがここに入ります</p>
+        <p class="tq-svh__meta">0000.00.00</p>
+      </li>
+      <li class="tq-svh__card">
+        <img src="../../../docs/demo/ph_a.jpg" alt="">
+        <p class="tq-svh__ttl">見出しがここに入ります</p>
+        <p class="tq-svh__meta">0000.00.00</p>
+      </li>
+    </ul>
+    <p class="tq-svh__note">写真の角丸と枠の角丸が二重になり、写真の面が小さく見える。</p>
+
+    <p class="tq-svh__cap">この工夫：ヘアラインだけ・写真は角丸0</p>
+    <ul class="tq-svh__cards">
+      <li class="tq-svh__card">
+        <img src="../../../docs/demo/ph_a.jpg" alt="">
+        <p class="tq-svh__ttl">見出しがここに入ります</p>
+        <p class="tq-svh__meta">0000.00.00</p>
+      </li>
+      <li class="tq-svh__card">
+        <img src="../../../docs/demo/ph_b.jpg" alt="">
+        <p class="tq-svh__ttl">見出しがここに入ります</p>
+        <p class="tq-svh__meta">0000.00.00</p>
+      </li>
+      <li class="tq-svh__card">
+        <img src="../../../docs/demo/ph_a.jpg" alt="">
+        <p class="tq-svh__ttl">見出しがここに入ります</p>
+        <p class="tq-svh__meta">0000.00.00</p>
+      </li>
+    </ul>
+    <p class="tq-svh__note">写真が版面いっぱいまで使えるので、同じ幅でも中身が大きく見える。</p>
+  </section>
+
+</div>

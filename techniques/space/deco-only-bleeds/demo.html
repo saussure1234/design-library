@@ -1,0 +1,184 @@
+<style>
+/* --- トークンのフォールバック（_tokens.css が無い環境でも見えるように） --- */
+:root{
+  --c-primary:#00B220; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-disp:var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px; --fs-lg:21px; --fs-xl:28px;
+  --lh-tight:1.35; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px; --s8:76px;
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --shadow:0 6px 24px rgba(17,17,17,.08);
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+
+/* =========================================================
+   space/deco-only-bleeds
+   本文は版面に収め、装飾レイヤーだけを画面外へ逃がす
+   ========================================================= */
+.tq-deco{
+  position:relative; overflow:hidden;
+  font-family:var(--f-sans); color:var(--c-ink2);
+  background:var(--c-bg2); padding-block:var(--s8);
+}
+.tq-deco__inner{
+  position:relative; z-index:1;              /* 本文は装飾より上 */
+  max-width:var(--w-max); margin-inline:auto; padding-inline:var(--w-gut);
+}
+.tq-deco__tag{
+  display:inline-block; margin:0 0 var(--s5);
+  font-size:var(--fs-note); letter-spacing:.08em; color:var(--c-ink3);
+  background:var(--c-bg); border:1px solid var(--c-line);
+  border-radius:var(--r-pill); padding:var(--s1) var(--s3);
+}
+.tq-deco__tag--on{ color:var(--c-on-primary); background:var(--c-primary); border-color:var(--c-primary); }
+.tq-deco__cap{ font-size:var(--fs-note); color:var(--c-ink3); margin:var(--s5) 0 0; }
+
+/* 本文と写真はあくまで版面の内側 */
+.tq-deco__row{ display:flex; gap:var(--s6); align-items:flex-start; }
+.tq-deco__txt{ flex:1 1 0; min-width:0; }
+.tq-deco__h{
+  font-family:var(--f-disp); font-size:var(--fs-xl); line-height:var(--lh-tight);
+  color:var(--c-ink); margin:0 0 var(--s3);
+}
+.tq-deco__p{ font-size:var(--fs-base); line-height:var(--lh-body); margin:0; }
+.tq-deco__fig{ margin:0; flex:0 0 40%; border-radius:var(--r-m); overflow:hidden; }
+.tq-deco__fig img{ display:block; width:100%; aspect-ratio:4/3; object-fit:cover; }
+
+/* --- 装飾レイヤー --- */
+.tq-deco__d{
+  position:absolute; z-index:0; pointer-events:none;
+  display:block;
+}
+.tq-deco__d svg{ display:block; width:100%; height:auto; }
+.tq-deco__d svg *{ fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+
+/* 右上：上辺で頭が切れる線画 */
+.tq-deco__d--tr{
+  top:-42px; right:-30px; width:min(48vw,420px);
+  color:color-mix(in srgb, var(--c-accent) 34%, var(--c-bg));
+}
+/* 左：画面左端で切れるリボン */
+.tq-deco__d--l{
+  left:-28px; top:180px; width:118px; transform:rotate(-8deg);
+  color:color-mix(in srgb, var(--c-accent) 30%, var(--c-bg));
+}
+/* 下端：背景との明度差だけで沈めて切る */
+.tq-deco__d--ghost{
+  bottom:-60px; left:8%; width:min(40vw,300px);
+  color:color-mix(in srgb, var(--c-ink) 5%, var(--c-bg2));
+}
+/* 右端で末尾が切れるロゴ */
+.tq-deco__logo{
+  position:absolute; z-index:0; pointer-events:none;
+  top:96px; right:-64px; width:min(40vw,320px); opacity:.35;
+}
+.tq-deco__logo img{ display:block; width:100%; height:auto; }
+/* 左外から入って上端で切れる破線の巨大円弧 */
+.tq-deco__arc{
+  position:absolute; z-index:0; pointer-events:none;
+  top:-300px; left:-170px; width:min(760px,110vw); aspect-ratio:1;
+  border-radius:50%;
+  border:1.5px dashed color-mix(in srgb, var(--c-primary) 30%, var(--c-bg));
+}
+
+/* --- 普通の場合：装飾も枠内に収める --- */
+.tq-deco--plain .tq-deco__d--tr{ top:var(--s5); right:var(--s5); width:min(26vw,200px); }
+.tq-deco--plain .tq-deco__d--l,
+.tq-deco--plain .tq-deco__d--ghost,
+.tq-deco--plain .tq-deco__logo,
+.tq-deco--plain .tq-deco__arc{ display:none; }
+
+@media (max-width:760px){
+  .tq-deco{ padding-block:var(--s7); }
+  .tq-deco__row{ flex-direction:column; }
+  .tq-deco__fig{ flex:0 0 auto; width:100%; }
+  .tq-deco__d--l{ top:auto; bottom:120px; width:84px; }
+  .tq-deco__logo{ top:auto; bottom:24px; width:60vw; }
+}
+</style>
+
+<!-- 1. 普通：装飾も枠内に収め、全体が見えるよう余白を取る -->
+<section class="tq-deco tq-deco--plain">
+  <span class="tq-deco__d tq-deco__d--tr" aria-hidden="true">
+    <svg viewBox="0 0 200 140">
+      <path d="M6 134C50 120 104 92 196 14"/>
+      <path d="M48 116c-4-16 6-28 22-28 2 16-8 26-22 28z"/>
+      <path d="M62 106c10-14 26-14 34-2-12 10-26 10-34 2z"/>
+      <path d="M96 88c-4-16 6-28 22-28 2 16-8 26-22 28z"/>
+      <path d="M110 78c10-14 26-14 34-2-12 10-26 10-34 2z"/>
+      <path d="M144 56c-4-16 6-28 22-28 2 16-8 26-22 28z"/>
+      <circle cx="176" cy="26" r="9"/>
+    </svg>
+  </span>
+  <div class="tq-deco__inner">
+    <p class="tq-deco__tag">普通</p>
+    <div class="tq-deco__row">
+      <div class="tq-deco__txt">
+        <h3 class="tq-deco__h">見出しがここに入ります</h3>
+        <p class="tq-deco__p">説明のテキストがここに入ります。装飾も版面の内側に全体が収まっていて、周りの白地は「余った空白」に見えます。</p>
+      </div>
+      <figure class="tq-deco__fig"><img src="../../../docs/demo/ph_a.jpg" alt=""></figure>
+    </div>
+    <p class="tq-deco__cap">装飾の全形が見えるぶん、画面はこの矩形で閉じている</p>
+  </div>
+</section>
+
+<!-- 2. この工夫：本文と写真は内側のまま、装飾だけが外へ逃げる -->
+<section class="tq-deco">
+  <!-- 左外から入って上端で切れる破線の巨大円弧 -->
+  <span class="tq-deco__arc" aria-hidden="true"></span>
+
+  <!-- 右上：上辺で頭が切れる線画 -->
+  <span class="tq-deco__d tq-deco__d--tr" aria-hidden="true">
+    <svg viewBox="0 0 200 140">
+      <path d="M6 134C50 120 104 92 196 14"/>
+      <path d="M48 116c-4-16 6-28 22-28 2 16-8 26-22 28z"/>
+      <path d="M62 106c10-14 26-14 34-2-12 10-26 10-34 2z"/>
+      <path d="M96 88c-4-16 6-28 22-28 2 16-8 26-22 28z"/>
+      <path d="M110 78c10-14 26-14 34-2-12 10-26 10-34 2z"/>
+      <path d="M144 56c-4-16 6-28 22-28 2 16-8 26-22 28z"/>
+      <circle cx="176" cy="26" r="9"/>
+    </svg>
+  </span>
+
+  <!-- 左：画面左端で切れるリボン -->
+  <span class="tq-deco__d tq-deco__d--l" aria-hidden="true">
+    <svg viewBox="0 0 120 60">
+      <path d="M0 30c14-22 28 22 42 0s28 22 42 0 28 22 36 4"/>
+      <path d="M0 44c14-22 28 22 42 0s28 22 42 0 28 22 36 4"/>
+    </svg>
+  </span>
+
+  <!-- 右端で末尾が切れるロゴ -->
+  <span class="tq-deco__logo" aria-hidden="true">
+    <img src="../../../docs/demo/logo.svg" alt="">
+  </span>
+
+  <div class="tq-deco__inner">
+    <p class="tq-deco__tag tq-deco__tag--on">この工夫｜装飾だけ外へ逃がす</p>
+    <div class="tq-deco__row">
+      <div class="tq-deco__txt">
+        <h3 class="tq-deco__h">見出しがここに入ります</h3>
+        <p class="tq-deco__p">説明のテキストがここに入ります。本文も写真もさきほどと同じ位置のままで、動かしたのは装飾レイヤーだけです。</p>
+      </div>
+      <figure class="tq-deco__fig"><img src="../../../docs/demo/ph_a.jpg" alt=""></figure>
+    </div>
+    <p class="tq-deco__cap">線画は上辺で頭が切れ、リボンは左端で切れ、ロゴは右端で末尾が切れる。切れた分だけ外に世界が続いて見える</p>
+  </div>
+
+  <!-- 下端：背景との明度差3〜5%だけで沈めて切る -->
+  <span class="tq-deco__d tq-deco__d--ghost" aria-hidden="true">
+    <svg viewBox="0 0 200 140">
+      <path d="M6 134C50 120 104 92 196 14"/>
+      <path d="M48 116c-4-16 6-28 22-28 2 16-8 26-22 28z"/>
+      <path d="M62 106c10-14 26-14 34-2-12 10-26 10-34 2z"/>
+      <path d="M96 88c-4-16 6-28 22-28 2 16-8 26-22 28z"/>
+      <path d="M110 78c10-14 26-14 34-2-12 10-26 10-34 2z"/>
+      <path d="M144 56c-4-16 6-28 22-28 2 16-8 26-22 28z"/>
+      <circle cx="176" cy="26" r="9"/>
+    </svg>
+  </span>
+</section>

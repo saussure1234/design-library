@@ -1,0 +1,40 @@
+{
+  "id": "space/type-to-the-edge",
+  "name": "巨大文字に余白を与えず、版面の最外線にツラで合わせるか画面外へ断ち落とす",
+  "ordinary": "見出しは上下左右に十分な余白を取って全体を見せる。フッターはコピーライトを小さく中央寄せして終える",
+  "actual": "unico_s01=赤い「ACCELERATE」を画面幅の約7割で置き、Aの左端を左マージンの縦罫(x=30)にぴったり合わせる。日本語キャッチは一切なく欧文1語だけ。meisei-es_s16=学校英名を高さ40px超のセリフ体大文字・字間.14emで1行に組み、左端のMと右端のLが画面端で切れ、下端もページ下端で切れてフッターの床そのものになる。hanamaru_s04=タイル文字の上端をセクション上端y=0でぶつ切りにし、左右には広い余白を残したまま上だけ切る。",
+  "css": "h1{font-size:clamp(64px,13vw,180px); font-weight:800; line-height:.9;\n  letter-spacing:-.01em; color:#e8342a; margin:0 0 0 30px}  /* 左マージン罫とツラ */\n.footer-mark{font-family:serif; font-size:clamp(40px,7.5vw,96px); letter-spacing:.14em;\n  white-space:nowrap; line-height:.8; margin:0 -6vw -.18em; color:#8e2b2b}\n.tiles{margin-top:-44px}          /* 上端だけ切る */\nsection,.footer{overflow:hidden; padding-top:0}",
+  "appliesTo": [
+    "hero",
+    "footer",
+    "cta",
+    "value"
+  ],
+  "impact": 3,
+  "effort": 1,
+  "why": "罫と文字が同じ線から始まると巨大でも版面が崩れず「意図してはみ出している」に読める。切れた文字は実寸が画面より大きいと分かり、実際以上のスケールが出る",
+  "params": [
+    "切る辺（上のみ / 左右＋下）",
+    "line-height .8〜.9",
+    "はみ出し -6vw",
+    "字間 -.01〜.14em"
+  ],
+  "avoid": "読ませたい日本語コピーは切らない。切っていいのは意味が既知の固有名詞・欧文だけ",
+  "sources": [
+    "unico_s01",
+    "meisei-es_s16",
+    "hanamaru_s04"
+  ],
+  "notes": [
+    "定義の margin:0 0 0 30px は「左マージンぶん動かす」意味だが、これだと文字ボックスの左辺が罫に合うだけで、字形（Aの左端）は必ず罫より内側に落ちる。サイドベアリングがあるため。ツラで合わせるには padding で版面を作ったうえで margin-inline-start に -.02〜-.05em の負値を足して字形を戻す。デモは -.035em。値は書体と頭文字ごとに測り直す（丸い O や斜めの A は特にベアリングが大きい）。",
+    "縦罫は疑似要素のグラデーションより grid + border-left が確実。罫を引く箱と巨大文字の箱に同じ padding-inline（--w-gut）を掛ければ、1本目の罫と文字の起点が必ず一致する。gradient の位置合わせは % と px が混ざって狂う。",
+    "line-height:.8 は文字の上下を行ボックスで切る指定。これを1.0以上に戻すと、下端を切るために別途 margin-bottom の負値が必要になり、切れ幅の調整点が2つになる。.8 と margin-bottom:-.18em はセットで効く。",
+    "左右を同じだけ切るのに text-align:center は使えない。Chrome では行が溢れた時点で中央揃えが効かず、文字は箱の左端から始まって右にだけ溢れる（実測：左34px／右392px）。width:max-content ＋ position:relative; left:50%; transform:translateX(-50%) にすると左右とも62pxずつ、確実に等しく切れる。定義の margin:0 -6vw も不要になる。",
+    "切れ幅は「左右0.5〜1文字ぶん」に収める。文字数 N、字間 t を含む1文字あたりの送りを (0.72+t)em とすると、必要な font-size ≒ 版面幅 /(N×(0.72+t) − 1)。17文字・字間.14em・版面1084pxなら約79px。ここを外して大きくしすぎると4文字ぶん消えて「切った」でなく「入りきらなかった」に見える。デモは clamp(26px,7.2vw,96px)。",
+    "切るには祖先の overflow が要る。ページ全体を overflow-x:clip にする（hidden は内側の position:sticky を殺すので不可）か、切る箱ごとに overflow:hidden を掛ける。デモは箱ごと。",
+    "「上端だけ切る」は margin-top の負値＋親の overflow:hidden と padding-top:0。親に padding-top が残っていると、負のマージンがそれを食うだけで切れない。",
+    "色は _tokens.css に赤が無いため --c-accent（橙）で組んだ。この工夫は色ではなく寸法で効くので、案件のトークンを差し替えれば同じに立つ。書体も同様で、セリフ体が要る場合は --f-disp 側を差し替える（デモ内で font-family:serif を直書きしない）。",
+    "ツラ合わせの側は逆に「切ってはいけない」。clamp の上限だけ決めて下限を放置すると、375px で欧文1語が版面を越えて切れ、上の『切る』工夫と混ざって何を見せたいのか分からなくなる。版面の7割に収める式は font-size ≒ 0.7×版面幅 /(N×0.71em) で、10文字なら約0.099×版面幅＝9.3vw。デモは clamp(28px,9.3vw,120px) で 1100px→102px / 375px→35px、どちらも7割強で収まる。",
+    "デモは techniques/space/type-to-the-edge/demo.html。〈普通＝十分な余白＋小さいコピーライト〉〈罫にツラ合わせ〉〈上端だけ切る〉〈左右＋下で切ってフッターの床にする〉の4段。"
+  ]
+}

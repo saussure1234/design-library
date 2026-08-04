@@ -1,0 +1,283 @@
+<style>
+/* --- トークンのフォールバック（_tokens.css が無い環境でも見えるように） --- */
+:root{
+  --c-primary:#00B220; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-disp:var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px; --fs-lg:21px; --fs-xl:28px;
+  --lh-tight:1.35; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --shadow:0 6px 24px rgba(17,17,17,.08);
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+
+/* =========================================================
+   space/rail-cut-both-ends
+   横並びの列を画面端で断ち落とし、矢印なしで「続き」を見せる
+   ========================================================= */
+.tq-rail{
+  font-family:var(--f-sans); color:var(--c-ink2);
+  background:var(--c-bg); overflow:hidden; padding-block:var(--s7);
+}
+.tq-rail--alt{ background:var(--c-bg2); }
+.tq-rail__inner{ max-width:var(--w-max); margin-inline:auto; padding-inline:var(--w-gut); }
+
+.tq-rail__tag{
+  display:inline-block; margin:0 0 var(--s5);
+  font-size:var(--fs-note); letter-spacing:.08em; color:var(--c-ink3);
+  background:var(--c-bg); border:1px solid var(--c-line);
+  border-radius:var(--r-pill); padding:var(--s1) var(--s3);
+}
+.tq-rail__tag--on{ color:var(--c-on-primary); background:var(--c-primary); border-color:var(--c-primary); }
+.tq-rail__cap{ font-size:var(--fs-note); color:var(--c-ink3); margin:var(--s3) 0 0; }
+
+/* --- 列そのもの --- */
+.tq-rail__list{
+  --card:300px;                      /* アイテム幅 300〜420px */
+  list-style:none; margin:0; padding:0;
+  display:flex; gap:22px;
+}
+/* min-width:0 が無いと flex の自動最小サイズが効き、nowrap の本文幅までカードが太る */
+.tq-rail__list > li{ flex:0 0 var(--card); min-width:0; }
+
+/* 普通：コンテナ内に3枚を収め、端で切れない */
+.tq-rail__list--plain{ justify-content:center; }
+.tq-rail__list--plain > li{ flex:0 1 var(--card); }
+
+/* この工夫：両端で断ち落とす */
+.tq-rail__list--cut{
+  overflow-x:auto; overscroll-behavior-x:contain;
+  scroll-snap-type:x mandatory;
+  margin-inline:calc(50% - 50vw);
+  padding-inline:48px;
+  /* ← padding と同値の scroll-padding が無いと、スナップした瞬間に端の覗きが消える */
+  scroll-padding-inline:48px;
+  scrollbar-width:none;
+}
+.tq-rail__list--cut > li{ scroll-snap-align:start; }
+.tq-rail__list--cut::-webkit-scrollbar{ display:none; }
+/* 停止位置でも左端に「前のカット」を出すための1枚（実装では前後ループの複製にあたる） */
+.tq-rail__list--cut > .tq-rail__prev{
+  margin-left:calc(-1 * var(--card)); scroll-snap-align:none;
+}
+
+/* 片端だけ：左は版面に揃え、右だけ画面外へ */
+.tq-rail__list--r{
+  margin-left:0; margin-right:calc(50% - 50vw);
+  padding-left:0; padding-right:30vw;
+  scroll-padding-inline:0 30vw;
+}
+
+/* --- カード --- */
+.tq-rail__card{
+  background:var(--c-bg); border-radius:var(--r-m);
+  overflow:hidden; box-shadow:var(--shadow);
+}
+.tq-rail__card img{ display:block; width:100%; height:170px; object-fit:cover; }
+.tq-rail__body{ padding:var(--s4); }
+.tq-rail__ttl{
+  font-family:var(--f-disp); font-size:var(--fs-md); line-height:var(--lh-tight);
+  color:var(--c-ink); margin:0 0 var(--s2);
+}
+/* 文字が途中で切れるのを許す（… は付けない＝省略でなく続き） */
+.tq-rail__txt{
+  font-size:var(--fs-sm); color:var(--c-ink3); margin:0;
+  white-space:nowrap; overflow:hidden;
+}
+
+@media (max-width:760px){
+  .tq-rail__list{ --card:240px; }
+  .tq-rail__list--cut{ padding-inline:30px; scroll-padding-inline:30px; }
+  .tq-rail__list--r{ padding-right:40vw; scroll-padding-inline:0 40vw; }
+  /* 中央寄せのまま溢れると1枚目が左へ出て掴めなくなるので、SPでは起点を左へ */
+  .tq-rail__list--plain{ justify-content:flex-start; overflow-x:auto; scrollbar-width:none; }
+  .tq-rail__list--plain > li{ flex:0 0 var(--card); }
+  .tq-rail__list--plain::-webkit-scrollbar{ display:none; }
+  .tq-rail__card img{ height:140px; }
+}
+</style>
+
+<!-- 1. 普通：コンテナ幅に収め、端で切れないようにする -->
+<section class="tq-rail">
+  <div class="tq-rail__inner">
+    <p class="tq-rail__tag">普通</p>
+    <ul class="tq-rail__list tq-rail__list--plain">
+      <li>
+        <article class="tq-rail__card">
+          <img src="../../../docs/demo/ph_a.jpg" alt="">
+          <div class="tq-rail__body">
+            <h3 class="tq-rail__ttl">見出しがここに入ります</h3>
+            <p class="tq-rail__txt">補足のテキストがここに入ります</p>
+          </div>
+        </article>
+      </li>
+      <li>
+        <article class="tq-rail__card">
+          <img src="../../../docs/demo/ph_b.jpg" alt="">
+          <div class="tq-rail__body">
+            <h3 class="tq-rail__ttl">見出しがここに入ります</h3>
+            <p class="tq-rail__txt">補足のテキストがここに入ります</p>
+          </div>
+        </article>
+      </li>
+      <li>
+        <article class="tq-rail__card">
+          <img src="../../../docs/demo/ph_a.jpg" alt="">
+          <div class="tq-rail__body">
+            <h3 class="tq-rail__ttl">見出しがここに入ります</h3>
+            <p class="tq-rail__txt">補足のテキストがここに入ります</p>
+          </div>
+        </article>
+      </li>
+    </ul>
+    <p class="tq-rail__cap">コンテナ幅の内側で完結させる。続きがあるかどうかは読み取れない</p>
+  </div>
+</section>
+
+<!-- 2. この工夫：両端で断ち落とす -->
+<section class="tq-rail tq-rail--alt">
+  <div class="tq-rail__inner">
+    <p class="tq-rail__tag tq-rail__tag--on">この工夫｜両端を断ち落とす</p>
+  </div>
+  <div class="tq-rail__inner">
+    <ul class="tq-rail__list tq-rail__list--cut">
+      <li class="tq-rail__prev" aria-hidden="true">
+        <article class="tq-rail__card">
+          <img src="../../../docs/demo/ph_a.jpg" alt="">
+          <div class="tq-rail__body">
+            <h3 class="tq-rail__ttl">見出しがここに入ります</h3>
+            <p class="tq-rail__txt">補足のテキストがここに入ります。行はここで途中でも構わない</p>
+          </div>
+        </article>
+      </li>
+      <li>
+        <article class="tq-rail__card">
+          <img src="../../../docs/demo/ph_b.jpg" alt="">
+          <div class="tq-rail__body">
+            <h3 class="tq-rail__ttl">見出しがここに入ります</h3>
+            <p class="tq-rail__txt">補足のテキストがここに入ります。行はここで途中でも構わない</p>
+          </div>
+        </article>
+      </li>
+      <li>
+        <article class="tq-rail__card">
+          <img src="../../../docs/demo/ph_a.jpg" alt="">
+          <div class="tq-rail__body">
+            <h3 class="tq-rail__ttl">見出しがここに入ります</h3>
+            <p class="tq-rail__txt">補足のテキストがここに入ります。行はここで途中でも構わない</p>
+          </div>
+        </article>
+      </li>
+      <li>
+        <article class="tq-rail__card">
+          <img src="../../../docs/demo/ph_b.jpg" alt="">
+          <div class="tq-rail__body">
+            <h3 class="tq-rail__ttl">見出しがここに入ります</h3>
+            <p class="tq-rail__txt">補足のテキストがここに入ります。行はここで途中でも構わない</p>
+          </div>
+        </article>
+      </li>
+      <li>
+        <article class="tq-rail__card">
+          <img src="../../../docs/demo/ph_a.jpg" alt="">
+          <div class="tq-rail__body">
+            <h3 class="tq-rail__ttl">見出しがここに入ります</h3>
+            <p class="tq-rail__txt">補足のテキストがここに入ります。行はここで途中でも構わない</p>
+          </div>
+        </article>
+      </li>
+      <li>
+        <article class="tq-rail__card">
+          <img src="../../../docs/demo/ph_b.jpg" alt="">
+          <div class="tq-rail__body">
+            <h3 class="tq-rail__ttl">見出しがここに入ります</h3>
+            <p class="tq-rail__txt">補足のテキストがここに入ります。行はここで途中でも構わない</p>
+          </div>
+        </article>
+      </li>
+      <li>
+        <article class="tq-rail__card">
+          <img src="../../../docs/demo/ph_a.jpg" alt="">
+          <div class="tq-rail__body">
+            <h3 class="tq-rail__ttl">見出しがここに入ります</h3>
+            <p class="tq-rail__txt">補足のテキストがここに入ります。行はここで途中でも構わない</p>
+          </div>
+        </article>
+      </li>
+    </ul>
+  </div>
+  <div class="tq-rail__inner">
+    <p class="tq-rail__cap">左右の端に前後のカットが覗く（PC 48px／SP 30px）。矢印も「もっと見る」も置いていない</p>
+  </div>
+</section>
+
+<!-- 3. 片端だけ：左は版面に揃え、右だけ画面外へ -->
+<section class="tq-rail">
+  <div class="tq-rail__inner">
+    <p class="tq-rail__tag tq-rail__tag--on">この工夫｜右だけ断ち落とす（非対称）</p>
+  </div>
+  <div class="tq-rail__inner">
+    <ul class="tq-rail__list tq-rail__list--cut tq-rail__list--r">
+      <li>
+        <article class="tq-rail__card">
+          <img src="../../../docs/demo/ph_a.jpg" alt="">
+          <div class="tq-rail__body">
+            <h3 class="tq-rail__ttl">見出しがここに入ります</h3>
+            <p class="tq-rail__txt">補足のテキストがここに入ります。行はここで途中でも構わない</p>
+          </div>
+        </article>
+      </li>
+      <li>
+        <article class="tq-rail__card">
+          <img src="../../../docs/demo/ph_b.jpg" alt="">
+          <div class="tq-rail__body">
+            <h3 class="tq-rail__ttl">見出しがここに入ります</h3>
+            <p class="tq-rail__txt">補足のテキストがここに入ります。行はここで途中でも構わない</p>
+          </div>
+        </article>
+      </li>
+      <li>
+        <article class="tq-rail__card">
+          <img src="../../../docs/demo/ph_a.jpg" alt="">
+          <div class="tq-rail__body">
+            <h3 class="tq-rail__ttl">見出しがここに入ります</h3>
+            <p class="tq-rail__txt">補足のテキストがここに入ります。行はここで途中でも構わない</p>
+          </div>
+        </article>
+      </li>
+      <li>
+        <article class="tq-rail__card">
+          <img src="../../../docs/demo/ph_b.jpg" alt="">
+          <div class="tq-rail__body">
+            <h3 class="tq-rail__ttl">見出しがここに入ります</h3>
+            <p class="tq-rail__txt">補足のテキストがここに入ります。行はここで途中でも構わない</p>
+          </div>
+        </article>
+      </li>
+      <li>
+        <article class="tq-rail__card">
+          <img src="../../../docs/demo/ph_a.jpg" alt="">
+          <div class="tq-rail__body">
+            <h3 class="tq-rail__ttl">見出しがここに入ります</h3>
+            <p class="tq-rail__txt">補足のテキストがここに入ります。行はここで途中でも構わない</p>
+          </div>
+        </article>
+      </li>
+      <li>
+        <article class="tq-rail__card">
+          <img src="../../../docs/demo/ph_b.jpg" alt="">
+          <div class="tq-rail__body">
+            <h3 class="tq-rail__ttl">見出しがここに入ります</h3>
+            <p class="tq-rail__txt">補足のテキストがここに入ります。行はここで途中でも構わない</p>
+          </div>
+        </article>
+      </li>
+    </ul>
+  </div>
+  <div class="tq-rail__inner">
+    <p class="tq-rail__cap">左端は版面のグリッドに揃い、右だけが画面外へ流れる</p>
+  </div>
+</section>

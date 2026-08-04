@@ -1,0 +1,28 @@
+{
+  "id": "rule/mat-frame",
+  "name": "線は要素に密着させず、10〜22px離して外側に回す（額装）",
+  "ordinary": "写真に角丸＋ドロップシャドウを付けて浮かせる／図をカードで囲う",
+  "actual": "写真は角丸0・影0のまま、outline-offset:10px で砂色の1px線を外周に回し、線と写真の間の空気そのものをマット（額の白台紙）にする。色面でやるなら緑ベタの角丸28pxパネルに padding:20px、内側の写真は角丸14pxの二重角丸にして額縁を線でなく面で作る。囲いを主張させたくない図なら inset:-22px の2px点線の円を1本だけ回し、線が図形の背後を横切るようにする。",
+  "css": "img{border-radius:0;box-shadow:none;outline:1px solid #cabfa6;outline-offset:10px}\n/* 色面のマット（二重角丸） */\n.panel{background:#36c29f;border-radius:28px;padding:20px}\n.panel img{display:block;width:100%;border-radius:14px}\n/* 主張しない外周 */\n.orbit{position:absolute;inset:-22px;border:2px dotted #cbb7b3;border-radius:50%;z-index:0}",
+  "params": [
+    "offset 10px（線）／padding 20px（色面）",
+    "外角丸28px＋内角丸14px",
+    "点線 or 実線",
+    "線色は地より2〜3段暗いだけ"
+  ],
+  "appliesTo": ["hero", "voice", "member", "features"],
+  "impact": 2,
+  "effort": 1,
+  "why": "線と要素の間の空気が「額装された一枚」に見せるので、影を使わずに格が上がる",
+  "avoid": "要素が小さいとき（offsetぶんの空気が取れず、ただの二重枠に見える）",
+  "sources": ["yugao_s13", "sho_seiha_s08", "meisei-kg_s05"],
+  "notes": [
+    "現物の色を実測：yugao_s13 の地は #F8F4EB、回している線は #CABFA6。地との差はごく浅く、線は「見える／見えない」の境目にある。線を濃くすると額装でなく囲いになるので、地より2〜3段暗いだけ、が寸法と同じくらい効いている。",
+    "実装上の落とし穴：outline は要素の外側に描かれるがレイアウト上の場所を取らない。offset ぶんの margin（または親の padding）を自分で確保しないと、隣の要素や親の端に線が食い込む。demo では img に margin:10px を足して offset と同値にしてある。",
+    "border ではなく outline を使う理由は2つ。border だと要素サイズが変わって写真の縦横比がずれること、そして border-radius:0 の写真に対して「密着した枠」しか作れないこと。offset を持てるのは outline だけ。",
+    "色面版（sho_seiha_s08）の実測値：パネル #36C29D、外角丸28px・padding 20px・内側写真の角丸14px。外と内の角丸を同じにすると額縁が消えて「角丸写真」に戻る。外:内 = 2:1 が現物の比率。",
+    "点線の外周（meisei-kg_s05）は、線がラベル円の背後を横切ることが要点。ラベルを線の上に載せる（z-index を上げる）と線が途切れて見え、囲いでなく『図の外側にある一本』として読める。線が要素をなぞった瞬間に囲いになる。",
+    "効かない条件を demo ④ で並べた。offset は同じ 10px でも、要素が 56×42px まで小さいと線と要素の距離が相対的に大きくなり、台紙でなく二重枠として読まれる。目安として要素の短辺が offset の10倍（100px前後）を下回ると崩れ始める。"
+  ],
+  "demoNotes": "①普通（角丸＋影）／この工夫（角丸0・影0＋outline-offset:10px）を横並び。②色面のマットを padding:0 版と 20px＋二重角丸版で対比。③点線の外周がラベル円の背後を横切る図。④同じ offset のまま要素サイズだけ3段階に振って、効かなくなる境目を見せた。"
+}

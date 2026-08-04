@@ -1,0 +1,145 @@
+<style>
+/* ==========================================================
+   edge/split-and-straddle — 背景をハード分割し、継ぎ目をまたがせる
+   :where(:root) はトークン未読込時のフォールバック（優先度0）。
+   ========================================================== */
+:where(:root){
+  --c-primary:#00B220; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-num:"Helvetica Neue",Arial,var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px; --fs-lg:21px; --fs-xl:28px;
+  --lh-tight:1.35; --lh-body:1.9;
+  --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+  --r-s:6px; --r-m:12px; --r-l:24px;
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+
+.tq-split{
+  font-family:var(--f-sans); color:var(--c-ink2); background:var(--c-bg);
+  max-width:var(--w-max); margin:0 auto; padding:var(--s6) var(--w-gut);
+}
+.tq-split__h{ font-size:var(--fs-md); font-weight:700; color:var(--c-ink); line-height:var(--lh-tight); margin:0 0 var(--s2); }
+.tq-split__lead{ font-size:var(--fs-sm); line-height:var(--lh-body); color:var(--c-ink3); margin:0 0 var(--s5); }
+.tq-split__row{ display:grid; gap:var(--s5); grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr)); }
+.tq-split__fig{ margin:0; }
+.tq-split__cap{ font-size:var(--fs-note); line-height:var(--lh-tight); color:var(--c-ink3); margin:var(--s3) 0 0; }
+.tq-split__cap b{ display:block; color:var(--c-ink); font-size:var(--fs-sm); margin-bottom:2px; }
+
+.tq-split__stage{
+  position:relative; height:260px; overflow:hidden;
+  border-radius:var(--r-m); border:1px solid var(--c-line);
+}
+
+/* --- A｜普通：背景は1色、色替えはコンテンツの外で水平に切る --- */
+.tq-split__stage--plain{
+  background:linear-gradient(var(--c-primary-l) 0 78%, var(--c-primary) 78% 100%);
+}
+.tq-split__stage--plain .tq-split__card{ bottom:80px; }
+
+/* --- B｜横割り62% + カードまたぎ --- */
+.tq-split__stage--h{
+  background:linear-gradient(var(--c-primary-l) 0 62%, var(--c-primary) 62% 100%);
+}
+.tq-split__card{
+  position:absolute; z-index:1; left:12%; right:12%; top:44px; bottom:56px;
+  background:var(--c-bg); border-radius:var(--r-l);
+  padding:var(--s4); display:flex; flex-direction:column; justify-content:center; gap:var(--s2);
+}
+.tq-split__card p{ margin:0; }
+.tq-split__ttl{ font-size:var(--fs-md); font-weight:700; color:var(--c-ink); line-height:var(--lh-tight); }
+.tq-split__sub{ font-size:var(--fs-note); color:var(--c-ink3); line-height:var(--lh-tight); }
+
+/* --- C｜縦割り27% + 大見出しが継ぎ目を食う --- */
+.tq-split__stage--v{
+  background:linear-gradient(90deg,var(--c-ink2) 0 27%, var(--c-ink) 27% 100%);
+  padding:var(--s5) 0 0;
+}
+.tq-split__vttl{
+  position:relative; z-index:1; margin:0 0 var(--s4) 6%;
+  font-family:var(--f-num); font-size:var(--fs-xl); font-weight:800; letter-spacing:.02em;
+  color:var(--c-on-primary); line-height:var(--lh-tight);
+}
+.tq-split__thumbs{ display:flex; gap:var(--s3); padding:0 6%; }
+.tq-split__thumbs img{
+  flex:1 1 0; min-width:0; width:100%;
+  height:110px; object-fit:cover; border-radius:var(--r-s); display:block;
+}
+
+/* --- D｜コンテンツを避けない色帯 --- */
+.tq-split__stage--band{
+  background:var(--c-bg); isolation:isolate;
+  display:grid; grid-template-columns:44% 1fr; gap:var(--s4);
+  padding:var(--s5) var(--s5) 0;
+}
+.tq-split__stage--band::after{
+  content:''; position:absolute; inset:auto 0 0 0; height:40%;
+  background:var(--c-primary-l); z-index:-1;
+}
+.tq-split__stage--band img{ width:100%; height:170px; object-fit:cover; border-radius:var(--r-s); display:block; }
+.tq-split__body h3{ margin:0 0 var(--s2); font-size:var(--fs-base); color:var(--c-ink); line-height:var(--lh-tight); }
+.tq-split__body p{ margin:0; font-size:var(--fs-note); color:var(--c-ink2); line-height:var(--lh-body); }
+
+@media (max-width:420px){
+  .tq-split__stage{ height:240px; }
+  .tq-split__card{ left:8%; right:8%; }
+  .tq-split__stage--band{ grid-template-columns:1fr; }
+  .tq-split__stage--band img{ height:100px; }
+}
+</style>
+
+<div class="tq-split">
+
+  <p class="tq-split__h">背景の切れ目と、要素の切れ目をずらす</p>
+  <p class="tq-split__lead">
+    左は背景の色替えをカードの外（余白）でやっている。右は同じ2色を高さ62%でハードに割り、
+    カードをその線にまたがせた。継ぎ目はカードの裏に隠れて左右の端にしか見えないのに、面が2枚あることは伝わる。
+  </p>
+
+  <div class="tq-split__row">
+
+    <figure class="tq-split__fig">
+      <div class="tq-split__stage tq-split__stage--plain">
+        <div class="tq-split__card">
+          <p class="tq-split__ttl">見出しがここに入ります</p>
+          <p class="tq-split__sub">補足テキストがここに入ります</p>
+        </div>
+      </div>
+      <p class="tq-split__cap"><b>普通</b>背景の切り替えはコンテンツの下の余白で。線がまるごと1本見えるだけ。</p>
+    </figure>
+
+    <figure class="tq-split__fig">
+      <div class="tq-split__stage tq-split__stage--h">
+        <div class="tq-split__card">
+          <p class="tq-split__ttl">見出しがここに入ります</p>
+          <p class="tq-split__sub">補足テキストがここに入ります</p>
+        </div>
+      </div>
+      <p class="tq-split__cap"><b>この工夫｜横割り62%</b>継ぎ目をカードで隠す。下段が土台になり、カードが手前に浮く。</p>
+    </figure>
+
+    <figure class="tq-split__fig">
+      <div class="tq-split__stage tq-split__stage--v">
+        <p class="tq-split__vttl">SECTION TITLE</p>
+        <div class="tq-split__thumbs">
+          <img src="../../../docs/demo/ph_a.jpg" alt="">
+          <img src="../../../docs/demo/ph_b.jpg" alt="">
+        </div>
+      </div>
+      <p class="tq-split__cap"><b>縦割り27%</b>明度差だけの2面を縦に割り、大見出しが継ぎ目を食う。色ではなく層だけが伝わる。</p>
+    </figure>
+
+    <figure class="tq-split__fig">
+      <div class="tq-split__stage tq-split__stage--band">
+        <img src="../../../docs/demo/ph_b.jpg" alt="">
+        <div class="tq-split__body">
+          <h3>見出しがここに入ります</h3>
+          <p>本文がここに入ります。色帯の上辺は本文の最終行と写真の下1/4をそのまま横切り、コンテンツを避けません。</p>
+        </div>
+      </div>
+      <p class="tq-split__cap"><b>コンテンツを避けない色帯</b>帯の上辺が写真と本文を貫く。帯は z-index:-1、親に isolation:isolate。</p>
+    </figure>
+
+  </div>
+</div>

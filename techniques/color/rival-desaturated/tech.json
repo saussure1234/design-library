@@ -1,0 +1,27 @@
+{
+  "id": "color/rival-desaturated",
+  "name": "比較の「よくない側／残り」に色を与えず、彩度の有無で結論を語る",
+  "ordinary": "自社を赤系・他社を青系のように2色で塗り分ける／円グラフの残りをグレーで塗る",
+  "actual": "自社側だけがティール(#0090a8)やピンク(#ff2d78)を持ち、他社列は見出しも本文も#9a9a9a で色相をひとつも持たない。棒グラフでは「増えた側」の棒・数値・軸ラベルの3箇所だけがティールで、開始値は#cdcdcf。円グラフの残り4.7%もグレーで塗らず白い欠けのまま12時に開けてある。",
+  "css": ":root{--own:#0090a8;--dim:#cdcdcf}\n.own,.after{color:var(--own)} .own .bar,.after .bar{background:var(--own)}\n.rival,.before{color:#9a9a9a} .rival .title{color:#7d7d7d;font-weight:700}\n.rival .bar,.before .bar{background:var(--dim)}\n/* 残りは塗らない（欠けにする） */\n.ring{width:300px;aspect-ratio:1;border-radius:50%;position:relative;background:conic-gradient(#f07800 0 95.3%,#fff 95.3% 100%)}\n.ring::after{content:'';position:absolute;inset:26px;border-radius:50%;background:#f7f4ee}",
+  "appliesTo": ["value", "features", "price"],
+  "impact": 3,
+  "effort": 1,
+  "why": "優劣や前後を文で言う前に彩度の有無が結論を伝えるので、凡例も「※当社比」の説明も要らなくなる",
+  "params": [
+    "自社側の色相",
+    "他社側のグレー値（文字まで落とすか面だけか）",
+    "残りを塗るか欠けにするか"
+  ],
+  "avoid": "比較が対等でどちらも勧める場合（不当な誘導になる）",
+  "sources": ["sho_atama_s09", "sho_globalcrown_s12", "sho_kimini_s04", "sho_smilezemi_s03"],
+  "notes": [
+    "棒グラフ（sho_kimini_s04）で色が付いているのは3箇所だけ：伸びた棒／その上の数値／見出しの数字。開始側は棒 #cdcdcf・数値 #9a9a9a・軸ラベルもグレー。棒2本の高さ差より先に『色があるのは右だけ』が読めるので、伸び幅を説明する文が要らなくなる。",
+    "比較表（sho_globalcrown_s12）は自社列だけがピンクの枠とチェック記号を持ち、他社列は見出しも本文も注記もすべてグレー。他社列に薄い背景色（青やグレーのティント）を敷くと『2色で塗り分け』に戻ってしまうので、他社列の地は自社列とまったく同じ地色のままにする。",
+    "円グラフ（sho_smilezemi_s03）の残り4.7%は塗らず、地の色のまま欠けとして12時に開けてある。conic-gradient の2区間目を地色にするのが実装。グレーで塗ると『4.7%という別のデータ』に見えてしまう。",
+    "sho_atama_s09 の積み上げ棒では、他社側の複数項目を1色のグレーの濃淡だけで積み、自社側は該当項目だけティールのベタ。他社側で濃淡を使う場合も色相は0のまま保つ。",
+    "他社列の文字は #9a9a9a まで落とすが、見出しだけ #7d7d7d に一段濃くして太字にすると『読めない／隠している』感じが消える。彩度は0のままなので結論は変わらない。",
+    "avoid の通り、対等な比較（どちらも勧める）には使えない。片方に有利な結論を出すことが目的の図にだけ使う。"
+  ],
+  "demoNotes": "3種（棒グラフ／比較表／円グラフ）それぞれで、左＝普通（2色で塗り分け・残りをグレー）／右＝この工夫（彩度の有無だけ）を並べた。"
+}

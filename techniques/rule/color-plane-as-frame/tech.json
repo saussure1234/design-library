@@ -1,0 +1,30 @@
+{
+  "id": "rule/color-plane-as-frame",
+  "name": "隙間ゼロで色面を突き合わせ、色の変わり目を枠の代わりにする",
+  "ordinary": "カードをgap24px＋角丸＋影で等間隔に並べる",
+  "actual": "gap:0・border-radius:0・box-shadow:none でベタ面を連結し、区切りは色の変わり目1本だけ。3色なら全体が1本の横長バンドに見える。タイル型は1枚だけ grid-row:1/3 で高さを倍にして単調さを消す。ラベルは面の外に出さず面の下端12pxに入れ、罫は群全体の底に1本だけ。見出しの地帯も同じで、角丸・枠線なしの帯を文字より左右へ大きくはみ出させ、端は写真の弧に食わせて切りっぱなしにする。",
+  "css": ".band{display:grid;grid-template-columns:repeat(3,1fr);gap:0}\n.band>*{border-radius:0;box-shadow:none;border:0}\n.band>*:nth-child(1){background:#fcd500}\n.band>*:nth-child(2){background:#f5a8cd}\n.band>*:nth-child(3){background:#26bfa5}\n/* 1枚だけ縦2枚ぶんに */\n.grid{display:grid;grid-template-columns:46% 27% 27%;grid-template-rows:1fr 1fr;gap:0}\n.grid>:first-child{grid-row:1/3}\n/* ラベルを面の中へ、罫は底1本 */\n.step{border:0;display:flex;align-items:flex-end;justify-content:center;padding-bottom:12px}\n.steps{border-bottom:1px solid #e0e6e9}\n/* 見出しの地帯を写真に食わせる */\nh2{display:inline-block;background:linear-gradient(90deg,#eef3c8,#d9efe8);padding:.5em 3em .5em 2.5em;border-radius:0;position:relative;z-index:0}\nfigure{position:relative;z-index:1}",
+  "params": [
+    "gap 0 or 5px（白の細隙間）",
+    "色数3〜6",
+    "1枚だけ倍サイズにするか",
+    "帯のはみ出し量（文字＋2.5〜3em）"
+  ],
+  "appliesTo": ["cta", "features", "value", "flow"],
+  "impact": 3,
+  "effort": 1,
+  "why": "分割線を引かずに色替えだけで割ると、面の強さが保たれて全体が1つの塊として目に入る",
+  "avoid": "面ごとに情報量の差が大きいとき（隙間0だと軽い面が潰れて見える）",
+  "sources": ["tanq_s11", "kobe-wu_s06", "odrive_s07", "sho_smilezemi_s15", "koran_s05"],
+  "notes": [
+    "tanq_s11 の現物（黄／ピンク／ティールの3面CTA）は、3面の色差が非常に大きいのに1本のバンドとして読める。3面とも情報量が完全に同じ（アイコン＋見出し2行＋説明2行＋ボタン1つ）だからで、avoid にある『情報量の差』はこの現物の裏返し。実運用では面の中身を先に揃えてから gap:0 にする。",
+    "tanq_s11 は面そのものの上端に細い多色ストライプが1本走っている。ベタ面だけだと『塗りつぶし』に見えるので、群の外側に細い装飾を1本足して群の始まりを示している。罫を引かない代わりの合図がここにある。",
+    "kobe-wu_s06 のタイル型は 46% / 27% / 27% の3列×2行で、左の1枚だけ grid-row:1/3。写真の上に単色を約60%で重ねる方式（面ごとに色が違う＝duotone）なので、gap:0 でも写真同士がぶつからない。写真をそのまま隙間ゼロで並べると境目が読めなくなるため、この工夫を写真に使うときは色オーバーレイとセットになる。",
+    "kobe-wu_s06 のラベルは面の中（下寄せ・中央）に置かれ、面の外には一切出ていない。ラベルを面の外に出した瞬間に『カードとキャプション』の関係に戻ってしまい、連結が崩れる。",
+    "odrive_s07 / sho_smilezemi_s15 の段階表示は、面ごとの区切り罫を持たず、群全体の底にだけ1pxが入る。『ここまでが1群』を示す線は1本で足りる。",
+    "koran_s05 / koran_s07 の見出し帯は角丸ゼロのグラデ帯で、文字の左右へ2.5〜3em はみ出し、右端は写真の大きな弧の下に潜って切れている。帯の終端を自分で決めず写真に決めさせるのが要点で、帯に角丸を付けた瞬間に『ラベル部品』に見えて写真と切り離れる。",
+    "🚨実装上の注意：写真側を position:relative + z-index:1、帯側の親を z-index:0 にしないと、帯が写真の上に出て弧が効かない。またグリッドの親に overflow:hidden を掛けておくと、帯が版面の外へ抜けたときに横スクロールが出ない。",
+    "デモの色は原典の黄／ピンク／ティールではなく、トークン（--c-primary / --c-accent）から color-mix で3〜6色を作っている。この工夫は特定の色相ではなく『隙間ゼロ＋角丸ゼロ』が本体なので、色は案件のトークンから派生させれば成立する。"
+  ],
+  "demoNotes": "4セクションとも「普通」を上、「この工夫」を下に縦積みで対比。①gap24＋角丸＋影 vs gap0のベタ3面、②等分カード vs 46/27/27＋1枚だけ2行ぶん（写真＋色オーバーレイ）、③ラベルを外にピル vs 面の下端12px＋群の底に罫1本、④角丸ラベル vs 角丸0の帯を写真の弧に食わせる。"
+}

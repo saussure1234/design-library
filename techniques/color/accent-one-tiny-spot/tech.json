@@ -1,0 +1,26 @@
+{
+  "id": "color/accent-one-tiny-spot",
+  "name": "有彩色を画面で最も小さい1点にだけ置く",
+  "ordinary": "ブランドカラーを見出し・タグ・日付・ボタンに散らして「らしさ」を出す",
+  "actual": "白黒グレーだけの画面で色が付いているのは、10pxの日付一行／70×16pxの「INTERVIEW」バッジ／見出し中の「人間力」3文字／高さ16pxのタグピル、のいずれか1つだけ。同じ列にある日付・カテゴリ・#タグは全部#8a8a8a前後のグレーに落としてある。2案の識別も、カード面・本文・罫は同じ無彩色のまま幅70pxのピル1個の色だけ（シアン／コーラル）で担う。",
+  "css": ":root{--accent:#e2231a}\n.card h3,.card p{color:#1a1a1a}\n.card .date,.card .cat,.card .tags{color:#8a8a8a}\n.card .badge{background:var(--accent);color:#fff;font-size:9px;letter-spacing:.12em;padding:3px 8px;border-radius:0}\n/* 文中1点だけ色を置く */\nh3 em{font-style:normal;color:#b08d4a}\n/* 2案の識別をピル1個に担わせる */\n.card{background:#eef1f5;border:0;border-radius:14px}\n.badge--a{background:#1eaede;color:#fff;border-radius:999px;padding:5px 14px;font-size:12px}\n.badge--b{background:#f4525f}",
+  "appliesTo": ["features", "value", "voice", "member"],
+  "impact": 3,
+  "effort": 1,
+  "why": "面積が小さいほど色は強く効くので、1点に絞ると「どこから読むか」が説明なしに決まる",
+  "params": [
+    "色を置く1要素（日付／バッジ／語／ピル）",
+    "accentの色相",
+    "無彩色側のグレー値 #8a8a8a〜#9a9a9a"
+  ],
+  "avoid": "色＝クリックの規則（color/accent-means-clickable）を同じページで併用すると、色の意味が二重になって両方死ぬ",
+  "sources": ["odrive_s09", "odrive_s05", "odrive_s03", "musashino_s12", "lumiarch_s05", "tanq_s08"],
+  "notes": [
+    "現物（odrive_s03/s05）で測ると、赤バッジは実寸 約62×15px・文字9px・字間.12em・角丸0。角を丸めると『タグ』に見えて色の格が下がるので、角丸0のまま置くのが効いている。",
+    "効き目を決めているのは accent の彩度ではなく『落とした側のグレー』。日付・カテゴリ・#タグを --c-ink3(#707070) まで濃くすると、色1点の相対的な強さが落ちる。#8a8a8a〜#9a9a9a が現物の値で、本文の黒(#1a1a1a前後)とも十分に差が付く。",
+    "1点の置き場所は4通りあり、どれも『行の中で最も小さい要素』である点が共通。日付10px（odrive_s09の暗い地）／バッジ70×16px（odrive_s03）／見出し中の3文字（musashino_s12・明朝＋金）／タグピル高さ16px（lumiarch_s05）。同じカード内で2つ以上を色にすると規則が壊れる。",
+    "tanq_s08 の『2案の識別』は同じ原理の応用。カード面・本文・区切り罫・下部の黒ピルまで完全に同一にして、上端の幅70pxピル1個の色（シアン／コーラル）だけで別案だと分からせている。面の色や枠線で塗り分けないのが要点。",
+    "実装上の注意：見出し中の1語は <em> を font-style:normal に戻して色だけ与える。太字にすると『色＋太さ』の二重強調になり、色1点の潔さが消える。"
+  ],
+  "demoNotes": "左＝普通（色を4か所に散らす）／右＝この工夫。下段に『1点をどこに置くか』の4通りと、tanq_s08 の2案識別ピルを並べた。"
+}

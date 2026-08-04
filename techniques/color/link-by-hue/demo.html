@@ -1,0 +1,272 @@
+<style>
+/* ============================================================
+   color/link-by-hue
+   引き出し線も番号も使わず、色の一致だけで対応をつくる
+   ============================================================ */
+
+@layer tq-fallback{
+  :root{
+    --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+    --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3;
+    --c-on-primary:#FFFFFF;
+    --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    --f-disp:var(--f-sans);
+    --f-num:"Helvetica Neue",Arial,var(--f-sans);
+    --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+    --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+    --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+    --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  }
+}
+
+/* この工夫が要求する値（案件では :root で差し替え） */
+:root{
+  --tq-lbh-1:#3aa9dc;   /* 図の円1 ／ 説明1 */
+  --tq-lbh-2:#7b78bd;   /* 図の円2 ／ 説明2 */
+  --tq-lbh-3:#35bfae;   /* 図の円3 ／ 説明3 */
+  /* 見出しを色の出典にする版の5色 */
+  --tq-lbh-p1:#f5a04a; --tq-lbh-p2:#ef7fa5; --tq-lbh-p3:#9a86d8;
+  --tq-lbh-p4:#6fa8dc; --tq-lbh-p5:#7fc9ae;
+  --tq-lbh-x:#8a8a8a;   /* 「普通」用：引き出し線・番号の色 */
+}
+
+.tq-lbh{
+  font-family:var(--f-sans); color:var(--c-ink);
+  line-height:var(--lh-head); -webkit-text-size-adjust:100%;
+  padding:var(--s5); background:var(--c-bg);
+}
+.tq-lbh *{box-sizing:border-box}
+
+.tq-lbh__lead{
+  margin:0 0 var(--s5); font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-lbh__cap{
+  display:flex; align-items:center; gap:var(--s2);
+  margin:0 0 var(--s3); font-size:var(--fs-note); font-weight:700;
+  color:var(--c-ink3); letter-spacing:.04em;
+}
+.tq-lbh__cap::before{
+  content:""; width:var(--s5); height:1px; background:var(--c-line); flex:0 0 auto;
+}
+.tq-lbh__note{
+  margin:var(--s3) 0 0; font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-lbh__sec{ margin-top:var(--s7) }
+.tq-lbh__sec:first-of-type{ margin-top:0 }
+.tq-lbh__secttl{ margin:0 0 var(--s4); font-size:var(--fs-sm); font-weight:700 }
+.tq-lbh__pair{
+  display:grid; gap:var(--s5);
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+}
+
+/* --- 図＋説明 ---------------------------------------------- */
+.tq-lbh__unit{
+  display:grid; gap:var(--s5);
+  grid-template-columns:minmax(0,150px) minmax(0,1fr);
+  align-items:center;
+}
+/* 図：円3つを三角に置く */
+.tq-lbh__fig{
+  display:grid; gap:var(--s2);
+  grid-template-columns:1fr 1fr;
+  justify-items:center;
+}
+.tq-lbh__circle{
+  display:flex; align-items:center; justify-content:center;
+  width:100%; max-width:74px; aspect-ratio:1; border-radius:50%;
+  background:var(--c); color:var(--c-on-primary);
+  font-size:10px; font-weight:700; text-align:center; line-height:1.3;
+  padding:var(--s1);
+}
+.tq-lbh__circle--1{ --c:var(--tq-lbh-1); grid-column:1/3 }
+.tq-lbh__circle--2{ --c:var(--tq-lbh-2) }
+.tq-lbh__circle--3{ --c:var(--tq-lbh-3) }
+
+/* 説明：囲みも区切り罫も持たない。手掛かりは4pxの縦バーの色だけ */
+.tq-lbh__blocks{ display:flex; flex-direction:column; gap:var(--s4) }
+.tq-lbh__block{ border:0; background:none; padding:0 }
+.tq-lbh__block--1{ --c:var(--tq-lbh-1) }
+.tq-lbh__block--2{ --c:var(--tq-lbh-2) }
+.tq-lbh__block--3{ --c:var(--tq-lbh-3) }
+.tq-lbh__bh{
+  margin:0 0 var(--s2); padding-left:var(--s3);
+  border-left:4px solid var(--c);
+  font-size:var(--fs-sm); font-weight:700; color:var(--c);
+  line-height:var(--lh-head);
+}
+.tq-lbh__bh small{
+  display:block; font-size:10px; font-weight:400; color:var(--c-ink3);
+}
+.tq-lbh__list{ margin:0; padding-left:var(--s4); list-style:disc }
+.tq-lbh__list li{
+  font-size:var(--fs-note); color:var(--c-ink2); line-height:var(--lh-head);
+  margin-bottom:2px;
+}
+.tq-lbh__list li::marker{ color:var(--c) }
+
+/* ── 普通：①②③＋引き出し線＋囲み。色は使わない ── */
+.tq-lbh__unit--x .tq-lbh__circle{ background:var(--c-bg2); color:var(--c-ink2) }
+.tq-lbh__unit--x .tq-lbh__circle::before{
+  content:counter(fignum) "　"; counter-increment:fignum;
+  font-family:var(--f-num); font-weight:800;
+}
+.tq-lbh__unit--x .tq-lbh__fig{ counter-reset:fignum }
+.tq-lbh__unit--x .tq-lbh__blocks{ counter-reset:blocknum }
+.tq-lbh__unit--x .tq-lbh__block{
+  position:relative;
+  border:1px solid var(--c-line); border-radius:var(--r-s);
+  background:var(--c-bg2); padding:var(--s3);
+}
+/* 引き出し線 */
+.tq-lbh__unit--x .tq-lbh__block::before{
+  content:""; position:absolute; top:50%; left:calc(var(--s3) * -1 - var(--s5));
+  width:var(--s5); height:1px; background:var(--tq-lbh-x);
+}
+.tq-lbh__unit--x .tq-lbh__bh{
+  border-left:0; padding-left:0; color:var(--c-ink);
+}
+.tq-lbh__unit--x .tq-lbh__bh::before{
+  content:counter(blocknum) "．"; counter-increment:blocknum;
+  font-family:var(--f-num); font-weight:800; color:var(--c-ink);
+}
+.tq-lbh__unit--x .tq-lbh__list li::marker{ color:var(--tq-lbh-x) }
+
+/* --- 見出しを色の出典にする版 ------------------------------- */
+.tq-lbh__palrow{
+  display:grid; gap:var(--s5);
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  align-items:start;
+}
+.tq-lbh__palh{
+  margin:0 0 var(--s5);
+  font-family:var(--f-num); font-size:var(--fs-xl); font-weight:700;
+  letter-spacing:.01em; line-height:1.2; color:var(--tq-lbh-p3);
+}
+@supports (background-clip:text) or (-webkit-background-clip:text){
+  .tq-lbh__palh{
+    background:linear-gradient(90deg,
+      var(--tq-lbh-p1),var(--tq-lbh-p2),var(--tq-lbh-p3),var(--tq-lbh-p4),var(--tq-lbh-p5));
+    -webkit-background-clip:text; background-clip:text;
+    color:transparent; width:fit-content;
+  }
+}
+.tq-lbh__palsub{
+  margin:calc(var(--s5) * -1 + var(--s2)) 0 var(--s5);
+  font-size:var(--fs-note); color:var(--c-ink3);
+}
+.tq-lbh__note--flush{ margin-top:0 }
+.tq-lbh__rows{ margin:0; padding:0; list-style:none }
+.tq-lbh__row{
+  display:flex; align-items:center; gap:var(--s3);
+  padding:var(--s3) 0; border-bottom:1px solid var(--c-line);
+}
+.tq-lbh__row p{
+  margin:0; flex:1 1 auto; font-size:var(--fs-note);
+  color:var(--c-ink2); line-height:var(--lh-head);
+}
+.tq-lbh__dot{
+  flex:0 0 auto; width:14px; height:14px; border-radius:50%; background:var(--c);
+}
+.tq-lbh__row:nth-child(1){ --c:var(--tq-lbh-p1) }
+.tq-lbh__row:nth-child(2){ --c:var(--tq-lbh-p2) }
+.tq-lbh__row:nth-child(3){ --c:var(--tq-lbh-p3) }
+.tq-lbh__row:nth-child(4){ --c:var(--tq-lbh-p4) }
+.tq-lbh__row:nth-child(5){ --c:var(--tq-lbh-p5) }
+
+@media (max-width:520px){
+  .tq-lbh__unit{ grid-template-columns:1fr }
+  .tq-lbh__fig{ max-width:230px; margin-inline:auto }
+  /* 縦積みになると引き出し線が繋がらないので消す（＝「普通」の側が破綻する） */
+  .tq-lbh__unit--x .tq-lbh__block::before{ display:none }
+}
+</style>
+
+<div class="tq-lbh">
+  <p class="tq-lbh__lead">
+    図と説明の対応を、番号でも引き出し線でも囲みでもなく「色の一致」だけで作る。
+    説明ブロック側は囲みも区切り罫も持たない。
+  </p>
+
+  <!-- ① 普通 / この工夫 -->
+  <section class="tq-lbh__sec">
+    <h3 class="tq-lbh__secttl">① 同じ図と説明で、対応の付け方だけを変える</h3>
+    <div class="tq-lbh__pair">
+
+      <div>
+        <p class="tq-lbh__cap">普通：番号＋引き出し線＋囲み</p>
+        <div class="tq-lbh__unit tq-lbh__unit--x">
+          <div class="tq-lbh__fig">
+            <div class="tq-lbh__circle tq-lbh__circle--1">項目名</div>
+            <div class="tq-lbh__circle tq-lbh__circle--2">項目名</div>
+            <div class="tq-lbh__circle tq-lbh__circle--3">項目名</div>
+          </div>
+          <div class="tq-lbh__blocks">
+            <section class="tq-lbh__block tq-lbh__block--1">
+              <h4 class="tq-lbh__bh">項目名<small>補足のテキスト</small></h4>
+              <ul class="tq-lbh__list"><li>説明が入ります</li><li>説明が入ります</li></ul>
+            </section>
+            <section class="tq-lbh__block tq-lbh__block--2">
+              <h4 class="tq-lbh__bh">項目名<small>補足のテキスト</small></h4>
+              <ul class="tq-lbh__list"><li>説明が入ります</li><li>説明が入ります</li></ul>
+            </section>
+            <section class="tq-lbh__block tq-lbh__block--3">
+              <h4 class="tq-lbh__bh">項目名<small>補足のテキスト</small></h4>
+              <ul class="tq-lbh__list"><li>説明が入ります</li><li>説明が入ります</li></ul>
+            </section>
+          </div>
+        </div>
+        <p class="tq-lbh__note">対応を示す部品（番号・線・囲み）が3種類も増える。図と説明のどちらが主かも曖昧になる。</p>
+      </div>
+
+      <div>
+        <p class="tq-lbh__cap">この工夫：4pxの縦バーの色だけ</p>
+        <div class="tq-lbh__unit">
+          <div class="tq-lbh__fig">
+            <div class="tq-lbh__circle tq-lbh__circle--1">項目名</div>
+            <div class="tq-lbh__circle tq-lbh__circle--2">項目名</div>
+            <div class="tq-lbh__circle tq-lbh__circle--3">項目名</div>
+          </div>
+          <div class="tq-lbh__blocks">
+            <section class="tq-lbh__block tq-lbh__block--1">
+              <h4 class="tq-lbh__bh">項目名<small>補足のテキスト</small></h4>
+              <ul class="tq-lbh__list"><li>説明が入ります</li><li>説明が入ります</li></ul>
+            </section>
+            <section class="tq-lbh__block tq-lbh__block--2">
+              <h4 class="tq-lbh__bh">項目名<small>補足のテキスト</small></h4>
+              <ul class="tq-lbh__list"><li>説明が入ります</li><li>説明が入ります</li></ul>
+            </section>
+            <section class="tq-lbh__block tq-lbh__block--3">
+              <h4 class="tq-lbh__bh">項目名<small>補足のテキスト</small></h4>
+              <ul class="tq-lbh__list"><li>説明が入ります</li><li>説明が入ります</li></ul>
+            </section>
+          </div>
+        </div>
+        <p class="tq-lbh__note">図はベタ塗りの面、説明は4pxの線。面積差が10倍以上あるので、同じ色でも主従が崩れない。</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ② 見出しを色の出典にする -->
+  <section class="tq-lbh__sec">
+    <h3 class="tq-lbh__secttl">② 見出しのグラデを「色の出典」にして、離れた行末の丸へ配る</h3>
+    <div class="tq-lbh__palrow">
+      <div>
+        <p class="tq-lbh__palh">Palette Title</p>
+        <p class="tq-lbh__palsub">補足のテキストが入ります</p>
+        <p class="tq-lbh__note tq-lbh__note--flush">見出しに掛けた5色のグラデが、そのままリストの色の出所になる。凡例も番号も置かない。</p>
+      </div>
+      <ul class="tq-lbh__rows">
+        <li class="tq-lbh__row"><p>説明のテキストが1〜2行で入ります。説明のテキスト。</p><span class="tq-lbh__dot"></span></li>
+        <li class="tq-lbh__row"><p>説明のテキストが1〜2行で入ります。説明のテキスト。</p><span class="tq-lbh__dot"></span></li>
+        <li class="tq-lbh__row"><p>説明のテキストが1〜2行で入ります。説明のテキスト。</p><span class="tq-lbh__dot"></span></li>
+        <li class="tq-lbh__row"><p>説明のテキストが1〜2行で入ります。説明のテキスト。</p><span class="tq-lbh__dot"></span></li>
+        <li class="tq-lbh__row"><p>説明のテキストが1〜2行で入ります。説明のテキスト。</p><span class="tq-lbh__dot"></span></li>
+      </ul>
+    </div>
+  </section>
+
+</div>

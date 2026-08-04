@@ -1,0 +1,33 @@
+{
+  "id": "edge/vertical-slab",
+  "name": "ヒーローを縦に断ち切り、右4割をベタ面の「看板」にする",
+  "ordinary": "ヘッダーの下に横並びのグローバルナビを置き、ヒーロー写真は全幅で見せる",
+  "actual": "画面右のx=61%から右端までを金色（くすんだ真鍮色）のベタ面が上端から下端まで貫き、左側の写真の右部分に被さる。面の中にロゴ・校名・住所・白と黒のボタン2つ・リンク7本・角丸バナーが縦に積まれる。セクション境界が水平でなく垂直の1本になる。",
+  "css": ".hero{position:relative; overflow:hidden; height:min(88vh,720px)}\n.hero>img{width:100%; height:100%; object-fit:cover}\n.panel{position:absolute; top:0; right:0; width:39%; height:100%;\n  background:#c8a44e; z-index:3;\n  display:flex; flex-direction:column; align-items:center; text-align:center;\n  gap:18px; padding:32px 24px}\n@media(max-width:768px){\n  .hero{height:auto}\n  .panel{position:static; width:100%; height:auto}\n}",
+  "params": [
+    "面の幅（35〜40%）",
+    "立てる側（右＝読了後に到達 / 左＝先に読ませる）",
+    "面の色（写真から拾わず、独立したブランド色のベタ）"
+  ],
+  "appliesTo": [
+    "hero",
+    "access",
+    "cta"
+  ],
+  "impact": 3,
+  "effort": 2,
+  "why": "ナビを横一列でなく縦の面にすると、ヒーローが「写真＋看板」の2枚構成になり、情報量を落とさずに静かになる",
+  "avoid": "スマホ比率が高い案件。縦板は必ず横積みに崩れるのでPC専用の絵作りと割り切れないなら使わない",
+  "sources": [
+    "musashino_s01"
+  ],
+  "notes": [
+    "position:absolute の縦板は高さが固定される＝中身が入りきらないと切れる。実測でロゴ28+社名+住所2行+ボタン+リンク7本+バナー＝約470〜500px必要だったので、hero に min-height:600px を敷いた。高さを height だけで決めると、縦の短いノートPCでリンクの下が消える。",
+    "崩す境目は 768px でなく 900px。1000px前後では面の幅39%＝約390pxまで痩せ、住所やボタン2つが折り返して縦板が破綻する。写真側も残り61%では絵として成立しない。",
+    "崩したあとのリンク7本は縦積みのままにすると異様に長い列になるので、スマホでは flex-direction:row + flex-wrap で横に流している。縦板の“縦”はPCだけの性質。",
+    "面の色は --c-accent。写真から色を拾わず独立したブランド色のベタにする、が肝なので、写真に合わせて色を作らないこと。ボタンは面の上で白ベタ／黒ベタの2種、バナーだけ --c-primary で色を1つ足している。",
+    "写真は全幅のまま敷き、その上に面を被せる（左を61%幅にして横並びにするのではない）。被せる構成だと写真の構図中心が画面中央のままなので、面を出し入れしても絵が崩れない。",
+    "面の中は justify-content:center。上詰めにすると背の低い画面で下が余り、看板ではなく“長い縦カラム”に見える。",
+    "デモは techniques/edge/vertical-slab/demo.html。上に〈普通＝横並びナビ＋全幅写真〉を小さく置き、下が本体。"
+  ]
+}

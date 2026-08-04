@@ -1,0 +1,158 @@
+<style>
+/* ==========================================================
+   edge/arc-oversized — 画面幅より大きい円で境界を削る
+   トークン未読込でも見えるようフォールバックを置く。
+   :where() で優先度0にしてあるので、_tokens.css があれば必ずそちらが勝つ。
+   ========================================================== */
+:where(:root){
+  --c-primary:#00B220; --c-primary-l:#E8F7EA;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px; --fs-lg:21px;
+  --lh-tight:1.35; --lh-body:1.9;
+  --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+  --r-s:6px; --r-m:12px; --r-l:24px;
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+
+.tq-arcov{
+  font-family:var(--f-sans); color:var(--c-ink2);
+  max-width:var(--w-max); margin:0 auto; padding:var(--s6) var(--w-gut);
+  background:var(--c-bg);
+}
+.tq-arcov__h{
+  font-size:var(--fs-md); line-height:var(--lh-tight); color:var(--c-ink);
+  margin:0 0 var(--s2); font-weight:700;
+}
+.tq-arcov__lead{
+  font-size:var(--fs-sm); line-height:var(--lh-body); color:var(--c-ink3);
+  margin:0 0 var(--s5);
+}
+.tq-arcov__h--2{ margin-top:var(--s7); }
+
+.tq-arcov__row{ display:grid; gap:var(--s5); grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr)); }
+.tq-arcov__row--range{ gap:var(--s4); grid-template-columns:repeat(auto-fit,minmax(min(180px,100%),1fr)); }
+
+.tq-arcov__cap{
+  font-size:var(--fs-note); line-height:var(--lh-tight); color:var(--c-ink3);
+  margin:var(--s3) 0 0;
+}
+.tq-arcov__cap b{ display:block; color:var(--c-ink); font-size:var(--fs-sm); margin-bottom:2px; }
+.tq-arcov__fig{ margin:0; }
+
+/* ---- ステージ（上の面＝主色 / 下の面＝交互面） ---- */
+.tq-arcov__stage{
+  height:230px; display:flex; flex-direction:column;
+  border:1px solid var(--c-line); border-radius:var(--r-m); overflow:hidden;
+  background:var(--c-bg2);
+}
+.tq-arcov__up{
+  position:relative; flex:1 1 auto; min-height:0; overflow:hidden;
+  background:var(--c-primary); color:var(--c-on-primary);
+  padding:var(--s4) var(--s4) 0;
+}
+.tq-arcov__t{
+  position:relative; z-index:1;
+  font-size:var(--fs-base); line-height:var(--lh-tight); font-weight:700; margin:0;
+}
+.tq-arcov__dn{
+  position:relative; z-index:1; flex:0 0 84px;
+  background:var(--c-bg2); color:var(--c-ink3);
+  padding:var(--s3) var(--s4) 0; font-size:var(--fs-note); line-height:var(--lh-tight);
+}
+
+/* A｜普通：水平線でぱたっと切り替わる */
+/* （追加指定なし。__up と __dn が直線で接する） */
+
+/* B｜大円弧：上の面の下辺を、幅の2倍ある円でえぐる
+   円の色＝次セクションの地色そのもの。overflow:hidden で「弧の一部だけ」が残る。 */
+.tq-arcov__stage--deep .tq-arcov__up::after{
+  content:''; position:absolute; left:-50%; top:44%;
+  width:200%; aspect-ratio:1; border-radius:50%;
+  background:var(--c-bg2);
+}
+
+/* ---- 振れ幅の3段階：下の面を負マージンで持ち上げる方式 ---- */
+.tq-arcov__stage--flat .tq-arcov__dn{
+  margin-top:-10px; border-radius:50% 50% 0 0 / 10px 10px 0 0; padding-top:var(--s4);
+}
+.tq-arcov__stage--mid .tq-arcov__dn{
+  margin-top:-48px; border-radius:50% 50% 0 0 / 48px 48px 0 0; padding-top:var(--s6);
+}
+/* 非対称：左端は急に立ち上がり、中央から右へ緩く下がる */
+.tq-arcov__stage--asym .tq-arcov__dn{
+  margin-top:-84px; border-radius:22% 78% 0 0 / 84px 30px 0 0; padding-top:var(--s7);
+}
+
+@media (max-width:420px){
+  .tq-arcov__stage{ height:200px; }
+}
+</style>
+
+<div class="tq-arcov">
+
+  <p class="tq-arcov__h">境界を「線」でなく「面の縁」にする</p>
+  <p class="tq-arcov__lead">
+    左は水平線で色を切り替えただけ。右は同じ2色のまま、直径が版面の2倍ある円の弧の一部だけを境界に使っている。
+    半径が画面幅を超えると、弧が装飾の波ではなく面そのものの縁に見える。
+  </p>
+
+  <div class="tq-arcov__row">
+    <figure class="tq-arcov__fig">
+      <div class="tq-arcov__stage">
+        <div class="tq-arcov__up"><p class="tq-arcov__t">見出しがここに入ります</p></div>
+        <div class="tq-arcov__dn">次のセクションのテキスト</div>
+      </div>
+      <p class="tq-arcov__cap"><b>普通</b>水平線で色を切り替える。区切りには見えるが場面は変わらない。</p>
+    </figure>
+
+    <figure class="tq-arcov__fig">
+      <div class="tq-arcov__stage tq-arcov__stage--deep">
+        <div class="tq-arcov__up"><p class="tq-arcov__t">見出しがここに入ります</p></div>
+        <div class="tq-arcov__dn">次のセクションのテキスト</div>
+      </div>
+      <p class="tq-arcov__cap"><b>この工夫</b>幅の2倍の円で上の面の下辺をえぐる。下の面が上を押し上げているように見える。</p>
+    </figure>
+  </div>
+
+  <p class="tq-arcov__h tq-arcov__h--2">同じ手で「空気の切れ目」から「包み込む面」まで振れる</p>
+  <p class="tq-arcov__lead">
+    決めるのは弧の深さ（縦半径）と、左右の非対称だけ。深さを10pxまで落とすと、区切りはほとんど消えて空気だけが入れ替わる。
+  </p>
+
+  <div class="tq-arcov__row tq-arcov__row--range">
+    <figure class="tq-arcov__fig">
+      <div class="tq-arcov__stage tq-arcov__stage--flat">
+        <div class="tq-arcov__up"><p class="tq-arcov__t">見出し</p></div>
+        <div class="tq-arcov__dn">次のセクション</div>
+      </div>
+      <p class="tq-arcov__cap"><b>扁平 10px</b>幅に対し約1:72。切れ目の気配だけ残る。</p>
+    </figure>
+
+    <figure class="tq-arcov__fig">
+      <div class="tq-arcov__stage tq-arcov__stage--mid">
+        <div class="tq-arcov__up"><p class="tq-arcov__t">見出し</p></div>
+        <div class="tq-arcov__dn">次のセクション</div>
+      </div>
+      <p class="tq-arcov__cap"><b>中 48px</b>面が持ち上がったと分かる標準。</p>
+    </figure>
+
+    <figure class="tq-arcov__fig">
+      <div class="tq-arcov__stage tq-arcov__stage--deep">
+        <div class="tq-arcov__up"><p class="tq-arcov__t">見出し</p></div>
+        <div class="tq-arcov__dn">次のセクション</div>
+      </div>
+      <p class="tq-arcov__cap"><b>深い（巨大円）</b>面が包み込む。ヒーロー下辺向き。</p>
+    </figure>
+
+    <figure class="tq-arcov__fig">
+      <div class="tq-arcov__stage tq-arcov__stage--asym">
+        <div class="tq-arcov__up"><p class="tq-arcov__t">見出し</p></div>
+        <div class="tq-arcov__dn">次のセクション</div>
+      </div>
+      <p class="tq-arcov__cap"><b>非対称 84 / 30px</b>左端で急に立ち上がり、右へ緩く下がる。</p>
+    </figure>
+  </div>
+
+</div>

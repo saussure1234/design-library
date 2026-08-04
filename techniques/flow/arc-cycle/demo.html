@@ -1,0 +1,139 @@
+<style>
+/* トークンのフォールバック。:where() で詰めているので、
+   _tokens.css が読み込まれていればそちらが必ず勝つ。 */
+:where(:root){
+  --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-disp:var(--f-sans); --f-num:"Helvetica Neue",Arial,var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+  --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+  --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px; --s8:76px;
+  --sec-y:clamp(56px,7vw,110px);
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+
+.tq-arc-cycle{font-family:var(--f-sans); color:var(--c-ink2); background:var(--c-bg); padding-block:var(--s7)}
+.tq-arc-cycle *{box-sizing:border-box}
+.tq-arc-cycle__wrap{max-width:var(--w-max); margin-inline:auto; padding-inline:var(--w-gut)}
+.tq-arc-cycle__grid{display:grid; grid-template-columns:1fr 1fr; gap:var(--s7); align-items:center}
+.tq-arc-cycle__blk{margin:0}
+.tq-arc-cycle__tag{
+  display:inline-block; margin:0 0 var(--s5);
+  font-size:var(--fs-note); letter-spacing:.08em; line-height:1;
+  padding:var(--s2) var(--s3); border-radius:var(--r-pill);
+  background:var(--c-bg2); color:var(--c-ink3);
+}
+.tq-arc-cycle__tag--on{background:var(--c-primary-l); color:var(--c-primary-d)}
+.tq-arc-cycle__cap{margin:var(--s5) 0 0; font-size:var(--fs-sm); line-height:var(--lh-body); color:var(--c-ink3)}
+
+/* ============ 普通：横一列＋同じ直線矢印 ============ */
+.tq-arc-cycle__row{display:flex; align-items:center; justify-content:center; gap:var(--s2)}
+.tq-arc-cycle__box{
+  flex:1 1 0; min-width:0; text-align:center;
+  border:1px solid var(--c-line); border-radius:var(--r-m);
+  padding:var(--s3) var(--s2); background:var(--c-bg);
+}
+.tq-arc-cycle__box img{width:100%; aspect-ratio:1; object-fit:cover; border-radius:var(--r-s); display:block}
+.tq-arc-cycle__box span{display:block; margin-top:var(--s2); font-size:var(--fs-sm); font-weight:700; color:var(--c-ink)}
+.tq-arc-cycle__str{position:relative; flex:0 0 26px; height:3px; background:var(--c-ink3)}
+.tq-arc-cycle__str::after{
+  content:""; position:absolute; right:-12px; top:-7px;
+  border:8px solid transparent; border-left-color:var(--c-ink3);
+}
+
+/* ============ この工夫：正三角に円を置き、外周を回る弧で結ぶ ============ */
+.tq-arc-cycle__cycle{position:relative; aspect-ratio:1; max-width:420px; margin-inline:auto}
+.tq-arc-cycle__cycle>svg{position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:1}
+
+.tq-arc-cycle__node{
+  position:absolute; width:36%; aspect-ratio:1; border-radius:50%; z-index:2;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:var(--s2); padding:var(--s2); text-align:center;
+}
+.tq-arc-cycle__node img{width:60%; aspect-ratio:1; object-fit:cover; border-radius:50%; display:block}
+.tq-arc-cycle__node span{font-size:var(--fs-sm); font-weight:700; color:var(--c-ink); line-height:var(--lh-tight)}
+/* 円の中心を正三角形（半径31.5%）に置く */
+.tq-arc-cycle__node--1{left:32%;    top:.5%;   background:color-mix(in srgb, var(--c-primary) 20%, var(--c-bg))}
+.tq-arc-cycle__node--2{left:59.25%; top:47.75%; background:color-mix(in srgb, var(--c-accent) 24%, var(--c-bg))}
+.tq-arc-cycle__node--3{left:4.75%;  top:47.75%; background:color-mix(in srgb, var(--c-ink3) 20%, var(--c-bg))}
+
+.tq-arc-cycle__core{
+  position:absolute; left:50%; top:50%; translate:-50% -50%;
+  width:26%; aspect-ratio:1; border-radius:50%; z-index:3;
+  background:color-mix(in srgb, var(--c-accent) 45%, var(--c-bg));
+  display:grid; place-items:center; text-align:center; padding:var(--s2);
+  font-size:var(--fs-note); font-weight:700; color:var(--c-ink); line-height:var(--lh-tight);
+}
+
+/* 区間ごとに線を描き分ける。矢羽は小さく、円に触れない位置で終わる */
+.tq-arc-cycle__arc{fill:none; stroke-width:2; stroke-dasharray:7 7}
+.tq-arc-cycle__arc--1{stroke:var(--c-primary)}
+.tq-arc-cycle__arc--2{stroke:var(--c-accent)}
+.tq-arc-cycle__arc--3{stroke:var(--c-ink3)}
+.tq-arc-cycle__ah--1{fill:none; stroke:var(--c-primary); stroke-width:1.5}
+.tq-arc-cycle__ah--2{fill:none; stroke:var(--c-accent);  stroke-width:1.5}
+.tq-arc-cycle__ah--3{fill:none; stroke:var(--c-ink3);    stroke-width:1.5}
+
+@media (max-width:768px){
+  .tq-arc-cycle__grid{grid-template-columns:1fr; gap:var(--s7)}
+}
+</style>
+
+<section class="tq-arc-cycle">
+  <div class="tq-arc-cycle__wrap">
+    <div class="tq-arc-cycle__grid">
+
+      <figure class="tq-arc-cycle__blk">
+        <p class="tq-arc-cycle__tag">普通の場合</p>
+        <div class="tq-arc-cycle__row">
+          <div class="tq-arc-cycle__box"><img src="../../../docs/demo/ph_a.jpg" alt=""><span>要素A</span></div>
+          <span class="tq-arc-cycle__str"></span>
+          <div class="tq-arc-cycle__box"><img src="../../../docs/demo/ph_b.jpg" alt=""><span>要素B</span></div>
+          <span class="tq-arc-cycle__str"></span>
+          <div class="tq-arc-cycle__box"><img src="../../../docs/demo/ph_a.jpg" alt=""><span>要素C</span></div>
+        </div>
+        <figcaption class="tq-arc-cycle__cap">横一列＋同じ直線矢印1種類。左から右へ進んで終わる図に見え、CからAへ戻ることが伝わらない。</figcaption>
+      </figure>
+
+      <figure class="tq-arc-cycle__blk">
+        <p class="tq-arc-cycle__tag tq-arc-cycle__tag--on">この工夫</p>
+        <div class="tq-arc-cycle__cycle">
+          <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+              <marker id="tqArcAh1" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="5" markerHeight="5" orient="auto">
+                <path class="tq-arc-cycle__ah--1" d="M0 0 L8 4 L0 8"/>
+              </marker>
+              <marker id="tqArcAh2" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="5" markerHeight="5" orient="auto">
+                <path class="tq-arc-cycle__ah--2" d="M0 0 L8 4 L0 8"/>
+              </marker>
+              <marker id="tqArcAh3" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="5" markerHeight="5" orient="auto">
+                <path class="tq-arc-cycle__ah--3" d="M0 0 L8 4 L0 8"/>
+              </marker>
+            </defs>
+            <!-- 弧の半径175 ＝ 円配置半径126 の約1.4倍。円の外側だけを通る -->
+            <path class="tq-arc-cycle__arc tq-arc-cycle__arc--1" d="M323.7,76.3 A175 175 0 0 1 369,154.7" marker-end="url(#tqArcAh1)"/>
+            <path class="tq-arc-cycle__arc tq-arc-cycle__arc--2" d="M245.3,369 A175 175 0 0 1 154.7,369" marker-end="url(#tqArcAh2)"/>
+            <path class="tq-arc-cycle__arc tq-arc-cycle__arc--3" d="M31,154.7 A175 175 0 0 1 76.3,76.3" marker-end="url(#tqArcAh3)"/>
+          </svg>
+
+          <div class="tq-arc-cycle__node tq-arc-cycle__node--1">
+            <img src="../../../docs/demo/ph_a.jpg" alt=""><span>要素A</span>
+          </div>
+          <div class="tq-arc-cycle__node tq-arc-cycle__node--2">
+            <img src="../../../docs/demo/ph_b.jpg" alt=""><span>要素B</span>
+          </div>
+          <div class="tq-arc-cycle__node tq-arc-cycle__node--3">
+            <img src="../../../docs/demo/ph_a.jpg" alt=""><span>要素C</span>
+          </div>
+          <p class="tq-arc-cycle__core">総括の<br>ラベル</p>
+        </div>
+        <figcaption class="tq-arc-cycle__cap">円の外側を回る弧なので、図を横切らずに順路だけが残る。区間ごとに線色を変え、矢羽は円に触れない位置で終わる。中心の円が3つを1つの名前にまとめる。</figcaption>
+      </figure>
+
+    </div>
+  </div>
+</section>

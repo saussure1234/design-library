@@ -1,0 +1,25 @@
+{
+  "id": "edge/underlap-next",
+  "name": "次セクションの色面を負マージンで引き上げ、カードの下半分を飲ませる",
+  "ordinary": "白背景のセクションが終わってから黒いセクションが始まる（境目は水平線）",
+  "actual": "odriveは黒面(#16181A)の上端をカード写真の下端あたり（カード高の約45%）まで上げ、白カードが黒の上に乗る。カード間のガターからだけ黒が上まで見えるので、境界が一直線でなく段違いのギザギザに見える。peppyは逆向きに、写真の下から輪郭の一致しないピンク〜ラベンダーの面を22pxずらして斜めに覗かせ「紙が2枚重なった縁」にしている。",
+  "css": "/* 次セクションを持ち上げてカードを飲む */\n.cards{position:relative; z-index:2; margin-bottom:-130px}\n.next-sec{background:#16181a; padding-top:150px}\n\n/* ずらして覗かせる版（輪郭を一致させないのが肝） */\n.hero{position:relative}\n.hero::after{content:''; position:absolute; left:0; right:0; bottom:-22px;\n  height:64px; z-index:-1;\n  background:linear-gradient(90deg,#f7e6ef,#eef3f7);\n  clip-path:polygon(8% 0,100% 0,96% 100%,0 100%)}",
+  "params": [
+    "潜り込ませる量（カード高の30〜50% = margin-bottom:-110〜-150px）",
+    "次セクションの padding-top（潜り量+20px 程度）",
+    "覗く面のずらし方向（真下 / 斜め）と色差"
+  ],
+  "appliesTo": ["features", "member", "voice", "price", "cta"],
+  "impact": 3,
+  "effort": 2,
+  "why": "カードとカードの間のガターからだけ次の色が見えるので、境界が1本の線でなく段差になり、視線が下へ落ちる",
+  "avoid": "カードが1枚しかない構成。ガターが無いので、ただの帯にしか見えず効果が出ない",
+  "sources": ["odrive_s02", "sho_peppy_s01"],
+  "notes": [
+    "3点セット。(1) カード列に position:relative + z-index、(2) カード列に負の margin-bottom、(3) 次セクションに「潜り量+20px程度」の padding-top。z-index を忘れるとカードが黒面の裏に回って全部消える。",
+    "潜り量はpx直値でなくカード高に対する比で決めるほうが移植が効く。odrive_s02 は約45%。デモではカード高120pxに対し -56px（約47%）。",
+    "ガターの幅がそのまま「黒が見える幅」になる。gapを詰めすぎると段差が読めず、広げすぎると縞模様に見える。デモは 12px（カード幅の約1割）に置いた。",
+    "カード列の左右にも padding があると外側にも次の色が回り込み、odrive_s02 と同じく境界が「コの字」に見える。これは効果を強める方向なので残してよい。",
+    "peppy型は「輪郭が一致しないこと」が本体。写真の下辺をわずかな曲線、覗く面を斜めの clip-path にして、2本の縁がどこでも平行にならないようにする。z-index:-1 を使うと親に isolation:isolate が要るので、デモでは写真側を z-index:1、覗く面を z-index:0 にして依存を減らした。"
+  ]
+}

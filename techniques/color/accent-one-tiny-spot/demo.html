@@ -1,0 +1,331 @@
+<style>
+/* ============================================================
+   color/accent-one-tiny-spot
+   有彩色を画面で最も小さい1点にだけ置く
+   ============================================================ */
+
+/* トークンが読み込まれていない環境用のフォールバック。
+   @layer に入れてあるので、_tokens.css（レイヤ外）が有ればそちらが勝つ。 */
+@layer tq-fallback{
+  :root{
+    --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+    --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3;
+    --c-on-primary:#FFFFFF;
+    --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    --f-disp:var(--f-sans);
+    --f-num:"Helvetica Neue",Arial,var(--f-sans);
+    --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+    --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+    --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+    --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  }
+}
+
+/* この工夫が要求する値。トークン契約に無いものはここで宣言する（案件では :root で差し替え） */
+:root{
+  --tq-a1s-accent:#e2231a;  /* 置く色（params: accentの色相） */
+  --tq-a1s-gold:#b08d4a;    /* 見出し中の1語に置く色 */
+  --tq-a1s-mute:#8a8a8a;    /* 無彩色側のグレー #8a8a8a〜#9a9a9a */
+  --tq-a1s-mute2:#9a9a9a;
+  --tq-a1s-body:#1a1a1a;    /* 本文・見出しの黒 */
+  --tq-a1s-dark:#141414;    /* 反転の地 */
+  --tq-a1s-panel:#eef1f5;   /* 無彩色のカード面 */
+  --tq-a1s-a:#1eaede;       /* 2案の識別ピル A */
+  --tq-a1s-b:#f4525f;       /* 2案の識別ピル B */
+  /* この工夫の要件は「行の中で最も小さい要素に色を置く」こと。
+     トークンの最小級数(--fs-note:12px)より小さい値がそのまま工夫の本体なので、
+     ここで宣言して本文CSSからは変数だけを参照する。 */
+  --tq-a1s-fs-badge:9px;    /* バッジ／タグピルの級数 */
+  --tq-a1s-fs-date:10px;    /* 日付・カテゴリ・#タグの級数 */
+  --tq-a1s-h-pill:16px;     /* タグピルの高さ */
+  --tq-a1s-r-plan:14px;     /* 2案カードの角丸（現物実測） */
+  --tq-a1s-line-d:#333333;  /* 暗い地の上の罫 */
+}
+
+.tq-a1s{
+  font-family:var(--f-sans); color:var(--tq-a1s-body);
+  line-height:var(--lh-head); -webkit-text-size-adjust:100%;
+  padding:var(--s5); background:var(--c-bg);
+}
+.tq-a1s *{box-sizing:border-box}
+
+/* --- デモの見出し・注記 ------------------------------------ */
+.tq-a1s__lead{
+  margin:0 0 var(--s5); font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-a1s__cap{
+  display:flex; align-items:center; gap:var(--s2);
+  margin:0 0 var(--s3); font-size:var(--fs-note); font-weight:700;
+  color:var(--c-ink3); letter-spacing:.04em;
+}
+.tq-a1s__cap::before{
+  content:""; width:var(--s5); height:1px; background:var(--c-line); flex:0 0 auto;
+}
+.tq-a1s__note{
+  margin:var(--s3) 0 0; font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-a1s__sec{ margin-top:var(--s7) }
+.tq-a1s__sec:first-of-type{ margin-top:0 }
+.tq-a1s__secttl{
+  margin:0 0 var(--s4); font-size:var(--fs-sm); font-weight:700; color:var(--tq-a1s-body);
+}
+
+/* --- 2枚並べ（普通／この工夫） ------------------------------ */
+.tq-a1s__pair{
+  display:grid; gap:var(--s5);
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+}
+
+/* --- カード（白地） ---------------------------------------- */
+.tq-a1s__card{
+  background:var(--c-bg); border:1px solid var(--c-line);
+  border-radius:var(--r-s); padding:var(--s5);
+}
+.tq-a1s__meta{
+  display:flex; align-items:center; gap:var(--s3); flex-wrap:wrap;
+  margin:0 0 var(--s3);
+}
+/* 70×16px 相当のバッジ。角丸0のまま置く */
+.tq-a1s__badge{
+  display:inline-block; padding:3px 8px; border-radius:0;
+  background:var(--tq-a1s-accent); color:var(--c-on-primary);
+  font-size:var(--tq-a1s-fs-badge); font-weight:700; letter-spacing:.12em; line-height:1.2;
+  font-family:var(--f-num);
+}
+.tq-a1s__date{
+  font-family:var(--f-num); font-size:var(--tq-a1s-fs-date); letter-spacing:.06em;
+  color:var(--tq-a1s-mute);
+}
+.tq-a1s__h{
+  margin:0; font-family:var(--f-disp); font-size:var(--fs-lg); font-weight:700;
+  line-height:var(--lh-head); color:var(--tq-a1s-body); letter-spacing:.01em;
+}
+.tq-a1s__h em{ font-style:normal; color:inherit }
+.tq-a1s__by{
+  margin:var(--s4) 0 0; font-size:var(--fs-note); color:var(--tq-a1s-body);
+}
+.tq-a1s__by span{ color:var(--tq-a1s-mute); margin-right:var(--s2) }
+.tq-a1s__by b{ font-size:var(--fs-sm) }
+.tq-a1s__tags{
+  display:flex; flex-wrap:wrap; gap:var(--s2) var(--s3);
+  margin:var(--s2) 0 0; font-size:var(--tq-a1s-fs-date); color:var(--tq-a1s-mute2);
+}
+.tq-a1s__more{
+  margin:var(--s4) 0 0; font-size:var(--fs-note); color:var(--tq-a1s-body);
+}
+
+/* ── 普通：色を4か所に散らした版 ── */
+.tq-a1s__card--scatter .tq-a1s__date{ color:var(--tq-a1s-accent) }
+.tq-a1s__card--scatter .tq-a1s__h em{ color:var(--tq-a1s-accent) }
+.tq-a1s__card--scatter .tq-a1s__tags{ color:var(--tq-a1s-accent) }
+.tq-a1s__card--scatter .tq-a1s__more{ color:var(--tq-a1s-accent) }
+.tq-a1s__card--scatter .tq-a1s__by b{ color:var(--tq-a1s-accent) }
+
+/* --- 1点をどこに置くか：4通り ------------------------------- */
+.tq-a1s__quad{
+  display:grid; gap:var(--s4);
+  grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+}
+.tq-a1s__spot{
+  border:1px solid var(--c-line); border-radius:var(--r-s);
+  padding:var(--s4); background:var(--c-bg);
+  display:flex; flex-direction:column;
+}
+.tq-a1s__spotttl{
+  margin:0 0 var(--s3); padding-bottom:var(--s2);
+  border-bottom:1px solid var(--c-line);
+  font-size:var(--tq-a1s-fs-date); font-weight:700; letter-spacing:.04em; color:var(--c-ink3);
+}
+.tq-a1s__thumb{
+  display:block; width:100%; aspect-ratio:4/3; object-fit:cover;
+  border-radius:0; margin-bottom:var(--s3);
+}
+.tq-a1s__h--sm{ font-size:var(--fs-sm); font-weight:700 }
+.tq-a1s__h--mid{ font-size:var(--fs-md) }
+
+/* 1) 10pxの日付一行だけ（暗い地） */
+.tq-a1s__spot--dark{ background:var(--tq-a1s-dark); border-color:var(--tq-a1s-dark) }
+.tq-a1s__spot--dark .tq-a1s__spotttl{ color:var(--tq-a1s-mute2); border-color:var(--tq-a1s-line-d) }
+.tq-a1s__spot--dark .tq-a1s__h{ color:var(--c-bg) }
+.tq-a1s__spot--dark .tq-a1s__date{ color:var(--tq-a1s-accent) }
+
+/* 3) 見出し中の3文字だけ */
+.tq-a1s__spot--word .tq-a1s__h{
+  font-family:var(--f-disp); letter-spacing:.06em; font-weight:500;
+}
+.tq-a1s__spot--word .tq-a1s__h em{ color:var(--tq-a1s-gold) }
+
+/* 4) 高さ16pxのタグピルだけ */
+.tq-a1s__pills{ display:flex; flex-wrap:wrap; gap:var(--s1); margin:var(--s3) 0 0 }
+.tq-a1s__pill{
+  display:inline-flex; align-items:center; height:var(--tq-a1s-h-pill); padding:0 var(--s2);
+  border-radius:var(--r-s);
+  background:var(--tq-a1s-accent); color:var(--c-on-primary);
+  font-size:var(--tq-a1s-fs-badge); line-height:1; letter-spacing:.02em;
+}
+
+/* --- 2案の識別をピル1個に担わせる（tanq_s08） --------------- */
+.tq-a1s__plans{
+  display:grid; gap:var(--s4);
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+}
+.tq-a1s__plan{
+  background:var(--tq-a1s-panel); border:0; border-radius:var(--tq-a1s-r-plan);
+  padding:var(--s5) var(--s4); text-align:center;
+}
+.tq-a1s__ppill{
+  display:inline-block; padding:5px 14px; border-radius:var(--r-pill);
+  font-size:var(--fs-note); font-weight:700; line-height:1.3;
+  color:var(--c-on-primary);
+}
+.tq-a1s__ppill--a{ background:var(--tq-a1s-a) }
+.tq-a1s__ppill--b{ background:var(--tq-a1s-b) }
+.tq-a1s__pttl{
+  margin:var(--s4) 0 0; font-size:var(--fs-sm); font-weight:700;
+  line-height:var(--lh-head); color:var(--tq-a1s-body);
+}
+.tq-a1s__psub{
+  margin:var(--s3) 0 0; padding-bottom:var(--s3);
+  border-bottom:1px solid var(--c-line);
+  font-size:var(--tq-a1s-fs-date); color:var(--tq-a1s-mute);
+}
+.tq-a1s__pbtn{
+  display:inline-block; margin:var(--s4) 0 0; padding:6px 18px;
+  border-radius:var(--r-pill); background:var(--tq-a1s-body);
+  color:var(--c-bg); font-size:var(--fs-note);
+}
+.tq-a1s__plist{ margin:var(--s3) 0 0; padding:0; list-style:none }
+.tq-a1s__plist li{
+  padding:var(--s2) 0; border-top:1px solid var(--c-line);
+  font-size:var(--fs-note); color:var(--tq-a1s-body);
+}
+.tq-a1s__plist li:first-child{ border-top:0 }
+</style>
+
+<div class="tq-a1s">
+  <p class="tq-a1s__lead">
+    画面の中で色が付いているのは1点だけ。日付・カテゴリ・#タグはすべてグレーに落とし、
+    見出しと本文は黒のまま置く。
+  </p>
+
+  <!-- ① 普通 / この工夫 -->
+  <section class="tq-a1s__sec">
+    <h3 class="tq-a1s__secttl">① 同じカードで、色の点の数だけを変える</h3>
+    <div class="tq-a1s__pair">
+
+      <div>
+        <p class="tq-a1s__cap">普通：日付・語・タグ・リンクに散らす</p>
+        <article class="tq-a1s__card tq-a1s__card--scatter">
+          <p class="tq-a1s__meta">
+            <span class="tq-a1s__badge">INTERVIEW</span>
+            <span class="tq-a1s__date">2026.07.03UP</span>
+          </p>
+          <h3 class="tq-a1s__h">見出しがここに入ります。<em>強調したい語</em>を含む2行程度の長さ。</h3>
+          <p class="tq-a1s__by"><span>所属ラベル</span><b>名前が入ります</b></p>
+          <p class="tq-a1s__tags"><span>#タグ</span><span>#タグ</span><span>#タグ</span><span>#タグ</span></p>
+          <p class="tq-a1s__more">詳しく見る →</p>
+        </article>
+        <p class="tq-a1s__note">色が5か所にあるので、どこから読むかが決まらない。</p>
+      </div>
+
+      <div>
+        <p class="tq-a1s__cap">この工夫：バッジ1点だけ</p>
+        <article class="tq-a1s__card">
+          <p class="tq-a1s__meta">
+            <span class="tq-a1s__badge">INTERVIEW</span>
+            <span class="tq-a1s__date">2026.07.03UP</span>
+          </p>
+          <h3 class="tq-a1s__h">見出しがここに入ります。<em>強調したい語</em>を含む2行程度の長さ。</h3>
+          <p class="tq-a1s__by"><span>所属ラベル</span><b>名前が入ります</b></p>
+          <p class="tq-a1s__tags"><span>#タグ</span><span>#タグ</span><span>#タグ</span><span>#タグ</span></p>
+          <p class="tq-a1s__more">詳しく見る →</p>
+        </article>
+        <p class="tq-a1s__note">62×15pxのバッジだけが色。視線の入口が1つに決まる。</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ② 1点をどこに置くか -->
+  <section class="tq-a1s__sec">
+    <h3 class="tq-a1s__secttl">② 置き場所は4通り。いずれも「行の中で最も小さい要素」</h3>
+    <div class="tq-a1s__quad">
+
+      <article class="tq-a1s__spot tq-a1s__spot--dark">
+        <p class="tq-a1s__spotttl">1／10pxの日付一行</p>
+        <img class="tq-a1s__thumb" src="../../../docs/demo/ph_a.jpg" alt="">
+        <p class="tq-a1s__date">2026.09.12UP</p>
+        <h4 class="tq-a1s__h tq-a1s__h--sm">見出しがここに入ります。テキスト…</h4>
+      </article>
+
+      <article class="tq-a1s__spot">
+        <p class="tq-a1s__spotttl">2／70×16pxのバッジ</p>
+        <img class="tq-a1s__thumb" src="../../../docs/demo/ph_b.jpg" alt="">
+        <p class="tq-a1s__meta">
+          <span class="tq-a1s__badge">INTERVIEW</span>
+          <span class="tq-a1s__date">2026.07.03UP</span>
+        </p>
+        <h4 class="tq-a1s__h tq-a1s__h--sm">見出しがここに入ります。2行程度の長さ。</h4>
+        <p class="tq-a1s__tags"><span>#タグ</span><span>#タグ</span><span>#タグ</span></p>
+      </article>
+
+      <article class="tq-a1s__spot tq-a1s__spot--word">
+        <p class="tq-a1s__spotttl">3／見出し中の3文字</p>
+        <img class="tq-a1s__thumb" src="../../../docs/demo/ph_a.jpg" alt="">
+        <h4 class="tq-a1s__h tq-a1s__h--mid">これからは<em>三文字</em>が重要になります。</h4>
+        <p class="tq-a1s__tags"><span>本文テキストが入ります。本文テキストが入ります。</span></p>
+      </article>
+
+      <article class="tq-a1s__spot">
+        <p class="tq-a1s__spotttl">4／高さ16pxのタグピル</p>
+        <img class="tq-a1s__thumb" src="../../../docs/demo/ph_b.jpg" alt="">
+        <h4 class="tq-a1s__h tq-a1s__h--sm">見出しがここに入ります。2行程度の長さ。</h4>
+        <p class="tq-a1s__pills">
+          <span class="tq-a1s__pill">#タグ</span>
+          <span class="tq-a1s__pill">#タグ</span>
+          <span class="tq-a1s__pill">#タグ</span>
+        </p>
+        <p class="tq-a1s__tags"><span>2026.07.07</span></p>
+      </article>
+
+    </div>
+    <p class="tq-a1s__note">4枚とも、色は1枚につき1種類・1か所だけ。日付とタグを同時に色にした瞬間に規則が壊れる。</p>
+  </section>
+
+  <!-- ③ 2案の識別をピル1個に担わせる -->
+  <section class="tq-a1s__sec">
+    <h3 class="tq-a1s__secttl">③ 2案の違いも、幅70pxのピル1個の色だけで担う</h3>
+    <div class="tq-a1s__plans">
+
+      <article class="tq-a1s__plan">
+        <span class="tq-a1s__ppill tq-a1s__ppill--a">プランA</span>
+        <p class="tq-a1s__pttl">見出しがここに<br>2行で入ります</p>
+        <p class="tq-a1s__psub">補足のテキストが1行入ります</p>
+        <p><span class="tq-a1s__pbtn">コース名 ›</span></p>
+        <ul class="tq-a1s__plist">
+          <li>項目が入ります</li>
+          <li>項目が入ります</li>
+          <li>項目が入ります</li>
+        </ul>
+      </article>
+
+      <article class="tq-a1s__plan">
+        <span class="tq-a1s__ppill tq-a1s__ppill--b">プランB</span>
+        <p class="tq-a1s__pttl">見出しがここに<br>2行で入ります</p>
+        <p class="tq-a1s__psub">補足のテキストが1行入ります</p>
+        <p><span class="tq-a1s__pbtn">コース名 ›</span></p>
+        <ul class="tq-a1s__plist">
+          <li>項目が入ります</li>
+          <li>項目が入ります</li>
+          <li>項目が入ります</li>
+        </ul>
+      </article>
+
+    </div>
+    <p class="tq-a1s__note">カード面・本文・罫・下のボタンは完全に同一。色で塗り分けていないのに2案だと分かる。</p>
+  </section>
+
+</div>

@@ -1,0 +1,23 @@
+{
+  "id": "color/duotone-as-category",
+  "name": "写真ごとに違う色を乗算で乗せ、色そのものを分類記号にする",
+  "ordinary": "写真はそのままの色で並べ、ホバー時だけ暗くする",
+  "actual": "タイル5枚に青緑／紫／緑／ピンク／オレンジを opacity .78 の乗算で重ね、写真の実色をほぼ消している。差し色を1点に使うのではなく、タイルの色が学部・カテゴリの識別子そのものになっている。",
+  "css": ".tile{position:relative;isolation:isolate;overflow:hidden}\n.tile::after{content:\"\";position:absolute;inset:0;mix-blend-mode:multiply;opacity:.78;background:linear-gradient(160deg,#8f5fd0,#b98fe0)}\n.tile--b::after{background:linear-gradient(160deg,#2e8f8a,#5fb6ae)}\n.tile--c::after{background:linear-gradient(160deg,#e0729a,#f0a3bd)}\n.tile *{position:relative;z-index:1;color:#fff}",
+  "appliesTo": ["features", "value", "member"],
+  "impact": 3,
+  "effort": 2,
+  "why": "素材の質や色温度がバラバラな支給写真でも、同じ処理で1枚のグリッドに揃い、色が分類を兼ねる",
+  "params": ["色相5種", "乗算のopacity（.7〜.85）", "グラデ角度160deg"],
+  "avoid": "写真の中身（表情・商品の実物）を見せることが目的のとき",
+  "sources": ["kobe-wu_s06"],
+  "notes": [
+    "現物は5枚のタイルが gap 0 で隙間なく突き合わさり、左1枚を大きく（縦2段ぶん）、右を2×2にした構成。色が分類記号として機能するのは、タイル同士が地の余白で切れずに1枚の色面として並ぶから。gap を空けると『色違いのカード』に戻る。",
+    "ベタ1色ではなく同色相の濃→淡の linear-gradient(160deg) を乗算する。これで写真の陰影の残り方が均一になり、5枚の色温度が揃う。角度は5枚とも同じにする。",
+    "乗算だけだと写真の暗部が沈んで色が濁るので、写真側を一度 grayscale＋コントラストを落としてから乗せると現物に近くなる。支給写真の色温度がバラバラなときはこの前処理が効く。",
+    "mix-blend-mode を使うので、親に isolation:isolate を必ず置く。置かないとページ全体の背景と合成されて、セクション背景色を変えた瞬間に色が変わる。",
+    "文字は白で、::after より上（position:relative + z-index:1）に置く。opacity .78 だと下の写真の明るい部分で白文字が読みにくくなることがあるので、下端に向けて暗くなるグラデを1枚だけ足すか、opacity を .85 側に寄せる。",
+    "avoid の通り、表情や商品の実物を見せたい写真には使えない。色は分類にしか使えず、被写体は『気配』しか残らない。"
+  ],
+  "demoNotes": "上に「普通（実色のまま並べる）」、下に現物どおりの5枚グリッド（左1枚大＋右2×2、gap 0）。同じ2枚の写真を使い回しているが、乗算で1枚の面に揃うことが分かる。"
+}

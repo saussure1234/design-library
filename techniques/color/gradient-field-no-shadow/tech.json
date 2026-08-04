@@ -1,0 +1,23 @@
+{
+  "id": "color/gradient-field-no-shadow",
+  "name": "背景を1枚のグラデにして、影と罫を地の色相の明度差で置き換える",
+  "ordinary": "背景は単色の淡いグレー、カードには drop-shadow、表の罫は黒〜グレー",
+  "actual": "セクション地は上#eaf4f7→下#6fa7baの縦グラデ1枚。カードは box-shadow を持たず、ほぼ白(#f4f9fb)との明度差だけで浮く。斜め版では「文字を置く左下＝白側／写真を置く右上＝濃い側」と場所ごとの明度を面を切らずに作り分ける。表の罫も黒でなく水色ヘアライン#a9dbe5、ヘッダ行と時刻列だけ淡ブルーのベタ。",
+  "css": "section{background:linear-gradient(180deg,#eaf4f7 0%,#6fa7ba 100%)}\nsection.diag{background:linear-gradient(200deg,#8ec7d9 0%,#cfe6ee 52%,#fbfdfd 100%)}\n.card{background:#fff;border:0;box-shadow:none;border-radius:24px}\n.tt{border-collapse:collapse} .tt td{border:1px solid #a9dbe5} .tt th,.tt .timecol{background:#dbeef4}\n.arrow{width:34px;height:34px;border:1px solid #b9c9cf;border-radius:50%;background:none}",
+  "appliesTo": ["features", "value", "price", "access", "hero"],
+  "impact": 3,
+  "effort": 1,
+  "why": "影を使わないので画面が硬くならず、グラデの濃い側でカードのコントラストが勝手に上がる",
+  "params": ["角度（180deg=上下／200deg=斜め）", "両端の明度差", "罫の色（地と同色相の淡い値）"],
+  "avoid": "カードが縦に長く、グラデの明暗をまたいで白カードが見えなくなる場合",
+  "sources": ["kobe-wu_s04", "kobe-wu_s05", "sho_atama_s08"],
+  "notes": [
+    "kobe-wu_s04 のカードは横長（左に年月の円、右に見出しと日付）で背が低い。グラデの明暗を1枚がまたがないので、上のカードは淡い地の上、下のカードは濃い地の上に来て、下に行くほどコントラストが自然に上がる。avoid の『縦に長いカード』が効かない理由がこれ。",
+    "セクション上端はグラデの一番淡い側なので、前セクションの白地との境目がほとんど見えない。地を切り替えたことを気づかせずに面を変えられるのがこの工夫の副産物。",
+    "kobe-wu_s05 の斜め版は 200deg で、白い側（左下）に見出しとリード、濃い側（右上）に写真タイル。面を分割せず、置くものに応じて明度を作り分けている。写真は濃い側なので縁取りが要らない。",
+    "sho_atama_s08 の表は黒罫を一切使わず、地と同色相の水色ヘアライン(#a9dbe5前後)。ヘッダ行と時刻列だけ淡ブルーのベタ(#dbeef4前後)で、線の濃さではなく面の有無で見出しを立てている。",
+    "丸い矢印ボタンも塗らず、1pxの細い縁だけ（#b9c9cf前後）。影・塗り・黒罫という『硬さの出る3点』をすべて明度差に置き換えるのがこの工夫の全体像。",
+    "実装上の注意：グラデはセクション要素の background に1枚だけ持たせる。カードやテーブルに個別のグラデを重ねると、スクロールしたときに継ぎ目が見える。"
+  ],
+  "demoNotes": "①カードを2枚並べて比較（左＝グレー地＋影＋黒罫／右＝グラデ地＋影なし）、②斜め200degの版、③表の罫（黒罫 vs 水色ヘアライン）。"
+}

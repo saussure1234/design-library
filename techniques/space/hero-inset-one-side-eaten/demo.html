@@ -1,0 +1,171 @@
+<style>
+/* トークンのフォールバック。:where() で詰めているので、
+   _tokens.css が読み込まれていればそちらが必ず勝つ。 */
+:where(:root){
+  --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-disp:var(--f-sans); --f-num:"Helvetica Neue",Arial,var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+  --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+  --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px; --s8:76px;
+  --sec-y:clamp(56px,7vw,110px);
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --shadow:0 6px 24px rgba(17,17,17,.08);
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+
+/* ============ 土台 ============ */
+.tq-inset{
+  font-family:var(--f-sans); color:var(--c-ink2); background:var(--c-bg);
+  padding-block:var(--s7);
+  overflow-x:clip;
+}
+.tq-inset *{box-sizing:border-box}
+.tq-inset__wrap{max-width:var(--w-max); margin-inline:auto; padding-inline:var(--w-gut)}
+.tq-inset__blk{margin-top:var(--s8)}
+.tq-inset__blk:first-child{margin-top:0}
+
+.tq-inset__tag{
+  display:inline-block; margin:0 0 var(--s4);
+  font-size:var(--fs-note); letter-spacing:.08em; line-height:1;
+  padding:var(--s2) var(--s3); border-radius:var(--r-pill);
+  background:var(--c-bg2); color:var(--c-ink3);
+}
+.tq-inset__tag--on{background:var(--c-primary-l); color:var(--c-primary-d)}
+.tq-inset__cap{
+  margin:var(--s4) 0 0; font-size:var(--fs-sm); line-height:var(--lh-head); color:var(--c-ink3);
+}
+
+/* ============ 普通：全画面写真＋白文字のキャッチ ============ */
+.tq-inset__full{
+  position:relative; overflow:hidden;
+  height:clamp(280px,40vw,470px); background:var(--c-bg2);
+  display:grid; place-items:center;
+}
+.tq-inset__full > img{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;
+}
+.tq-inset__full::after{content:""; position:absolute; inset:0; background:var(--c-ink); opacity:.3}
+.tq-inset__catch{
+  position:relative; margin:0; text-align:center; color:var(--c-on-primary);
+  font-family:var(--f-disp); font-size:var(--fs-2xl); font-weight:800;
+  letter-spacing:.1em; line-height:var(--lh-tight);
+}
+
+/* ============ この工夫：三辺に余白を残し、右辺だけ隣の面に食わせる ============ */
+.tq-inset__hero{
+  display:grid; grid-template-columns:1fr 39%;
+  background:var(--c-bg);
+}
+.tq-inset__main{
+  position:relative;
+  padding:clamp(44px,7vw,57px) 0 clamp(34px,6vw,70px) clamp(16px,3vw,36px);
+}
+.tq-inset__main > img{
+  display:block; width:100%; height:clamp(200px,36vw,420px);
+  object-fit:cover; border-radius:0; background:var(--c-bg2);
+}
+/* ロゴと校名は写真の外の白地に乗せる */
+.tq-inset__brand{
+  position:absolute; top:var(--s4); left:clamp(16px,3vw,36px);
+  display:flex; align-items:center; gap:var(--s3);
+}
+.tq-inset__brand img{height:22px; width:auto; display:block}
+.tq-inset__brand span{
+  font-size:var(--fs-sm); color:var(--c-ink); font-weight:700; letter-spacing:.06em;
+}
+/* 写真の上に置くのは1点だけ */
+.tq-inset__emblem{
+  position:absolute; left:50%; top:56%; transform:translate(-50%,-50%);
+  display:grid; place-items:center; gap:var(--s1);
+  width:clamp(96px,15vw,152px); aspect-ratio:1;
+  border:1px solid var(--c-bg); border-radius:var(--r-pill);
+  color:var(--c-on-primary); text-align:center;
+}
+.tq-inset__emblem b{font-family:var(--f-num); font-size:var(--fs-2xl); line-height:.9; font-weight:800}
+.tq-inset__emblem small{font-size:var(--fs-note); letter-spacing:.18em}
+.tq-inset__scroll{
+  position:absolute; left:50%; bottom:var(--s3); transform:translateX(-50%);
+  font-family:var(--f-num); font-size:var(--fs-note); letter-spacing:.24em; color:var(--c-ink3);
+}
+
+/* 写真の右辺を食う面 */
+.tq-inset__side{
+  background:var(--c-accent); color:var(--c-on-primary);
+  padding:var(--s5) clamp(16px,2.5vw,32px);
+  display:flex; flex-direction:column; align-items:center; gap:var(--s3);
+  text-align:center;
+}
+.tq-inset__side h2{
+  margin:0; font-family:var(--f-disp); font-size:var(--fs-md); font-weight:700;
+  letter-spacing:.1em; line-height:var(--lh-tight);
+}
+.tq-inset__side p{margin:0; font-size:var(--fs-note); line-height:var(--lh-head); letter-spacing:.04em}
+.tq-inset__btns{display:flex; gap:var(--s3); flex-wrap:wrap; justify-content:center; margin-top:var(--s2)}
+.tq-inset__btn{
+  padding:var(--s3) var(--s5); border-radius:var(--r-pill);
+  font-size:var(--fs-note); font-weight:700; white-space:nowrap;
+  background:var(--c-bg); color:var(--c-ink);
+}
+.tq-inset__btn--d{background:var(--c-ink); color:var(--c-on-primary)}
+.tq-inset__links{
+  list-style:none; margin:var(--s3) 0 0; padding:0;
+  display:grid; gap:var(--s3); font-size:var(--fs-note);
+}
+
+@media (max-width:768px){
+  /* 縦積み。食わせる辺は右から下へ移す（三辺＝上・左・右に余白を残す） */
+  .tq-inset__hero{grid-template-columns:1fr}
+  .tq-inset__main{padding:clamp(44px,9vw,57px) clamp(16px,4vw,36px) 0}
+  .tq-inset__brand{left:clamp(16px,4vw,36px)}
+  .tq-inset__scroll{display:none}
+}
+</style>
+
+<section class="tq-inset">
+  <div class="tq-inset__wrap">
+    <p class="tq-inset__tag">普通の場合</p>
+  </div>
+  <div class="tq-inset__full">
+    <img src="../../../docs/demo/ph_a.jpg" alt="">
+    <h2 class="tq-inset__catch">キャッチコピーがここに入ります</h2>
+  </div>
+  <div class="tq-inset__wrap">
+    <p class="tq-inset__cap">写真を画面いっぱいに敷き、その上に白文字のキャッチを乗せる。写真は「壁」になり、上に乗る文字は写真の一部として読まれる。読ませるために暗い膜も要る。</p>
+  </div>
+
+  <div class="tq-inset__wrap tq-inset__blk">
+    <p class="tq-inset__tag tq-inset__tag--on">この工夫：三辺に余白を残し、右辺だけ食わせる</p>
+  </div>
+  <div class="tq-inset__hero">
+    <div class="tq-inset__main">
+      <div class="tq-inset__brand">
+        <img src="../../../docs/demo/logo.svg" alt="">
+        <span>名称がここに入ります</span>
+      </div>
+      <img src="../../../docs/demo/ph_a.jpg" alt="">
+      <span class="tq-inset__emblem"><b>100</b><small>ANNIV.</small></span>
+      <span class="tq-inset__scroll">SCROLL</span>
+    </div>
+    <aside class="tq-inset__side">
+      <h2>名称がここに入ります</h2>
+      <p>〒000-0000 住所がここに入ります<br>TEL 000-000-0000</p>
+      <div class="tq-inset__btns">
+        <span class="tq-inset__btn">アクセス</span>
+        <span class="tq-inset__btn tq-inset__btn--d">お問い合わせ</span>
+      </div>
+      <ul class="tq-inset__links">
+        <li>項目がここに入ります</li>
+        <li>項目がここに入ります</li>
+        <li>項目がここに入ります</li>
+      </ul>
+    </aside>
+  </div>
+  <div class="tq-inset__wrap">
+    <p class="tq-inset__cap">写真は左・上・下に白い余白を残した横長の面として置かれ、右辺だけが隣の色面に食われている。ロゴと名称は写真の外の白地に乗り、写真の上に置くのは1点だけ。四辺のうち三辺を余白で締めるので、写真が「壁」でなく「1枚の作品」に見える。</p>
+  </div>
+
+</section>

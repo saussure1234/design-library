@@ -1,0 +1,23 @@
+{
+  "id": "color/paper-grain-ground",
+  "name": "地を#fffのベタにせず、紙目ノイズや網点を敷いて罫を省く",
+  "ordinary": "背景は#ffffffか単色ベージュのフラット塗り／薄い水色のベタ",
+  "actual": "全面が微細な粒を持つ生成り(#f7f3ec)。写真の外側と背景の境目に罫は一切なく、粒と白い写真周辺の質感差だけで面が分かれている。別例は淡い青の全面に6px間隔のドットを敷き、パネルの落ち影までベタでなくドットの密度で作り、セクション下端はドット帯が斜めに切れて終わる。",
+  "css": "body{background:#f7f3ec}\nbody::before{content:'';position:fixed;inset:0;pointer-events:none;opacity:.5;mix-blend-mode:multiply;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")}\n/* 網点版 */\n.halftone{background-image:radial-gradient(#c9d8ef 1px,transparent 1.2px);background-size:6px 6px;-webkit-mask-image:linear-gradient(180deg,transparent,#000 40%,transparent)}",
+  "appliesTo": ["hero", "features", "value", "footer"],
+  "impact": 2,
+  "effort": 2,
+  "why": "地に質感があると枠線を一切引かなくても要素の輪郭が立ち、淡い色面だけの構成でも画面が痩せない",
+  "params": ["粒（紙目ノイズ／網点6px）", "opacity 4〜50%", "網点の色"],
+  "avoid": "低スペック端末で全画面 fixed の擬似要素がスクロールを重くする場合はPNGタイルに置き換える",
+  "sources": ["koran_s06", "koran_s07", "meikei_s05"],
+  "notes": [
+    "koran_s06/s07 実測：地の生成りに対し、写真の左側は円弧でマスクされ、写真の外周に罫は無い。粒は等倍で見てやっと分かる細かさ（baseFrequency .9 相当）で、色は付けず multiply で地に沈めている。写真の周りにわずかな白マージンを残すと、粒と白の質感差だけで写真が浮く。",
+    "meikei_s05 実測：淡い青の地に約6px間隔のドット。パネル（見開きの白）の落ち影がぼかしでなくドットの粒で表現され、セクション下端でドット帯が斜めに切れて終わる（帯の下は無地に戻る）。",
+    "実装メモ：擬似要素は position:fixed が本来だが、demo ではタイル内で見せるため position:absolute + inset:0 に変更した。実案件では body::before で fixed のまま使う（スクロールしても粒が動かない＝紙に見える）。",
+    "実装メモ：mask-image のグラデーションに使う黒はトークンではないので、:root に --tq-pg-fade として切り出し、宣言側は var() のみにした。上下ともフェードさせると clip-path の斜め切りが見えなくなるので、フェードは上端だけ（transparent→黒30%）にして下端は斜めで終わらせる。",
+    "実装メモ：紙目の opacity は css ヒントの .5 だと粒が粗く出る（画面上でサンドペーパーに見える）。実測に寄せるなら .3 前後。demo は .32。",
+    "実装メモ：mix-blend-mode:multiply が効かない環境では粒が白く浮くので、その場合は opacity を .08 前後まで落とすかPNGタイルに置換する（avoid 記載の通り）。",
+    "対比の作り方：左に『#fffベタ＋罫4本』の同じ内容を並べた。罫の本数（4→0）が質感で置き換わったことが数えられる。"
+  ]
+}

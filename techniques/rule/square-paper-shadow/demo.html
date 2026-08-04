@@ -1,0 +1,238 @@
+<style>
+/* ============================================================
+   rule/square-paper-shadow
+   角丸と枠線を捨て、直角＋落ち影だけで「紙」にする
+   ============================================================ */
+
+@layer tq-fallback{
+  :root{
+    --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA;
+    --c-accent:#FF9301;
+    --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+    --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+    --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    --f-disp:var(--f-sans); --f-num:"Helvetica Neue",Arial,var(--f-sans);
+    --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+    --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px; --fs-3xl:50px; --fs-4xl:64px;
+    --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px;
+    --s6:36px; --s7:52px; --s8:76px; --s9:110px;
+    --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+    --shadow:0 6px 24px rgba(17,17,17,.08);
+  }
+}
+
+/* この工夫の寸法（トークンでは表せないパラメータ） */
+.tq-sps{
+  --tq-sps-shadow-dark:0 18px 40px color-mix(in srgb,var(--c-ink) 55%,transparent);
+  --tq-sps-shadow-light:0 2px 6px color-mix(in srgb,var(--c-ink) 8%,transparent);
+  --tq-sps-btngap:24px;   /* ラベルと矢印の距離 18〜28px */
+  --tq-sps-arrow:22px;    /* 矢印は width22px / height1px の線だけ */
+}
+
+.tq-sps{
+  container-type:inline-size;
+  font-family:var(--f-sans); color:var(--c-ink2);
+  line-height:var(--lh-head); -webkit-text-size-adjust:100%;
+  background:var(--c-bg); padding:var(--s5);
+}
+.tq-sps *{box-sizing:border-box}
+
+.tq-sps__lead{margin:0 0 var(--s5); font-size:var(--fs-note); color:var(--c-ink3); line-height:var(--lh-body)}
+.tq-sps__sec{margin-top:var(--s7)}
+.tq-sps__sec:first-of-type{margin-top:0}
+.tq-sps__secttl{margin:0 0 var(--s4); font-size:var(--fs-sm); font-weight:700; color:var(--c-ink)}
+.tq-sps__cap{
+  display:flex; align-items:center; gap:var(--s2);
+  margin:0 0 var(--s3); font-size:var(--fs-note); font-weight:700;
+  color:var(--c-ink3); letter-spacing:.04em;
+}
+.tq-sps__cap::before{content:""; width:var(--s5); height:1px; background:var(--c-line); flex:0 0 auto}
+.tq-sps__note{margin:var(--s3) 0 var(--s6); font-size:var(--fs-note); color:var(--c-ink3); line-height:var(--lh-body)}
+.tq-sps__note:last-child{margin-bottom:0}
+
+/* --- 暗地：直角＋強い落ち影で紙のように浮かせる -------------- */
+.tq-sps__dark{background:var(--c-ink); padding:var(--s7) var(--s5)}
+.tq-sps__cards{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:var(--s5); margin:0; padding:0; list-style:none;
+}
+.tq-sps__card{
+  background:var(--c-bg); border:0; border-radius:0;
+  box-shadow:var(--tq-sps-shadow-dark);
+}
+.tq-sps__figure{position:relative; margin:0}
+.tq-sps__figure img{display:block; width:100%; aspect-ratio:4/3; object-fit:cover; border-radius:0}
+.tq-sps__badge{
+  position:absolute; left:0; bottom:0;
+  background:var(--c-bg); padding:var(--s1) var(--s3);
+  font-size:10px; color:var(--c-ink); border-radius:0;
+}
+.tq-sps__body{padding:var(--s4)}
+.tq-sps__date{margin:0 0 var(--s2); font-size:10px; color:var(--c-ink3); letter-spacing:.06em}
+.tq-sps__ttl{margin:0 0 var(--s4); font-size:var(--fs-note); font-weight:700; color:var(--c-ink); line-height:var(--lh-head)}
+/* カード内で使う線はタグ行の上の1px罫のみ */
+.tq-sps__tags{
+  margin:0; padding-top:var(--s3); border-top:1px solid var(--c-line);
+  font-size:10px; color:var(--c-ink3); letter-spacing:.02em;
+}
+
+/* 普通：角丸＋1px枠でやわらげる */
+.tq-sps__card--soft{
+  border:1px solid color-mix(in srgb,var(--c-on-primary) 22%,transparent);
+  border-radius:var(--r-m); box-shadow:none; overflow:hidden;
+}
+.tq-sps__card--soft .tq-sps__badge{border-radius:var(--r-pill); left:var(--s2); bottom:var(--s2)}
+
+/* --- 明地：淡い影の短冊＋線だけの矢印ボタン ------------------ */
+.tq-sps__light{background:var(--c-bg2); padding:var(--s6) var(--s5)}
+.tq-sps__btns{display:flex; flex-wrap:wrap; gap:var(--s4); align-items:flex-start}
+.tq-sps__btn{
+  background:var(--c-bg); border:0; border-radius:0;
+  box-shadow:var(--tq-sps-shadow-light);
+  padding:var(--s3) var(--s4);
+  display:inline-flex; align-items:center; gap:var(--tq-sps-btngap);
+  color:var(--c-primary); font-family:inherit; font-size:var(--fs-note);
+  line-height:var(--lh-head); text-align:left; cursor:pointer;
+}
+.tq-sps__btn::after{
+  content:""; flex:0 0 auto;
+  width:var(--tq-sps-arrow); height:1px; background:var(--c-ink2);
+}
+/* 普通：幅を揃え、角丸＋1px枠＋塗りにする */
+.tq-sps__btns--soft .tq-sps__btn{
+  width:200px; justify-content:space-between;
+  background:var(--c-primary); color:var(--c-on-primary);
+  border:1px solid var(--c-primary-d); border-radius:var(--r-pill);
+  box-shadow:var(--shadow);
+}
+.tq-sps__btns--soft .tq-sps__btn::after{background:var(--c-on-primary)}
+
+.tq-sps__strips{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:var(--s4); margin-bottom:var(--s5)}
+.tq-sps__strip{
+  background:var(--c-bg); border:0; border-radius:0;
+  box-shadow:var(--tq-sps-shadow-light); padding:var(--s4);
+}
+.tq-sps__strips--soft .tq-sps__strip{
+  border:1px solid var(--c-line); border-radius:var(--r-m); box-shadow:none;
+}
+.tq-sps__stripttl{margin:0 0 var(--s2); font-size:var(--fs-note); font-weight:700; color:var(--c-ink)}
+.tq-sps__stripp{margin:0; font-size:10px; color:var(--c-ink3); line-height:var(--lh-body)}
+
+@container (max-width:520px){
+  .tq-sps{padding:var(--s4)}
+  .tq-sps__dark{padding:var(--s6) var(--s4)}
+  .tq-sps__light{padding:var(--s5) var(--s4)}
+  .tq-sps__btns--soft .tq-sps__btn{width:100%}
+}
+</style>
+
+<div class="tq-sps">
+  <p class="tq-sps__lead">
+    カードもボタンも border-radius:0 / border:0。境界は影だけが作る。
+    暗地では強い影で紙のように浮かせ、明地では淡い影で短冊のように乗せる。
+  </p>
+
+  <!-- ① 暗地 -->
+  <section class="tq-sps__sec">
+    <h3 class="tq-sps__secttl">① 暗い地：0 18px 40px の強い影で「紙が乗っている」と読ませる</h3>
+
+    <p class="tq-sps__cap">普通：角丸12px＋1px枠でやわらげる</p>
+    <div class="tq-sps__dark">
+      <ul class="tq-sps__cards">
+        <li class="tq-sps__card tq-sps__card--soft">
+          <figure class="tq-sps__figure"><img src="../../../docs/demo/ph_a.jpg" alt=""><span class="tq-sps__badge">ラベル</span></figure>
+          <div class="tq-sps__body">
+            <p class="tq-sps__date">0000.00.00UP</p>
+            <p class="tq-sps__ttl">記事のタイトルがここに入ります。2行ほどで折り返します。</p>
+            <p class="tq-sps__tags">#タグ　#タグ　#タグ</p>
+          </div>
+        </li>
+        <li class="tq-sps__card tq-sps__card--soft">
+          <figure class="tq-sps__figure"><img src="../../../docs/demo/ph_b.jpg" alt=""><span class="tq-sps__badge">ラベル</span></figure>
+          <div class="tq-sps__body">
+            <p class="tq-sps__date">0000.00.00UP</p>
+            <p class="tq-sps__ttl">記事のタイトルがここに入ります。2行ほどで折り返します。</p>
+            <p class="tq-sps__tags">#タグ　#タグ　#タグ</p>
+          </div>
+        </li>
+        <li class="tq-sps__card tq-sps__card--soft">
+          <figure class="tq-sps__figure"><img src="../../../docs/demo/ph_a.jpg" alt=""><span class="tq-sps__badge">ラベル</span></figure>
+          <div class="tq-sps__body">
+            <p class="tq-sps__date">0000.00.00UP</p>
+            <p class="tq-sps__ttl">記事のタイトルがここに入ります。2行ほどで折り返します。</p>
+            <p class="tq-sps__tags">#タグ　#タグ　#タグ</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <p class="tq-sps__note">枠線が暗地の上で「切り抜き線」に見え、カードが地に貼り付いたまま浮かない。</p>
+
+    <p class="tq-sps__cap">この工夫：角丸0・枠0・影だけ</p>
+    <div class="tq-sps__dark">
+      <ul class="tq-sps__cards">
+        <li class="tq-sps__card">
+          <figure class="tq-sps__figure"><img src="../../../docs/demo/ph_a.jpg" alt=""><span class="tq-sps__badge">ラベル</span></figure>
+          <div class="tq-sps__body">
+            <p class="tq-sps__date">0000.00.00UP</p>
+            <p class="tq-sps__ttl">記事のタイトルがここに入ります。2行ほどで折り返します。</p>
+            <p class="tq-sps__tags">#タグ　#タグ　#タグ</p>
+          </div>
+        </li>
+        <li class="tq-sps__card">
+          <figure class="tq-sps__figure"><img src="../../../docs/demo/ph_b.jpg" alt=""><span class="tq-sps__badge">ラベル</span></figure>
+          <div class="tq-sps__body">
+            <p class="tq-sps__date">0000.00.00UP</p>
+            <p class="tq-sps__ttl">記事のタイトルがここに入ります。2行ほどで折り返します。</p>
+            <p class="tq-sps__tags">#タグ　#タグ　#タグ</p>
+          </div>
+        </li>
+        <li class="tq-sps__card">
+          <figure class="tq-sps__figure"><img src="../../../docs/demo/ph_a.jpg" alt=""><span class="tq-sps__badge">ラベル</span></figure>
+          <div class="tq-sps__body">
+            <p class="tq-sps__date">0000.00.00UP</p>
+            <p class="tq-sps__ttl">記事のタイトルがここに入ります。2行ほどで折り返します。</p>
+            <p class="tq-sps__tags">#タグ　#タグ　#タグ</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <p class="tq-sps__note">直角の紙が3枚、暗地の上に置かれて見える。カード内の線はタグ行の上の1本だけ。</p>
+  </section>
+
+  <!-- ② 明地 -->
+  <section class="tq-sps__sec">
+    <h3 class="tq-sps__secttl">② 明るい地：0 2px 6px の淡い影で短冊のように乗せる／ボタンの幅は揃えない</h3>
+
+    <p class="tq-sps__cap">普通：角丸＋1px枠＋塗り、幅は全部揃える</p>
+    <div class="tq-sps__light">
+      <div class="tq-sps__strips tq-sps__strips--soft">
+        <div class="tq-sps__strip"><p class="tq-sps__stripttl">見出しが入ります</p><p class="tq-sps__stripp">説明のテキストが2行ほど入ります。説明のテキストが入ります。</p></div>
+        <div class="tq-sps__strip"><p class="tq-sps__stripttl">見出しが入ります</p><p class="tq-sps__stripp">説明のテキストが2行ほど入ります。説明のテキストが入ります。</p></div>
+        <div class="tq-sps__strip"><p class="tq-sps__stripttl">見出しが入ります</p><p class="tq-sps__stripp">説明のテキストが2行ほど入ります。説明のテキストが入ります。</p></div>
+      </div>
+      <div class="tq-sps__btns tq-sps__btns--soft">
+        <button class="tq-sps__btn" type="button">ボタンのラベル</button>
+        <button class="tq-sps__btn" type="button">ボタン</button>
+        <button class="tq-sps__btn" type="button">長めのボタンのラベル</button>
+      </div>
+    </div>
+    <p class="tq-sps__note">枠・角丸・塗り・等幅の4つが効いて、地の質感（淡い面）が全部隠れる。</p>
+
+    <p class="tq-sps__cap">この工夫：直角＋淡い影、幅は内容任せ（1つだけ2行でも可）</p>
+    <div class="tq-sps__light">
+      <div class="tq-sps__strips">
+        <div class="tq-sps__strip"><p class="tq-sps__stripttl">見出しが入ります</p><p class="tq-sps__stripp">説明のテキストが2行ほど入ります。説明のテキストが入ります。</p></div>
+        <div class="tq-sps__strip"><p class="tq-sps__stripttl">見出しが入ります</p><p class="tq-sps__stripp">説明のテキストが2行ほど入ります。説明のテキストが入ります。</p></div>
+        <div class="tq-sps__strip"><p class="tq-sps__stripttl">見出しが入ります</p><p class="tq-sps__stripp">説明のテキストが2行ほど入ります。説明のテキストが入ります。</p></div>
+      </div>
+      <div class="tq-sps__btns">
+        <button class="tq-sps__btn" type="button">ボタンのラベル</button>
+        <button class="tq-sps__btn" type="button">ボタン</button>
+        <button class="tq-sps__btn" type="button">2行になる<br>ボタンのラベル</button>
+      </div>
+    </div>
+    <p class="tq-sps__note">影が薄いので地の面が透けて残る。ラベルと矢印の間は24px、矢印は22px×1pxの線だけ。</p>
+  </section>
+
+</div>

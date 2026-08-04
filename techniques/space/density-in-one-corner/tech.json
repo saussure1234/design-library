@@ -1,0 +1,38 @@
+{
+  "id": "space/density-in-one-corner",
+  "name": "版面の9割を空け、密度を1点に沈める",
+  "ordinary": "要素を中央に寄せ、上下左右の余白を均等に取る",
+  "actual": "ogawa_s10=720×450の画面のうち文字は右下寄りの約130×70pxだけ。縦組みで中央でも上でもなく下1/3に沈め、「収穫時期：8月下旬」のメタだけ本文列から1列分離して左に置く。残りは白のまま、左辺に紺の大円が半分だけ入る。",
+  "css": ".sec{display:grid; min-height:100svh; place-items:end;\n  padding-inline-end:28%; padding-block-end:34%}\n.sec .body{writing-mode:vertical-rl; line-height:2.1; letter-spacing:.08em;\n  font-size:13px; max-height:220px}\n.sec .meta{margin-inline-start:24px}   /* メタだけ本文列から1列離す */",
+  "appliesTo": [
+    "hero",
+    "value",
+    "voice",
+    "access"
+  ],
+  "impact": 3,
+  "effort": 1,
+  "why": "密度を1点に集めるほど残りの白が「空き」でなく品として読める。均等な余白は空白を安く見せる",
+  "params": [
+    "寄せる隅",
+    "padding 28〜34%",
+    "縦組みにするか",
+    "メタの離し 24px"
+  ],
+  "avoid": "機能一覧・料金など情報量の多いセクションでは成立しない。文字が3行以内のときだけ",
+  "sources": [
+    "ogawa_s10"
+  ],
+  "notes": [
+    "定義の padding-inline-end:28% / padding-block-end:34% は、% padding が「幅」に対して解決される仕様を踏まえて読む必要がある。block 方向の34%も高さの34%ではなく幅の34%。16/10 の版面なら高さの54%ぶん空くことになり、原典（下から約31%）より沈みすぎる。デモは padding-block-end:20%（＝高さの32%）にして現物に合わせた。100svh の全画面なら 16/9 前後なので 34% でもおおむね合う。",
+    "定義の .meta{margin-inline-start:24px} は横組みの記述。縦組み（writing-mode:vertical-rl）では inline 方向が上→下なので、これは「上に24px」になってしまい列は離れない。列を1本ぶん離すのは block 方向＝右→左なので margin-block-start:24px（＝実際には右に24px）が正解。デモはこちらを使っている。",
+    "縦組みの列の長さを決めるのは height 系。max-height:220px が「1列の文字数」を決め、超えた分が左へ折り返して次の列になる。width を触っても列は変わらない。",
+    "縦組みのブロックに display:flex を付けてはいけない。vertical-rl では flex の主軸（row）が上→下になるため、見出し・本文・メタが列にならず斜めに散る。素の block フロー（既定）のままにすると、子が右→左に1列ずつ積まれて狙いどおりになる。実装中に一度これで崩した。",
+    "版面に aspect-ratio と min-height を併記すると Chrome は min-height を比率で幅へ逆算し、親より広い箱を作る（375px幅で min-height:340px + aspect-ratio:16/10 → 幅544px）。overflow:clip で見えないだけで、右下に沈めた文字が画面外へ出て消える。高さの下限が要るときは media query 側で aspect-ratio:auto + height に切り替える。",
+    "place-items:end は書字方向に従うので、縦組みの子を入れても親（横組み）の end＝右下で正しく効く。子側を vertical-rl にするだけでよい。",
+    "この工夫の主語は縦組みではなく「沈める位置」。デモに横組み版を並べたとおり、同じ隅・同じ padding なら横組みでも成立する。縦組みは字面を細くして密度をさらに1点へ集めるための手段。",
+    "左辺の大円は「沈めた1点の対岸に置く錘」。現物は直径が版面高の約63%（幅の39%）、中心が x=-10% で、見えているのは幅の約11%だけ。これ以上見せると円が主役になり、空白が空白でなくなる。",
+    "375px では aspect-ratio 16/10 だと高さ234pxしか無く縦組みが窮屈になるため min-height:340px を敷き、padding を 16%/14% に詰めた。沈める方向は保ったまま余白率だけ落とす。",
+    "デモは techniques/space/density-in-one-corner/demo.html。〈普通＝中央・均等余白〉〈この工夫＝右下へ沈める縦組み〉〈横組み版〉の3段。文字量は3案とも同一にして、差が配置だけであることを見せている。"
+  ]
+}

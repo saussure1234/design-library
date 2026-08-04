@@ -1,0 +1,218 @@
+<style>
+/* トークンのフォールバック。:where() で詰めているので、
+   _tokens.css が読み込まれていればそちらが必ず勝つ。 */
+:where(:root){
+  --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-disp:var(--f-sans); --f-num:"Helvetica Neue",Arial,var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+  --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+  --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px; --s8:76px;
+  --sec-y:clamp(56px,7vw,110px);
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --shadow:0 6px 24px rgba(17,17,17,.08);
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+
+/* ============ 土台 ============ */
+.tq-aplane{
+  font-family:var(--f-sans); color:var(--c-ink2); background:var(--c-bg);
+  padding-block:var(--s7);
+  overflow-x:clip;
+}
+.tq-aplane *{box-sizing:border-box}
+.tq-aplane__wrap{max-width:var(--w-max); margin-inline:auto; padding-inline:var(--w-gut)}
+.tq-aplane__blk{margin-top:var(--s8)}
+.tq-aplane__blk:first-child{margin-top:0}
+
+.tq-aplane__tag{
+  display:inline-block; margin:0;
+  font-size:var(--fs-note); letter-spacing:.08em; line-height:1;
+  padding:var(--s2) var(--s3); border-radius:var(--r-pill);
+  background:var(--c-bg2); color:var(--c-ink3);
+}
+.tq-aplane__tag--on{background:var(--c-primary-l); color:var(--c-primary-d)}
+.tq-aplane__h{
+  font-family:var(--f-disp); font-size:var(--fs-xl); line-height:var(--lh-tight);
+  letter-spacing:.02em; color:var(--c-ink); font-weight:800;
+  margin:var(--s3) 0 var(--s5);
+}
+.tq-aplane__cap{
+  margin:var(--s4) 0 0; font-size:var(--fs-sm); line-height:var(--lh-head); color:var(--c-ink3);
+}
+
+/* ============ 舞台 ============ */
+/* 面はコンテナではなく画面に対して敷くので、左右のガターぶん外へ出す */
+.tq-aplane__stage{
+  position:relative;
+  margin-inline:calc(var(--w-gut) * -1);
+  padding-inline:var(--w-gut);
+  isolation:isolate;
+}
+
+/* 敷いた面 */
+.tq-aplane__plane{
+  position:absolute; z-index:0; bottom:0; right:0; height:46%;
+  background:var(--c-ink);
+}
+.tq-aplane__plane--full{left:0}            /* 普通：全幅 */
+.tq-aplane__plane--off{left:20%}           /* この工夫：左20%だけ地を残す */
+
+/* 面の上にずれて重なる札の列 */
+.tq-aplane__cards{
+  position:relative; z-index:1;
+  display:grid; grid-template-columns:repeat(3,1fr); gap:var(--s4);
+  padding-block:var(--s5) var(--s8);
+}
+.tq-aplane__cards--shift{margin-left:calc(var(--w-gut) * -.5); margin-right:var(--s7)}
+.tq-aplane__card{background:var(--c-bg); box-shadow:var(--shadow)}
+.tq-aplane__ph{aspect-ratio:4/3; overflow:hidden; background:var(--c-bg2)}
+.tq-aplane__ph img{width:100%; height:100%; object-fit:cover; display:block}
+.tq-aplane__t{
+  margin:0; padding:var(--s3) var(--s3) var(--s4);
+  font-size:var(--fs-sm); line-height:var(--lh-head); color:var(--c-ink); font-weight:700;
+}
+
+/* 残した帯の目印（デモ用の説明。実装では不要） */
+.tq-aplane__mark{
+  position:absolute; z-index:2; left:0; bottom:0; width:20%; height:46%;
+  border-right:1px dashed var(--c-line);
+  display:flex; align-items:flex-end; justify-content:center;
+  padding-bottom:var(--s3);
+  font-family:var(--f-num); font-size:var(--fs-note); color:var(--c-ink3); letter-spacing:.06em;
+}
+
+/* ============ 下地を覗かせる版 ============ */
+.tq-aplane__bed{
+  position:relative;
+  margin-inline:calc(var(--w-gut) * -1);
+  background:var(--c-bg2);
+  overflow:hidden;
+}
+.tq-aplane__bed>img{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;
+}
+.tq-aplane__grid{
+  position:relative;
+  width:92%;                                  /* 右8%は色を乗せない＝下地が覗く */
+  display:grid; grid-template-columns:1.35fr 1fr 1fr; grid-auto-rows:minmax(84px,11vw);
+}
+.tq-aplane__grid--full{width:100%}            /* 普通：右端まで色を乗せる */
+.tq-aplane__tile{position:relative; display:grid; place-items:center; padding:var(--s3)}
+.tq-aplane__tile::before{content:""; position:absolute; inset:0; opacity:.82}
+.tq-aplane__tile:nth-child(1){grid-row:span 2}
+.tq-aplane__tile:nth-child(1)::before{background:var(--c-primary)}
+.tq-aplane__tile:nth-child(2)::before{background:var(--c-accent)}
+.tq-aplane__tile:nth-child(3)::before{background:var(--c-ink)}
+.tq-aplane__tile:nth-child(4)::before{background:var(--c-primary-d)}
+.tq-aplane__tile:nth-child(5)::before{background:var(--c-ink2)}
+.tq-aplane__tile>span{
+  position:relative; color:var(--c-on-primary);
+  font-size:var(--fs-sm); font-weight:700; letter-spacing:.06em; text-align:center;
+}
+
+/* ============ 残し幅の下限（4% は事故に見える） ============ */
+.tq-aplane__pair{display:grid; grid-template-columns:1fr 1fr; gap:var(--s5)}
+.tq-aplane__mini{position:relative; height:96px; background:var(--c-bg2)}
+.tq-aplane__mini i{position:absolute; inset:0 0 0 4%; background:var(--c-ink); display:block}
+.tq-aplane__mini--ok i{inset:0 0 0 20%}
+.tq-aplane__minicap{
+  margin:var(--s2) 0 0; font-size:var(--fs-note); color:var(--c-ink3); line-height:var(--lh-head);
+}
+
+@media (max-width:560px){
+  .tq-aplane__cards{grid-template-columns:1fr 1fr; gap:var(--s3)}
+  .tq-aplane__cards--shift{margin-right:var(--s5)}
+  .tq-aplane__grid{grid-template-columns:1fr 1fr; grid-auto-rows:minmax(72px,18vw)}
+  .tq-aplane__tile:nth-child(1){grid-row:span 1}
+  .tq-aplane__mark{font-size:10px}
+}
+</style>
+
+<section class="tq-aplane">
+  <div class="tq-aplane__wrap">
+
+    <div class="tq-aplane__blk">
+      <p class="tq-aplane__tag">普通の場合</p>
+      <h2 class="tq-aplane__h">見出しがここに入ります</h2>
+      <div class="tq-aplane__stage">
+        <div class="tq-aplane__plane tq-aplane__plane--full"></div>
+        <div class="tq-aplane__cards">
+          <article class="tq-aplane__card">
+            <div class="tq-aplane__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+            <h3 class="tq-aplane__t">見出しがここに入ります</h3>
+          </article>
+          <article class="tq-aplane__card">
+            <div class="tq-aplane__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+            <h3 class="tq-aplane__t">見出しがここに入ります</h3>
+          </article>
+          <article class="tq-aplane__card">
+            <div class="tq-aplane__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+            <h3 class="tq-aplane__t">見出しがここに入ります</h3>
+          </article>
+        </div>
+      </div>
+      <p class="tq-aplane__cap">面の左右が画面の枠とぴったり一致するので、「敷いた背景」としか読めない。札の列も面も同じ枠に揃っていて、層が1枚しかないように見える。</p>
+    </div>
+
+    <div class="tq-aplane__blk">
+      <p class="tq-aplane__tag tq-aplane__tag--on">この工夫：左20%だけ地を残す</p>
+      <h2 class="tq-aplane__h">見出しがここに入ります</h2>
+      <div class="tq-aplane__stage">
+        <div class="tq-aplane__plane tq-aplane__plane--off"></div>
+        <span class="tq-aplane__mark">20%</span>
+        <div class="tq-aplane__cards tq-aplane__cards--shift">
+          <article class="tq-aplane__card">
+            <div class="tq-aplane__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+            <h3 class="tq-aplane__t">見出しがここに入ります</h3>
+          </article>
+          <article class="tq-aplane__card">
+            <div class="tq-aplane__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+            <h3 class="tq-aplane__t">見出しがここに入ります</h3>
+          </article>
+          <article class="tq-aplane__card">
+            <div class="tq-aplane__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+            <h3 class="tq-aplane__t">見出しがここに入ります</h3>
+          </article>
+        </div>
+      </div>
+      <p class="tq-aplane__cap">面の左辺が画面幅の20%に垂直に立ち、そこから右端まで断ち落とし。残った左20%の地と、札の列の左右のずれで、面が「背景」でなく「あとから重ねた層」に見える。</p>
+    </div>
+
+    <div class="tq-aplane__blk">
+      <p class="tq-aplane__tag tq-aplane__tag--on">この工夫：反対側に下地を覗かせる</p>
+      <h2 class="tq-aplane__h">見出しがここに入ります</h2>
+      <div class="tq-aplane__bed">
+        <img src="../../../docs/demo/ph_b.jpg" alt="">
+        <div class="tq-aplane__grid">
+          <div class="tq-aplane__tile"><span>項目がここに入ります</span></div>
+          <div class="tq-aplane__tile"><span>項目</span></div>
+          <div class="tq-aplane__tile"><span>項目</span></div>
+          <div class="tq-aplane__tile"><span>項目</span></div>
+          <div class="tq-aplane__tile"><span>項目</span></div>
+        </div>
+      </div>
+      <p class="tq-aplane__cap">色を乗せたグリッドは左端 x=0 まで断ち落とし、右8%だけ色を乗せない。そこに下地の写真が縦帯状に覗くので、グリッドが右にずれた層として立ち上がる。</p>
+    </div>
+
+    <div class="tq-aplane__blk">
+      <p class="tq-aplane__tag">残す幅の下限</p>
+      <h2 class="tq-aplane__h">4% と 20%</h2>
+      <div class="tq-aplane__pair">
+        <div>
+          <div class="tq-aplane__mini"><i></i></div>
+          <p class="tq-aplane__minicap">4%：狙いに見えず、面がずれた事故に見える。</p>
+        </div>
+        <div>
+          <div class="tq-aplane__mini tq-aplane__mini--ok"><i></i></div>
+          <p class="tq-aplane__minicap">20%：明らかに意図した非対称として読める。</p>
+        </div>
+      </div>
+      <p class="tq-aplane__cap">中途半端に残さない。8〜20%まで大きく残すか、いっそ全幅にする。</p>
+    </div>
+
+  </div>
+</section>

@@ -1,0 +1,259 @@
+<style>
+/* ============================================================
+   rule/table-no-grid
+   表の格子罫を全部消し、行は不透明度6%の1本・列は色帯か余白だけにする
+   ============================================================ */
+
+@layer tq-fallback{
+  :root{
+    --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA;
+    --c-accent:#FF9301;
+    --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+    --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+    --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    --f-disp:var(--f-sans); --f-num:"Helvetica Neue",Arial,var(--f-sans);
+    --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+    --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px; --fs-3xl:50px; --fs-4xl:64px;
+    --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px;
+    --s6:36px; --s7:52px; --s8:76px; --s9:110px;
+    --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+    --shadow:0 6px 24px rgba(17,17,17,.08);
+  }
+}
+
+/* この工夫の寸法（トークンでは表せないパラメータ） */
+.tq-tng{
+  --tq-tng-rowline:color-mix(in srgb,var(--c-ink) 6%,transparent); /* 行罫 .04〜.08 */
+  --tq-tng-padY:20px;   /* セル余白 */
+  --tq-tng-padX:24px;
+  --tq-tng-colr:14px;   /* 色帯の上下角丸 */
+  --tq-tng-colgap:5px;  /* 色帯の白い隙間 */
+  --tq-tng-dlgap:38px;  /* 定義リストの行間 28〜38px */
+  --tq-tng-dlcol:120px;
+}
+
+.tq-tng{
+  container-type:inline-size;
+  font-family:var(--f-sans); color:var(--c-ink2);
+  line-height:var(--lh-head); -webkit-text-size-adjust:100%;
+  background:var(--c-bg); padding:var(--s5);
+}
+.tq-tng *{box-sizing:border-box}
+
+.tq-tng__lead{margin:0 0 var(--s5); font-size:var(--fs-note); color:var(--c-ink3); line-height:var(--lh-body)}
+.tq-tng__sec{margin-top:var(--s7)}
+.tq-tng__sec:first-of-type{margin-top:0}
+.tq-tng__secttl{margin:0 0 var(--s4); font-size:var(--fs-sm); font-weight:700; color:var(--c-ink)}
+.tq-tng__cap{
+  display:flex; align-items:center; gap:var(--s2);
+  margin:0 0 var(--s3); font-size:var(--fs-note); font-weight:700;
+  color:var(--c-ink3); letter-spacing:.04em;
+}
+.tq-tng__cap::before{content:""; width:var(--s5); height:1px; background:var(--c-line); flex:0 0 auto}
+.tq-tng__note{margin:var(--s3) 0 var(--s6); font-size:var(--fs-note); color:var(--c-ink3); line-height:var(--lh-body)}
+.tq-tng__note:last-child{margin-bottom:0}
+.tq-tng__scroll{overflow-x:auto}
+
+/* --- 表の基本 ---------------------------------------------- */
+.tq-tng__t{
+  width:100%; min-width:300px;
+  border-collapse:separate; border-spacing:0;
+  font-size:var(--fs-note); line-height:var(--lh-body);
+}
+.tq-tng__t th,.tq-tng__t td{text-align:left; vertical-align:top; font-weight:400}
+
+/* 普通：格子罫を全部回し、ヘッダ行に背景色 */
+.tq-tng__t--grid th,.tq-tng__t--grid td{
+  border:1px solid var(--c-line); padding:var(--s3);
+}
+.tq-tng__t--grid thead th{background:var(--c-bg2); font-weight:700; color:var(--c-ink)}
+
+/* この工夫：縦罫ゼロ・列見出しの下罫もゼロ・行は1本だけ */
+.tq-tng__t--bare th,.tq-tng__t--bare td{
+  border:0; border-bottom:1px solid var(--tq-tng-rowline);
+  padding:var(--tq-tng-padY) var(--tq-tng-padX);
+}
+.tq-tng__t--bare tbody tr:last-child th,
+.tq-tng__t--bare tbody tr:last-child td{border-bottom:0}
+.tq-tng__t--bare thead th{
+  border-bottom:0; padding-bottom:var(--s4);
+  font-weight:700; color:var(--c-ink); text-align:center;
+}
+.tq-tng__t--bare tbody th{color:var(--c-ink); font-weight:700; white-space:nowrap}
+.tq-tng__t--bare td{color:var(--c-ink3)}
+/* 画面上で唯一の線＝差し色の枠。列の左右に1本ずつ、上下端で閉じる */
+.tq-tng__t--bare .tq-tng__hl{
+  border-left:1px solid var(--c-accent); border-right:1px solid var(--c-accent);
+  color:var(--c-ink2);
+}
+.tq-tng__t--bare thead .tq-tng__hl{border-top:1px solid var(--c-accent)}
+.tq-tng__t--bare tbody tr:last-child .tq-tng__hl{border-bottom:1px solid var(--c-accent)}
+.tq-tng__t--bare .tq-tng__hl b{color:var(--c-ink); display:block; margin-bottom:var(--s1)}
+
+/* --- 列そのものを色帯にする版 ------------------------------- */
+.tq-tng__cols{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(96px,1fr));
+  gap:var(--tq-tng-colgap);
+}
+.tq-tng__col{
+  border-radius:var(--tq-tng-colr); padding:var(--s3) var(--s2);
+  display:grid; gap:var(--s3); text-align:center;
+}
+.tq-tng__col:nth-child(6n+1){background:color-mix(in srgb,var(--c-primary) 16%,var(--c-bg))}
+.tq-tng__col:nth-child(6n+2){background:color-mix(in srgb,var(--c-primary) 26%,var(--c-bg))}
+.tq-tng__col:nth-child(6n+3){background:color-mix(in srgb,var(--c-accent) 16%,var(--c-bg))}
+.tq-tng__col:nth-child(6n+4){background:color-mix(in srgb,var(--c-accent) 26%,var(--c-bg))}
+.tq-tng__col:nth-child(6n+5){background:color-mix(in srgb,var(--c-ink) 8%,var(--c-bg))}
+.tq-tng__col:nth-child(6n+6){background:color-mix(in srgb,color-mix(in srgb,var(--c-primary) 50%,var(--c-accent)) 20%,var(--c-bg))}
+.tq-tng__colh{margin:0; font-size:var(--fs-note); font-weight:700; color:var(--c-ink); line-height:var(--lh-tight)}
+.tq-tng__cellbox{
+  background:var(--c-bg); border-radius:var(--r-s); padding:var(--s3) var(--s2);
+  font-size:10px; color:var(--c-ink2); line-height:var(--lh-head);
+}
+
+/* --- 罫ゼロの定義リスト ------------------------------------- */
+.tq-tng__dl{
+  display:grid; grid-template-columns:var(--tq-tng-dlcol) 1fr;
+  row-gap:var(--tq-tng-dlgap); column-gap:var(--s5);
+  margin:0; border:0;
+}
+.tq-tng__dl dt{
+  margin:0; font-family:var(--f-num); font-size:var(--fs-note);
+  letter-spacing:.2em; text-transform:uppercase; color:var(--c-accent);
+}
+.tq-tng__dl dd{margin:0; font-size:var(--fs-base); letter-spacing:.06em; color:var(--c-ink); line-height:var(--lh-body)}
+.tq-tng__dl--boxed{row-gap:0; column-gap:0}
+.tq-tng__dl--boxed dt,.tq-tng__dl--boxed dd{
+  border:1px solid var(--c-line); padding:var(--s3); font-size:var(--fs-note);
+}
+.tq-tng__dl--boxed dt{background:var(--c-bg2); font-family:var(--f-sans); letter-spacing:0; text-transform:none; color:var(--c-ink)}
+.tq-tng__dl--boxed dd{letter-spacing:0}
+
+@container (max-width:520px){
+  .tq-tng{padding:var(--s4)}
+  .tq-tng__t--bare th,.tq-tng__t--bare td{padding:var(--s4) var(--s3)}
+  .tq-tng__dl{grid-template-columns:1fr; row-gap:var(--s5); column-gap:0}
+  .tq-tng__dl dt{margin-bottom:var(--s1)}
+}
+</style>
+
+<div class="tq-tng">
+  <p class="tq-tng__lead">
+    縦罫ゼロ・列見出しの下罫もゼロ。列は padding 20px 24px の余白だけで分け、行の区切りは不透明度6%の1本のみ。
+    罫が消えると、画面上で唯一の線（差し色の枠）が意味を持つ。
+  </p>
+
+  <!-- ① 格子罫 vs 行罫1本 -->
+  <section class="tq-tng__sec">
+    <h3 class="tq-tng__secttl">① 同じ比較表を、格子罫と「行罫1本だけ」で比べる</h3>
+
+    <p class="tq-tng__cap">普通：全セルに罫を回し、ヘッダ行に背景色</p>
+    <div class="tq-tng__scroll">
+      <table class="tq-tng__t tq-tng__t--grid">
+        <thead>
+          <tr><th></th><th>項目A</th><th>項目B</th></tr>
+        </thead>
+        <tbody>
+          <tr><th>比較軸1</th><td>説明のテキストが入ります。2行ほど続きます。</td><td>説明のテキストが入ります。2行ほど続きます。</td></tr>
+          <tr><th>比較軸2</th><td>説明のテキストが入ります。2行ほど続きます。</td><td>説明のテキストが入ります。2行ほど続きます。</td></tr>
+          <tr><th>比較軸3</th><td>説明のテキストが入ります。2行ほど続きます。</td><td>説明のテキストが入ります。2行ほど続きます。</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="tq-tng__note">線が18本。どこを見てほしいのかを線では示せなくなる。</p>
+
+    <p class="tq-tng__cap">この工夫：縦罫ゼロ・行罫1本・唯一の線は差し色の枠</p>
+    <div class="tq-tng__scroll">
+      <table class="tq-tng__t tq-tng__t--bare">
+        <thead>
+          <tr><th></th><th class="tq-tng__hl">項目A</th><th>項目B</th></tr>
+        </thead>
+        <tbody>
+          <tr><th>比較軸1</th><td class="tq-tng__hl"><b>要点が入ります</b>説明のテキストが入ります。2行ほど続きます。</td><td>説明のテキストが入ります。2行ほど続きます。</td></tr>
+          <tr><th>比較軸2</th><td class="tq-tng__hl"><b>要点が入ります</b>説明のテキストが入ります。2行ほど続きます。</td><td>説明のテキストが入ります。2行ほど続きます。</td></tr>
+          <tr><th>比較軸3</th><td class="tq-tng__hl"><b>要点が入ります</b>説明のテキストが入ります。2行ほど続きます。</td><td>説明のテキストが入ります。2行ほど続きます。</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="tq-tng__note">線が「行の区切り3本＋枠1つ」だけになるので、枠のある列に目が真っ直ぐ行く。</p>
+  </section>
+
+  <!-- ② 列を色帯にする -->
+  <section class="tq-tng__sec">
+    <h3 class="tq-tng__secttl">② 列を見せたいときは、列そのものを角丸14pxの色帯にして5pxの白い隙間で並べる</h3>
+
+    <p class="tq-tng__cap">普通：格子罫で列を作る</p>
+    <div class="tq-tng__scroll">
+      <table class="tq-tng__t tq-tng__t--grid">
+        <thead>
+          <tr><th>区分1</th><th>区分2</th><th>区分3</th><th>区分4</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>要素が入ります</td><td>要素が入ります</td><td>要素が入ります</td><td>要素が入ります</td></tr>
+          <tr><td>要素が入ります</td><td>要素が入ります</td><td>要素が入ります</td><td>要素が入ります</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="tq-tng__note">縦罫と横罫が同じ強さなので、列で読むのか行で読むのかが決まらない。</p>
+
+    <p class="tq-tng__cap">この工夫：列＝色帯・行の罫は1本も引かない</p>
+    <div class="tq-tng__cols">
+      <div class="tq-tng__col">
+        <p class="tq-tng__colh">区分1</p>
+        <div class="tq-tng__cellbox">要素が入ります</div>
+        <div class="tq-tng__cellbox">要素が入ります</div>
+      </div>
+      <div class="tq-tng__col">
+        <p class="tq-tng__colh">区分2</p>
+        <div class="tq-tng__cellbox">要素が入ります</div>
+        <div class="tq-tng__cellbox">要素が入ります</div>
+      </div>
+      <div class="tq-tng__col">
+        <p class="tq-tng__colh">区分3</p>
+        <div class="tq-tng__cellbox">要素が入ります</div>
+        <div class="tq-tng__cellbox">要素が入ります</div>
+      </div>
+      <div class="tq-tng__col">
+        <p class="tq-tng__colh">区分4</p>
+        <div class="tq-tng__cellbox">要素が入ります</div>
+        <div class="tq-tng__cellbox">要素が入ります</div>
+      </div>
+      <div class="tq-tng__col">
+        <p class="tq-tng__colh">区分5</p>
+        <div class="tq-tng__cellbox">要素が入ります</div>
+        <div class="tq-tng__cellbox">要素が入ります</div>
+      </div>
+      <div class="tq-tng__col">
+        <p class="tq-tng__colh">区分6</p>
+        <div class="tq-tng__cellbox">要素が入ります</div>
+        <div class="tq-tng__cellbox">要素が入ります</div>
+      </div>
+    </div>
+    <p class="tq-tng__note">列が6本の帯として立つので、行の罫は不要。5pxの白い隙間だけが列を分ける。</p>
+  </section>
+
+  <!-- ③ 罫ゼロの定義リスト -->
+  <section class="tq-tng__sec">
+    <h3 class="tq-tng__secttl">③ 定義リストは罫ゼロのまま、位置揃えと行間だけで表として読ませる</h3>
+
+    <p class="tq-tng__cap">普通：2列の表にして全部囲う</p>
+    <dl class="tq-tng__dl tq-tng__dl--boxed">
+      <dt>項目名</dt><dd>値がここに入ります</dd>
+      <dt>項目名</dt><dd>値がここに入ります</dd>
+      <dt>項目名</dt><dd>値がここに入ります</dd>
+      <dt>項目名</dt><dd>値がここに入ります</dd>
+    </dl>
+    <p class="tq-tng__note">罫が8本増えるだけで、読み取りやすさは変わらない。</p>
+
+    <p class="tq-tng__cap">この工夫：grid 120px 1fr・row-gap 38px・ラベルは字間.2emの欧文大文字</p>
+    <dl class="tq-tng__dl">
+      <dt>address</dt><dd>住所がここに入ります</dd>
+      <dt>tel</dt><dd>000-0000-0000</dd>
+      <dt>open</dt><dd>00:00〜00:00（00:00 L.O）</dd>
+      <dt>close</dt><dd>定休日がここに入ります</dd>
+    </dl>
+    <p class="tq-tng__note">左端が揃い、行間が本文より広いので、線が1本も無くても表として読める。</p>
+  </section>
+
+</div>

@@ -1,0 +1,29 @@
+{
+  "id": "space/deco-only-bleeds",
+  "name": "本文は版面に収め、装飾レイヤーだけを画面外へ逃がす",
+  "ordinary": "挿絵やロゴは枠内に収め、全体が見えるよう余白を取って置く",
+  "actual": "buddies_s04=ベージュの線画がセクション上端で頭が切れ、筆記体ロゴは右端で末尾のsが切れる。写真と本文は内側に収まり装飾だけが外へ逃げる。novakid_s12=手描きリボンが画面左端で切れ、カード上辺に少し掛かる。meisei-kg_s15=一筆書きの線画を6個以上散らし、左端と右端の2個だけ半分に切る。novakid_s04=淡紫の破線の巨大円弧が左外から入って上端で切れる。buddies_s05=下端の線画は背景#faf9f7に対して#eee1c1、明度差3〜5%だけで沈めて切る。",
+  "css": "section{position:relative; overflow:hidden}\n.deco{position:absolute; z-index:0; pointer-events:none}\n.deco--tr{top:-42px; right:-30px; width:min(48vw,420px); color:#dcc9a4}\n.deco--l {left:-28px; top:118px; width:118px; transform:rotate(-8deg)}\n.deco--ghost{bottom:-60px; left:8%; color:#eee1c1; opacity:.9}  /* 明度差3〜5% */\n.arc{position:absolute; top:-260px; left:-220px; width:1100px; height:600px;\n  border-radius:50%; border:1.5px dashed #cfc8f5;\n  border-color:#cfc8f5 transparent transparent transparent}",
+  "appliesTo": ["hero", "features", "value", "voice", "footer"],
+  "impact": 3,
+  "effort": 1,
+  "why": "切れた分だけ画面の外に世界が続いて見え、広い白地が「余った空白」でなく広がりとして読める",
+  "params": [
+    "はみ出し量 14〜60px",
+    "切る辺",
+    "散らす点数（6個以上・切るのは端の2個だけ）",
+    "背景との明度差3〜5%で沈めるか"
+  ],
+  "avoid": "本文や写真まで一緒に切ると読みにくいだけ。逃がすのは意味を持たない装飾に限る",
+  "sources": ["buddies_s04", "sho_novakid_s12", "meisei-kg_s15", "sho_novakid_s04", "buddies_s05"],
+  "notes": [
+    "装飾レイヤーには pointer-events:none と z-index:0 を必ず付ける。付け忘れると本文の上に透明な板が乗り、テキスト選択とリンククリックを奪う。本文側は position:relative; z-index:1 で上に出す。",
+    "buddies_s05 の『明度差3〜5%で沈める』は、トークン契約では color-mix(in srgb, var(--c-ink) 5%, var(--c-bg2)) で作れる。opacity で薄めるのとは違い、重なった部分が濃くならないので装飾同士が交差しても破綻しない。",
+    "線画は SVG に stroke:currentColor / fill:none を指定し、色は親の color で切り替える。これでトークン変数1つ差し替えるだけで全装飾の色が変わる。",
+    "破線の巨大円弧は border-radius:50% ＋ border-color の3辺を transparent にする方法が最も軽い（SVGもmaskも不要）。ただし border-style:dashed の破線ピッチは制御できないので、ピッチを指定したい場合だけ SVG に切り替える。",
+    "meisei-kg_s15 の『6個以上散らして端の2個だけ切る』が要点。全部切ると散らかって見え、1個も切らないと画面が閉じる。切る点数は端の2個までに固定するのが安全。",
+    "セクションの overflow:hidden は必須。ただしこれを付けると内側で横スクロールUIやドロップシャドウのはみ出しが使えなくなるため、装飾専用のラッパーを1枚かませて、そのラッパーにだけ overflow:hidden を付ける手もある。",
+    "はみ出し量は 14〜60px。60pxを超えると『何の絵か分からない断片』になり、装飾ではなくノイズに見える。デモは -30〜-60px に収めた。",
+    "375px では min(48vw,420px) の指定が効いて自動的に縮む。固定 px で置くと SP で装飾が本文を覆うので、幅は必ず min() か vw で持つこと。"
+  ]
+}

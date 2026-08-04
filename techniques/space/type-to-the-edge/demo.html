@@ -1,0 +1,166 @@
+<style>
+/* トークンのフォールバック。:where() で詰めているので、
+   _tokens.css が読み込まれていればそちらが必ず勝つ。 */
+:where(:root){
+  --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-disp:var(--f-sans); --f-num:"Helvetica Neue",Arial,var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+  --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+  --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px; --s8:76px;
+  --sec-y:clamp(56px,7vw,110px);
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --shadow:0 6px 24px rgba(17,17,17,.08);
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+
+/* ============ 土台 ============ */
+.tq-edge{
+  font-family:var(--f-sans); color:var(--c-ink2); background:var(--c-bg);
+  padding-block:var(--s7);
+  overflow-x:clip;
+}
+.tq-edge *{box-sizing:border-box}
+.tq-edge__wrap{max-width:var(--w-max); margin-inline:auto; padding-inline:var(--w-gut)}
+.tq-edge__blk{margin-top:var(--s8)}
+.tq-edge__blk:first-child{margin-top:0}
+
+.tq-edge__tag{
+  display:inline-block; margin:0 0 var(--s4);
+  font-size:var(--fs-note); letter-spacing:.08em; line-height:1;
+  padding:var(--s2) var(--s3); border-radius:var(--r-pill);
+  background:var(--c-bg2); color:var(--c-ink3);
+}
+.tq-edge__tag--on{background:var(--c-primary-l); color:var(--c-primary-d)}
+.tq-edge__cap{
+  margin:var(--s4) 0 0; font-size:var(--fs-sm); line-height:var(--lh-head); color:var(--c-ink3);
+}
+
+/* ============ 普通：十分な余白を取って全体を見せる ============ */
+.tq-edge__plain{
+  padding:var(--s7) var(--s6); background:var(--c-bg2); text-align:center;
+}
+.tq-edge__plain h2{
+  margin:0; font-family:var(--f-disp); font-weight:800; color:var(--c-ink);
+  font-size:var(--fs-2xl); line-height:var(--lh-tight); letter-spacing:.02em;
+}
+.tq-edge__plainfoot{
+  padding:var(--s6) var(--s6) var(--s5); background:var(--c-bg2);
+  border-top:1px solid var(--c-line); text-align:center;
+}
+.tq-edge__plainfoot small{font-size:var(--fs-note); color:var(--c-ink3); letter-spacing:.06em}
+
+/* ============ この工夫A：左マージンの縦罫にツラで合わせる ============ */
+.tq-edge__bed{
+  position:relative; overflow:hidden;
+  padding:var(--s7) var(--w-gut) var(--s5);
+  background:var(--c-bg);
+}
+.tq-edge__rules{
+  position:absolute; inset:0; padding-inline:var(--w-gut);
+  display:grid; grid-template-columns:repeat(7,1fr); pointer-events:none;
+}
+.tq-edge__rules i{border-left:1px solid var(--c-line)}
+.tq-edge__rules i:last-child{border-right:1px solid var(--c-line)}
+.tq-edge__big{
+  position:relative; margin:0 0 0 -.035em;   /* 字形のサイドベアリングぶんだけ戻して罫にツラで合わせる */
+  font-family:var(--f-disp); font-weight:800;
+  /* 版面の約7割で収まり、375pxでも切れない大きさ（10文字 ≒ 7.1em） */
+  font-size:clamp(28px,9.3vw,120px); line-height:.9; letter-spacing:-.01em;
+  color:var(--c-accent); white-space:nowrap;
+}
+
+/* ============ この工夫B：上端だけ切る ============ */
+.tq-edge__cut{
+  overflow:hidden; padding:0 var(--s6) var(--s7); background:var(--c-bg2);
+}
+.tq-edge__tiles{
+  margin:-40px auto 0; width:min(560px,72%);
+  display:grid; grid-template-columns:repeat(8,1fr); gap:4px;
+}
+.tq-edge__tiles i{display:block; aspect-ratio:1; background:var(--c-line)}
+.tq-edge__tiles i:nth-child(3n+1){background:var(--c-primary-l)}
+.tq-edge__tiles i:nth-child(5n+2){background:var(--c-accent)}
+.tq-edge__tiles i:nth-child(7n+5){background:var(--c-primary)}
+
+/* ============ この工夫C：左右＋下で切ってフッターの床にする ============ */
+.tq-edge__foot{
+  overflow:hidden; padding:var(--s7) var(--w-gut) 0; background:var(--c-bg2);
+}
+.tq-edge__footrow{
+  display:flex; flex-wrap:wrap; gap:var(--s4) var(--s6);
+  font-size:var(--fs-note); color:var(--c-ink3);
+  padding-bottom:var(--s6);
+}
+/* text-align:center は「はみ出した行」を左右均等に溢れさせてくれない（左端で止まる）。
+   width:max-content ＋ left:50%/translateX(-50%) なら確実に両端が同じだけ切れる。 */
+.tq-edge__mark{
+  width:max-content; position:relative; left:50%; transform:translateX(-50%);
+  margin:0 0 -.18em; white-space:nowrap;
+  font-family:var(--f-disp); font-weight:800; color:var(--c-ink);
+  font-size:clamp(26px,7.2vw,96px); letter-spacing:.14em; line-height:.8;
+}
+
+@media (max-width:560px){
+  .tq-edge__rules{grid-template-columns:repeat(4,1fr)}
+  .tq-edge__tiles{width:86%; grid-template-columns:repeat(6,1fr); margin-top:-28px}
+  .tq-edge__plain{padding:var(--s6) var(--s5)}
+}
+</style>
+
+<section class="tq-edge">
+  <div class="tq-edge__wrap">
+    <p class="tq-edge__tag">普通の場合</p>
+  </div>
+  <div class="tq-edge__wrap">
+    <div class="tq-edge__plain">
+      <h2>ACCELERATE</h2>
+    </div>
+    <div class="tq-edge__plainfoot">
+      <small>&copy; 0000 Organization Name</small>
+    </div>
+    <p class="tq-edge__cap">見出しは上下左右に十分な余白を取って全体を見せ、フッターはコピーライトを小さく中央寄せして終える。文字は「置かれた要素」のままで、版面の大きさは伝わらない。</p>
+  </div>
+
+  <div class="tq-edge__wrap tq-edge__blk">
+    <p class="tq-edge__tag tq-edge__tag--on">この工夫A：左マージンの縦罫にツラで合わせる</p>
+  </div>
+  <div class="tq-edge__bed">
+    <div class="tq-edge__rules"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <h2 class="tq-edge__big">ACCELERATE</h2>
+  </div>
+  <div class="tq-edge__wrap">
+    <p class="tq-edge__cap">巨大な欧文1語を版面の約7割で置き、Aの左端を左マージンの縦罫にぴったり合わせる。日本語のキャッチは足さない。罫と文字が同じ線から始まるので、これだけ大きくても版面は崩れず「意図してはみ出している」に読める。</p>
+  </div>
+
+  <div class="tq-edge__wrap tq-edge__blk">
+    <p class="tq-edge__tag tq-edge__tag--on">この工夫B：上端だけ切る</p>
+  </div>
+  <div class="tq-edge__cut">
+    <div class="tq-edge__tiles">
+      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+    </div>
+  </div>
+  <div class="tq-edge__wrap">
+    <p class="tq-edge__cap">左右には広い余白を残したまま、上端だけをセクションの上辺でぶつ切りにする。切る辺を1辺に絞ると、実寸が画面より大きいことだけが伝わり、レイアウトは静かなまま。</p>
+  </div>
+
+  <div class="tq-edge__wrap tq-edge__blk">
+    <p class="tq-edge__tag tq-edge__tag--on">この工夫C：左右＋下で切り、フッターの床にする</p>
+  </div>
+  <div class="tq-edge__foot">
+    <div class="tq-edge__footrow">
+      <span>項目がここに入ります</span><span>項目がここに入ります</span><span>項目がここに入ります</span><span>&copy; 0000 Organization Name</span>
+    </div>
+    <p class="tq-edge__mark">ORGANIZATION NAME</p>
+  </div>
+  <div class="tq-edge__wrap">
+    <p class="tq-edge__cap">組織名を1行に組み、左端と右端が画面端で切れ、下端もページ下端で切れてフッターの床そのものになる。切れた文字は実寸が画面より大きいと分かるので、実際以上のスケールが出る。切ってよいのは意味が既知の固有名詞・欧文だけ。</p>
+  </div>
+
+</section>

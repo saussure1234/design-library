@@ -1,0 +1,33 @@
+{
+  "id": "flow/plus-equation",
+  "name": "2枚のカードを手描きの「＋」でつないで数式として読ませる",
+  "ordinary": "2つのプランを同じ幅のカードで等間隔に左右へ並べる。",
+  "actual": "左右カードの間の余白の中央に、筆で書いたような不揃いな紫の＋（幅44px）を置く。さらに両カードの幅いっぱいに紫の丸帯が下を渡り、3要素で1つの塊になる＝「＝」の役割を果たす。",
+  "css": ".pair{display:grid;grid-template-columns:1fr auto 1fr;gap:24px;align-items:center}\n.pair__plus{width:44px;height:44px}  /* 手描きSVG。真円・均等線幅にしないこと */\n.pair__sum{grid-column:1/-1;margin-top:18px;background:#6b4ef0;color:#fff;\n  border-radius:999px;display:flex;justify-content:space-between;align-items:center;\n  padding:14px 20px;font-weight:700}\n@media(max-width:768px){.pair{grid-template-columns:1fr;justify-items:center}}",
+  "params": [
+    "＋の手描き度合い（線幅のムラ）",
+    "まとめ帯の有無",
+    "＋を「×」や「→」に替える"
+  ],
+  "appliesTo": [
+    "price",
+    "features",
+    "value"
+  ],
+  "impact": 3,
+  "effort": 2,
+  "why": "並列でなく加算だと形で示せるので、「両方セットで効く」という提案が文章を読む前に伝わる。",
+  "avoid": "AかBを選ばせたい二択の料金比較では、両方買う話に読めて逆効果。",
+  "sources": [
+    "sho_novakid_s04"
+  ],
+  "notes": [
+    "＋を文字（＋や+）で置かない。フォントの＋は線幅が均一で、カードの角丸と同じ「機械の線」に見え、手描きの効き目が全部消える。SVGの塗りパスで縦横の太さを変え、端をわずかに傾ける。デモは横棒と縦棒で厚みを変えた2本のベジェ。",
+    "grid-template-columns:1fr auto 1fr の auto が＋の実寸。gap を --s5(24px) にすると＋の左右に24pxずつ空き、44pxの＋と合わせて92pxの「演算子の余白」になる。ここを詰めると加算ではなく区切り線に見える。",
+    "まとめ帯（grid-column:1/-1）が「＝」の本体。これが無いと「A＋B」で終わる答えの無い式になる。帯の中に結論の1行とボタンを入れて初めて等式が閉じる。",
+    "帯は --c-primary ベタ＋--c-on-primary。中のボタンだけ地色を反転（背景 --c-bg／文字 --c-primary-d）すると、帯の中でボタンが沈まない。丸ポチは --c-accent を1点だけ。",
+    "768px以下は1カラム＋justify-items:center。＋は縦の連結記号として残るので加算の意味は消えない。ただし帯の角丸は --r-pill から --r-l に落とす（縦積みで pill だと間延びする）。",
+    "二択の料金比較には使わない（avoid の通り）。使うなら「＋」を「×」に替えて掛け合わせにするか、比較用の別パーツにする。",
+    "デモは techniques/flow/plus-equation/demo.html。上＝等間隔に並べただけの普通版、下＝この工夫。"
+  ]
+}

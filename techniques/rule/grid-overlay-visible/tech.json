@@ -1,0 +1,28 @@
+{
+  "id": "rule/grid-overlay-visible",
+  "name": "版面のカラムグリッドをヘアラインのまま画面に出す",
+  "ordinary": "グリッドは実装の裏側にあり、画面には出さない",
+  "actual": "6カラムぶんの境界を1pxの青紫縦罫でビューポート全高に引き、ガター（15px）の左右2本をペアで見せる。線はナビの日本語ラベルの上も遠慮なく横切らせる。静かなトーンでやるなら、背景色より2〜3段暗いだけのヘアラインを縦1本・横1本だけ交差させ、囲みは作らず交差そのものを見せる。",
+  "css": ".grid-overlay{position:absolute;inset:0;pointer-events:none;z-index:0;background-repeat:no-repeat;background-position:30px 0;background-size:calc(100% - 60px) 100%;background-image:repeating-linear-gradient(90deg,#9797c9 0 1px,transparent 1px 97px,#9797c9 97px 98px,transparent 98px 112px)}\n/* 静かな版：交差だけ見せる */\nsection{background-color:#f4efe4;background-image:linear-gradient(#e6ddcb 1px,transparent 1px),linear-gradient(90deg,#e6ddcb 1px,transparent 1px);background-size:100% 242px,360px 100%}",
+  "params": [
+    "カラム数6",
+    "ガター15px（左右2本ペア）",
+    "線色＝差し色 or 地より2〜3段暗いだけ",
+    "全高 or セクション内のみ"
+  ],
+  "appliesTo": ["hero", "value", "features"],
+  "impact": 3,
+  "effort": 1,
+  "why": "設計図をそのまま出すと「作りかけ」ではなく「設計している会社」に見え、余白の理由が可視化される",
+  "avoid": "写真が主役の面（線が被写体を横切って汚れる）",
+  "sources": ["unico_s01", "yugao_s08"],
+  "notes": [
+    "unico_s01 の線位置をピクセル走査で実測：左右の版面余白 30px、カラム 97px、ガター 15px、繰り返しの周期は 112px、線色 #9797C9。渡された repeating-linear-gradient の数値はこの実測と一致する（0-1px 線 / 1-97px 空き / 97-98px 線 / 98-112px ガター）。",
+    "効いているのは「線を出す」ことより「線をペアで出す」こと。ガターの左右2本が並ぶので、空いている 15px が余白ではなく設計値として読める。1本ずつの等間隔罫にすると罫線ノートになり、意味が変わる。",
+    "線はナビの日本語ラベルの上を横切らせる。ラベルに地色を敷いて線を避けると『避けた＝間違い扱いした』ことになり、設計図としての強度が落ちる。demo でもナビには background を置いていない。",
+    "実装：background-position を左マージン(30px)、background-size を calc(100% - 60px) にすることで、版面の内側だけにグリッドを出せる。inset:0 + pointer-events:none + z-index:0 で、上に載る要素の操作を邪魔しない。",
+    "静かな版（yugao_s08/s10）の実測：地 #F8F4EB に対して罫 #F3EFE3。RGB で5階調しか違わない。縦罫のピッチは約360px、横罫は約242px で、囲いは一度も作らず交差点だけを見せる。差し色でやる版と静かな版は、線色の彩度だけが違って構造は同じ。",
+    "スマホ幅では 97px 固定のカラムが画面幅と合わなくなる。周期そのものは崩れないので『版面より狭い場所で切り取られたグリッド』として成立するが、カラム数を厳密に6本見せたい場合は --tq-gov-col を vw ベースに切り替える必要がある。"
+  ],
+  "demoNotes": "①同じヒーローを、グリッドを出さない版／出す版で上下に並べた。ナビのラベルと巨大文字の上を線が横切ることを確認できる。②地より2〜3段暗いだけのヘアラインで縦横1本ずつ交差させた静かな版。"
+}

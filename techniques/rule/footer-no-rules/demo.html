@@ -1,0 +1,192 @@
+<style>
+/* ============================================================
+   rule/footer-no-rules
+   フッターは罫を1本も引かず、階層を▶と・と字下げだけで示す
+   ============================================================ */
+
+@layer tq-fallback{
+  :root{
+    --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA;
+    --c-accent:#FF9301;
+    --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+    --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+    --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    --f-disp:var(--f-sans); --f-num:"Helvetica Neue",Arial,var(--f-sans);
+    --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+    --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px; --fs-3xl:50px; --fs-4xl:64px;
+    --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px;
+    --s6:36px; --s7:52px; --s8:76px; --s9:110px;
+    --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+    --shadow:0 6px 24px rgba(17,17,17,.08);
+  }
+}
+
+/* この工夫の寸法（トークンでは表せないパラメータ） */
+.tq-fnr{
+  --tq-fnr-gap:clamp(24px,4vw,56px);  /* 列の間 24〜56px */
+  --tq-fnr-mark:.65em;                /* ▶の大きさ */
+  --tq-fnr-dot:6px;                   /* 点線のピッチ */
+}
+
+.tq-fnr{
+  container-type:inline-size;
+  font-family:var(--f-sans); color:var(--c-ink2);
+  line-height:var(--lh-head); -webkit-text-size-adjust:100%;
+  background:var(--c-bg); padding:var(--s5);
+}
+.tq-fnr *{box-sizing:border-box}
+.tq-fnr :where(a){color:inherit; text-decoration:none}
+
+.tq-fnr__lead{margin:0 0 var(--s5); font-size:var(--fs-note); color:var(--c-ink3); line-height:var(--lh-body)}
+.tq-fnr__sec{margin-top:var(--s7)}
+.tq-fnr__sec:first-of-type{margin-top:0}
+.tq-fnr__secttl{margin:0 0 var(--s4); font-size:var(--fs-sm); font-weight:700; color:var(--c-ink)}
+.tq-fnr__cap{
+  display:flex; align-items:center; gap:var(--s2);
+  margin:0 0 var(--s3); font-size:var(--fs-note); font-weight:700;
+  color:var(--c-ink3); letter-spacing:.04em;
+}
+.tq-fnr__cap::before{content:""; width:var(--s5); height:1px; background:var(--c-line); flex:0 0 auto}
+.tq-fnr__note{margin:var(--s3) 0 var(--s6); font-size:var(--fs-note); color:var(--c-ink3); line-height:var(--lh-body)}
+.tq-fnr__note:last-child{margin-bottom:0}
+
+/* --- 上のセクション（境目は色面の切り替わりだけ） ------------ */
+.tq-fnr__above{
+  background:var(--c-primary-l); padding:var(--s6) var(--s5);
+  text-align:center; font-size:var(--fs-md); font-weight:700; color:var(--c-ink);
+}
+
+/* --- フッター本体 ------------------------------------------- */
+.tq-fnr__footer{background:var(--c-bg); border:0; padding:var(--s6) var(--s5) var(--s5)}
+.tq-fnr__footer hr{display:none}
+
+/* 列幅は文字数まかせで不揃いのまま（flexで content 幅） */
+.tq-fnr__nav{
+  display:flex; flex-wrap:wrap;
+  gap:var(--s5) var(--tq-fnr-gap);
+  margin:0 0 var(--s6); padding:0; list-style:none; border:0;
+}
+.tq-fnr__navcol{border:0}
+.tq-fnr__navh{
+  margin:0 0 var(--s2); font-size:var(--fs-note); font-weight:700; color:var(--c-ink);
+  white-space:nowrap; border:0;
+}
+.tq-fnr__navh::before{
+  content:"▶"; color:var(--c-primary); font-size:var(--tq-fnr-mark); margin-right:.5em;
+  vertical-align:.08em;
+}
+.tq-fnr__navcol ul{margin:0; padding:0; list-style:none}
+.tq-fnr__navcol li{font-size:10px; color:var(--c-ink3); line-height:1.9}
+.tq-fnr__navcol li::before{content:"・"; color:color-mix(in srgb,var(--c-ink3) 55%,var(--c-bg))}
+
+/* 情報の種類が変わる所だけ、実線でなくドット点線を1本 */
+.tq-fnr__dotline{
+  height:1px; margin:0 0 var(--s5); border:0;
+  background-image:radial-gradient(color-mix(in srgb,var(--c-ink3) 40%,var(--c-bg)) 1px,transparent 1px);
+  background-size:var(--tq-fnr-dot) 1px;
+}
+.tq-fnr__brand{display:flex; align-items:center; gap:var(--s3); flex-wrap:wrap}
+.tq-fnr__brand img{display:block; height:20px; width:auto}
+.tq-fnr__brand b{font-size:var(--fs-note); color:var(--c-ink)}
+.tq-fnr__brand span{font-size:10px; color:var(--c-ink3)}
+.tq-fnr__legal{margin:var(--s7) 0 0; font-size:10px; color:var(--c-ink3); border:0}
+
+/* --- 普通：境界線・見出しの下罫・コピーライトの上罫 ---------- */
+.tq-fnr__footer--rules{border-top:1px solid var(--c-line); background:var(--c-bg2)}
+.tq-fnr__footer--rules .tq-fnr__nav{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:var(--s5); border-bottom:1px solid var(--c-line); padding-bottom:var(--s5);
+}
+.tq-fnr__footer--rules .tq-fnr__navcol{border-right:1px solid var(--c-line); padding-right:var(--s4)}
+.tq-fnr__footer--rules .tq-fnr__navh{
+  border-bottom:1px solid var(--c-line); padding-bottom:var(--s2); margin-bottom:var(--s3);
+}
+.tq-fnr__footer--rules .tq-fnr__navh::before{content:none}
+.tq-fnr__footer--rules .tq-fnr__navcol li::before{content:none}
+.tq-fnr__footer--rules .tq-fnr__legal{border-top:1px solid var(--c-line); padding-top:var(--s4); margin-top:var(--s5)}
+.tq-fnr__footer--rules .tq-fnr__dotline{
+  height:1px; background-image:none; background-color:var(--c-line);
+}
+
+@container (max-width:520px){
+  .tq-fnr{padding:var(--s4)}
+  .tq-fnr__footer{padding:var(--s5) var(--s4) var(--s4)}
+  .tq-fnr__above{padding:var(--s5) var(--s4)}
+}
+</style>
+
+<div class="tq-fnr">
+  <p class="tq-fnr__lead">
+    フッターの罫を1本も引かない。上のセクションとの境目は色面の切り替わりだけ、
+    列は余白だけで割り、階層は第1階層の▶（差し色）と第2階層の「・」と字色の濃淡で示す。
+  </p>
+
+  <!-- ① 普通 -->
+  <section class="tq-fnr__sec">
+    <h3 class="tq-fnr__secttl">① 普通：境界線＋見出しの下罫＋列の縦罫＋コピーライトの上罫</h3>
+    <p class="tq-fnr__above">上のセクション</p>
+    <footer class="tq-fnr__footer tq-fnr__footer--rules">
+      <ul class="tq-fnr__nav">
+        <li class="tq-fnr__navcol"><h4 class="tq-fnr__navh">カテゴリ名</h4>
+          <ul><li>リンク項目</li><li>リンク項目</li><li>リンク項目</li></ul></li>
+        <li class="tq-fnr__navcol"><h4 class="tq-fnr__navh">カテゴリ名</h4>
+          <ul><li>リンク項目</li><li>リンク項目</li></ul></li>
+        <li class="tq-fnr__navcol"><h4 class="tq-fnr__navh">カテゴリ名</h4>
+          <ul><li>リンク項目</li><li>リンク項目</li><li>リンク項目</li><li>リンク項目</li></ul></li>
+        <li class="tq-fnr__navcol"><h4 class="tq-fnr__navh">カテゴリ名</h4>
+          <ul><li>リンク項目</li><li>リンク項目</li></ul></li>
+        <li class="tq-fnr__navcol"><h4 class="tq-fnr__navh">カテゴリ名</h4>
+          <ul><li>リンク項目</li><li>リンク項目</li><li>リンク項目</li></ul></li>
+        <li class="tq-fnr__navcol"><h4 class="tq-fnr__navh">カテゴリ名</h4>
+          <ul><li>リンク項目</li><li>リンク項目</li></ul></li>
+        <li class="tq-fnr__navcol"><h4 class="tq-fnr__navh">カテゴリ名</h4>
+          <ul><li>リンク項目</li><li>リンク項目</li><li>リンク項目</li></ul></li>
+        <li class="tq-fnr__navcol"><h4 class="tq-fnr__navh">カテゴリ名</h4>
+          <ul><li>リンク項目</li></ul></li>
+      </ul>
+      <div class="tq-fnr__dotline"></div>
+      <div class="tq-fnr__brand">
+        <img src="../../../docs/demo/logo.svg" alt="">
+        <b>組織名が入ります</b>
+        <span>〒000-0000 住所が入ります／000-0000-0000</span>
+      </div>
+      <p class="tq-fnr__legal">© 0000 組織名</p>
+    </footer>
+    <p class="tq-fnr__note">罫が上境界1本＋見出し8本＋縦罫7本＋群の下1本＋コピーライト1本＝18本。列が均等幅に固定されるぶん、余白も窮屈になる。</p>
+  </section>
+
+  <!-- ② この工夫 -->
+  <section class="tq-fnr__sec">
+    <h3 class="tq-fnr__secttl">② この工夫：罫ゼロ。境目は色面の切り替わり、階層は▶と・だけ</h3>
+    <p class="tq-fnr__above">上のセクション</p>
+    <footer class="tq-fnr__footer">
+      <ul class="tq-fnr__nav">
+        <li class="tq-fnr__navcol"><h4 class="tq-fnr__navh">カテゴリ名</h4>
+          <ul><li>リンク項目</li><li>リンク項目</li><li>リンク項目</li></ul></li>
+        <li class="tq-fnr__navcol"><h4 class="tq-fnr__navh">長めのカテゴリ名</h4>
+          <ul><li>リンク項目</li><li>リンク項目</li></ul></li>
+        <li class="tq-fnr__navcol"><h4 class="tq-fnr__navh">カテゴリ名</h4>
+          <ul><li>やや長いリンク項目</li><li>リンク項目</li><li>リンク項目</li><li>リンク項目</li></ul></li>
+        <li class="tq-fnr__navcol"><h4 class="tq-fnr__navh">カテゴリ</h4>
+          <ul><li>リンク項目</li><li>リンク項目</li></ul></li>
+        <li class="tq-fnr__navcol"><h4 class="tq-fnr__navh">カテゴリ名</h4>
+          <ul><li>リンク項目</li><li>リンク項目</li><li>リンク項目</li></ul></li>
+        <li class="tq-fnr__navcol"><h4 class="tq-fnr__navh">保護者の方へ</h4>
+          <ul><li>リンク項目</li><li>リンク項目</li></ul></li>
+        <li class="tq-fnr__navcol"><h4 class="tq-fnr__navh">カテゴリ名</h4>
+          <ul><li>リンク項目</li><li>リンク項目</li><li>リンク項目</li></ul></li>
+        <li class="tq-fnr__navcol"><h4 class="tq-fnr__navh">お問い合わせ</h4></li>
+      </ul>
+      <div class="tq-fnr__dotline"></div>
+      <div class="tq-fnr__brand">
+        <img src="../../../docs/demo/logo.svg" alt="">
+        <b>組織名が入ります</b>
+        <span>〒000-0000 住所が入ります／000-0000-0000</span>
+      </div>
+      <p class="tq-fnr__legal">© 0000 組織名</p>
+    </footer>
+    <p class="tq-fnr__note">実線はゼロ。列幅は文字数まかせで不揃いのまま、▶が唯一の見出し記号として効く。ナビと住所の間だけ、種類が変わる合図としてドット点線を1本入れている。</p>
+  </section>
+
+</div>

@@ -1,0 +1,37 @@
+{
+  "id": "flow/sticky-column-moving-rail",
+  "name": "左3割を止まった見出し柱にし、右だけ画面外へ流す",
+  "ordinary": "見出しを上に置いて中央寄せし、その下に3カラムのカードを均等に並べて全部見せる。",
+  "actual": "左30%に「小見出し＋タイトル＋説明文＋もっとみる」を縦に積んで position:sticky で止め、右70%だけが横スクロールして画面右端で断ち切れる。上下型もあり、見出しと送りボタンだけを上段に固定し、下段の写真列だけが画面外へ抜ける。",
+  "css": ".split{display:grid;grid-template-columns:30% 1fr;column-gap:40px;align-items:start}\n.split__col{position:sticky;top:120px;align-self:start}\n.split__rail{display:flex;gap:24px;overflow-x:auto;\n  margin-right:calc(50% - 50vw);padding-right:0;scrollbar-width:none}\n.split__rail>*{flex:0 0 260px}\n\n/* 上下型：固定面と可動面を上下で割る */\n.head{display:flex;justify-content:space-between;align-items:center;padding-inline:48px}\n@media(max-width:768px){.split{grid-template-columns:1fr}.split__col{position:static}}",
+  "params": [
+    "柱の幅 26〜32%",
+    "sticky top（ヘッダー高＋24px）",
+    "上下型に切り替える",
+    "柱に置く要素＝小見出し／タイトル／説明／CTAの4点"
+  ],
+  "appliesTo": [
+    "features",
+    "voice",
+    "value"
+  ],
+  "impact": 3,
+  "effort": 2,
+  "why": "止まっている面と流れる面に役割が分かれるので、どこが動くのか説明なしで分かり、見出しが常に見えるので迷子にならない。",
+  "avoid": "柱に入れる文字が3行未満だと左が空白だらけに見えるので使わない。",
+  "sources": [
+    "kobe-wu_s05",
+    "lumiarch_s06",
+    "odrive_s11",
+    "odrive_s01"
+  ],
+  "notes": [
+    "この工夫の最大の落とし穴：列を画面外へ抜くために親へ overflow-x:hidden を敷くと、その要素が最寄りのスクロールポートになって position:sticky が完全に死ぬ。必ず overflow-x:clip を使う（clip はスクロールコンテナを作らないので sticky は生きたまま溢れだけ切れる）。",
+    "margin-right:calc(50% - 50vw) は「要素の幅＝中央寄せコンテナの内容幅」を前提にした式。ここでは列が右70%カラムの中にあるため 50% が小さく、画面端を通り越して伸びる。デモは --tq-bleed:calc(-1 * (max(0px,(100vw - var(--w-max))/2) + var(--w-gut))) を使い、自分の幅に依存しない形で右余白ぶんだけ正確に抜いている。",
+    "sticky が効くのは「柱の高さ＜親グリッドの高さ」のときだけ。右に列が1本しかないセクションでは差が出ないので、右を2〜3ブロック積んで初めて“止まる”のが見える（デモは列を3本積んでいる）。align-items:start を外すと柱が親の高さまで伸びて sticky が無効になるので必須。",
+    "sticky top は参照元（kobe-wu）が120px＝固定ヘッダーぶん。ヘッダーの無いデモでは24px（--s5）にしている。実装時は「ヘッダー高＋24px」に置き換える。",
+    "柱の幅は30%だが、column-gap を引いた実寸は約300px。ここに小見出し／タイトル／説明3〜4行／もっとみる の4点が入って初めて画面が持つ。3行未満なら上下型に切り替える。",
+    "768px以下では柱を position:static に戻し1カラムへ。結果として自動的に上下型と同じ見え方になるので、モバイル用の別レイアウトを作る必要がない。",
+    "デモは techniques/flow/sticky-column-moving-rail/demo.html。上段＝左右型（縦スクロールで柱が止まる）、下段＝上下型。"
+  ]
+}

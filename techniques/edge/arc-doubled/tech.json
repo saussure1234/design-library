@@ -1,0 +1,25 @@
+{
+  "id": "edge/arc-doubled",
+  "name": "弧を2本ずらして重ね、境界を「層」にする",
+  "ordinary": "曲線で切るなら弧は1本。2本目は引かない",
+  "actual": "gakugei_s01は同じ大弧を橙とレモンイエローの2枚、縦に約120pxずらして重ね、手描きロゴタイプが手前の弧をまたぐ。koran_s08は淡ミントの大弧の内側に白1px相当のヘアライン弧を6pxずらして平行に走らせ、境界を「水面の波紋」に読み替えている。ベタ2枚か、ベタ＋ヘアラインの2通り。",
+  "css": "/* ベタ2枚をずらす */\n.arc{position:absolute; left:-10%; width:120%; height:280px;\n  border-radius:50% / 100% 100% 0 0}\n.arc.back {background:#f4b23c; top:0;     z-index:0}\n.arc.front{background:#e9e335; top:120px; z-index:1}\n.on-arc{position:relative; z-index:2}   /* ロゴ等を手前の弧にまたがせる */\n\n/* ヘアライン版: 面の内側にもう1本だけ */\n.wave{position:absolute; bottom:-360px; left:-50%;\n  width:200%; height:420px; border-radius:50%; background:#cfe8e6}\n.wave.hair{background:transparent; border-top:1px solid #fff;\n  transform:translateY(6px); z-index:2}",
+  "params": [
+    "ずらし量（6px＝波紋 / 120px＝層）",
+    "2枚目の扱い（ベタ色 / 1pxヘアライン）",
+    "2色の関係（同系で層 / 補色で図案）"
+  ],
+  "appliesTo": ["hero", "value", "voice", "footer"],
+  "impact": 2,
+  "effort": 2,
+  "why": "弧が2本になると面が前後に分かれて見え、1本では出ない奥行きが境界そのものから生まれる",
+  "avoid": "弧が扁平なとき。2本が近接して単なる太い線に潰れる",
+  "sources": ["gakugei_s01", "koran_s08"],
+  "notes": [
+    "2枚の弧は「同じ形」であることが効く条件。曲率や幅を変えると2本が別々の飾りに見えて層にならない。実装は .tq-...__arc を1クラスにまとめ、top と background だけを差し替える。",
+    "ずらし量はセクション高さに対する比で持つとよい。gakugei_s01は約556px高の面に対し120px＝およそ22%。デモは高さ230pxのステージなので 48px（約21%）に換算した。",
+    "ヘアライン版は border-top:1px solid だけを当てた透明の弧を重ねる。border-left/right を持たないので弧の左右端で線幅が0にすぼまり、それが逆に「水面の反射」らしく見える。koran_s08のずらしは6px＝ほぼ線幅数本分で、これ以上離すと波紋でなく2本の縁になる。",
+    "手前の弧をロゴや見出しにまたがせるときは、またぐ要素に position:relative と、弧より大きい z-index を必ず付ける（弧は position:absolute なので指定なしだと後ろに回る）。",
+    "扁平弧には使えないという avoid は実測どおりで、縦半径が40pxを切ると2本が1本の太線に潰れる。デモの弧は縦半径が高さの55%前後ある。"
+  ]
+}

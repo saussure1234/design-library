@@ -1,0 +1,151 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../../parts/_tokens.css"><style>*{margin:0;padding:0}body{font-family:sans-serif}</style></head><body>
+<style>
+/* トークンのフォールバック。:where() で詰めているので、
+   _tokens.css が読み込まれていればそちらが必ず勝つ。 */
+:where(:root){
+  --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-disp:var(--f-sans); --f-num:"Helvetica Neue",Arial,var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+  --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+  --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px; --s8:76px;
+  --sec-y:clamp(56px,7vw,110px);
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+
+/* ============ 土台 ============ */
+.tq-afade{
+  font-family:var(--f-sans); color:var(--c-ink2); background:var(--c-bg);
+  padding-block:var(--s7);
+}
+.tq-afade *{box-sizing:border-box}
+.tq-afade__wrap{max-width:var(--w-max); margin-inline:auto; padding-inline:var(--w-gut)}
+.tq-afade__blk{margin-top:var(--s8)}
+.tq-afade__blk:first-child{margin-top:0}
+
+.tq-afade__tag{
+  display:inline-block; margin:0;
+  font-size:var(--fs-note); letter-spacing:.08em; line-height:1;
+  padding:var(--s2) var(--s3); border-radius:var(--r-pill);
+  background:var(--c-bg2); color:var(--c-ink3);
+}
+.tq-afade__tag--on{background:var(--c-primary-l); color:var(--c-primary-d)}
+.tq-afade__h{
+  font-family:var(--f-disp); font-size:var(--fs-lg); line-height:var(--lh-tight);
+  letter-spacing:.02em; color:var(--c-ink); font-weight:800;
+  margin:var(--s3) 0 var(--s4);
+}
+.tq-afade__cap{
+  max-width:var(--w-max); margin:var(--s4) auto 0; padding-inline:var(--w-gut);
+  font-size:var(--fs-sm); line-height:var(--lh-head); color:var(--c-ink3);
+}
+.tq-afade__cap b{color:var(--c-ink2); font-weight:700}
+
+/* ============ 写真の上下に置く面 ============ */
+.tq-afade__nav{
+  background:var(--c-bg2); padding:var(--s5) var(--w-gut);
+  display:flex; justify-content:center; gap:clamp(var(--s5),8vw,var(--s8));
+  text-align:center;
+}
+.tq-afade__nav b{
+  display:block; font-family:var(--f-disp); font-weight:700;
+  font-size:var(--fs-md); letter-spacing:.08em; color:var(--c-ink2);
+}
+.tq-afade__nav span{display:block; margin-top:var(--s1); font-size:var(--fs-note); color:var(--c-ink3)}
+.tq-afade__next{
+  background:var(--c-bg2); padding:var(--s7) var(--w-gut); text-align:center;
+}
+.tq-afade__next p:first-child{
+  margin:0 0 var(--s2); font-family:var(--f-disp); font-weight:800;
+  font-size:var(--fs-md); color:var(--c-ink);
+}
+.tq-afade__next p:last-child{margin:0; font-size:var(--fs-sm); color:var(--c-ink3)}
+
+/* ============ 写真そのもの ============ */
+.tq-afade__ph{
+  position:relative; overflow:hidden;
+  height:clamp(220px,32vw,400px);
+  background:var(--c-ink);
+}
+.tq-afade__ph img{width:100%; height:100%; object-fit:cover; display:block}
+
+/* この工夫：上辺だけグラデで溶かす。下辺には何も付けない＝きっぱり切る */
+.tq-afade__ph--fade::before{
+  content:''; position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:linear-gradient(180deg, var(--c-ink) 0%, transparent 58%);
+  background:linear-gradient(180deg,
+    var(--c-ink) 0%,
+    color-mix(in srgb, var(--c-ink) 55%, transparent) 28%,
+    transparent 58%);
+}
+/* 下端には clip-path も border-radius も border も付けない = そのまま切る */
+
+.tq-afade__mark{
+  position:absolute; left:var(--w-gut); z-index:2;
+  font-size:var(--fs-note); letter-spacing:.08em; line-height:1;
+  padding:var(--s2) var(--s3); border-radius:var(--r-pill);
+}
+.tq-afade__mark--top{top:var(--s3); background:var(--c-on-primary); color:var(--c-ink)}
+.tq-afade__mark--btm{bottom:var(--s3); background:var(--c-ink); color:var(--c-on-primary)}
+
+@media (max-width:560px){
+  .tq-afade__nav{gap:var(--s5); padding:var(--s4) var(--w-gut)}
+  .tq-afade__next{padding:var(--s6) var(--w-gut)}
+}
+</style>
+
+<section class="tq-afade">
+
+  <div class="tq-afade__blk">
+    <div class="tq-afade__wrap">
+      <p class="tq-afade__tag">普通の場合</p>
+      <h2 class="tq-afade__h">上辺も下辺も同じ扱い。写真の辺をそのまま出す</h2>
+    </div>
+    <div class="tq-afade__stage">
+      <div class="tq-afade__nav">
+        <div><b>項目名</b><span>説明テキスト</span></div>
+        <div><b>項目名</b><span>説明テキスト</span></div>
+        <div><b>項目名</b><span>説明テキスト</span></div>
+      </div>
+      <div class="tq-afade__ph">
+        <img src="../../../docs/demo/ph_a.jpg" alt="">
+      </div>
+      <div class="tq-afade__next">
+        <p>見出しがここに入ります</p>
+        <p>本文テキストがここに入ります。</p>
+      </div>
+    </div>
+    <p class="tq-afade__cap">上下とも同じ水平線。写真が「上の面と下の面のあいだに挟まれた1枚」に見え、ナビとは無関係な別ブロックになる。</p>
+  </div>
+
+  <div class="tq-afade__blk">
+    <div class="tq-afade__wrap">
+      <p class="tq-afade__tag tq-afade__tag--on">この工夫｜境界の非対称</p>
+      <h2 class="tq-afade__h">上辺だけグラデで溶かし、下辺はきっぱり切る</h2>
+    </div>
+    <div class="tq-afade__stage">
+      <div class="tq-afade__nav">
+        <div><b>項目名</b><span>説明テキスト</span></div>
+        <div><b>項目名</b><span>説明テキスト</span></div>
+        <div><b>項目名</b><span>説明テキスト</span></div>
+      </div>
+      <div class="tq-afade__ph tq-afade__ph--fade">
+        <img src="../../../docs/demo/ph_a.jpg" alt="">
+        <span class="tq-afade__mark tq-afade__mark--top">上：溶かす（0% で真っ黒 → 58% で消える）</span>
+        <span class="tq-afade__mark tq-afade__mark--btm">下：切る（何も付けない）</span>
+      </div>
+      <div class="tq-afade__next">
+        <p>見出しがここに入ります</p>
+        <p>本文テキストがここに入ります。</p>
+      </div>
+    </div>
+    <p class="tq-afade__cap">上は接合部から真っ黒で始まり、写真は下へ行くほど現れる。<b>写真の終わりを告げる直線は下の1本だけ</b>になり、上のナビと写真がひと塊に見える。</p>
+  </div>
+
+</section>
+
+</body></html>

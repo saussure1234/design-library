@@ -1,0 +1,38 @@
+{
+  "id": "edge/divider-as-band",
+  "name": "境界を線でなく「高さのある帯」に置き換える（流れる文字／写真ストリップ）",
+  "ordinary": "セクションの境目は1本の水平線か、白い余白で切る",
+  "actual": "Novakidは白と紫の境目に高さ約28pxの黄緑帯を挟み、「ノバキッドのスター先生をご紹介 ✦」を反復して横に流す。文字は左右の画面端で切れており、区切り線そのものが動くテキストになっている。花まるは寄り・引き・アングルの違う子ども5枚を隙間1〜2pxで並べた高さ約115pxの帯を、次の写真セクションの直上に余白ゼロで密着させ、「密度の高い帯→霞んだ面」という密度差だけで切っている。",
+  "css": "/* マーキー帯（中身は同じ span を2回分入れておく） */\n.marquee{height:28px; background:#6ee87a; overflow:hidden; white-space:nowrap;\n  display:flex; align-items:center}\n.marquee>span{display:inline-block; padding-right:40px;\n  animation:m 18s linear infinite}\n@keyframes m{to{transform:translateX(-50%)}}\n\n/* 写真ストリップ帯（余白ゼロで密着） */\n.strip{display:grid; grid-template-columns:repeat(5,1fr); gap:2px; margin-bottom:0}\n.strip img{width:100%; aspect-ratio:1/1.1; object-fit:cover; display:block}\n.strip + section{margin-top:0}",
+  "params": [
+    "帯の高さ（28px＝線の代役 / 115px＝もう1セクション）",
+    "中身（流れるテキスト / 写真5枚）",
+    "速度（18s、遅いほど上品）",
+    "隙間（2px＝連結感 / 8px＝一覧）"
+  ],
+  "appliesTo": [
+    "features",
+    "value",
+    "voice",
+    "member",
+    "cta"
+  ],
+  "impact": 3,
+  "effort": 1,
+  "why": "境界に情報と動き（または密度）を持たせられるので、罫1本より強く場面転換が伝わるのに硬くならない",
+  "avoid": "上下どちらかがすでに動いている・情報密度が高いとき。帯が3つ目のノイズになる",
+  "sources": [
+    "sho_novakid_s12",
+    "sho_hanamaru_s11"
+  ],
+  "notes": [
+    "元CSSの `.marquee>span{animation}` は span が1本だと -50% で必ず途切れる。同一内容の span を2本入れ、アニメーションは親のトラックに掛けて translateX(-50%) する（トラック幅の半分＝span 1本分ちょうど）。span 2本の幅が1pxでも違うと繋ぎ目が跳ねるので、中身は完全に同じ文字列にする。",
+    "帯の高さはトークンから導出した。28px＝calc(var(--s5) + var(--s1))、114px＝calc(var(--s9) + var(--s1))。トークンに帯用の寸法は無いので、直書きせず計算で持つ。隙間2pxは calc(var(--s1) / 2)。",
+    "写真ストリップは `aspect-ratio:1/1.1` で高さを決めると、列幅に比例して帯の高さが動く（375pxでは73pxまで痩せて線に見える）。帯は「高さそのもの」が効きどころなので、`height:114px` を先に決めて img は height:100%/object-fit:cover で埋めるほうが実物に近い。",
+    "同じ写真2枚しか無いので、寄り・引き・アングルの違いは object-position と transform:scale で作った。実案件では必ず別カットを5枚用意する（同じ顔が並ぶと帯でなく繰り返し模様に見える）。",
+    "花まるの下段の「霞んだ面」は、白地に写真を opacity:.2 で沈めて再現した。color-mix の白ベールでも同じ絵になるが、opacity のほうが対応環境が広くフォールバックも不要。",
+    "マーキーは prefers-reduced-motion:reduce で animation:none。止めても帯の高さと文字は残るので、境界としての役目は落ちない。",
+    "帯を全幅にするため、stage には max-width を掛けていない（文字が左右の画面端で切れることがこの工夫の要）。タグと注釈だけ --w-max のラッパに入れている。",
+    "デモは techniques/edge/divider-as-band/demo.html。上から〈普通＝1px罫〉〈工夫A＝28pxのマーキー帯〉〈工夫B＝114pxの写真ストリップ帯〉の3段で対比している。"
+  ]
+}

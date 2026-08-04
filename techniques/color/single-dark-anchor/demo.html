@@ -1,0 +1,119 @@
+<style>
+/* ============================================================
+   color/single-dark-anchor
+   暗い面を画面に1つだけ許し、その中に情報を閉じ込める
+   ============================================================ */
+:root{
+  /* --- _tokens.css フォールバック --- */
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px; --fs-lg:21px; --fs-xl:28px;
+  --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --c-primary:#00B220; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070; --c-bg:#FFFFFF; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+
+  /* --- この工夫の変数 --- */
+  --tq-sda-ground:#eceef1;   /* 明度の高い青みグレー（param: #eceef1前後） */
+  --tq-sda-dark:#1a2f4a;     /* 画面に1つだけ許す暗い面 */
+  --tq-sda-on-dark:#ffffff;
+}
+
+.tq-sda{ font-family:var(--f-sans); color:var(--c-ink); background:var(--c-bg); line-height:var(--lh-body); }
+.tq-sda *{ box-sizing:border-box; }
+.tq-sda img{ display:block; width:100%; height:100%; object-fit:cover; }
+
+.tq-sda__lead{ margin:0 0 var(--s5); font-size:var(--fs-sm); color:var(--c-ink3); line-height:var(--lh-tight); }
+.tq-sda__cmp{ display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:var(--s5); }
+.tq-sda__tag{ display:block; margin-bottom:var(--s2); font-size:var(--fs-note); letter-spacing:.08em; color:var(--c-ink3); }
+.tq-sda__tag--on{ color:var(--c-ink); font-weight:700; }
+.tq-sda__note{ margin:var(--s2) 0 0; font-size:var(--fs-note); color:var(--c-ink3); line-height:var(--lh-tight); }
+
+/* ---- 共通の面 ---- */
+.tq-sda__stage{ background:var(--tq-sda-ground); border-radius:var(--r-m); padding:var(--s5); }
+
+/* ---- この工夫 ---- */
+.tq-sda__stage--anchor{ display:grid; grid-template-columns:minmax(0,1.25fr) minmax(0,.6fr); gap:var(--s4); align-items:center; }
+.tq-sda__stage--anchor *{ border:0; box-shadow:none; }
+.tq-sda__circle{ width:min(100%,360px); aspect-ratio:1; border-radius:50%; background:var(--tq-sda-dark); color:var(--tq-sda-on-dark);
+  display:grid; align-content:center; padding:14%; }
+.tq-sda__en{ margin:0 0 var(--s1); font-size:var(--fs-note); letter-spacing:.1em; opacity:.7; line-height:var(--lh-tight); }
+.tq-sda__h{ margin:0 0 var(--s4); font-size:clamp(15px,1.7vw,21px); font-weight:500; letter-spacing:.08em; line-height:var(--lh-tight); }
+.tq-sda__dl{ margin:0; font-size:clamp(11px,1.05vw,13px); line-height:1.95; }
+.tq-sda__dl div{ display:flex; gap:var(--s2); }
+.tq-sda__dl dt{ flex:0 0 3.4em; }
+.tq-sda__dl dd{ margin:0; }
+.tq-sda__map{ display:inline-block; margin-top:var(--s3); font-size:clamp(11px,1.05vw,13px); color:var(--tq-sda-on-dark);
+  text-decoration:underline; text-underline-offset:3px; }   /* 円の外に残す装飾はこの下線1本だけ */
+.tq-sda__photos{ display:grid; gap:var(--s4); justify-items:end; }
+.tq-sda__pcircle{ width:min(100%,168px); aspect-ratio:1; border-radius:50%; overflow:hidden; filter:saturate(.55); }
+
+/* ---- 普通の場合：アクセント色を複数点 ---- */
+.tq-sda__stage--multi{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,.72fr); gap:var(--s5); align-items:start; }
+.tq-sda__box{ background:var(--c-bg); border:2px solid var(--c-primary); border-radius:var(--r-m); padding:var(--s4); }
+.tq-sda__h--multi{ margin:0 0 var(--s3); color:var(--c-primary); font-size:var(--fs-md); font-weight:700; line-height:var(--lh-tight); }
+.tq-sda__badge{ display:inline-block; margin-bottom:var(--s3); padding:var(--s1) var(--s3); border-radius:var(--r-pill);
+  background:var(--c-accent); color:var(--c-on-primary); font-size:var(--fs-note); }
+.tq-sda__dl--multi{ margin:0; font-size:var(--fs-note); line-height:1.95; color:var(--c-ink2); }
+.tq-sda__dl--multi div{ display:flex; gap:var(--s2); border-bottom:1px solid var(--c-line); padding:var(--s1) 0; }
+.tq-sda__dl--multi dt{ flex:0 0 4.6em; color:var(--c-primary); }
+.tq-sda__dl--multi dd{ margin:0; }
+.tq-sda__btn{ display:inline-block; margin-top:var(--s3); padding:var(--s2) var(--s4); border-radius:var(--r-pill);
+  background:var(--c-primary); color:var(--c-on-primary); font-size:var(--fs-note); text-decoration:none; }
+.tq-sda__prect{ border-radius:var(--r-m); overflow:hidden; aspect-ratio:1; border:2px solid var(--c-accent); }
+
+@media (max-width:520px){
+  .tq-sda__stage--anchor,
+  .tq-sda__stage--multi{ grid-template-columns:1fr; }
+  .tq-sda__circle{ width:min(100%,320px); margin:0 auto; }
+  .tq-sda__photos{ grid-template-columns:1fr 1fr; justify-items:center; }
+  .tq-sda__pcircle{ width:min(100%,140px); }
+}
+</style>
+
+<section class="tq-sda">
+  <p class="tq-sda__lead">同じ連絡先の情報を同じ地の上に置いた比較。右は暗い面が画面に1つしか無いので、見出しで説明しなくてもそこが連絡先だと分かる。</p>
+
+  <div class="tq-sda__cmp">
+
+    <div>
+      <span class="tq-sda__tag">普通の場合：アクセント色を複数点</span>
+      <div class="tq-sda__stage tq-sda__stage--multi">
+        <div class="tq-sda__box">
+          <span class="tq-sda__badge">ラベル</span>
+          <p class="tq-sda__h--multi">見出しがここに入ります</p>
+          <dl class="tq-sda__dl--multi">
+            <div><dt>項目</dt><dd>テキストがここに入ります</dd></div>
+            <div><dt>項目</dt><dd>000-0000-0000</dd></div>
+            <div><dt>項目</dt><dd>00:00〜00:00</dd></div>
+          </dl>
+          <a class="tq-sda__btn" href="#">テキストがここに入ります</a>
+        </div>
+        <div class="tq-sda__prect"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+      </div>
+      <p class="tq-sda__note">枠・帯・ボタン・ラベルに色が分散し、どこを先に見ればよいか決まらない。</p>
+    </div>
+
+    <div>
+      <span class="tq-sda__tag tq-sda__tag--on">この工夫：暗い面は1つだけ</span>
+      <div class="tq-sda__stage tq-sda__stage--anchor">
+        <div class="tq-sda__circle">
+          <p class="tq-sda__en">section label</p>
+          <p class="tq-sda__h">見出しがここに入ります</p>
+          <dl class="tq-sda__dl">
+            <div><dt>項目</dt><dd>テキストが入ります</dd></div>
+            <div><dt>項目</dt><dd>000-0000-0000</dd></div>
+            <div><dt>項目</dt><dd>00:00〜00:00</dd></div>
+          </dl>
+          <a class="tq-sda__map" href="#">地図で位置を確認する</a>
+        </div>
+        <div class="tq-sda__photos">
+          <div class="tq-sda__pcircle"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+          <div class="tq-sda__pcircle"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+        </div>
+      </div>
+      <p class="tq-sda__note">地は青みグレー1色、写真は低彩度。罫も影もゼロで、装飾は円の中の下線1本だけ。</p>
+    </div>
+
+  </div>
+</section>

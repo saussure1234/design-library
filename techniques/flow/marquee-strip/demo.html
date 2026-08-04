@@ -1,0 +1,143 @@
+<style>
+/* トークンのフォールバック。:where() で詰めているので、
+   _tokens.css が読み込まれていればそちらが必ず勝つ。 */
+:where(:root){
+  --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-disp:var(--f-sans); --f-num:"Helvetica Neue",Arial,var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+  --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+  --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px; --s8:76px;
+  --sec-y:clamp(56px,7vw,110px);
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+/* 単体で開いたときだけ効く既定余白の打ち消し（:where で詰めてあるので本体CSSが必ず勝つ） */
+:where(body){margin:0}
+
+.tq-mq{
+  font-family:var(--f-sans); color:var(--c-ink2); background:var(--c-bg);
+  padding-block:var(--s7);
+  overflow-x:clip;                 /* 帯を画面外へ抜くので横スクロールを止める */
+}
+.tq-mq *{box-sizing:border-box}
+.tq-mq__wrap{max-width:var(--w-max); margin-inline:auto; padding-inline:var(--w-gut)}
+.tq-mq__blk{margin-top:var(--s8)}
+.tq-mq__blk:first-child{margin-top:0}
+.tq-mq__tag{
+  display:inline-block; margin:0 0 var(--s5);
+  font-size:var(--fs-note); letter-spacing:.08em; line-height:1;
+  padding:var(--s2) var(--s3); border-radius:var(--r-pill);
+  background:var(--c-bg2); color:var(--c-ink3);
+}
+.tq-mq__tag--on{background:var(--c-primary-l); color:var(--c-primary-d)}
+.tq-mq__cap{margin:var(--s4) 0 0; font-size:var(--fs-sm); line-height:var(--lh-head); color:var(--c-ink3)}
+.tq-mq__h{
+  margin:var(--s5) 0 0; font-family:var(--f-disp); font-weight:800;
+  font-size:var(--fs-xl); line-height:var(--lh-tight); letter-spacing:.02em; color:var(--c-ink);
+}
+
+/* ============ 普通：静止したチップ＋1本罫 ============ */
+.tq-mq__rule{border-top:1px solid var(--c-line); padding-top:var(--s4)}
+.tq-mq__chips{display:flex; flex-wrap:wrap; gap:var(--s2); margin:var(--s5) 0 0; padding:0; list-style:none}
+.tq-mq__chips li{
+  font-size:var(--fs-note); line-height:1; color:var(--c-ink3);
+  border:1px solid var(--c-line); border-radius:var(--r-pill); padding:var(--s2) var(--s3);
+}
+
+/* ============ この工夫：流れる文字帯 ============ */
+.tq-mq__strip{
+  position:relative; display:flex; align-items:center; overflow:hidden;
+  height:30px;
+  background:var(--c-ink); color:var(--c-bg);
+  margin-left:var(--s6);
+  margin-right:calc(50% - 50vw);      /* 右端で切りっぱなしにする */
+}
+.tq-mq__label{
+  position:relative; z-index:2; flex:0 0 auto;
+  background:var(--c-ink); color:var(--c-bg);
+  padding-inline:var(--s4);
+  font-family:var(--f-num); font-size:var(--fs-note); letter-spacing:.12em; line-height:30px;
+}
+.tq-mq__track{display:flex; white-space:nowrap; animation:tq-mq-run 26s linear infinite}
+.tq-mq__set{
+  display:flex; gap:var(--s5); flex:0 0 auto; padding-right:var(--s5);
+  font-size:var(--fs-note); letter-spacing:.04em; line-height:30px;
+}
+@keyframes tq-mq-run{to{transform:translateX(-50%)}}
+/* 読み込み直後から語の途中で切れている状態にする（負のdelayで途中から始める） */
+.tq-mq__strip .tq-mq__track{animation-delay:-7s}
+
+/* 罫の代わり版 */
+.tq-mq__hair{
+  overflow:hidden; border-bottom:1px solid var(--c-line); padding-block:var(--s4);
+  margin-right:calc(50% - 50vw);
+}
+.tq-mq__hair .tq-mq__track{animation-duration:34s; animation-delay:-11s}
+.tq-mq__hair .tq-mq__set{
+  line-height:1;
+  font-family:var(--f-num); font-size:var(--fs-note); letter-spacing:.18em; color:var(--c-primary);
+}
+
+@media (prefers-reduced-motion:reduce){
+  .tq-mq__track{animation:none; transform:translateX(-9%)}  /* 止めても端の切れは残す */
+}
+@media (max-width:560px){
+  .tq-mq__strip{margin-left:var(--s4)}
+}
+</style>
+
+<section class="tq-mq">
+  <div class="tq-mq__wrap">
+
+    <div class="tq-mq__blk">
+      <p class="tq-mq__tag">普通の場合</p>
+      <div class="tq-mq__rule">
+        <h2 class="tq-mq__h">見出しがここに入ります</h2>
+        <ul class="tq-mq__chips">
+          <li>#キーワード</li><li>#タグ</li><li>#カテゴリ</li><li>#トピック</li>
+          <li>#テーマ</li><li>#ラベル</li><li>#分類</li><li>#見出し語</li>
+        </ul>
+      </div>
+      <p class="tq-mq__cap">見出しの上には1本罫。タグは静止したチップとして折り返して並ぶ。全部読めるが、画面は止まったまま。</p>
+    </div>
+
+    <div class="tq-mq__blk">
+      <p class="tq-mq__tag tq-mq__tag--on">この工夫（黒帯・固定ラベルつき）</p>
+      <div class="tq-mq__strip">
+        <span class="tq-mq__label">KEYWORD</span>
+        <div class="tq-mq__track">
+          <div class="tq-mq__set">
+            <span>#キーワード</span><span>#タグ</span><span>#カテゴリ</span><span>#トピック</span>
+            <span>#テーマ</span><span>#ラベル</span><span>#分類</span><span>#見出し語</span>
+          </div>
+          <div class="tq-mq__set" aria-hidden="true">
+            <span>#キーワード</span><span>#タグ</span><span>#カテゴリ</span><span>#トピック</span>
+            <span>#テーマ</span><span>#ラベル</span><span>#分類</span><span>#見出し語</span>
+          </div>
+        </div>
+      </div>
+      <p class="tq-mq__cap">止まっているラベルの脇から語が現れ、先頭は語の途中から、右端でも切れたまま。切れているのが事故ではなく仕掛けだと伝わる。</p>
+    </div>
+
+    <div class="tq-mq__blk">
+      <p class="tq-mq__tag tq-mq__tag--on">この工夫（罫の代わり版）</p>
+      <div class="tq-mq__hair">
+        <div class="tq-mq__track">
+          <div class="tq-mq__set">
+            <span>LABEL ✦ LABEL ✦ LABEL ✦ LABEL ✦ LABEL ✦ LABEL ✦ LABEL ✦</span>
+          </div>
+          <div class="tq-mq__set" aria-hidden="true">
+            <span>LABEL ✦ LABEL ✦ LABEL ✦ LABEL ✦ LABEL ✦ LABEL ✦ LABEL ✦</span>
+          </div>
+        </div>
+      </div>
+      <h2 class="tq-mq__h">見出しがここに入ります</h2>
+      <p class="tq-mq__cap">1本罫を引く代わりに、極小の欧文を反復して流す。罫そのものが文字になっている。読ませる情報は入れない。</p>
+    </div>
+
+  </div>
+</section>

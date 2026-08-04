@@ -1,0 +1,25 @@
+{
+  "id": "space/oversize-lineart-as-ground",
+  "name": "空きカラムを、カラム幅より大きい塗りなし線画で埋めて端で切る",
+  "ordinary": "見出し＋リード文の下は空白のままにするか、小さなアイコンを1つ置く",
+  "actual": "lumiarch_s06=左カラムに「虫めがねを持つ手」の1色線画をカラム幅の135%スケールで描き、セクション下端とカラム境界で切り落とす。s08=椅子とテーブルの絵を幅520px超で置き画面左端で切る。s05=有機的な植物の線を左端と下端で切る。3例とも塗りなし・線幅1.2〜1.5px・色は見出しと同じ青。",
+  "css": ".lead-col{position:relative; overflow:hidden}\n.lead-col svg{width:135%; margin-left:-12%; display:block}\n.lead-col svg *{fill:none; stroke:#1a5fe0; stroke-width:1.2; stroke-linecap:round}\n/* 画面左端まで抜く場合 */\n.lead-col svg{position:absolute; left:-120px; top:180px; width:520px}",
+  "appliesTo": ["features", "value", "voice", "access"],
+  "impact": 3,
+  "effort": 2,
+  "why": "拡大して切ると「絵」でなく「地の模様」になり、隣の記事カードの情報量とぶつからずに空きカラムが版面として成立する",
+  "params": ["倍率 120〜140%", "線幅 1.2〜1.5px", "色は見出しと同色", "切る辺（下＋左）"],
+  "avoid": "塗ると図として読まれ本文と主従が逆転する。必ず fill:none の単線で",
+  "sources": ["lumiarch_s06", "lumiarch_s08", "lumiarch_s05"],
+  "notes": [
+    "線幅は SVG を拡大しても太らせない。vector-effect:non-scaling-stroke を使うか、viewBox 側の stroke-width を倍率で割っておく。太い線は『イラスト』に見えてしまい、地の模様として沈まない。デモは non-scaling-stroke を採用した。",
+    "色は見出しと同色というのが決定的。別色にすると独立した挿絵になり、同色にすると『見出しの続き』として同じレイヤーに読める。デモは見出しも線画も var(--c-primary)。",
+    "倍率 135% は『カラム幅に対して』であって画面幅に対してではない。カラムが狭いほど拡大率の効果が出る。SP はカラムが全幅になり、切ると絵の断片しか残らない。デモは SP で position:static・width:64% に戻して全形を見せる方に倒した（この技法は空きカラムが生まれる2カラム時だけの手当てで、1カラムでは前提が消える）。",
+    "切る辺は下＋カラム境界の2辺。上辺まで切ると絵の重心が分からなくなり、単なる線の断片になる。輪郭の一部（レンズの円など）は必ず1つ残す。",
+    "fill:none は svg 要素側ではなく子要素すべて（svg *）に当てる。path 側に fill 属性が残っていると SVG 書き出しツールの既定 fill が効いて黒く塗り潰される。",
+    "opacity で薄めるのは避け、線幅と色そのもので調整する。opacity を下げると線が痩せて見えず、拡大した意味が消える。",
+    "在フローで置くと右カラムの高さに合わせて切れ方が毎回変わる。position:absolute + left:-12% + bottom:-12% でカラムに固定すると、下辺とカラム境界の2辺で必ず切れる（lumiarch_s08 も絶対配置）。",
+    "ただし絶対配置にすると線画が在フローの見出し・リード文の上に描画される。見出しとリードに position:relative; z-index:1 を付けて前に出すこと。これを忘れると線が文字を横切って可読性が落ちる。",
+    "隣のカード列と主従を逆転させないため、線画には z-index:0 を与える。カードに重ねる設計にはしない。"
+  ]
+}

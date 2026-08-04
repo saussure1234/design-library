@@ -1,0 +1,34 @@
+{
+  "id": "flow/flanking-pair",
+  "name": "本文の左右外側に対の素材を置いて中央に縦の通路をつくる",
+  "ordinary": "見出しの上にアイコンを1つ中央置きし、写真は本文の後にまとめて並べる。",
+  "actual": "色地の面で本文を中央の細幅（約46%）に絞り、左外の余白に三輪車の切り抜き、右外に子どもの切り抜きを高さをずらして対で置く。締めの1行見出しは左に種、右に手の線画（塗りなし・線1.5px・別色）で挟む。中央だけが読む道になり、長い本文のあとの着地点ができる。",
+  "css": ".flank{position:relative;padding:80px 0;background:#7d2b2b}\n.flank__body{width:min(560px,46%);margin-inline:auto}\n.flank__l{position:absolute;left:2%;top:22%;width:130px}\n.flank__r{position:absolute;right:2%;top:30%;width:150px}  /* 左右で高さをずらす */\n.flank__lead{display:flex;align-items:center;justify-content:center;gap:32px}\n.flank__lead svg{fill:none;stroke-width:1.5;width:34px}\n.flank__lead svg:first-child{stroke:#6fb3a8}\n.flank__lead svg:last-child{stroke:#d98b7a}\n@media(max-width:768px){.flank__body{width:86%}.flank__l,.flank__r{position:static;width:90px}}",
+  "params": [
+    "中央幅 42〜50%",
+    "左右の高さのずれ 8〜10%",
+    "素材（切り抜き写真／線画）",
+    "左右で線色を変える"
+  ],
+  "appliesTo": [
+    "value",
+    "features",
+    "cta"
+  ],
+  "impact": 2,
+  "effort": 1,
+  "why": "左右対称の印が中央の文字列を囲い込み、要素を足さずに読む幅と着地点を同時に決められる。",
+  "avoid": "情報量の多いセクションでは中央幅が狭すぎて行数が伸び、読みにくくなる。",
+  "sources": [
+    "meisei-kg_s03"
+  ],
+  "notes": [
+    "左右の素材は position:absolute。768px以下で static に戻すと DOM 順で縦に積まれてしまうので、2枚を1つの箱で包み、PCでは display:contents（＝箱を無かったことにして絶対配置を親基準にする）、SPでは display:flex にして横並びに畳む。この1手が無いとSPで素材が本文の上下に散る。",
+    "高さのずれは top:16% と 26%（約10%）。同じ高さに置くと左右対称の「額縁」になり、通路ではなく飾りに見える。ずらして初めて視線が中央へ落ちる。",
+    "中央幅 min(560px,46%) は 1100px で約500px＝日本語で30〜35字。これ以上広げると通路が消え、狭めると行数が伸びる。情報量の多いセクションには向かない（avoid の通り）。",
+    "締めの1行を挟む線画は fill:none / stroke-width:1.5 / 左右で色違い（デモは --c-on-primary と --c-accent）。塗りにすると本文脇の写真と同じ「面」になり、挟んでいる感じが出ない。",
+    "色面の上では白地用のトークンが効かない。点線の罫は --c-line ではなく color-mix(in srgb, var(--c-on-primary) 55%, transparent) で作る。",
+    "切り抜き素材が無ければ border-radius:50% の丸トリミングでも成立する。四角い写真だと「貼り付けたカード」になって通路が閉じる。",
+    "デモは techniques/flow/flanking-pair/demo.html。上＝中央アイコン1つ＋本文後に写真の普通版、下＝この工夫。"
+  ]
+}

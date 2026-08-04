@@ -1,0 +1,36 @@
+{
+  "id": "flow/nav-off-the-cards",
+  "name": "送り操作をカードに重ねず見出し行の右端へ逃がす",
+  "ordinary": "前後ボタンはカード列の左右中央に半透明の丸で重ね、下に丸ドットのページャーを置く。",
+  "actual": "塗りなし・1px枠の正円（直径20〜34px）を2つ、見出しと同じ行の右端に並べる。カードの上には何も重ならない。進捗は丸ドットでなく幅56px・高さ3pxの横バーで、現在位置だけ赤。写真の上に置く場合だけ枠を白にする。",
+  "css": ".rail-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}\n.rail-nav{display:flex;gap:10px}\n.rail-nav button{width:26px;height:26px;border:1px solid #d8d8d8;border-radius:50%;\n  background:none;color:#333;display:grid;place-items:center;font-size:11px;cursor:pointer}\n.rail-nav--onphoto button{border-color:#fff;color:#fff;width:34px;height:34px}\n\n.bars{display:flex;gap:8px;margin-top:18px}\n.bars i{display:block;width:56px;height:3px;background:#555}\n.bars i.is-on{background:#e60012}",
+  "params": [
+    "円の直径 20/26/34px",
+    "枠色（写真上なら#fff）",
+    "バー幅56px・高さ3px",
+    "バーの現在色"
+  ],
+  "appliesTo": [
+    "features",
+    "voice",
+    "member"
+  ],
+  "impact": 2,
+  "effort": 1,
+  "why": "操作系が写真に被らないので、カードの断ち切りがそのまま素直に読める。",
+  "avoid": "端が切れないカルーセルでは操作の存在に気づかれない。断ち切りとセットで使う。",
+  "sources": [
+    "odrive_s08",
+    "odrive_s02",
+    "odrive_s11"
+  ],
+  "notes": [
+    "flow/rail-bleed-cut と必ず同時に使う。単体で見ると「小さくて目立たないボタン」でしかなく、右端で札が切れて初めて操作の存在が推測できる。デモでも工夫側は必ず断ち切りの列に付けている。",
+    "見出し行を display:flex + justify-content:space-between にするだけなので、見出しが2行になっても円は右端の縦中央に残る（align-items:center）。ボタン側を position:absolute で置くと見出しの行数で崩れる。",
+    "円は border-radius:50% だが、トークンでは --r-pill(999px) が同じ結果になる。正方形＋pill で真円。",
+    "26pxの円に矢印グリフを入れるとタップ領域が小さすぎる（44px未満）。実装では ::before で透明な当たり判定を広げるか、直径を34pxにする。デモは見た目の寸法を現物に合わせて26pxのまま。",
+    "横バーは幅56px・高さ3pxの固定。ドットと違い「全体で何コマか」「いま何コマ目か」が距離として読める。現在色は原案が赤＝ブランド色なので --c-primary に割り当て、非現在は --c-ink3。",
+    "暗い面／写真の上では枠と文字を --c-bg（白）にして直径を34pxへ。位置は見出し行の右端のまま変えない。",
+    "デモは techniques/flow/nav-off-the-cards/demo.html。上から〈普通＝カードに重なる半透明丸＋ドット〉〈この工夫〉〈写真の上に置く場合〉。ボタンはJS無しのため見た目だけで、送りはトラックパッド／ドラッグで確認する。"
+  ]
+}

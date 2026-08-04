@@ -20,7 +20,7 @@ from PIL import Image, ImageChops
 Image.MAX_IMAGE_PIXELS = None
 
 MAX_H = 22000          # これ以上長いページは切る
-NAV_TIMEOUT = 45       # 読み込みを待つ上限（秒）
+NAV_TIMEOUT = 30       # 読み込みを待つ上限（秒）
 SITE_TIMEOUT = 260     # 1サイトにかける上限（秒）
 STABLE_TRIES = 3       # 「まだ動いている」判定のやり直し回数
 STABLE_WAIT = 0.55      # 2回撮る間隔（秒）
@@ -94,14 +94,18 @@ JS_SETTLE = """
   const SKIP = 'nav,header,[class*="menu"],[class*="Menu"],[class*="nav"],[class*="Nav"],' +
                '[class*="drawer"],[class*="modal"],[class*="Modal"],[class*="popup"],' +
                '[class*="overlay"],[role="dialog"],[aria-hidden="true"]';
-  document.querySelectorAll('body *').forEach(el => {
-    if (el.closest(SKIP)) return;
+  // ★ 読みと書きを分ける。混ぜるとレイアウト再計算が毎回走って桁違いに遅くなる
+  const all = document.querySelectorAll('body *');
+  const fixOpacity = [], fixVis = [];
+  for (const el of all) {
+    if (el.closest(SKIP)) continue;
     const cs = getComputedStyle(el);
     const o = parseFloat(cs.opacity);
-    if (!isNaN(o) && o < .98) el.style.setProperty('opacity','1','important');
-    if (cs.visibility === 'hidden' && el.offsetHeight > 0)
-      el.style.setProperty('visibility','visible','important');
-  });
+    if (!isNaN(o) && o < .98) fixOpacity.push(el);
+    else if (cs.visibility === 'hidden' && el.getClientRects().length) fixVis.push(el);
+  }
+  for (const el of fixOpacity) el.style.setProperty('opacity','1','important');
+  for (const el of fixVis)     el.style.setProperty('visibility','visible','important');
   await new Promise(r => setTimeout(r, 340));
   return 1;
 })()"""
@@ -125,6 +129,21 @@ JS_HIDE_FIXED = """
 
 JS_SCROLL_TO = "(y => { window.scrollTo(0, y); return window.scrollY })"
 
+# 5) 一括撮りでは壊れる構造（大きな sticky / 背景固定）があるか数える
+JS_NEEDS_TILES = """
+(() => {
+  const vh = innerHeight;
+  let n = 0;
+  document.querySelectorAll('body *').forEach(el => {
+    const cs = getComputedStyle(el);
+    if (cs.backgroundAttachment === 'fixed') { n++; return; }
+    if (cs.position !== 'sticky') return;
+    const r = el.getBoundingClientRect();
+    if (r.height > vh * 0.5) n++;          // 画面の半分以上を占める sticky
+  });
+  return n;
+})()"""
+
 
 def diff_ratio(a: Image.Image, b: Image.Image) -> float:
     """2枚の違いの割合。小さいほど「止まっている」"""
@@ -137,13 +156,16 @@ def diff_ratio(a: Image.Image, b: Image.Image) -> float:
 
 
 class Shooter:
-    def __init__(self, port, out, w, h, mobile, quality):
+    def __init__(self, port, out, w, h, mobile, quality, tiles=False):
         self.port, self.out = port, out
         self.w, self.h, self.mobile, self.quality = w, h, mobile, quality
+        self.tiles = tiles
 
     async def shot_viewport(self, ws, q=88):
         r = await cdp(ws, "Page.captureScreenshot", {"format": "jpeg", "quality": q})
-        return Image.open(io.BytesIO(base64.b64decode(r["data"]))).convert("RGB")
+        raw = r["data"]
+        return await asyncio.to_thread(
+            lambda: Image.open(io.BytesIO(base64.b64decode(raw))).convert("RGB"))
 
     async def wait_stable(self, ws):
         """同じ画面を2回撮って、違えばまだ動いている。落ち着くまで待つ"""
@@ -160,7 +182,7 @@ class Shooter:
         path = os.path.join(self.out, f"{name}.jpg")
         if os.path.exists(path):
             return f"SKIP {name}"
-        t = http(self.port, "/json/new?about:blank")
+        t = await asyncio.to_thread(http, self.port, "/json/new?about:blank")
         tid = t["id"]
         try:
             async with websockets.connect(t["webSocketDebuggerUrl"],
@@ -202,7 +224,28 @@ class Shooter:
                     full = min(int(css["height"]), MAX_H)
                 calm = True
 
-                # タイルを貼る（実際にスクロールするので、出てくる要素も写る）
+                # --- 一括撮り（既定）---------------------------------
+                # JS_SETTLE で「薄いまま／隠れたまま」を確定表示させてあるので、
+                # スクロールしなくても中身は出ている。1回で済むぶん桁違いに速い。
+                need = 0
+                if not self.tiles:
+                    r = await cdp(ws, "Runtime.evaluate",
+                                  {"expression": JS_NEEDS_TILES, "returnByValue": True})
+                    need = int(r.get("result", {}).get("value") or 0)
+
+                if not self.tiles and need == 0:
+                    r = await cdp(ws, "Page.captureScreenshot", {
+                        "format": "jpeg", "quality": self.quality,
+                        "captureBeyondViewport": True,
+                        "clip": {"x": 0, "y": 0, "width": self.w, "height": full, "scale": 1},
+                    })
+                    data = r["data"]
+                    await asyncio.to_thread(
+                        lambda: open(path, "wb").write(base64.b64decode(data)))
+                    kb = os.path.getsize(path) // 1024
+                    return f"{'OK  ' if calm else 'WARN'} {name}  {full}px  {kb}KB"
+
+                # --- タイル貼り（--tiles 指定時）----------------------
                 sheet = Image.new("RGB", (self.w, full), "white")
                 y, first = 0, True
                 while y < full:
@@ -225,12 +268,12 @@ class Shooter:
                     await asyncio.sleep(.3)
                     sheet.paste(await self.shot_viewport(ws), (0, min(ry, full - self.h)))
 
-                sheet.save(path, quality=self.quality, optimize=True)
+                await asyncio.to_thread(sheet.save, path, quality=self.quality, optimize=True)
                 kb = os.path.getsize(path) // 1024
                 return f"{'OK  ' if calm else 'WARN'} {name}  {full}px  {kb}KB{'' if calm else '  (動きが残った)'}"
         finally:
             try:
-                http(self.port, f"/json/close/{tid}")
+                await asyncio.to_thread(http, self.port, f"/json/close/{tid}")
             except Exception:
                 pass
 
@@ -242,9 +285,26 @@ async def main():
     ap.add_argument("--par", type=int, default=4)
     ap.add_argument("--port", type=int, default=9333)
     ap.add_argument("--sp", action="store_true", help="スマホ(390x844)で撮る")
+    ap.add_argument("--tiles", action="store_true", help="スクロールしながらタイルで貼る（遅いが確実）")
     a = ap.parse_args()
 
     os.makedirs(a.out, exist_ok=True)
+
+    # 前回の残骸タブを掃除する（放置するとメモリを食い潰して全体が遅くなる）
+    try:
+        lst = json.loads(urllib.request.urlopen(
+            f"http://127.0.0.1:{a.port}/json/list", timeout=5).read())
+        pages = [t for t in lst if t.get("type") == "page"]
+        for t in pages[1:]:
+            try:
+                http(a.port, f"/json/close/{t['id']}")
+            except Exception:
+                pass
+        if len(pages) > 1:
+            print(f"残骸タブ {len(pages)-1} 件を閉じました", flush=True)
+    except Exception:
+        pass
+
     rows = []
     for line in open(a.list, encoding="utf-8"):
         line = line.rstrip("\n")
@@ -256,7 +316,7 @@ async def main():
         if len(parts) >= 2:
             rows.append((parts[0].strip(), parts[1].strip()))
 
-    sh = Shooter(a.port, a.out, 390 if a.sp else 1440, 844 if a.sp else 900, a.sp, 82)
+    sh = Shooter(a.port, a.out, 390 if a.sp else 1440, 844 if a.sp else 900, a.sp, 82, a.tiles)
     sem = asyncio.Semaphore(a.par)
     done = [0]
 

@@ -1,0 +1,210 @@
+<style>
+/* ============================================================
+   color/cta-sink-same-hue
+   CTAを白抜きにせず、背景と同色相の一段明るい値で面に沈める
+   ============================================================ */
+
+@layer tq-fallback{
+  :root{
+    --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+    --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3;
+    --c-on-primary:#FFFFFF;
+    --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    --f-disp:var(--f-sans);
+    --f-num:"Helvetica Neue",Arial,var(--f-sans);
+    --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+    --fs-lg:21px; --fs-xl:28px;
+    --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+    --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  }
+}
+
+/* この工夫が要求する値（案件では :root で差し替え） */
+:root{
+  --tq-csh-field:#b8740f;   /* デュオトーンの地。L*≒55 */
+  --tq-csh-btn:#f39801;     /* 最上部の帯と同一の色。L*≒70（L差 約15） */
+  --tq-csh-l10:#dd8b0c;     /* 参考：L差 約10（沈みすぎ） */
+  --tq-csh-l25:#ffc266;     /* 参考：L差 約25（白抜きと同じ強さ） */
+}
+
+.tq-csh{
+  font-family:var(--f-sans); color:var(--c-ink);
+  line-height:var(--lh-head); -webkit-text-size-adjust:100%;
+  padding:var(--s5); background:var(--c-bg);
+}
+.tq-csh *{box-sizing:border-box}
+
+.tq-csh__lead{
+  margin:0 0 var(--s5); font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-csh__cap{
+  display:flex; align-items:center; gap:var(--s2);
+  margin:0 0 var(--s3); font-size:var(--fs-note); font-weight:700;
+  color:var(--c-ink3); letter-spacing:.04em;
+}
+.tq-csh__cap::before{
+  content:""; width:var(--s5); height:1px; background:var(--c-line); flex:0 0 auto;
+}
+.tq-csh__note{
+  margin:var(--s3) 0 0; font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-csh__sec{ margin-top:var(--s7) }
+.tq-csh__sec:first-of-type{ margin-top:0 }
+.tq-csh__secttl{ margin:0 0 var(--s4); font-size:var(--fs-sm); font-weight:700 }
+
+.tq-csh__pair{
+  display:grid; gap:var(--s5);
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+}
+
+/* --- パネル本体 -------------------------------------------- */
+.tq-csh__panel{
+  border-radius:var(--r-l); overflow:hidden;
+  background:var(--tq-csh-field);
+}
+/* 最上部の帯。ボタンと同じ色を使う */
+.tq-csh__band{ height:var(--s5); background:var(--tq-csh-btn) }
+
+/* デュオトーン：写真を1色に潰して背景の明度を一定にする */
+.tq-csh__duo{
+  position:relative; isolation:isolate;
+  padding:var(--s6) var(--s5) var(--s6);
+  background:var(--tq-csh-field);
+}
+.tq-csh__duo img{
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:cover; z-index:-2;
+  filter:grayscale(1) contrast(.7) brightness(1.05);
+}
+.tq-csh__duo::before{
+  content:""; position:absolute; inset:0; z-index:-1;
+  background:var(--tq-csh-field); mix-blend-mode:multiply;
+}
+.tq-csh__duo::after{
+  content:""; position:absolute; inset:0; z-index:-1;
+  background:var(--tq-csh-field); opacity:.38;
+}
+
+.tq-csh__inner{ max-width:420px; margin-inline:auto }
+.tq-csh__eyebrow{
+  margin:0 0 var(--s3); font-size:var(--fs-note); font-weight:700;
+  letter-spacing:.08em; color:var(--c-on-primary); opacity:.9;
+}
+.tq-csh__h{
+  margin:0 0 var(--s3); font-size:var(--fs-md); font-weight:700;
+  color:var(--c-on-primary); line-height:var(--lh-head);
+}
+.tq-csh__p{
+  margin:0; font-size:var(--fs-note); color:var(--c-on-primary);
+  line-height:var(--lh-body); opacity:.95;
+}
+
+/* ── この工夫：同色相の一段明るい値。border も shadow も持たない ── */
+.tq-csh__btn{
+  display:block; width:100%; margin-top:var(--s5);
+  padding:15px; border:0; border-radius:var(--r-pill);
+  background:var(--tq-csh-btn); color:var(--c-on-primary);
+  font-family:inherit; font-size:var(--fs-sm); font-weight:700;
+  text-align:center; text-decoration:none; cursor:pointer;
+}
+/* ── 普通：白抜き ── */
+.tq-csh__btn--white{
+  background:var(--c-bg); color:var(--tq-csh-field);
+}
+/* ── 普通：白フチ ── */
+.tq-csh__btn--outline{
+  background:transparent; border:1px solid var(--c-bg);
+  color:var(--c-on-primary); margin-top:var(--s3);
+}
+
+/* --- 明度差のスケール --------------------------------------- */
+.tq-csh__scale{
+  display:grid; gap:var(--s4);
+  grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+}
+.tq-csh__swatch{
+  border-radius:var(--r-m); padding:var(--s4);
+  background:var(--tq-csh-field);
+}
+.tq-csh__swatch .tq-csh__btn{ margin-top:0; padding:11px; font-size:var(--fs-note) }
+.tq-csh__slabel{
+  margin:var(--s3) 0 0; font-size:10px; color:var(--c-on-primary);
+  line-height:var(--lh-head); opacity:.92; text-align:center;
+}
+.tq-csh__btn--l10{ background:var(--tq-csh-l10) }
+.tq-csh__btn--l25{ background:var(--tq-csh-l25); color:var(--tq-csh-field) }
+</style>
+
+<div class="tq-csh">
+  <p class="tq-csh__lead">
+    色面の上のCTAを白で抜かず、最上部の帯とまったく同じ色（＝地と同色相の一段明るい値）で置く。
+    border も shadow も持たせない。
+  </p>
+
+  <!-- ① 普通 / この工夫 -->
+  <section class="tq-csh__sec">
+    <h3 class="tq-csh__secttl">① 同じ面の上で、ボタンの色だけを変える</h3>
+    <div class="tq-csh__pair">
+
+      <div>
+        <p class="tq-csh__cap">普通：白抜き／白フチでコントラストを最大化</p>
+        <div class="tq-csh__panel">
+          <div class="tq-csh__band"></div>
+          <div class="tq-csh__duo">
+            <img src="../../../docs/demo/ph_a.jpg" alt="">
+            <div class="tq-csh__inner">
+              <p class="tq-csh__eyebrow">ラベルが入ります</p>
+              <h4 class="tq-csh__h">見出しがここに入ります</h4>
+              <p class="tq-csh__p">本文テキストが入ります。本文テキストが入ります。本文テキストが入ります。本文テキストが入ります。</p>
+              <a class="tq-csh__btn tq-csh__btn--white" href="#">ボタンのラベル</a>
+              <a class="tq-csh__btn tq-csh__btn--outline" href="#">ボタンのラベル</a>
+            </div>
+          </div>
+        </div>
+        <p class="tq-csh__note">白が2つ増えて、帯・面・文字と別系統の要素になる。面がそこで切れて見える。</p>
+      </div>
+
+      <div>
+        <p class="tq-csh__cap">この工夫：帯と同じ色で面に沈める</p>
+        <div class="tq-csh__panel">
+          <div class="tq-csh__band"></div>
+          <div class="tq-csh__duo">
+            <img src="../../../docs/demo/ph_a.jpg" alt="">
+            <div class="tq-csh__inner">
+              <p class="tq-csh__eyebrow">ラベルが入ります</p>
+              <h4 class="tq-csh__h">見出しがここに入ります</h4>
+              <p class="tq-csh__p">本文テキストが入ります。本文テキストが入ります。本文テキストが入ります。本文テキストが入ります。</p>
+              <a class="tq-csh__btn" href="#">ボタンのラベル</a>
+            </div>
+          </div>
+        </div>
+        <p class="tq-csh__note">色は増えていない（帯と同一色）。明度差だけで押せる要素だと分かり、面は1枚のまま。</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ② 明度差の幅 -->
+  <section class="tq-csh__sec">
+    <h3 class="tq-csh__secttl">② 明度差は12〜18に留める</h3>
+    <div class="tq-csh__scale">
+      <div class="tq-csh__swatch">
+        <p class="tq-csh__btn tq-csh__btn--l10">ボタンのラベル</p>
+        <p class="tq-csh__slabel">L差 約10<br>沈みすぎて見つからない</p>
+      </div>
+      <div class="tq-csh__swatch">
+        <p class="tq-csh__btn">ボタンのラベル</p>
+        <p class="tq-csh__slabel">L差 約15（この工夫）<br>面を切らずに押せると分かる</p>
+      </div>
+      <div class="tq-csh__swatch">
+        <p class="tq-csh__btn tq-csh__btn--l25">ボタンのラベル</p>
+        <p class="tq-csh__slabel">L差 約25<br>白抜きと同じ強さで浮く</p>
+      </div>
+    </div>
+    <p class="tq-csh__note">背景は写真をデュオトーンで1色に潰して明度を一定にしてある。生写真のままだと沈む場所と浮く場所ができてこの工夫は成立しない。</p>
+  </section>
+
+</div>

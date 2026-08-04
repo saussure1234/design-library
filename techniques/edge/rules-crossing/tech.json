@@ -1,0 +1,37 @@
+{
+  "id": "edge/rules-crossing",
+  "name": "極細の縦罫を不等間隔で降ろし、面の境界を越境させる",
+  "ordinary": "装飾の線は引かない。引いてもセクション内に等間隔で収める",
+  "actual": "幅1px・薄い青紫の縦線が10本前後、間隔20〜90pxの不等間隔で白場から降り、写真の上辺を越えて写真内部の異なる深さで止まる。写真パネルの右端より外側にも1本走っている。等間隔にせず、止まる深さも揃えないのが肝。",
+  "css": ".rule{position:absolute; top:0; width:1px; z-index:2;\n  background:rgba(90,80,200,.45);\n  transform-origin:top; transform:scaleY(0);\n  transition:transform .8s cubic-bezier(.2,.7,.2,1)}\n.is-in .rule{transform:scaleY(1)}\n/* 個別指定の例（左位置は等間隔にしない、高さも揃えない） */\n.rule:nth-child(1){left:8%;  height:180px; transition-delay:.00s}\n.rule:nth-child(2){left:12%; height:300px; transition-delay:.06s}\n.rule:nth-child(3){left:21%; height:230px; transition-delay:.12s}\n.rule:nth-child(4){left:23%; height:320px; transition-delay:.18s}\n/* 1本はパネルの外側（left:101% など）に置く */",
+  "params": [
+    "本数（8〜12）",
+    "間隔のばらつき（20〜90px、規則的にしない）",
+    "越境の深さ（180〜320px）",
+    "色と透明度（rgba .35〜.5）"
+  ],
+  "appliesTo": [
+    "hero",
+    "features",
+    "value",
+    "access"
+  ],
+  "impact": 2,
+  "effort": 2,
+  "why": "線が白地と写真の境界を跨ぐので、切り替わっている2つの面が1枚の紙の上に見える",
+  "avoid": "写真が細かい柄・暗いとき。線が消えるか、画像の傷に見える",
+  "sources": [
+    "unico_s02"
+  ],
+  "notes": [
+    "高さを px で固定すると、画面幅で写真の高さが変わったときに線が写真を突き抜けたり届かなかったりする。線は「白場＋写真」を囲う絶対配置のレイヤー（inset:0）の子にして height を % で指定した。48〜92% にしておけば、1100pxでも375pxでも必ず写真の内部で止まる。",
+    "元CSSは transition + .is-in（スクロール検知）だが、demo.html は markup と style だけなので JS を使わない。読み込み時に走る animation ＋ animation-fill-mode:both ＋ animation-delay の段差に置き換えた。実装時は IntersectionObserver で .is-in を付ける元の形でよい。",
+    "duration は calc(var(--d) * 1.6)＝0.8s、イージングは --e。トークンの動きの値から導出している。",
+    "線の色は color-mix(in srgb, var(--c-primary) 55%, transparent)。非対応環境用に直前で --c-ink3 のベタを同じプロパティで宣言してある。半透明でないと、白場では濃すぎ写真では黒い傷に見える。",
+    "パネルは margin-inline:4%（＝4%〜96%）にして、右端の外側 97.5% に1本走らせている。この“はみ出した1本”があるかないかで、線が装飾か構造かの印象が変わる。",
+    "本数は11本。左位置は 7/11/19.5/22/31/34.5/46/49/58/71/97.5% と、近接する2本組と大きな空きを混ぜている。等差にした瞬間に罫のパターン（模様）になり、越境の効果が消える。",
+    "写真は明るく面の広いカットを選ぶこと。avoid の通り、暗い写真や細かい柄では 1px の半透明線は消える。デモでも ph_b（明るい面が多い方）を使っている。",
+    "prefers-reduced-motion:reduce では animation を切り、scaleY(1) の最終状態を直接出す。線の配置自体が効きどころなので、動きを止めても成立する。",
+    "デモは techniques/edge/rules-crossing/demo.html。左が〈普通＝等間隔・写真の手前で揃って停止〉、右が〈不等間隔・越境・1本は枠外〉。"
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "id": "edge/arc-oversized",
+  "name": "画面幅より大きい円で境界を削る（大円弧）",
+  "ordinary": "背景色を切り替える水平線でセクションを分ける。曲線にしてもテンプレ標準の波形dividerを1本挟むだけ",
+  "actual": "直径が画面幅の1.2〜2倍ある円の「弧の一部だけ」を境界に使う。linie_s01は深緑面の下辺を width:124%/aspect-ratio:1 の白円でえぐり、左端はほぼ垂直に立ち上がり中央から右へ緩く下がる非対称。shoei_s04は逆に幅720pxに対し弧の高さが10px程度しかない超扁平。同じ手で「包み込む面」から「空気の切れ目」まで振れる。",
+  "css": "/* A. 深い弧: 上の色面の下辺を巨大な白円でえぐる */\n.hero{position:relative; overflow:hidden; background:#1d5137}\n.hero::after{content:''; position:absolute; left:-12%; bottom:-72%;\n  width:124%; aspect-ratio:1; border-radius:50%; background:#fbfaf7}\n\n/* B. 扁平弧: 次セクション側を持ち上げる（縦半径を幅よりはるかに小さく） */\n.next{background:#f6f5fa; margin-top:-40px;\n  border-radius:50% 50% 0 0 / 40px 40px 0 0}\n\n/* C. 非対称にする: left/top を左右非対称にずらす */\n.sec{background:#f4f4f2; position:relative; overflow:hidden}\n.sec::before{content:''; position:absolute; left:-34%; top:-150%;\n  width:170%; aspect-ratio:1; border-radius:50%; background:#fff}",
+  "params": [
+    "弧の深さ（縦半径/幅 = 40px/1200px の扁平 〜 aspect-ratio:1 の深い弧）",
+    "左右のずらし量（left:-12% 対称 / left:-34% 非対称）",
+    "削る側（上セクションを円でえぐる / 下セクションを角丸で持ち上げる）",
+    "弧の色（次セクションの地色そのまま）"
+  ],
+  "appliesTo": ["hero", "value", "features", "voice", "cta"],
+  "impact": 3,
+  "effort": 1,
+  "why": "半径が画面幅を超えると弧が「装飾の波」でなく面そのものの縁に見え、区切りではなく場面転換になる",
+  "avoid": "直角・グリッド基調の硬いブランド。弧の分だけ縦が数十〜百px食われるので、境界の直上直下に情報を詰めたいときも不可",
+  "sources": ["linie_s01", "linie_s05", "linie_s07", "shoei_s04", "shoei_s08"],
+  "notes": [
+    "実装は2系統ある。(1) 巨大円のpseudo要素で上の面をえぐる（overflow:hidden必須）、(2) 下の面に border-radius:50% 50% 0 0 / Npx Npx 0 0 を当てて負マージンで持ち上げる。見た目はほぼ同じで、(2)のほうが弧の深さをpxで正確に決められるので扁平弧・レスポンシブ向き。",
+    "円pseudo版の left/top/bottom の % はセクションの高さ・幅に強く依存する。sourcesのCSSはヒーロー相当の高い面（H>W級）前提の値で、浅い帯にそのまま貼ると円がセクション全面を覆って色が消える。デモでは width:200%/left:-50%/top:44% に組み直し、どの幅でも下辺を必ず全幅カバーするようにした（left/right下端に上の色が三日月状に残るのを防ぐ）。",
+    "非対称は円をずらすより border-radius の水平半径を左右で変えるほうが破綻しない。linieの「左端はほぼ垂直に立ち上がり右へ緩く下がる」は border-radius:22% 78% 0 0 / 84px 30px 0 0 で再現できる（左右の水平半径の和を100%以内に収めること。超えると全半径が一律縮小されて深さが狂う）。",
+    "扁平弧（shoei_s04相当）は幅720pxに対し縦10px＝縦横比 約1:72。デモでは幅に依らず10px固定にしている。",
+    "弧の色は必ず「次セクションの地色そのもの」にする。中間色を挟むと弧が装飾の帯に見えて効果が消える。"
+  ]
+}

@@ -1,0 +1,194 @@
+<style>
+/* ============================================================
+   color/series-by-fixed-mark
+   地色は1枚ずつ変え、番号など記号の色だけ全部同じにする
+   ============================================================ */
+
+@layer tq-fallback{
+  :root{
+    --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+    --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3;
+    --c-on-primary:#FFFFFF;
+    --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    --f-disp:var(--f-sans);
+    --f-num:"Helvetica Neue",Arial,var(--f-sans);
+    --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+    --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+    --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+    --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+    --shadow:0 6px 24px rgba(17,17,17,.08);
+  }
+}
+
+/* この工夫が要求する値（案件では :root で差し替え） */
+:root{
+  --tq-sfm-1:#e8f4e4;   /* 地色1（淡緑）  L*≒94 */
+  --tq-sfm-2:#ddeff6;   /* 地色2（淡水色）L*≒94 */
+  --tq-sfm-3:#fbe0e6;   /* 地色3（淡ピンク）L*≒93 */
+  --tq-sfm-mark:#0f8a4a; /* 串刺しにする記号の色。地色1と同色相の濃い版 */
+  /* 「普通」用：番号を1枚ずつ変える */
+  --tq-sfm-x1:#0f8a4a; --tq-sfm-x2:#1c7fc0; --tq-sfm-x3:#d2477a;
+  /* 明度を揃えていない失敗例の地色 */
+  --tq-sfm-bad2:#9fd3ea; --tq-sfm-bad3:#fdf3d0;
+}
+
+.tq-sfm{
+  font-family:var(--f-sans); color:var(--c-ink);
+  line-height:var(--lh-head); -webkit-text-size-adjust:100%;
+  padding:var(--s5); background:var(--c-bg);
+}
+.tq-sfm *{box-sizing:border-box}
+
+.tq-sfm__lead{
+  margin:0 0 var(--s5); font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-sfm__cap{
+  display:flex; align-items:center; gap:var(--s2);
+  margin:0 0 var(--s3); font-size:var(--fs-note); font-weight:700;
+  color:var(--c-ink3); letter-spacing:.04em;
+}
+.tq-sfm__cap::before{
+  content:""; width:var(--s5); height:1px; background:var(--c-line); flex:0 0 auto;
+}
+.tq-sfm__note{
+  margin:var(--s3) 0 0; font-size:var(--fs-note); color:var(--c-ink3);
+  line-height:var(--lh-body);
+}
+.tq-sfm__sec{ margin-top:var(--s7) }
+.tq-sfm__sec:first-of-type{ margin-top:0 }
+.tq-sfm__secttl{ margin:0 0 var(--s4); font-size:var(--fs-sm); font-weight:700 }
+.tq-sfm__pair{
+  display:grid; gap:var(--s6) var(--s5);
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+}
+
+/* --- カード列 ---------------------------------------------- */
+.tq-sfm__cards{
+  display:grid; gap:var(--s4);
+  grid-template-columns:repeat(3,minmax(0,1fr));
+}
+.tq-sfm__card{
+  position:relative;
+  /* 枠線も影も持たない。地色そのものがカードの輪郭 */
+  border:0; box-shadow:none; border-radius:var(--r-m);
+  background:var(--c); padding:var(--s5) var(--s4) var(--s5);
+  margin-top:var(--s4);
+}
+.tq-sfm__card--1{ --c:var(--tq-sfm-1) }
+.tq-sfm__card--2{ --c:var(--tq-sfm-2) }
+.tq-sfm__card--3{ --c:var(--tq-sfm-3) }
+/* 番号は面から出す。内側に置くと地色に埋もれて串刺しが弱くなる */
+.tq-sfm__num{
+  position:absolute; top:calc(var(--s4) * -1); left:0;
+  margin:0; font-family:var(--f-num); font-size:var(--fs-xl); font-weight:800;
+  line-height:1; color:var(--tq-sfm-mark);
+}
+.tq-sfm__cttl{
+  margin:0; font-size:var(--fs-sm); font-weight:700;
+  color:var(--c-ink); line-height:var(--lh-head);
+}
+.tq-sfm__cp{
+  margin:var(--s3) 0 0; font-size:var(--fs-note); color:var(--c-ink2);
+  line-height:var(--lh-body);
+}
+
+/* ── 普通：白カードで揃え、番号を1枚ずつ違う色にする ── */
+.tq-sfm__cards--x .tq-sfm__card{
+  --c:var(--c-bg); border:1px solid var(--c-line); box-shadow:var(--shadow);
+}
+.tq-sfm__cards--x .tq-sfm__card--1 .tq-sfm__num{ color:var(--tq-sfm-x1) }
+.tq-sfm__cards--x .tq-sfm__card--2 .tq-sfm__num{ color:var(--tq-sfm-x2) }
+.tq-sfm__cards--x .tq-sfm__card--3 .tq-sfm__num{ color:var(--tq-sfm-x3) }
+
+/* ── 失敗例：地色の明度が揃っていない ── */
+.tq-sfm__cards--bad .tq-sfm__card--2{ --c:var(--tq-sfm-bad2) }
+.tq-sfm__cards--bad .tq-sfm__card--3{ --c:var(--tq-sfm-bad3) }
+
+@media (max-width:460px){
+  .tq-sfm__cards{ grid-template-columns:1fr; gap:var(--s6) }
+}
+</style>
+
+<div class="tq-sfm">
+  <p class="tq-sfm__lead">
+    カードの地色は1枚ずつ変え、番号の色だけ3枚とも同じにする。枠線も影も置かない。
+  </p>
+
+  <!-- ① 普通 / この工夫 -->
+  <section class="tq-sfm__sec">
+    <h3 class="tq-sfm__secttl">① 地色と番号、どちらを固定するか</h3>
+    <div class="tq-sfm__pair">
+
+      <div>
+        <p class="tq-sfm__cap">普通：白で揃えて、番号を1枚ずつ変える</p>
+        <div class="tq-sfm__cards tq-sfm__cards--x">
+          <article class="tq-sfm__card tq-sfm__card--1">
+            <p class="tq-sfm__num">01</p>
+            <h4 class="tq-sfm__cttl">見出しがここに<br>入ります</h4>
+            <p class="tq-sfm__cp">本文テキストが入ります。本文テキストが入ります。</p>
+          </article>
+          <article class="tq-sfm__card tq-sfm__card--2">
+            <p class="tq-sfm__num">02</p>
+            <h4 class="tq-sfm__cttl">見出しがここに<br>入ります</h4>
+            <p class="tq-sfm__cp">本文テキストが入ります。本文テキストが入ります。</p>
+          </article>
+          <article class="tq-sfm__card tq-sfm__card--3">
+            <p class="tq-sfm__num">03</p>
+            <h4 class="tq-sfm__cttl">見出しがここに<br>入ります</h4>
+            <p class="tq-sfm__cp">本文テキストが入ります。本文テキストが入ります。</p>
+          </article>
+        </div>
+        <p class="tq-sfm__note">面は同じなのに番号だけ色が違うので、3枚が「別々の項目」に見える。枠線と影も要る。</p>
+      </div>
+
+      <div>
+        <p class="tq-sfm__cap">この工夫：地色をバラし、番号を1色に固定</p>
+        <div class="tq-sfm__cards">
+          <article class="tq-sfm__card tq-sfm__card--1">
+            <p class="tq-sfm__num">01</p>
+            <h4 class="tq-sfm__cttl">見出しがここに<br>入ります</h4>
+            <p class="tq-sfm__cp">本文テキストが入ります。本文テキストが入ります。</p>
+          </article>
+          <article class="tq-sfm__card tq-sfm__card--2">
+            <p class="tq-sfm__num">02</p>
+            <h4 class="tq-sfm__cttl">見出しがここに<br>入ります</h4>
+            <p class="tq-sfm__cp">本文テキストが入ります。本文テキストが入ります。</p>
+          </article>
+          <article class="tq-sfm__card tq-sfm__card--3">
+            <p class="tq-sfm__num">03</p>
+            <h4 class="tq-sfm__cttl">見出しがここに<br>入ります</h4>
+            <p class="tq-sfm__cp">本文テキストが入ります。本文テキストが入ります。</p>
+          </article>
+        </div>
+        <p class="tq-sfm__note">地色が3種でも番号の色が串刺しになり、3枚が1つのシリーズとして読める。枠線も影も要らない。</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ② 地色の明度は揃える -->
+  <section class="tq-sfm__sec">
+    <h3 class="tq-sfm__secttl">② 地色は「色相だけ」動かす。明度が揃わないとシリーズが崩れる</h3>
+    <div class="tq-sfm__cards tq-sfm__cards--bad">
+      <article class="tq-sfm__card tq-sfm__card--1">
+        <p class="tq-sfm__num">01</p>
+        <h4 class="tq-sfm__cttl">見出しがここに入ります</h4>
+        <p class="tq-sfm__cp">本文テキストが入ります。本文テキストが入ります。</p>
+      </article>
+      <article class="tq-sfm__card tq-sfm__card--2">
+        <p class="tq-sfm__num">02</p>
+        <h4 class="tq-sfm__cttl">見出しがここに入ります</h4>
+        <p class="tq-sfm__cp">本文テキストが入ります。本文テキストが入ります。</p>
+      </article>
+      <article class="tq-sfm__card tq-sfm__card--3">
+        <p class="tq-sfm__num">03</p>
+        <h4 class="tq-sfm__cttl">見出しがここに入ります</h4>
+        <p class="tq-sfm__cp">本文テキストが入ります。本文テキストが入ります。</p>
+      </article>
+    </div>
+    <p class="tq-sfm__note">2枚目だけ濃く、3枚目だけ黄み。手前に出たり奥に引っ込んだりして、同じ番号色でもシリーズに見えない。</p>
+  </section>
+
+</div>

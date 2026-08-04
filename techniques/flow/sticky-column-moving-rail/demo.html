@@ -1,0 +1,266 @@
+<style>
+/* トークンのフォールバック。:where() で詰めているので、
+   _tokens.css が読み込まれていればそちらが必ず勝つ。 */
+:where(:root){
+  --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-disp:var(--f-sans); --f-num:"Helvetica Neue",Arial,var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+  --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+  --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px; --s8:76px;
+  --sec-y:clamp(56px,7vw,110px);
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+/* 単体で開いたときだけ効く既定余白の打ち消し（:where で詰めてあるので本体CSSが必ず勝つ） */
+:where(body){margin:0}
+
+.tq-scol{
+  font-family:var(--f-sans); color:var(--c-ink2); background:var(--c-bg2);
+  padding-block:var(--s7);
+  overflow-x:clip;                     /* hidden にすると sticky が死ぬので clip */
+  /* 中央寄せコンテナの外側（右の余白ぶん）を正確に測る */
+  --tq-bleed:calc(-1 * (max(0px,(100vw - var(--w-max))/2) + var(--w-gut)));
+}
+.tq-scol *{box-sizing:border-box}
+.tq-scol__wrap{max-width:var(--w-max); margin-inline:auto; padding-inline:var(--w-gut)}
+.tq-scol__blk{margin-top:var(--s8)}
+.tq-scol__blk:first-child{margin-top:0}
+
+.tq-scol__tag{
+  display:inline-block; margin:0 0 var(--s4);
+  font-size:var(--fs-note); letter-spacing:.08em; line-height:1;
+  padding:var(--s2) var(--s3); border-radius:var(--r-pill);
+  background:var(--c-primary-l); color:var(--c-primary-d);
+}
+.tq-scol__cap{margin:var(--s4) 0 0; font-size:var(--fs-sm); line-height:var(--lh-head); color:var(--c-ink3)}
+
+/* ============ 左3割＝止まった柱 ／ 右7割＝流れる列 ============ */
+.tq-scol__split{
+  display:grid; grid-template-columns:30% 1fr; column-gap:var(--s6);
+  align-items:start;
+}
+.tq-scol__col{
+  position:sticky;
+  top:var(--s5);          /* 実装時は「固定ヘッダーの高さ＋24px」。参照元は120px */
+  align-self:start;
+}
+.tq-scol__eyebrow{
+  margin:0 0 var(--s3); font-size:var(--fs-note); letter-spacing:.12em; color:var(--c-primary-d);
+}
+.tq-scol__h{
+  margin:0 0 var(--s4); font-family:var(--f-disp); font-weight:800;
+  font-size:var(--fs-xl); line-height:var(--lh-tight); letter-spacing:.02em; color:var(--c-ink);
+}
+.tq-scol__lead{margin:0 0 var(--s5); font-size:var(--fs-sm); line-height:var(--lh-body); color:var(--c-ink2)}
+.tq-scol__more{
+  display:inline-flex; align-items:center; gap:var(--s3);
+  font-size:var(--fs-sm); color:var(--c-ink); text-decoration:none;
+}
+.tq-scol__more i{
+  width:34px; height:34px; border:1px solid var(--c-ink3); border-radius:var(--r-pill);
+  display:grid; place-items:center; font-style:normal; font-size:var(--fs-note); color:var(--c-ink2);
+}
+
+/* 右側：積み重なる可動面 */
+.tq-scol__flow{min-width:0}
+.tq-scol__flow>*+*{margin-top:var(--s7)}
+
+.tq-scol__rail{
+  /* 「2.5枚ぶん」で割ると、幅がいくつでも3枚目がちょうど半分だけ見える */
+  --tqp:calc(100% / 2.5);
+  --tqw:calc(var(--tqp) - var(--s5));
+  display:flex; gap:var(--s5);
+  overflow-x:auto; scroll-snap-type:x proximity;
+  margin-right:var(--tq-bleed);        /* 右だけ画面外へ抜く */
+  padding-right:0;
+  scrollbar-width:none; -ms-overflow-style:none;
+  overscroll-behavior-x:contain;
+}
+.tq-scol__rail::-webkit-scrollbar{display:none}
+.tq-scol__rail>*{flex:0 0 var(--tqw); min-width:0; scroll-snap-align:start}
+/* 上下型は柱がないぶん列が広いので、3.5枚ぶんで割る */
+.tq-scol__blk > .tq-scol__rail{--tqp:calc(100% / 3.5)}
+
+/* 札 */
+.tq-scol__card{background:var(--c-bg)}
+.tq-scol__ph{aspect-ratio:4/3; overflow:hidden; border-radius:var(--r-s); background:var(--c-line)}
+.tq-scol__ph img{width:100%; height:100%; object-fit:cover; display:block}
+.tq-scol__meta{
+  display:flex; gap:var(--s3); align-items:center;
+  margin:var(--s3) 0 var(--s1); font-size:var(--fs-note); color:var(--c-ink3);
+}
+.tq-scol__meta b{font-weight:700; color:var(--c-primary-d)}
+.tq-scol__meta time{font-family:var(--f-num); letter-spacing:.04em}
+.tq-scol__t{margin:0; font-size:var(--fs-base); line-height:var(--lh-head); color:var(--c-ink); font-weight:700}
+
+/* ============ 上下型：見出しと送りだけ上段、下段の列だけ抜ける ============ */
+.tq-scol__head{
+  display:flex; justify-content:space-between; align-items:center;
+  gap:var(--s4); margin-bottom:var(--s5);
+}
+.tq-scol__head .tq-scol__h{margin:0}
+.tq-scol__nav{display:flex; gap:var(--s2)}
+.tq-scol__nav button{
+  width:26px; height:26px; padding:0; cursor:pointer;
+  border:1px solid var(--c-line); border-radius:var(--r-pill);
+  background:none; color:var(--c-ink2);
+  display:grid; place-items:center; font-size:var(--fs-note);
+}
+
+@media (max-width:768px){
+  /* 柱が短くなる幅では上下型に落とす（＝柱を止めない） */
+  .tq-scol__split{grid-template-columns:1fr; row-gap:var(--s5)}
+  .tq-scol__col{position:static}
+  .tq-scol__rail,
+  .tq-scol__blk > .tq-scol__rail{--tqp:calc(100% / 1.5)}
+}
+</style>
+
+<section class="tq-scol">
+  <div class="tq-scol__wrap">
+
+    <div class="tq-scol__blk">
+      <p class="tq-scol__tag">この工夫（左右型）</p>
+
+      <div class="tq-scol__split">
+        <div class="tq-scol__col">
+          <p class="tq-scol__eyebrow">＋ 小見出しがここに入ります</p>
+          <h2 class="tq-scol__h">見出しがここに<br>入ります</h2>
+          <p class="tq-scol__lead">説明文がここに入ります。このブロックで何を並べているのかを2〜4行で補います。柱に置く文字が3行に満たないと、左が空白だらけに見えます。</p>
+          <a class="tq-scol__more" href="#">もっとみる <i>→</i></a>
+          <p class="tq-scol__cap">縦にスクロールすると、この柱だけが止まったまま残り、右の列だけが動く。</p>
+        </div>
+
+        <div class="tq-scol__flow">
+          <div class="tq-scol__rail">
+            <article class="tq-scol__card">
+              <div class="tq-scol__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+              <p class="tq-scol__meta"><b>ラベル</b><time>0000.00.00</time></p>
+              <h3 class="tq-scol__t">見出しがここに入り、2行程度で収まります</h3>
+            </article>
+            <article class="tq-scol__card">
+              <div class="tq-scol__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+              <p class="tq-scol__meta"><b>ラベル</b><time>0000.00.00</time></p>
+              <h3 class="tq-scol__t">見出しがここに入り、2行程度で収まります</h3>
+            </article>
+            <article class="tq-scol__card">
+              <div class="tq-scol__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+              <p class="tq-scol__meta"><b>ラベル</b><time>0000.00.00</time></p>
+              <h3 class="tq-scol__t">見出しがここに入り、2行程度で収まります</h3>
+            </article>
+            <article class="tq-scol__card">
+              <div class="tq-scol__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+              <p class="tq-scol__meta"><b>ラベル</b><time>0000.00.00</time></p>
+              <h3 class="tq-scol__t">見出しがここに入り、2行程度で収まります</h3>
+            </article>
+            <article class="tq-scol__card">
+              <div class="tq-scol__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+              <p class="tq-scol__meta"><b>ラベル</b><time>0000.00.00</time></p>
+              <h3 class="tq-scol__t">見出しがここに入り、2行程度で収まります</h3>
+            </article>
+          </div>
+
+          <div class="tq-scol__rail">
+            <article class="tq-scol__card">
+              <div class="tq-scol__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+              <p class="tq-scol__meta"><b>ラベル</b><time>0000.00.00</time></p>
+              <h3 class="tq-scol__t">見出しがここに入り、2行程度で収まります</h3>
+            </article>
+            <article class="tq-scol__card">
+              <div class="tq-scol__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+              <p class="tq-scol__meta"><b>ラベル</b><time>0000.00.00</time></p>
+              <h3 class="tq-scol__t">見出しがここに入り、2行程度で収まります</h3>
+            </article>
+            <article class="tq-scol__card">
+              <div class="tq-scol__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+              <p class="tq-scol__meta"><b>ラベル</b><time>0000.00.00</time></p>
+              <h3 class="tq-scol__t">見出しがここに入り、2行程度で収まります</h3>
+            </article>
+            <article class="tq-scol__card">
+              <div class="tq-scol__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+              <p class="tq-scol__meta"><b>ラベル</b><time>0000.00.00</time></p>
+              <h3 class="tq-scol__t">見出しがここに入り、2行程度で収まります</h3>
+            </article>
+            <article class="tq-scol__card">
+              <div class="tq-scol__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+              <p class="tq-scol__meta"><b>ラベル</b><time>0000.00.00</time></p>
+              <h3 class="tq-scol__t">見出しがここに入り、2行程度で収まります</h3>
+            </article>
+          </div>
+
+          <div class="tq-scol__rail">
+            <article class="tq-scol__card">
+              <div class="tq-scol__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+              <p class="tq-scol__meta"><b>ラベル</b><time>0000.00.00</time></p>
+              <h3 class="tq-scol__t">見出しがここに入り、2行程度で収まります</h3>
+            </article>
+            <article class="tq-scol__card">
+              <div class="tq-scol__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+              <p class="tq-scol__meta"><b>ラベル</b><time>0000.00.00</time></p>
+              <h3 class="tq-scol__t">見出しがここに入り、2行程度で収まります</h3>
+            </article>
+            <article class="tq-scol__card">
+              <div class="tq-scol__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+              <p class="tq-scol__meta"><b>ラベル</b><time>0000.00.00</time></p>
+              <h3 class="tq-scol__t">見出しがここに入り、2行程度で収まります</h3>
+            </article>
+            <article class="tq-scol__card">
+              <div class="tq-scol__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+              <p class="tq-scol__meta"><b>ラベル</b><time>0000.00.00</time></p>
+              <h3 class="tq-scol__t">見出しがここに入り、2行程度で収まります</h3>
+            </article>
+            <article class="tq-scol__card">
+              <div class="tq-scol__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+              <p class="tq-scol__meta"><b>ラベル</b><time>0000.00.00</time></p>
+              <h3 class="tq-scol__t">見出しがここに入り、2行程度で収まります</h3>
+            </article>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tq-scol__blk">
+      <p class="tq-scol__tag">この工夫（上下型）</p>
+      <div class="tq-scol__head">
+        <h2 class="tq-scol__h">見出しがここに入ります</h2>
+        <div class="tq-scol__nav">
+          <button type="button" aria-label="前へ">‹</button>
+          <button type="button" aria-label="次へ">›</button>
+        </div>
+      </div>
+      <div class="tq-scol__rail">
+        <article class="tq-scol__card">
+          <div class="tq-scol__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+          <p class="tq-scol__meta"><b>ラベル</b><time>0000.00.00</time></p>
+          <h3 class="tq-scol__t">見出しがここに入り、2行程度で収まります</h3>
+        </article>
+        <article class="tq-scol__card">
+          <div class="tq-scol__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+          <p class="tq-scol__meta"><b>ラベル</b><time>0000.00.00</time></p>
+          <h3 class="tq-scol__t">見出しがここに入り、2行程度で収まります</h3>
+        </article>
+        <article class="tq-scol__card">
+          <div class="tq-scol__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+          <p class="tq-scol__meta"><b>ラベル</b><time>0000.00.00</time></p>
+          <h3 class="tq-scol__t">見出しがここに入り、2行程度で収まります</h3>
+        </article>
+        <article class="tq-scol__card">
+          <div class="tq-scol__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+          <p class="tq-scol__meta"><b>ラベル</b><time>0000.00.00</time></p>
+          <h3 class="tq-scol__t">見出しがここに入り、2行程度で収まります</h3>
+        </article>
+        <article class="tq-scol__card">
+          <div class="tq-scol__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+          <p class="tq-scol__meta"><b>ラベル</b><time>0000.00.00</time></p>
+          <h3 class="tq-scol__t">見出しがここに入り、2行程度で収まります</h3>
+        </article>
+      </div>
+      <p class="tq-scol__cap">固定面（見出し＋送り）と可動面（写真列）を上下で割った型。柱に置く文字が足りないときはこちら。</p>
+    </div>
+
+  </div>
+</section>

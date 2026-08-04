@@ -1,0 +1,173 @@
+<style>
+/* --- トークンのフォールバック（_tokens.css が無い環境でも見えるように） --- */
+:root{
+  --c-primary:#00B220; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-disp:var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px; --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+  --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --shadow:0 6px 24px rgba(17,17,17,.08);
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+
+/* =========================================================
+   space/oversize-lineart-as-ground
+   空きカラムを、カラム幅より大きい塗りなし線画で埋めて端で切る
+   ========================================================= */
+.tq-lineart{
+  font-family:var(--f-sans); color:var(--c-ink2);
+  background:var(--c-bg); padding-block:var(--s7);
+  border-top:1px solid var(--c-line);
+}
+.tq-lineart__inner{ max-width:var(--w-max); margin-inline:auto; padding-inline:var(--w-gut); }
+.tq-lineart__tag{
+  display:inline-block; margin:0 0 var(--s5);
+  font-size:var(--fs-note); letter-spacing:.08em; color:var(--c-ink3);
+  background:var(--c-bg); border:1px solid var(--c-line);
+  border-radius:var(--r-pill); padding:var(--s1) var(--s3);
+}
+.tq-lineart__tag--on{ color:var(--c-on-primary); background:var(--c-primary); border-color:var(--c-primary); }
+.tq-lineart__cap{ font-size:var(--fs-note); color:var(--c-ink3); margin:var(--s5) 0 0; }
+
+.tq-lineart__cols{ display:grid; grid-template-columns:minmax(0,28%) minmax(0,1fr); gap:var(--s7); }
+
+/* --- 左：見出し＋リード＋線画 --- */
+.tq-lineart__lead{ position:relative; overflow:hidden; min-height:420px; }
+.tq-lineart__h{
+  position:relative; z-index:1;              /* 絶対配置の線画より前に出す */
+  font-family:var(--f-disp); font-size:var(--fs-2xl); line-height:var(--lh-tight);
+  color:var(--c-primary); margin:0 0 var(--s3);
+}
+.tq-lineart__p{
+  position:relative; z-index:1;
+  font-size:var(--fs-sm); line-height:var(--lh-body); margin:0;
+}
+
+/* 線画：カラム幅の135%で置き、下辺とカラム境界で切る */
+/* 絶対配置にして、カラムの下辺と左辺の2辺で確実に切る */
+.tq-lineart__art{
+  display:block; position:absolute; z-index:0; left:-12%; bottom:-12%; width:135%;
+}
+.tq-lineart__art *{
+  fill:none; stroke:var(--c-primary);      /* 色は見出しと同色 */
+  stroke-width:1.2; stroke-linecap:round; stroke-linejoin:round;
+  vector-effect:non-scaling-stroke;        /* 拡大しても線を太らせない */
+}
+/* 普通：小さなアイコンを1つ置くだけ */
+.tq-lineart__art--plain{ position:static; width:64px; margin:var(--s5) 0 0; }
+
+/* --- 右：記事カード --- */
+.tq-lineart__list{ list-style:none; margin:0; padding:0; display:grid; gap:var(--s5); }
+.tq-lineart__card{
+  position:relative; display:flex; gap:var(--s4);
+  background:var(--c-bg); border-bottom:1px solid var(--c-line); padding-bottom:var(--s5);
+}
+.tq-lineart__ph{ margin:0; flex:0 0 34%; border-radius:var(--r-s); overflow:hidden; }
+.tq-lineart__ph img{ display:block; width:100%; aspect-ratio:16/10; object-fit:cover; }
+.tq-lineart__ttl{
+  font-family:var(--f-disp); font-size:var(--fs-md); line-height:var(--lh-head);
+  color:var(--c-ink); margin:0 0 var(--s2);
+}
+.tq-lineart__tags{ list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:var(--s2); }
+.tq-lineart__tags li{
+  font-size:var(--fs-note); color:var(--c-ink2);
+  background:var(--c-primary-l); border-radius:var(--r-pill); padding:var(--s1) var(--s3);
+}
+.tq-lineart__date{ font-size:var(--fs-note); color:var(--c-ink3); margin:var(--s2) 0 0; }
+
+@media (max-width:760px){
+  .tq-lineart__cols{ grid-template-columns:1fr; gap:var(--s6); }
+  .tq-lineart__lead{ min-height:0; }
+  .tq-lineart__art{ position:static; width:64%; margin:var(--s4) 0 0; }
+  .tq-lineart__card{ flex-direction:column; }
+  .tq-lineart__ph{ flex:0 0 auto; width:100%; }
+}
+</style>
+
+<!-- 1. 普通：空きカラムに小さなアイコンを1つ置くだけ -->
+<section class="tq-lineart">
+  <div class="tq-lineart__inner">
+    <p class="tq-lineart__tag">普通</p>
+    <div class="tq-lineart__cols">
+      <div class="tq-lineart__lead">
+        <h2 class="tq-lineart__h">見出し</h2>
+        <p class="tq-lineart__p">リード文がここに入ります。見出しの意図を短く補足するテキストが2〜3行入ります。</p>
+        <svg class="tq-lineart__art tq-lineart__art--plain" viewBox="0 12 260 300" aria-hidden="true">
+          <circle cx="140" cy="104" r="70"/>
+          <circle cx="140" cy="104" r="58"/>
+          <path d="M92 154 40 238"/>
+          <path d="M108 166 56 250"/>
+          <path d="M40 238c-8 12 4 26 16 12"/>
+        </svg>
+      </div>
+      <ul class="tq-lineart__list">
+        <li class="tq-lineart__card">
+          <figure class="tq-lineart__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></figure>
+          <div>
+            <h3 class="tq-lineart__ttl">見出しがここに入ります。記事タイトルの想定です</h3>
+            <ul class="tq-lineart__tags"><li>#タグ</li><li>#タグ</li></ul>
+            <p class="tq-lineart__date">0000.00.00</p>
+          </div>
+        </li>
+        <li class="tq-lineart__card">
+          <figure class="tq-lineart__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></figure>
+          <div>
+            <h3 class="tq-lineart__ttl">見出しがここに入ります。記事タイトルの想定です</h3>
+            <ul class="tq-lineart__tags"><li>#タグ</li><li>#タグ</li></ul>
+            <p class="tq-lineart__date">0000.00.00</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <p class="tq-lineart__cap">アイコンが小さいぶん左カラムは「空いている」ままで、右の情報量に押し負ける</p>
+  </div>
+</section>
+
+<!-- 2. この工夫：カラム幅の135%まで拡大し、下辺とカラム境界で切る -->
+<section class="tq-lineart">
+  <div class="tq-lineart__inner">
+    <p class="tq-lineart__tag tq-lineart__tag--on">この工夫｜135%に拡大して端で切る</p>
+    <div class="tq-lineart__cols">
+      <div class="tq-lineart__lead">
+        <h2 class="tq-lineart__h">見出し</h2>
+        <p class="tq-lineart__p">リード文がここに入ります。見出しの意図を短く補足するテキストが2〜3行入ります。</p>
+        <svg class="tq-lineart__art" viewBox="0 12 260 300" aria-hidden="true">
+          <circle cx="140" cy="104" r="70"/>
+          <circle cx="140" cy="104" r="58"/>
+          <path d="M118 88c8-10 22-12 32-4"/>
+          <path d="M92 154 40 238"/>
+          <path d="M108 166 56 250"/>
+          <path d="M40 238c-8 12 4 26 16 12"/>
+          <path d="M62 232c-12 6-26 16-32 27-8 13-4 30 9 37 13 8 29 4 37-7"/>
+          <path d="M46 276c7-9 17-15 28-17"/>
+          <path d="M53 293c7-8 18-14 29-16"/>
+          <path d="M62 308c7-7 17-11 26-13"/>
+          <path d="M196 178c22 10 40 30 46 54"/>
+        </svg>
+      </div>
+      <ul class="tq-lineart__list">
+        <li class="tq-lineart__card">
+          <figure class="tq-lineart__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></figure>
+          <div>
+            <h3 class="tq-lineart__ttl">見出しがここに入ります。記事タイトルの想定です</h3>
+            <ul class="tq-lineart__tags"><li>#タグ</li><li>#タグ</li></ul>
+            <p class="tq-lineart__date">0000.00.00</p>
+          </div>
+        </li>
+        <li class="tq-lineart__card">
+          <figure class="tq-lineart__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></figure>
+          <div>
+            <h3 class="tq-lineart__ttl">見出しがここに入ります。記事タイトルの想定です</h3>
+            <ul class="tq-lineart__tags"><li>#タグ</li><li>#タグ</li></ul>
+            <p class="tq-lineart__date">0000.00.00</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <p class="tq-lineart__cap">同じ線画。塗りなし・線幅1.2px・見出しと同色のまま拡大して切ると「絵」でなく「地の模様」になり、右の情報量とぶつからない</p>
+  </div>
+</section>

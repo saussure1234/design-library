@@ -1,0 +1,22 @@
+{
+  "id": "color/whisper-contrast",
+  "name": "見出しや面を「見えるか見えないか」の差で置く",
+  "ordinary": "セクションタイトルは黒か濃色ではっきり読ませる／背景は真っ黒のベタ一色で終わらせる",
+  "actual": "白地の「SHOEI REAL」は#dedede、日本語サブはさらに薄い#e3d9d9 で、写真より弱いコントラストに落としてある。暗い側では#0a0b0dの地に#16171a（RGBで12差）の斜めのくさびが潜み、要素としては認識されないのに平面さだけが消える。",
+  "css": "h2{color:#dedede;font-weight:300;font-size:34px;letter-spacing:.15em}\nh2+p{color:#e3d9d9;font-size:12px;letter-spacing:.12em}\nsection{background:#0a0b0d;position:relative;isolation:isolate}\nsection::before{content:'';position:absolute;inset:0;z-index:-1;background:#16171a;clip-path:polygon(72% 0,100% 0,100% 55%,86% 100%,60% 0)}",
+  "appliesTo": ["features", "value", "hero", "member"],
+  "impact": 2,
+  "effort": 1,
+  "why": "タイトルが背景の一部まで下がるので写真と本文が先に目に入り、面は光が当たっている程度の奥行きだけを足す",
+  "params": ["地との差（明るい地はLで8〜12／暗い地はRGBで8〜16）", "くさびの clip-path 頂点"],
+  "avoid": "本文・ラベル・操作要素（可読性が落ちる。装飾的な英字見出しと背景の面に限る）",
+  "sources": ["shoei_s11", "odrive_s09"],
+  "notes": [
+    "shoei_s11 実測：英字見出しは細ウェイト・字間0.15em前後で大きさは34px相当。日本語サブはその直下に12px相当で、英字よりさらに薄い（わずかに赤みのある灰）。注記の1行だけが濃く、結果として『注記＞見出し』というコントラストの逆転が起きている。写真カードは通常の濃さのままなので、視線は写真→名前→見出しの順になる。",
+    "odrive_s09 実測：くさびは右側にあり、上辺から下辺へ細くなる帯。地との差はRGBで10〜14程度で、スクリーンショットを縮小すると消える。見出し（SPECIAL）は白のままで、弱くするのは面だけ。",
+    "実装メモ：css ヒントの clip-path:polygon(72% 0,100% 0,100% 55%,86% 100%,60% 0) は頂点が自己交差して環境によって描画が割れるため、demo では polygon(64% 0,100% 0,100% 100%,88% 100%) の素直な斜め帯に置き換えた。形は :root の --tq-wc-wedge-shape で差し替える。",
+    "実装メモ：::before に z-index:-1 を使うので、親に isolation:isolate（または position:relative + z-index）が要る。無いと祖先の背景まで突き抜ける。",
+    "実装メモ：色差が本当に狙い通りかを確認できるよう、デモ側に地／見出し／くさびの色チップを並べた（実装時は不要）。",
+    "注意：この工夫を本文やボタンに広げると単に読めないだけになる。適用は装飾的な英字見出しと背景の面に限る。"
+  ]
+}

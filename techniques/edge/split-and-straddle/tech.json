@@ -1,0 +1,26 @@
+{
+  "id": "edge/split-and-straddle",
+  "name": "背景を2色にハード分割し、その継ぎ目をカード・写真・見出しにまたがせる",
+  "ordinary": "セクション背景は1色にし、その内側にカードや写真を並べる。背景色の切り替えはコンテンツの下、余白のところで水平に切る",
+  "actual": "hanamaruは背景を高さ62%で淡ピンク→濃マゼンタにハードストップで割り、R40の白カードをその線にまたがせるので継ぎ目がカードの裏に隠れ左右の端にしか見えない。odrive_s03は上95pxだけ白・以下薄グレーで人物写真がその線を貫く。odrive_s11は同じことを縦にやり（左27%=#161719／右=#0a0b0d）「GALLERY」の白文字が継ぎ目を食う。musashino_s12は色帯の上辺を本文最終行と写真の下1/4に平気で走らせ、コンテンツを避けない。",
+  "css": "/* 横割り + カードを跨がせる */\nsection{background:linear-gradient(#fce8ef 0 62%, #ea4b93 62% 100%)}\n.card{position:relative; z-index:1; background:#fff; border-radius:40px;\n  margin:60px 90px -70px}          /* 下マージン負値で下段へ沈める */\n\n/* 縦割り（明度差だけ）+ 見出しを食い込ませる */\nsection{background:linear-gradient(90deg,#161719 0 27%, #0a0b0d 27% 100%)}\nh2{position:relative; z-index:1; margin-left:6%}\n\n/* コンテンツを避けない色帯 */\n.sec{position:relative; isolation:isolate}\n.sec::after{content:''; position:absolute; inset:auto 0 0 0; height:19%;\n  background:#f3f3e6; z-index:-1}",
+  "params": [
+    "割る向き（横 / 縦）",
+    "割る位置（62% / 95px / 27%）",
+    "2色のコントラスト（強＝下段が土台に見える / 微差＝奥行きだけ）",
+    "またぐ要素（カード / 写真 / 大見出し / 本文最終行）"
+  ],
+  "appliesTo": ["features", "value", "member", "voice", "price", "cta"],
+  "impact": 3,
+  "effort": 1,
+  "why": "背景の切れ目と要素の切れ目をずらすとフラットな2色面に前後の層ができる。線を消さず「隠す」ので面が2枚あることは伝わるのに切れ目が目立たない",
+  "avoid": "継ぎ目が本文の行間に来る位置。読みにくいので、行を堂々と跨がせるか完全に外すか、どちらかに振り切る",
+  "sources": ["hanamaru_s07", "sho_hanamaru_s07", "odrive_s03", "odrive_s11", "musashino_s12"],
+  "notes": [
+    "肝は linear-gradient のハードストップ（同じ位置に2つの色停止を置く）。0 62% / 62% 100% のように書けば1要素で2色面になり、要素を増やさずに済むのでカードの重ね順を考えなくてよくなる。",
+    "hanamaru_s07 の実測比率は、カードの左右余白がセクション幅の約12%、継ぎ目がカード高さのおよそ下から1/3。カードの左右に継ぎ目が「少しだけ」見えるのが成立条件なので、カードを全幅にすると効果が消える。デモは position:absolute の left/right/top/bottom で必ず跨ぐよう固定した。",
+    "縦割り版（odrive_s11）は2色の明度差がごく小さい（#161719 と #0a0b0d）。色差で見せる技ではなく「面が2枚ある」ことだけを伝える技なので、コントラストを上げすぎると単なるツートン背景に落ちる。トークンでは --c-ink2 と --c-ink がこの関係にあたる。",
+    "musashino_s12 型の色帯は z-index:-1 を使うため、親に isolation:isolate が必須。付け忘れると帯がページ背景の裏に回って消える。",
+    "継ぎ目の位置は本文の行間を避けること。行の真ん中を堂々と横切るか、段落の外に出すかの二択にする。"
+  ]
+}

@@ -1,0 +1,206 @@
+<style>
+/* トークンのフォールバック。:where() で詰めているので、
+   _tokens.css が読み込まれていればそちらが必ず勝つ。 */
+:where(:root){
+  --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-disp:var(--f-sans); --f-num:"Helvetica Neue",Arial,var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+  --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+  --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px; --s8:76px;
+  --sec-y:clamp(56px,7vw,110px);
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+/* 単体で開いたときだけ効く既定余白の打ち消し（:where で詰めてあるので本体CSSが必ず勝つ） */
+:where(body){margin:0}
+
+/* ============ 土台 ============ */
+.tq-bcut{
+  font-family:var(--f-sans); color:var(--c-ink2); background:var(--c-bg);
+  padding-block:var(--s7);
+  overflow-x:clip;              /* 画面外へ抜いた列で横スクロールバーを出さない */
+}
+.tq-bcut *{box-sizing:border-box}
+.tq-bcut__wrap{
+  max-width:var(--w-max); margin-inline:auto; padding-inline:var(--w-gut);
+}
+.tq-bcut__blk{margin-top:var(--s8)}
+.tq-bcut__blk:first-child{margin-top:0}
+
+.tq-bcut__tag{
+  display:inline-block; margin:0;
+  font-size:var(--fs-note); letter-spacing:.08em; line-height:1;
+  padding:var(--s2) var(--s3);
+  border-radius:var(--r-pill);
+  background:var(--c-bg2); color:var(--c-ink3);
+}
+.tq-bcut__tag--on{background:var(--c-primary-l); color:var(--c-primary-d)}
+.tq-bcut__h{
+  font-family:var(--f-disp); font-size:var(--fs-xl); line-height:var(--lh-tight);
+  letter-spacing:.02em; color:var(--c-ink); font-weight:800;
+  margin:var(--s3) 0 var(--s5);
+}
+.tq-bcut__cap{
+  margin:var(--s4) 0 0; font-size:var(--fs-sm); line-height:var(--lh-head); color:var(--c-ink3);
+}
+
+/* ============ 札 ============ */
+.tq-bcut__card{background:var(--c-bg)}
+.tq-bcut__ph{
+  aspect-ratio:4/3; overflow:hidden; border-radius:var(--r-s); background:var(--c-bg2);
+}
+.tq-bcut__ph img{width:100%; height:100%; object-fit:cover; display:block}
+.tq-bcut__date{
+  margin:var(--s3) 0 var(--s1);
+  font-family:var(--f-num); font-size:var(--fs-note); color:var(--c-ink3); letter-spacing:.04em;
+}
+.tq-bcut__t{
+  margin:0; font-size:var(--fs-base); line-height:var(--lh-head);
+  color:var(--c-ink); font-weight:700;
+}
+
+/* ============ 普通：コンテナ幅にぴったり収める ============ */
+.tq-bcut__grid{display:grid; grid-template-columns:repeat(3,1fr); gap:var(--s5)}
+.tq-bcut__grid>*{min-width:0}
+.tq-bcut__dots{display:flex; gap:var(--s2); justify-content:center; margin-top:var(--s5)}
+.tq-bcut__dots i{
+  display:block; width:8px; height:8px; border-radius:var(--r-pill); background:var(--c-line);
+}
+.tq-bcut__dots i:first-child{background:var(--c-ink3)}
+
+/* ============ この工夫：画面端で断ち切る ============ */
+.tq-bcut__rail{
+  /* 「3.5枚ぶん」で割ると、幅がいくつでも4枚目がちょうど半分だけ見える。
+     ピッチ（札＋間隔）＝100%/3.5、札の幅＝ピッチ−間隔。 */
+  --tqp:calc(100% / 3.5);
+  --tqw:calc(var(--tqp) - var(--s5));
+  display:flex; gap:var(--s5);
+  overflow-x:auto; scroll-snap-type:x proximity;
+  margin-right:calc(50% - 50vw);             /* 片端型：右だけ画面外へ抜く */
+  padding-right:0;
+  scrollbar-width:none; -ms-overflow-style:none;
+  overscroll-behavior-x:contain;
+}
+.tq-bcut__rail::-webkit-scrollbar{display:none}
+.tq-bcut__rail>*{flex:0 0 var(--tqw); min-width:0; scroll-snap-align:start}
+
+/* 両端型：左右とも切る。列の幅が100vwになるので、ピッチも vw で決める */
+.tq-bcut__rail--both{
+  --tqp:calc(100vw / 4);
+  margin-inline:calc(50% - 50vw); padding-inline:0;
+}
+.tq-bcut__rail--both>*{scroll-snap-align:center}
+/* 左端の切れは「巻き戻せない側」へ半ピッチはみ出させて作る（初期表示から切れて見える） */
+.tq-bcut__rail--both>*:first-child{margin-left:calc(var(--tqp) / -2)}
+
+@media (max-width:560px){
+  .tq-bcut__grid{grid-template-columns:1fr}
+  .tq-bcut__rail{--tqp:calc(100% / 1.5)}
+  .tq-bcut__rail--both{--tqp:calc(100vw / 1.75)}
+}
+</style>
+
+<section class="tq-bcut">
+  <div class="tq-bcut__wrap">
+
+    <div class="tq-bcut__blk">
+      <p class="tq-bcut__tag">普通の場合</p>
+      <h2 class="tq-bcut__h">見出しがここに入ります</h2>
+      <div class="tq-bcut__grid">
+        <article class="tq-bcut__card">
+          <div class="tq-bcut__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+          <p class="tq-bcut__date">0000.00.00</p>
+          <h3 class="tq-bcut__t">見出しがここに入り、2行程度で収まります</h3>
+        </article>
+        <article class="tq-bcut__card">
+          <div class="tq-bcut__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+          <p class="tq-bcut__date">0000.00.00</p>
+          <h3 class="tq-bcut__t">見出しがここに入り、2行程度で収まります</h3>
+        </article>
+        <article class="tq-bcut__card">
+          <div class="tq-bcut__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+          <p class="tq-bcut__date">0000.00.00</p>
+          <h3 class="tq-bcut__t">見出しがここに入り、2行程度で収まります</h3>
+        </article>
+      </div>
+      <div class="tq-bcut__dots"><i></i><i></i><i></i></div>
+      <p class="tq-bcut__cap">3枚が幅にぴったり収まり、右端で列が終わる。続きがあることはドットでしか分からない。</p>
+    </div>
+
+    <div class="tq-bcut__blk">
+      <p class="tq-bcut__tag tq-bcut__tag--on">この工夫（片端型）</p>
+      <h2 class="tq-bcut__h">見出しがここに入ります</h2>
+      <div class="tq-bcut__rail">
+        <article class="tq-bcut__card">
+          <div class="tq-bcut__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+          <p class="tq-bcut__date">0000.00.00</p>
+          <h3 class="tq-bcut__t">見出しがここに入り、2行程度で収まります</h3>
+        </article>
+        <article class="tq-bcut__card">
+          <div class="tq-bcut__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+          <p class="tq-bcut__date">0000.00.00</p>
+          <h3 class="tq-bcut__t">見出しがここに入り、2行程度で収まります</h3>
+        </article>
+        <article class="tq-bcut__card">
+          <div class="tq-bcut__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+          <p class="tq-bcut__date">0000.00.00</p>
+          <h3 class="tq-bcut__t">見出しがここに入り、2行程度で収まります</h3>
+        </article>
+        <article class="tq-bcut__card">
+          <div class="tq-bcut__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+          <p class="tq-bcut__date">0000.00.00</p>
+          <h3 class="tq-bcut__t">見出しがここに入り、2行程度で収まります</h3>
+        </article>
+        <article class="tq-bcut__card">
+          <div class="tq-bcut__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+          <p class="tq-bcut__date">0000.00.00</p>
+          <h3 class="tq-bcut__t">見出しがここに入り、2行程度で収まります</h3>
+        </article>
+      </div>
+      <p class="tq-bcut__cap">4枚目が画面右端で写真の途中から断たれる。矢印も「一覧を見る」も無しで、続きの存在だけが伝わる。</p>
+    </div>
+
+    <div class="tq-bcut__blk">
+      <p class="tq-bcut__tag tq-bcut__tag--on">この工夫（両端型）</p>
+      <h2 class="tq-bcut__h">見出しがここに入ります</h2>
+      <div class="tq-bcut__rail tq-bcut__rail--both">
+        <article class="tq-bcut__card">
+          <div class="tq-bcut__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+          <p class="tq-bcut__date">0000.00.00</p>
+          <h3 class="tq-bcut__t">見出しがここに入り、2行程度で収まります</h3>
+        </article>
+        <article class="tq-bcut__card">
+          <div class="tq-bcut__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+          <p class="tq-bcut__date">0000.00.00</p>
+          <h3 class="tq-bcut__t">見出しがここに入り、2行程度で収まります</h3>
+        </article>
+        <article class="tq-bcut__card">
+          <div class="tq-bcut__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+          <p class="tq-bcut__date">0000.00.00</p>
+          <h3 class="tq-bcut__t">見出しがここに入り、2行程度で収まります</h3>
+        </article>
+        <article class="tq-bcut__card">
+          <div class="tq-bcut__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+          <p class="tq-bcut__date">0000.00.00</p>
+          <h3 class="tq-bcut__t">見出しがここに入り、2行程度で収まります</h3>
+        </article>
+        <article class="tq-bcut__card">
+          <div class="tq-bcut__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+          <p class="tq-bcut__date">0000.00.00</p>
+          <h3 class="tq-bcut__t">見出しがここに入り、2行程度で収まります</h3>
+        </article>
+        <article class="tq-bcut__card">
+          <div class="tq-bcut__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+          <p class="tq-bcut__date">0000.00.00</p>
+          <h3 class="tq-bcut__t">見出しがここに入り、2行程度で収まります</h3>
+        </article>
+      </div>
+      <p class="tq-bcut__cap">左右とも切れ、全体が見えるのは中央の数枚だけ。左右どちらにも続きがあると分かる。</p>
+    </div>
+
+  </div>
+</section>

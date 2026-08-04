@@ -1,0 +1,146 @@
+<style>
+/* ==========================================================
+   edge/ground-line — 境界線を「地面」にして人物を立たせる
+   :where(:root) はトークン未読込時のフォールバック（優先度0）。
+   ========================================================== */
+:where(:root){
+  --c-primary:#00B220; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px; --fs-lg:21px;
+  --lh-tight:1.35; --lh-body:1.9;
+  --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+
+.tq-grnd{
+  font-family:var(--f-sans); color:var(--c-ink2); background:var(--c-bg);
+  max-width:var(--w-max); margin:0 auto; padding:var(--s6) var(--w-gut);
+}
+.tq-grnd__h{ font-size:var(--fs-md); font-weight:700; color:var(--c-ink); line-height:var(--lh-tight); margin:0 0 var(--s2); }
+.tq-grnd__lead{ font-size:var(--fs-sm); line-height:var(--lh-body); color:var(--c-ink3); margin:0 0 var(--s5); }
+.tq-grnd__row{ display:grid; gap:var(--s5); grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr)); }
+.tq-grnd__fig{ margin:0; }
+.tq-grnd__cap{ font-size:var(--fs-note); line-height:var(--lh-tight); color:var(--c-ink3); margin:var(--s3) 0 0; }
+.tq-grnd__cap b{ display:block; color:var(--c-ink); font-size:var(--fs-sm); margin-bottom:2px; }
+
+/* ---- ステージ ---- */
+.tq-grnd__stage{
+  border:1px solid var(--c-line); border-radius:var(--r-m); overflow:hidden;
+  background:var(--c-bg);
+}
+.tq-grnd__up{
+  position:relative; height:150px; background:var(--c-primary-l);
+  padding:var(--s4) var(--s4) 0;
+}
+.tq-grnd__dn{
+  height:66px; background:var(--c-bg2);
+  padding:var(--s3) var(--s4) 0; font-size:var(--fs-note); color:var(--c-ink3);
+}
+.tq-grnd__card{
+  position:relative; z-index:1;
+  background:var(--c-bg); border-radius:var(--r-m);
+  padding:var(--s3) var(--s4); max-width:62%;
+  font-size:var(--fs-sm); font-weight:700; color:var(--c-ink); line-height:var(--lh-tight);
+}
+
+/* 地面 = 次セクションの地色。currentColor で追従させる */
+.tq-grnd__ground{
+  position:absolute; inset:auto 0 0 0; height:40px; display:block;
+  color:var(--c-bg2);
+}
+.tq-grnd__ground path{ fill:currentColor; }
+
+/* 人物：足元が bottom で決まる。波の高さに合わせて個別に指定する */
+.tq-grnd__kid{
+  position:absolute; z-index:2; pointer-events:none;
+  width:52px; height:76px; color:var(--c-ink2);
+}
+/* left は「足の中心を波の x に合わせる」ので図の半幅(26px)を引く */
+.tq-grnd__kid--a{ left:calc(25% - 26px); bottom:32px; }   /* 波の山（path上で y=8） */
+.tq-grnd__kid--b{ left:calc(50% - 26px); bottom:20px; }   /* 基準線（y=20） */
+.tq-grnd__kid--c{ left:calc(75% - 26px); bottom:8px;  }   /* 波の谷（y=32） */
+
+/* 普通：人物はパネルの内側に浮いている */
+.tq-grnd__kid--float{ left:8%; bottom:30px; }
+
+/* 点線の地面：上下とも同じ地色、区切りは点線1本だけ */
+.tq-grnd__stage--dot .tq-grnd__up{ background:var(--c-bg); }
+.tq-grnd__stage--dot .tq-grnd__dn{ background:var(--c-bg); border-top:1px dotted var(--c-line); }
+.tq-grnd__stage--dot .tq-grnd__kid{ bottom:-1px; }   /* 靴裏を点線に重ねる */
+.tq-grnd__stage--dot .tq-grnd__kid--a{ left:7%;  }
+.tq-grnd__stage--dot .tq-grnd__kid--b{ left:20%; }
+
+.tq-grnd__flat{ position:absolute; inset:auto 0 0 0; height:1px; background:var(--c-line); }
+
+@media (max-width:420px){
+  .tq-grnd__card{ max-width:74%; }
+}
+</style>
+
+<svg class="tq-grnd__defs" width="0" height="0" aria-hidden="true" style="position:absolute">
+  <symbol id="tq-grnd-kid" viewBox="0 0 44 64">
+    <g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="22" cy="12" r="9"/>
+      <path d="M22 21 L22 42"/>
+      <path d="M9 31 L22 26 L35 31"/>
+      <path d="M22 42 L14 62"/>
+      <path d="M22 42 L30 62"/>
+    </g>
+  </symbol>
+</svg>
+
+<div class="tq-grnd">
+
+  <p class="tq-grnd__h">罫を「地面」にすると、線を引いた理由が生まれる</p>
+  <p class="tq-grnd__lead">
+    3つとも境界の位置は同じ。違うのは、そこに足が着いているかどうかだけ。
+    人物を線の上に立たせた瞬間、境界は「仕切り」から「場所」に変わる。
+  </p>
+
+  <div class="tq-grnd__row">
+
+    <figure class="tq-grnd__fig">
+      <div class="tq-grnd__stage">
+        <div class="tq-grnd__up">
+          <p class="tq-grnd__card">見出しがここに入ります</p>
+          <span class="tq-grnd__flat"></span>
+          <svg class="tq-grnd__kid tq-grnd__kid--float"><use href="#tq-grnd-kid"/></svg>
+        </div>
+        <div class="tq-grnd__dn">次のセクションのテキスト</div>
+      </div>
+      <p class="tq-grnd__cap"><b>普通</b>水平線で切り、人物はパネルの内側に収める。線は仕切りでしかない。</p>
+    </figure>
+
+    <figure class="tq-grnd__fig">
+      <div class="tq-grnd__stage">
+        <div class="tq-grnd__up">
+          <p class="tq-grnd__card">見出しがここに入ります</p>
+          <svg class="tq-grnd__ground" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M0 20 C200 4 400 4 600 20 S1000 36 1200 20 L1200 40 L0 40 Z"/>
+          </svg>
+          <svg class="tq-grnd__kid tq-grnd__kid--a"><use href="#tq-grnd-kid"/></svg>
+          <svg class="tq-grnd__kid tq-grnd__kid--b"><use href="#tq-grnd-kid"/></svg>
+          <svg class="tq-grnd__kid tq-grnd__kid--c"><use href="#tq-grnd-kid"/></svg>
+        </div>
+        <div class="tq-grnd__dn">次のセクションのテキスト</div>
+      </div>
+      <p class="tq-grnd__cap"><b>この工夫｜波の地面</b>振幅12px・1周期＝画面幅。3人とも波の高さに合わせて足元を変えてある。</p>
+    </figure>
+
+    <figure class="tq-grnd__fig">
+      <div class="tq-grnd__stage tq-grnd__stage--dot">
+        <div class="tq-grnd__up">
+          <p class="tq-grnd__card">見出しがここに入ります</p>
+          <svg class="tq-grnd__kid tq-grnd__kid--a"><use href="#tq-grnd-kid"/></svg>
+          <svg class="tq-grnd__kid tq-grnd__kid--b"><use href="#tq-grnd-kid"/></svg>
+        </div>
+        <div class="tq-grnd__dn">次のセクションのテキスト</div>
+      </div>
+      <p class="tq-grnd__cap"><b>この工夫｜点線の地面</b>線の種類は問わない。淡い点線1本でも、靴裏が着いていれば地面になる。</p>
+    </figure>
+
+  </div>
+</div>

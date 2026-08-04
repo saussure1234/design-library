@@ -1,0 +1,29 @@
+{
+  "id": "overlap/bg-type-eaten",
+  "name": "極大の欧文を背面に敷き、写真やカードに大半を食わせる",
+  "ordinary": "英語のセクションラベルは見出しの上に小さい大文字で、読める大きさで置く",
+  "actual": "90〜120px級の欧文を地とほぼ同トーン（明度差3〜8%）で敷き、上端で断ち切ったうえに写真・カード・キャラで単語の後半を完全に隠す。読ませる意図がない。sanrio_s01は3行フル幅の淡青紫をキャラの立ち姿が分断、odrive_s06は黒#111の上に#2a2aの120pxを置きカード3枚で覆って隙間から字画だけ見せる、buddies_s03は筆記体110pxの「program」後半を写真が飲む、yugao_s06はロゴタイプの中ほど（RIS YUG）をアーチ写真が隠す。",
+  "css": ".sec{position:relative; overflow:hidden}\n.bgword{position:absolute; top:-48px; left:0; z-index:0;\n  font-size:clamp(64px,11vw,120px); font-weight:800; line-height:1;\n  letter-spacing:.02em; white-space:nowrap;\n  color:#2a2a2a}            /* 地#111との明度差は3〜8%だけ。読ませない */\n.sec > .card, .sec > figure{position:relative; z-index:1}\n\n/* 筆記体・淡色版（明るい地の上） */\n.eyebrow{position:absolute; top:40px; left:0; z-index:0;\n  font-family:'Tangerine',cursive; font-size:clamp(64px,9vw,120px);\n  line-height:.95; color:#e7dcc6}\n.photo{position:relative; z-index:1}",
+  "appliesTo": ["hero", "features", "value", "voice", "member"],
+  "impact": 3,
+  "effort": 1,
+  "why": "隠れて読めない部分があることで文字が情報から地紋に落ち、日本語見出しの可読性を一切邪魔せずに階調と奥行きが1段増える",
+  "params": [
+    "地との明度差 3〜8%",
+    "隠す割合 4〜7割",
+    "切り方（セクション上端で断つ／要素で覆う）"
+  ],
+  "avoid": "その欧文をブランド名やコピーとして読ませたいとき（読めない前提の手法なので機能が死ぬ）",
+  "sources": ["sanrio_s01", "odrive_s06", "buddies_s03", "yugao_s06", "yugao_s10"],
+  "notes": [
+    "明度差は色を直に指定するより color-mix(in srgb, var(--c-bg) 8%, var(--c-ink)) のように「地に地の反対色を何%混ぜるか」で書くほうが移植が効く。#111 に白を8〜10%混ぜると現物の #2a2a2a とほぼ一致するので、odrive_s06 の値は『差8%』として再現できる。明るい地でも同じ式で作れる（buddies_s03 の淡いベージュ＝クリーム地に差8%相当）。",
+    "デモで 3%／8%／25% を並べて確認したところ、破綻の境目は 8% と 25% の間にある。差が大きいと読もうとしてしまい、隠れている部分が『地紋』ではなく『文字の欠け＝不具合』に見える。上限は8%と考えてよい。逆に3%は安全側だが、あってもなくても変わらない。",
+    "級数はトークンの最大（--fs-4xl:64px）を大きく超えるのが前提。ただし vw で組むと段組みの中に入れたときに効かないので、セクション側に container-type:inline-size を置き clamp(52px,13cqw,120px) のように cqw で組むと、1カラムでも2カラムでも『セクション幅に対して極大』が保たれる。",
+    "上端で断つのは overflow:hidden + top:マイナス値。断つ量も cqw 連動（clamp(14px,4cqw,48px)）にしないと、狭い幅で字が全部消える／広い幅で断ちが効かない。",
+    "white-space:nowrap は必須。折り返した瞬間に『読める2行のラベル』に戻ってしまい、地紋にならない。あわせて pointer-events:none / user-select:none / aria-hidden=\"true\" を付ける。読ませない文字を読み上げ・選択・クリック対象に残す理由がない。",
+    "隠す割合は4〜7割が体感の適正。デモの『後半を飲む』版は program の gram を写真が飲んで pro だけ残す（約5割）。『中ほどを隠す』版（yugao_s06型）は両端の字画だけが残り、語としては完全に読めなくなるので隠す割合は最大級。",
+    "筆記体は webfont 前提の手法なので、トークンだけで組むデモでは --f-num の Light + italic で代用した。案件では --f-disp に筆記体を割り当てるのが筋。書体が変わっても『淡色・極大・後半を飲ませる』の3点が揃っていれば効き目は同じ。",
+    "この工夫は版面の高さを1pxも増やさない。①の普通版とこの工夫版はセクションの高さも見出しの位置も完全に同じで、背面の1要素を足しただけで層が増えている。"
+  ],
+  "demoNotes": "①同じセクションで欧文の扱いだけを変えた対比（普通＝読めるラベル／この工夫＝敷いて断って食わせる）。②明度差 3%／8%／25% の3段で破綻の境目を見せる。③隠し方2通り（単語の後半を写真が飲む／中ほどをアーチ写真が隠す）。"
+}

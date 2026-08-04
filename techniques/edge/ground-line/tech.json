@@ -1,0 +1,26 @@
+{
+  "id": "edge/ground-line",
+  "name": "境界線を「地面」にして、切り抜きの人物を上に立たせる",
+  "ordinary": "セクションの境目は水平線で切り、人物写真やイラストはパネルの内側に収める",
+  "actual": "yamanomiは黄→水色の境目を振幅約12px・1周期＝画面幅のゆるい波にし、歩く親子の線画をその波の上に立たせて、白カードの下辺と波の両方をまたがせる。meisei-kgは淡い点線1本だけの区切りに、ランドセルを背負った園児2人の切り抜き写真の靴裏をぴたりと接地させている。線の種類（波/点線/実線）は問わず、要は境界に足が着いていること。",
+  "css": "/* 波の地面（1周期の非対称波は border-radius では作れない → SVG path） */\n.sec{position:relative}\n.sec::after{content:''; position:absolute; inset:auto 0 0 0; height:40px;\n  background:url(wave.svg) bottom/100% 40px no-repeat}\n.kid{position:absolute; right:40px; bottom:-20px; width:150px;\n  z-index:2; pointer-events:none}   /* 足元が bottom:0 に来るよう切り抜く */\n\n/* 点線の地面 */\n.divider{border-top:1px dotted #d6d6d6; position:relative}\n.divider .kid{left:6%; bottom:0; width:130px}",
+  "params": [
+    "地面の種類（1周期の波 / 点線 / 実線）",
+    "はみ出し量（bottom:-20〜-30px）",
+    "接地位置（左6% / 右40px）と人数"
+  ],
+  "appliesTo": ["features", "value", "voice", "cta", "access", "footer"],
+  "impact": 3,
+  "effort": 2,
+  "why": "罫が仕切りと地面の二役になるので線を引いた理由が生まれ、境界が「線」でなく「場所」になる",
+  "avoid": "背景抜きの素材が用意できないとき。足元が中途半端に浮くと合成ミスに見える",
+  "sources": ["yamanomi_s05", "yamanomi_s07", "meisei-kg_s13"],
+  "notes": [
+    "外部 wave.svg を background に読むと色をトークンで差し替えられない。インラインSVGを置いて fill=\"currentColor\"、親に color:var(--下の面の色) を当てると、地面の色が常に次セクションの地色に追従する。",
+    "波は viewBox=\"0 0 1200 40\" + preserveAspectRatio=\"none\" + height:40px 固定にすると、横だけ伸びて縦の振幅が幅に依存しなくなる。yamanomi_s05 の振幅は約12px・1周期＝画面幅で、これを1200×40のpathに写すと基準線y=20・山y=8・谷y=32。",
+    "接地の肝は「波のどの位置に立たせるか」で bottom を変えること。上のpathなら x=25%地点は bottom:32px、x=50%は bottom:20px、x=75%は bottom:8px。全部同じ bottom にすると波と足が食い違って合成ミスに見える（avoidに書かれた失敗はこれ）。",
+    "人物は position:absolute + z-index を上の面より大きく、pointer-events:none を必ず付ける（見出しやボタンのクリックを食う事故が起きる）。",
+    "meisei-kg_s13 の点線版は、地面が1pxの点線1本しかないぶん接地精度がシビア。足の裏を線に重ねる（bottom:0 でなく bottom:-1px 相当）ほうが乗って見える。",
+    "デモでは切り抜き写真素材が無いため線画のインラインSVGで代用している。実案件では背景抜きPNG/WebPが前提。"
+  ]
+}

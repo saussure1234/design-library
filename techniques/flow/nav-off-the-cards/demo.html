@@ -1,0 +1,222 @@
+<style>
+/* トークンのフォールバック。:where() で詰めているので、
+   _tokens.css が読み込まれていればそちらが必ず勝つ。 */
+:where(:root){
+  --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-disp:var(--f-sans); --f-num:"Helvetica Neue",Arial,var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+  --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+  --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px; --s8:76px;
+  --sec-y:clamp(56px,7vw,110px);
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+/* 単体で開いたときだけ効く既定余白の打ち消し（:where で詰めてあるので本体CSSが必ず勝つ） */
+:where(body){margin:0}
+
+.tq-noff{
+  font-family:var(--f-sans); color:var(--c-ink2); background:var(--c-bg);
+  padding-block:var(--s7);
+  overflow-x:clip;                 /* 断ち切りとセットで使うので横スクロールを止める */
+}
+.tq-noff *{box-sizing:border-box}
+.tq-noff__wrap{max-width:var(--w-max); margin-inline:auto; padding-inline:var(--w-gut)}
+.tq-noff__blk{margin-top:var(--s8)}
+.tq-noff__blk:first-child{margin-top:0}
+.tq-noff__tag{
+  display:inline-block; margin:0 0 var(--s5);
+  font-size:var(--fs-note); letter-spacing:.08em; line-height:1;
+  padding:var(--s2) var(--s3); border-radius:var(--r-pill);
+  background:var(--c-bg2); color:var(--c-ink3);
+}
+.tq-noff__tag--on{background:var(--c-primary-l); color:var(--c-primary-d)}
+.tq-noff__cap{margin:var(--s4) 0 0; font-size:var(--fs-sm); line-height:var(--lh-head); color:var(--c-ink3)}
+.tq-noff__h{
+  margin:0; font-family:var(--f-disp); font-weight:800;
+  font-size:var(--fs-xl); line-height:var(--lh-tight); letter-spacing:.02em; color:var(--c-ink);
+}
+
+/* ============ 札 ============ */
+.tq-noff__card{background:transparent}
+.tq-noff__ph{aspect-ratio:4/3; overflow:hidden; border-radius:var(--r-s); background:var(--c-bg2)}
+.tq-noff__ph img{width:100%; height:100%; object-fit:cover; display:block}
+.tq-noff__t{margin:var(--s3) 0 0; font-size:var(--fs-base); line-height:var(--lh-head); color:var(--c-ink); font-weight:700}
+
+/* ============ 普通：カードに重ねた半透明の丸＋ドット ============ */
+.tq-noff__stage{position:relative}
+.tq-noff__grid{display:grid; grid-template-columns:repeat(3,1fr); gap:var(--s5)}
+.tq-noff__grid>*{min-width:0}
+.tq-noff__ov{
+  position:absolute; top:calc(50% - var(--s7)); transform:translateY(-50%);
+  width:40px; height:40px; padding:0; cursor:pointer;
+  border:0; border-radius:var(--r-pill);
+  background:color-mix(in srgb, var(--c-bg) 74%, transparent);
+  color:var(--c-ink); font-size:var(--fs-base);
+  display:grid; place-items:center;
+}
+.tq-noff__ov--l{left:var(--s3)}
+.tq-noff__ov--r{right:var(--s3)}
+.tq-noff__dots{display:flex; gap:var(--s2); justify-content:center; margin-top:var(--s5)}
+.tq-noff__dots i{display:block; width:8px; height:8px; border-radius:var(--r-pill); background:var(--c-line)}
+.tq-noff__dots i:first-child{background:var(--c-ink3)}
+
+/* ============ この工夫：見出し行の右端へ逃がす ============ */
+.tq-noff__head{
+  display:flex; justify-content:space-between; align-items:center;
+  gap:var(--s4); margin-bottom:var(--s5);
+}
+.tq-noff__nav{display:flex; gap:var(--s3)}
+.tq-noff__nav button{
+  width:26px; height:26px; padding:0; cursor:pointer;
+  border:1px solid var(--c-line); border-radius:var(--r-pill);
+  background:none; color:var(--c-ink2);
+  display:grid; place-items:center; font-size:var(--fs-note); line-height:1;
+}
+/* 進捗はドットでなく横バー */
+.tq-noff__bars{display:flex; gap:var(--s2); margin-top:var(--s5)}
+.tq-noff__bars i{display:block; width:56px; height:3px; background:var(--c-ink3)}
+.tq-noff__bars i.is-on{background:var(--c-primary)}
+
+.tq-noff__rail{
+  /* 「3.5枚ぶん」で割ると、幅がいくつでも4枚目がちょうど半分だけ見える */
+  --tqp:calc(100% / 3.5);
+  --tqw:calc(var(--tqp) - var(--s5));
+  display:flex; gap:var(--s5);
+  overflow-x:auto; scroll-snap-type:x proximity;
+  margin-right:calc(50% - 50vw); padding-right:0;
+  scrollbar-width:none; -ms-overflow-style:none;
+  overscroll-behavior-x:contain;
+}
+.tq-noff__rail::-webkit-scrollbar{display:none}
+.tq-noff__rail>*{flex:0 0 var(--tqw); min-width:0; scroll-snap-align:start}
+
+/* ============ 写真の上に置く場合＝枠を白に、直径34px ============ */
+.tq-noff__dark{
+  background:var(--c-ink); color:var(--c-bg);
+  padding-block:var(--s6); margin-top:var(--s8);
+}
+.tq-noff__dark .tq-noff__h{color:var(--c-bg)}
+.tq-noff__dark .tq-noff__t{color:var(--c-bg)}
+.tq-noff__dark .tq-noff__ph{border-radius:0; background:var(--c-ink2)}
+.tq-noff__dark .tq-noff__cap{color:var(--c-line)}
+.tq-noff__nav--photo button{
+  width:34px; height:34px;
+  border-color:var(--c-bg); color:var(--c-bg);
+}
+.tq-noff__dark .tq-noff__bars i{background:var(--c-ink3)}
+.tq-noff__dark .tq-noff__bars i.is-on{background:var(--c-bg)}
+
+@media (max-width:560px){
+  .tq-noff__grid{grid-template-columns:1fr}
+  .tq-noff__ov{top:calc(50% - var(--s8))}
+  .tq-noff__rail{--tqp:calc(100% / 1.5)}
+  .tq-noff__bars i{width:40px}
+}
+</style>
+
+<section class="tq-noff">
+  <div class="tq-noff__wrap">
+
+    <div class="tq-noff__blk">
+      <p class="tq-noff__tag">普通の場合</p>
+      <div class="tq-noff__head"><h2 class="tq-noff__h">見出しがここに入ります</h2></div>
+      <div class="tq-noff__stage">
+        <div class="tq-noff__grid">
+          <article class="tq-noff__card">
+            <div class="tq-noff__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+            <h3 class="tq-noff__t">見出しがここに入ります</h3>
+          </article>
+          <article class="tq-noff__card">
+            <div class="tq-noff__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+            <h3 class="tq-noff__t">見出しがここに入ります</h3>
+          </article>
+          <article class="tq-noff__card">
+            <div class="tq-noff__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+            <h3 class="tq-noff__t">見出しがここに入ります</h3>
+          </article>
+        </div>
+        <button class="tq-noff__ov tq-noff__ov--l" type="button" aria-label="前へ">‹</button>
+        <button class="tq-noff__ov tq-noff__ov--r" type="button" aria-label="次へ">›</button>
+      </div>
+      <div class="tq-noff__dots"><i></i><i></i><i></i></div>
+      <p class="tq-noff__cap">半透明の丸が写真の上に乗り、被写体の一部を隠す。丸ドットは小さく、いま何枚目かは読み取りにくい。</p>
+    </div>
+
+    <div class="tq-noff__blk">
+      <p class="tq-noff__tag tq-noff__tag--on">この工夫</p>
+      <div class="tq-noff__head">
+        <h2 class="tq-noff__h">見出しがここに入ります</h2>
+        <div class="tq-noff__nav">
+          <button type="button" aria-label="前へ">‹</button>
+          <button type="button" aria-label="次へ">›</button>
+        </div>
+      </div>
+      <div class="tq-noff__rail">
+        <article class="tq-noff__card">
+          <div class="tq-noff__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+          <h3 class="tq-noff__t">見出しがここに入ります</h3>
+        </article>
+        <article class="tq-noff__card">
+          <div class="tq-noff__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+          <h3 class="tq-noff__t">見出しがここに入ります</h3>
+        </article>
+        <article class="tq-noff__card">
+          <div class="tq-noff__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+          <h3 class="tq-noff__t">見出しがここに入ります</h3>
+        </article>
+        <article class="tq-noff__card">
+          <div class="tq-noff__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+          <h3 class="tq-noff__t">見出しがここに入ります</h3>
+        </article>
+        <article class="tq-noff__card">
+          <div class="tq-noff__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+          <h3 class="tq-noff__t">見出しがここに入ります</h3>
+        </article>
+      </div>
+      <div class="tq-noff__bars"><i class="is-on"></i><i></i><i></i></div>
+      <p class="tq-noff__cap">塗りなし・1px枠の正円を見出しと同じ行の右端へ。カードの上には何も重ならないので、右端の断ち切りがそのまま読める。進捗は幅56pxの横バーで、現在位置だけ色が変わる。</p>
+    </div>
+
+  </div>
+
+  <div class="tq-noff__dark">
+    <div class="tq-noff__wrap">
+      <p class="tq-noff__tag tq-noff__tag--on">この工夫（写真の上に置く場合）</p>
+      <div class="tq-noff__head">
+        <h2 class="tq-noff__h">見出しがここに入ります</h2>
+        <div class="tq-noff__nav tq-noff__nav--photo">
+          <button type="button" aria-label="前へ">‹</button>
+          <button type="button" aria-label="次へ">›</button>
+        </div>
+      </div>
+      <div class="tq-noff__rail">
+        <article class="tq-noff__card">
+          <div class="tq-noff__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+          <h3 class="tq-noff__t">見出しがここに入ります</h3>
+        </article>
+        <article class="tq-noff__card">
+          <div class="tq-noff__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+          <h3 class="tq-noff__t">見出しがここに入ります</h3>
+        </article>
+        <article class="tq-noff__card">
+          <div class="tq-noff__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+          <h3 class="tq-noff__t">見出しがここに入ります</h3>
+        </article>
+        <article class="tq-noff__card">
+          <div class="tq-noff__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+          <h3 class="tq-noff__t">見出しがここに入ります</h3>
+        </article>
+        <article class="tq-noff__card">
+          <div class="tq-noff__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+          <h3 class="tq-noff__t">見出しがここに入ります</h3>
+        </article>
+      </div>
+      <div class="tq-noff__bars"><i class="is-on"></i><i></i><i></i></div>
+      <p class="tq-noff__cap">暗い面や写真に重なる位置では枠と文字を白にし、直径を34pxまで上げる。位置は見出し行の右端のまま。</p>
+    </div>
+  </div>
+</section>

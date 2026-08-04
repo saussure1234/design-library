@@ -1,0 +1,126 @@
+<style>
+/* --- トークンのフォールバック（_tokens.css が無い環境でも見えるように） --- */
+:root{
+  --c-primary:#00B220; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-disp:var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px; --fs-lg:21px; --fs-xl:28px;
+  --lh-tight:1.35; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px;
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --shadow:0 6px 24px rgba(17,17,17,.08);
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+
+/* =========================================================
+   space/row-stagger
+   横一列の天地と高さを揃えず、段差でリズムを作る
+   ========================================================= */
+.tq-stagger{
+  font-family:var(--f-sans); color:var(--c-ink2);
+  background:var(--c-bg); padding-block:var(--s7);
+}
+.tq-stagger--alt{ background:var(--c-bg2); }
+.tq-stagger__inner{ max-width:var(--w-max); margin-inline:auto; padding-inline:var(--w-gut); }
+
+.tq-stagger__tag{
+  display:inline-block; margin:0 0 var(--s5);
+  font-size:var(--fs-note); letter-spacing:.08em; color:var(--c-ink3);
+  background:var(--c-bg); border:1px solid var(--c-line);
+  border-radius:var(--r-pill); padding:var(--s1) var(--s3);
+}
+.tq-stagger__tag--on{ color:var(--c-on-primary); background:var(--c-primary); border-color:var(--c-primary); }
+.tq-stagger__cap{ font-size:var(--fs-note); color:var(--c-ink3); margin:var(--s4) 0 0; }
+
+/* --- 列 --- */
+.tq-stagger__row{
+  list-style:none; margin:0; padding:0 0 var(--s2);
+  display:flex; align-items:flex-start; gap:22px;
+  overflow-x:auto; scrollbar-width:none;
+}
+.tq-stagger__row::-webkit-scrollbar{ display:none; }
+/* min-width:0 が無いと flex の自動最小サイズで写真の実寸までカードが太る */
+.tq-stagger__row > li{ flex:0 0 calc((100% - 66px) / 4); min-width:0; }
+
+.tq-stagger__pic{
+  margin:0; height:100%; overflow:hidden; background:var(--c-bg2);
+  border-radius:var(--r-l);
+}
+.tq-stagger__pic img{ display:block; width:100%; height:100%; object-fit:cover; }
+
+/* 普通：等高・同じ天地位置 */
+.tq-stagger__row--plain > li{ height:170px; margin-top:0; }
+
+/* この工夫：段差＋高さ2値の交互 */
+.tq-stagger__row--step > li:nth-child(1){ height:145px; margin-top:0; }
+.tq-stagger__row--step > li:nth-child(2){ height:180px; margin-top:12px; }
+.tq-stagger__row--step > li:nth-child(3){ height:145px; margin-top:33px; }
+.tq-stagger__row--step > li:nth-child(4){ height:180px; margin-top:47px; }
+
+/* 実物写真の見立て：マット枠＋淡い影＋回転 */
+.tq-stagger__row--mat{ padding-block:var(--s5) var(--s6); gap:var(--s5); }
+.tq-stagger__row--mat > li{ flex:0 0 calc((100% - 96px) / 5); }
+.tq-stagger__row--mat .tq-stagger__pic{
+  border:8px solid var(--c-bg2); border-radius:var(--r-s);
+  box-shadow:var(--shadow); background:var(--c-bg);
+}
+.tq-stagger__row--mat .tq-stagger__pic img{ aspect-ratio:4/3; height:auto; }
+.tq-stagger__row--mat > li:nth-child(1){ margin-top:0;    transform:rotate(-5deg); }
+.tq-stagger__row--mat > li:nth-child(2){ margin-top:26px; transform:rotate(3deg); }
+.tq-stagger__row--mat > li:nth-child(3){ margin-top:8px;  transform:rotate(-7deg); }
+.tq-stagger__row--mat > li:nth-child(4){ margin-top:40px; transform:rotate(4deg); }
+.tq-stagger__row--mat > li:nth-child(5){ margin-top:18px; transform:rotate(-3deg); }
+
+@media (max-width:760px){
+  /* 折り返さず、4枚とも1画面に収める（折り返すと「崩れたグリッド」に見える） */
+  .tq-stagger__row{ gap:10px; }
+  .tq-stagger__row > li{ flex:0 0 calc((100% - 30px) / 4); }
+  .tq-stagger__row--mat{ gap:var(--s3); }
+  .tq-stagger__row--mat > li{ flex:0 0 calc((100% - 60px) / 5); }
+}
+</style>
+
+<!-- 1. 普通：等幅・等高・同じ天地位置で整列 -->
+<section class="tq-stagger">
+  <div class="tq-stagger__inner">
+    <p class="tq-stagger__tag">普通</p>
+    <ul class="tq-stagger__row tq-stagger__row--plain">
+      <li><figure class="tq-stagger__pic"><img src="../../../docs/demo/ph_a.jpg" alt=""></figure></li>
+      <li><figure class="tq-stagger__pic"><img src="../../../docs/demo/ph_b.jpg" alt=""></figure></li>
+      <li><figure class="tq-stagger__pic"><img src="../../../docs/demo/ph_a.jpg" alt=""></figure></li>
+      <li><figure class="tq-stagger__pic"><img src="../../../docs/demo/ph_b.jpg" alt=""></figure></li>
+    </ul>
+    <p class="tq-stagger__cap">上端も下端も揃い、4枚で完結して見える</p>
+  </div>
+</section>
+
+<!-- 2. この工夫：上端を約12pxずつずらし、高さは145/180の交互 -->
+<section class="tq-stagger tq-stagger--alt">
+  <div class="tq-stagger__inner">
+    <p class="tq-stagger__tag tq-stagger__tag--on">この工夫｜段差＋高さ2値の交互</p>
+    <ul class="tq-stagger__row tq-stagger__row--step">
+      <li><figure class="tq-stagger__pic"><img src="../../../docs/demo/ph_a.jpg" alt=""></figure></li>
+      <li><figure class="tq-stagger__pic"><img src="../../../docs/demo/ph_b.jpg" alt=""></figure></li>
+      <li><figure class="tq-stagger__pic"><img src="../../../docs/demo/ph_a.jpg" alt=""></figure></li>
+      <li><figure class="tq-stagger__pic"><img src="../../../docs/demo/ph_b.jpg" alt=""></figure></li>
+    </ul>
+    <p class="tq-stagger__cap">同じ4枚。上端 0 / 12 / 33 / 47px、高さ 145 / 180 の交互で「たくさんある中の一部」に読める</p>
+  </div>
+</section>
+
+<!-- 3. 実物写真の見立て：マット枠＋回転も揃えない -->
+<section class="tq-stagger">
+  <div class="tq-stagger__inner">
+    <p class="tq-stagger__tag tq-stagger__tag--on">この工夫｜マット枠＋±3〜8°の回転</p>
+    <ul class="tq-stagger__row tq-stagger__row--mat">
+      <li><figure class="tq-stagger__pic"><img src="../../../docs/demo/ph_a.jpg" alt=""></figure></li>
+      <li><figure class="tq-stagger__pic"><img src="../../../docs/demo/ph_b.jpg" alt=""></figure></li>
+      <li><figure class="tq-stagger__pic"><img src="../../../docs/demo/ph_a.jpg" alt=""></figure></li>
+      <li><figure class="tq-stagger__pic"><img src="../../../docs/demo/ph_b.jpg" alt=""></figure></li>
+      <li><figure class="tq-stagger__pic"><img src="../../../docs/demo/ph_a.jpg" alt=""></figure></li>
+    </ul>
+    <p class="tq-stagger__cap">枠と影と角度が1枚ずつ違い、並べたのではなく「置かれている」に見える</p>
+  </div>
+</section>

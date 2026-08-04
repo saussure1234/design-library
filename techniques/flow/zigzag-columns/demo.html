@@ -1,0 +1,120 @@
+<style>
+/* トークンのフォールバック。:where() で詰めているので、
+   _tokens.css が読み込まれていればそちらが必ず勝つ。 */
+:where(:root){
+  --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-disp:var(--f-sans); --f-num:"Helvetica Neue",Arial,var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+  --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+  --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px; --s8:76px;
+  --sec-y:clamp(56px,7vw,110px);
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+/* 単体で開いたときだけ効く既定余白の打ち消し（:where で詰めてあるので本体CSSが必ず勝つ） */
+:where(body){margin:0}
+
+.tq-zig{font-family:var(--f-sans); color:var(--c-ink2); background:var(--c-bg); padding-block:var(--s7)}
+.tq-zig *{box-sizing:border-box}
+.tq-zig__wrap{max-width:var(--w-max); margin-inline:auto; padding-inline:var(--w-gut)}
+.tq-zig__blk{margin-top:var(--s8)}
+.tq-zig__blk:first-child{margin-top:0}
+.tq-zig__tag{
+  display:inline-block; margin:0 0 var(--s5);
+  font-size:var(--fs-note); letter-spacing:.08em; line-height:1;
+  padding:var(--s2) var(--s3); border-radius:var(--r-pill);
+  background:var(--c-bg2); color:var(--c-ink3);
+}
+.tq-zig__tag--on{background:var(--c-primary-l); color:var(--c-primary-d)}
+.tq-zig__cap{margin:var(--s5) 0 0; font-size:var(--fs-sm); line-height:var(--lh-head); color:var(--c-ink3)}
+
+/* 比較用の目安線：ここに頭が揃っているかどうかだけを見る */
+.tq-zig__stage{position:relative; padding-top:var(--s4)}
+.tq-zig__stage::before{
+  content:""; position:absolute; left:0; right:0; top:0;
+  border-top:1px dashed var(--c-line);
+}
+
+/* ============ 中身（普通も工夫も同じ部品） ============ */
+.tq-zig__col{display:flex; flex-direction:column}
+.tq-zig__col>*+*{margin-top:var(--s4)}
+.tq-zig__dash{display:block; width:28px; height:1px; background:var(--c-ink3)}
+.tq-zig__h{margin:0; font-family:var(--f-disp); font-weight:700;
+  font-size:var(--fs-md); line-height:var(--lh-head); color:var(--c-ink); letter-spacing:.04em}
+.tq-zig__p{margin:0; font-size:var(--fs-sm); line-height:var(--lh-body); color:var(--c-ink2)}
+.tq-zig__ph{
+  margin-top:var(--s5); overflow:hidden; border-radius:var(--r-m);
+  background:var(--c-bg2); aspect-ratio:4/3;
+}
+.tq-zig__ph img{width:100%; height:100%; object-fit:cover; display:block}
+.tq-zig__ph--wide{aspect-ratio:3/2}
+/* 写真が先頭に来る側は、頭を目安線にきっちり合わせる */
+.tq-zig__col>.tq-zig__ph:first-child{margin-top:0}
+
+/* ============ 普通：左右の高さを揃えて横一直線に並べる ============ */
+.tq-zig__even{display:grid; grid-template-columns:1fr 1fr; column-gap:var(--s7); align-items:start}
+
+/* ============ この工夫：高さを揃えず上下にずらす ============ */
+.tq-zig__zig{display:grid; grid-template-columns:1fr 1fr; column-gap:var(--s8); align-items:start}
+.tq-zig__zig>*:nth-child(odd){padding-top:56px}   /* ずらし量 40〜80px */
+.tq-zig__zig>*:nth-child(even){padding-top:0}
+/* 各カラムを独立フローに保つ。align-items:stretch や grid-auto-rows で揃えない */
+
+@media (max-width:768px){
+  .tq-zig__even,
+  .tq-zig__zig{grid-template-columns:1fr; row-gap:var(--s7)}
+  .tq-zig__zig>*:nth-child(odd){padding-top:0}
+}
+</style>
+
+<section class="tq-zig">
+  <div class="tq-zig__wrap">
+
+    <div class="tq-zig__blk">
+      <p class="tq-zig__tag">普通の場合</p>
+      <div class="tq-zig__stage">
+        <div class="tq-zig__even">
+          <div class="tq-zig__col">
+            <span class="tq-zig__dash"></span>
+            <h3 class="tq-zig__h">見出しがここに入ります</h3>
+            <p class="tq-zig__p">本文がここに入ります。このブロックで伝えたい内容を5〜7行で書きます。左右のカラムで文量が同じくらいになるように整えると、行の頭も終わりも水平に揃い、読み手はどちらから読んでも同じだと受け取ります。</p>
+            <div class="tq-zig__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+          </div>
+          <div class="tq-zig__col">
+            <span class="tq-zig__dash"></span>
+            <h3 class="tq-zig__h">見出しがここに入ります</h3>
+            <p class="tq-zig__p">本文がここに入ります。このブロックで伝えたい内容を5〜7行で書きます。左右のカラムで文量が同じくらいになるように整えると、行の頭も終わりも水平に揃い、読み手はどちらから読んでも同じだと受け取ります。</p>
+            <div class="tq-zig__ph"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+          </div>
+        </div>
+      </div>
+      <p class="tq-zig__cap">見出し・本文・写真が左右で水平に揃い、2列の「表」に見える。読む順序は生まれない。</p>
+    </div>
+
+    <div class="tq-zig__blk">
+      <p class="tq-zig__tag tq-zig__tag--on">この工夫</p>
+      <div class="tq-zig__stage">
+        <div class="tq-zig__zig">
+          <div class="tq-zig__col">
+            <span class="tq-zig__dash"></span>
+            <h3 class="tq-zig__h">見出しがここに入ります</h3>
+            <p class="tq-zig__p">本文がここに入ります。このブロックで伝えたい内容を5〜7行で書きます。左のカラムは「見出し→本文→写真」の順で積み、右のカラムだけ順序を入れ替えます。左右どの要素も水平には揃いません。</p>
+            <div class="tq-zig__ph"><img src="../../../docs/demo/ph_a.jpg" alt=""></div>
+          </div>
+          <div class="tq-zig__col">
+            <div class="tq-zig__ph tq-zig__ph--wide"><img src="../../../docs/demo/ph_b.jpg" alt=""></div>
+            <span class="tq-zig__dash"></span>
+            <h3 class="tq-zig__h">見出しがここに入ります</h3>
+            <p class="tq-zig__p">本文がここに入ります。右のカラムは「写真→見出し→本文」の順。写真が先に来るぶん、右の見出しは左の本文の中ほどの高さから始まり、視線は左上→右中→左下→右下と折れて進みます。</p>
+          </div>
+        </div>
+      </div>
+      <p class="tq-zig__cap">破線に頭が揃っているのは右の写真だけ。左は56px下がり、見出しと写真の順序も左右で逆。表に見えなくなり、読み進める順序が生まれる。</p>
+    </div>
+
+  </div>
+</section>

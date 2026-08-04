@@ -1,0 +1,25 @@
+{
+  "id": "space/never-show-whole-shape",
+  "name": "大きな面・図形・タイル群の全形を見せない（外側余白ゼロで四辺すべて切る）",
+  "ordinary": "背景の装飾は画面内に収まる小さめの図形にするか、薄い色面をコンテナの内側に敷く",
+  "actual": "gakugei_s01=ピンクの大円は左辺、水色の面は上辺、黄緑の面は右辺でそれぞれ断ち落とし、どれも全形が見えない。中央だけ白のまま残す。ogawa_s13=版面の1/3を超える濃紺(#1e3350)の正円を右端で切って半分だけ見せ、文字も写真も乗せない。tanq_s01=タイルグリッドの最下段を高さ1/3で切り、左右も列の途中で切り、外側余白を一切作らずCTAピルをタイルに直接重ねる。",
+  "css": ".hero{position:relative; overflow:hidden; background:#f7f7f5}\n.blob{position:absolute; border-radius:50%}\n.blob.pink{left:-32%; top:6%; width:46%; aspect-ratio:1; background:#f4c3ca}\n.blob.blue{top:-22%; right:22%; width:34%; aspect-ratio:1.4/1; background:#8fd3ec}\n.blob.navy{right:-9%; top:40%; width:34vw; aspect-ratio:1; background:#1e3350; z-index:0}\n/* タイル群を全方向で切る */\nsection{height:100svh; overflow:hidden; padding:0}\n.tiles{width:calc(100% + 160px); margin-inline:-80px}\n.cta{position:absolute; bottom:40px; left:50%; transform:translateX(-50%)}",
+  "appliesTo": ["hero", "features", "value", "cta"],
+  "impact": 3,
+  "effort": 1,
+  "why": "全形が見えないと画面が「窓」に見え、レイアウトが版面の外まで続く＝実物より規模が大きく感じる",
+  "params": ["はみ出し率 -9%〜-32%", "切る辺の数", "図形サイズは版面の1/3以上"],
+  "avoid": "ロゴ・アイコン・図解など形そのものが意味を持つ要素は切らない",
+  "sources": ["gakugei_s01", "ogawa_s13", "tanq_s01"],
+  "notes": [
+    "『中央だけ地色のまま残す』が gakugei_s01 の要点。図形を切るだけでなく、中央に何も置かない余白を確保して初めて『窓から見えている一部』に読める。全面を図形で埋めると単なる派手な背景になる。",
+    "図形サイズは版面の1/3以上。1/4以下だと切っても『小さい図形が端に寄っている』に見えるだけで、規模が大きく感じる効果が出ない。ogawa_s13 は版面の1/3超の正円を半分だけ見せている。",
+    "切る辺は図形ごとに変える。3つとも同じ辺で切ると『左が欠けたデザイン』という1つの意図に見え、四方に続く感じにならない。デモは左辺・上辺・右辺で1つずつ切った。",
+    "はみ出し率は width に対する % ではなく left/right/top の負値。-9% で『半分弱』、-32% で『三分の二が外』。ogawa_s13 の right:-9% と width:34vw の組み合わせで、円の右半分弱が欠ける。",
+    "vw と % の混在に注意。width:34vw はビューポート基準なので、コンテナ幅が固定される大画面では相対関係が崩れる。デモは幅の基準を % に寄せ、vw は1つに絞った。",
+    "タイル群は width:calc(100% + 160px) と margin-inline:-80px の組で左右を列の途中で切る。行の切り方は親の固定高＋overflow:hidden。最下段が高さ1/3で切れるよう、親の高さは必ずタイル総高より低くする（実測：総高343pxに対し親264px＝最下段が約1/3残る）。同じ高さのままだと下に地色の帯が出て『外側余白ゼロ』が崩れる。",
+    "タイルを ul で組むなら list-style/margin/padding のリセットを忘れない。ul 既定の margin-block 1em がそのまま上下に出て、親の地色（濃色）が帯として見え、行頭の点も出る。実装時に実際に踏んだ。",
+    "CTAピルはタイルに直接重ねる（tanq_s01）。あいだに帯や余白を挟むと『外側余白ゼロ』が崩れ、切っている意味が薄れる。ピルの可読性は影と不透明な地で確保する。",
+    "avoid の通り、ロゴ・アイコン・図解は切らない。この技法は『意味を持たない大きな面』専用。"
+  ]
+}

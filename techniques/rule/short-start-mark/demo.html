@@ -1,0 +1,224 @@
+<style>
+/* ============================================================
+   rule/short-start-mark
+   短い線1本を「仕切り」でなく「起点」にする
+   ============================================================ */
+
+@layer tq-fallback{
+  :root{
+    --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA;
+    --c-accent:#FF9301;
+    --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+    --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+    --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    --f-disp:var(--f-sans); --f-num:"Helvetica Neue",Arial,var(--f-sans);
+    --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+    --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px; --fs-3xl:50px; --fs-4xl:64px;
+    --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+    --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px;
+    --s6:36px; --s7:52px; --s8:76px; --s9:110px;
+    --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+    --shadow:0 6px 24px rgba(17,17,17,.08);
+  }
+}
+
+/* この工夫の寸法（トークンでは表せないパラメータ。案件では :root で差し替え） */
+.tq-ssm{
+  --tq-ssm-len:32px;    /* 横線の長さ 24〜40px */
+  --tq-ssm-w:1px;       /* 太さ 1px or 2px */
+  --tq-ssm-gap:26px;    /* 線と文字の距離 22〜28px */
+  --tq-ssm-vlen:60px;   /* 縦線の長さ 60〜80px */
+  --tq-ssm-drop:80px;   /* 写真へ垂らす線の長さ */
+  --tq-ssm-star:11px;   /* 途中に置く星 */
+  --tq-ssm-starY:58px;  /* 星の位置（線の途中） */
+}
+
+.tq-ssm{
+  container-type:inline-size;
+  font-family:var(--f-sans); color:var(--c-ink2);
+  line-height:var(--lh-head); -webkit-text-size-adjust:100%;
+  background:var(--c-bg); padding:var(--s5);
+}
+.tq-ssm *{box-sizing:border-box}
+
+.tq-ssm__lead{
+  margin:0 0 var(--s5); font-size:var(--fs-note);
+  color:var(--c-ink3); line-height:var(--lh-body);
+}
+.tq-ssm__sec{margin-top:var(--s7)}
+.tq-ssm__sec:first-of-type{margin-top:0}
+.tq-ssm__secttl{margin:0 0 var(--s4); font-size:var(--fs-sm); font-weight:700; color:var(--c-ink)}
+.tq-ssm__pair{display:grid; gap:var(--s5); grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.tq-ssm__cap{
+  display:flex; align-items:center; gap:var(--s2);
+  margin:0 0 var(--s3); font-size:var(--fs-note); font-weight:700;
+  color:var(--c-ink3); letter-spacing:.04em;
+}
+.tq-ssm__cap::before{content:""; width:var(--s5); height:1px; background:var(--c-line); flex:0 0 auto}
+.tq-ssm__note{margin:var(--s3) 0 0; font-size:var(--fs-note); color:var(--c-ink3); line-height:var(--lh-body)}
+
+/* --- ① 全幅の罫 vs 短い起点線 ------------------------------- */
+.tq-ssm__panel{background:var(--c-bg2); padding:var(--s6) var(--s5)}
+.tq-ssm__h{margin:0; font-size:var(--fs-lg); font-weight:700; color:var(--c-ink); line-height:var(--lh-tight)}
+.tq-ssm__p{margin:var(--s4) 0 0; font-size:var(--fs-note); color:var(--c-ink2); line-height:var(--lh-body)}
+
+/* 普通：見出しの上下に全幅1px。セクション内にもう1本 hr が入る */
+.tq-ssm__h--rules{
+  border-top:1px solid var(--c-line); border-bottom:1px solid var(--c-line);
+  padding:var(--s3) 0;
+}
+.tq-ssm__hr{border:0; border-top:1px solid var(--c-line); margin:var(--s5) 0 0}
+
+/* この工夫：32px×1px を1本だけ、26px あける */
+.tq-ssm__h--mark::before{
+  content:""; display:block;
+  width:var(--tq-ssm-len); height:var(--tq-ssm-w);
+  background:var(--c-accent);
+  margin-bottom:var(--tq-ssm-gap);
+}
+
+/* --- ② 縦組みキャプションの頭に立てる ----------------------- */
+.tq-ssm__stage{position:relative; overflow:hidden; background:var(--c-ink)}
+.tq-ssm__stage img{display:block; width:100%; height:100%; object-fit:cover; aspect-ratio:4/3}
+.tq-ssm__vcap{
+  position:absolute; left:var(--s5); top:var(--s5);
+  writing-mode:vertical-rl;
+  margin:0; font-size:10px; letter-spacing:.3em; line-height:1.6;
+  color:var(--c-on-primary);
+}
+/* 縦組みでは ::before を display:block にすると「文字の横」に出てしまう。
+   inline-block にして inline 方向（＝上→下）の先頭に置くのが正解。 */
+.tq-ssm__vcap::before{
+  content:""; display:inline-block; vertical-align:middle;
+  width:1px; height:var(--tq-ssm-vlen);
+  margin-bottom:var(--s3);
+  background:color-mix(in srgb,var(--c-on-primary) 85%,transparent);
+}
+/* 比較用：全幅の罫を写真の上に渡した場合 */
+.tq-ssm__vcap--rules{border-top:1px solid color-mix(in srgb,var(--c-on-primary) 85%,transparent); padding-top:var(--s3)}
+.tq-ssm__vcap--rules::before{display:none}
+.tq-ssm__fullrule{
+  position:absolute; left:0; right:0; top:var(--s5);
+  height:1px; background:color-mix(in srgb,var(--c-on-primary) 60%,transparent);
+}
+.tq-ssm__fullrule--undernav{top:calc(var(--s4) + var(--s5))}
+
+/* --- ③ 写真の中へ垂らす（下端をグラデで消す＋途中に星） ------ */
+.tq-ssm__drop{
+  position:absolute; left:50%; top:0;
+  width:1px; height:var(--tq-ssm-drop);
+  background:linear-gradient(
+    color-mix(in srgb,var(--c-accent) 90%,var(--c-on-primary)),
+    color-mix(in srgb,var(--c-accent) 0%,transparent));
+}
+.tq-ssm__drop::after{
+  content:""; position:absolute;
+  top:var(--tq-ssm-starY); left:calc(var(--tq-ssm-star) / -2);
+  width:var(--tq-ssm-star); height:var(--tq-ssm-star);
+  background:color-mix(in srgb,var(--c-accent) 80%,var(--c-on-primary));
+  clip-path:polygon(50% 0,58% 42%,100% 50%,58% 58%,50% 100%,42% 58%,0 50%,42% 42%);
+}
+.tq-ssm__navi{
+  position:absolute; left:0; right:0; top:var(--s4);
+  display:flex; justify-content:space-around;
+  margin:0; padding:0; list-style:none;
+  font-size:var(--fs-note); color:var(--c-on-primary); letter-spacing:.12em;
+}
+
+@container (max-width:420px){
+  .tq-ssm{padding:var(--s4)}
+  .tq-ssm__panel{padding:var(--s5) var(--s4)}
+}
+</style>
+
+<div class="tq-ssm">
+  <p class="tq-ssm__lead">
+    全幅の罫は面を割る。24〜40pxの短い線を見出しの上に1本だけ置き、線と文字を22〜28pxあけると、
+    線は「ここから」の印にしかならない。セクション内の他の罫はゼロにする。
+  </p>
+
+  <!-- ① 横組み -->
+  <section class="tq-ssm__sec">
+    <h3 class="tq-ssm__secttl">① 同じ見出しを、全幅の罫と32pxの線で比べる</h3>
+    <div class="tq-ssm__pair">
+
+      <div>
+        <p class="tq-ssm__cap">普通：上下に全幅1px＋区切りの罫</p>
+        <div class="tq-ssm__panel">
+          <h4 class="tq-ssm__h tq-ssm__h--rules">見出しがここに入ります</h4>
+          <p class="tq-ssm__p">本文テキストが入ります。説明が2〜3行ほど続きます。本文テキストが入ります。説明が2〜3行ほど続きます。</p>
+          <hr class="tq-ssm__hr">
+          <p class="tq-ssm__p">補足のテキストが入ります。本文テキストが入ります。</p>
+        </div>
+        <p class="tq-ssm__note">罫が面を3つに割るので、余白をどれだけ広げても「詰まった一枚」に見える。</p>
+      </div>
+
+      <div>
+        <p class="tq-ssm__cap">この工夫：32px×1pxを1本だけ・26pxあける</p>
+        <div class="tq-ssm__panel">
+          <h4 class="tq-ssm__h tq-ssm__h--mark">見出しがここに入ります</h4>
+          <p class="tq-ssm__p">本文テキストが入ります。説明が2〜3行ほど続きます。本文テキストが入ります。説明が2〜3行ほど続きます。</p>
+          <p class="tq-ssm__p">補足のテキストが入ります。本文テキストが入ります。</p>
+        </div>
+        <p class="tq-ssm__note">線は起点の印だけを担う。面は割れず、余白の広さがそのまま残る。</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ② 縦組み -->
+  <section class="tq-ssm__sec">
+    <h3 class="tq-ssm__secttl">② 縦組みキャプションの頭に1px×60pxを立てる</h3>
+    <div class="tq-ssm__pair">
+
+      <div>
+        <p class="tq-ssm__cap">普通：写真の上に全幅の罫を渡す</p>
+        <div class="tq-ssm__stage">
+          <img src="../../../docs/demo/ph_a.jpg" alt="">
+          <span class="tq-ssm__fullrule"></span>
+          <p class="tq-ssm__vcap tq-ssm__vcap--rules">キャプションが入ります</p>
+        </div>
+        <p class="tq-ssm__note">罫が写真を上下に切ってしまい、画面が2枚に見える。</p>
+      </div>
+
+      <div>
+        <p class="tq-ssm__cap">この工夫：1px×60px＋12px</p>
+        <div class="tq-ssm__stage">
+          <img src="../../../docs/demo/ph_a.jpg" alt="">
+          <p class="tq-ssm__vcap">キャプションが入ります</p>
+        </div>
+        <p class="tq-ssm__note">縦線はキャプションの頭にしか掛からないので、写真は1枚のまま残る。</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ③ 写真の中へ垂らす -->
+  <section class="tq-ssm__sec">
+    <h3 class="tq-ssm__secttl">③ 写真の中へ1px×80pxを垂らし、途中に11pxの星を1つ置く</h3>
+    <div class="tq-ssm__pair">
+
+      <div>
+        <p class="tq-ssm__cap">普通：ナビの下に全幅の境界線</p>
+        <div class="tq-ssm__stage">
+          <img src="../../../docs/demo/ph_b.jpg" alt="">
+          <ul class="tq-ssm__navi"><li>項目</li><li>項目</li><li>項目</li></ul>
+          <span class="tq-ssm__fullrule tq-ssm__fullrule--undernav"></span>
+        </div>
+        <p class="tq-ssm__note">境界線が写真の上端を切り落とし、上下がつながらない。</p>
+      </div>
+
+      <div>
+        <p class="tq-ssm__cap">この工夫：下端をグラデで消す縦線＋星</p>
+        <div class="tq-ssm__stage">
+          <img src="../../../docs/demo/ph_b.jpg" alt="">
+          <ul class="tq-ssm__navi"><li>項目</li><li>項目</li><li>項目</li></ul>
+          <span class="tq-ssm__drop"></span>
+        </div>
+        <p class="tq-ssm__note">線が写真の中で消えるので、ナビと写真が地続きのまま「ここから下」だけが伝わる。</p>
+      </div>
+
+    </div>
+  </section>
+
+</div>

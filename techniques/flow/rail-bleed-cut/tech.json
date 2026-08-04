@@ -1,0 +1,39 @@
+{
+  "id": "flow/rail-bleed-cut",
+  "name": "列を画面端で断ち切って「まだ続く」を見せる",
+  "ordinary": "3枚をコンテナ幅にぴったり収め、下にドットページャーか「一覧を見る」ボタンを置く。",
+  "actual": "4〜5枚目が画面右端で写真の途中から断たれる。人物の顔の途中でも構わず切り、切れ幅はカード幅の40〜60%。両端型は左右とも切り、中央3枚だけが全体を見せる。続きの存在を矢印や文言でなく断ち切りだけで伝えている。",
+  "css": ".rail{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x proximity;\n  margin-right:calc(50% - 50vw); /* 片端型：右だけ画面外へ抜く */\n  padding-right:0;scrollbar-width:none}\n.rail::-webkit-scrollbar{display:none}\n.rail>*{flex:0 0 clamp(200px,24%,320px);scroll-snap-align:start}\n\n/* 両端型（左右とも切る） */\n.rail--both{margin-inline:calc(50% - 50vw);padding-inline:0}\n.rail--both>*{flex:0 0 22%;scroll-snap-align:center}",
+  "params": [
+    "切れ幅＝カード幅の40〜60%",
+    "片端／両端",
+    "flex-basis 22〜30%",
+    "scroll-snap は mandatory より proximity のほうが切れ幅を保ちやすい"
+  ],
+  "appliesTo": [
+    "features",
+    "voice",
+    "member",
+    "value"
+  ],
+  "impact": 3,
+  "effort": 1,
+  "why": "半端に切れた1枚があるだけで、静止画面に横方向の運動が生まれ、矢印より強く「先がある」と伝わる。",
+  "avoid": "全件を並べて比較させたい料金表・要件一覧では、切れると比較そのものが成立しない。",
+  "sources": [
+    "odrive_s08",
+    "odrive_s02",
+    "odrive_s12",
+    "sanrio_s06",
+    "kobe-wu_s05"
+  ],
+  "notes": [
+    "margin-right:calc(50% - 50vw) が正確に画面端まで届くのは、列の幅＝中央寄せコンテナの内容幅と等しいときだけ。列を狭いカラムの中に入れる場合は伸ばしすぎになるので、親に overflow-x:clip を敷いて溢れを切るか、margin-right:calc(-1 * (max(0px,(100vw - var(--w-max))/2) + var(--w-gut))) を使う。",
+    "親の overflow-x は hidden ではなく clip。hidden にすると内側の position:sticky が効かなくなる（flow/sticky-column-moving-rail と併用するとき必ず問題になる）。100vw は縦スクロールバー幅を含むので、clip が無いとページに横スクロールが出る。",
+    "左端の切れは「初期スクロール位置が0」なので CSS だけでは作れない。このデモでは両端型の1枚目に margin-left:calc(カード幅 * -.52) を掛け、巻き戻せない側へ札をはみ出させて初期表示から切れて見せている（実サイトの両端型はスクロール途中の状態）。",
+    "flex-basis の % はコンテナ内容幅に対する割合。両端型はコンテナ幅が100vwになるため、% ではなく vw で指定したほうが切れ幅が読みやすい（デモは clamp(190px,22vw,300px)）。",
+    "375px では 24% が下限200pxに張り付いて1.7枚ぶんの表示になり、切れ幅は自動的に確保される。1100pxでは4枚強が入って5枚目が切れる。どちらも狙いどおり。",
+    "scrollbar は scrollbar-width:none と ::-webkit-scrollbar{display:none} の両方。片方だけだと環境によって切れ幅の下に帯が残る。",
+    "デモは techniques/flow/rail-bleed-cut/demo.html。上から〈普通＝3枚ぴったり＋ドット〉〈片端型〉〈両端型〉の3段で対比している。"
+  ]
+}

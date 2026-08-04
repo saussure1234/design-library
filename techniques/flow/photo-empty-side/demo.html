@@ -1,0 +1,116 @@
+<style>
+/* トークンのフォールバック。:where() で詰めているので、
+   _tokens.css が読み込まれていればそちらが必ず勝つ。 */
+:where(:root){
+  --c-primary:#00B220; --c-primary-d:#05A81F; --c-primary-l:#E8F7EA; --c-accent:#FF9301;
+  --c-ink:#111111; --c-ink2:#333333; --c-ink3:#707070;
+  --c-bg:#FFFFFF; --c-bg2:#F7F8F7; --c-line:#E3E3E3; --c-on-primary:#FFFFFF;
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-disp:var(--f-sans); --f-num:"Helvetica Neue",Arial,var(--f-sans);
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+  --fs-lg:21px; --fs-xl:28px; --fs-2xl:38px;
+  --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:36px; --s7:52px; --s8:76px;
+  --sec-y:clamp(56px,7vw,110px);
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --shadow:0 6px 24px rgba(17,17,17,.08);
+  --w-max:1120px; --w-gut:clamp(18px,4vw,32px);
+}
+
+.tq-photo-empty{font-family:var(--f-sans); color:var(--c-ink2); background:var(--c-bg); padding-block:var(--s7)}
+.tq-photo-empty *{box-sizing:border-box}
+.tq-photo-empty__wrap{max-width:var(--w-max); margin-inline:auto; padding-inline:var(--w-gut)}
+.tq-photo-empty__grid{display:grid; grid-template-columns:1fr 1fr; gap:var(--s7); align-items:start}
+.tq-photo-empty__blk{margin:0}
+.tq-photo-empty__tag{
+  display:inline-block; margin:0 0 var(--s4);
+  font-size:var(--fs-note); letter-spacing:.08em; line-height:1;
+  padding:var(--s2) var(--s3); border-radius:var(--r-pill);
+  background:var(--c-bg2); color:var(--c-ink3);
+}
+.tq-photo-empty__tag--on{background:var(--c-primary-l); color:var(--c-primary-d)}
+.tq-photo-empty__cap{margin:var(--s4) 0 0; font-size:var(--fs-sm); line-height:var(--lh-body); color:var(--c-ink3)}
+
+/* 舞台。被写体が右1/3に寄って見える比率で切る */
+.tq-photo-empty__hero{position:relative; aspect-ratio:1.02; overflow:hidden}
+.tq-photo-empty__hero img{
+  width:100%; height:100%; display:block;
+  object-fit:cover; object-position:0% center;   /* 被写体側を残す */
+}
+
+/* 中身（普通も工夫も同じカード） */
+.tq-photo-empty__h{margin:0 0 var(--s3); font-family:var(--f-disp); font-weight:700;
+  font-size:var(--fs-md); line-height:var(--lh-head); color:var(--c-ink)}
+.tq-photo-empty__p{margin:0; font-size:var(--fs-sm); line-height:var(--lh-body)}
+.tq-photo-empty__btn{
+  display:inline-block; margin-top:var(--s4);
+  background:var(--c-primary); color:var(--c-on-primary);
+  border-radius:var(--r-s); padding:var(--s2) var(--s4);
+  font-size:var(--fs-sm); font-weight:700;
+}
+
+/* ============ 普通：中央にテキストボックス＋全面スクリム ============ */
+.tq-photo-empty__scrim{
+  position:absolute; inset:0;
+  background:color-mix(in srgb, var(--c-ink) 46%, transparent);   /* 暗幕 */
+}
+.tq-photo-empty__mid{
+  position:absolute; left:50%; top:50%; translate:-50% -50%;
+  width:74%; text-align:center; color:var(--c-on-primary);
+}
+.tq-photo-empty__mid .tq-photo-empty__h{color:var(--c-on-primary)}
+
+/* ============ この工夫：空いている側にだけカード。スクリムは敷かない ============ */
+.tq-photo-empty__card{
+  position:absolute; left:3%; top:50%; translate:0 -50%;
+  width:33%; max-width:330px;
+  background:var(--c-bg); padding:var(--s4); box-shadow:var(--shadow);
+}
+/* スクリム（linear-gradient や 半透明の黒）は敷かない */
+
+@media (max-width:768px){
+  .tq-photo-empty__grid{grid-template-columns:1fr; gap:var(--s6)}
+  /* カードを流し込みに戻すので、舞台の高さ固定と切り抜きも外す */
+  .tq-photo-empty__blk--on .tq-photo-empty__hero{aspect-ratio:auto; overflow:visible}
+  .tq-photo-empty__blk--on .tq-photo-empty__hero img{aspect-ratio:1.3; height:auto}
+  .tq-photo-empty__card{
+    position:static; width:auto; max-width:none; translate:0;
+    padding:var(--s5) var(--s4); box-shadow:none; border:1px solid var(--c-line);
+  }
+}
+</style>
+
+<section class="tq-photo-empty">
+  <div class="tq-photo-empty__wrap">
+    <div class="tq-photo-empty__grid">
+
+      <figure class="tq-photo-empty__blk">
+        <p class="tq-photo-empty__tag">普通の場合</p>
+        <div class="tq-photo-empty__hero">
+          <img src="../../../docs/demo/ph_a.jpg" alt="">
+          <div class="tq-photo-empty__scrim"></div>
+          <div class="tq-photo-empty__mid">
+            <h3 class="tq-photo-empty__h">見出しがここに入ります</h3>
+            <p class="tq-photo-empty__p">本文がここに入ります。写真の中央に文字を重ね、読ませるために全面へ暗幕を敷いています。</p>
+            <span class="tq-photo-empty__btn">ボタンの文言</span>
+          </div>
+        </div>
+        <figcaption class="tq-photo-empty__cap">中央に重ねたので、読ませるには全面の暗幕が要る。写真は暗く沈み、被写体の顔にも文字がかかる。</figcaption>
+      </figure>
+
+      <figure class="tq-photo-empty__blk tq-photo-empty__blk--on">
+        <p class="tq-photo-empty__tag tq-photo-empty__tag--on">この工夫</p>
+        <div class="tq-photo-empty__hero">
+          <img src="../../../docs/demo/ph_a.jpg" alt="">
+          <div class="tq-photo-empty__card">
+            <h3 class="tq-photo-empty__h">見出しがここに入ります</h3>
+            <p class="tq-photo-empty__p">本文がここに入ります。被写体の空いている側にだけ置いています。</p>
+            <span class="tq-photo-empty__btn">ボタンの文言</span>
+          </div>
+        </div>
+        <figcaption class="tq-photo-empty__cap">被写体が寄っていない側にだけ白カードを重ね、被写体との間に余白を残す。暗幕も透過も一切なし。写真は明るいまま、視線はカード→被写体へ抜ける。</figcaption>
+      </figure>
+
+    </div>
+  </div>
+</section>

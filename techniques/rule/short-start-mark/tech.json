@@ -1,0 +1,28 @@
+{
+  "id": "rule/short-start-mark",
+  "name": "短い線1本を「仕切り」でなく「起点」にする",
+  "ordinary": "見出しの上下に全幅1pxのボーダーを引いてセクションを切る",
+  "actual": "横なら幅24〜40px・太さ1〜2pxの線を見出しの上に1本だけ置き、線と文字の間を22〜28pxあける。縦組みなら1px×60pxの縦線をキャプションの頭に立て12pxあける。写真の中へ落とすときは1px×80pxをグラデで消えるように垂らし、途中に11pxの星を1つ置く。セクション内の他の罫はゼロにする。",
+  "css": "h2::before{content:\"\";display:block;width:32px;height:1px;background:#c9a227;margin-bottom:26px}\n/* 縦組みの頭に立てる */\n.vcap{writing-mode:vertical-rl;font-size:10px;letter-spacing:.3em}\n.vcap::before{content:\"\";display:block;width:1px;height:60px;margin:0 auto 12px;background:rgba(255,255,255,.85)}\n/* 写真の中へ垂らす */\n.drop{position:absolute;left:50%;top:0;width:1px;height:80px;background:linear-gradient(#c9ab68,rgba(201,171,104,0))}\n.drop::after{content:\"\";position:absolute;top:58px;left:-5px;width:11px;height:11px;background:url(star.svg) center/contain no-repeat}",
+  "params": [
+    "線長（横24〜40px／縦60〜80px）",
+    "太さ1px or 2px",
+    "線と文字の距離22〜28px",
+    "下端をグラデで消すか"
+  ],
+  "appliesTo": ["hero", "value", "features", "voice", "member"],
+  "impact": 2,
+  "effort": 1,
+  "why": "全幅の罫は面を割るが40px以下の線は「ここから」の印にしかならず、余白の広さを殺さない",
+  "avoid": "情報の種類が変わる大区切り（そこは面か色を変える）",
+  "sources": ["buddies_s01", "buddies_s03", "buddies_s04", "buddies_s05", "yugao_s15"],
+  "notes": [
+    "buddies_s03 / s05 の現物は、線の長さがおよそ32px・太さ1px・線と見出しの距離が26px前後。線色は地（オフホワイト）に対して淡いゴールドで、本文よりコントラストが低い。『目立つ線』ではなく『見つけると効く線』の濃さになっている。",
+    "現物のセクションは、この短い線を除くと罫が1本もない。線が1本しかないから起点として読める、というのが要点で、短い線を各所に散らすと効果が消える。線を短くすること自体は本質ではない。",
+    "🚨実装上の発見：縦組み（writing-mode:vertical-rl）で ::before を display:block にすると、線は文字の『上』ではなく『横（block方向＝右）』に出る。vertical-rl では block 方向が水平になるため。正しくは display:inline-block + vertical-align:middle にして inline 方向（上→下）の先頭に置き、gap は margin-bottom で取る。定義側CSSの `display:block;margin:0 auto 12px` はそのままでは意図通りに出ない。",
+    "写真へ垂らす線（yugao_s15）は、上端が不透明・下端が透明のグラデ。CSS の `transparent` は環境によって黒へ補間されて線が濁ることがあるので、`color-mix(in srgb, <線色> 0%, transparent)` で同色の透明を作ると安全。",
+    "星は11px前後で、線の上端から58px＝線の下端（80px）より少し手前に乗る。線の終端ではなく途中に置くのがポイントで、終端に置くと『矢印』に見えて意味が変わる。",
+    "デモの星は star.svg を使わず clip-path のポリゴンで作った（素材依存を外すため）。4方向に尖った菱形の星で、現物の形に近い。"
+  ],
+  "demoNotes": "3セクションすべて「普通／この工夫」の横並び対比。①横組み＝全幅の罫2本 vs 32px線1本、②縦組み＝写真を横断する罫 vs キャプション頭の1px×60px、③写真＝ナビ下の境界線 vs グラデで消える1px×80px＋11pxの星。線色は --c-accent、地は --c-bg2。"
+}

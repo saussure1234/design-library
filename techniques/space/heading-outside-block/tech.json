@@ -1,0 +1,39 @@
+{
+  "id": "space/heading-outside-block",
+  "name": "見出しをブロックの外へ外置きし、罫を引かず空白距離だけで関係を作る",
+  "ordinary": "見出しをリストやパネルの真上に置き、下に罫を1本引いて区切る",
+  "actual": "shoei_s03=縦組みのNEWSが x≈95 に単独で立ち、リストの日付は x≈245 から始まる。見出しとリストの間に罫も枠もなく、画面左1/3は完全な空白のまま。見出し側だけ sticky で止まり本文が流れる。seiha_s08=見出し2行をパネルの上辺の外・右寄りに左揃えで置き、パネルには一切乗せない。左約40%は巨大数字とVALUEだけの広い白。",
+  "css": ".sec{display:grid; grid-template-columns:230px 1fr; gap:0}\n.sec>h2{position:sticky; top:120px; align-self:start;\n  writing-mode:vertical-rl; letter-spacing:.18em; margin:0}\n.sec>.list{border:0}            /* 罫は引かない */\n/* パネルの外へ見出しを出す場合 */\n.sec--panel{display:grid; grid-template-columns:38% 62%}\n.sec--panel>h2{grid-column:2; text-align:left; margin:0 0 14px}\n.sec--panel>.num{grid-column:1; grid-row:1/3}",
+  "appliesTo": [
+    "features",
+    "value",
+    "voice",
+    "access",
+    "footer"
+  ],
+  "impact": 3,
+  "effort": 1,
+  "why": "見出しが止まり本文が流れる関係を、線ではなく空白の距離だけで作る。罫を1本減らすと画面が静かになる",
+  "params": [
+    "見出し列幅 200〜260px（or 38%）",
+    "sticky top 120px",
+    "縦組み/横組み"
+  ],
+  "avoid": "見出しが2行以上に折り返す長文では成立しない。NEWS/VALUEのような短語に限る",
+  "sources": [
+    "shoei_s03",
+    "sho_seiha_s08"
+  ],
+  "notes": [
+    "縦組みの欧文は writing-mode:vertical-rl だけでは寝てしまう。現物（shoei）はN/E/W/Sが正立しているので text-orientation:upright が必須。これが無いと「縦に倒した英単語」になり、別の表情になる。",
+    "sticky は align-self:start が要る。grid の既定は stretch で、見出しが列いっぱいに伸びると sticky が動く余地を失って止まって見えない。",
+    "同時に justify-self:start も要る。縦組み（vertical-rl）は block 方向が右→左なので、230px の列いっぱいに伸びた箱の中で見出しは「列の右端」から組まれる。するとリストとの間に空白が残らず、この工夫の主眼（空白距離だけで関係を作る）が消える。start にすると箱が字面まで縮み、列幅230px − 字面幅 ぶんがそのまま空白になる。",
+    "sticky の親に overflow:hidden があると効かない。デモは sticky を見せるためだけに height:300px + overflow-y:auto のスクロール枠を作って、その中で top:0 に止めている。実装ではページごとスクロールなので top:120px（固定ヘッダーぶん）。",
+    "見出しに background:var(--c-bg) を敷いた。止まった見出しの後ろを本文が通過するので、透明のままだと文字が重なって読めなくなる。",
+    "gap:0 でよい。空白は gap ではなく見出し列の幅（230px）と見出しの字面の細さの差で生まれる。gap を足すと列幅の意味が二重になって調整点が増える。",
+    "パネル版の見出しの左端は、パネルの左辺ではなくパネル内の写真の左辺に揃っている（現物はパネル左辺+約35px＝内側 padding ぶん）。padding-inline-start に パネルの padding と同じ値（--s5）を入れると、罫が無くても縦の線が通って見える。ここがずれると外置きが「置き忘れ」に見える。",
+    "巨大数字は淡色。トークンの --c-primary-l（#E8F7EA）は白地では薄すぎて消えるので、--c-primary に opacity:.32 を掛けた。淡色トークンは面（背景）用であって、大きな文字面には効かない。",
+    "640px以下では見出し列が成立しないので、縦組みを解いて（horizontal-tb / text-orientation:mixed）本文の上へ戻す。パネル版は 数字→見出し→パネル の順に組み替える。外置きはPCだけの表情と割り切る。",
+    "デモは techniques/space/heading-outside-block/demo.html。〈普通＝真上＋罫1本〉〈列の外へ出す（縦組みsticky）〉〈パネルの外へ出す〉の3段。"
+  ]
+}
