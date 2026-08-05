@@ -39,8 +39,21 @@
   font-size:clamp(14px,1.15vw,16.5px);font-weight:800;color:var(--c-ink);line-height:1.7}
 .vhr__body{margin-top:10px;font-size:clamp(12.5px,1vw,14px);color:var(--c-ink2);line-height:2.05}
 
+/* 1件だけのときは全幅で横に組む（縦書き見出し＋写真 ｜ 本文） */
+.vhr__list:has(> :only-child){grid-template-columns:minmax(0,1fr)}
+.vhr__list:has(> :only-child) .vhr__item{display:grid;
+  grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);
+  align-items:center;margin-top:0}
+.vhr__list:has(> :only-child) .vhr__sub{margin-top:0;padding-top:0;border-top:0;
+  padding-bottom:clamp(14px,1.8vw,22px);border-bottom:1px dashed var(--c-line)}
+.vhr__list:has(> :only-child) .vhr__body{margin-top:clamp(14px,1.8vw,22px)}
+.vhr__list:has(> :only-child) .vhr__top{grid-row:span 2}
+
 @media(max-width:900px){
   .vhr__list{grid-template-columns:minmax(0,1fr);gap:34px}
+  .vhr__list:has(> :only-child) .vhr__item{grid-template-columns:minmax(0,1fr);gap:16px}
+  .vhr__list:has(> :only-child) .vhr__sub{border-bottom:0;padding-bottom:0;
+    padding-top:clamp(14px,2vw,22px);border-top:1px dashed var(--c-line)}
   .vhr__item:nth-child(even){margin-top:0}
   .vhr__fig img{border-width:5px}
   /* ★狭い画面で縦書きは読みにくい。横書きに戻して写真の上へ出す */

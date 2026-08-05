@@ -127,7 +127,7 @@ ul,ol{padding:0;list-style:none}
   border-bottom:1px solid transparent;
   transition:transform .28s var(--e),border-color .2s var(--e)}
 .hdr.is-stuck{border-bottom-color:var(--c-line)}
-.hdr.is-hide{transform:translateY(-100%)}
+/* 固定。スクロールしても隠さない */
 .hdr__logo{display:flex;align-items:center}
 .hdr__logo img{height:clamp(20px,2vw,28px);width:auto;display:block}
 .hdr__cta{font-size:clamp(12px,1.05vw,14.5px);padding:11px 22px;box-shadow:0 5px 0 var(--c-primary-d)}
@@ -275,6 +275,23 @@ body{padding-top:var(--hdr-h,60px)}
 /* ── カード ──────────────────────────────── */
 .card{background:var(--c-bg);border-radius:22px;box-shadow:var(--shadow);padding:28px}
 
+
+/* ── セクションの分け目を曲線にする ──────────────
+   直線の境界だと段が積まれた印象になる。上端／下端を弧で抜くと流れて見える。
+   前後の地の色を --wave-from / --wave-to で受け取り、面の色で弧を描く。 */
+.wave-top,.wave-bottom{position:relative;z-index:2}
+.wave-top::before,.wave-bottom::after{
+  content:"";position:absolute;left:-4%;right:-4%;height:clamp(38px,5.2vw,86px);
+  pointer-events:none;z-index:3}
+.wave-top::before{top:0;transform:translateY(-99%);
+  background:var(--wave-from,var(--c-bg));
+  border-bottom-left-radius:52% 100%;border-bottom-right-radius:52% 100%}
+.wave-bottom::after{bottom:0;transform:translateY(99%);
+  background:var(--wave-to,var(--c-bg));
+  border-top-left-radius:52% 100%;border-top-right-radius:52% 100%}
+/* 弧のぶんだけ中身を逃がす */
+.wave-top{padding-top:clamp(46px,6vw,96px)}
+.wave-bottom{padding-bottom:clamp(46px,6vw,96px)}
 
 .nb{white-space:nowrap}
 
@@ -631,8 +648,21 @@ html:not(.js) .lm__i{transform:none}
   font-size:clamp(14px,1.15vw,16.5px);font-weight:800;color:var(--c-ink);line-height:1.7}
 .vhr__body{margin-top:10px;font-size:clamp(12.5px,1vw,14px);color:var(--c-ink2);line-height:2.05}
 
+/* 1件だけのときは全幅で横に組む（縦書き見出し＋写真 ｜ 本文） */
+.vhr__list:has(> :only-child){grid-template-columns:minmax(0,1fr)}
+.vhr__list:has(> :only-child) .vhr__item{display:grid;
+  grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);
+  align-items:center;margin-top:0}
+.vhr__list:has(> :only-child) .vhr__sub{margin-top:0;padding-top:0;border-top:0;
+  padding-bottom:clamp(14px,1.8vw,22px);border-bottom:1px dashed var(--c-line)}
+.vhr__list:has(> :only-child) .vhr__body{margin-top:clamp(14px,1.8vw,22px)}
+.vhr__list:has(> :only-child) .vhr__top{grid-row:span 2}
+
 @media(max-width:900px){
   .vhr__list{grid-template-columns:minmax(0,1fr);gap:34px}
+  .vhr__list:has(> :only-child) .vhr__item{grid-template-columns:minmax(0,1fr);gap:16px}
+  .vhr__list:has(> :only-child) .vhr__sub{border-bottom:0;padding-bottom:0;
+    padding-top:clamp(14px,2vw,22px);border-top:1px dashed var(--c-line)}
   .vhr__item:nth-child(even){margin-top:0}
   .vhr__fig img{border-width:5px}
   /* ★狭い画面で縦書きは読みにくい。横書きに戻して写真の上へ出す */
@@ -682,6 +712,74 @@ html:not(.js) .lm__i{transform:none}
   .ndg__v{font-size:28px}
 }
 
+/* ===== features/features-vertical-heading-rows ===== */
+/* features/features-vertical-heading-rows
+   linie（リニエ シューレ）の作りを再現して起こした型。
+   ・見出しを【縦書き】にして写真の左に立てる。項目番号も縦書きの小さなラベルで添える
+   ・写真は白い縁＋わずかな回転＋角丸をばらつかせて「手で置いた」感じにする
+   ・写真と本文のあいだは【破線】で切る
+   ・項目ごとに上下をずらす（段違い）
+   再現の記録: repro/vhr/ */
+.vhr{position:relative;overflow:hidden}
+.vhr__ghost{position:absolute;left:-4%;top:8%;z-index:0;font-family:var(--f-num);
+  font-size:clamp(140px,20vw,300px);font-weight:900;letter-spacing:-.02em;line-height:1;
+  color:var(--c-ink);opacity:.035;pointer-events:none;white-space:nowrap}
+.vhr .wrap{position:relative;z-index:1}
+
+.vhr__list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(28px,4vw,64px) clamp(24px,4vw,72px)}
+.vhr__item{margin:0}
+/* 段違い。2・4番目を下げる */
+.vhr__item:nth-child(even){margin-top:clamp(26px,4vw,64px)}
+
+.vhr__top{display:flex;align-items:stretch;gap:clamp(10px,1.4vw,20px)}
+/* ★縦書き。右から左に読む */
+/* 写真と同じ高さに収める。溢れたら列が増えて左へ伸びる */
+.vhr__vert{writing-mode:vertical-rl;text-orientation:upright;display:flex;gap:10px;
+  padding-top:6px;overflow:hidden}
+.vhr__label{writing-mode:vertical-rl;text-orientation:mixed;
+  font-family:var(--f-num);font-size:clamp(8px,.7vw,10px);font-weight:700;
+  letter-spacing:.22em;color:var(--c-ink3);white-space:nowrap;align-self:flex-start}
+.vhr__title{font-size:clamp(15px,1.35vw,19px);font-weight:800;color:var(--c-ink);
+  letter-spacing:.14em;line-height:1.55}
+
+.vhr__fig{flex:1;min-width:0;margin:0;transform:rotate(-1.1deg)}
+.vhr__item:nth-child(even) .vhr__fig{transform:rotate(1.2deg)}
+.vhr__fig img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;
+  border:6px solid #fff;box-shadow:var(--shadow-s);
+  border-radius:14px 10px 16px 11px}
+
+/* 写真と本文のあいだの破線 */
+.vhr__sub{margin-top:clamp(18px,2.2vw,30px);padding-top:clamp(16px,2vw,26px);
+  border-top:1px dashed var(--c-line);
+  font-size:clamp(14px,1.15vw,16.5px);font-weight:800;color:var(--c-ink);line-height:1.7}
+.vhr__body{margin-top:10px;font-size:clamp(12.5px,1vw,14px);color:var(--c-ink2);line-height:2.05}
+
+/* 1件だけのときは全幅で横に組む（縦書き見出し＋写真 ｜ 本文） */
+.vhr__list:has(> :only-child){grid-template-columns:minmax(0,1fr)}
+.vhr__list:has(> :only-child) .vhr__item{display:grid;
+  grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);
+  align-items:center;margin-top:0}
+.vhr__list:has(> :only-child) .vhr__sub{margin-top:0;padding-top:0;border-top:0;
+  padding-bottom:clamp(14px,1.8vw,22px);border-bottom:1px dashed var(--c-line)}
+.vhr__list:has(> :only-child) .vhr__body{margin-top:clamp(14px,1.8vw,22px)}
+.vhr__list:has(> :only-child) .vhr__top{grid-row:span 2}
+
+@media(max-width:900px){
+  .vhr__list{grid-template-columns:minmax(0,1fr);gap:34px}
+  .vhr__list:has(> :only-child) .vhr__item{grid-template-columns:minmax(0,1fr);gap:16px}
+  .vhr__list:has(> :only-child) .vhr__sub{border-bottom:0;padding-bottom:0;
+    padding-top:clamp(14px,2vw,22px);border-top:1px dashed var(--c-line)}
+  .vhr__item:nth-child(even){margin-top:0}
+  .vhr__fig img{border-width:5px}
+  /* ★狭い画面で縦書きは読みにくい。横書きに戻して写真の上へ出す */
+  .vhr__top{flex-direction:column;align-items:stretch;gap:14px}
+  .vhr__vert{writing-mode:horizontal-tb;flex-direction:row-reverse;justify-content:flex-end;
+    align-items:baseline;gap:12px;padding-top:0}
+  .vhr__label{writing-mode:horizontal-tb;letter-spacing:.12em}
+  .vhr__title{font-size:17px;letter-spacing:.02em;line-height:1.6}
+  .vhr__fig{transform:none!important}
+}
+
 /* ===== gallery/gallery-video-cards-bordered ===== */
 /* gallery/gallery-video-cards-bordered
    目白大学 MEJINAVI の作りを再現して起こした型。
@@ -725,6 +823,74 @@ html:not(.js) .lm__i{transform:none}
 /* 埋め込みが拒否されたときの逃げ道 */
 .gvb__esc{display:block;margin-top:10px;text-align:center;font-size:12px;font-weight:700;
   color:var(--c-primary);text-decoration:underline}
+
+/* ===== features/features-vertical-heading-rows ===== */
+/* features/features-vertical-heading-rows
+   linie（リニエ シューレ）の作りを再現して起こした型。
+   ・見出しを【縦書き】にして写真の左に立てる。項目番号も縦書きの小さなラベルで添える
+   ・写真は白い縁＋わずかな回転＋角丸をばらつかせて「手で置いた」感じにする
+   ・写真と本文のあいだは【破線】で切る
+   ・項目ごとに上下をずらす（段違い）
+   再現の記録: repro/vhr/ */
+.vhr{position:relative;overflow:hidden}
+.vhr__ghost{position:absolute;left:-4%;top:8%;z-index:0;font-family:var(--f-num);
+  font-size:clamp(140px,20vw,300px);font-weight:900;letter-spacing:-.02em;line-height:1;
+  color:var(--c-ink);opacity:.035;pointer-events:none;white-space:nowrap}
+.vhr .wrap{position:relative;z-index:1}
+
+.vhr__list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(28px,4vw,64px) clamp(24px,4vw,72px)}
+.vhr__item{margin:0}
+/* 段違い。2・4番目を下げる */
+.vhr__item:nth-child(even){margin-top:clamp(26px,4vw,64px)}
+
+.vhr__top{display:flex;align-items:stretch;gap:clamp(10px,1.4vw,20px)}
+/* ★縦書き。右から左に読む */
+/* 写真と同じ高さに収める。溢れたら列が増えて左へ伸びる */
+.vhr__vert{writing-mode:vertical-rl;text-orientation:upright;display:flex;gap:10px;
+  padding-top:6px;overflow:hidden}
+.vhr__label{writing-mode:vertical-rl;text-orientation:mixed;
+  font-family:var(--f-num);font-size:clamp(8px,.7vw,10px);font-weight:700;
+  letter-spacing:.22em;color:var(--c-ink3);white-space:nowrap;align-self:flex-start}
+.vhr__title{font-size:clamp(15px,1.35vw,19px);font-weight:800;color:var(--c-ink);
+  letter-spacing:.14em;line-height:1.55}
+
+.vhr__fig{flex:1;min-width:0;margin:0;transform:rotate(-1.1deg)}
+.vhr__item:nth-child(even) .vhr__fig{transform:rotate(1.2deg)}
+.vhr__fig img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;
+  border:6px solid #fff;box-shadow:var(--shadow-s);
+  border-radius:14px 10px 16px 11px}
+
+/* 写真と本文のあいだの破線 */
+.vhr__sub{margin-top:clamp(18px,2.2vw,30px);padding-top:clamp(16px,2vw,26px);
+  border-top:1px dashed var(--c-line);
+  font-size:clamp(14px,1.15vw,16.5px);font-weight:800;color:var(--c-ink);line-height:1.7}
+.vhr__body{margin-top:10px;font-size:clamp(12.5px,1vw,14px);color:var(--c-ink2);line-height:2.05}
+
+/* 1件だけのときは全幅で横に組む（縦書き見出し＋写真 ｜ 本文） */
+.vhr__list:has(> :only-child){grid-template-columns:minmax(0,1fr)}
+.vhr__list:has(> :only-child) .vhr__item{display:grid;
+  grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);
+  align-items:center;margin-top:0}
+.vhr__list:has(> :only-child) .vhr__sub{margin-top:0;padding-top:0;border-top:0;
+  padding-bottom:clamp(14px,1.8vw,22px);border-bottom:1px dashed var(--c-line)}
+.vhr__list:has(> :only-child) .vhr__body{margin-top:clamp(14px,1.8vw,22px)}
+.vhr__list:has(> :only-child) .vhr__top{grid-row:span 2}
+
+@media(max-width:900px){
+  .vhr__list{grid-template-columns:minmax(0,1fr);gap:34px}
+  .vhr__list:has(> :only-child) .vhr__item{grid-template-columns:minmax(0,1fr);gap:16px}
+  .vhr__list:has(> :only-child) .vhr__sub{border-bottom:0;padding-bottom:0;
+    padding-top:clamp(14px,2vw,22px);border-top:1px dashed var(--c-line)}
+  .vhr__item:nth-child(even){margin-top:0}
+  .vhr__fig img{border-width:5px}
+  /* ★狭い画面で縦書きは読みにくい。横書きに戻して写真の上へ出す */
+  .vhr__top{flex-direction:column;align-items:stretch;gap:14px}
+  .vhr__vert{writing-mode:horizontal-tb;flex-direction:row-reverse;justify-content:flex-end;
+    align-items:baseline;gap:12px;padding-top:0}
+  .vhr__label{writing-mode:horizontal-tb;letter-spacing:.12em}
+  .vhr__title{font-size:17px;letter-spacing:.02em;line-height:1.6}
+  .vhr__fig{transform:none!important}
+}
 
 /* ===== cta/cta-priority-stack ===== */
 /* cta/cta-priority-stack — 主CTAを地の上に直接置く（白カードを持たない）
@@ -1369,7 +1535,7 @@ html:not(.js) .lm__i{transform:none}
 .cts__radio{position:absolute;opacity:0;pointer-events:none;width:0;height:0}
 
 /* ── タブ ── */
-.cts__tabs{display:flex;gap:var(--s2);margin-bottom:var(--sp-el);flex-wrap:wrap}
+.cts__tabs{display:flex;justify-content:center;gap:var(--s2);margin-bottom:var(--sp-el);flex-wrap:wrap}
 .cts__tab{display:inline-flex;align-items:center;justify-content:center;
   min-width:180px;height:52px;padding:0 var(--s5);cursor:pointer;
   font-weight:700;font-size:var(--fs-md);color:var(--c-ink3);
@@ -1748,7 +1914,6 @@ html:not(.js) .lm__i{transform:none}
     <figure class="hbc__ph hbc__ph--b"><img src="img/fv_girl.png" alt="オンラインで英検対策を受ける中高生"></figure>
 
     <div class="hbc__head">
-      <p class="hbc__logo"><img src="img/logo.svg" alt="ESL club"></p>
       
       <h1 class="hbc__h1"><span class="nb">受験勉強と並走しながら</span><wbr><br><em><span class="nb">小学生・中学生で英検2級、</span></em><wbr><br><em><span class="nb">高校生で準1級</span></em>を<wbr><span class="nb">目指せる英語塾</span></h1>
     </div>
@@ -1882,36 +2047,6 @@ html:not(.js) .lm__i{transform:none}
         </div>
         <p class="vhr__sub">累計1,000名以上を合格に導いた英検ベースのカリキュラム</p>
         <p class="vhr__body">ESL clubでは2015年の開塾以降、英検をカリキュラムに用いて、着実な英語力の向上と英検合格に導いてきました。国際基準であるCEFRに対応した英検を用いることで、バランスよく4技能＋語彙力を高めていきます。一般的には、英検2級が高校卒業時の到達目標とされていますが、ESL clubでは、小学生、中学生の時点での高い合格率を誇っています。</p>
-      </li><li class="vhr__item fx" data-fx="fadeup" data-d="90">
-        <div class="vhr__top">
-          <div class="vhr__vert">
-            <p class="vhr__label">（&nbsp;POINT&nbsp;02&nbsp;）</p>
-            <h3 class="vhr__title">受験勉強と並行可能</h3>
-          </div>
-          <figure class="vhr__fig"><img src="img/p11.jpg" alt="部活動を続けながら学習を並行する" loading="lazy"></figure>
-        </div>
-        <p class="vhr__sub">目標級・時期と現在のレベルから作成する個別の学習計画</p>
-        <p class="vhr__body">目標とする級と受験の時期、そして現在の英語レベル、学習に充てられる時間の4点から逆算して個別の学習計画を作成し、確保できる学習時間に合わせてレッスンの進め方と宿題量を設計します。学習時間そのものを増やすのではなく、限られた時間の使い方を組み立て直すため、中学受験から大学受験までの受験勉強や、部活動・他の習い事を続けながら、英検合格を目指すことができます。</p>
-      </li><li class="vhr__item fx" data-fx="fadeup" data-d="180">
-        <div class="vhr__top">
-          <div class="vhr__vert">
-            <p class="vhr__label">（&nbsp;POINT&nbsp;03&nbsp;）</p>
-            <h3 class="vhr__title">学習効率を向上</h3>
-          </div>
-          <figure class="vhr__fig"><img src="img/p16.jpg" alt="オンラインでマンツーマンレッスンを受ける中高生" loading="lazy"></figure>
-        </div>
-        <p class="vhr__sub">バイリンガル講師のマンツーマンレッスン</p>
-        <p class="vhr__body">ESL clubでは、英検1級・TOEFL iBT95点・TOEIC900点レベル以上のバイリンガル講師のみを採用しています。年齢の近い講師との距離の近さがそのまま学習の動機づけになり、ライティングや長文読解では、その場で日本語に切り替えて解説します。必要な時に日本語で補えるため、疑問をその場で解消し、1回のレッスンで進める量を最大化できます。</p>
-      </li><li class="vhr__item fx" data-fx="fadeup" data-d="270">
-        <div class="vhr__top">
-          <div class="vhr__vert">
-            <p class="vhr__label">（&nbsp;POINT&nbsp;04&nbsp;）</p>
-            <h3 class="vhr__title">保護者様が忙しくても安心</h3>
-          </div>
-          <figure class="vhr__fig"><img src="img/p01.jpg" alt="すきま時間にオンラインで学ぶ小学生" loading="lazy"></figure>
-        </div>
-        <p class="vhr__sub">計画の実行をフォローするスクールマネージャー</p>
-        <p class="vhr__body">スクールマネージャーが中心となり、学習計画どおりにレッスンが進むよう講師へ内容を伝達し、生徒様の進捗をレッスンごとに保護者様へ共有します。保護者様が学習内容を把握したり、レッスンに付き添っていただく必要はありません。お忙しいご家庭でも安心してお任せいただけます。</p>
       </li>
     </ul>
   </div>
@@ -1962,8 +2097,45 @@ html:not(.js) .lm__i{transform:none}
 </section>
 
 </div>
-<!-- gallery/gallery-video-cards-bordered (base) -->
+<!-- features/features-vertical-heading-rows (base) -->
 <div class="tone-base">
+<section class="sec vhr">
+  
+  <div class="wrap">
+    <div class="sec-head">
+      
+      <h2 class="sec-head__ja"></h2>
+      
+    </div>
+    <ul class="vhr__list">
+      <li class="vhr__item fx" data-fx="fadeup" data-d="0">
+        <div class="vhr__top">
+          <div class="vhr__vert">
+            <p class="vhr__label">（&nbsp;POINT&nbsp;02&nbsp;）</p>
+            <h3 class="vhr__title">受験勉強と並行可能</h3>
+          </div>
+          <figure class="vhr__fig"><img src="img/p11.jpg" alt="部活動を続けながら学習を並行する" loading="lazy"></figure>
+        </div>
+        <p class="vhr__sub">目標級・時期と現在のレベルから作成する個別の学習計画</p>
+        <p class="vhr__body">目標とする級と受験の時期、そして現在の英語レベル、学習に充てられる時間の4点から逆算して個別の学習計画を作成し、確保できる学習時間に合わせてレッスンの進め方と宿題量を設計します。学習時間そのものを増やすのではなく、限られた時間の使い方を組み立て直すため、中学受験から大学受験までの受験勉強や、部活動・他の習い事を続けながら、英検合格を目指すことができます。</p>
+      </li><li class="vhr__item fx" data-fx="fadeup" data-d="90">
+        <div class="vhr__top">
+          <div class="vhr__vert">
+            <p class="vhr__label">（&nbsp;POINT&nbsp;03&nbsp;）</p>
+            <h3 class="vhr__title">学習効率を向上</h3>
+          </div>
+          <figure class="vhr__fig"><img src="img/p16.jpg" alt="オンラインでマンツーマンレッスンを受ける中高生" loading="lazy"></figure>
+        </div>
+        <p class="vhr__sub">バイリンガル講師のマンツーマンレッスン</p>
+        <p class="vhr__body">ESL clubでは、英検1級・TOEFL iBT95点・TOEIC900点レベル以上のバイリンガル講師のみを採用しています。年齢の近い講師との距離の近さがそのまま学習の動機づけになり、ライティングや長文読解では、その場で日本語に切り替えて解説します。必要な時に日本語で補えるため、疑問をその場で解消し、1回のレッスンで進める量を最大化できます。</p>
+      </li>
+    </ul>
+  </div>
+</section>
+
+</div>
+<!-- gallery/gallery-video-cards-bordered (tint) -->
+<div class="tone-tint">
 <section class="sec gvb">
   <div class="wrap">
     <div class="sec-head">
@@ -1993,6 +2165,33 @@ html:not(.js) .lm__i{transform:none}
       </li>
     </ul>
     
+  </div>
+</section>
+
+</div>
+<!-- features/features-vertical-heading-rows (base) -->
+<div class="tone-base">
+<section class="sec vhr">
+  
+  <div class="wrap">
+    <div class="sec-head">
+      
+      <h2 class="sec-head__ja"></h2>
+      
+    </div>
+    <ul class="vhr__list">
+      <li class="vhr__item fx" data-fx="fadeup" data-d="0">
+        <div class="vhr__top">
+          <div class="vhr__vert">
+            <p class="vhr__label">（&nbsp;POINT&nbsp;04&nbsp;）</p>
+            <h3 class="vhr__title">保護者様が忙しくても安心</h3>
+          </div>
+          <figure class="vhr__fig"><img src="img/p01.jpg" alt="すきま時間にオンラインで学ぶ小学生" loading="lazy"></figure>
+        </div>
+        <p class="vhr__sub">計画の実行をフォローするスクールマネージャー</p>
+        <p class="vhr__body">スクールマネージャーが中心となり、学習計画どおりにレッスンが進むよう講師へ内容を伝達し、生徒様の進捗をレッスンごとに保護者様へ共有します。保護者様が学習内容を把握したり、レッスンに付き添っていただく必要はありません。お忙しいご家庭でも安心してお任せいただけます。</p>
+      </li>
+    </ul>
   </div>
 </section>
 
@@ -2059,7 +2258,7 @@ html:not(.js) .lm__i{transform:none}
 
 </div>
 <!-- member/member-blob-portrait-letter (brand) -->
-<div class="tone-brand">
+<div class="tone-brand wave-top wave-bottom" style="--wave-from:var(--c-bg);--wave-to:var(--c-bg2)">
 <section class="sec mbl">
   <div class="wrap">
     <div class="sec-head">
@@ -2663,7 +2862,7 @@ html:not(.js) .lm__i{transform:none}
 
 </div>
 <!-- footer/footer-two-tier-cta (brand) -->
-<div class="tone-brand">
+<div class="tone-brand wave-top wave-bottom" style="--wave-from:var(--c-bg);--wave-to:var(--c-bg)">
 <footer class="ftc">
 
   <!-- 写真ストリップ（任意）。導線帯の“上”に置くので、PCでもSPでも写真はCTAより上になる。
@@ -2885,6 +3084,11 @@ document.documentElement.classList.add('js');
   var hs=[].slice.call(document.querySelectorAll('.sec-head__ja'));
   if(!hs.length) return;
   hs.forEach(function(h){
+    /* 見出しが無い節は、見出しブロックごと消す（装飾線だけ残るのを防ぐ） */
+    if(!h.textContent.trim()){
+      var head=h.closest('.sec-head'); if(head) head.style.display='none';
+      return;
+    }
     if(h.querySelector('img,svg')) return;
     h.classList.add('lm');
     var html=h.innerHTML;
@@ -2999,7 +3203,6 @@ document.documentElement.classList.add('js');
     ticking=false;
     var y=window.pageYOffset||0;
     h.classList.toggle('is-stuck', y>4);
-    h.classList.toggle('is-hide', y>240 && y>last);
     last=y;
   }
   addEventListener('scroll',function(){ if(!ticking){ ticking=true; requestAnimationFrame(frame); } },{passive:true});

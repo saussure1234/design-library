@@ -28,7 +28,7 @@ ul,ol{padding:0;list-style:none}
   border-bottom:1px solid transparent;
   transition:transform .28s var(--e),border-color .2s var(--e)}
 .hdr.is-stuck{border-bottom-color:var(--c-line)}
-.hdr.is-hide{transform:translateY(-100%)}
+/* 固定。スクロールしても隠さない */
 .hdr__logo{display:flex;align-items:center}
 .hdr__logo img{height:clamp(20px,2vw,28px);width:auto;display:block}
 .hdr__cta{font-size:clamp(12px,1.05vw,14.5px);padding:11px 22px;box-shadow:0 5px 0 var(--c-primary-d)}
@@ -176,6 +176,23 @@ body{padding-top:var(--hdr-h,60px)}
 /* ── カード ──────────────────────────────── */
 .card{background:var(--c-bg);border-radius:22px;box-shadow:var(--shadow);padding:28px}
 
+
+/* ── セクションの分け目を曲線にする ──────────────
+   直線の境界だと段が積まれた印象になる。上端／下端を弧で抜くと流れて見える。
+   前後の地の色を --wave-from / --wave-to で受け取り、面の色で弧を描く。 */
+.wave-top,.wave-bottom{position:relative;z-index:2}
+.wave-top::before,.wave-bottom::after{
+  content:"";position:absolute;left:-4%;right:-4%;height:clamp(38px,5.2vw,86px);
+  pointer-events:none;z-index:3}
+.wave-top::before{top:0;transform:translateY(-99%);
+  background:var(--wave-from,var(--c-bg));
+  border-bottom-left-radius:52% 100%;border-bottom-right-radius:52% 100%}
+.wave-bottom::after{bottom:0;transform:translateY(99%);
+  background:var(--wave-to,var(--c-bg));
+  border-top-left-radius:52% 100%;border-top-right-radius:52% 100%}
+/* 弧のぶんだけ中身を逃がす */
+.wave-top{padding-top:clamp(46px,6vw,96px)}
+.wave-bottom{padding-bottom:clamp(46px,6vw,96px)}
 
 .nb{white-space:nowrap}
 

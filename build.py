@@ -144,6 +144,11 @@ document.documentElement.classList.add('js');
   var hs=[].slice.call(document.querySelectorAll('.sec-head__ja'));
   if(!hs.length) return;
   hs.forEach(function(h){
+    /* 見出しが無い節は、見出しブロックごと消す（装飾線だけ残るのを防ぐ） */
+    if(!h.textContent.trim()){
+      var head=h.closest('.sec-head'); if(head) head.style.display='none';
+      return;
+    }
     if(h.querySelector('img,svg')) return;
     h.classList.add('lm');
     var html=h.innerHTML;
@@ -258,7 +263,6 @@ document.documentElement.classList.add('js');
     ticking=false;
     var y=window.pageYOffset||0;
     h.classList.toggle('is-stuck', y>4);
-    h.classList.toggle('is-hide', y>240 && y>last);
     last=y;
   }
   addEventListener('scroll',function(){ if(!ticking){ ticking=true; requestAnimationFrame(frame); } },{passive:true});
@@ -288,8 +292,14 @@ def build(kit_path, out_path):
         css_chunks.append(f"/* ===== {pid} ===== */\n{css}")
         body = render(html, data)
         tone = s.get("tone") if isinstance(s, dict) else None
-        if tone:
-            body = f'<div class="tone-{tone}">\n{body}\n</div>'
+        wave = s.get("wave") if isinstance(s, dict) else None   # "top" / "bottom" / "both"
+        if tone or wave:
+            cls = [f"tone-{tone}"] if tone else []
+            if wave in ("top", "both"): cls.append("wave-top")
+            if wave in ("bottom", "both"): cls.append("wave-bottom")
+            st = s.get("style") if isinstance(s, dict) else None
+            sattr = f' style="{st}"' if st else ""
+            body = f'<div class="{" ".join(cls)}"{sattr}>\n{body}\n</div>'
         html_chunks.append(f"<!-- {pid} ({tone or 'base'}) -->\n" + body)
         used.append(f"{pid} ({meta.get('name', '')})")
 
