@@ -16,17 +16,18 @@
 /* 段違い。2・4番目を下げる */
 .vhr__item:nth-child(even){margin-top:clamp(26px,4vw,64px)}
 
-.vhr__top{display:flex;align-items:flex-start;gap:clamp(10px,1.4vw,20px)}
+.vhr__top{display:flex;align-items:stretch;gap:clamp(10px,1.4vw,20px)}
 /* ★縦書き。右から左に読む */
+/* 写真と同じ高さに収める。溢れたら列が増えて左へ伸びる */
 .vhr__vert{writing-mode:vertical-rl;text-orientation:upright;display:flex;gap:10px;
-  max-height:280px;padding-top:6px}
+  padding-top:6px;overflow:hidden}
 .vhr__label{writing-mode:vertical-rl;text-orientation:mixed;
   font-family:var(--f-num);font-size:clamp(8px,.7vw,10px);font-weight:700;
   letter-spacing:.22em;color:var(--c-ink3);white-space:nowrap;align-self:flex-start}
-.vhr__title{font-size:clamp(16px,1.5vw,21px);font-weight:800;color:var(--c-ink);
-  letter-spacing:.18em;line-height:1.5}
+.vhr__title{font-size:clamp(15px,1.35vw,19px);font-weight:800;color:var(--c-ink);
+  letter-spacing:.14em;line-height:1.55}
 
-.vhr__fig{flex:1;margin:0;transform:rotate(-1.1deg)}
+.vhr__fig{flex:1;min-width:0;margin:0;transform:rotate(-1.1deg)}
 .vhr__item:nth-child(even) .vhr__fig{transform:rotate(1.2deg)}
 .vhr__fig img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;
   border:6px solid #fff;box-shadow:var(--shadow-s);
@@ -41,7 +42,12 @@
 @media(max-width:900px){
   .vhr__list{grid-template-columns:minmax(0,1fr);gap:34px}
   .vhr__item:nth-child(even){margin-top:0}
-  .vhr__vert{max-height:200px}
-  .vhr__title{font-size:16px;letter-spacing:.14em}
   .vhr__fig img{border-width:5px}
+  /* ★狭い画面で縦書きは読みにくい。横書きに戻して写真の上へ出す */
+  .vhr__top{flex-direction:column;align-items:stretch;gap:14px}
+  .vhr__vert{writing-mode:horizontal-tb;flex-direction:row-reverse;justify-content:flex-end;
+    align-items:baseline;gap:12px;padding-top:0}
+  .vhr__label{writing-mode:horizontal-tb;letter-spacing:.12em}
+  .vhr__title{font-size:17px;letter-spacing:.02em;line-height:1.6}
+  .vhr__fig{transform:none!important}
 }
