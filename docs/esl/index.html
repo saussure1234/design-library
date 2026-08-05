@@ -1,0 +1,2710 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>受験勉強と並走しながら小学生・中学生で英検2級、高校生で準1級を目指せる英語塾｜ESL club</title>
+<meta name="description" content="英検に特化して10年。受験勉強と両立しながら、小中学生で英検2級、高校生で準1級を目指せる英語塾です。">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* =========================================================
+   トークン契約 v1
+   すべてのパーツは「ここに定義された変数だけ」を使う。
+   案件ごとに :root を差し替えれば、全パーツが即座に着替える。
+   ここに無い色・サイズをパーツ内で直書きしたら契約違反。
+   ========================================================= */
+:root{
+  /* --- 色 --- */
+  /* ── 色：使い方のルール付き ─────────────────────
+     #00B21F  ロゴの緑。CTA・強調（主）
+     #00B63A  補強用。ガッツリ使わない
+     #FFEE03  補強用。ガッツリ使わない
+     #6CBB00  ロゴの黄緑。★背景には使わない。線・小さいラベル・アイコンだけ
+     #262626  ★背景に使ってよい。ただし前に大きめの白いブロックを置くこと
+     #303030  文字（ロゴと同じ濃度）
+     ※ここに無い色を作らない。 */
+  --c-primary:#00B21F;      /* CTA・強調 */
+  --c-primary-d:#05A81F;    /* 押下/hover */
+  --c-primary-2:#6CBB00;    /* 黄緑。線・小ラベル・アイコンのみ。面に塗らない */
+  --c-support:#00B63A;      /* 補強。小さく1点 */
+  --c-support2:#FFEE03;     /* 補強。小さく1点 */
+  --c-accent:#FF9301;
+  --c-accent-d:#D97A00;       /* 差し色。最小の1点にだけ */
+  --c-ink:#303030;
+  --c-ink2:#4A4A4A;
+  --c-ink3:#707070;
+  --c-bg:#FFFFFF;           /* base  L255 */
+  --c-bg2:#F8F8F8;          /* tint  L248 */
+  --c-primary-l:#EAF3DC;    /* 黄緑の淡色。面に使うのはページで1回まで */
+  --c-dark:#262626;         /* ★濃い面。前に大きめの白いブロックを置く */
+  --c-on-dark:#FFFFFF;      /* #262626 の上で 14.7:1 */
+  --c-on-dark2:#B8B8B8;
+  --c-line:#E3E3E3;
+  --c-on-primary:#FFFFFF;
+
+  /* --- 書体 --- */
+  --f-sans:"Noto Sans JP","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --f-disp:var(--f-sans);   /* 見出し用に別書体を当てる場合はここだけ変える */
+  --f-num:"Helvetica Neue",Arial,var(--f-sans);
+
+  /* --- 文字サイズ（PC基準・clampはパーツ側で組む） --- */
+  --fs-note:12px; --fs-sm:13px; --fs-base:15px; --fs-md:17px;
+  --fs-lg:21px;   --fs-xl:28px; --fs-2xl:38px;  --fs-3xl:50px; --fs-4xl:64px;
+  --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
+
+  /* --- 余白 --- */
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px;
+  --s6:36px; --s7:52px; --s8:76px; --s9:110px;
+  /* 余白は3値に固定する。検算で「24箇所に21通り」が出たため */
+  /* 実測：良いサイトの縦の刻みは 8/12/16/20/24/32px。4の倍数に乗せる。
+     clamp で連続値にすると刻みが崩れるので、段階を固定する。 */
+  --sp-sec:120px;   /* セクション間 */
+  --sp-blk:64px;    /* セクション内のブロック間 */
+  --sp-el:32px;     /* 要素間 */
+  --sp-tight:16px;  /* くっつける（ボタンと直前の要素など） */
+  --sec-y:var(--sp-sec);
+  /* SPでは詰める */
+
+  /* --- 形 --- */
+  --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
+  --shadow:0 12px 30px rgba(48,48,48,.10);
+  --shadow-s:0 6px 16px rgba(48,48,48,.10);
+
+  /* --- 動き --- */
+  --e:cubic-bezier(.23,1,.32,1);
+  --d:.5s;
+
+  /* --- 版面 --- */
+  --w-max:1120px;
+  --w-gut:clamp(18px,4vw,32px);
+}
+
+:root{
+  --c-primary:#00B21F;
+  --c-primary-d:#05A81F;
+  --c-primary-2:#6CBB00;
+  --c-support:#00B63A;
+  --c-support2:#FFEE03;
+  --c-accent:#FF9301;
+  --c-ink:#303030;
+  --c-ink2:#4A4A4A;
+  --c-bg2:#F8F8F8;
+  --c-primary-l:#EAF3DC;
+  --c-dark:#262626;
+}
+
+/* =========================================================
+   基盤 v2 — 明光キッズLPで実際に通った作りを土台にする
+   （見出しの型／ピル＋ベタ影のボタン／白縁の写真／セクション余白）
+   色と書体はトークンで差し替えるので、別ブランドでも成立する。
+   出典：~/Desktop/MeikoKids_Ramune_LP/index.html の <style>（自作・同一クライアント群）
+   ========================================================= */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;font-family:var(--f-sans);color:var(--c-ink2);background:var(--c-bg);
+  line-height:1.8;font-size:16px;-webkit-font-smoothing:antialiased;overflow-x:clip;
+  font-feature-settings:"palt" 1}   /* ★日本語は約物を詰める。無いと1行の字数が変わる */
+img,svg,video{display:block;max-width:100%;height:auto}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit}
+h1,h2,h3,h4,p,ul,ol,figure,dl,dd{margin:0}
+ul,ol{padding:0;list-style:none}
+:where(a,button,input,textarea,select):focus-visible{
+  outline:3px solid var(--c-primary);outline-offset:3px;border-radius:var(--r-s)}
+
+/* ── 版面・セクション ────────────────────────── */
+.wrap{width:100%;max-width:1080px;margin-inline:auto;padding-inline:22px}
+.sec{padding-block:74px}
+.sec--alt{background:var(--c-bg2)}
+.tone-base{background:var(--c-bg)}
+.tone-tint{background:var(--c-bg2)}
+.tone-accent,.tone-pale{background:var(--c-primary-l)}
+/* ★#262626 の面。前に大きめの白いブロックを置くことが条件 */
+.tone-deep,.tone-dark{background:var(--c-dark);color:var(--c-on-dark2)}
+
+/* ── 見出し：英字（大きく淡く）＋和文＋装飾線 ────── */
+.sec-head{text-align:center;margin-bottom:44px}
+.sec-head__en{display:block;font-family:var(--f-num);font-size:54px;line-height:1;
+  font-weight:900;letter-spacing:.02em;color:var(--c-primary);opacity:.9}
+.sec-head__ja{margin-top:10px;font-size:28px;font-weight:800;line-height:1.4;color:var(--c-ink)}
+.sec-head__sub{margin-top:14px;font-size:15.5px;color:var(--c-ink2);max-width:38em;margin-inline:auto}
+.sec-head::after{content:"";display:inline-block;margin-top:16px;
+  width:60px;height:5px;border-radius:5px;background:var(--c-accent)}
+.tone-deep .sec-head__ja,.tone-dark .sec-head__ja{color:var(--c-on-dark)}
+.tone-deep .sec-head__en,.tone-dark .sec-head__en{color:var(--c-primary-2)}
+.tone-deep .sec-head__sub,.tone-dark .sec-head__sub{color:var(--c-on-dark2)}
+/* 濃い面の上に直接置かれた見出し・本文は白抜きにする（カードの中は元の色） */
+.tone-deep :is(h2,h3,h4),.tone-dark :is(h2,h3,h4){color:var(--c-on-dark)}
+.tone-deep .card :is(h2,h3,h4),.tone-dark .card :is(h2,h3,h4){color:var(--c-ink)}
+
+.sec-head--left{text-align:left}
+.sec-head--left .sec-head__sub{margin-inline:0}
+
+/* ── ボタン：ピル＋下に8pxのベタ影。押すと沈む ────
+   半透明の影ではなくベタ。これが「押せそう」を作っている。 */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5em;
+  background:var(--c-primary);color:var(--c-on-primary);
+  font-weight:800;font-size:19px;letter-spacing:.02em;
+  padding:20px 46px;border-radius:50px;border:0;cursor:pointer;
+  box-shadow:0 8px 0 var(--c-primary-d);
+  transition:transform .12s ease,box-shadow .12s ease}
+.btn:hover{transform:translateY(3px);box-shadow:0 5px 0 var(--c-primary-d)}
+.btn:active{transform:translateY(6px);box-shadow:0 2px 0 var(--c-primary-d)}
+.btn--sm{font-size:16px;padding:14px 30px;box-shadow:0 6px 0 var(--c-primary-d)}
+.btn--sm:hover{box-shadow:0 3px 0 var(--c-primary-d)}
+.btn .arr{font-size:.9em}
+
+/* ── 写真：白い縁＋角丸＋影 ───────────────────── */
+.ph{border-radius:26px;overflow:hidden;border:6px solid #fff;
+  box-shadow:var(--shadow);object-fit:cover;width:100%;display:block}
+.ph--sm{border-radius:20px;border-width:5px}
+
+/* ── カード ──────────────────────────────── */
+.card{background:var(--c-bg);border-radius:22px;box-shadow:var(--shadow);padding:28px}
+
+.nb{white-space:nowrap}
+
+/* ── スクロール表示（IO不使用・JSが死んでも中身は見える） ── */
+.fx-on .fx{opacity:0;will-change:opacity,transform,filter,clip-path;
+  transition:opacity var(--d) var(--e),transform var(--d) var(--e),
+             filter var(--d) var(--e),clip-path var(--d) var(--e)}
+.fx-on .fx[data-fx="fadeup"],
+.fx-on .fx:not([data-fx]){transform:translateY(26px)}
+.fx-on .fx[data-fx="fadeblur"]{filter:blur(10px);transform:translateY(14px)}
+.fx-on .fx[data-fx="left"]{transform:translateX(-44px)}
+.fx-on .fx[data-fx="right"]{transform:translateX(44px)}
+.fx-on .fx[data-fx="scale"]{transform:scale(.94)}
+.fx-on .fx[data-fx="clip"]{clip-path:inset(0 100% 0 0)}
+.fx-on .fx[data-fx="mask"]{clip-path:inset(100% 0 0 0)}
+.fx-on .fx.hh-in{opacity:1;transform:none;filter:none;clip-path:inset(0 0 0 0)}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.floaty{animation:floaty 4.5s var(--e) infinite}
+
+@media(max-width:768px){
+  .sec{padding-block:50px}
+  .sec-head{margin-bottom:32px}
+  .sec-head__en{font-size:40px}
+  .sec-head__ja{font-size:22px}
+  .sec-head__sub{font-size:14.5px}
+  .btn{font-size:17px;padding:17px 32px}
+  .ph{border-radius:20px;border-width:5px}
+  .card{border-radius:18px;padding:22px}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .fx-on .fx{opacity:1!important;transform:none!important;filter:none!important;clip-path:none!important;transition:none!important}
+  .floaty{animation:none}
+  *{animation-duration:.001s!important}
+}
+
+/* ===== hero/hero-blob-cutout ===== */
+/* hero/hero-blob-cutout
+   sgkz.or.jp（市村清新技術財団 少年少女創造性育成事業）の作りを再現して起こした型。
+   ・写真2枚を【有機的な色の面（ブロブ）】の上に置く。左下に小さく／右上に大きく
+   ・手描き風の落書きを散らす
+   ・下に大きなキャッチコピー。1語だけ色を変える
+   再現の記録: repro/fv/ */
+.hbc{position:relative;background:var(--c-bg2);overflow:hidden}
+.hbc__in{position:relative;width:100%;max-width:1440px;margin-inline:auto;
+  height:clamp(560px,50vw,720px)}
+
+/* 色の面 */
+.hbc__blob{position:absolute;z-index:1}
+.hbc__blob--a{left:44%;top:52%;width:15%;aspect-ratio:29/28;background:var(--c-primary-l);
+  border-radius:48% 52% 55% 45% / 52% 48% 52% 48%}
+.hbc__blob--b{left:52%;top:6%;width:26%;aspect-ratio:43/40;background:var(--c-primary-l);
+  border-radius:52% 48% 46% 54% / 50% 44% 56% 50%}
+
+/* 写真 */
+.hbc__ph{position:absolute;z-index:3;margin:0}
+.hbc__ph img{width:100%;display:block;border-radius:50% 50% 46% 54% / 46% 46% 54% 54%}
+.hbc__ph--a{left:43%;top:49%;width:17%}
+.hbc__ph--b{left:50%;top:4%;width:31%}
+
+/* 見出し */
+.hbc__head{position:absolute;left:6%;top:13%;z-index:5;width:40%;max-width:560px}
+.hbc__logo img{height:clamp(22px,2.1vw,30px);width:auto}
+.hbc__eyebrow{margin-top:14px;font-size:clamp(12px,1.05vw,14px);font-weight:700;color:var(--c-ink3)}
+.hbc__h1{margin-top:8px;font-size:clamp(26px,2.9vw,42px);font-weight:900;color:var(--c-ink);
+  line-height:1.28;letter-spacing:.01em}
+.hbc__h1 em{font-style:normal;color:var(--c-primary)}
+
+/* キャッチ */
+.hbc__copy{position:absolute;right:4%;bottom:16%;max-width:34%;z-index:5;text-align:left;
+  font-size:clamp(20px,2.4vw,34px);font-weight:900;color:var(--c-ink);line-height:1.5}
+.hbc__copy em{font-style:normal;color:var(--c-primary)}
+
+/* 実績の数字 */
+.hbc__stats{position:absolute;left:6%;bottom:27%;z-index:5;display:flex;gap:clamp(20px,3vw,44px)}
+.hbc__stats b{display:block;font-family:var(--f-num);font-size:clamp(28px,3.4vw,46px);
+  font-weight:900;color:var(--c-ink);line-height:1}
+.hbc__stats b span{font-size:.42em;margin-left:3px;font-weight:800}
+.hbc__stats small{display:block;margin-top:6px;font-size:clamp(10px,.9vw,12.5px);color:var(--c-ink3)}
+
+/* CTA */
+.hbc__cta{position:absolute;left:6%;bottom:8%;z-index:5;display:flex;flex-direction:column;gap:10px}
+.hbc__note{font-size:clamp(11px,.92vw,13px);color:var(--c-ink3)}
+
+/* 落書き */
+.hbc__dd{position:absolute;z-index:4;pointer-events:none}
+.hbc__dd--1{left:47%;top:11%;width:clamp(46px,6vw,86px)}
+.hbc__dd--2{left:84%;top:14%;width:clamp(38px,4.6vw,66px);transform:rotate(-8deg)}
+.hbc__dd--3{right:6%;top:12%;width:clamp(22px,2.6vw,38px)}
+.hbc__dd--4{left:41%;bottom:16%;width:clamp(30px,3.4vw,50px);transform:rotate(12deg)}
+.hbc__dd--5{right:6%;top:52%;width:clamp(52px,6.6vw,96px);transform:rotate(6deg)}
+.hbc__conf{position:absolute;z-index:2;width:9px;height:9px;border-radius:2px;opacity:.85}
+.hbc__conf--1{left:49%;top:22%;background:var(--c-accent);transform:rotate(24deg)}
+.hbc__conf--2{left:62%;bottom:14%;background:var(--c-primary);transform:rotate(-16deg)}
+.hbc__conf--3{left:73%;top:20%;background:var(--c-support2);transform:rotate(40deg)}
+.hbc__conf--4{left:69%;bottom:22%;background:var(--c-accent);transform:rotate(-30deg)}
+.hbc__conf--5{left:45%;bottom:9%;background:var(--c-primary-2);transform:rotate(18deg)}
+.hbc__conf--6{left:86%;top:34%;background:var(--c-primary);transform:rotate(-8deg)}
+
+.hbc__foot{padding:0 0 18px;font-size:11px;color:var(--c-ink3);text-align:center}
+
+@media(max-width:900px){
+  .hbc__in{height:auto;padding:28px 0 24px;display:grid;gap:16px}
+  .hbc__blob,.hbc__dd,.hbc__conf{display:none}
+  .hbc__head,.hbc__copy,.hbc__stats,.hbc__cta{position:static;max-width:none}
+  .hbc__head{padding-inline:22px}
+  .hbc__h1{font-size:23px;line-height:1.5}
+  .hbc__h1 .nb{white-space:normal}   /* 狭い画面では折り返しを許す */
+  /* ★スマホは写真をCTAより上に */
+  .hbc__ph{position:static;width:100%;padding-inline:22px;order:-1}
+  .hbc__ph--a{display:none}
+  .hbc__ph img{border-radius:20px}
+  .hbc__copy{padding-inline:22px;font-size:21px}
+  .hbc__stats{padding-inline:22px;gap:26px}
+  .hbc__cta{padding-inline:22px}
+  .hbc__cta .btn{width:100%}
+}
+
+/* ===== cta/cta-priority-stack ===== */
+/* cta/cta-priority-stack — 主CTAを地の上に直接置く（白カードを持たない）
+   ── 効かせている工夫 ─────────────────────────────
+   color/accent-means-clickable : 有彩色が出るのは「押せる場所」だけ。
+     ボタンの塗り（--c-primary）1点に緑を集約し、注記・小タグ・罫・写真の下地は
+     すべて無彩色に落とす。旧版は小タグを橙（--c-accent）にしていたが、
+     橙はページ全体で2箇所の予算なので外した。ゴースト（枠だけの緑ボタン）も廃止。
+   edge/panel-not-full-width : 面を全幅の矩形にしない。版面（.wrap）より狭い
+     「1枚の板」として置き、角は1箇所（右下）だけ大きく丸める。
+     R=--r-l×2.5（60px）、560px以下は×1.6（38px）。
+     板に塗りは持たせない（塗ると kit の tone が敷く地の階段が壊れる）ので、
+     輪郭は 1px の罫だけで示し、余った地色がそのまま余白として働く。
+   ───────────────────────────────────────────── */
+
+/* 地は敷かない。--cps-edge は地に対して見える濃さを地ごとに持ち替える。
+   淡い地：ink 20%（罫と地で 1.54:1）／濃い地：白 30%（2.60:1） */
+.cps{
+  --cps-r:calc(var(--r-l) * 2.5);
+  --cps-edge:color-mix(in srgb,var(--c-ink) 20%,transparent);
+}
+.tone-dark .cps{--cps-edge:color-mix(in srgb,var(--c-on-dark) 30%,transparent)}
+
+/* 本文の途中に挟む回。上下はブロック間の値まで詰める（独自のpxは置かない） */
+.cps--tight{padding-block:var(--sp-blk)}
+
+/* ── 板 ───────────────────────────────────────
+   全幅の矩形にしない。幅は中身に合わせて縮み（最小 32em＝512px、上限は版面）、
+   角は右下の1箇所だけ大きく丸める。余った地色がそのまま余白として働く。
+   版面いっぱいに広げると、ボタン1本の回で中が空洞に見える（実描画で確認）。
+   クラス名に __panel / __card を使わない（_base.css が自動で影を付けるため） */
+.cps__field{
+  width:fit-content;min-width:min(32em,100%);max-width:100%;margin-inline:auto;
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  padding:var(--sp-el);
+  border:1px solid var(--cps-edge);
+  border-radius:0 0 var(--cps-r) 0;
+}
+
+/* 写真（任意）。既定はCTAより上（全画面幅で共通） */
+.cps__ph{margin:0 0 var(--s5);width:100%;overflow:hidden;
+  border-radius:var(--r-m);aspect-ratio:16/10;background:var(--c-bg2)}
+.cps__ph img{width:100%;height:100%;object-fit:cover}
+
+.cps__body{width:100%;min-width:0;
+  display:flex;flex-direction:column;align-items:center}
+
+/* 見出し。様式は .sec-head のまま、中央寄せだけ足す。
+   eyebrow も heading も無い回は箱ごと消す（--sp-el の空白が残らないように） */
+.cps__head{text-align:center}
+.cps__head .sec-head__en{justify-content:center}
+.cps__head:not(:has(*)){display:none}
+
+/* ── ボタン ───────────────────────────────────
+   _base.css の .btn を1形のまま使う。高さ・角丸・左右パディング・丸矢印・色は触らない。
+   ここで足すのは版面に収めるための上限幅と、2行に折れたときの行間だけ */
+.cps__stack{width:100%;display:flex;flex-direction:column;align-items:center;gap:var(--s4)}
+.cps__btn{max-width:100%;line-height:var(--lh-tight)}
+.cps__label{min-width:0;text-wrap:balance}
+
+/* 小タグ（無料／簡単30秒）。押せる場所の中に置く無彩色のチップにする */
+.cps__tag{flex:none;padding:var(--s1) var(--s2);border-radius:var(--r-pill);
+  background:var(--c-on-primary);color:var(--c-ink);
+  font-size:var(--fs-note);font-weight:700;line-height:var(--lh-tight)}
+
+.cps__ico{flex:none;display:grid;place-items:center;width:1.4em;height:1.4em}
+.cps__ico svg{width:100%;height:100%;fill:none;stroke:currentColor;
+  stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+
+/* _base.css の .hh-in は表示後も clip-path:inset(0) を残す。
+   そのままだと :focus-visible のリング（outline-offset 3px）が切り落とされるので、
+   ボタンだけ解除する（.fx の定義自体は触らない） */
+.fx-on .cps__btn.hh-in{clip-path:none}
+
+.cps__note{margin-top:var(--s5);max-width:36em;
+  font-size:var(--fs-sm);color:var(--c-ink3);line-height:var(--lh-head)}
+/* --c-ink3 は濃色地で 2.89:1 しかない。淡色へ振り替える（11.9:1） */
+.tone-dark .cps__note{color:var(--c-bg3)}
+
+/* ── 写真を渡した回だけ、PCは横に添える ─────────
+   2段組を抱える回だけ、板の幅は工夫の既定値どおり版面の82%で止める（78〜85%の中） */
+@media(min-width:901px){
+  .cps__field:has(.cps__ph){width:100%;max-width:82%;flex-direction:row;gap:var(--sp-el)}
+  .cps__field:has(.cps__ph) .cps__ph{flex:0 0 34%;margin:0;aspect-ratio:4/5}
+  .cps__field:has(.cps__ph) .cps__body{flex:1 1 auto}
+}
+
+/* ───────── SP ───────── */
+@media(max-width:900px){
+  .cps__field{padding:var(--s5)}
+  .cps__stack{gap:var(--s3)}
+}
+@media(max-width:560px){
+  /* R60は板の高さに対して大きすぎて“カプセル”に見えるので落とす */
+  .cps{--cps-r:calc(var(--r-l) * 1.6)}
+  .cps__field{width:100%}
+  .cps__btn{width:100%}
+  .cps__btn:not(.cps__btn--sub){font-size:var(--fs-base)}
+}
+@media(max-width:420px){
+  .cps__field{padding-inline:var(--s4)}
+}
+
+/* ①見えるか：白カードは地に溶ける。面をやめ、地の上に直接ボタンを置く。
+   色は「押せる場所」だけ＝ボタンだけが緑になる（color/accent-means-clickable） */
+.cps__panel,[class*="cps__panel"],[class*="cps"] .panel{
+  background:transparent;box-shadow:none;border:0;padding-inline:0}
+.cps__panel::before,[class*="cps__panel"]::before{display:none}
+.tone-dark .cps__note,.tone-dark [class*="note"]{color:var(--c-on-dark2)}
+
+/* ===== features/features-notch-number-cards ===== */
+/* features/features-notch-number-cards
+   学研教室（sho_gakken_s05）の作りを再現して起こした型。
+   ・カードの【左上に切り欠き】を作り、そこへ番号を置く
+   ・カードごとに淡い面の色を変える（同系のトーン違い）
+   再現の記録: repro/gakken/ （score 8.27・残差の大半は先方のイラスト）*/
+.fnc__grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.fnc__item{margin:0}
+.fnc__card{position:relative;display:flex;flex-direction:column;height:100%;
+  border-radius:14px;padding:34px 18px 20px;
+  transition:transform .14s ease,box-shadow .14s ease}
+/* ★左上の切り欠き。地の白でカードの角を削り、そこに番号を置く */
+.fnc__card::before{content:"";position:absolute;left:0;top:0;width:40px;height:28px;
+  background:var(--c-bg);border-bottom-right-radius:12px}
+.tone-tint .fnc__card::before{background:var(--c-bg2)}
+.fnc__no{position:absolute;left:5px;top:2px;z-index:2;
+  font-family:var(--f-num);font-size:21px;font-weight:800;line-height:1;letter-spacing:-.02em}
+.fnc__t{font-size:15px;font-weight:800;color:var(--c-ink);line-height:1.6}
+.fnc__d{margin-top:10px;font-size:12.5px;color:var(--c-ink2);line-height:1.85;flex:1}
+.fnc__more{display:inline-flex;align-items:center;gap:6px;margin-top:16px;
+  font-size:11.5px;font-weight:700;color:var(--c-primary)}
+.fnc__more i{width:14px;height:1px;background:currentColor;transition:width .14s ease}
+@media(hover:hover) and (pointer:fine){
+  .fnc__card:hover{transform:translateY(-3px);box-shadow:var(--shadow-s)}
+  .fnc__card:hover .fnc__more i{width:22px}
+}
+/* 面はブランド色の濃淡で4段。彩度は上げすぎない */
+.fnc__item:nth-child(1) .fnc__card{background:#EAF5E4}
+.fnc__item:nth-child(2) .fnc__card{background:#E2F1E9}
+.fnc__item:nth-child(3) .fnc__card{background:#E6F2DC}
+.fnc__item:nth-child(4) .fnc__card{background:#EEF4E0}
+.fnc__item:nth-child(1) .fnc__no{color:var(--c-primary)}
+.fnc__item:nth-child(2) .fnc__no{color:var(--c-primary-d)}
+.fnc__item:nth-child(3) .fnc__no{color:var(--c-primary-2)}
+.fnc__item:nth-child(4) .fnc__no{color:var(--c-primary)}
+
+.fnc__cta{margin-top:40px;text-align:center;display:flex;flex-direction:column;
+  align-items:center;gap:12px}
+.fnc__ctanote{font-size:13px;color:var(--c-ink3)}
+
+@media(max-width:900px){.fnc__grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){
+  .fnc__grid{grid-template-columns:minmax(0,1fr);gap:10px}
+  .fnc__card{padding:30px 16px 18px}
+  .fnc__cta .btn{width:100%}
+}
+
+/* ===== features/features-vertical-heading-rows ===== */
+/* features/features-vertical-heading-rows
+   linie（リニエ シューレ）の作りを再現して起こした型。
+   ・見出しを【縦書き】にして写真の左に立てる。項目番号も縦書きの小さなラベルで添える
+   ・写真は白い縁＋わずかな回転＋角丸をばらつかせて「手で置いた」感じにする
+   ・写真と本文のあいだは【破線】で切る
+   ・項目ごとに上下をずらす（段違い）
+   再現の記録: repro/vhr/ */
+.vhr{position:relative;overflow:hidden}
+.vhr__ghost{position:absolute;left:-4%;top:8%;z-index:0;font-family:var(--f-num);
+  font-size:clamp(140px,20vw,300px);font-weight:900;letter-spacing:-.02em;line-height:1;
+  color:var(--c-ink);opacity:.035;pointer-events:none;white-space:nowrap}
+.vhr .wrap{position:relative;z-index:1}
+
+.vhr__list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(28px,4vw,64px) clamp(24px,4vw,72px)}
+.vhr__item{margin:0}
+/* 段違い。2・4番目を下げる */
+.vhr__item:nth-child(even){margin-top:clamp(26px,4vw,64px)}
+
+.vhr__top{display:flex;align-items:stretch;gap:clamp(10px,1.4vw,20px)}
+/* ★縦書き。右から左に読む */
+/* 写真と同じ高さに収める。溢れたら列が増えて左へ伸びる */
+.vhr__vert{writing-mode:vertical-rl;text-orientation:upright;display:flex;gap:10px;
+  padding-top:6px;overflow:hidden}
+.vhr__label{writing-mode:vertical-rl;text-orientation:mixed;
+  font-family:var(--f-num);font-size:clamp(8px,.7vw,10px);font-weight:700;
+  letter-spacing:.22em;color:var(--c-ink3);white-space:nowrap;align-self:flex-start}
+.vhr__title{font-size:clamp(15px,1.35vw,19px);font-weight:800;color:var(--c-ink);
+  letter-spacing:.14em;line-height:1.55}
+
+.vhr__fig{flex:1;min-width:0;margin:0;transform:rotate(-1.1deg)}
+.vhr__item:nth-child(even) .vhr__fig{transform:rotate(1.2deg)}
+.vhr__fig img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;
+  border:6px solid #fff;box-shadow:var(--shadow-s);
+  border-radius:14px 10px 16px 11px}
+
+/* 写真と本文のあいだの破線 */
+.vhr__sub{margin-top:clamp(18px,2.2vw,30px);padding-top:clamp(16px,2vw,26px);
+  border-top:1px dashed var(--c-line);
+  font-size:clamp(14px,1.15vw,16.5px);font-weight:800;color:var(--c-ink);line-height:1.7}
+.vhr__body{margin-top:10px;font-size:clamp(12.5px,1vw,14px);color:var(--c-ink2);line-height:2.05}
+
+@media(max-width:900px){
+  .vhr__list{grid-template-columns:minmax(0,1fr);gap:34px}
+  .vhr__item:nth-child(even){margin-top:0}
+  .vhr__fig img{border-width:5px}
+  /* ★狭い画面で縦書きは読みにくい。横書きに戻して写真の上へ出す */
+  .vhr__top{flex-direction:column;align-items:stretch;gap:14px}
+  .vhr__vert{writing-mode:horizontal-tb;flex-direction:row-reverse;justify-content:flex-end;
+    align-items:baseline;gap:12px;padding-top:0}
+  .vhr__label{writing-mode:horizontal-tb;letter-spacing:.12em}
+  .vhr__title{font-size:17px;letter-spacing:.02em;line-height:1.6}
+  .vhr__fig{transform:none!important}
+}
+
+/* ===== numbers/numbers-donut-grid ===== */
+/* numbers/numbers-donut-grid
+   ESL club 自身の online-c にある「級別の合格率ドーナツ」を再現して起こした型。
+   再現の記録: repro/donut/（score 5.62）
+   ・リングは conic-gradient。内側を地色の円でくり抜く
+   ・3個＋2個の千鳥（2段目は1段目の間に来る） */
+.ndg__panel{border:1px solid var(--c-line);border-radius:6px;padding:44px 40px 28px}
+.ndg__grid{display:flex;flex-wrap:wrap;justify-content:center;gap:20px;max-width:702px;margin-inline:auto}
+.ndg__cell{margin:0}
+.ndg__d{position:relative;width:214px;height:214px;border-radius:50%;
+  display:grid;place-content:center;text-align:center}
+.ndg__d::before{content:"";position:absolute;inset:0;border-radius:50%;
+  background:conic-gradient(var(--c-primary) 0 var(--p), #e8e8e8 var(--p) 100%)}
+.ndg__d::after{content:"";position:absolute;inset:12px;border-radius:50%;background:var(--c-bg)}
+.tone-tint .ndg__d::after{background:var(--c-bg2)}
+.ndg__label,.ndg__v{position:relative;z-index:2}
+.ndg__label{display:block;font-size:20px;font-weight:700;color:var(--c-ink);letter-spacing:.02em}
+.ndg__v{display:block;margin-top:4px;font-family:var(--f-num);font-size:44px;font-weight:900;
+  color:var(--c-primary);line-height:1;letter-spacing:-.01em}
+.ndg__v i{font-style:normal;font-size:.5em;margin-left:1px}
+
+.ndg__note{margin-top:24px;text-align:center;font-size:11px;color:var(--c-ink3);line-height:1.8}
+
+@media(max-width:900px){
+  .ndg__panel{padding:28px 16px 20px}
+  .ndg__grid{gap:14px}
+  .ndg__d{width:150px;height:150px}
+  .ndg__d::after{inset:9px}
+  .ndg__label{font-size:14px}
+  .ndg__v{font-size:31px}
+}
+@media(max-width:560px){
+  .ndg__grid{gap:12px}
+  .ndg__d{width:136px;height:136px}
+  .ndg__label{font-size:13px}
+  .ndg__v{font-size:28px}
+}
+
+/* ===== gallery/gallery-video-cards-bordered ===== */
+/* gallery/gallery-video-cards-bordered
+   目白大学 MEJINAVI の作りを再現して起こした型。
+   ・動画カードに【色のついた太い縁】を付け、わずかに傾ける
+   ・再生ボタンは右下に円で置き、縁と同じ色にする
+   ・カードごとに縁の色を変える
+   再現の記録: repro/gvb/ */
+.gvb__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(18px,3vw,40px)}
+.gvb__item{margin:0}
+.gvb__card{display:block;transition:transform .16s var(--e)}
+.gvb__thumb{position:relative;display:block;border-radius:22px;overflow:hidden;
+  border:6px solid var(--c-primary-2);background:var(--c-bg2)}
+.gvb__item:nth-child(even) .gvb__thumb{border-color:var(--c-primary)}
+.gvb__thumb img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block}
+/* 再生ボタン：右下・円・縁と同じ色 */
+.gvb__play{position:absolute;right:16px;bottom:16px;width:clamp(44px,4.6vw,64px);aspect-ratio:1;
+  border-radius:50%;background:var(--c-primary-2);display:grid;place-content:center}
+.gvb__item:nth-child(even) .gvb__play{background:var(--c-primary)}
+.gvb__play::after{content:"";border-left:clamp(13px,1.4vw,19px) solid var(--c-accent);
+  border-top:clamp(9px,.95vw,13px) solid transparent;border-bottom:clamp(9px,.95vw,13px) solid transparent;
+  margin-left:3px}
+.gvb__item:nth-child(odd) .gvb__card{transform:rotate(-1.1deg)}
+.gvb__item:nth-child(even) .gvb__card{transform:rotate(1.1deg)}
+@media(hover:hover) and (pointer:fine){.gvb__card:hover{transform:rotate(0) translateY(-4px)}}
+.gvb__cap{display:block;margin-top:14px;text-align:center}
+.gvb__cap b{display:block;font-size:clamp(11px,.9vw,12.5px);color:var(--c-ink3);font-weight:700}
+.gvb__cap em{display:block;margin-top:3px;font-style:normal;
+  font-size:clamp(15px,1.4vw,19px);font-weight:900;color:var(--c-ink)}
+.gvb__note{margin-top:20px;text-align:center;font-size:11.5px;color:var(--c-ink3)}
+@media(max-width:768px){
+  .gvb__grid{grid-template-columns:minmax(0,1fr);gap:22px}
+  .gvb__thumb{border-width:5px;border-radius:18px}
+  .gvb__item .gvb__card{transform:none}
+}
+
+/* ===== cta/cta-priority-stack ===== */
+/* cta/cta-priority-stack — 主CTAを地の上に直接置く（白カードを持たない）
+   ── 効かせている工夫 ─────────────────────────────
+   color/accent-means-clickable : 有彩色が出るのは「押せる場所」だけ。
+     ボタンの塗り（--c-primary）1点に緑を集約し、注記・小タグ・罫・写真の下地は
+     すべて無彩色に落とす。旧版は小タグを橙（--c-accent）にしていたが、
+     橙はページ全体で2箇所の予算なので外した。ゴースト（枠だけの緑ボタン）も廃止。
+   edge/panel-not-full-width : 面を全幅の矩形にしない。版面（.wrap）より狭い
+     「1枚の板」として置き、角は1箇所（右下）だけ大きく丸める。
+     R=--r-l×2.5（60px）、560px以下は×1.6（38px）。
+     板に塗りは持たせない（塗ると kit の tone が敷く地の階段が壊れる）ので、
+     輪郭は 1px の罫だけで示し、余った地色がそのまま余白として働く。
+   ───────────────────────────────────────────── */
+
+/* 地は敷かない。--cps-edge は地に対して見える濃さを地ごとに持ち替える。
+   淡い地：ink 20%（罫と地で 1.54:1）／濃い地：白 30%（2.60:1） */
+.cps{
+  --cps-r:calc(var(--r-l) * 2.5);
+  --cps-edge:color-mix(in srgb,var(--c-ink) 20%,transparent);
+}
+.tone-dark .cps{--cps-edge:color-mix(in srgb,var(--c-on-dark) 30%,transparent)}
+
+/* 本文の途中に挟む回。上下はブロック間の値まで詰める（独自のpxは置かない） */
+.cps--tight{padding-block:var(--sp-blk)}
+
+/* ── 板 ───────────────────────────────────────
+   全幅の矩形にしない。幅は中身に合わせて縮み（最小 32em＝512px、上限は版面）、
+   角は右下の1箇所だけ大きく丸める。余った地色がそのまま余白として働く。
+   版面いっぱいに広げると、ボタン1本の回で中が空洞に見える（実描画で確認）。
+   クラス名に __panel / __card を使わない（_base.css が自動で影を付けるため） */
+.cps__field{
+  width:fit-content;min-width:min(32em,100%);max-width:100%;margin-inline:auto;
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  padding:var(--sp-el);
+  border:1px solid var(--cps-edge);
+  border-radius:0 0 var(--cps-r) 0;
+}
+
+/* 写真（任意）。既定はCTAより上（全画面幅で共通） */
+.cps__ph{margin:0 0 var(--s5);width:100%;overflow:hidden;
+  border-radius:var(--r-m);aspect-ratio:16/10;background:var(--c-bg2)}
+.cps__ph img{width:100%;height:100%;object-fit:cover}
+
+.cps__body{width:100%;min-width:0;
+  display:flex;flex-direction:column;align-items:center}
+
+/* 見出し。様式は .sec-head のまま、中央寄せだけ足す。
+   eyebrow も heading も無い回は箱ごと消す（--sp-el の空白が残らないように） */
+.cps__head{text-align:center}
+.cps__head .sec-head__en{justify-content:center}
+.cps__head:not(:has(*)){display:none}
+
+/* ── ボタン ───────────────────────────────────
+   _base.css の .btn を1形のまま使う。高さ・角丸・左右パディング・丸矢印・色は触らない。
+   ここで足すのは版面に収めるための上限幅と、2行に折れたときの行間だけ */
+.cps__stack{width:100%;display:flex;flex-direction:column;align-items:center;gap:var(--s4)}
+.cps__btn{max-width:100%;line-height:var(--lh-tight)}
+.cps__label{min-width:0;text-wrap:balance}
+
+/* 小タグ（無料／簡単30秒）。押せる場所の中に置く無彩色のチップにする */
+.cps__tag{flex:none;padding:var(--s1) var(--s2);border-radius:var(--r-pill);
+  background:var(--c-on-primary);color:var(--c-ink);
+  font-size:var(--fs-note);font-weight:700;line-height:var(--lh-tight)}
+
+.cps__ico{flex:none;display:grid;place-items:center;width:1.4em;height:1.4em}
+.cps__ico svg{width:100%;height:100%;fill:none;stroke:currentColor;
+  stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+
+/* _base.css の .hh-in は表示後も clip-path:inset(0) を残す。
+   そのままだと :focus-visible のリング（outline-offset 3px）が切り落とされるので、
+   ボタンだけ解除する（.fx の定義自体は触らない） */
+.fx-on .cps__btn.hh-in{clip-path:none}
+
+.cps__note{margin-top:var(--s5);max-width:36em;
+  font-size:var(--fs-sm);color:var(--c-ink3);line-height:var(--lh-head)}
+/* --c-ink3 は濃色地で 2.89:1 しかない。淡色へ振り替える（11.9:1） */
+.tone-dark .cps__note{color:var(--c-bg3)}
+
+/* ── 写真を渡した回だけ、PCは横に添える ─────────
+   2段組を抱える回だけ、板の幅は工夫の既定値どおり版面の82%で止める（78〜85%の中） */
+@media(min-width:901px){
+  .cps__field:has(.cps__ph){width:100%;max-width:82%;flex-direction:row;gap:var(--sp-el)}
+  .cps__field:has(.cps__ph) .cps__ph{flex:0 0 34%;margin:0;aspect-ratio:4/5}
+  .cps__field:has(.cps__ph) .cps__body{flex:1 1 auto}
+}
+
+/* ───────── SP ───────── */
+@media(max-width:900px){
+  .cps__field{padding:var(--s5)}
+  .cps__stack{gap:var(--s3)}
+}
+@media(max-width:560px){
+  /* R60は板の高さに対して大きすぎて“カプセル”に見えるので落とす */
+  .cps{--cps-r:calc(var(--r-l) * 1.6)}
+  .cps__field{width:100%}
+  .cps__btn{width:100%}
+  .cps__btn:not(.cps__btn--sub){font-size:var(--fs-base)}
+}
+@media(max-width:420px){
+  .cps__field{padding-inline:var(--s4)}
+}
+
+/* ①見えるか：白カードは地に溶ける。面をやめ、地の上に直接ボタンを置く。
+   色は「押せる場所」だけ＝ボタンだけが緑になる（color/accent-means-clickable） */
+.cps__panel,[class*="cps__panel"],[class*="cps"] .panel{
+  background:transparent;box-shadow:none;border:0;padding-inline:0}
+.cps__panel::before,[class*="cps__panel"]::before{display:none}
+.tone-dark .cps__note,.tone-dark [class*="note"]{color:var(--c-on-dark2)}
+
+/* ===== banner/banner-duo ===== */
+/* banner/banner-duo — 既製バナーをそのまま2本並べる */
+.bnr__list{display:grid;gap:var(--s4)}
+.bnr__item{margin:0}
+.bnr__item a{display:block;border-radius:var(--r-m);overflow:hidden;
+  transition:transform .18s var(--e),box-shadow .18s var(--e)}
+.bnr__item img{width:100%;height:auto;display:block}
+.bnr__item a:active{transform:scale(.995)}
+@media(hover:hover) and (pointer:fine){
+  .bnr__item a:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+}
+
+/* ===== member/member-blob-portrait-letter ===== */
+/* member/member-blob-portrait-letter
+   MY genius の作りを再現して起こした型。
+   ・写真を【有機的な形（ブロブ）】にくり抜き、脇に小さな色のブロブを2つ添える
+   ・右は 肩書 → 氏名 → リード（大きめ・太字） → 手描き風の罫 → 本文（小さめ）
+   ・1人ごとに写真の左右を入れ替える
+   再現の記録: repro/mbl/ */
+.mbl__list{display:grid;gap:clamp(40px,6vw,88px)}
+.mbl__item{margin:0;display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.35fr);
+  gap:clamp(24px,4vw,64px);align-items:start}
+.mbl__item:nth-child(even) .mbl__figwrap{order:2}
+
+.mbl__figwrap{position:relative}
+.mbl__fig{position:relative;z-index:2;margin:0}
+/* ★有機的な形。真円にしない */
+.mbl__fig img{width:100%;aspect-ratio:1/1;object-fit:cover;object-position:50% 26%;display:block;
+  border-radius:50%}
+.mbl__b1,.mbl__b2{position:absolute;z-index:1;display:block}
+.mbl__b1{left:2%;top:22%;width:15%;aspect-ratio:1/.8;background:var(--c-accent);
+  border-radius:60% 40% 46% 54% / 54% 60% 40% 46%;opacity:.85}
+.mbl__b2{left:4%;bottom:20%;width:17%;aspect-ratio:1/.62;background:var(--c-primary-2);
+  border-radius:52% 48% 60% 40% / 58% 42% 58% 42%;opacity:.8}
+
+.mbl__role{font-size:clamp(11px,.95vw,13px);color:var(--c-ink3);font-weight:700;letter-spacing:.04em}
+.mbl__name{margin-top:4px;display:flex;align-items:baseline;gap:12px;
+  font-size:clamp(20px,2vw,27px);font-weight:900;color:var(--c-ink);letter-spacing:.04em}
+.mbl__name span{font-family:var(--f-num);font-size:.5em;font-weight:800;color:var(--c-primary)}
+.mbl__lead{margin-top:clamp(16px,2vw,26px);font-size:clamp(14.5px,1.3vw,18px);font-weight:800;
+  color:var(--c-ink);line-height:1.95}
+/* 手描き風の罫 */
+.mbl__body{margin-top:clamp(16px,2vw,26px);padding-top:clamp(16px,2vw,26px);
+  border-top:1px solid var(--c-line);
+  font-size:clamp(12.5px,1.02vw,14px);color:var(--c-ink2);line-height:2.05}
+.mbl__body p + p{margin-top:1.35em}
+
+@media(max-width:900px){
+  .mbl__item{grid-template-columns:minmax(0,1fr);gap:20px}
+  .mbl__item:nth-child(even) .mbl__figwrap{order:0}
+  .mbl__figwrap{max-width:220px}
+  .mbl__name{font-size:20px}
+}
+
+/* ===== member/member-staggered-color-cards ===== */
+/* member/member-staggered-color-cards
+   目白大学 MEJINAVI2025 の作りを再現して起こした型。
+   ・人物カードを【色違い】にして【上下に段差】をつけて並べる
+   ・氏名は【雲形（もこもこ）のラベル】で写真に重ねる
+   再現の記録: repro/msc/ */
+.msc__grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(16px,2.4vw,32px);
+  align-items:start}
+.msc__item{margin:0}
+.msc__item:nth-child(2){margin-top:clamp(18px,2.6vw,40px)}
+.msc__item:nth-child(3){margin-top:clamp(36px,5.2vw,80px)}
+
+/* ★カードが「大きめの白いブロック」。濃い面の上でもこの中は読める */
+.msc__card{position:relative;border-radius:22px;overflow:hidden;background:var(--c-bg);
+  box-shadow:var(--shadow-s)}
+.msc__item:nth-child(1) .msc__fig{background:var(--c-primary-l)}
+.msc__item:nth-child(2) .msc__fig{background:#E2F1E9}
+.msc__item:nth-child(3) .msc__fig{background:#F6EFD9}
+.msc__fig{margin:0}
+/* 素材が円形に切り抜かれているので、円のまま色面に乗せる */
+.msc__fig{display:grid;place-items:center;padding:22px 22px 14px}
+.msc__fig img{width:76%;aspect-ratio:1/1;object-fit:cover;border-radius:50%;display:block}
+/* 氏名：雲形のラベルを写真の下端に重ねる */
+.msc__name{position:relative;margin:-14px 12% 0;z-index:2;text-align:center;padding:12px 10px;
+  border-radius:44% 56% 46% 54% / 60% 58% 42% 40%;background:var(--c-bg)}
+.msc__item:nth-child(1) .msc__name{background:#DCEFD0}
+.msc__item:nth-child(2) .msc__name{background:#C9E6D6}
+.msc__item:nth-child(3) .msc__name{background:#F3E3BC}
+.msc__name b{display:block;font-size:clamp(14px,1.35vw,18px);font-weight:900;color:var(--c-ink)}
+.msc__name span{display:block;margin-top:2px;font-size:clamp(8.5px,.72vw,10px);
+  letter-spacing:.06em;color:var(--c-ink3);font-weight:700}
+
+.msc__spec{padding:14px 18px 20px}
+.msc__dl{display:grid;grid-template-columns:5.6em minmax(0,1fr);gap:0 10px;
+  font-size:clamp(11px,.92vw,12.5px);padding:7px 0;border-top:1px dashed var(--c-line)}
+.msc__dl:first-child{border-top:0}
+.msc__dl dt{color:var(--c-ink3);font-weight:700}
+.msc__dl dd{margin:0;color:var(--c-ink2);line-height:1.7}
+.msc__cmt{margin-top:12px;font-size:clamp(11.5px,.95vw,13px);color:var(--c-ink2);line-height:1.95}
+
+@media(max-width:900px){
+  .msc__grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .msc__item:nth-child(3){margin-top:0}
+}
+@media(max-width:560px){
+  .msc__grid{grid-template-columns:minmax(0,1fr);gap:26px}
+  .msc__item:nth-child(2){margin-top:0}
+}
+
+/* ===== cta/cta-priority-stack ===== */
+/* cta/cta-priority-stack — 主CTAを地の上に直接置く（白カードを持たない）
+   ── 効かせている工夫 ─────────────────────────────
+   color/accent-means-clickable : 有彩色が出るのは「押せる場所」だけ。
+     ボタンの塗り（--c-primary）1点に緑を集約し、注記・小タグ・罫・写真の下地は
+     すべて無彩色に落とす。旧版は小タグを橙（--c-accent）にしていたが、
+     橙はページ全体で2箇所の予算なので外した。ゴースト（枠だけの緑ボタン）も廃止。
+   edge/panel-not-full-width : 面を全幅の矩形にしない。版面（.wrap）より狭い
+     「1枚の板」として置き、角は1箇所（右下）だけ大きく丸める。
+     R=--r-l×2.5（60px）、560px以下は×1.6（38px）。
+     板に塗りは持たせない（塗ると kit の tone が敷く地の階段が壊れる）ので、
+     輪郭は 1px の罫だけで示し、余った地色がそのまま余白として働く。
+   ───────────────────────────────────────────── */
+
+/* 地は敷かない。--cps-edge は地に対して見える濃さを地ごとに持ち替える。
+   淡い地：ink 20%（罫と地で 1.54:1）／濃い地：白 30%（2.60:1） */
+.cps{
+  --cps-r:calc(var(--r-l) * 2.5);
+  --cps-edge:color-mix(in srgb,var(--c-ink) 20%,transparent);
+}
+.tone-dark .cps{--cps-edge:color-mix(in srgb,var(--c-on-dark) 30%,transparent)}
+
+/* 本文の途中に挟む回。上下はブロック間の値まで詰める（独自のpxは置かない） */
+.cps--tight{padding-block:var(--sp-blk)}
+
+/* ── 板 ───────────────────────────────────────
+   全幅の矩形にしない。幅は中身に合わせて縮み（最小 32em＝512px、上限は版面）、
+   角は右下の1箇所だけ大きく丸める。余った地色がそのまま余白として働く。
+   版面いっぱいに広げると、ボタン1本の回で中が空洞に見える（実描画で確認）。
+   クラス名に __panel / __card を使わない（_base.css が自動で影を付けるため） */
+.cps__field{
+  width:fit-content;min-width:min(32em,100%);max-width:100%;margin-inline:auto;
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  padding:var(--sp-el);
+  border:1px solid var(--cps-edge);
+  border-radius:0 0 var(--cps-r) 0;
+}
+
+/* 写真（任意）。既定はCTAより上（全画面幅で共通） */
+.cps__ph{margin:0 0 var(--s5);width:100%;overflow:hidden;
+  border-radius:var(--r-m);aspect-ratio:16/10;background:var(--c-bg2)}
+.cps__ph img{width:100%;height:100%;object-fit:cover}
+
+.cps__body{width:100%;min-width:0;
+  display:flex;flex-direction:column;align-items:center}
+
+/* 見出し。様式は .sec-head のまま、中央寄せだけ足す。
+   eyebrow も heading も無い回は箱ごと消す（--sp-el の空白が残らないように） */
+.cps__head{text-align:center}
+.cps__head .sec-head__en{justify-content:center}
+.cps__head:not(:has(*)){display:none}
+
+/* ── ボタン ───────────────────────────────────
+   _base.css の .btn を1形のまま使う。高さ・角丸・左右パディング・丸矢印・色は触らない。
+   ここで足すのは版面に収めるための上限幅と、2行に折れたときの行間だけ */
+.cps__stack{width:100%;display:flex;flex-direction:column;align-items:center;gap:var(--s4)}
+.cps__btn{max-width:100%;line-height:var(--lh-tight)}
+.cps__label{min-width:0;text-wrap:balance}
+
+/* 小タグ（無料／簡単30秒）。押せる場所の中に置く無彩色のチップにする */
+.cps__tag{flex:none;padding:var(--s1) var(--s2);border-radius:var(--r-pill);
+  background:var(--c-on-primary);color:var(--c-ink);
+  font-size:var(--fs-note);font-weight:700;line-height:var(--lh-tight)}
+
+.cps__ico{flex:none;display:grid;place-items:center;width:1.4em;height:1.4em}
+.cps__ico svg{width:100%;height:100%;fill:none;stroke:currentColor;
+  stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+
+/* _base.css の .hh-in は表示後も clip-path:inset(0) を残す。
+   そのままだと :focus-visible のリング（outline-offset 3px）が切り落とされるので、
+   ボタンだけ解除する（.fx の定義自体は触らない） */
+.fx-on .cps__btn.hh-in{clip-path:none}
+
+.cps__note{margin-top:var(--s5);max-width:36em;
+  font-size:var(--fs-sm);color:var(--c-ink3);line-height:var(--lh-head)}
+/* --c-ink3 は濃色地で 2.89:1 しかない。淡色へ振り替える（11.9:1） */
+.tone-dark .cps__note{color:var(--c-bg3)}
+
+/* ── 写真を渡した回だけ、PCは横に添える ─────────
+   2段組を抱える回だけ、板の幅は工夫の既定値どおり版面の82%で止める（78〜85%の中） */
+@media(min-width:901px){
+  .cps__field:has(.cps__ph){width:100%;max-width:82%;flex-direction:row;gap:var(--sp-el)}
+  .cps__field:has(.cps__ph) .cps__ph{flex:0 0 34%;margin:0;aspect-ratio:4/5}
+  .cps__field:has(.cps__ph) .cps__body{flex:1 1 auto}
+}
+
+/* ───────── SP ───────── */
+@media(max-width:900px){
+  .cps__field{padding:var(--s5)}
+  .cps__stack{gap:var(--s3)}
+}
+@media(max-width:560px){
+  /* R60は板の高さに対して大きすぎて“カプセル”に見えるので落とす */
+  .cps{--cps-r:calc(var(--r-l) * 1.6)}
+  .cps__field{width:100%}
+  .cps__btn{width:100%}
+  .cps__btn:not(.cps__btn--sub){font-size:var(--fs-base)}
+}
+@media(max-width:420px){
+  .cps__field{padding-inline:var(--s4)}
+}
+
+/* ①見えるか：白カードは地に溶ける。面をやめ、地の上に直接ボタンを置く。
+   色は「押せる場所」だけ＝ボタンだけが緑になる（color/accent-means-clickable） */
+.cps__panel,[class*="cps__panel"],[class*="cps"] .panel{
+  background:transparent;box-shadow:none;border:0;padding-inline:0}
+.cps__panel::before,[class*="cps__panel"]::before{display:none}
+.tone-dark .cps__note,.tone-dark [class*="note"]{color:var(--c-on-dark2)}
+
+/* ===== voice/voice-band-illustration ===== */
+/* voice/voice-band-illustration
+   トミーそろばん教室の作りを再現して起こした型。
+   ・セクションの上端に【色の帯】を敷く
+   ・左に小さな人物、右に 見出し（ブランド色）→ 属性 → 本文
+   ・見出しはブランド色。本文は行間を広めに取って長文でも読ませる
+   再現の記録: repro/vbi/ */
+.vbi{position:relative}
+.vbi__band{position:absolute;left:0;right:0;top:0;height:clamp(28px,3.4vw,46px);
+  background:var(--c-support2);opacity:.85}
+.vbi .wrap{position:relative;z-index:1}
+
+.vbi__list{display:grid;gap:clamp(30px,4.6vw,64px)}
+.vbi__item{margin:0;display:grid;grid-template-columns:clamp(80px,9vw,132px) minmax(0,1fr);
+  gap:clamp(18px,3vw,48px);align-items:start}
+.vbi__fig{margin:0}
+.vbi__fig img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:50%;
+  border:5px solid #fff;box-shadow:var(--shadow-s)}
+
+.vbi__t{font-size:clamp(16px,1.7vw,23px);font-weight:900;color:var(--c-primary);line-height:1.6}
+.vbi__who{margin-top:8px;font-size:clamp(12px,1vw,14px);font-weight:800;color:var(--c-ink)}
+.vbi__body{margin-top:clamp(12px,1.6vw,20px);font-size:clamp(12.5px,1.02vw,14px);
+  color:var(--c-ink2);line-height:2.1}
+.vbi__body p + p{margin-top:1.3em}
+
+/* 講師コメント（入れ子） */
+.vbi__reply{margin-top:clamp(18px,2.4vw,30px);padding:clamp(16px,2vw,26px);
+  background:var(--c-bg2);border-radius:16px}
+.vbi__replyhead span{display:inline-block;background:var(--c-primary);color:var(--c-on-primary);
+  font-size:clamp(10px,.82vw,11.5px);font-weight:800;letter-spacing:.06em;
+  padding:5px 13px;border-radius:999px}
+.vbi__replybody{margin-top:12px;font-size:clamp(12px,.98vw,13.5px);color:var(--c-ink2);line-height:2.05}
+.vbi__replybody p + p{margin-top:1.3em}
+
+@media(max-width:768px){
+  .vbi__item{grid-template-columns:minmax(0,1fr);gap:14px}
+  .vbi__fig{max-width:88px}
+  .vbi__t{font-size:16px}
+}
+
+/* ===== numbers/numbers-chip-row ===== */
+/* numbers/numbers-chip-row — 等価な事実（学校名・拠点数など）を並べて「信用の面」を作る
+   ── 効かせている工夫 ─────────────────────────────
+   rule/dissolve-into-ground : チップに枠も影も持たせない。境界は地との色差だけに任せる。
+     6枚並んでも罫が6本・影が6つ増えないので、一覧が静かなまま1つの「面」として読める。
+     地と面は必ずペアで決める（片方だけ差し替えると成立しない）。
+   color/rival-desaturated   : 面・タブ・注記から色相を全部抜く。
+     押せる場所が1つも無いセクションなので、主色（緑）も差し色（橙）も置かない。
+     並んだ6件は等価な事実なので、どれか1件だけを色で立てることもしない。
+   ─────────────────────────────────────────────
+   ★ 実装上の急所：_base.css の .fx.hh-in は clip-path:inset(0) を掛ける。
+     .fx を付けた要素からはみ出したものは出現後に切り落とされる。
+     だから li（=.fx）は透明な器にして、面は中の .nch__body に持たせ、
+     タブは器の中で面の上辺を跨がせる。はみ出しは器の内側で完結させる。 */
+
+.nch{
+  /* 地と面のペア。地が base なら面を1段落とし、地が tint/accent なら面を1段上げる。
+     どちらでも ΔL* は 4〜5 で、枠を1本も引かずに①輝度の段差が立つ。
+     6%を切ると面が消え、12%を超えると普通の白カードに戻る */
+  --nch-face:var(--c-bg2);
+  /* タブは面から無彩色で1段。色相は持たせない */
+  --nch-tab-bg:color-mix(in srgb,var(--c-ink) 9%,var(--nch-face));
+  --nch-tab-h:calc(var(--fs-note) * 1.6 + var(--s1) * 2);
+}
+.tone-tint .nch,.tone-accent .nch{--nch-face:var(--c-bg)}
+.tone-dark .nch{--nch-face:color-mix(in srgb,var(--c-on-dark) 9%,var(--c-dark));
+  --nch-tab-bg:color-mix(in srgb,var(--c-on-dark) 18%,var(--c-dark))}
+
+/* ── 見出し ─────────────────────────────
+   .sec-head（欧文ラベル＋和文＋補足）をそのまま使う。独自の様式は作らない。
+   下の余白は _base.css の .sec-head が持つ --sp-el。ここでは足さない */
+.nch__head{max-width:44em}
+.nch__head em{font-style:normal}   /* 見出しの中で色を持たせない */
+
+/* ── チップ群 ───────────────────────────
+   既定（数値）は中央寄せの横並び。名前モードは等幅グリッドで3列→2列→1列に畳む */
+.nch__chips{display:flex;flex-wrap:wrap;justify-content:center;gap:var(--s3)}
+.nch--wordy .nch__chips{display:grid;align-items:stretch;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+
+/* li は透明な器。上の padding がタブの乗り上げぶんの逃げになる。
+   タブが1つも無いときだけ逃げを畳む（畳まないと行間だけが13px広がる）。
+   :not(:has()) が効かない環境では逃げが残るだけ＝タブは切られない側に倒れる */
+.nch__chip{position:relative;flex:0 1 auto;min-width:min(100%,180px);
+  display:flex;flex-direction:column;
+  padding-top:calc(var(--nch-tab-h) / 2)}
+.nch__chips:not(:has(.nch__tab)) .nch__chip{padding-top:0}
+
+/* 面。枠も影も持たない＝この工夫の本体。
+   境界は地との色差だけ。角丸は小さく取り、面の輪郭を主張させない */
+.nch__body{flex:1;display:flex;flex-direction:column;justify-content:center;
+  background:var(--nch-face);border:0;border-radius:var(--r-s);
+  padding:var(--s5) var(--s4);text-align:center}
+
+/* タブ。面の上辺にちょうど半分だけ乗り上げる＝この型の署名。
+   高さを --nch-tab-h で固定してあるので器の padding-top と必ず噛み合う。
+   色は持たせず、面から無彩色で1段だけ動かす。
+   max-width と ellipsis は、タブ文言が長すぎたときの保険（本来は4〜6文字） */
+.nch__tab{position:absolute;top:0;left:50%;transform:translateX(-50%);
+  z-index:1;height:var(--nch-tab-h);
+  display:flex;align-items:center;justify-content:center;
+  max-width:calc(100% - var(--s5));padding-inline:var(--s3);
+  background:var(--nch-tab-bg);color:var(--c-ink2);
+  font-size:var(--fs-note);font-weight:700;letter-spacing:.06em;line-height:1;
+  border-radius:var(--r-s);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tone-dark .nch__tab{color:var(--c-on-dark)}
+
+/* 値。数値は等幅・極大。名前は級数を落とし、ウェイトも1段下げる
+   （6件が等価に並ぶので、6箇所を最大ウェイトで押さない）。
+   overflow-wrap:anywhere は、長い固有名詞が器から溢れないための最終保険 */
+.nch__val{font-family:var(--f-num);font-weight:900;color:var(--c-ink);
+  font-size:clamp(var(--fs-xl),3.6vw,var(--fs-2xl));line-height:var(--lh-tight);
+  font-variant-numeric:tabular-nums;letter-spacing:.01em}
+.nch__unit{font-style:normal;font-family:var(--f-sans);font-weight:700;
+  font-size:.38em;margin-left:.1em;letter-spacing:0}
+.nch--wordy .nch__val{font-family:var(--f-disp);font-weight:700;
+  font-size:clamp(var(--fs-base),1.7vw,var(--fs-md));line-height:var(--lh-head);
+  letter-spacing:.01em;font-feature-settings:"palt";
+  text-wrap:balance;overflow-wrap:anywhere}
+.nch--wordy .nch__unit{font-size:.85em;margin-left:0}
+.tone-dark .nch__val{color:var(--c-on-dark)}
+
+.nch__cnote{margin-top:var(--s1);font-size:var(--fs-note);color:var(--c-ink3);
+  line-height:var(--lh-head)}
+
+/* 注記。見出しと同じ左端に揃える */
+.nch__source{margin-top:var(--s4);font-size:var(--fs-note);color:var(--c-ink3);
+  line-height:var(--lh-body)}
+
+/* ── 動き ─────────────────────────────
+   チップが下から60msずつずれて出るだけ。跳ね返り・拡大は使わない。
+   .fx-on が付かない＝JSが死んだ環境では最初から全部見えている */
+
+/* ── SP：チップを畳む ─────────────────
+   数値モードは2個までなら横並び。3個以上（:has で数える）は全幅で縦積み。
+   :has が効かない環境でも2列で止まるだけで、崩れはしない */
+@media(max-width:900px){
+  .nch__chip{flex:1 1 calc(50% - var(--s3))}
+  .nch__chips:has(> :nth-child(3)) .nch__chip{flex-basis:100%}
+  .nch--wordy .nch__chips{grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr))}
+  .nch__body{padding:var(--s4) var(--s3)}
+  .nch__val{font-size:clamp(var(--fs-lg),6.4vw,var(--fs-xl))}
+}
+@media(max-width:560px){
+  .nch--wordy .nch__chips{grid-template-columns:minmax(0,1fr)}
+  .nch__tab{letter-spacing:.03em}
+}
+
+/* rule/dissolve-into-ground：枠も影も置かず、地と同系の塗りだけで面を立てる */
+
+
+.nch__chip{background:var(--c-bg);box-shadow:none;border:0}
+
+/* ===== compare/compare-matrix-symbol ===== */
+/* compare/compare-matrix-symbol
+   他社比較のマトリクス（7行×3列・セルは文章）
+
+   rule/table-no-grid ── 格子罫を1本も引かない
+     縦罫ゼロ・ヘッダ下罫ゼロ。列は padding（工夫の指定 20px 24px ＝ --s5）の
+     余白だけで分ける。行の区切りは --c-ink の不透明度6%が1本きり、最終行は0。
+     線を全部消すと、残った1つの面（自社列の帯）が画面上で唯一の手がかりになる。
+
+   color/rival-desaturated ── 色を持つのは自社列だけ
+     A社・B社は地・本文・記号のすべてから彩度を抜く。競合列に別のティントを敷くと
+     「2色で塗り分け」に戻るので、競合列の地は素のまま（＝セクションの地色）にする。
+     自社列は地を1段だけ動かし（--c-bg3）、記号だけが色相を持つ。
+
+   地はパーツ側で敷かない。kit の tone-* が外側で敷いているので、
+   ここで背景を足すとページの地の階段が壊れる。 */
+
+.cmx{
+  /* この表で引く唯一の線。工夫の指定は不透明度 .04〜.08、ここは6% */
+  --cmx-rule:1px solid color-mix(in srgb,var(--c-ink) 6%,transparent);
+  /* セル余白＝列の区切り。縦罫の代わりにこれが列を分ける */
+  --cmx-pad:var(--s5);
+  /* 線ではなく幅で主従をつける。自社列だけ1.28倍。
+     項目列は .9fr ＝ 13〜14字が1行に収まる幅。狭いと語尾1字だけが次行に落ちる */
+  --cmx-cols:minmax(var(--s9),.9fr) 1.28fr 1fr 1fr;
+}
+
+/* 1100px以下は列幅が詰まる。縦罫が無いので、区切りである余白を1段だけ落として
+   本文の行あたり字数を戻す（項目名の語尾1字が次行に落ちるのを防ぐ） */
+@media(max-width:1100px){ .cmx{--cmx-pad:var(--s4)} }
+
+/* 見出しは _base.css の .sec-head をそのまま使う（独自の見出し様式を作らない）。
+   見出しの <em> にはマーカー帯を敷かない ── この面で色を持つのは自社列だけにする */
+.cmx em{font-style:normal;color:inherit}
+
+/* ── 表本体 ─────────────────────────────
+   .sec-head の margin-bottom（--sp-el）が表との間隔になる。ここでは足さない。
+   行は箱を持たない＝子セルがそのまま grid item になり、
+   列ごとに文章量がバラついても行の高さは最も高いセルに揃う。 */
+.cmx__grid{display:grid;grid-template-columns:var(--cmx-cols)}
+.cmx__thead,.cmx__row{display:contents}
+
+/* ヘッダ：このセクションで唯一の濃い面。
+   行罫を6%まで落としたぶん、表の骨はこの1本の帯が受け持つ（輝度差 14.3:1）。
+   下罫は引かない（面そのものが区切りになる） */
+.cmx__hc{display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;
+  gap:var(--s1);min-width:0;padding:var(--s4) var(--cmx-pad);
+  background:var(--c-dark);line-height:var(--lh-head)}
+.cmx__hc--item{font-size:var(--fs-note);font-weight:700;letter-spacing:.06em;
+  border-top-left-radius:var(--r-m)}
+.cmx__thead>:last-child{border-top-right-radius:var(--r-m)}
+
+/* 競合の列名は白のまま彩度を持たせず、透過で一段落とす（コントラスト 7.9:1） */
+.cmx__hc--item,
+.cmx__hname{color:color-mix(in srgb,var(--c-on-dark) 74%,transparent)}
+.cmx__hname{font-size:var(--fs-sm);font-weight:700}
+.cmx__hnote{font-size:var(--fs-note);font-weight:400;
+  color:color-mix(in srgb,var(--c-on-dark) 58%,transparent)}
+/* 自社ヘッダだけ白100%＋一段大きく。ここは色ではなく明度と級数で立てる */
+.cmx__hc--own .cmx__hname{font-size:var(--fs-md);font-weight:900;letter-spacing:.01em;
+  color:var(--c-on-dark)}
+.cmx__badge{display:inline-block;padding:var(--s1) var(--s3);border-radius:var(--r-pill);
+  background:var(--c-on-dark);color:var(--c-dark);
+  font-size:var(--fs-note);font-weight:700;line-height:var(--lh-head)}
+
+/* 項目名の列。面も罫も持たず、左端が揃っていることと太字だけで見出し列にする */
+.cmx__item{display:flex;align-items:center;min-width:0;padding:var(--cmx-pad);
+  font-size:var(--fs-sm);font-weight:700;color:var(--c-ink);line-height:var(--lh-head);
+  border-bottom:var(--cmx-rule)}
+
+/* データセル。競合列は地を持たない＝セクションの地がそのまま出る */
+.cmx__c{position:relative;display:flex;flex-direction:column;justify-content:center;
+  min-width:0;padding:var(--cmx-pad);border-bottom:var(--cmx-rule)}
+/* 自社列だけが色を持つ。ヘッダ直下から最終行まで1本の帯として通る */
+.cmx__c--own{background:var(--c-bg3)}
+/* 地が色付きの tone に置かれても帯が消えないよう、そのときは白抜きに反転させる */
+.tone-tint .cmx__c--own,
+.tone-accent .cmx__c--own{background:var(--c-bg)}
+
+/* 最終行だけ罫を落とし、帯の下端を丸める */
+.cmx__row:last-child .cmx__item,
+.cmx__row:last-child .cmx__c{border-bottom:0}
+.cmx__row:last-child .cmx__c--own{border-radius:0 0 var(--r-m) var(--r-m)}
+
+/* 競合の本文・補足は彩度ゼロのグレー。
+   これ以上淡くすると白地で4.5:1を割るので、主従は級数でつける（色では下げない） */
+.cmx__main{font-size:var(--fs-sm);line-height:var(--lh-head);color:var(--c-ink3);
+  overflow-wrap:anywhere}
+.cmx__sub{margin-top:var(--s2);font-size:var(--fs-note);line-height:var(--lh-head);
+  color:var(--c-ink3);overflow-wrap:anywhere}
+/* 自社の本文だけ黒・太字・一段大きく */
+.cmx__c--own .cmx__main{font-size:var(--fs-base);font-weight:700;color:var(--c-ink)}
+.cmx__c--own .cmx__sub{color:var(--c-ink2)}
+
+/* 記号は「形」で語る。色相を持つのは自社の◎ひとつだけで、競合は無彩色のまま。
+   data-mark が空＝記号なしの文章セルになる */
+.cmx__mk{display:none;margin-right:var(--s2);
+  font-size:var(--fs-md);line-height:var(--lh-tight);vertical-align:-.06em;font-weight:700}
+.cmx__c[data-mark="good"] .cmx__mk,
+.cmx__c[data-mark="mid"]  .cmx__mk,
+.cmx__c[data-mark="bad"]  .cmx__mk{display:inline-block}
+.cmx__mk::before{color:var(--c-ink3)}
+.cmx__c[data-mark="good"] .cmx__mk::before{content:"\25CE"}
+.cmx__c[data-mark="mid"]  .cmx__mk::before{content:"\25B3"}
+.cmx__c[data-mark="bad"]  .cmx__mk::before{content:"\00D7"}
+.cmx__c--own[data-mark="good"] .cmx__mk::before{color:var(--c-primary-d)}
+
+/* 列名。PCでは読み上げ専用（列と値の対応を音声に残す）、SPでは表に出す */
+.cmx__lab{position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;
+  overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+
+.cmx__note{margin-top:var(--s5);font-size:var(--fs-note);color:var(--c-ink3);
+  line-height:var(--lh-head)}
+
+/* ───────── SP：横スクロールにせず「1項目＝1ブロック」へ分解 ─────────
+   DOMの並びが 項目名 → 自社 → A社 → B社 なので、畳むだけで
+   「項目名＝見出し／自社が1つ目／競合が2つ目以降」になる。
+   ここでも罫は増やさない。ブロックの区切りは同じ6%の1本だけ。 */
+@media(max-width:900px){
+  .cmx__grid{display:block}
+  .cmx__thead{display:none}
+
+  .cmx__row{display:block}
+  .cmx__row+.cmx__row{margin-top:var(--s5);padding-top:var(--s5);border-top:var(--cmx-rule)}
+
+  /* 項目名は色を持たせず、級数と太さだけで見出しにする */
+  .cmx__item{display:block;padding:0 0 var(--s3);border-bottom:0;
+    font-size:var(--fs-base)}
+
+  /* 競合は「罫ゼロの定義リスト」として、位置揃えと行間だけで表として読ませる */
+  .cmx__c{display:grid;grid-template-columns:var(--s8) 1fr;
+    column-gap:var(--s4);align-items:baseline;
+    padding:var(--s3) 0 0;border-bottom:0}
+  .cmx__c .cmx__sub{grid-column:2;margin-top:var(--s1)}
+  .cmx__lab{position:static;width:auto;height:auto;margin:0;padding:0;
+    overflow:visible;clip-path:none;white-space:normal;
+    font-size:var(--fs-note);font-weight:700;letter-spacing:.06em;
+    color:var(--c-ink3);line-height:var(--lh-head)}
+
+  /* 自社だけ帯として1枚の面にする＝SPでも色を持つのはここだけ */
+  .cmx__c--own{display:block;padding:var(--s4);border-radius:var(--r-m)}
+  .cmx__c--own .cmx__lab{display:block;margin-bottom:var(--s1);color:var(--c-ink2)}
+
+  /* PC側の「最終行だけ」の指定を打ち消す */
+  .cmx__row:last-child .cmx__item{border-bottom:0}
+  .cmx__row:last-child .cmx__c--own{border-radius:var(--r-m)}
+
+  .cmx__note{margin-top:var(--s6)}
+}
+
+@media(max-width:420px){
+  .cmx__c--own{padding:var(--s3) var(--s4)}
+}
+
+/* rule/table-no-grid：格子罫を消し、行は不透明度6%の1本・列は余白で分ける */
+
+/* ===== access/access-campus-tabs ===== */
+/* access/access-campus-tabs
+   校舎ごとに「情報・料金・タイムテーブル・挨拶」を1つのタブの中へ入れる。
+   原稿の構成そのもの。同じ表が校舎別に2回ずつ直列に並ぶのを避ける。
+   切り替えは JS なし（ラジオ＋:checked）。
+   ─ 使っている工夫 ─
+   rule/table-no-grid        … 表の格子罫を全部消し、行は不透明度6%の1本だけにする
+   rule/dissolve-into-ground … 面は影を持たず、地との明度差だけで立てる */
+.cts__box{position:relative}
+.cts__radio{position:absolute;opacity:0;pointer-events:none;width:0;height:0}
+
+/* ── タブ ── */
+.cts__tabs{display:flex;gap:var(--s2);margin-bottom:var(--sp-el);flex-wrap:wrap}
+.cts__tab{display:inline-flex;align-items:center;justify-content:center;
+  min-width:180px;height:52px;padding:0 var(--s5);cursor:pointer;
+  font-weight:700;font-size:var(--fs-md);color:var(--c-ink3);
+  background:var(--c-bg2);border-radius:var(--r-pill);
+  transition:background .16s var(--e),color .16s var(--e)}
+@media(hover:hover) and (pointer:fine){.cts__tab:hover{color:var(--c-ink)}}
+.cts__radio:nth-of-type(1):checked ~ .cts__tabs .cts__tab:nth-of-type(1),
+.cts__radio:nth-of-type(2):checked ~ .cts__tabs .cts__tab:nth-of-type(2),
+.cts__radio:nth-of-type(3):checked ~ .cts__tabs .cts__tab:nth-of-type(3){
+  background:var(--c-primary);color:var(--c-on-primary)}
+.cts__radio:focus-visible ~ .cts__tabs .cts__tab{outline:3px solid var(--c-primary);outline-offset:3px}
+
+/* ── パネル ── */
+.cts__panel{display:none}
+.cts__radio:nth-of-type(1):checked ~ .cts__panels .cts__panel:nth-of-type(1),
+.cts__radio:nth-of-type(2):checked ~ .cts__panels .cts__panel:nth-of-type(2),
+.cts__radio:nth-of-type(3):checked ~ .cts__panels .cts__panel:nth-of-type(3){display:block}
+/* JSもCSSも効かない環境では先頭を出す保険 */
+.cts__panels .cts__panel:first-child{display:block}
+.cts__radio:checked ~ .cts__panels .cts__panel:first-child{display:none}
+.cts__radio:nth-of-type(1):checked ~ .cts__panels .cts__panel:first-child{display:block}
+
+/* ── 上段：写真＋情報 ── */
+.cts__top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--sp-el);align-items:start}
+.cts__figure{margin:0;border-radius:var(--r-m);overflow:hidden;background:var(--c-bg2)}
+.cts__figure img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block}
+.cts__body{font-size:var(--fs-base);line-height:1.95;color:var(--c-ink2);margin-bottom:var(--sp-el)}
+.cts__tel{display:flex;align-items:baseline;gap:var(--s3);margin-bottom:var(--s5)}
+.cts__tel span{font-size:var(--fs-note);color:var(--c-ink3);font-weight:700}
+.cts__tel a{font-family:var(--f-num);font-weight:900;font-size:clamp(24px,2.6vw,32px);
+  color:var(--c-primary);letter-spacing:.01em;line-height:1}
+/* 罫は引かず、行は不透明度6%の1本だけ */
+.cts__dl{display:grid;grid-template-columns:7.5em minmax(0,1fr);gap:0 var(--s4);font-size:var(--fs-sm)}
+.cts__dl dt{padding:12px 0;color:var(--c-ink3);font-weight:700;border-top:1px solid rgba(48,48,48,.06)}
+.cts__dl dd{padding:12px 0;margin:0;color:var(--c-ink2);line-height:1.75;border-top:1px solid rgba(48,48,48,.06)}
+.cts__dl dt:first-of-type,.cts__dl dd:first-of-type{border-top:0}
+
+/* ── 各ブロック ── */
+.cts__block{margin-top:var(--sp-blk)}
+.cts__h3{font-family:var(--f-disp);font-weight:900;font-size:var(--fs-lg);color:var(--c-ink);
+  margin-bottom:var(--sp-el)}
+
+/* 料金：罫なし。価格だけが主役 */
+.cts__plans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s2)}
+.cts__plan{background:var(--c-bg2);border-radius:var(--r-m);padding:var(--s5) var(--s4);text-align:center}
+.cts__planname{font-weight:700;font-size:var(--fs-md);color:var(--c-ink)}
+.cts__planname span{display:block;margin-top:2px;font-size:var(--fs-note);color:var(--c-ink3);font-weight:400}
+.cts__price{margin-top:var(--s4);font-family:var(--f-num);font-weight:900;
+  font-size:clamp(21px,2.4vw,28px);color:var(--c-ink);line-height:1}
+
+/* タイムテーブル：格子罫なし。列は余白だけで分ける */
+.cts__tt{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s2)}
+.cts__day{background:var(--c-bg2);border-radius:var(--r-m);padding:var(--s5) var(--s4)}
+.cts__day.is-off{background:var(--c-bg);color:var(--c-ink3)}
+.cts__dayname{font-weight:900;font-size:var(--fs-md);color:var(--c-ink);text-align:center;
+  padding-bottom:var(--s4);border-bottom:1px solid rgba(48,48,48,.06)}
+.cts__day.is-off .cts__dayname{color:var(--c-ink3)}
+.cts__off{padding:var(--sp-el) 0;text-align:center;color:var(--c-ink3);font-size:var(--fs-sm)}
+.cts__slots{margin-top:var(--s4);display:grid;gap:var(--s2)}
+.cts__slots li{font-size:var(--fs-sm);color:var(--c-ink2);text-align:center;padding:6px 0}
+.cts__slots li span{display:block;margin-top:2px;font-size:var(--fs-note);color:var(--c-ink3)}
+.cts__notes{margin-top:var(--s5);display:grid;gap:4px}
+.cts__notes li{font-size:var(--fs-note);color:var(--c-ink3);line-height:1.8}
+
+/* 挨拶（渋谷校のみ） */
+.cts__msgbody{display:grid;grid-template-columns:200px minmax(0,1fr);gap:var(--sp-el);align-items:start}
+.cts__msgfig{margin:0;border-radius:50% 50% var(--r-m) var(--r-m) / 22% 22% var(--r-m) var(--r-m);
+  overflow:hidden;background:var(--c-bg2)}
+.cts__msgfig img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:50% 24%;display:block}
+.cts__msgtext{max-width:40em;font-size:var(--fs-base);line-height:2.05;color:var(--c-ink2)}
+.cts__msgtext p + p{margin-top:1.4em}
+.cts__sign{margin-top:var(--sp-el)}
+.cts__sign span{display:block;font-size:var(--fs-note);color:var(--c-ink3)}
+.cts__sign b{display:block;margin-top:2px;font-family:var(--f-disp);font-weight:900;
+  font-size:var(--fs-lg);color:var(--c-ink);letter-spacing:.04em}
+
+@media(max-width:900px){
+  .cts__tab{min-width:0;flex:1;height:48px;font-size:var(--fs-sm);padding:0 var(--s4)}
+  .cts__top{grid-template-columns:minmax(0,1fr);gap:var(--s5)}
+  .cts__plans,.cts__tt{grid-template-columns:minmax(0,1fr)}
+  .cts__dl{grid-template-columns:6.5em minmax(0,1fr)}
+  .cts__msgbody{grid-template-columns:minmax(0,1fr);gap:var(--s5)}
+  .cts__msgfig{max-width:200px}
+}
+
+/* ===== cta/cta-priority-stack ===== */
+/* cta/cta-priority-stack — 主CTAを地の上に直接置く（白カードを持たない）
+   ── 効かせている工夫 ─────────────────────────────
+   color/accent-means-clickable : 有彩色が出るのは「押せる場所」だけ。
+     ボタンの塗り（--c-primary）1点に緑を集約し、注記・小タグ・罫・写真の下地は
+     すべて無彩色に落とす。旧版は小タグを橙（--c-accent）にしていたが、
+     橙はページ全体で2箇所の予算なので外した。ゴースト（枠だけの緑ボタン）も廃止。
+   edge/panel-not-full-width : 面を全幅の矩形にしない。版面（.wrap）より狭い
+     「1枚の板」として置き、角は1箇所（右下）だけ大きく丸める。
+     R=--r-l×2.5（60px）、560px以下は×1.6（38px）。
+     板に塗りは持たせない（塗ると kit の tone が敷く地の階段が壊れる）ので、
+     輪郭は 1px の罫だけで示し、余った地色がそのまま余白として働く。
+   ───────────────────────────────────────────── */
+
+/* 地は敷かない。--cps-edge は地に対して見える濃さを地ごとに持ち替える。
+   淡い地：ink 20%（罫と地で 1.54:1）／濃い地：白 30%（2.60:1） */
+.cps{
+  --cps-r:calc(var(--r-l) * 2.5);
+  --cps-edge:color-mix(in srgb,var(--c-ink) 20%,transparent);
+}
+.tone-dark .cps{--cps-edge:color-mix(in srgb,var(--c-on-dark) 30%,transparent)}
+
+/* 本文の途中に挟む回。上下はブロック間の値まで詰める（独自のpxは置かない） */
+.cps--tight{padding-block:var(--sp-blk)}
+
+/* ── 板 ───────────────────────────────────────
+   全幅の矩形にしない。幅は中身に合わせて縮み（最小 32em＝512px、上限は版面）、
+   角は右下の1箇所だけ大きく丸める。余った地色がそのまま余白として働く。
+   版面いっぱいに広げると、ボタン1本の回で中が空洞に見える（実描画で確認）。
+   クラス名に __panel / __card を使わない（_base.css が自動で影を付けるため） */
+.cps__field{
+  width:fit-content;min-width:min(32em,100%);max-width:100%;margin-inline:auto;
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  padding:var(--sp-el);
+  border:1px solid var(--cps-edge);
+  border-radius:0 0 var(--cps-r) 0;
+}
+
+/* 写真（任意）。既定はCTAより上（全画面幅で共通） */
+.cps__ph{margin:0 0 var(--s5);width:100%;overflow:hidden;
+  border-radius:var(--r-m);aspect-ratio:16/10;background:var(--c-bg2)}
+.cps__ph img{width:100%;height:100%;object-fit:cover}
+
+.cps__body{width:100%;min-width:0;
+  display:flex;flex-direction:column;align-items:center}
+
+/* 見出し。様式は .sec-head のまま、中央寄せだけ足す。
+   eyebrow も heading も無い回は箱ごと消す（--sp-el の空白が残らないように） */
+.cps__head{text-align:center}
+.cps__head .sec-head__en{justify-content:center}
+.cps__head:not(:has(*)){display:none}
+
+/* ── ボタン ───────────────────────────────────
+   _base.css の .btn を1形のまま使う。高さ・角丸・左右パディング・丸矢印・色は触らない。
+   ここで足すのは版面に収めるための上限幅と、2行に折れたときの行間だけ */
+.cps__stack{width:100%;display:flex;flex-direction:column;align-items:center;gap:var(--s4)}
+.cps__btn{max-width:100%;line-height:var(--lh-tight)}
+.cps__label{min-width:0;text-wrap:balance}
+
+/* 小タグ（無料／簡単30秒）。押せる場所の中に置く無彩色のチップにする */
+.cps__tag{flex:none;padding:var(--s1) var(--s2);border-radius:var(--r-pill);
+  background:var(--c-on-primary);color:var(--c-ink);
+  font-size:var(--fs-note);font-weight:700;line-height:var(--lh-tight)}
+
+.cps__ico{flex:none;display:grid;place-items:center;width:1.4em;height:1.4em}
+.cps__ico svg{width:100%;height:100%;fill:none;stroke:currentColor;
+  stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+
+/* _base.css の .hh-in は表示後も clip-path:inset(0) を残す。
+   そのままだと :focus-visible のリング（outline-offset 3px）が切り落とされるので、
+   ボタンだけ解除する（.fx の定義自体は触らない） */
+.fx-on .cps__btn.hh-in{clip-path:none}
+
+.cps__note{margin-top:var(--s5);max-width:36em;
+  font-size:var(--fs-sm);color:var(--c-ink3);line-height:var(--lh-head)}
+/* --c-ink3 は濃色地で 2.89:1 しかない。淡色へ振り替える（11.9:1） */
+.tone-dark .cps__note{color:var(--c-bg3)}
+
+/* ── 写真を渡した回だけ、PCは横に添える ─────────
+   2段組を抱える回だけ、板の幅は工夫の既定値どおり版面の82%で止める（78〜85%の中） */
+@media(min-width:901px){
+  .cps__field:has(.cps__ph){width:100%;max-width:82%;flex-direction:row;gap:var(--sp-el)}
+  .cps__field:has(.cps__ph) .cps__ph{flex:0 0 34%;margin:0;aspect-ratio:4/5}
+  .cps__field:has(.cps__ph) .cps__body{flex:1 1 auto}
+}
+
+/* ───────── SP ───────── */
+@media(max-width:900px){
+  .cps__field{padding:var(--s5)}
+  .cps__stack{gap:var(--s3)}
+}
+@media(max-width:560px){
+  /* R60は板の高さに対して大きすぎて“カプセル”に見えるので落とす */
+  .cps{--cps-r:calc(var(--r-l) * 1.6)}
+  .cps__field{width:100%}
+  .cps__btn{width:100%}
+  .cps__btn:not(.cps__btn--sub){font-size:var(--fs-base)}
+}
+@media(max-width:420px){
+  .cps__field{padding-inline:var(--s4)}
+}
+
+/* ①見えるか：白カードは地に溶ける。面をやめ、地の上に直接ボタンを置く。
+   色は「押せる場所」だけ＝ボタンだけが緑になる（color/accent-means-clickable） */
+.cps__panel,[class*="cps__panel"],[class*="cps"] .panel{
+  background:transparent;box-shadow:none;border:0;padding-inline:0}
+.cps__panel::before,[class*="cps__panel"]::before{display:none}
+.tone-dark .cps__note,.tone-dark [class*="note"]{color:var(--c-on-dark2)}
+
+/* ===== footer/footer-two-tier-cta ===== */
+/* footer/footer-two-tier-cta — 二段構えフッター（受け皿＋事務フッター）
+   地はパーツ側で敷かない。kit の tone（base/tint/accent/dark）が外側で敷いており、
+   ここで面を敷くとページの地の階段が1段増えて壊れる。
+   段は「面をひとつだけ持たせる（電話）」「1pxの罫」「級数」の3つで作る。
+   ページの終点は、版面より大きいブランド名を左右と下で断ち落として作る
+   （type/oversize-bleed × space/type-to-the-edge）。 */
+
+.ftc{
+  /* 版面の外へ出した極大タイポを断つ。hidden はスクロール文脈を作るので clip を使う */
+  overflow:clip;
+  /* 契約の最大級数は --fs-4xl:64px。画面より大きい級数はここだけ専用に持つ。
+     "ESL club"（8字・字間.06em）の実測は 4.57em 幅。左右を0.45字ずつ切るには
+     4.57F − 2×0.45×(4.57/8)F = 画面幅 → F ≒ 画面幅/4.05 ＝ 24.7vw */
+  --ftc-mark-fs:clamp(64px,24.7vw,400px);
+}
+
+/* ── 写真ストリップ（任意）───────────────────────
+   全幅・gap 0・断ち切り。高さは px ではなく比率で決めるので、
+   どの画面幅でも 130〜160px 相当に収まる */
+.ftc__strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0}
+.ftc__strip:not(:has(img)){display:none}   /* 写真を渡さなかった場合の保険 */
+.ftc__cut{margin:0;overflow:hidden;aspect-ratio:16/6;background:var(--c-bg2)}
+.ftc__cut img{width:100%;height:100%;object-fit:cover}
+
+/* ── 上段：受け皿（電話）───────────────────────── */
+.ftc__band{padding-block:var(--sp-blk) 0}
+.ftc__band-in{display:flex;flex-direction:column;align-items:center;text-align:center}
+.ftc__eyebrow{justify-content:center}
+.ftc__h{text-wrap:balance}
+/* 見出しが無い案件では上に余白を足さない（空の分だけ帯が間延びするため） */
+.ftc__h:not(:first-child){margin-top:var(--s3)}
+
+.ftc__ways{width:100%;display:flex;flex-wrap:wrap;justify-content:center;gap:var(--s5)}
+.ftc__ways:not(:first-child){margin-top:var(--sp-el)}
+
+/* 電話＝このフッターに残る唯一の押せる場所。
+   ①の段差は、地から1段落とした面をここ“だけ”に持たせて作る。
+   幅を必ず版面に収めるので、SPで受付時間が横に溢れない */
+.ftc__tel{width:min(100%,34em);min-width:0;font-size:var(--fs-base);
+  padding:var(--s5);border-radius:var(--r-m);background:var(--c-bg2)}
+.ftc__tel-cap{font-size:var(--fs-sm);font-weight:700;color:var(--c-ink2);line-height:var(--lh-head)}
+.ftc__tel-num{display:inline-flex;align-items:center;gap:var(--s2);
+  margin-top:var(--s1);color:var(--c-ink);font-family:var(--f-num);font-weight:900;
+  font-size:clamp(var(--fs-xl),3.2vw,var(--fs-2xl));line-height:var(--lh-tight);letter-spacing:.02em}
+.ftc__tel-ico{flex:none;display:grid;place-items:center;width:.78em;height:.78em;color:var(--c-primary)}
+.ftc__tel-ico svg{width:100%;height:100%;fill:none;stroke:currentColor;
+  stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.ftc__tel-digits{white-space:nowrap}
+.ftc__tel-hours{margin-top:var(--s2);font-size:var(--fs-note);color:var(--c-ink3);line-height:var(--lh-head)}
+
+/* _base.css の .hh-in は表示後も clip-path:inset(0) を残すため、
+   面の外に出るフォーカスリングが切れる。上段の中だけ解除する */
+.fx-on .ftc__band .fx.hh-in{clip-path:none}
+
+/* ── 下段：事務フッター ───────────────────────── */
+.ftc__base{padding-block:var(--sp-blk) 0}   /* 下は0。極大タイポを下端で断つため */
+
+.ftc__cols{display:grid;
+  grid-template-columns:minmax(0,.9fr) minmax(0,1fr) minmax(0,1.25fr);
+  gap:var(--sp-el)}
+
+.ftc__logo{width:min(100%,12em);height:auto}
+.ftc__brand-note{margin-top:var(--s3);font-size:var(--fs-sm);color:var(--c-ink3);line-height:var(--lh-head)}
+
+/* 列見出し（.h-eyebrow の骨を使い、罫の長さだけ詰める）。
+   罫は currentColor＝ink に戻す。緑は押せる場所だけに使う */
+.ftc__col-h{color:var(--c-ink);font-size:var(--fs-sm);letter-spacing:.06em}
+.ftc__col-h::before{width:var(--s4)}
+.ftc__col-h-a{transition:color .16s var(--e)}
+
+/* 事業導線：面は持たせず、級数と1pxの罫で「行き先」の段を作る */
+.ftc__svc{margin-top:var(--s4);display:grid;border-top:1px solid var(--c-line)}
+.ftc__svc>li{border-bottom:1px solid var(--c-line)}
+.ftc__svc-a{position:relative;display:block;
+  padding:var(--s3) calc(var(--s5) + 1.6em) var(--s3) 0}
+.ftc__svc-label{display:block;font-size:var(--fs-md);font-weight:700;color:var(--c-ink);line-height:var(--lh-tight)}
+.ftc__svc-sub{display:block;margin-top:var(--s1);font-size:var(--fs-sm);color:var(--c-ink3);line-height:var(--lh-head)}
+.ftc__svc-sub:empty{display:none}
+
+.ftc__arw{position:absolute;right:0;top:50%;transform:translateY(-50%);
+  flex:none;display:grid;place-items:center;width:1.6em;height:1.6em;
+  border-radius:var(--r-pill);background:transparent;color:var(--c-primary);
+  transition:background .16s var(--e),color .16s var(--e)}
+.ftc__arw svg{width:.54em;height:.54em;fill:none;stroke:currentColor;
+  stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+
+/* 注目記事：級数を1段落とし、印は緑を使わない中立の短い罫にする */
+.ftc__posts-label{margin-top:var(--s4);font-size:var(--fs-note);font-weight:700;
+  color:var(--c-ink3);letter-spacing:.08em;line-height:var(--lh-head)}
+.ftc__posts{margin-top:var(--s3);display:grid;gap:var(--s3)}
+.ftc__post{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:start;
+  gap:var(--s3);font-size:var(--fs-sm);color:var(--c-ink2);line-height:var(--lh-head);
+  transition:color .16s var(--e)}
+.ftc__post-dot{margin-top:.72em;width:var(--s2);height:1px;background:var(--c-ink3);flex:none}
+.ftc__post-t{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+/* 法務リンク＋コピーライト（1px の罫は段の境目ではなく下段の内側なので可） */
+.ftc__meta{margin-top:var(--sp-el);padding-top:var(--s5);
+  border-top:1px solid var(--c-line);
+  display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;
+  gap:var(--s3) var(--s5)}
+.ftc__legal{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s5);
+  font-size:var(--fs-sm);color:var(--c-ink2)}
+.ftc__legal-a{transition:color .16s var(--e)}
+.ftc__copy{font-size:var(--fs-note);color:var(--c-ink3);letter-spacing:.04em}
+
+/* 最下段の細字（商標注記・reCAPTCHA注記）。長文になる前提で行長を切る */
+.ftc__fine{margin-top:var(--s4);display:grid;gap:var(--s2)}
+.ftc__note{max-width:56em;font-size:var(--fs-note);color:var(--c-ink3);line-height:var(--lh-head)}
+.ftc__note a{text-decoration:underline;text-underline-offset:.2em}
+
+/* ── 終点：極大タイポを左右と下で断ち落とす ─────────
+   text-align:center は溢れた行に効かない（左端で止まり右にだけ溢れる）ので、
+   width:max-content ＋ left:50%/translateX(-50%) で左右を必ず同じだけ切る。
+   色は地に8%沈めた地紋。読ませないので既知の固有名詞だけを回す。
+   line-height:.8 と負の margin-bottom はセットで効く（下端の切れ幅の調整点を1つにする） */
+.ftc__mark{
+  width:max-content;position:relative;left:50%;
+  /* 字間の分だけ箱の右に余りが出て中心がずれるので、その半分（.03em）だけ戻す */
+  transform:translateX(calc(-50% + .03em));
+  margin:var(--sp-el) 0 -.12em;
+  font-family:var(--f-disp);font-weight:900;
+  font-size:var(--ftc-mark-fs);line-height:.8;letter-spacing:.04em;white-space:nowrap;
+  color:color-mix(in srgb,var(--c-ink) 8%,transparent);
+  user-select:none;pointer-events:none}
+
+@media(hover:hover) and (pointer:fine){
+  .ftc__tel-num:hover{color:var(--c-primary-d)}
+  .ftc__svc-a:hover .ftc__svc-label{color:var(--c-primary-d)}
+  .ftc__svc-a:hover .ftc__arw--sm{background:var(--c-primary);color:var(--c-on-primary)}
+  .ftc__post:hover{color:var(--c-primary-d)}
+  .ftc__post:hover .ftc__post-t{text-decoration:underline;text-underline-offset:.2em}
+  .ftc__legal-a:hover,.ftc__col-h-a:hover{color:var(--c-primary-d)}
+  .ftc__note a:hover{color:var(--c-primary-d)}
+}
+
+/* ───────── 900px以下 ───────── */
+@media(max-width:900px){
+  /* 写真は 2×2。上段より上に置いてあるので、SPでも写真が電話より上に来る */
+  .ftc__strip{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ftc__cut{aspect-ratio:16/9}
+
+  .ftc__band{padding-block:var(--sp-el) 0}
+  .ftc__base{padding-block:var(--sp-el) 0}
+
+  /* 下段は1カラム。ロゴ・法務・コピーライトは中央寄せ、
+     リンクの列と長い注記だけは読みやすさを優先して左のまま */
+  .ftc__cols{grid-template-columns:minmax(0,1fr);gap:var(--sp-el)}
+  .ftc__brand{text-align:center}
+  .ftc__logo{margin-inline:auto}
+
+  /* 縦積みにすると幅が max-content になって溢れるので、
+     方向は横のまま・折り返しと幅100%で畳む */
+  .ftc__meta{justify-content:center;text-align:center}
+  .ftc__legal{width:100%;justify-content:center}
+  .ftc__copy{width:100%}
+}
+
+@media(max-width:480px){
+  .ftc__tel-num{font-size:var(--fs-xl)}
+  .ftc__legal{gap:var(--s2) var(--s4)}
+}
+
+/* type/oversize-bleed + space/type-to-the-edge：
+   極大タイポを版面の外へ断ち落とし、地紋にしてページの終点を作る */
+.ftr,[class*="ftr"],footer{position:relative;overflow:clip}
+.ftr::after,footer::after{
+  content:"ESL club";position:absolute;left:50%;bottom:-.22em;transform:translateX(-50%);
+  font-family:var(--f-num);font-weight:900;font-size:clamp(90px,17vw,240px);line-height:.8;
+  letter-spacing:-.02em;white-space:nowrap;color:var(--c-bg2);z-index:0;pointer-events:none}
+.ftr>*,footer>*{position:relative;z-index:1}
+
+</style>
+</head>
+<body>
+<!-- hero/hero-blob-cutout (base) -->
+<div class="tone-base">
+<section class="hbc">
+  <div class="hbc__in">
+    <div class="hbc__blob hbc__blob--a"></div>
+    <div class="hbc__blob hbc__blob--b"></div>
+
+    <figure class="hbc__ph hbc__ph--a"><img src="img/p05.jpg" alt="オンラインでレッスンを受ける生徒"></figure>
+    <figure class="hbc__ph hbc__ph--b"><img src="img/p01.jpg" alt="教室で学習する生徒"></figure>
+
+    <div class="hbc__head">
+      <p class="hbc__logo"><img src="img/logo.svg" alt="ESL club"></p>
+      <p class="hbc__eyebrow">2015年の開塾以来 “英検に特化” してきたからできる</p>
+      <h1 class="hbc__h1">受験勉強と<span class="nb">並走しながら</span><br><em>英検2級</em>を、<span class="nb">小中学生で。</span></h1>
+    </div>
+
+    <p class="hbc__copy">いつまでに2級か、<br><em>入る前</em>にわかる。</p>
+
+    <ul class="hbc__stats">
+      <li><b>1,000<span>名以上</span></b><small>累計の合格実績</small></li><li><b>75<span>%</span></b><small>小中学生の英検2級 合格率</small></li>
+    </ul>
+
+    <p class="hbc__cta">
+      <a class="btn" href="#trial">無料体験レッスンはこちら<span class="arr">→</span></a>
+      <span class="hbc__note">いつまでに2級合格できるか、レッスン後にご案内します</span>
+    </p>
+
+    <!-- 落書きの装飾。英語塾なので 鉛筆／本／吹き出し／星／矢印 -->
+    <svg class="hbc__dd hbc__dd--1" viewBox="0 0 120 120" aria-hidden="true">
+      <circle cx="60" cy="60" r="40" fill="none" stroke="var(--c-accent)" stroke-width="15"/>
+      <circle cx="60" cy="60" r="11" fill="var(--c-accent)"/></svg>
+    <svg class="hbc__dd hbc__dd--2" viewBox="0 0 90 70" aria-hidden="true">
+      <path d="M4 34 L86 6 L54 64 L44 42 Z" fill="none" stroke="var(--c-ink)" stroke-width="3.4"/></svg>
+    <svg class="hbc__dd hbc__dd--3" viewBox="0 0 60 150" aria-hidden="true">
+      <path d="M30 146 L30 20 M12 38 L30 12 L48 38" fill="none" stroke="var(--c-primary)"
+            stroke-width="6" stroke-linecap="round"/></svg>
+    <svg class="hbc__dd hbc__dd--4" viewBox="0 0 110 110" aria-hidden="true">
+      <path d="M55 8 L67 42 L103 42 L74 63 L85 97 L55 76 L25 97 L36 63 L7 42 L43 42 Z"
+            fill="none" stroke="var(--c-support2)" stroke-width="6" stroke-linejoin="round"/></svg>
+    <svg class="hbc__dd hbc__dd--5" viewBox="0 0 130 90" aria-hidden="true">
+      <path d="M12 12 h106 v52 h-58 l-22 22 v-22 h-26 Z" fill="none" stroke="var(--c-ink)" stroke-width="3.4"
+            stroke-linejoin="round"/>
+      <text x="65" y="48" text-anchor="middle" font-size="26" font-weight="900"
+            fill="var(--c-ink)" font-family="var(--f-num)">ABC</text></svg>
+    <span class="hbc__conf hbc__conf--1"></span><span class="hbc__conf hbc__conf--2"></span>
+    <span class="hbc__conf hbc__conf--3"></span><span class="hbc__conf hbc__conf--4"></span>
+    <span class="hbc__conf hbc__conf--5"></span><span class="hbc__conf hbc__conf--6"></span>
+  </div>
+  <p class="hbc__foot"><span class="wrap">※合格率は2023年度第2回の実績（ESL clubオンライン校）／受験者のうち1次・2次受験双方に合格した生徒の割合</span></p>
+</section>
+
+</div>
+<!-- cta/cta-priority-stack (tint) -->
+<div class="tone-tint">
+<section class="sec cps cps--tight" id="cta1">
+  <div class="wrap">
+
+    <!-- 地は敷かない。外側の kit tone（tint／dark）がそのまま面になる。
+         白カードは持たず、地の上に直接ボタンと注釈を置く。
+         版面より狭い「1枚の板」であることは、罫と角1箇所の大Rだけで示す。 -->
+    <div class="cps__field">
+
+      
+
+      <div class="cps__body">
+
+        <!-- 見出しは .sec-head の2段（欧文ラベル＋和文）に統一。
+             eyebrow→__en / heading→__ja。両方空の回は箱ごと消える -->
+        <div class="sec-head cps__head">
+          
+          
+        </div>
+
+        <div class="cps__stack">
+
+          <!-- 主：_base.css の .btn そのまま（矢印は .btn::after が持つ） -->
+          <a class="btn cps__btn fx" data-fx="fadeup" data-d="120" href="https://eslclub.jp/trial/">
+            
+            
+            <span class="cps__label">無料体験レッスンはこちら</span>
+          </a>
+
+          <!-- 副1／副2：同じ .btn の小さい方（.btn--sm）。主従は大きさだけでつける -->
+          
+
+          
+
+        </div>
+
+        <p class="cps__note fx" data-fx="fadeup" data-d="240">いつまでに2級合格できるかレッスン後にご案内します</p>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>
+<!-- features/features-notch-number-cards (base) -->
+<div class="tone-base">
+<section class="sec fnc">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="sec-head__en">FEATURES</p>
+      <h2 class="sec-head__ja">短期で英検合格を目指せる<span class="nb">4つの特徴</span></h2>
+      
+    </div>
+    <ul class="fnc__grid">
+      <li class="fnc__item fx" data-fx="fadeup" data-d="0">
+        <a class="fnc__card" href="#point1">
+          <span class="fnc__no">1</span>
+          <p class="fnc__t">高い英検合格率を実現</p>
+          <p class="fnc__d">累計1,000名以上を合格に導いた英検ベースのカリキュラム</p>
+          <span class="fnc__more">詳細を見る<i></i></span>
+        </a>
+      </li><li class="fnc__item fx" data-fx="fadeup" data-d="90">
+        <a class="fnc__card" href="#point2">
+          <span class="fnc__no">2</span>
+          <p class="fnc__t">受験勉強と並行可能</p>
+          <p class="fnc__d">目標級・時期と現在のレベルから作成する個別の学習計画</p>
+          <span class="fnc__more">詳細を見る<i></i></span>
+        </a>
+      </li><li class="fnc__item fx" data-fx="fadeup" data-d="180">
+        <a class="fnc__card" href="#point3">
+          <span class="fnc__no">3</span>
+          <p class="fnc__t">学習効率を向上</p>
+          <p class="fnc__d">バイリンガル講師のマンツーマンレッスン</p>
+          <span class="fnc__more">詳細を見る<i></i></span>
+        </a>
+      </li><li class="fnc__item fx" data-fx="fadeup" data-d="270">
+        <a class="fnc__card" href="#point4">
+          <span class="fnc__no">4</span>
+          <p class="fnc__t">保護者様が忙しくても安心</p>
+          <p class="fnc__d">計画の実行をフォローするスクールマネージャー</p>
+          <span class="fnc__more">詳細を見る<i></i></span>
+        </a>
+      </li>
+    </ul>
+    <p class="fnc__cta fx" data-fx="fadeup" data-d="320">
+      <a class="btn" href="https://eslclub.jp/trial/">無料体験レッスンはこちら</a>
+      
+    </p>
+  </div>
+</section>
+
+</div>
+<!-- features/features-vertical-heading-rows (tint) -->
+<div class="tone-tint">
+<section class="sec vhr">
+  <span class="vhr__ghost" aria-hidden="true">POINT</span>
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="sec-head__en">POINT</p>
+      <h2 class="sec-head__ja">ESL clubが選ばれる4つの理由</h2>
+      
+    </div>
+    <ul class="vhr__list">
+      <li class="vhr__item fx" data-fx="fadeup" data-d="0">
+        <div class="vhr__top">
+          <div class="vhr__vert">
+            <p class="vhr__label">（&nbsp;POINT&nbsp;01&nbsp;）</p>
+            <h3 class="vhr__title">高い英検合格率を実現</h3>
+          </div>
+          <figure class="vhr__fig"><img src="img/p01.jpg" alt="POINT1 の様子" loading="lazy"></figure>
+        </div>
+        <p class="vhr__sub">累計1,000名以上を合格に導いた英検ベースのカリキュラム</p>
+        <p class="vhr__body">ESL clubでは2015年の開塾以降、英検をカリキュラムに用いて、着実な英語力の向上と英検合格に導いてきました。国際基準であるCEFRに対応した英検を用いることで、お子さまの英語スキルに合わせた個別カリキュラムを作成し、バランスよく4技能＋語彙力を高めていきます。</p>
+      </li><li class="vhr__item fx" data-fx="fadeup" data-d="90">
+        <div class="vhr__top">
+          <div class="vhr__vert">
+            <p class="vhr__label">（&nbsp;POINT&nbsp;02&nbsp;）</p>
+            <h3 class="vhr__title">受験勉強と並行可能</h3>
+          </div>
+          <figure class="vhr__fig"><img src="img/p02.jpg" alt="POINT2 の様子" loading="lazy"></figure>
+        </div>
+        <p class="vhr__sub">目標級・時期と現在のレベルから作成する個別の学習計画</p>
+        <p class="vhr__body">目標とする級と受験の時期、現在の英語レベル、学習に充てられる時間の4点から逆算して個別の学習計画を作成します。学習時間そのものを増やすのではなく、限られた時間の使い方を組み立て直すため、中学受験や大学受験の受験勉強、部活動・他の習い事を続けながら英検合格を目指すことができます。</p>
+      </li><li class="vhr__item fx" data-fx="fadeup" data-d="180">
+        <div class="vhr__top">
+          <div class="vhr__vert">
+            <p class="vhr__label">（&nbsp;POINT&nbsp;03&nbsp;）</p>
+            <h3 class="vhr__title">学習効率を向上</h3>
+          </div>
+          <figure class="vhr__fig"><img src="img/p03.jpg" alt="POINT3 の様子" loading="lazy"></figure>
+        </div>
+        <p class="vhr__sub">バイリンガル講師のマンツーマンレッスン</p>
+        <p class="vhr__body">ESL clubでは、英検1級・TOEFL iBT95点・TOEIC900点レベル以上のバイリンガル講師のみを採用しています。年齢の近い講師との距離感がそのままレッスンに表れ、日本語に切り替えて解説したり、英語で言い換えたりと、生徒一人ひとりの理解度に合わせて進めます。</p>
+      </li><li class="vhr__item fx" data-fx="fadeup" data-d="270">
+        <div class="vhr__top">
+          <div class="vhr__vert">
+            <p class="vhr__label">（&nbsp;POINT&nbsp;04&nbsp;）</p>
+            <h3 class="vhr__title">保護者様が忙しくても安心</h3>
+          </div>
+          <figure class="vhr__fig"><img src="img/p04.jpg" alt="POINT4 の様子" loading="lazy"></figure>
+        </div>
+        <p class="vhr__sub">計画の実行をフォローするスクールマネジャー</p>
+        <p class="vhr__body">スクールマネジャーが中心となり、学習計画どおりにレッスンが進むよう講師へ内容を伝達し、生徒様の進捗をレッスンごとに保護者様へ共有します。保護者様が学習内容を把握したり、レッスンに付き添っていただく必要はありません。お忙しいご家庭でも安心してお任せいただけます。</p>
+      </li>
+    </ul>
+  </div>
+</section>
+
+</div>
+<!-- numbers/numbers-donut-grid (base) -->
+<div class="tone-base">
+<section class="sec ndg">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="sec-head__en">RESULT</p>
+      <h2 class="sec-head__ja">ESL clubの<span class="nb">小中学生の英検合格率</span></h2>
+      
+    </div>
+    <div class="ndg__panel">
+      <ul class="ndg__grid">
+        <li class="ndg__cell fx" data-fx="scale" data-d="0">
+          <div class="ndg__d" style="--p:100%">
+            <span class="ndg__label">英検5級</span>
+            <b class="ndg__v">100<i>%</i></b>
+          </div>
+        </li><li class="ndg__cell fx" data-fx="scale" data-d="90">
+          <div class="ndg__d" style="--p:88%">
+            <span class="ndg__label">英検4級</span>
+            <b class="ndg__v">88<i>%</i></b>
+          </div>
+        </li><li class="ndg__cell fx" data-fx="scale" data-d="180">
+          <div class="ndg__d" style="--p:86%">
+            <span class="ndg__label">英検3級</span>
+            <b class="ndg__v">86<i>%</i></b>
+          </div>
+        </li><li class="ndg__cell fx" data-fx="scale" data-d="270">
+          <div class="ndg__d" style="--p:64%">
+            <span class="ndg__label">英検準2級</span>
+            <b class="ndg__v">64<i>%</i></b>
+          </div>
+        </li><li class="ndg__cell fx" data-fx="scale" data-d="360">
+          <div class="ndg__d" style="--p:75%">
+            <span class="ndg__label">英検2級</span>
+            <b class="ndg__v">75<i>%</i></b>
+          </div>
+        </li>
+      </ul>
+      <p class="ndg__note">※2023年度第2回の実績（ESL clubオンライン校）　※受験者のうち1次・2次受験双方に合格した生徒の割合</p>
+    </div>
+  </div>
+</section>
+
+</div>
+<!-- gallery/gallery-video-cards-bordered (tint) -->
+<div class="tone-tint">
+<section class="sec gvb">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="sec-head__en">LESSON</p>
+      <h2 class="sec-head__ja">レッスンの様子</h2>
+      <p class="sec-head__sub">実際のオンラインレッスンをご覧いただけます</p>
+    </div>
+    <ul class="gvb__grid">
+      <li class="gvb__item fx" data-fx="fadeup" data-d="0">
+        <a class="gvb__card" href="#v1" target="_blank" rel="noopener">
+          <span class="gvb__thumb">
+            <img src="img/yt_1.jpg" alt="小3男子 初学者のレッスン" loading="lazy">
+            <span class="gvb__play" aria-hidden="true"></span>
+          </span>
+          <span class="gvb__cap">
+            <b>小3男子　初学者</b>
+            <em>ハシモトカズマくん</em>
+          </span>
+        </a>
+      </li><li class="gvb__item fx" data-fx="fadeup" data-d="90">
+        <a class="gvb__card" href="#v2" target="_blank" rel="noopener">
+          <span class="gvb__thumb">
+            <img src="img/yt_2.jpg" alt="小4女子 学習経験者のレッスン" loading="lazy">
+            <span class="gvb__play" aria-hidden="true"></span>
+          </span>
+          <span class="gvb__cap">
+            <b>小4女子　学習経験者</b>
+            <em>オオツカキサちゃん</em>
+          </span>
+        </a>
+      </li>
+    </ul>
+    <p class="gvb__note">※動画は保護者様の許可を得て掲載しています</p>
+  </div>
+</section>
+
+</div>
+<!-- cta/cta-priority-stack (base) -->
+<div class="tone-base">
+<section class="sec cps" id="cta2">
+  <div class="wrap">
+
+    <!-- 地は敷かない。外側の kit tone（tint／dark）がそのまま面になる。
+         白カードは持たず、地の上に直接ボタンと注釈を置く。
+         版面より狭い「1枚の板」であることは、罫と角1箇所の大Rだけで示す。 -->
+    <div class="cps__field">
+
+      
+
+      <div class="cps__body">
+
+        <!-- 見出しは .sec-head の2段（欧文ラベル＋和文）に統一。
+             eyebrow→__en / heading→__ja。両方空の回は箱ごと消える -->
+        <div class="sec-head cps__head">
+          
+          
+        </div>
+
+        <div class="cps__stack">
+
+          <!-- 主：_base.css の .btn そのまま（矢印は .btn::after が持つ） -->
+          <a class="btn cps__btn fx" data-fx="fadeup" data-d="120" href="https://eslclub.jp/trial/">
+            
+            
+            <span class="cps__label">無料体験レッスンはこちら</span>
+          </a>
+
+          <!-- 副1／副2：同じ .btn の小さい方（.btn--sm）。主従は大きさだけでつける -->
+          
+
+          
+
+        </div>
+
+        <p class="cps__note fx" data-fx="fadeup" data-d="240">いつまでに2級合格できるかレッスン後にご案内します</p>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>
+<!-- banner/banner-duo (base) -->
+<div class="tone-base">
+<section class="sec bnr">
+  <div class="wrap">
+    
+    <ul class="bnr__list">
+      <li class="bnr__item fx" data-fx="fadeup" data-d="0">
+        <a href="https://eslclub.jp/seasonal-eiken/"><img src="img/bnr_eiken.jpg" alt="英検®駆け込み歓迎！短期集中講座　1級から5級対応　英検合格実績累計1,000名以上" loading="lazy"></a>
+      </li><li class="bnr__item fx" data-fx="fadeup" data-d="90">
+        <a href="https://eslclub.jp/seasonal-school/"><img src="img/bnr_summer.jpg" alt="夏は英語を頑張りたい！秋の英検に向けて対策！夏期講習開講中" loading="lazy"></a>
+      </li>
+    </ul>
+  </div>
+</section>
+
+</div>
+<!-- member/member-blob-portrait-letter (tint) -->
+<div class="tone-tint">
+<section class="sec mbl">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="sec-head__en">MANAGER</p>
+      <h2 class="sec-head__ja">スクールマネジャー紹介</h2>
+      <p class="sec-head__sub">学習計画をつくり、レッスンの進みを保護者様に届ける担当です</p>
+    </div>
+    <ul class="mbl__list">
+      <li class="mbl__item fx" data-fx="fadeup" data-d="0">
+        <div class="mbl__figwrap">
+          <span class="mbl__b1" aria-hidden="true"></span>
+          <span class="mbl__b2" aria-hidden="true"></span>
+          <figure class="mbl__fig"><img src="img/manager01.jpg" alt="オンライン校スクールマネジャー 梶玲菜" loading="lazy"></figure>
+        </div>
+        <div class="mbl__text">
+          <p class="mbl__role">オンライン校スクールマネジャー</p>
+          <p class="mbl__name">梶　玲菜<span>英語学習指導歴 7年</span></p>
+          <p class="mbl__lead">みなさんにとっての、『英語』って何でしょうか？私にとっての『英語』とは、子どもたちの世界や視野を広げてくれるツールだと思います。</p>
+          <div class="mbl__body"><p>将来の進路や、夢・目標を叶えられる場所や可能性がグーンと増やせるからです。</p><p>英語は、子どもたちと世界の架け橋となり、とにかく新しい気づきを与え続けてくれます。例えば、文化の違い、見たこともない景色、日本では会えない人との出会い。この気づきは子どもたちにとって、「違うって面白い」「もっと知りたい」という探求の原動力になります。</p><p>こうした探求の原動力を刺激し引き出しながら、子どもたちの可能性を英語で広げ、わくわくする気持ちを育んであげたい。そのためにもオンライン校では、楽しく、着実に実力に繋がるよう、一人ひとりの得意・不得意に柔軟に、カリキュラムを組みレッスンを行っています。</p><p>まずは土台となる、一生モノの英語力を身に付けて、世界を広げる準備を一緒に始めませんか？みなさんと、英語とどんな将来を描いているのか、お話しできる日を楽しみにしています。</p></div>
+        </div>
+      </li><li class="mbl__item fx" data-fx="fadeup" data-d="90">
+        <div class="mbl__figwrap">
+          <span class="mbl__b1" aria-hidden="true"></span>
+          <span class="mbl__b2" aria-hidden="true"></span>
+          <figure class="mbl__fig"><img src="img/manager02.jpg" alt="オンライン校スクールマネジャー 楠山理紀" loading="lazy"></figure>
+        </div>
+        <div class="mbl__text">
+          <p class="mbl__role">オンライン校スクールマネジャー</p>
+          <p class="mbl__name">楠山　理紀<span>英語学習指導歴 5年</span></p>
+          <p class="mbl__lead">英語は、何のために身につけるものか、人それぞれで、どれも正解だと思います。</p>
+          <div class="mbl__body"><p>ただ、その中で、何か一つ楽しい理由を持って欲しいと思っております。</p><p>洋画を、吹き替え・字幕なしで見たい。海外のYouTuberを、翻訳されるのを待たないで見れるようになりたい。将来外車を買うときに、マニュアルが全部英語でもへっちゃらになりたい。英語の習得は、時には難しく、辛いときもあるでしょう。でもその先に、趣味的な意味でも楽しい未来が待っていて欲しい。</p><p>英語は、勉強として身につけるのだけではなく、自分の人生を楽しくするためにも身につけて欲しい。そして、ゴールだけでなく、その過程も楽しくしてあげたい、というのが私の願いです。</p><p>是非、私やESL clubの講師と接してみて、英語ができたら、なにが楽しいんだろう？と問いかけてみてください。多種多様な答えが返ってきますので、これだ！と思えるもの見つけ出すのも、英語学習の一環としてみてはいかがでしょうか。</p></div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+</div>
+<!-- member/member-staggered-color-cards (deep) -->
+<div class="tone-deep">
+<section class="sec msc">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="sec-head__en">TEACHERS</p>
+      <h2 class="sec-head__ja">講師紹介</h2>
+      <p class="sec-head__sub">英検1級・TOEFL iBT95点・TOEIC900点レベル以上のバイリンガル講師のみが在籍しています</p>
+    </div>
+    <ul class="msc__grid">
+      <li class="msc__item fx" data-fx="fadeup" data-d="0">
+        <div class="msc__card">
+          <figure class="msc__fig"><img src="img/teacher01.jpg" alt="A.M.先生" loading="lazy"></figure>
+          <p class="msc__name"><b>A.M.先生</b><span>BILINGUAL TEACHER</span></p>
+          <div class="msc__spec">
+            <dl class="msc__dl"><dt>英語レベル</dt><dd>英検1級／IELTS 8.0</dd></dl><dl class="msc__dl"><dt>海外経験</dt><dd>アメリカ9年／シンガポール1年</dd></dl>
+            <p class="msc__cmt">英語を学ぶことで様々な価値観に触れ、これまで以上に広い世界が見えてきます。思いがけない挑戦をするきっかけにもなるかもしれません！英語を使って未来の可能性を広げる楽しさを知ってもらえたら嬉しいです。</p>
+          </div>
+        </div>
+      </li><li class="msc__item fx" data-fx="fadeup" data-d="90">
+        <div class="msc__card">
+          <figure class="msc__fig"><img src="img/teacher02.jpg" alt="K.N.先生" loading="lazy"></figure>
+          <p class="msc__name"><b>K.N.先生</b><span>BILINGUAL TEACHER</span></p>
+          <div class="msc__spec">
+            <dl class="msc__dl"><dt>英語レベル</dt><dd>英検1級／TOEFL ITP 623点</dd></dl><dl class="msc__dl"><dt>海外経験</dt><dd>エチオピア2年／アメリカ2年／オランダ1年</dd></dl>
+            <p class="msc__cmt">英語は、異なる国の多様な価値観を持った人々と対話をするためのツールであり、あなたの可能性を広げる武器となり、自信となります。言語学習を通してみなさんに世界を見ることができる人になってもらいたいです。</p>
+          </div>
+        </div>
+      </li><li class="msc__item fx" data-fx="fadeup" data-d="180">
+        <div class="msc__card">
+          <figure class="msc__fig"><img src="img/teacher03.jpg" alt="A.M.先生" loading="lazy"></figure>
+          <p class="msc__name"><b>A.M.先生</b><span>BILINGUAL TEACHER</span></p>
+          <div class="msc__spec">
+            <dl class="msc__dl"><dt>英語レベル</dt><dd>英検1級</dd></dl><dl class="msc__dl"><dt>海外経験</dt><dd>タイ5年／ロシア5年／パキスタン2年</dd></dl>
+            <p class="msc__cmt">英語話者は世界中にいるため、英語が話せればどこへ行っても自分の思いを伝えられます。それはとても心強く、自信にもつながります。皆さんも英語を通じて様々な文化と出会い、自身の可能性を広げてみましょう！</p>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+</div>
+<!-- cta/cta-priority-stack (base) -->
+<div class="tone-base">
+<section class="sec cps" id="cta3">
+  <div class="wrap">
+
+    <!-- 地は敷かない。外側の kit tone（tint／dark）がそのまま面になる。
+         白カードは持たず、地の上に直接ボタンと注釈を置く。
+         版面より狭い「1枚の板」であることは、罫と角1箇所の大Rだけで示す。 -->
+    <div class="cps__field">
+
+      
+
+      <div class="cps__body">
+
+        <!-- 見出しは .sec-head の2段（欧文ラベル＋和文）に統一。
+             eyebrow→__en / heading→__ja。両方空の回は箱ごと消える -->
+        <div class="sec-head cps__head">
+          
+          
+        </div>
+
+        <div class="cps__stack">
+
+          <!-- 主：_base.css の .btn そのまま（矢印は .btn::after が持つ） -->
+          <a class="btn cps__btn fx" data-fx="fadeup" data-d="120" href="https://eslclub.jp/trial/">
+            
+            
+            <span class="cps__label">無料体験レッスンはこちら</span>
+          </a>
+
+          <!-- 副1／副2：同じ .btn の小さい方（.btn--sm）。主従は大きさだけでつける -->
+          
+
+          
+
+        </div>
+
+        <p class="cps__note fx" data-fx="fadeup" data-d="240">いつまでに2級合格できるかレッスン後にご案内します</p>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>
+<!-- voice/voice-band-illustration (tint) -->
+<div class="tone-tint">
+<section class="sec vbi">
+  <span class="vbi__band" aria-hidden="true"></span>
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="sec-head__en">VOICE</p>
+      <h2 class="sec-head__ja">保護者さまの声</h2>
+      
+    </div>
+    <ul class="vbi__list">
+      <li class="vbi__item fx" data-fx="fadeup" data-d="0">
+        <div class="vbi__side">
+          <figure class="vbi__fig"><img src="img/voice_parent01.jpg" alt="" loading="lazy"></figure>
+        </div>
+        <div class="vbi__main">
+          <h3 class="vbi__t">3ヶ月で英検準2級を取得したAさん（小4）のお父さま</h3>
+          <p class="vbi__who">Aさん（小4）のお父さま</p>
+          <div class="vbi__body"><p>ESL clubによる毎日の取り組みにより勉強習慣が身につきました。毎日やることによる継続力、単語テストを通じて得た自信、結果として残った英検準2級の合格が本人の成功体験へと繋がったかと思います。その小さな積み重ねののちに他教科への好影響へと波及していきました。</p><p>授業においては講師の皆様には常に優しく接していただき、毎回「楽しかった」と言っておりました。特にナヒョン先生のことは好きなようで、始まる前に「今日はナヒョン先生かな、たくさん話したいな」といつもウキウキしておりました。中学受験前、最後のレッスンを終えた後も「いつESL clubで再会できるかな、宿題を毎日するのは嫌だけど（笑）、ナヒョン先生とはずっと話したいのにな」とも言っておりました。「人生迷った時があったら、自分が幸せになれる方を選んでね」という言葉も昨日いただき「私はそうするんだ」と響いているようです。</p></div>
+          <div class="vbi__reply">
+            <p class="vbi__replyhead"><span>講師からのコメント</span></p>
+            <div class="vbi__replybody"><p>素敵なお言葉をいただき、ありがとうございます。私は海外の医学部で学んだ経験から、「勉強を頑張ること」の喜びと同時に、その大変さも身をもって知っています。だからこそ、ESL clubでは、生徒さん一人ひとりにとって学ぶことが負担ではなく、人生を豊かにする喜びであってほしいと願いながら、日々の授業に向き合っています。</p><p>努力は大切ですが、頑張り続けることだけが正解ではありません。人生にはさまざまな選択や遠回りがあります。私自身、「なぜ生きるのか」を考え続けた結果、30代になってたどり着いた答えはとてもシンプルでした。それは、幸せになることです。</p><p>ESL clubの生徒さんたちには、「自分が幸せになること」をコンパスにして、これからの人生を歩んでほしいと考えています。その想いは、Aさんの最後の授業でもお伝えしました。そしてこれは、子どもたちだけでなく、私たち大人にも当てはまることだと思っています。子どもは、大人や先生の背中を見て学ぶからこそ、私は「幸せに向かって生きる姿」を示す存在でありたいと考えています。ESL clubの授業では、英語を学ぶことそのものを楽しみながら、その英語を通して自分の人生をより幸せなものにする力を育んでほしいと、心から願っています。</p></div>
+          </div>
+        </div>
+      </li><li class="vbi__item fx" data-fx="fadeup" data-d="90">
+        <div class="vbi__side">
+          <figure class="vbi__fig"><img src="img/voice_parent02.jpg" alt="" loading="lazy"></figure>
+        </div>
+        <div class="vbi__main">
+          <h3 class="vbi__t">ESL club入会からたった8ヶ月で5級・4級・3級をスピード合格したTくん（小6）のお母さまより</h3>
+          <p class="vbi__who">Tくん（小6）のお母さま</p>
+          <div class="vbi__body"><p>3級合格の目標達成ありがとうございます！本人も、『やっぱりESL clubスゴい！』と言っていて、ESLさんの力を肌で実感しているようです！ここまで、モチベーションも保ちつつ継続して学習に取り組め、尚且つ結果もしっかり導いて下さっており、本当にESLさんの力を私も実感させて頂いております。梶さんはじめ、ESLのスタッフの皆さん、講師の先生方のおかげです！感謝の気持ちでいっぱいです。</p><p>本人の発言など聞いていると、ESLさんをとても信頼していると感じており、本人の力を引き出して下さっている雰囲気、環境作りもスゴいなと感じています。本当にありがとうございます！</p></div>
+          
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+</div>
+<!-- numbers/numbers-chip-row (base) -->
+<div class="tone-base">
+<section class="sec nch nch--wordy">
+  <div class="wrap">
+
+    <div class="sec-head nch__head">
+      <p class="sec-head__en fx" data-fx="left">RESULT</p>
+      <h2 class="sec-head__ja fx" data-fx="fadeup" data-d="60">中学受験合格実績</h2>
+      
+    </div>
+
+    <ul class="nch__chips" role="list">
+      <li class="nch__chip fx" data-fx="fadeup" data-d="0">
+        
+        <div class="nch__body">
+          <p class="nch__val">東京学芸大学附属国際中等教育学校</p>
+          
+        </div>
+      </li><li class="nch__chip fx" data-fx="fadeup" data-d="90">
+        
+        <div class="nch__body">
+          <p class="nch__val">広尾学園中学校</p>
+          
+        </div>
+      </li><li class="nch__chip fx" data-fx="fadeup" data-d="180">
+        
+        <div class="nch__body">
+          <p class="nch__val">渋谷教育学園渋谷中学校</p>
+          
+        </div>
+      </li><li class="nch__chip fx" data-fx="fadeup" data-d="270">
+        
+        <div class="nch__body">
+          <p class="nch__val">開智学園日本橋中学校</p>
+          
+        </div>
+      </li><li class="nch__chip fx" data-fx="fadeup" data-d="360">
+        
+        <div class="nch__body">
+          <p class="nch__val">サレジアン国際中学校</p>
+          
+        </div>
+      </li><li class="nch__chip fx" data-fx="fadeup" data-d="450">
+        
+        <div class="nch__body">
+          <p class="nch__val">文化学園杉並中学校</p>
+          
+        </div>
+      </li>
+    </ul>
+
+    <p class="nch__source fx" data-fx="fadeup">※一部</p>
+
+  </div>
+</section>
+
+</div>
+<!-- compare/compare-matrix-symbol (tint) -->
+<div class="tone-tint">
+<section class="sec cmx">
+  <div class="wrap">
+
+    <div class="sec-head">
+      <p class="sec-head__en fx" data-fx="left">COMPARE</p>
+      <h2 class="sec-head__ja fx" data-fx="fadeup" data-d="70">他の英語スクールとの違い</h2>
+      
+    </div>
+
+    <div class="cmx__grid">
+
+      <div class="cmx__thead">
+        <div class="cmx__hc cmx__hc--item fx" data-fx="fadeup" data-d="0">比較項目</div>
+
+        <div class="cmx__hc cmx__hc--own fx" data-fx="fadeup" data-d="60">
+          
+          <span class="cmx__hname">ESL club</span>
+          
+        </div>
+
+        <div class="cmx__hc fx" data-fx="fadeup" data-d="110">
+          <span class="cmx__hname">A社</span>
+          
+        </div>
+
+        <div class="cmx__hc fx" data-fx="fadeup" data-d="160">
+          <span class="cmx__hname">B社</span>
+          
+        </div>
+      </div>
+
+      <div class="cmx__row">
+        <p class="cmx__item fx" data-fx="fadeup" data-d="0">講師</p>
+
+        <div class="cmx__c cmx__c--own fx" data-fx="fadeup" data-d="0" data-mark="good">
+          <span class="cmx__lab">ESL club</span>
+          <p class="cmx__main"><span class="cmx__mk" aria-hidden="true"></span>英検1級以上のバイリンガル</p>
+          
+        </div>
+
+        <div class="cmx__c fx" data-fx="fadeup" data-d="0" data-mark="mid">
+          <span class="cmx__lab">A社</span>
+          <p class="cmx__main"><span class="cmx__mk" aria-hidden="true"></span>バイリンガル</p>
+          
+        </div>
+
+        <div class="cmx__c fx" data-fx="fadeup" data-d="0" data-mark="mid">
+          <span class="cmx__lab">B社</span>
+          <p class="cmx__main"><span class="cmx__mk" aria-hidden="true"></span>バイリンガル</p>
+          
+        </div>
+      </div><div class="cmx__row">
+        <p class="cmx__item fx" data-fx="fadeup" data-d="90">レッスン形式</p>
+
+        <div class="cmx__c cmx__c--own fx" data-fx="fadeup" data-d="90" data-mark="good">
+          <span class="cmx__lab">ESL club</span>
+          <p class="cmx__main"><span class="cmx__mk" aria-hidden="true"></span>マンツーマン</p>
+          
+        </div>
+
+        <div class="cmx__c fx" data-fx="fadeup" data-d="90" data-mark="good">
+          <span class="cmx__lab">A社</span>
+          <p class="cmx__main"><span class="cmx__mk" aria-hidden="true"></span>マンツーマン</p>
+          
+        </div>
+
+        <div class="cmx__c fx" data-fx="fadeup" data-d="90" data-mark="mid">
+          <span class="cmx__lab">B社</span>
+          <p class="cmx__main"><span class="cmx__mk" aria-hidden="true"></span>グループ</p>
+          
+        </div>
+      </div><div class="cmx__row">
+        <p class="cmx__item fx" data-fx="fadeup" data-d="180">日々の保護者のフォロー</p>
+
+        <div class="cmx__c cmx__c--own fx" data-fx="fadeup" data-d="180" data-mark="good">
+          <span class="cmx__lab">ESL club</span>
+          <p class="cmx__main"><span class="cmx__mk" aria-hidden="true"></span>ほぼ不要</p>
+          <p class="cmx__sub">定期面談あり</p>
+        </div>
+
+        <div class="cmx__c fx" data-fx="fadeup" data-d="180" data-mark="mid">
+          <span class="cmx__lab">A社</span>
+          <p class="cmx__main"><span class="cmx__mk" aria-hidden="true"></span>必要</p>
+          
+        </div>
+
+        <div class="cmx__c fx" data-fx="fadeup" data-d="180" data-mark="mid">
+          <span class="cmx__lab">B社</span>
+          <p class="cmx__main"><span class="cmx__mk" aria-hidden="true"></span>必要</p>
+          
+        </div>
+      </div><div class="cmx__row">
+        <p class="cmx__item fx" data-fx="fadeup" data-d="270">カリキュラム</p>
+
+        <div class="cmx__c cmx__c--own fx" data-fx="fadeup" data-d="270" data-mark="good">
+          <span class="cmx__lab">ESL club</span>
+          <p class="cmx__main"><span class="cmx__mk" aria-hidden="true"></span>目標とレベルに応じて一人一人個別に作成</p>
+          
+        </div>
+
+        <div class="cmx__c fx" data-fx="fadeup" data-d="270" data-mark="mid">
+          <span class="cmx__lab">A社</span>
+          <p class="cmx__main"><span class="cmx__mk" aria-hidden="true"></span>画一的</p>
+          
+        </div>
+
+        <div class="cmx__c fx" data-fx="fadeup" data-d="270" data-mark="mid">
+          <span class="cmx__lab">B社</span>
+          <p class="cmx__main"><span class="cmx__mk" aria-hidden="true"></span>画一的</p>
+          
+        </div>
+      </div><div class="cmx__row">
+        <p class="cmx__item fx" data-fx="fadeup" data-d="360">英語力が伸びる宿題設計</p>
+
+        <div class="cmx__c cmx__c--own fx" data-fx="fadeup" data-d="360" data-mark="good">
+          <span class="cmx__lab">ESL club</span>
+          <p class="cmx__main"><span class="cmx__mk" aria-hidden="true"></span>あり</p>
+          
+        </div>
+
+        <div class="cmx__c fx" data-fx="fadeup" data-d="360" data-mark="bad">
+          <span class="cmx__lab">A社</span>
+          <p class="cmx__main"><span class="cmx__mk" aria-hidden="true"></span>なし</p>
+          
+        </div>
+
+        <div class="cmx__c fx" data-fx="fadeup" data-d="360" data-mark="bad">
+          <span class="cmx__lab">B社</span>
+          <p class="cmx__main"><span class="cmx__mk" aria-hidden="true"></span>なし</p>
+          
+        </div>
+      </div><div class="cmx__row">
+        <p class="cmx__item fx" data-fx="fadeup" data-d="450">英検対策</p>
+
+        <div class="cmx__c cmx__c--own fx" data-fx="fadeup" data-d="450" data-mark="good">
+          <span class="cmx__lab">ESL club</span>
+          <p class="cmx__main"><span class="cmx__mk" aria-hidden="true"></span>5級から1級まで1次試験・面接の指導が可能</p>
+          
+        </div>
+
+        <div class="cmx__c fx" data-fx="fadeup" data-d="450" data-mark="mid">
+          <span class="cmx__lab">A社</span>
+          <p class="cmx__main"><span class="cmx__mk" aria-hidden="true"></span>5級から準2級までは可能</p>
+          
+        </div>
+
+        <div class="cmx__c fx" data-fx="fadeup" data-d="450" data-mark="mid">
+          <span class="cmx__lab">B社</span>
+          <p class="cmx__main"><span class="cmx__mk" aria-hidden="true"></span>4級から準2級までは可能</p>
+          
+        </div>
+      </div><div class="cmx__row">
+        <p class="cmx__item fx" data-fx="fadeup" data-d="540">受験・編入対策</p>
+
+        <div class="cmx__c cmx__c--own fx" data-fx="fadeup" data-d="540" data-mark="good">
+          <span class="cmx__lab">ESL club</span>
+          <p class="cmx__main"><span class="cmx__mk" aria-hidden="true"></span>インターナショナルスクール入学・編入から、中学・高校・大学受験まで相談可能</p>
+          
+        </div>
+
+        <div class="cmx__c fx" data-fx="fadeup" data-d="540" data-mark="bad">
+          <span class="cmx__lab">A社</span>
+          <p class="cmx__main"><span class="cmx__mk" aria-hidden="true"></span>不可</p>
+          
+        </div>
+
+        <div class="cmx__c fx" data-fx="fadeup" data-d="540" data-mark="bad">
+          <span class="cmx__lab">B社</span>
+          <p class="cmx__main"><span class="cmx__mk" aria-hidden="true"></span>不可</p>
+          
+        </div>
+      </div>
+
+    </div>
+
+    
+
+  </div>
+</section>
+
+</div>
+<!-- access/access-campus-tabs (base) -->
+<div class="tone-base">
+<section class="sec cts" >
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="sec-head__en">SCHOOL</p>
+      <h2 class="sec-head__ja">教室紹介</h2>
+      
+    </div>
+
+    <div class="cts__box">
+      <input class="cts__radio" type="radio" name="cts-campus" id="cts-campus-1" checked><input class="cts__radio" type="radio" name="cts-campus" id="cts-campus-2" >
+
+      <div class="cts__tabs" role="tablist">
+        <label class="cts__tab" for="cts-campus-1">渋谷校</label><label class="cts__tab" for="cts-campus-2">オンライン校</label>
+      </div>
+
+      <div class="cts__panels">
+        <div class="cts__panel">
+
+          <div class="cts__top">
+            <figure class="cts__figure">
+              <img src="img/classroom.jpg" alt="ESL club 渋谷校 教室内観">
+            </figure>
+            <div class="cts__info">
+              
+              <p class="cts__tel"><span>Tel.</span><a href="tel:0337973380">03-3797-3380</a></p>
+              <dl class="cts__dl">
+                <dt>住所</dt><dd>〒150-0002　渋谷区渋谷1-8-6　宮益坂STビル10階</dd>
+                <dt>営業時間</dt><dd>火曜日から金曜日　14:00から20:00（土曜日14:00から19:00）</dd>
+                <dt>休校日</dt><dd>月曜日・日曜日</dd>
+                <dt>対象</dt><dd>小学1年生から高校3年生（既卒含む）／未就学児はご相談ください</dd>
+                <dt>レッスン形式</dt><dd>バイリンガル講師によるマンツーマンレッスン</dd>
+                <dt>レッスン時間</dt><dd>1回90分</dd>
+              </dl>
+            </div>
+          </div>
+
+          <div class="cts__block">
+            <h3 class="cts__h3">料金</h3>
+            <ul class="cts__plans">
+              <li class="cts__plan">
+                <p class="cts__planname">週1回<span>月4回</span></p>
+                <p class="cts__price">58,300円</p>
+              </li><li class="cts__plan">
+                <p class="cts__planname">週2回<span>月8回</span></p>
+                <p class="cts__price">85,800円</p>
+              </li><li class="cts__plan">
+                <p class="cts__planname">週3回<span>月12回</span></p>
+                <p class="cts__price">113,300円</p>
+              </li>
+            </ul>
+            <ul class="cts__notes"><li>※金額はすべて税込です</li><li>※入会金：22,000円（税込）</li></ul>
+          </div>
+
+          <div class="cts__block">
+            <h3 class="cts__h3">タイムテーブル</h3>
+            <div class="cts__tt">
+              <div class="cts__day">
+                <p class="cts__dayname">火〜金</p>
+                
+                <ul class="cts__slots"><li>14:45-16:15</li><li>16:30-18:00</li><li>18:15-19:45</li></ul>
+              </div><div class="cts__day">
+                <p class="cts__dayname">土</p>
+                
+                <ul class="cts__slots"><li>14:20-15:50</li><li>16:05-17:35</li><li>17:50-19:20</li></ul>
+              </div><div class="cts__day is-off">
+                <p class="cts__dayname">月・日</p>
+                <p class="cts__off">休校</p>
+                <ul class="cts__slots"></ul>
+              </div>
+            </div>
+            <ul class="cts__notes"></ul>
+          </div>
+
+          <div class="cts__block cts__msg">
+            <h3 class="cts__h3">スクールマネジャーよりご挨拶</h3>
+            <div class="cts__msgbody">
+              <figure class="cts__msgfig"><img src="img/head_teacher.jpg" alt="ESL club 渋谷校 スクールマネジャー 杉舘皆華"></figure>
+              <div class="cts__msgtext">
+                <p>私は、英検は子どもたちの成長を確認するための一つの「通過点」だと考えています。もちろん、英検合格は大きな目標です。しかし、私が本当に大切にしたいのは、その過程で身につく英語力や、目標に向かって努力する経験です。</p><p>これまで子どもたちと向き合う中で、結果だけでなく、その過程で得られる経験や自信こそが、その後の成長を支える大切な財産になることを実感してきました。</p><p>英検の学習を通して、英語力だけでなく、挑戦する力や継続する力も身につけていきます。そして、「できた」という成功体験の積み重ねが、自信となって次の一歩を後押ししてくれます。</p><p>私は、子どもたちには自分でも気付いていない大きな可能性があると信じています。その可能性を引き出し、一人ひとりが自信を持って成長していけるよう支えていくことが私の役割です。</p><p>英語を学ぶことが、生徒様の未来の選択肢を広げるきっかけとなるよう、ESL club渋谷校スタッフ一同、全力でサポートしてまいります。みなさまとお会いできることを心より楽しみにしております。</p>
+                <p class="cts__sign"><span>ESL club 渋谷校　スクールマネジャー</span><b>杉舘　皆華</b></p>
+              </div>
+            </div>
+          </div>
+
+        </div><div class="cts__panel">
+
+          <div class="cts__top">
+            <figure class="cts__figure">
+              <img src="img/school_online.jpg" alt="オンライン校のレッスンの様子">
+            </figure>
+            <div class="cts__info">
+              <p class="cts__body">バイリンガル講師の個別レッスン指導をオンラインでも受講できます。シャドーイングやエッセイライティングの指導といったバイリンガルによる個別指導だからこそのレッスンはもちろん、生徒一人ひとりに合わせた学習プランのご提案まで、教室と全く同じサービスをご提供いたします。</p>
+              
+              <dl class="cts__dl">
+                
+                <dt>営業時間</dt><dd>火曜日から金曜日　14:00から20:00（土曜日14:00から19:00）</dd>
+                <dt>休校日</dt><dd>月曜日・日曜日</dd>
+                <dt>対象</dt><dd>小学1年生から高校3年生（既卒含む）／未就学児の生徒様はご相談ください</dd>
+                <dt>レッスン形式</dt><dd>バイリンガル講師による完全マンツーマンレッスン</dd>
+                <dt>レッスン時間</dt><dd>1回45分</dd>
+              </dl>
+            </div>
+          </div>
+
+          <div class="cts__block">
+            <h3 class="cts__h3">料金</h3>
+            <ul class="cts__plans">
+              <li class="cts__plan">
+                <p class="cts__planname">週1回<span>月4回</span></p>
+                <p class="cts__price">33,000円</p>
+              </li><li class="cts__plan">
+                <p class="cts__planname">週2回<span>月8回</span></p>
+                <p class="cts__price">52,800円</p>
+              </li><li class="cts__plan">
+                <p class="cts__planname">週3回<span>月12回</span></p>
+                <p class="cts__price">79,200円</p>
+              </li>
+            </ul>
+            <ul class="cts__notes"><li>※金額はすべて税込です</li><li>※入会金：22,000円（税込）</li><li>※教材は別途ご購入いただきます</li></ul>
+          </div>
+
+          <div class="cts__block">
+            <h3 class="cts__h3">タイムテーブル</h3>
+            <div class="cts__tt">
+              <div class="cts__day">
+                <p class="cts__dayname">火〜金</p>
+                
+                <ul class="cts__slots"><li>16:00-16:45</li><li>17:00-17:45</li><li>18:00-18:45</li><li>19:00-19:45</li><li>20:00-20:45<span>火・木のみ</span></li></ul>
+              </div><div class="cts__day">
+                <p class="cts__dayname">土</p>
+                
+                <ul class="cts__slots"><li>14:00-14:45</li><li>15:00-15:45</li><li>16:00-16:45</li><li>17:00-17:45</li><li>18:00-18:45</li></ul>
+              </div><div class="cts__day is-off">
+                <p class="cts__dayname">月・日</p>
+                <p class="cts__off">休校</p>
+                <ul class="cts__slots"></ul>
+              </div>
+            </div>
+            <ul class="cts__notes"><li>※週2回レッスンは同日連続受講も可能です（16:00-16:45 レッスン① ／ 16:45-17:00 休憩 ／ 17:00-17:45 レッスン②）</li></ul>
+          </div>
+
+          
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>
+<!-- cta/cta-priority-stack (tint) -->
+<div class="tone-tint">
+<section class="sec cps" id="cta4">
+  <div class="wrap">
+
+    <!-- 地は敷かない。外側の kit tone（tint／dark）がそのまま面になる。
+         白カードは持たず、地の上に直接ボタンと注釈を置く。
+         版面より狭い「1枚の板」であることは、罫と角1箇所の大Rだけで示す。 -->
+    <div class="cps__field">
+
+      
+
+      <div class="cps__body">
+
+        <!-- 見出しは .sec-head の2段（欧文ラベル＋和文）に統一。
+             eyebrow→__en / heading→__ja。両方空の回は箱ごと消える -->
+        <div class="sec-head cps__head">
+          
+          
+        </div>
+
+        <div class="cps__stack">
+
+          <!-- 主：_base.css の .btn そのまま（矢印は .btn::after が持つ） -->
+          <a class="btn cps__btn fx" data-fx="fadeup" data-d="120" href="https://eslclub.jp/trial/">
+            
+            
+            <span class="cps__label">無料体験レッスンはこちら</span>
+          </a>
+
+          <!-- 副1／副2：同じ .btn の小さい方（.btn--sm）。主従は大きさだけでつける -->
+          
+
+          
+
+        </div>
+
+        <p class="cps__note fx" data-fx="fadeup" data-d="240">いつまでに2級合格できるかレッスン後にご案内します</p>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>
+<!-- footer/footer-two-tier-cta (base) -->
+<div class="tone-base">
+<footer class="ftc">
+
+  <!-- 写真ストリップ（任意）。導線帯の“上”に置くので、PCでもSPでも写真はCTAより上になる。
+       photos を渡さなければ中身が空になり、CSS 側（:has）で消える。
+       同じキーの条件ブロックで繰り返しを包むと閉じ判定が壊れるので、条件では包まない -->
+  <div class="ftc__strip">
+    
+  </div>
+
+  <!-- ── 上段：受け皿（電話）───────────────────────────
+       地は敷かない（kit の tone が外で敷いている）。
+       このフッターで面を持つのは電話だけ＝押せる場所がひとつに絞られる -->
+  <div class="ftc__band">
+    <div class="wrap ftc__band-in">
+
+      
+      
+
+      <div class="ftc__ways">
+
+        
+        <div class="ftc__tel fx" data-fx="fadeup" data-d="120">
+          <p class="ftc__tel-cap">お電話でのお問い合わせ</p>
+          <a class="ftc__tel-num" href="tel:0337973380">
+            <span class="ftc__tel-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6.5 3.5h3l1.5 4-2 1.5a12 12 0 0 0 6 6l1.5-2 4 1.5v3c0 1-.8 1.8-1.8 1.7C10.8 18.8 5.2 13.2 4.8 5.3 4.7 4.3 5.5 3.5 6.5 3.5z"/></svg></span>
+            <span class="ftc__tel-digits">03-3797-3380</span>
+          </a>
+          <p class="ftc__tel-hours">火曜日から金曜日　14:00から20:00（土曜日14:00から19:00）</p>
+        </div>
+        
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 下段：事務フッター ─────────────────────────
+       面は持たせない。段は級数と1pxの罫だけで作る。動きは付けない -->
+  <div class="ftc__base">
+    <div class="wrap">
+
+      <div class="ftc__cols">
+
+        <div class="ftc__brand">
+          <img class="ftc__logo" src="img/logo.svg" alt="ESL club" loading="lazy">
+          
+        </div>
+
+        <!-- 事業導線（2本）：級数と罫で「行き先」として読ませる（記事リンクとの階層差を作る） -->
+        <nav class="ftc__col" aria-label="コース">
+          <p class="h-eyebrow ftc__col-h">コース</p>
+          <ul class="ftc__svc">
+            
+            <li>
+              <a class="ftc__svc-a" href="https://eslclub.jp/">
+                <span class="ftc__svc-label">小学部</span>
+                <span class="ftc__svc-sub">英検2級に合格できる</span>
+                <span class="ftc__arw ftc__arw--sm" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M4.3 2.2 8.1 6l-3.8 3.8"/></svg></span>
+              </a>
+            </li>
+            
+            <li>
+              <a class="ftc__svc-a" href="https://eslclub.jp/highschool/">
+                <span class="ftc__svc-label">中高部</span>
+                <span class="ftc__svc-sub">受験・留学を有利にする</span>
+                <span class="ftc__arw ftc__arw--sm" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M4.3 2.2 8.1 6l-3.8 3.8"/></svg></span>
+              </a>
+            </li>
+            
+          </ul>
+        </nav>
+
+        <!-- ブログ導線＋注目記事 -->
+        <nav class="ftc__col ftc__col--blog" aria-label="ブログ">
+          <p class="h-eyebrow ftc__col-h">
+            <a class="ftc__col-h-a" href="https://eslclub.jp/blog/">ブログ</a>
+          </p>
+          <p class="ftc__posts-label">注目記事</p>
+          <ul class="ftc__posts">
+            
+            <li>
+              <a class="ftc__post" href="https://eslclub.jp/blog/">
+                <span class="ftc__post-dot" aria-hidden="true"></span>
+                <span class="ftc__post-t">英検2級の合格点・レベル・問題傾向・必要な学習時間</span>
+              </a>
+            </li>
+            
+            <li>
+              <a class="ftc__post" href="https://eslclub.jp/blog/">
+                <span class="ftc__post-dot" aria-hidden="true"></span>
+                <span class="ftc__post-t">英検準2級のレベル・難易度・問題範囲・勉強法対策</span>
+              </a>
+            </li>
+            
+            <li>
+              <a class="ftc__post" href="https://eslclub.jp/blog/">
+                <span class="ftc__post-dot" aria-hidden="true"></span>
+                <span class="ftc__post-t">英検3級の合格点ライン・レベル・勉強方法・合格対策</span>
+              </a>
+            </li>
+            
+            <li>
+              <a class="ftc__post" href="https://eslclub.jp/blog/">
+                <span class="ftc__post-dot" aria-hidden="true"></span>
+                <span class="ftc__post-t">2025年英検試験日程・申込期間・解答・合格発表</span>
+              </a>
+            </li>
+            
+            <li>
+              <a class="ftc__post" href="https://eslclub.jp/blog/">
+                <span class="ftc__post-dot" aria-hidden="true"></span>
+                <span class="ftc__post-t">英検ライティング予想問題　3級・準2級・2級・準1級</span>
+              </a>
+            </li>
+            
+          </ul>
+        </nav>
+
+      </div>
+
+      <!-- 法務リンク＋コピーライト（1px の罫は段の境目ではなく下段の内側なので可） -->
+      <div class="ftc__meta">
+        <ul class="ftc__legal">
+          
+          <li><a class="ftc__legal-a" href="https://www.meikonet.co.jp/">会社概要（明光ネットワークジャパン）</a></li>
+          
+          <li><a class="ftc__legal-a" href="https://eslclub.jp/privacy/">プライバシーポリシー</a></li>
+          
+        </ul>
+        <p class="ftc__copy">Copyright © 2024 ESL club</p>
+      </div>
+
+      <!-- 最下段の細字。商標注記・reCAPTCHA注記など、長くても構わないもの -->
+      <div class="ftc__fine">
+        <p class="ftc__note">英検®は、公益財団法人日本英語検定協会の登録商標です。このコンテンツは、公益財団法人日本英語検定協会の承認や推奨、その他の検討を受けたものではありません。</p>
+        
+      </div>
+
+    </div>
+
+    <!-- ページの終点。ブランド名を版面より大きく組み、左右と下で断ち落とす。
+         地に8%だけ沈めた地紋なので読ませない（読ませる語ではない＝既知の固有名詞だけ切ってよい）。
+         版面の外へ出すので .wrap の外に置く -->
+    <p class="ftc__mark" aria-hidden="true">ESL club</p>
+  </div>
+</footer>
+
+</div>
+<script>
+/* スクロール表示：画面に入ったら .hh-in を付ける（IO不使用） */
+(function(){
+  var els=[].slice.call(document.querySelectorAll('.fx'));
+  if(!els.length) return;
+  document.body.classList.add('fx-on');
+  var scrolled=false, ticking=false;
+  function show(el){
+    var d=parseInt(el.dataset.d||'0',10);
+    if(d) setTimeout(function(){el.classList.add('hh-in')},d);
+    else el.classList.add('hh-in');
+  }
+  function check(){
+    ticking=false;
+    var vh=window.innerHeight, i;
+    for(i=els.length-1;i>=0;i--){
+      var el=els[i], r=el.getBoundingClientRect();
+      if(r.top < vh*0.88 && r.bottom > 0){ show(el); els.splice(i,1); }
+    }
+  }
+  function onScroll(){ scrolled=true; if(!ticking){ ticking=true; requestAnimationFrame(check); } }
+  addEventListener('scroll',onScroll,{passive:true});
+  addEventListener('resize',onScroll,{passive:true});
+  check();                                   /* 初期表示分 */
+  /* 保険：20秒たっても一度もスクロールされなければ全部出す */
+  setTimeout(function(){ if(!scrolled){ els.forEach(function(e){e.classList.add('hh-in')}); els.length=0; } },20000);
+})();
+</script>
+</body>
+</html>
