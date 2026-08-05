@@ -270,6 +270,15 @@ footer{position:relative;z-index:1}
 .tone-brand .mbl__lead{color:var(--c-ink)}
 .tone-brand .mbl__role{color:var(--c-ink3)}
 .tone-brand .nch__note{color:rgba(255,255,255,.82)}
+/* 教室紹介：タブごと白いボックスに載せる（緑の上に表や料金を直に置かない） */
+.tone-brand .cts__box{background:var(--c-bg);border-radius:28px;
+  padding:clamp(24px,3.4vw,48px);color:var(--c-ink2)}
+.tone-brand .cts__tab{background:var(--c-bg2);color:var(--c-ink3)}
+/* CTA：緑ベタの上なので板を白に返す。ボタンは緑のまま */
+.tone-brand .cps__field{background:var(--c-bg);color:var(--c-ink2);
+  border-radius:28px;padding:clamp(28px,4vw,52px)}
+.tone-brand .cps__field .sec-head__ja{color:var(--c-ink)}
+.tone-brand .cps__field .sec-head__sub,.tone-brand .cps__note{color:var(--c-ink2)}
 
 /* 白地に濃いボックス。中の文字は白 */
 .tone-boxdark{background:var(--c-bg)}
@@ -822,7 +831,8 @@ html:not(.js) .lm__i{transform:none}
 .pmp__arrow-l,.pmp__arrow-h{stroke-dasharray:120;stroke-dashoffset:0;
   transition:stroke-dashoffset .7s var(--e) .35s}
 .fx-on .fx[data-fx="pair"]{opacity:1;transform:none}         /* 既定のフェードは使わない */
-.fx-on .fx[data-fx="pair"] .pmp__box{transform:translateX(11%)}
+/* 寄せ幅はごく浅く。動いたと分かる手前で止める（大きく動かすと版がずれて見える） */
+.fx-on .fx[data-fx="pair"] .pmp__box{transform:translateX(3%)}
 .fx-on .fx[data-fx="pair"] .pmp__media{opacity:0;transform:translateX(56px)}
 .fx-on .fx[data-fx="pair"] .pmp__arrow{opacity:0}
 .fx-on .fx[data-fx="pair"] .pmp__arrow-l,
@@ -1142,20 +1152,23 @@ html:not(.js) .lm__i{transform:none}
 /* ★カードが「大きめの白いブロック」。濃い面の上でもこの中は読める */
 .msc__card{position:relative;border-radius:22px;overflow:hidden;background:var(--c-bg);
   box-shadow:var(--shadow-s)}
-/* 写真の地は3枚とも同じ。ブランド緑 #00B21F を白に10%混ぜた色 */
-.msc__fig{background:#E6F7E9}
+/* 写真の地は3枚とも同じ。ブランド緑のベタ（淡い緑は他の節と馴染まないので使わない） */
+.msc__fig{background:var(--c-primary)}
 .msc__fig{margin:0}
 /* 素材が円形に切り抜かれているので、円のまま色面に乗せる */
 .msc__fig{display:grid;place-items:center;padding:22px 22px 14px}
-.msc__fig img{width:150px;max-width:72%;aspect-ratio:1/1;object-fit:cover;border-radius:50%;display:block}
+/* 素材の丸い地が緑の上で浮くので、白い輪で縁取って「額」に見せる */
+.msc__fig img{width:150px;max-width:72%;aspect-ratio:1/1;object-fit:cover;border-radius:50%;display:block;
+  box-shadow:0 0 0 6px var(--c-bg)}
 /* 氏名：雲形のラベルを写真の下端に重ねる */
 .msc__name{position:relative;margin:-14px 12% 0;z-index:2;text-align:center;padding:12px 10px;
   border-radius:44% 56% 46% 54% / 60% 58% 42% 40%;background:var(--c-bg)}
-/* 氏名の雲形は一段濃く（同20%） */
-.msc__name{background:#CCF0D2}
-.msc__name b{display:block;font-size:clamp(14px,1.35vw,18px);font-weight:900;color:var(--c-ink)}
+/* 雲形は写真の緑と白い下半分にまたがる。どちらの上でも立つよう、
+   ブランド緑をさらに沈めた濃い緑にして、文字は白で抜く */
+.msc__name{background:#00701A}
+.msc__name b{display:block;font-size:clamp(14px,1.35vw,18px);font-weight:900;color:var(--c-on-primary)}
 .msc__name span{display:block;margin-top:2px;font-size:clamp(8.5px,.72vw,10px);
-  letter-spacing:.06em;color:var(--c-ink3);font-weight:700}
+  letter-spacing:.06em;color:rgba(255,255,255,.74);font-weight:700}
 
 .msc__spec{padding:14px 18px 20px}
 .msc__dl{display:grid;grid-template-columns:5.6em minmax(0,1fr);gap:0 10px;
@@ -2708,8 +2721,8 @@ html:not(.js) .lm__i{transform:none}
 </section>
 
 </div>
-<!-- access/access-campus-tabs (tint) -->
-<div class="tone-tint">
+<div class="tone-brand bg-growth"><span class="gbg" aria-hidden="true"><svg viewBox="0 0 1440 2600" preserveAspectRatio="none"><path class="b1" d="M-80 2560 C 420 2430, 980 1560, 1560 240"/><path class="b2" d="M-80 2700 C 460 2560, 1020 1760, 1560 520"/><path class="b3" d="M-80 2820 C 500 2700, 1060 2020, 1560 820"/></svg></span>
+<!-- access/access-campus-tabs (base) -->
 <section class="sec cts" >
   <div class="wrap">
     <div class="sec-head">
@@ -2859,9 +2872,7 @@ html:not(.js) .lm__i{transform:none}
   </div>
 </section>
 
-</div>
-<!-- cta/cta-priority-stack (boxdark) -->
-<div class="tone-boxdark">
+<!-- cta/cta-priority-stack (base) -->
 <section class="sec cps" id="cta4">
   <div class="wrap">
 
@@ -2906,7 +2917,7 @@ html:not(.js) .lm__i{transform:none}
 
 </div>
 <!-- footer/footer-two-tier-cta (ink) -->
-<div class="tone-ink wave-top" style="--wave-from:var(--c-bg)">
+<div class="tone-ink wave-top" style="--wave-from:var(--c-primary)">
 <footer class="ftc">
 
   <!-- 写真ストリップ（任意）。導線帯の“上”に置くので、PCでもSPでも写真はCTAより上になる。

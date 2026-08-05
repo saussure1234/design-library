@@ -12,20 +12,23 @@
 /* ★カードが「大きめの白いブロック」。濃い面の上でもこの中は読める */
 .msc__card{position:relative;border-radius:22px;overflow:hidden;background:var(--c-bg);
   box-shadow:var(--shadow-s)}
-/* 写真の地は3枚とも同じ。ブランド緑 #00B21F を白に10%混ぜた色 */
-.msc__fig{background:#E6F7E9}
+/* 写真の地は3枚とも同じ。ブランド緑のベタ（淡い緑は他の節と馴染まないので使わない） */
+.msc__fig{background:var(--c-primary)}
 .msc__fig{margin:0}
 /* 素材が円形に切り抜かれているので、円のまま色面に乗せる */
 .msc__fig{display:grid;place-items:center;padding:22px 22px 14px}
-.msc__fig img{width:150px;max-width:72%;aspect-ratio:1/1;object-fit:cover;border-radius:50%;display:block}
+/* 素材の丸い地が緑の上で浮くので、白い輪で縁取って「額」に見せる */
+.msc__fig img{width:150px;max-width:72%;aspect-ratio:1/1;object-fit:cover;border-radius:50%;display:block;
+  box-shadow:0 0 0 6px var(--c-bg)}
 /* 氏名：雲形のラベルを写真の下端に重ねる */
 .msc__name{position:relative;margin:-14px 12% 0;z-index:2;text-align:center;padding:12px 10px;
   border-radius:44% 56% 46% 54% / 60% 58% 42% 40%;background:var(--c-bg)}
-/* 氏名の雲形は一段濃く（同20%） */
-.msc__name{background:#CCF0D2}
-.msc__name b{display:block;font-size:clamp(14px,1.35vw,18px);font-weight:900;color:var(--c-ink)}
+/* 雲形は写真の緑と白い下半分にまたがる。どちらの上でも立つよう、
+   ブランド緑をさらに沈めた濃い緑にして、文字は白で抜く */
+.msc__name{background:#00701A}
+.msc__name b{display:block;font-size:clamp(14px,1.35vw,18px);font-weight:900;color:var(--c-on-primary)}
 .msc__name span{display:block;margin-top:2px;font-size:clamp(8.5px,.72vw,10px);
-  letter-spacing:.06em;color:var(--c-ink3);font-weight:700}
+  letter-spacing:.06em;color:rgba(255,255,255,.74);font-weight:700}
 
 .msc__spec{padding:14px 18px 20px}
 .msc__dl{display:grid;grid-template-columns:5.6em minmax(0,1fr);gap:0 10px;
