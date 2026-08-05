@@ -209,7 +209,12 @@ document.documentElement.classList.add('js');
     b.addEventListener('click',function(){
       var id=b.dataset.yt; if(!id||b.classList.contains('is-play')) return;
       var f=document.createElement('iframe');
-      f.src='https://www.youtube.com/embed/'+id+'?autoplay=1&rel=0&playsinline=1&origin='+location.origin;
+      /* origin は http(s) のときだけ付ける。file:// だと origin=null になり
+         YouTube が「エラー153」で再生を拒否する */
+      var q='autoplay=1&rel=0&playsinline=1';
+      if(location.protocol==='http:'||location.protocol==='https:') q+='&origin='+encodeURIComponent(location.origin);
+      f.src='https://www.youtube-nocookie.com/embed/'+id+'?'+q;
+      f.referrerPolicy='strict-origin-when-cross-origin';
       f.title=b.getAttribute('aria-label')||'';
       f.allow='accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture';
       f.setAttribute('allowfullscreen','');
@@ -270,6 +275,33 @@ document.documentElement.classList.add('js');
   addEventListener('resize',frame);
   frame();
   requestAnimationFrame(function(){ growth.classList.add('is-ready'); });
+})();
+
+/* ── 長文のドロップダウン ─────────────────────
+   高さを実測してから animate するので、中身が変わっても滑らかに開く。
+   JSが動かない場合は全文が出たまま（読めなくならない）。 */
+(function(){
+  var COLLAPSED = 128;                      /* たたんだときに見せる高さ(px) */
+  document.querySelectorAll('.mbl__more').forEach(function(btn){
+    var fold = btn.previousElementSibling;
+    if(!fold || !fold.classList.contains('mbl__fold')) return;
+    var full = fold.scrollHeight;
+    if(full <= COLLAPSED + 40){ btn.style.display='none'; return; }   /* 短ければ畳まない */
+    var open = false;
+    fold.style.height = COLLAPSED + 'px';
+    fold.dataset.folded = '1';
+    var t = btn.querySelector('.mbl__more-t');
+    function set(o){
+      open = o;
+      full = fold.firstElementChild.getBoundingClientRect().height;
+      fold.style.height = (o ? full : COLLAPSED) + 'px';
+      fold.dataset.folded = o ? '0' : '1';
+      btn.setAttribute('aria-expanded', o ? 'true' : 'false');
+      if(t) t.textContent = o ? (t.dataset.close || '閉じる') : (t.dataset.open || '続きを読む');
+    }
+    btn.addEventListener('click', function(){ set(!open); });
+    addEventListener('resize', function(){ if(open) set(true); }, {passive:true});
+  });
 })();
 """
 

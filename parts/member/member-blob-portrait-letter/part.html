@@ -16,7 +16,13 @@
           <p class="mbl__role">{{.role}}</p>
           <p class="mbl__name">{{.name}}{{?.career}}<span>{{.career}}</span>{{/.career}}</p>
           <p class="mbl__lead">{{.lead}}</p>
-          <div class="mbl__body">{{.body}}</div>
+          <div class="mbl__fold">
+            <div class="mbl__body" id="mblb-{{.i}}">{{.body}}</div>
+          </div>
+          <button class="mbl__more" type="button" aria-expanded="false" aria-controls="mblb-{{.i}}">
+            <span class="mbl__more-t" data-open="{{openLabel}}" data-close="{{closeLabel}}">{{openLabel}}</span>
+            <span class="mbl__more-i" aria-hidden="true"></span>
+          </button>
         </div>
       </li>{{/items}}
     </ul>

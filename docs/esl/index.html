@@ -1077,6 +1077,25 @@ html:not(.js) .lm__i{transform:none}
 .mbl__name span{font-family:var(--f-num);font-size:.5em;font-weight:800;color:var(--c-primary)}
 .mbl__lead{margin-top:clamp(16px,2vw,26px);font-size:clamp(14.5px,1.3vw,18px);font-weight:800;
   color:var(--c-ink);line-height:1.95}
+/* 長文はたたむ。開閉は高さを実測して滑らかに動かす */
+.mbl__fold{overflow:hidden;transition:height .5s var(--e)}
+.mbl__more{display:inline-flex;align-items:center;gap:8px;margin-top:14px;
+  padding:9px 18px;border:1px solid var(--c-line);border-radius:var(--r-pill);
+  background:var(--c-bg);cursor:pointer;
+  font-size:clamp(11.5px,.95vw,13px);font-weight:700;color:var(--c-ink2);
+  transition:border-color .16s var(--e),color .16s var(--e)}
+@media(hover:hover) and (pointer:fine){
+  .mbl__more:hover{border-color:var(--c-primary);color:var(--c-primary)}}
+.mbl__more-i{width:9px;height:9px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;
+  transform:rotate(45deg) translate(-2px,-2px);transition:transform .35s var(--e)}
+.mbl__more[aria-expanded="true"] .mbl__more-i{transform:rotate(-135deg) translate(-2px,-2px)}
+/* たたまれている間だけ、下端をぼかして「続きがある」ことを示す */
+.mbl__fold[data-folded="1"]{
+  -webkit-mask-image:linear-gradient(180deg,#000 62%,transparent 100%);
+          mask-image:linear-gradient(180deg,#000 62%,transparent 100%)}
+@media(prefers-reduced-motion:reduce){
+  .mbl__fold{transition:none}.mbl__more-i{transition:none}}
+
 /* 手描き風の罫 */
 .mbl__body{margin-top:clamp(16px,2vw,26px);padding-top:clamp(16px,2vw,26px);
   border-top:1px solid var(--c-line);
@@ -2268,7 +2287,13 @@ html:not(.js) .lm__i{transform:none}
           <p class="mbl__role">オンライン校スクールマネジャー</p>
           <p class="mbl__name">梶　玲菜<span>英語学習指導歴 7年</span></p>
           <p class="mbl__lead">みなさんにとっての、『英語』って何でしょうか？私にとっての『英語』とは、子どもたちの世界や視野を広げてくれるツールだと思います。</p>
-          <div class="mbl__body"><p>将来の進路や、夢・目標を叶えられる場所や可能性がグーンと増やせるからです。</p><p>英語は、子どもたちと世界の架け橋となり、とにかく新しい気づきを与え続けてくれます。例えば、文化の違い、見たこともない景色、日本では会えない人との出会い。この気づきは子どもたちにとって、「違うって面白い」「もっと知りたい」という探求の原動力になります。</p><p>こうした探求の原動力を刺激し引き出しながら、子どもたちの可能性を英語で広げ、わくわくする気持ちを育んであげたい。そのためにもオンライン校では、楽しく、着実に実力に繋がるよう、一人ひとりの得意・不得意に柔軟に、カリキュラムを組みレッスンを行っています。</p><p>まずは土台となる、一生モノの英語力を身に付けて、世界を広げる準備を一緒に始めませんか？みなさんと、英語とどんな将来を描いているのか、お話しできる日を楽しみにしています。</p></div>
+          <div class="mbl__fold">
+            <div class="mbl__body" id="mblb-1"><p>将来の進路や、夢・目標を叶えられる場所や可能性がグーンと増やせるからです。</p><p>英語は、子どもたちと世界の架け橋となり、とにかく新しい気づきを与え続けてくれます。例えば、文化の違い、見たこともない景色、日本では会えない人との出会い。この気づきは子どもたちにとって、「違うって面白い」「もっと知りたい」という探求の原動力になります。</p><p>こうした探求の原動力を刺激し引き出しながら、子どもたちの可能性を英語で広げ、わくわくする気持ちを育んであげたい。そのためにもオンライン校では、楽しく、着実に実力に繋がるよう、一人ひとりの得意・不得意に柔軟に、カリキュラムを組みレッスンを行っています。</p><p>まずは土台となる、一生モノの英語力を身に付けて、世界を広げる準備を一緒に始めませんか？みなさんと、英語とどんな将来を描いているのか、お話しできる日を楽しみにしています。</p></div>
+          </div>
+          <button class="mbl__more" type="button" aria-expanded="false" aria-controls="mblb-1">
+            <span class="mbl__more-t" data-open="続きを読む" data-close="閉じる">続きを読む</span>
+            <span class="mbl__more-i" aria-hidden="true"></span>
+          </button>
         </div>
       </li><li class="mbl__item fx" data-fx="fadeup" data-d="90">
         <div class="mbl__figwrap">
@@ -2280,7 +2305,13 @@ html:not(.js) .lm__i{transform:none}
           <p class="mbl__role">オンライン校スクールマネジャー</p>
           <p class="mbl__name">楠山　理紀<span>英語学習指導歴 5年</span></p>
           <p class="mbl__lead">英語は、何のために身につけるものか、人それぞれで、どれも正解だと思います。</p>
-          <div class="mbl__body"><p>ただ、その中で、何か一つ楽しい理由を持って欲しいと思っております。</p><p>洋画を、吹き替え・字幕なしで見たい。海外のYouTuberを、翻訳されるのを待たないで見れるようになりたい。将来外車を買うときに、マニュアルが全部英語でもへっちゃらになりたい。英語の習得は、時には難しく、辛いときもあるでしょう。でもその先に、趣味的な意味でも楽しい未来が待っていて欲しい。</p><p>英語は、勉強として身につけるのだけではなく、自分の人生を楽しくするためにも身につけて欲しい。そして、ゴールだけでなく、その過程も楽しくしてあげたい、というのが私の願いです。</p><p>是非、私やESL clubの講師と接してみて、英語ができたら、なにが楽しいんだろう？と問いかけてみてください。多種多様な答えが返ってきますので、これだ！と思えるもの見つけ出すのも、英語学習の一環としてみてはいかがでしょうか。</p></div>
+          <div class="mbl__fold">
+            <div class="mbl__body" id="mblb-2"><p>ただ、その中で、何か一つ楽しい理由を持って欲しいと思っております。</p><p>洋画を、吹き替え・字幕なしで見たい。海外のYouTuberを、翻訳されるのを待たないで見れるようになりたい。将来外車を買うときに、マニュアルが全部英語でもへっちゃらになりたい。英語の習得は、時には難しく、辛いときもあるでしょう。でもその先に、趣味的な意味でも楽しい未来が待っていて欲しい。</p><p>英語は、勉強として身につけるのだけではなく、自分の人生を楽しくするためにも身につけて欲しい。そして、ゴールだけでなく、その過程も楽しくしてあげたい、というのが私の願いです。</p><p>是非、私やESL clubの講師と接してみて、英語ができたら、なにが楽しいんだろう？と問いかけてみてください。多種多様な答えが返ってきますので、これだ！と思えるもの見つけ出すのも、英語学習の一環としてみてはいかがでしょうか。</p></div>
+          </div>
+          <button class="mbl__more" type="button" aria-expanded="false" aria-controls="mblb-2">
+            <span class="mbl__more-t" data-open="続きを読む" data-close="閉じる">続きを読む</span>
+            <span class="mbl__more-i" aria-hidden="true"></span>
+          </button>
         </div>
       </li>
     </ul>
@@ -3140,7 +3171,12 @@ document.documentElement.classList.add('js');
     b.addEventListener('click',function(){
       var id=b.dataset.yt; if(!id||b.classList.contains('is-play')) return;
       var f=document.createElement('iframe');
-      f.src='https://www.youtube.com/embed/'+id+'?autoplay=1&rel=0&playsinline=1&origin='+location.origin;
+      /* origin は http(s) のときだけ付ける。file:// だと origin=null になり
+         YouTube が「エラー153」で再生を拒否する */
+      var q='autoplay=1&rel=0&playsinline=1';
+      if(location.protocol==='http:'||location.protocol==='https:') q+='&origin='+encodeURIComponent(location.origin);
+      f.src='https://www.youtube-nocookie.com/embed/'+id+'?'+q;
+      f.referrerPolicy='strict-origin-when-cross-origin';
       f.title=b.getAttribute('aria-label')||'';
       f.allow='accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture';
       f.setAttribute('allowfullscreen','');
@@ -3201,6 +3237,33 @@ document.documentElement.classList.add('js');
   addEventListener('resize',frame);
   frame();
   requestAnimationFrame(function(){ growth.classList.add('is-ready'); });
+})();
+
+/* ── 長文のドロップダウン ─────────────────────
+   高さを実測してから animate するので、中身が変わっても滑らかに開く。
+   JSが動かない場合は全文が出たまま（読めなくならない）。 */
+(function(){
+  var COLLAPSED = 128;                      /* たたんだときに見せる高さ(px) */
+  document.querySelectorAll('.mbl__more').forEach(function(btn){
+    var fold = btn.previousElementSibling;
+    if(!fold || !fold.classList.contains('mbl__fold')) return;
+    var full = fold.scrollHeight;
+    if(full <= COLLAPSED + 40){ btn.style.display='none'; return; }   /* 短ければ畳まない */
+    var open = false;
+    fold.style.height = COLLAPSED + 'px';
+    fold.dataset.folded = '1';
+    var t = btn.querySelector('.mbl__more-t');
+    function set(o){
+      open = o;
+      full = fold.firstElementChild.getBoundingClientRect().height;
+      fold.style.height = (o ? full : COLLAPSED) + 'px';
+      fold.dataset.folded = o ? '0' : '1';
+      btn.setAttribute('aria-expanded', o ? 'true' : 'false');
+      if(t) t.textContent = o ? (t.dataset.close || '閉じる') : (t.dataset.open || '続きを読む');
+    }
+    btn.addEventListener('click', function(){ set(!open); });
+    addEventListener('resize', function(){ if(open) set(true); }, {passive:true});
+  });
 })();
 </script>
 </body>

@@ -28,6 +28,25 @@
 .mbl__name span{font-family:var(--f-num);font-size:.5em;font-weight:800;color:var(--c-primary)}
 .mbl__lead{margin-top:clamp(16px,2vw,26px);font-size:clamp(14.5px,1.3vw,18px);font-weight:800;
   color:var(--c-ink);line-height:1.95}
+/* 長文はたたむ。開閉は高さを実測して滑らかに動かす */
+.mbl__fold{overflow:hidden;transition:height .5s var(--e)}
+.mbl__more{display:inline-flex;align-items:center;gap:8px;margin-top:14px;
+  padding:9px 18px;border:1px solid var(--c-line);border-radius:var(--r-pill);
+  background:var(--c-bg);cursor:pointer;
+  font-size:clamp(11.5px,.95vw,13px);font-weight:700;color:var(--c-ink2);
+  transition:border-color .16s var(--e),color .16s var(--e)}
+@media(hover:hover) and (pointer:fine){
+  .mbl__more:hover{border-color:var(--c-primary);color:var(--c-primary)}}
+.mbl__more-i{width:9px;height:9px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;
+  transform:rotate(45deg) translate(-2px,-2px);transition:transform .35s var(--e)}
+.mbl__more[aria-expanded="true"] .mbl__more-i{transform:rotate(-135deg) translate(-2px,-2px)}
+/* たたまれている間だけ、下端をぼかして「続きがある」ことを示す */
+.mbl__fold[data-folded="1"]{
+  -webkit-mask-image:linear-gradient(180deg,#000 62%,transparent 100%);
+          mask-image:linear-gradient(180deg,#000 62%,transparent 100%)}
+@media(prefers-reduced-motion:reduce){
+  .mbl__fold{transition:none}.mbl__more-i{transition:none}}
+
 /* 手描き風の罫 */
 .mbl__body{margin-top:clamp(16px,2vw,26px);padding-top:clamp(16px,2vw,26px);
   border-top:1px solid var(--c-line);
