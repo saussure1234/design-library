@@ -339,7 +339,8 @@ footer{position:relative;z-index:1}
 /* ── 節の地に「成長の曲線」を薄く敷く ─────────────
    FVの装置をそのまま使い回す。ページの装置を1つに保つため、
    新しい図形は増やさず、同じ稜線を低い不透明度で置く。 */
-.bg-growth{position:relative;overflow:hidden}
+/* overflow:hidden にすると、上端の山（.hill）まで切ってしまう。SVG自身が切るので不要 */
+.bg-growth{position:relative}
 .bg-growth > .gbg{position:absolute;inset:0;z-index:0;pointer-events:none}
 .bg-growth > .gbg svg{width:100%;height:100%;display:block}
 .bg-growth > .gbg path{fill:none;stroke-linecap:round;vector-effect:non-scaling-stroke;stroke:#fff}
@@ -363,7 +364,7 @@ footer{position:relative;z-index:1}
 .tone-ink.hill-top{--hill-fill:#333333}
 .hill-top > *:not(.hill){position:relative;z-index:1}
 /* 山頂と中身がぶつからないよう、稜線のぶんだけ上を空ける */
-.hill-top > .sec,.hill-top > *:not(.hill) > .sec{padding-top:clamp(96px,10.5vw,180px)}
+.hill-top > .sec,.hill-top > *:not(.hill) > .sec{padding-top:clamp(48px,5.2vw,92px)}
 
 /* ── セクションの分け目を曲線にする ──────────────
    直線の境界だと段が積まれて見える。前後の地の色で【大きな楕円】を置き、
@@ -803,8 +804,8 @@ html:not(.js) .lm__i{transform:none}
 .pmp__arrow-l,.pmp__arrow-h{stroke-dasharray:120;stroke-dashoffset:0;
   transition:stroke-dashoffset .7s var(--e) .35s}
 .fx-on .fx[data-fx="pair"]{opacity:1;transform:none}         /* 既定のフェードは使わない */
-.fx-on .fx[data-fx="pair"] .pmp__box{transform:translateX(38%)}
-.fx-on .fx[data-fx="pair"] .pmp__media{opacity:0;transform:translateX(70px)}
+.fx-on .fx[data-fx="pair"] .pmp__box{transform:translateX(11%)}
+.fx-on .fx[data-fx="pair"] .pmp__media{opacity:0;transform:translateX(56px)}
 .fx-on .fx[data-fx="pair"] .pmp__arrow{opacity:0}
 .fx-on .fx[data-fx="pair"] .pmp__arrow-l,
 .fx-on .fx[data-fx="pair"] .pmp__arrow-h{stroke-dashoffset:120}
