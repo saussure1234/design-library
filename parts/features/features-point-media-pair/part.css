@@ -4,22 +4,23 @@
    その間を矢印が描かれてつながる。「この説明の実物がこれ」という関係を動きで示す。
    POINTの箱の中身は features-vertical-heading-rows と同じ組み方を借りる。 */
 /* 箱は POINT1・2・4 と【同じ幅・ほぼ同じ位置】に置く。
-   そこから左へ 110px 出す。動画は版面の右へこぼして置き場所を作る
+   そこから左へ 220px 出す。動画は版面の右へこぼして置き場所を作る
    （行を版面に収めようとすると、箱が中央から 235px も左へ動いてしまう）*/
 /* 登場前の動画は画面の右外（+56px）に置く。clip でないと、その間だけ
    横スクロールバーが出る。hidden ではなく clip（位置指定の子を壊さない） */
 .pmp{overflow-x:clip}
 .pmp__row{display:grid;grid-template-columns:minmax(0,540px) auto minmax(300px,1fr);
-  /* 動画はPOINTの【右下】に出す。下端をそろえるので、箱の底から
-     真横に出てきたように見える */
+  /* 動画はPOINTの【右下】。行を下ぞろえにしたうえで箱に下マージンを持たせると、
+     箱の底より下まで動画が回り込む（＝右へ、かつ下へずれる） */
   gap:clamp(10px,1.5vw,22px);align-items:end;
   /* 版面を抜けて画面の端まで使う。左端の位置は「他のPOINTの箱の左 −40px」で固定。
-     他のPOINTは 50vw-270px から始まるので、ここは 50vw-380px */
+     他のPOINTは 50vw-270px から始まるので、ここは 50vw-490px */
   margin-inline:calc(50% - 50vw);
-  padding-left:max(24px,calc(50vw - 380px));
+  padding-left:max(24px,calc(50vw - 490px));
   padding-right:clamp(20px,2.6vw,40px)}
 
-/* 左：POINTの箱（白） */
+/* 左：POINTの箱（白）。この下マージンのぶんだけ、動画が箱より下へ回り込む */
+.pmp__box{margin-bottom:clamp(80px,9.5vw,150px)}
 .pmp__box .vhr__item{background:var(--c-bg);border-radius:20px;
   padding:clamp(20px,2.4vw,30px);box-shadow:var(--shadow-s)}
 
@@ -60,7 +61,7 @@
   transition:stroke-dashoffset .7s var(--e) .35s}
 .fx-on .fx[data-fx="pair"]{opacity:1;transform:none}         /* 既定のフェードは使わない */
 /* ① 節に入った時点：箱は他のPOINTと【同じ位置】。動画は画面の右の外 */
-.fx-on .fx[data-fx="pair"] .pmp__box{transform:translateX(110px)}
+.fx-on .fx[data-fx="pair"] .pmp__box{transform:translateX(220px)}
 .fx-on .fx[data-fx="pair"] .pmp__media{opacity:0;transform:translateX(calc(100% + 48px))}
 .fx-on .fx[data-fx="pair"] .pmp__arrow{opacity:0}
 .fx-on .fx[data-fx="pair"] .pmp__arrow-l,
@@ -81,7 +82,8 @@
 @media(max-width:1024px){
   .pmp__row{grid-template-columns:minmax(0,1fr);gap:16px;
     margin-inline:auto;padding-inline:0;max-width:540px}
-  .pmp__arrow{width:44px;margin-inline:auto;transform:rotate(90deg)}
+  .pmp__box{margin-bottom:0}
+  .pmp__arrow{width:44px;margin-inline:auto;margin-bottom:0;transform:rotate(90deg)}
   /* 縦積みでは左右に割れない。動画は下から入れる */
   .fx-on .fx[data-fx="pair"] .pmp__box{transform:none}
   .fx-on .fx[data-fx="pair"] .pmp__media{transform:translateY(40px)}
