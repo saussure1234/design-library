@@ -66,7 +66,10 @@ body{padding-top:var(--hdr-h,60px)}
 .gm2{stroke:var(--c-accent); stroke-width:19px;opacity:.44;display:none}
 /* 中身は必ず曲線より前面に */
 .tone-clear,.tone-base,.tone-tint,.tone-blob,.tone-brand,.tone-boxdark,.tone-grad,.tone-pale,.tone-ink,
-.hdr,footer{position:relative;z-index:1}
+footer{position:relative;z-index:1}
+/* ★ヘッダーは position:fixed のまま。ここで relative にすると流れに戻って
+   スクロールで消え、上に余白ができる */
+.hdr{z-index:60}
 
 @media(max-width:767px){
   /* 横に潰すとPC用パスの立ち上がりが右端に寄って消える。パスごと差し替える */

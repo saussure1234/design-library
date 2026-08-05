@@ -165,7 +165,10 @@ body{padding-top:var(--hdr-h,60px)}
 .gm2{stroke:var(--c-accent); stroke-width:19px;opacity:.44;display:none}
 /* 中身は必ず曲線より前面に */
 .tone-clear,.tone-base,.tone-tint,.tone-blob,.tone-brand,.tone-boxdark,.tone-grad,.tone-pale,.tone-ink,
-.hdr,footer{position:relative;z-index:1}
+footer{position:relative;z-index:1}
+/* ★ヘッダーは position:fixed のまま。ここで relative にすると流れに戻って
+   スクロールで消え、上に余白ができる */
+.hdr{z-index:60}
 
 @media(max-width:767px){
   /* 横に潰すとPC用パスの立ち上がりが右端に寄って消える。パスごと差し替える */
@@ -1092,9 +1095,8 @@ html:not(.js) .lm__i{transform:none}
 /* ★カードが「大きめの白いブロック」。濃い面の上でもこの中は読める */
 .msc__card{position:relative;border-radius:22px;overflow:hidden;background:var(--c-bg);
   box-shadow:var(--shadow-s)}
-.msc__item:nth-child(1) .msc__fig{background:var(--c-primary-l)}
-.msc__item:nth-child(2) .msc__fig{background:#E2F1E9}
-.msc__item:nth-child(3) .msc__fig{background:#F6EFD9}
+/* 写真の地は3枚とも同じ。ブランド緑 #00B21F を白に10%混ぜた色 */
+.msc__fig{background:#E6F7E9}
 .msc__fig{margin:0}
 /* 素材が円形に切り抜かれているので、円のまま色面に乗せる */
 .msc__fig{display:grid;place-items:center;padding:22px 22px 14px}
@@ -1102,9 +1104,8 @@ html:not(.js) .lm__i{transform:none}
 /* 氏名：雲形のラベルを写真の下端に重ねる */
 .msc__name{position:relative;margin:-14px 12% 0;z-index:2;text-align:center;padding:12px 10px;
   border-radius:44% 56% 46% 54% / 60% 58% 42% 40%;background:var(--c-bg)}
-.msc__item:nth-child(1) .msc__name{background:#DCEFD0}
-.msc__item:nth-child(2) .msc__name{background:#C9E6D6}
-.msc__item:nth-child(3) .msc__name{background:#F3E3BC}
+/* 氏名の雲形は一段濃く（同20%） */
+.msc__name{background:#CCF0D2}
 .msc__name b{display:block;font-size:clamp(14px,1.35vw,18px);font-weight:900;color:var(--c-ink)}
 .msc__name span{display:block;margin-top:2px;font-size:clamp(8.5px,.72vw,10px);
   letter-spacing:.06em;color:var(--c-ink3);font-weight:700}
