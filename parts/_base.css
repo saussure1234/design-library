@@ -251,6 +251,8 @@ footer{position:relative;z-index:1}
 .tone-pale.hill-top{--hill-fill:var(--c-bg2)}
 .tone-ink.hill-top{--hill-fill:#333333}
 .hill-top > *:not(.hill){position:relative;z-index:1}
+/* 山頂と中身がぶつからないよう、稜線のぶんだけ上を空ける */
+.hill-top > .sec,.hill-top > *:not(.hill) > .sec{padding-top:clamp(96px,10.5vw,180px)}
 
 /* ── セクションの分け目を曲線にする ──────────────
    直線の境界だと段が積まれて見える。前後の地の色で【大きな楕円】を置き、
