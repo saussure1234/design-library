@@ -3,18 +3,36 @@
    ・左に小さな人物、右に 見出し（ブランド色）→ 属性 → 本文
    ・見出しはブランド色。本文は行間を広めに取って長文でも読ませる
    再現の記録: repro/vbi/ */
-/* 地に【大きな緑の丸】を3つ置く。この節は文字が地に直接乗るので、
+/* 地に【大きな緑の丸】を置く。この節は文字が地に直接乗るので、
    丸はブランド緑を薄く溶いた濃さにする（濃くすると本文が読めなくなる）。
-   色止めを1点で切るので、ぼけずに丸の輪郭が出る。 */
-.vbi{position:relative;
+   色止めを1点で切るので、ぼけずに丸の輪郭が出る。
+   ★動かすのは transform だけ。背景の位置を毎フレーム描き直すと重いので、
+     丸を2枚の層に分け、層ごと GPU で漂わせる。
+     層は節より一回り大きく取り、はみ出しは節側で切る。 */
+.vbi{position:relative;overflow:hidden;isolation:isolate;
   --r1:clamp(150px,20vw,310px); --r2:clamp(165px,22vw,345px); --r3:clamp(115px,15vw,240px);
   --c1:color-mix(in srgb,var(--c-primary) 20%,transparent);
   --c2:color-mix(in srgb,var(--c-primary) 15%,transparent);
-  --c3:color-mix(in srgb,var(--c-primary) 12%,transparent);
-  background-image:
-    radial-gradient(circle at 4% 13%,  var(--c1) 0 var(--r1), transparent var(--r1)),
-    radial-gradient(circle at 98% 48%, var(--c2) 0 var(--r2), transparent var(--r2)),
-    radial-gradient(circle at 20% 95%, var(--c3) 0 var(--r3), transparent var(--r3))}
+  --c3:color-mix(in srgb,var(--c-primary) 12%,transparent)}
+.vbi::before,.vbi::after{content:"";position:absolute;inset:-14%;z-index:0;
+  pointer-events:none;will-change:transform}
+.vbi::before{background-image:
+    radial-gradient(circle at 12% 22%, var(--c1) 0 var(--r1), transparent var(--r1)),
+    radial-gradient(circle at 25% 88%, var(--c3) 0 var(--r3), transparent var(--r3));
+  animation:vbiDriftA 27s ease-in-out infinite}
+.vbi::after{background-image:
+    radial-gradient(circle at 88% 50%, var(--c2) 0 var(--r2), transparent var(--r2));
+  animation:vbiDriftB 34s ease-in-out infinite}
+@keyframes vbiDriftA{
+  0%,100%{transform:translate(0,0) scale(1)}
+  34%    {transform:translate(2.4%,-1.8%) scale(1.06)}
+  67%    {transform:translate(-1.6%,2.2%) scale(.97)}}
+@keyframes vbiDriftB{
+  0%,100%{transform:translate(0,0) scale(1)}
+  40%    {transform:translate(-2.8%,2.4%) scale(1.07)}
+  72%    {transform:translate(1.4%,-1.6%) scale(.96)}}
+@media(prefers-reduced-motion:reduce){
+  .vbi::before,.vbi::after{animation:none}}
 .vbi .wrap{position:relative;z-index:1}
 
 .vbi__list{display:grid;gap:clamp(30px,4.6vw,64px)}

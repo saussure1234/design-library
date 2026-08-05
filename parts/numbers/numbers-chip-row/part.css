@@ -22,6 +22,9 @@
   --nch-tab-h:calc(var(--fs-note) * 1.6 + var(--s1) * 2);
 }
 .tone-tint .nch,.tone-accent .nch{--nch-face:var(--c-bg)}
+/* 濃い地の上では、面は真っ白。薄グレーだと地に対して濁って見える */
+.tone-brand .nch{--nch-face:var(--c-bg);
+  --nch-tab-bg:color-mix(in srgb,var(--c-ink) 8%,var(--c-bg))}
 .tone-dark .nch{--nch-face:color-mix(in srgb,var(--c-on-dark) 9%,var(--c-dark));
   --nch-tab-bg:color-mix(in srgb,var(--c-on-dark) 18%,var(--c-dark))}
 

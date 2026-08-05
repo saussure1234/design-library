@@ -122,7 +122,10 @@ ul,ol{padding:0;list-style:none}
    下へ動かしたときだけ隠し、上へ戻すと出す（読む邪魔をしない）。 */
 .hdr{position:fixed;left:0;right:0;top:0;z-index:60;height:90px;
   display:flex;align-items:center;justify-content:space-between;gap:var(--s4);
-  padding:0 clamp(16px,3vw,34px);background:rgba(255,255,255,.94);
+  /* 本家（eslclub.jp）に合わせて、中身を1200pxの枠に収めて中央に寄せる。
+     1440pxのとき、ロゴの左も CTAの右も画面から120px */
+  padding-inline:max(16px,calc((100% - 1200px) / 2));
+  background:rgba(255,255,255,.94);
   backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid transparent;
   transition:border-color .2s var(--e)}
 .hdr.is-stuck{border-bottom-color:var(--c-line)}
@@ -135,7 +138,7 @@ ul,ol{padding:0;list-style:none}
 body{padding-top:var(--hdr-h,60px)}
 .hdr__cta{white-space:nowrap}
 @media(max-width:900px){
-  .hdr{height:64px;padding:0 14px;gap:10px}
+  .hdr{height:64px;padding-inline:14px;gap:10px}
   .hdr__logo img{height:26px}
   .hdr__cta{min-width:0;height:40px;font-size:12px;padding:0 14px;box-shadow:0 4px 0 var(--c-primary-d)}
 }
@@ -1153,7 +1156,7 @@ html:not(.js) .lm__i{transform:none}
   color:var(--c-ink);line-height:1.9;align-self:start}
 /* 長文はたたむ。開閉は高さを実測して滑らかに動かす */
 .mbl__fold{overflow:hidden;transition:height .5s var(--e)}
-.mbl__more{display:inline-flex;align-items:center;gap:8px;margin-top:14px;
+.mbl__more{display:inline-flex;align-items:center;gap:8px;margin-top:2px;
   padding:9px 18px;border:1px solid var(--c-line);border-radius:var(--r-pill);
   background:var(--c-bg);cursor:pointer;
   font-size:clamp(11.5px,.95vw,13px);font-weight:700;color:var(--c-ink2);
@@ -1350,18 +1353,36 @@ html:not(.js) .lm__i{transform:none}
    ・左に小さな人物、右に 見出し（ブランド色）→ 属性 → 本文
    ・見出しはブランド色。本文は行間を広めに取って長文でも読ませる
    再現の記録: repro/vbi/ */
-/* 地に【大きな緑の丸】を3つ置く。この節は文字が地に直接乗るので、
+/* 地に【大きな緑の丸】を置く。この節は文字が地に直接乗るので、
    丸はブランド緑を薄く溶いた濃さにする（濃くすると本文が読めなくなる）。
-   色止めを1点で切るので、ぼけずに丸の輪郭が出る。 */
-.vbi{position:relative;
+   色止めを1点で切るので、ぼけずに丸の輪郭が出る。
+   ★動かすのは transform だけ。背景の位置を毎フレーム描き直すと重いので、
+     丸を2枚の層に分け、層ごと GPU で漂わせる。
+     層は節より一回り大きく取り、はみ出しは節側で切る。 */
+.vbi{position:relative;overflow:hidden;isolation:isolate;
   --r1:clamp(150px,20vw,310px); --r2:clamp(165px,22vw,345px); --r3:clamp(115px,15vw,240px);
   --c1:color-mix(in srgb,var(--c-primary) 20%,transparent);
   --c2:color-mix(in srgb,var(--c-primary) 15%,transparent);
-  --c3:color-mix(in srgb,var(--c-primary) 12%,transparent);
-  background-image:
-    radial-gradient(circle at 4% 13%,  var(--c1) 0 var(--r1), transparent var(--r1)),
-    radial-gradient(circle at 98% 48%, var(--c2) 0 var(--r2), transparent var(--r2)),
-    radial-gradient(circle at 20% 95%, var(--c3) 0 var(--r3), transparent var(--r3))}
+  --c3:color-mix(in srgb,var(--c-primary) 12%,transparent)}
+.vbi::before,.vbi::after{content:"";position:absolute;inset:-14%;z-index:0;
+  pointer-events:none;will-change:transform}
+.vbi::before{background-image:
+    radial-gradient(circle at 12% 22%, var(--c1) 0 var(--r1), transparent var(--r1)),
+    radial-gradient(circle at 25% 88%, var(--c3) 0 var(--r3), transparent var(--r3));
+  animation:vbiDriftA 27s ease-in-out infinite}
+.vbi::after{background-image:
+    radial-gradient(circle at 88% 50%, var(--c2) 0 var(--r2), transparent var(--r2));
+  animation:vbiDriftB 34s ease-in-out infinite}
+@keyframes vbiDriftA{
+  0%,100%{transform:translate(0,0) scale(1)}
+  34%    {transform:translate(2.4%,-1.8%) scale(1.06)}
+  67%    {transform:translate(-1.6%,2.2%) scale(.97)}}
+@keyframes vbiDriftB{
+  0%,100%{transform:translate(0,0) scale(1)}
+  40%    {transform:translate(-2.8%,2.4%) scale(1.07)}
+  72%    {transform:translate(1.4%,-1.6%) scale(.96)}}
+@media(prefers-reduced-motion:reduce){
+  .vbi::before,.vbi::after{animation:none}}
 .vbi .wrap{position:relative;z-index:1}
 
 .vbi__list{display:grid;gap:clamp(30px,4.6vw,64px)}
@@ -1417,6 +1438,9 @@ html:not(.js) .lm__i{transform:none}
   --nch-tab-h:calc(var(--fs-note) * 1.6 + var(--s1) * 2);
 }
 .tone-tint .nch,.tone-accent .nch{--nch-face:var(--c-bg)}
+/* 濃い地の上では、面は真っ白。薄グレーだと地に対して濁って見える */
+.tone-brand .nch{--nch-face:var(--c-bg);
+  --nch-tab-bg:color-mix(in srgb,var(--c-ink) 8%,var(--c-bg))}
 .tone-dark .nch{--nch-face:color-mix(in srgb,var(--c-on-dark) 9%,var(--c-dark));
   --nch-tab-bg:color-mix(in srgb,var(--c-on-dark) 18%,var(--c-dark))}
 

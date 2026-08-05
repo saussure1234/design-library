@@ -23,7 +23,10 @@ ul,ol{padding:0;list-style:none}
    下へ動かしたときだけ隠し、上へ戻すと出す（読む邪魔をしない）。 */
 .hdr{position:fixed;left:0;right:0;top:0;z-index:60;height:90px;
   display:flex;align-items:center;justify-content:space-between;gap:var(--s4);
-  padding:0 clamp(16px,3vw,34px);background:rgba(255,255,255,.94);
+  /* 本家（eslclub.jp）に合わせて、中身を1200pxの枠に収めて中央に寄せる。
+     1440pxのとき、ロゴの左も CTAの右も画面から120px */
+  padding-inline:max(16px,calc((100% - 1200px) / 2));
+  background:rgba(255,255,255,.94);
   backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid transparent;
   transition:border-color .2s var(--e)}
 .hdr.is-stuck{border-bottom-color:var(--c-line)}
@@ -36,7 +39,7 @@ ul,ol{padding:0;list-style:none}
 body{padding-top:var(--hdr-h,60px)}
 .hdr__cta{white-space:nowrap}
 @media(max-width:900px){
-  .hdr{height:64px;padding:0 14px;gap:10px}
+  .hdr{height:64px;padding-inline:14px;gap:10px}
   .hdr__logo img{height:26px}
   .hdr__cta{min-width:0;height:40px;font-size:12px;padding:0 14px;box-shadow:0 4px 0 var(--c-primary-d)}
 }
