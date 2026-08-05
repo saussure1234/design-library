@@ -77,22 +77,31 @@
 .cts__notes li{font-size:var(--fs-note);color:var(--c-ink3);line-height:1.8}
 
 /* 挨拶（渋谷校のみ） */
-.cts__msgbody{display:grid;grid-template-columns:200px minmax(0,1fr);gap:var(--sp-el);align-items:start}
-.cts__msgfig{margin:0;border-radius:50% 50% var(--r-m) var(--r-m) / 22% 22% var(--r-m) var(--r-m);
-  overflow:hidden;background:var(--c-bg2)}
-.cts__msgfig img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:50% 24%;display:block}
-.cts__msgtext{max-width:40em;font-size:var(--fs-base);line-height:2.05;color:var(--c-ink2)}
+/* スクールマネジャー紹介（member-blob-portrait-letter）と同じ組み。
+   写真を左に通しで置き、肩書・氏名・本文はすべて右の列へ。
+   .cts__msghead を display:contents にして、中の2つを直接この格子へ参加させる。 */
+.cts__msgbody{display:grid;grid-template-columns:clamp(92px,8.2vw,116px) minmax(0,1fr);
+  column-gap:clamp(20px,2.6vw,40px);row-gap:0;align-items:start}
+.cts__msghead{display:contents}
+.cts__msgfig{grid-column:1;grid-row:1 / span 2;align-self:start;
+  margin:0;border-radius:50%;overflow:hidden;background:var(--c-bg2)}
+.cts__msgfig img{width:100%;aspect-ratio:1/1;object-fit:cover;object-position:50% 22%;display:block}
+.cts__msgid,.cts__msgtext{grid-column:2}
+.cts__msgrole{font-size:clamp(10.5px,.88vw,12.5px);color:var(--c-ink3);font-weight:700;letter-spacing:.04em}
+.cts__msgname{margin-top:3px;font-family:var(--f-disp);font-weight:900;
+  font-size:clamp(19px,1.65vw,23px);color:var(--c-ink);letter-spacing:.04em}
+/* 罫は本文の外に置く（マネジャー紹介と同じ扱い） */
+.cts__msgtext{margin-top:clamp(14px,1.7vw,22px);padding-top:clamp(14px,1.7vw,22px);
+  border-top:1px solid var(--c-line);
+  max-width:44em;font-size:var(--fs-sm);line-height:2.05;color:var(--c-ink2)}
 .cts__msgtext p + p{margin-top:1.4em}
-.cts__sign{margin-top:var(--sp-el)}
-.cts__sign span{display:block;font-size:var(--fs-note);color:var(--c-ink3)}
-.cts__sign b{display:block;margin-top:2px;font-family:var(--f-disp);font-weight:900;
-  font-size:var(--fs-lg);color:var(--c-ink);letter-spacing:.04em}
 
 @media(max-width:900px){
   .cts__tab{min-width:0;flex:1;height:48px;font-size:var(--fs-sm);padding:0 var(--s4)}
   .cts__top{grid-template-columns:minmax(0,1fr);gap:var(--s5)}
   .cts__plans,.cts__tt{grid-template-columns:minmax(0,1fr)}
   .cts__dl{grid-template-columns:6.5em minmax(0,1fr)}
-  .cts__msgbody{grid-template-columns:minmax(0,1fr);gap:var(--s5)}
-  .cts__msgfig{max-width:200px}
+  .cts__msgbody{grid-template-columns:minmax(0,1fr);row-gap:16px}
+  .cts__msgfig{grid-row:auto;width:104px}
+  .cts__msgid,.cts__msgtext{grid-column:1}
 }

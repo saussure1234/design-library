@@ -804,30 +804,30 @@ html:not(.js) .lm__i{transform:none}
    画面に入ると、左のPOINTが中央から左へ寄り、右から動画が入り、
    その間を矢印が描かれてつながる。「この説明の実物がこれ」という関係を動きで示す。
    POINTの箱の中身は features-vertical-heading-rows と同じ組み方を借りる。 */
-/* 箱は POINT1・2・4 と【同じ幅・ほぼ同じ位置】に置く。
-   そこから左へ 220px 出す。動画は版面の右へこぼして置き場所を作る
-   （行を版面に収めようとすると、箱が中央から 235px も左へ動いてしまう）*/
-/* 登場前の動画は画面の右外（+56px）に置く。clip でないと、その間だけ
+/* 登場前の動画は画面の右外に置く。clip でないと、その間だけ
    横スクロールバーが出る。hidden ではなく clip（位置指定の子を壊さない） */
 .pmp{overflow-x:clip}
-.pmp__row{display:grid;grid-template-columns:minmax(0,540px) auto minmax(300px,1fr);
-  /* 動画はPOINTの【右下】。行を下ぞろえにしたうえで箱に下マージンを持たせると、
-     箱の底より下まで動画が回り込む（＝右へ、かつ下へずれる） */
-  gap:clamp(10px,1.5vw,22px);align-items:end;
-  /* 版面を抜けて画面の端まで使う。左端の位置は「他のPOINTの箱の左 −40px」で固定。
-     他のPOINTは 50vw-270px から始まるので、ここは 50vw-490px */
+/* 左右対称に組む。版面を抜けて画面いっぱいを使い、
+   左右の余白を同じにして、箱と動画を【同じ幅】の柱として置く。
+   あいだの列が伸び縮みするので、矢印はいつも画面の中央に来る。
+   動画はPOINTの【右下】。行を下ぞろえにしたうえで箱に下マージンを持たせると、
+   箱の底より下まで動画が回り込む（＝右へ、かつ下へずれる）。 */
+.pmp__row{display:grid;
+  grid-template-columns:minmax(0,540px) minmax(clamp(56px,6vw,110px),1fr) minmax(0,540px);
+  align-items:end;
   margin-inline:calc(50% - 50vw);
-  padding-left:max(24px,calc(50vw - 490px));
-  padding-right:clamp(20px,2.6vw,40px)}
+  padding-inline:var(--pmp-side)}
+.pmp{--pmp-side:clamp(24px,4vw,58px)}
 
 /* 左：POINTの箱（白）。この下マージンのぶんだけ、動画が箱より下へ回り込む */
-.pmp__box{margin-bottom:clamp(80px,9.5vw,150px)}
+.pmp__box{margin-bottom:clamp(110px,14vw,215px)}
 .pmp__box .vhr__item{background:var(--c-bg);border-radius:20px;
   padding:clamp(20px,2.4vw,30px);box-shadow:var(--shadow-s)}
 
-/* 中央：矢印。行は下ぞろえなので、動画の板の高さのなかほどまで持ち上げる */
+/* 中央：矢印。伸び縮みする真ん中の列のなかで中央に置く。
+   行は下ぞろえなので、動画の板の高さのなかほどまで持ち上げる */
 .pmp__arrow{display:block;width:clamp(44px,4.6vw,74px);color:var(--c-accent);
-  margin-bottom:clamp(70px,8.6vw,130px)}
+  justify-self:center;margin-bottom:clamp(80px,10vw,155px)}
 .pmp__arrow svg{width:100%;height:auto;display:block}
 
 /* 右：動画 */
@@ -865,7 +865,10 @@ html:not(.js) .lm__i{transform:none}
 .pmp__box,.pmp__media,.pmp__arrow{transition:transform .2s linear,opacity .2s linear}
 .pmp__arrow-l,.pmp__arrow-h{stroke-dasharray:120;transition:stroke-dashoffset .2s linear}
 .fx-on .fx[data-fx="pair"]{opacity:1;transform:none}         /* 既定のフェードは使わない */
-.fx-on .fx[data-fx="pair"] .pmp__box{transform:translateX(calc(220px * (1 - var(--pp))))}
+/* 進み0のとき、箱は他のPOINT（画面中央・幅540＝左端は 50vw-270px）にぴったり重なる。
+   ここの休み位置は左の余白 --pmp-side なので、差は 50vw-270px-余白 */
+.fx-on .fx[data-fx="pair"] .pmp__box{
+  transform:translateX(calc((50vw - 270px - var(--pmp-side)) * (1 - var(--pp))))}
 .fx-on .fx[data-fx="pair"] .pmp__media{opacity:var(--pp);
   transform:translateX(calc((100% + 48px) * (1 - var(--pp))))}
 .fx-on .fx[data-fx="pair"] .pmp__arrow{opacity:var(--pp)}
@@ -879,6 +882,7 @@ html:not(.js) .lm__i{transform:none}
 @media(max-width:1024px){
   .pmp__row{grid-template-columns:minmax(0,1fr);gap:16px;
     margin-inline:auto;padding-inline:0;max-width:540px}
+  .pmp__arrow{justify-self:center}
   .pmp__box{margin-bottom:0}
   .pmp__arrow{width:44px;margin-inline:auto;margin-bottom:0;transform:rotate(90deg)}
   /* 縦積みでは左右に割れない。動画は下から入れる */
@@ -1747,24 +1751,33 @@ html:not(.js) .lm__i{transform:none}
 .cts__notes li{font-size:var(--fs-note);color:var(--c-ink3);line-height:1.8}
 
 /* 挨拶（渋谷校のみ） */
-.cts__msgbody{display:grid;grid-template-columns:200px minmax(0,1fr);gap:var(--sp-el);align-items:start}
-.cts__msgfig{margin:0;border-radius:50% 50% var(--r-m) var(--r-m) / 22% 22% var(--r-m) var(--r-m);
-  overflow:hidden;background:var(--c-bg2)}
-.cts__msgfig img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:50% 24%;display:block}
-.cts__msgtext{max-width:40em;font-size:var(--fs-base);line-height:2.05;color:var(--c-ink2)}
+/* スクールマネジャー紹介（member-blob-portrait-letter）と同じ組み。
+   写真を左に通しで置き、肩書・氏名・本文はすべて右の列へ。
+   .cts__msghead を display:contents にして、中の2つを直接この格子へ参加させる。 */
+.cts__msgbody{display:grid;grid-template-columns:clamp(92px,8.2vw,116px) minmax(0,1fr);
+  column-gap:clamp(20px,2.6vw,40px);row-gap:0;align-items:start}
+.cts__msghead{display:contents}
+.cts__msgfig{grid-column:1;grid-row:1 / span 2;align-self:start;
+  margin:0;border-radius:50%;overflow:hidden;background:var(--c-bg2)}
+.cts__msgfig img{width:100%;aspect-ratio:1/1;object-fit:cover;object-position:50% 22%;display:block}
+.cts__msgid,.cts__msgtext{grid-column:2}
+.cts__msgrole{font-size:clamp(10.5px,.88vw,12.5px);color:var(--c-ink3);font-weight:700;letter-spacing:.04em}
+.cts__msgname{margin-top:3px;font-family:var(--f-disp);font-weight:900;
+  font-size:clamp(19px,1.65vw,23px);color:var(--c-ink);letter-spacing:.04em}
+/* 罫は本文の外に置く（マネジャー紹介と同じ扱い） */
+.cts__msgtext{margin-top:clamp(14px,1.7vw,22px);padding-top:clamp(14px,1.7vw,22px);
+  border-top:1px solid var(--c-line);
+  max-width:44em;font-size:var(--fs-sm);line-height:2.05;color:var(--c-ink2)}
 .cts__msgtext p + p{margin-top:1.4em}
-.cts__sign{margin-top:var(--sp-el)}
-.cts__sign span{display:block;font-size:var(--fs-note);color:var(--c-ink3)}
-.cts__sign b{display:block;margin-top:2px;font-family:var(--f-disp);font-weight:900;
-  font-size:var(--fs-lg);color:var(--c-ink);letter-spacing:.04em}
 
 @media(max-width:900px){
   .cts__tab{min-width:0;flex:1;height:48px;font-size:var(--fs-sm);padding:0 var(--s4)}
   .cts__top{grid-template-columns:minmax(0,1fr);gap:var(--s5)}
   .cts__plans,.cts__tt{grid-template-columns:minmax(0,1fr)}
   .cts__dl{grid-template-columns:6.5em minmax(0,1fr)}
-  .cts__msgbody{grid-template-columns:minmax(0,1fr);gap:var(--s5)}
-  .cts__msgfig{max-width:200px}
+  .cts__msgbody{grid-template-columns:minmax(0,1fr);row-gap:16px}
+  .cts__msgfig{grid-row:auto;width:104px}
+  .cts__msgid,.cts__msgtext{grid-column:1}
 }
 
 /* ===== cta/cta-priority-stack ===== */
@@ -2088,9 +2101,8 @@ html:not(.js) .lm__i{transform:none}
 
 </div>
 <!-- features/features-notch-number-cards (brand) -->
-<div class="tone-brand hill-top bg-growth">
+<div class="tone-brand hill-top">
 <span class="hill" aria-hidden="true"><svg viewBox="0 0 1440 120" preserveAspectRatio="none"><path d="M0 120 L0 78 C 78 18, 176 0, 286 16 C 600 62, 1010 102, 1440 108 L1440 120 Z"/></svg></span>
-<span class="gbg" aria-hidden="true"><svg viewBox="0 0 1440 900" preserveAspectRatio="none"><path class="b1" d="M-80 1010 C 420 998, 980 760, 1560 300"/><path class="b2" d="M-80 1090 C 460 1074, 1020 826, 1560 424"/><path class="b3" d="M-80 1160 C 500 1146, 1060 960, 1560 560"/></svg></span>
 <section class="sec fnc">
   <div class="wrap">
     <div class="sec-head">
@@ -2133,7 +2145,7 @@ html:not(.js) .lm__i{transform:none}
 </section>
 
 </div>
-<div class="tone-brand bg-growth"><span class="gbg" aria-hidden="true"><svg viewBox="0 0 1440 2600" preserveAspectRatio="none"><path class="b1" d="M-80 2560 C 420 2430, 980 1560, 1560 240"/><path class="b2" d="M-80 2700 C 460 2560, 1020 1760, 1560 520"/><path class="b3" d="M-80 2820 C 500 2700, 1060 2020, 1560 820"/></svg></span>
+<div class="tone-brand">
 <!-- features/features-vertical-heading-rows (base) -->
 <span class="anc" id="point1" aria-hidden="true"></span>
 <div style="--b1x:4%;--b1y:5%;--b1w:23vw;--b1max:320px;--b2r:4%;--b2y:46%;--b2w:19vw;--b2max:270px">
@@ -2551,7 +2563,7 @@ html:not(.js) .lm__i{transform:none}
 
 </div>
 <!-- numbers/numbers-chip-row (brand) -->
-<div class="tone-brand" style="background:#00701A">
+<div class="tone-brand">
 <section class="sec nch nch--wordy">
   <div class="wrap">
 
@@ -2790,7 +2802,7 @@ html:not(.js) .lm__i{transform:none}
 </section>
 
 </div>
-<div class="tone-brand bg-growth"><span class="gbg" aria-hidden="true"><svg viewBox="0 0 1440 2600" preserveAspectRatio="none"><path class="b1" d="M-80 2560 C 420 2430, 980 1560, 1560 240"/><path class="b2" d="M-80 2700 C 460 2560, 1020 1760, 1560 520"/><path class="b3" d="M-80 2820 C 500 2700, 1060 2020, 1560 820"/></svg></span>
+<div class="tone-brand">
 <!-- access/access-campus-tabs (base) -->
 <section class="sec cts" >
   <div class="wrap">
@@ -2868,11 +2880,14 @@ html:not(.js) .lm__i{transform:none}
           <div class="cts__block cts__msg">
             <h3 class="cts__h3">スクールマネジャーよりご挨拶</h3>
             <div class="cts__msgbody">
-              <figure class="cts__msgfig"><img src="img/head_teacher.jpg" alt="ESL club 渋谷校 スクールマネジャー 杉舘皆華"></figure>
-              <div class="cts__msgtext">
-                <p>私は、英検は子どもたちの成長を確認するための一つの「通過点」だと考えています。もちろん、英検合格は大きな目標です。しかし、私が本当に大切にしたいのは、その過程で身につく英語力や、目標に向かって努力する経験です。</p><p>これまで子どもたちと向き合う中で、結果だけでなく、その過程で得られる経験や自信こそが、その後の成長を支える大切な財産になることを実感してきました。</p><p>英検の学習を通して、英語力だけでなく、挑戦する力や継続する力も身につけていきます。そして、「できた」という成功体験の積み重ねが、自信となって次の一歩を後押ししてくれます。</p><p>私は、子どもたちには自分でも気付いていない大きな可能性があると信じています。その可能性を引き出し、一人ひとりが自信を持って成長していけるよう支えていくことが私の役割です。</p><p>英語を学ぶことが、生徒様の未来の選択肢を広げるきっかけとなるよう、ESL club渋谷校スタッフ一同、全力でサポートしてまいります。みなさまとお会いできることを心より楽しみにしております。</p>
-                <p class="cts__sign"><span>ESL club 渋谷校　スクールマネジャー</span><b>杉舘　皆華</b></p>
+              <div class="cts__msghead">
+                <figure class="cts__msgfig"><img src="img/head_teacher.jpg" alt="ESL club 渋谷校 スクールマネジャー 杉舘皆華"></figure>
+                <div class="cts__msgid">
+                  <p class="cts__msgrole">ESL club 渋谷校　スクールマネジャー</p>
+                  <p class="cts__msgname">杉舘　皆華</p>
+                </div>
               </div>
+              <div class="cts__msgtext"><p>私は、英検は子どもたちの成長を確認するための一つの「通過点」だと考えています。もちろん、英検合格は大きな目標です。しかし、私が本当に大切にしたいのは、その過程で身につく英語力や、目標に向かって努力する経験です。</p><p>これまで子どもたちと向き合う中で、結果だけでなく、その過程で得られる経験や自信こそが、その後の成長を支える大切な財産になることを実感してきました。</p><p>英検の学習を通して、英語力だけでなく、挑戦する力や継続する力も身につけていきます。そして、「できた」という成功体験の積み重ねが、自信となって次の一歩を後押ししてくれます。</p><p>私は、子どもたちには自分でも気付いていない大きな可能性があると信じています。その可能性を引き出し、一人ひとりが自信を持って成長していけるよう支えていくことが私の役割です。</p><p>英語を学ぶことが、生徒様の未来の選択肢を広げるきっかけとなるよう、ESL club渋谷校スタッフ一同、全力でサポートしてまいります。みなさまとお会いできることを心より楽しみにしております。</p></div>
             </div>
           </div>
 

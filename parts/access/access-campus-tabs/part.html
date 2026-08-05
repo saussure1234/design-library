@@ -60,11 +60,14 @@
           {{?.msgName}}<div class="cts__block cts__msg">
             <h3 class="cts__h3">{{.msgHead}}</h3>
             <div class="cts__msgbody">
-              <figure class="cts__msgfig"><img src="{{.msgPhoto}}" alt="{{.msgPhotoAlt}}"></figure>
-              <div class="cts__msgtext">
-                {{.msgText}}
-                <p class="cts__sign"><span>{{.msgRole}}</span><b>{{.msgName}}</b></p>
+              <div class="cts__msghead">
+                <figure class="cts__msgfig"><img src="{{.msgPhoto}}" alt="{{.msgPhotoAlt}}"></figure>
+                <div class="cts__msgid">
+                  <p class="cts__msgrole">{{.msgRole}}</p>
+                  <p class="cts__msgname">{{.msgName}}</p>
+                </div>
               </div>
+              <div class="cts__msgtext">{{.msgText}}</div>
             </div>
           </div>{{/.msgName}}
 
