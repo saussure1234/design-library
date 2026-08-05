@@ -133,9 +133,14 @@ ul,ol{padding:0;list-style:none}
 .hdr__cta{font-size:clamp(12px,1.05vw,14.5px);padding:11px 22px;box-shadow:0 5px 0 var(--c-primary-d)}
 .hdr__cta:hover{box-shadow:0 3px 0 var(--c-primary-d)}
 body{padding-top:var(--hdr-h,60px)}
+.hdr__cta{white-space:nowrap}
 @media(max-width:600px){
-  .hdr{padding:9px 14px}
-  .hdr__cta{font-size:12px;padding:10px 15px;box-shadow:0 4px 0 var(--c-primary-d)}
+  .hdr{padding:8px 12px;gap:10px}
+  .hdr__logo img{height:19px}
+  .hdr__cta{font-size:11.5px;padding:9px 13px;box-shadow:0 4px 0 var(--c-primary-d)}
+}
+@media(max-width:380px){
+  .hdr__cta{font-size:11px;padding:8px 11px}
 }
 
 /* ── 版面・セクション ────────────────────────── */
@@ -402,13 +407,14 @@ html:not(.js) .lm__i{transform:none}
 @media(max-width:900px){
   .hbc__in{height:auto;padding:28px 0 24px;display:grid;gap:16px}
   .hbc__blob,.hbc__dd,.hbc__conf{display:none}
-  .hbc__head,.hbc__copy,.hbc__stats,.hbc__cta{position:static;max-width:none}
+  .hbc__head,.hbc__copy,.hbc__stats,.hbc__cta{position:static;width:auto;max-width:none}
   .hbc__head{padding-inline:22px}
   .hbc__h1{font-size:23px;line-height:1.5}
   .hbc__h1 .nb{white-space:normal}   /* 狭い画面では折り返しを許す */
   /* ★スマホは写真をCTAより上に */
   .hbc__ph{position:static;width:100%;padding-inline:22px;order:-1}
-  .hbc__ph--a{display:none}
+  /* スマホは主役の1枚だけ（左＝男の子）。2枚だと縦に伸びすぎる */
+  .hbc__ph--b{display:none}
   .hbc__ph img{filter:none}
   .hbc__ph img{border-radius:20px}
   .hbc__copy{padding-inline:22px;font-size:21px}
