@@ -9,9 +9,11 @@
   border-radius:14px;padding:34px 18px 20px;
   transition:transform .14s ease,box-shadow .14s ease}
 /* ★左上の切り欠き。地の白でカードの角を削り、そこに番号を置く */
+/* 左上の切り欠きは地の色で抜く（節ごとに変わるので変数で受ける） */
 .fnc__card::before{content:"";position:absolute;left:0;top:0;width:40px;height:28px;
-  background:var(--c-bg);border-bottom-right-radius:12px}
-.tone-tint .fnc__card::before{background:var(--c-bg2)}
+  background:var(--fnc-notch,var(--c-bg));border-bottom-right-radius:12px}
+.tone-tint .fnc{--fnc-notch:var(--c-bg2)}
+.tone-brand .fnc{--fnc-notch:var(--c-primary)}
 .fnc__no{position:absolute;left:5px;top:2px;z-index:2;
   font-family:var(--f-num);font-size:21px;font-weight:800;line-height:1;letter-spacing:-.02em}
 .fnc__t{font-size:15px;font-weight:800;color:var(--c-ink);line-height:1.6}
@@ -23,15 +25,9 @@
   .fnc__card:hover{transform:translateY(-3px);box-shadow:var(--shadow-s)}
   .fnc__card:hover .fnc__more i{width:22px}
 }
-/* 面はブランド色の濃淡で4段。彩度は上げすぎない */
-.fnc__item:nth-child(1) .fnc__card{background:#EAF5E4}
-.fnc__item:nth-child(2) .fnc__card{background:#E2F1E9}
-.fnc__item:nth-child(3) .fnc__card{background:#E6F2DC}
-.fnc__item:nth-child(4) .fnc__card{background:#EEF4E0}
-.fnc__item:nth-child(1) .fnc__no{color:var(--c-primary)}
-.fnc__item:nth-child(2) .fnc__no{color:var(--c-primary-d)}
-.fnc__item:nth-child(3) .fnc__no{color:var(--c-primary-2)}
-.fnc__item:nth-child(4) .fnc__no{color:var(--c-primary)}
+/* 4枚とも同じ色。濃い面の上なので白いブロックにする */
+.fnc__card{background:var(--c-bg)}
+.fnc__no{color:var(--c-primary)}
 
 
 @media(max-width:900px){.fnc__grid{grid-template-columns:repeat(2,minmax(0,1fr))}}

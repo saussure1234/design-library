@@ -261,7 +261,8 @@ footer{position:relative;z-index:1}
 .tone-brand .sec-head__sub{color:rgba(255,255,255,.86)}
 .tone-brand .sec-head::after{background:var(--c-accent)}
 .tone-brand .card,.tone-brand .nch__chip,.tone-brand .cmx__grid,
-.tone-brand .msc__card,.tone-brand .ndg__panel{background:var(--c-bg);color:var(--c-ink)}
+.tone-brand .msc__card,.tone-brand .ndg__panel,.tone-brand .fnc__card{
+  background:var(--c-bg);color:var(--c-ink)}
 /* マネジャー紹介：緑ベタの上に白いボックスを敷き、その中に全部入れる */
 .tone-brand .mbl__list{background:var(--c-bg);border-radius:28px;
   padding:clamp(26px,4vw,56px);color:var(--c-ink2)}
@@ -510,9 +511,11 @@ html:not(.js) .lm__i{transform:none}
   border-radius:14px;padding:34px 18px 20px;
   transition:transform .14s ease,box-shadow .14s ease}
 /* ★左上の切り欠き。地の白でカードの角を削り、そこに番号を置く */
+/* 左上の切り欠きは地の色で抜く（節ごとに変わるので変数で受ける） */
 .fnc__card::before{content:"";position:absolute;left:0;top:0;width:40px;height:28px;
-  background:var(--c-bg);border-bottom-right-radius:12px}
-.tone-tint .fnc__card::before{background:var(--c-bg2)}
+  background:var(--fnc-notch,var(--c-bg));border-bottom-right-radius:12px}
+.tone-tint .fnc{--fnc-notch:var(--c-bg2)}
+.tone-brand .fnc{--fnc-notch:var(--c-primary)}
 .fnc__no{position:absolute;left:5px;top:2px;z-index:2;
   font-family:var(--f-num);font-size:21px;font-weight:800;line-height:1;letter-spacing:-.02em}
 .fnc__t{font-size:15px;font-weight:800;color:var(--c-ink);line-height:1.6}
@@ -524,15 +527,9 @@ html:not(.js) .lm__i{transform:none}
   .fnc__card:hover{transform:translateY(-3px);box-shadow:var(--shadow-s)}
   .fnc__card:hover .fnc__more i{width:22px}
 }
-/* 面はブランド色の濃淡で4段。彩度は上げすぎない */
-.fnc__item:nth-child(1) .fnc__card{background:#EAF5E4}
-.fnc__item:nth-child(2) .fnc__card{background:#E2F1E9}
-.fnc__item:nth-child(3) .fnc__card{background:#E6F2DC}
-.fnc__item:nth-child(4) .fnc__card{background:#EEF4E0}
-.fnc__item:nth-child(1) .fnc__no{color:var(--c-primary)}
-.fnc__item:nth-child(2) .fnc__no{color:var(--c-primary-d)}
-.fnc__item:nth-child(3) .fnc__no{color:var(--c-primary-2)}
-.fnc__item:nth-child(4) .fnc__no{color:var(--c-primary)}
+/* 4枚とも同じ色。濃い面の上なので白いブロックにする */
+.fnc__card{background:var(--c-bg)}
+.fnc__no{color:var(--c-primary)}
 
 
 @media(max-width:900px){.fnc__grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -556,22 +553,23 @@ html:not(.js) .lm__i{transform:none}
    位置は kit の style で --b1x / --b1y … を渡して節ごとに散らす。 */
 .vhr__blob{position:absolute;z-index:0;pointer-events:none;
   background:var(--c-primary);opacity:.07;will-change:border-radius,transform}
-.vhr__blob--1{left:var(--b1x,-14%);top:var(--b1y,2%);
-  width:var(--b1w,42vw);aspect-ratio:1/.96;max-width:620px;
+/* 節の中に収める。はみ出すと overflow:hidden で半円に切れる */
+.vhr__blob--1{left:var(--b1x,3%);top:var(--b1y,6%);
+  width:var(--b1w,24vw);aspect-ratio:1/.96;max-width:var(--b1max,340px);
   border-radius:58% 42% 47% 53% / 46% 55% 45% 54%;
   animation:vhrBlobA 26s ease-in-out infinite}
-.vhr__blob--2{left:var(--b2x,auto);right:var(--b2r,-13%);top:var(--b2y,50%);
-  width:var(--b2w,36vw);aspect-ratio:1/1.02;max-width:540px;
+.vhr__blob--2{left:auto;right:var(--b2r,3%);top:var(--b2y,50%);
+  width:var(--b2w,22vw);aspect-ratio:1/1.02;max-width:var(--b2max,310px);
   border-radius:43% 57% 61% 39% / 57% 44% 56% 43%;
   animation:vhrBlobB 32s ease-in-out infinite}
 @keyframes vhrBlobA{
   0%,100%{border-radius:58% 42% 47% 53% / 46% 55% 45% 54%;transform:translate(0,0) rotate(0)}
-  33%{border-radius:41% 59% 66% 34% / 58% 40% 60% 42%;transform:translate(7%,4%) rotate(7deg)}
-  66%{border-radius:66% 34% 38% 62% / 37% 63% 37% 63%;transform:translate(-5%,8%) rotate(-6deg)}}
+  33%{border-radius:41% 59% 66% 34% / 58% 40% 60% 42%;transform:translate(4%,3%) rotate(6deg)}
+  66%{border-radius:66% 34% 38% 62% / 37% 63% 37% 63%;transform:translate(-3%,5%) rotate(-5deg)}}
 @keyframes vhrBlobB{
   0%,100%{border-radius:43% 57% 61% 39% / 57% 44% 56% 43%;transform:translate(0,0) rotate(0)}
-  38%{border-radius:63% 37% 34% 66% / 39% 64% 36% 61%;transform:translate(-8%,-6%) rotate(-8deg)}
-  72%{border-radius:35% 65% 58% 42% / 65% 35% 65% 35%;transform:translate(5%,-9%) rotate(6deg)}}
+  38%{border-radius:63% 37% 34% 66% / 39% 64% 36% 61%;transform:translate(-5%,-4%) rotate(-6deg)}
+  72%{border-radius:35% 65% 58% 42% / 65% 35% 65% 35%;transform:translate(3%,-5%) rotate(5deg)}}
 @media(prefers-reduced-motion:reduce){.vhr__blob{animation:none}}
 .vhr .wrap{position:relative;z-index:1}
 
@@ -669,22 +667,23 @@ html:not(.js) .lm__i{transform:none}
    位置は kit の style で --b1x / --b1y … を渡して節ごとに散らす。 */
 .vhr__blob{position:absolute;z-index:0;pointer-events:none;
   background:var(--c-primary);opacity:.07;will-change:border-radius,transform}
-.vhr__blob--1{left:var(--b1x,-14%);top:var(--b1y,2%);
-  width:var(--b1w,42vw);aspect-ratio:1/.96;max-width:620px;
+/* 節の中に収める。はみ出すと overflow:hidden で半円に切れる */
+.vhr__blob--1{left:var(--b1x,3%);top:var(--b1y,6%);
+  width:var(--b1w,24vw);aspect-ratio:1/.96;max-width:var(--b1max,340px);
   border-radius:58% 42% 47% 53% / 46% 55% 45% 54%;
   animation:vhrBlobA 26s ease-in-out infinite}
-.vhr__blob--2{left:var(--b2x,auto);right:var(--b2r,-13%);top:var(--b2y,50%);
-  width:var(--b2w,36vw);aspect-ratio:1/1.02;max-width:540px;
+.vhr__blob--2{left:auto;right:var(--b2r,3%);top:var(--b2y,50%);
+  width:var(--b2w,22vw);aspect-ratio:1/1.02;max-width:var(--b2max,310px);
   border-radius:43% 57% 61% 39% / 57% 44% 56% 43%;
   animation:vhrBlobB 32s ease-in-out infinite}
 @keyframes vhrBlobA{
   0%,100%{border-radius:58% 42% 47% 53% / 46% 55% 45% 54%;transform:translate(0,0) rotate(0)}
-  33%{border-radius:41% 59% 66% 34% / 58% 40% 60% 42%;transform:translate(7%,4%) rotate(7deg)}
-  66%{border-radius:66% 34% 38% 62% / 37% 63% 37% 63%;transform:translate(-5%,8%) rotate(-6deg)}}
+  33%{border-radius:41% 59% 66% 34% / 58% 40% 60% 42%;transform:translate(4%,3%) rotate(6deg)}
+  66%{border-radius:66% 34% 38% 62% / 37% 63% 37% 63%;transform:translate(-3%,5%) rotate(-5deg)}}
 @keyframes vhrBlobB{
   0%,100%{border-radius:43% 57% 61% 39% / 57% 44% 56% 43%;transform:translate(0,0) rotate(0)}
-  38%{border-radius:63% 37% 34% 66% / 39% 64% 36% 61%;transform:translate(-8%,-6%) rotate(-8deg)}
-  72%{border-radius:35% 65% 58% 42% / 65% 35% 65% 35%;transform:translate(5%,-9%) rotate(6deg)}}
+  38%{border-radius:63% 37% 34% 66% / 39% 64% 36% 61%;transform:translate(-5%,-4%) rotate(-6deg)}
+  72%{border-radius:35% 65% 58% 42% / 65% 35% 65% 35%;transform:translate(3%,-5%) rotate(5deg)}}
 @media(prefers-reduced-motion:reduce){.vhr__blob{animation:none}}
 .vhr .wrap{position:relative;z-index:1}
 
@@ -826,22 +825,23 @@ html:not(.js) .lm__i{transform:none}
    位置は kit の style で --b1x / --b1y … を渡して節ごとに散らす。 */
 .vhr__blob{position:absolute;z-index:0;pointer-events:none;
   background:var(--c-primary);opacity:.07;will-change:border-radius,transform}
-.vhr__blob--1{left:var(--b1x,-14%);top:var(--b1y,2%);
-  width:var(--b1w,42vw);aspect-ratio:1/.96;max-width:620px;
+/* 節の中に収める。はみ出すと overflow:hidden で半円に切れる */
+.vhr__blob--1{left:var(--b1x,3%);top:var(--b1y,6%);
+  width:var(--b1w,24vw);aspect-ratio:1/.96;max-width:var(--b1max,340px);
   border-radius:58% 42% 47% 53% / 46% 55% 45% 54%;
   animation:vhrBlobA 26s ease-in-out infinite}
-.vhr__blob--2{left:var(--b2x,auto);right:var(--b2r,-13%);top:var(--b2y,50%);
-  width:var(--b2w,36vw);aspect-ratio:1/1.02;max-width:540px;
+.vhr__blob--2{left:auto;right:var(--b2r,3%);top:var(--b2y,50%);
+  width:var(--b2w,22vw);aspect-ratio:1/1.02;max-width:var(--b2max,310px);
   border-radius:43% 57% 61% 39% / 57% 44% 56% 43%;
   animation:vhrBlobB 32s ease-in-out infinite}
 @keyframes vhrBlobA{
   0%,100%{border-radius:58% 42% 47% 53% / 46% 55% 45% 54%;transform:translate(0,0) rotate(0)}
-  33%{border-radius:41% 59% 66% 34% / 58% 40% 60% 42%;transform:translate(7%,4%) rotate(7deg)}
-  66%{border-radius:66% 34% 38% 62% / 37% 63% 37% 63%;transform:translate(-5%,8%) rotate(-6deg)}}
+  33%{border-radius:41% 59% 66% 34% / 58% 40% 60% 42%;transform:translate(4%,3%) rotate(6deg)}
+  66%{border-radius:66% 34% 38% 62% / 37% 63% 37% 63%;transform:translate(-3%,5%) rotate(-5deg)}}
 @keyframes vhrBlobB{
   0%,100%{border-radius:43% 57% 61% 39% / 57% 44% 56% 43%;transform:translate(0,0) rotate(0)}
-  38%{border-radius:63% 37% 34% 66% / 39% 64% 36% 61%;transform:translate(-8%,-6%) rotate(-8deg)}
-  72%{border-radius:35% 65% 58% 42% / 65% 35% 65% 35%;transform:translate(5%,-9%) rotate(6deg)}}
+  38%{border-radius:63% 37% 34% 66% / 39% 64% 36% 61%;transform:translate(-5%,-4%) rotate(-6deg)}
+  72%{border-radius:35% 65% 58% 42% / 65% 35% 65% 35%;transform:translate(3%,-5%) rotate(5deg)}}
 @media(prefers-reduced-motion:reduce){.vhr__blob{animation:none}}
 .vhr .wrap{position:relative;z-index:1}
 
@@ -1973,8 +1973,8 @@ html:not(.js) .lm__i{transform:none}
 </section>
 
 </div>
-<!-- features/features-notch-number-cards (base) -->
-<div class="tone-base">
+<!-- features/features-notch-number-cards (brand) -->
+<div class="tone-brand">
 <section class="sec fnc">
   <div class="wrap">
     <div class="sec-head">
@@ -2019,7 +2019,7 @@ html:not(.js) .lm__i{transform:none}
 </div>
 <div class="tone-blob">
 <!-- features/features-vertical-heading-rows (base) -->
-<div style="--b1x:-16%;--b1y:-4%;--b1w:44vw;--b2r:-15%;--b2y:58%;--b2w:34vw">
+<div style="--b1x:4%;--b1y:5%;--b1w:23vw;--b1max:320px;--b2r:4%;--b2y:46%;--b2w:19vw;--b2max:270px">
 <section class="sec vhr">
   <span class="vhr__blob vhr__blob--1" aria-hidden="true"></span>
   <span class="vhr__blob vhr__blob--2" aria-hidden="true"></span>
@@ -2070,7 +2070,7 @@ html:not(.js) .lm__i{transform:none}
 
 </div>
 <!-- features/features-vertical-heading-rows (base) -->
-<div style="--b1x:-13%;--b1y:40%;--b1w:38vw;--b2r:-16%;--b2y:2%;--b2w:40vw">
+<div style="--b1x:3%;--b1y:9%;--b1w:25vw;--b1max:350px;--b2r:3%;--b2y:56%;--b2w:26vw;--b2max:370px">
 <section class="sec vhr">
   <span class="vhr__blob vhr__blob--1" aria-hidden="true"></span>
   <span class="vhr__blob vhr__blob--2" aria-hidden="true"></span>
@@ -2148,7 +2148,7 @@ html:not(.js) .lm__i{transform:none}
 </section>
 
 <!-- features/features-vertical-heading-rows (base) -->
-<div style="--b1x:-14%;--b1y:6%;--b1w:36vw;--b2r:-12%;--b2y:48%;--b2w:32vw">
+<div style="--b1x:5%;--b1y:8%;--b1w:21vw;--b1max:290px;--b2r:4%;--b2y:44%;--b2w:18vw;--b2max:250px">
 <section class="sec vhr">
   <span class="vhr__blob vhr__blob--1" aria-hidden="true"></span>
   <span class="vhr__blob vhr__blob--2" aria-hidden="true"></span>
