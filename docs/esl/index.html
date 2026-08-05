@@ -522,11 +522,9 @@ html:not(.js) .lm__i{transform:none}
   align-items:flex-start;gap:10px;margin-top:clamp(22px,3.2vw,40px)}
 .hbc__cta .btn{white-space:nowrap}
 /* CTAの下の約束。ただの注記に見えて素通りされていたので、
-   淡い緑の帯に載せて「もう一つの押し」として読ませる */
-.hbc__note{display:inline-block;padding:8px 18px;border-radius:var(--r-pill);
-  background:color-mix(in srgb,var(--c-primary) 12%,#fff);
-  color:var(--c-primary-d);font-size:clamp(12px,1.05vw,14.5px);font-weight:800;
-  letter-spacing:.01em;white-space:nowrap}
+   級数と太さを上げてブランド色で書く（面は敷かない） */
+.hbc__note{font-size:clamp(12px,1.05vw,14.5px);font-weight:800;
+  color:var(--c-primary-d);letter-spacing:.01em;white-space:nowrap}
 
 /* 落書き */
 .hbc__dd{position:absolute;z-index:4;pointer-events:none}
@@ -821,44 +819,35 @@ html:not(.js) .lm__i{transform:none}
 /* ===== features/features-point-media-pair ===== */
 /* features/features-point-media-pair
    1つのPOINTと、それを裏づける動画を【一組】として見せる。
-   画面に入ると、左のPOINTが中央から左へ寄り、右から動画が入り、
-   その間を矢印が描かれてつながる。「この説明の実物がこれ」という関係を動きで示す。
+   POINTが画面に完全に収まったあと、さらにスクロールすると
+   POINTが左へ寄り、同じ高さの動画パネルが右からまっすぐ滑り込む。
    POINTの箱の中身は features-vertical-heading-rows と同じ組み方を借りる。 */
-/* 登場前の動画は画面の右外に置く。clip でないと、その間だけ
+
+/* 登場前の動画は画面の右の外に置く。clip でないと、その間だけ
    横スクロールバーが出る。hidden ではなく clip（位置指定の子を壊さない） */
 .pmp{overflow-x:clip}
-/* 左右対称に組む。版面を抜けて画面いっぱいを使い、
-   左右の余白を同じにして、箱と動画を【同じ幅】の柱として置く。
-   あいだの列が伸び縮みするので、矢印はいつも画面の中央に来る。
-   動画はPOINTの【右下】。行を下ぞろえにしたうえで箱に下マージンを持たせると、
-   箱の底より下まで動画が回り込む（＝右へ、かつ下へずれる）。 */
-.pmp__row{display:grid;
-  grid-template-columns:minmax(0,540px) minmax(clamp(56px,6vw,110px),1fr) minmax(0,540px);
-  align-items:end;
+
+/* 左右対称に組む。版面を抜けて画面いっぱいを使い、左右の余白を同じにして、
+   箱と動画を【同じ幅・同じ高さ】の2本の柱として置く。 */
+.pmp__row{display:grid;grid-template-columns:minmax(0,540px) minmax(0,540px);
+  justify-content:space-between;align-items:stretch;
   margin-inline:calc(50% - 50vw);
   padding-inline:var(--pmp-side)}
 /* 左右の余白。箱と動画が540pxを保てる範囲でめいっぱい内側へ寄せる */
 .pmp{--pmp-side:max(24px, min(9.5vw, (100vw - 1140px) / 2))}
 
-/* 左：POINTの箱（白）。この下マージンのぶんだけ、動画が箱より下へ回り込む */
-.pmp__box{margin-bottom:clamp(110px,14vw,215px)}
-.pmp__box .vhr__item{background:var(--c-bg);border-radius:20px;
+/* 左：POINTの箱（白）。列いっぱいに伸ばして、動画と高さをそろえる */
+.pmp__box{display:flex}
+.pmp__box .vhr__item{flex:1;background:var(--c-bg);border-radius:20px;
   padding:clamp(20px,2.4vw,30px);box-shadow:var(--shadow-s)}
 
-/* 中央：矢印。伸び縮みする真ん中の列のなかで中央に置く。
-   行は下ぞろえなので、動画の板の高さのなかほどまで持ち上げる */
-.pmp__arrow{display:block;width:clamp(44px,4.6vw,74px);color:var(--c-accent);
-  justify-self:center;margin-bottom:clamp(80px,10vw,155px)}
-.pmp__arrow svg{width:100%;height:auto;display:block}
-
-/* 右：動画 */
-.pmp__media{background:var(--c-bg);border-radius:20px;
+/* 右：動画。高さは箱に合わせて伸びるので、中身は縦の中央に置く */
+.pmp__media{display:flex;flex-direction:column;justify-content:center;
+  background:var(--c-bg);border-radius:20px;
   padding:clamp(18px,2.2vw,28px);box-shadow:var(--shadow-s)}
 .pmp__mh{margin-bottom:clamp(12px,1.6vw,18px);text-align:center;
   font-size:clamp(13.5px,1.05vw,15.5px);font-weight:800;color:var(--c-ink)}
-/* 動画は横に2本。縦に積むと板が箱より高くなり、下端をそろえても
-   上へはみ出して「右上」に見えてしまう */
-.pmp__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.pmp__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 .pmp__item{margin:0}
 .pmp__thumb{position:relative;display:block;width:100%;padding:0;border:0;cursor:pointer;
   border-radius:12px 9px 14px 10px;overflow:hidden;background:var(--c-bg2)}
@@ -877,44 +866,34 @@ html:not(.js) .lm__i{transform:none}
 .pmp__esc{display:block;margin-top:8px;text-align:center;font-size:11px;font-weight:700;
   color:var(--c-primary);text-decoration:underline}
 
-/* ── 動き：スクロールに連動して左右へ割れる ────────────
-   JSが --pp を書き込む（0＝他のPOINTと同じ中央／1＝割れきった）。
+/* ── 動き：スクロールに連動して、左へ寄る／右から入る ────────
+   JSが --pp を書き込む（0＝他のPOINTと同じ中央／1＝入りきった）。
    一発のアニメーションではなくスクロール量に紐づけているので、
    ゆっくり動き、戻せばそのまま巻き戻る。
    transition はスクロールの粒を均すためだけの短いもの。 */
 .pmp__row{--pp:0}
-.pmp__box,.pmp__media,.pmp__arrow{transition:transform .2s linear,opacity .2s linear}
-.pmp__arrow-l,.pmp__arrow-h{stroke-dasharray:120;transition:stroke-dashoffset .2s linear}
+.pmp__box,.pmp__media{transition:transform .2s linear,opacity .2s linear}
 .fx-on .fx[data-fx="pair"]{opacity:1;transform:none}         /* 既定のフェードは使わない */
 /* 進み0のとき、箱は他のPOINT（画面中央・幅540＝左端は 50vw-270px）にぴったり重なる。
    ここの休み位置は左の余白 --pmp-side なので、差は 50vw-270px-余白 */
 .fx-on .fx[data-fx="pair"] .pmp__box{
   transform:translateX(calc((50vw - 270px - var(--pmp-side)) * (1 - var(--pp))))}
+/* 動画は画面の右の外から、まっすぐ滑り込む */
 .fx-on .fx[data-fx="pair"] .pmp__media{opacity:var(--pp);
-  transform:translateX(calc((100% + 48px) * (1 - var(--pp))))}
-.fx-on .fx[data-fx="pair"] .pmp__arrow{opacity:var(--pp)}
-.fx-on .fx[data-fx="pair"] .pmp__arrow-l,
-.fx-on .fx[data-fx="pair"] .pmp__arrow-h{stroke-dashoffset:calc(120px * (1 - var(--pp)))}
-/* 割れきったあと、先端が小さく往復して「こっち」を示し続ける */
-.fx-on .fx[data-fx="pair"].is-split .pmp__arrow svg{animation:pmpNudge 2.6s var(--e) .4s infinite}
-@keyframes pmpNudge{0%,72%,100%{transform:translateX(0)}84%{transform:translateX(7%)}}
+  transform:translateX(calc((100% + var(--pmp-side) + 40px) * (1 - var(--pp))))}
 
 /* 横に並べると動画が細くなりすぎる幅からは、縦に積む */
 @media(max-width:1024px){
   .pmp__row{grid-template-columns:minmax(0,1fr);gap:16px;
     margin-inline:auto;padding-inline:0;max-width:540px}
-  .pmp__arrow{justify-self:center}
-  .pmp__box{margin-bottom:0}
-  .pmp__arrow{width:44px;margin-inline:auto;margin-bottom:0;transform:rotate(90deg)}
+  .pmp__box{display:block}
   /* 縦積みでは左右に割れない。動画は下から入れる */
   .fx-on .fx[data-fx="pair"] .pmp__box{transform:none}
   .fx-on .fx[data-fx="pair"] .pmp__media{transform:translateY(calc(40px * (1 - var(--pp))))}
-  .fx-on .fx[data-fx="pair"].is-split .pmp__arrow svg{animation:none}
 }
 @media(prefers-reduced-motion:reduce){
   .pmp__row{--pp:1!important}          /* stylesheet の !important はJSのインラインに勝つ */
-  .pmp__box,.pmp__media,.pmp__arrow{transition:none!important}
-  .fx-on .fx[data-fx="pair"] .pmp__arrow svg{animation:none}
+  .pmp__box,.pmp__media{transition:none!important}
 }
 
 /* ===== features/features-vertical-heading-rows ===== */
@@ -2298,16 +2277,6 @@ html:not(.js) .lm__i{transform:none}
         </div>
       </div>
 
-      <!-- 箱から右へ伸びる矢印。線が描かれたあと、先端が小さく往復する -->
-      <span class="pmp__arrow" aria-hidden="true">
-        <svg viewBox="0 0 120 60" fill="none">
-          <path class="pmp__arrow-l" d="M4 30 C 40 30, 60 18, 96 18"
-                stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-          <path class="pmp__arrow-h" d="M86 10 L98 18 L86 26"
-                stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </span>
-
       <div class="pmp__media">
         <p class="pmp__mh">レッスンの様子</p>
         <ul class="pmp__grid">
@@ -3254,8 +3223,13 @@ document.documentElement.classList.add('js');
     ticking=false;
     try{
       var r=box.getBoundingClientRect(), vh=window.innerHeight;
-      /* 箱の頭が画面の42%から2%まで上がるあいだ（vhの4割ぶんのスクロール）で 0→1 */
-      var p=(vh*0.42 - r.top)/(vh*0.40);
+      /* 起点＝POINTが画面にちょうど全部収まった位置。
+         そこから画面の1/3ぶんスクロールするあいだで 0→1。
+         「読み終えて次へ行こうとした瞬間に、右から入ってくる」ようにする */
+      /* 終点は箱の頭がヘッダーのすぐ下に来るあたり。
+         そこまでに入りきるので、動画が届いた時点でもPOINTは全部見えている */
+      var start = Math.max(vh*0.10, vh - r.height - 8);
+      var p=(start - r.top)/Math.max(120, start - 100);
       p = p<0 ? 0 : (p>1 ? 1 : p);
       if(Math.abs(p-last) < 0.004) return;
       last=p;

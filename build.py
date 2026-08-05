@@ -113,8 +113,13 @@ document.documentElement.classList.add('js');
     ticking=false;
     try{
       var r=box.getBoundingClientRect(), vh=window.innerHeight;
-      /* 箱の頭が画面の42%から2%まで上がるあいだ（vhの4割ぶんのスクロール）で 0→1 */
-      var p=(vh*0.42 - r.top)/(vh*0.40);
+      /* 起点＝POINTが画面にちょうど全部収まった位置。
+         そこから画面の1/3ぶんスクロールするあいだで 0→1。
+         「読み終えて次へ行こうとした瞬間に、右から入ってくる」ようにする */
+      /* 終点は箱の頭がヘッダーのすぐ下に来るあたり。
+         そこまでに入りきるので、動画が届いた時点でもPOINTは全部見えている */
+      var start = Math.max(vh*0.10, vh - r.height - 8);
+      var p=(start - r.top)/Math.max(120, start - 100);
       p = p<0 ? 0 : (p>1 ? 1 : p);
       if(Math.abs(p-last) < 0.004) return;
       last=p;
