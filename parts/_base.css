@@ -26,11 +26,6 @@ ul,ol{padding:0;list-style:none}
 /* ブランド色の面。白ばかりにならないよう、白／薄グレーと交互に使う */
 .tone-accent{background:var(--c-primary-l)}
 .tone-pale{background:linear-gradient(180deg,#F4F9EE 0%,var(--c-primary-l) 100%)}
-/* ブランド色のベタ面。前に白いブロックを置くのが条件 */
-.tone-brand{background:var(--c-primary);color:var(--c-on-primary);position:relative;overflow:hidden}
-.tone-brand .sec-head__ja{color:var(--c-on-primary)}
-.tone-brand .sec-head__sub{color:rgba(255,255,255,.86)}
-.tone-brand .sec-head::after{background:var(--c-accent)}
 /* 濃い緑の上に置く箱は白。中の文字は元の色に戻す */
 .tone-brand .card,.tone-brand .nch__chip,.tone-brand .cmx__grid{background:var(--c-bg)}
 .tone-brand .nch__chip{color:var(--c-ink);border-color:transparent}
@@ -38,6 +33,71 @@ ul,ol{padding:0;list-style:none}
 
 /* ★#262626 の面。前に大きめの白いブロックを置くことが条件 */
 .tone-deep,.tone-dark{background:var(--c-dark);color:var(--c-on-dark2)}
+
+
+/* ── 地の扱い ────────────────────────────
+   セクションごとに違う扱いにする。同じ見せ方を続けない。
+     base      白
+     tint      薄グレー
+     pale      ブランド色の淡い面（何度か出してよい）
+     blob      白＋有機的な形。★ページで1セクションだけ
+     brand     ブランド色のベタ。★上に白いブロックがあることが条件
+     boxdark   白地に濃いボックス＋白文字
+     grad      白地にグラデーションのボックス
+   ------------------------------------------------------------ */
+.sec{position:relative}
+.tone-base{background:var(--c-bg)}
+.tone-tint{background:var(--c-bg2)}
+.tone-pale{background:var(--c-primary-l)}
+.tone-accent{background:var(--c-primary-l)}
+
+/* ★有機的な形。1セクションだけに使う */
+.tone-blob{position:relative;overflow:hidden;isolation:isolate;background:var(--c-bg)}
+.tone-blob > *{position:relative;z-index:1}
+.tone-blob::before,.tone-blob::after{
+  content:"";position:absolute;z-index:0;pointer-events:none;
+  background:var(--c-primary);opacity:.07;will-change:border-radius,transform}
+.tone-blob::before{left:-12%;top:-18%;width:52vw;height:52vw;max-width:760px;max-height:760px;
+  border-radius:58% 42% 47% 53% / 46% 55% 45% 54%;animation:blobA 34s ease-in-out infinite}
+.tone-blob::after{right:-16%;bottom:-24%;width:44vw;height:44vw;max-width:640px;max-height:640px;
+  border-radius:43% 57% 61% 39% / 57% 44% 56% 43%;animation:blobB 42s ease-in-out infinite}
+@keyframes blobA{
+  0%,100%{border-radius:58% 42% 47% 53% / 46% 55% 45% 54%;transform:translate(0,0) rotate(0)}
+  33%{border-radius:44% 56% 62% 38% / 55% 43% 57% 45%;transform:translate(3%,2%) rotate(6deg)}
+  66%{border-radius:62% 38% 41% 59% / 40% 60% 40% 60%;transform:translate(-2%,4%) rotate(-4deg)}}
+@keyframes blobB{
+  0%,100%{border-radius:43% 57% 61% 39% / 57% 44% 56% 43%;transform:translate(0,0) rotate(0)}
+  40%{border-radius:60% 40% 38% 62% / 42% 61% 39% 58%;transform:translate(-4%,-3%) rotate(-7deg)}
+  75%{border-radius:38% 62% 55% 45% / 62% 38% 62% 38%;transform:translate(2%,-5%) rotate(5deg)}}
+
+/* ★ブランド色のベタ。上に白いブロックを置くのが条件 */
+.tone-brand{background:var(--c-primary);color:var(--c-on-primary)}
+.tone-brand .sec-head__ja{color:var(--c-on-primary)}
+.tone-brand .sec-head__sub{color:rgba(255,255,255,.86)}
+.tone-brand .sec-head::after{background:var(--c-accent)}
+.tone-brand .card,.tone-brand .nch__chip,.tone-brand .cmx__grid,
+.tone-brand .msc__card,.tone-brand .ndg__panel{background:var(--c-bg);color:var(--c-ink)}
+.tone-brand .nch__note{color:rgba(255,255,255,.82)}
+
+/* 白地に濃いボックス。中の文字は白 */
+.tone-boxdark{background:var(--c-bg)}
+.tone-boxdark .cps__field,.tone-boxdark .nch__chips,.tone-boxdark .gvb__grid{
+  background:var(--c-primary);color:var(--c-on-primary);
+  border-radius:28px;padding:clamp(28px,4vw,52px)}
+.tone-boxdark .cps__note,.tone-boxdark .nch__note{color:rgba(255,255,255,.84)}
+.tone-boxdark .btn{background:var(--c-bg);color:var(--c-primary);box-shadow:0 8px 0 rgba(0,0,0,.16)}
+.tone-boxdark .btn:hover{box-shadow:0 5px 0 rgba(0,0,0,.16)}
+.tone-boxdark .nch__chip{background:rgba(255,255,255,.14);color:var(--c-on-primary);border-color:transparent}
+
+/* 白地にグラデーションのボックス */
+.tone-grad{background:var(--c-bg)}
+.tone-grad .cps__field,.tone-grad .vbi__list,.tone-grad .ndg__panel{
+  background:linear-gradient(135deg,#F2F9EA 0%,var(--c-primary-l) 55%,#DCEBCE 100%);
+  border-radius:28px;padding:clamp(28px,4vw,52px);border:0}
+
+@media(prefers-reduced-motion:reduce){
+  .tone-blob::before,.tone-blob::after{animation:none}
+}
 
 /* ── 見出し：英字（大きく淡く）＋和文＋装飾線 ────── */
 .sec-head{text-align:center;margin-bottom:44px}
@@ -83,40 +143,6 @@ ul,ol{padding:0;list-style:none}
 /* ── カード ──────────────────────────────── */
 .card{background:var(--c-bg);border-radius:22px;box-shadow:var(--shadow);padding:28px}
 
-/* ── 背景の有機的な形 ──────────────────────
-   真円にしない。ブランド色を薄く敷き、ゆっくり形と位置を変える。
-   セクションの後ろ（z-index:0）に置き、中身は前に出す。 */
-.sec{position:relative;overflow:hidden}
-.sec > *{position:relative;z-index:1}
-/* ★形を置く面には必ず基準点を持たせる。無いとページ全体へ広がる */
-.tone-pale,.tone-accent{position:relative;overflow:hidden;isolation:isolate}
-.tone-pale > *,.tone-accent > *{position:relative;z-index:1}
-.tone-pale::before,.tone-pale::after,
-.tone-accent::before,.tone-accent::after{
-  content:"";position:absolute;z-index:0;pointer-events:none;
-  background:var(--c-primary);opacity:.055;will-change:border-radius,transform}
-.tone-pale::before,.tone-accent::before{
-  left:-12%;top:-18%;width:52vw;height:52vw;max-width:760px;max-height:760px;
-  border-radius:58% 42% 47% 53% / 46% 55% 45% 54%;
-  animation:blobA 34s ease-in-out infinite}
-.tone-pale::after,.tone-accent::after{
-  right:-16%;bottom:-24%;width:44vw;height:44vw;max-width:640px;max-height:640px;
-  border-radius:43% 57% 61% 39% / 57% 44% 56% 43%;
-  animation:blobB 42s ease-in-out infinite}
-@keyframes blobA{
-  0%,100%{border-radius:58% 42% 47% 53% / 46% 55% 45% 54%;transform:translate(0,0) rotate(0)}
-  33%    {border-radius:44% 56% 62% 38% / 55% 43% 57% 45%;transform:translate(3%,2%) rotate(6deg)}
-  66%    {border-radius:62% 38% 41% 59% / 40% 60% 40% 60%;transform:translate(-2%,4%) rotate(-4deg)}
-}
-@keyframes blobB{
-  0%,100%{border-radius:43% 57% 61% 39% / 57% 44% 56% 43%;transform:translate(0,0) rotate(0)}
-  40%    {border-radius:60% 40% 38% 62% / 42% 61% 39% 58%;transform:translate(-4%,-3%) rotate(-7deg)}
-  75%    {border-radius:38% 62% 55% 45% / 62% 38% 62% 38%;transform:translate(2%,-5%) rotate(5deg)}
-}
-@media(prefers-reduced-motion:reduce){
-  .tone-pale::before,.tone-pale::after,
-  .tone-accent::before,.tone-accent::after{animation:none}
-}
 
 .nb{white-space:nowrap}
 
