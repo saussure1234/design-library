@@ -35,7 +35,9 @@
 /* ── 上段：写真＋情報 ── */
 .cts__top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--sp-el);align-items:start}
 .cts__figure{margin:0;border-radius:var(--r-m);overflow:hidden;background:var(--c-bg2)}
-.cts__figure img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block}
+/* 教室の写真は切らない。枠の比を画像そのものの比に合わせる
+   （オンライン校は横長で、16:10に収めると左右が大きく欠ける） */
+.cts__figure img{width:100%;height:auto;aspect-ratio:auto;object-fit:contain;display:block}
 .cts__body{font-size:var(--fs-base);line-height:1.95;color:var(--c-ink2);margin-bottom:var(--sp-el)}
 .cts__tel{display:flex;align-items:baseline;gap:var(--s3);margin-bottom:var(--s5)}
 .cts__tel span{font-size:var(--fs-note);color:var(--c-ink3);font-weight:700}

@@ -522,9 +522,9 @@ html:not(.js) .lm__i{transform:none}
   align-items:flex-start;gap:10px;margin-top:clamp(22px,3.2vw,40px)}
 .hbc__cta .btn{white-space:nowrap}
 /* CTAの下の約束。ただの注記に見えて素通りされていたので、
-   級数と太さを上げてブランド色で書く（面は敷かない） */
+   級数と太さを上げて墨で書く（面は敷かない） */
 .hbc__note{font-size:clamp(12px,1.05vw,14.5px);font-weight:800;
-  color:var(--c-primary-d);letter-spacing:.01em;white-space:nowrap}
+  color:var(--c-ink);letter-spacing:.01em;white-space:nowrap}
 
 /* 落書き */
 .hbc__dd{position:absolute;z-index:4;pointer-events:none}
@@ -819,8 +819,8 @@ html:not(.js) .lm__i{transform:none}
 /* ===== features/features-point-media-pair ===== */
 /* features/features-point-media-pair
    1つのPOINTと、それを裏づける動画を【一組】として見せる。
-   POINTが画面に完全に収まったあと、さらにスクロールすると
-   POINTが左へ寄り、同じ高さの動画パネルが右からまっすぐ滑り込む。
+   POINT2を読み終えてスクロールすると、POINTが左へ寄り、
+   右に動画2本がフェードインする。動画に板は敷かず、地の緑に直接置く。
    POINTの箱の中身は features-vertical-heading-rows と同じ組み方を借りる。 */
 
 /* 登場前の動画は画面の右の外に置く。clip でないと、その間だけ
@@ -830,39 +830,42 @@ html:not(.js) .lm__i{transform:none}
 /* 左右対称に組む。版面を抜けて画面いっぱいを使い、左右の余白を同じにして、
    箱と動画を【同じ幅・同じ高さ】の2本の柱として置く。 */
 .pmp__row{display:grid;grid-template-columns:minmax(0,540px) minmax(0,540px);
-  justify-content:space-between;align-items:stretch;
+  justify-content:space-between;align-items:start;
   margin-inline:calc(50% - 50vw);
   padding-inline:var(--pmp-side)}
 /* 左右の余白。箱と動画が540pxを保てる範囲でめいっぱい内側へ寄せる */
 .pmp{--pmp-side:max(24px, min(9.5vw, (100vw - 1140px) / 2))}
 
-/* 左：POINTの箱（白）。列いっぱいに伸ばして、動画と高さをそろえる */
-.pmp__box{display:flex}
-.pmp__box .vhr__item{flex:1;background:var(--c-bg);border-radius:20px;
+/* 左：POINTの箱（白） */
+.pmp__box .vhr__item{background:var(--c-bg);border-radius:20px;
   padding:clamp(20px,2.4vw,30px);box-shadow:var(--shadow-s)}
 
-/* 右：動画。高さは箱に合わせて伸びるので、中身は縦の中央に置く */
-.pmp__media{display:flex;flex-direction:column;justify-content:center;
-  background:var(--c-bg);border-radius:20px;
-  padding:clamp(18px,2.2vw,28px);box-shadow:var(--shadow-s)}
+/* 右：動画。板は敷かない（地の緑に直接置く）ので、文字は地に合わせて白 */
+.pmp__media{background:none;padding:0;box-shadow:none}
 .pmp__mh{margin-bottom:clamp(12px,1.6vw,18px);text-align:center;
-  font-size:clamp(13.5px,1.05vw,15.5px);font-weight:800;color:var(--c-ink)}
-.pmp__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  font-size:clamp(14px,1.15vw,17px);font-weight:800;color:var(--c-on-primary)}
+/* 縦に1本ずつ */
+.pmp__grid{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(16px,2vw,26px)}
 .pmp__item{margin:0}
 .pmp__thumb{position:relative;display:block;width:100%;padding:0;border:0;cursor:pointer;
   border-radius:12px 9px 14px 10px;overflow:hidden;background:var(--c-bg2)}
 .pmp__thumb img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
 .pmp__thumb iframe{width:100%;aspect-ratio:4/3;display:block;border:0}
 .pmp__thumb.is-play .pmp__play{display:none}
-.pmp__play{position:absolute;right:10px;bottom:10px;width:clamp(28px,3vw,40px);aspect-ratio:1;
-  border-radius:50%;background:var(--c-primary);display:grid;place-content:center}
-.pmp__play::after{content:"";border-left:clamp(8px,.9vw,11px) solid var(--c-on-primary);
-  border-top:clamp(5px,.58vw,7px) solid transparent;border-bottom:clamp(5px,.58vw,7px) solid transparent;
-  margin-left:2px}
+/* 再生ボタンはサムネの真ん中 */
+.pmp__play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:clamp(46px,4.4vw,64px);aspect-ratio:1;
+  border-radius:50%;background:var(--c-primary);display:grid;place-content:center;
+  box-shadow:0 6px 20px rgba(0,0,0,.24);transition:transform .16s var(--e)}
+.pmp__play::after{content:"";border-left:clamp(13px,1.25vw,18px) solid var(--c-on-primary);
+  border-top:clamp(8px,.78vw,11px) solid transparent;border-bottom:clamp(8px,.78vw,11px) solid transparent;
+  margin-left:3px}
+@media(hover:hover) and (pointer:fine){
+  .pmp__thumb:hover .pmp__play{transform:translate(-50%,-50%) scale(1.08)}}
 .pmp__cap{display:block;margin-top:8px;text-align:center}
-.pmp__cap b{display:block;font-size:clamp(9px,.72vw,10.5px);color:var(--c-ink3);font-weight:700}
-.pmp__cap em{display:block;margin-top:2px;font-style:normal;
-  font-size:clamp(11px,.9vw,12.5px);font-weight:900;color:var(--c-ink)}
+.pmp__cap b{display:block;font-size:clamp(10px,.8vw,11.5px);color:rgba(255,255,255,.8);font-weight:700}
+.pmp__cap em{display:block;margin-top:3px;font-style:normal;
+  font-size:clamp(12px,1vw,14px);font-weight:900;color:var(--c-on-primary)}
 .pmp__esc{display:block;margin-top:8px;text-align:center;font-size:11px;font-weight:700;
   color:var(--c-primary);text-decoration:underline}
 
@@ -878,18 +881,17 @@ html:not(.js) .lm__i{transform:none}
    ここの休み位置は左の余白 --pmp-side なので、差は 50vw-270px-余白 */
 .fx-on .fx[data-fx="pair"] .pmp__box{
   transform:translateX(calc((50vw - 270px - var(--pmp-side)) * (1 - var(--pp))))}
-/* 動画は画面の右の外から、まっすぐ滑り込む */
+/* 動画はその場でフェードイン（滑らせない）。ほんの少しだけ上げて着地させる */
 .fx-on .fx[data-fx="pair"] .pmp__media{opacity:var(--pp);
-  transform:translateX(calc((100% + var(--pmp-side) + 40px) * (1 - var(--pp))))}
+  transform:translateY(calc(18px * (1 - var(--pp))))}
 
 /* 横に並べると動画が細くなりすぎる幅からは、縦に積む */
 @media(max-width:1024px){
   .pmp__row{grid-template-columns:minmax(0,1fr);gap:16px;
     margin-inline:auto;padding-inline:0;max-width:540px}
-  .pmp__box{display:block}
   /* 縦積みでは左右に割れない。動画は下から入れる */
   .fx-on .fx[data-fx="pair"] .pmp__box{transform:none}
-  .fx-on .fx[data-fx="pair"] .pmp__media{transform:translateY(calc(40px * (1 - var(--pp))))}
+  .fx-on .fx[data-fx="pair"] .pmp__media{transform:translateY(calc(28px * (1 - var(--pp))))}
 }
 @media(prefers-reduced-motion:reduce){
   .pmp__row{--pp:1!important}          /* stylesheet の !important はJSのインラインに勝つ */
@@ -1730,7 +1732,9 @@ html:not(.js) .lm__i{transform:none}
 /* ── 上段：写真＋情報 ── */
 .cts__top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--sp-el);align-items:start}
 .cts__figure{margin:0;border-radius:var(--r-m);overflow:hidden;background:var(--c-bg2)}
-.cts__figure img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block}
+/* 教室の写真は切らない。枠の比を画像そのものの比に合わせる
+   （オンライン校は横長で、16:10に収めると左右が大きく欠ける） */
+.cts__figure img{width:100%;height:auto;aspect-ratio:auto;object-fit:contain;display:block}
 .cts__body{font-size:var(--fs-base);line-height:1.95;color:var(--c-ink2);margin-bottom:var(--sp-el)}
 .cts__tel{display:flex;align-items:baseline;gap:var(--s3);margin-bottom:var(--s5)}
 .cts__tel span{font-size:var(--fs-note);color:var(--c-ink3);font-weight:700}
@@ -3222,13 +3226,10 @@ document.documentElement.classList.add('js');
     ticking=false;
     try{
       var r=box.getBoundingClientRect(), vh=window.innerHeight;
-      /* 起点＝POINTが画面にちょうど全部収まった位置。
-         そこから画面の1/3ぶんスクロールするあいだで 0→1。
-         「読み終えて次へ行こうとした瞬間に、右から入ってくる」ようにする */
-      /* 終点は箱の頭がヘッダーのすぐ下に来るあたり。
-         そこまでに入りきるので、動画が届いた時点でもPOINTは全部見えている */
-      var start = Math.max(vh*0.10, vh - r.height - 8);
-      var p=(start - r.top)/Math.max(120, start - 100);
+      /* POINT2を読み終えてスクロールし、POINT3が下から入ってくるあいだで 0→1。
+         画面の8割の位置で動きだし、3割まで上がったら入りきる
+         （＝POINT3が全部見えるころには、もう動画がそろっている） */
+      var p=(vh*0.80 - r.top)/(vh*0.50);
       p = p<0 ? 0 : (p>1 ? 1 : p);
       if(Math.abs(p-last) < 0.004) return;
       last=p;
