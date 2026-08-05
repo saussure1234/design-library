@@ -7,16 +7,14 @@
     </div>
     <ul class="gvb__grid">
       {{#items}}<li class="gvb__item fx" data-fx="fadeup" data-d="{{.d}}">
-        <a class="gvb__card" href="{{.href}}" target="_blank" rel="noopener">
-          <span class="gvb__thumb">
+        <div class="gvb__card">
+          <button class="gvb__thumb" type="button" data-yt="{{.yt}}"
+                  aria-label="{{.name}} のレッスン動画を再生">
             <img src="{{.thumb}}" alt="{{.alt}}" loading="lazy">
             <span class="gvb__play" aria-hidden="true"></span>
-          </span>
-          <span class="gvb__cap">
-            <b>{{.meta}}</b>
-            <em>{{.name}}</em>
-          </span>
-        </a>
+          </button>
+          <p class="gvb__cap"><b>{{.meta}}</b><em>{{.name}}</em></p>
+        </div>
       </li>{{/items}}
     </ul>
     {{?note}}<p class="gvb__note">{{note}}</p>{{/note}}

@@ -29,8 +29,9 @@
   --c-primary-2:#6CBB00;    /* 黄緑。線・小ラベル・アイコンのみ。面に塗らない */
   --c-support:#00B63A;      /* 補強。小さく1点 */
   --c-support2:#FFEE03;     /* 補強。小さく1点 */
-  --c-accent:#FF9301;
-  --c-accent-d:#D97A00;       /* 差し色。最小の1点にだけ */
+  --c-accent:#FFEE03;       /* 差し色（黄）。最小の1点にだけ */
+  --c-accent-d:#E0CF00;
+  --c-on-accent:#303030;    /* 黄の上は墨。白は乗らない */
   --c-ink:#303030;
   --c-ink2:#4A4A4A;
   --c-ink3:#707070;
@@ -122,6 +123,16 @@ ul,ol{padding:0;list-style:none}
 /* ブランド色の面。白ばかりにならないよう、白／薄グレーと交互に使う */
 .tone-accent{background:var(--c-primary-l)}
 .tone-pale{background:linear-gradient(180deg,#F4F9EE 0%,var(--c-primary-l) 100%)}
+/* ブランド色のベタ面。前に白いブロックを置くのが条件 */
+.tone-brand{background:var(--c-primary);color:var(--c-on-primary);position:relative;overflow:hidden}
+.tone-brand .sec-head__ja{color:var(--c-on-primary)}
+.tone-brand .sec-head__sub{color:rgba(255,255,255,.86)}
+.tone-brand .sec-head::after{background:var(--c-accent)}
+/* 濃い緑の上に置く箱は白。中の文字は元の色に戻す */
+.tone-brand .card,.tone-brand .nch__chip,.tone-brand .cmx__grid{background:var(--c-bg)}
+.tone-brand .nch__chip{color:var(--c-ink);border-color:transparent}
+.tone-brand .nch__note{color:rgba(255,255,255,.8)}
+
 /* ★#262626 の面。前に大きめの白いブロックを置くことが条件 */
 .tone-deep,.tone-dark{background:var(--c-dark);color:var(--c-on-dark2)}
 
@@ -588,10 +599,14 @@ html:not(.js) .lm__i{transform:none}
 .gvb__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(18px,3vw,40px)}
 .gvb__item{margin:0}
 .gvb__card{display:block;transition:transform .16s var(--e)}
-.gvb__thumb{position:relative;display:block;border-radius:22px;overflow:hidden;
+.gvb__thumb{display:block;width:100%;padding:0;border:0;background:none;cursor:pointer}
+.gvb__thumb{position:relative;border-radius:22px;overflow:hidden;
   border:6px solid var(--c-primary-2);background:var(--c-bg2)}
 .gvb__item:nth-child(even) .gvb__thumb{border-color:var(--c-primary)}
 .gvb__thumb img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block}
+/* 押すとその場で YouTube に差し替わる */
+.gvb__thumb iframe{width:100%;aspect-ratio:16/10;display:block;border:0}
+.gvb__thumb.is-play .gvb__play{display:none}
 /* 再生ボタン：右下・円・縁と同じ色 */
 .gvb__play{position:absolute;right:16px;bottom:16px;width:clamp(44px,4.6vw,64px);aspect-ratio:1;
   border-radius:50%;background:var(--c-primary-2);display:grid;place-content:center}
@@ -603,6 +618,7 @@ html:not(.js) .lm__i{transform:none}
 .gvb__item:nth-child(even) .gvb__card{transform:rotate(1.1deg)}
 @media(hover:hover) and (pointer:fine){.gvb__card:hover{transform:rotate(0) translateY(-4px)}}
 .gvb__cap{display:block;margin-top:14px;text-align:center}
+.gvb__cap b,.gvb__cap em{display:block}
 .gvb__cap b{display:block;font-size:clamp(11px,.9vw,12.5px);color:var(--c-ink3);font-weight:700}
 .gvb__cap em{display:block;margin-top:3px;font-style:normal;
   font-size:clamp(15px,1.4vw,19px);font-weight:900;color:var(--c-ink)}
@@ -935,13 +951,10 @@ html:not(.js) .lm__i{transform:none}
 /* ===== voice/voice-band-illustration ===== */
 /* voice/voice-band-illustration
    トミーそろばん教室の作りを再現して起こした型。
-   ・セクションの上端に【色の帯】を敷く
    ・左に小さな人物、右に 見出し（ブランド色）→ 属性 → 本文
    ・見出しはブランド色。本文は行間を広めに取って長文でも読ませる
    再現の記録: repro/vbi/ */
 .vbi{position:relative}
-.vbi__band{position:absolute;left:0;right:0;top:0;height:clamp(28px,3.4vw,46px);
-  background:var(--c-support2);opacity:.85}
 .vbi .wrap{position:relative;z-index:1}
 
 .vbi__list{display:grid;gap:clamp(30px,4.6vw,64px)}
@@ -1842,27 +1855,23 @@ html:not(.js) .lm__i{transform:none}
     </div>
     <ul class="gvb__grid">
       <li class="gvb__item fx" data-fx="fadeup" data-d="0">
-        <a class="gvb__card" href="https://www.youtube.com/watch?v=7TLrJshYhXY" target="_blank" rel="noopener">
-          <span class="gvb__thumb">
+        <div class="gvb__card">
+          <button class="gvb__thumb" type="button" data-yt="7TLrJshYhXY"
+                  aria-label="ハシモトカズマくん のレッスン動画を再生">
             <img src="img/yt_1.jpg" alt="小3男子 初学者のレッスン" loading="lazy">
             <span class="gvb__play" aria-hidden="true"></span>
-          </span>
-          <span class="gvb__cap">
-            <b>小3男子　初学者</b>
-            <em>ハシモトカズマくん</em>
-          </span>
-        </a>
+          </button>
+          <p class="gvb__cap"><b>小3男子　初学者</b><em>ハシモトカズマくん</em></p>
+        </div>
       </li><li class="gvb__item fx" data-fx="fadeup" data-d="90">
-        <a class="gvb__card" href="https://www.youtube.com/watch?v=d1pNo4ETKYc" target="_blank" rel="noopener">
-          <span class="gvb__thumb">
+        <div class="gvb__card">
+          <button class="gvb__thumb" type="button" data-yt="d1pNo4ETKYc"
+                  aria-label="オオツカキサちゃん のレッスン動画を再生">
             <img src="img/yt_2.jpg" alt="小4女子 学習経験者のレッスン" loading="lazy">
             <span class="gvb__play" aria-hidden="true"></span>
-          </span>
-          <span class="gvb__cap">
-            <b>小4女子　学習経験者</b>
-            <em>オオツカキサちゃん</em>
-          </span>
-        </a>
+          </button>
+          <p class="gvb__cap"><b>小4女子　学習経験者</b><em>オオツカキサちゃん</em></p>
+        </div>
       </li>
     </ul>
     
@@ -2062,7 +2071,6 @@ html:not(.js) .lm__i{transform:none}
 <!-- voice/voice-band-illustration (tint) -->
 <div class="tone-tint">
 <section class="sec vbi">
-  <span class="vbi__band" aria-hidden="true"></span>
   <div class="wrap">
     <div class="sec-head">
       
@@ -2099,8 +2107,8 @@ html:not(.js) .lm__i{transform:none}
 </section>
 
 </div>
-<!-- numbers/numbers-chip-row (base) -->
-<div class="tone-base">
+<!-- numbers/numbers-chip-row (brand) -->
+<div class="tone-brand">
 <section class="sec nch nch--wordy">
   <div class="wrap">
 
@@ -2809,6 +2817,23 @@ document.documentElement.classList.add('js');
   }
   addEventListener('scroll',check,{passive:true}); addEventListener('resize',check,{passive:true});
   setTimeout(check,120);
+})();
+
+/* ── 動画をその場で再生 ─────────────────────
+   サムネイルを押したら YouTube の埋め込みに差し替える。
+   最初から iframe を置くと読み込みが重く、外部に足跡も残るため押されてから作る。 */
+(function(){
+  document.querySelectorAll('[data-yt]').forEach(function(b){
+    b.addEventListener('click',function(){
+      var id=b.dataset.yt; if(!id||b.classList.contains('is-play')) return;
+      var f=document.createElement('iframe');
+      f.src='https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&rel=0&playsinline=1';
+      f.title=b.getAttribute('aria-label')||'';
+      f.allow='accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture';
+      f.setAttribute('allowfullscreen','');
+      b.innerHTML=''; b.appendChild(f); b.classList.add('is-play');
+    });
+  });
 })();
 </script>
 </body>

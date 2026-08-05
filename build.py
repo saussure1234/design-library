@@ -195,6 +195,23 @@ document.documentElement.classList.add('js');
   addEventListener('scroll',check,{passive:true}); addEventListener('resize',check,{passive:true});
   setTimeout(check,120);
 })();
+
+/* ── 動画をその場で再生 ─────────────────────
+   サムネイルを押したら YouTube の埋め込みに差し替える。
+   最初から iframe を置くと読み込みが重く、外部に足跡も残るため押されてから作る。 */
+(function(){
+  document.querySelectorAll('[data-yt]').forEach(function(b){
+    b.addEventListener('click',function(){
+      var id=b.dataset.yt; if(!id||b.classList.contains('is-play')) return;
+      var f=document.createElement('iframe');
+      f.src='https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&rel=0&playsinline=1';
+      f.title=b.getAttribute('aria-label')||'';
+      f.allow='accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture';
+      f.setAttribute('allowfullscreen','');
+      b.innerHTML=''; b.appendChild(f); b.classList.add('is-play');
+    });
+  });
+})();
 """
 
 

@@ -26,6 +26,16 @@ ul,ol{padding:0;list-style:none}
 /* ブランド色の面。白ばかりにならないよう、白／薄グレーと交互に使う */
 .tone-accent{background:var(--c-primary-l)}
 .tone-pale{background:linear-gradient(180deg,#F4F9EE 0%,var(--c-primary-l) 100%)}
+/* ブランド色のベタ面。前に白いブロックを置くのが条件 */
+.tone-brand{background:var(--c-primary);color:var(--c-on-primary);position:relative;overflow:hidden}
+.tone-brand .sec-head__ja{color:var(--c-on-primary)}
+.tone-brand .sec-head__sub{color:rgba(255,255,255,.86)}
+.tone-brand .sec-head::after{background:var(--c-accent)}
+/* 濃い緑の上に置く箱は白。中の文字は元の色に戻す */
+.tone-brand .card,.tone-brand .nch__chip,.tone-brand .cmx__grid{background:var(--c-bg)}
+.tone-brand .nch__chip{color:var(--c-ink);border-color:transparent}
+.tone-brand .nch__note{color:rgba(255,255,255,.8)}
+
 /* ★#262626 の面。前に大きめの白いブロックを置くことが条件 */
 .tone-deep,.tone-dark{background:var(--c-dark);color:var(--c-on-dark2)}
 
