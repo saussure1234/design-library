@@ -23,18 +23,16 @@ ul,ol{padding:0;list-style:none}
 .tone-base{background:var(--c-bg)}
 .tone-tint{background:var(--c-bg2)}
 .tone-accent,.tone-pale{background:var(--c-primary-l)}
-.tone-deep{background:var(--c-surface);color:var(--c-on-surface)}
+/* ★var(--c-dark) の面。前に大きめの白いブロックを置くことが条件。
+   白い面を持たないセクションには使わない。 */
+.tone-deep{background:var(--c-dark);color:var(--c-on-dark2)}
 .tone-dark{background:var(--c-dark);color:var(--c-on-dark2)}
-/* 黄緑の面：文字は濃い墨。白抜きにすると彩度に負けて読みにくい */
-.tone-deep .h-lead,.tone-deep h2,.tone-deep h3,
-.tone-deep .sec-head__ja{color:var(--c-on-surface)}
-.tone-deep .sec-head__en,.tone-deep .h-eyebrow{color:#3F4D14}
-.tone-deep .sec-head__sub{color:#3F4D14}
-/* チャコールの面：白抜き */
-.tone-dark .h-lead,.tone-dark h2,.tone-dark h3,
-.tone-dark .sec-head__ja{color:var(--c-on-dark)}
+/* 濃い面：白抜き。黄緑は「線と小ラベル」だけに使う（面には塗らない） */
+.tone-deep .h-lead,.tone-deep h2,.tone-deep h3,.tone-deep .sec-head__ja,
+.tone-dark .h-lead,.tone-dark h2,.tone-dark h3,.tone-dark .sec-head__ja{color:var(--c-on-dark)}
+.tone-deep .sec-head__en,.tone-deep .h-eyebrow,
 .tone-dark .sec-head__en,.tone-dark .h-eyebrow{color:var(--c-primary-2)}
-.tone-dark .sec-head__sub{color:var(--c-on-dark2)}
+.tone-deep .sec-head__sub,.tone-dark .sec-head__sub{color:var(--c-on-dark2)}
 /* 面は影ではなく【地との輝度差】で立てる。
    実測：良いサイトで影を持つ面は 0%。輝度差の中央値は 11。 */
 .nb{white-space:nowrap}          /* 日本語の改行制御。必ず <wbr> と併用 */
@@ -51,7 +49,7 @@ ul,ol{padding:0;list-style:none}
 .sec-head__ja{font-family:var(--f-disp);font-weight:900;color:var(--c-ink);
   font-size:clamp(23px,3.2vw,34px);line-height:1.42;letter-spacing:.01em}
 .sec-head__sub{margin-top:var(--s4);font-size:var(--fs-base);color:var(--c-ink3);max-width:44em}
-.tone-dark .sec-head__en{color:#8FD6A0}
+.tone-dark .sec-head__en{color:var(--c-primary-2)}
 .tone-dark .sec-head__ja{color:var(--c-on-dark)}
 
 /* 見出しの型（案件をまたいで共通の骨） */
