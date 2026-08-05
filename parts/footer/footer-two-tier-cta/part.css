@@ -114,15 +114,6 @@
    width:max-content ＋ left:50%/translateX(-50%) で左右を必ず同じだけ切る。
    色は地に8%沈めた地紋。読ませないので既知の固有名詞だけを回す。
    line-height:.8 と負の margin-bottom はセットで効く（下端の切れ幅の調整点を1つにする） */
-.ftc__mark{
-  width:max-content;position:relative;left:50%;
-  /* 字間の分だけ箱の右に余りが出て中心がずれるので、その半分（.03em）だけ戻す */
-  transform:translateX(calc(-50% + .03em));
-  margin:var(--sp-el) 0 -.12em;
-  font-family:var(--f-disp);font-weight:900;
-  font-size:var(--ftc-mark-fs);line-height:.8;letter-spacing:.04em;white-space:nowrap;
-  color:color-mix(in srgb,var(--c-ink) 8%,transparent);
-  user-select:none;pointer-events:none}
 
 @media(hover:hover) and (pointer:fine){
   .ftc__tel-num:hover{color:var(--c-primary-d)}
@@ -161,11 +152,3 @@
   .ftc__legal{gap:var(--s2) var(--s4)}
 }
 
-/* type/oversize-bleed + space/type-to-the-edge：
-   極大タイポを版面の外へ断ち落とし、地紋にしてページの終点を作る */
-.ftr,[class*="ftr"],footer{position:relative;overflow:clip}
-.ftr::after,footer::after{
-  content:"ESL club";position:absolute;left:50%;bottom:-.22em;transform:translateX(-50%);
-  font-family:var(--f-num);font-weight:900;font-size:clamp(90px,17vw,240px);line-height:.8;
-  letter-spacing:-.02em;white-space:nowrap;color:var(--c-bg2);z-index:0;pointer-events:none}
-.ftr>*,footer>*{position:relative;z-index:1}

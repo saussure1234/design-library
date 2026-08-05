@@ -23,7 +23,9 @@ ul,ol{padding:0;list-style:none}
 .sec--alt{background:var(--c-bg2)}
 .tone-base{background:var(--c-bg)}
 .tone-tint{background:var(--c-bg2)}
-.tone-accent,.tone-pale{background:var(--c-primary-l)}
+/* ブランド色の面。白ばかりにならないよう、白／薄グレーと交互に使う */
+.tone-accent{background:var(--c-primary-l)}
+.tone-pale{background:linear-gradient(180deg,#F4F9EE 0%,var(--c-primary-l) 100%)}
 /* ★#262626 の面。前に大きめの白いブロックを置くことが条件 */
 .tone-deep,.tone-dark{background:var(--c-dark);color:var(--c-on-dark2)}
 
@@ -41,6 +43,10 @@ ul,ol{padding:0;list-style:none}
 /* 濃い面の上に直接置かれた見出し・本文は白抜きにする（カードの中は元の色） */
 .tone-deep :is(h2,h3,h4),.tone-dark :is(h2,h3,h4){color:var(--c-on-dark)}
 .tone-deep .card :is(h2,h3,h4),.tone-dark .card :is(h2,h3,h4){color:var(--c-ink)}
+
+/* 見出しが無い節では、見出しブロックごと出さない（装飾線だけ残るのを防ぐ） */
+.sec-head:has(.sec-head__ja:empty){display:none}
+.sec-head__ja:empty{display:none}
 
 .sec-head--left{text-align:left}
 .sec-head--left .sec-head__sub{margin-inline:0}

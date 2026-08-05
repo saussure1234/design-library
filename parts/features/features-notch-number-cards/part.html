@@ -7,12 +7,12 @@
     </div>
     <ul class="fnc__grid">
       {{#items}}<li class="fnc__item fx" data-fx="fadeup" data-d="{{.d}}">
-        <a class="fnc__card" href="{{.href}}">
+        <div class="fnc__card">
           <span class="fnc__no">{{.no}}</span>
           <p class="fnc__t">{{.title}}</p>
           <p class="fnc__d">{{.desc}}</p>
-          <span class="fnc__more">{{linkLabel}}<i></i></span>
-        </a>
+          {{?linkLabel}}<span class="fnc__more">{{linkLabel}}<i></i></span>{{/linkLabel}}
+        </div>
       </li>{{/items}}
     </ul>
     {{?ctaLabel}}<p class="fnc__cta fx" data-fx="fadeup" data-d="320">

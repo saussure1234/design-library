@@ -119,7 +119,9 @@ ul,ol{padding:0;list-style:none}
 .sec--alt{background:var(--c-bg2)}
 .tone-base{background:var(--c-bg)}
 .tone-tint{background:var(--c-bg2)}
-.tone-accent,.tone-pale{background:var(--c-primary-l)}
+/* ブランド色の面。白ばかりにならないよう、白／薄グレーと交互に使う */
+.tone-accent{background:var(--c-primary-l)}
+.tone-pale{background:linear-gradient(180deg,#F4F9EE 0%,var(--c-primary-l) 100%)}
 /* ★#262626 の面。前に大きめの白いブロックを置くことが条件 */
 .tone-deep,.tone-dark{background:var(--c-dark);color:var(--c-on-dark2)}
 
@@ -137,6 +139,10 @@ ul,ol{padding:0;list-style:none}
 /* 濃い面の上に直接置かれた見出し・本文は白抜きにする（カードの中は元の色） */
 .tone-deep :is(h2,h3,h4),.tone-dark :is(h2,h3,h4){color:var(--c-on-dark)}
 .tone-deep .card :is(h2,h3,h4),.tone-dark .card :is(h2,h3,h4){color:var(--c-ink)}
+
+/* 見出しが無い節では、見出しブロックごと出さない（装飾線だけ残るのを防ぐ） */
+.sec-head:has(.sec-head__ja:empty){display:none}
+.sec-head__ja:empty{display:none}
 
 .sec-head--left{text-align:left}
 .sec-head--left .sec-head__sub{margin-inline:0}
@@ -262,11 +268,13 @@ html:not(.js) .lm__i{transform:none}
 
 /* 落書き */
 .hbc__dd{position:absolute;z-index:4;pointer-events:none}
-.hbc__dd--1{left:51%;top:20%;width:clamp(46px,6vw,86px)}
-.hbc__dd--2{left:84%;top:14%;width:clamp(38px,4.6vw,66px);transform:rotate(-8deg)}
-.hbc__dd--3{right:6%;top:12%;width:clamp(22px,2.6vw,38px)}
-.hbc__dd--4{left:31%;bottom:36%;width:clamp(30px,3.4vw,50px);transform:rotate(12deg)}
-.hbc__dd--5{right:2%;top:20%;width:clamp(52px,6.6vw,96px);transform:rotate(6deg)}
+/* 星（スパークル）だけを散らす */
+.hbc__dd--s1{left:29%;bottom:34%;width:clamp(20px,2.4vw,34px);transform:rotate(-12deg)}
+.hbc__dd--s2{left:52%;top:16%;width:clamp(16px,1.8vw,26px);transform:rotate(14deg)}
+.hbc__dd--s3{right:5%;top:22%;width:clamp(22px,2.6vw,38px);transform:rotate(-6deg)}
+.hbc__dd--s4{left:47%;bottom:12%;width:clamp(13px,1.5vw,21px);transform:rotate(22deg)}
+.hbc__dd--s5{right:14%;bottom:7%;width:clamp(15px,1.7vw,24px);transform:rotate(-18deg)}
+.hbc__dd--s6{left:34%;top:26%;width:clamp(12px,1.4vw,19px);transform:rotate(8deg)}
 .hbc__conf{position:absolute;z-index:2;width:9px;height:9px;border-radius:2px;opacity:.85}
 .hbc__conf--1{left:49%;top:22%;background:var(--c-accent);transform:rotate(24deg)}
 .hbc__conf--2{left:52%;bottom:24%;background:var(--c-primary);transform:rotate(-16deg)}
@@ -329,8 +337,6 @@ html:not(.js) .lm__i{transform:none}
   width:fit-content;min-width:min(32em,100%);max-width:100%;margin-inline:auto;
   display:flex;flex-direction:column;align-items:center;text-align:center;
   padding:var(--sp-el);
-  border:1px solid var(--cps-edge);
-  border-radius:0 0 var(--cps-r) 0;
 }
 
 /* 写真（任意）。既定はCTAより上（全画面幅で共通） */
@@ -613,8 +619,6 @@ html:not(.js) .lm__i{transform:none}
   width:fit-content;min-width:min(32em,100%);max-width:100%;margin-inline:auto;
   display:flex;flex-direction:column;align-items:center;text-align:center;
   padding:var(--sp-el);
-  border:1px solid var(--cps-edge);
-  border-radius:0 0 var(--cps-r) 0;
 }
 
 /* 写真（任意）。既定はCTAより上（全画面幅で共通） */
@@ -708,8 +712,10 @@ html:not(.js) .lm__i{transform:none}
    ・1人ごとに写真の左右を入れ替える
    再現の記録: repro/mbl/ */
 .mbl__list{display:grid;gap:clamp(40px,6vw,88px)}
-.mbl__item{margin:0;display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.35fr);
+.mbl__item{margin:0;display:grid;grid-template-columns:clamp(150px,15vw,210px) minmax(0,1fr);
   gap:clamp(24px,4vw,64px);align-items:start}
+/* 偶数番は写真を右に。列幅も入れ替える（入れ替えないと写真が本文幅まで伸びる） */
+.mbl__item:nth-child(even){grid-template-columns:minmax(0,1fr) clamp(150px,15vw,210px)}
 .mbl__item:nth-child(even) .mbl__figwrap{order:2}
 
 .mbl__figwrap{position:relative}
@@ -763,7 +769,7 @@ html:not(.js) .lm__i{transform:none}
 .msc__fig{margin:0}
 /* 素材が円形に切り抜かれているので、円のまま色面に乗せる */
 .msc__fig{display:grid;place-items:center;padding:22px 22px 14px}
-.msc__fig img{width:76%;aspect-ratio:1/1;object-fit:cover;border-radius:50%;display:block}
+.msc__fig img{width:150px;max-width:72%;aspect-ratio:1/1;object-fit:cover;border-radius:50%;display:block}
 /* 氏名：雲形のラベルを写真の下端に重ねる */
 .msc__name{position:relative;margin:-14px 12% 0;z-index:2;text-align:center;padding:12px 10px;
   border-radius:44% 56% 46% 54% / 60% 58% 42% 40%;background:var(--c-bg)}
@@ -825,8 +831,6 @@ html:not(.js) .lm__i{transform:none}
   width:fit-content;min-width:min(32em,100%);max-width:100%;margin-inline:auto;
   display:flex;flex-direction:column;align-items:center;text-align:center;
   padding:var(--sp-el);
-  border:1px solid var(--cps-edge);
-  border-radius:0 0 var(--cps-r) 0;
 }
 
 /* 写真（任意）。既定はCTAより上（全画面幅で共通） */
@@ -1342,8 +1346,6 @@ html:not(.js) .lm__i{transform:none}
   width:fit-content;min-width:min(32em,100%);max-width:100%;margin-inline:auto;
   display:flex;flex-direction:column;align-items:center;text-align:center;
   padding:var(--sp-el);
-  border:1px solid var(--cps-edge);
-  border-radius:0 0 var(--cps-r) 0;
 }
 
 /* 写真（任意）。既定はCTAより上（全画面幅で共通） */
@@ -1534,15 +1536,6 @@ html:not(.js) .lm__i{transform:none}
    width:max-content ＋ left:50%/translateX(-50%) で左右を必ず同じだけ切る。
    色は地に8%沈めた地紋。読ませないので既知の固有名詞だけを回す。
    line-height:.8 と負の margin-bottom はセットで効く（下端の切れ幅の調整点を1つにする） */
-.ftc__mark{
-  width:max-content;position:relative;left:50%;
-  /* 字間の分だけ箱の右に余りが出て中心がずれるので、その半分（.03em）だけ戻す */
-  transform:translateX(calc(-50% + .03em));
-  margin:var(--sp-el) 0 -.12em;
-  font-family:var(--f-disp);font-weight:900;
-  font-size:var(--ftc-mark-fs);line-height:.8;letter-spacing:.04em;white-space:nowrap;
-  color:color-mix(in srgb,var(--c-ink) 8%,transparent);
-  user-select:none;pointer-events:none}
 
 @media(hover:hover) and (pointer:fine){
   .ftc__tel-num:hover{color:var(--c-primary-d)}
@@ -1581,14 +1574,6 @@ html:not(.js) .lm__i{transform:none}
   .ftc__legal{gap:var(--s2) var(--s4)}
 }
 
-/* type/oversize-bleed + space/type-to-the-edge：
-   極大タイポを版面の外へ断ち落とし、地紋にしてページの終点を作る */
-.ftr,[class*="ftr"],footer{position:relative;overflow:clip}
-.ftr::after,footer::after{
-  content:"ESL club";position:absolute;left:50%;bottom:-.22em;transform:translateX(-50%);
-  font-family:var(--f-num);font-weight:900;font-size:clamp(90px,17vw,240px);line-height:.8;
-  letter-spacing:-.02em;white-space:nowrap;color:var(--c-bg2);z-index:0;pointer-events:none}
-.ftr>*,footer>*{position:relative;z-index:1}
 
 </style>
 </head>
@@ -1605,7 +1590,7 @@ html:not(.js) .lm__i{transform:none}
 
     <div class="hbc__head">
       <p class="hbc__logo"><img src="img/logo.svg" alt="ESL club"></p>
-      <p class="hbc__eyebrow">2015年の開塾以降”英検に特化”してきたからできる</p>
+      
       <h1 class="hbc__h1"><span class="nb">受験勉強と並走しながら</span><wbr><br><em><span class="nb">小学生・中学生で英検2級、</span></em><wbr><br><em><span class="nb">高校生で準1級</span></em>を<wbr><span class="nb">目指せる英語塾</span></h1>
     </div>
 
@@ -1621,22 +1606,24 @@ html:not(.js) .lm__i{transform:none}
     </p>
 
     <!-- 落書きの装飾。英語塾なので 鉛筆／本／吹き出し／星／矢印 -->
-    <svg class="hbc__dd dw hbc__dd--1" viewBox="0 0 120 120" aria-hidden="true">
-      <circle cx="60" cy="60" r="40" fill="none" stroke="var(--c-accent)" stroke-width="15"/>
-      <circle cx="60" cy="60" r="11" fill="var(--c-accent)"/></svg>
-    <svg class="hbc__dd dw hbc__dd--2" viewBox="0 0 90 70" aria-hidden="true">
-      <path d="M4 34 L86 6 L54 64 L44 42 Z" fill="none" stroke="var(--c-ink)" stroke-width="3.4"/></svg>
-    <svg class="hbc__dd dw hbc__dd--3" viewBox="0 0 60 150" aria-hidden="true">
-      <path d="M30 146 L30 20 M12 38 L30 12 L48 38" fill="none" stroke="var(--c-primary)"
-            stroke-width="6" stroke-linecap="round"/></svg>
-    <svg class="hbc__dd dw hbc__dd--4" viewBox="0 0 110 110" aria-hidden="true">
+    <svg class="hbc__dd dw hbc__dd--s1" viewBox="0 0 110 110" aria-hidden="true">
       <path d="M55 8 L67 42 L103 42 L74 63 L85 97 L55 76 L25 97 L36 63 L7 42 L43 42 Z"
             fill="none" stroke="var(--c-support2)" stroke-width="6" stroke-linejoin="round"/></svg>
-    <svg class="hbc__dd dw hbc__dd--5" viewBox="0 0 130 90" aria-hidden="true">
-      <path d="M12 12 h106 v52 h-58 l-22 22 v-22 h-26 Z" fill="none" stroke="var(--c-ink)" stroke-width="3.4"
-            stroke-linejoin="round"/>
-      <text x="65" y="48" text-anchor="middle" font-size="26" font-weight="900"
-            fill="var(--c-ink)" font-family="var(--f-num)">ABC</text></svg>
+    <svg class="hbc__dd dw hbc__dd--s2" viewBox="0 0 110 110" aria-hidden="true">
+      <path d="M55 8 L67 42 L103 42 L74 63 L85 97 L55 76 L25 97 L36 63 L7 42 L43 42 Z"
+            fill="none" stroke="var(--c-accent)" stroke-width="6" stroke-linejoin="round"/></svg>
+    <svg class="hbc__dd dw hbc__dd--s3" viewBox="0 0 110 110" aria-hidden="true">
+      <path d="M55 8 L67 42 L103 42 L74 63 L85 97 L55 76 L25 97 L36 63 L7 42 L43 42 Z"
+            fill="none" stroke="var(--c-primary-2)" stroke-width="6" stroke-linejoin="round"/></svg>
+    <svg class="hbc__dd dw hbc__dd--s4" viewBox="0 0 110 110" aria-hidden="true">
+      <path d="M55 8 L67 42 L103 42 L74 63 L85 97 L55 76 L25 97 L36 63 L7 42 L43 42 Z"
+            fill="none" stroke="var(--c-support2)" stroke-width="6" stroke-linejoin="round"/></svg>
+    <svg class="hbc__dd dw hbc__dd--s5" viewBox="0 0 110 110" aria-hidden="true">
+      <path d="M55 8 L67 42 L103 42 L74 63 L85 97 L55 76 L25 97 L36 63 L7 42 L43 42 Z"
+            fill="none" stroke="var(--c-primary)" stroke-width="6" stroke-linejoin="round"/></svg>
+    <svg class="hbc__dd dw hbc__dd--s6" viewBox="0 0 110 110" aria-hidden="true">
+      <path d="M55 8 L67 42 L103 42 L74 63 L85 97 L55 76 L25 97 L36 63 L7 42 L43 42 Z"
+            fill="none" stroke="var(--c-accent)" stroke-width="6" stroke-linejoin="round"/></svg>
     <span class="hbc__conf hbc__conf--1"></span><span class="hbc__conf hbc__conf--2"></span>
     <span class="hbc__conf hbc__conf--3"></span><span class="hbc__conf hbc__conf--4"></span>
     <span class="hbc__conf hbc__conf--5"></span><span class="hbc__conf hbc__conf--6"></span>
@@ -1695,39 +1682,39 @@ html:not(.js) .lm__i{transform:none}
 <section class="sec fnc">
   <div class="wrap">
     <div class="sec-head">
-      <p class="sec-head__en">FEATURES</p>
+      
       <h2 class="sec-head__ja">短期で英検合格を目指せる<span class="nb">4つの特徴</span></h2>
       
     </div>
     <ul class="fnc__grid">
       <li class="fnc__item fx" data-fx="fadeup" data-d="0">
-        <a class="fnc__card" href="#point1">
+        <div class="fnc__card">
           <span class="fnc__no">1</span>
           <p class="fnc__t">高い英検合格率を実現</p>
           <p class="fnc__d">累計1,000名以上を合格に導いた英検ベースのカリキュラム</p>
-          <span class="fnc__more"><i></i></span>
-        </a>
+          
+        </div>
       </li><li class="fnc__item fx" data-fx="fadeup" data-d="90">
-        <a class="fnc__card" href="#point2">
+        <div class="fnc__card">
           <span class="fnc__no">2</span>
           <p class="fnc__t">受験勉強と並行可能</p>
           <p class="fnc__d">目標級・時期と現在のレベルから作成する個別の学習計画</p>
-          <span class="fnc__more"><i></i></span>
-        </a>
+          
+        </div>
       </li><li class="fnc__item fx" data-fx="fadeup" data-d="180">
-        <a class="fnc__card" href="#point3">
+        <div class="fnc__card">
           <span class="fnc__no">3</span>
           <p class="fnc__t">学習効率を向上</p>
           <p class="fnc__d">バイリンガル講師のマンツーマンレッスン</p>
-          <span class="fnc__more"><i></i></span>
-        </a>
+          
+        </div>
       </li><li class="fnc__item fx" data-fx="fadeup" data-d="270">
-        <a class="fnc__card" href="#point4">
+        <div class="fnc__card">
           <span class="fnc__no">4</span>
           <p class="fnc__t">保護者様が忙しくても安心</p>
           <p class="fnc__d">計画の実行をフォローするスクールマネージャー</p>
-          <span class="fnc__more"><i></i></span>
-        </a>
+          
+        </div>
       </li>
     </ul>
     <p class="fnc__cta fx" data-fx="fadeup" data-d="320">
@@ -1741,7 +1728,7 @@ html:not(.js) .lm__i{transform:none}
 <!-- features/features-vertical-heading-rows (tint) -->
 <div class="tone-tint">
 <section class="sec vhr">
-  <span class="vhr__ghost" aria-hidden="true">POINT</span>
+  
   <div class="wrap">
     <div class="sec-head">
       
@@ -1800,7 +1787,7 @@ html:not(.js) .lm__i{transform:none}
 <section class="sec ndg">
   <div class="wrap">
     <div class="sec-head">
-      <p class="sec-head__en">RESULT</p>
+      
       <h2 class="sec-head__ja">ESL clubの<span class="nb">小中学生の英検合格率</span></h2>
       
     </div>
@@ -1839,8 +1826,8 @@ html:not(.js) .lm__i{transform:none}
 </section>
 
 </div>
-<!-- gallery/gallery-video-cards-bordered (tint) -->
-<div class="tone-tint">
+<!-- gallery/gallery-video-cards-bordered (pale) -->
+<div class="tone-pale">
 <section class="sec gvb">
   <div class="wrap">
     <div class="sec-head">
@@ -1850,7 +1837,7 @@ html:not(.js) .lm__i{transform:none}
     </div>
     <ul class="gvb__grid">
       <li class="gvb__item fx" data-fx="fadeup" data-d="0">
-        <a class="gvb__card" href="#v1" target="_blank" rel="noopener">
+        <a class="gvb__card" href="https://www.youtube.com/watch?v=7TLrJshYhXY" target="_blank" rel="noopener">
           <span class="gvb__thumb">
             <img src="img/yt_1.jpg" alt="小3男子 初学者のレッスン" loading="lazy">
             <span class="gvb__play" aria-hidden="true"></span>
@@ -1861,7 +1848,7 @@ html:not(.js) .lm__i{transform:none}
           </span>
         </a>
       </li><li class="gvb__item fx" data-fx="fadeup" data-d="90">
-        <a class="gvb__card" href="#v2" target="_blank" rel="noopener">
+        <a class="gvb__card" href="https://www.youtube.com/watch?v=d1pNo4ETKYc" target="_blank" rel="noopener">
           <span class="gvb__thumb">
             <img src="img/yt_2.jpg" alt="小4女子 学習経験者のレッスン" loading="lazy">
             <span class="gvb__play" aria-hidden="true"></span>
@@ -1944,7 +1931,7 @@ html:not(.js) .lm__i{transform:none}
 <section class="sec mbl">
   <div class="wrap">
     <div class="sec-head">
-      <p class="sec-head__en">MANAGER</p>
+      
       <h2 class="sec-head__ja">スクールマネジャー紹介</h2>
       
     </div>
@@ -1979,12 +1966,12 @@ html:not(.js) .lm__i{transform:none}
 </section>
 
 </div>
-<!-- member/member-staggered-color-cards (deep) -->
-<div class="tone-deep">
+<!-- member/member-staggered-color-cards (pale) -->
+<div class="tone-pale">
 <section class="sec msc">
   <div class="wrap">
     <div class="sec-head">
-      <p class="sec-head__en">TEACHERS</p>
+      
       <h2 class="sec-head__ja">講師紹介</h2>
       
     </div>
@@ -2073,7 +2060,7 @@ html:not(.js) .lm__i{transform:none}
   <span class="vbi__band" aria-hidden="true"></span>
   <div class="wrap">
     <div class="sec-head">
-      <p class="sec-head__en">VOICE</p>
+      
       <h2 class="sec-head__ja">保護者さまの声</h2>
       
     </div>
@@ -2113,7 +2100,7 @@ html:not(.js) .lm__i{transform:none}
   <div class="wrap">
 
     <div class="sec-head nch__head">
-      <p class="sec-head__en fx" data-fx="left">RESULT</p>
+      
       <h2 class="sec-head__ja fx" data-fx="fadeup" data-d="60">中学受験合格実績</h2>
       
     </div>
@@ -2164,13 +2151,13 @@ html:not(.js) .lm__i{transform:none}
 </section>
 
 </div>
-<!-- compare/compare-matrix-symbol (tint) -->
-<div class="tone-tint">
+<!-- compare/compare-matrix-symbol (pale) -->
+<div class="tone-pale">
 <section class="sec cmx">
   <div class="wrap">
 
     <div class="sec-head">
-      <p class="sec-head__en fx" data-fx="left">COMPARE</p>
+      
       <h2 class="sec-head__ja fx" data-fx="fadeup" data-d="70">他の英語スクールとの違い</h2>
       
     </div>
@@ -2352,7 +2339,7 @@ html:not(.js) .lm__i{transform:none}
 <section class="sec cts" >
   <div class="wrap">
     <div class="sec-head">
-      <p class="sec-head__en">SCHOOL</p>
+      
       <h2 class="sec-head__ja">教室紹介</h2>
       
     </div>
@@ -2688,7 +2675,6 @@ html:not(.js) .lm__i{transform:none}
     <!-- ページの終点。ブランド名を版面より大きく組み、左右と下で断ち落とす。
          地に8%だけ沈めた地紋なので読ませない（読ませる語ではない＝既知の固有名詞だけ切ってよい）。
          版面の外へ出すので .wrap の外に置く -->
-    <p class="ftc__mark" aria-hidden="true">ESL club</p>
   </div>
 </footer>
 
