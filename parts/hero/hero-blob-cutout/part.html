@@ -1,0 +1,48 @@
+<section class="hbc">
+  <div class="hbc__in">
+    <div class="hbc__blob hbc__blob--a"></div>
+    <div class="hbc__blob hbc__blob--b"></div>
+
+    <figure class="hbc__ph hbc__ph--a"><img src="{{photoA}}" alt="{{photoAAlt}}"></figure>
+    <figure class="hbc__ph hbc__ph--b"><img src="{{photoB}}" alt="{{photoBAlt}}"></figure>
+
+    <div class="hbc__head">
+      {{?logo}}<p class="hbc__logo"><img src="{{logo}}" alt="{{brand}}"></p>{{/logo}}
+      {{?eyebrow}}<p class="hbc__eyebrow">{{eyebrow}}</p>{{/eyebrow}}
+      <h1 class="hbc__h1">{{heading}}</h1>
+    </div>
+
+    <p class="hbc__copy">{{catch}}</p>
+
+    <ul class="hbc__stats">
+      {{#stats}}<li><b>{{.v}}<span>{{.u}}</span></b><small>{{.l}}</small></li>{{/stats}}
+    </ul>
+
+    <p class="hbc__cta">
+      <a class="btn" href="{{ctaHref}}">{{ctaLabel}}<span class="arr">→</span></a>
+      {{?ctaNote}}<span class="hbc__note">{{ctaNote}}</span>{{/ctaNote}}
+    </p>
+
+    <!-- 落書きの装飾。英語塾なので 鉛筆／本／吹き出し／星／矢印 -->
+    <svg class="hbc__dd hbc__dd--1" viewBox="0 0 120 120" aria-hidden="true">
+      <circle cx="60" cy="60" r="40" fill="none" stroke="var(--c-accent)" stroke-width="15"/>
+      <circle cx="60" cy="60" r="11" fill="var(--c-accent)"/></svg>
+    <svg class="hbc__dd hbc__dd--2" viewBox="0 0 90 70" aria-hidden="true">
+      <path d="M4 34 L86 6 L54 64 L44 42 Z" fill="none" stroke="var(--c-ink)" stroke-width="3.4"/></svg>
+    <svg class="hbc__dd hbc__dd--3" viewBox="0 0 60 150" aria-hidden="true">
+      <path d="M30 146 L30 20 M12 38 L30 12 L48 38" fill="none" stroke="var(--c-primary)"
+            stroke-width="6" stroke-linecap="round"/></svg>
+    <svg class="hbc__dd hbc__dd--4" viewBox="0 0 110 110" aria-hidden="true">
+      <path d="M55 8 L67 42 L103 42 L74 63 L85 97 L55 76 L25 97 L36 63 L7 42 L43 42 Z"
+            fill="none" stroke="var(--c-support2)" stroke-width="6" stroke-linejoin="round"/></svg>
+    <svg class="hbc__dd hbc__dd--5" viewBox="0 0 130 90" aria-hidden="true">
+      <path d="M12 12 h106 v52 h-58 l-22 22 v-22 h-26 Z" fill="none" stroke="var(--c-ink)" stroke-width="3.4"
+            stroke-linejoin="round"/>
+      <text x="65" y="48" text-anchor="middle" font-size="26" font-weight="900"
+            fill="var(--c-ink)" font-family="var(--f-num)">ABC</text></svg>
+    <span class="hbc__conf hbc__conf--1"></span><span class="hbc__conf hbc__conf--2"></span>
+    <span class="hbc__conf hbc__conf--3"></span><span class="hbc__conf hbc__conf--4"></span>
+    <span class="hbc__conf hbc__conf--5"></span><span class="hbc__conf hbc__conf--6"></span>
+  </div>
+  {{?note}}<p class="hbc__foot"><span class="wrap">{{note}}</span></p>{{/note}}
+</section>

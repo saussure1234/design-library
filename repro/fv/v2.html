@@ -1,0 +1,72 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#F9F5F2;font-family:"Noto Sans JP",sans-serif;-webkit-font-smoothing:antialiased;
+  font-feature-settings:"palt" 1}
+.fv{position:relative;width:1440px;height:968px;background:#F9F5F2;overflow:hidden}
+
+/* 右上のピル型ナビ */
+.nav{position:absolute;right:36px;top:22px;display:flex;gap:0;background:#fff;border-radius:999px;
+  padding:10px 12px;box-shadow:0 2px 10px rgba(0,0,0,.05);z-index:6}
+.nav a{display:flex;align-items:center;gap:8px;padding:8px 20px;font-size:15px;font-weight:700;color:#2b2b2b}
+.nav a+a{border-left:1px solid #EDE8E3}
+.nav i{width:18px;height:18px;border-radius:4px;display:block}
+
+/* 左上：ロゴと見出し */
+.logo{position:absolute;left:140px;top:142px;display:flex;align-items:center;gap:10px;z-index:5}
+.logo b{font-size:22px;font-weight:900;color:#1B3E82;letter-spacing:.02em}
+.logo small{display:block;font-size:8px;color:#6E7A93;letter-spacing:.04em}
+.h1{position:absolute;left:138px;top:196px;z-index:5;
+  font-size:52px;font-weight:900;color:#23262B;line-height:1.28;letter-spacing:.01em}
+
+/* ブロブ（色の面） */
+.blob{position:absolute;border-radius:50%;z-index:1}
+.blob--y{left:560px;top:110px;width:430px;height:400px;background:#EEB51E;
+  border-radius:52% 48% 46% 54% / 50% 44% 56% 50%}
+.blob--c{left:52px;top:404px;width:290px;height:280px;background:#BFE6F2;
+  border-radius:48% 52% 55% 45% / 52% 48% 52% 48%}
+
+/* 切り抜き写真 */
+.ph{position:absolute;z-index:3}
+.ph--girl{left:18px;top:352px;width:374px}
+.ph--boy{left:536px;top:92px;width:616px}
+.ph img{width:100%;display:block}
+
+/* 下のキャッチコピー */
+.copy{position:absolute;right:96px;bottom:118px;z-index:5;text-align:left;
+  font-size:46px;font-weight:900;color:#23262B;line-height:1.5;letter-spacing:.01em}
+.copy em{font-style:normal;color:#EEB51E}
+.copy .l2{padding-left:52px}
+
+/* 落書きの装飾 */
+.dd{position:absolute;z-index:4;pointer-events:none}
+</style></head><body>
+<div class="fv">
+
+  <nav class="nav">
+    <a><i style="background:#F0C419"></i>市村アイデア賞</a>
+    <a><i style="background:#E8622A"></i>キッズ・フロンティア・ワークショップ</a>
+    <a><i style="background:#3FA96B"></i>受賞・活動レポート</a>
+  </nav>
+
+  <div class="logo"><b>市村清新技術財団</b></div>
+  <p class="h1">少年少女<br>創造性育成事業</p>
+
+  <figure class="ph ph--girl"><img src="left.png" alt=""></figure>
+  <figure class="ph ph--boy"><img src="right.png" alt=""></figure>
+
+  <p class="copy">そのひらめきが、<br><span class="l2"><em>未来</em>をつくる。</span></p>
+
+  <svg class="dd" style="left:600px;top:150px" width="120" height="120" viewBox="0 0 120 120">
+    <circle cx="60" cy="60" r="42" fill="none" stroke="#E8452A" stroke-width="16"/>
+    <circle cx="60" cy="60" r="12" fill="#E8452A"/>
+  </svg>
+  <svg class="dd" style="left:430px;top:170px" width="90" height="70" viewBox="0 0 90 70">
+    <path d="M4 34 L86 6 L54 64 L44 42 Z" fill="none" stroke="#2C2C2C" stroke-width="3"/>
+  </svg>
+  <svg class="dd" style="left:1290px;top:150px" width="60" height="150" viewBox="0 0 60 150">
+    <path d="M30 145 L30 20 M12 38 L30 12 L48 38" fill="none" stroke="#1B3E82" stroke-width="6" stroke-linecap="round"/>
+  </svg>
+</div>
+</body></html>
