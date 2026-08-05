@@ -55,7 +55,8 @@
 /* 料金：罫なし。価格だけが主役 */
 .cts__plans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s2)}
 /* 白地の上でグレーの箱は沈む。ブランド色の淡い面＋左に線で立てる */
-.cts__plan{background:var(--c-primary-l);border-radius:var(--r-m);
+/* 面は無彩の薄グレー。--c-primary-l は黄緑寄りで、ブランド緑の横だと濁って見える */
+.cts__plan{background:var(--c-bg2);border-radius:var(--r-m);
   padding:var(--s5) var(--s4);text-align:center;border-top:4px solid var(--c-primary)}
 .cts__planname{font-weight:700;font-size:var(--fs-md);color:var(--c-ink)}
 .cts__planname span{display:block;margin-top:2px;font-size:var(--fs-note);color:var(--c-ink3);font-weight:400}
@@ -64,8 +65,9 @@
 
 /* タイムテーブル：格子罫なし。列は余白だけで分ける */
 .cts__tt{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s2)}
-.cts__day{background:var(--c-primary-l);border-radius:var(--r-m);padding:var(--s5) var(--s4)}
-.cts__day.is-off{background:var(--c-bg2);color:var(--c-ink3)}
+.cts__day{background:var(--c-bg2);border-radius:var(--r-m);padding:var(--s5) var(--s4)}
+/* 休校日は面を持たせず、破線の枠だけにして開講日と分ける */
+.cts__day.is-off{background:transparent;border:1px dashed var(--c-line);color:var(--c-ink3)}
 .cts__dayname{font-weight:900;font-size:var(--fs-md);color:var(--c-ink);text-align:center;
   padding-bottom:var(--s4);border-bottom:1px solid rgba(48,48,48,.06)}
 .cts__day.is-off .cts__dayname{color:var(--c-ink3)}
@@ -84,12 +86,13 @@
   column-gap:clamp(20px,2.6vw,40px);row-gap:0;align-items:start}
 .cts__msghead{display:contents}
 .cts__msgfig{grid-column:1;grid-row:1 / span 2;align-self:start;
-  margin:0;border-radius:50%;overflow:hidden;
-  background:color-mix(in srgb,var(--c-primary) 10%,#fff)}
+  margin:0;border-radius:50%;overflow:hidden;background:var(--c-bg)}
 .cts__msgfig img{width:100%;aspect-ratio:1/1;object-fit:cover;object-position:50% 14%;display:block}
 .cts__msgbody > .cts__msgid,
 .cts__msgbody > .mbl__fold,
 .cts__msgbody > .mbl__more{grid-column:2}
+/* ボタンは格子の升に引き伸ばさない（既定の stretch だと列幅いっぱいになる） */
+.cts__msgbody > .mbl__more{justify-self:start}
 .cts__msgrole{font-size:clamp(10.5px,.88vw,12.5px);color:var(--c-ink3);font-weight:700;letter-spacing:.04em}
 .cts__msgname{margin-top:3px;font-family:var(--f-disp);font-weight:900;
   font-size:clamp(19px,1.65vw,23px);color:var(--c-ink);letter-spacing:.04em}

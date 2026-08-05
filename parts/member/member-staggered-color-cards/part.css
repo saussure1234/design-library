@@ -1,44 +1,40 @@
 /* member/member-staggered-color-cards
-   目白大学 MEJINAVI2025 の作りを再現して起こした型。
-   ・人物カードを【色違い】にして【上下に段差】をつけて並べる
-   ・氏名は【雲形（もこもこ）のラベル】で写真に重ねる
-   再現の記録: repro/msc/ */
-/* 段差はつけず、3枚を並列・同じ高さで置く（原型の staggered はやめている）。
-   高さを揃えるには、行を stretch にしたうえでカードの中を縦のflexにして、
-   本文の箱に flex:1 を持たせる（そうしないと箱だけが伸びて中身が上に貼りつく）*/
+   スクールマネジャー紹介（member-blob-portrait-letter）と同じ組みを
+   3枚並べる版。カードの上段は「写真（左）＋肩書・氏名（右）」、
+   その下に 英語レベル／海外経験 の表とコメントを全幅で置く。
+   段差はつけず、3枚を並列・同じ高さにする。 */
 .msc__grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(16px,2.4vw,32px);
   align-items:stretch}
 .msc__item{margin:0;display:flex}
 
 /* ★カードが「大きめの白いブロック」。濃い面の上でもこの中は読める */
-.msc__card{position:relative;width:100%;display:flex;flex-direction:column;
-  border-radius:22px;overflow:hidden;background:var(--c-bg);
-  box-shadow:var(--shadow-s)}
-/* 写真の地は3枚とも同じ。節の地（#00B21F）と同じ緑にすると
-   カードの上半分が背景に溶けて、箱の形が消える。一段沈めた緑にする */
-.msc__fig{background:#00701A}
-.msc__fig{margin:0}
-/* 素材が円形に切り抜かれているので、円のまま色面に乗せる */
-.msc__fig{display:grid;place-items:center;padding:22px 22px 14px}
-/* 素材は背景を抜いてある。円の地をこちらで持ち、白い輪で縁取って「額」に見せる。
-   こうすると、元の壁の色が人によって違っても見えが揃う */
-.msc__fig img{width:150px;max-width:72%;aspect-ratio:1/1;object-fit:cover;object-position:50% 12%;
-  border-radius:50%;display:block;background:var(--c-bg);box-shadow:0 0 0 6px var(--c-bg)}
-/* 氏名：写真の下端に重ねる帯。
-   ひしゃげた楕円だと形が読めないので、丸帯（ピル）にする。
-   幅は中身に合わせて縮め、濃い緑と白の境目をまたがせる。 */
-.msc__name{position:relative;z-index:2;margin:-20px auto 0;width:max-content;max-width:88%;
-  text-align:center;padding:10px 22px 11px;
-  border-radius:var(--r-pill);background:var(--c-primary);
-  box-shadow:0 6px 16px rgba(0,0,0,.14)}
-.msc__name b{display:block;font-size:clamp(14px,1.35vw,18px);font-weight:900;color:var(--c-on-primary)}
-.msc__name span{display:block;margin-top:2px;font-size:clamp(8.5px,.72vw,10px);
-  letter-spacing:.06em;color:rgba(255,255,255,.74);font-weight:700}
+.msc__card{position:relative;width:100%;
+  display:grid;grid-template-columns:auto minmax(0,1fr);
+  column-gap:clamp(10px,1.1vw,16px);row-gap:0;align-items:center;
+  align-content:start;
+  padding:clamp(16px,1.8vw,24px);
+  border-radius:22px;background:var(--c-bg);box-shadow:var(--shadow-s)}
 
-.msc__spec{padding:14px 18px 20px;flex:1}
+/* 上段：写真（左） */
+.msc__fig{grid-column:1;grid-row:1;margin:0;align-self:center}
+/* 素材は背景を抜いてある。円の地はこちらで持つ（白いカードの上なので白） */
+.msc__fig img{width:clamp(62px,5.6vw,80px);aspect-ratio:1/1;object-fit:cover;object-position:50% 12%;
+  border-radius:50%;display:block;background:var(--c-bg)}
+
+/* 上段：肩書 → 氏名（右）。マネジャー紹介と同じ並び */
+.msc__name{grid-column:2;grid-row:1;min-width:0}
+.msc__name span{display:block;font-size:clamp(8.5px,.7vw,10px);letter-spacing:.06em;
+  color:var(--c-ink3);font-weight:700}
+.msc__name b{display:block;margin-top:3px;font-family:var(--f-disp);font-weight:900;
+  font-size:clamp(15px,1.35vw,19px);color:var(--c-ink);letter-spacing:.03em}
+
+/* 下段：表とコメント。写真の下も使って全幅で置く */
+.msc__spec{grid-column:1 / -1;grid-row:2;
+  margin-top:clamp(12px,1.4vw,18px);padding-top:clamp(12px,1.4vw,18px);
+  border-top:1px solid var(--c-line)}
 .msc__dl{display:grid;grid-template-columns:5.6em minmax(0,1fr);gap:0 10px;
   font-size:clamp(11px,.92vw,12.5px);padding:7px 0;border-top:1px dashed var(--c-line)}
-.msc__dl:first-child{border-top:0}
+.msc__dl:first-child{border-top:0;padding-top:0}
 .msc__dl dt{color:var(--c-ink3);font-weight:700}
 .msc__dl dd{margin:0;color:var(--c-ink2);line-height:1.7}
 .msc__cmt{margin-top:12px;font-size:clamp(11.5px,.95vw,13px);color:var(--c-ink2);line-height:1.95}
@@ -47,5 +43,5 @@
   .msc__grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media(max-width:560px){
-  .msc__grid{grid-template-columns:minmax(0,1fr);gap:26px}
+  .msc__grid{grid-template-columns:minmax(0,1fr);gap:20px}
 }
