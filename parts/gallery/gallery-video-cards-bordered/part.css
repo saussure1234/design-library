@@ -4,36 +4,35 @@
    ・再生ボタンは右下に円で置き、縁と同じ色にする
    ・カードごとに縁の色を変える
    再現の記録: repro/gvb/ */
-.gvb__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(16px,2.4vw,28px);
-  max-width:720px;margin-inline:auto}
+/* POINTの版面と揃える（幅460px・白い縁・同じ角丸） */
+.gvb__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;
+  max-width:460px;margin-inline:auto}
 .gvb__item{margin:0}
 .gvb__card{display:block;transition:transform .16s var(--e)}
 .gvb__thumb{display:block;width:100%;padding:0;border:0;background:none;cursor:pointer}
-.gvb__thumb{position:relative;border-radius:16px;overflow:hidden;
-  border:4px solid var(--c-primary-2);background:var(--c-bg2)}
-.gvb__item:nth-child(even) .gvb__thumb{border-color:var(--c-primary)}
-.gvb__thumb img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block}
+.gvb__thumb{position:relative;border-radius:12px 9px 14px 10px;overflow:hidden;
+  border:4px solid #fff;box-shadow:var(--shadow-s);background:var(--c-bg2)}
+
+.gvb__thumb img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
 /* 押すとその場で YouTube に差し替わる */
 .gvb__thumb iframe{width:100%;aspect-ratio:16/10;display:block;border:0}
 .gvb__thumb.is-play .gvb__play{display:none}
 /* 再生ボタン：右下・円・縁と同じ色 */
-.gvb__play{position:absolute;right:16px;bottom:16px;width:clamp(44px,4.6vw,64px);aspect-ratio:1;
+.gvb__play{position:absolute;right:10px;bottom:10px;width:clamp(30px,3.2vw,42px);aspect-ratio:1;
   border-radius:50%;background:var(--c-primary-2);display:grid;place-content:center}
 .gvb__item:nth-child(even) .gvb__play{background:var(--c-primary)}
-.gvb__play::after{content:"";border-left:clamp(13px,1.4vw,19px) solid var(--c-accent);
-  border-top:clamp(9px,.95vw,13px) solid transparent;border-bottom:clamp(9px,.95vw,13px) solid transparent;
+.gvb__play::after{content:"";border-left:clamp(9px,.95vw,12px) solid var(--c-on-primary);
+  border-top:clamp(6px,.62vw,8px) solid transparent;border-bottom:clamp(6px,.62vw,8px) solid transparent;
   margin-left:3px}
-.gvb__item:nth-child(odd) .gvb__card{transform:rotate(-1.1deg)}
-.gvb__item:nth-child(even) .gvb__card{transform:rotate(1.1deg)}
-@media(hover:hover) and (pointer:fine){.gvb__card:hover{transform:rotate(0) translateY(-4px)}}
-.gvb__cap{display:block;margin-top:14px;text-align:center}
+@media(hover:hover) and (pointer:fine){.gvb__card:hover{transform:translateY(-3px)}}
+.gvb__cap{display:block;margin-top:9px;text-align:center}
 .gvb__cap b,.gvb__cap em{display:block}
-.gvb__cap b{display:block;font-size:clamp(11px,.9vw,12.5px);color:var(--c-ink3);font-weight:700}
-.gvb__cap em{display:block;margin-top:3px;font-style:normal;
-  font-size:clamp(13px,1.1vw,15px);font-weight:900;color:var(--c-ink)}
+.gvb__cap b{display:block;font-size:clamp(9.5px,.76vw,11px);color:var(--c-ink3);font-weight:700}
+.gvb__cap em{display:block;margin-top:2px;font-style:normal;
+  font-size:clamp(11.5px,.95vw,13px);font-weight:900;color:var(--c-ink)}
 .gvb__note{margin-top:20px;text-align:center;font-size:11.5px;color:var(--c-ink3)}
 @media(max-width:768px){
-  .gvb__grid{grid-template-columns:minmax(0,1fr);gap:22px}
+  .gvb__grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;max-width:none}
   .gvb__thumb{border-width:5px;border-radius:18px}
   .gvb__item .gvb__card{transform:none}
 }
