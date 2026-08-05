@@ -70,6 +70,8 @@ def tokens_css(tokens):
 
 
 RUNTIME_JS = """
+document.documentElement.classList.add('js');
+
 /* スクロール表示：画面に入ったら .hh-in を付ける（IO不使用） */
 (function(){
   var els=[].slice.call(document.querySelectorAll('.fx'));
@@ -95,6 +97,103 @@ RUNTIME_JS = """
   check();                                   /* 初期表示分 */
   /* 保険：20秒たっても一度もスクロールされなければ全部出す */
   setTimeout(function(){ if(!scrolled){ els.forEach(function(e){e.classList.add('hh-in')}); els.length=0; } },20000);
+})();
+
+/* ── 数字のカウントアップ ──────────────────────
+   data-count を持つ要素が画面に入ったら 0 から実値まで回す。
+   同時にドーナツのリング（--p）も 0% から実値へ描く。
+   JSが動かなければ最終状態がそのまま出る（中身は消えない）。 */
+(function(){
+  var ns=[].slice.call(document.querySelectorAll('[data-count]'));
+  if(!ns.length) return;
+  var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  function ease(t){ return 1-Math.pow(1-t,3); }
+  function run(el){
+    var to=parseFloat(el.dataset.count), dur=900+Math.min(600,to*6);
+    var ring=el.closest('[style*="--p"]'), pTo=null;
+    if(ring){ var mm=/--p:\s*([\d.]+)%/.exec(ring.getAttribute('style')||''); if(mm) pTo=parseFloat(mm[1]); }
+    if(reduce){ el.textContent=to; return; }
+    if(pTo!=null) ring.style.setProperty('--p','0%');
+    var t0=null;
+    function step(t){
+      if(!t0) t0=t;
+      var k=Math.min(1,(t-t0)/dur), e=ease(k);
+      el.textContent=Math.round(to*e);
+      if(pTo!=null) ring.style.setProperty('--p',(pTo*e).toFixed(1)+'%');
+      if(k<1) requestAnimationFrame(step);
+      else { el.textContent=to; if(pTo!=null) ring.style.setProperty('--p',pTo+'%'); }
+    }
+    requestAnimationFrame(step);
+  }
+  function check(){
+    var vh=innerHeight;
+    for(var i=ns.length-1;i>=0;i--){
+      var r=ns[i].getBoundingClientRect();
+      if(r.top<vh*0.86 && r.bottom>0){ run(ns[i]); ns.splice(i,1); }
+    }
+  }
+  addEventListener('scroll',check,{passive:true}); addEventListener('resize',check,{passive:true});
+  check();
+})();
+
+/* ── 見出しの行マスク ────────────────────────
+   .sec-head__ja を1行ずつ下からせり上げる。
+   実際に折り返した位置で割るため、描画後に測ってから分ける。 */
+(function(){
+  if(matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  var hs=[].slice.call(document.querySelectorAll('.sec-head__ja'));
+  if(!hs.length) return;
+  hs.forEach(function(h){
+    if(h.querySelector('img,svg')) return;
+    h.classList.add('lm');
+    var html=h.innerHTML;
+    /* <br> で区切られた行だけを対象にする（DOMを壊さない範囲） */
+    var parts=html.split(/<br\s*\/?>/i);
+    if(parts.length<2) parts=[html];
+    h.innerHTML=parts.map(function(x){
+      return '<span class="lm__l"><span class="lm__i">'+x+'</span></span>';
+    }).join('');
+  });
+  var left=hs.slice();
+  function check(){
+    var vh=innerHeight;
+    for(var i=left.length-1;i>=0;i--){
+      var r=left[i].getBoundingClientRect();
+      if(r.top<vh*0.9 && r.bottom>0){ left[i].classList.add('lm-in'); left.splice(i,1); }
+    }
+  }
+  addEventListener('scroll',check,{passive:true}); addEventListener('resize',check,{passive:true});
+  check();
+})();
+
+/* ── SVGの線を描く（ストローク） ──────────────
+   .dw を持つ path/line を、画面に入ったら描き足す。 */
+(function(){
+  if(matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  var ps=[].slice.call(document.querySelectorAll('.dw path,.dw line,.dw circle,.dw polyline'));
+  if(!ps.length) return;
+  ps.forEach(function(p){
+    try{
+      var L=p.getTotalLength?p.getTotalLength():0;
+      if(!L) return;
+      p.style.strokeDasharray=L; p.style.strokeDashoffset=L;
+      p.style.transition='stroke-dashoffset 1.1s cubic-bezier(.22,.61,.36,1)';
+    }catch(e){}
+  });
+  var left=ps.slice();
+  function check(){
+    var vh=innerHeight;
+    for(var i=left.length-1;i>=0;i--){
+      var el=left[i], r=el.getBoundingClientRect();
+      if(r.top<vh*0.92 && r.bottom>0){
+        el.style.transitionDelay=(i%5)*70+'ms';
+        el.style.strokeDashoffset='0';
+        left.splice(i,1);
+      }
+    }
+  }
+  addEventListener('scroll',check,{passive:true}); addEventListener('resize',check,{passive:true});
+  setTimeout(check,120);
 })();
 """
 

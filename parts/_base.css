@@ -82,6 +82,16 @@ ul,ol{padding:0;list-style:none}
 .fx-on .fx[data-fx="clip"]{clip-path:inset(0 100% 0 0)}
 .fx-on .fx[data-fx="mask"]{clip-path:inset(100% 0 0 0)}
 .fx-on .fx.hh-in{opacity:1;transform:none;filter:none;clip-path:inset(0 0 0 0)}
+/* ── 見出しの行マスク：行ごとに下からせり上がる ── */
+.lm__l{display:block;overflow:hidden}
+.lm__i{display:inline-block;transform:translateY(105%);
+  transition:transform .78s cubic-bezier(.22,.61,.36,1)}
+.lm-in .lm__i{transform:none}
+.lm-in .lm__l:nth-child(2) .lm__i{transition-delay:.09s}
+.lm-in .lm__l:nth-child(3) .lm__i{transition-delay:.18s}
+/* JSが動かない場合は最初から出す */
+html:not(.js) .lm__i{transform:none}
+
 @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
 .floaty{animation:floaty 4.5s var(--e) infinite}
 
