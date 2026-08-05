@@ -55,19 +55,22 @@
 .pmp__arrow-l,.pmp__arrow-h{stroke-dasharray:120;stroke-dashoffset:0;
   transition:stroke-dashoffset .7s var(--e) .35s}
 .fx-on .fx[data-fx="pair"]{opacity:1;transform:none}         /* 既定のフェードは使わない */
-/* 寄せ幅はごく浅く。動いたと分かる手前で止める（大きく動かすと版がずれて見える） */
-.fx-on .fx[data-fx="pair"] .pmp__box{transform:translateX(3%)}
-.fx-on .fx[data-fx="pair"] .pmp__media{opacity:0;transform:translateX(56px)}
+/* ① 節に入った時点：箱は他のPOINTと【同じ位置】。動画は画面の右の外 */
+.fx-on .fx[data-fx="pair"] .pmp__box{transform:translateX(40px)}
+.fx-on .fx[data-fx="pair"] .pmp__media{opacity:0;transform:translateX(calc(100% + 48px))}
 .fx-on .fx[data-fx="pair"] .pmp__arrow{opacity:0}
 .fx-on .fx[data-fx="pair"] .pmp__arrow-l,
 .fx-on .fx[data-fx="pair"] .pmp__arrow-h{stroke-dashoffset:120}
-.fx-on .fx[data-fx="pair"].hh-in .pmp__box{transform:none}
-.fx-on .fx[data-fx="pair"].hh-in .pmp__media{opacity:1;transform:none}
-.fx-on .fx[data-fx="pair"].hh-in .pmp__arrow{opacity:1;transition:opacity .4s var(--e) .3s}
-.fx-on .fx[data-fx="pair"].hh-in .pmp__arrow-l,
-.fx-on .fx[data-fx="pair"].hh-in .pmp__arrow-h{stroke-dashoffset:0}
+/* ② 読み終わったころ（JSが .is-split を付ける）：箱が左へ寄り、動画が右から入る */
+.fx-on .fx[data-fx="pair"].is-split .pmp__box{transform:none}
+.fx-on .fx[data-fx="pair"].is-split .pmp__media{opacity:1;transform:none;
+  transition:transform .95s var(--e),opacity .55s var(--e)}
+.fx-on .fx[data-fx="pair"].is-split .pmp__arrow{opacity:1;transition:opacity .4s var(--e) .5s}
+.fx-on .fx[data-fx="pair"].is-split .pmp__arrow-l,
+.fx-on .fx[data-fx="pair"].is-split .pmp__arrow-h{stroke-dashoffset:0;
+  transition:stroke-dashoffset .7s var(--e) .55s}
 /* 描き終わったあと、先端が小さく往復して「こっち」を示し続ける */
-.fx-on .fx[data-fx="pair"].hh-in .pmp__arrow svg{animation:pmpNudge 2.6s var(--e) 1.1s infinite}
+.fx-on .fx[data-fx="pair"].is-split .pmp__arrow svg{animation:pmpNudge 2.6s var(--e) 1.5s infinite}
 @keyframes pmpNudge{0%,72%,100%{transform:translateX(0)}84%{transform:translateX(7%)}}
 
 /* 横に並べると動画が細くなりすぎる幅からは、縦に積む */
@@ -75,14 +78,15 @@
   .pmp__row{grid-template-columns:minmax(0,1fr);gap:16px;
     margin-inline:auto;padding-inline:0;max-width:540px}
   .pmp__arrow{width:44px;margin-inline:auto;transform:rotate(90deg)}
-  .fx-on .fx[data-fx="pair"] .pmp__box{transform:translateY(18px)}
-  .fx-on .fx[data-fx="pair"] .pmp__media{transform:translateY(24px)}
-  .fx-on .fx[data-fx="pair"].hh-in .pmp__box,
-  .fx-on .fx[data-fx="pair"].hh-in .pmp__media{transform:none}
-  .fx-on .fx[data-fx="pair"].hh-in .pmp__arrow svg{animation:none}
+  /* 縦積みでは左右に割れない。動画は下から入れる */
+  .fx-on .fx[data-fx="pair"] .pmp__box{transform:none}
+  .fx-on .fx[data-fx="pair"] .pmp__media{transform:translateY(40px)}
+  .fx-on .fx[data-fx="pair"].is-split .pmp__box,
+  .fx-on .fx[data-fx="pair"].is-split .pmp__media{transform:none}
+  .fx-on .fx[data-fx="pair"].is-split .pmp__arrow svg{animation:none}
 }
 @media(prefers-reduced-motion:reduce){
   .pmp__box,.pmp__media,.pmp__arrow{transition:none!important;transform:none!important;opacity:1!important}
   .pmp__arrow-l,.pmp__arrow-h{stroke-dashoffset:0!important}
-  .fx-on .fx[data-fx="pair"].hh-in .pmp__arrow svg{animation:none}
+  .fx-on .fx[data-fx="pair"].is-split .pmp__arrow svg{animation:none}
 }

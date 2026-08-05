@@ -99,6 +99,35 @@ document.documentElement.classList.add('js');
   setTimeout(function(){ if(!scrolled){ els.forEach(function(e){e.classList.add('hh-in')}); els.length=0; } },20000);
 })();
 
+/* ── POINT3と動画：読み終わったころに左右へ割れる ────────
+   節に入った時点では、他のPOINTと同じ位置（中央）に置く。
+   そこからさらにスクロールして、箱を読み終えたあたりで .is-split を付け、
+   箱を左へ寄せて動画を右から出す。一度割れたら戻さない（上下に振るとちらつく）。
+   このJSが動かなくても、CSSの隠しは .fx-on 配下なので中身は消えない。 */
+(function(){
+  var row=document.querySelector('.fx[data-fx="pair"]');
+  if(!row) return;
+  var box=row.querySelector('.pmp__box') || row;
+  var done=false, ticking=false;
+  function check(){
+    ticking=false;
+    if(done) return;
+    var r=box.getBoundingClientRect(), vh=window.innerHeight;
+    /* 下端が画面の86%まで上がった＝ひと通り目に入った／
+       もしくは箱の頭が画面の上3割に入った＝読み進めた */
+    if((r.bottom < vh*0.86 && r.top < vh*0.62) || r.top < vh*0.30){
+      done=true; row.classList.add('is-split');
+      removeEventListener('scroll',onScroll); removeEventListener('resize',onScroll);
+    }
+  }
+  function onScroll(){ if(!ticking){ ticking=true; requestAnimationFrame(check); } }
+  addEventListener('scroll',onScroll,{passive:true});
+  addEventListener('resize',onScroll,{passive:true});
+  check();
+  /* 保険：20秒たっても割れていなければ出す（動画が永久に隠れないように） */
+  setTimeout(function(){ if(!done){ done=true; row.classList.add('is-split'); } },20000);
+})();
+
 /* ── 数字のカウントアップ ──────────────────────
    data-count を持つ要素が画面に入ったら 0 から実値まで回す。
    同時にドーナツのリング（--p）も 0% から実値へ描く。
