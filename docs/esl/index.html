@@ -1335,7 +1335,18 @@ html:not(.js) .lm__i{transform:none}
    ・左に小さな人物、右に 見出し（ブランド色）→ 属性 → 本文
    ・見出しはブランド色。本文は行間を広めに取って長文でも読ませる
    再現の記録: repro/vbi/ */
-.vbi{position:relative}
+/* 地に【大きな緑の丸】を3つ置く。この節は文字が地に直接乗るので、
+   丸はブランド緑を薄く溶いた濃さにする（濃くすると本文が読めなくなる）。
+   色止めを1点で切るので、ぼけずに丸の輪郭が出る。 */
+.vbi{position:relative;
+  --r1:clamp(215px,30vw,470px); --r2:clamp(240px,34vw,520px); --r3:clamp(170px,23vw,370px);
+  --c1:color-mix(in srgb,var(--c-primary) 20%,transparent);
+  --c2:color-mix(in srgb,var(--c-primary) 15%,transparent);
+  --c3:color-mix(in srgb,var(--c-primary) 12%,transparent);
+  background-image:
+    radial-gradient(circle at 4% 13%,  var(--c1) 0 var(--r1), transparent var(--r1)),
+    radial-gradient(circle at 98% 48%, var(--c2) 0 var(--r2), transparent var(--r2)),
+    radial-gradient(circle at 20% 95%, var(--c3) 0 var(--r3), transparent var(--r3))}
 .vbi .wrap{position:relative;z-index:1}
 
 .vbi__list{display:grid;gap:clamp(30px,4.6vw,64px)}
