@@ -792,7 +792,7 @@ html:not(.js) .lm__i{transform:none}
    その間を矢印が描かれてつながる。「この説明の実物がこれ」という関係を動きで示す。
    POINTの箱の中身は features-vertical-heading-rows と同じ組み方を借りる。 */
 /* 箱は POINT1・2・4 と【同じ幅・ほぼ同じ位置】に置く。
-   そこから左へ出すのは 40px だけ。動画は版面の右へこぼして置き場所を作る
+   そこから左へ 110px 出す。動画は版面の右へこぼして置き場所を作る
    （行を版面に収めようとすると、箱が中央から 235px も左へ動いてしまう）*/
 /* 登場前の動画は画面の右外（+56px）に置く。clip でないと、その間だけ
    横スクロールバーが出る。hidden ではなく clip（位置指定の子を壊さない） */
@@ -800,9 +800,9 @@ html:not(.js) .lm__i{transform:none}
 .pmp__row{display:grid;grid-template-columns:minmax(0,540px) auto minmax(300px,1fr);
   gap:clamp(10px,1.5vw,22px);align-items:center;
   /* 版面を抜けて画面の端まで使う。左端の位置は「他のPOINTの箱の左 −40px」で固定。
-     他のPOINTは 50vw-270px から始まるので、ここは 50vw-310px */
+     他のPOINTは 50vw-270px から始まるので、ここは 50vw-380px */
   margin-inline:calc(50% - 50vw);
-  padding-left:max(24px,calc(50vw - 310px));
+  padding-left:max(24px,calc(50vw - 380px));
   padding-right:clamp(20px,2.6vw,40px)}
 
 /* 左：POINTの箱（白） */
@@ -844,7 +844,7 @@ html:not(.js) .lm__i{transform:none}
   transition:stroke-dashoffset .7s var(--e) .35s}
 .fx-on .fx[data-fx="pair"]{opacity:1;transform:none}         /* 既定のフェードは使わない */
 /* ① 節に入った時点：箱は他のPOINTと【同じ位置】。動画は画面の右の外 */
-.fx-on .fx[data-fx="pair"] .pmp__box{transform:translateX(40px)}
+.fx-on .fx[data-fx="pair"] .pmp__box{transform:translateX(110px)}
 .fx-on .fx[data-fx="pair"] .pmp__media{opacity:0;transform:translateX(calc(100% + 48px))}
 .fx-on .fx[data-fx="pair"] .pmp__arrow{opacity:0}
 .fx-on .fx[data-fx="pair"] .pmp__arrow-l,
@@ -1099,13 +1099,19 @@ html:not(.js) .lm__i{transform:none}
    ・右は 肩書 → 氏名 → リード（大きめ・太字） → 手描き風の罫 → 本文（小さめ）
    ・1人ごとに写真の左右を入れ替える
    再現の記録: repro/mbl/ */
-/* 2人を横に並べる。1人ぶんの列が半分になるので、中は写真を上・文章を下に積む
-   （半分の幅で写真を横に置くと、本文が2〜3語で折り返す） */
+/* 2人を横に並べる。写真の【横】に肩書と氏名を置いて縦を詰める。
+   ★subgrid で親の行を共有するので、リード文の行数が違っても
+     「写真の段／リードの段／本文の段」の頭が2人で揃う。 */
 .mbl__list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:clamp(28px,3.6vw,64px)}
-.mbl__item{margin:0;display:grid;grid-template-columns:minmax(0,1fr);
-  gap:clamp(16px,1.8vw,24px);align-items:start;align-content:start}
-.mbl__figwrap{max-width:clamp(120px,11vw,152px)}
+  grid-template-rows:auto auto auto;
+  column-gap:clamp(28px,3.6vw,64px);row-gap:0}
+.mbl__item{margin:0;display:grid;grid-row:span 3;grid-template-rows:subgrid;
+  grid-template-columns:minmax(0,1fr);align-content:start}
+
+/* 顔まわり：写真＋（肩書／氏名） */
+.mbl__head{display:grid;grid-template-columns:auto minmax(0,1fr);
+  gap:clamp(14px,1.5vw,22px);align-items:center;align-self:start}
+.mbl__figwrap{width:clamp(92px,8.2vw,116px)}
 
 .mbl__figwrap{position:relative}
 .mbl__fig{position:relative;z-index:2;margin:0}
@@ -1118,12 +1124,13 @@ html:not(.js) .lm__i{transform:none}
 .mbl__b2{left:4%;bottom:20%;width:17%;aspect-ratio:1/.62;background:var(--c-primary-2);
   border-radius:52% 48% 60% 40% / 58% 42% 58% 42%;opacity:.8}
 
-.mbl__role{font-size:clamp(11px,.95vw,13px);color:var(--c-ink3);font-weight:700;letter-spacing:.04em}
-.mbl__name{margin-top:4px;display:flex;align-items:baseline;gap:12px;
-  font-size:clamp(20px,2vw,27px);font-weight:900;color:var(--c-ink);letter-spacing:.04em}
-.mbl__name span{font-family:var(--f-num);font-size:.5em;font-weight:800;color:var(--c-primary)}
-.mbl__lead{margin-top:clamp(16px,2vw,26px);font-size:clamp(14.5px,1.3vw,18px);font-weight:800;
-  color:var(--c-ink);line-height:1.95}
+.mbl__role{font-size:clamp(10.5px,.88vw,12.5px);color:var(--c-ink3);font-weight:700;letter-spacing:.04em}
+.mbl__name{margin-top:3px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
+  font-size:clamp(19px,1.65vw,23px);font-weight:900;color:var(--c-ink);letter-spacing:.04em}
+.mbl__name span{font-family:var(--f-num);font-size:.55em;font-weight:800;color:var(--c-primary)}
+/* リードは本文の一段上まで。ここが大きいと2人ぶんで画面を占領する */
+.mbl__lead{margin-top:clamp(14px,1.7vw,22px);font-size:clamp(13.5px,1.08vw,15.5px);font-weight:800;
+  color:var(--c-ink);line-height:1.9;align-self:start}
 /* 長文はたたむ。開閉は高さを実測して滑らかに動かす */
 .mbl__fold{overflow:hidden;transition:height .5s var(--e)}
 .mbl__more{display:inline-flex;align-items:center;gap:8px;margin-top:14px;
@@ -1143,17 +1150,24 @@ html:not(.js) .lm__i{transform:none}
 @media(prefers-reduced-motion:reduce){
   .mbl__fold{transition:none}.mbl__more-i{transition:none}}
 
-/* 手描き風の罫 */
-.mbl__body{margin-top:clamp(16px,2vw,26px);padding-top:clamp(16px,2vw,26px);
-  border-top:1px solid var(--c-line);
-  font-size:clamp(12.5px,1.02vw,14px);color:var(--c-ink2);line-height:2.05}
+/* 罫は本文の【外】に置く。中に置くと、たたんだ高さのうち罫と余白ぶんが
+   本文から差し引かれ、開閉の実測ともズレる */
+.mbl__text{margin-top:clamp(14px,1.7vw,22px);padding-top:clamp(14px,1.7vw,22px);
+  border-top:1px solid var(--c-line);align-self:start}
+.mbl__body{font-size:clamp(12.5px,1.02vw,14px);color:var(--c-ink2);line-height:2.05}
 .mbl__body p + p{margin-top:1.35em}
 
+/* subgrid が無い環境では、行がそろわないだけで崩れはしない */
+@supports not (grid-template-rows:subgrid){
+  .mbl__list{grid-template-rows:none}
+  .mbl__item{grid-row:auto;grid-template-rows:none}
+}
 /* 横に2人だと1人ぶんが細くなりすぎる幅からは、縦に戻す */
 @media(max-width:900px){
-  .mbl__list{grid-template-columns:minmax(0,1fr);gap:clamp(36px,6vw,64px)}
-  .mbl__item{gap:20px}
-  .mbl__figwrap{max-width:184px}
+  .mbl__list{grid-template-columns:minmax(0,1fr);grid-template-rows:none;
+    row-gap:clamp(36px,6vw,64px)}
+  .mbl__item{grid-row:auto;grid-template-rows:none}
+  .mbl__figwrap{width:132px}
   .mbl__name{font-size:20px}
 }
 
@@ -2210,16 +2224,16 @@ html:not(.js) .lm__i{transform:none}
         <p class="pmp__mh">レッスンの様子</p>
         <ul class="pmp__grid">
           <li class="pmp__item">
-            <button class="pmp__thumb" type="button" data-yt="7TLrJshYhXY"
+            <button class="pmp__thumb" type="button" data-yt="d1pNo4ETKYc"
                     aria-label="ハシモトカズマくん のレッスン動画を再生">
-              <img src="img/yt_1.jpg" alt="小3男子 初学者のレッスン" loading="lazy">
+              <img src="img/yt_2.jpg" alt="小3男子 初学者のレッスン" loading="lazy">
               <span class="pmp__play" aria-hidden="true"></span>
             </button>
             <p class="pmp__cap"><b>小3男子　初学者</b><em>ハシモトカズマくん</em></p>
           </li><li class="pmp__item">
-            <button class="pmp__thumb" type="button" data-yt="d1pNo4ETKYc"
+            <button class="pmp__thumb" type="button" data-yt="7TLrJshYhXY"
                     aria-label="オオツカキサちゃん のレッスン動画を再生">
-              <img src="img/yt_2.jpg" alt="小4女子 学習経験者のレッスン" loading="lazy">
+              <img src="img/yt_1.jpg" alt="小4女子 学習経験者のレッスン" loading="lazy">
               <span class="pmp__play" aria-hidden="true"></span>
             </button>
             <p class="pmp__cap"><b>小4女子　学習経験者</b><em>オオツカキサちゃん</em></p>
@@ -2335,15 +2349,19 @@ html:not(.js) .lm__i{transform:none}
     </div>
     <ul class="mbl__list">
       <li class="mbl__item fx" data-fx="fadeup" data-d="0">
-        <div class="mbl__figwrap">
-          <span class="mbl__b1" aria-hidden="true"></span>
-          <span class="mbl__b2" aria-hidden="true"></span>
-          <figure class="mbl__fig"><img src="img/manager01.jpg" alt="オンライン校スクールマネジャー 梶玲菜" loading="lazy"></figure>
+        <div class="mbl__head">
+          <div class="mbl__figwrap">
+            <span class="mbl__b1" aria-hidden="true"></span>
+            <span class="mbl__b2" aria-hidden="true"></span>
+            <figure class="mbl__fig"><img src="img/manager01.jpg" alt="オンライン校スクールマネジャー 梶玲菜" loading="lazy"></figure>
+          </div>
+          <div class="mbl__id">
+            <p class="mbl__role">オンライン校スクールマネジャー</p>
+            <p class="mbl__name">梶　玲菜<span>英語学習指導歴 7年</span></p>
+          </div>
         </div>
+        <p class="mbl__lead">みなさんにとっての、『英語』って何でしょうか？私にとっての『英語』とは、子どもたちの世界や視野を広げてくれるツールだと思います。</p>
         <div class="mbl__text">
-          <p class="mbl__role">オンライン校スクールマネジャー</p>
-          <p class="mbl__name">梶　玲菜<span>英語学習指導歴 7年</span></p>
-          <p class="mbl__lead">みなさんにとっての、『英語』って何でしょうか？私にとっての『英語』とは、子どもたちの世界や視野を広げてくれるツールだと思います。</p>
           <div class="mbl__fold">
             <div class="mbl__body" id="mblb-1"><p>将来の進路や、夢・目標を叶えられる場所や可能性がグーンと増やせるからです。</p><p>英語は、子どもたちと世界の架け橋となり、とにかく新しい気づきを与え続けてくれます。例えば、文化の違い、見たこともない景色、日本では会えない人との出会い。この気づきは子どもたちにとって、「違うって面白い」「もっと知りたい」という探求の原動力になります。</p><p>こうした探求の原動力を刺激し引き出しながら、子どもたちの可能性を英語で広げ、わくわくする気持ちを育んであげたい。そのためにもオンライン校では、楽しく、着実に実力に繋がるよう、一人ひとりの得意・不得意に柔軟に、カリキュラムを組みレッスンを行っています。</p><p>まずは土台となる、一生モノの英語力を身に付けて、世界を広げる準備を一緒に始めませんか？みなさんと、英語とどんな将来を描いているのか、お話しできる日を楽しみにしています。</p></div>
           </div>
@@ -2353,15 +2371,19 @@ html:not(.js) .lm__i{transform:none}
           </button>
         </div>
       </li><li class="mbl__item fx" data-fx="fadeup" data-d="90">
-        <div class="mbl__figwrap">
-          <span class="mbl__b1" aria-hidden="true"></span>
-          <span class="mbl__b2" aria-hidden="true"></span>
-          <figure class="mbl__fig"><img src="img/manager02.jpg" alt="オンライン校スクールマネジャー 楠山理紀" loading="lazy"></figure>
+        <div class="mbl__head">
+          <div class="mbl__figwrap">
+            <span class="mbl__b1" aria-hidden="true"></span>
+            <span class="mbl__b2" aria-hidden="true"></span>
+            <figure class="mbl__fig"><img src="img/manager02.jpg" alt="オンライン校スクールマネジャー 楠山理紀" loading="lazy"></figure>
+          </div>
+          <div class="mbl__id">
+            <p class="mbl__role">オンライン校スクールマネジャー</p>
+            <p class="mbl__name">楠山　理紀<span>英語学習指導歴 5年</span></p>
+          </div>
         </div>
+        <p class="mbl__lead">英語は、何のために身につけるものか、人それぞれで、どれも正解だと思います。</p>
         <div class="mbl__text">
-          <p class="mbl__role">オンライン校スクールマネジャー</p>
-          <p class="mbl__name">楠山　理紀<span>英語学習指導歴 5年</span></p>
-          <p class="mbl__lead">英語は、何のために身につけるものか、人それぞれで、どれも正解だと思います。</p>
           <div class="mbl__fold">
             <div class="mbl__body" id="mblb-2"><p>ただ、その中で、何か一つ楽しい理由を持って欲しいと思っております。</p><p>洋画を、吹き替え・字幕なしで見たい。海外のYouTuberを、翻訳されるのを待たないで見れるようになりたい。将来外車を買うときに、マニュアルが全部英語でもへっちゃらになりたい。英語の習得は、時には難しく、辛いときもあるでしょう。でもその先に、趣味的な意味でも楽しい未来が待っていて欲しい。</p><p>英語は、勉強として身につけるのだけではなく、自分の人生を楽しくするためにも身につけて欲しい。そして、ゴールだけでなく、その過程も楽しくしてあげたい、というのが私の願いです。</p><p>是非、私やESL clubの講師と接してみて、英語ができたら、なにが楽しいんだろう？と問いかけてみてください。多種多様な答えが返ってきますので、これだ！と思えるもの見つけ出すのも、英語学習の一環としてみてはいかがでしょうか。</p></div>
           </div>
@@ -3131,9 +3153,9 @@ document.documentElement.classList.add('js');
     ticking=false;
     if(done) return;
     var r=box.getBoundingClientRect(), vh=window.innerHeight;
-    /* 下端が画面の86%まで上がった＝ひと通り目に入った／
-       もしくは箱の頭が画面の上3割に入った＝読み進めた */
-    if((r.bottom < vh*0.86 && r.top < vh*0.62) || r.top < vh*0.30){
+    /* 下端が画面の7割まで上がった＝ひと通り読み終えた／
+       もしくは箱の頭がヘッダーのすぐ下まで来た＝読み進めた */
+    if((r.bottom < vh*0.70 && r.top < vh*0.55) || r.top < vh*0.12){
       done=true; row.classList.add('is-split');
       removeEventListener('scroll',onScroll); removeEventListener('resize',onScroll);
     }

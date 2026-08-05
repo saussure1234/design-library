@@ -4,13 +4,19 @@
    ・右は 肩書 → 氏名 → リード（大きめ・太字） → 手描き風の罫 → 本文（小さめ）
    ・1人ごとに写真の左右を入れ替える
    再現の記録: repro/mbl/ */
-/* 2人を横に並べる。1人ぶんの列が半分になるので、中は写真を上・文章を下に積む
-   （半分の幅で写真を横に置くと、本文が2〜3語で折り返す） */
+/* 2人を横に並べる。写真の【横】に肩書と氏名を置いて縦を詰める。
+   ★subgrid で親の行を共有するので、リード文の行数が違っても
+     「写真の段／リードの段／本文の段」の頭が2人で揃う。 */
 .mbl__list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:clamp(28px,3.6vw,64px)}
-.mbl__item{margin:0;display:grid;grid-template-columns:minmax(0,1fr);
-  gap:clamp(16px,1.8vw,24px);align-items:start;align-content:start}
-.mbl__figwrap{max-width:clamp(120px,11vw,152px)}
+  grid-template-rows:auto auto auto;
+  column-gap:clamp(28px,3.6vw,64px);row-gap:0}
+.mbl__item{margin:0;display:grid;grid-row:span 3;grid-template-rows:subgrid;
+  grid-template-columns:minmax(0,1fr);align-content:start}
+
+/* 顔まわり：写真＋（肩書／氏名） */
+.mbl__head{display:grid;grid-template-columns:auto minmax(0,1fr);
+  gap:clamp(14px,1.5vw,22px);align-items:center;align-self:start}
+.mbl__figwrap{width:clamp(92px,8.2vw,116px)}
 
 .mbl__figwrap{position:relative}
 .mbl__fig{position:relative;z-index:2;margin:0}
@@ -23,12 +29,13 @@
 .mbl__b2{left:4%;bottom:20%;width:17%;aspect-ratio:1/.62;background:var(--c-primary-2);
   border-radius:52% 48% 60% 40% / 58% 42% 58% 42%;opacity:.8}
 
-.mbl__role{font-size:clamp(11px,.95vw,13px);color:var(--c-ink3);font-weight:700;letter-spacing:.04em}
-.mbl__name{margin-top:4px;display:flex;align-items:baseline;gap:12px;
-  font-size:clamp(20px,2vw,27px);font-weight:900;color:var(--c-ink);letter-spacing:.04em}
-.mbl__name span{font-family:var(--f-num);font-size:.5em;font-weight:800;color:var(--c-primary)}
-.mbl__lead{margin-top:clamp(16px,2vw,26px);font-size:clamp(14.5px,1.3vw,18px);font-weight:800;
-  color:var(--c-ink);line-height:1.95}
+.mbl__role{font-size:clamp(10.5px,.88vw,12.5px);color:var(--c-ink3);font-weight:700;letter-spacing:.04em}
+.mbl__name{margin-top:3px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
+  font-size:clamp(19px,1.65vw,23px);font-weight:900;color:var(--c-ink);letter-spacing:.04em}
+.mbl__name span{font-family:var(--f-num);font-size:.55em;font-weight:800;color:var(--c-primary)}
+/* リードは本文の一段上まで。ここが大きいと2人ぶんで画面を占領する */
+.mbl__lead{margin-top:clamp(14px,1.7vw,22px);font-size:clamp(13.5px,1.08vw,15.5px);font-weight:800;
+  color:var(--c-ink);line-height:1.9;align-self:start}
 /* 長文はたたむ。開閉は高さを実測して滑らかに動かす */
 .mbl__fold{overflow:hidden;transition:height .5s var(--e)}
 .mbl__more{display:inline-flex;align-items:center;gap:8px;margin-top:14px;
@@ -48,16 +55,23 @@
 @media(prefers-reduced-motion:reduce){
   .mbl__fold{transition:none}.mbl__more-i{transition:none}}
 
-/* 手描き風の罫 */
-.mbl__body{margin-top:clamp(16px,2vw,26px);padding-top:clamp(16px,2vw,26px);
-  border-top:1px solid var(--c-line);
-  font-size:clamp(12.5px,1.02vw,14px);color:var(--c-ink2);line-height:2.05}
+/* 罫は本文の【外】に置く。中に置くと、たたんだ高さのうち罫と余白ぶんが
+   本文から差し引かれ、開閉の実測ともズレる */
+.mbl__text{margin-top:clamp(14px,1.7vw,22px);padding-top:clamp(14px,1.7vw,22px);
+  border-top:1px solid var(--c-line);align-self:start}
+.mbl__body{font-size:clamp(12.5px,1.02vw,14px);color:var(--c-ink2);line-height:2.05}
 .mbl__body p + p{margin-top:1.35em}
 
+/* subgrid が無い環境では、行がそろわないだけで崩れはしない */
+@supports not (grid-template-rows:subgrid){
+  .mbl__list{grid-template-rows:none}
+  .mbl__item{grid-row:auto;grid-template-rows:none}
+}
 /* 横に2人だと1人ぶんが細くなりすぎる幅からは、縦に戻す */
 @media(max-width:900px){
-  .mbl__list{grid-template-columns:minmax(0,1fr);gap:clamp(36px,6vw,64px)}
-  .mbl__item{gap:20px}
-  .mbl__figwrap{max-width:184px}
+  .mbl__list{grid-template-columns:minmax(0,1fr);grid-template-rows:none;
+    row-gap:clamp(36px,6vw,64px)}
+  .mbl__item{grid-row:auto;grid-template-rows:none}
+  .mbl__figwrap{width:132px}
   .mbl__name{font-size:20px}
 }

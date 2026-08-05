@@ -113,9 +113,9 @@ document.documentElement.classList.add('js');
     ticking=false;
     if(done) return;
     var r=box.getBoundingClientRect(), vh=window.innerHeight;
-    /* 下端が画面の86%まで上がった＝ひと通り目に入った／
-       もしくは箱の頭が画面の上3割に入った＝読み進めた */
-    if((r.bottom < vh*0.86 && r.top < vh*0.62) || r.top < vh*0.30){
+    /* 下端が画面の7割まで上がった＝ひと通り読み終えた／
+       もしくは箱の頭がヘッダーのすぐ下まで来た＝読み進めた */
+    if((r.bottom < vh*0.70 && r.top < vh*0.55) || r.top < vh*0.12){
       done=true; row.classList.add('is-split');
       removeEventListener('scroll',onScroll); removeEventListener('resize',onScroll);
     }

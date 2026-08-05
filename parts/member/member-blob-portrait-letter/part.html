@@ -7,15 +7,19 @@
     </div>
     <ul class="mbl__list">
       {{#items}}<li class="mbl__item fx" data-fx="fadeup" data-d="{{.d}}">
-        <div class="mbl__figwrap">
-          <span class="mbl__b1" aria-hidden="true"></span>
-          <span class="mbl__b2" aria-hidden="true"></span>
-          <figure class="mbl__fig"><img src="{{.photo}}" alt="{{.alt}}" loading="lazy"></figure>
+        <div class="mbl__head">
+          <div class="mbl__figwrap">
+            <span class="mbl__b1" aria-hidden="true"></span>
+            <span class="mbl__b2" aria-hidden="true"></span>
+            <figure class="mbl__fig"><img src="{{.photo}}" alt="{{.alt}}" loading="lazy"></figure>
+          </div>
+          <div class="mbl__id">
+            <p class="mbl__role">{{.role}}</p>
+            <p class="mbl__name">{{.name}}{{?.career}}<span>{{.career}}</span>{{/.career}}</p>
+          </div>
         </div>
+        <p class="mbl__lead">{{.lead}}</p>
         <div class="mbl__text">
-          <p class="mbl__role">{{.role}}</p>
-          <p class="mbl__name">{{.name}}{{?.career}}<span>{{.career}}</span>{{/.career}}</p>
-          <p class="mbl__lead">{{.lead}}</p>
           <div class="mbl__fold">
             <div class="mbl__body" id="mblb-{{.i}}">{{.body}}</div>
           </div>
