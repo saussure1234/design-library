@@ -212,6 +212,35 @@ document.documentElement.classList.add('js');
     });
   });
 })();
+
+/* ── FV背景「成長の曲線」──────────────────
+   1) 読み込み時に3本を時間差で描く
+   2) FVをスクロールする間だけ、静かに上へ抜けながら薄くする（等速・加速しない）
+   加速させると「急かされている」印象になり、安心感と衝突する。 */
+(function(){
+  var wrap=document.querySelector('.hbc__growth'), fv=document.querySelector('.hbc');
+  if(!wrap||!fv) return;
+  var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var paths=[].slice.call(wrap.querySelectorAll('path'));
+  function measure(){
+    paths.forEach(function(p){ p.style.setProperty('--len', Math.ceil(p.getTotalLength())); });
+  }
+  measure(); wrap.style.setProperty('--dur','1400ms');
+  if(reduce){ wrap.classList.add('is-in'); }
+  else{ requestAnimationFrame(function(){ requestAnimationFrame(function(){ wrap.classList.add('is-in'); }); }); }
+  var SHIFT=42, FADE=.55, ticking=false;
+  function frame(){
+    ticking=false; if(reduce) return;
+    var h=fv.offsetHeight||1;
+    var p=Math.min(1,Math.max(0,(window.pageYOffset||0)/h));
+    wrap.style.transform='translate3d(0,'+(-p*SHIFT)+'px,0)';
+    wrap.style.opacity=(1-p*FADE).toFixed(3);
+    wrap.style.willChange = p<1 ? 'transform,opacity' : 'auto';
+  }
+  addEventListener('scroll',function(){ if(!ticking){ ticking=true; requestAnimationFrame(frame); } },{passive:true});
+  var rt; addEventListener('resize',function(){ clearTimeout(rt); rt=setTimeout(function(){ measure(); frame(); },150); });
+  frame();
+})();
 """
 
 
