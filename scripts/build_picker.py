@@ -16,6 +16,36 @@ OUT = os.path.join(DOCS, "pick")
 N_PER = 24   # 1セクションあたりの候補数
 
 
+# サービス系だけを候補にする。商品・食品・ECは外す。
+ALLOW = {"教育", "BtoB", "コーポレート", "採用", "医療", "士業", "不動産", "メディア",
+         "サービス", "金融", "福祉", "美容", "ブライダル", "フィットネス", "自治体",
+         "公共", "団体", "文化施設", "スポーツ", "建設", "建築", "製造", "地域・自治体",
+         "既存"}
+DENY = {"EC", "飲食", "食品", "小売", "店舗", "ブランド", "観光", "宿泊",
+        "レジャー", "エンタメ", "イベント", "文化"}
+
+
+def industries():
+    """サイトのスラッグ → 業種"""
+    m = {}
+    p = os.path.join(LIB, "harvest_sites.csv")
+    if os.path.exists(p):
+        for r in csv.DictReader(open(p, encoding="utf-8-sig")):
+            u = (r.get("url") or "").strip()
+            if not u.startswith("http"):
+                continue
+            d = re.sub(r"^https?://(www\.)?", "", u).split("/")[0].lower()
+            m[re.sub(r"[^0-9a-zA-Z]+", "_", d)[:36]] = (r.get("industry") or "").strip()
+    # 最初に集めた49サイト（教育・キッズ・表現）は既存として通す
+    p2 = os.path.join(LIB, "index.csv")
+    if os.path.exists(p2):
+        for r in csv.DictReader(open(p2, encoding="utf-8-sig")):
+            sid = r.get("id", "")
+            if sid:
+                m.setdefault(sid.rsplit("_s", 1)[0], "既存")
+    return m
+
+
 def load():
     F = json.load(open(os.path.join(LIB, "_raw", "features.json"), encoding="utf-8"))
     pos = json.load(open(os.path.join(LIB, "_raw", "pos.json"), encoding="utf-8"))
@@ -31,7 +61,7 @@ def load():
             d = re.sub(r"^https?://(www\.)?", "", u).split("/")[0].lower()
             slug = re.sub(r"[^0-9a-zA-Z]+", "_", d)[:36]
             site.setdefault(slug, (n, u))
-    return F, pos, site
+    return F, pos, site, industries()
 
 
 # セクションごとの条件。fn(f, i, n) -> スコア（高いほど候補）／None なら除外
@@ -111,7 +141,7 @@ def rules():
 
 
 def main():
-    F, pos, site = load()
+    F, pos, site, IND = load()
     os.makedirs(OUT, exist_ok=True)
     used = set()
     blocks = []
@@ -120,6 +150,9 @@ def main():
         cand = []
         for k, f in F.items():
             if f["ink"] < 2.2 or not (0.7 < f["ratio"] < 9) or f["h"] < 150:
+                continue
+            g = IND.get(k.rsplit("_s", 1)[0], "")
+            if g in DENY or g not in ALLOW:      # サービス系だけ
                 continue
             i, n = pos.get(k, (0, 1))
             s = fn(f, i, n)
@@ -194,7 +227,7 @@ dialog::backdrop{{background:rgba(0,0,0,.82)}} dialog img{{max-width:min(1280px,
 </style></head><body>
 <header><div class="in">
 <h1>ESL club｜セクションごとの目標を選ぶ</h1>
-<p class="lead">953サイト・9,649セクションから、各セクションの中身に構造が合うものだけを出しています（業種は問いません）。<br>
+<p class="lead">サービス系のサイトだけに絞って（商品・食品・ECは除外）、各セクションの中身に構造が合うものを出しています。<br>
 <b>番号（例：03-7）を言うだけ</b>で、そのデザインに一致するよう作ります。良いものが無ければ「03 無し」で別案を出します。</p>
 <nav>{nav}</nav>
 </div></header>
