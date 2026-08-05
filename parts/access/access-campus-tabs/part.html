@@ -1,0 +1,75 @@
+<section class="sec cts" {{?sectionId}}id="{{sectionId}}"{{/sectionId}}>
+  <div class="wrap">
+    <div class="sec-head">
+      {{?eyebrow}}<p class="sec-head__en">{{eyebrow}}</p>{{/eyebrow}}
+      <h2 class="sec-head__ja">{{heading}}</h2>
+      {{?lead}}<p class="sec-head__sub">{{lead}}</p>{{/lead}}
+    </div>
+
+    <div class="cts__box">
+      {{#locs}}<input class="cts__radio" type="radio" name="cts-{{group}}" id="cts-{{group}}-{{.i}}" {{?.on}}checked{{/.on}}>{{/locs}}
+
+      <div class="cts__tabs" role="tablist">
+        {{#locs}}<label class="cts__tab" for="cts-{{group}}-{{.i}}">{{.name}}</label>{{/locs}}
+      </div>
+
+      <div class="cts__panels">
+        {{#locs}}<div class="cts__panel">
+
+          <div class="cts__top">
+            <figure class="cts__figure">
+              <img src="{{.photo}}" alt="{{.photoAlt}}">
+            </figure>
+            <div class="cts__info">
+              {{?.body}}<p class="cts__body">{{.body}}</p>{{/.body}}
+              {{?.tel}}<p class="cts__tel"><span>{{telLabel}}</span><a href="tel:{{.telHref}}">{{.tel}}</a></p>{{/.tel}}
+              <dl class="cts__dl">
+                {{?.address}}<dt>{{addressLabel}}</dt><dd>{{.address}}</dd>{{/.address}}
+                <dt>{{hoursLabel}}</dt><dd>{{.hours}}</dd>
+                <dt>{{closedLabel}}</dt><dd>{{.closed}}</dd>
+                <dt>{{targetLabel}}</dt><dd>{{.target}}</dd>
+                <dt>{{styleLabel}}</dt><dd>{{.style}}</dd>
+                <dt>{{lessonLabel}}</dt><dd>{{.lesson}}</dd>
+              </dl>
+            </div>
+          </div>
+
+          <div class="cts__block">
+            <h3 class="cts__h3">{{priceLabel}}</h3>
+            <ul class="cts__plans">
+              {{#.plans}}<li class="cts__plan">
+                <p class="cts__planname">{{.plan}}<span>{{.sub}}</span></p>
+                <p class="cts__price">{{.price}}</p>
+              </li>{{/.plans}}
+            </ul>
+            <ul class="cts__notes">{{#.priceNotes}}<li>{{.t}}</li>{{/.priceNotes}}</ul>
+          </div>
+
+          <div class="cts__block">
+            <h3 class="cts__h3">{{timeLabel}}</h3>
+            <div class="cts__tt">
+              {{#.days}}<div class="cts__day{{?.off}} is-off{{/.off}}">
+                <p class="cts__dayname">{{.day}}</p>
+                {{?.off}}<p class="cts__off">{{.off}}</p>{{/.off}}
+                <ul class="cts__slots">{{#.slots}}<li>{{.time}}{{?.note}}<span>{{.note}}</span>{{/.note}}</li>{{/.slots}}</ul>
+              </div>{{/.days}}
+            </div>
+            <ul class="cts__notes">{{#.timeNotes}}<li>{{.t}}</li>{{/.timeNotes}}</ul>
+          </div>
+
+          {{?.msgName}}<div class="cts__block cts__msg">
+            <h3 class="cts__h3">{{.msgHead}}</h3>
+            <div class="cts__msgbody">
+              <figure class="cts__msgfig"><img src="{{.msgPhoto}}" alt="{{.msgPhotoAlt}}"></figure>
+              <div class="cts__msgtext">
+                {{.msgText}}
+                <p class="cts__sign"><span>{{.msgRole}}</span><b>{{.msgName}}</b></p>
+              </div>
+            </div>
+          </div>{{/.msgName}}
+
+        </div>{{/locs}}
+      </div>
+    </div>
+  </div>
+</section>

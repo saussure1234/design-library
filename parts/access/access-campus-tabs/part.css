@@ -1,0 +1,96 @@
+/* access/access-campus-tabs
+   校舎ごとに「情報・料金・タイムテーブル・挨拶」を1つのタブの中へ入れる。
+   原稿の構成そのもの。同じ表が校舎別に2回ずつ直列に並ぶのを避ける。
+   切り替えは JS なし（ラジオ＋:checked）。
+   ─ 使っている工夫 ─
+   rule/table-no-grid        … 表の格子罫を全部消し、行は不透明度6%の1本だけにする
+   rule/dissolve-into-ground … 面は影を持たず、地との明度差だけで立てる */
+.cts__box{position:relative}
+.cts__radio{position:absolute;opacity:0;pointer-events:none;width:0;height:0}
+
+/* ── タブ ── */
+.cts__tabs{display:flex;gap:var(--s2);margin-bottom:var(--sp-el);flex-wrap:wrap}
+.cts__tab{display:inline-flex;align-items:center;justify-content:center;
+  min-width:180px;height:52px;padding:0 var(--s5);cursor:pointer;
+  font-weight:700;font-size:var(--fs-md);color:var(--c-ink3);
+  background:var(--c-bg2);border-radius:var(--r-pill);
+  transition:background .16s var(--e),color .16s var(--e)}
+@media(hover:hover) and (pointer:fine){.cts__tab:hover{color:var(--c-ink)}}
+.cts__radio:nth-of-type(1):checked ~ .cts__tabs .cts__tab:nth-of-type(1),
+.cts__radio:nth-of-type(2):checked ~ .cts__tabs .cts__tab:nth-of-type(2),
+.cts__radio:nth-of-type(3):checked ~ .cts__tabs .cts__tab:nth-of-type(3){
+  background:var(--c-primary);color:var(--c-on-primary)}
+.cts__radio:focus-visible ~ .cts__tabs .cts__tab{outline:3px solid var(--c-primary);outline-offset:3px}
+
+/* ── パネル ── */
+.cts__panel{display:none}
+.cts__radio:nth-of-type(1):checked ~ .cts__panels .cts__panel:nth-of-type(1),
+.cts__radio:nth-of-type(2):checked ~ .cts__panels .cts__panel:nth-of-type(2),
+.cts__radio:nth-of-type(3):checked ~ .cts__panels .cts__panel:nth-of-type(3){display:block}
+/* JSもCSSも効かない環境では先頭を出す保険 */
+.cts__panels .cts__panel:first-child{display:block}
+.cts__radio:checked ~ .cts__panels .cts__panel:first-child{display:none}
+.cts__radio:nth-of-type(1):checked ~ .cts__panels .cts__panel:first-child{display:block}
+
+/* ── 上段：写真＋情報 ── */
+.cts__top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--sp-el);align-items:start}
+.cts__figure{margin:0;border-radius:var(--r-m);overflow:hidden;background:var(--c-bg2)}
+.cts__figure img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block}
+.cts__body{font-size:var(--fs-base);line-height:1.95;color:var(--c-ink2);margin-bottom:var(--sp-el)}
+.cts__tel{display:flex;align-items:baseline;gap:var(--s3);margin-bottom:var(--s5)}
+.cts__tel span{font-size:var(--fs-note);color:var(--c-ink3);font-weight:700}
+.cts__tel a{font-family:var(--f-num);font-weight:900;font-size:clamp(24px,2.6vw,32px);
+  color:var(--c-primary);letter-spacing:.01em;line-height:1}
+/* 罫は引かず、行は不透明度6%の1本だけ */
+.cts__dl{display:grid;grid-template-columns:7.5em minmax(0,1fr);gap:0 var(--s4);font-size:var(--fs-sm)}
+.cts__dl dt{padding:12px 0;color:var(--c-ink3);font-weight:700;border-top:1px solid rgba(48,48,48,.06)}
+.cts__dl dd{padding:12px 0;margin:0;color:var(--c-ink2);line-height:1.75;border-top:1px solid rgba(48,48,48,.06)}
+.cts__dl dt:first-of-type,.cts__dl dd:first-of-type{border-top:0}
+
+/* ── 各ブロック ── */
+.cts__block{margin-top:var(--sp-blk)}
+.cts__h3{font-family:var(--f-disp);font-weight:900;font-size:var(--fs-lg);color:var(--c-ink);
+  margin-bottom:var(--sp-el)}
+
+/* 料金：罫なし。価格だけが主役 */
+.cts__plans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s2)}
+.cts__plan{background:var(--c-bg2);border-radius:var(--r-m);padding:var(--s5) var(--s4);text-align:center}
+.cts__planname{font-weight:700;font-size:var(--fs-md);color:var(--c-ink)}
+.cts__planname span{display:block;margin-top:2px;font-size:var(--fs-note);color:var(--c-ink3);font-weight:400}
+.cts__price{margin-top:var(--s4);font-family:var(--f-num);font-weight:900;
+  font-size:clamp(21px,2.4vw,28px);color:var(--c-ink);line-height:1}
+
+/* タイムテーブル：格子罫なし。列は余白だけで分ける */
+.cts__tt{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s2)}
+.cts__day{background:var(--c-bg2);border-radius:var(--r-m);padding:var(--s5) var(--s4)}
+.cts__day.is-off{background:var(--c-bg);color:var(--c-ink3)}
+.cts__dayname{font-weight:900;font-size:var(--fs-md);color:var(--c-ink);text-align:center;
+  padding-bottom:var(--s4);border-bottom:1px solid rgba(48,48,48,.06)}
+.cts__day.is-off .cts__dayname{color:var(--c-ink3)}
+.cts__off{padding:var(--sp-el) 0;text-align:center;color:var(--c-ink3);font-size:var(--fs-sm)}
+.cts__slots{margin-top:var(--s4);display:grid;gap:var(--s2)}
+.cts__slots li{font-size:var(--fs-sm);color:var(--c-ink2);text-align:center;padding:6px 0}
+.cts__slots li span{display:block;margin-top:2px;font-size:var(--fs-note);color:var(--c-ink3)}
+.cts__notes{margin-top:var(--s5);display:grid;gap:4px}
+.cts__notes li{font-size:var(--fs-note);color:var(--c-ink3);line-height:1.8}
+
+/* 挨拶（渋谷校のみ） */
+.cts__msgbody{display:grid;grid-template-columns:200px minmax(0,1fr);gap:var(--sp-el);align-items:start}
+.cts__msgfig{margin:0;border-radius:50% 50% var(--r-m) var(--r-m) / 22% 22% var(--r-m) var(--r-m);
+  overflow:hidden;background:var(--c-bg2)}
+.cts__msgfig img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:50% 24%;display:block}
+.cts__msgtext{max-width:40em;font-size:var(--fs-base);line-height:2.05;color:var(--c-ink2)}
+.cts__msgtext p + p{margin-top:1.4em}
+.cts__sign{margin-top:var(--sp-el)}
+.cts__sign span{display:block;font-size:var(--fs-note);color:var(--c-ink3)}
+.cts__sign b{display:block;margin-top:2px;font-family:var(--f-disp);font-weight:900;
+  font-size:var(--fs-lg);color:var(--c-ink);letter-spacing:.04em}
+
+@media(max-width:900px){
+  .cts__tab{min-width:0;flex:1;height:48px;font-size:var(--fs-sm);padding:0 var(--s4)}
+  .cts__top{grid-template-columns:minmax(0,1fr);gap:var(--s5)}
+  .cts__plans,.cts__tt{grid-template-columns:minmax(0,1fr)}
+  .cts__dl{grid-template-columns:6.5em minmax(0,1fr)}
+  .cts__msgbody{grid-template-columns:minmax(0,1fr);gap:var(--s5)}
+  .cts__msgfig{max-width:200px}
+}

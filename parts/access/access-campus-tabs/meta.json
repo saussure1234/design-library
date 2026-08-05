@@ -1,0 +1,18 @@
+{
+  "id": "access/access-campus-tabs",
+  "name": "校舎タブ（1つのタブに、その校舎の全部を入れる）",
+  "type": "access",
+  "intent": "校舎ごとに情報・料金・タイムテーブル・挨拶が全部あるとき、同じ表が校舎別に直列反復するのを避ける",
+  "when": ["拠点が2〜3、各拠点に同じ構造の情報が一式ある", "料金や時間割が拠点で違う"],
+  "avoid": ["拠点が1つ", "拠点ごとに載せる情報の構造が違いすぎる"],
+  "slots": {
+    "eyebrow": "欧文ラベル", "heading": "見出し", "lead": "導入（省略可）",
+    "group": "ラジオのname。同じページで2回使うときだけ変える",
+    "telLabel/addressLabel/hoursLabel/closedLabel/targetLabel/styleLabel/lessonLabel": "行ラベル",
+    "priceLabel": "料金ブロックの見出し", "timeLabel": "時間割ブロックの見出し",
+    "locs": "[{i, on, name, photo, photoAlt, body, tel, telHref, address, hours, closed, target, style, lesson, plans:[{plan,sub,price}], priceNotes:[{t}], days:[{day, closed, slots:[{time,note}]}], timeNotes:[{t}], msgHead, msgPhoto, msgPhotoAlt, msgText, msgRole, msgName}]"
+  },
+  "motion": "なし（切り替えは即時。フェードは入れない）",
+  "responsive": "900px以下でタブを等分割、写真と情報を縦積み、料金と時間割を1列に",
+  "verified": false
+}
