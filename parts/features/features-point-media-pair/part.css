@@ -3,15 +3,26 @@
    画面に入ると、左のPOINTが中央から左へ寄り、右から動画が入り、
    その間を矢印が描かれてつながる。「この説明の実物がこれ」という関係を動きで示す。
    POINTの箱の中身は features-vertical-heading-rows と同じ組み方を借りる。 */
-.pmp__row{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
-  gap:clamp(8px,1.4vw,20px);align-items:center;max-width:1180px;margin-inline:auto}
+/* 箱は POINT1・2・4 と【同じ幅・ほぼ同じ位置】に置く。
+   そこから左へ出すのは 40px だけ。動画は版面の右へこぼして置き場所を作る
+   （行を版面に収めようとすると、箱が中央から 235px も左へ動いてしまう）*/
+/* 登場前の動画は画面の右外（+56px）に置く。clip でないと、その間だけ
+   横スクロールバーが出る。hidden ではなく clip（位置指定の子を壊さない） */
+.pmp{overflow-x:clip}
+.pmp__row{display:grid;grid-template-columns:minmax(0,540px) auto minmax(300px,1fr);
+  gap:clamp(10px,1.5vw,22px);align-items:center;
+  /* 版面を抜けて画面の端まで使う。左端の位置は「他のPOINTの箱の左 −40px」で固定。
+     他のPOINTは 50vw-270px から始まるので、ここは 50vw-310px */
+  margin-inline:calc(50% - 50vw);
+  padding-left:max(24px,calc(50vw - 310px));
+  padding-right:clamp(20px,2.6vw,40px)}
 
 /* 左：POINTの箱（白） */
 .pmp__box .vhr__item{background:var(--c-bg);border-radius:20px;
   padding:clamp(20px,2.4vw,30px);box-shadow:var(--shadow-s)}
 
 /* 中央：矢印 */
-.pmp__arrow{display:block;width:clamp(56px,7vw,110px);color:var(--c-accent)}
+.pmp__arrow{display:block;width:clamp(44px,4.6vw,74px);color:var(--c-accent)}
 .pmp__arrow svg{width:100%;height:auto;display:block}
 
 /* 右：動画 */
@@ -19,7 +30,8 @@
   padding:clamp(18px,2.2vw,28px);box-shadow:var(--shadow-s)}
 .pmp__mh{margin-bottom:clamp(12px,1.6vw,18px);text-align:center;
   font-size:clamp(13.5px,1.05vw,15.5px);font-weight:800;color:var(--c-ink)}
-.pmp__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+/* 列が細くなったぶん、動画は横並びをやめて縦に積む。1本あたりは今より大きくなる */
+.pmp__grid{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
 .pmp__item{margin:0}
 .pmp__thumb{position:relative;display:block;width:100%;padding:0;border:0;cursor:pointer;
   border-radius:12px 9px 14px 10px;overflow:hidden;background:var(--c-bg2)}
@@ -58,8 +70,10 @@
 .fx-on .fx[data-fx="pair"].hh-in .pmp__arrow svg{animation:pmpNudge 2.6s var(--e) 1.1s infinite}
 @keyframes pmpNudge{0%,72%,100%{transform:translateX(0)}84%{transform:translateX(7%)}}
 
-@media(max-width:900px){
-  .pmp__row{grid-template-columns:minmax(0,1fr);gap:16px}
+/* 横に並べると動画が細くなりすぎる幅からは、縦に積む */
+@media(max-width:1024px){
+  .pmp__row{grid-template-columns:minmax(0,1fr);gap:16px;
+    margin-inline:auto;padding-inline:0;max-width:540px}
   .pmp__arrow{width:44px;margin-inline:auto;transform:rotate(90deg)}
   .fx-on .fx[data-fx="pair"] .pmp__box{transform:translateY(18px)}
   .fx-on .fx[data-fx="pair"] .pmp__media{transform:translateY(24px)}
