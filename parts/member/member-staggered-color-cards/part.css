@@ -23,12 +23,13 @@
 /* 素材の丸い地が緑の上で浮くので、白い輪で縁取って「額」に見せる */
 .msc__fig img{width:150px;max-width:72%;aspect-ratio:1/1;object-fit:cover;border-radius:50%;display:block;
   box-shadow:0 0 0 6px var(--c-bg)}
-/* 氏名：雲形のラベルを写真の下端に重ねる */
-.msc__name{position:relative;margin:-14px 12% 0;z-index:2;text-align:center;padding:12px 10px;
-  border-radius:44% 56% 46% 54% / 60% 58% 42% 40%;background:var(--c-bg)}
-/* 雲形は写真の濃い緑と白い下半分にまたがる。どちらの上でも立つよう、
-   ブランド緑そのものを使い、文字は白で抜く */
-.msc__name{background:var(--c-primary)}
+/* 氏名：写真の下端に重ねる帯。
+   ひしゃげた楕円だと形が読めないので、丸帯（ピル）にする。
+   幅は中身に合わせて縮め、濃い緑と白の境目をまたがせる。 */
+.msc__name{position:relative;z-index:2;margin:-20px auto 0;width:max-content;max-width:88%;
+  text-align:center;padding:10px 22px 11px;
+  border-radius:var(--r-pill);background:var(--c-primary);
+  box-shadow:0 6px 16px rgba(0,0,0,.14)}
 .msc__name b{display:block;font-size:clamp(14px,1.35vw,18px);font-weight:900;color:var(--c-on-primary)}
 .msc__name span{display:block;margin-top:2px;font-size:clamp(8.5px,.72vw,10px);
   letter-spacing:.06em;color:rgba(255,255,255,.74);font-weight:700}
