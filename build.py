@@ -204,11 +204,17 @@ document.documentElement.classList.add('js');
     b.addEventListener('click',function(){
       var id=b.dataset.yt; if(!id||b.classList.contains('is-play')) return;
       var f=document.createElement('iframe');
-      f.src='https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&rel=0&playsinline=1';
+      f.src='https://www.youtube.com/embed/'+id+'?autoplay=1&rel=0&playsinline=1&origin='+location.origin;
       f.title=b.getAttribute('aria-label')||'';
       f.allow='accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture';
       f.setAttribute('allowfullscreen','');
       b.innerHTML=''; b.appendChild(f); b.classList.add('is-play');
+      /* 埋め込みが拒否された場合の逃げ道（エラー153など）を必ず出す */
+      var esc=document.createElement('a');
+      esc.href='https://www.youtube.com/watch?v='+id;
+      esc.target='_blank'; esc.rel='noopener';
+      esc.className='gvb__esc'; esc.textContent='YouTubeで見る';
+      b.parentNode.appendChild(esc);
     });
   });
 })();

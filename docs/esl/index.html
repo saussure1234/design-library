@@ -174,8 +174,8 @@ body{padding-top:var(--hdr-h,60px)}
 .sec{position:relative}
 .tone-base{background:var(--c-bg)}
 .tone-tint{background:var(--c-bg2)}
-.tone-pale{background:var(--c-primary-l)}
-.tone-accent{background:var(--c-primary-l)}
+/* 薄い緑は地には使わない（面ではなくカードの中でだけ使う） */
+.tone-pale,.tone-accent{background:var(--c-bg2)}
 
 /* ★有機的な形。1セクションだけに使う */
 .tone-blob{position:relative;overflow:hidden;isolation:isolate;background:var(--c-bg)}
@@ -203,6 +203,12 @@ body{padding-top:var(--hdr-h,60px)}
 .tone-brand .sec-head::after{background:var(--c-accent)}
 .tone-brand .card,.tone-brand .nch__chip,.tone-brand .cmx__grid,
 .tone-brand .msc__card,.tone-brand .ndg__panel{background:var(--c-bg);color:var(--c-ink)}
+/* マネジャー紹介：緑ベタの上に白いボックスを敷き、その中に全部入れる */
+.tone-brand .mbl__list{background:var(--c-bg);border-radius:28px;
+  padding:clamp(26px,4vw,56px);color:var(--c-ink2)}
+.tone-brand .mbl__name{color:var(--c-ink)}
+.tone-brand .mbl__lead{color:var(--c-ink)}
+.tone-brand .mbl__role{color:var(--c-ink3)}
 .tone-brand .nch__note{color:rgba(255,255,255,.82)}
 
 /* 白地に濃いボックス。中の文字は白 */
@@ -349,20 +355,20 @@ html:not(.js) .lm__i{transform:none}
 /* ★丸くしない。四隅の曲率をばらして「若干曲がった」形にする */
 /* ★丸くしない。四隅の曲率をばらして「若干曲がった」形にする。
    人物より一回り小さくして、体が枠から はみ出す ようにする */
-.hbc__blob--a{left:34%;top:16%;width:20%;aspect-ratio:1/.98;background:#E2EFD6;
+.hbc__blob--a{left:28%;top:14%;width:18%;aspect-ratio:1/.98;background:#E2EFD6;
   border-radius:44% 56% 61% 39% / 57% 43% 57% 43%}
-.hbc__blob--b{left:66%;bottom:16%;width:16%;aspect-ratio:1/1;background:#F2E9CE;
+.hbc__blob--b{left:57%;bottom:24%;width:16%;aspect-ratio:1/1;background:#F2E9CE;
   border-radius:57% 43% 41% 59% / 46% 57% 43% 54%}
 
 /* 写真 */
 .hbc__ph{position:absolute;z-index:3;margin:0;filter:drop-shadow(0 8px 18px rgba(48,48,48,.10))}
 /* ★背景を抜いた人物。枠（色の面）から はみ出す ように大きめに重ねる */
 .hbc__ph img{width:100%;display:block}
-.hbc__ph--a{left:31%;bottom:0;width:27%}
-.hbc__ph--b{left:61%;bottom:0;width:27%}
+.hbc__ph--a{left:27%;bottom:0;width:29%}
+.hbc__ph--b{left:52%;bottom:2%;width:27%}
 
 /* 見出し */
-.hbc__head{position:absolute;left:6%;top:13%;z-index:5;width:40%;max-width:560px}
+.hbc__head{position:absolute;left:4%;top:15%;z-index:5;width:27%;max-width:400px}
 .hbc__logo img{height:clamp(22px,2.1vw,30px);width:auto}
 .hbc__eyebrow{margin-top:14px;font-size:clamp(12px,1.05vw,14px);font-weight:700;color:var(--c-ink3)}
 .hbc__h1{margin-top:8px;font-size:clamp(26px,2.9vw,42px);font-weight:900;color:var(--c-ink);
@@ -375,14 +381,15 @@ html:not(.js) .lm__i{transform:none}
 .hbc__copy em{font-style:normal;color:var(--c-primary)}
 
 /* 実績の数字 */
-.hbc__stats{position:absolute;left:6%;bottom:26%;z-index:5;display:flex;gap:clamp(20px,3vw,44px)}
+.hbc__stats{display:none}
 .hbc__stats b{display:block;font-family:var(--f-num);font-size:clamp(28px,3.4vw,46px);
   font-weight:900;color:var(--c-ink);line-height:1}
 .hbc__stats b span{font-size:.42em;margin-left:3px;font-weight:800}
 .hbc__stats small{display:block;margin-top:6px;font-size:clamp(10px,.9vw,12.5px);color:var(--c-ink3)}
 
 /* CTA */
-.hbc__cta{position:absolute;left:6%;bottom:8%;z-index:5;display:flex;flex-direction:column;gap:10px}
+.hbc__cta{position:absolute;right:4%;bottom:14%;z-index:5;display:flex;flex-direction:column;
+  align-items:flex-start;gap:10px;width:24%;max-width:340px}
 .hbc__note{font-size:clamp(11px,.92vw,13px);color:var(--c-ink3)}
 
 /* 落書き */
@@ -418,7 +425,7 @@ html:not(.js) .lm__i{transform:none}
   .hbc__ph img{filter:none}
   .hbc__ph img{border-radius:20px}
   .hbc__copy{padding-inline:22px;font-size:21px}
-  .hbc__stats{padding-inline:22px;gap:26px}
+  .hbc__stats{display:none}
   .hbc__cta{padding-inline:22px}
   .hbc__cta .btn{width:100%}
 }
@@ -714,6 +721,10 @@ html:not(.js) .lm__i{transform:none}
   .gvb__thumb{border-width:5px;border-radius:18px}
   .gvb__item .gvb__card{transform:none}
 }
+
+/* 埋め込みが拒否されたときの逃げ道 */
+.gvb__esc{display:block;margin-top:10px;text-align:center;font-size:12px;font-weight:700;
+  color:var(--c-primary);text-decoration:underline}
 
 /* ===== cta/cta-priority-stack ===== */
 /* cta/cta-priority-stack — 主CTAを地の上に直接置く（白カードを持たない）
@@ -1907,8 +1918,8 @@ html:not(.js) .lm__i{transform:none}
 </section>
 
 </div>
-<!-- numbers/numbers-donut-grid (base) -->
-<div class="tone-base">
+<!-- numbers/numbers-donut-grid (tint) -->
+<div class="tone-tint">
 <section class="sec ndg">
   <div class="wrap">
     <div class="sec-head">
@@ -1951,8 +1962,8 @@ html:not(.js) .lm__i{transform:none}
 </section>
 
 </div>
-<!-- gallery/gallery-video-cards-bordered (tint) -->
-<div class="tone-tint">
+<!-- gallery/gallery-video-cards-bordered (base) -->
+<div class="tone-base">
 <section class="sec gvb">
   <div class="wrap">
     <div class="sec-head">
@@ -2047,8 +2058,8 @@ html:not(.js) .lm__i{transform:none}
 </section>
 
 </div>
-<!-- member/member-blob-portrait-letter (pale) -->
-<div class="tone-pale">
+<!-- member/member-blob-portrait-letter (brand) -->
+<div class="tone-brand">
 <section class="sec mbl">
   <div class="wrap">
     <div class="sec-head">
@@ -2087,8 +2098,8 @@ html:not(.js) .lm__i{transform:none}
 </section>
 
 </div>
-<!-- member/member-staggered-color-cards (brand) -->
-<div class="tone-brand">
+<!-- member/member-staggered-color-cards (tint) -->
+<div class="tone-tint">
 <section class="sec msc">
   <div class="wrap">
     <div class="sec-head">
@@ -2271,8 +2282,8 @@ html:not(.js) .lm__i{transform:none}
 </section>
 
 </div>
-<!-- compare/compare-matrix-symbol (pale) -->
-<div class="tone-pale">
+<!-- compare/compare-matrix-symbol (base) -->
+<div class="tone-base">
 <section class="sec cmx">
   <div class="wrap">
 
@@ -2454,8 +2465,8 @@ html:not(.js) .lm__i{transform:none}
 </section>
 
 </div>
-<!-- access/access-campus-tabs (base) -->
-<div class="tone-base">
+<!-- access/access-campus-tabs (tint) -->
+<div class="tone-tint">
 <section class="sec cts" >
   <div class="wrap">
     <div class="sec-head">
@@ -2651,8 +2662,8 @@ html:not(.js) .lm__i{transform:none}
 </section>
 
 </div>
-<!-- footer/footer-two-tier-cta (pale) -->
-<div class="tone-pale">
+<!-- footer/footer-two-tier-cta (brand) -->
+<div class="tone-brand">
 <footer class="ftc">
 
   <!-- 写真ストリップ（任意）。導線帯の“上”に置くので、PCでもSPでも写真はCTAより上になる。
@@ -2934,11 +2945,17 @@ document.documentElement.classList.add('js');
     b.addEventListener('click',function(){
       var id=b.dataset.yt; if(!id||b.classList.contains('is-play')) return;
       var f=document.createElement('iframe');
-      f.src='https://www.youtube-nocookie.com/embed/'+id+'?autoplay=1&rel=0&playsinline=1';
+      f.src='https://www.youtube.com/embed/'+id+'?autoplay=1&rel=0&playsinline=1&origin='+location.origin;
       f.title=b.getAttribute('aria-label')||'';
       f.allow='accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture';
       f.setAttribute('allowfullscreen','');
       b.innerHTML=''; b.appendChild(f); b.classList.add('is-play');
+      /* 埋め込みが拒否された場合の逃げ道（エラー153など）を必ず出す */
+      var esc=document.createElement('a');
+      esc.href='https://www.youtube.com/watch?v='+id;
+      esc.target='_blank'; esc.rel='noopener';
+      esc.className='gvb__esc'; esc.textContent='YouTubeで見る';
+      b.parentNode.appendChild(esc);
     });
   });
 })();

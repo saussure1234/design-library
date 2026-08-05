@@ -75,8 +75,8 @@ body{padding-top:var(--hdr-h,60px)}
 .sec{position:relative}
 .tone-base{background:var(--c-bg)}
 .tone-tint{background:var(--c-bg2)}
-.tone-pale{background:var(--c-primary-l)}
-.tone-accent{background:var(--c-primary-l)}
+/* 薄い緑は地には使わない（面ではなくカードの中でだけ使う） */
+.tone-pale,.tone-accent{background:var(--c-bg2)}
 
 /* ★有機的な形。1セクションだけに使う */
 .tone-blob{position:relative;overflow:hidden;isolation:isolate;background:var(--c-bg)}
@@ -104,6 +104,12 @@ body{padding-top:var(--hdr-h,60px)}
 .tone-brand .sec-head::after{background:var(--c-accent)}
 .tone-brand .card,.tone-brand .nch__chip,.tone-brand .cmx__grid,
 .tone-brand .msc__card,.tone-brand .ndg__panel{background:var(--c-bg);color:var(--c-ink)}
+/* マネジャー紹介：緑ベタの上に白いボックスを敷き、その中に全部入れる */
+.tone-brand .mbl__list{background:var(--c-bg);border-radius:28px;
+  padding:clamp(26px,4vw,56px);color:var(--c-ink2)}
+.tone-brand .mbl__name{color:var(--c-ink)}
+.tone-brand .mbl__lead{color:var(--c-ink)}
+.tone-brand .mbl__role{color:var(--c-ink3)}
 .tone-brand .nch__note{color:rgba(255,255,255,.82)}
 
 /* 白地に濃いボックス。中の文字は白 */
