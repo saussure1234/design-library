@@ -301,7 +301,18 @@ def build(kit_path, out_path):
             if open_group is not None:
                 html_chunks.append("</div>")
             if grp:
-                html_chunks.append(f'<div class="tone-{s.get("groupTone", "blob")}">')
+                gcls = [f'tone-{s.get("groupTone", "blob")}']
+                gbg = ""
+                if s.get("groupBg") == "growth":
+                    gcls.append("bg-growth")
+                    # グループは縦に長い。潰れないよう縦長の viewBox で引く
+                    gbg = ('<span class="gbg" aria-hidden="true">'
+                           '<svg viewBox="0 0 1440 2600" preserveAspectRatio="none">'
+                           '<path class="b1" d="M-80 2560 C 420 2430, 980 1560, 1560 240"/>'
+                           '<path class="b2" d="M-80 2700 C 460 2560, 1020 1760, 1560 520"/>'
+                           '<path class="b3" d="M-80 2820 C 500 2700, 1060 2020, 1560 820"/>'
+                           '</svg></span>')
+                html_chunks.append(f'<div class="{" ".join(gcls)}">{gbg}')
             open_group = grp
         tone = None if grp else (s.get("tone") if isinstance(s, dict) else None)
         wave = s.get("wave") if isinstance(s, dict) else None   # "top" / "bottom" / "both"
@@ -310,16 +321,23 @@ def build(kit_path, out_path):
         if tone or wave or st or hill:
             cls = [f"tone-{tone}"] if tone else []
             if hill == "top": cls.append("hill-top")
+            if (s.get("bg") if isinstance(s, dict) else None) == "growth": cls.append("bg-growth")
             if wave in ("top", "both"): cls.append("wave-top")
             if wave in ("bottom", "both"): cls.append("wave-bottom")
             sattr = f' style="{st}"' if st else ""
             cattr = f' class="{" ".join(cls)}"' if cls else ""
+            bg_svg = ('<span class="gbg" aria-hidden="true">'
+                      '<svg viewBox="0 0 1440 900" preserveAspectRatio="none">'
+                      '<path class="b1" d="M-80 1010 C 420 998, 980 760, 1560 300"/>'
+                      '<path class="b2" d="M-80 1090 C 460 1074, 1020 826, 1560 424"/>'
+                      '<path class="b3" d="M-80 1160 C 500 1146, 1060 960, 1560 560"/>'
+                      '</svg></span>\n') if (s.get("bg") if isinstance(s, dict) else None) == "growth" else ""
             hill_svg = ('<span class="hill" aria-hidden="true">'
                         '<svg viewBox="0 0 1440 120" preserveAspectRatio="none">'
                         '<path d="M0 120 L0 78 C 78 18, 176 0, 286 16 '
                         'C 600 62, 1010 102, 1440 108 L1440 120 Z"/>'
                         '</svg></span>\n') if hill == "top" else ""
-            body = f'<div{cattr}{sattr}>\n{hill_svg}{body}\n</div>'
+            body = f'<div{cattr}{sattr}>\n{hill_svg}{bg_svg}{body}\n</div>'
         html_chunks.append(f"<!-- {pid} ({tone or 'base'}) -->\n" + body)
         used.append(f"{pid} ({meta.get('name', '')})")
     if open_group is not None:

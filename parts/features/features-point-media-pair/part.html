@@ -1,0 +1,45 @@
+<section class="sec pmp">
+  <div class="wrap">
+    <div class="pmp__row fx" data-fx="pair">
+
+      <div class="pmp__box">
+        <div class="vhr__item">
+          <div class="vhr__top">
+            <div class="vhr__vert">
+              <p class="vhr__label">（&nbsp;{{labelPrefix}}&nbsp;{{no}}&nbsp;）</p>
+              <h3 class="vhr__title">{{title}}</h3>
+            </div>
+            {{?photo}}<figure class="vhr__fig"><img src="{{photo}}" alt="{{photoAlt}}" loading="lazy"></figure>{{/photo}}
+          </div>
+          <p class="vhr__sub">{{sub}}</p>
+          <p class="vhr__body">{{body}}</p>
+        </div>
+      </div>
+
+      <!-- 箱から右へ伸びる矢印。線が描かれたあと、先端が小さく往復する -->
+      <span class="pmp__arrow" aria-hidden="true">
+        <svg viewBox="0 0 120 60" fill="none">
+          <path class="pmp__arrow-l" d="M4 30 C 40 30, 60 18, 96 18"
+                stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+          <path class="pmp__arrow-h" d="M86 10 L98 18 L86 26"
+                stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
+
+      <div class="pmp__media">
+        {{?mediaHeading}}<p class="pmp__mh">{{mediaHeading}}</p>{{/mediaHeading}}
+        <ul class="pmp__grid">
+          {{#items}}<li class="pmp__item">
+            <button class="pmp__thumb" type="button" data-yt="{{.yt}}"
+                    aria-label="{{.name}} のレッスン動画を再生">
+              <img src="{{.thumb}}" alt="{{.alt}}" loading="lazy">
+              <span class="pmp__play" aria-hidden="true"></span>
+            </button>
+            <p class="pmp__cap"><b>{{.meta}}</b><em>{{.name}}</em></p>
+          </li>{{/items}}
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>

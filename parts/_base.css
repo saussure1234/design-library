@@ -237,6 +237,18 @@ footer{position:relative;z-index:1}
 .card{background:var(--c-bg);border-radius:22px;box-shadow:var(--shadow);padding:28px}
 
 
+/* ── 節の地に「成長の曲線」を薄く敷く ─────────────
+   FVの装置をそのまま使い回す。ページの装置を1つに保つため、
+   新しい図形は増やさず、同じ稜線を低い不透明度で置く。 */
+.bg-growth{position:relative;overflow:hidden}
+.bg-growth > .gbg{position:absolute;inset:0;z-index:0;pointer-events:none}
+.bg-growth > .gbg svg{width:100%;height:100%;display:block}
+.bg-growth > .gbg path{fill:none;stroke-linecap:round;vector-effect:non-scaling-stroke;stroke:#fff}
+.bg-growth > .gbg .b1{stroke-width:clamp(22px,5.4vw,86px);opacity:.08}
+.bg-growth > .gbg .b2{stroke-width:clamp(15px,3.8vw,60px);opacity:.06}
+.bg-growth > .gbg .b3{stroke-width:clamp(10px,2.6vw,42px);opacity:.07}
+.bg-growth > *:not(.gbg){position:relative;z-index:1}
+
 /* ── 節の上端を山型にする ──────────────────────
    直線の境目をやめ、左寄りに頂点のある稜線で上のセクションへ食い込ませる。
    SVGは節の地色で塗るので、色を変えても追従する。 */

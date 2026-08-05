@@ -1,0 +1,14 @@
+{
+  "id": "features/features-point-media-pair",
+  "name": "POINTと実物の動画を一組で見せる",
+  "type": "features",
+  "intent": "説明とその実物（動画）を、動きで結びつけて一組だと示す",
+  "when": ["ある特徴を裏づける映像がある", "説明だけでは伝わりにくい"],
+  "avoid": ["映像が無い", "特徴を並列に見せたい場面"],
+  "slots": {"labelPrefix":"POINT等","no":"番号","title":"縦書き見出し","photo":"","photoAlt":"",
+            "sub":"横書き見出し","body":"本文","mediaHeading":"動画側の見出し",
+            "items":"[{thumb,alt,yt,meta,name}]"},
+  "motion": "画面に入ると 箱が中央から左へ／動画が右から／矢印が描かれ、以後ゆっくり往復",
+  "responsive": "900px以下で縦積み・矢印は下向き・往復は止める",
+  "verified": false
+}
