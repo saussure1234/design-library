@@ -1,0 +1,23 @@
+<section class="sec fnc">
+  <div class="wrap">
+    <div class="sec-head">
+      {{?eyebrow}}<p class="sec-head__en">{{eyebrow}}</p>{{/eyebrow}}
+      <h2 class="sec-head__ja">{{heading}}</h2>
+      {{?lead}}<p class="sec-head__sub">{{lead}}</p>{{/lead}}
+    </div>
+    <ul class="fnc__grid">
+      {{#items}}<li class="fnc__item fx" data-fx="fadeup" data-d="{{.d}}">
+        <a class="fnc__card" href="{{.href}}">
+          <span class="fnc__no">{{.no}}</span>
+          <p class="fnc__t">{{.title}}</p>
+          <p class="fnc__d">{{.desc}}</p>
+          <span class="fnc__more">{{linkLabel}}<i></i></span>
+        </a>
+      </li>{{/items}}
+    </ul>
+    {{?ctaLabel}}<p class="fnc__cta fx" data-fx="fadeup" data-d="320">
+      <a class="btn" href="{{ctaHref}}">{{ctaLabel}}</a>
+      {{?ctaNote}}<span class="fnc__ctanote">{{ctaNote}}</span>{{/ctaNote}}
+    </p>{{/ctaLabel}}
+  </div>
+</section>

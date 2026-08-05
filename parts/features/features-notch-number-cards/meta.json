@@ -1,0 +1,16 @@
+{
+  "id": "features/features-notch-number-cards",
+  "name": "左上を切り欠いて番号を置くカード列",
+  "type": "features",
+  "intent": "3〜4個の並列な特徴を、番号を枠外に逃がして読ませる",
+  "when": ["特徴が3〜4個で並列", "各項目が短い見出し＋1〜2行"],
+  "avoid": ["項目が5個以上", "各項目に長文が必要"],
+  "slots": {"eyebrow":"欧文ラベル","heading":"見出し","lead":"リード",
+            "linkLabel":"詳細リンクの文言（全カード共通）",
+            "items":"[{no,title,desc,href}]","ctaLabel":"下のCTA","ctaHref":"","ctaNote":""},
+  "motion": "カードを下から26px、90ms差で。hoverで-3px浮いて矢印線が14→22pxに伸びる",
+  "responsive": "900px以下で2列、560px以下で1列",
+  "reproducedFrom": "sho_gakken_s05",
+  "reproScore": 8.27,
+  "verified": false
+}

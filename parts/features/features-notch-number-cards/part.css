@@ -1,0 +1,45 @@
+/* features/features-notch-number-cards
+   学研教室（sho_gakken_s05）の作りを再現して起こした型。
+   ・カードの【左上に切り欠き】を作り、そこへ番号を置く
+   ・カードごとに淡い面の色を変える（同系のトーン違い）
+   再現の記録: repro/gakken/ （score 8.27・残差の大半は先方のイラスト）*/
+.fnc__grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.fnc__item{margin:0}
+.fnc__card{position:relative;display:flex;flex-direction:column;height:100%;
+  border-radius:14px;padding:34px 18px 20px;
+  transition:transform .14s ease,box-shadow .14s ease}
+/* ★左上の切り欠き。地の白でカードの角を削り、そこに番号を置く */
+.fnc__card::before{content:"";position:absolute;left:0;top:0;width:40px;height:28px;
+  background:var(--c-bg);border-bottom-right-radius:12px}
+.tone-tint .fnc__card::before{background:var(--c-bg2)}
+.fnc__no{position:absolute;left:5px;top:2px;z-index:2;
+  font-family:var(--f-num);font-size:21px;font-weight:800;line-height:1;letter-spacing:-.02em}
+.fnc__t{font-size:15px;font-weight:800;color:var(--c-ink);line-height:1.6}
+.fnc__d{margin-top:10px;font-size:12.5px;color:var(--c-ink2);line-height:1.85;flex:1}
+.fnc__more{display:inline-flex;align-items:center;gap:6px;margin-top:16px;
+  font-size:11.5px;font-weight:700;color:var(--c-primary)}
+.fnc__more i{width:14px;height:1px;background:currentColor;transition:width .14s ease}
+@media(hover:hover) and (pointer:fine){
+  .fnc__card:hover{transform:translateY(-3px);box-shadow:var(--shadow-s)}
+  .fnc__card:hover .fnc__more i{width:22px}
+}
+/* 面はブランド色の濃淡で4段。彩度は上げすぎない */
+.fnc__item:nth-child(1) .fnc__card{background:#EAF5E4}
+.fnc__item:nth-child(2) .fnc__card{background:#E2F1E9}
+.fnc__item:nth-child(3) .fnc__card{background:#E6F2DC}
+.fnc__item:nth-child(4) .fnc__card{background:#EEF4E0}
+.fnc__item:nth-child(1) .fnc__no{color:var(--c-primary)}
+.fnc__item:nth-child(2) .fnc__no{color:var(--c-primary-d)}
+.fnc__item:nth-child(3) .fnc__no{color:var(--c-primary-2)}
+.fnc__item:nth-child(4) .fnc__no{color:var(--c-primary)}
+
+.fnc__cta{margin-top:40px;text-align:center;display:flex;flex-direction:column;
+  align-items:center;gap:12px}
+.fnc__ctanote{font-size:13px;color:var(--c-ink3)}
+
+@media(max-width:900px){.fnc__grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){
+  .fnc__grid{grid-template-columns:minmax(0,1fr);gap:10px}
+  .fnc__card{padding:30px 16px 18px}
+  .fnc__cta .btn{width:100%}
+}
