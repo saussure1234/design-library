@@ -22,15 +22,19 @@ ul,ol{padding:0;list-style:none}
 /* 地の階段。kit の tone で切り替える */
 .tone-base{background:var(--c-bg)}
 .tone-tint{background:var(--c-bg2)}
-.tone-accent,.tone-pale{background:var(--c-bg3)}
-.tone-deep{background:var(--c-deep);color:var(--c-on-dark2)}
+.tone-accent,.tone-pale{background:var(--c-primary-l)}
+.tone-deep{background:var(--c-surface);color:var(--c-on-surface)}
 .tone-dark{background:var(--c-dark);color:var(--c-on-dark2)}
+/* 黄緑の面：文字は濃い墨。白抜きにすると彩度に負けて読みにくい */
 .tone-deep .h-lead,.tone-deep h2,.tone-deep h3,
-.tone-dark .h-lead,.tone-dark h2,.tone-dark h3{color:var(--c-on-dark)}
-.tone-deep .sec-head__ja,.tone-dark .sec-head__ja{color:var(--c-on-dark)}
-.tone-deep .sec-head__en,.tone-dark .sec-head__en,
-.tone-deep .h-eyebrow,.tone-dark .h-eyebrow{color:#8FD6A0}
-.tone-deep .sec-head__sub,.tone-dark .sec-head__sub{color:var(--c-on-dark2)}
+.tone-deep .sec-head__ja{color:var(--c-on-surface)}
+.tone-deep .sec-head__en,.tone-deep .h-eyebrow{color:#3F4D14}
+.tone-deep .sec-head__sub{color:#3F4D14}
+/* チャコールの面：白抜き */
+.tone-dark .h-lead,.tone-dark h2,.tone-dark h3,
+.tone-dark .sec-head__ja{color:var(--c-on-dark)}
+.tone-dark .sec-head__en,.tone-dark .h-eyebrow{color:var(--c-primary-2)}
+.tone-dark .sec-head__sub{color:var(--c-on-dark2)}
 /* 面は影ではなく【地との輝度差】で立てる。
    実測：良いサイトで影を持つ面は 0%。輝度差の中央値は 11。 */
 .nb{white-space:nowrap}          /* 日本語の改行制御。必ず <wbr> と併用 */
