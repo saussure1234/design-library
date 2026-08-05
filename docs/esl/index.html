@@ -551,6 +551,28 @@ html:not(.js) .lm__i{transform:none}
    1行に1項目。ただし版面は絞って、2列で並んでいたときの寸法感を保つ。
    再現の記録: repro/vhr/ */
 .vhr{position:relative;overflow:hidden}
+
+/* 背景の丸い装飾。真円にせず、ゆっくり形と位置を変える。
+   位置は kit の style で --b1x / --b1y … を渡して節ごとに散らす。 */
+.vhr__blob{position:absolute;z-index:0;pointer-events:none;
+  background:var(--c-primary);opacity:.07;will-change:border-radius,transform}
+.vhr__blob--1{left:var(--b1x,-8%);top:var(--b1y,4%);
+  width:var(--b1w,26vw);aspect-ratio:1/.96;max-width:360px;
+  border-radius:58% 42% 47% 53% / 46% 55% 45% 54%;
+  animation:vhrBlobA 32s ease-in-out infinite}
+.vhr__blob--2{left:var(--b2x,auto);right:var(--b2r,-6%);top:var(--b2y,52%);
+  width:var(--b2w,20vw);aspect-ratio:1/1.02;max-width:280px;
+  border-radius:43% 57% 61% 39% / 57% 44% 56% 43%;
+  animation:vhrBlobB 40s ease-in-out infinite}
+@keyframes vhrBlobA{
+  0%,100%{border-radius:58% 42% 47% 53% / 46% 55% 45% 54%;transform:translate(0,0)}
+  35%{border-radius:44% 56% 62% 38% / 55% 43% 57% 45%;transform:translate(3%,2%)}
+  70%{border-radius:62% 38% 41% 59% / 40% 60% 40% 60%;transform:translate(-2%,4%)}}
+@keyframes vhrBlobB{
+  0%,100%{border-radius:43% 57% 61% 39% / 57% 44% 56% 43%;transform:translate(0,0)}
+  40%{border-radius:60% 40% 38% 62% / 42% 61% 39% 58%;transform:translate(-4%,-3%)}
+  75%{border-radius:38% 62% 55% 45% / 62% 38% 62% 38%;transform:translate(2%,-5%)}}
+@media(prefers-reduced-motion:reduce){.vhr__blob{animation:none}}
 .vhr .wrap{position:relative;z-index:1}
 
 /* 本文の幅を写真の幅に合わせる（右端が揃う）。版面を絞ってコンパクトに */
@@ -642,6 +664,28 @@ html:not(.js) .lm__i{transform:none}
    1行に1項目。ただし版面は絞って、2列で並んでいたときの寸法感を保つ。
    再現の記録: repro/vhr/ */
 .vhr{position:relative;overflow:hidden}
+
+/* 背景の丸い装飾。真円にせず、ゆっくり形と位置を変える。
+   位置は kit の style で --b1x / --b1y … を渡して節ごとに散らす。 */
+.vhr__blob{position:absolute;z-index:0;pointer-events:none;
+  background:var(--c-primary);opacity:.07;will-change:border-radius,transform}
+.vhr__blob--1{left:var(--b1x,-8%);top:var(--b1y,4%);
+  width:var(--b1w,26vw);aspect-ratio:1/.96;max-width:360px;
+  border-radius:58% 42% 47% 53% / 46% 55% 45% 54%;
+  animation:vhrBlobA 32s ease-in-out infinite}
+.vhr__blob--2{left:var(--b2x,auto);right:var(--b2r,-6%);top:var(--b2y,52%);
+  width:var(--b2w,20vw);aspect-ratio:1/1.02;max-width:280px;
+  border-radius:43% 57% 61% 39% / 57% 44% 56% 43%;
+  animation:vhrBlobB 40s ease-in-out infinite}
+@keyframes vhrBlobA{
+  0%,100%{border-radius:58% 42% 47% 53% / 46% 55% 45% 54%;transform:translate(0,0)}
+  35%{border-radius:44% 56% 62% 38% / 55% 43% 57% 45%;transform:translate(3%,2%)}
+  70%{border-radius:62% 38% 41% 59% / 40% 60% 40% 60%;transform:translate(-2%,4%)}}
+@keyframes vhrBlobB{
+  0%,100%{border-radius:43% 57% 61% 39% / 57% 44% 56% 43%;transform:translate(0,0)}
+  40%{border-radius:60% 40% 38% 62% / 42% 61% 39% 58%;transform:translate(-4%,-3%)}
+  75%{border-radius:38% 62% 55% 45% / 62% 38% 62% 38%;transform:translate(2%,-5%)}}
+@media(prefers-reduced-motion:reduce){.vhr__blob{animation:none}}
 .vhr .wrap{position:relative;z-index:1}
 
 /* 本文の幅を写真の幅に合わせる（右端が揃う）。版面を絞ってコンパクトに */
@@ -777,6 +821,28 @@ html:not(.js) .lm__i{transform:none}
    1行に1項目。ただし版面は絞って、2列で並んでいたときの寸法感を保つ。
    再現の記録: repro/vhr/ */
 .vhr{position:relative;overflow:hidden}
+
+/* 背景の丸い装飾。真円にせず、ゆっくり形と位置を変える。
+   位置は kit の style で --b1x / --b1y … を渡して節ごとに散らす。 */
+.vhr__blob{position:absolute;z-index:0;pointer-events:none;
+  background:var(--c-primary);opacity:.07;will-change:border-radius,transform}
+.vhr__blob--1{left:var(--b1x,-8%);top:var(--b1y,4%);
+  width:var(--b1w,26vw);aspect-ratio:1/.96;max-width:360px;
+  border-radius:58% 42% 47% 53% / 46% 55% 45% 54%;
+  animation:vhrBlobA 32s ease-in-out infinite}
+.vhr__blob--2{left:var(--b2x,auto);right:var(--b2r,-6%);top:var(--b2y,52%);
+  width:var(--b2w,20vw);aspect-ratio:1/1.02;max-width:280px;
+  border-radius:43% 57% 61% 39% / 57% 44% 56% 43%;
+  animation:vhrBlobB 40s ease-in-out infinite}
+@keyframes vhrBlobA{
+  0%,100%{border-radius:58% 42% 47% 53% / 46% 55% 45% 54%;transform:translate(0,0)}
+  35%{border-radius:44% 56% 62% 38% / 55% 43% 57% 45%;transform:translate(3%,2%)}
+  70%{border-radius:62% 38% 41% 59% / 40% 60% 40% 60%;transform:translate(-2%,4%)}}
+@keyframes vhrBlobB{
+  0%,100%{border-radius:43% 57% 61% 39% / 57% 44% 56% 43%;transform:translate(0,0)}
+  40%{border-radius:60% 40% 38% 62% / 42% 61% 39% 58%;transform:translate(-4%,-3%)}
+  75%{border-radius:38% 62% 55% 45% / 62% 38% 62% 38%;transform:translate(2%,-5%)}}
+@media(prefers-reduced-motion:reduce){.vhr__blob{animation:none}}
 .vhr .wrap{position:relative;z-index:1}
 
 /* 本文の幅を写真の幅に合わせる（右端が揃う）。版面を絞ってコンパクトに */
@@ -1953,7 +2019,10 @@ html:not(.js) .lm__i{transform:none}
 </div>
 <div class="tone-blob">
 <!-- features/features-vertical-heading-rows (base) -->
+<div style="--b1x:-9%;--b1y:2%;--b1w:27vw;--b2r:-7%;--b2y:56%;--b2w:19vw">
 <section class="sec vhr">
+  <span class="vhr__blob vhr__blob--1" aria-hidden="true"></span>
+  <span class="vhr__blob vhr__blob--2" aria-hidden="true"></span>
   
   <div class="wrap">
     <div class="sec-head">
@@ -1999,8 +2068,12 @@ html:not(.js) .lm__i{transform:none}
   </div>
 </section>
 
+</div>
 <!-- features/features-vertical-heading-rows (base) -->
+<div style="--b1x:-6%;--b1y:34%;--b1w:22vw;--b2r:-9%;--b2y:6%;--b2w:24vw">
 <section class="sec vhr">
+  <span class="vhr__blob vhr__blob--1" aria-hidden="true"></span>
+  <span class="vhr__blob vhr__blob--2" aria-hidden="true"></span>
   
   <div class="wrap">
     <div class="sec-head">
@@ -2040,6 +2113,7 @@ html:not(.js) .lm__i{transform:none}
   </div>
 </section>
 
+</div>
 <!-- gallery/gallery-video-cards-bordered (base) -->
 <section class="sec gvb">
   <div class="wrap">
@@ -2074,7 +2148,10 @@ html:not(.js) .lm__i{transform:none}
 </section>
 
 <!-- features/features-vertical-heading-rows (base) -->
+<div style="--b1x:-7%;--b1y:12%;--b1w:20vw;--b2r:-5%;--b2y:44%;--b2w:17vw">
 <section class="sec vhr">
+  <span class="vhr__blob vhr__blob--1" aria-hidden="true"></span>
+  <span class="vhr__blob vhr__blob--2" aria-hidden="true"></span>
   
   <div class="wrap">
     <div class="sec-head">
@@ -2089,7 +2166,7 @@ html:not(.js) .lm__i{transform:none}
             <p class="vhr__label">（&nbsp;POINT&nbsp;04&nbsp;）</p>
             <h3 class="vhr__title">保護者様が忙しくても安心</h3>
           </div>
-          
+          <figure class="vhr__fig vhr__fig--fit"><img src="img/reason_diagram.jpg" alt="スクールマネジャーを中心に、保護者さま・講師・生徒さまで情報を共有する図" loading="lazy"></figure>
           
           
         </div>
@@ -2100,6 +2177,7 @@ html:not(.js) .lm__i{transform:none}
   </div>
 </section>
 
+</div>
 </div>
 <!-- cta/cta-priority-stack (boxdark) -->
 <div class="tone-boxdark">

@@ -305,13 +305,14 @@ def build(kit_path, out_path):
             open_group = grp
         tone = None if grp else (s.get("tone") if isinstance(s, dict) else None)
         wave = s.get("wave") if isinstance(s, dict) else None   # "top" / "bottom" / "both"
-        if tone or wave:
+        st = s.get("style") if isinstance(s, dict) else None
+        if tone or wave or st:
             cls = [f"tone-{tone}"] if tone else []
             if wave in ("top", "both"): cls.append("wave-top")
             if wave in ("bottom", "both"): cls.append("wave-bottom")
-            st = s.get("style") if isinstance(s, dict) else None
             sattr = f' style="{st}"' if st else ""
-            body = f'<div class="{" ".join(cls)}"{sattr}>\n{body}\n</div>'
+            cattr = f' class="{" ".join(cls)}"' if cls else ""
+            body = f'<div{cattr}{sattr}>\n{body}\n</div>'
         html_chunks.append(f"<!-- {pid} ({tone or 'base'}) -->\n" + body)
         used.append(f"{pid} ({meta.get('name', '')})")
     if open_group is not None:

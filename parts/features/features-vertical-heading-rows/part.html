@@ -1,4 +1,6 @@
 <section class="sec vhr">
+  <span class="vhr__blob vhr__blob--1" aria-hidden="true"></span>
+  <span class="vhr__blob vhr__blob--2" aria-hidden="true"></span>
   {{?ghost}}<span class="vhr__ghost" aria-hidden="true">{{ghost}}</span>{{/ghost}}
   <div class="wrap">
     <div class="sec-head">
@@ -13,7 +15,7 @@
             <p class="vhr__label">（&nbsp;{{labelPrefix}}&nbsp;{{.no}}&nbsp;）</p>
             <h3 class="vhr__title">{{.title}}</h3>
           </div>
-          {{?.photo}}<figure class="vhr__fig"><img src="{{.photo}}" alt="{{.photoAlt}}" loading="lazy"></figure>{{/.photo}}
+          {{?.photo}}<figure class="vhr__fig{{?.figFit}} vhr__fig--fit{{/.figFit}}"><img src="{{.photo}}" alt="{{.photoAlt}}" loading="lazy"></figure>{{/.photo}}
           {{?.photosOn}}<div class="vhr__figs">
             {{#.photos}}<figure class="vhr__fig"><img src="{{.src}}" alt="{{.alt}}" loading="lazy"></figure>{{/.photos}}
           </div>{{/.photosOn}}
