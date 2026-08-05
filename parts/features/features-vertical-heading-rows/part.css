@@ -28,26 +28,33 @@
   border:4px solid #fff;box-shadow:var(--shadow-s);
   border-radius:12px 9px 14px 10px}
 
-/* 写真2枚を半々で並べる */
-.vhr__figs{flex:1;min-width:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-.vhr__figs .vhr__fig{flex:none}
-.vhr__figs .vhr__fig img{aspect-ratio:1/1}
+/* 写真・写真2枚・グラフ を同じ大きさの枠に収める（白い縁＋角丸＋影） */
+.vhr__figs,.vhr__chart{flex:1;min-width:0;
+  aspect-ratio:4/3;box-sizing:border-box;
+  border:4px solid #fff;border-radius:12px 9px 14px 10px;
+  box-shadow:var(--shadow-s);background:var(--c-bg);overflow:hidden}
 
-/* 写真の代わりに合格率のドーナツを置く。数値は0から回る（--p も0%から描かれる） */
-.vhr__chart{flex:1;min-width:0}
-.vhr__ds{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;
-  max-width:360px;margin-inline:auto}
-.vhr__d{position:relative;width:108px;height:108px;border-radius:50%;
+/* 写真2枚は枠の中で半々 */
+.vhr__figs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;padding:0}
+.vhr__figs .vhr__fig{flex:none;height:100%}
+.vhr__figs .vhr__fig img{width:100%;height:100%;aspect-ratio:auto;object-fit:cover;
+  border:0;border-radius:0;box-shadow:none}
+
+/* グラフも同じ枠の中。数値は0から回る（--p も0%から描かれる） */
+.vhr__chart{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:14px 12px 10px}
+.vhr__ds{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;max-width:100%}
+.vhr__d{position:relative;width:clamp(74px,9.2vw,100px);aspect-ratio:1;border-radius:50%;
   display:grid;place-content:center;text-align:center}
 .vhr__d::before{content:"";position:absolute;inset:0;border-radius:50%;
   background:conic-gradient(var(--c-primary) 0 var(--p), #e8e8e8 var(--p) 100%)}
 .vhr__d::after{content:"";position:absolute;inset:7px;border-radius:50%;background:var(--c-bg)}
 .vhr__dl,.vhr__dv{position:relative;z-index:2}
-.vhr__dl{display:block;font-size:11px;font-weight:700;color:var(--c-ink)}
-.vhr__dv{display:block;margin-top:2px;font-family:var(--f-num);font-size:22px;
+.vhr__dl{display:block;font-size:clamp(9px,.78vw,10.5px);font-weight:700;color:var(--c-ink)}
+.vhr__dv{display:block;margin-top:2px;font-family:var(--f-num);font-size:clamp(16px,1.55vw,21px);
   font-weight:900;color:var(--c-primary);line-height:1}
 .vhr__dv i{font-style:normal;font-size:.5em;margin-left:1px}
-.vhr__cnote{margin-top:12px;text-align:center;font-size:10px;color:var(--c-ink3);line-height:1.7}
+.vhr__cnote{margin-top:9px;text-align:center;font-size:clamp(8px,.68vw,9.5px);color:var(--c-ink3);line-height:1.7}
 
 /* ── 破線 → 下段：横書きの見出し → 本文 ── */
 .vhr__sub{margin-top:clamp(16px,2vw,24px);padding-top:clamp(14px,1.8vw,22px);
