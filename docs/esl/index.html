@@ -1167,13 +1167,6 @@ html:not(.js) .lm__i{transform:none}
   border-radius:50%;background:var(--c-bg);
   /* 白い板の上では円の輪郭が消えるので、白い輪＋細い線で枠にする */
   box-shadow:0 0 0 5px var(--c-bg),0 0 0 6px var(--c-line)}
-.mbl__b1,.mbl__b2{position:absolute;z-index:1;display:block}
-/* 白い輪を回したぶん、形は円の外まで出さないと隠れてしまう。
-   左上と右下に半分ずつのぞかせる */
-.mbl__b1{left:-16%;top:8%;width:27%;aspect-ratio:1/.8;background:var(--c-accent);
-  border-radius:60% 40% 46% 54% / 54% 60% 40% 46%;opacity:.9}
-.mbl__b2{right:-14%;left:auto;bottom:6%;width:29%;aspect-ratio:1/.62;background:var(--c-primary-2);
-  border-radius:52% 48% 60% 40% / 58% 42% 58% 42%;opacity:.85}
 
 .mbl__role{font-size:clamp(10.5px,.88vw,12.5px);color:var(--c-ink3);font-weight:700;letter-spacing:.04em}
 .mbl__name{margin-top:3px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
@@ -1814,15 +1807,8 @@ html:not(.js) .lm__i{transform:none}
 .cts__msgbody{display:grid;grid-template-columns:clamp(92px,8.2vw,116px) minmax(0,1fr);
   column-gap:clamp(20px,2.6vw,40px);row-gap:0;align-items:start}
 .cts__msghead{display:contents}
-/* 写真の脇に小さな色の形を2つ添える（マネジャー紹介と同じ扱い） */
+/* 写真は左に通しで置く */
 .cts__msgfigwrap{grid-column:1;grid-row:1 / span 2;align-self:start;position:relative}
-.cts__msgb1,.cts__msgb2{position:absolute;z-index:1;display:block}
-/* 白い輪を回したぶん、形は円の外まで出さないと隠れてしまう。
-   左上と右下に半分ずつのぞかせる */
-.cts__msgb1{left:-16%;top:8%;width:27%;aspect-ratio:1/.8;background:var(--c-accent);
-  border-radius:60% 40% 46% 54% / 54% 60% 40% 46%;opacity:.9}
-.cts__msgb2{right:-14%;left:auto;bottom:6%;width:29%;aspect-ratio:1/.62;background:var(--c-primary-2);
-  border-radius:52% 48% 60% 40% / 58% 42% 58% 42%;opacity:.85}
 .cts__msgfig{position:relative;z-index:2;margin:0}
 .cts__msgfig img{width:100%;aspect-ratio:1/1;object-fit:cover;object-position:50% 14%;display:block;
   border-radius:50%;background:var(--c-bg);
@@ -2452,8 +2438,6 @@ html:not(.js) .lm__i{transform:none}
       <li class="mbl__item fx" data-fx="fadeup" data-d="0">
         <div class="mbl__head">
           <div class="mbl__figwrap">
-            <span class="mbl__b1" aria-hidden="true"></span>
-            <span class="mbl__b2" aria-hidden="true"></span>
             <figure class="mbl__fig"><img src="img/manager01_cut.png" alt="オンライン校スクールマネジャー 梶玲菜" loading="lazy"></figure>
           </div>
           <div class="mbl__id">
@@ -2474,8 +2458,6 @@ html:not(.js) .lm__i{transform:none}
       </li><li class="mbl__item fx" data-fx="fadeup" data-d="90">
         <div class="mbl__head">
           <div class="mbl__figwrap">
-            <span class="mbl__b1" aria-hidden="true"></span>
-            <span class="mbl__b2" aria-hidden="true"></span>
             <figure class="mbl__fig"><img src="img/manager02_cut.png" alt="オンライン校スクールマネジャー 楠山理紀" loading="lazy"></figure>
           </div>
           <div class="mbl__id">
@@ -2951,8 +2933,6 @@ html:not(.js) .lm__i{transform:none}
             <div class="cts__msgbody">
               <div class="cts__msghead">
                 <div class="cts__msgfigwrap">
-                  <span class="cts__msgb1" aria-hidden="true"></span>
-                  <span class="cts__msgb2" aria-hidden="true"></span>
                   <figure class="cts__msgfig"><img src="img/head_teacher_cut.png" alt="ESL club 渋谷校 スクールマネジャー 杉舘皆華"></figure>
                 </div>
                 <div class="cts__msgid">
