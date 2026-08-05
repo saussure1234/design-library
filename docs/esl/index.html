@@ -333,21 +333,22 @@ body{padding-top:var(--hdr-h,60px)}
 
 
 /* ── セクションの分け目を曲線にする ──────────────
-   直線の境界だと段が積まれた印象になる。上端／下端を弧で抜くと流れて見える。
-   前後の地の色を --wave-from / --wave-to で受け取り、面の色で弧を描く。 */
-.wave-top,.wave-bottom{position:relative;z-index:2}
+   直線の境界だと段が積まれて見える。前後の地の色で【大きな楕円】を置き、
+   その弧だけを見せて境界を丸くする。楕円は画面より広くして、
+   端の曲がりが画面内に出ないようにする（出ると"泡"に見える）。
+   前後の色は --wave-from / --wave-to で受け取る。 */
+.wave-top,.wave-bottom{position:relative;overflow:hidden}
+.wave-top > *,.wave-bottom > *{position:relative;z-index:1}
 .wave-top::before,.wave-bottom::after{
-  content:"";position:absolute;left:-4%;right:-4%;height:clamp(38px,5.2vw,86px);
-  pointer-events:none;z-index:3}
-.wave-top::before{top:0;transform:translateY(-99%);
-  background:var(--wave-from,var(--c-bg));
-  border-bottom-left-radius:52% 100%;border-bottom-right-radius:52% 100%}
-.wave-bottom::after{bottom:0;transform:translateY(99%);
-  background:var(--wave-to,var(--c-bg));
-  border-top-left-radius:52% 100%;border-top-right-radius:52% 100%}
+  content:"";position:absolute;left:50%;transform:translateX(-50%);
+  width:116%;height:clamp(72px,9.5vw,170px);z-index:0;pointer-events:none}
+.wave-top::before{top:0;background:var(--wave-from,var(--c-bg));
+  border-radius:0 0 50% 50%}
+.wave-bottom::after{bottom:0;background:var(--wave-to,var(--c-bg));
+  border-radius:50% 50% 0 0}
 /* 弧のぶんだけ中身を逃がす */
-.wave-top{padding-top:clamp(46px,6vw,96px)}
-.wave-bottom{padding-bottom:clamp(46px,6vw,96px)}
+.wave-top{padding-top:clamp(72px,9.5vw,170px)}
+.wave-bottom{padding-bottom:clamp(72px,9.5vw,170px)}
 
 .nb{white-space:nowrap}
 
@@ -2885,7 +2886,7 @@ html:not(.js) .lm__i{transform:none}
 
 </div>
 <!-- footer/footer-two-tier-cta (ink) -->
-<div class="tone-ink">
+<div class="tone-ink wave-top" style="--wave-from:var(--c-bg)">
 <footer class="ftc">
 
   <!-- 写真ストリップ（任意）。導線帯の“上”に置くので、PCでもSPでも写真はCTAより上になる。
