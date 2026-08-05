@@ -14,7 +14,7 @@ LIB = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DOCS = os.path.join(LIB, "docs")
 SRC = os.path.join(LIB, "_raw", "allsections")
 OUT = os.path.join(DOCS, "pick")
-N = 24
+N = 60          # 1セクションあたりの掲載上限
 
 # ESLの原稿の実寸。ここに合わないものは出さない。
 #   need(x) -> True なら候補
@@ -105,9 +105,19 @@ def main():
         for j, x in enumerate(picked, 1):
             k = x["id"]
             if k not in copied:
-                s = os.path.join(SRC, k + ".jpg")
-                if os.path.exists(s):
-                    shutil.copy(s, os.path.join(OUT, k + ".jpg")); copied.add(k)
+                src = os.path.join(SRC, k + ".jpg")
+                if os.path.exists(src):
+                    try:
+                        from PIL import Image
+                        im = Image.open(src).convert("RGB")
+                        if im.width > 460:
+                            im = im.resize((460, round(im.height * 460 / im.width)), Image.LANCZOS)
+                        if im.height > 620:
+                            im = im.crop((0, 0, im.width, 620))
+                        im.save(os.path.join(OUT, k + ".jpg"), quality=78, optimize=True)
+                    except Exception:
+                        shutil.copy(src, os.path.join(OUT, k + ".jpg"))
+                    copied.add(k)
             nm, url = SITE.get(k.rsplit("_s", 1)[0], (k.rsplit("_s", 1)[0], ""))
             ph = "写真あり" if x["unitPhoto"] else "写真なし"
             u = f'{x["units"]}個' if x["units"] else "繰り返しなし"
@@ -125,7 +135,7 @@ def main():
         blocks.append(f'''<section class="s" id="s{no}">
   <h2><span>{no}</span>{html.escape(name)}</h2>
   <p class="spec"><b>入れる内容</b>{html.escape(spec)}</p>
-  <p class="hint">この分量が入る型だけを出しています。「<b>{no}-7</b>」のように番号を言ってください。良いものが無ければ「{no} 無し」。</p>
+  <p class="hint">この分量が入る型だけを出しています（{len(picked)}件）。「<b>{no}-7</b>」のように番号を言ってください。良いものが無ければ「{no} 無し」。</p>
   <div class="grid">{''.join(cards)}</div>
 </section>''')
         print(f"  {no} {name}: {len(picked)}件（母数 {len(c)}）")
