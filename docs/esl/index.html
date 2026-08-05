@@ -498,113 +498,6 @@ html:not(.js) .lm__i{transform:none}
   .hbc__growth.is-draw path{stroke-dashoffset:0!important;transition:none!important}
 }
 
-/* ===== cta/cta-priority-stack ===== */
-/* cta/cta-priority-stack — 主CTAを地の上に直接置く（白カードを持たない）
-   ── 効かせている工夫 ─────────────────────────────
-   color/accent-means-clickable : 有彩色が出るのは「押せる場所」だけ。
-     ボタンの塗り（--c-primary）1点に緑を集約し、注記・小タグ・罫・写真の下地は
-     すべて無彩色に落とす。旧版は小タグを橙（--c-accent）にしていたが、
-     橙はページ全体で2箇所の予算なので外した。ゴースト（枠だけの緑ボタン）も廃止。
-   edge/panel-not-full-width : 面を全幅の矩形にしない。版面（.wrap）より狭い
-     「1枚の板」として置き、角は1箇所（右下）だけ大きく丸める。
-     R=--r-l×2.5（60px）、560px以下は×1.6（38px）。
-     板に塗りは持たせない（塗ると kit の tone が敷く地の階段が壊れる）ので、
-     輪郭は 1px の罫だけで示し、余った地色がそのまま余白として働く。
-   ───────────────────────────────────────────── */
-
-/* 地は敷かない。--cps-edge は地に対して見える濃さを地ごとに持ち替える。
-   淡い地：ink 20%（罫と地で 1.54:1）／濃い地：白 30%（2.60:1） */
-.cps{
-  --cps-r:calc(var(--r-l) * 2.5);
-  --cps-edge:color-mix(in srgb,var(--c-ink) 20%,transparent);
-}
-.tone-dark .cps{--cps-edge:color-mix(in srgb,var(--c-on-dark) 30%,transparent)}
-
-/* 本文の途中に挟む回。上下はブロック間の値まで詰める（独自のpxは置かない） */
-.cps--tight{padding-block:var(--sp-blk)}
-
-/* ── 板 ───────────────────────────────────────
-   全幅の矩形にしない。幅は中身に合わせて縮み（最小 32em＝512px、上限は版面）、
-   角は右下の1箇所だけ大きく丸める。余った地色がそのまま余白として働く。
-   版面いっぱいに広げると、ボタン1本の回で中が空洞に見える（実描画で確認）。
-   クラス名に __panel / __card を使わない（_base.css が自動で影を付けるため） */
-.cps__field{
-  width:fit-content;min-width:min(32em,100%);max-width:100%;margin-inline:auto;
-  display:flex;flex-direction:column;align-items:center;text-align:center;
-  padding:var(--sp-el);
-}
-
-/* 写真（任意）。既定はCTAより上（全画面幅で共通） */
-.cps__ph{margin:0 0 var(--s5);width:100%;overflow:hidden;
-  border-radius:var(--r-m);aspect-ratio:16/10;background:var(--c-bg2)}
-.cps__ph img{width:100%;height:100%;object-fit:cover}
-
-.cps__body{width:100%;min-width:0;
-  display:flex;flex-direction:column;align-items:center}
-
-/* 見出し。様式は .sec-head のまま、中央寄せだけ足す。
-   eyebrow も heading も無い回は箱ごと消す（--sp-el の空白が残らないように） */
-.cps__head{text-align:center}
-.cps__head .sec-head__en{justify-content:center}
-.cps__head:not(:has(*)){display:none}
-
-/* ── ボタン ───────────────────────────────────
-   _base.css の .btn を1形のまま使う。高さ・角丸・左右パディング・丸矢印・色は触らない。
-   ここで足すのは版面に収めるための上限幅と、2行に折れたときの行間だけ */
-.cps__stack{width:100%;display:flex;flex-direction:column;align-items:center;gap:var(--s4)}
-.cps__btn{max-width:100%;line-height:var(--lh-tight)}
-.cps__label{min-width:0;text-wrap:balance}
-
-/* 小タグ（無料／簡単30秒）。押せる場所の中に置く無彩色のチップにする */
-.cps__tag{flex:none;padding:var(--s1) var(--s2);border-radius:var(--r-pill);
-  background:var(--c-on-primary);color:var(--c-ink);
-  font-size:var(--fs-note);font-weight:700;line-height:var(--lh-tight)}
-
-.cps__ico{flex:none;display:grid;place-items:center;width:1.4em;height:1.4em}
-.cps__ico svg{width:100%;height:100%;fill:none;stroke:currentColor;
-  stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-
-/* _base.css の .hh-in は表示後も clip-path:inset(0) を残す。
-   そのままだと :focus-visible のリング（outline-offset 3px）が切り落とされるので、
-   ボタンだけ解除する（.fx の定義自体は触らない） */
-.fx-on .cps__btn.hh-in{clip-path:none}
-
-.cps__note{margin-top:var(--s5);max-width:36em;
-  font-size:var(--fs-sm);color:var(--c-ink3);line-height:var(--lh-head)}
-/* --c-ink3 は濃色地で 2.89:1 しかない。淡色へ振り替える（11.9:1） */
-.tone-dark .cps__note{color:var(--c-bg3)}
-
-/* ── 写真を渡した回だけ、PCは横に添える ─────────
-   2段組を抱える回だけ、板の幅は工夫の既定値どおり版面の82%で止める（78〜85%の中） */
-@media(min-width:901px){
-  .cps__field:has(.cps__ph){width:100%;max-width:82%;flex-direction:row;gap:var(--sp-el)}
-  .cps__field:has(.cps__ph) .cps__ph{flex:0 0 34%;margin:0;aspect-ratio:4/5}
-  .cps__field:has(.cps__ph) .cps__body{flex:1 1 auto}
-}
-
-/* ───────── SP ───────── */
-@media(max-width:900px){
-  .cps__field{padding:var(--s5)}
-  .cps__stack{gap:var(--s3)}
-}
-@media(max-width:560px){
-  /* R60は板の高さに対して大きすぎて“カプセル”に見えるので落とす */
-  .cps{--cps-r:calc(var(--r-l) * 1.6)}
-  .cps__field{width:100%}
-  .cps__btn{width:100%}
-  .cps__btn:not(.cps__btn--sub){font-size:var(--fs-base)}
-}
-@media(max-width:420px){
-  .cps__field{padding-inline:var(--s4)}
-}
-
-/* ①見えるか：白カードは地に溶ける。面をやめ、地の上に直接ボタンを置く。
-   色は「押せる場所」だけ＝ボタンだけが緑になる（color/accent-means-clickable） */
-.cps__panel,[class*="cps__panel"],[class*="cps"] .panel{
-  background:transparent;box-shadow:none;border:0;padding-inline:0}
-.cps__panel::before,[class*="cps__panel"]::before{display:none}
-.tone-dark .cps__note,.tone-dark [class*="note"]{color:var(--c-on-dark2)}
-
 /* ===== features/features-notch-number-cards ===== */
 /* features/features-notch-number-cards
    学研教室（sho_gakken_s05）の作りを再現して起こした型。
@@ -655,64 +548,52 @@ html:not(.js) .lm__i{transform:none}
 /* ===== features/features-vertical-heading-rows ===== */
 /* features/features-vertical-heading-rows
    linie（リニエ シューレ）の作りを再現して起こした型。
-   ・見出しを【縦書き】にして左に立てる
-   ・写真は白い縁＋角丸をばらつかせて「手で置いた」感じにする
-   ・見出しと本文のあいだは【破線】で切る
-   並びは 左から  縦書き見出し ｜ 本文 ｜ 写真  の3カラム。
-   写真を持たない項目は2カラムに畳む。
+   1項目の組み方（上下2段）:
+     上段  縦書きの見出し ｜ 写真（白い縁・角丸をばらす）
+     ── 破線 ──
+     下段  横書きの見出し → 本文
+   1行に1項目。ただし版面は絞って、2列で並んでいたときの寸法感を保つ。
    再現の記録: repro/vhr/ */
 .vhr{position:relative;overflow:hidden}
 .vhr .wrap{position:relative;z-index:1}
 
-/* 1行1項目。ただし1項目の幅は絞って、2列で並んでいたときの寸法感を保つ */
-.vhr__list{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(26px,3.6vw,50px);
-  max-width:900px;margin-inline:auto}
+.vhr__list{display:grid;grid-template-columns:minmax(0,1fr);
+  gap:clamp(30px,4vw,56px);max-width:660px;margin-inline:auto}
+.vhr__item{margin:0}
 
-/* 1項目 ＝ 見出し ｜ 本文 ｜ 写真 */
-.vhr__item{margin:0;display:grid;
-  grid-template-columns:auto minmax(0,1.15fr) minmax(0,.95fr);
-  grid-template-rows:auto auto;
-  gap:0 clamp(16px,2.4vw,32px);align-items:start}
-.vhr__item:not(:has(.vhr__fig)){grid-template-columns:auto minmax(0,1fr)}
-
-/* 縦書きの見出し。2行ぶんにまたがって左に立つ */
-.vhr__top{display:contents}
-.vhr__vert{grid-column:1;grid-row:1 / span 2;
-  writing-mode:vertical-rl;text-orientation:upright;
-  display:flex;gap:10px;padding-top:4px}
+/* ── 上段：縦書きの見出し ｜ 写真 ── */
+.vhr__top{display:flex;align-items:stretch;gap:clamp(10px,1.4vw,18px)}
+.vhr__vert{writing-mode:vertical-rl;text-orientation:upright;
+  display:flex;gap:9px;padding-top:4px;overflow:hidden}
 .vhr__label{writing-mode:vertical-rl;text-orientation:mixed;
-  font-family:var(--f-num);font-size:clamp(8px,.7vw,10px);font-weight:700;
+  font-family:var(--f-num);font-size:clamp(8px,.62vw,9.5px);font-weight:700;
   letter-spacing:.22em;color:var(--c-ink3);white-space:nowrap;align-self:flex-start}
 .vhr__title{font-size:clamp(14px,1.15vw,17px);font-weight:800;color:var(--c-ink);
   letter-spacing:.14em;line-height:1.55}
-
-/* 写真は右。2行ぶんにまたがる */
-.vhr__fig{grid-column:3;grid-row:1 / span 2;margin:0;align-self:center}
+.vhr__fig{flex:1;min-width:0;margin:0;transform:rotate(-1deg)}
+.vhr__item:nth-child(even) .vhr__fig{transform:rotate(1.1deg)}
 .vhr__fig img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;
   border:5px solid #fff;box-shadow:var(--shadow-s);
   border-radius:14px 10px 16px 11px}
-.vhr__item:nth-child(even) .vhr__fig img{border-radius:11px 16px 10px 14px}
 
-/* 中央：見出し（横書き）→ 破線 → 本文 */
-.vhr__sub{grid-column:2;grid-row:1;
-  font-size:clamp(13.5px,1.05vw,15.5px);font-weight:800;color:var(--c-ink);line-height:1.7}
-.vhr__body{grid-column:2;grid-row:2;
-  margin-top:clamp(13px,1.7vw,20px);padding-top:clamp(13px,1.7vw,20px);
+/* ── 破線 → 下段：横書きの見出し → 本文 ── */
+.vhr__sub{margin-top:clamp(16px,2vw,24px);padding-top:clamp(14px,1.8vw,22px);
   border-top:1px dashed var(--c-line);
-  font-size:clamp(12px,.92vw,13px);color:var(--c-ink2);line-height:2.0}
+  font-size:clamp(13.5px,1.05vw,15.5px);font-weight:800;color:var(--c-ink);line-height:1.7}
+.vhr__body{margin-top:9px;font-size:clamp(12px,.92vw,13px);color:var(--c-ink2);line-height:2.0}
+
+/* 写真を持たない項目（POINT4）は縦書き見出しだけを左に立てる */
+.vhr__item:not(:has(.vhr__fig)) .vhr__top{align-items:flex-start}
 
 @media(max-width:900px){
-  .vhr__list{gap:34px}
-  /* 狭い画面では縦書きをやめ、見出しを上へ */
-  .vhr__item,.vhr__item:not(:has(.vhr__fig)){grid-template-columns:minmax(0,1fr);
-    grid-template-rows:auto auto auto;gap:14px 0}
-  .vhr__vert{grid-column:1;grid-row:1;writing-mode:horizontal-tb;
-    flex-direction:row-reverse;justify-content:flex-end;align-items:baseline;gap:12px;padding-top:0}
+  .vhr__list{gap:34px;max-width:none}
+  /* 狭い画面では縦書きをやめ、見出しを写真の上へ */
+  .vhr__top{flex-direction:column;align-items:stretch;gap:12px}
+  .vhr__vert{writing-mode:horizontal-tb;flex-direction:row-reverse;
+    justify-content:flex-end;align-items:baseline;gap:12px;padding-top:0}
   .vhr__label{writing-mode:horizontal-tb;letter-spacing:.12em}
   .vhr__title{font-size:17px;letter-spacing:.02em;line-height:1.6}
-  .vhr__fig{grid-column:1;grid-row:2}
-  .vhr__sub{grid-column:1;grid-row:3}
-  .vhr__body{grid-column:1;grid-row:4}
+  .vhr__fig{transform:none!important}
   .vhr__fig img{border-width:5px}
 }
 
@@ -758,64 +639,52 @@ html:not(.js) .lm__i{transform:none}
 /* ===== features/features-vertical-heading-rows ===== */
 /* features/features-vertical-heading-rows
    linie（リニエ シューレ）の作りを再現して起こした型。
-   ・見出しを【縦書き】にして左に立てる
-   ・写真は白い縁＋角丸をばらつかせて「手で置いた」感じにする
-   ・見出しと本文のあいだは【破線】で切る
-   並びは 左から  縦書き見出し ｜ 本文 ｜ 写真  の3カラム。
-   写真を持たない項目は2カラムに畳む。
+   1項目の組み方（上下2段）:
+     上段  縦書きの見出し ｜ 写真（白い縁・角丸をばらす）
+     ── 破線 ──
+     下段  横書きの見出し → 本文
+   1行に1項目。ただし版面は絞って、2列で並んでいたときの寸法感を保つ。
    再現の記録: repro/vhr/ */
 .vhr{position:relative;overflow:hidden}
 .vhr .wrap{position:relative;z-index:1}
 
-/* 1行1項目。ただし1項目の幅は絞って、2列で並んでいたときの寸法感を保つ */
-.vhr__list{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(26px,3.6vw,50px);
-  max-width:900px;margin-inline:auto}
+.vhr__list{display:grid;grid-template-columns:minmax(0,1fr);
+  gap:clamp(30px,4vw,56px);max-width:660px;margin-inline:auto}
+.vhr__item{margin:0}
 
-/* 1項目 ＝ 見出し ｜ 本文 ｜ 写真 */
-.vhr__item{margin:0;display:grid;
-  grid-template-columns:auto minmax(0,1.15fr) minmax(0,.95fr);
-  grid-template-rows:auto auto;
-  gap:0 clamp(16px,2.4vw,32px);align-items:start}
-.vhr__item:not(:has(.vhr__fig)){grid-template-columns:auto minmax(0,1fr)}
-
-/* 縦書きの見出し。2行ぶんにまたがって左に立つ */
-.vhr__top{display:contents}
-.vhr__vert{grid-column:1;grid-row:1 / span 2;
-  writing-mode:vertical-rl;text-orientation:upright;
-  display:flex;gap:10px;padding-top:4px}
+/* ── 上段：縦書きの見出し ｜ 写真 ── */
+.vhr__top{display:flex;align-items:stretch;gap:clamp(10px,1.4vw,18px)}
+.vhr__vert{writing-mode:vertical-rl;text-orientation:upright;
+  display:flex;gap:9px;padding-top:4px;overflow:hidden}
 .vhr__label{writing-mode:vertical-rl;text-orientation:mixed;
-  font-family:var(--f-num);font-size:clamp(8px,.7vw,10px);font-weight:700;
+  font-family:var(--f-num);font-size:clamp(8px,.62vw,9.5px);font-weight:700;
   letter-spacing:.22em;color:var(--c-ink3);white-space:nowrap;align-self:flex-start}
 .vhr__title{font-size:clamp(14px,1.15vw,17px);font-weight:800;color:var(--c-ink);
   letter-spacing:.14em;line-height:1.55}
-
-/* 写真は右。2行ぶんにまたがる */
-.vhr__fig{grid-column:3;grid-row:1 / span 2;margin:0;align-self:center}
+.vhr__fig{flex:1;min-width:0;margin:0;transform:rotate(-1deg)}
+.vhr__item:nth-child(even) .vhr__fig{transform:rotate(1.1deg)}
 .vhr__fig img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;
   border:5px solid #fff;box-shadow:var(--shadow-s);
   border-radius:14px 10px 16px 11px}
-.vhr__item:nth-child(even) .vhr__fig img{border-radius:11px 16px 10px 14px}
 
-/* 中央：見出し（横書き）→ 破線 → 本文 */
-.vhr__sub{grid-column:2;grid-row:1;
-  font-size:clamp(13.5px,1.05vw,15.5px);font-weight:800;color:var(--c-ink);line-height:1.7}
-.vhr__body{grid-column:2;grid-row:2;
-  margin-top:clamp(13px,1.7vw,20px);padding-top:clamp(13px,1.7vw,20px);
+/* ── 破線 → 下段：横書きの見出し → 本文 ── */
+.vhr__sub{margin-top:clamp(16px,2vw,24px);padding-top:clamp(14px,1.8vw,22px);
   border-top:1px dashed var(--c-line);
-  font-size:clamp(12px,.92vw,13px);color:var(--c-ink2);line-height:2.0}
+  font-size:clamp(13.5px,1.05vw,15.5px);font-weight:800;color:var(--c-ink);line-height:1.7}
+.vhr__body{margin-top:9px;font-size:clamp(12px,.92vw,13px);color:var(--c-ink2);line-height:2.0}
+
+/* 写真を持たない項目（POINT4）は縦書き見出しだけを左に立てる */
+.vhr__item:not(:has(.vhr__fig)) .vhr__top{align-items:flex-start}
 
 @media(max-width:900px){
-  .vhr__list{gap:34px}
-  /* 狭い画面では縦書きをやめ、見出しを上へ */
-  .vhr__item,.vhr__item:not(:has(.vhr__fig)){grid-template-columns:minmax(0,1fr);
-    grid-template-rows:auto auto auto;gap:14px 0}
-  .vhr__vert{grid-column:1;grid-row:1;writing-mode:horizontal-tb;
-    flex-direction:row-reverse;justify-content:flex-end;align-items:baseline;gap:12px;padding-top:0}
+  .vhr__list{gap:34px;max-width:none}
+  /* 狭い画面では縦書きをやめ、見出しを写真の上へ */
+  .vhr__top{flex-direction:column;align-items:stretch;gap:12px}
+  .vhr__vert{writing-mode:horizontal-tb;flex-direction:row-reverse;
+    justify-content:flex-end;align-items:baseline;gap:12px;padding-top:0}
   .vhr__label{writing-mode:horizontal-tb;letter-spacing:.12em}
   .vhr__title{font-size:17px;letter-spacing:.02em;line-height:1.6}
-  .vhr__fig{grid-column:1;grid-row:2}
-  .vhr__sub{grid-column:1;grid-row:3}
-  .vhr__body{grid-column:1;grid-row:4}
+  .vhr__fig{transform:none!important}
   .vhr__fig img{border-width:5px}
 }
 
@@ -867,64 +736,52 @@ html:not(.js) .lm__i{transform:none}
 /* ===== features/features-vertical-heading-rows ===== */
 /* features/features-vertical-heading-rows
    linie（リニエ シューレ）の作りを再現して起こした型。
-   ・見出しを【縦書き】にして左に立てる
-   ・写真は白い縁＋角丸をばらつかせて「手で置いた」感じにする
-   ・見出しと本文のあいだは【破線】で切る
-   並びは 左から  縦書き見出し ｜ 本文 ｜ 写真  の3カラム。
-   写真を持たない項目は2カラムに畳む。
+   1項目の組み方（上下2段）:
+     上段  縦書きの見出し ｜ 写真（白い縁・角丸をばらす）
+     ── 破線 ──
+     下段  横書きの見出し → 本文
+   1行に1項目。ただし版面は絞って、2列で並んでいたときの寸法感を保つ。
    再現の記録: repro/vhr/ */
 .vhr{position:relative;overflow:hidden}
 .vhr .wrap{position:relative;z-index:1}
 
-/* 1行1項目。ただし1項目の幅は絞って、2列で並んでいたときの寸法感を保つ */
-.vhr__list{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(26px,3.6vw,50px);
-  max-width:900px;margin-inline:auto}
+.vhr__list{display:grid;grid-template-columns:minmax(0,1fr);
+  gap:clamp(30px,4vw,56px);max-width:660px;margin-inline:auto}
+.vhr__item{margin:0}
 
-/* 1項目 ＝ 見出し ｜ 本文 ｜ 写真 */
-.vhr__item{margin:0;display:grid;
-  grid-template-columns:auto minmax(0,1.15fr) minmax(0,.95fr);
-  grid-template-rows:auto auto;
-  gap:0 clamp(16px,2.4vw,32px);align-items:start}
-.vhr__item:not(:has(.vhr__fig)){grid-template-columns:auto minmax(0,1fr)}
-
-/* 縦書きの見出し。2行ぶんにまたがって左に立つ */
-.vhr__top{display:contents}
-.vhr__vert{grid-column:1;grid-row:1 / span 2;
-  writing-mode:vertical-rl;text-orientation:upright;
-  display:flex;gap:10px;padding-top:4px}
+/* ── 上段：縦書きの見出し ｜ 写真 ── */
+.vhr__top{display:flex;align-items:stretch;gap:clamp(10px,1.4vw,18px)}
+.vhr__vert{writing-mode:vertical-rl;text-orientation:upright;
+  display:flex;gap:9px;padding-top:4px;overflow:hidden}
 .vhr__label{writing-mode:vertical-rl;text-orientation:mixed;
-  font-family:var(--f-num);font-size:clamp(8px,.7vw,10px);font-weight:700;
+  font-family:var(--f-num);font-size:clamp(8px,.62vw,9.5px);font-weight:700;
   letter-spacing:.22em;color:var(--c-ink3);white-space:nowrap;align-self:flex-start}
 .vhr__title{font-size:clamp(14px,1.15vw,17px);font-weight:800;color:var(--c-ink);
   letter-spacing:.14em;line-height:1.55}
-
-/* 写真は右。2行ぶんにまたがる */
-.vhr__fig{grid-column:3;grid-row:1 / span 2;margin:0;align-self:center}
+.vhr__fig{flex:1;min-width:0;margin:0;transform:rotate(-1deg)}
+.vhr__item:nth-child(even) .vhr__fig{transform:rotate(1.1deg)}
 .vhr__fig img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;
   border:5px solid #fff;box-shadow:var(--shadow-s);
   border-radius:14px 10px 16px 11px}
-.vhr__item:nth-child(even) .vhr__fig img{border-radius:11px 16px 10px 14px}
 
-/* 中央：見出し（横書き）→ 破線 → 本文 */
-.vhr__sub{grid-column:2;grid-row:1;
-  font-size:clamp(13.5px,1.05vw,15.5px);font-weight:800;color:var(--c-ink);line-height:1.7}
-.vhr__body{grid-column:2;grid-row:2;
-  margin-top:clamp(13px,1.7vw,20px);padding-top:clamp(13px,1.7vw,20px);
+/* ── 破線 → 下段：横書きの見出し → 本文 ── */
+.vhr__sub{margin-top:clamp(16px,2vw,24px);padding-top:clamp(14px,1.8vw,22px);
   border-top:1px dashed var(--c-line);
-  font-size:clamp(12px,.92vw,13px);color:var(--c-ink2);line-height:2.0}
+  font-size:clamp(13.5px,1.05vw,15.5px);font-weight:800;color:var(--c-ink);line-height:1.7}
+.vhr__body{margin-top:9px;font-size:clamp(12px,.92vw,13px);color:var(--c-ink2);line-height:2.0}
+
+/* 写真を持たない項目（POINT4）は縦書き見出しだけを左に立てる */
+.vhr__item:not(:has(.vhr__fig)) .vhr__top{align-items:flex-start}
 
 @media(max-width:900px){
-  .vhr__list{gap:34px}
-  /* 狭い画面では縦書きをやめ、見出しを上へ */
-  .vhr__item,.vhr__item:not(:has(.vhr__fig)){grid-template-columns:minmax(0,1fr);
-    grid-template-rows:auto auto auto;gap:14px 0}
-  .vhr__vert{grid-column:1;grid-row:1;writing-mode:horizontal-tb;
-    flex-direction:row-reverse;justify-content:flex-end;align-items:baseline;gap:12px;padding-top:0}
+  .vhr__list{gap:34px;max-width:none}
+  /* 狭い画面では縦書きをやめ、見出しを写真の上へ */
+  .vhr__top{flex-direction:column;align-items:stretch;gap:12px}
+  .vhr__vert{writing-mode:horizontal-tb;flex-direction:row-reverse;
+    justify-content:flex-end;align-items:baseline;gap:12px;padding-top:0}
   .vhr__label{writing-mode:horizontal-tb;letter-spacing:.12em}
   .vhr__title{font-size:17px;letter-spacing:.02em;line-height:1.6}
-  .vhr__fig{grid-column:1;grid-row:2}
-  .vhr__sub{grid-column:1;grid-row:3}
-  .vhr__body{grid-column:1;grid-row:4}
+  .vhr__fig{transform:none!important}
   .vhr__fig img{border-width:5px}
 }
 
@@ -1974,51 +1831,6 @@ html:not(.js) .lm__i{transform:none}
     </p>
   </div>
   
-</section>
-
-</div>
-<!-- cta/cta-priority-stack (tint) -->
-<div class="tone-tint">
-<section class="sec cps cps--tight" id="cta1">
-  <div class="wrap">
-
-    <!-- 地は敷かない。外側の kit tone（tint／dark）がそのまま面になる。
-         白カードは持たず、地の上に直接ボタンと注釈を置く。
-         版面より狭い「1枚の板」であることは、罫と角1箇所の大Rだけで示す。 -->
-    <div class="cps__field">
-
-      
-
-      <div class="cps__body">
-
-        <!-- 見出しは .sec-head の2段（欧文ラベル＋和文）に統一。
-             eyebrow→__en / heading→__ja。両方空の回は箱ごと消える -->
-        <div class="sec-head cps__head">
-          
-          
-        </div>
-
-        <div class="cps__stack">
-
-          <!-- 主：_base.css の .btn そのまま（矢印は .btn::after が持つ） -->
-          <a class="btn cps__btn fx" data-fx="fadeup" data-d="120" href="https://eslclub.jp/trial/">
-            
-            
-            <span class="cps__label">無料体験レッスンはこちら</span>
-          </a>
-
-          <!-- 副1／副2：同じ .btn の小さい方（.btn--sm）。主従は大きさだけでつける -->
-          
-
-          
-
-        </div>
-
-        <p class="cps__note fx" data-fx="fadeup" data-d="240">いつまでに2級合格できるかレッスン後にご案内します</p>
-
-      </div>
-    </div>
-  </div>
 </section>
 
 </div>
