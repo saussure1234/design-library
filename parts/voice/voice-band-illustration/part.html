@@ -16,7 +16,13 @@
           <div class="vbi__body">{{.body}}</div>
           {{?.replyBody}}<div class="vbi__reply">
             <p class="vbi__replyhead"><span>{{.replyLabel}}</span></p>
-            <div class="vbi__replybody">{{.replyBody}}</div>
+            <div class="mbl__fold">
+              <div class="vbi__replybody" id="vbir-{{.i}}">{{.replyBody}}</div>
+            </div>
+            <button class="mbl__more" type="button" aria-expanded="false" aria-controls="vbir-{{.i}}">
+              <span class="mbl__more-t" data-open="{{openLabel}}" data-close="{{closeLabel}}">{{openLabel}}</span>
+              <span class="mbl__more-i" aria-hidden="true"></span>
+            </button>
           </div>{{/.replyBody}}
         </div>
       </li>{{/items}}

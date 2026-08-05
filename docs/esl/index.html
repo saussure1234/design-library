@@ -474,9 +474,21 @@ html:not(.js) .lm__i{transform:none}
 /* ★丸くしない。四隅の曲率をばらして「若干曲がった」形にする。
    人物より一回り小さくして、体が枠から はみ出す ようにする */
 .hbc__blob--a{left:36%;top:19%;width:17%;aspect-ratio:1/.98;background:#E2EFD6;
-  border-radius:44% 56% 61% 39% / 57% 43% 57% 43%}
+  border-radius:44% 56% 61% 39% / 57% 43% 57% 43%;
+  animation:hbcBlobA 23s ease-in-out infinite}
 .hbc__blob--b{left:70%;top:29%;width:15%;aspect-ratio:1/1;background:#F2E9CE;
-  border-radius:57% 43% 41% 59% / 46% 57% 43% 54%}
+  border-radius:57% 43% 41% 59% / 46% 57% 43% 54%;
+  animation:hbcBlobB 29s ease-in-out infinite}
+/* 形と位置をゆっくり揺らす。回転は入れない（面が回ると図形に見えてしまう） */
+@keyframes hbcBlobA{
+  0%,100%{border-radius:44% 56% 61% 39% / 57% 43% 57% 43%;transform:translate(0,0) scale(1)}
+  34%    {border-radius:58% 42% 44% 56% / 43% 58% 42% 57%;transform:translate(3%,-4%) scale(1.06)}
+  67%    {border-radius:39% 61% 57% 43% / 60% 40% 60% 40%;transform:translate(-3%,3%) scale(.95)}}
+@keyframes hbcBlobB{
+  0%,100%{border-radius:57% 43% 41% 59% / 46% 57% 43% 54%;transform:translate(0,0) scale(1)}
+  40%    {border-radius:41% 59% 58% 42% / 59% 42% 58% 41%;transform:translate(-4%,4%) scale(1.07)}
+  72%    {border-radius:62% 38% 45% 55% / 40% 60% 40% 60%;transform:translate(3%,-3%) scale(.94)}}
+@media(prefers-reduced-motion:reduce){.hbc__blob{animation:none!important}}
 
 /* 写真 */
 .hbc__ph{position:absolute;z-index:3;margin:0;filter:drop-shadow(0 8px 18px rgba(48,48,48,.10))}
@@ -509,7 +521,12 @@ html:not(.js) .lm__i{transform:none}
 .hbc__cta{grid-column:1;grid-row:2;z-index:5;display:flex;flex-direction:column;
   align-items:flex-start;gap:10px;margin-top:clamp(22px,3.2vw,40px)}
 .hbc__cta .btn{white-space:nowrap}
-.hbc__note{font-size:clamp(10.5px,.86vw,12.5px);color:var(--c-ink3);white-space:nowrap}
+/* CTAの下の約束。ただの注記に見えて素通りされていたので、
+   淡い緑の帯に載せて「もう一つの押し」として読ませる */
+.hbc__note{display:inline-block;padding:8px 18px;border-radius:var(--r-pill);
+  background:color-mix(in srgb,var(--c-primary) 12%,#fff);
+  color:var(--c-primary-d);font-size:clamp(12px,1.05vw,14.5px);font-weight:800;
+  letter-spacing:.01em;white-space:nowrap}
 
 /* 落書き */
 .hbc__dd{position:absolute;z-index:4;pointer-events:none}
@@ -1071,7 +1088,7 @@ html:not(.js) .lm__i{transform:none}
 .fx-on .cps__btn.hh-in{clip-path:none}
 
 .cps__note{margin-top:var(--s5);max-width:36em;
-  font-size:var(--fs-sm);color:var(--c-ink3);line-height:var(--lh-head)}
+  font-size:var(--fs-md);font-weight:700;color:var(--c-ink2);line-height:var(--lh-head)}
 /* --c-ink3 は濃色地で 2.89:1 しかない。淡色へ振り替える（11.9:1） */
 .tone-dark .cps__note{color:var(--c-bg3)}
 
@@ -1314,7 +1331,7 @@ html:not(.js) .lm__i{transform:none}
 .fx-on .cps__btn.hh-in{clip-path:none}
 
 .cps__note{margin-top:var(--s5);max-width:36em;
-  font-size:var(--fs-sm);color:var(--c-ink3);line-height:var(--lh-head)}
+  font-size:var(--fs-md);font-weight:700;color:var(--c-ink2);line-height:var(--lh-head)}
 /* --c-ink3 は濃色地で 2.89:1 しかない。淡色へ振り替える（11.9:1） */
 .tone-dark .cps__note{color:var(--c-bg3)}
 
@@ -1406,7 +1423,10 @@ html:not(.js) .lm__i{transform:none}
 .vbi__replyhead span{display:inline-block;background:var(--c-primary);color:var(--c-on-primary);
   font-size:clamp(10px,.82vw,11.5px);font-weight:800;letter-spacing:.06em;
   padding:5px 13px;border-radius:999px}
-.vbi__replybody{margin-top:12px;font-size:clamp(12px,.98vw,13.5px);color:var(--c-ink2);line-height:2.05}
+/* 余白はたたむ箱の【外】に置く。中に入れると、たたんだ高さから
+   その余白ぶんが本文に食い込み、開閉の実測ともズレる */
+.vbi__reply > .mbl__fold{margin-top:12px}
+.vbi__replybody{font-size:clamp(12px,.98vw,13.5px);color:var(--c-ink2);line-height:2.05}
 .vbi__replybody p + p{margin-top:1.3em}
 
 @media(max-width:768px){
@@ -1507,9 +1527,9 @@ html:not(.js) .lm__i{transform:none}
 .nch__cnote{margin-top:var(--s1);font-size:var(--fs-note);color:var(--c-ink3);
   line-height:var(--lh-head)}
 
-/* 注記。見出しと同じ左端に揃える */
+/* 注記。チップ群と同じく中央に置く */
 .nch__source{margin-top:var(--s4);font-size:var(--fs-note);color:var(--c-ink3);
-  line-height:var(--lh-body)}
+  line-height:var(--lh-body);text-align:center}
 
 /* ── 動き ─────────────────────────────
    チップが下から60msずつずれて出るだけ。跳ね返り・拡大は使わない。
@@ -1882,7 +1902,7 @@ html:not(.js) .lm__i{transform:none}
 .fx-on .cps__btn.hh-in{clip-path:none}
 
 .cps__note{margin-top:var(--s5);max-width:36em;
-  font-size:var(--fs-sm);color:var(--c-ink3);line-height:var(--lh-head)}
+  font-size:var(--fs-md);font-weight:700;color:var(--c-ink2);line-height:var(--lh-head)}
 /* --c-ink3 は濃色地で 2.89:1 しかない。淡色へ振り替える（11.9:1） */
 .tone-dark .cps__note{color:var(--c-bg3)}
 
@@ -2573,7 +2593,13 @@ html:not(.js) .lm__i{transform:none}
           <div class="vbi__body"><p>ESL clubによる毎日の取り組みにより勉強習慣が身につきました。毎日やることによる継続力、単語テストを通じて得た自信、結果として残った英検準2級の合格が本人の成功体験へと繋がったかと思います。その小さな積み重ねののちに他教科への好影響へと波及していきました。</p><p>授業においては講師の皆様には常に優しく接していただき、毎回「楽しかった」と言っておりました。特にナヒョン先生のことは好きなようで、始まる前に「今日はナヒョン先生かな、たくさん話したいな」といつもウキウキしておりました。中学受験前、最後のレッスンを終えた後も「いつESL clubで再会できるかな、宿題を毎日するのは嫌だけど（笑）、ナヒョン先生とはずっと話したいのにな」とも言っておりました。「人生迷った時があったら、自分が幸せになれる方を選んでね」という言葉も昨日いただき「私はそうするんだ」と響いているようです。</p></div>
           <div class="vbi__reply">
             <p class="vbi__replyhead"><span>講師からのコメント</span></p>
-            <div class="vbi__replybody"><p>素敵なお言葉をいただき、ありがとうございます。私は海外の医学部で学んだ経験から、「勉強を頑張ること」の喜びと同時に、その大変さも身をもって知っています。だからこそ、ESL clubでは、生徒さん一人ひとりにとって学ぶことが負担ではなく、人生を豊かにする喜びであってほしいと願いながら、日々の授業に向き合っています。</p><p>努力は大切ですが、頑張り続けることだけが正解ではありません。人生にはさまざまな選択や遠回りがあります。私自身、「なぜ生きるのか」を考え続けた結果、30代になってたどり着いた答えはとてもシンプルでした。それは、幸せになることです。</p><p>ESL clubの生徒さんたちには、「自分が幸せになること」をコンパスにして、これからの人生を歩んでほしいと考えています。その想いは、Aさんの最後の授業でもお伝えしました。そしてこれは、子どもたちだけでなく、私たち大人にも当てはまることだと思っています。子どもは、大人や先生の背中を見て学ぶからこそ、私は「幸せに向かって生きる姿」を示す存在でありたいと考えています。ESL clubの授業では、英語を学ぶことそのものを楽しみながら、その英語を通して自分の人生をより幸せなものにする力を育んでほしいと、心から願っています。</p></div>
+            <div class="mbl__fold">
+              <div class="vbi__replybody" id="vbir-1"><p>素敵なお言葉をいただき、ありがとうございます。私は海外の医学部で学んだ経験から、「勉強を頑張ること」の喜びと同時に、その大変さも身をもって知っています。だからこそ、ESL clubでは、生徒さん一人ひとりにとって学ぶことが負担ではなく、人生を豊かにする喜びであってほしいと願いながら、日々の授業に向き合っています。</p><p>努力は大切ですが、頑張り続けることだけが正解ではありません。人生にはさまざまな選択や遠回りがあります。私自身、「なぜ生きるのか」を考え続けた結果、30代になってたどり着いた答えはとてもシンプルでした。それは、幸せになることです。</p><p>ESL clubの生徒さんたちには、「自分が幸せになること」をコンパスにして、これからの人生を歩んでほしいと考えています。その想いは、Aさんの最後の授業でもお伝えしました。そしてこれは、子どもたちだけでなく、私たち大人にも当てはまることだと思っています。子どもは、大人や先生の背中を見て学ぶからこそ、私は「幸せに向かって生きる姿」を示す存在でありたいと考えています。ESL clubの授業では、英語を学ぶことそのものを楽しみながら、その英語を通して自分の人生をより幸せなものにする力を育んでほしいと、心から願っています。</p></div>
+            </div>
+            <button class="mbl__more" type="button" aria-expanded="false" aria-controls="vbir-1">
+              <span class="mbl__more-t" data-open="続きを読む" data-close="閉じる">続きを読む</span>
+              <span class="mbl__more-i" aria-hidden="true"></span>
+            </button>
           </div>
         </div>
       </li><li class="vbi__item fx" data-fx="fadeup" data-d="90">
