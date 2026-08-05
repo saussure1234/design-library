@@ -106,6 +106,22 @@ JS_SETTLE = """
   }
   for (const el of fixOpacity) el.style.setProperty('opacity','1','important');
   for (const el of fixVis)     el.style.setProperty('visibility','visible','important');
+  // 画面全体を覆う暗幕（同意バー・モーダルの背面）は消す。
+  // これを opacity:1 にすると、ページ全体が暗く写ってしまう。
+  const VW = innerWidth, VH = innerHeight;
+  document.querySelectorAll('body *').forEach(el => {
+    const cs = getComputedStyle(el);
+    if (cs.position !== 'fixed' && cs.position !== 'absolute') return;
+    const r = el.getBoundingClientRect();
+    if (r.width < VW * .9 || r.height < VH * .9) return;
+    const bg = cs.backgroundColor || '';
+    const m = bg.match(/rgba?\(([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)(?:[,/\s]+([\d.]+))?/);
+    if (!m) return;
+    const a = m[4] === undefined ? 1 : parseFloat(m[4]);
+    const l = (+m[1] + +m[2] + +m[3]) / 3;
+    if (a > .05 && l < 140) el.style.setProperty('display', 'none', 'important');
+  });
+
   // ★ sticky は「貼り付いた位置」で描かれるため、全長撮影で同じ要素が何度も写る。
   //    消すと背景が抜けて白地に白文字になるので、消さずに static へ戻して
   //    本来の流し位置に一度だけ描かせる。

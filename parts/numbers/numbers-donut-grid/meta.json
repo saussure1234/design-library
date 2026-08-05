@@ -1,0 +1,15 @@
+{
+  "id": "numbers/numbers-donut-grid",
+  "name": "級別の合格率ドーナツ（3＋2の千鳥）",
+  "type": "numbers",
+  "intent": "同じ指標を段階別に5つ並べて、全部高いことを一目で見せる",
+  "when": ["同じ単位の数値が4〜6個ある", "個々の値より『全部高い』ことを伝えたい"],
+  "avoid": ["数値が1つだけ", "値の差が大きく、比較を強調したい（バーの方が向く）"],
+  "slots": {"eyebrow":"欧文ラベル","heading":"見出し","lead":"リード",
+            "rows":"[{label, pct, value, unit}]  pct はリングの塗り(0-100)","note":"注記"},
+  "motion": "1つずつ scale(.94)→1 で 90ms差",
+  "responsive": "900px以下で直径150px、560px以下で136px",
+  "reproducedFrom": "eslclub.jp/online-c の合格率セクション",
+  "reproScore": 5.62,
+  "verified": false
+}

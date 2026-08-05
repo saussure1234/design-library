@@ -1,0 +1,20 @@
+<section class="sec ndg">
+  <div class="wrap">
+    <div class="sec-head">
+      {{?eyebrow}}<p class="sec-head__en">{{eyebrow}}</p>{{/eyebrow}}
+      <h2 class="sec-head__ja">{{heading}}</h2>
+      {{?lead}}<p class="sec-head__sub">{{lead}}</p>{{/lead}}
+    </div>
+    <div class="ndg__panel">
+      <ul class="ndg__grid">
+        {{#rows}}<li class="ndg__cell fx" data-fx="scale" data-d="{{.d}}">
+          <div class="ndg__d" style="--p:{{.pct}}%">
+            <span class="ndg__label">{{.label}}</span>
+            <b class="ndg__v">{{.value}}<i>{{.unit}}</i></b>
+          </div>
+        </li>{{/rows}}
+      </ul>
+      {{?note}}<p class="ndg__note">{{note}}</p>{{/note}}
+    </div>
+  </div>
+</section>
