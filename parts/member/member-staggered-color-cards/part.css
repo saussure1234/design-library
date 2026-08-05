@@ -3,14 +3,16 @@
    ・人物カードを【色違い】にして【上下に段差】をつけて並べる
    ・氏名は【雲形（もこもこ）のラベル】で写真に重ねる
    再現の記録: repro/msc/ */
+/* 段差はつけず、3枚を並列・同じ高さで置く（原型の staggered はやめている）。
+   高さを揃えるには、行を stretch にしたうえでカードの中を縦のflexにして、
+   本文の箱に flex:1 を持たせる（そうしないと箱だけが伸びて中身が上に貼りつく）*/
 .msc__grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(16px,2.4vw,32px);
-  align-items:start}
-.msc__item{margin:0}
-.msc__item:nth-child(2){margin-top:clamp(18px,2.6vw,40px)}
-.msc__item:nth-child(3){margin-top:clamp(36px,5.2vw,80px)}
+  align-items:stretch}
+.msc__item{margin:0;display:flex}
 
 /* ★カードが「大きめの白いブロック」。濃い面の上でもこの中は読める */
-.msc__card{position:relative;border-radius:22px;overflow:hidden;background:var(--c-bg);
+.msc__card{position:relative;width:100%;display:flex;flex-direction:column;
+  border-radius:22px;overflow:hidden;background:var(--c-bg);
   box-shadow:var(--shadow-s)}
 /* 写真の地は3枚とも同じ。節の地（#00B21F）と同じ緑にすると
    カードの上半分が背景に溶けて、箱の形が消える。一段沈めた緑にする */
@@ -31,7 +33,7 @@
 .msc__name span{display:block;margin-top:2px;font-size:clamp(8.5px,.72vw,10px);
   letter-spacing:.06em;color:rgba(255,255,255,.74);font-weight:700}
 
-.msc__spec{padding:14px 18px 20px}
+.msc__spec{padding:14px 18px 20px;flex:1}
 .msc__dl{display:grid;grid-template-columns:5.6em minmax(0,1fr);gap:0 10px;
   font-size:clamp(11px,.92vw,12.5px);padding:7px 0;border-top:1px dashed var(--c-line)}
 .msc__dl:first-child{border-top:0}
@@ -41,9 +43,7 @@
 
 @media(max-width:900px){
   .msc__grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .msc__item:nth-child(3){margin-top:0}
 }
 @media(max-width:560px){
   .msc__grid{grid-template-columns:minmax(0,1fr);gap:26px}
-  .msc__item:nth-child(2){margin-top:0}
 }
