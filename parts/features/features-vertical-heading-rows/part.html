@@ -14,6 +14,18 @@
             <h3 class="vhr__title">{{.title}}</h3>
           </div>
           {{?.photo}}<figure class="vhr__fig"><img src="{{.photo}}" alt="{{.photoAlt}}" loading="lazy"></figure>{{/.photo}}
+          {{?.photosOn}}<div class="vhr__figs">
+            {{#.photos}}<figure class="vhr__fig"><img src="{{.src}}" alt="{{.alt}}" loading="lazy"></figure>{{/.photos}}
+          </div>{{/.photosOn}}
+          {{?.donutsOn}}<div class="vhr__chart">
+            <ul class="vhr__ds">
+              {{#.donuts}}<li class="vhr__d" style="--p:{{.pct}}%">
+                <span class="vhr__dl">{{.label}}</span>
+                <b class="vhr__dv"><span data-count="{{.value}}">{{.value}}</span><i>%</i></b>
+              </li>{{/.donuts}}
+            </ul>
+            {{?.chartNote}}<p class="vhr__cnote">{{.chartNote}}</p>{{/.chartNote}}
+          </div>{{/.donutsOn}}
         </div>
         <p class="vhr__sub">{{.sub}}</p>
         <p class="vhr__body">{{.body}}</p>

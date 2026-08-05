@@ -572,6 +572,27 @@ html:not(.js) .lm__i{transform:none}
   border:4px solid #fff;box-shadow:var(--shadow-s);
   border-radius:12px 9px 14px 10px}
 
+/* 写真2枚を半々で並べる */
+.vhr__figs{flex:1;min-width:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.vhr__figs .vhr__fig{flex:none}
+.vhr__figs .vhr__fig img{aspect-ratio:1/1}
+
+/* 写真の代わりに合格率のドーナツを置く。数値は0から回る（--p も0%から描かれる） */
+.vhr__chart{flex:1;min-width:0}
+.vhr__ds{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;
+  max-width:360px;margin-inline:auto}
+.vhr__d{position:relative;width:108px;height:108px;border-radius:50%;
+  display:grid;place-content:center;text-align:center}
+.vhr__d::before{content:"";position:absolute;inset:0;border-radius:50%;
+  background:conic-gradient(var(--c-primary) 0 var(--p), #e8e8e8 var(--p) 100%)}
+.vhr__d::after{content:"";position:absolute;inset:7px;border-radius:50%;background:var(--c-bg)}
+.vhr__dl,.vhr__dv{position:relative;z-index:2}
+.vhr__dl{display:block;font-size:11px;font-weight:700;color:var(--c-ink)}
+.vhr__dv{display:block;margin-top:2px;font-family:var(--f-num);font-size:22px;
+  font-weight:900;color:var(--c-primary);line-height:1}
+.vhr__dv i{font-style:normal;font-size:.5em;margin-left:1px}
+.vhr__cnote{margin-top:12px;text-align:center;font-size:10px;color:var(--c-ink3);line-height:1.7}
+
 /* ── 破線 → 下段：横書きの見出し → 本文 ── */
 .vhr__sub{margin-top:clamp(16px,2vw,24px);padding-top:clamp(14px,1.8vw,22px);
   border-top:1px dashed var(--c-line);
@@ -590,46 +611,9 @@ html:not(.js) .lm__i{transform:none}
   .vhr__label{writing-mode:horizontal-tb;letter-spacing:.12em}
   .vhr__title{font-size:17px;letter-spacing:.02em;line-height:1.6}
   .vhr__fig{flex:1;max-width:340px}
+  .vhr__figs{max-width:340px}
+  .vhr__ds{max-width:none}
   .vhr__fig img{border-width:5px}
-}
-
-/* ===== numbers/numbers-donut-grid ===== */
-/* numbers/numbers-donut-grid
-   ESL club 自身の online-c にある「級別の合格率ドーナツ」を再現して起こした型。
-   再現の記録: repro/donut/（score 5.62）
-   ・リングは conic-gradient。内側を地色の円でくり抜く
-   ・3個＋2個の千鳥（2段目は1段目の間に来る） */
-.ndg__panel{border:1px solid var(--c-line);border-radius:14px;padding:30px 26px 20px;
-  max-width:640px;margin-inline:auto;background:var(--c-bg)}
-.ndg__grid{display:flex;flex-wrap:wrap;justify-content:center;gap:20px;max-width:500px;margin-inline:auto}
-.ndg__cell{margin:0}
-.ndg__d{position:relative;width:150px;height:150px;border-radius:50%;
-  display:grid;place-content:center;text-align:center}
-.ndg__d::before{content:"";position:absolute;inset:0;border-radius:50%;
-  background:conic-gradient(var(--c-primary) 0 var(--p), #e8e8e8 var(--p) 100%)}
-.ndg__d::after{content:"";position:absolute;inset:9px;border-radius:50%;background:var(--c-bg)}
-.tone-tint .ndg__d::after{background:var(--c-bg2)}
-.ndg__label,.ndg__v{position:relative;z-index:2}
-.ndg__label{display:block;font-size:14px;font-weight:700;color:var(--c-ink);letter-spacing:.02em}
-.ndg__v{display:block;margin-top:4px;font-family:var(--f-num);font-size:31px;font-weight:900;
-  color:var(--c-primary);line-height:1;letter-spacing:-.01em}
-.ndg__v i{font-style:normal;font-size:.5em;margin-left:1px}
-
-.ndg__note{margin-top:24px;text-align:center;font-size:11px;color:var(--c-ink3);line-height:1.8}
-
-@media(max-width:900px){
-  .ndg__panel{padding:28px 16px 20px}
-  .ndg__grid{gap:14px}
-  .ndg__d{width:150px;height:150px}
-  .ndg__d::after{inset:9px}
-  .ndg__label{font-size:14px}
-  .ndg__v{font-size:31px}
-}
-@media(max-width:560px){
-  .ndg__grid{gap:12px}
-  .ndg__d{width:136px;height:136px}
-  .ndg__label{font-size:13px}
-  .ndg__v{font-size:28px}
 }
 
 /* ===== features/features-vertical-heading-rows ===== */
@@ -663,6 +647,27 @@ html:not(.js) .lm__i{transform:none}
   border:4px solid #fff;box-shadow:var(--shadow-s);
   border-radius:12px 9px 14px 10px}
 
+/* 写真2枚を半々で並べる */
+.vhr__figs{flex:1;min-width:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.vhr__figs .vhr__fig{flex:none}
+.vhr__figs .vhr__fig img{aspect-ratio:1/1}
+
+/* 写真の代わりに合格率のドーナツを置く。数値は0から回る（--p も0%から描かれる） */
+.vhr__chart{flex:1;min-width:0}
+.vhr__ds{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;
+  max-width:360px;margin-inline:auto}
+.vhr__d{position:relative;width:108px;height:108px;border-radius:50%;
+  display:grid;place-content:center;text-align:center}
+.vhr__d::before{content:"";position:absolute;inset:0;border-radius:50%;
+  background:conic-gradient(var(--c-primary) 0 var(--p), #e8e8e8 var(--p) 100%)}
+.vhr__d::after{content:"";position:absolute;inset:7px;border-radius:50%;background:var(--c-bg)}
+.vhr__dl,.vhr__dv{position:relative;z-index:2}
+.vhr__dl{display:block;font-size:11px;font-weight:700;color:var(--c-ink)}
+.vhr__dv{display:block;margin-top:2px;font-family:var(--f-num);font-size:22px;
+  font-weight:900;color:var(--c-primary);line-height:1}
+.vhr__dv i{font-style:normal;font-size:.5em;margin-left:1px}
+.vhr__cnote{margin-top:12px;text-align:center;font-size:10px;color:var(--c-ink3);line-height:1.7}
+
 /* ── 破線 → 下段：横書きの見出し → 本文 ── */
 .vhr__sub{margin-top:clamp(16px,2vw,24px);padding-top:clamp(14px,1.8vw,22px);
   border-top:1px dashed var(--c-line);
@@ -681,6 +686,8 @@ html:not(.js) .lm__i{transform:none}
   .vhr__label{writing-mode:horizontal-tb;letter-spacing:.12em}
   .vhr__title{font-size:17px;letter-spacing:.02em;line-height:1.6}
   .vhr__fig{flex:1;max-width:340px}
+  .vhr__figs{max-width:340px}
+  .vhr__ds{max-width:none}
   .vhr__fig img{border-width:5px}
 }
 
@@ -760,6 +767,27 @@ html:not(.js) .lm__i{transform:none}
   border:4px solid #fff;box-shadow:var(--shadow-s);
   border-radius:12px 9px 14px 10px}
 
+/* 写真2枚を半々で並べる */
+.vhr__figs{flex:1;min-width:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.vhr__figs .vhr__fig{flex:none}
+.vhr__figs .vhr__fig img{aspect-ratio:1/1}
+
+/* 写真の代わりに合格率のドーナツを置く。数値は0から回る（--p も0%から描かれる） */
+.vhr__chart{flex:1;min-width:0}
+.vhr__ds{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;
+  max-width:360px;margin-inline:auto}
+.vhr__d{position:relative;width:108px;height:108px;border-radius:50%;
+  display:grid;place-content:center;text-align:center}
+.vhr__d::before{content:"";position:absolute;inset:0;border-radius:50%;
+  background:conic-gradient(var(--c-primary) 0 var(--p), #e8e8e8 var(--p) 100%)}
+.vhr__d::after{content:"";position:absolute;inset:7px;border-radius:50%;background:var(--c-bg)}
+.vhr__dl,.vhr__dv{position:relative;z-index:2}
+.vhr__dl{display:block;font-size:11px;font-weight:700;color:var(--c-ink)}
+.vhr__dv{display:block;margin-top:2px;font-family:var(--f-num);font-size:22px;
+  font-weight:900;color:var(--c-primary);line-height:1}
+.vhr__dv i{font-style:normal;font-size:.5em;margin-left:1px}
+.vhr__cnote{margin-top:12px;text-align:center;font-size:10px;color:var(--c-ink3);line-height:1.7}
+
 /* ── 破線 → 下段：横書きの見出し → 本文 ── */
 .vhr__sub{margin-top:clamp(16px,2vw,24px);padding-top:clamp(14px,1.8vw,22px);
   border-top:1px dashed var(--c-line);
@@ -778,6 +806,8 @@ html:not(.js) .lm__i{transform:none}
   .vhr__label{writing-mode:horizontal-tb;letter-spacing:.12em}
   .vhr__title{font-size:17px;letter-spacing:.02em;line-height:1.6}
   .vhr__fig{flex:1;max-width:340px}
+  .vhr__figs{max-width:340px}
+  .vhr__ds{max-width:none}
   .vhr__fig img{border-width:5px}
 }
 
@@ -1891,54 +1921,34 @@ html:not(.js) .lm__i{transform:none}
             <p class="vhr__label">（&nbsp;POINT&nbsp;01&nbsp;）</p>
             <h3 class="vhr__title">高い英検合格率を実現</h3>
           </div>
-          <figure class="vhr__fig"><img src="img/p08.jpg" alt="カリキュラムに沿ってノートに取り組む生徒" loading="lazy"></figure>
+          
+          
+          <div class="vhr__chart">
+            <ul class="vhr__ds">
+              <li class="vhr__d" style="--p:100%">
+                <span class="vhr__dl">5級</span>
+                <b class="vhr__dv"><span data-count="100">100</span><i>%</i></b>
+              </li><li class="vhr__d" style="--p:88%">
+                <span class="vhr__dl">4級</span>
+                <b class="vhr__dv"><span data-count="88">88</span><i>%</i></b>
+              </li><li class="vhr__d" style="--p:86%">
+                <span class="vhr__dl">3級</span>
+                <b class="vhr__dv"><span data-count="86">86</span><i>%</i></b>
+              </li><li class="vhr__d" style="--p:64%">
+                <span class="vhr__dl">準2級</span>
+                <b class="vhr__dv"><span data-count="64">64</span><i>%</i></b>
+              </li><li class="vhr__d" style="--p:75%">
+                <span class="vhr__dl">2級</span>
+                <b class="vhr__dv"><span data-count="75">75</span><i>%</i></b>
+              </li>
+            </ul>
+            <p class="vhr__cnote">2023年度第2回の実績（ESL clubオンライン校）／受験者のうち1次・2次受験双方に合格した生徒の割合</p>
+          </div>
         </div>
         <p class="vhr__sub">累計1,000名以上を合格に導いた英検ベースのカリキュラム</p>
         <p class="vhr__body">ESL clubでは2015年の開塾以降、英検をカリキュラムに用いて、着実な英語力の向上と英検合格に導いてきました。国際基準であるCEFRに対応した英検を用いることで、バランスよく4技能＋語彙力を高めていきます。一般的には、英検2級が高校卒業時の到達目標とされていますが、ESL clubでは、小学生、中学生の時点での高い合格率を誇っています。</p>
       </li>
     </ul>
-  </div>
-</section>
-
-<!-- numbers/numbers-donut-grid (base) -->
-<section class="sec ndg">
-  <div class="wrap">
-    <div class="sec-head">
-      
-      <h2 class="sec-head__ja">ESL clubの<span class="nb">小中学生の英検合格率</span></h2>
-      
-    </div>
-    <div class="ndg__panel">
-      <ul class="ndg__grid">
-        <li class="ndg__cell fx" data-fx="scale" data-d="0">
-          <div class="ndg__d" style="--p:100%">
-            <span class="ndg__label">5級</span>
-            <b class="ndg__v"><span data-count="100">100</span><i>%</i></b>
-          </div>
-        </li><li class="ndg__cell fx" data-fx="scale" data-d="90">
-          <div class="ndg__d" style="--p:88%">
-            <span class="ndg__label">4級</span>
-            <b class="ndg__v"><span data-count="88">88</span><i>%</i></b>
-          </div>
-        </li><li class="ndg__cell fx" data-fx="scale" data-d="180">
-          <div class="ndg__d" style="--p:86%">
-            <span class="ndg__label">3級</span>
-            <b class="ndg__v"><span data-count="86">86</span><i>%</i></b>
-          </div>
-        </li><li class="ndg__cell fx" data-fx="scale" data-d="270">
-          <div class="ndg__d" style="--p:64%">
-            <span class="ndg__label">準2級</span>
-            <b class="ndg__v"><span data-count="64">64</span><i>%</i></b>
-          </div>
-        </li><li class="ndg__cell fx" data-fx="scale" data-d="360">
-          <div class="ndg__d" style="--p:75%">
-            <span class="ndg__label">2級</span>
-            <b class="ndg__v"><span data-count="75">75</span><i>%</i></b>
-          </div>
-        </li>
-      </ul>
-      <p class="ndg__note">2023年度第2回の実績（ESL clubオンライン校）／受験者のうち1次・2次受験双方に合格した生徒の割合</p>
-    </div>
   </div>
 </section>
 
@@ -1958,7 +1968,11 @@ html:not(.js) .lm__i{transform:none}
             <p class="vhr__label">（&nbsp;POINT&nbsp;02&nbsp;）</p>
             <h3 class="vhr__title">受験勉強と並行可能</h3>
           </div>
-          <figure class="vhr__fig"><img src="img/p11.jpg" alt="部活動を続けながら学習を並行する" loading="lazy"></figure>
+          
+          <div class="vhr__figs">
+            <figure class="vhr__fig"><img src="img/p11.jpg" alt="部活動を続けながら学習を並行する" loading="lazy"></figure><figure class="vhr__fig"><img src="img/p08.jpg" alt="カリキュラムに沿ってノートに取り組む生徒" loading="lazy"></figure>
+          </div>
+          
         </div>
         <p class="vhr__sub">目標級・時期と現在のレベルから作成する個別の学習計画</p>
         <p class="vhr__body">目標とする級と受験の時期、そして現在の英語レベル、学習に充てられる時間の4点から逆算して個別の学習計画を作成し、確保できる学習時間に合わせてレッスンの進め方と宿題量を設計します。学習時間そのものを増やすのではなく、限られた時間の使い方を組み立て直すため、中学受験から大学受験までの受験勉強や、部活動・他の習い事を続けながら、英検合格を目指すことができます。</p>
@@ -1969,6 +1983,8 @@ html:not(.js) .lm__i{transform:none}
             <h3 class="vhr__title">学習効率を向上</h3>
           </div>
           <figure class="vhr__fig"><img src="img/p16.jpg" alt="自宅からオンラインでマンツーマンレッスンを受ける中高生" loading="lazy"></figure>
+          
+          
         </div>
         <p class="vhr__sub">バイリンガル講師のマンツーマンレッスン</p>
         <p class="vhr__body">ESL clubでは、英検1級・TOEFL iBT95点・TOEIC900点レベル以上のバイリンガル講師のみを採用しています。年齢の近い講師との距離の近さがそのまま学習の動機づけになり、ライティングや長文読解では、その場で日本語に切り替えて解説します。必要な時に日本語で補えるため、疑問をその場で解消し、1回のレッスンで進める量を最大化できます。</p>
@@ -2026,6 +2042,8 @@ html:not(.js) .lm__i{transform:none}
             <p class="vhr__label">（&nbsp;POINT&nbsp;04&nbsp;）</p>
             <h3 class="vhr__title">保護者様が忙しくても安心</h3>
           </div>
+          
+          
           
         </div>
         <p class="vhr__sub">計画の実行をフォローするスクールマネージャー</p>
