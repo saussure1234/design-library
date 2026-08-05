@@ -237,6 +237,21 @@ footer{position:relative;z-index:1}
 .card{background:var(--c-bg);border-radius:22px;box-shadow:var(--shadow);padding:28px}
 
 
+/* ── 節の上端を山型にする ──────────────────────
+   直線の境目をやめ、左寄りに頂点のある稜線で上のセクションへ食い込ませる。
+   SVGは節の地色で塗るので、色を変えても追従する。 */
+.hill-top{position:relative}
+.hill-top > .hill{position:absolute;left:0;right:0;bottom:calc(100% - 1px);
+  height:clamp(46px,6.2vw,110px);line-height:0;pointer-events:none;z-index:0}
+.hill-top > .hill svg{width:100%;height:100%;display:block}
+/* 稜線は「節の地色」で塗る（文字色ではない） */
+.hill-top > .hill path{fill:var(--hill-fill,var(--c-bg))}
+.tone-brand.hill-top{--hill-fill:var(--c-primary)}
+.tone-tint.hill-top{--hill-fill:var(--c-bg2)}
+.tone-pale.hill-top{--hill-fill:var(--c-bg2)}
+.tone-ink.hill-top{--hill-fill:#333333}
+.hill-top > *:not(.hill){position:relative;z-index:1}
+
 /* ── セクションの分け目を曲線にする ──────────────
    直線の境界だと段が積まれて見える。前後の地の色で【大きな楕円】を置き、
    その弧だけを見せて境界を丸くする。楕円は画面より広くして、

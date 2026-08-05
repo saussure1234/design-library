@@ -306,13 +306,20 @@ def build(kit_path, out_path):
         tone = None if grp else (s.get("tone") if isinstance(s, dict) else None)
         wave = s.get("wave") if isinstance(s, dict) else None   # "top" / "bottom" / "both"
         st = s.get("style") if isinstance(s, dict) else None
-        if tone or wave or st:
+        hill = s.get("hill") if isinstance(s, dict) else None
+        if tone or wave or st or hill:
             cls = [f"tone-{tone}"] if tone else []
+            if hill == "top": cls.append("hill-top")
             if wave in ("top", "both"): cls.append("wave-top")
             if wave in ("bottom", "both"): cls.append("wave-bottom")
             sattr = f' style="{st}"' if st else ""
             cattr = f' class="{" ".join(cls)}"' if cls else ""
-            body = f'<div{cattr}{sattr}>\n{body}\n</div>'
+            hill_svg = ('<span class="hill" aria-hidden="true">'
+                        '<svg viewBox="0 0 1440 120" preserveAspectRatio="none">'
+                        '<path d="M0 120 L0 78 C 78 18, 176 0, 286 16 '
+                        'C 600 62, 1010 102, 1440 108 L1440 120 Z"/>'
+                        '</svg></span>\n') if hill == "top" else ""
+            body = f'<div{cattr}{sattr}>\n{hill_svg}{body}\n</div>'
         html_chunks.append(f"<!-- {pid} ({tone or 'base'}) -->\n" + body)
         used.append(f"{pid} ({meta.get('name', '')})")
     if open_group is not None:

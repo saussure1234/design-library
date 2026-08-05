@@ -8,31 +8,6 @@
    再現の記録: repro/vhr/ */
 .vhr{position:relative;overflow:hidden}
 
-/* 濃い面の上では白の装飾にする */
-.tone-brand .vhr__blob{background:#fff;opacity:.10}
-
-/* 背景の丸い装飾。真円にせず、ゆっくり形と位置を変える。
-   位置は kit の style で --b1x / --b1y … を渡して節ごとに散らす。 */
-.vhr__blob{position:absolute;z-index:0;pointer-events:none;
-  background:var(--c-primary);opacity:.07;will-change:border-radius,transform}
-/* 節の中に収める。はみ出すと overflow:hidden で半円に切れる */
-.vhr__blob--1{left:var(--b1x,3%);top:var(--b1y,6%);
-  width:var(--b1w,24vw);aspect-ratio:1/.96;max-width:var(--b1max,340px);
-  border-radius:58% 42% 47% 53% / 46% 55% 45% 54%;
-  animation:vhrBlobA 26s ease-in-out infinite}
-.vhr__blob--2{left:auto;right:var(--b2r,3%);top:var(--b2y,50%);
-  width:var(--b2w,22vw);aspect-ratio:1/1.02;max-width:var(--b2max,310px);
-  border-radius:43% 57% 61% 39% / 57% 44% 56% 43%;
-  animation:vhrBlobB 32s ease-in-out infinite}
-@keyframes vhrBlobA{
-  0%,100%{border-radius:58% 42% 47% 53% / 46% 55% 45% 54%;transform:translate(0,0) rotate(0)}
-  33%{border-radius:41% 59% 66% 34% / 58% 40% 60% 42%;transform:translate(4%,3%) rotate(6deg)}
-  66%{border-radius:66% 34% 38% 62% / 37% 63% 37% 63%;transform:translate(-3%,5%) rotate(-5deg)}}
-@keyframes vhrBlobB{
-  0%,100%{border-radius:43% 57% 61% 39% / 57% 44% 56% 43%;transform:translate(0,0) rotate(0)}
-  38%{border-radius:63% 37% 34% 66% / 39% 64% 36% 61%;transform:translate(-5%,-4%) rotate(-6deg)}
-  72%{border-radius:35% 65% 58% 42% / 65% 35% 65% 35%;transform:translate(3%,-5%) rotate(5deg)}}
-@media(prefers-reduced-motion:reduce){.vhr__blob{animation:none}}
 .vhr .wrap{position:relative;z-index:1}
 
 /* 本文の幅を写真の幅に合わせる（右端が揃う）。版面を絞ってコンパクトに */
