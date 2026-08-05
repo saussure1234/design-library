@@ -106,6 +106,13 @@ JS_SETTLE = """
   }
   for (const el of fixOpacity) el.style.setProperty('opacity','1','important');
   for (const el of fixVis)     el.style.setProperty('visibility','visible','important');
+  // ★ sticky は「貼り付いた位置」で描かれるため、全長撮影で同じ要素が何度も写る。
+  //    消すと背景が抜けて白地に白文字になるので、消さずに static へ戻して
+  //    本来の流し位置に一度だけ描かせる。
+  document.querySelectorAll('body *').forEach(el => {
+    if (getComputedStyle(el).position === 'sticky')
+      el.style.setProperty('position', 'static', 'important');
+  });
   await new Promise(r => setTimeout(r, 340));
   return 1;
 })()"""
