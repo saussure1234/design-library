@@ -1,0 +1,14 @@
+{
+  "id": "voice/voice-avatar-letter",
+  "name": "アバター＋長文の声（入れ子の返信つき）",
+  "type": "voice",
+  "intent": "写真がイラストアバターしかなく、本文が300〜500字ある声を、読ませる形に収める",
+  "when": ["顔写真が使えずアバター／イラストになる", "本文が長い", "講師コメントなどの返信が入れ子になる"],
+  "avoid": ["実写の人物写真が主役にできる", "声が1〜2行と短い"],
+  "slots": {
+    "heading": "見出し",
+    "voices": "[{photo, photoAlt, title, paras:[{t}], name, reply:[{photo,photoAlt,head,lines:[{t}]}]}]"
+  },
+  "responsive": "900px以下でパディングを詰め、アバターを56pxに",
+  "verified": false
+}

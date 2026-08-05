@@ -1,0 +1,18 @@
+{
+  "id": "member/member-round-letter",
+  "name": "円形の顔写真＋長文の手紙",
+  "type": "member",
+  "intent": "素材が288pxの円形サムネしかなく、本文が400〜800字ある人物紹介を、読ませる形に収める",
+  "when": ["顔写真が小さい円形の切り抜きしかない", "本人コメントが長い（400字以上）", "複数人を縦に並べる"],
+  "avoid": ["全身・引きの写真が主役にできる", "コメントが2〜3行と短い"],
+  "slots": {
+    "eyebrow": "欧文ラベル",
+    "heading": "見出し",
+    "members": "[{photo, photoAlt, role, name, careerLabel, careerValue, comment}]",
+    "members[].comment": "<p>…</p> の連結。400〜800字"
+  },
+  "motion": "写真と署名が左から44px、本文が下から26pxで90ms差",
+  "responsive": "900px以下で写真＋署名を横並びの1行に畳み、本文を下へ",
+  "verified": false,
+  "refs": []
+}

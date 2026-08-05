@@ -1,0 +1,22 @@
+<section class="sec mrl">
+  <div class="wrap">
+    <div class="sec-head">
+      {{?eyebrow}}<p class="sec-head__en">{{eyebrow}}</p>{{/eyebrow}}
+      <h2 class="sec-head__ja">{{heading}}</h2>
+    </div>
+
+    <ul class="mrl__list">
+      {{#members}}<li class="mrl__item">
+        <div class="mrl__aside fx" data-fx="left">
+          <figure class="mrl__figure">
+            <img src="{{.photo}}" alt="{{.photoAlt}}" loading="lazy">
+          </figure>
+          <p class="mrl__role">{{.role}}</p>
+          <p class="mrl__name">{{.name}}</p>
+          {{?.careerLabel}}<p class="mrl__career"><span>{{.careerLabel}}</span><b>{{.careerValue}}</b></p>{{/.careerLabel}}
+        </div>
+        <div class="mrl__body fx" data-fx="fadeup" data-d="90">{{.comment}}</div>
+      </li>{{/members}}
+    </ul>
+  </div>
+</section>

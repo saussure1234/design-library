@@ -117,3 +117,10 @@
 
 
 .mig__card{background:var(--c-bg);box-shadow:none;border:0}
+
+/* 素材が288pxの円形切り抜きなので、縦長のトリミング枠は使えない。
+   円形のまま置き、カードは地と同系の塗りだけで立てる */
+.mig__figure,.mig__photo,[class*="mig"] figure{
+  width:132px;height:132px;margin:0 auto;border-radius:50%;overflow:hidden;background:var(--c-bg2)}
+.mig__figure img,.mig__photo img,[class*="mig"] figure img{
+  width:100%;height:100%;object-fit:cover;object-position:50% 40%}

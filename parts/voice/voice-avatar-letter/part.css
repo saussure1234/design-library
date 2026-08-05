@@ -1,0 +1,34 @@
+/* voice/voice-avatar-letter
+   保護者の声。素材は288pxのイラストアバターなので、写真を主役にできない。
+   本文（300〜500字＋入れ子の講師コメント400字級）を読ませることが仕事。
+   ─ 使っている工夫 ─
+   rule/dissolve-into-ground … 枠も影も置かず、地と同系の塗りだけで面を立てる
+   rule/border-as-meaning    … 罫は装飾でなく「入れ子である」ことの記号としてだけ使う */
+.val__list{display:grid;gap:var(--sp-blk)}
+.val__item{margin:0;background:var(--c-bg);border-radius:var(--r-l);
+  padding:var(--sp-el) clamp(20px,3.4vw,48px)}
+.val__head{display:flex;align-items:center;gap:var(--s5);margin-bottom:var(--s5)}
+.val__avatar{margin:0;flex:none;width:72px;height:72px;border-radius:50%;overflow:hidden;
+  background:var(--c-bg2)}
+.val__avatar img{width:100%;height:100%;object-fit:cover}
+.val__avatar--sm{width:48px;height:48px}
+.val__title{font-family:var(--f-disp);font-weight:900;color:var(--c-ink);
+  font-size:clamp(16px,1.9vw,21px);line-height:1.55}
+.val__body{max-width:42em;font-size:var(--fs-base);line-height:2.05;color:var(--c-ink2)}
+.val__body p + p{margin-top:1.4em}
+.val__name{margin-top:var(--s5);font-size:var(--fs-sm);font-weight:700;color:var(--c-ink)}
+
+/* 入れ子の講師コメント：面を変えず、左の1本の罫だけで「返信」を示す */
+.val__reply{margin-top:var(--sp-el);padding-left:clamp(16px,2.4vw,28px);
+  border-left:2px solid var(--c-primary-l)}
+.val__replyhead{display:flex;align-items:center;gap:var(--s4);margin-bottom:var(--s4)}
+.val__replylabel{font-size:var(--fs-sm);font-weight:700;color:var(--c-primary-d);letter-spacing:.06em}
+.val__reply .val__body{font-size:var(--fs-sm);color:var(--c-ink3);line-height:2}
+.val__note{margin-top:var(--s5);font-size:var(--fs-note);color:var(--c-ink3)}
+
+@media(max-width:900px){
+  .val__item{padding:var(--s6) var(--s5);border-radius:var(--r-m)}
+  .val__head{gap:var(--s4);margin-bottom:var(--s4)}
+  .val__avatar{width:56px;height:56px}
+  .val__body{line-height:1.95}
+}

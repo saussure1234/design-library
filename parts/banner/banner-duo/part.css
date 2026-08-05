@@ -1,0 +1,10 @@
+/* banner/banner-duo — 既製バナーをそのまま2本並べる */
+.bnr__list{display:grid;gap:var(--s4)}
+.bnr__item{margin:0}
+.bnr__item a{display:block;border-radius:var(--r-m);overflow:hidden;
+  transition:transform .18s var(--e),box-shadow .18s var(--e)}
+.bnr__item img{width:100%;height:auto;display:block}
+.bnr__item a:active{transform:scale(.995)}
+@media(hover:hover) and (pointer:fine){
+  .bnr__item a:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+}

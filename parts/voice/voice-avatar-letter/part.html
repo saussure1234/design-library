@@ -1,0 +1,28 @@
+<section class="sec val">
+  <div class="wrap">
+    <div class="sec-head">
+      {{?eyebrow}}<p class="sec-head__en">{{eyebrow}}</p>{{/eyebrow}}
+      <h2 class="sec-head__ja">{{heading}}</h2>
+    </div>
+
+    <ul class="val__list">
+      {{#voices}}<li class="val__item fx" data-fx="fadeup" data-d="{{.d}}">
+        <div class="val__head">
+          <figure class="val__avatar"><img src="{{.photo}}" alt="{{.photoAlt}}" loading="lazy"></figure>
+          <h3 class="val__title">{{.title}}</h3>
+        </div>
+        <div class="val__body">{{#.paras}}<p>{{.t}}</p>{{/.paras}}</div>
+        <p class="val__name">{{.name}}</p>
+
+        {{#.reply}}<div class="val__reply">
+          <div class="val__replyhead">
+            <figure class="val__avatar val__avatar--sm"><img src="{{.photo}}" alt="{{.photoAlt}}" loading="lazy"></figure>
+            <p class="val__replylabel">{{.head}}</p>
+          </div>
+          <div class="val__body">{{#.lines}}<p>{{.t}}</p>{{/.lines}}</div>
+        </div>{{/.reply}}
+      </li>{{/voices}}
+    </ul>
+    {{?note}}<p class="val__note">{{note}}</p>{{/note}}
+  </div>
+</section>

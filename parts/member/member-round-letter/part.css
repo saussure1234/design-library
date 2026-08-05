@@ -1,0 +1,45 @@
+/* member/member-round-letter
+   円形の顔写真（288px・白背景の切り抜き）＋400〜800字の長文。
+   素材が円形サムネなので、全面ブリード写真を前提にした型は使えない。
+   長文を読ませることが仕事なので、行長と行間を最優先にする。
+   ─ 使っている工夫 ─
+   space/heading-outside-block … 氏名と肩書を本文ブロックの外に置き、罫を引かず距離だけで関係を作る
+   color/accent-one-tiny-spot  … 有彩色は指導歴の数字1点だけ */
+.mrl__list{display:grid;gap:var(--sp-blk)}
+.mrl__item{display:grid;grid-template-columns:210px minmax(0,1fr);gap:var(--sp-el);align-items:start}
+
+/* 左：円形写真と署名。罫は引かない */
+.mrl__aside{text-align:center}
+.mrl__figure{margin:0 auto;width:168px;height:168px;border-radius:50%;overflow:hidden;
+  background:var(--c-bg2)}
+.mrl__figure img{width:100%;height:100%;object-fit:cover;object-position:50% 42%}
+.mrl__role{margin-top:var(--s4);font-size:var(--fs-note);color:var(--c-ink3);line-height:1.6}
+.mrl__name{margin-top:var(--s1);font-family:var(--f-disp);font-weight:900;
+  font-size:var(--fs-lg);color:var(--c-ink);letter-spacing:.04em}
+.mrl__career{margin-top:var(--s3);font-size:var(--fs-note);color:var(--c-ink3);
+  display:flex;align-items:baseline;justify-content:center;gap:var(--s2)}
+.mrl__career b{font-family:var(--f-num);font-weight:900;font-size:var(--fs-lg);
+  color:var(--c-accent);line-height:1}
+
+/* 右：長文。1行35〜45字で頭打ちにする */
+.mrl__body{max-width:40em;font-size:var(--fs-base);line-height:2.05;color:var(--c-ink2)}
+.mrl__body p{margin:0}
+.mrl__body p + p{margin-top:1.5em}
+.mrl__body em{font-style:normal;font-weight:700;color:var(--c-ink)}
+
+/* 濃色の地に乗る場合 */
+.tone-dark .mrl__figure{background:rgba(255,255,255,.08)}
+.tone-dark .mrl__name{color:var(--c-on-dark)}
+.tone-dark .mrl__role,.tone-dark .mrl__career{color:#A9BFAE}
+.tone-dark .mrl__body{color:#D5E0D7}
+.tone-dark .mrl__body em{color:var(--c-on-dark)}
+
+@media(max-width:900px){
+  .mrl__item{grid-template-columns:minmax(0,1fr);gap:var(--s5)}
+  .mrl__aside{display:grid;grid-template-columns:96px minmax(0,1fr);
+    align-items:center;gap:var(--s4);text-align:left}
+  .mrl__figure{width:96px;height:96px}
+  .mrl__role{margin-top:0}
+  .mrl__career{justify-content:flex-start;margin-top:var(--s2)}
+  .mrl__body{max-width:none;line-height:1.95}
+}
