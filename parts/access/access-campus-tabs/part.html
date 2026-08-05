@@ -67,7 +67,13 @@
                   <p class="cts__msgname">{{.msgName}}</p>
                 </div>
               </div>
-              <div class="cts__msgtext">{{.msgText}}</div>
+              <div class="mbl__fold">
+                <div class="cts__msgtext" id="ctsmsg-{{.i}}">{{.msgText}}</div>
+              </div>
+              <button class="mbl__more" type="button" aria-expanded="false" aria-controls="ctsmsg-{{.i}}">
+                <span class="mbl__more-t" data-open="{{openLabel}}" data-close="{{closeLabel}}">{{openLabel}}</span>
+                <span class="mbl__more-i" aria-hidden="true"></span>
+              </button>
             </div>
           </div>{{/.msgName}}
 

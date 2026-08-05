@@ -820,7 +820,8 @@ html:not(.js) .lm__i{transform:none}
   align-items:end;
   margin-inline:calc(50% - 50vw);
   padding-inline:var(--pmp-side)}
-.pmp{--pmp-side:clamp(24px,4vw,58px)}
+/* 左右の余白。箱と動画が540pxを保てる範囲でめいっぱい内側へ寄せる */
+.pmp{--pmp-side:max(24px, min(9.5vw, (100vw - 1140px) / 2))}
 
 /* 左：POINTの箱（白）。この下マージンのぶんだけ、動画が箱より下へ回り込む */
 .pmp__box{margin-bottom:clamp(110px,14vw,215px)}
@@ -1138,9 +1139,9 @@ html:not(.js) .lm__i{transform:none}
 
 .mbl__figwrap{position:relative}
 .mbl__fig{position:relative;z-index:2;margin:0}
-/* ★有機的な形。真円にしない */
-.mbl__fig img{width:100%;aspect-ratio:1/1;object-fit:cover;object-position:50% 26%;display:block;
-  border-radius:50%}
+/* 素材は背景を抜いてある。円の地はこちらで持つ（白い板の上なので薄い緑） */
+.mbl__fig img{width:100%;aspect-ratio:1/1;object-fit:cover;object-position:50% 14%;display:block;
+  border-radius:50%;background:color-mix(in srgb,var(--c-primary) 10%,#fff)}
 .mbl__b1,.mbl__b2{position:absolute;z-index:1;display:block}
 .mbl__b1{left:2%;top:22%;width:15%;aspect-ratio:1/.8;background:var(--c-accent);
   border-radius:60% 40% 46% 54% / 54% 60% 40% 46%;opacity:.85}
@@ -1211,9 +1212,10 @@ html:not(.js) .lm__i{transform:none}
 .msc__fig{margin:0}
 /* 素材が円形に切り抜かれているので、円のまま色面に乗せる */
 .msc__fig{display:grid;place-items:center;padding:22px 22px 14px}
-/* 素材の丸い地が緑の上で浮くので、白い輪で縁取って「額」に見せる */
-.msc__fig img{width:150px;max-width:72%;aspect-ratio:1/1;object-fit:cover;border-radius:50%;display:block;
-  box-shadow:0 0 0 6px var(--c-bg)}
+/* 素材は背景を抜いてある。円の地をこちらで持ち、白い輪で縁取って「額」に見せる。
+   こうすると、元の壁の色が人によって違っても見えが揃う */
+.msc__fig img{width:150px;max-width:72%;aspect-ratio:1/1;object-fit:cover;object-position:50% 12%;
+  border-radius:50%;display:block;background:var(--c-bg);box-shadow:0 0 0 6px var(--c-bg)}
 /* 氏名：写真の下端に重ねる帯。
    ひしゃげた楕円だと形が読めないので、丸帯（ピル）にする。
    幅は中身に合わせて縮め、濃い緑と白の境目をまたがせる。 */
@@ -1782,16 +1784,20 @@ html:not(.js) .lm__i{transform:none}
   column-gap:clamp(20px,2.6vw,40px);row-gap:0;align-items:start}
 .cts__msghead{display:contents}
 .cts__msgfig{grid-column:1;grid-row:1 / span 2;align-self:start;
-  margin:0;border-radius:50%;overflow:hidden;background:var(--c-bg2)}
-.cts__msgfig img{width:100%;aspect-ratio:1/1;object-fit:cover;object-position:50% 22%;display:block}
-.cts__msgid,.cts__msgtext{grid-column:2}
+  margin:0;border-radius:50%;overflow:hidden;
+  background:color-mix(in srgb,var(--c-primary) 10%,#fff)}
+.cts__msgfig img{width:100%;aspect-ratio:1/1;object-fit:cover;object-position:50% 14%;display:block}
+.cts__msgbody > .cts__msgid,
+.cts__msgbody > .mbl__fold,
+.cts__msgbody > .mbl__more{grid-column:2}
 .cts__msgrole{font-size:clamp(10.5px,.88vw,12.5px);color:var(--c-ink3);font-weight:700;letter-spacing:.04em}
 .cts__msgname{margin-top:3px;font-family:var(--f-disp);font-weight:900;
   font-size:clamp(19px,1.65vw,23px);color:var(--c-ink);letter-spacing:.04em}
-/* 罫は本文の外に置く（マネジャー紹介と同じ扱い） */
-.cts__msgtext{margin-top:clamp(14px,1.7vw,22px);padding-top:clamp(14px,1.7vw,22px);
-  border-top:1px solid var(--c-line);
-  max-width:44em;font-size:var(--fs-sm);line-height:2.05;color:var(--c-ink2)}
+/* 罫はたたむ箱の【外】に置く。中に入れると、たたんだ高さから罫と余白のぶんが
+   本文に食い込み、開閉の実測ともズレる（マネジャー紹介と同じ扱い） */
+.cts__msgid{padding-bottom:clamp(14px,1.7vw,22px);border-bottom:1px solid var(--c-line)}
+.cts__msgbody > .mbl__fold{margin-top:clamp(14px,1.7vw,22px)}
+.cts__msgtext{max-width:44em;font-size:var(--fs-sm);line-height:2.05;color:var(--c-ink2)}
 .cts__msgtext p + p{margin-top:1.4em}
 
 @media(max-width:900px){
@@ -2415,7 +2421,7 @@ html:not(.js) .lm__i{transform:none}
           <div class="mbl__figwrap">
             <span class="mbl__b1" aria-hidden="true"></span>
             <span class="mbl__b2" aria-hidden="true"></span>
-            <figure class="mbl__fig"><img src="img/manager01.jpg" alt="オンライン校スクールマネジャー 梶玲菜" loading="lazy"></figure>
+            <figure class="mbl__fig"><img src="img/manager01_cut.png" alt="オンライン校スクールマネジャー 梶玲菜" loading="lazy"></figure>
           </div>
           <div class="mbl__id">
             <p class="mbl__role">オンライン校スクールマネジャー</p>
@@ -2437,7 +2443,7 @@ html:not(.js) .lm__i{transform:none}
           <div class="mbl__figwrap">
             <span class="mbl__b1" aria-hidden="true"></span>
             <span class="mbl__b2" aria-hidden="true"></span>
-            <figure class="mbl__fig"><img src="img/manager02.jpg" alt="オンライン校スクールマネジャー 楠山理紀" loading="lazy"></figure>
+            <figure class="mbl__fig"><img src="img/manager02_cut.png" alt="オンライン校スクールマネジャー 楠山理紀" loading="lazy"></figure>
           </div>
           <div class="mbl__id">
             <p class="mbl__role">オンライン校スクールマネジャー</p>
@@ -2471,7 +2477,7 @@ html:not(.js) .lm__i{transform:none}
     <ul class="msc__grid">
       <li class="msc__item fx" data-fx="fadeup" data-d="0">
         <div class="msc__card">
-          <figure class="msc__fig"><img src="img/teacher01.jpg" alt="A.M.先生" loading="lazy"></figure>
+          <figure class="msc__fig"><img src="img/teacher01_cut.png" alt="A.M.先生" loading="lazy"></figure>
           <p class="msc__name"><b>A.M.先生</b><span>BILINGUAL TEACHER</span></p>
           <div class="msc__spec">
             <dl class="msc__dl"><dt>英語レベル</dt><dd>英検1級／IELTS 8.0</dd></dl><dl class="msc__dl"><dt>海外経験</dt><dd>アメリカ9年／シンガポール1年</dd></dl>
@@ -2480,7 +2486,7 @@ html:not(.js) .lm__i{transform:none}
         </div>
       </li><li class="msc__item fx" data-fx="fadeup" data-d="90">
         <div class="msc__card">
-          <figure class="msc__fig"><img src="img/teacher02.jpg" alt="K.N.先生" loading="lazy"></figure>
+          <figure class="msc__fig"><img src="img/teacher02_cut.png" alt="K.N.先生" loading="lazy"></figure>
           <p class="msc__name"><b>K.N.先生</b><span>BILINGUAL TEACHER</span></p>
           <div class="msc__spec">
             <dl class="msc__dl"><dt>英語レベル</dt><dd>英検1級／TOEFL ITP 623点</dd></dl><dl class="msc__dl"><dt>海外経験</dt><dd>エチオピア2年／アメリカ2年／オランダ1年</dd></dl>
@@ -2489,7 +2495,7 @@ html:not(.js) .lm__i{transform:none}
         </div>
       </li><li class="msc__item fx" data-fx="fadeup" data-d="180">
         <div class="msc__card">
-          <figure class="msc__fig"><img src="img/teacher03.jpg" alt="A.M.先生" loading="lazy"></figure>
+          <figure class="msc__fig"><img src="img/teacher03_cut.png" alt="A.M.先生" loading="lazy"></figure>
           <p class="msc__name"><b>A.M.先生</b><span>BILINGUAL TEACHER</span></p>
           <div class="msc__spec">
             <dl class="msc__dl"><dt>英語レベル</dt><dd>英検1級</dd></dl><dl class="msc__dl"><dt>海外経験</dt><dd>タイ5年／ロシア5年／パキスタン2年</dd></dl>
@@ -2905,13 +2911,19 @@ html:not(.js) .lm__i{transform:none}
             <h3 class="cts__h3">スクールマネジャーよりご挨拶</h3>
             <div class="cts__msgbody">
               <div class="cts__msghead">
-                <figure class="cts__msgfig"><img src="img/head_teacher.jpg" alt="ESL club 渋谷校 スクールマネジャー 杉舘皆華"></figure>
+                <figure class="cts__msgfig"><img src="img/head_teacher_cut.png" alt="ESL club 渋谷校 スクールマネジャー 杉舘皆華"></figure>
                 <div class="cts__msgid">
                   <p class="cts__msgrole">ESL club 渋谷校　スクールマネジャー</p>
                   <p class="cts__msgname">杉舘　皆華</p>
                 </div>
               </div>
-              <div class="cts__msgtext"><p>私は、英検は子どもたちの成長を確認するための一つの「通過点」だと考えています。もちろん、英検合格は大きな目標です。しかし、私が本当に大切にしたいのは、その過程で身につく英語力や、目標に向かって努力する経験です。</p><p>これまで子どもたちと向き合う中で、結果だけでなく、その過程で得られる経験や自信こそが、その後の成長を支える大切な財産になることを実感してきました。</p><p>英検の学習を通して、英語力だけでなく、挑戦する力や継続する力も身につけていきます。そして、「できた」という成功体験の積み重ねが、自信となって次の一歩を後押ししてくれます。</p><p>私は、子どもたちには自分でも気付いていない大きな可能性があると信じています。その可能性を引き出し、一人ひとりが自信を持って成長していけるよう支えていくことが私の役割です。</p><p>英語を学ぶことが、生徒様の未来の選択肢を広げるきっかけとなるよう、ESL club渋谷校スタッフ一同、全力でサポートしてまいります。みなさまとお会いできることを心より楽しみにしております。</p></div>
+              <div class="mbl__fold">
+                <div class="cts__msgtext" id="ctsmsg-1"><p>私は、英検は子どもたちの成長を確認するための一つの「通過点」だと考えています。もちろん、英検合格は大きな目標です。しかし、私が本当に大切にしたいのは、その過程で身につく英語力や、目標に向かって努力する経験です。</p><p>これまで子どもたちと向き合う中で、結果だけでなく、その過程で得られる経験や自信こそが、その後の成長を支える大切な財産になることを実感してきました。</p><p>英検の学習を通して、英語力だけでなく、挑戦する力や継続する力も身につけていきます。そして、「できた」という成功体験の積み重ねが、自信となって次の一歩を後押ししてくれます。</p><p>私は、子どもたちには自分でも気付いていない大きな可能性があると信じています。その可能性を引き出し、一人ひとりが自信を持って成長していけるよう支えていくことが私の役割です。</p><p>英語を学ぶことが、生徒様の未来の選択肢を広げるきっかけとなるよう、ESL club渋谷校スタッフ一同、全力でサポートしてまいります。みなさまとお会いできることを心より楽しみにしております。</p></div>
+              </div>
+              <button class="mbl__more" type="button" aria-expanded="false" aria-controls="ctsmsg-1">
+                <span class="mbl__more-t" data-open="続きを読む" data-close="閉じる">続きを読む</span>
+                <span class="mbl__more-i" aria-hidden="true"></span>
+              </button>
             </div>
           </div>
 

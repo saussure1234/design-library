@@ -20,9 +20,10 @@
 .msc__fig{margin:0}
 /* 素材が円形に切り抜かれているので、円のまま色面に乗せる */
 .msc__fig{display:grid;place-items:center;padding:22px 22px 14px}
-/* 素材の丸い地が緑の上で浮くので、白い輪で縁取って「額」に見せる */
-.msc__fig img{width:150px;max-width:72%;aspect-ratio:1/1;object-fit:cover;border-radius:50%;display:block;
-  box-shadow:0 0 0 6px var(--c-bg)}
+/* 素材は背景を抜いてある。円の地をこちらで持ち、白い輪で縁取って「額」に見せる。
+   こうすると、元の壁の色が人によって違っても見えが揃う */
+.msc__fig img{width:150px;max-width:72%;aspect-ratio:1/1;object-fit:cover;object-position:50% 12%;
+  border-radius:50%;display:block;background:var(--c-bg);box-shadow:0 0 0 6px var(--c-bg)}
 /* 氏名：写真の下端に重ねる帯。
    ひしゃげた楕円だと形が読めないので、丸帯（ピル）にする。
    幅は中身に合わせて縮め、濃い緑と白の境目をまたがせる。 */

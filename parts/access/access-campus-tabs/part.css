@@ -84,16 +84,20 @@
   column-gap:clamp(20px,2.6vw,40px);row-gap:0;align-items:start}
 .cts__msghead{display:contents}
 .cts__msgfig{grid-column:1;grid-row:1 / span 2;align-self:start;
-  margin:0;border-radius:50%;overflow:hidden;background:var(--c-bg2)}
-.cts__msgfig img{width:100%;aspect-ratio:1/1;object-fit:cover;object-position:50% 22%;display:block}
-.cts__msgid,.cts__msgtext{grid-column:2}
+  margin:0;border-radius:50%;overflow:hidden;
+  background:color-mix(in srgb,var(--c-primary) 10%,#fff)}
+.cts__msgfig img{width:100%;aspect-ratio:1/1;object-fit:cover;object-position:50% 14%;display:block}
+.cts__msgbody > .cts__msgid,
+.cts__msgbody > .mbl__fold,
+.cts__msgbody > .mbl__more{grid-column:2}
 .cts__msgrole{font-size:clamp(10.5px,.88vw,12.5px);color:var(--c-ink3);font-weight:700;letter-spacing:.04em}
 .cts__msgname{margin-top:3px;font-family:var(--f-disp);font-weight:900;
   font-size:clamp(19px,1.65vw,23px);color:var(--c-ink);letter-spacing:.04em}
-/* 罫は本文の外に置く（マネジャー紹介と同じ扱い） */
-.cts__msgtext{margin-top:clamp(14px,1.7vw,22px);padding-top:clamp(14px,1.7vw,22px);
-  border-top:1px solid var(--c-line);
-  max-width:44em;font-size:var(--fs-sm);line-height:2.05;color:var(--c-ink2)}
+/* 罫はたたむ箱の【外】に置く。中に入れると、たたんだ高さから罫と余白のぶんが
+   本文に食い込み、開閉の実測ともズレる（マネジャー紹介と同じ扱い） */
+.cts__msgid{padding-bottom:clamp(14px,1.7vw,22px);border-bottom:1px solid var(--c-line)}
+.cts__msgbody > .mbl__fold{margin-top:clamp(14px,1.7vw,22px)}
+.cts__msgtext{max-width:44em;font-size:var(--fs-sm);line-height:2.05;color:var(--c-ink2)}
 .cts__msgtext p + p{margin-top:1.4em}
 
 @media(max-width:900px){

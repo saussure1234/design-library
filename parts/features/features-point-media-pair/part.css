@@ -16,7 +16,8 @@
   align-items:end;
   margin-inline:calc(50% - 50vw);
   padding-inline:var(--pmp-side)}
-.pmp{--pmp-side:clamp(24px,4vw,58px)}
+/* 左右の余白。箱と動画が540pxを保てる範囲でめいっぱい内側へ寄せる */
+.pmp{--pmp-side:max(24px, min(9.5vw, (100vw - 1140px) / 2))}
 
 /* 左：POINTの箱（白）。この下マージンのぶんだけ、動画が箱より下へ回り込む */
 .pmp__box{margin-bottom:clamp(110px,14vw,215px)}
