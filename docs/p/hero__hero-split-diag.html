@@ -17,8 +17,13 @@
   --c-ink:#111111;          /* 見出し */
   --c-ink2:#333333;         /* 本文 */
   --c-ink3:#707070;         /* 補足・注記 */
-  --c-bg:#FFFFFF;           /* 地 */
-  --c-bg2:#F7F8F7;          /* 交互に敷く面 */
+  /* 地は「階段」にする。セクションごとに必ず1段動かす。
+     同じ明るさが続くと面が消える（＝最頻の指摘「薄すぎて見えない」の正体） */
+  --c-bg:#FFFFFF;           /* base   L255  カード・面 */
+  --c-bg2:#F0F3F0;          /* tint   L241  1段落とす */
+  --c-bg3:#E4F1E8;          /* accent L238  主色寄りの淡色 */
+  --c-dark:#0E3113;         /* dark   L39   句読点。1ページに2回まで */
+  --c-on-dark:#FFFFFF;      /* dark の上の文字（14.3:1） */
   --c-line:#E3E3E3;         /* 罫 */
   --c-on-primary:#FFFFFF;   /* 主色の上に乗る文字 */
 
@@ -35,11 +40,16 @@
   /* --- 余白 --- */
   --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px;
   --s6:36px; --s7:52px; --s8:76px; --s9:110px;
-  --sec-y:clamp(56px,7vw,110px);   /* セクションの上下 */
+  /* 余白は3値に固定する。検算で「24箇所に21通り」が出たため */
+  --sp-sec:clamp(88px,10vw,160px);   /* セクション間 */
+  --sp-blk:clamp(56px,6vw,104px);    /* セクション内のブロック間 */
+  --sp-el:clamp(36px,4vw,64px);      /* 要素間 */
+  --sec-y:var(--sp-sec);
 
   /* --- 形 --- */
   --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
-  --shadow:0 6px 24px rgba(17,17,17,.08);
+  --shadow:0 6px 24px rgba(14,49,19,.10), 0 1px 2px rgba(14,49,19,.06);
+  --shadow-lg:0 12px 32px rgba(14,49,19,.16);
 
   /* --- 動き --- */
   --e:cubic-bezier(.23,1,.32,1);
@@ -71,7 +81,31 @@ ul,ol{padding:0;list-style:none}
 .wrap{width:100%;max-width:var(--w-max);margin-inline:auto;padding-inline:var(--w-gut)}
 .sec{padding-block:var(--sec-y)}
 .sec--alt{background:var(--c-bg2)}
+/* 地の階段。kit の tone で切り替える */
+.tone-base{background:var(--c-bg)}
+.tone-tint{background:var(--c-bg2)}
+.tone-accent{background:var(--c-bg3)}
+.tone-dark{background:var(--c-dark);color:#D9E3DB}
+.tone-dark .h-lead,.tone-dark h2,.tone-dark h3{color:var(--c-on-dark)}
+.tone-dark .h-eyebrow{color:#8FD6A0}
+/* 面は必ず地から浮かせる。白の上の白は最頻の指摘 */
+.card,.panel,[class*="__card"],[class*="__panel"]{box-shadow:var(--shadow)}
 .nb{white-space:nowrap}          /* 日本語の改行制御。必ず <wbr> と併用 */
+
+/* ── セクション見出し：1系統に統一する ──────────────
+   type/two-tier-latin-jp  欧文ラベルと和文を2段に組み、
+   級数・太さ・色の主従をわざと逆転させる（欧文は極小・和文が主）。
+   検算で「見出しの様式が8系統」と出たため、全セクションこれに揃える。 */
+.sec-head{margin-bottom:var(--sp-el)}
+.sec-head__en{display:flex;align-items:center;gap:var(--s3);
+  font-size:11.5px;font-weight:700;letter-spacing:.14em;color:var(--c-primary);
+  text-transform:uppercase;margin-bottom:var(--s3)}
+.sec-head__en::before{content:"";width:24px;height:2px;background:currentColor;flex:none}
+.sec-head__ja{font-family:var(--f-disp);font-weight:900;color:var(--c-ink);
+  font-size:clamp(23px,3.2vw,34px);line-height:1.42;letter-spacing:.01em}
+.sec-head__sub{margin-top:var(--s4);font-size:var(--fs-base);color:var(--c-ink3);max-width:44em}
+.tone-dark .sec-head__en{color:#8FD6A0}
+.tone-dark .sec-head__ja{color:var(--c-on-dark)}
 
 /* 見出しの型（案件をまたいで共通の骨） */
 .h-eyebrow{display:flex;align-items:center;gap:var(--s3);
@@ -82,10 +116,19 @@ ul,ol{padding:0;list-style:none}
 .h-sub{margin-top:var(--s4);font-size:var(--fs-base);color:var(--c-ink3)}
 
 /* ボタン */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--s3);
+/* CTAは1形だけ。ピル＋右端に白丸の矢印。
+   検算で「10個・6種類の形」が出たため、形の差で主従を作るのをやめ、
+   大きさだけで主従をつける（.btn--sm が従）。 */
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:var(--s3);
   background:var(--c-primary);color:var(--c-on-primary);font-weight:700;font-size:var(--fs-md);
-  padding:18px 34px;border-radius:var(--r-s);border:0;cursor:pointer;
+  height:72px;padding:0 76px 0 40px;border-radius:var(--r-pill);border:0;cursor:pointer;
   transition:background .16s var(--e),transform .16s var(--e)}
+.btn::after{content:"";position:absolute;right:20px;top:50%;width:32px;height:32px;margin-top:-16px;
+  border-radius:50%;background:var(--c-on-primary);
+  -webkit-mask:no-repeat center/11px 11px url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'><path d='M3 1l5 5-5 5' fill='none' stroke='%23000' stroke-width='2'/></svg>");
+  mask:no-repeat center/11px 11px url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'><path d='M3 1l5 5-5 5' fill='none' stroke='%23000' stroke-width='2'/></svg>")}
+.btn--sm{height:48px;padding:0 24px;font-size:var(--fs-sm)}
+.btn--sm::after{display:none}
 .btn:active{transform:scale(.97)}
 @media(hover:hover) and (pointer:fine){.btn:hover{background:var(--c-primary-d)}}
 .btn--ghost{background:transparent;color:var(--c-primary);box-shadow:inset 0 0 0 2px currentColor}
@@ -122,20 +165,25 @@ ul,ol{padding:0;list-style:none}
   *{animation-duration:.001s!important}
 }
 
-/* hero/hero-split-diag — 写真2枚を斜めの継ぎ目で並走させるヒーロー */
+/* hero/hero-split-diag — 写真2枚を斜めの継ぎ目で並走させるヒーロー
+   ┌ overlap/cross-the-band
+   │  数字＋CTAのブロックを、白地と写真帯の境界にまたがせる。
+   │  出す辺は「下」だけ（片側だけ）。左は画面端まで面一に抜き、
+   │  右は --hsd-inset ぶん内側で止めて、写真帯の上辺＝水平線をわざと残す。
+   │  ブロックの色は地と同じ白のまま越える（＝2面をつなぐ橋。色を変えるとただの重なりに戻る）。
+   └ type/size-gap-inline
+      数字と単位を同じ1行にベースライン揃えで置き、級数比を約4.0〜4.4倍つける。
+      字間も逆転させる（数字 -.02em／単位 +.08em）。 */
+
 .hd{position:relative;z-index:5;background:var(--c-bg)}
 .hd__in{display:flex;align-items:center;justify-content:space-between;gap:var(--s4);height:68px}
 .hd__logo img{height:30px;width:auto}
 .hd__cta{padding:11px 22px;font-size:var(--fs-sm)}
 
-/* order で PC/SP の並びを切り替える
-   PC : 見出し → 数字+CTA → 写真 → 注記
-   SP : 見出し → 写真 → 数字+CTA → 注記   （写真をCTAより上に置く） */
-.hsd{display:flex;flex-direction:column}
-.hsd__head {order:1}
-.hsd__meta {order:2}
-.hsd__lanes{order:3}
-.hsd__foot {order:4}
+.hsd{display:flex;flex-direction:column;
+  --hsd-cross:var(--s8);        /* またぎ量。写真帯へ出す量（76px） */
+  --hsd-inset:var(--w-gut);     /* 白い面の右端。本文の右端と面一で止める＝水平線が右に残る */
+}
 
 .hsd__head{padding-block:clamp(18px,2.8vw,38px) 0}
 .hsd__eyebrow{text-wrap:balance}
@@ -144,14 +192,35 @@ ul,ol{padding:0;list-style:none}
 .hsd__h em{font-style:normal;color:var(--c-primary-d)}
 .hsd__h .sml{display:block;font-size:.56em;color:var(--c-ink2);margin-bottom:var(--s2)}
 
-.hsd__meta{padding-block:clamp(16px,2.2vw,30px)}
-.hsd__row{display:flex;align-items:flex-end;justify-content:space-between;
-  gap:var(--s5) var(--s7);flex-wrap:wrap}
-.hsd__facts{display:flex;gap:clamp(24px,4vw,var(--s7))}
-.hsd__fact b{display:block;font-family:var(--f-num);font-weight:900;line-height:1;color:var(--c-ink);
-  font-size:clamp(26px,3.2vw,42px);font-variant-numeric:tabular-nums}
-.hsd__fact b i{font-style:normal;font-size:.44em;margin-left:2px;font-family:var(--f-sans)}
-.hsd__fact span{display:block;margin-top:var(--s2);font-size:var(--fs-sm);font-weight:700;color:var(--c-ink2);line-height:1.55}
+/* ── またぐブロック ───────────────────────────────
+   .hsd__meta を負のマージンで写真帯へ沈める。z-index を持たせないと
+   order で後ろに回った写真帯が上に描かれて消える。 */
+.hsd__meta{position:relative;z-index:2;margin-bottom:calc(var(--hsd-cross) * -1)}
+
+.hsd__panel{position:relative;
+  display:flex;align-items:flex-end;justify-content:space-between;
+  gap:var(--s5) var(--sp-el);flex-wrap:wrap;
+  padding-block:var(--s6);
+  box-shadow:none}                     /* 白い面は ::before 側が持つ */
+
+/* 白い面。左は画面外まで面一に抜き、右は本文の右端でぴたりと止める。
+   出す辺を「下」の1つに絞る（四辺から出すと版ズレに見える）。
+   親要素そのものに background を敷くと右の止めが効かないので ::before に持たせる。
+   境界より上は地と同色なので姿が消え、写真に乗った部分だけが見える＝2面をつなぐ橋。 */
+.hsd__panel::before{content:"";position:absolute;z-index:-1;
+  top:0;bottom:0;left:-100vw;right:var(--hsd-inset);
+  background:var(--c-bg);border-radius:0 0 var(--r-m) 0;
+  box-shadow:var(--shadow)}
+
+.hsd__facts{display:flex;gap:var(--s5) clamp(24px,4vw,var(--s7))}
+.hsd__fact{min-width:0}
+/* 数字と単位：級数比 約4.0〜4.4倍。単位は小さく・字間を開けて従属させる */
+.hsd__fact b{display:block;white-space:nowrap;   /* 数字と単位を1行に固定（折れるとベースラインが崩れる） */
+  font-family:var(--f-num);font-weight:900;line-height:1;color:var(--c-ink);
+  font-size:clamp(44px,3.4vw,var(--fs-3xl));letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.hsd__fact b i{font-style:normal;font-family:var(--f-sans);font-weight:700;
+  font-size:clamp(11px,.23em,var(--fs-sm));letter-spacing:.08em;margin-left:var(--s1)}
+.hsd__fact span{display:block;margin-top:var(--s3);font-size:var(--fs-sm);font-weight:700;color:var(--c-ink2);line-height:1.55}
 .hsd__cta{display:flex;flex-direction:column;gap:var(--s3);align-items:flex-start}
 .hsd__ctanote{font-size:var(--fs-sm);color:var(--c-ink3);line-height:1.6}
 .btn__arw{width:20px;height:9px;flex:none}
@@ -174,19 +243,28 @@ ul,ol{padding:0;list-style:none}
 .hsd__foot{padding-block:var(--s4) var(--s6)}
 .hsd__note{font-size:var(--fs-note);color:var(--c-ink3);line-height:1.8}
 
-/* ───────── SP ───────── */
+/* ───────── SP ─────────
+   写真をCTAより上に置く。またぎ先が写真帯の【下辺】に変わるので、
+   沈める向き（margin）と角丸の位置も上下反転させる。 */
 @media(max-width:900px){
   .hd__in{height:60px}
   .hd__cta{display:none}
 
+  .hsd__head{order:1}
   .hsd__lanes{order:2}
-  .hsd__meta {order:3}
+  .hsd__meta{order:3}
+  .hsd__foot{order:4}
+
+  /* SPは白の右端より内側に数字しか無いので、残す水平線を少し長く取る */
+  .hsd{--hsd-inset:var(--s6)}
+  .hsd__meta{margin-bottom:0;margin-top:calc(var(--hsd-cross) * -1)}
+  /* SPは写真帯の【下辺】をまたぐ。影は下に落ちる＝白地側にしか出ないので消す
+     （写真との境目は白と写真の輝度差だけで足りる） */
+  .hsd__panel::before{border-radius:0 var(--r-m) 0 0;box-shadow:none}
 
   .hsd__head{padding-block:var(--s5) 0}
   .hsd__h{line-height:1.5}
-  .hsd__meta{padding-block:var(--s5)}
-  .hsd__row{gap:var(--s5)}
-  .hsd__facts{gap:var(--s6)}
+  .hsd__facts{gap:var(--s5)}
   .hsd__cta{align-self:stretch;width:100%}
   .hsd__cta .btn{width:100%}
   .hsd__ctanote{text-align:center}
@@ -205,6 +283,8 @@ ul,ol{padding:0;list-style:none}
   .hsd__h{font-size:clamp(21px,5.7vw,26px)}
 }
 
+.hsd__fact.is-hi b{color:var(--c-accent)}
+
 body{background:#fff}</style></head><body>
 <header class="hd">
   <div class="wrap hd__in">
@@ -222,17 +302,12 @@ body{background:#fff}</style></head><body>
     </div>
   </div>
 
-  <div class="hsd__lanes fx" data-fx="clip" data-d="120">
-    <figure class="hsd__lane hsd__lane--a"><img src="../demo/ph_a.jpg" alt="左の写真"></figure>
-    <figure class="hsd__lane hsd__lane--b"><img src="../demo/ph_b.jpg" alt="右の写真"></figure>
-  </div>
-
   <div class="hsd__meta">
-    <div class="wrap hsd__row">
+    <div class="wrap hsd__panel">
       <ul class="hsd__facts">
-        <li class="hsd__fact fx" data-fx="fadeup" data-d="0">
+        <li class="hsd__fact  fx" data-fx="fadeup" data-d="0">
           <b>1,000<i>名以上</i></b><span>実績を表す数字</span>
-        </li><li class="hsd__fact fx" data-fx="fadeup" data-d="90">
+        </li><li class="hsd__fact  fx" data-fx="fadeup" data-d="90">
           <b>75<i>%</i></b><span>もう一つの証拠</span>
         </li>
       </ul>
@@ -243,6 +318,11 @@ body{background:#fff}</style></head><body>
         <p class="hsd__ctanote">ボタンの下に添える一言が入ります</p>
       </div>
     </div>
+  </div>
+
+  <div class="hsd__lanes fx" data-fx="clip" data-d="120">
+    <figure class="hsd__lane hsd__lane--a"><img src="../demo/ph_a.jpg" alt="左の写真"></figure>
+    <figure class="hsd__lane hsd__lane--b"><img src="../demo/ph_b.jpg" alt="右の写真"></figure>
   </div>
 
   <div class="hsd__foot"><div class="wrap"><p class="hsd__note">※注記。出典や条件をここに書きます</p></div></div>

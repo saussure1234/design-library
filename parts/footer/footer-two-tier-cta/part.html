@@ -11,19 +11,19 @@
     {{/photos}}
   </div>
 
-  <!-- ── 上段：導線帯 ───────────────────────────────
-       面の色（--c-primary-l）だけで段を分ける。
-       ここと下段の境目に罫線・影・角丸は入れない -->
+  <!-- ── 上段：受け皿（電話）───────────────────────────
+       地は敷かない（kit の tone が外で敷いている）。
+       このフッターで面を持つのは電話だけ＝押せる場所がひとつに絞られる -->
   <div class="ftc__band">
     <div class="wrap ftc__band-in">
 
-      {{?bandEyebrow}}<p class="h-eyebrow ftc__eyebrow fx" data-fx="scale">{{bandEyebrow}}</p>{{/bandEyebrow}}
-      {{?bandHeading}}<h2 class="h-lead ftc__h fx" data-fx="scale" data-d="50">{{bandHeading}}</h2>{{/bandHeading}}
+      {{?bandEyebrow}}<p class="h-eyebrow ftc__eyebrow fx" data-fx="fadeup">{{bandEyebrow}}</p>{{/bandEyebrow}}
+      {{?bandHeading}}<h2 class="h-lead ftc__h fx" data-fx="fadeup" data-d="60">{{bandHeading}}</h2>{{/bandHeading}}
 
       <div class="ftc__ways">
 
         {{?telNumber}}
-        <div class="ftc__tel fx" data-fx="scale" data-d="100">
+        <div class="ftc__tel fx" data-fx="fadeup" data-d="120">
           {{?telCaption}}<p class="ftc__tel-cap">{{telCaption}}</p>{{/telCaption}}
           <a class="ftc__tel-num" href="tel:{{telHref}}">
             <span class="ftc__tel-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6.5 3.5h3l1.5 4-2 1.5a12 12 0 0 0 6 6l1.5-2 4 1.5v3c0 1-.8 1.8-1.8 1.7C10.8 18.8 5.2 13.2 4.8 5.3 4.7 4.3 5.5 3.5 6.5 3.5z"/></svg></span>
@@ -33,22 +33,12 @@
         </div>
         {{/telNumber}}
 
-        {{?ctaLabel}}
-        <div class="ftc__ctabox fx" data-fx="scale" data-d="150">
-          <a class="btn ftc__cta" href="{{ctaHref}}">
-            <span class="ftc__cta-label">{{ctaLabel}}</span>
-            <span class="ftc__arw" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M4.3 2.2 8.1 6l-3.8 3.8"/></svg></span>
-          </a>
-          {{?ctaNote}}<p class="ftc__cta-note">{{ctaNote}}</p>{{/ctaNote}}
-        </div>
-        {{/ctaLabel}}
-
       </div>
     </div>
   </div>
 
   <!-- ── 下段：事務フッター ─────────────────────────
-       地を白に落とすだけで段が変わる。動きは付けない -->
+       面は持たせない。段は級数と1pxの罫だけで作る。動きは付けない -->
   <div class="ftc__base">
     <div class="wrap">
 
@@ -59,7 +49,7 @@
           {{?brandNote}}<p class="ftc__brand-note">{{brandNote}}</p>{{/brandNote}}
         </div>
 
-        <!-- 事業導線（2本）：小さなリンクではなく面を持たせて“行き先”として読ませる -->
+        <!-- 事業導線（2本）：級数と罫で「行き先」として読ませる（記事リンクとの階層差を作る） -->
         <nav class="ftc__col" aria-label="{{servicesHeading}}">
           <p class="h-eyebrow ftc__col-h">{{servicesHeading}}</p>
           <ul class="ftc__svc">
@@ -112,5 +102,10 @@
       </div>
 
     </div>
+
+    <!-- ページの終点。ブランド名を版面より大きく組み、左右と下で断ち落とす。
+         地に8%だけ沈めた地紋なので読ませない（読ませる語ではない＝既知の固有名詞だけ切ってよい）。
+         版面の外へ出すので .wrap の外に置く -->
+    {{?brand}}<p class="ftc__mark" aria-hidden="true">{{brand}}</p>{{/brand}}
   </div>
 </footer>

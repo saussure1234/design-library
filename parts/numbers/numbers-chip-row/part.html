@@ -1,17 +1,11 @@
-<section class="sec sec--alt nch{{?wordy}} nch--wordy{{/wordy}}">
-  <div class="wrap nch__inner">
+<section class="sec nch{{?wordy}} nch--wordy{{/wordy}}">
+  <div class="wrap">
 
-    {{?eyebrow}}<p class="h-eyebrow nch__eyebrow fx" data-fx="fadeup">{{eyebrow}}</p>{{/eyebrow}}
-
-    {{?heading}}<div class="nch__bubblewrap fx" data-fx="fadeup" data-d="60">
-      <div class="nch__bubble">
-        <h2 class="h-lead nch__h">{{heading}}</h2>
-      </div>
-    </div>{{/heading}}
-
-    {{?copy}}<p class="nch__copy fx" data-fx="fadeup" data-d="140">
-      <span class="nch__spark" aria-hidden="true"></span><span class="nch__copytext">{{copy}}</span><span class="nch__spark nch__spark--r" aria-hidden="true"></span>
-    </p>{{/copy}}
+    <div class="sec-head nch__head">
+      {{?eyebrow}}<p class="sec-head__en fx" data-fx="left">{{eyebrow}}</p>{{/eyebrow}}
+      {{?heading}}<h2 class="sec-head__ja fx" data-fx="fadeup" data-d="60">{{heading}}</h2>{{/heading}}
+      {{?copy}}<p class="sec-head__sub fx" data-fx="fadeup" data-d="120">{{copy}}</p>{{/copy}}
+    </div>
 
     <ul class="nch__chips" role="list">
       {{#chips}}<li class="nch__chip fx" data-fx="fadeup" data-d="{{.d}}">

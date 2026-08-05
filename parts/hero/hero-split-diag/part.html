@@ -14,13 +14,8 @@
     </div>
   </div>
 
-  <div class="hsd__lanes fx" data-fx="clip" data-d="120">
-    <figure class="hsd__lane hsd__lane--a"><img src="{{photoA}}" alt="{{photoAAlt}}"></figure>
-    <figure class="hsd__lane hsd__lane--b"><img src="{{photoB}}" alt="{{photoBAlt}}"></figure>
-  </div>
-
   <div class="hsd__meta">
-    <div class="wrap hsd__row">
+    <div class="wrap hsd__panel">
       <ul class="hsd__facts">
         {{#facts}}<li class="hsd__fact {{.cls}} fx" data-fx="fadeup" data-d="{{.d}}">
           <b>{{.n}}<i>{{.unit}}</i></b><span>{{.label}}</span>
@@ -33,6 +28,11 @@
         {{?ctaNote}}<p class="hsd__ctanote">{{ctaNote}}</p>{{/ctaNote}}
       </div>
     </div>
+  </div>
+
+  <div class="hsd__lanes fx" data-fx="clip" data-d="120">
+    <figure class="hsd__lane hsd__lane--a"><img src="{{photoA}}" alt="{{photoAAlt}}"></figure>
+    <figure class="hsd__lane hsd__lane--b"><img src="{{photoB}}" alt="{{photoBAlt}}"></figure>
   </div>
 
   {{?note}}<div class="hsd__foot"><div class="wrap"><p class="hsd__note">{{note}}</p></div></div>{{/note}}

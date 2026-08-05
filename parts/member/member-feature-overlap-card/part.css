@@ -1,173 +1,123 @@
-/* =========================================================
-   member/member-feature-overlap-card
-   濃色ベタ × 巨大な裏文字 × 人物写真に白カードを差し込む
-   ── 長文コメント（400〜600字）を読ませるための調整版 ──
-   接頭辞は .mfo__ で固定。色・寸法は _tokens.css の変数のみ。
-   モバイル先行：土台＝縦積み／901px 以上で「重ね」レイアウトに組み替える。
-   ========================================================= */
+/* member/member-feature-overlap-card — 長文コメントを写真の帯にまたがる白カードで読ませる
+   ── 効かせている工夫 ─────────────────────────────
+   overlap/cross-the-band  : カードを色面の境界にまたがせ、出す辺を1つだけに絞る。
+     土台＝写真の帯の下端を上へまたぐ。901px以上＝写真の帯の天面を上へまたぐ。
+     さらに【最後の1枚だけ】濃色の下端をまたいで外側の地へ出る（またぎ量＝--sp-el）。
+   color/accent-one-tiny-spot : 有彩色はカードの中で最も小さい1点（約76×19pxの矩形ラベル）
+     だけ。周りの補足・肩書・タグは無彩色に落とす。白文字(2.2:1)をやめ濃色文字(7.8:1)にする。
+   ───────────────────────────────────────────── */
 
-/* 濃色の面。黒ベタは使わず --c-ink に --c-primary を混ぜた「深い主色」で作る。
-   color-mix 非対応ブラウザは 1行目の var(--c-primary) にフォールバックする。 */
-.mfo{
-  position:relative;overflow:hidden;color:var(--c-bg);
-  background:var(--c-primary);
-  background:color-mix(in srgb,var(--c-ink) 80%,var(--c-primary));
-}
+/* 地は敷かない。濃色は kit の tone（外側）が敷く。ここで敷くと地の階段が壊れる。
+   下端の余白だけ 0 にして、最後のカードが濃色の下端をまたげるようにする。
+   親の overflow:hidden は「またぎ」を全部殺すので付けない。 */
+.mfo{padding-block:var(--sp-sec) 0}
 
-/* ── セクション見出し ───────────────────────────── */
-.mfo__head{position:relative;z-index:3}
+/* ── 見出し ─────────────────────────────
+   .sec-head（欧文ラベル＋和文）をそのまま使う。独自の様式は作らない。
+   label→__en / heading→__ja / eyebrow→__sub */
+.mfo__head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;
+  gap:var(--s5) var(--s6);margin-bottom:var(--sp-el)}
+.mfo__head .sec-head{margin-bottom:0;max-width:44em}
+/* .sec-head__sub は --c-ink3。濃色地では 2.1:1 で読めないので淡色へ振り替える（12.3:1） */
+.tone-dark .mfo .sec-head__sub{color:var(--c-bg3)}
 
-/* .h-eyebrow の主色は濃色地では沈むので、淡い主色に振り替える */
-.mfo__eyebrow{
-  color:var(--c-primary-l);
-  color:color-mix(in srgb,var(--c-primary) 55%,var(--c-bg));
-}
-
-.mfo__brow{
-  display:flex;align-items:center;flex-wrap:wrap;
-  gap:var(--s3) clamp(var(--s4),2.4vw,var(--s6));
-  margin-top:var(--s3);
-}
-
-/* 極大の欧文ラベル（装飾。読み上げは h2 に任せる） */
-.mfo__big{
-  font-family:var(--f-disp);font-weight:900;color:var(--c-bg);
-  font-size:clamp(var(--fs-2xl),8.2vw,calc(var(--fs-4xl) * 1.72));
-  line-height:.92;letter-spacing:-.015em;text-transform:uppercase;
-}
-
-.mfo__more{
-  display:inline-flex;align-items:center;gap:var(--s2);align-self:center;
-  font-size:var(--fs-note);font-weight:700;letter-spacing:.14em;color:var(--c-bg);
+/* 補助リンク。押せる場所だが、緑1点を CTA に取っておくため色は地から継ぐ */
+.mfo__more{display:inline-flex;align-items:center;gap:var(--s2);color:inherit;
+  font-size:var(--fs-note);font-weight:700;letter-spacing:.14em;
   padding-bottom:var(--s1);border-bottom:1px solid currentColor;
-  transition:opacity .18s var(--e);
-}
+  transition:opacity .18s var(--e)}
 @media(hover:hover) and (pointer:fine){.mfo__more:hover{opacity:.66}}
 .mfo__arw{width:var(--s5);height:calc(var(--s5) * .45);flex:none}
 .mfo__arw svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.8}
 
-/* .h-lead は --c-ink 固定なので、濃色地では地色に反転させる */
-.mfo__lead{color:var(--c-bg);margin-top:var(--s4);max-width:24em}
+/* ── 一覧 ───────────────────────────── */
+/* 列は minmax(0,1fr)。auto のままだと日本語の長文が max-content で列を押し広げ、
+   狭い画面で本文が版面の外へ溢れる（親の overflow:hidden で隠れているだけになる） */
+.mfo__list{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--sp-blk)}
+.mfo__item{position:relative;min-width:0}
 
-/* ── 一覧 ───────────────────────────────────────── */
-.mfo__list{display:grid;gap:clamp(var(--s7),9vw,var(--s8));margin-top:var(--s6)}
-.mfo__item{position:relative}
-
-/* 裏文字：土台（〜900px）では出さない。重ねレイアウトのときだけ効かせる */
+/* 裏文字：濃色より数%だけ明るい色がトークンに無く、
+   1セクション内の強調も2箇所に抑えたいので出さない（差し込み口は残す） */
 .mfo__ghost{display:none}
 
-/* ── 写真 ───────────────────────────────────────── */
-.mfo__photo{
-  position:relative;z-index:1;margin:0;overflow:hidden;
-  aspect-ratio:16 / 11;
-  background:var(--c-primary);
-  background:color-mix(in srgb,var(--c-ink) 68%,var(--c-primary));
-}
+/* ── 写真＝色面の帯 ───────────────────── */
+.mfo__photo{position:relative;z-index:1;margin:0;overflow:hidden;aspect-ratio:16 / 11}
 .mfo__photo img{width:100%;height:100%;object-fit:cover;object-position:50% 26%}
 
-/* ── カード ─────────────────────────────────────── */
-/* 土台では写真の下端に食い込ませる（-24px） */
-.mfo__cardwrap{position:relative;z-index:2;margin-top:calc(var(--s5) * -1)}
-.mfo__card{
-  background:var(--c-bg);color:var(--c-ink2);border-radius:var(--r-s);
-  padding:clamp(var(--s4),5vw,var(--s5));
-}
+/* ── カード ─────────────────────────────
+   土台では写真の帯の下端を --sp-el（36〜64px）だけ上へまたぐ。出す辺は上の1つだけ */
+.mfo__cardwrap{position:relative;z-index:2;margin-top:calc(var(--sp-el) * -1)}
+.mfo__card{background:var(--c-bg);color:var(--c-ink2);border-radius:var(--r-s);
+  padding:clamp(var(--s4),5vw,var(--s5))}
+
+/* 最後の1枚だけ、濃色の下端をまたいで外側の地に出る。
+   position:relative + z-index が付いているので、次のセクションの地より前に描かれる */
+.mfo__item:last-child .mfo__card{margin-bottom:calc(var(--sp-el) * -1)}
 
 .mfo__meta{display:flex;align-items:center;flex-wrap:wrap;gap:var(--s3)}
-/* 差し色は「この矩形ラベル 1箇所」だけに効かせる。
-   文字色は --c-ink（明るい差し色でもコントラストが落ちないため） */
-.mfo__chip{
-  display:inline-block;background:var(--c-accent);color:var(--c-ink);
-  font-size:var(--fs-note);font-weight:700;letter-spacing:.1em;line-height:1.7;
-  padding:var(--s1) var(--s3);border-radius:var(--r-s);
-}
+/* 有彩色はこの1点だけ。約76×19px・角丸0（丸めるとタグに見えて色の格が落ちる）。
+   文字は --c-ink（#1A1A1A on #FF9301 ＝ 7.8:1）。白文字は 2.2:1 で読めない */
+.mfo__chip{display:inline-block;background:var(--c-accent);color:var(--c-ink);
+  font-size:var(--fs-note);font-weight:700;letter-spacing:.12em;line-height:1.6;
+  padding:0 var(--s2);border-radius:0}
 .mfo__chip:empty{display:none}
+/* 色1点を効かせるため、同じ行の補足は無彩色へ落とす */
 .mfo__career{font-size:var(--fs-note);color:var(--c-ink3);letter-spacing:.04em}
-.mfo__career b{margin-left:var(--s2);font-family:var(--f-num);font-size:var(--fs-sm);color:var(--c-ink2)}
+.mfo__career b{margin-left:var(--s2);font-family:var(--f-num);font-size:var(--fs-sm);
+  font-weight:700;color:var(--c-ink2)}
 
-.mfo__id{
-  margin-top:var(--s4);
-  display:flex;align-items:baseline;flex-wrap:wrap;gap:var(--s1) var(--s3);
-}
-.mfo__role{font-size:var(--fs-note);font-weight:700;color:var(--c-ink3);letter-spacing:.06em}
-.mfo__name{
-  font-family:var(--f-disp);font-weight:900;color:var(--c-ink);
-  font-size:clamp(var(--fs-lg),2.1vw,var(--fs-xl));line-height:var(--lh-tight);
-}
+/* 肩書は無彩色・太らせない。太いのは氏名だけにする */
+.mfo__id{margin-top:var(--s5);display:flex;flex-direction:column;gap:var(--s1)}
+.mfo__role{font-size:var(--fs-note);font-weight:400;color:var(--c-ink3);letter-spacing:.06em}
+.mfo__name{font-family:var(--f-disp);font-weight:900;color:var(--c-ink);
+  font-size:clamp(var(--fs-lg),2.1vw,var(--fs-xl));line-height:var(--lh-tight)}
 
-/* 任意：長文の前に置く一文（無いときは空文字で消える） */
-.mfo__pull{
-  margin-top:var(--s4);font-weight:700;color:var(--c-ink);
-  font-size:clamp(var(--fs-md),1.9vw,var(--fs-lg));line-height:var(--lh-head);
-}
+/* 任意：長文の前に置く一文（無いときは要素ごと消える） */
+.mfo__pull{margin-top:var(--s5);font-weight:700;color:var(--c-ink);
+  font-size:clamp(var(--fs-md),1.7vw,var(--fs-lg));line-height:var(--lh-head)}
 .mfo__pull:empty{display:none}
 
-/* 長文本文：このパーツの主役。
-   文字サイズを vw で連動させ、1行 35〜45字の範囲に収める。 */
-.mfo__body{
-  margin-top:var(--s5);padding-top:var(--s5);border-top:1px solid var(--c-line);
+/* 長文本文：このパーツの主役。1行 35〜45字・行間1.9 を最優先で維持する */
+.mfo__body{margin-top:var(--s5);padding-top:var(--s5);border-top:1px solid var(--c-line);
   font-size:clamp(var(--fs-base),1.25vw,var(--fs-md));
-  line-height:var(--lh-body);color:var(--c-ink2);
-}
+  line-height:var(--lh-body);color:var(--c-ink2)}
 .mfo__body p + p{margin-top:var(--s4)}
-.mfo__body em{
-  font-style:normal;font-weight:700;color:var(--c-ink);
-  background:linear-gradient(transparent 62%,var(--c-primary-l) 62%);
-}
+/* 強調は濃さだけ。マーカー地（緑）は敷かない＝緑は押せる場所に取っておく */
+.mfo__body em{font-style:normal;font-weight:700;color:var(--c-ink)}
 
-.mfo__tags{margin-top:var(--s5);font-size:var(--fs-note);color:var(--c-ink3);letter-spacing:.04em;line-height:1.7}
+.mfo__tags{margin-top:var(--s5);font-size:var(--fs-note);color:var(--c-ink3);
+  letter-spacing:.04em;line-height:1.7}
 .mfo__tags:empty{display:none}
 
-/* ═════════ 901px 以上：写真にカードを差し込む重ねレイアウト ═════════ */
+/* ═════════ 901px 以上：写真の帯にカードをまたがせる ═════════ */
 @media(min-width:901px){
 
-  .mfo__list{margin-top:0;gap:clamp(var(--s6),5vw,var(--s8))}
-  /* カードの上下マージン(52px)が「大見出し下端 → カード上端」の間隔も兼ねる */
-  .mfo__item{display:grid;align-content:center;min-height:calc(var(--w-max) * .44)}
-
-  /* 巨大な裏文字：地色より数%明るい同系色で作る（opacity ではなく色差）。
-     z-index 0 で必ず写真より後ろ。下端から溢れさせて切り取る。 */
-  .mfo__ghost{
-    display:block;position:absolute;left:0;bottom:calc(var(--s7) * -1);z-index:0;
-    pointer-events:none;user-select:none;white-space:nowrap;width:max-content;
-    font-family:var(--f-disp);font-weight:900;letter-spacing:-.03em;line-height:.72;
-    font-size:clamp(calc(var(--fs-4xl) * 2),24vw,calc(var(--fs-4xl) * 5.2));
-    text-transform:uppercase;
-    color:transparent;
-    color:color-mix(in srgb,var(--c-bg) 7%,color-mix(in srgb,var(--c-ink) 80%,var(--c-primary)));
-  }
-
-  /* 写真はセクション右端まで抜けさせ、天地はカードより 52px ずつ大きくする */
-  .mfo__photo{position:absolute;top:0;bottom:0;right:0;width:50%;aspect-ratio:auto}
+  /* 写真は外側の端まで抜く（右辺は余白ゼロ＝面一）。
+     天面だけ --sp-el 下げ、その分カードが帯の上へ出る＝出す辺は上の1つだけ */
+  .mfo__photo{position:absolute;z-index:1;top:var(--sp-el);right:0;bottom:0;
+    width:50%;aspect-ratio:auto}
   .mfo__photo img{object-position:var(--mfo-pos,66% 26%)}
 
-  /* カード幅 = 560〜784px。内寸が 500〜690px になり、1行 35〜45字に収まる */
+  /* カード幅 605〜784px。内寸 544〜686px＝1行 36〜40字に収まる */
   .mfo__cardwrap{margin-top:0}
-  .mfo__card{
-    width:min(100%,clamp(calc(var(--w-max) * .5),62vw,calc(var(--w-max) * .7)));
-    margin-block:var(--s7);
-    padding:clamp(var(--s5),3.4vw,var(--s7));
-  }
+  .mfo__card{width:min(100%,clamp(calc(var(--w-max) * .54),64vw,calc(var(--w-max) * .7)));
+    margin-block:0 var(--sp-el);
+    padding:clamp(var(--s5),3.4vw,var(--s7))}
+  .mfo__item:last-child .mfo__card{margin-bottom:calc(var(--sp-el) * -1)}
 
-  /* ハッシュタグは折り返さず 1行（溢れたら … で切る） */
+  /* ハッシュタグは折り返さず1行（溢れたら … で切る） */
   .mfo__tags{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
   /* 2人目以降は左右を反転して縦のリズムを作る */
   .mfo__item:nth-child(even) .mfo__photo{right:auto;left:0}
   .mfo__item:nth-child(even) .mfo__card{margin-inline-start:auto}
-  .mfo__item:nth-child(even) .mfo__ghost{left:auto;right:0;text-align:right}
 }
 
-/* ═════════ 900px 以下：縦積みの調整 ═════════ */
+/* ═════════ 900px 以下：縦積み ═════════ */
 @media(max-width:900px){
-  .mfo__brow{gap:var(--s3) var(--s4)}
-  .mfo__big{font-size:clamp(var(--fs-xl),13vw,var(--fs-4xl))}
-  .mfo__lead{margin-top:var(--s3);max-width:none}
-  .mfo__more{font-size:var(--fs-note)}
-  .mfo__id{margin-top:var(--s4)}
-  .mfo__body{font-size:var(--fs-base)}
-  /* ハッシュタグは 2行まで折り返してよい */
-  .mfo__tags{margin-top:var(--s4)}
+  /* 版面いっぱいに広げると 900px 手前で1行52字になる。
+     行長35〜45字を維持するためカード幅を止め、中央に置く */
+  .mfo__card{max-width:calc(var(--w-max) * .62);margin-inline:auto}
 }
 
 @media(max-width:420px){

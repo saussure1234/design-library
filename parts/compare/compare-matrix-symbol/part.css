@@ -1,125 +1,154 @@
 /* compare/compare-matrix-symbol
-   記号評価の多列マトリクス（自社列ベタ塗り強調）
-   ── セルに「文章」が入る前提の版。
-      行の高さは CSS Grid の行が最も高いセルに合わせて伸びるので、
-      列ごとに文章量がバラついても自動で揃う。
-      縦罫は引かない（自社列のティント帯が死ぬ）。横罫1pxのみ。 */
+   他社比較のマトリクス（7行×3列・セルは文章）
+
+   rule/table-no-grid ── 格子罫を1本も引かない
+     縦罫ゼロ・ヘッダ下罫ゼロ。列は padding（工夫の指定 20px 24px ＝ --s5）の
+     余白だけで分ける。行の区切りは --c-ink の不透明度6%が1本きり、最終行は0。
+     線を全部消すと、残った1つの面（自社列の帯）が画面上で唯一の手がかりになる。
+
+   color/rival-desaturated ── 色を持つのは自社列だけ
+     A社・B社は地・本文・記号のすべてから彩度を抜く。競合列に別のティントを敷くと
+     「2色で塗り分け」に戻るので、競合列の地は素のまま（＝セクションの地色）にする。
+     自社列は地を1段だけ動かし（--c-bg3）、記号だけが色相を持つ。
+
+   地はパーツ側で敷かない。kit の tone-* が外側で敷いているので、
+   ここで背景を足すとページの地の階段が壊れる。 */
 
 .cmx{
-  /* 項目列は他列の 0.5〜0.6 倍。自社列だけ 1.24 倍にして無意識の視線集中を作る */
-  --cmx-cols:minmax(var(--s8),.58fr) 1.24fr 1fr 1fr;
+  /* この表で引く唯一の線。工夫の指定は不透明度 .04〜.08、ここは6% */
+  --cmx-rule:1px solid color-mix(in srgb,var(--c-ink) 6%,transparent);
+  /* セル余白＝列の区切り。縦罫の代わりにこれが列を分ける */
+  --cmx-pad:var(--s5);
+  /* 線ではなく幅で主従をつける。自社列だけ1.28倍。
+     項目列は .9fr ＝ 13〜14字が1行に収まる幅。狭いと語尾1字だけが次行に落ちる */
+  --cmx-cols:minmax(var(--s9),.9fr) 1.28fr 1fr 1fr;
 }
 
-/* ── 見出し ───────────────────────────── */
-.cmx__intro{max-width:44em}
-.cmx__title{margin-top:var(--s4)}
-/* マーカー帯付き見出し。文字は濃いままで、下側だけ差し色を敷く */
-.cmx__title em{font-style:normal;color:var(--c-ink);
-  background:linear-gradient(to top,var(--c-accent) 38%,transparent 38%)}
-.cmx__lead{margin-top:var(--s4);font-size:var(--fs-base);color:var(--c-ink2);line-height:var(--lh-body)}
+/* 1100px以下は列幅が詰まる。縦罫が無いので、区切りである余白を1段だけ落として
+   本文の行あたり字数を戻す（項目名の語尾1字が次行に落ちるのを防ぐ） */
+@media(max-width:1100px){ .cmx{--cmx-pad:var(--s4)} }
 
-/* ── 表本体 ───────────────────────────── */
-.cmx__grid{margin-top:var(--s6);display:grid;grid-template-columns:var(--cmx-cols)}
-/* 行は箱を持たない＝子セルがそのまま grid item になる（PC）。
-   SPではここを block に戻して「1項目＝1カード」に畳む。 */
+/* 見出しは _base.css の .sec-head をそのまま使う（独自の見出し様式を作らない）。
+   見出しの <em> にはマーカー帯を敷かない ── この面で色を持つのは自社列だけにする */
+.cmx em{font-style:normal;color:inherit}
+
+/* ── 表本体 ─────────────────────────────
+   .sec-head の margin-bottom（--sp-el）が表との間隔になる。ここでは足さない。
+   行は箱を持たない＝子セルがそのまま grid item になり、
+   列ごとに文章量がバラついても行の高さは最も高いセルに揃う。 */
+.cmx__grid{display:grid;grid-template-columns:var(--cmx-cols)}
 .cmx__thead,.cmx__row{display:contents}
 
-/* ヘッダ行：ブランド色ベタ＋白文字。行高は本文行より詰める */
-.cmx__hc{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;
-  gap:var(--s1);min-width:0;padding:var(--s3);
-  background:var(--c-dark);color:var(--c-on-primary);line-height:var(--lh-head)}
-.cmx__hc--item{align-items:center;text-align:center;
-  font-size:var(--fs-note);font-weight:700;letter-spacing:.06em;
+/* ヘッダ：このセクションで唯一の濃い面。
+   行罫を6%まで落としたぶん、表の骨はこの1本の帯が受け持つ（輝度差 14.3:1）。
+   下罫は引かない（面そのものが区切りになる） */
+.cmx__hc{display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;
+  gap:var(--s1);min-width:0;padding:var(--s4) var(--cmx-pad);
+  background:var(--c-dark);line-height:var(--lh-head)}
+.cmx__hc--item{font-size:var(--fs-note);font-weight:700;letter-spacing:.06em;
   border-top-left-radius:var(--r-m)}
 .cmx__thead>:last-child{border-top-right-radius:var(--r-m)}
 
+/* 競合の列名は白のまま彩度を持たせず、透過で一段落とす（コントラスト 7.9:1） */
+.cmx__hc--item,
+.cmx__hname{color:color-mix(in srgb,var(--c-on-dark) 74%,transparent)}
 .cmx__hname{font-size:var(--fs-sm);font-weight:700}
-.cmx__hnote{font-size:var(--fs-note);font-weight:400;opacity:.86}
-/* 自社ヘッダだけ一段強く。列の始点をチップで明示する */
-.cmx__hc--own{padding-block:var(--s4)}
-.cmx__hc--own .cmx__hname{font-size:var(--fs-md);font-weight:900;letter-spacing:.01em}
+.cmx__hnote{font-size:var(--fs-note);font-weight:400;
+  color:color-mix(in srgb,var(--c-on-dark) 58%,transparent)}
+/* 自社ヘッダだけ白100%＋一段大きく。ここは色ではなく明度と級数で立てる */
+.cmx__hc--own .cmx__hname{font-size:var(--fs-md);font-weight:900;letter-spacing:.01em;
+  color:var(--c-on-dark)}
 .cmx__badge{display:inline-block;padding:var(--s1) var(--s3);border-radius:var(--r-pill);
-  background:var(--c-bg);color:var(--c-primary-d);
+  background:var(--c-on-dark);color:var(--c-dark);
   font-size:var(--fs-note);font-weight:700;line-height:var(--lh-head)}
 
-/* 項目名の列（左のラベル・レール）。色は付けず、太字と中央寄せだけで見出し列にする
-   ── 表全体を1枚の白い面にして、sec--alt の地の上で四隅の丸みを効かせる */
-.cmx__item{display:flex;align-items:center;justify-content:center;min-width:0;
-  padding:var(--s4) var(--s3);text-align:center;background:var(--c-bg);
+/* 項目名の列。面も罫も持たず、左端が揃っていることと太字だけで見出し列にする */
+.cmx__item{display:flex;align-items:center;min-width:0;padding:var(--cmx-pad);
   font-size:var(--fs-sm);font-weight:700;color:var(--c-ink);line-height:var(--lh-head);
-  border-bottom:1px solid var(--c-line)}
+  border-bottom:var(--cmx-rule)}
 
-/* データセル */
+/* データセル。競合列は地を持たない＝セクションの地がそのまま出る */
 .cmx__c{position:relative;display:flex;flex-direction:column;justify-content:center;
-  min-width:0;padding:var(--s4) var(--s3);
-  background:var(--c-bg);border-bottom:1px solid var(--c-line)}
-/* 自社列のティント帯：ヘッダ直下から最終行まで、同じ淡色で1本に通る */
-.cmx__c--own{background:var(--c-primary-l)}
+  min-width:0;padding:var(--cmx-pad);border-bottom:var(--cmx-rule)}
+/* 自社列だけが色を持つ。ヘッダ直下から最終行まで1本の帯として通る */
+.cmx__c--own{background:var(--c-bg3)}
+/* 地が色付きの tone に置かれても帯が消えないよう、そのときは白抜きに反転させる */
+.tone-tint .cmx__c--own,
+.tone-accent .cmx__c--own{background:var(--c-bg)}
 
-.cmx__main{font-size:var(--fs-sm);line-height:var(--lh-head);color:var(--c-ink2);
+/* 最終行だけ罫を落とし、帯の下端を丸める */
+.cmx__row:last-child .cmx__item,
+.cmx__row:last-child .cmx__c{border-bottom:0}
+.cmx__row:last-child .cmx__c--own{border-radius:0 0 var(--r-m) var(--r-m)}
+
+/* 競合の本文・補足は彩度ゼロのグレー。
+   これ以上淡くすると白地で4.5:1を割るので、主従は級数でつける（色では下げない） */
+.cmx__main{font-size:var(--fs-sm);line-height:var(--lh-head);color:var(--c-ink3);
   overflow-wrap:anywhere}
-.cmx__c--own .cmx__main{font-size:var(--fs-base);font-weight:700;color:var(--c-ink)}
 .cmx__sub{margin-top:var(--s2);font-size:var(--fs-note);line-height:var(--lh-head);
   color:var(--c-ink3);overflow-wrap:anywhere}
+/* 自社の本文だけ黒・太字・一段大きく */
+.cmx__c--own .cmx__main{font-size:var(--fs-base);font-weight:700;color:var(--c-ink)}
 .cmx__c--own .cmx__sub{color:var(--c-ink2)}
 
-/* 記号は「形」と「色」の両方で差をつける（色だけに依存させない）。
+/* 記号は「形」で語る。色相を持つのは自社の◎ひとつだけで、競合は無彩色のまま。
    data-mark が空＝記号なしの文章セルになる */
 .cmx__mk{display:none;margin-right:var(--s2);
   font-size:var(--fs-md);line-height:var(--lh-tight);vertical-align:-.06em;font-weight:700}
 .cmx__c[data-mark="good"] .cmx__mk,
 .cmx__c[data-mark="mid"]  .cmx__mk,
 .cmx__c[data-mark="bad"]  .cmx__mk{display:inline-block}
-.cmx__c[data-mark="good"] .cmx__mk::before{content:"\25CE";color:var(--c-primary-d)}
-.cmx__c[data-mark="mid"]  .cmx__mk::before{content:"\25B3";color:var(--c-ink2)}
-.cmx__c[data-mark="bad"]  .cmx__mk::before{content:"\00D7";color:var(--c-ink3)}
+.cmx__mk::before{color:var(--c-ink3)}
+.cmx__c[data-mark="good"] .cmx__mk::before{content:"\25CE"}
+.cmx__c[data-mark="mid"]  .cmx__mk::before{content:"\25B3"}
+.cmx__c[data-mark="bad"]  .cmx__mk::before{content:"\00D7"}
+.cmx__c--own[data-mark="good"] .cmx__mk::before{color:var(--c-primary-d)}
 
-/* 列名。PCでは読み上げ専用（列と値の対応を音声にも残す）、SPでは表に出す */
+/* 列名。PCでは読み上げ専用（列と値の対応を音声に残す）、SPでは表に出す */
 .cmx__lab{position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;
   overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 
-/* 外枠は付けず、四隅だけ丸める */
-.cmx__row:last-child .cmx__item{border-bottom:0;border-bottom-left-radius:var(--r-m)}
-.cmx__row:last-child .cmx__c{border-bottom:0}
-.cmx__row:last-child .cmx__c:last-child{border-bottom-right-radius:var(--r-m)}
+.cmx__note{margin-top:var(--s5);font-size:var(--fs-note);color:var(--c-ink3);
+  line-height:var(--lh-head)}
 
-.cmx__note{margin-top:var(--s4);text-align:center;
-  font-size:var(--fs-note);color:var(--c-ink3);line-height:var(--lh-head)}
-
-/* ───────── SP：横スクロールにせず「1項目＝1カード」へ分解 ─────────
-   DOMの並びが 項目名 → 自社 → A社 → B社 なので、
-   畳むだけで「項目名＝カード見出し／自社が1行目／競合が2行目以降」になる。 */
+/* ───────── SP：横スクロールにせず「1項目＝1ブロック」へ分解 ─────────
+   DOMの並びが 項目名 → 自社 → A社 → B社 なので、畳むだけで
+   「項目名＝見出し／自社が1つ目／競合が2つ目以降」になる。
+   ここでも罫は増やさない。ブロックの区切りは同じ6%の1本だけ。 */
 @media(max-width:900px){
-  .cmx__intro{max-width:none}
-  .cmx__grid{display:block;margin-top:var(--s5)}
+  .cmx__grid{display:block}
   .cmx__thead{display:none}
 
-  .cmx__row{display:block;background:var(--c-bg);
-    border-radius:var(--r-m);box-shadow:var(--shadow);overflow:hidden}
-  .cmx__row+.cmx__row{margin-top:var(--s4)}
+  .cmx__row{display:block}
+  .cmx__row+.cmx__row{margin-top:var(--s5);padding-top:var(--s5);border-top:var(--cmx-rule)}
 
-  .cmx__item{justify-content:flex-start;text-align:left;
-    padding:var(--s3) var(--s4);background:var(--c-dark);color:var(--c-on-primary);
-    font-size:var(--fs-base);border-bottom:0;border-radius:0}
-  .cmx__c{padding:var(--s4);border-bottom:1px solid var(--c-line);border-radius:0}
-  .cmx__c--own{box-shadow:inset var(--s1) 0 0 var(--c-primary)}
-  .cmx__c:last-child{border-bottom:0}
+  /* 項目名は色を持たせず、級数と太さだけで見出しにする */
+  .cmx__item{display:block;padding:0 0 var(--s3);border-bottom:0;
+    font-size:var(--fs-base)}
 
-  /* PC側の「最終行だけ」指定を、同じ強さの指定で打ち消す */
-  .cmx__row:last-child .cmx__item{border-bottom:0;border-bottom-left-radius:0}
-  .cmx__row:last-child .cmx__c{border-bottom:1px solid var(--c-line)}
-  .cmx__row:last-child .cmx__c:last-child{border-bottom:0;border-bottom-right-radius:0}
-
-  .cmx__lab{position:static;display:block;width:auto;height:auto;margin:0 0 var(--s2);
+  /* 競合は「罫ゼロの定義リスト」として、位置揃えと行間だけで表として読ませる */
+  .cmx__c{display:grid;grid-template-columns:var(--s8) 1fr;
+    column-gap:var(--s4);align-items:baseline;
+    padding:var(--s3) 0 0;border-bottom:0}
+  .cmx__c .cmx__sub{grid-column:2;margin-top:var(--s1)}
+  .cmx__lab{position:static;width:auto;height:auto;margin:0;padding:0;
     overflow:visible;clip-path:none;white-space:normal;
     font-size:var(--fs-note);font-weight:700;letter-spacing:.06em;
     color:var(--c-ink3);line-height:var(--lh-head)}
-  .cmx__c--own .cmx__lab{color:var(--c-primary-d)}
 
-  .cmx__note{margin-top:var(--s5);text-align:left}
+  /* 自社だけ帯として1枚の面にする＝SPでも色を持つのはここだけ */
+  .cmx__c--own{display:block;padding:var(--s4);border-radius:var(--r-m)}
+  .cmx__c--own .cmx__lab{display:block;margin-bottom:var(--s1);color:var(--c-ink2)}
+
+  /* PC側の「最終行だけ」の指定を打ち消す */
+  .cmx__row:last-child .cmx__item{border-bottom:0}
+  .cmx__row:last-child .cmx__c--own{border-radius:var(--r-m)}
+
+  .cmx__note{margin-top:var(--s6)}
 }
 
 @media(max-width:420px){
-  .cmx__c{padding:var(--s3) var(--s4)}
-  .cmx__item{font-size:var(--fs-sm)}
+  .cmx__c--own{padding:var(--s3) var(--s4)}
 }
+
+/* rule/table-no-grid：格子罫を消し、行は不透明度6%の1本・列は余白で分ける */

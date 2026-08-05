@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
-<title>講師カード一覧（写真＋ネームプレート＋スペック表）</title>
+<title>講師カード一覧（写真＋氏名プレート＋スペック）</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>/* =========================================================
    トークン契約 v1
@@ -17,8 +17,13 @@
   --c-ink:#111111;          /* 見出し */
   --c-ink2:#333333;         /* 本文 */
   --c-ink3:#707070;         /* 補足・注記 */
-  --c-bg:#FFFFFF;           /* 地 */
-  --c-bg2:#F7F8F7;          /* 交互に敷く面 */
+  /* 地は「階段」にする。セクションごとに必ず1段動かす。
+     同じ明るさが続くと面が消える（＝最頻の指摘「薄すぎて見えない」の正体） */
+  --c-bg:#FFFFFF;           /* base   L255  カード・面 */
+  --c-bg2:#F0F3F0;          /* tint   L241  1段落とす */
+  --c-bg3:#E4F1E8;          /* accent L238  主色寄りの淡色 */
+  --c-dark:#0E3113;         /* dark   L39   句読点。1ページに2回まで */
+  --c-on-dark:#FFFFFF;      /* dark の上の文字（14.3:1） */
   --c-line:#E3E3E3;         /* 罫 */
   --c-on-primary:#FFFFFF;   /* 主色の上に乗る文字 */
 
@@ -35,11 +40,16 @@
   /* --- 余白 --- */
   --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px;
   --s6:36px; --s7:52px; --s8:76px; --s9:110px;
-  --sec-y:clamp(56px,7vw,110px);   /* セクションの上下 */
+  /* 余白は3値に固定する。検算で「24箇所に21通り」が出たため */
+  --sp-sec:clamp(88px,10vw,160px);   /* セクション間 */
+  --sp-blk:clamp(56px,6vw,104px);    /* セクション内のブロック間 */
+  --sp-el:clamp(36px,4vw,64px);      /* 要素間 */
+  --sec-y:var(--sp-sec);
 
   /* --- 形 --- */
   --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
-  --shadow:0 6px 24px rgba(17,17,17,.08);
+  --shadow:0 6px 24px rgba(14,49,19,.10), 0 1px 2px rgba(14,49,19,.06);
+  --shadow-lg:0 12px 32px rgba(14,49,19,.16);
 
   /* --- 動き --- */
   --e:cubic-bezier(.23,1,.32,1);
@@ -71,7 +81,31 @@ ul,ol{padding:0;list-style:none}
 .wrap{width:100%;max-width:var(--w-max);margin-inline:auto;padding-inline:var(--w-gut)}
 .sec{padding-block:var(--sec-y)}
 .sec--alt{background:var(--c-bg2)}
+/* 地の階段。kit の tone で切り替える */
+.tone-base{background:var(--c-bg)}
+.tone-tint{background:var(--c-bg2)}
+.tone-accent{background:var(--c-bg3)}
+.tone-dark{background:var(--c-dark);color:#D9E3DB}
+.tone-dark .h-lead,.tone-dark h2,.tone-dark h3{color:var(--c-on-dark)}
+.tone-dark .h-eyebrow{color:#8FD6A0}
+/* 面は必ず地から浮かせる。白の上の白は最頻の指摘 */
+.card,.panel,[class*="__card"],[class*="__panel"]{box-shadow:var(--shadow)}
 .nb{white-space:nowrap}          /* 日本語の改行制御。必ず <wbr> と併用 */
+
+/* ── セクション見出し：1系統に統一する ──────────────
+   type/two-tier-latin-jp  欧文ラベルと和文を2段に組み、
+   級数・太さ・色の主従をわざと逆転させる（欧文は極小・和文が主）。
+   検算で「見出しの様式が8系統」と出たため、全セクションこれに揃える。 */
+.sec-head{margin-bottom:var(--sp-el)}
+.sec-head__en{display:flex;align-items:center;gap:var(--s3);
+  font-size:11.5px;font-weight:700;letter-spacing:.14em;color:var(--c-primary);
+  text-transform:uppercase;margin-bottom:var(--s3)}
+.sec-head__en::before{content:"";width:24px;height:2px;background:currentColor;flex:none}
+.sec-head__ja{font-family:var(--f-disp);font-weight:900;color:var(--c-ink);
+  font-size:clamp(23px,3.2vw,34px);line-height:1.42;letter-spacing:.01em}
+.sec-head__sub{margin-top:var(--s4);font-size:var(--fs-base);color:var(--c-ink3);max-width:44em}
+.tone-dark .sec-head__en{color:#8FD6A0}
+.tone-dark .sec-head__ja{color:var(--c-on-dark)}
 
 /* 見出しの型（案件をまたいで共通の骨） */
 .h-eyebrow{display:flex;align-items:center;gap:var(--s3);
@@ -82,10 +116,19 @@ ul,ol{padding:0;list-style:none}
 .h-sub{margin-top:var(--s4);font-size:var(--fs-base);color:var(--c-ink3)}
 
 /* ボタン */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--s3);
+/* CTAは1形だけ。ピル＋右端に白丸の矢印。
+   検算で「10個・6種類の形」が出たため、形の差で主従を作るのをやめ、
+   大きさだけで主従をつける（.btn--sm が従）。 */
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:var(--s3);
   background:var(--c-primary);color:var(--c-on-primary);font-weight:700;font-size:var(--fs-md);
-  padding:18px 34px;border-radius:var(--r-s);border:0;cursor:pointer;
+  height:72px;padding:0 76px 0 40px;border-radius:var(--r-pill);border:0;cursor:pointer;
   transition:background .16s var(--e),transform .16s var(--e)}
+.btn::after{content:"";position:absolute;right:20px;top:50%;width:32px;height:32px;margin-top:-16px;
+  border-radius:50%;background:var(--c-on-primary);
+  -webkit-mask:no-repeat center/11px 11px url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'><path d='M3 1l5 5-5 5' fill='none' stroke='%23000' stroke-width='2'/></svg>");
+  mask:no-repeat center/11px 11px url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'><path d='M3 1l5 5-5 5' fill='none' stroke='%23000' stroke-width='2'/></svg>")}
+.btn--sm{height:48px;padding:0 24px;font-size:var(--fs-sm)}
+.btn--sm::after{display:none}
 .btn:active{transform:scale(.97)}
 @media(hover:hover) and (pointer:fine){.btn:hover{background:var(--c-primary-d)}}
 .btn--ghost{background:transparent;color:var(--c-primary);box-shadow:inset 0 0 0 2px currentColor}
@@ -123,110 +166,129 @@ ul,ol{padding:0;list-style:none}
 }
 
 /* =========================================================
-   member/member-interview-card-grid
-   講師カード一覧：色ベタ地 × 白カード ×（写真＋ネームプレート）
-   接頭辞は .mig__ で固定。色・寸法は _tokens.css の変数のみ。
+   member/member-interview-card-grid — 講師カード一覧
+   ── 効かせている工夫 ─────────────────────────────
+   rule/dissolve-into-ground : カードは枠も影も持たない。地（tone）と同じ family の
+     塗り1つだけで立てる（地との明度差は 6〜12% に収める）。カード内の区切り罫も
+     カード幅いっぱいには引かず、左右 --s3 内側で止める（罫にカードの外形を
+     なぞらせない）。溶かす代わりに、中の1点＝英語レベルのチップだけを面で立てる。
+   overlap/badge-half-out    : 氏名プレートの中心を写真の下辺の線上に置き、
+     高さの半分だけ写真に噛ませる（transform:translateY(-50%)）。
+     流し込みの箱は動かさないので、残り半分がそのまま下の余白になる＝
+     プレートの高さが変わっても本文とぶつからない。
+   ─────────────────────────────────────────────
+   ・地はパーツ側で敷かない（kit の tone が外側で敷く。敷くと階段が壊れる）
+   ・緑（--c-primary）は押せる場所だけ。このセクションには押せる場所が無いので使わない
+   ・接頭辞は .mig__ で固定。色・寸法は _tokens.css の変数だけ
    ========================================================= */
 
-.mig{position:relative;overflow:hidden;background:var(--c-primary)}
-
-/* 背景の裏文字：カード列の後ろから覗かせる。色差ではなく地色＋白の透過で作る */
-.mig__ghost{
-  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-  z-index:0;pointer-events:none;user-select:none;white-space:nowrap;
-  font-family:var(--f-disp);font-weight:900;line-height:1;letter-spacing:.02em;
-  color:var(--c-on-primary);opacity:.1;
-  font-size:clamp(calc(var(--fs-2xl) * 2.2), 24vw, calc(var(--fs-4xl) * 4));
+.mig{
+  /* 地とカードは【ペアで】決める。片方だけ差し替えるとこの工夫は成立しない。
+     既定＝白地に置かれた場合。白の上の白は消えるのでカードを1段落とす。 */
+  --mig-card:var(--c-bg2);
+  /* 淡色地（tint / accent / dark）では逆に1段上げて白で抜く */
+  --mig-rule:color-mix(in srgb,var(--c-ink) 10%,transparent);  /* カード内の区切り罫 */
+  --mig-chip:color-mix(in srgb,var(--c-ink) 9%,var(--mig-card)); /* 英語レベルのチップ面 */
+  --mig-dot:color-mix(in srgb,var(--c-ink) 30%,transparent);     /* 海外経験の行頭 */
 }
+.tone-tint .mig,.tone-accent .mig,.tone-dark .mig{--mig-card:var(--c-bg)}
 
-.mig__in{position:relative;z-index:1}
+/* ── 見出し ─────────────────────────────
+   .sec-head（欧文ラベル＋和文）をそのまま使う。独自の様式は作らない */
+.mig__head{max-width:44em}
 
-/* ── 見出し ─────────────────────────────── */
-.mig__head{max-width:36em;margin-bottom:clamp(var(--s6), 4vw, var(--s7))}
-.mig__eyebrow{color:var(--c-on-primary);opacity:.85}      /* 主色の面に乗るので反転 */
-.mig__h{color:var(--c-on-primary)}
-.mig__lead{margin-top:var(--s4);color:var(--c-on-primary);opacity:.88;
-  font-size:var(--fs-base);line-height:var(--lh-body)}
-
-/* ── カード列 ───────────────────────────── */
+/* ── カード列 ───────────────────────────
+   3人が横に並び、写真の高さが揃う＝「英語レベル」「海外経験」の行が
+   3枚とも同じ高さから始まる。読み比べを成立させているのはこの縦位置の一致。 */
 .mig__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s5);align-items:stretch}
 
+/* 枠も影も持たない。_base.css の [class*="__card"] が影を付けるので明示的に消す。
+   カードの輪郭は「地との明度差」だけが作る（accent地 #E4F1E8 → 白カード ＝ L*で約6） */
 .mig__card{display:flex;flex-direction:column;height:100%;
-  background:var(--c-bg);border-radius:var(--r-s);overflow:hidden}
+  background:var(--mig-card);border:0;box-shadow:none;border-radius:var(--r-m);
+  padding:var(--s5)}
 
-/* 写真：縦長・顔を上寄せ */
-.mig__ph{position:relative;margin:0}
-.mig__ph img{width:100%;height:auto;aspect-ratio:3 / 4;object-fit:cover;object-position:top center}
-.mig__ph::after{content:"";position:absolute;inset:auto 0 0 0;height:42%;pointer-events:none;
-  background:linear-gradient(to top,
-    color-mix(in srgb, var(--c-ink) 62%, transparent), transparent)}
+/* ── 写真 ───────────────────────────────
+   カードの内側に落とす（＝写真の四周にカードの塗りが残る）。
+   写真が地と近い明るさでも、この余白があるかぎりカードは面として見える。 */
+.mig__ph{margin:0;display:flex;flex-direction:column;align-items:flex-start}
+.mig__ph img{width:100%;height:auto;aspect-ratio:3 / 4;
+  object-fit:cover;object-position:top center;border-radius:var(--r-s)}
 
-/* ネームプレート（黒ベタは使わず --c-ink の透過で作る） */
-.mig__plate{position:absolute;left:var(--s4);right:var(--s4);bottom:var(--s4);
-  display:flex;flex-direction:column;align-items:flex-start;gap:var(--s2);z-index:1}
+/* ── 氏名プレート（写真の下辺に半分噛ませる） ──
+   overlap/badge-half-out。写真の下辺の線上に中心を置く。
+   地の階段のいちばん暗い段（--c-dark）を小さく1点だけ借りて、
+   写真↔カードの境目を跨がせる。半透明パネルは敷かない（写真が濁る）。 */
+.mig__plate{margin-left:var(--s3);max-width:calc(100% - var(--s3) * 2);
+  transform:translateY(-50%);
+  display:flex;flex-direction:column;gap:var(--s1);
+  background:var(--c-dark);border-radius:var(--r-s);
+  padding:var(--s2) var(--s4)}
 .mig__role{font-size:var(--fs-note);font-weight:700;letter-spacing:.06em;
-  line-height:var(--lh-tight);color:var(--c-bg)}
+  line-height:var(--lh-tight);color:color-mix(in srgb,var(--c-on-dark) 74%,var(--c-dark))}
 .mig__name{font-family:var(--f-disp);font-weight:900;font-size:var(--fs-md);
-  line-height:var(--lh-tight);color:var(--c-bg);
-  background:color-mix(in srgb, var(--c-ink) 86%, transparent);
-  padding:var(--s1) var(--s3);border-radius:var(--r-s)}
+  line-height:var(--lh-tight);color:var(--c-on-dark)}
 
-/* ── カード本文 ─────────────────────────── */
-.mig__body{flex:1;display:flex;flex-direction:column;gap:var(--s4);padding:var(--s5)}
+/* ── カード本文 ─────────────────────────
+   プレートが半分ぶんの余白を自分で残しているので、上は詰めてよい */
+.mig__body{flex:1;display:flex;flex-direction:column;padding-top:var(--s3)}
 
-/* スペック表：面を1段落として区切り、ラベル→値で読ませる */
-.mig__spec{background:var(--c-bg2);border-radius:var(--r-s);padding:var(--s4)}
-.mig__row + .mig__row{margin-top:var(--s3);padding-top:var(--s3);border-top:1px solid var(--c-line)}
+/* スペック：面（別色のパネル）も枠も敷かない。区切りは罫1本だけ。
+   罫はカード幅いっぱいには引かず左右 --s3 内側で止める（rule/dissolve-into-ground） */
+.mig__row+.mig__row{margin-top:var(--s3)}
+.mig__row+.mig__row::before{content:"";display:block;height:1px;
+  margin:0 var(--s3) var(--s3);background:var(--mig-rule)}
+
 .mig__label{font-size:var(--fs-note);font-weight:700;letter-spacing:.08em;
   line-height:var(--lh-tight);color:var(--c-ink3)}
 .mig__val{margin:0;margin-top:var(--s2)}
 
-/* 英語レベル＝いちばん読ませたいスペックなのでピルで立てる */
+/* 英語レベル＝いちばん読み比べさせたい1点。
+   色は使わず、面の1段と字面の太さだけで立てる（緑は押せる場所の色なので使わない） */
 .mig__badges{display:flex;flex-wrap:wrap;gap:var(--s2)}
-.mig__badge{font-family:var(--f-num);font-size:var(--fs-sm);font-weight:700;
-  line-height:var(--lh-tight);color:var(--c-primary-d);background:var(--c-primary-l);
-  border-radius:var(--r-pill);padding:var(--s2) var(--s3)}
+.mig__badge{font-weight:700;font-size:var(--fs-sm);line-height:var(--lh-tight);
+  color:var(--c-ink);background:var(--mig-chip);
+  border-radius:var(--r-s);padding:var(--s2) var(--s3)}
 
-/* 海外経験：複数行。行頭の点で行の切れ目を作る */
+/* 海外経験：1行1件。行頭の点は行の切れ目を作るためだけの無彩色 */
 .mig__abroad li{position:relative;padding-left:var(--s4);
   font-size:var(--fs-sm);line-height:var(--lh-head);color:var(--c-ink2)}
-.mig__abroad li + li{margin-top:var(--s2)}
-.mig__abroad li::before{content:"";position:absolute;left:0;
+.mig__abroad li+li{margin-top:var(--s1)}
+.mig__abroad li::before{content:"";position:absolute;left:var(--s1);
   top:calc(var(--fs-sm) * var(--lh-head) / 2);transform:translateY(-50%);
-  width:var(--s1);height:var(--s1);border-radius:var(--r-pill);background:var(--c-primary)}
+  width:var(--s1);height:var(--s1);border-radius:var(--r-pill);background:var(--mig-dot)}
 
-/* コメント：margin-top:auto で全カードの下端に揃える */
-.mig__comment{margin-top:auto;font-size:var(--fs-sm);line-height:var(--lh-body);color:var(--c-ink2)}
+/* コメント：margin-top:auto で全カードの下端に揃える。
+   スペックとは罫1本で切る（罫の引き方はスペック内と同じ＝左右 --s3 内側で止める） */
+.mig__comment{margin-top:auto;font-size:var(--fs-sm);
+  line-height:var(--lh-body);color:var(--c-ink2)}
+.mig__comment::before{content:"";display:block;height:1px;
+  margin:var(--s5) var(--s3) var(--s4);background:var(--mig-rule)}
 
 .mig__note{margin-top:var(--s5);font-size:var(--fs-note);
-  color:var(--c-on-primary);opacity:.75}
+  line-height:var(--lh-body);color:var(--c-ink3)}
 
 /* ── レスポンシブ ───────────────────────── */
 @media (max-width:900px){
   .mig__grid{grid-template-columns:repeat(2,1fr);gap:var(--s4)}
-  .mig__ph img{aspect-ratio:4 / 5}          /* 2列だとカードが縦に伸びすぎるので浅くする */
-  .mig__body{gap:var(--s3);padding:var(--s4)}
-  .mig__spec{padding:var(--s3)}
-  .mig__head{margin-bottom:var(--s6)}
+  .mig__card{padding:var(--s4)}
+  .mig__ph img{aspect-ratio:4 / 5}      /* 2列だとカードが縦に伸びすぎるので浅くする */
 }
 @media (max-width:620px){
-  /* 1列。写真は常にカードの最上部＝テキストより上に置く */
+  /* 1列。写真は常にカードの最上部＝すべてのテキストより上 */
   .mig__grid{grid-template-columns:1fr;gap:var(--s5)}
-  .mig__ph img{aspect-ratio:4 / 3}
-  .mig__ghost{opacity:.12}
+  .mig__ph img{aspect-ratio:1 / 1}      /* 縦の消費を抑える。顔は object-position:top で残る */
 }
 
 body{background:#fff}</style></head><body>
 <section class="sec mig" aria-labelledby="mig-title">
-  <span class="mig__ghost" aria-hidden="true">MEMBER</span>
+  <div class="wrap">
 
-  <div class="wrap mig__in">
-
-    <header class="mig__head">
-      <p class="h-eyebrow mig__eyebrow fx" data-fx="left">ここに英字の小見出し</p>
-      <h2 id="mig-title" class="h-lead mig__h fx" data-fx="fadeup" data-d="70"><span class="nb">見出しがここに入り、</span><wbr><span class="nb">2行目で言い切ります。</span></h2>
-      <p class="mig__lead fx" data-fx="fadeup" data-d="140"><span class="nb">リード文がここに入ります。</span><wbr><span class="nb">この一覧で何が分かるのかを1〜2行で書きます。</span></p>
-    </header>
+    <div class="sec-head mig__head">
+      <p class="sec-head__en fx" data-fx="left">ここに英字の小見出し</p>
+      <h2 id="mig-title" class="sec-head__ja fx" data-fx="fadeup" data-d="70"><span class="nb">見出しがここに入り、</span><wbr><span class="nb">2行目で言い切ります。</span></h2>
+      <p class="sec-head__sub fx" data-fx="fadeup" data-d="140"><span class="nb">リード文がここに入ります。</span><wbr><span class="nb">この一覧で何が分かるのかを1〜2行で書きます。</span></p>
+    </div>
 
     <ul class="mig__grid">
       

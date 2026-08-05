@@ -17,8 +17,13 @@
   --c-ink:#111111;          /* 見出し */
   --c-ink2:#333333;         /* 本文 */
   --c-ink3:#707070;         /* 補足・注記 */
-  --c-bg:#FFFFFF;           /* 地 */
-  --c-bg2:#F7F8F7;          /* 交互に敷く面 */
+  /* 地は「階段」にする。セクションごとに必ず1段動かす。
+     同じ明るさが続くと面が消える（＝最頻の指摘「薄すぎて見えない」の正体） */
+  --c-bg:#FFFFFF;           /* base   L255  カード・面 */
+  --c-bg2:#F0F3F0;          /* tint   L241  1段落とす */
+  --c-bg3:#E4F1E8;          /* accent L238  主色寄りの淡色 */
+  --c-dark:#0E3113;         /* dark   L39   句読点。1ページに2回まで */
+  --c-on-dark:#FFFFFF;      /* dark の上の文字（14.3:1） */
   --c-line:#E3E3E3;         /* 罫 */
   --c-on-primary:#FFFFFF;   /* 主色の上に乗る文字 */
 
@@ -35,11 +40,16 @@
   /* --- 余白 --- */
   --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px;
   --s6:36px; --s7:52px; --s8:76px; --s9:110px;
-  --sec-y:clamp(56px,7vw,110px);   /* セクションの上下 */
+  /* 余白は3値に固定する。検算で「24箇所に21通り」が出たため */
+  --sp-sec:clamp(88px,10vw,160px);   /* セクション間 */
+  --sp-blk:clamp(56px,6vw,104px);    /* セクション内のブロック間 */
+  --sp-el:clamp(36px,4vw,64px);      /* 要素間 */
+  --sec-y:var(--sp-sec);
 
   /* --- 形 --- */
   --r-s:6px; --r-m:12px; --r-l:24px; --r-pill:999px;
-  --shadow:0 6px 24px rgba(17,17,17,.08);
+  --shadow:0 6px 24px rgba(14,49,19,.10), 0 1px 2px rgba(14,49,19,.06);
+  --shadow-lg:0 12px 32px rgba(14,49,19,.16);
 
   /* --- 動き --- */
   --e:cubic-bezier(.23,1,.32,1);
@@ -71,7 +81,31 @@ ul,ol{padding:0;list-style:none}
 .wrap{width:100%;max-width:var(--w-max);margin-inline:auto;padding-inline:var(--w-gut)}
 .sec{padding-block:var(--sec-y)}
 .sec--alt{background:var(--c-bg2)}
+/* 地の階段。kit の tone で切り替える */
+.tone-base{background:var(--c-bg)}
+.tone-tint{background:var(--c-bg2)}
+.tone-accent{background:var(--c-bg3)}
+.tone-dark{background:var(--c-dark);color:#D9E3DB}
+.tone-dark .h-lead,.tone-dark h2,.tone-dark h3{color:var(--c-on-dark)}
+.tone-dark .h-eyebrow{color:#8FD6A0}
+/* 面は必ず地から浮かせる。白の上の白は最頻の指摘 */
+.card,.panel,[class*="__card"],[class*="__panel"]{box-shadow:var(--shadow)}
 .nb{white-space:nowrap}          /* 日本語の改行制御。必ず <wbr> と併用 */
+
+/* ── セクション見出し：1系統に統一する ──────────────
+   type/two-tier-latin-jp  欧文ラベルと和文を2段に組み、
+   級数・太さ・色の主従をわざと逆転させる（欧文は極小・和文が主）。
+   検算で「見出しの様式が8系統」と出たため、全セクションこれに揃える。 */
+.sec-head{margin-bottom:var(--sp-el)}
+.sec-head__en{display:flex;align-items:center;gap:var(--s3);
+  font-size:11.5px;font-weight:700;letter-spacing:.14em;color:var(--c-primary);
+  text-transform:uppercase;margin-bottom:var(--s3)}
+.sec-head__en::before{content:"";width:24px;height:2px;background:currentColor;flex:none}
+.sec-head__ja{font-family:var(--f-disp);font-weight:900;color:var(--c-ink);
+  font-size:clamp(23px,3.2vw,34px);line-height:1.42;letter-spacing:.01em}
+.sec-head__sub{margin-top:var(--s4);font-size:var(--fs-base);color:var(--c-ink3);max-width:44em}
+.tone-dark .sec-head__en{color:#8FD6A0}
+.tone-dark .sec-head__ja{color:var(--c-on-dark)}
 
 /* 見出しの型（案件をまたいで共通の骨） */
 .h-eyebrow{display:flex;align-items:center;gap:var(--s3);
@@ -82,10 +116,19 @@ ul,ol{padding:0;list-style:none}
 .h-sub{margin-top:var(--s4);font-size:var(--fs-base);color:var(--c-ink3)}
 
 /* ボタン */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--s3);
+/* CTAは1形だけ。ピル＋右端に白丸の矢印。
+   検算で「10個・6種類の形」が出たため、形の差で主従を作るのをやめ、
+   大きさだけで主従をつける（.btn--sm が従）。 */
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:var(--s3);
   background:var(--c-primary);color:var(--c-on-primary);font-weight:700;font-size:var(--fs-md);
-  padding:18px 34px;border-radius:var(--r-s);border:0;cursor:pointer;
+  height:72px;padding:0 76px 0 40px;border-radius:var(--r-pill);border:0;cursor:pointer;
   transition:background .16s var(--e),transform .16s var(--e)}
+.btn::after{content:"";position:absolute;right:20px;top:50%;width:32px;height:32px;margin-top:-16px;
+  border-radius:50%;background:var(--c-on-primary);
+  -webkit-mask:no-repeat center/11px 11px url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'><path d='M3 1l5 5-5 5' fill='none' stroke='%23000' stroke-width='2'/></svg>");
+  mask:no-repeat center/11px 11px url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'><path d='M3 1l5 5-5 5' fill='none' stroke='%23000' stroke-width='2'/></svg>")}
+.btn--sm{height:48px;padding:0 24px;font-size:var(--fs-sm)}
+.btn--sm::after{display:none}
 .btn:active{transform:scale(.97)}
 @media(hover:hover) and (pointer:fine){.btn:hover{background:var(--c-primary-d)}}
 .btn--ghost{background:transparent;color:var(--c-primary);box-shadow:inset 0 0 0 2px currentColor}
@@ -122,133 +165,141 @@ ul,ol{padding:0;list-style:none}
   *{animation-duration:.001s!important}
 }
 
-/* numbers/numbers-compare-bars — 割合／前後を横バーで1行ずつ積む
-   行＝1単位。左に固定幅ラベル、右にバー、数値はバーの右端の「外」。
-   lead を立てた行だけ差し色＋級数を上げて主役にする。
-   基準バー（basePct）を足すと「受講前→受講後」の比較型になる。 */
+/* numbers/numbers-compare-bars — 同じ指標を区分ごとに横バーで積む
+   ── 効かせている工夫 ─────────────────────────────
+   color/rival-desaturated : 結論の1本だけが色相を持ち、残りは【同じ明度の無彩色】。
+     ばらけた明度で「薄い＝悪い」と読ませない。差し色を消しても順位は数値が持つ。
+   rule/table-no-grid      : 枠・格子罫・ヘッダ地色を全部消し、線は行の区切り1本だけ。
+     線が減るぶん、面の1段（地→パネル）と数値の位置揃えが表として効く。
+   ───────────────────────────────────────────── */
 
-/* 値100のときバーが取る幅。残りが数値とふきだしの置き場になる。
-   数値が大きいほど、ここを絞らないと右端からはみ出す。 */
-.ncb{--ncb-span:86%}
+.ncb{
+  /* バーの無彩色。--c-accent とほぼ同じ相対輝度（0.42）に合わせてあるので、
+     並べたときに差として残るのは【彩度の有無だけ】になる。
+     ここを薄くすると 100% の行が「悪い数字」に見えるので落とさない。 */
+  --ncb-dim:color-mix(in srgb,var(--c-ink) 36%,var(--c-bg));
+  --ncb-dim-l:color-mix(in srgb,var(--c-ink) 18%,var(--c-bg));  /* 基準バー（比較型） */
+  --ncb-rule:color-mix(in srgb,var(--c-ink) 8%,transparent);    /* 行の区切り1本 */
+  --ncb-numw:var(--s8);   /* 数値の列幅。右端で揃えるための固定列 */
+  --ncb-h:var(--s5);      /* バーの高さ */
+}
 
-/* ── 見出し ───────────────────────────── */
-.ncb__head{text-align:center}
-.ncb__eyebrow{justify-content:center;margin-bottom:var(--s3)}
-.ncb__h{margin-bottom:clamp(20px,3vw,var(--s6))}
-.ncb__h em{font-style:normal;color:var(--c-primary-d)}
+/* ── 見出し ─────────────────────────────
+   .sec-head（欧文ラベル＋和文）をそのまま使う。独自の様式は作らない */
+.ncb__head{max-width:44em}
 
-/* ── 白カード ─────────────────────────── */
-.ncb__card{background:var(--c-bg);border:1px solid var(--c-line);
-  border-radius:var(--r-l);box-shadow:var(--shadow);
-  padding:clamp(20px,3.2vw,var(--s7)) clamp(14px,3.2vw,var(--s7))}
+/* ── バーを載せる面 ───────────────────────
+   枠線も影も持たない。地（tone）から明度を1段だけ落として面を作る。
+   ＝ 線を1本も足さずに①輝度の段差を作るのがこの面の役目 */
+.ncb__chart{background:var(--c-bg2);border-radius:var(--r-l);
+  padding:var(--s7) var(--s6)}
+/* 地がすでに1段落ちているトーンでは、逆に1段上げて段差を保つ */
+.tone-tint .ncb__chart,.tone-accent .ncb__chart{background:var(--c-bg)}
 
-/* ＼ 一言 ／ の斜線は擬似要素で。em基準なので文字サイズに追従する */
-.ncb__cardtitle{display:flex;align-items:center;justify-content:center;gap:var(--s4);
+/* ＼ 一言 ／（任意）。斜線は擬似要素。押せる場所ではないので緑は使わない */
+.ncb__ttl{display:flex;align-items:center;justify-content:center;gap:var(--s4);
   font-family:var(--f-disp);font-weight:900;color:var(--c-ink);
-  font-size:clamp(15px,1.9vw,var(--fs-md));line-height:var(--lh-tight);letter-spacing:.04em;
-  margin-bottom:clamp(16px,2.4vw,var(--s5))}
-.ncb__cardtitle::before,.ncb__cardtitle::after{content:"";flex:none;
-  width:.12em;height:1.5em;background:var(--c-primary);border-radius:var(--r-pill)}
-.ncb__cardtitle::before{transform:rotate(-20deg)}
-.ncb__cardtitle::after{transform:rotate(20deg)}
+  font-size:var(--fs-md);line-height:var(--lh-tight);letter-spacing:.04em;
+  margin-bottom:var(--s5)}
+.ncb__ttl::before,.ncb__ttl::after{content:"";flex:none;
+  width:.12em;height:1.5em;background:var(--c-ink3);border-radius:var(--r-pill)}
+.ncb__ttl::before{transform:rotate(-20deg)}
+.ncb__ttl::after{transform:rotate(20deg)}
 
-/* ── 行 ───────────────────────────────── */
-.ncb__rows{display:flex;flex-direction:column;gap:var(--s2)}
-.ncb__row{display:grid;grid-template-columns:clamp(52px,6.4vw,84px) minmax(0,1fr);
-  align-items:center;gap:var(--s4);
-  padding:var(--s2) var(--s3);border-radius:var(--r-m)}
-.ncb__row--lead{background:var(--c-bg2)}
+/* ── 行 ───────────────────────────────
+   罫は行と行のあいだの1本だけ。縦罫・外枠・ヘッダ地色は引かない。
+   行の面色も敷かない（主役の行に面を敷くと「2色で塗り分け」に戻る） */
+.ncb__rows{display:flex;flex-direction:column}
+.ncb__row{display:grid;grid-template-columns:var(--s8) minmax(0,1fr);
+  align-items:center;column-gap:var(--s5);padding-block:var(--s4)}
+.ncb__row+.ncb__row{border-top:1px solid var(--ncb-rule)}
+.ncb__row:first-child{padding-top:0}
+.ncb__row:last-child{padding-bottom:0}
 
 .ncb__label{text-align:right;font-weight:700;color:var(--c-ink);
-  font-size:clamp(13px,1.5vw,var(--fs-md));line-height:var(--lh-tight);
-  font-feature-settings:"palt"}
-.ncb__sub{display:block;margin-top:.15em;font-size:var(--fs-note);font-weight:500;color:var(--c-ink3)}
+  font-size:var(--fs-md);line-height:var(--lh-tight);font-feature-settings:"palt"}
+.ncb__sub{display:block;margin-top:var(--s1);font-size:var(--fs-note);font-weight:500;color:var(--c-ink3)}
 
-.ncb__bars{display:flex;flex-direction:column;gap:var(--s1);min-width:0}
-.ncb__line{display:flex;align-items:center;gap:var(--s3);min-width:0}
+/* バー＋数値。数値は固定幅の列に入れて右端で縦に揃える。
+   位置揃えが揃うほど、罫が無くても「表」として読める */
+.ncb__bars{display:flex;flex-direction:column;gap:var(--s2);min-width:0}
+.ncb__line{display:grid;grid-template-columns:minmax(0,1fr) var(--ncb-numw);
+  align-items:center;column-gap:var(--s4);min-width:0}
 
-/* バー長は --ncb-p（0〜100の素の数値）× --ncb-span。
-   min-width は「短い値でもバーとして見える」下限。
-   flex-shrink を1にしてあるのは、数値やふきだしが長すぎたときに
-   バーだけが縮んで受け止め、カードの外へはみ出さないようにするため。 */
-.ncb__bar{flex:0 1 auto;width:calc(var(--ncb-p) * var(--ncb-span) / 100);min-width:var(--s6);
-  height:clamp(18px,2.2vw,var(--s5));border-radius:var(--r-pill);overflow:hidden;
+/* バー長は --ncb-p（0〜100の素の数値）＝ 列幅に対する％。
+   目盛りの溝（トラック）は敷かない。残りを塗ると「もう一つのデータ」に見える */
+.ncb__bar{width:calc(var(--ncb-p) * 1%);min-width:var(--s5);height:var(--ncb-h);
+  border-radius:0 var(--r-s) var(--r-s) 0;overflow:hidden;
   display:flex;align-items:center;padding-inline:var(--s3);
-  background:var(--c-primary);color:var(--c-on-primary)}
-.ncb__bar--base{background:var(--c-line);color:var(--c-ink2)}
-.ncb__row--lead .ncb__bar--main{background:var(--c-accent);color:var(--c-ink)}
+  background:var(--ncb-dim);color:var(--c-ink)}
+.ncb__bar--base{background:var(--ncb-dim-l);color:var(--c-ink2)}
+/* 色相を持つのはここ1本だけ。＝このセクションの差し色は1箇所 */
+.ncb__row--lead .ncb__bar--main{background:var(--c-accent)}
 .ncb__inbar{font-size:var(--fs-note);font-weight:700;line-height:1;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-/* 数値。主役と基準で級数差を大きく取るのがこの型の肝 */
-.ncb__num{flex:none;white-space:nowrap;font-family:var(--f-num);font-weight:900;
-  line-height:1;color:var(--c-ink);font-variant-numeric:tabular-nums;
-  font-size:clamp(19px,2.4vw,var(--fs-xl))}
+/* 数値。色は全行そろえ、主役だけ級数を上げる。
+   ウェイトは全行 900 のまま落とさない（落とすと 100% が弱く見える） */
+.ncb__num{justify-self:end;white-space:nowrap;font-family:var(--f-num);font-weight:900;
+  line-height:1;color:var(--c-ink);font-variant-numeric:tabular-nums;font-size:var(--fs-xl)}
 .ncb__num b{font-weight:inherit}
-.ncb__num i{font-style:normal;font-family:var(--f-sans);font-size:.5em;margin-left:.08em}
+.ncb__num i{font-style:normal;font-family:var(--f-sans);font-size:.5em;
+  color:var(--c-ink3);margin-left:.08em}
 .ncb__num--base{font-size:var(--fs-sm);font-weight:700;color:var(--c-ink3)}
-.ncb__row--lead .ncb__num{color:var(--c-accent);font-size:clamp(28px,4vw,var(--fs-2xl))}
+.ncb__row--lead .ncb__num{font-size:var(--fs-2xl)}
 
-/* 差分ふきだし（任意）。バー領域の外へ出す */
-.ncb__badge{position:relative;flex:none;display:inline-flex;align-items:center;
-  margin-left:var(--s2);padding:var(--s1) var(--s3);border-radius:var(--r-pill);
-  background:var(--c-accent);color:var(--c-ink);font-weight:900;
-  font-size:clamp(11px,1.3vw,var(--fs-sm));line-height:1.5}
-.ncb__badge::before{content:"";position:absolute;left:calc(.46em * -1);top:50%;
-  width:.5em;height:.66em;transform:translateY(-50%);background:var(--c-accent);
-  clip-path:polygon(100% 0,100% 100%,0 50%)}
+/* 差分チップ（任意）。数値の下・右端に揃える。差し色はバーで使い切っている */
+.ncb__badge{grid-column:2;justify-self:end;margin-top:var(--s2);
+  padding:var(--s1) var(--s3);border-radius:var(--r-pill);
+  background:color-mix(in srgb,var(--c-ink) 10%,var(--c-bg));color:var(--c-ink);
+  font-weight:900;font-size:var(--fs-sm);line-height:1.5;white-space:nowrap}
 
-.ncb__note{margin-top:var(--s4);font-size:var(--fs-note);color:var(--c-ink3);line-height:1.8}
+.ncb__note{margin-top:var(--s4);font-size:var(--fs-note);color:var(--c-ink3);line-height:var(--lh-body)}
 
 /* ── 動き ─────────────────────────────
-   行に .hh-in が付いた時点でバーが左から伸び、遅れて数値・ふきだしが出る。
+   行に .hh-in が付いたらバーが左から伸び、遅れて数値が出る。気配の範囲に留める。
    JSが動かないと .fx-on が付かない＝最初から全部見えている（安全側） */
-.fx-on .ncb__bar{clip-path:inset(0 100% 0 0 round var(--r-pill));
-  transition:clip-path .62s var(--e) .08s}
-.fx-on .ncb__row.hh-in .ncb__bar{clip-path:inset(0 round var(--r-pill))}
+.fx-on .ncb__bar{clip-path:inset(0 100% 0 0);transition:clip-path var(--d) var(--e) .08s}
+.fx-on .ncb__row.hh-in .ncb__bar{clip-path:inset(0)}
 .fx-on .ncb__num{opacity:0;transform:translateX(calc(var(--s2) * -1));
-  transition:opacity .34s var(--e) .5s,transform .34s var(--e) .5s}
+  transition:opacity .34s var(--e) .34s,transform .34s var(--e) .34s}
 .fx-on .ncb__row.hh-in .ncb__num{opacity:1;transform:none}
-@keyframes ncb-pop{0%{opacity:0;transform:scale(.8)}60%{opacity:1;transform:scale(1.06)}100%{opacity:1;transform:scale(1)}}
-.fx-on .ncb__badge{opacity:0}
-.fx-on .ncb__row.hh-in .ncb__badge{animation:ncb-pop .42s var(--e) .62s both}
+.fx-on .ncb__badge{opacity:0;transition:opacity .34s var(--e) .46s}
+.fx-on .ncb__row.hh-in .ncb__badge{opacity:1}
 
-/* ── SP：ラベルをバーの上へ、行間を広げて境目を保つ ── */
+/* ── SP：ラベルをバーの上へ。数値の列だけは揃えたまま残す ── */
 @media(max-width:900px){
-  .ncb{--ncb-span:84%}   /* ラベルが上に移り、行の全幅がバーに使える */
-  .ncb__rows{gap:var(--s3)}
-  .ncb__row{grid-template-columns:minmax(0,1fr);gap:var(--s2);padding:var(--s3)}
-  .ncb__label{text-align:left;font-size:var(--fs-sm)}
+  .ncb__chart{padding:var(--s6) var(--s5)}
+  .ncb__row{grid-template-columns:minmax(0,1fr);row-gap:var(--s2);padding-block:var(--s5)}
+  .ncb__label{text-align:left;font-size:var(--fs-base)}
   .ncb__sub{display:inline;margin-left:var(--s2)}
-  .ncb__num{font-size:clamp(19px,4.4vw,var(--fs-xl))}
-  .ncb__row--lead .ncb__num{font-size:clamp(25px,6.2vw,var(--fs-xl))}
-  .ncb__note{margin-top:var(--s3)}
 }
 @media(max-width:560px){
-  .ncb{--ncb-span:74%}   /* 数値が相対的に大きくなるぶん、バーの取り分を絞る */
-  .ncb__line{flex-wrap:wrap;gap:var(--s2)}
-  .ncb__bar{padding-inline:var(--s2)}
-  .ncb__badge{font-size:var(--fs-note);margin-left:auto}
-  .ncb__badge::before{display:none}
+  .ncb{--ncb-numw:var(--s7);--ncb-h:var(--s4)}
+  .ncb__chart{padding:var(--s5) var(--s4)}
+  .ncb__line{column-gap:var(--s3)}
+  .ncb__num{font-size:var(--fs-lg)}
+  .ncb__row--lead .ncb__num{font-size:var(--fs-xl)}
+  .ncb__label{font-size:var(--fs-sm)}
 }
 
 @media(prefers-reduced-motion:reduce){
   .fx-on .ncb__bar{clip-path:none!important;transition:none!important}
   .fx-on .ncb__num{opacity:1!important;transform:none!important;transition:none!important}
-  .fx-on .ncb__badge{opacity:1!important;animation:none!important}
+  .fx-on .ncb__badge{opacity:1!important;transition:none!important}
 }
 
 body{background:#fff}</style></head><body>
-<section class="sec sec--alt ncb">
+<section class="sec ncb">
   <div class="wrap">
 
-    <div class="ncb__head">
-      <p class="h-eyebrow ncb__eyebrow fx" data-fx="left">小見出しがここに入ります</p>
-      <h2 class="h-lead ncb__h fx" data-fx="fadeup" data-d="70"><span class="nb">見出しがここに入り、</span><wbr><span class="nb">数字の<em>結論</em>まで</span><wbr><span class="nb">言い切ります</span></h2>
+    <div class="sec-head ncb__head">
+      <p class="sec-head__en fx" data-fx="left">小見出しがここに入ります</p>
+      <h2 class="sec-head__ja fx" data-fx="fadeup" data-d="70"><span class="nb">見出しがここに入り、</span><wbr><span class="nb">数字の<em>結論</em>まで</span><wbr><span class="nb">言い切ります</span></h2>
     </div>
 
-    <div class="ncb__card fx" data-fx="fadeup" data-d="120">
-      <p class="ncb__cardtitle">カードの上に置く一言</p>
+    <div class="ncb__chart fx" data-fx="fadeup" data-d="120">
+      <p class="ncb__ttl">カードの上に置く一言</p>
 
       <ul class="ncb__rows" role="list">
         <li class="ncb__row fx" data-fx="fadeup" data-d="0">

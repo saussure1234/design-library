@@ -1,9 +1,9 @@
-<section class="sec sec--alt vff">
+<section class="sec vff">
 
-  <div class="wrap vff__head">
-    <p class="h-eyebrow fx" data-fx="left">{{eyebrow}}</p>
-    <h2 class="h-lead vff__h fx" data-fx="fadeup" data-d="80">{{heading}}</h2>
-    {{?lead}}<p class="h-sub vff__sub fx" data-fx="fadeup" data-d="140">{{lead}}</p>{{/lead}}
+  <div class="wrap sec-head vff__head">
+    {{?eyebrow}}<p class="sec-head__en fx" data-fx="left">{{eyebrow}}</p>{{/eyebrow}}
+    <h2 class="sec-head__ja fx" data-fx="fadeup" data-d="80">{{heading}}</h2>
+    {{?lead}}<p class="sec-head__sub fx" data-fx="fadeup" data-d="140">{{lead}}</p>{{/lead}}
   </div>
 
   <div class="vff__list">
@@ -12,7 +12,6 @@
 
       <figure class="vff__shot fx" data-fx="clip">
         <img src="{{.photo}}" alt="{{.photoAlt}}" loading="lazy" decoding="async">
-        
       </figure>
 
       <div class="vff__plate">
@@ -20,7 +19,7 @@
         <div class="vff__card fx" data-fx="fadeup" data-d="120">
 
           <p class="vff__markrow">
-            <span class="vff__mark fx" data-fx="right" data-d="240">{{.mark}}</span>
+            <span class="vff__mark">{{.mark}}</span>
             {{?.moreHref}}<a class="vff__more" href="{{.moreHref}}">{{.moreLabel}}<svg viewBox="0 0 22 10" aria-hidden="true"><path d="M0 5h19M15 1l4 4-4 4"/></svg></a>{{/.moreHref}}
           </p>
 
@@ -43,7 +42,7 @@
         </div>
 
         {{#.reply}}
-        <aside class="vff__reply fx" data-fx="fadeup" data-d="320">
+        <aside class="vff__reply fx" data-fx="fadeup" data-d="220">
           <p class="vff__reply__h">{{.head}}</p>
           <div class="vff__reply__t">{{#.lines}}<p>{{.t}}</p>{{/.lines}}</div>
           {{?.who}}<p class="vff__reply__n">{{.who}}</p>{{/.who}}

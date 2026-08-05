@@ -1,13 +1,13 @@
-<section class="sec sec--alt gop">
+<section class="sec gop">
+  <div class="wrap">
 
-  <div class="wrap gop__head">
-    {{?eyebrow}}<p class="h-eyebrow fx" data-fx="left">{{eyebrow}}</p>{{/eyebrow}}
-    <h2 class="h-lead gop__h fx" data-fx="fadeup" data-d="80">{{heading}}</h2>
-    {{?lead}}<p class="h-sub gop__sub fx" data-fx="fadeup" data-d="140">{{lead}}</p>{{/lead}}
-  </div>
+    <div class="sec-head gop__head">
+      {{?eyebrow}}<p class="sec-head__en fx" data-fx="left">{{eyebrow}}</p>{{/eyebrow}}
+      {{?heading}}<h2 class="sec-head__ja fx" data-fx="fadeup" data-d="70">{{heading}}</h2>{{/heading}}
+      {{?lead}}<p class="sec-head__sub fx" data-fx="fadeup" data-d="120">{{lead}}</p>{{/lead}}
+    </div>
 
-  <div class="gop__stage">
-    <ul class="gop__list">
+    <ul class="gop__list" role="list">
       {{#items}}
       <li class="gop__item fx" data-fx="fadeup" data-d="{{.d}}">
         <a class="gop__link" href="{{.href}}" target="_blank" rel="noopener noreferrer">
@@ -32,8 +32,8 @@
       </li>
       {{/items}}
     </ul>
+
+    {{?note}}<p class="gop__note">{{note}}</p>{{/note}}
+
   </div>
-
-  {{?note}}<div class="wrap gop__foot"><p class="gop__note">{{note}}</p></div>{{/note}}
-
 </section>

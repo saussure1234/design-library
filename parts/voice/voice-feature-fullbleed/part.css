@@ -1,43 +1,62 @@
 /* voice/voice-feature-fullbleed — 1人フィーチャー（片側フルブリード写真）
-   写真は画面の端まで断ち切り、白カードがその縁へ食い込む。
-   食い込んだ白の上に極太の欧文見出しを置くので、写真の明暗に関係なく必ず読める。 */
+   ── 効かせている工夫 ─────────────────────────────
+   edge/split-and-straddle : 1件ごとに地を linear-gradient の【ハードストップ】で
+     2色に割り、その継ぎ目を写真と白カードにまたがせる。継ぎ目は写真の裏と
+     カードの裏に隠れ、外側の余白（--vff-out）にだけ現れる。
+     線を消さず「隠す」ので、切れ目は目立たないのに面が2枚あることは伝わる。
+     割る位置は件の上端から --vff-seam。本文はすべて白カードの中にあるので、
+     継ぎ目が本文の行にかかることは構造上ありえない（長文の可読性が最優先）。
+   ── 決めごと ─────────────────────────────────
+   ・セクションの地は敷かない。地は外側の tone-* が持つ（階段を壊さない）
+   ・緑（--c-primary）は押せる場所＝詳細リンクだけ。面・ラベル・記号には使わない
+   ・強調は「帯とそれをまたぐ白カード（＝この工夫）」と「欧文の VOICE」の2箇所まで
+   ───────────────────────────────────────────── */
+
 .vff{
-  --vff-shot:47%;                                    /* 写真カラムの幅 */
+  --vff-shot:46%;                                    /* 写真カラムの幅 */
+  --vff-shot-min:clamp(300px,46vw,620px);            /* 写真の下限（＝正方形に近い形） */
   --vff-bite:clamp(var(--s5),5vw,var(--s8));         /* 白カードが写真へ食い込む量 */
   --vff-pad:clamp(var(--s5),2.8vw,var(--s6));        /* カード内側の左右余白 */
-  --vff-out:max(var(--w-gut),calc((100vw - var(--w-max))/2 + var(--s5))); /* 写真と対比させる「余白側」 */
+  /* 写真と対比させる「余白側」。ここに継ぎ目が顔を出す＝工夫が成立する条件。
+     どの幅でも最低 52px は残す（継ぎ目が完全に隠れると工夫が消える） */
+  --vff-out:max(var(--s7),calc((100vw - var(--w-max))/2 + var(--s8)));
+  /* 地を割る位置（件の上端から）。カードの頭（欧文＋罫）だけを地の側に残し、
+     本文から下は帯の側に載せる。カードの大半が帯の上に来るので輝度の段差が効く */
+  --vff-seam:calc(var(--vff-shot-min) * .35);
+  --vff-band:var(--c-bg3);                           /* 下段の面 */
   overflow:hidden;                                   /* 食い込み・スライドインで横に溢れない */
 }
+/* 地が1段落ちているトーンでは帯をさらに1段落とし、輝度の段差を保つ */
+.tone-tint .vff__item{--vff-band:color-mix(in srgb,var(--c-dark) 7%,var(--c-bg3))}
+.tone-accent .vff__item{--vff-band:var(--c-bg2)}
 
-.vff__head{position:relative;z-index:1}
-.vff__h{margin-top:var(--s4)}
-.vff__sub{max-width:42em}
+.vff__head{position:relative;z-index:1;margin-bottom:var(--sp-blk)}
 
-.vff__list{margin-top:clamp(var(--s6),4.4vw,var(--s8));
-  display:flex;flex-direction:column;gap:clamp(var(--s6),6vw,var(--s9))}
+.vff__list{display:flex;flex-direction:column;gap:var(--sp-blk)}
 
-.vff__item{position:relative;display:grid;align-items:stretch;
-  grid-template-columns:minmax(0,var(--vff-shot)) minmax(0,1fr)}
+/* ── 1件 ＝ 地をハードに2色へ割った1枚のスラブ ──
+   0〜seam は透明（＝外側の tone がそのまま出る）、seam から下が --vff-band。
+   色停止を同じ位置に2つ置くだけなので、要素も重ね順も増えない。 */
+.vff__item{position:relative;display:grid;
+  grid-template-columns:minmax(0,var(--vff-shot)) minmax(0,1fr);
+  padding-bottom:var(--sp-el);
+  background:linear-gradient(transparent 0 var(--vff-seam),
+                             var(--vff-band) var(--vff-seam) 100%)}
 
-/* ── 写真：グリッドの行いっぱいに伸び、外側は画面の端で断ち切る ── */
+/* ── 写真：外側は画面の端で断ち切り、下端は帯の中へ沈む＝継ぎ目を貫く。
+   本文が長い件では縦に伸びるが、縦横比 1:1.6（人物写真の常識的な範囲）で頭打ち。
+   伸ばしっぱなしにすると細長く切り抜かれ、止めると左下が空くのでこの2値で挟む ── */
 .vff__shot{position:relative;grid-row:1;grid-column:1;margin:0;z-index:0;
-  min-height:clamp(340px,36vw,540px);background:var(--c-line)}
+  min-height:var(--vff-shot-min);max-height:calc(var(--vff-shot-min) * 1.6);
+  background:var(--c-line)}
 .vff__shot img{position:absolute;inset:0;width:100%;height:100%;
   object-fit:cover;object-position:var(--vff-pos,50% 28%)}
-/* 継ぎ目側だけ暗く落とす。白カードが浮き、連番が読める（黒ベタは使わず ink の透過） */
-.vff__shot::after{content:"";position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(to left,var(--c-ink),transparent 44%);opacity:.58}
 
-/* 連番：写真の縁で白カードに半分隠れる＝境界をまたぐ2つ目の要素 */
-.vff__no{position:absolute;top:50%;right:0;transform:translate(8%,-50%);
-  font-family:var(--f-num);font-weight:900;line-height:.78;letter-spacing:-.04em;
-  font-size:clamp(var(--fs-2xl),8.6vw,calc(var(--fs-4xl) * 2));
-  color:var(--c-on-primary);font-variant-numeric:tabular-nums;pointer-events:none}
+/* ── テキスト側：右にたっぷり余白を残す。そこにだけ継ぎ目が見える ── */
+.vff__plate{position:relative;grid-row:1;grid-column:2;z-index:2;align-self:start;
+  min-width:0;padding:var(--s6) var(--vff-out) 0 var(--s3)}
 
-/* ── テキスト側：右にたっぷり余白を残し、要素はすべて左揃え ── */
-.vff__plate{position:relative;grid-row:1;grid-column:2;z-index:2;align-self:center;
-  min-width:0;padding:var(--s6) var(--vff-out) var(--s6) var(--s3)}
-
+/* 白カードが継ぎ目をまたぐ。上端は地の側、下は帯の側に載る */
 .vff__card{position:relative;background:var(--c-bg);border-radius:var(--r-m);
   box-shadow:var(--shadow);padding:var(--s6) var(--vff-pad);
   margin-left:calc(-1 * var(--vff-bite))}
@@ -45,23 +64,22 @@
 .vff__markrow{display:flex;align-items:flex-end;gap:var(--s4);
   padding-bottom:var(--s4);margin-bottom:var(--s5);border-bottom:1px solid var(--c-line)}
 .vff__mark{font-family:var(--f-num);font-weight:900;color:var(--c-ink);
-  font-size:clamp(var(--fs-xl),4.6vw,var(--fs-4xl));line-height:.9;letter-spacing:-.02em;
+  font-size:clamp(var(--fs-lg),2.6vw,var(--fs-2xl));line-height:.9;letter-spacing:-.02em;
   margin-left:calc(var(--s3) - var(--vff-pad))}   /* カードの食い込んだ端まで寄せる */
+/* このセクションで唯一の「押せる場所」。緑はここだけ */
 .vff__more{margin-left:auto;flex:none;display:inline-flex;align-items:center;gap:var(--s2);
   font-family:var(--f-num);font-size:var(--fs-note);font-weight:700;letter-spacing:.12em;
-  color:var(--c-ink3);padding-bottom:var(--s1);white-space:nowrap;
-  transition:color .16s var(--e)}
+  color:var(--c-primary-d);padding-bottom:var(--s1);white-space:nowrap;
+  transition:opacity .16s var(--e)}
 .vff__more svg{width:18px;height:9px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8}
-@media(hover:hover) and (pointer:fine){.vff__more:hover{color:var(--c-primary-d)}}
+@media(hover:hover) and (pointer:fine){.vff__more:hover{opacity:.7}}
 
-.vff__meta{display:flex;align-items:center;flex-wrap:wrap;gap:var(--s3)}
-.vff__label{display:inline-block;background:var(--c-primary);color:var(--c-on-primary);
-  font-size:var(--fs-sm);font-weight:700;line-height:1;letter-spacing:.1em;
-  padding:var(--s2) var(--s3);border-radius:var(--r-s)}
+.vff__meta{display:flex;align-items:center;flex-wrap:wrap;gap:var(--s2) var(--s3)}
+.vff__label{font-size:var(--fs-note);font-weight:700;color:var(--c-ink3);letter-spacing:.14em}
 .vff__date{font-family:var(--f-num);font-size:var(--fs-note);color:var(--c-ink3);letter-spacing:.06em}
 
-.vff__title{margin-top:var(--s4);font-family:var(--f-disp);font-weight:900;color:var(--c-ink);
-  font-size:clamp(var(--fs-lg),2.2vw,var(--fs-xl));line-height:var(--lh-head);letter-spacing:.01em}
+.vff__title{margin-top:var(--s4);font-family:var(--f-disp);font-weight:700;color:var(--c-ink);
+  font-size:clamp(var(--fs-md),1.9vw,var(--fs-lg));line-height:var(--lh-head);letter-spacing:.01em}
 
 .vff__text{margin-top:var(--s5)}
 .vff__text:empty{display:none}
@@ -76,69 +94,72 @@
 .vff__tags{margin-top:var(--s3);display:flex;flex-wrap:wrap;gap:var(--s2) var(--s3)}
 .vff__tags:empty{display:none}
 .vff__tags li{font-size:var(--fs-note);color:var(--c-ink3);line-height:1.6}
-.vff__tags li::before{content:"#";color:var(--c-primary)}
+.vff__tags li::before{content:"#";color:var(--c-ink3)}
 
 /* ── 入れ子の「講師からのコメント」──
-   カードの外に出し、字下げ＋淡色面＋小さい級数で「本体への返信」に見せる */
-.vff__reply{position:relative;background:var(--c-primary-l);border-radius:var(--r-m);
+   帯の上に載る2枚めの白面。カードとの区別は【面の色ではなく】字下げと級数でつける
+   （帯と同系の淡色を敷くと帯に溶けて段差が消える） */
+.vff__reply{position:relative;background:var(--c-bg);border-radius:var(--r-m);
   padding:var(--s5) clamp(var(--s5),2.6vw,var(--s6));
   margin:var(--s5) 0 0 calc(var(--s6) - var(--vff-bite))}
 .vff__reply::before{content:"";position:absolute;top:calc(-1 * var(--s3));left:var(--s6);
-  width:calc(var(--s3) * 2);height:var(--s3);background:var(--c-primary-l);
+  width:calc(var(--s3) * 2);height:var(--s3);background:var(--c-bg);
   clip-path:polygon(50% 0, 100% 100%, 0 100%)}
 .vff__reply__h{display:flex;align-items:center;gap:var(--s2);
   font-size:var(--fs-sm);font-weight:700;color:var(--c-ink);letter-spacing:.04em}
 .vff__reply__h::before{content:"";width:var(--s4);height:2px;flex:none;
-  background:var(--c-primary);border-radius:var(--r-pill)}
+  background:var(--c-ink3);border-radius:var(--r-pill)}
 .vff__reply__t{margin-top:var(--s3)}
 .vff__reply__t p{font-size:var(--fs-sm);color:var(--c-ink2);line-height:var(--lh-body)}
 .vff__reply__t p + p{margin-top:var(--s3)}
 .vff__reply__n{margin-top:var(--s4);text-align:right;
   font-size:var(--fs-sm);font-weight:700;color:var(--c-ink)}
 
-.vff__foot{margin-top:clamp(var(--s5),3vw,var(--s6))}
+.vff__foot{margin-top:var(--sp-el)}
 .vff__note{font-size:var(--fs-note);color:var(--c-ink3);line-height:1.8}
+
+/* _base.css は表示後の .hh-in に clip-path:inset(0) を当てる（clip/mask 型のリセット）。
+   fadeup の【面】には不要なうえ、これが効くと box-shadow と外にはみ出す三角が
+   まるごと切り落とされる。面の輪郭は①輝度の段差そのものなので、この2つだけ解除する。
+   写真（data-fx="clip"）は clip-path が本体なので触らない。 */
+.fx-on .vff__card.hh-in,
+.fx-on .vff__reply.hh-in{clip-path:none}
 
 /* ── 偶数番めは左右を反転（写真を右の端で断ち切る）── */
 .vff__item:nth-child(even){grid-template-columns:minmax(0,1fr) minmax(0,var(--vff-shot))}
 .vff__item:nth-child(even) .vff__shot{grid-column:2}
 .vff__item:nth-child(even) .vff__shot img{object-position:var(--vff-pos-b,50% 28%)}
-.vff__item:nth-child(even) .vff__shot::after{
-  background-image:linear-gradient(to right,var(--c-ink),transparent 44%)}
-.vff__item:nth-child(even) .vff__no{right:auto;left:0;transform:translate(-8%,-50%)}
 .vff__item:nth-child(even) .vff__plate{grid-column:1;
   padding-left:var(--vff-out);padding-right:var(--s3)}
 .vff__item:nth-child(even) .vff__card{margin-left:0;margin-right:calc(-1 * var(--vff-bite))}
 .vff__item:nth-child(even) .vff__reply{
   margin-left:var(--s6);margin-right:calc(-1 * var(--vff-bite))}
+/* 写真の開き方も反転させる（外側の端から内へ開く）。
+   :not(.hh-in) を必ず付ける（付けないと表示後もクリップが残って写真が消える） */
+.fx-on .vff__item:nth-child(even) .fx[data-fx="clip"]:not(.hh-in){clip-path:inset(0 0 0 100%)}
 
 /* ───────── SP（900px以下）─────────
    写真を16:9で上に断ち切り、白カードを写真の下端へ食い込ませて重ねる。
+   継ぎ目はカードの少し内側に置き、左右の余白にだけ顔を出す（またぎは残す）。
    ★ 写真はカード（＝CTA・本文）より必ず上。 */
 @media(max-width:900px){
-  .vff{--vff-bite:clamp(var(--s5),5vw,var(--s6))}
-  .vff__list{gap:var(--s8)}
+  .vff{--vff-bite:clamp(var(--s5),5vw,var(--s6));
+       --vff-seam:calc(56.25vw - var(--vff-bite) + var(--s7))}
+  .vff__list{gap:var(--sp-blk)}
   .vff__item,
   .vff__item:nth-child(even){display:block;grid-template-columns:none}
 
   .vff__shot,
-  .vff__item:nth-child(even) .vff__shot{min-height:0;aspect-ratio:16/9}
-  .vff__shot::after,
-  .vff__item:nth-child(even) .vff__shot::after{
-    background-image:linear-gradient(to top,var(--c-ink),transparent 62%)}
-  .vff__no,
-  .vff__item:nth-child(even) .vff__no{top:auto;right:auto;left:var(--w-gut);
-    bottom:calc(var(--vff-bite) + var(--s4));transform:none;
-    font-size:clamp(var(--fs-2xl),16vw,calc(var(--fs-4xl) * 1.5))}
+  .vff__item:nth-child(even) .vff__shot{min-height:0;max-height:none;aspect-ratio:16/9}
 
   .vff__plate,
   .vff__item:nth-child(even) .vff__plate{padding:0 var(--w-gut)}
   .vff__card,
   .vff__item:nth-child(even) .vff__card{
     margin:calc(-1 * var(--vff-bite)) 0 0;padding:var(--s5)}
-  .vff__mark{margin-left:0;font-size:clamp(var(--fs-xl),9vw,var(--fs-3xl))}
+  .vff__mark{margin-left:0;font-size:clamp(var(--fs-lg),7vw,var(--fs-xl))}
   .vff__markrow{align-items:center;gap:var(--s3)}
-  .vff__title{font-size:clamp(var(--fs-md),5.2vw,var(--fs-lg))}
+  .vff__title{font-size:clamp(var(--fs-base),4.4vw,var(--fs-md))}
 
   /* タグは折り返さず横スクロールの1行に */
   .vff__tags{flex-wrap:nowrap;overflow-x:auto;padding-bottom:var(--s2);scrollbar-width:none}

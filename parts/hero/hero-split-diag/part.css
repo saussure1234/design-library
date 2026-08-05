@@ -1,17 +1,22 @@
-/* hero/hero-split-diag — 写真2枚を斜めの継ぎ目で並走させるヒーロー */
+/* hero/hero-split-diag — 写真2枚を斜めの継ぎ目で並走させるヒーロー
+   ┌ overlap/cross-the-band
+   │  数字＋CTAのブロックを、白地と写真帯の境界にまたがせる。
+   │  出す辺は「下」だけ（片側だけ）。左は画面端まで面一に抜き、
+   │  右は --hsd-inset ぶん内側で止めて、写真帯の上辺＝水平線をわざと残す。
+   │  ブロックの色は地と同じ白のまま越える（＝2面をつなぐ橋。色を変えるとただの重なりに戻る）。
+   └ type/size-gap-inline
+      数字と単位を同じ1行にベースライン揃えで置き、級数比を約4.0〜4.4倍つける。
+      字間も逆転させる（数字 -.02em／単位 +.08em）。 */
+
 .hd{position:relative;z-index:5;background:var(--c-bg)}
 .hd__in{display:flex;align-items:center;justify-content:space-between;gap:var(--s4);height:68px}
 .hd__logo img{height:30px;width:auto}
 .hd__cta{padding:11px 22px;font-size:var(--fs-sm)}
 
-/* order で PC/SP の並びを切り替える
-   PC : 見出し → 数字+CTA → 写真 → 注記
-   SP : 見出し → 写真 → 数字+CTA → 注記   （写真をCTAより上に置く） */
-.hsd{display:flex;flex-direction:column}
-.hsd__head {order:1}
-.hsd__meta {order:2}
-.hsd__lanes{order:3}
-.hsd__foot {order:4}
+.hsd{display:flex;flex-direction:column;
+  --hsd-cross:var(--s8);        /* またぎ量。写真帯へ出す量（76px） */
+  --hsd-inset:var(--w-gut);     /* 白い面の右端。本文の右端と面一で止める＝水平線が右に残る */
+}
 
 .hsd__head{padding-block:clamp(18px,2.8vw,38px) 0}
 .hsd__eyebrow{text-wrap:balance}
@@ -20,14 +25,35 @@
 .hsd__h em{font-style:normal;color:var(--c-primary-d)}
 .hsd__h .sml{display:block;font-size:.56em;color:var(--c-ink2);margin-bottom:var(--s2)}
 
-.hsd__meta{padding-block:clamp(16px,2.2vw,30px)}
-.hsd__row{display:flex;align-items:flex-end;justify-content:space-between;
-  gap:var(--s5) var(--s7);flex-wrap:wrap}
-.hsd__facts{display:flex;gap:clamp(24px,4vw,var(--s7))}
-.hsd__fact b{display:block;font-family:var(--f-num);font-weight:900;line-height:1;color:var(--c-ink);
-  font-size:clamp(26px,3.2vw,42px);font-variant-numeric:tabular-nums}
-.hsd__fact b i{font-style:normal;font-size:.44em;margin-left:2px;font-family:var(--f-sans)}
-.hsd__fact span{display:block;margin-top:var(--s2);font-size:var(--fs-sm);font-weight:700;color:var(--c-ink2);line-height:1.55}
+/* ── またぐブロック ───────────────────────────────
+   .hsd__meta を負のマージンで写真帯へ沈める。z-index を持たせないと
+   order で後ろに回った写真帯が上に描かれて消える。 */
+.hsd__meta{position:relative;z-index:2;margin-bottom:calc(var(--hsd-cross) * -1)}
+
+.hsd__panel{position:relative;
+  display:flex;align-items:flex-end;justify-content:space-between;
+  gap:var(--s5) var(--sp-el);flex-wrap:wrap;
+  padding-block:var(--s6);
+  box-shadow:none}                     /* 白い面は ::before 側が持つ */
+
+/* 白い面。左は画面外まで面一に抜き、右は本文の右端でぴたりと止める。
+   出す辺を「下」の1つに絞る（四辺から出すと版ズレに見える）。
+   親要素そのものに background を敷くと右の止めが効かないので ::before に持たせる。
+   境界より上は地と同色なので姿が消え、写真に乗った部分だけが見える＝2面をつなぐ橋。 */
+.hsd__panel::before{content:"";position:absolute;z-index:-1;
+  top:0;bottom:0;left:-100vw;right:var(--hsd-inset);
+  background:var(--c-bg);border-radius:0 0 var(--r-m) 0;
+  box-shadow:var(--shadow)}
+
+.hsd__facts{display:flex;gap:var(--s5) clamp(24px,4vw,var(--s7))}
+.hsd__fact{min-width:0}
+/* 数字と単位：級数比 約4.0〜4.4倍。単位は小さく・字間を開けて従属させる */
+.hsd__fact b{display:block;white-space:nowrap;   /* 数字と単位を1行に固定（折れるとベースラインが崩れる） */
+  font-family:var(--f-num);font-weight:900;line-height:1;color:var(--c-ink);
+  font-size:clamp(44px,3.4vw,var(--fs-3xl));letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.hsd__fact b i{font-style:normal;font-family:var(--f-sans);font-weight:700;
+  font-size:clamp(11px,.23em,var(--fs-sm));letter-spacing:.08em;margin-left:var(--s1)}
+.hsd__fact span{display:block;margin-top:var(--s3);font-size:var(--fs-sm);font-weight:700;color:var(--c-ink2);line-height:1.55}
 .hsd__cta{display:flex;flex-direction:column;gap:var(--s3);align-items:flex-start}
 .hsd__ctanote{font-size:var(--fs-sm);color:var(--c-ink3);line-height:1.6}
 .btn__arw{width:20px;height:9px;flex:none}
@@ -50,19 +76,28 @@
 .hsd__foot{padding-block:var(--s4) var(--s6)}
 .hsd__note{font-size:var(--fs-note);color:var(--c-ink3);line-height:1.8}
 
-/* ───────── SP ───────── */
+/* ───────── SP ─────────
+   写真をCTAより上に置く。またぎ先が写真帯の【下辺】に変わるので、
+   沈める向き（margin）と角丸の位置も上下反転させる。 */
 @media(max-width:900px){
   .hd__in{height:60px}
   .hd__cta{display:none}
 
+  .hsd__head{order:1}
   .hsd__lanes{order:2}
-  .hsd__meta {order:3}
+  .hsd__meta{order:3}
+  .hsd__foot{order:4}
+
+  /* SPは白の右端より内側に数字しか無いので、残す水平線を少し長く取る */
+  .hsd{--hsd-inset:var(--s6)}
+  .hsd__meta{margin-bottom:0;margin-top:calc(var(--hsd-cross) * -1)}
+  /* SPは写真帯の【下辺】をまたぐ。影は下に落ちる＝白地側にしか出ないので消す
+     （写真との境目は白と写真の輝度差だけで足りる） */
+  .hsd__panel::before{border-radius:0 var(--r-m) 0 0;box-shadow:none}
 
   .hsd__head{padding-block:var(--s5) 0}
   .hsd__h{line-height:1.5}
-  .hsd__meta{padding-block:var(--s5)}
-  .hsd__row{gap:var(--s5)}
-  .hsd__facts{gap:var(--s6)}
+  .hsd__facts{gap:var(--s5)}
   .hsd__cta{align-self:stretch;width:100%}
   .hsd__cta .btn{width:100%}
   .hsd__ctanote{text-align:center}

@@ -1,10 +1,11 @@
-<section class="sec sec--alt acp"{{?sectionId}} id="{{sectionId}}"{{/sectionId}}>
+<section class="sec acp"{{?sectionId}} id="{{sectionId}}"{{/sectionId}}>
   <div class="wrap">
 
-    <div class="acp__head">
-      {{?eyebrow}}<p class="h-eyebrow fx" data-fx="left">{{eyebrow}}</p>{{/eyebrow}}
-      <h2 class="h-lead acp__title fx" data-fx="fadeup" data-d="70">{{headline}}</h2>
-      {{?lead}}<p class="acp__lead fx" data-fx="fadeup" data-d="140">{{lead}}</p>{{/lead}}
+    <!-- 見出しは .sec-head の1系統だけ（独自の見出し様式は作らない） -->
+    <div class="sec-head">
+      {{?eyebrow}}<p class="sec-head__en fx" data-fx="left">{{eyebrow}}</p>{{/eyebrow}}
+      <h2 class="sec-head__ja fx" data-fx="fadeup" data-d="70">{{heading}}{{headline}}</h2>
+      {{?lead}}<p class="sec-head__sub fx" data-fx="fadeup" data-d="140">{{lead}}</p>{{/lead}}
     </div>
 
     <!-- 切替にJSは使わない。ラジオをDOM上でタブ／パネルより前に置き、

@@ -30,14 +30,14 @@
 .tone-tint .ncb__chart,.tone-accent .ncb__chart{background:var(--c-bg)}
 
 /* ＼ 一言 ／（任意）。斜線は擬似要素。押せる場所ではないので緑は使わない */
-.ncb__cardtitle{display:flex;align-items:center;justify-content:center;gap:var(--s4);
+.ncb__ttl{display:flex;align-items:center;justify-content:center;gap:var(--s4);
   font-family:var(--f-disp);font-weight:900;color:var(--c-ink);
   font-size:var(--fs-md);line-height:var(--lh-tight);letter-spacing:.04em;
   margin-bottom:var(--s5)}
-.ncb__cardtitle::before,.ncb__cardtitle::after{content:"";flex:none;
+.ncb__ttl::before,.ncb__ttl::after{content:"";flex:none;
   width:.12em;height:1.5em;background:var(--c-ink3);border-radius:var(--r-pill)}
-.ncb__cardtitle::before{transform:rotate(-20deg)}
-.ncb__cardtitle::after{transform:rotate(20deg)}
+.ncb__ttl::before{transform:rotate(-20deg)}
+.ncb__ttl::after{transform:rotate(20deg)}
 
 /* ── 行 ───────────────────────────────
    罫は行と行のあいだの1本だけ。縦罫・外枠・ヘッダ地色は引かない。
@@ -102,14 +102,13 @@
 
 /* ── SP：ラベルをバーの上へ。数値の列だけは揃えたまま残す ── */
 @media(max-width:900px){
-  .ncb{--ncb-h:var(--s4)}
   .ncb__chart{padding:var(--s6) var(--s5)}
   .ncb__row{grid-template-columns:minmax(0,1fr);row-gap:var(--s2);padding-block:var(--s5)}
   .ncb__label{text-align:left;font-size:var(--fs-base)}
   .ncb__sub{display:inline;margin-left:var(--s2)}
 }
 @media(max-width:560px){
-  .ncb{--ncb-numw:var(--s7)}
+  .ncb{--ncb-numw:var(--s7);--ncb-h:var(--s4)}
   .ncb__chart{padding:var(--s5) var(--s4)}
   .ncb__line{column-gap:var(--s3)}
   .ncb__num{font-size:var(--fs-lg)}

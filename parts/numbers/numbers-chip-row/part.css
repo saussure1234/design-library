@@ -1,160 +1,112 @@
-/* numbers/numbers-chip-row — ラベルタブ付きチップの横並び
-   等価な事実を並べて「信用の面」を作る型。
-   この型の要は「タブが白い箱の上辺を跨いで乗り上げている」こと。
-   タブを箱の中に入れた瞬間、ただの箱に落ちる。
-
+/* numbers/numbers-chip-row — 等価な事実（学校名・拠点数など）を並べて「信用の面」を作る
+   ── 効かせている工夫 ─────────────────────────────
+   rule/dissolve-into-ground : チップに枠も影も持たせない。境界は地との色差だけに任せる。
+     6枚並んでも罫が6本・影が6つ増えないので、一覧が静かなまま1つの「面」として読める。
+     地と面は必ずペアで決める（片方だけ差し替えると成立しない）。
+   color/rival-desaturated   : 面・タブ・注記から色相を全部抜く。
+     押せる場所が1つも無いセクションなので、主色（緑）も差し色（橙）も置かない。
+     並んだ6件は等価な事実なので、どれか1件だけを色で立てることもしない。
+   ─────────────────────────────────────────────
    ★ 実装上の急所：_base.css の .fx.hh-in は clip-path:inset(0) を掛ける。
-     つまり .fx を付けた要素からはみ出したものは、出現後に切り落とされる。
-     だから li（=.fx）は透明な器にして、白い箱は中の .nch__body に持たせ、
-     タブは li の中で body の上辺を跨がせる。はみ出しは器の中で完結させる。
-     吹き出しのしっぽ・ずらし影も同じ理由で .nch__bubblewrap の内側に収める。
+     .fx を付けた要素からはみ出したものは出現後に切り落とされる。
+     だから li（=.fx）は透明な器にして、面は中の .nch__body に持たせ、
+     タブは器の中で面の上辺を跨がせる。はみ出しは器の内側で完結させる。 */
 
-   値は数字でも名前でもよい。名前（学校名・資格名など長い語）を入れるときは
-   ルートに .nch--wordy を付ける（テンプレの wordy スロット）。
-   級数を落として2〜3行の折り返しを許し、等幅グリッドに切り替わる。 */
+.nch{
+  /* 地と面のペア。地が base なら面を1段落とし、地が tint/accent なら面を1段上げる。
+     どちらでも ΔL* は 4〜5 で、枠を1本も引かずに①輝度の段差が立つ。
+     6%を切ると面が消え、12%を超えると普通の白カードに戻る */
+  --nch-face:var(--c-bg2);
+  /* タブは面から無彩色で1段。色相は持たせない */
+  --nch-tab-bg:color-mix(in srgb,var(--c-ink) 9%,var(--nch-face));
+  --nch-tab-h:calc(var(--fs-note) * 1.6 + var(--s1) * 2);
+}
+.tone-tint .nch,.tone-accent .nch{--nch-face:var(--c-bg)}
+.tone-dark .nch{--nch-face:color-mix(in srgb,var(--c-on-dark) 9%,var(--c-dark));
+  --nch-tab-bg:color-mix(in srgb,var(--c-on-dark) 18%,var(--c-dark))}
 
-.nch{--nch-tab-h:calc(var(--fs-note) * 1.6 + var(--s1) * 2)}
-.nch__inner{text-align:center}
-
-/* ── 吹き出し見出し ─────────────────────
-   白い吹き出しの背後に、同じ形をわずかにずらした主色ベタを敷いて二重に見せる。
-   ずらしは擬似要素ではなく box-shadow のオフセット（ぼかし0）で作る。
-   器（bubblewrap）の下と横に、しっぽとずらしぶんの逃げを取ってある */
-.nch__bubblewrap{padding:0 var(--s2) var(--s4);
-  margin-bottom:clamp(12px,2vw,var(--s5))}
-.nch__bubble{position:relative;display:inline-block;max-width:100%;
-  background:var(--c-bg);border-radius:var(--r-l);
-  box-shadow:var(--s1) var(--s1) 0 0 var(--c-primary),
-             inset 0 0 0 .08em var(--c-primary);
-  padding:clamp(12px,1.8vw,var(--s4)) clamp(20px,3.4vw,var(--s6))}
-.nch__bubble::after{content:"";position:absolute;left:50%;bottom:0;
-  width:1.05em;height:.6em;background:var(--c-primary);
-  transform:translate(-50%,100%);
-  clip-path:polygon(50% 100%,0 0,100% 0)}
-.nch__h{font-size:clamp(19px,2.6vw,var(--fs-xl));letter-spacing:.04em}
-.nch__h em{font-style:normal;color:var(--c-primary-d)}
-
-.nch__eyebrow{justify-content:center;margin-bottom:var(--s4)}
-
-/* ── 主張コピー（キーワードだけ差し色） ──
-   両端の「あしらい」は3本の短い線。要素自身の背景が中央の1本、
-   ::before / ::after が上下の斜め線で、右端を軸に左へ扇状に開く。
-   flex-wrap:nowrap が肝。wrap にすると本文が2行に折れたときに
-   あしらいだけ別行へ飛ぶ。nowrap なら本文の中だけが折れ、
-   あしらいは2行ぶんの中央で左右から挟んだままになる */
-.nch__copy{display:flex;flex-wrap:nowrap;align-items:center;justify-content:center;
-  font-family:var(--f-disp);font-weight:900;color:var(--c-ink);
-  font-size:clamp(17px,2.2vw,var(--fs-lg));line-height:var(--lh-head);
-  letter-spacing:.02em;font-feature-settings:"palt";
-  margin-bottom:clamp(24px,3.4vw,var(--s6))}
-.nch__copy em{font-style:normal;font-weight:900;color:var(--c-accent)}
-
-.nch__copytext{min-width:0}
-
-.nch__spark{flex:none;position:relative;
-  width:.62em;height:1em;margin-inline:var(--s2);
-  color:var(--c-primary);
-  background:linear-gradient(currentColor,currentColor) right center/100% .07em no-repeat}
-.nch__spark::before,.nch__spark::after{content:"";position:absolute;right:0;
-  width:.52em;height:.07em;background:currentColor;border-radius:var(--r-pill);
-  transform-origin:right center}
-.nch__spark::before{top:.2em;transform:rotate(-46deg)}
-.nch__spark::after{bottom:.2em;transform:rotate(46deg)}
-.nch__spark--r{transform:scaleX(-1)}
+/* ── 見出し ─────────────────────────────
+   .sec-head（欧文ラベル＋和文＋補足）をそのまま使う。独自の様式は作らない。
+   下の余白は _base.css の .sec-head が持つ --sp-el。ここでは足さない */
+.nch__head{max-width:44em}
+.nch__head em{font-style:normal}   /* 見出しの中で色を持たせない */
 
 /* ── チップ群 ───────────────────────────
-   既定（数値）は中央寄せの横並び。名前モードは等幅グリッドで、
-   3列→2列→1列と自動で畳む */
-.nch__chips{display:flex;flex-wrap:wrap;justify-content:center;
-  gap:var(--s5) var(--s4)}
-.nch--wordy .nch__chips{display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));
-  align-items:stretch}
+   既定（数値）は中央寄せの横並び。名前モードは等幅グリッドで3列→2列→1列に畳む */
+.nch__chips{display:flex;flex-wrap:wrap;justify-content:center;gap:var(--s3)}
+.nch--wordy .nch__chips{display:grid;align-items:stretch;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
 
-/* li は透明な器。上の padding がタブの乗り上げぶんの逃げになる */
-.nch__chip{position:relative;flex:0 1 auto;min-width:min(100%,160px);
+/* li は透明な器。上の padding がタブの乗り上げぶんの逃げになる。
+   タブが1つも無いときだけ逃げを畳む（畳まないと行間だけが13px広がる）。
+   :not(:has()) が効かない環境では逃げが残るだけ＝タブは切られない側に倒れる */
+.nch__chip{position:relative;flex:0 1 auto;min-width:min(100%,180px);
   display:flex;flex-direction:column;
   padding-top:calc(var(--nch-tab-h) / 2)}
+.nch__chips:not(:has(.nch__tab)) .nch__chip{padding-top:0}
 
-/* 白い箱。影を落とさず1本の罫で締めるのは、器が clip-path で
-   切られる以上、器の外へ滲む影は必ず断ち切られるため */
+/* 面。枠も影も持たない＝この工夫の本体。
+   境界は地との色差だけ。角丸は小さく取り、面の輪郭を主張させない */
 .nch__body{flex:1;display:flex;flex-direction:column;justify-content:center;
-  background:var(--c-bg);border:1px solid var(--c-line);border-radius:var(--r-s);
-  padding:var(--s5) var(--s4) var(--s4)}
+  background:var(--nch-face);border:0;border-radius:var(--r-s);
+  padding:var(--s5) var(--s4);text-align:center}
 
-/* タブ。白い箱の上辺にちょうど半分だけ乗り上げる＝この型の署名。
-   高さを --nch-tab-h で固定してあるので、器の padding-top と必ず噛み合う。
-   max-width と ellipsis は、タブ文言が長すぎたときに箱の外へ
-   はみ出させないための保険（本来は4〜6文字で置く） */
+/* タブ。面の上辺にちょうど半分だけ乗り上げる＝この型の署名。
+   高さを --nch-tab-h で固定してあるので器の padding-top と必ず噛み合う。
+   色は持たせず、面から無彩色で1段だけ動かす。
+   max-width と ellipsis は、タブ文言が長すぎたときの保険（本来は4〜6文字） */
 .nch__tab{position:absolute;top:0;left:50%;transform:translateX(-50%);
   z-index:1;height:var(--nch-tab-h);
   display:flex;align-items:center;justify-content:center;
   max-width:calc(100% - var(--s5));padding-inline:var(--s3);
-  background:var(--c-primary);color:var(--c-on-primary);
-  font-size:var(--fs-note);font-weight:700;letter-spacing:.06em;
+  background:var(--nch-tab-bg);color:var(--c-ink2);
+  font-size:var(--fs-note);font-weight:700;letter-spacing:.06em;line-height:1;
   border-radius:var(--r-s);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tone-dark .nch__tab{color:var(--c-on-dark)}
 
-/* 値。数字は等幅・極大、名前は級数を落として折り返しを許す */
+/* 値。数値は等幅・極大。名前は級数を落とし、ウェイトも1段下げる
+   （6件が等価に並ぶので、6箇所を最大ウェイトで押さない）。
+   overflow-wrap:anywhere は、長い固有名詞が器から溢れないための最終保険 */
 .nch__val{font-family:var(--f-num);font-weight:900;color:var(--c-ink);
-  font-size:clamp(26px,3.6vw,var(--fs-2xl));line-height:var(--lh-tight);
+  font-size:clamp(var(--fs-xl),3.6vw,var(--fs-2xl));line-height:var(--lh-tight);
   font-variant-numeric:tabular-nums;letter-spacing:.01em}
 .nch__unit{font-style:normal;font-family:var(--f-sans);font-weight:700;
   font-size:.38em;margin-left:.1em;letter-spacing:0}
-.nch--wordy .nch__val{font-family:var(--f-disp);
-  font-size:clamp(15px,1.8vw,var(--fs-md));line-height:var(--lh-head);
+.nch--wordy .nch__val{font-family:var(--f-disp);font-weight:700;
+  font-size:clamp(var(--fs-base),1.7vw,var(--fs-md));line-height:var(--lh-head);
   letter-spacing:.01em;font-feature-settings:"palt";
   text-wrap:balance;overflow-wrap:anywhere}
 .nch--wordy .nch__unit{font-size:.85em;margin-left:0}
+.tone-dark .nch__val{color:var(--c-on-dark)}
 
 .nch__cnote{margin-top:var(--s1);font-size:var(--fs-note);color:var(--c-ink3);
   line-height:var(--lh-head)}
 
-.nch__source{margin-top:var(--s4);text-align:right;
-  font-size:var(--fs-note);color:var(--c-ink3);line-height:1.8}
+/* 注記。見出しと同じ左端に揃える */
+.nch__source{margin-top:var(--s4);font-size:var(--fs-note);color:var(--c-ink3);
+  line-height:var(--lh-body)}
 
 /* ── 動き ─────────────────────────────
-   チップ本体は .fx（data-d で60msずつずらす）。
-   タブと値はチップに .hh-in が付いてから遅れて乗る。
+   チップが下から60msずつずれて出るだけ。跳ね返り・拡大は使わない。
    .fx-on が付かない＝JSが死んだ環境では最初から全部見えている */
-@keyframes nch-pop{0%{transform:scale(.94)}60%{transform:scale(1.02)}100%{transform:scale(1)}}
-.fx-on .nch__bubblewrap.hh-in .nch__bubble{animation:nch-pop .55s var(--e) both}
-
-.fx-on .nch__tab{opacity:0;transform:translateX(-50%) scale(.9);
-  transition:opacity .3s var(--e) .12s,transform .34s var(--e) .12s}
-.fx-on .nch__chip.hh-in .nch__tab{opacity:1;transform:translateX(-50%) scale(1)}
-
-.fx-on .nch__val{opacity:0;transform:translateY(var(--s2));
-  transition:opacity .34s var(--e) .1s,transform .34s var(--e) .1s}
-.fx-on .nch__chip.hh-in .nch__val{opacity:1;transform:none}
 
 /* ── SP：チップを畳む ─────────────────
-   2個までは横並びを保つ。3個以上（:has で数える）は全幅で縦積み。
+   数値モードは2個までなら横並び。3個以上（:has で数える）は全幅で縦積み。
    :has が効かない環境でも2列で止まるだけで、崩れはしない */
 @media(max-width:900px){
-  .nch__chips{gap:var(--s5) var(--s3)}
   .nch__chip{flex:1 1 calc(50% - var(--s3))}
   .nch__chips:has(> :nth-child(3)) .nch__chip{flex-basis:100%}
-  .nch__body{padding:var(--s5) var(--s3) var(--s3)}
   .nch--wordy .nch__chips{grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr))}
-  .nch__val{font-size:clamp(24px,6.4vw,var(--fs-xl))}
-  .nch--wordy .nch__val{font-size:var(--fs-base)}
-  .nch__copy{font-size:clamp(16px,4.4vw,var(--fs-md))}
-  .nch__source{margin-top:var(--s3)}
+  .nch__body{padding:var(--s4) var(--s3)}
+  .nch__val{font-size:clamp(var(--fs-lg),6.4vw,var(--fs-xl))}
 }
 @media(max-width:560px){
-  .nch__chips{gap:var(--s4) var(--s2)}
   .nch--wordy .nch__chips{grid-template-columns:minmax(0,1fr)}
   .nch__tab{letter-spacing:.03em}
-  .nch__h{font-size:clamp(17px,5vw,var(--fs-lg))}
-  /* 幅が無いと本文が2行に折れ、あしらいだけが左右の端まで
-     引き離されて浮く。スマホでは潔く落とす */
-  .nch__spark{display:none}
 }
 
-@media(prefers-reduced-motion:reduce){
-  .fx-on .nch__bubblewrap.hh-in .nch__bubble{animation:none!important}
-  .fx-on .nch__tab,.fx-on .nch__val{opacity:1!important;transition:none!important}
-  .fx-on .nch__tab{transform:translateX(-50%)!important}
-  .fx-on .nch__val{transform:none!important}
-}
+/* rule/dissolve-into-ground：枠も影も置かず、地と同系の塗りだけで面を立てる */
+
+
+.nch__chip{background:var(--c-bg);box-shadow:none;border:0}

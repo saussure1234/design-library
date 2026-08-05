@@ -1,8 +1,10 @@
 <section class="sec cps{{?tight}} cps--tight{{/tight}}"{{?anchor}} id="{{anchor}}"{{/anchor}}>
   <div class="wrap">
 
-    <!-- 地色は前後のセクションに任せ、この白パネルだけで成立させる（同じ見た目で何度でも置ける） -->
-    <div class="cps__panel">
+    <!-- 地は敷かない。外側の kit tone（tint／dark）がそのまま面になる。
+         白カードは持たず、地の上に直接ボタンと注釈を置く。
+         版面より狭い「1枚の板」であることは、罫と角1箇所の大Rだけで示す。 -->
+    <div class="cps__field">
 
       {{?photo}}
       <figure class="cps__ph fx" data-fx="scale">
@@ -12,35 +14,35 @@
 
       <div class="cps__body">
 
-        {{?eyebrow}}<p class="h-eyebrow cps__eyebrow fx" data-fx="fadeup">{{eyebrow}}</p>{{/eyebrow}}
-        {{?heading}}<h2 class="h-lead cps__h fx" data-fx="fadeup" data-d="60">{{heading}}</h2>{{/heading}}
+        <!-- 見出しは .sec-head の2段（欧文ラベル＋和文）に統一。
+             eyebrow→__en / heading→__ja。両方空の回は箱ごと消える -->
+        <div class="sec-head cps__head">
+          {{?eyebrow}}<p class="sec-head__en fx" data-fx="fadeup">{{eyebrow}}</p>{{/eyebrow}}
+          {{?heading}}<h2 class="sec-head__ja fx" data-fx="fadeup" data-d="60">{{heading}}</h2>{{/heading}}
+        </div>
 
         <div class="cps__stack">
 
-          <!-- 主：ベタ塗り・幅100%・いちばん高い -->
-          <a class="btn cps__btn cps__btn--main fx" data-fx="fadeup" data-d="120" href="{{mainHref}}">
+          <!-- 主：_base.css の .btn そのまま（矢印は .btn::after が持つ） -->
+          <a class="btn cps__btn fx" data-fx="fadeup" data-d="120" href="{{mainHref}}">
             {{?mainTag}}<span class="cps__tag">{{mainTag}}</span>{{/mainTag}}
             {{?mainIcon}}<span class="cps__ico" aria-hidden="true">{{mainIcon}}</span>{{/mainIcon}}
             <span class="cps__label">{{mainLabel}}</span>
-            <span class="cps__arw" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M4.3 2.2 8.1 6l-3.8 3.8"/></svg></span>
           </a>
 
-          <!-- 副1：同系の淡色ベタ・幅80%・低い -->
+          <!-- 副1／副2：同じ .btn の小さい方（.btn--sm）。主従は大きさだけでつける -->
           {{?subLabel}}
-          <a class="btn cps__btn cps__btn--sub cps__btn--sub1 fx" data-fx="fadeup" data-d="160" href="{{subHref}}">
+          <a class="btn btn--sm cps__btn cps__btn--sub fx" data-fx="fadeup" data-d="160" href="{{subHref}}">
             {{?subTag}}<span class="cps__tag">{{subTag}}</span>{{/subTag}}
             {{?subIcon}}<span class="cps__ico" aria-hidden="true">{{subIcon}}</span>{{/subIcon}}
             <span class="cps__label">{{subLabel}}</span>
-            <span class="cps__arw" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M4.3 2.2 8.1 6l-3.8 3.8"/></svg></span>
           </a>
           {{/subLabel}}
 
-          <!-- 副2：白地＋枠・幅80%・低い -->
           {{?sub2Label}}
-          <a class="btn btn--ghost cps__btn cps__btn--sub cps__btn--sub2 fx" data-fx="fadeup" data-d="200" href="{{sub2Href}}">
+          <a class="btn btn--sm cps__btn cps__btn--sub fx" data-fx="fadeup" data-d="200" href="{{sub2Href}}">
             {{?sub2Icon}}<span class="cps__ico" aria-hidden="true">{{sub2Icon}}</span>{{/sub2Icon}}
             <span class="cps__label">{{sub2Label}}</span>
-            <span class="cps__arw" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M4.3 2.2 8.1 6l-3.8 3.8"/></svg></span>
           </a>
           {{/sub2Label}}
 

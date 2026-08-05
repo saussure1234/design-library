@@ -2,89 +2,113 @@
    gallery/gallery-offset-pair
    段差オフセット（大判2〜6枚を互い違い）
    接頭辞は .gop__ で固定。他パーツと衝突させない。
+
+   ── 効かせている工夫 ─────────────────────────────
+   shape/arch-top-only : 写真の上辺だけを弧にする。左右と下辺は直線のまま。
+     ・垂直半径は px で持つ。% で持つと写真の高さに引きずられ、
+       縦横比の違う2枚で起伏が別物になる（16:9 と 3:2 で 1.12倍ずれる）。
+     ・水平半径 50% にすると弧の頂点が必ず幅の中央に来るので、
+       写真の幅が変わっても構図が崩れない。
+     ・この列は全カットに掛ける。1枚だけ掛ける使い方（主役を決める）は
+       写真が3枚以上そろってからにする。2枚では「片方が事故」に見える。
+   ─────────────────────────────────────────────
+   地はパーツ側で敷かない。kit の tone（base/tint/accent/dark）が外側で
+   敷いているので、ここで背景を持つと地の階段が壊れる。
    ========================================================= */
 
 .gop{
-  /* 段差量：写真高さの25〜40%相当を可変で */
-  --gop-off:clamp(var(--s6),8vw,var(--s9));
-  /* 列の間・行の間 */
-  --gop-gap:clamp(var(--s4),3vw,var(--s6));
-  --gop-row:clamp(var(--s5),5vw,var(--s8));
-  /* 右列を画面端で断ち切る量 */
-  --gop-bleed:clamp(var(--s5),5vw,var(--s8));
+  /* 上辺の弧の起伏（＝垂直半径）。
+     起伏は px で持つ。% で持つと写真の高さに引きずられる。
+     ただし「弧に見えるかどうか」は 起伏 ÷ 写真の幅 で決まるので、
+     どの幅でも 写真幅の約4.3% に着地するよう vw で連動させる
+     （2列時は写真＝画面の約37%、1列時は約94%。倍率が違うので係数も分ける）。
+     380px 幅に 12px＝3.2% が現物の実測値。上限 24px は --r-l */
+  --gop-arch:clamp(var(--r-m),2vw,var(--r-l));
+  /* 段差量・列間・行間はすべて「要素間」の1値でそろえる。
+     段差＝列間にすると、ずれが寸法の取り違えではなく意図に見える */
+  --gop-off:var(--sp-el);
   /* 写真内のキャプション余白 */
-  --gop-pad:clamp(var(--s4),2.6vw,var(--s5));
-  /* 再生ボタンの直径（44〜56px相当をトークンから合成） */
-  --gop-play:clamp(calc(var(--s6) + var(--s2)),5vw,calc(var(--s7) + var(--s1)));
-  /* 写真の下端に敷く暗幕（黒ベタは使わず --c-ink の透過） */
+  --gop-pad:var(--s5);
+  /* 再生ボタンの直径 */
+  --gop-play:var(--s7);
+  /* 写真の下端に敷く暗幕＝キャプションの可読性。
+     黒ベタは使わず --c-ink の透過。面ではなくグラデで持つ（②）。
+     濃さは「明るい写真の上でも白文字が4.5:1を超える」ところから決めた
+     （実測：13pxの属性行 5.2:1 ／ 名前 6.4:1。地はプレースホルダのL237） */
   --gop-veil:color-mix(in srgb,var(--c-ink) 76%,transparent);
-  --gop-veil-mid:color-mix(in srgb,var(--c-ink) 42%,transparent);
+  --gop-veil-mid:color-mix(in srgb,var(--c-ink) 62%,transparent);
   --gop-glass:color-mix(in srgb,var(--c-ink) 26%,transparent);
-  --gop-hair:color-mix(in srgb,var(--c-on-primary) 70%,transparent);
-  --gop-sub:color-mix(in srgb,var(--c-on-primary) 82%,transparent);
-  /* 右端の断ち切りをセクション内で完結させる（縦は切らない） */
-  overflow-x:clip;
+  --gop-hair:color-mix(in srgb,var(--c-on-primary) 78%,transparent);
+  /* 写真の輪郭を地から立てる髪の毛線。上辺の弧をなぞる役目も持つ（①） */
+  --gop-ring:color-mix(in srgb,var(--c-ink) 16%,transparent);
 }
 
-/* ── 見出し ───────────────────────────────── */
-.gop__head{margin-bottom:clamp(var(--s6),5vw,var(--s8))}
-.gop__h{margin-top:var(--s3)}
-.gop__sub{max-width:38em}
+/* ── 見出し ─────────────────────────────
+   .sec-head（欧文ラベル＋和文）をそのまま使う。独自の様式は作らない */
+.gop__head{max-width:44em}
 
-/* ── 版面：左は本文と揃え、右だけ画面端へ抜けて断ち切る ── */
-.gop__stage{
-  --gop-edge:max(var(--w-gut),calc((100% - var(--w-max)) / 2 + var(--w-gut)));
-  padding-inline-start:var(--gop-edge);
-  padding-inline-end:0;
-  margin-inline-end:calc(-1 * var(--gop-bleed));
-}
-
-/* ── 2列。列の中心線は画面中央からわずかに外す ── */
+/* ── 2列。列幅をわずかに振って中心線を版面の中央から外す ── */
 .gop__list{
   display:grid;
   grid-template-columns:1.06fr .94fr;
-  column-gap:var(--gop-gap);
-  row-gap:var(--gop-row);
+  column-gap:var(--sp-el);
+  row-gap:var(--sp-el);
   align-items:start;
 }
 
 /* 写真ごとに縦横比を変える＝ずらしが偶然に見える。
-   ただしYouTubeサムネ（16:9）を切りすぎないよう変化幅は 3:2〜16:9 に抑える */
-.gop__item{--gop-ar:3 / 2;min-width:0}
+   ただし縦横比の組み方には条件がある。
+   左右の【下端が揃ってしまう】組み合わせは、段差ではなく「上端の崩れ」に見える。
+   列幅が 1.06 : 0.94 なので、左を横長・右をやや正方形寄りにすると
+   右の実高が左を上回り、上端も下端も同じ向きにずれる＝平行移動として読める。
+   （左16:9 h=0.596w / 右3:2 h=0.667w → 下端差 約70px を常に確保） */
+.gop__item{--gop-ar:16 / 9;min-width:0}
 .gop__item:nth-child(even){
-  --gop-ar:16 / 9;
+  --gop-ar:3 / 2;
   margin-block-start:var(--gop-off);   /* 右列だけ段差を付ける */
 }
-/* 3枚目以降はさらに大小差を付ける（右端の断ち切りは保つ＝左から縮める） */
-.gop__item:nth-child(4n+3){--gop-ar:4 / 3;inline-size:88%}
-.gop__item:nth-child(4n+4){--gop-ar:16 / 10;inline-size:90%;justify-self:end}
+/* 3枚目以降も同じ条件で組む。幅は動かさず縦横比だけで大小差を付ける */
+.gop__item:nth-child(4n+3){--gop-ar:3 / 2}
+.gop__item:nth-child(4n+4){--gop-ar:4 / 3}
 
-/* ── 写真 ───────────────────────────────── */
-.gop__link{display:block;position:relative;border-radius:var(--r-m)}
+/* ── 写真：上辺だけが弧、左右と下辺は直線 ────────── */
+.gop__link{
+  display:block;position:relative;
+  border-radius:50% 50% 0 0 / var(--gop-arch) var(--gop-arch) 0 0;
+}
 .gop__frame{
   position:relative;display:block;overflow:hidden;
   aspect-ratio:var(--gop-ar);
-  border-radius:var(--r-m);
-  background:var(--c-bg);
+  border-radius:50% 50% 0 0 / var(--gop-arch) var(--gop-arch) 0 0;
+  border:1px solid var(--gop-ring);
+  background:var(--c-bg2);
   box-shadow:var(--shadow);
 }
+/* 地が1段落ちているトーンでは、写真が無いときの面を1段上げて段差を保つ */
+.tone-tint .gop__frame,.tone-accent .gop__frame{background:var(--c-bg)}
+
 .gop__img{
   width:100%;height:100%;object-fit:cover;
   transform:scale(1.001);
   transition:transform .6s var(--e);
 }
 
-/* 下端の暗幕＝キャプションの可読性 */
+/* 下端の暗幕＝キャプションの可読性。ベタパネルは敷かない */
 .gop__scrim{
-  position:absolute;inset:auto 0 0 0;height:58%;
-  background:linear-gradient(to top,var(--gop-veil) 0%,var(--gop-veil-mid) 46%,transparent 100%);
+  /* 高さは写真の52%。ただしキャプション1行に必要な高さの2.5倍で頭打ちにする。
+     %だけで持つと、1列に畳んだ大きい写真で暗幕が240px超まで伸びる */
+  position:absolute;inset:auto 0 0 0;
+  height:min(52%,calc(var(--gop-play) * 2.5 + var(--gop-pad) * 2));
+  background:linear-gradient(to top,var(--gop-veil) 0%,var(--gop-veil-mid) 48%,transparent 100%);
   pointer-events:none;
 }
 
-/* ── 写真内・左下：再生ボタン → その下にキャプション ── */
+/* ── 写真内・左下：再生ボタンとキャプションを1行に組む ──
+   縦に積むと文字の帯が写真の46%まで伸び、暗幕もそのぶん高く要る。
+   横に並べれば下から26%で収まり、暗幕を半分に減らせる（②） */
 .gop__body{
   position:absolute;inset:auto auto var(--gop-pad) var(--gop-pad);
-  display:flex;flex-direction:column;align-items:flex-start;gap:var(--s3);
+  display:flex;align-items:center;gap:var(--s4);
   max-width:calc(100% - var(--gop-pad) * 2);
 }
 .gop__play{
@@ -102,13 +126,16 @@
 .gop__cap{display:block;line-height:var(--lh-tight)}
 .gop__meta{
   display:block;
-  font-size:var(--fs-sm);font-weight:700;letter-spacing:.08em;
-  color:var(--gop-sub);
+  font-size:var(--fs-sm);font-weight:500;letter-spacing:.08em;
+  /* 白を薄めない。13pxで82%白にすると、明るい写真の上で 3.6:1 まで落ちる。
+     主従は級数（13 vs 21）と太さ（500 vs 700）で付ける */
+  color:var(--c-on-primary);
 }
+/* 名前は太らせない。H2（900）より下位に置く */
 .gop__name{
   display:block;margin-top:var(--s1);
-  font-family:var(--f-disp);font-weight:900;
-  font-size:clamp(var(--fs-md),1.9vw,var(--fs-lg));
+  font-family:var(--f-disp);font-weight:700;
+  font-size:clamp(var(--fs-md),1.5vw,var(--fs-lg));
   color:var(--c-on-primary);
 }
 
@@ -119,43 +146,36 @@
 }
 
 /* ── 注記 ───────────────────────────────── */
-.gop__foot{margin-top:clamp(var(--s5),3vw,var(--s6))}
-.gop__note{font-size:var(--fs-note);color:var(--c-ink3);line-height:var(--lh-head)}
+.gop__note{margin-top:var(--s5);font-size:var(--fs-note);color:var(--c-ink3);line-height:var(--lh-head)}
 
 /* ── hover ─────────────────────────────── */
 @media(hover:hover) and (pointer:fine){
-  .gop__link:hover .gop__img{transform:scale(1.045)}
+  .gop__link:hover .gop__img{transform:scale(1.04)}
   .gop__link:hover .gop__play{background:var(--c-primary);border-color:var(--c-primary);transform:scale(1.06)}
 }
 .gop__link:active .gop__play{transform:scale(.96)}
 
-/* ── 900px以下：1列。ただし左右へ16pxはみ出させて段差の名残を残す ── */
+/* ── 900px以下：1列。段差は畳んで縦に積む ── */
 @media (max-width:900px){
-  .gop__stage{
-    padding-inline-start:var(--w-gut);
-    padding-inline-end:0;
-    margin-inline-end:0;
-  }
+  /* 1列では写真が画面幅の約94%まで太る。2列時と同じ px のままだと
+     起伏が写真幅の1.7%まで薄まり、弧が消えて長方形に戻る。係数と上限を上げる */
+  .gop{--gop-arch:clamp(var(--r-m),4vw,calc(var(--r-l) + var(--r-m)))}
   .gop__list{
     grid-template-columns:minmax(0,1fr);
-    row-gap:clamp(var(--s5),6vw,var(--s7));
+    row-gap:var(--sp-el);
   }
-  .gop__item{
-    inline-size:auto;justify-self:stretch;
-    margin-inline:calc(-1 * var(--s4)) var(--w-gut);   /* 左へ16pxはみ出す */
-    margin-block-start:0;
-  }
-  .gop__item:nth-child(even){
-    --gop-ar:16 / 9;
-    margin-inline:var(--s5) calc(-1 * var(--s4));      /* 右へ16pxはみ出す */
-    margin-block-start:0;
-  }
-  /* 3枚目以降も幅は揃え、大小差は縦横比だけで維持する
-     （PC側の inline-size 指定は詳細度が高いのでここで打ち消す） */
-  .gop__item:nth-child(4n+3){--gop-ar:4 / 3;inline-size:auto;justify-self:stretch}
-  .gop__item:nth-child(4n+4){--gop-ar:16 / 10;inline-size:auto;justify-self:stretch}
+  .gop__item,
+  .gop__item:nth-child(even){margin-block-start:0}
 }
 
 @media (max-width:560px){
-  .gop{--gop-pad:var(--s4)}
+  .gop{--gop-pad:var(--s4);--gop-play:var(--s6)}
 }
+
+/* shape/arch-top-only：上辺だけを浅い弧にする（左右と下は直線） */
+.gop__fig,.gop__item figure,[class*="gop"] figure{
+  border-radius:50% 50% var(--r-s) var(--r-s) / 13% 13% var(--r-s) var(--r-s);
+  overflow:hidden}
+
+/* shape/arch-top-only：上辺だけを浅い弧にする */
+.gop__img{border-radius:50% 50% var(--r-s) var(--r-s) / 13% 13% var(--r-s) var(--r-s)}

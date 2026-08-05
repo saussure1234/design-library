@@ -1,102 +1,107 @@
-/* cta/cta-priority-stack — 主副を塗り分けで表すボタン群
-   ページに4回出しても成立させるため、セクションには地を敷かない。
-   白パネル（罫＋影＋上端の主色バー）が自前の地になるので、
-   前後のセクションが白でも --c-bg2 でも同じ見え方で置ける。 */
+/* cta/cta-priority-stack — 主CTAを地の上に直接置く（白カードを持たない）
+   ── 効かせている工夫 ─────────────────────────────
+   color/accent-means-clickable : 有彩色が出るのは「押せる場所」だけ。
+     ボタンの塗り（--c-primary）1点に緑を集約し、注記・小タグ・罫・写真の下地は
+     すべて無彩色に落とす。旧版は小タグを橙（--c-accent）にしていたが、
+     橙はページ全体で2箇所の予算なので外した。ゴースト（枠だけの緑ボタン）も廃止。
+   edge/panel-not-full-width : 面を全幅の矩形にしない。版面（.wrap）より狭い
+     「1枚の板」として置き、角は1箇所（右下）だけ大きく丸める。
+     R=--r-l×2.5（60px）、560px以下は×1.6（38px）。
+     板に塗りは持たせない（塗ると kit の tone が敷く地の階段が壊れる）ので、
+     輪郭は 1px の罫だけで示し、余った地色がそのまま余白として働く。
+   ───────────────────────────────────────────── */
 
-.cps{position:relative}
-/* 本文の途中に何度も挟む用。セクションの上下を詰める */
-.cps--tight{padding-block:clamp(var(--s6),4.5vw,var(--s8))}
+/* 地は敷かない。--cps-edge は地に対して見える濃さを地ごとに持ち替える。
+   淡い地：ink 20%（罫と地で 1.54:1）／濃い地：白 30%（2.60:1） */
+.cps{
+  --cps-r:calc(var(--r-l) * 2.5);
+  --cps-edge:color-mix(in srgb,var(--c-ink) 20%,transparent);
+}
+.tone-dark .cps{--cps-edge:color-mix(in srgb,var(--c-on-dark) 30%,transparent)}
 
-.cps__panel{position:relative;overflow:hidden;
-  display:flex;align-items:center;gap:clamp(var(--s5),3.5vw,var(--s7));
-  padding:clamp(var(--s6),4vw,var(--s8)) clamp(var(--s5),4vw,var(--s7));
-  background:var(--c-bg);border:1px solid var(--c-line);border-radius:var(--r-l);
-  box-shadow:var(--shadow)}
-.cps__panel::before{content:"";position:absolute;left:0;right:0;top:0;
-  height:var(--s1);background:var(--c-primary)}
+/* 本文の途中に挟む回。上下はブロック間の値まで詰める（独自のpxは置かない） */
+.cps--tight{padding-block:var(--sp-blk)}
 
-/* 写真（任意）。PCは右に添え、SPではCTAより上へ回す */
-.cps__ph{flex:0 0 30%;max-width:30%;margin:0;
-  border-radius:var(--r-m);overflow:hidden;aspect-ratio:4/5;background:var(--c-bg2)}
+/* ── 板 ───────────────────────────────────────
+   全幅の矩形にしない。幅は中身に合わせて縮み（最小 32em＝512px、上限は版面）、
+   角は右下の1箇所だけ大きく丸める。余った地色がそのまま余白として働く。
+   版面いっぱいに広げると、ボタン1本の回で中が空洞に見える（実描画で確認）。
+   クラス名に __panel / __card を使わない（_base.css が自動で影を付けるため） */
+.cps__field{
+  width:fit-content;min-width:min(32em,100%);max-width:100%;margin-inline:auto;
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  padding:var(--sp-el);
+  border:1px solid var(--cps-edge);
+  border-radius:0 0 var(--cps-r) 0;
+}
+
+/* 写真（任意）。既定はCTAより上（全画面幅で共通） */
+.cps__ph{margin:0 0 var(--s5);width:100%;overflow:hidden;
+  border-radius:var(--r-m);aspect-ratio:16/10;background:var(--c-bg2)}
 .cps__ph img{width:100%;height:100%;object-fit:cover}
 
-.cps__body{flex:1 1 auto;min-width:0;
-  display:flex;flex-direction:column;align-items:center;text-align:center}
-.cps__h{margin-top:var(--s3);text-wrap:balance}
+.cps__body{width:100%;min-width:0;
+  display:flex;flex-direction:column;align-items:center}
 
-/* 主が幅100%でも間延びしないよう、ボタン列そのものに読みやすい幅の上限を置く */
-.cps__stack{width:100%;max-width:40em;margin-top:var(--s5);
-  display:flex;flex-direction:column;align-items:center;gap:var(--s4)}
+/* 見出し。様式は .sec-head のまま、中央寄せだけ足す。
+   eyebrow も heading も無い回は箱ごと消す（--sp-el の空白が残らないように） */
+.cps__head{text-align:center}
+.cps__head .sec-head__en{justify-content:center}
+.cps__head:not(:has(*)){display:none}
 
-/* 3本とも形（ピル・アイコン左・丸矢印右）は完全に揃え、
-   差は「塗り・幅・高さ」の3段階だけに限定する。
-   左右パディングは丸矢印の占有幅（右 --s4 + 1.9em）より必ず大きく取る。
-   em基準なので、文字を落とす画面幅でも中央の文字が矢印に潜らない */
-.cps__btn{position:relative;width:100%;
-  border-radius:var(--r-pill);gap:var(--s3);line-height:var(--lh-tight);
-  padding-block:var(--s5);padding-inline:calc(var(--s4) + 2.2em);
-  font-size:clamp(var(--fs-md),1.5vw,var(--fs-lg));font-weight:900;
-  transition:background .16s var(--e),color .16s var(--e),transform .16s var(--e)}
-.cps__btn--main{background:var(--c-primary);color:var(--c-on-primary)}
-.cps__btn--sub{width:80%;font-weight:700;font-size:var(--fs-md);padding-block:var(--s4)}
-.cps__btn--sub1{background:var(--c-primary-l);color:var(--c-primary-d)}
-.cps__btn--sub2{background:var(--c-bg);color:var(--c-primary-d)}
+/* ── ボタン ───────────────────────────────────
+   _base.css の .btn を1形のまま使う。高さ・角丸・左右パディング・丸矢印・色は触らない。
+   ここで足すのは版面に収めるための上限幅と、2行に折れたときの行間だけ */
+.cps__stack{width:100%;display:flex;flex-direction:column;align-items:center;gap:var(--s4)}
+.cps__btn{max-width:100%;line-height:var(--lh-tight)}
+.cps__label{min-width:0;text-wrap:balance}
 
-/* 折り返す場合に1文字だけ次行へ落ちないようにする */
-.cps__label{display:block;min-width:0;text-wrap:balance}
+/* 小タグ（無料／簡単30秒）。押せる場所の中に置く無彩色のチップにする */
+.cps__tag{flex:none;padding:var(--s1) var(--s2);border-radius:var(--r-pill);
+  background:var(--c-on-primary);color:var(--c-ink);
+  font-size:var(--fs-note);font-weight:700;line-height:var(--lh-tight)}
 
 .cps__ico{flex:none;display:grid;place-items:center;width:1.4em;height:1.4em}
 .cps__ico svg{width:100%;height:100%;fill:none;stroke:currentColor;
   stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 
-.cps__arw{position:absolute;right:var(--s4);top:50%;transform:translateY(-50%);
-  flex:none;display:grid;place-items:center;width:1.9em;height:1.9em;
-  border-radius:var(--r-pill);background:var(--c-on-primary);color:var(--c-primary)}
-.cps__arw svg{width:.52em;height:.52em;fill:none;stroke:currentColor;
-  stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
-.cps__btn--sub .cps__arw{background:var(--c-primary);color:var(--c-on-primary)}
-
-/* 左肩の小タグ（無料／簡単30秒）。傾けない
-   z-index を明示しないと、.fx の will-change で層が上がったボタン面に飲まれる */
-.cps__tag{position:absolute;z-index:1;left:clamp(var(--s5),4vw,var(--s7));top:0;
-  transform:translateY(-50%);white-space:nowrap;
-  padding:var(--s1) var(--s3);border-radius:var(--r-pill);
-  background:var(--c-bg);color:var(--c-accent);border:1px solid currentColor;
-  font-size:var(--fs-note);font-weight:900;line-height:var(--lh-tight)}
-
 /* _base.css の .hh-in は表示後も clip-path:inset(0) を残す。
-   そのままだと「左肩の小タグ」と :focus-visible のリングが切り落とされるので、
+   そのままだと :focus-visible のリング（outline-offset 3px）が切り落とされるので、
    ボタンだけ解除する（.fx の定義自体は触らない） */
 .fx-on .cps__btn.hh-in{clip-path:none}
 
-.cps__note{margin-top:var(--s4);max-width:36em;
+.cps__note{margin-top:var(--s5);max-width:36em;
   font-size:var(--fs-sm);color:var(--c-ink3);line-height:var(--lh-head)}
+/* --c-ink3 は濃色地で 2.89:1 しかない。淡色へ振り替える（11.9:1） */
+.tone-dark .cps__note{color:var(--c-bg3)}
 
-/* _base.css の .btn:hover は主色濃色ベタ。副1/副2はそれだと潰れるので上書き */
-@media(hover:hover) and (pointer:fine){
-  .cps__btn--sub1:hover{background:var(--c-primary);color:var(--c-on-primary)}
-  .cps__btn--sub1:hover .cps__arw{background:var(--c-on-primary);color:var(--c-primary)}
-  .cps__btn--sub2:hover{background:var(--c-primary-l);color:var(--c-primary-d)}
+/* ── 写真を渡した回だけ、PCは横に添える ─────────
+   2段組を抱える回だけ、板の幅は工夫の既定値どおり版面の82%で止める（78〜85%の中） */
+@media(min-width:901px){
+  .cps__field:has(.cps__ph){width:100%;max-width:82%;flex-direction:row;gap:var(--sp-el)}
+  .cps__field:has(.cps__ph) .cps__ph{flex:0 0 34%;margin:0;aspect-ratio:4/5}
+  .cps__field:has(.cps__ph) .cps__body{flex:1 1 auto}
 }
 
 /* ───────── SP ───────── */
 @media(max-width:900px){
-  .cps__panel{flex-direction:column;gap:var(--s5);
-    padding:var(--s6) var(--s4);border-radius:var(--r-m)}
-  /* 写真はCTAより上（全案件共通の必須条件） */
-  .cps__ph{order:-1;flex:none;width:100%;max-width:100%;aspect-ratio:16/10}
-  .cps__body{width:100%}
-
-  .cps__stack{margin-top:var(--s4);gap:var(--s3)}
-  .cps__btn{padding-block:var(--s4);font-size:var(--fs-md)}
-  .cps__btn--sub{width:100%;padding-block:var(--s3);font-size:var(--fs-base)}
-  .cps__arw{width:1.7em;height:1.7em}
-
-  /* 小タグはボタン内の左端へ吸収する */
-  .cps__tag{position:static;transform:none;order:-1;padding:var(--s1) var(--s2)}
+  .cps__field{padding:var(--s5)}
+  .cps__stack{gap:var(--s3)}
 }
-
+@media(max-width:560px){
+  /* R60は板の高さに対して大きすぎて“カプセル”に見えるので落とす */
+  .cps{--cps-r:calc(var(--r-l) * 1.6)}
+  .cps__field{width:100%}
+  .cps__btn{width:100%}
+  .cps__btn:not(.cps__btn--sub){font-size:var(--fs-base)}
+}
 @media(max-width:420px){
-  .cps__panel{padding:var(--s5) var(--s4)}
-  .cps__btn{font-size:var(--fs-base)}
+  .cps__field{padding-inline:var(--s4)}
 }
+
+/* ①見えるか：白カードは地に溶ける。面をやめ、地の上に直接ボタンを置く。
+   色は「押せる場所」だけ＝ボタンだけが緑になる（color/accent-means-clickable） */
+.cps__panel,[class*="cps__panel"],[class*="cps"] .panel{
+  background:transparent;box-shadow:none;border:0;padding-inline:0}
+.cps__panel::before,[class*="cps__panel"]::before{display:none}
+.tone-dark .cps__note,.tone-dark [class*="note"]{color:#B9CDBE}

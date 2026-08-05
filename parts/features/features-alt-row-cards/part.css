@@ -1,96 +1,117 @@
 /* features/features-alt-row-cards
-   ブランド淡色の面に白の角丸カードを縦積み。写真とテキストは1枚ごと左右反転。
-   飾りはカードの輪郭に対する「四隅のかぎ括弧線」1種だけ。カード内部には足さない。
+   横長カードを縦積みし、写真とテキストは1枚ごと左右反転。
+   工夫: shape/one-corner-mega   … 四隅のうち1隅だけを極端に丸め、残り3隅は直角。影は付けない
+         space/heading-outside-block … POINTラベルと見出しはカードの外へ外置き。罫は引かず空白距離だけ
+   地はキット側の tone（このページでは accent #E4F1E8）が敷く。
+   パーツ側で背景を敷くと地の階段が壊れるので、ここでは面を持たない。
    接頭辞 .arc__ */
 
-.arc{background:var(--c-primary-l)}
+/* 角丸のスケールだけはトークンの外側に出る。「極大R」そのものが工夫の本体で、
+   6/12/24px では成立しないため。固定pxは置かず余白トークンで組む。
+   375px→36px / 1120px→90px / 1375px以上→110px。
+   極大Rを固定pxのままにすると狭い画面で角が要素を食い潰すので必ず clamp する。 */
+.arc{--arc-r:clamp(var(--s6),8vw,var(--s9))}
 
-/* ── セクションの頭 ── */
-.arc__head{text-align:center;max-width:calc(var(--w-max) * .76);margin-inline:auto}
-.arc__eyebrow{justify-content:center}
-.arc__h{margin-top:var(--s3)}
-.arc__intro{margin-top:var(--s4);font-size:var(--fs-base);color:var(--c-ink2);line-height:var(--lh-body)}
+/* ── カードの積み ──────────────────────────────
+   罫も影も無いので、離すのは余白だけ。
+   カード間 --sp-blk に対して、外置き見出し→カードは --s5。
+   この差だけで「この見出しは下のカードのもの」と読ませる。 */
+.arc__list{display:flex;flex-direction:column;gap:var(--sp-blk)}
 
-/* ── カードの積み ── */
-.arc__list{margin-top:clamp(var(--s6),4vw,var(--s8));
-  display:flex;flex-direction:column;gap:clamp(var(--s5),2.4vw,var(--s6))}
+/* ── 1項目 ────────────────────────────────────
+   行1＝外置きの見出し／行2＝カード（全幅）。
+   列は カード内の 写真42% : 本文58% と同じ比で割り、見出しは本文側の帯にだけ置く。
+   空いた42%には罫も飾りも入れず、白のまま残す。 */
+.arc__item{display:grid;grid-template-columns:minmax(0,42fr) minmax(0,58fr);row-gap:var(--s5)}
+/* padding-inline はカードの内側余白と同じ値。ここが揃うと罫が無くても縦の線が通る */
+.arc__hgroup{grid-row:1;grid-column:2;padding-inline:var(--sp-el)}
+.arc__card{grid-row:2;grid-column:1 / -1}
 
-.arc__card{position:relative;background:var(--c-bg);border-radius:var(--r-l);
-  box-shadow:var(--shadow);padding:clamp(var(--s5),2.4vw,var(--s6))}
+/* 偶数枚目は左右反転。丸める隅も一緒に反転させる（列内でバラバラにはしない） */
+.arc__item:nth-child(even){grid-template-columns:minmax(0,58fr) minmax(0,42fr)}
+.arc__item:nth-child(even) .arc__hgroup{grid-column:1}
 
-/* 四隅から少し飛び出すかぎ括弧線。
-   角丸の枠を1本引き、四隅だけをマスクで残す（マスクは透明度しか見ないので色は何でもよい）。
-   mask 非対応なら枠が一周するだけ＝崩れない。 */
-.arc__frame{position:absolute;inset:calc(var(--s3) * -1);pointer-events:none;
-  color:var(--c-primary);
-  border:3px solid currentColor;
-  border-radius:calc(var(--r-l) + var(--s3));
-  -webkit-mask:
-    linear-gradient(var(--c-ink),var(--c-ink)) left top/var(--s7) var(--s7) no-repeat,
-    linear-gradient(var(--c-ink),var(--c-ink)) right top/var(--s7) var(--s7) no-repeat,
-    linear-gradient(var(--c-ink),var(--c-ink)) left bottom/var(--s7) var(--s7) no-repeat,
-    linear-gradient(var(--c-ink),var(--c-ink)) right bottom/var(--s7) var(--s7) no-repeat;
-  mask:
-    linear-gradient(var(--c-ink),var(--c-ink)) left top/var(--s7) var(--s7) no-repeat,
-    linear-gradient(var(--c-ink),var(--c-ink)) right top/var(--s7) var(--s7) no-repeat,
-    linear-gradient(var(--c-ink),var(--c-ink)) left bottom/var(--s7) var(--s7) no-repeat,
-    linear-gradient(var(--c-ink),var(--c-ink)) right bottom/var(--s7) var(--s7) no-repeat}
-
-/* ── カードの中身：写真 42% / テキスト 58%、偶数枚目で左右反転 ── */
-.arc__inner{display:flex;align-items:center;gap:clamp(var(--s5),3vw,var(--s7))}
-.arc__item:nth-child(even) .arc__inner{flex-direction:row-reverse}
-
-.arc__media{flex:0 0 42%;align-self:stretch;margin:0;
-  display:flex;flex-direction:column;gap:var(--s2);min-width:0}
-.arc__media img{width:100%;flex:1 1 auto;min-height:calc(var(--s9) * 1.9);
-  object-fit:cover;border-radius:var(--r-m)}
-.arc__cap{flex:none;font-size:var(--fs-note);color:var(--c-ink3);line-height:1.7}
-
-/* 写真が無い項目でも成立させる。写真が無いと本文が全幅に伸びて読みにくいので
-   1行の字数を em で頭打ちにし、余りは左右に均等に振る（写真ありの時は効かない）。 */
-.arc__body{flex:1 1 auto;min-width:0;max-width:40em;margin-inline:auto}
-
-.arc__label{display:flex;align-items:center;gap:var(--s2);line-height:1}
+/* ── 外置きの見出し ── */
+.arc__label{display:flex;align-items:baseline;gap:var(--s2);line-height:1}
 .arc__labelword{font-size:var(--fs-note);font-weight:700;letter-spacing:.16em;color:var(--c-ink3)}
-.arc__num{font-family:var(--f-num);font-weight:700;font-size:var(--fs-lg);line-height:1;
-  color:var(--c-accent);font-variant-numeric:tabular-nums}
-
+.arc__num{font-family:var(--f-num);font-weight:700;font-size:var(--fs-xl);line-height:1;
+  color:var(--c-ink);font-variant-numeric:tabular-nums}
 .arc__sub{margin-top:var(--s3);font-size:var(--fs-sm);font-weight:700;
-  color:var(--c-primary);line-height:var(--lh-head)}
-.arc__title{margin-top:var(--s2);font-family:var(--f-disp);font-weight:900;color:var(--c-ink);
-  font-size:clamp(var(--fs-lg),1.8vw,var(--fs-xl));line-height:var(--lh-head);letter-spacing:.01em}
-.arc__title em{font-style:normal;color:var(--c-primary)}
-.arc__text{margin-top:var(--s4);font-size:var(--fs-base);color:var(--c-ink2);line-height:var(--lh-body)}
+  color:var(--c-ink3);line-height:var(--lh-head)}
+.arc__title{margin-top:var(--s3);font-family:var(--f-disp);font-weight:900;color:var(--c-ink);
+  font-size:clamp(var(--fs-lg),1.9vw,var(--fs-xl));line-height:var(--lh-head);letter-spacing:.01em}
+/* 原稿の <em> は和文だと合成イタリックになって書体が崩れる。傾きだけ止める。
+   色は変えない（緑は押せる場所だけ・橙はページで2箇所と決まっているため）。 */
+.arc .sec-head__ja em,
+.arc__title em{font-style:normal}
 
-/* CTA はテキスト列の左端に揃える（全カードで同じ位置から始まる） */
+/* ── カード：1隅だけ極大R、残り3隅は直角。影は付けない ──
+   影を残すと「四隅が丸いカードの角を1つ大きくしただけ」に見え、非対称が方向として読まれない。
+   面は 地(accent #E4F1E8) → カード(base #FFFFFF) の1段と、
+   削れた隅から三角に覗く地色、そして裁ち落とした写真の塊で立てる。
+   丸めるのは「写真側の上の隅」＝外置き見出しの向かい側。空いた帯の白がそのまま
+   削れた隅へ流れ込む。写真の下に置くキャプションや本文末のボタンとは当たらない。 */
+.arc__card{display:flex;align-items:stretch;overflow:hidden;
+  background:var(--c-bg);box-shadow:none;
+  border-radius:var(--arc-r) 0 0 0}
+.arc__item:nth-child(even) .arc__card{flex-direction:row-reverse;
+  border-radius:0 var(--arc-r) 0 0}
+
+/* 写真はカードの外側3辺まで裁ち落とす。丸めた隅は overflow で写真ごと削れる */
+.arc__media{flex:0 0 42%;margin:0;min-width:0;display:flex;flex-direction:column}
+.arc__media img{width:100%;flex:1 1 auto;min-height:calc(var(--s9) * 2.4);object-fit:cover}
+.arc__cap{flex:none;padding:var(--s3) var(--s5);
+  font-size:var(--fs-note);color:var(--c-ink3);line-height:var(--lh-body)}
+
+.arc__body{flex:1 1 auto;min-width:0;padding:var(--sp-el)}
+/* 写真が無い項目（＝本文がカードの唯一の中身）。全幅に伸ばすと読みにくいので
+   写真ありの本文と同じ 58% の帯に収め、外置き見出しの真下へ寄せて縦の線を保つ。
+   空いた側に極大Rが来るので、削れた隅がコピーに当たらない。 */
+.arc__body:first-child{max-width:58%;margin-inline-start:auto}
+.arc__item:nth-child(even) .arc__body:first-child{margin-inline-start:0;margin-inline-end:auto}
+.arc__text{font-size:var(--fs-base);color:var(--c-ink2);line-height:var(--lh-body)}
+
+/* CTA は _base.css の .btn 1形のまま。ここでは位置だけ決める */
 .arc__act{margin-top:var(--s5)}
-.arc__btn{padding:var(--s3) var(--s6);font-size:var(--fs-base);border-radius:var(--r-pill)}
-.arc__arw{width:var(--s5);height:var(--s3);flex:none}
-.arc__arw svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.8}
 
-.arc__note{margin-top:var(--s5);text-align:center;font-size:var(--fs-note);color:var(--c-ink3);line-height:1.8}
+.arc__note{margin-top:var(--sp-el);font-size:var(--fs-note);color:var(--c-ink3);line-height:var(--lh-body)}
 
-/* ───────── SP（写真上・テキスト下の1列。左右反転は解除） ───────── */
+/* ───────── 900px以下（写真上・テキスト下の1列。左右反転は解除） ─────────
+   外置きはPCだけの表情と割り切り、見出しは版面の左端へ戻す。
+   丸める隅の左右反転だけは残すので、縦に読んでも1枚ごとの向きが分かる。 */
 @media(max-width:900px){
-  .arc__head{max-width:none}
-  .arc__list{margin-top:var(--s6);gap:var(--s4)}
-  .arc__card{padding:var(--s5)}
+  .arc__list{gap:var(--sp-el)}
 
-  .arc__inner,
-  .arc__item:nth-child(even) .arc__inner{flex-direction:column;align-items:stretch;gap:var(--s4)}
+  .arc__item,
+  .arc__item:nth-child(even){grid-template-columns:minmax(0,1fr);row-gap:var(--s4)}
+  .arc__hgroup,
+  .arc__item:nth-child(even) .arc__hgroup{grid-column:1;padding-inline:0}
+  .arc__card{grid-column:1}
+  .arc__card,
+  .arc__item:nth-child(even) .arc__card{flex-direction:column}
+
+  .arc__num{font-size:var(--fs-lg)}
+  .arc__title{font-size:clamp(var(--fs-md),4.6vw,var(--fs-lg))}
 
   .arc__media{flex:none}
   .arc__media img{flex:none;min-height:0;aspect-ratio:16/10}
 
-  .arc__body{max-width:none}
-  .arc__title{font-size:var(--fs-lg)}
+  .arc__body,
+  .arc__body:first-child,
+  .arc__item:nth-child(even) .arc__body:first-child{padding:var(--s5);max-width:none;margin-inline:0}
   .arc__act{margin-top:var(--s4)}
-  .arc__btn{width:100%}
-
-  .arc__frame{inset:calc(var(--s2) * -1);border-radius:calc(var(--r-l) + var(--s2));
-    -webkit-mask-size:var(--s6) var(--s6);mask-size:var(--s6) var(--s6)}
+  .arc__act .btn{width:100%}
 }
 @media(max-width:520px){
-  .arc__card{padding:var(--s4)}
+  .arc__body,
+  .arc__body:first-child,
+  .arc__item:nth-child(even) .arc__body:first-child{padding:var(--s4)}
+  .arc__cap{padding:var(--s3) var(--s4)}
   .arc__media img{aspect-ratio:3/2}
 }
+
+/* shape/one-corner-mega：四隅のうち1隅だけ極端に丸め、残り3隅は直角のまま。
+   左右反転する行では、丸める隅も反転させる */
+.arc__card{border-radius:0 0 0 64px;overflow:hidden}
+.arc__item:nth-child(even) .arc__card{border-radius:0 0 64px 0}
+@media(max-width:900px){.arc__card,.arc__item:nth-child(even) .arc__card{border-radius:0 0 0 40px}}
