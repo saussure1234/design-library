@@ -169,6 +169,41 @@ ul,ol{padding:0;list-style:none}
 /* ── カード ──────────────────────────────── */
 .card{background:var(--c-bg);border-radius:22px;box-shadow:var(--shadow);padding:28px}
 
+/* ── 背景の有機的な形 ──────────────────────
+   真円にしない。ブランド色を薄く敷き、ゆっくり形と位置を変える。
+   セクションの後ろ（z-index:0）に置き、中身は前に出す。 */
+.sec{position:relative;overflow:hidden}
+.sec > *{position:relative;z-index:1}
+/* ★形を置く面には必ず基準点を持たせる。無いとページ全体へ広がる */
+.tone-pale,.tone-accent{position:relative;overflow:hidden;isolation:isolate}
+.tone-pale > *,.tone-accent > *{position:relative;z-index:1}
+.tone-pale::before,.tone-pale::after,
+.tone-accent::before,.tone-accent::after{
+  content:"";position:absolute;z-index:0;pointer-events:none;
+  background:var(--c-primary);opacity:.055;will-change:border-radius,transform}
+.tone-pale::before,.tone-accent::before{
+  left:-12%;top:-18%;width:52vw;height:52vw;max-width:760px;max-height:760px;
+  border-radius:58% 42% 47% 53% / 46% 55% 45% 54%;
+  animation:blobA 34s ease-in-out infinite}
+.tone-pale::after,.tone-accent::after{
+  right:-16%;bottom:-24%;width:44vw;height:44vw;max-width:640px;max-height:640px;
+  border-radius:43% 57% 61% 39% / 57% 44% 56% 43%;
+  animation:blobB 42s ease-in-out infinite}
+@keyframes blobA{
+  0%,100%{border-radius:58% 42% 47% 53% / 46% 55% 45% 54%;transform:translate(0,0) rotate(0)}
+  33%    {border-radius:44% 56% 62% 38% / 55% 43% 57% 45%;transform:translate(3%,2%) rotate(6deg)}
+  66%    {border-radius:62% 38% 41% 59% / 40% 60% 40% 60%;transform:translate(-2%,4%) rotate(-4deg)}
+}
+@keyframes blobB{
+  0%,100%{border-radius:43% 57% 61% 39% / 57% 44% 56% 43%;transform:translate(0,0) rotate(0)}
+  40%    {border-radius:60% 40% 38% 62% / 42% 61% 39% 58%;transform:translate(-4%,-3%) rotate(-7deg)}
+  75%    {border-radius:38% 62% 55% 45% / 62% 38% 62% 38%;transform:translate(2%,-5%) rotate(5deg)}
+}
+@media(prefers-reduced-motion:reduce){
+  .tone-pale::before,.tone-pale::after,
+  .tone-accent::before,.tone-accent::after{animation:none}
+}
+
 .nb{white-space:nowrap}
 
 /* ── スクロール表示（IO不使用・JSが死んでも中身は見える） ── */
@@ -230,17 +265,17 @@ html:not(.js) .lm__i{transform:none}
 /* ★丸くしない。四隅の曲率をばらして「若干曲がった」形にする */
 /* ★丸くしない。四隅の曲率をばらして「若干曲がった」形にする。
    人物より一回り小さくして、体が枠から はみ出す ようにする */
-.hbc__blob--a{left:30%;bottom:12%;width:15%;aspect-ratio:1/1;background:#E2EFD6;
+.hbc__blob--a{left:34%;top:16%;width:20%;aspect-ratio:1/.98;background:#E2EFD6;
   border-radius:44% 56% 61% 39% / 57% 43% 57% 43%}
-.hbc__blob--b{left:58%;top:15%;width:21%;aspect-ratio:1/.98;background:#F2E9CE;
+.hbc__blob--b{left:66%;bottom:16%;width:16%;aspect-ratio:1/1;background:#F2E9CE;
   border-radius:57% 43% 41% 59% / 46% 57% 43% 54%}
 
 /* 写真 */
 .hbc__ph{position:absolute;z-index:3;margin:0;filter:drop-shadow(0 8px 18px rgba(48,48,48,.10))}
 /* ★背景を抜いた人物。枠（色の面）から はみ出す ように大きめに重ねる */
 .hbc__ph img{width:100%;display:block}
-.hbc__ph--a{left:32%;bottom:0;width:16%}
-.hbc__ph--b{left:60%;bottom:0;width:28%}
+.hbc__ph--a{left:31%;bottom:0;width:27%}
+.hbc__ph--b{left:61%;bottom:0;width:27%}
 
 /* 見出し */
 .hbc__head{position:absolute;left:6%;top:13%;z-index:5;width:40%;max-width:560px}
@@ -268,13 +303,6 @@ html:not(.js) .lm__i{transform:none}
 
 /* 落書き */
 .hbc__dd{position:absolute;z-index:4;pointer-events:none}
-/* 星（スパークル）だけを散らす */
-.hbc__dd--s1{left:29%;bottom:34%;width:clamp(20px,2.4vw,34px);transform:rotate(-12deg)}
-.hbc__dd--s2{left:52%;top:16%;width:clamp(16px,1.8vw,26px);transform:rotate(14deg)}
-.hbc__dd--s3{right:5%;top:22%;width:clamp(22px,2.6vw,38px);transform:rotate(-6deg)}
-.hbc__dd--s4{left:47%;bottom:12%;width:clamp(13px,1.5vw,21px);transform:rotate(22deg)}
-.hbc__dd--s5{right:14%;bottom:7%;width:clamp(15px,1.7vw,24px);transform:rotate(-18deg)}
-.hbc__dd--s6{left:34%;top:26%;width:clamp(12px,1.4vw,19px);transform:rotate(8deg)}
 .hbc__conf{position:absolute;z-index:2;width:9px;height:9px;border-radius:2px;opacity:.85}
 .hbc__conf--1{left:49%;top:22%;background:var(--c-accent);transform:rotate(24deg)}
 .hbc__conf--2{left:52%;bottom:24%;background:var(--c-primary);transform:rotate(-16deg)}
@@ -1585,8 +1613,8 @@ html:not(.js) .lm__i{transform:none}
     <div class="hbc__blob hbc__blob--a"></div>
     <div class="hbc__blob hbc__blob--b"></div>
 
-    <figure class="hbc__ph hbc__ph--a"><img src="img/cut_girl.png" alt="オンラインで英検対策を受ける中高生"></figure>
-    <figure class="hbc__ph hbc__ph--b"><img src="img/cut_boy.png" alt="自宅で学習に取り組む小学生"></figure>
+    <figure class="hbc__ph hbc__ph--a"><img src="img/fv_boy.png" alt="自宅の机で学習に取り組む小学生"></figure>
+    <figure class="hbc__ph hbc__ph--b"><img src="img/fv_girl.png" alt="オンラインで英検対策を受ける中高生"></figure>
 
     <div class="hbc__head">
       <p class="hbc__logo"><img src="img/logo.svg" alt="ESL club"></p>
@@ -1604,29 +1632,6 @@ html:not(.js) .lm__i{transform:none}
       <a class="btn" href="https://eslclub.jp/trial/">無料体験レッスンはこちら<span class="arr">→</span></a>
       <span class="hbc__note">いつまでに2級合格できるかレッスン後にご案内します</span>
     </p>
-
-    <!-- 落書きの装飾。英語塾なので 鉛筆／本／吹き出し／星／矢印 -->
-    <svg class="hbc__dd dw hbc__dd--s1" viewBox="0 0 110 110" aria-hidden="true">
-      <path d="M55 8 L67 42 L103 42 L74 63 L85 97 L55 76 L25 97 L36 63 L7 42 L43 42 Z"
-            fill="none" stroke="var(--c-support2)" stroke-width="6" stroke-linejoin="round"/></svg>
-    <svg class="hbc__dd dw hbc__dd--s2" viewBox="0 0 110 110" aria-hidden="true">
-      <path d="M55 8 L67 42 L103 42 L74 63 L85 97 L55 76 L25 97 L36 63 L7 42 L43 42 Z"
-            fill="none" stroke="var(--c-accent)" stroke-width="6" stroke-linejoin="round"/></svg>
-    <svg class="hbc__dd dw hbc__dd--s3" viewBox="0 0 110 110" aria-hidden="true">
-      <path d="M55 8 L67 42 L103 42 L74 63 L85 97 L55 76 L25 97 L36 63 L7 42 L43 42 Z"
-            fill="none" stroke="var(--c-primary-2)" stroke-width="6" stroke-linejoin="round"/></svg>
-    <svg class="hbc__dd dw hbc__dd--s4" viewBox="0 0 110 110" aria-hidden="true">
-      <path d="M55 8 L67 42 L103 42 L74 63 L85 97 L55 76 L25 97 L36 63 L7 42 L43 42 Z"
-            fill="none" stroke="var(--c-support2)" stroke-width="6" stroke-linejoin="round"/></svg>
-    <svg class="hbc__dd dw hbc__dd--s5" viewBox="0 0 110 110" aria-hidden="true">
-      <path d="M55 8 L67 42 L103 42 L74 63 L85 97 L55 76 L25 97 L36 63 L7 42 L43 42 Z"
-            fill="none" stroke="var(--c-primary)" stroke-width="6" stroke-linejoin="round"/></svg>
-    <svg class="hbc__dd dw hbc__dd--s6" viewBox="0 0 110 110" aria-hidden="true">
-      <path d="M55 8 L67 42 L103 42 L74 63 L85 97 L55 76 L25 97 L36 63 L7 42 L43 42 Z"
-            fill="none" stroke="var(--c-accent)" stroke-width="6" stroke-linejoin="round"/></svg>
-    <span class="hbc__conf hbc__conf--1"></span><span class="hbc__conf hbc__conf--2"></span>
-    <span class="hbc__conf hbc__conf--3"></span><span class="hbc__conf hbc__conf--4"></span>
-    <span class="hbc__conf hbc__conf--5"></span><span class="hbc__conf hbc__conf--6"></span>
   </div>
   
 </section>
@@ -1742,7 +1747,7 @@ html:not(.js) .lm__i{transform:none}
             <p class="vhr__label">（&nbsp;POINT&nbsp;01&nbsp;）</p>
             <h3 class="vhr__title">高い英検合格率を実現</h3>
           </div>
-          <figure class="vhr__fig"><img src="img/p04.jpg" alt="移動中に本を読む小学生" loading="lazy"></figure>
+          <figure class="vhr__fig"><img src="img/p08.jpg" alt="カリキュラムに沿ってノートに取り組む生徒" loading="lazy"></figure>
         </div>
         <p class="vhr__sub">累計1,000名以上を合格に導いた英検ベースのカリキュラム</p>
         <p class="vhr__body">ESL clubでは2015年の開塾以降、英検をカリキュラムに用いて、着実な英語力の向上と英検合格に導いてきました。国際基準であるCEFRに対応した英検を用いることで、バランスよく4技能＋語彙力を高めていきます。一般的には、英検2級が高校卒業時の到達目標とされていますが、ESL clubでは、小学生、中学生の時点での高い合格率を誇っています。</p>

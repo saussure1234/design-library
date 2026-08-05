@@ -73,6 +73,41 @@ ul,ol{padding:0;list-style:none}
 /* ── カード ──────────────────────────────── */
 .card{background:var(--c-bg);border-radius:22px;box-shadow:var(--shadow);padding:28px}
 
+/* ── 背景の有機的な形 ──────────────────────
+   真円にしない。ブランド色を薄く敷き、ゆっくり形と位置を変える。
+   セクションの後ろ（z-index:0）に置き、中身は前に出す。 */
+.sec{position:relative;overflow:hidden}
+.sec > *{position:relative;z-index:1}
+/* ★形を置く面には必ず基準点を持たせる。無いとページ全体へ広がる */
+.tone-pale,.tone-accent{position:relative;overflow:hidden;isolation:isolate}
+.tone-pale > *,.tone-accent > *{position:relative;z-index:1}
+.tone-pale::before,.tone-pale::after,
+.tone-accent::before,.tone-accent::after{
+  content:"";position:absolute;z-index:0;pointer-events:none;
+  background:var(--c-primary);opacity:.055;will-change:border-radius,transform}
+.tone-pale::before,.tone-accent::before{
+  left:-12%;top:-18%;width:52vw;height:52vw;max-width:760px;max-height:760px;
+  border-radius:58% 42% 47% 53% / 46% 55% 45% 54%;
+  animation:blobA 34s ease-in-out infinite}
+.tone-pale::after,.tone-accent::after{
+  right:-16%;bottom:-24%;width:44vw;height:44vw;max-width:640px;max-height:640px;
+  border-radius:43% 57% 61% 39% / 57% 44% 56% 43%;
+  animation:blobB 42s ease-in-out infinite}
+@keyframes blobA{
+  0%,100%{border-radius:58% 42% 47% 53% / 46% 55% 45% 54%;transform:translate(0,0) rotate(0)}
+  33%    {border-radius:44% 56% 62% 38% / 55% 43% 57% 45%;transform:translate(3%,2%) rotate(6deg)}
+  66%    {border-radius:62% 38% 41% 59% / 40% 60% 40% 60%;transform:translate(-2%,4%) rotate(-4deg)}
+}
+@keyframes blobB{
+  0%,100%{border-radius:43% 57% 61% 39% / 57% 44% 56% 43%;transform:translate(0,0) rotate(0)}
+  40%    {border-radius:60% 40% 38% 62% / 42% 61% 39% 58%;transform:translate(-4%,-3%) rotate(-7deg)}
+  75%    {border-radius:38% 62% 55% 45% / 62% 38% 62% 38%;transform:translate(2%,-5%) rotate(5deg)}
+}
+@media(prefers-reduced-motion:reduce){
+  .tone-pale::before,.tone-pale::after,
+  .tone-accent::before,.tone-accent::after{animation:none}
+}
+
 .nb{white-space:nowrap}
 
 /* ── スクロール表示（IO不使用・JSが死んでも中身は見える） ── */

@@ -1,4 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="208.021" height="38.217" viewBox="0 0 208.021 38.217">
+  <style>
+    /* ESL の下の曲線は「口」。ゆっくり開いて閉じる */
+    .esl-mouth{transform-box:fill-box;transform-origin:50% 8%;
+      animation:eslTalk 4.6s cubic-bezier(.45,0,.35,1) infinite}
+    @keyframes eslTalk{
+      0%,58%,100%{transform:scaleY(1) scaleX(1)}
+      66%        {transform:scaleY(1.5) scaleX(.985)}
+      74%        {transform:scaleY(.72) scaleX(1.012)}
+      82%        {transform:scaleY(1.34) scaleX(.99)}
+      90%        {transform:scaleY(.88) scaleX(1.006)}
+    }
+    @media(prefers-reduced-motion:reduce){.esl-mouth{animation:none}}
+  </style>
   <defs>
     <clipPath id="clip-path">
       <rect id="長方形_637" data-name="長方形 637" width="208.021" height="38.217" transform="translate(0 0)" fill="none"/>
@@ -8,7 +21,7 @@
     <path id="パス_14775" data-name="パス 14775" d="M30.245,4.36h4.639V18.91h7.752v4.272H30.245Z" fill="#00b21f"/>
     <g id="グループ_720" data-name="グループ 720">
       <g id="グループ_719" data-name="グループ 719" clip-path="url(#clip-path)">
-        <path id="パス_14776" data-name="パス 14776" d="M38.922,37.909l2.422-2.628a16.448,16.448,0,0,1-7.9-8.545l-3.113,2.246a10.373,10.373,0,0,0,1.4,3.509s-4.654,2.085-12.362,1.939A39.6,39.6,0,0,1,5.213,31.258L2.834,34.311s6.24,3.909,16.943,3.906c10.512-.412,14.652-2.525,14.652-2.525a21.423,21.423,0,0,0,4.493,2.217" fill="#00b21f"/>
+        <path id="esl-mouth" class="esl-mouth" data-name="パス 14776" d="M38.922,37.909l2.422-2.628a16.448,16.448,0,0,1-7.9-8.545l-3.113,2.246a10.373,10.373,0,0,0,1.4,3.509s-4.654,2.085-12.362,1.939A39.6,39.6,0,0,1,5.213,31.258L2.834,34.311s6.24,3.909,16.943,3.906c10.512-.412,14.652-2.525,14.652-2.525a21.423,21.423,0,0,0,4.493,2.217" fill="#00b21f"/>
         <path id="パス_14777" data-name="パス 14777" d="M58.684,15.152l2.731-2.1a6.311,6.311,0,0,0-5.55-2.818,6.861,6.861,0,0,0-6.607,6.812,6.759,6.759,0,0,0,6.71,6.753c4.2,0,6.283-4.066,6.283-4.066l-3.185-1.586a3.351,3.351,0,0,1-3.142,2.158,3.267,3.267,0,0,1,.014-6.533,3.059,3.059,0,0,1,2.746,1.38" fill="#6cbb00"/>
         <rect id="長方形_636" data-name="長方形 636" width="4.243" height="17.41" transform="translate(63.587 5.756)" fill="#6cbb00"/>
         <path id="パス_14778" data-name="パス 14778" d="M73.336,14.036H70.047v5.995c0,.565.206,3.651,4.581,3.651s4.09-3.027,4.09-3.651,0-5.995,0-5.995H75.656V19.41a1.164,1.164,0,0,1-2.32.015Z" fill="#6cbb00"/>
