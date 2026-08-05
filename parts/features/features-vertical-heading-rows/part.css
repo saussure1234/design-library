@@ -9,13 +9,15 @@
 .vhr{position:relative;overflow:hidden}
 .vhr .wrap{position:relative;z-index:1}
 
-.vhr__list{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(30px,4.4vw,64px)}
+/* 1行1項目。ただし1項目の幅は絞って、2列で並んでいたときの寸法感を保つ */
+.vhr__list{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(26px,3.6vw,50px);
+  max-width:900px;margin-inline:auto}
 
 /* 1項目 ＝ 見出し ｜ 本文 ｜ 写真 */
 .vhr__item{margin:0;display:grid;
-  grid-template-columns:auto minmax(0,1.25fr) minmax(0,1fr);
+  grid-template-columns:auto minmax(0,1.15fr) minmax(0,.95fr);
   grid-template-rows:auto auto;
-  gap:0 clamp(18px,3vw,44px);align-items:start}
+  gap:0 clamp(16px,2.4vw,32px);align-items:start}
 .vhr__item:not(:has(.vhr__fig)){grid-template-columns:auto minmax(0,1fr)}
 
 /* 縦書きの見出し。2行ぶんにまたがって左に立つ */
@@ -26,23 +28,23 @@
 .vhr__label{writing-mode:vertical-rl;text-orientation:mixed;
   font-family:var(--f-num);font-size:clamp(8px,.7vw,10px);font-weight:700;
   letter-spacing:.22em;color:var(--c-ink3);white-space:nowrap;align-self:flex-start}
-.vhr__title{font-size:clamp(15px,1.35vw,19px);font-weight:800;color:var(--c-ink);
+.vhr__title{font-size:clamp(14px,1.15vw,17px);font-weight:800;color:var(--c-ink);
   letter-spacing:.14em;line-height:1.55}
 
 /* 写真は右。2行ぶんにまたがる */
 .vhr__fig{grid-column:3;grid-row:1 / span 2;margin:0;align-self:center}
 .vhr__fig img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;
-  border:6px solid #fff;box-shadow:var(--shadow-s);
+  border:5px solid #fff;box-shadow:var(--shadow-s);
   border-radius:14px 10px 16px 11px}
 .vhr__item:nth-child(even) .vhr__fig img{border-radius:11px 16px 10px 14px}
 
 /* 中央：見出し（横書き）→ 破線 → 本文 */
 .vhr__sub{grid-column:2;grid-row:1;
-  font-size:clamp(14px,1.15vw,16.5px);font-weight:800;color:var(--c-ink);line-height:1.7}
+  font-size:clamp(13.5px,1.05vw,15.5px);font-weight:800;color:var(--c-ink);line-height:1.7}
 .vhr__body{grid-column:2;grid-row:2;
   margin-top:clamp(13px,1.7vw,20px);padding-top:clamp(13px,1.7vw,20px);
   border-top:1px dashed var(--c-line);
-  font-size:clamp(12.5px,1vw,14px);color:var(--c-ink2);line-height:2.05}
+  font-size:clamp(12px,.92vw,13px);color:var(--c-ink2);line-height:2.0}
 
 @media(max-width:900px){
   .vhr__list{gap:34px}
