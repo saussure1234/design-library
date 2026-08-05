@@ -1,0 +1,47 @@
+/* member/member-staggered-color-cards
+   目白大学 MEJINAVI2025 の作りを再現して起こした型。
+   ・人物カードを【色違い】にして【上下に段差】をつけて並べる
+   ・氏名は【雲形（もこもこ）のラベル】で写真に重ねる
+   再現の記録: repro/msc/ */
+.msc__grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(16px,2.4vw,32px);
+  align-items:start}
+.msc__item{margin:0}
+.msc__item:nth-child(2){margin-top:clamp(18px,2.6vw,40px)}
+.msc__item:nth-child(3){margin-top:clamp(36px,5.2vw,80px)}
+
+/* ★カードが「大きめの白いブロック」。濃い面の上でもこの中は読める */
+.msc__card{position:relative;border-radius:22px;overflow:hidden;background:var(--c-bg);
+  box-shadow:var(--shadow-s)}
+.msc__item:nth-child(1) .msc__fig{background:var(--c-primary-l)}
+.msc__item:nth-child(2) .msc__fig{background:#E2F1E9}
+.msc__item:nth-child(3) .msc__fig{background:#F6EFD9}
+.msc__fig{margin:0}
+/* 素材が円形に切り抜かれているので、円のまま色面に乗せる */
+.msc__fig{display:grid;place-items:center;padding:22px 22px 14px}
+.msc__fig img{width:76%;aspect-ratio:1/1;object-fit:cover;border-radius:50%;display:block}
+/* 氏名：雲形のラベルを写真の下端に重ねる */
+.msc__name{position:relative;margin:-14px 12% 0;z-index:2;text-align:center;padding:12px 10px;
+  border-radius:44% 56% 46% 54% / 60% 58% 42% 40%;background:var(--c-bg)}
+.msc__item:nth-child(1) .msc__name{background:#DCEFD0}
+.msc__item:nth-child(2) .msc__name{background:#C9E6D6}
+.msc__item:nth-child(3) .msc__name{background:#F3E3BC}
+.msc__name b{display:block;font-size:clamp(14px,1.35vw,18px);font-weight:900;color:var(--c-ink)}
+.msc__name span{display:block;margin-top:2px;font-size:clamp(8.5px,.72vw,10px);
+  letter-spacing:.06em;color:var(--c-ink3);font-weight:700}
+
+.msc__spec{padding:14px 18px 20px}
+.msc__dl{display:grid;grid-template-columns:5.6em minmax(0,1fr);gap:0 10px;
+  font-size:clamp(11px,.92vw,12.5px);padding:7px 0;border-top:1px dashed var(--c-line)}
+.msc__dl:first-child{border-top:0}
+.msc__dl dt{color:var(--c-ink3);font-weight:700}
+.msc__dl dd{margin:0;color:var(--c-ink2);line-height:1.7}
+.msc__cmt{margin-top:12px;font-size:clamp(11.5px,.95vw,13px);color:var(--c-ink2);line-height:1.95}
+
+@media(max-width:900px){
+  .msc__grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .msc__item:nth-child(3){margin-top:0}
+}
+@media(max-width:560px){
+  .msc__grid{grid-template-columns:minmax(0,1fr);gap:26px}
+  .msc__item:nth-child(2){margin-top:0}
+}

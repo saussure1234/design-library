@@ -1,0 +1,21 @@
+<section class="sec msc">
+  <div class="wrap">
+    <div class="sec-head">
+      {{?eyebrow}}<p class="sec-head__en">{{eyebrow}}</p>{{/eyebrow}}
+      <h2 class="sec-head__ja">{{heading}}</h2>
+      {{?lead}}<p class="sec-head__sub">{{lead}}</p>{{/lead}}
+    </div>
+    <ul class="msc__grid">
+      {{#items}}<li class="msc__item fx" data-fx="fadeup" data-d="{{.d}}">
+        <div class="msc__card">
+          <figure class="msc__fig"><img src="{{.photo}}" alt="{{.alt}}" loading="lazy"></figure>
+          <p class="msc__name"><b>{{.name}}</b><span>{{.role}}</span></p>
+          <div class="msc__spec">
+            {{#.specs}}<dl class="msc__dl"><dt>{{.k}}</dt><dd>{{.v}}</dd></dl>{{/.specs}}
+            <p class="msc__cmt">{{.comment}}</p>
+          </div>
+        </div>
+      </li>{{/items}}
+    </ul>
+  </div>
+</section>

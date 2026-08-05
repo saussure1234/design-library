@@ -1,0 +1,26 @@
+<section class="sec vbi">
+  <span class="vbi__band" aria-hidden="true"></span>
+  <div class="wrap">
+    <div class="sec-head">
+      {{?eyebrow}}<p class="sec-head__en">{{eyebrow}}</p>{{/eyebrow}}
+      <h2 class="sec-head__ja">{{heading}}</h2>
+      {{?lead}}<p class="sec-head__sub">{{lead}}</p>{{/lead}}
+    </div>
+    <ul class="vbi__list">
+      {{#items}}<li class="vbi__item fx" data-fx="fadeup" data-d="{{.d}}">
+        <div class="vbi__side">
+          <figure class="vbi__fig"><img src="{{.avatar}}" alt="" loading="lazy"></figure>
+        </div>
+        <div class="vbi__main">
+          <h3 class="vbi__t">{{.title}}</h3>
+          <p class="vbi__who">{{.who}}</p>
+          <div class="vbi__body">{{.body}}</div>
+          {{?.replyBody}}<div class="vbi__reply">
+            <p class="vbi__replyhead"><span>{{.replyLabel}}</span></p>
+            <div class="vbi__replybody">{{.replyBody}}</div>
+          </div>{{/.replyBody}}
+        </div>
+      </li>{{/items}}
+    </ul>
+  </div>
+</section>

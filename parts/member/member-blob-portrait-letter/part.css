@@ -1,0 +1,40 @@
+/* member/member-blob-portrait-letter
+   MY genius の作りを再現して起こした型。
+   ・写真を【有機的な形（ブロブ）】にくり抜き、脇に小さな色のブロブを2つ添える
+   ・右は 肩書 → 氏名 → リード（大きめ・太字） → 手描き風の罫 → 本文（小さめ）
+   ・1人ごとに写真の左右を入れ替える
+   再現の記録: repro/mbl/ */
+.mbl__list{display:grid;gap:clamp(40px,6vw,88px)}
+.mbl__item{margin:0;display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.35fr);
+  gap:clamp(24px,4vw,64px);align-items:start}
+.mbl__item:nth-child(even) .mbl__figwrap{order:2}
+
+.mbl__figwrap{position:relative}
+.mbl__fig{position:relative;z-index:2;margin:0}
+/* ★有機的な形。真円にしない */
+.mbl__fig img{width:100%;aspect-ratio:1/1;object-fit:cover;object-position:50% 26%;display:block;
+  border-radius:50%}
+.mbl__b1,.mbl__b2{position:absolute;z-index:1;display:block}
+.mbl__b1{left:2%;top:22%;width:15%;aspect-ratio:1/.8;background:var(--c-accent);
+  border-radius:60% 40% 46% 54% / 54% 60% 40% 46%;opacity:.85}
+.mbl__b2{left:4%;bottom:20%;width:17%;aspect-ratio:1/.62;background:var(--c-primary-2);
+  border-radius:52% 48% 60% 40% / 58% 42% 58% 42%;opacity:.8}
+
+.mbl__role{font-size:clamp(11px,.95vw,13px);color:var(--c-ink3);font-weight:700;letter-spacing:.04em}
+.mbl__name{margin-top:4px;display:flex;align-items:baseline;gap:12px;
+  font-size:clamp(20px,2vw,27px);font-weight:900;color:var(--c-ink);letter-spacing:.04em}
+.mbl__name span{font-family:var(--f-num);font-size:.5em;font-weight:800;color:var(--c-primary)}
+.mbl__lead{margin-top:clamp(16px,2vw,26px);font-size:clamp(14.5px,1.3vw,18px);font-weight:800;
+  color:var(--c-ink);line-height:1.95}
+/* 手描き風の罫 */
+.mbl__body{margin-top:clamp(16px,2vw,26px);padding-top:clamp(16px,2vw,26px);
+  border-top:1px solid var(--c-line);
+  font-size:clamp(12.5px,1.02vw,14px);color:var(--c-ink2);line-height:2.05}
+.mbl__body p + p{margin-top:1.35em}
+
+@media(max-width:900px){
+  .mbl__item{grid-template-columns:minmax(0,1fr);gap:20px}
+  .mbl__item:nth-child(even) .mbl__figwrap{order:0}
+  .mbl__figwrap{max-width:220px}
+  .mbl__name{font-size:20px}
+}

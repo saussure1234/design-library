@@ -1,0 +1,23 @@
+<section class="sec vhr">
+  {{?ghost}}<span class="vhr__ghost" aria-hidden="true">{{ghost}}</span>{{/ghost}}
+  <div class="wrap">
+    <div class="sec-head">
+      {{?eyebrow}}<p class="sec-head__en">{{eyebrow}}</p>{{/eyebrow}}
+      <h2 class="sec-head__ja">{{heading}}</h2>
+      {{?lead}}<p class="sec-head__sub">{{lead}}</p>{{/lead}}
+    </div>
+    <ul class="vhr__list">
+      {{#items}}<li class="vhr__item fx" data-fx="fadeup" data-d="{{.d}}">
+        <div class="vhr__top">
+          <div class="vhr__vert">
+            <p class="vhr__label">（&nbsp;{{labelPrefix}}&nbsp;{{.no}}&nbsp;）</p>
+            <h3 class="vhr__title">{{.title}}</h3>
+          </div>
+          <figure class="vhr__fig"><img src="{{.photo}}" alt="{{.photoAlt}}" loading="lazy"></figure>
+        </div>
+        <p class="vhr__sub">{{.sub}}</p>
+        <p class="vhr__body">{{.body}}</p>
+      </li>{{/items}}
+    </ul>
+  </div>
+</section>
