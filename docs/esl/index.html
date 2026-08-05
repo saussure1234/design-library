@@ -157,7 +157,25 @@ body{padding-top:var(--hdr-h,60px)}
 #growth.is-ready{opacity:1}
 /* トラックは 220vh。上下に余りを持たせ、動かしても端が見えないようにする */
 #growth .gl{position:absolute;left:0;top:-60vh;width:100%;height:220vh;will-change:transform}
-#growth svg{width:100%;height:100%;display:block}
+/* スクロールの動きは .gl（JSが transform を書く）。
+   ここは【常時の揺れ】を中の svg に持たせる。層が別なので互いを潰さない。
+   3本それぞれ周期と向きを変えて、同じ揺れに見えないようにする */
+#growth svg{width:100%;height:100%;display:block;will-change:transform}
+#growth .gl:nth-of-type(1) svg{animation:growthSwayA 19s ease-in-out infinite}
+#growth .gl:nth-of-type(2) svg{animation:growthSwayB 24s ease-in-out infinite}
+#growth .gl:nth-of-type(3) svg{animation:growthSwayC 29s ease-in-out infinite}
+@keyframes growthSwayA{
+  0%,100%{transform:translate(0,0) scaleY(1)}
+  38%    {transform:translate(-.9%,.7%) scaleY(1.018)}
+  70%    {transform:translate(.7%,-.5%) scaleY(.988)}}
+@keyframes growthSwayB{
+  0%,100%{transform:translate(0,0) scaleY(1)}
+  44%    {transform:translate(1.1%,-.8%) scaleY(.984)}
+  76%    {transform:translate(-.6%,.6%) scaleY(1.014)}}
+@keyframes growthSwayC{
+  0%,100%{transform:translate(0,0) scaleY(1)}
+  33%    {transform:translate(-.7%,-.6%) scaleY(1.012)}
+  68%    {transform:translate(.9%,.5%) scaleY(.99)}}
 #growth path{fill:none;stroke-linecap:round;vector-effect:non-scaling-stroke}
 /* 3色はブランド色で【明度差】をつける（同明度で重ねると団子になり上昇が読めない） */
 .gr1{stroke:var(--c-primary);  stroke-width:clamp(18px,6.0vw,96px);opacity:.30}  /* 奥・太い・最も薄い */
@@ -180,7 +198,10 @@ footer{position:relative;z-index:1}
   /* 曲線が入る帯を確保するため、スマホではFVを全画面に */
   .hbc__in{min-height:100vh}
 }
-@media(prefers-reduced-motion:reduce){ #growth .gl{transform:none!important} }
+@media(prefers-reduced-motion:reduce){
+  #growth .gl{transform:none!important}
+  #growth svg{animation:none!important}
+}
 
 /* 濃い墨の面（フッター用）。上に白いブロックを置く */
 .tone-ink{background:#333333;color:var(--c-on-dark2)}
@@ -847,8 +868,9 @@ html:not(.js) .lm__i{transform:none}
 .pmp__media{background:none;padding:0;box-shadow:none}
 .pmp__mh{margin-bottom:clamp(12px,1.6vw,18px);text-align:center;
   font-size:clamp(14px,1.15vw,17px);font-weight:800;color:var(--c-on-primary)}
-/* 縦に1本ずつ */
-.pmp__grid{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(16px,2vw,26px)}
+/* 縦に1本ずつ。列いっぱいに広げず、幅を抑えて中央に置く */
+.pmp__grid{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(16px,2vw,26px);
+  max-width:clamp(240px,22vw,330px);margin-inline:auto}
 .pmp__item{margin:0}
 .pmp__thumb{position:relative;display:block;width:100%;padding:0;border:0;cursor:pointer;
   border-radius:12px 9px 14px 10px;overflow:hidden;background:var(--c-bg2)}
@@ -1742,7 +1764,8 @@ html:not(.js) .lm__i{transform:none}
 /* 教室の写真は切らない。枠の比を画像そのものの比に合わせる
    （オンライン校は横長で、16:10に収めると左右が大きく欠ける） */
 .cts__figure img{width:100%;height:auto;aspect-ratio:auto;object-fit:contain;display:block}
-.cts__body{font-size:var(--fs-base);line-height:1.95;color:var(--c-ink2);margin-bottom:var(--sp-el)}
+/* 説明文は表の【下】。上に置くと、先に読みたい営業時間・対象が押し下がる */
+.cts__body{margin-top:var(--sp-el);font-size:var(--fs-sm);line-height:1.95;color:var(--c-ink2)}
 .cts__tel{display:flex;align-items:baseline;gap:var(--s3);margin-bottom:var(--s5)}
 .cts__tel span{font-size:var(--fs-note);color:var(--c-ink3);font-weight:700}
 .cts__tel a{font-family:var(--f-num);font-weight:900;font-size:clamp(24px,2.6vw,32px);
@@ -2873,7 +2896,6 @@ html:not(.js) .lm__i{transform:none}
               <img src="img/classroom.jpg" alt="ESL club 渋谷校 教室内観">
             </figure>
             <div class="cts__info">
-              
               <p class="cts__tel"><span>Tel.</span><a href="tel:0337973380">03-3797-3380</a></p>
               <dl class="cts__dl">
                 <dt>住所</dt><dd>〒150-0002　渋谷区渋谷1-8-6　宮益坂STビル10階</dd>
@@ -2883,6 +2905,7 @@ html:not(.js) .lm__i{transform:none}
                 <dt>レッスン形式</dt><dd>バイリンガル講師によるマンツーマンレッスン</dd>
                 <dt>レッスン時間</dt><dd>1回90分</dd>
               </dl>
+              
             </div>
           </div>
 
@@ -2954,7 +2977,6 @@ html:not(.js) .lm__i{transform:none}
               <img src="img/school_online.jpg" alt="オンライン校のレッスンの様子">
             </figure>
             <div class="cts__info">
-              <p class="cts__body">バイリンガル講師の個別レッスン指導をオンラインでも受講できます。シャドーイングやエッセイライティングの指導といったバイリンガルによる個別指導だからこそのレッスンはもちろん、生徒一人ひとりに合わせた学習プランのご提案まで、教室と全く同じサービスをご提供いたします。</p>
               
               <dl class="cts__dl">
                 
@@ -2964,6 +2986,7 @@ html:not(.js) .lm__i{transform:none}
                 <dt>レッスン形式</dt><dd>バイリンガル講師による完全マンツーマンレッスン</dd>
                 <dt>レッスン時間</dt><dd>1回45分</dd>
               </dl>
+              <p class="cts__body">バイリンガル講師の個別レッスン指導をオンラインでも受講できます。シャドーイングやエッセイライティングの指導といったバイリンガルによる個別指導だからこそのレッスンはもちろん、生徒一人ひとりに合わせた学習プランのご提案まで、教室と全く同じサービスをご提供いたします。</p>
             </div>
           </div>
 

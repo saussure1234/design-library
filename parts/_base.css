@@ -58,7 +58,25 @@ body{padding-top:var(--hdr-h,60px)}
 #growth.is-ready{opacity:1}
 /* トラックは 220vh。上下に余りを持たせ、動かしても端が見えないようにする */
 #growth .gl{position:absolute;left:0;top:-60vh;width:100%;height:220vh;will-change:transform}
-#growth svg{width:100%;height:100%;display:block}
+/* スクロールの動きは .gl（JSが transform を書く）。
+   ここは【常時の揺れ】を中の svg に持たせる。層が別なので互いを潰さない。
+   3本それぞれ周期と向きを変えて、同じ揺れに見えないようにする */
+#growth svg{width:100%;height:100%;display:block;will-change:transform}
+#growth .gl:nth-of-type(1) svg{animation:growthSwayA 19s ease-in-out infinite}
+#growth .gl:nth-of-type(2) svg{animation:growthSwayB 24s ease-in-out infinite}
+#growth .gl:nth-of-type(3) svg{animation:growthSwayC 29s ease-in-out infinite}
+@keyframes growthSwayA{
+  0%,100%{transform:translate(0,0) scaleY(1)}
+  38%    {transform:translate(-.9%,.7%) scaleY(1.018)}
+  70%    {transform:translate(.7%,-.5%) scaleY(.988)}}
+@keyframes growthSwayB{
+  0%,100%{transform:translate(0,0) scaleY(1)}
+  44%    {transform:translate(1.1%,-.8%) scaleY(.984)}
+  76%    {transform:translate(-.6%,.6%) scaleY(1.014)}}
+@keyframes growthSwayC{
+  0%,100%{transform:translate(0,0) scaleY(1)}
+  33%    {transform:translate(-.7%,-.6%) scaleY(1.012)}
+  68%    {transform:translate(.9%,.5%) scaleY(.99)}}
 #growth path{fill:none;stroke-linecap:round;vector-effect:non-scaling-stroke}
 /* 3色はブランド色で【明度差】をつける（同明度で重ねると団子になり上昇が読めない） */
 .gr1{stroke:var(--c-primary);  stroke-width:clamp(18px,6.0vw,96px);opacity:.30}  /* 奥・太い・最も薄い */
@@ -81,7 +99,10 @@ footer{position:relative;z-index:1}
   /* 曲線が入る帯を確保するため、スマホではFVを全画面に */
   .hbc__in{min-height:100vh}
 }
-@media(prefers-reduced-motion:reduce){ #growth .gl{transform:none!important} }
+@media(prefers-reduced-motion:reduce){
+  #growth .gl{transform:none!important}
+  #growth svg{animation:none!important}
+}
 
 /* 濃い墨の面（フッター用）。上に白いブロックを置く */
 .tone-ink{background:#333333;color:var(--c-on-dark2)}

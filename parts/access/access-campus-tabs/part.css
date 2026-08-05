@@ -38,7 +38,8 @@
 /* 教室の写真は切らない。枠の比を画像そのものの比に合わせる
    （オンライン校は横長で、16:10に収めると左右が大きく欠ける） */
 .cts__figure img{width:100%;height:auto;aspect-ratio:auto;object-fit:contain;display:block}
-.cts__body{font-size:var(--fs-base);line-height:1.95;color:var(--c-ink2);margin-bottom:var(--sp-el)}
+/* 説明文は表の【下】。上に置くと、先に読みたい営業時間・対象が押し下がる */
+.cts__body{margin-top:var(--sp-el);font-size:var(--fs-sm);line-height:1.95;color:var(--c-ink2)}
 .cts__tel{display:flex;align-items:baseline;gap:var(--s3);margin-bottom:var(--s5)}
 .cts__tel span{font-size:var(--fs-note);color:var(--c-ink3);font-weight:700}
 .cts__tel a{font-family:var(--f-num);font-weight:900;font-size:clamp(24px,2.6vw,32px);
