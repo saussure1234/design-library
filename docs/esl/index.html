@@ -1095,12 +1095,13 @@ html:not(.js) .lm__i{transform:none}
    ・右は 肩書 → 氏名 → リード（大きめ・太字） → 手描き風の罫 → 本文（小さめ）
    ・1人ごとに写真の左右を入れ替える
    再現の記録: repro/mbl/ */
-.mbl__list{display:grid;gap:clamp(40px,6vw,88px)}
-.mbl__item{margin:0;display:grid;grid-template-columns:clamp(128px,12.4vw,172px) minmax(0,1fr);
-  gap:clamp(24px,4vw,64px);align-items:start}
-/* 偶数番は写真を右に。列幅も入れ替える（入れ替えないと写真が本文幅まで伸びる） */
-.mbl__item:nth-child(even){grid-template-columns:minmax(0,1fr) clamp(128px,12.4vw,172px)}
-.mbl__item:nth-child(even) .mbl__figwrap{order:2}
+/* 2人を横に並べる。1人ぶんの列が半分になるので、中は写真を上・文章を下に積む
+   （半分の幅で写真を横に置くと、本文が2〜3語で折り返す） */
+.mbl__list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:clamp(28px,3.6vw,64px)}
+.mbl__item{margin:0;display:grid;grid-template-columns:minmax(0,1fr);
+  gap:clamp(16px,1.8vw,24px);align-items:start;align-content:start}
+.mbl__figwrap{max-width:clamp(120px,11vw,152px)}
 
 .mbl__figwrap{position:relative}
 .mbl__fig{position:relative;z-index:2;margin:0}
@@ -1144,9 +1145,10 @@ html:not(.js) .lm__i{transform:none}
   font-size:clamp(12.5px,1.02vw,14px);color:var(--c-ink2);line-height:2.05}
 .mbl__body p + p{margin-top:1.35em}
 
+/* 横に2人だと1人ぶんが細くなりすぎる幅からは、縦に戻す */
 @media(max-width:900px){
-  .mbl__item{grid-template-columns:minmax(0,1fr);gap:20px}
-  .mbl__item:nth-child(even) .mbl__figwrap{order:0}
+  .mbl__list{grid-template-columns:minmax(0,1fr);gap:clamp(36px,6vw,64px)}
+  .mbl__item{gap:20px}
   .mbl__figwrap{max-width:184px}
   .mbl__name{font-size:20px}
 }
@@ -1166,8 +1168,9 @@ html:not(.js) .lm__i{transform:none}
 /* ★カードが「大きめの白いブロック」。濃い面の上でもこの中は読める */
 .msc__card{position:relative;border-radius:22px;overflow:hidden;background:var(--c-bg);
   box-shadow:var(--shadow-s)}
-/* 写真の地は3枚とも同じ。ブランド緑のベタ（淡い緑は他の節と馴染まないので使わない） */
-.msc__fig{background:var(--c-primary)}
+/* 写真の地は3枚とも同じ。節の地（#00B21F）と同じ緑にすると
+   カードの上半分が背景に溶けて、箱の形が消える。一段沈めた緑にする */
+.msc__fig{background:#00701A}
 .msc__fig{margin:0}
 /* 素材が円形に切り抜かれているので、円のまま色面に乗せる */
 .msc__fig{display:grid;place-items:center;padding:22px 22px 14px}
@@ -1177,9 +1180,9 @@ html:not(.js) .lm__i{transform:none}
 /* 氏名：雲形のラベルを写真の下端に重ねる */
 .msc__name{position:relative;margin:-14px 12% 0;z-index:2;text-align:center;padding:12px 10px;
   border-radius:44% 56% 46% 54% / 60% 58% 42% 40%;background:var(--c-bg)}
-/* 雲形は写真の緑と白い下半分にまたがる。どちらの上でも立つよう、
-   ブランド緑をさらに沈めた濃い緑にして、文字は白で抜く */
-.msc__name{background:#00701A}
+/* 雲形は写真の濃い緑と白い下半分にまたがる。どちらの上でも立つよう、
+   ブランド緑そのものを使い、文字は白で抜く */
+.msc__name{background:var(--c-primary)}
 .msc__name b{display:block;font-size:clamp(14px,1.35vw,18px);font-weight:900;color:var(--c-on-primary)}
 .msc__name span{display:block;margin-top:2px;font-size:clamp(8.5px,.72vw,10px);
   letter-spacing:.06em;color:rgba(255,255,255,.74);font-weight:700}
@@ -2316,8 +2319,9 @@ html:not(.js) .lm__i{transform:none}
 </section>
 
 </div>
-<!-- member/member-blob-portrait-letter (brand) -->
-<div class="tone-brand wave-top wave-bottom" style="--wave-from:var(--c-bg);--wave-to:var(--c-bg2)">
+<div class="tone-brand">
+<!-- member/member-blob-portrait-letter (base) -->
+<div class="wave-top wave-bottom" style="--wave-from:var(--c-bg);--wave-to:var(--c-bg2)">
 <section class="sec mbl">
   <div class="wrap">
     <div class="sec-head">
@@ -2368,8 +2372,7 @@ html:not(.js) .lm__i{transform:none}
 </section>
 
 </div>
-<!-- member/member-staggered-color-cards (tint) -->
-<div class="tone-tint">
+<!-- member/member-staggered-color-cards (base) -->
 <section class="sec msc">
   <div class="wrap">
     <div class="sec-head">

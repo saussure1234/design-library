@@ -4,12 +4,13 @@
    ・右は 肩書 → 氏名 → リード（大きめ・太字） → 手描き風の罫 → 本文（小さめ）
    ・1人ごとに写真の左右を入れ替える
    再現の記録: repro/mbl/ */
-.mbl__list{display:grid;gap:clamp(40px,6vw,88px)}
-.mbl__item{margin:0;display:grid;grid-template-columns:clamp(128px,12.4vw,172px) minmax(0,1fr);
-  gap:clamp(24px,4vw,64px);align-items:start}
-/* 偶数番は写真を右に。列幅も入れ替える（入れ替えないと写真が本文幅まで伸びる） */
-.mbl__item:nth-child(even){grid-template-columns:minmax(0,1fr) clamp(128px,12.4vw,172px)}
-.mbl__item:nth-child(even) .mbl__figwrap{order:2}
+/* 2人を横に並べる。1人ぶんの列が半分になるので、中は写真を上・文章を下に積む
+   （半分の幅で写真を横に置くと、本文が2〜3語で折り返す） */
+.mbl__list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:clamp(28px,3.6vw,64px)}
+.mbl__item{margin:0;display:grid;grid-template-columns:minmax(0,1fr);
+  gap:clamp(16px,1.8vw,24px);align-items:start;align-content:start}
+.mbl__figwrap{max-width:clamp(120px,11vw,152px)}
 
 .mbl__figwrap{position:relative}
 .mbl__fig{position:relative;z-index:2;margin:0}
@@ -53,9 +54,10 @@
   font-size:clamp(12.5px,1.02vw,14px);color:var(--c-ink2);line-height:2.05}
 .mbl__body p + p{margin-top:1.35em}
 
+/* 横に2人だと1人ぶんが細くなりすぎる幅からは、縦に戻す */
 @media(max-width:900px){
-  .mbl__item{grid-template-columns:minmax(0,1fr);gap:20px}
-  .mbl__item:nth-child(even) .mbl__figwrap{order:0}
+  .mbl__list{grid-template-columns:minmax(0,1fr);gap:clamp(36px,6vw,64px)}
+  .mbl__item{gap:20px}
   .mbl__figwrap{max-width:184px}
   .mbl__name{font-size:20px}
 }
