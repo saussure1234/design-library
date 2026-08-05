@@ -224,34 +224,6 @@ document.documentElement.classList.add('js');
   });
 })();
 
-/* ── FV背景「成長の曲線」──────────────────
-   1) 読み込み時に3本を時間差で描く
-   2) FVをスクロールする間だけ、静かに上へ抜けながら薄くする（等速・加速しない）
-   加速させると「急かされている」印象になり、安心感と衝突する。 */
-(function(){
-  var wrap=document.querySelector('.hbc__growth'), fv=document.querySelector('.hbc');
-  if(!wrap||!fv) return;
-  var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
-  var paths=[].slice.call(wrap.querySelectorAll('path'));
-  function measure(){
-    paths.forEach(function(p){ p.style.setProperty('--len', Math.ceil(p.getTotalLength())); });
-  }
-  measure(); wrap.style.setProperty('--dur','1400ms');
-  if(reduce){ wrap.classList.add('is-in'); }
-  else{ requestAnimationFrame(function(){ requestAnimationFrame(function(){ wrap.classList.add('is-in'); }); }); }
-  var SHIFT=42, FADE=.55, ticking=false;
-  function frame(){
-    ticking=false; if(reduce) return;
-    var h=fv.offsetHeight||1;
-    var p=Math.min(1,Math.max(0,(window.pageYOffset||0)/h));
-    wrap.style.transform='translate3d(0,'+(-p*SHIFT)+'px,0)';
-    wrap.style.opacity=(1-p*FADE).toFixed(3);
-    wrap.style.willChange = p<1 ? 'transform,opacity' : 'auto';
-  }
-  addEventListener('scroll',function(){ if(!ticking){ ticking=true; requestAnimationFrame(frame); } },{passive:true});
-  var rt; addEventListener('resize',function(){ clearTimeout(rt); rt=setTimeout(function(){ measure(); frame(); },150); });
-  frame();
-})();
 
 /* 固定ヘッダー：下スクロールで隠し、上スクロールで出す */
 (function(){
@@ -267,6 +239,37 @@ document.documentElement.classList.add('js');
   }
   addEventListener('scroll',function(){ if(!ticking){ ticking=true; requestAnimationFrame(frame); } },{passive:true});
   frame();
+})();
+
+/* ── FV背景「成長の曲線」──────────────────────
+   3枚をそれぞれ違う速さで下へ動かす（奥ほど遅い＝奥行き）。
+   scrollY × speed の1次式のまま。加速させない。
+   独自の背景を持つ最初のセクションの手前でクリップして消す。 */
+(function(){
+  var growth=document.getElementById('growth'); if(!growth) return;
+  var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var layers=[].slice.call(growth.querySelectorAll('.gl'));
+  var stop=document.querySelector('.hbc') ?
+           (document.querySelector('.hbc').closest('div')||{}).nextElementSibling : null;
+  var ticking=false;
+  function frame(){
+    ticking=false;
+    var y=window.pageYOffset||0;
+    if(!reduce){
+      layers.forEach(function(el){
+        var sp=parseFloat(el.getAttribute('data-speed'))||0.3;
+        el.style.transform='translate3d(0,'+(y*sp)+'px,0)';
+      });
+    }
+    if(stop){
+      var top=stop.getBoundingClientRect().top;
+      growth.style.clipPath='inset(0 0 '+Math.max(0, innerHeight-top)+'px 0)';
+    }
+  }
+  addEventListener('scroll',function(){ if(!ticking){ ticking=true; requestAnimationFrame(frame); } },{passive:true});
+  addEventListener('resize',frame);
+  frame();
+  requestAnimationFrame(function(){ growth.classList.add('is-ready'); });
 })();
 """
 
@@ -320,6 +323,26 @@ def build(kit_path, out_path):
 </style>
 </head>
 <body>
+<!-- FV背景「成長の曲線」。body直下・fixed で、スクロールについてくる -->
+<div id="growth" aria-hidden="true">
+  <div class="gl" data-speed="0.30">
+    <svg viewBox="0 0 1440 1584" preserveAspectRatio="none">
+      <path class="gr1" d="M-80 1182 C 420 1172, 980 992, 1560 552"/>
+      <path class="gm1" d="M-120 1150 C 380 1130, 860 1060, 1560 960"/>
+    </svg>
+  </div>
+  <div class="gl" data-speed="0.40">
+    <svg viewBox="0 0 1440 1584" preserveAspectRatio="none">
+      <path class="gr2" d="M-80 1252 C 460 1232, 1020 1042, 1560 662"/>
+      <path class="gm2" d="M-120 1216 C 400 1200, 880 1140, 1560 1050"/>
+    </svg>
+  </div>
+  <div class="gl" data-speed="0.52">
+    <svg viewBox="0 0 1440 1584" preserveAspectRatio="none">
+      <path class="gr3" d="M-80 1312 C 500 1297, 1060 1152, 1560 792"/>
+    </svg>
+  </div>
+</div>
 <header class="hdr">
   <a class="hdr__logo" href="#top" aria-label="ESL club"><img src="img/logo.svg" alt="ESL club"></a>
   <a class="btn btn--sm hdr__cta" href="https://eslclub.jp/trial/">無料体験レッスンはこちら</a>

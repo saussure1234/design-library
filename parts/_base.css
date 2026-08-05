@@ -44,10 +44,64 @@ body{padding-top:var(--hdr-h,60px)}
   .hdr__cta{font-size:11px;padding:8px 11px}
 }
 
+
+/* ── FV背景「成長の曲線」──────────────────────
+   body直下の fixed レイヤ。3本を別々の面に分け、別々の速さで下へ動かす。
+   奥（太い）ほどゆっくり＝奥行き。加速はしない（1次式のまま）。
+   曲線は最初から引かれている（描画の演出は入れない）。
+   ★ vector-effect が無いと preserveAspectRatio="none" で線が横に潰れる。 */
+#growth{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;
+  opacity:0;transition:opacity .6s var(--e)}
+#growth.is-ready{opacity:1}
+/* トラックは 220vh。上下に余りを持たせ、動かしても端が見えないようにする */
+#growth .gl{position:absolute;left:0;top:-60vh;width:100%;height:220vh;will-change:transform}
+#growth svg{width:100%;height:100%;display:block}
+#growth path{fill:none;stroke-linecap:round;vector-effect:non-scaling-stroke}
+/* 3色はブランド色で【明度差】をつける（同明度で重ねると団子になり上昇が読めない） */
+.gr1{stroke:var(--c-primary);  stroke-width:clamp(18px,6.0vw,96px);opacity:.18}  /* 奥・太い・最も薄い */
+.gr2{stroke:var(--c-accent);   stroke-width:clamp(13px,4.4vw,70px);opacity:.40}  /* 中 */
+.gr3{stroke:var(--c-primary-d);stroke-width:clamp( 9px,3.0vw,48px);opacity:.40}  /* 手前・細い・最も濃い */
+/* スマホ専用パス（既定は非表示） */
+.gm1{stroke:var(--c-primary);stroke-width:26px;opacity:.22;display:none}
+.gm2{stroke:var(--c-accent); stroke-width:19px;opacity:.44;display:none}
+/* 中身は必ず曲線より前面に */
+.tone-clear,.tone-base,.tone-tint,.tone-blob,.tone-brand,.tone-boxdark,.tone-grad,.tone-pale,.tone-ink,
+.hdr,footer{position:relative;z-index:1}
+
+@media(max-width:767px){
+  /* 横に潰すとPC用パスの立ち上がりが右端に寄って消える。パスごと差し替える */
+  #growth .gr1,#growth .gr2,#growth .gr3{display:none}
+  #growth .gm1,#growth .gm2{display:block}
+  /* 曲線が入る帯を確保するため、スマホではFVを全画面に */
+  .hbc__in{min-height:100vh}
+}
+@media(prefers-reduced-motion:reduce){ #growth .gl{transform:none!important} }
+
+/* 濃い墨の面（フッター用）。上に白いブロックを置く */
+.tone-ink{background:#333333;color:var(--c-on-dark2)}
+.tone-ink .sec-head__ja,.tone-ink h2,.tone-ink h3{color:var(--c-on-dark)}
+/* 濃い面の上：見出しと導線名は白、補足は明るいグレー、罫は白の14% */
+.tone-ink .ftc__col-h,.tone-ink .ftc__svc-label,.tone-ink .ftc__posts-label,
+.tone-ink .ftc__post-t,.tone-ink .h-eyebrow{color:var(--c-on-dark)}
+.tone-ink .ftc__svc-sub,.tone-ink .ftc__brand-note,.tone-ink .ftc__copy,
+.tone-ink .ftc__note,.tone-ink .ftc__fine{color:rgba(255,255,255,.62)}
+.tone-ink .ftc__legal-a{color:rgba(255,255,255,.84)}
+.tone-ink .ftc__arw svg{stroke:rgba(255,255,255,.7)}
+.tone-ink a{color:inherit}
+.tone-ink [class*="ftc__"]{border-color:rgba(255,255,255,.14)}
+/* 電話の箱だけ白いブロックにする（濃い面の条件） */
+.tone-ink .ftc__strip{background:var(--c-bg);border-radius:16px;padding:var(--s6) var(--s5)}
+.tone-ink .ftc__strip *{color:var(--c-ink2)}
+.tone-ink .ftc__tel-cap{color:var(--c-ink3)}
+.tone-ink .ftc__tel-num,.tone-ink .ftc__strip a{color:var(--c-primary)}
+.tone-ink .ftc__logo{filter:brightness(0) invert(1);opacity:.92}
+
 /* ── 版面・セクション ────────────────────────── */
 .wrap{width:100%;max-width:1080px;margin-inline:auto;padding-inline:22px}
 .sec{padding-block:74px}
 .sec--alt{background:var(--c-bg2)}
+/* 地を敷かない＝body直下の曲線レイヤを透かす（FV用） */
+.tone-clear{background:transparent}
 .tone-base{background:var(--c-bg)}
 .tone-tint{background:var(--c-bg2)}
 /* ブランド色の面。白ばかりにならないよう、白／薄グレーと交互に使う */
@@ -73,6 +127,8 @@ body{padding-top:var(--hdr-h,60px)}
      grad      白地にグラデーションのボックス
    ------------------------------------------------------------ */
 .sec{position:relative}
+/* 地を敷かない＝body直下の曲線レイヤを透かす（FV用） */
+.tone-clear{background:transparent}
 .tone-base{background:var(--c-bg)}
 .tone-tint{background:var(--c-bg2)}
 /* 薄い緑は地には使わない（面ではなくカードの中でだけ使う） */

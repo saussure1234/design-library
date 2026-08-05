@@ -143,10 +143,64 @@ body{padding-top:var(--hdr-h,60px)}
   .hdr__cta{font-size:11px;padding:8px 11px}
 }
 
+
+/* ── FV背景「成長の曲線」──────────────────────
+   body直下の fixed レイヤ。3本を別々の面に分け、別々の速さで下へ動かす。
+   奥（太い）ほどゆっくり＝奥行き。加速はしない（1次式のまま）。
+   曲線は最初から引かれている（描画の演出は入れない）。
+   ★ vector-effect が無いと preserveAspectRatio="none" で線が横に潰れる。 */
+#growth{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;
+  opacity:0;transition:opacity .6s var(--e)}
+#growth.is-ready{opacity:1}
+/* トラックは 220vh。上下に余りを持たせ、動かしても端が見えないようにする */
+#growth .gl{position:absolute;left:0;top:-60vh;width:100%;height:220vh;will-change:transform}
+#growth svg{width:100%;height:100%;display:block}
+#growth path{fill:none;stroke-linecap:round;vector-effect:non-scaling-stroke}
+/* 3色はブランド色で【明度差】をつける（同明度で重ねると団子になり上昇が読めない） */
+.gr1{stroke:var(--c-primary);  stroke-width:clamp(18px,6.0vw,96px);opacity:.18}  /* 奥・太い・最も薄い */
+.gr2{stroke:var(--c-accent);   stroke-width:clamp(13px,4.4vw,70px);opacity:.40}  /* 中 */
+.gr3{stroke:var(--c-primary-d);stroke-width:clamp( 9px,3.0vw,48px);opacity:.40}  /* 手前・細い・最も濃い */
+/* スマホ専用パス（既定は非表示） */
+.gm1{stroke:var(--c-primary);stroke-width:26px;opacity:.22;display:none}
+.gm2{stroke:var(--c-accent); stroke-width:19px;opacity:.44;display:none}
+/* 中身は必ず曲線より前面に */
+.tone-clear,.tone-base,.tone-tint,.tone-blob,.tone-brand,.tone-boxdark,.tone-grad,.tone-pale,.tone-ink,
+.hdr,footer{position:relative;z-index:1}
+
+@media(max-width:767px){
+  /* 横に潰すとPC用パスの立ち上がりが右端に寄って消える。パスごと差し替える */
+  #growth .gr1,#growth .gr2,#growth .gr3{display:none}
+  #growth .gm1,#growth .gm2{display:block}
+  /* 曲線が入る帯を確保するため、スマホではFVを全画面に */
+  .hbc__in{min-height:100vh}
+}
+@media(prefers-reduced-motion:reduce){ #growth .gl{transform:none!important} }
+
+/* 濃い墨の面（フッター用）。上に白いブロックを置く */
+.tone-ink{background:#333333;color:var(--c-on-dark2)}
+.tone-ink .sec-head__ja,.tone-ink h2,.tone-ink h3{color:var(--c-on-dark)}
+/* 濃い面の上：見出しと導線名は白、補足は明るいグレー、罫は白の14% */
+.tone-ink .ftc__col-h,.tone-ink .ftc__svc-label,.tone-ink .ftc__posts-label,
+.tone-ink .ftc__post-t,.tone-ink .h-eyebrow{color:var(--c-on-dark)}
+.tone-ink .ftc__svc-sub,.tone-ink .ftc__brand-note,.tone-ink .ftc__copy,
+.tone-ink .ftc__note,.tone-ink .ftc__fine{color:rgba(255,255,255,.62)}
+.tone-ink .ftc__legal-a{color:rgba(255,255,255,.84)}
+.tone-ink .ftc__arw svg{stroke:rgba(255,255,255,.7)}
+.tone-ink a{color:inherit}
+.tone-ink [class*="ftc__"]{border-color:rgba(255,255,255,.14)}
+/* 電話の箱だけ白いブロックにする（濃い面の条件） */
+.tone-ink .ftc__strip{background:var(--c-bg);border-radius:16px;padding:var(--s6) var(--s5)}
+.tone-ink .ftc__strip *{color:var(--c-ink2)}
+.tone-ink .ftc__tel-cap{color:var(--c-ink3)}
+.tone-ink .ftc__tel-num,.tone-ink .ftc__strip a{color:var(--c-primary)}
+.tone-ink .ftc__logo{filter:brightness(0) invert(1);opacity:.92}
+
 /* ── 版面・セクション ────────────────────────── */
 .wrap{width:100%;max-width:1080px;margin-inline:auto;padding-inline:22px}
 .sec{padding-block:74px}
 .sec--alt{background:var(--c-bg2)}
+/* 地を敷かない＝body直下の曲線レイヤを透かす（FV用） */
+.tone-clear{background:transparent}
 .tone-base{background:var(--c-bg)}
 .tone-tint{background:var(--c-bg2)}
 /* ブランド色の面。白ばかりにならないよう、白／薄グレーと交互に使う */
@@ -172,6 +226,8 @@ body{padding-top:var(--hdr-h,60px)}
      grad      白地にグラデーションのボックス
    ------------------------------------------------------------ */
 .sec{position:relative}
+/* 地を敷かない＝body直下の曲線レイヤを透かす（FV用） */
+.tone-clear{background:transparent}
 .tone-base{background:var(--c-bg)}
 .tone-tint{background:var(--c-bg2)}
 /* 薄い緑は地には使わない（面ではなくカードの中でだけ使う） */
@@ -345,25 +401,9 @@ html:not(.js) .lm__i{transform:none}
    ・手描き風の落書きを散らす
    ・下に大きなキャッチコピー。1語だけ色を変える
    再現の記録: repro/fv/ */
-.hbc{position:relative;background:linear-gradient(172deg,#FDFDFB 0%,var(--c-bg2) 100%);
-  overflow:hidden}   /* ★曲線を次のセクションへ流さない */
+/* 地は敷かない。body直下の曲線レイヤを透かす */
+.hbc{position:relative;background:transparent}
 
-/* ── 背景：成長の曲線 ─────────────────────
-   左下から右上へ立ち上がる3本。右端30%で一気に上がる形が「伸びる」の読みになる。
-   3色はブランド色で【明度差】をつける（同じ明度で重ねると団子になって上昇が読めない）。
-   ★ vector-effect:non-scaling-stroke が無いと、preserveAspectRatio="none" で線が横に潰れる。 */
-.hbc__growth{position:absolute;inset:0;z-index:0;pointer-events:none;will-change:transform,opacity}
-.hbc__growth svg{width:100%;height:100%;display:block}
-.hbc__growth path{fill:none;stroke-linecap:round;vector-effect:non-scaling-stroke}
-.hbc__r1{stroke:var(--c-primary);  stroke-width:clamp(12px,2.40vw,34px);opacity:.14}  /* 奥・太い・最も薄い */
-.hbc__r2{stroke:var(--c-primary-2);stroke-width:clamp(9px, 1.85vw,26px);opacity:.30}  /* 中 */
-.hbc__r3{stroke:var(--c-accent);   stroke-width:clamp(7px, 1.30vw,18px);opacity:.46}  /* 手前・細い・最も濃い */
-/* 入場ドロー（長さはJSが実測して --len に入れる） */
-.hbc__growth.is-draw path{stroke-dasharray:var(--len);stroke-dashoffset:var(--len)}
-.hbc__growth.is-draw.is-in path{stroke-dashoffset:0;
-  transition:stroke-dashoffset var(--dur,1400ms) cubic-bezier(.22,1,.36,1)}
-.hbc__growth.is-draw.is-in .hbc__r2{transition-delay:140ms}
-.hbc__growth.is-draw.is-in .hbc__r3{transition-delay:280ms}
 .hbc__in{position:relative;width:100%;max-width:1440px;margin-inline:auto;
   height:clamp(560px,52vw,760px)}
 
@@ -421,10 +461,6 @@ html:not(.js) .lm__i{transform:none}
 
 .hbc__foot{padding:0 0 18px;font-size:11px;color:var(--c-ink3);text-align:center}
 
-@media(max-width:767px){
-  .hbc__r3{display:none}                    /* 3本だと団子になるので落とす */
-  .hbc__growth svg{transform:translateY(6%)}
-}
 @media(max-width:480px){
   .hbc__growth svg{transform:translateY(9%)}
 }
@@ -1889,23 +1925,33 @@ html:not(.js) .lm__i{transform:none}
 </style>
 </head>
 <body>
+<!-- FV背景「成長の曲線」。body直下・fixed で、スクロールについてくる -->
+<div id="growth" aria-hidden="true">
+  <div class="gl" data-speed="0.30">
+    <svg viewBox="0 0 1440 1584" preserveAspectRatio="none">
+      <path class="gr1" d="M-80 1182 C 420 1172, 980 992, 1560 552"/>
+      <path class="gm1" d="M-120 1150 C 380 1130, 860 1060, 1560 960"/>
+    </svg>
+  </div>
+  <div class="gl" data-speed="0.40">
+    <svg viewBox="0 0 1440 1584" preserveAspectRatio="none">
+      <path class="gr2" d="M-80 1252 C 460 1232, 1020 1042, 1560 662"/>
+      <path class="gm2" d="M-120 1216 C 400 1200, 880 1140, 1560 1050"/>
+    </svg>
+  </div>
+  <div class="gl" data-speed="0.52">
+    <svg viewBox="0 0 1440 1584" preserveAspectRatio="none">
+      <path class="gr3" d="M-80 1312 C 500 1297, 1060 1152, 1560 792"/>
+    </svg>
+  </div>
+</div>
 <header class="hdr">
   <a class="hdr__logo" href="#top" aria-label="ESL club"><img src="img/logo.svg" alt="ESL club"></a>
   <a class="btn btn--sm hdr__cta" href="https://eslclub.jp/trial/">無料体験レッスンはこちら</a>
 </header>
-<!-- hero/hero-blob-cutout (base) -->
-<div class="tone-base">
+<!-- hero/hero-blob-cutout (clear) -->
+<div class="tone-clear">
 <section class="hbc">
-  <!-- 背景：成長の曲線。左下から右上へ立ち上がる3本。
-       端は viewBox の外（-80 / 1560）へ逃がし、線端の丸みを画面に出さない。 -->
-  <div class="hbc__growth is-draw" aria-hidden="true">
-    <svg viewBox="0 0 1440 720" preserveAspectRatio="none">
-      <path class="hbc__r1" d="M-80 830 C 420 820, 980 640, 1560 200"/>
-      <path class="hbc__r2" d="M-80 900 C 460 880, 1020 690, 1560 310"/>
-      <path class="hbc__r3" d="M-80 960 C 500 945, 1060 800, 1560 440"/>
-    </svg>
-  </div>
-
   <div class="hbc__in">
     <div class="hbc__blob hbc__blob--a"></div>
     <div class="hbc__blob hbc__blob--b"></div>
@@ -2861,8 +2907,8 @@ html:not(.js) .lm__i{transform:none}
 </section>
 
 </div>
-<!-- footer/footer-two-tier-cta (brand) -->
-<div class="tone-brand wave-top wave-bottom" style="--wave-from:var(--c-bg);--wave-to:var(--c-bg)">
+<!-- footer/footer-two-tier-cta (ink) -->
+<div class="tone-ink">
 <footer class="ftc">
 
   <!-- 写真ストリップ（任意）。導線帯の“上”に置くので、PCでもSPでも写真はCTAより上になる。
@@ -3164,34 +3210,6 @@ document.documentElement.classList.add('js');
   });
 })();
 
-/* ── FV背景「成長の曲線」──────────────────
-   1) 読み込み時に3本を時間差で描く
-   2) FVをスクロールする間だけ、静かに上へ抜けながら薄くする（等速・加速しない）
-   加速させると「急かされている」印象になり、安心感と衝突する。 */
-(function(){
-  var wrap=document.querySelector('.hbc__growth'), fv=document.querySelector('.hbc');
-  if(!wrap||!fv) return;
-  var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
-  var paths=[].slice.call(wrap.querySelectorAll('path'));
-  function measure(){
-    paths.forEach(function(p){ p.style.setProperty('--len', Math.ceil(p.getTotalLength())); });
-  }
-  measure(); wrap.style.setProperty('--dur','1400ms');
-  if(reduce){ wrap.classList.add('is-in'); }
-  else{ requestAnimationFrame(function(){ requestAnimationFrame(function(){ wrap.classList.add('is-in'); }); }); }
-  var SHIFT=42, FADE=.55, ticking=false;
-  function frame(){
-    ticking=false; if(reduce) return;
-    var h=fv.offsetHeight||1;
-    var p=Math.min(1,Math.max(0,(window.pageYOffset||0)/h));
-    wrap.style.transform='translate3d(0,'+(-p*SHIFT)+'px,0)';
-    wrap.style.opacity=(1-p*FADE).toFixed(3);
-    wrap.style.willChange = p<1 ? 'transform,opacity' : 'auto';
-  }
-  addEventListener('scroll',function(){ if(!ticking){ ticking=true; requestAnimationFrame(frame); } },{passive:true});
-  var rt; addEventListener('resize',function(){ clearTimeout(rt); rt=setTimeout(function(){ measure(); frame(); },150); });
-  frame();
-})();
 
 /* 固定ヘッダー：下スクロールで隠し、上スクロールで出す */
 (function(){
@@ -3207,6 +3225,37 @@ document.documentElement.classList.add('js');
   }
   addEventListener('scroll',function(){ if(!ticking){ ticking=true; requestAnimationFrame(frame); } },{passive:true});
   frame();
+})();
+
+/* ── FV背景「成長の曲線」──────────────────────
+   3枚をそれぞれ違う速さで下へ動かす（奥ほど遅い＝奥行き）。
+   scrollY × speed の1次式のまま。加速させない。
+   独自の背景を持つ最初のセクションの手前でクリップして消す。 */
+(function(){
+  var growth=document.getElementById('growth'); if(!growth) return;
+  var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var layers=[].slice.call(growth.querySelectorAll('.gl'));
+  var stop=document.querySelector('.hbc') ?
+           (document.querySelector('.hbc').closest('div')||{}).nextElementSibling : null;
+  var ticking=false;
+  function frame(){
+    ticking=false;
+    var y=window.pageYOffset||0;
+    if(!reduce){
+      layers.forEach(function(el){
+        var sp=parseFloat(el.getAttribute('data-speed'))||0.3;
+        el.style.transform='translate3d(0,'+(y*sp)+'px,0)';
+      });
+    }
+    if(stop){
+      var top=stop.getBoundingClientRect().top;
+      growth.style.clipPath='inset(0 0 '+Math.max(0, innerHeight-top)+'px 0)';
+    }
+  }
+  addEventListener('scroll',function(){ if(!ticking){ ticking=true; requestAnimationFrame(frame); } },{passive:true});
+  addEventListener('resize',frame);
+  frame();
+  requestAnimationFrame(function(){ growth.classList.add('is-ready'); });
 })();
 </script>
 </body>
