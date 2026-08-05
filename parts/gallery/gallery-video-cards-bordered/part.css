@@ -4,12 +4,13 @@
    ・再生ボタンは右下に円で置き、縁と同じ色にする
    ・カードごとに縁の色を変える
    再現の記録: repro/gvb/ */
-.gvb__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(18px,3vw,40px)}
+.gvb__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(16px,2.4vw,28px);
+  max-width:720px;margin-inline:auto}
 .gvb__item{margin:0}
 .gvb__card{display:block;transition:transform .16s var(--e)}
 .gvb__thumb{display:block;width:100%;padding:0;border:0;background:none;cursor:pointer}
-.gvb__thumb{position:relative;border-radius:22px;overflow:hidden;
-  border:6px solid var(--c-primary-2);background:var(--c-bg2)}
+.gvb__thumb{position:relative;border-radius:16px;overflow:hidden;
+  border:4px solid var(--c-primary-2);background:var(--c-bg2)}
 .gvb__item:nth-child(even) .gvb__thumb{border-color:var(--c-primary)}
 .gvb__thumb img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block}
 /* 押すとその場で YouTube に差し替わる */
@@ -29,7 +30,7 @@
 .gvb__cap b,.gvb__cap em{display:block}
 .gvb__cap b{display:block;font-size:clamp(11px,.9vw,12.5px);color:var(--c-ink3);font-weight:700}
 .gvb__cap em{display:block;margin-top:3px;font-style:normal;
-  font-size:clamp(15px,1.4vw,19px);font-weight:900;color:var(--c-ink)}
+  font-size:clamp(13px,1.1vw,15px);font-weight:900;color:var(--c-ink)}
 .gvb__note{margin-top:20px;text-align:center;font-size:11.5px;color:var(--c-ink3)}
 @media(max-width:768px){
   .gvb__grid{grid-template-columns:minmax(0,1fr);gap:22px}

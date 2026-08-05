@@ -21,27 +21,27 @@ ul,ol{padding:0;list-style:none}
 /* ── 固定ヘッダー：ロゴとCTAだけ ─────────────
    スクロールしても常に申し込み導線が見えるようにする。
    下へ動かしたときだけ隠し、上へ戻すと出す（読む邪魔をしない）。 */
-.hdr{position:fixed;left:0;right:0;top:0;z-index:60;
+.hdr{position:fixed;left:0;right:0;top:0;z-index:60;height:90px;
   display:flex;align-items:center;justify-content:space-between;gap:var(--s4);
-  padding:12px clamp(16px,3vw,34px);background:rgba(255,255,255,.94);
-  backdrop-filter:saturate(1.4) blur(10px);
-  border-bottom:1px solid transparent;
-  transition:transform .28s var(--e),border-color .2s var(--e)}
+  padding:0 clamp(16px,3vw,34px);background:rgba(255,255,255,.94);
+  backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid transparent;
+  transition:border-color .2s var(--e)}
 .hdr.is-stuck{border-bottom-color:var(--c-line)}
 /* 固定。スクロールしても隠さない */
 .hdr__logo{display:flex;align-items:center}
-.hdr__logo img{height:clamp(20px,2vw,28px);width:auto;display:block}
-.hdr__cta{font-size:clamp(12px,1.05vw,14.5px);padding:11px 22px;box-shadow:0 5px 0 var(--c-primary-d)}
+.hdr__logo img{height:38px;width:auto;display:block}
+.hdr__cta{min-width:238px;height:48px;font-size:14px;padding:0 22px;
+  box-shadow:0 5px 0 var(--c-primary-d)}
 .hdr__cta:hover{box-shadow:0 3px 0 var(--c-primary-d)}
 body{padding-top:var(--hdr-h,60px)}
 .hdr__cta{white-space:nowrap}
-@media(max-width:600px){
-  .hdr{padding:8px 12px;gap:10px}
-  .hdr__logo img{height:19px}
-  .hdr__cta{font-size:11.5px;padding:9px 13px;box-shadow:0 4px 0 var(--c-primary-d)}
+@media(max-width:900px){
+  .hdr{height:64px;padding:0 14px;gap:10px}
+  .hdr__logo img{height:26px}
+  .hdr__cta{min-width:0;height:40px;font-size:12px;padding:0 14px;box-shadow:0 4px 0 var(--c-primary-d)}
 }
 @media(max-width:380px){
-  .hdr__cta{font-size:11px;padding:8px 11px}
+  .hdr__cta{font-size:11px;padding:0 11px}
 }
 
 

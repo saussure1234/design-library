@@ -285,6 +285,7 @@ def build(kit_path, out_path):
     tok_css = open(os.path.join(PARTS, "_tokens.css"), encoding="utf-8").read()
 
     css_chunks, html_chunks, used = [], [], []
+    open_group = None
     for i, s in enumerate(kit["parts"]):
         pid = s["part"] if isinstance(s, dict) else s
         data = dict(content.get("_common", {}))
@@ -294,7 +295,15 @@ def build(kit_path, out_path):
         html, css, meta = load_part(pid)
         css_chunks.append(f"/* ===== {pid} ===== */\n{css}")
         body = render(html, data)
-        tone = s.get("tone") if isinstance(s, dict) else None
+        # 同じ group の節はひとつの面でくくる（地と装飾を通しで共有する）
+        grp = s.get("group") if isinstance(s, dict) else None
+        if grp != open_group:
+            if open_group is not None:
+                html_chunks.append("</div>")
+            if grp:
+                html_chunks.append(f'<div class="tone-{s.get("groupTone", "blob")}">')
+            open_group = grp
+        tone = None if grp else (s.get("tone") if isinstance(s, dict) else None)
         wave = s.get("wave") if isinstance(s, dict) else None   # "top" / "bottom" / "both"
         if tone or wave:
             cls = [f"tone-{tone}"] if tone else []
@@ -305,6 +314,8 @@ def build(kit_path, out_path):
             body = f'<div class="{" ".join(cls)}"{sattr}>\n{body}\n</div>'
         html_chunks.append(f"<!-- {pid} ({tone or 'base'}) -->\n" + body)
         used.append(f"{pid} ({meta.get('name', '')})")
+    if open_group is not None:
+        html_chunks.append("</div>")
 
     page = f"""<!DOCTYPE html>
 <html lang="ja">

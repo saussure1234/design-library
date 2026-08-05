@@ -120,27 +120,27 @@ ul,ol{padding:0;list-style:none}
 /* ── 固定ヘッダー：ロゴとCTAだけ ─────────────
    スクロールしても常に申し込み導線が見えるようにする。
    下へ動かしたときだけ隠し、上へ戻すと出す（読む邪魔をしない）。 */
-.hdr{position:fixed;left:0;right:0;top:0;z-index:60;
+.hdr{position:fixed;left:0;right:0;top:0;z-index:60;height:90px;
   display:flex;align-items:center;justify-content:space-between;gap:var(--s4);
-  padding:12px clamp(16px,3vw,34px);background:rgba(255,255,255,.94);
-  backdrop-filter:saturate(1.4) blur(10px);
-  border-bottom:1px solid transparent;
-  transition:transform .28s var(--e),border-color .2s var(--e)}
+  padding:0 clamp(16px,3vw,34px);background:rgba(255,255,255,.94);
+  backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid transparent;
+  transition:border-color .2s var(--e)}
 .hdr.is-stuck{border-bottom-color:var(--c-line)}
 /* 固定。スクロールしても隠さない */
 .hdr__logo{display:flex;align-items:center}
-.hdr__logo img{height:clamp(20px,2vw,28px);width:auto;display:block}
-.hdr__cta{font-size:clamp(12px,1.05vw,14.5px);padding:11px 22px;box-shadow:0 5px 0 var(--c-primary-d)}
+.hdr__logo img{height:38px;width:auto;display:block}
+.hdr__cta{min-width:238px;height:48px;font-size:14px;padding:0 22px;
+  box-shadow:0 5px 0 var(--c-primary-d)}
 .hdr__cta:hover{box-shadow:0 3px 0 var(--c-primary-d)}
 body{padding-top:var(--hdr-h,60px)}
 .hdr__cta{white-space:nowrap}
-@media(max-width:600px){
-  .hdr{padding:8px 12px;gap:10px}
-  .hdr__logo img{height:19px}
-  .hdr__cta{font-size:11.5px;padding:9px 13px;box-shadow:0 4px 0 var(--c-primary-d)}
+@media(max-width:900px){
+  .hdr{height:64px;padding:0 14px;gap:10px}
+  .hdr__logo img{height:26px}
+  .hdr__cta{min-width:0;height:40px;font-size:12px;padding:0 14px;box-shadow:0 4px 0 var(--c-primary-d)}
 }
 @media(max-width:380px){
-  .hdr__cta{font-size:11px;padding:8px 11px}
+  .hdr__cta{font-size:11px;padding:0 11px}
 }
 
 
@@ -412,20 +412,20 @@ html:not(.js) .lm__i{transform:none}
 /* ★丸くしない。四隅の曲率をばらして「若干曲がった」形にする */
 /* ★丸くしない。四隅の曲率をばらして「若干曲がった」形にする。
    人物より一回り小さくして、体が枠から はみ出す ようにする */
-.hbc__blob--a{left:28%;top:14%;width:18%;aspect-ratio:1/.98;background:#E2EFD6;
+.hbc__blob--a{left:24%;top:12%;width:19%;aspect-ratio:1/.98;background:#E2EFD6;
   border-radius:44% 56% 61% 39% / 57% 43% 57% 43%}
-.hbc__blob--b{left:57%;bottom:24%;width:16%;aspect-ratio:1/1;background:#F2E9CE;
+.hbc__blob--b{left:55%;bottom:26%;width:13%;aspect-ratio:1/1;background:#F2E9CE;
   border-radius:57% 43% 41% 59% / 46% 57% 43% 54%}
 
 /* 写真 */
 .hbc__ph{position:absolute;z-index:3;margin:0;filter:drop-shadow(0 8px 18px rgba(48,48,48,.10))}
 /* ★背景を抜いた人物。枠（色の面）から はみ出す ように大きめに重ねる */
 .hbc__ph img{width:100%;display:block}
-.hbc__ph--a{left:27%;bottom:0;width:29%}
-.hbc__ph--b{left:52%;bottom:2%;width:27%}
+.hbc__ph--a{left:22%;bottom:0;width:34%}
+.hbc__ph--b{left:52%;bottom:2%;width:20%}
 
 /* 見出し */
-.hbc__head{position:absolute;left:4%;top:15%;z-index:5;width:27%;max-width:400px}
+.hbc__head{position:absolute;left:4%;top:16%;z-index:5;width:26%;max-width:380px}
 .hbc__logo img{height:clamp(22px,2.1vw,30px);width:auto}
 .hbc__eyebrow{margin-top:14px;font-size:clamp(12px,1.05vw,14px);font-weight:700;color:var(--c-ink3)}
 .hbc__h1{margin-top:8px;font-size:clamp(26px,2.9vw,42px);font-weight:900;color:var(--c-ink);
@@ -445,9 +445,10 @@ html:not(.js) .lm__i{transform:none}
 .hbc__stats small{display:block;margin-top:6px;font-size:clamp(10px,.9vw,12.5px);color:var(--c-ink3)}
 
 /* CTA */
-.hbc__cta{position:absolute;right:4%;bottom:14%;z-index:5;display:flex;flex-direction:column;
-  align-items:flex-start;gap:10px;width:24%;max-width:340px}
-.hbc__note{font-size:clamp(11px,.92vw,13px);color:var(--c-ink3)}
+.hbc__cta{position:absolute;right:4%;bottom:18%;z-index:5;display:flex;flex-direction:column;
+  align-items:flex-start;gap:10px;width:auto;max-width:300px}
+.hbc__cta .btn{white-space:nowrap}
+.hbc__note{font-size:clamp(11px,.92vw,13px);color:var(--c-ink3);max-width:19em}
 
 /* 落書き */
 .hbc__dd{position:absolute;z-index:4;pointer-events:none}
@@ -645,69 +646,63 @@ html:not(.js) .lm__i{transform:none}
 /* ===== features/features-vertical-heading-rows ===== */
 /* features/features-vertical-heading-rows
    linie（リニエ シューレ）の作りを再現して起こした型。
-   ・見出しを【縦書き】にして写真の左に立てる。項目番号も縦書きの小さなラベルで添える
-   ・写真は白い縁＋わずかな回転＋角丸をばらつかせて「手で置いた」感じにする
-   ・写真と本文のあいだは【破線】で切る
-   ・項目ごとに上下をずらす（段違い）
+   ・見出しを【縦書き】にして左に立てる
+   ・写真は白い縁＋角丸をばらつかせて「手で置いた」感じにする
+   ・見出しと本文のあいだは【破線】で切る
+   並びは 左から  縦書き見出し ｜ 本文 ｜ 写真  の3カラム。
+   写真を持たない項目は2カラムに畳む。
    再現の記録: repro/vhr/ */
 .vhr{position:relative;overflow:hidden}
-.vhr__ghost{position:absolute;left:-4%;top:8%;z-index:0;font-family:var(--f-num);
-  font-size:clamp(140px,20vw,300px);font-weight:900;letter-spacing:-.02em;line-height:1;
-  color:var(--c-ink);opacity:.035;pointer-events:none;white-space:nowrap}
 .vhr .wrap{position:relative;z-index:1}
 
-.vhr__list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(28px,4vw,64px) clamp(24px,4vw,72px)}
-.vhr__item{margin:0}
-/* 段違い。2・4番目を下げる */
-.vhr__item:nth-child(even){margin-top:clamp(26px,4vw,64px)}
+.vhr__list{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(30px,4.4vw,64px)}
 
-.vhr__top{display:flex;align-items:stretch;gap:clamp(10px,1.4vw,20px)}
-/* ★縦書き。右から左に読む */
-/* 写真と同じ高さに収める。溢れたら列が増えて左へ伸びる */
-.vhr__vert{writing-mode:vertical-rl;text-orientation:upright;display:flex;gap:10px;
-  padding-top:6px;overflow:hidden}
+/* 1項目 ＝ 見出し ｜ 本文 ｜ 写真 */
+.vhr__item{margin:0;display:grid;
+  grid-template-columns:auto minmax(0,1.25fr) minmax(0,1fr);
+  grid-template-rows:auto auto;
+  gap:0 clamp(18px,3vw,44px);align-items:start}
+.vhr__item:not(:has(.vhr__fig)){grid-template-columns:auto minmax(0,1fr)}
+
+/* 縦書きの見出し。2行ぶんにまたがって左に立つ */
+.vhr__top{display:contents}
+.vhr__vert{grid-column:1;grid-row:1 / span 2;
+  writing-mode:vertical-rl;text-orientation:upright;
+  display:flex;gap:10px;padding-top:4px}
 .vhr__label{writing-mode:vertical-rl;text-orientation:mixed;
   font-family:var(--f-num);font-size:clamp(8px,.7vw,10px);font-weight:700;
   letter-spacing:.22em;color:var(--c-ink3);white-space:nowrap;align-self:flex-start}
 .vhr__title{font-size:clamp(15px,1.35vw,19px);font-weight:800;color:var(--c-ink);
   letter-spacing:.14em;line-height:1.55}
 
-.vhr__fig{flex:1;min-width:0;margin:0;transform:rotate(-1.1deg)}
-.vhr__item:nth-child(even) .vhr__fig{transform:rotate(1.2deg)}
+/* 写真は右。2行ぶんにまたがる */
+.vhr__fig{grid-column:3;grid-row:1 / span 2;margin:0;align-self:center}
 .vhr__fig img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;
   border:6px solid #fff;box-shadow:var(--shadow-s);
   border-radius:14px 10px 16px 11px}
+.vhr__item:nth-child(even) .vhr__fig img{border-radius:11px 16px 10px 14px}
 
-/* 写真と本文のあいだの破線 */
-.vhr__sub{margin-top:clamp(18px,2.2vw,30px);padding-top:clamp(16px,2vw,26px);
-  border-top:1px dashed var(--c-line);
+/* 中央：見出し（横書き）→ 破線 → 本文 */
+.vhr__sub{grid-column:2;grid-row:1;
   font-size:clamp(14px,1.15vw,16.5px);font-weight:800;color:var(--c-ink);line-height:1.7}
-.vhr__body{margin-top:10px;font-size:clamp(12.5px,1vw,14px);color:var(--c-ink2);line-height:2.05}
-
-/* 1件だけのときは全幅で横に組む（縦書き見出し＋写真 ｜ 本文） */
-.vhr__list:has(> :only-child){grid-template-columns:minmax(0,1fr)}
-.vhr__list:has(> :only-child) .vhr__item{display:grid;
-  grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);
-  align-items:center;margin-top:0}
-.vhr__list:has(> :only-child) .vhr__sub{margin-top:0;padding-top:0;border-top:0;
-  padding-bottom:clamp(14px,1.8vw,22px);border-bottom:1px dashed var(--c-line)}
-.vhr__list:has(> :only-child) .vhr__body{margin-top:clamp(14px,1.8vw,22px)}
-.vhr__list:has(> :only-child) .vhr__top{grid-row:span 2}
+.vhr__body{grid-column:2;grid-row:2;
+  margin-top:clamp(13px,1.7vw,20px);padding-top:clamp(13px,1.7vw,20px);
+  border-top:1px dashed var(--c-line);
+  font-size:clamp(12.5px,1vw,14px);color:var(--c-ink2);line-height:2.05}
 
 @media(max-width:900px){
-  .vhr__list{grid-template-columns:minmax(0,1fr);gap:34px}
-  .vhr__list:has(> :only-child) .vhr__item{grid-template-columns:minmax(0,1fr);gap:16px}
-  .vhr__list:has(> :only-child) .vhr__sub{border-bottom:0;padding-bottom:0;
-    padding-top:clamp(14px,2vw,22px);border-top:1px dashed var(--c-line)}
-  .vhr__item:nth-child(even){margin-top:0}
-  .vhr__fig img{border-width:5px}
-  /* ★狭い画面で縦書きは読みにくい。横書きに戻して写真の上へ出す */
-  .vhr__top{flex-direction:column;align-items:stretch;gap:14px}
-  .vhr__vert{writing-mode:horizontal-tb;flex-direction:row-reverse;justify-content:flex-end;
-    align-items:baseline;gap:12px;padding-top:0}
+  .vhr__list{gap:34px}
+  /* 狭い画面では縦書きをやめ、見出しを上へ */
+  .vhr__item,.vhr__item:not(:has(.vhr__fig)){grid-template-columns:minmax(0,1fr);
+    grid-template-rows:auto auto auto;gap:14px 0}
+  .vhr__vert{grid-column:1;grid-row:1;writing-mode:horizontal-tb;
+    flex-direction:row-reverse;justify-content:flex-end;align-items:baseline;gap:12px;padding-top:0}
   .vhr__label{writing-mode:horizontal-tb;letter-spacing:.12em}
   .vhr__title{font-size:17px;letter-spacing:.02em;line-height:1.6}
-  .vhr__fig{transform:none!important}
+  .vhr__fig{grid-column:1;grid-row:2}
+  .vhr__sub{grid-column:1;grid-row:3}
+  .vhr__body{grid-column:1;grid-row:4}
+  .vhr__fig img{border-width:5px}
 }
 
 /* ===== numbers/numbers-donut-grid ===== */
@@ -716,18 +711,19 @@ html:not(.js) .lm__i{transform:none}
    再現の記録: repro/donut/（score 5.62）
    ・リングは conic-gradient。内側を地色の円でくり抜く
    ・3個＋2個の千鳥（2段目は1段目の間に来る） */
-.ndg__panel{border:1px solid var(--c-line);border-radius:6px;padding:44px 40px 28px}
-.ndg__grid{display:flex;flex-wrap:wrap;justify-content:center;gap:20px;max-width:702px;margin-inline:auto}
+.ndg__panel{border:1px solid var(--c-line);border-radius:14px;padding:30px 26px 20px;
+  max-width:640px;margin-inline:auto;background:var(--c-bg)}
+.ndg__grid{display:flex;flex-wrap:wrap;justify-content:center;gap:20px;max-width:500px;margin-inline:auto}
 .ndg__cell{margin:0}
-.ndg__d{position:relative;width:214px;height:214px;border-radius:50%;
+.ndg__d{position:relative;width:150px;height:150px;border-radius:50%;
   display:grid;place-content:center;text-align:center}
 .ndg__d::before{content:"";position:absolute;inset:0;border-radius:50%;
   background:conic-gradient(var(--c-primary) 0 var(--p), #e8e8e8 var(--p) 100%)}
-.ndg__d::after{content:"";position:absolute;inset:12px;border-radius:50%;background:var(--c-bg)}
+.ndg__d::after{content:"";position:absolute;inset:9px;border-radius:50%;background:var(--c-bg)}
 .tone-tint .ndg__d::after{background:var(--c-bg2)}
 .ndg__label,.ndg__v{position:relative;z-index:2}
-.ndg__label{display:block;font-size:20px;font-weight:700;color:var(--c-ink);letter-spacing:.02em}
-.ndg__v{display:block;margin-top:4px;font-family:var(--f-num);font-size:44px;font-weight:900;
+.ndg__label{display:block;font-size:14px;font-weight:700;color:var(--c-ink);letter-spacing:.02em}
+.ndg__v{display:block;margin-top:4px;font-family:var(--f-num);font-size:31px;font-weight:900;
   color:var(--c-primary);line-height:1;letter-spacing:-.01em}
 .ndg__v i{font-style:normal;font-size:.5em;margin-left:1px}
 
@@ -751,69 +747,63 @@ html:not(.js) .lm__i{transform:none}
 /* ===== features/features-vertical-heading-rows ===== */
 /* features/features-vertical-heading-rows
    linie（リニエ シューレ）の作りを再現して起こした型。
-   ・見出しを【縦書き】にして写真の左に立てる。項目番号も縦書きの小さなラベルで添える
-   ・写真は白い縁＋わずかな回転＋角丸をばらつかせて「手で置いた」感じにする
-   ・写真と本文のあいだは【破線】で切る
-   ・項目ごとに上下をずらす（段違い）
+   ・見出しを【縦書き】にして左に立てる
+   ・写真は白い縁＋角丸をばらつかせて「手で置いた」感じにする
+   ・見出しと本文のあいだは【破線】で切る
+   並びは 左から  縦書き見出し ｜ 本文 ｜ 写真  の3カラム。
+   写真を持たない項目は2カラムに畳む。
    再現の記録: repro/vhr/ */
 .vhr{position:relative;overflow:hidden}
-.vhr__ghost{position:absolute;left:-4%;top:8%;z-index:0;font-family:var(--f-num);
-  font-size:clamp(140px,20vw,300px);font-weight:900;letter-spacing:-.02em;line-height:1;
-  color:var(--c-ink);opacity:.035;pointer-events:none;white-space:nowrap}
 .vhr .wrap{position:relative;z-index:1}
 
-.vhr__list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(28px,4vw,64px) clamp(24px,4vw,72px)}
-.vhr__item{margin:0}
-/* 段違い。2・4番目を下げる */
-.vhr__item:nth-child(even){margin-top:clamp(26px,4vw,64px)}
+.vhr__list{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(30px,4.4vw,64px)}
 
-.vhr__top{display:flex;align-items:stretch;gap:clamp(10px,1.4vw,20px)}
-/* ★縦書き。右から左に読む */
-/* 写真と同じ高さに収める。溢れたら列が増えて左へ伸びる */
-.vhr__vert{writing-mode:vertical-rl;text-orientation:upright;display:flex;gap:10px;
-  padding-top:6px;overflow:hidden}
+/* 1項目 ＝ 見出し ｜ 本文 ｜ 写真 */
+.vhr__item{margin:0;display:grid;
+  grid-template-columns:auto minmax(0,1.25fr) minmax(0,1fr);
+  grid-template-rows:auto auto;
+  gap:0 clamp(18px,3vw,44px);align-items:start}
+.vhr__item:not(:has(.vhr__fig)){grid-template-columns:auto minmax(0,1fr)}
+
+/* 縦書きの見出し。2行ぶんにまたがって左に立つ */
+.vhr__top{display:contents}
+.vhr__vert{grid-column:1;grid-row:1 / span 2;
+  writing-mode:vertical-rl;text-orientation:upright;
+  display:flex;gap:10px;padding-top:4px}
 .vhr__label{writing-mode:vertical-rl;text-orientation:mixed;
   font-family:var(--f-num);font-size:clamp(8px,.7vw,10px);font-weight:700;
   letter-spacing:.22em;color:var(--c-ink3);white-space:nowrap;align-self:flex-start}
 .vhr__title{font-size:clamp(15px,1.35vw,19px);font-weight:800;color:var(--c-ink);
   letter-spacing:.14em;line-height:1.55}
 
-.vhr__fig{flex:1;min-width:0;margin:0;transform:rotate(-1.1deg)}
-.vhr__item:nth-child(even) .vhr__fig{transform:rotate(1.2deg)}
+/* 写真は右。2行ぶんにまたがる */
+.vhr__fig{grid-column:3;grid-row:1 / span 2;margin:0;align-self:center}
 .vhr__fig img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;
   border:6px solid #fff;box-shadow:var(--shadow-s);
   border-radius:14px 10px 16px 11px}
+.vhr__item:nth-child(even) .vhr__fig img{border-radius:11px 16px 10px 14px}
 
-/* 写真と本文のあいだの破線 */
-.vhr__sub{margin-top:clamp(18px,2.2vw,30px);padding-top:clamp(16px,2vw,26px);
-  border-top:1px dashed var(--c-line);
+/* 中央：見出し（横書き）→ 破線 → 本文 */
+.vhr__sub{grid-column:2;grid-row:1;
   font-size:clamp(14px,1.15vw,16.5px);font-weight:800;color:var(--c-ink);line-height:1.7}
-.vhr__body{margin-top:10px;font-size:clamp(12.5px,1vw,14px);color:var(--c-ink2);line-height:2.05}
-
-/* 1件だけのときは全幅で横に組む（縦書き見出し＋写真 ｜ 本文） */
-.vhr__list:has(> :only-child){grid-template-columns:minmax(0,1fr)}
-.vhr__list:has(> :only-child) .vhr__item{display:grid;
-  grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);
-  align-items:center;margin-top:0}
-.vhr__list:has(> :only-child) .vhr__sub{margin-top:0;padding-top:0;border-top:0;
-  padding-bottom:clamp(14px,1.8vw,22px);border-bottom:1px dashed var(--c-line)}
-.vhr__list:has(> :only-child) .vhr__body{margin-top:clamp(14px,1.8vw,22px)}
-.vhr__list:has(> :only-child) .vhr__top{grid-row:span 2}
+.vhr__body{grid-column:2;grid-row:2;
+  margin-top:clamp(13px,1.7vw,20px);padding-top:clamp(13px,1.7vw,20px);
+  border-top:1px dashed var(--c-line);
+  font-size:clamp(12.5px,1vw,14px);color:var(--c-ink2);line-height:2.05}
 
 @media(max-width:900px){
-  .vhr__list{grid-template-columns:minmax(0,1fr);gap:34px}
-  .vhr__list:has(> :only-child) .vhr__item{grid-template-columns:minmax(0,1fr);gap:16px}
-  .vhr__list:has(> :only-child) .vhr__sub{border-bottom:0;padding-bottom:0;
-    padding-top:clamp(14px,2vw,22px);border-top:1px dashed var(--c-line)}
-  .vhr__item:nth-child(even){margin-top:0}
-  .vhr__fig img{border-width:5px}
-  /* ★狭い画面で縦書きは読みにくい。横書きに戻して写真の上へ出す */
-  .vhr__top{flex-direction:column;align-items:stretch;gap:14px}
-  .vhr__vert{writing-mode:horizontal-tb;flex-direction:row-reverse;justify-content:flex-end;
-    align-items:baseline;gap:12px;padding-top:0}
+  .vhr__list{gap:34px}
+  /* 狭い画面では縦書きをやめ、見出しを上へ */
+  .vhr__item,.vhr__item:not(:has(.vhr__fig)){grid-template-columns:minmax(0,1fr);
+    grid-template-rows:auto auto auto;gap:14px 0}
+  .vhr__vert{grid-column:1;grid-row:1;writing-mode:horizontal-tb;
+    flex-direction:row-reverse;justify-content:flex-end;align-items:baseline;gap:12px;padding-top:0}
   .vhr__label{writing-mode:horizontal-tb;letter-spacing:.12em}
   .vhr__title{font-size:17px;letter-spacing:.02em;line-height:1.6}
-  .vhr__fig{transform:none!important}
+  .vhr__fig{grid-column:1;grid-row:2}
+  .vhr__sub{grid-column:1;grid-row:3}
+  .vhr__body{grid-column:1;grid-row:4}
+  .vhr__fig img{border-width:5px}
 }
 
 /* ===== gallery/gallery-video-cards-bordered ===== */
@@ -823,12 +813,13 @@ html:not(.js) .lm__i{transform:none}
    ・再生ボタンは右下に円で置き、縁と同じ色にする
    ・カードごとに縁の色を変える
    再現の記録: repro/gvb/ */
-.gvb__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(18px,3vw,40px)}
+.gvb__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(16px,2.4vw,28px);
+  max-width:720px;margin-inline:auto}
 .gvb__item{margin:0}
 .gvb__card{display:block;transition:transform .16s var(--e)}
 .gvb__thumb{display:block;width:100%;padding:0;border:0;background:none;cursor:pointer}
-.gvb__thumb{position:relative;border-radius:22px;overflow:hidden;
-  border:6px solid var(--c-primary-2);background:var(--c-bg2)}
+.gvb__thumb{position:relative;border-radius:16px;overflow:hidden;
+  border:4px solid var(--c-primary-2);background:var(--c-bg2)}
 .gvb__item:nth-child(even) .gvb__thumb{border-color:var(--c-primary)}
 .gvb__thumb img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block}
 /* 押すとその場で YouTube に差し替わる */
@@ -848,7 +839,7 @@ html:not(.js) .lm__i{transform:none}
 .gvb__cap b,.gvb__cap em{display:block}
 .gvb__cap b{display:block;font-size:clamp(11px,.9vw,12.5px);color:var(--c-ink3);font-weight:700}
 .gvb__cap em{display:block;margin-top:3px;font-style:normal;
-  font-size:clamp(15px,1.4vw,19px);font-weight:900;color:var(--c-ink)}
+  font-size:clamp(13px,1.1vw,15px);font-weight:900;color:var(--c-ink)}
 .gvb__note{margin-top:20px;text-align:center;font-size:11.5px;color:var(--c-ink3)}
 @media(max-width:768px){
   .gvb__grid{grid-template-columns:minmax(0,1fr);gap:22px}
@@ -863,69 +854,63 @@ html:not(.js) .lm__i{transform:none}
 /* ===== features/features-vertical-heading-rows ===== */
 /* features/features-vertical-heading-rows
    linie（リニエ シューレ）の作りを再現して起こした型。
-   ・見出しを【縦書き】にして写真の左に立てる。項目番号も縦書きの小さなラベルで添える
-   ・写真は白い縁＋わずかな回転＋角丸をばらつかせて「手で置いた」感じにする
-   ・写真と本文のあいだは【破線】で切る
-   ・項目ごとに上下をずらす（段違い）
+   ・見出しを【縦書き】にして左に立てる
+   ・写真は白い縁＋角丸をばらつかせて「手で置いた」感じにする
+   ・見出しと本文のあいだは【破線】で切る
+   並びは 左から  縦書き見出し ｜ 本文 ｜ 写真  の3カラム。
+   写真を持たない項目は2カラムに畳む。
    再現の記録: repro/vhr/ */
 .vhr{position:relative;overflow:hidden}
-.vhr__ghost{position:absolute;left:-4%;top:8%;z-index:0;font-family:var(--f-num);
-  font-size:clamp(140px,20vw,300px);font-weight:900;letter-spacing:-.02em;line-height:1;
-  color:var(--c-ink);opacity:.035;pointer-events:none;white-space:nowrap}
 .vhr .wrap{position:relative;z-index:1}
 
-.vhr__list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(28px,4vw,64px) clamp(24px,4vw,72px)}
-.vhr__item{margin:0}
-/* 段違い。2・4番目を下げる */
-.vhr__item:nth-child(even){margin-top:clamp(26px,4vw,64px)}
+.vhr__list{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(30px,4.4vw,64px)}
 
-.vhr__top{display:flex;align-items:stretch;gap:clamp(10px,1.4vw,20px)}
-/* ★縦書き。右から左に読む */
-/* 写真と同じ高さに収める。溢れたら列が増えて左へ伸びる */
-.vhr__vert{writing-mode:vertical-rl;text-orientation:upright;display:flex;gap:10px;
-  padding-top:6px;overflow:hidden}
+/* 1項目 ＝ 見出し ｜ 本文 ｜ 写真 */
+.vhr__item{margin:0;display:grid;
+  grid-template-columns:auto minmax(0,1.25fr) minmax(0,1fr);
+  grid-template-rows:auto auto;
+  gap:0 clamp(18px,3vw,44px);align-items:start}
+.vhr__item:not(:has(.vhr__fig)){grid-template-columns:auto minmax(0,1fr)}
+
+/* 縦書きの見出し。2行ぶんにまたがって左に立つ */
+.vhr__top{display:contents}
+.vhr__vert{grid-column:1;grid-row:1 / span 2;
+  writing-mode:vertical-rl;text-orientation:upright;
+  display:flex;gap:10px;padding-top:4px}
 .vhr__label{writing-mode:vertical-rl;text-orientation:mixed;
   font-family:var(--f-num);font-size:clamp(8px,.7vw,10px);font-weight:700;
   letter-spacing:.22em;color:var(--c-ink3);white-space:nowrap;align-self:flex-start}
 .vhr__title{font-size:clamp(15px,1.35vw,19px);font-weight:800;color:var(--c-ink);
   letter-spacing:.14em;line-height:1.55}
 
-.vhr__fig{flex:1;min-width:0;margin:0;transform:rotate(-1.1deg)}
-.vhr__item:nth-child(even) .vhr__fig{transform:rotate(1.2deg)}
+/* 写真は右。2行ぶんにまたがる */
+.vhr__fig{grid-column:3;grid-row:1 / span 2;margin:0;align-self:center}
 .vhr__fig img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;
   border:6px solid #fff;box-shadow:var(--shadow-s);
   border-radius:14px 10px 16px 11px}
+.vhr__item:nth-child(even) .vhr__fig img{border-radius:11px 16px 10px 14px}
 
-/* 写真と本文のあいだの破線 */
-.vhr__sub{margin-top:clamp(18px,2.2vw,30px);padding-top:clamp(16px,2vw,26px);
-  border-top:1px dashed var(--c-line);
+/* 中央：見出し（横書き）→ 破線 → 本文 */
+.vhr__sub{grid-column:2;grid-row:1;
   font-size:clamp(14px,1.15vw,16.5px);font-weight:800;color:var(--c-ink);line-height:1.7}
-.vhr__body{margin-top:10px;font-size:clamp(12.5px,1vw,14px);color:var(--c-ink2);line-height:2.05}
-
-/* 1件だけのときは全幅で横に組む（縦書き見出し＋写真 ｜ 本文） */
-.vhr__list:has(> :only-child){grid-template-columns:minmax(0,1fr)}
-.vhr__list:has(> :only-child) .vhr__item{display:grid;
-  grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(24px,4vw,56px);
-  align-items:center;margin-top:0}
-.vhr__list:has(> :only-child) .vhr__sub{margin-top:0;padding-top:0;border-top:0;
-  padding-bottom:clamp(14px,1.8vw,22px);border-bottom:1px dashed var(--c-line)}
-.vhr__list:has(> :only-child) .vhr__body{margin-top:clamp(14px,1.8vw,22px)}
-.vhr__list:has(> :only-child) .vhr__top{grid-row:span 2}
+.vhr__body{grid-column:2;grid-row:2;
+  margin-top:clamp(13px,1.7vw,20px);padding-top:clamp(13px,1.7vw,20px);
+  border-top:1px dashed var(--c-line);
+  font-size:clamp(12.5px,1vw,14px);color:var(--c-ink2);line-height:2.05}
 
 @media(max-width:900px){
-  .vhr__list{grid-template-columns:minmax(0,1fr);gap:34px}
-  .vhr__list:has(> :only-child) .vhr__item{grid-template-columns:minmax(0,1fr);gap:16px}
-  .vhr__list:has(> :only-child) .vhr__sub{border-bottom:0;padding-bottom:0;
-    padding-top:clamp(14px,2vw,22px);border-top:1px dashed var(--c-line)}
-  .vhr__item:nth-child(even){margin-top:0}
-  .vhr__fig img{border-width:5px}
-  /* ★狭い画面で縦書きは読みにくい。横書きに戻して写真の上へ出す */
-  .vhr__top{flex-direction:column;align-items:stretch;gap:14px}
-  .vhr__vert{writing-mode:horizontal-tb;flex-direction:row-reverse;justify-content:flex-end;
-    align-items:baseline;gap:12px;padding-top:0}
+  .vhr__list{gap:34px}
+  /* 狭い画面では縦書きをやめ、見出しを上へ */
+  .vhr__item,.vhr__item:not(:has(.vhr__fig)){grid-template-columns:minmax(0,1fr);
+    grid-template-rows:auto auto auto;gap:14px 0}
+  .vhr__vert{grid-column:1;grid-row:1;writing-mode:horizontal-tb;
+    flex-direction:row-reverse;justify-content:flex-end;align-items:baseline;gap:12px;padding-top:0}
   .vhr__label{writing-mode:horizontal-tb;letter-spacing:.12em}
   .vhr__title{font-size:17px;letter-spacing:.02em;line-height:1.6}
-  .vhr__fig{transform:none!important}
+  .vhr__fig{grid-column:1;grid-row:2}
+  .vhr__sub{grid-column:1;grid-row:3}
+  .vhr__body{grid-column:1;grid-row:4}
+  .vhr__fig img{border-width:5px}
 }
 
 /* ===== cta/cta-priority-stack ===== */
@@ -2072,8 +2057,8 @@ html:not(.js) .lm__i{transform:none}
 </section>
 
 </div>
-<!-- features/features-vertical-heading-rows (blob) -->
 <div class="tone-blob">
+<!-- features/features-vertical-heading-rows (base) -->
 <section class="sec vhr">
   
   <div class="wrap">
@@ -2098,9 +2083,7 @@ html:not(.js) .lm__i{transform:none}
   </div>
 </section>
 
-</div>
-<!-- numbers/numbers-donut-grid (tint) -->
-<div class="tone-tint">
+<!-- numbers/numbers-donut-grid (base) -->
 <section class="sec ndg">
   <div class="wrap">
     <div class="sec-head">
@@ -2142,9 +2125,7 @@ html:not(.js) .lm__i{transform:none}
   </div>
 </section>
 
-</div>
 <!-- features/features-vertical-heading-rows (base) -->
-<div class="tone-base">
 <section class="sec vhr">
   
   <div class="wrap">
@@ -2179,9 +2160,7 @@ html:not(.js) .lm__i{transform:none}
   </div>
 </section>
 
-</div>
-<!-- gallery/gallery-video-cards-bordered (tint) -->
-<div class="tone-tint">
+<!-- gallery/gallery-video-cards-bordered (base) -->
 <section class="sec gvb">
   <div class="wrap">
     <div class="sec-head">
@@ -2214,9 +2193,7 @@ html:not(.js) .lm__i{transform:none}
   </div>
 </section>
 
-</div>
 <!-- features/features-vertical-heading-rows (base) -->
-<div class="tone-base">
 <section class="sec vhr">
   
   <div class="wrap">
@@ -2232,7 +2209,7 @@ html:not(.js) .lm__i{transform:none}
             <p class="vhr__label">（&nbsp;POINT&nbsp;04&nbsp;）</p>
             <h3 class="vhr__title">保護者様が忙しくても安心</h3>
           </div>
-          <figure class="vhr__fig"><img src="img/p01.jpg" alt="すきま時間にオンラインで学ぶ小学生" loading="lazy"></figure>
+          <figure class="vhr__fig"><img src="" alt="" loading="lazy"></figure>
         </div>
         <p class="vhr__sub">計画の実行をフォローするスクールマネージャー</p>
         <p class="vhr__body">スクールマネージャーが中心となり、学習計画どおりにレッスンが進むよう講師へ内容を伝達し、生徒様の進捗をレッスンごとに保護者様へ共有します。保護者様が学習内容を把握したり、レッスンに付き添っていただく必要はありません。お忙しいご家庭でも安心してお任せいただけます。</p>
