@@ -241,6 +241,23 @@ document.documentElement.classList.add('js');
   var rt; addEventListener('resize',function(){ clearTimeout(rt); rt=setTimeout(function(){ measure(); frame(); },150); });
   frame();
 })();
+
+/* 固定ヘッダー：下スクロールで隠し、上スクロールで出す */
+(function(){
+  var h=document.querySelector('.hdr'); if(!h) return;
+  function setH(){ document.documentElement.style.setProperty('--hdr-h', h.offsetHeight+'px'); }
+  setH(); addEventListener('resize',setH,{passive:true});
+  var last=0, ticking=false;
+  function frame(){
+    ticking=false;
+    var y=window.pageYOffset||0;
+    h.classList.toggle('is-stuck', y>4);
+    h.classList.toggle('is-hide', y>240 && y>last);
+    last=y;
+  }
+  addEventListener('scroll',function(){ if(!ticking){ ticking=true; requestAnimationFrame(frame); } },{passive:true});
+  frame();
+})();
 """
 
 
@@ -287,6 +304,10 @@ def build(kit_path, out_path):
 </style>
 </head>
 <body>
+<header class="hdr">
+  <a class="hdr__logo" href="#top" aria-label="ESL club"><img src="img/logo.svg" alt="ESL club"></a>
+  <a class="btn btn--sm hdr__cta" href="https://eslclub.jp/trial/">無料体験レッスンはこちら</a>
+</header>
 {chr(10).join(html_chunks)}
 <script>{RUNTIME_JS}</script>
 </body>

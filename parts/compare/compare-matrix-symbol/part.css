@@ -36,7 +36,9 @@
    .sec-head の margin-bottom（--sp-el）が表との間隔になる。ここでは足さない。
    行は箱を持たない＝子セルがそのまま grid item になり、
    列ごとに文章量がバラついても行の高さは最も高いセルに揃う。 */
-.cmx__grid{display:grid;grid-template-columns:var(--cmx-cols)}
+/* 地と分けるため、表そのものを白いボックスにする */
+.cmx__grid{display:grid;grid-template-columns:var(--cmx-cols);
+  background:var(--c-bg);border-radius:22px;overflow:hidden;box-shadow:var(--shadow-s)}
 .cmx__thead,.cmx__row{display:contents}
 
 /* ヘッダ：このセクションで唯一の濃い面。

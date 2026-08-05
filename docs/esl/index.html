@@ -116,6 +116,28 @@ ul,ol{padding:0;list-style:none}
 :where(a,button,input,textarea,select):focus-visible{
   outline:3px solid var(--c-primary);outline-offset:3px;border-radius:var(--r-s)}
 
+
+/* ── 固定ヘッダー：ロゴとCTAだけ ─────────────
+   スクロールしても常に申し込み導線が見えるようにする。
+   下へ動かしたときだけ隠し、上へ戻すと出す（読む邪魔をしない）。 */
+.hdr{position:fixed;left:0;right:0;top:0;z-index:60;
+  display:flex;align-items:center;justify-content:space-between;gap:var(--s4);
+  padding:12px clamp(16px,3vw,34px);background:rgba(255,255,255,.94);
+  backdrop-filter:saturate(1.4) blur(10px);
+  border-bottom:1px solid transparent;
+  transition:transform .28s var(--e),border-color .2s var(--e)}
+.hdr.is-stuck{border-bottom-color:var(--c-line)}
+.hdr.is-hide{transform:translateY(-100%)}
+.hdr__logo{display:flex;align-items:center}
+.hdr__logo img{height:clamp(20px,2vw,28px);width:auto;display:block}
+.hdr__cta{font-size:clamp(12px,1.05vw,14.5px);padding:11px 22px;box-shadow:0 5px 0 var(--c-primary-d)}
+.hdr__cta:hover{box-shadow:0 3px 0 var(--c-primary-d)}
+body{padding-top:var(--hdr-h,60px)}
+@media(max-width:600px){
+  .hdr{padding:9px 14px}
+  .hdr__cta{font-size:12px;padding:10px 15px;box-shadow:0 4px 0 var(--c-primary-d)}
+}
+
 /* ── 版面・セクション ────────────────────────── */
 .wrap{width:100%;max-width:1080px;margin-inline:auto;padding-inline:22px}
 .sec{padding-block:74px}
@@ -1079,16 +1101,19 @@ html:not(.js) .lm__i{transform:none}
 
 /* ── チップ群 ───────────────────────────
    既定（数値）は中央寄せの横並び。名前モードは等幅グリッドで3列→2列→1列に畳む */
-.nch__chips{display:flex;flex-wrap:wrap;justify-content:center;gap:var(--s3)}
+.nch__chips{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;max-width:920px;margin-inline:auto;justify-items:stretch}
+/* 名前モードも3列で中央に揃える（自動折返しだと2列になり左右に空きが出る） */
 .nch--wordy .nch__chips{display:grid;align-items:stretch;
-  grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+  grid-template-columns:repeat(3,minmax(0,1fr));max-width:1000px;margin-inline:auto}
+@media(max-width:860px){.nch--wordy .nch__chips{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.nch--wordy .nch__chips{grid-template-columns:minmax(0,1fr)}}
 
 /* li は透明な器。上の padding がタブの乗り上げぶんの逃げになる。
    タブが1つも無いときだけ逃げを畳む（畳まないと行間だけが13px広がる）。
    :not(:has()) が効かない環境では逃げが残るだけ＝タブは切られない側に倒れる */
-.nch__chip{position:relative;flex:0 1 auto;min-width:min(100%,180px);
+.nch__chip{position:relative;min-width:0;
   display:flex;flex-direction:column;
-  padding-top:calc(var(--nch-tab-h) / 2)}
+  padding-top:calc(var(--nch-tab-h) / 2);text-align:center;display:flex;align-items:center;justify-content:center;min-height:64px}
 .nch__chips:not(:has(.nch__tab)) .nch__chip{padding-top:0}
 
 /* 面。枠も影も持たない＝この工夫の本体。
@@ -1196,7 +1221,9 @@ html:not(.js) .lm__i{transform:none}
    .sec-head の margin-bottom（--sp-el）が表との間隔になる。ここでは足さない。
    行は箱を持たない＝子セルがそのまま grid item になり、
    列ごとに文章量がバラついても行の高さは最も高いセルに揃う。 */
-.cmx__grid{display:grid;grid-template-columns:var(--cmx-cols)}
+/* 地と分けるため、表そのものを白いボックスにする */
+.cmx__grid{display:grid;grid-template-columns:var(--cmx-cols);
+  background:var(--c-bg);border-radius:22px;overflow:hidden;box-shadow:var(--shadow-s)}
 .cmx__thead,.cmx__row{display:contents}
 
 /* ヘッダ：このセクションで唯一の濃い面。
@@ -1370,16 +1397,18 @@ html:not(.js) .lm__i{transform:none}
 
 /* 料金：罫なし。価格だけが主役 */
 .cts__plans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s2)}
-.cts__plan{background:var(--c-bg2);border-radius:var(--r-m);padding:var(--s5) var(--s4);text-align:center}
+/* 白地の上でグレーの箱は沈む。ブランド色の淡い面＋左に線で立てる */
+.cts__plan{background:var(--c-primary-l);border-radius:var(--r-m);
+  padding:var(--s5) var(--s4);text-align:center;border-top:4px solid var(--c-primary)}
 .cts__planname{font-weight:700;font-size:var(--fs-md);color:var(--c-ink)}
 .cts__planname span{display:block;margin-top:2px;font-size:var(--fs-note);color:var(--c-ink3);font-weight:400}
 .cts__price{margin-top:var(--s4);font-family:var(--f-num);font-weight:900;
-  font-size:clamp(21px,2.4vw,28px);color:var(--c-ink);line-height:1}
+  font-size:clamp(21px,2.4vw,28px);color:var(--c-primary);line-height:1}
 
 /* タイムテーブル：格子罫なし。列は余白だけで分ける */
 .cts__tt{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s2)}
-.cts__day{background:var(--c-bg2);border-radius:var(--r-m);padding:var(--s5) var(--s4)}
-.cts__day.is-off{background:var(--c-bg);color:var(--c-ink3)}
+.cts__day{background:var(--c-primary-l);border-radius:var(--r-m);padding:var(--s5) var(--s4)}
+.cts__day.is-off{background:var(--c-bg2);color:var(--c-ink3)}
 .cts__dayname{font-weight:900;font-size:var(--fs-md);color:var(--c-ink);text-align:center;
   padding-bottom:var(--s4);border-bottom:1px solid rgba(48,48,48,.06)}
 .cts__day.is-off .cts__dayname{color:var(--c-ink3)}
@@ -1677,6 +1706,10 @@ html:not(.js) .lm__i{transform:none}
 </style>
 </head>
 <body>
+<header class="hdr">
+  <a class="hdr__logo" href="#top" aria-label="ESL club"><img src="img/logo.svg" alt="ESL club"></a>
+  <a class="btn btn--sm hdr__cta" href="https://eslclub.jp/trial/">無料体験レッスンはこちら</a>
+</header>
 <!-- hero/hero-blob-cutout (base) -->
 <div class="tone-base">
 <section class="hbc">
@@ -2612,8 +2645,8 @@ html:not(.js) .lm__i{transform:none}
 </section>
 
 </div>
-<!-- footer/footer-two-tier-cta (tint) -->
-<div class="tone-tint">
+<!-- footer/footer-two-tier-cta (pale) -->
+<div class="tone-pale">
 <footer class="ftc">
 
   <!-- 写真ストリップ（任意）。導線帯の“上”に置くので、PCでもSPでも写真はCTAより上になる。
@@ -2930,6 +2963,23 @@ document.documentElement.classList.add('js');
   }
   addEventListener('scroll',function(){ if(!ticking){ ticking=true; requestAnimationFrame(frame); } },{passive:true});
   var rt; addEventListener('resize',function(){ clearTimeout(rt); rt=setTimeout(function(){ measure(); frame(); },150); });
+  frame();
+})();
+
+/* 固定ヘッダー：下スクロールで隠し、上スクロールで出す */
+(function(){
+  var h=document.querySelector('.hdr'); if(!h) return;
+  function setH(){ document.documentElement.style.setProperty('--hdr-h', h.offsetHeight+'px'); }
+  setH(); addEventListener('resize',setH,{passive:true});
+  var last=0, ticking=false;
+  function frame(){
+    ticking=false;
+    var y=window.pageYOffset||0;
+    h.classList.toggle('is-stuck', y>4);
+    h.classList.toggle('is-hide', y>240 && y>last);
+    last=y;
+  }
+  addEventListener('scroll',function(){ if(!ticking){ ticking=true; requestAnimationFrame(frame); } },{passive:true});
   frame();
 })();
 </script>

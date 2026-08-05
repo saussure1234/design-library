@@ -54,16 +54,18 @@
 
 /* 料金：罫なし。価格だけが主役 */
 .cts__plans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s2)}
-.cts__plan{background:var(--c-bg2);border-radius:var(--r-m);padding:var(--s5) var(--s4);text-align:center}
+/* 白地の上でグレーの箱は沈む。ブランド色の淡い面＋左に線で立てる */
+.cts__plan{background:var(--c-primary-l);border-radius:var(--r-m);
+  padding:var(--s5) var(--s4);text-align:center;border-top:4px solid var(--c-primary)}
 .cts__planname{font-weight:700;font-size:var(--fs-md);color:var(--c-ink)}
 .cts__planname span{display:block;margin-top:2px;font-size:var(--fs-note);color:var(--c-ink3);font-weight:400}
 .cts__price{margin-top:var(--s4);font-family:var(--f-num);font-weight:900;
-  font-size:clamp(21px,2.4vw,28px);color:var(--c-ink);line-height:1}
+  font-size:clamp(21px,2.4vw,28px);color:var(--c-primary);line-height:1}
 
 /* タイムテーブル：格子罫なし。列は余白だけで分ける */
 .cts__tt{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s2)}
-.cts__day{background:var(--c-bg2);border-radius:var(--r-m);padding:var(--s5) var(--s4)}
-.cts__day.is-off{background:var(--c-bg);color:var(--c-ink3)}
+.cts__day{background:var(--c-primary-l);border-radius:var(--r-m);padding:var(--s5) var(--s4)}
+.cts__day.is-off{background:var(--c-bg2);color:var(--c-ink3)}
 .cts__dayname{font-weight:900;font-size:var(--fs-md);color:var(--c-ink);text-align:center;
   padding-bottom:var(--s4);border-bottom:1px solid rgba(48,48,48,.06)}
 .cts__day.is-off .cts__dayname{color:var(--c-ink3)}
