@@ -139,7 +139,7 @@ footer{position:relative;z-index:1}
 
 /* ★有機的な形。1セクションだけに使う */
 .tone-blob{position:relative;overflow:hidden;isolation:isolate;background:var(--c-bg)}
-.tone-blob > *{position:relative;z-index:1}
+.tone-blob > *:not(.gbg){position:relative;z-index:1}
 .tone-blob::before,.tone-blob::after{
   content:"";position:absolute;z-index:0;pointer-events:none;
   background:var(--c-primary);opacity:.07;will-change:border-radius,transform}
@@ -241,6 +241,11 @@ footer{position:relative;z-index:1}
    FVの装置をそのまま使い回す。ページの装置を1つに保つため、
    新しい図形は増やさず、同じ稜線を低い不透明度で置く。 */
 /* overflow:hidden にすると、上端の山（.hill）まで切ってしまう。SVG自身が切るので不要 */
+/* ── 節への飛び先 ────────────────────────────
+   高さ0の目印。固定ヘッダーのぶんだけ手前で止める。 */
+.anc{display:block;height:0;scroll-margin-top:112px}
+@media(max-width:900px){.anc{scroll-margin-top:82px}}
+
 .bg-growth{position:relative}
 .bg-growth > .gbg{position:absolute;inset:0;z-index:0;pointer-events:none}
 .bg-growth > .gbg svg{width:100%;height:100%;display:block}
@@ -263,7 +268,9 @@ footer{position:relative;z-index:1}
 .tone-tint.hill-top{--hill-fill:var(--c-bg2)}
 .tone-pale.hill-top{--hill-fill:var(--c-bg2)}
 .tone-ink.hill-top{--hill-fill:#333333}
-.hill-top > *:not(.hill){position:relative;z-index:1}
+/* ★.gbg（成長の曲線）を外すこと。ここで position:relative を上書きすると
+   絶対配置の背景が流れに戻り、900pxの空セクションとして居座る */
+.hill-top > *:not(.hill):not(.gbg){position:relative;z-index:1}
 /* 山頂と中身がぶつからないよう、稜線のぶんだけ上を空ける */
 .hill-top > .sec,.hill-top > *:not(.hill) > .sec{padding-top:clamp(48px,5.2vw,92px)}
 
@@ -273,7 +280,7 @@ footer{position:relative;z-index:1}
    端の曲がりが画面内に出ないようにする（出ると"泡"に見える）。
    前後の色は --wave-from / --wave-to で受け取る。 */
 .wave-top,.wave-bottom{position:relative;overflow:hidden}
-.wave-top > *,.wave-bottom > *{position:relative;z-index:1}
+.wave-top > *:not(.gbg),.wave-bottom > *:not(.gbg){position:relative;z-index:1}
 .wave-top::before,.wave-bottom::after{
   content:"";position:absolute;left:50%;transform:translateX(-50%);
   width:116%;height:clamp(72px,9.5vw,170px);z-index:0;pointer-events:none}

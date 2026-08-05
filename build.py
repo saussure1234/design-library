@@ -370,6 +370,10 @@ def build(kit_path, out_path):
                         'C 600 62, 1010 102, 1440 108 L1440 120 Z"/>'
                         '</svg></span>\n') if hill == "top" else ""
             body = f'<div{cattr}{sattr}>\n{hill_svg}{bg_svg}{body}\n</div>'
+        # 節への飛び先。高さ0なので、どこに挟んでも見た目は変わらない
+        anc = s.get("anchor") if isinstance(s, dict) else None
+        if anc:
+            body = f'<span class="anc" id="{anc}" aria-hidden="true"></span>\n' + body
         html_chunks.append(f"<!-- {pid} ({tone or 'base'}) -->\n" + body)
         used.append(f"{pid} ({meta.get('name', '')})")
     if open_group is not None:

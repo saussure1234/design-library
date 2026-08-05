@@ -5,10 +5,10 @@
    ・1人ごとに写真の左右を入れ替える
    再現の記録: repro/mbl/ */
 .mbl__list{display:grid;gap:clamp(40px,6vw,88px)}
-.mbl__item{margin:0;display:grid;grid-template-columns:clamp(150px,15vw,210px) minmax(0,1fr);
+.mbl__item{margin:0;display:grid;grid-template-columns:clamp(128px,12.4vw,172px) minmax(0,1fr);
   gap:clamp(24px,4vw,64px);align-items:start}
 /* 偶数番は写真を右に。列幅も入れ替える（入れ替えないと写真が本文幅まで伸びる） */
-.mbl__item:nth-child(even){grid-template-columns:minmax(0,1fr) clamp(150px,15vw,210px)}
+.mbl__item:nth-child(even){grid-template-columns:minmax(0,1fr) clamp(128px,12.4vw,172px)}
 .mbl__item:nth-child(even) .mbl__figwrap{order:2}
 
 .mbl__figwrap{position:relative}
@@ -56,6 +56,6 @@
 @media(max-width:900px){
   .mbl__item{grid-template-columns:minmax(0,1fr);gap:20px}
   .mbl__item:nth-child(even) .mbl__figwrap{order:0}
-  .mbl__figwrap{max-width:220px}
+  .mbl__figwrap{max-width:184px}
   .mbl__name{font-size:20px}
 }

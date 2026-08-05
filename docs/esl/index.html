@@ -238,7 +238,7 @@ footer{position:relative;z-index:1}
 
 /* ★有機的な形。1セクションだけに使う */
 .tone-blob{position:relative;overflow:hidden;isolation:isolate;background:var(--c-bg)}
-.tone-blob > *{position:relative;z-index:1}
+.tone-blob > *:not(.gbg){position:relative;z-index:1}
 .tone-blob::before,.tone-blob::after{
   content:"";position:absolute;z-index:0;pointer-events:none;
   background:var(--c-primary);opacity:.07;will-change:border-radius,transform}
@@ -340,6 +340,11 @@ footer{position:relative;z-index:1}
    FVの装置をそのまま使い回す。ページの装置を1つに保つため、
    新しい図形は増やさず、同じ稜線を低い不透明度で置く。 */
 /* overflow:hidden にすると、上端の山（.hill）まで切ってしまう。SVG自身が切るので不要 */
+/* ── 節への飛び先 ────────────────────────────
+   高さ0の目印。固定ヘッダーのぶんだけ手前で止める。 */
+.anc{display:block;height:0;scroll-margin-top:112px}
+@media(max-width:900px){.anc{scroll-margin-top:82px}}
+
 .bg-growth{position:relative}
 .bg-growth > .gbg{position:absolute;inset:0;z-index:0;pointer-events:none}
 .bg-growth > .gbg svg{width:100%;height:100%;display:block}
@@ -362,7 +367,9 @@ footer{position:relative;z-index:1}
 .tone-tint.hill-top{--hill-fill:var(--c-bg2)}
 .tone-pale.hill-top{--hill-fill:var(--c-bg2)}
 .tone-ink.hill-top{--hill-fill:#333333}
-.hill-top > *:not(.hill){position:relative;z-index:1}
+/* ★.gbg（成長の曲線）を外すこと。ここで position:relative を上書きすると
+   絶対配置の背景が流れに戻り、900pxの空セクションとして居座る */
+.hill-top > *:not(.hill):not(.gbg){position:relative;z-index:1}
 /* 山頂と中身がぶつからないよう、稜線のぶんだけ上を空ける */
 .hill-top > .sec,.hill-top > *:not(.hill) > .sec{padding-top:clamp(48px,5.2vw,92px)}
 
@@ -372,7 +379,7 @@ footer{position:relative;z-index:1}
    端の曲がりが画面内に出ないようにする（出ると"泡"に見える）。
    前後の色は --wave-from / --wave-to で受け取る。 */
 .wave-top,.wave-bottom{position:relative;overflow:hidden}
-.wave-top > *,.wave-bottom > *{position:relative;z-index:1}
+.wave-top > *:not(.gbg),.wave-bottom > *:not(.gbg){position:relative;z-index:1}
 .wave-top::before,.wave-bottom::after{
   content:"";position:absolute;left:50%;transform:translateX(-50%);
   width:116%;height:clamp(72px,9.5vw,170px);z-index:0;pointer-events:none}
@@ -550,12 +557,23 @@ html:not(.js) .lm__i{transform:none}
   font-family:var(--f-num);font-size:21px;font-weight:800;line-height:1;letter-spacing:-.02em}
 .fnc__t{font-size:15px;font-weight:800;color:var(--c-ink);line-height:1.6}
 .fnc__d{margin-top:10px;font-size:12.5px;color:var(--c-ink2);line-height:1.85;flex:1}
-.fnc__more{display:inline-flex;align-items:center;gap:6px;margin-top:16px;
-  font-size:11.5px;font-weight:700;color:var(--c-primary)}
-.fnc__more i{width:14px;height:1px;background:currentColor;transition:width .14s ease}
+/* ── その節へ飛ぶ ────────────────────────────
+   ::after でカード全面に広げるので、カードのどこを押しても飛ぶ。
+   文言は足さず、下向きの山かたちだけを置く（読み上げは aria-label で氏名代わりに見出しを渡す）*/
+.fnc__jump{position:absolute;right:14px;bottom:14px;z-index:3;
+  width:26px;height:26px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;
+  color:var(--c-primary);background:var(--c-primary-l);
+  transition:background .16s var(--e),color .16s var(--e),transform .16s var(--e)}
+.fnc__jump::after{content:"";position:absolute;inset:-34px -18px -18px -18px}
+.fnc__jump i{width:8px;height:8px;margin-top:-3px;
+  border-right:2px solid currentColor;border-bottom:2px solid currentColor;
+  transform:rotate(45deg)}
+.fnc__jump:focus-visible{outline:3px solid var(--c-primary);outline-offset:3px}
+.fnc__card:has(.fnc__jump){padding-bottom:46px;cursor:pointer}
 @media(hover:hover) and (pointer:fine){
   .fnc__card:hover{transform:translateY(-3px);box-shadow:var(--shadow-s)}
-  .fnc__card:hover .fnc__more i{width:22px}
+  .fnc__card:hover .fnc__jump{background:var(--c-primary);color:var(--c-on-primary);transform:translateY(2px)}
 }
 /* 4枚とも同じ色。濃い面の上なので白いブロックにする */
 .fnc__card{background:var(--c-bg)}
@@ -1054,10 +1072,10 @@ html:not(.js) .lm__i{transform:none}
    ・1人ごとに写真の左右を入れ替える
    再現の記録: repro/mbl/ */
 .mbl__list{display:grid;gap:clamp(40px,6vw,88px)}
-.mbl__item{margin:0;display:grid;grid-template-columns:clamp(150px,15vw,210px) minmax(0,1fr);
+.mbl__item{margin:0;display:grid;grid-template-columns:clamp(128px,12.4vw,172px) minmax(0,1fr);
   gap:clamp(24px,4vw,64px);align-items:start}
 /* 偶数番は写真を右に。列幅も入れ替える（入れ替えないと写真が本文幅まで伸びる） */
-.mbl__item:nth-child(even){grid-template-columns:minmax(0,1fr) clamp(150px,15vw,210px)}
+.mbl__item:nth-child(even){grid-template-columns:minmax(0,1fr) clamp(128px,12.4vw,172px)}
 .mbl__item:nth-child(even) .mbl__figwrap{order:2}
 
 .mbl__figwrap{position:relative}
@@ -1105,7 +1123,7 @@ html:not(.js) .lm__i{transform:none}
 @media(max-width:900px){
   .mbl__item{grid-template-columns:minmax(0,1fr);gap:20px}
   .mbl__item:nth-child(even) .mbl__figwrap{order:0}
-  .mbl__figwrap{max-width:220px}
+  .mbl__figwrap{max-width:184px}
   .mbl__name{font-size:20px}
 }
 
@@ -2012,28 +2030,28 @@ html:not(.js) .lm__i{transform:none}
           <span class="fnc__no">1</span>
           <p class="fnc__t">高い英検合格率を実現</p>
           <p class="fnc__d">累計1,000名以上を合格に導いた英検ベースのカリキュラム</p>
-          
+          <a class="fnc__jump" href="#point1" aria-label="高い英検合格率を実現"><i></i></a>
         </div>
       </li><li class="fnc__item fx" data-fx="fadeup" data-d="90">
         <div class="fnc__card">
           <span class="fnc__no">2</span>
           <p class="fnc__t">受験勉強と並行可能</p>
           <p class="fnc__d">目標級・時期と現在のレベルから作成する個別の学習計画</p>
-          
+          <a class="fnc__jump" href="#point2" aria-label="受験勉強と並行可能"><i></i></a>
         </div>
       </li><li class="fnc__item fx" data-fx="fadeup" data-d="180">
         <div class="fnc__card">
           <span class="fnc__no">3</span>
           <p class="fnc__t">学習効率を向上</p>
           <p class="fnc__d">バイリンガル講師のマンツーマンレッスン</p>
-          
+          <a class="fnc__jump" href="#point3" aria-label="学習効率を向上"><i></i></a>
         </div>
       </li><li class="fnc__item fx" data-fx="fadeup" data-d="270">
         <div class="fnc__card">
           <span class="fnc__no">4</span>
           <p class="fnc__t">保護者様が忙しくても安心</p>
           <p class="fnc__d">計画の実行をフォローするスクールマネージャー</p>
-          
+          <a class="fnc__jump" href="#point4" aria-label="保護者様が忙しくても安心"><i></i></a>
         </div>
       </li>
     </ul>
@@ -2043,6 +2061,7 @@ html:not(.js) .lm__i{transform:none}
 </div>
 <div class="tone-brand bg-growth"><span class="gbg" aria-hidden="true"><svg viewBox="0 0 1440 2600" preserveAspectRatio="none"><path class="b1" d="M-80 2560 C 420 2430, 980 1560, 1560 240"/><path class="b2" d="M-80 2700 C 460 2560, 1020 1760, 1560 520"/><path class="b3" d="M-80 2820 C 500 2700, 1060 2020, 1560 820"/></svg></span>
 <!-- features/features-vertical-heading-rows (base) -->
+<span class="anc" id="point1" aria-hidden="true"></span>
 <div style="--b1x:4%;--b1y:5%;--b1w:23vw;--b1max:320px;--b2r:4%;--b2y:46%;--b2w:19vw;--b2max:270px">
 <section class="sec vhr">
   
@@ -2092,6 +2111,7 @@ html:not(.js) .lm__i{transform:none}
 
 </div>
 <!-- features/features-vertical-heading-rows (base) -->
+<span class="anc" id="point2" aria-hidden="true"></span>
 <div style="--b1x:3%;--b1y:9%;--b1w:25vw;--b1max:350px;--b2r:3%;--b2y:56%;--b2w:26vw;--b2max:370px">
 <section class="sec vhr">
   
@@ -2123,6 +2143,7 @@ html:not(.js) .lm__i{transform:none}
 
 </div>
 <!-- features/features-point-media-pair (base) -->
+<span class="anc" id="point3" aria-hidden="true"></span>
 <section class="sec pmp">
   <div class="wrap">
     <div class="pmp__row fx" data-fx="pair">
@@ -2177,6 +2198,7 @@ html:not(.js) .lm__i{transform:none}
 </section>
 
 <!-- features/features-vertical-heading-rows (base) -->
+<span class="anc" id="point4" aria-hidden="true"></span>
 <div style="--b1x:5%;--b1y:8%;--b1w:21vw;--b1max:290px;--b2r:4%;--b2y:44%;--b2w:18vw;--b2max:250px">
 <section class="sec vhr">
   
