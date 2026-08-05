@@ -55,27 +55,23 @@
 .pmp__esc{display:block;margin-top:8px;text-align:center;font-size:11px;font-weight:700;
   color:var(--c-primary);text-decoration:underline}
 
-/* ── 動き：画面に入ったら、左へ寄る／右から入る／矢印が描かれる ── */
-.pmp__box,.pmp__media{transition:transform .85s var(--e),opacity .7s var(--e)}
-.pmp__arrow-l,.pmp__arrow-h{stroke-dasharray:120;stroke-dashoffset:0;
-  transition:stroke-dashoffset .7s var(--e) .35s}
+/* ── 動き：スクロールに連動して左右へ割れる ────────────
+   JSが --pp を書き込む（0＝他のPOINTと同じ中央／1＝割れきった）。
+   一発のアニメーションではなくスクロール量に紐づけているので、
+   ゆっくり動き、戻せばそのまま巻き戻る。
+   transition はスクロールの粒を均すためだけの短いもの。 */
+.pmp__row{--pp:0}
+.pmp__box,.pmp__media,.pmp__arrow{transition:transform .2s linear,opacity .2s linear}
+.pmp__arrow-l,.pmp__arrow-h{stroke-dasharray:120;transition:stroke-dashoffset .2s linear}
 .fx-on .fx[data-fx="pair"]{opacity:1;transform:none}         /* 既定のフェードは使わない */
-/* ① 節に入った時点：箱は他のPOINTと【同じ位置】。動画は画面の右の外 */
-.fx-on .fx[data-fx="pair"] .pmp__box{transform:translateX(220px)}
-.fx-on .fx[data-fx="pair"] .pmp__media{opacity:0;transform:translateX(calc(100% + 48px))}
-.fx-on .fx[data-fx="pair"] .pmp__arrow{opacity:0}
+.fx-on .fx[data-fx="pair"] .pmp__box{transform:translateX(calc(220px * (1 - var(--pp))))}
+.fx-on .fx[data-fx="pair"] .pmp__media{opacity:var(--pp);
+  transform:translateX(calc((100% + 48px) * (1 - var(--pp))))}
+.fx-on .fx[data-fx="pair"] .pmp__arrow{opacity:var(--pp)}
 .fx-on .fx[data-fx="pair"] .pmp__arrow-l,
-.fx-on .fx[data-fx="pair"] .pmp__arrow-h{stroke-dashoffset:120}
-/* ② 読み終わったころ（JSが .is-split を付ける）：箱が左へ寄り、動画が右から入る */
-.fx-on .fx[data-fx="pair"].is-split .pmp__box{transform:none}
-.fx-on .fx[data-fx="pair"].is-split .pmp__media{opacity:1;transform:none;
-  transition:transform .95s var(--e),opacity .55s var(--e)}
-.fx-on .fx[data-fx="pair"].is-split .pmp__arrow{opacity:1;transition:opacity .4s var(--e) .5s}
-.fx-on .fx[data-fx="pair"].is-split .pmp__arrow-l,
-.fx-on .fx[data-fx="pair"].is-split .pmp__arrow-h{stroke-dashoffset:0;
-  transition:stroke-dashoffset .7s var(--e) .55s}
-/* 描き終わったあと、先端が小さく往復して「こっち」を示し続ける */
-.fx-on .fx[data-fx="pair"].is-split .pmp__arrow svg{animation:pmpNudge 2.6s var(--e) 1.5s infinite}
+.fx-on .fx[data-fx="pair"] .pmp__arrow-h{stroke-dashoffset:calc(120px * (1 - var(--pp)))}
+/* 割れきったあと、先端が小さく往復して「こっち」を示し続ける */
+.fx-on .fx[data-fx="pair"].is-split .pmp__arrow svg{animation:pmpNudge 2.6s var(--e) .4s infinite}
 @keyframes pmpNudge{0%,72%,100%{transform:translateX(0)}84%{transform:translateX(7%)}}
 
 /* 横に並べると動画が細くなりすぎる幅からは、縦に積む */
@@ -86,13 +82,11 @@
   .pmp__arrow{width:44px;margin-inline:auto;margin-bottom:0;transform:rotate(90deg)}
   /* 縦積みでは左右に割れない。動画は下から入れる */
   .fx-on .fx[data-fx="pair"] .pmp__box{transform:none}
-  .fx-on .fx[data-fx="pair"] .pmp__media{transform:translateY(40px)}
-  .fx-on .fx[data-fx="pair"].is-split .pmp__box,
-  .fx-on .fx[data-fx="pair"].is-split .pmp__media{transform:none}
+  .fx-on .fx[data-fx="pair"] .pmp__media{transform:translateY(calc(40px * (1 - var(--pp))))}
   .fx-on .fx[data-fx="pair"].is-split .pmp__arrow svg{animation:none}
 }
 @media(prefers-reduced-motion:reduce){
-  .pmp__box,.pmp__media,.pmp__arrow{transition:none!important;transform:none!important;opacity:1!important}
-  .pmp__arrow-l,.pmp__arrow-h{stroke-dashoffset:0!important}
-  .fx-on .fx[data-fx="pair"].is-split .pmp__arrow svg{animation:none}
+  .pmp__row{--pp:1!important}          /* stylesheet の !important はJSのインラインに勝つ */
+  .pmp__box,.pmp__media,.pmp__arrow{transition:none!important}
+  .fx-on .fx[data-fx="pair"] .pmp__arrow svg{animation:none}
 }

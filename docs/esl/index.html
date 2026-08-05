@@ -856,27 +856,23 @@ html:not(.js) .lm__i{transform:none}
 .pmp__esc{display:block;margin-top:8px;text-align:center;font-size:11px;font-weight:700;
   color:var(--c-primary);text-decoration:underline}
 
-/* ── 動き：画面に入ったら、左へ寄る／右から入る／矢印が描かれる ── */
-.pmp__box,.pmp__media{transition:transform .85s var(--e),opacity .7s var(--e)}
-.pmp__arrow-l,.pmp__arrow-h{stroke-dasharray:120;stroke-dashoffset:0;
-  transition:stroke-dashoffset .7s var(--e) .35s}
+/* ── 動き：スクロールに連動して左右へ割れる ────────────
+   JSが --pp を書き込む（0＝他のPOINTと同じ中央／1＝割れきった）。
+   一発のアニメーションではなくスクロール量に紐づけているので、
+   ゆっくり動き、戻せばそのまま巻き戻る。
+   transition はスクロールの粒を均すためだけの短いもの。 */
+.pmp__row{--pp:0}
+.pmp__box,.pmp__media,.pmp__arrow{transition:transform .2s linear,opacity .2s linear}
+.pmp__arrow-l,.pmp__arrow-h{stroke-dasharray:120;transition:stroke-dashoffset .2s linear}
 .fx-on .fx[data-fx="pair"]{opacity:1;transform:none}         /* 既定のフェードは使わない */
-/* ① 節に入った時点：箱は他のPOINTと【同じ位置】。動画は画面の右の外 */
-.fx-on .fx[data-fx="pair"] .pmp__box{transform:translateX(220px)}
-.fx-on .fx[data-fx="pair"] .pmp__media{opacity:0;transform:translateX(calc(100% + 48px))}
-.fx-on .fx[data-fx="pair"] .pmp__arrow{opacity:0}
+.fx-on .fx[data-fx="pair"] .pmp__box{transform:translateX(calc(220px * (1 - var(--pp))))}
+.fx-on .fx[data-fx="pair"] .pmp__media{opacity:var(--pp);
+  transform:translateX(calc((100% + 48px) * (1 - var(--pp))))}
+.fx-on .fx[data-fx="pair"] .pmp__arrow{opacity:var(--pp)}
 .fx-on .fx[data-fx="pair"] .pmp__arrow-l,
-.fx-on .fx[data-fx="pair"] .pmp__arrow-h{stroke-dashoffset:120}
-/* ② 読み終わったころ（JSが .is-split を付ける）：箱が左へ寄り、動画が右から入る */
-.fx-on .fx[data-fx="pair"].is-split .pmp__box{transform:none}
-.fx-on .fx[data-fx="pair"].is-split .pmp__media{opacity:1;transform:none;
-  transition:transform .95s var(--e),opacity .55s var(--e)}
-.fx-on .fx[data-fx="pair"].is-split .pmp__arrow{opacity:1;transition:opacity .4s var(--e) .5s}
-.fx-on .fx[data-fx="pair"].is-split .pmp__arrow-l,
-.fx-on .fx[data-fx="pair"].is-split .pmp__arrow-h{stroke-dashoffset:0;
-  transition:stroke-dashoffset .7s var(--e) .55s}
-/* 描き終わったあと、先端が小さく往復して「こっち」を示し続ける */
-.fx-on .fx[data-fx="pair"].is-split .pmp__arrow svg{animation:pmpNudge 2.6s var(--e) 1.5s infinite}
+.fx-on .fx[data-fx="pair"] .pmp__arrow-h{stroke-dashoffset:calc(120px * (1 - var(--pp)))}
+/* 割れきったあと、先端が小さく往復して「こっち」を示し続ける */
+.fx-on .fx[data-fx="pair"].is-split .pmp__arrow svg{animation:pmpNudge 2.6s var(--e) .4s infinite}
 @keyframes pmpNudge{0%,72%,100%{transform:translateX(0)}84%{transform:translateX(7%)}}
 
 /* 横に並べると動画が細くなりすぎる幅からは、縦に積む */
@@ -887,15 +883,13 @@ html:not(.js) .lm__i{transform:none}
   .pmp__arrow{width:44px;margin-inline:auto;margin-bottom:0;transform:rotate(90deg)}
   /* 縦積みでは左右に割れない。動画は下から入れる */
   .fx-on .fx[data-fx="pair"] .pmp__box{transform:none}
-  .fx-on .fx[data-fx="pair"] .pmp__media{transform:translateY(40px)}
-  .fx-on .fx[data-fx="pair"].is-split .pmp__box,
-  .fx-on .fx[data-fx="pair"].is-split .pmp__media{transform:none}
+  .fx-on .fx[data-fx="pair"] .pmp__media{transform:translateY(calc(40px * (1 - var(--pp))))}
   .fx-on .fx[data-fx="pair"].is-split .pmp__arrow svg{animation:none}
 }
 @media(prefers-reduced-motion:reduce){
-  .pmp__box,.pmp__media,.pmp__arrow{transition:none!important;transform:none!important;opacity:1!important}
-  .pmp__arrow-l,.pmp__arrow-h{stroke-dashoffset:0!important}
-  .fx-on .fx[data-fx="pair"].is-split .pmp__arrow svg{animation:none}
+  .pmp__row{--pp:1!important}          /* stylesheet の !important はJSのインラインに勝つ */
+  .pmp__box,.pmp__media,.pmp__arrow{transition:none!important}
+  .fx-on .fx[data-fx="pair"] .pmp__arrow svg{animation:none}
 }
 
 /* ===== features/features-vertical-heading-rows ===== */
@@ -1123,19 +1117,17 @@ html:not(.js) .lm__i{transform:none}
    ・右は 肩書 → 氏名 → リード（大きめ・太字） → 手描き風の罫 → 本文（小さめ）
    ・1人ごとに写真の左右を入れ替える
    再現の記録: repro/mbl/ */
-/* 2人を横に並べる。写真の【横】に肩書と氏名を置いて縦を詰める。
-   ★subgrid で親の行を共有するので、リード文の行数が違っても
-     「写真の段／リードの段／本文の段」の頭が2人で揃う。 */
-.mbl__list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
-  grid-template-rows:auto auto auto;
-  column-gap:clamp(28px,3.6vw,64px);row-gap:0}
-.mbl__item{margin:0;display:grid;grid-row:span 3;grid-template-rows:subgrid;
-  grid-template-columns:minmax(0,1fr);align-content:start}
-
-/* 顔まわり：写真＋（肩書／氏名） */
-.mbl__head{display:grid;grid-template-columns:auto minmax(0,1fr);
-  gap:clamp(14px,1.5vw,22px);align-items:center;align-self:start}
-.mbl__figwrap{width:clamp(92px,8.2vw,116px)}
+/* 縦に1人ずつ。写真を左、文章はぜんぶ右へ。
+   .mbl__head を display:contents にして、中の写真と氏名を
+   そのまま item のグリッドに参加させている（写真だけ左列に通す）。 */
+.mbl__list{display:grid;grid-template-columns:minmax(0,1fr);
+  gap:clamp(34px,4.4vw,64px)}
+.mbl__item{margin:0;display:grid;
+  grid-template-columns:clamp(92px,8.2vw,116px) minmax(0,1fr);
+  column-gap:clamp(20px,2.6vw,40px);row-gap:0;align-items:start}
+.mbl__head{display:contents}
+.mbl__figwrap{grid-column:1;grid-row:1 / span 3;align-self:start}
+.mbl__id,.mbl__lead,.mbl__text{grid-column:2}
 
 .mbl__figwrap{position:relative}
 .mbl__fig{position:relative;z-index:2;margin:0}
@@ -1181,17 +1173,11 @@ html:not(.js) .lm__i{transform:none}
 .mbl__body{font-size:clamp(12.5px,1.02vw,14px);color:var(--c-ink2);line-height:2.05}
 .mbl__body p + p{margin-top:1.35em}
 
-/* subgrid が無い環境では、行がそろわないだけで崩れはしない */
-@supports not (grid-template-rows:subgrid){
-  .mbl__list{grid-template-rows:none}
-  .mbl__item{grid-row:auto;grid-template-rows:none}
-}
-/* 横に2人だと1人ぶんが細くなりすぎる幅からは、縦に戻す */
-@media(max-width:900px){
-  .mbl__list{grid-template-columns:minmax(0,1fr);grid-template-rows:none;
-    row-gap:clamp(36px,6vw,64px)}
-  .mbl__item{grid-row:auto;grid-template-rows:none}
-  .mbl__figwrap{width:132px}
+/* 細い画面では写真を上・文章を下に積む */
+@media(max-width:640px){
+  .mbl__item{grid-template-columns:minmax(0,1fr);row-gap:16px}
+  .mbl__figwrap{grid-row:auto;width:104px}
+  .mbl__id,.mbl__lead,.mbl__text{grid-column:1}
   .mbl__name{font-size:20px}
 }
 
@@ -2480,7 +2466,7 @@ html:not(.js) .lm__i{transform:none}
 </section>
 
 <!-- cta/cta-priority-stack (base) -->
-<div class="wave-bottom" style="--cps-panel:transparent;--cps-pad:0;--cps-ink:rgba(255,255,255,.9);--cps-head:#FFFFFF;--btn-bg:#FFFFFF;--btn-ink:var(--c-primary);--btn-sd:rgba(0,0,0,.18);--wave-to:var(--c-bg)">
+<div style="--cps-panel:transparent;--cps-pad:0;--cps-ink:rgba(255,255,255,.9);--cps-head:#FFFFFF;--btn-bg:#FFFFFF;--btn-ink:var(--c-primary);--btn-sd:rgba(0,0,0,.18)">
 <section class="sec cps" id="cta3">
   <div class="wrap">
 
@@ -3177,33 +3163,33 @@ document.documentElement.classList.add('js');
   setTimeout(function(){ if(!scrolled){ els.forEach(function(e){e.classList.add('hh-in')}); els.length=0; } },20000);
 })();
 
-/* ── POINT3と動画：読み終わったころに左右へ割れる ────────
-   節に入った時点では、他のPOINTと同じ位置（中央）に置く。
-   そこからさらにスクロールして、箱を読み終えたあたりで .is-split を付け、
-   箱を左へ寄せて動画を右から出す。一度割れたら戻さない（上下に振るとちらつく）。
+/* ── POINT3と動画：スクロールに連れて左右へ割れる ────────
+   節に入った時点では、他のPOINTと同じ位置（中央）。そこからスクロールするほど
+   0→1 で --pp が上がり、箱が左へ寄って動画が右から出てくる。
+   スクロール量に紐づけているので、戻せばそのまま巻き戻る。
    このJSが動かなくても、CSSの隠しは .fx-on 配下なので中身は消えない。 */
 (function(){
   var row=document.querySelector('.fx[data-fx="pair"]');
   if(!row) return;
   var box=row.querySelector('.pmp__box') || row;
-  var done=false, ticking=false;
-  function check(){
+  var ticking=false, last=-1;
+  function update(){
     ticking=false;
-    if(done) return;
-    var r=box.getBoundingClientRect(), vh=window.innerHeight;
-    /* 下端が画面の7割まで上がった＝ひと通り読み終えた／
-       もしくは箱の頭がヘッダーのすぐ下まで来た＝読み進めた */
-    if((r.bottom < vh*0.70 && r.top < vh*0.55) || r.top < vh*0.12){
-      done=true; row.classList.add('is-split');
-      removeEventListener('scroll',onScroll); removeEventListener('resize',onScroll);
-    }
+    try{
+      var r=box.getBoundingClientRect(), vh=window.innerHeight;
+      /* 箱の頭が画面の42%から2%まで上がるあいだ（vhの4割ぶんのスクロール）で 0→1 */
+      var p=(vh*0.42 - r.top)/(vh*0.40);
+      p = p<0 ? 0 : (p>1 ? 1 : p);
+      if(Math.abs(p-last) < 0.004) return;
+      last=p;
+      row.style.setProperty('--pp', p.toFixed(3));
+      row.classList.toggle('is-split', p > 0.985);
+    }catch(e){ row.style.setProperty('--pp','1'); }
   }
-  function onScroll(){ if(!ticking){ ticking=true; requestAnimationFrame(check); } }
+  function onScroll(){ if(!ticking){ ticking=true; requestAnimationFrame(update); } }
   addEventListener('scroll',onScroll,{passive:true});
   addEventListener('resize',onScroll,{passive:true});
-  check();
-  /* 保険：20秒たっても割れていなければ出す（動画が永久に隠れないように） */
-  setTimeout(function(){ if(!done){ done=true; row.classList.add('is-split'); } },20000);
+  update();
 })();
 
 /* ── 数字のカウントアップ ──────────────────────

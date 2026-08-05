@@ -4,19 +4,17 @@
    ・右は 肩書 → 氏名 → リード（大きめ・太字） → 手描き風の罫 → 本文（小さめ）
    ・1人ごとに写真の左右を入れ替える
    再現の記録: repro/mbl/ */
-/* 2人を横に並べる。写真の【横】に肩書と氏名を置いて縦を詰める。
-   ★subgrid で親の行を共有するので、リード文の行数が違っても
-     「写真の段／リードの段／本文の段」の頭が2人で揃う。 */
-.mbl__list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
-  grid-template-rows:auto auto auto;
-  column-gap:clamp(28px,3.6vw,64px);row-gap:0}
-.mbl__item{margin:0;display:grid;grid-row:span 3;grid-template-rows:subgrid;
-  grid-template-columns:minmax(0,1fr);align-content:start}
-
-/* 顔まわり：写真＋（肩書／氏名） */
-.mbl__head{display:grid;grid-template-columns:auto minmax(0,1fr);
-  gap:clamp(14px,1.5vw,22px);align-items:center;align-self:start}
-.mbl__figwrap{width:clamp(92px,8.2vw,116px)}
+/* 縦に1人ずつ。写真を左、文章はぜんぶ右へ。
+   .mbl__head を display:contents にして、中の写真と氏名を
+   そのまま item のグリッドに参加させている（写真だけ左列に通す）。 */
+.mbl__list{display:grid;grid-template-columns:minmax(0,1fr);
+  gap:clamp(34px,4.4vw,64px)}
+.mbl__item{margin:0;display:grid;
+  grid-template-columns:clamp(92px,8.2vw,116px) minmax(0,1fr);
+  column-gap:clamp(20px,2.6vw,40px);row-gap:0;align-items:start}
+.mbl__head{display:contents}
+.mbl__figwrap{grid-column:1;grid-row:1 / span 3;align-self:start}
+.mbl__id,.mbl__lead,.mbl__text{grid-column:2}
 
 .mbl__figwrap{position:relative}
 .mbl__fig{position:relative;z-index:2;margin:0}
@@ -62,16 +60,10 @@
 .mbl__body{font-size:clamp(12.5px,1.02vw,14px);color:var(--c-ink2);line-height:2.05}
 .mbl__body p + p{margin-top:1.35em}
 
-/* subgrid が無い環境では、行がそろわないだけで崩れはしない */
-@supports not (grid-template-rows:subgrid){
-  .mbl__list{grid-template-rows:none}
-  .mbl__item{grid-row:auto;grid-template-rows:none}
-}
-/* 横に2人だと1人ぶんが細くなりすぎる幅からは、縦に戻す */
-@media(max-width:900px){
-  .mbl__list{grid-template-columns:minmax(0,1fr);grid-template-rows:none;
-    row-gap:clamp(36px,6vw,64px)}
-  .mbl__item{grid-row:auto;grid-template-rows:none}
-  .mbl__figwrap{width:132px}
+/* 細い画面では写真を上・文章を下に積む */
+@media(max-width:640px){
+  .mbl__item{grid-template-columns:minmax(0,1fr);row-gap:16px}
+  .mbl__figwrap{grid-row:auto;width:104px}
+  .mbl__id,.mbl__lead,.mbl__text{grid-column:1}
   .mbl__name{font-size:20px}
 }
