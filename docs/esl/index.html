@@ -207,20 +207,24 @@ ul,ol{padding:0;list-style:none}
    再現の記録: repro/fv/ */
 .hbc{position:relative;background:var(--c-bg2);overflow:hidden}
 .hbc__in{position:relative;width:100%;max-width:1440px;margin-inline:auto;
-  height:clamp(560px,50vw,720px)}
+  height:clamp(560px,52vw,760px)}
 
 /* 色の面 */
 .hbc__blob{position:absolute;z-index:1}
-.hbc__blob--a{left:44%;top:52%;width:15%;aspect-ratio:29/28;background:var(--c-primary-l);
-  border-radius:48% 52% 55% 45% / 52% 48% 52% 48%}
-.hbc__blob--b{left:52%;top:6%;width:26%;aspect-ratio:43/40;background:var(--c-primary-l);
-  border-radius:52% 48% 46% 54% / 50% 44% 56% 50%}
+/* ★丸くしない。四隅の曲率をばらして「若干曲がった」形にする */
+/* ★丸くしない。四隅の曲率をばらして「若干曲がった」形にする。
+   人物より一回り小さくして、体が枠から はみ出す ようにする */
+.hbc__blob--a{left:30%;bottom:12%;width:15%;aspect-ratio:1/1;background:#E2EFD6;
+  border-radius:44% 56% 61% 39% / 57% 43% 57% 43%}
+.hbc__blob--b{left:58%;top:15%;width:21%;aspect-ratio:1/.98;background:#F2E9CE;
+  border-radius:57% 43% 41% 59% / 46% 57% 43% 54%}
 
 /* 写真 */
-.hbc__ph{position:absolute;z-index:3;margin:0}
-.hbc__ph img{width:100%;display:block;border-radius:50% 50% 46% 54% / 46% 46% 54% 54%}
-.hbc__ph--a{left:43%;top:49%;width:17%}
-.hbc__ph--b{left:50%;top:4%;width:31%}
+.hbc__ph{position:absolute;z-index:3;margin:0;filter:drop-shadow(0 8px 18px rgba(48,48,48,.10))}
+/* ★背景を抜いた人物。枠（色の面）から はみ出す ように大きめに重ねる */
+.hbc__ph img{width:100%;display:block}
+.hbc__ph--a{left:32%;bottom:0;width:16%}
+.hbc__ph--b{left:60%;bottom:0;width:28%}
 
 /* 見出し */
 .hbc__head{position:absolute;left:6%;top:13%;z-index:5;width:40%;max-width:560px}
@@ -231,12 +235,12 @@ ul,ol{padding:0;list-style:none}
 .hbc__h1 em{font-style:normal;color:var(--c-primary)}
 
 /* キャッチ */
-.hbc__copy{position:absolute;right:4%;bottom:16%;max-width:34%;z-index:5;text-align:left;
+.hbc__copy{position:absolute;left:6%;bottom:40%;max-width:30%;z-index:5;text-align:left;
   font-size:clamp(20px,2.4vw,34px);font-weight:900;color:var(--c-ink);line-height:1.5}
 .hbc__copy em{font-style:normal;color:var(--c-primary)}
 
 /* 実績の数字 */
-.hbc__stats{position:absolute;left:6%;bottom:27%;z-index:5;display:flex;gap:clamp(20px,3vw,44px)}
+.hbc__stats{position:absolute;left:6%;bottom:26%;z-index:5;display:flex;gap:clamp(20px,3vw,44px)}
 .hbc__stats b{display:block;font-family:var(--f-num);font-size:clamp(28px,3.4vw,46px);
   font-weight:900;color:var(--c-ink);line-height:1}
 .hbc__stats b span{font-size:.42em;margin-left:3px;font-weight:800}
@@ -248,17 +252,17 @@ ul,ol{padding:0;list-style:none}
 
 /* 落書き */
 .hbc__dd{position:absolute;z-index:4;pointer-events:none}
-.hbc__dd--1{left:47%;top:11%;width:clamp(46px,6vw,86px)}
+.hbc__dd--1{left:51%;top:20%;width:clamp(46px,6vw,86px)}
 .hbc__dd--2{left:84%;top:14%;width:clamp(38px,4.6vw,66px);transform:rotate(-8deg)}
 .hbc__dd--3{right:6%;top:12%;width:clamp(22px,2.6vw,38px)}
-.hbc__dd--4{left:41%;bottom:16%;width:clamp(30px,3.4vw,50px);transform:rotate(12deg)}
-.hbc__dd--5{right:6%;top:52%;width:clamp(52px,6.6vw,96px);transform:rotate(6deg)}
+.hbc__dd--4{left:31%;bottom:36%;width:clamp(30px,3.4vw,50px);transform:rotate(12deg)}
+.hbc__dd--5{right:2%;top:20%;width:clamp(52px,6.6vw,96px);transform:rotate(6deg)}
 .hbc__conf{position:absolute;z-index:2;width:9px;height:9px;border-radius:2px;opacity:.85}
 .hbc__conf--1{left:49%;top:22%;background:var(--c-accent);transform:rotate(24deg)}
-.hbc__conf--2{left:62%;bottom:14%;background:var(--c-primary);transform:rotate(-16deg)}
+.hbc__conf--2{left:52%;bottom:24%;background:var(--c-primary);transform:rotate(-16deg)}
 .hbc__conf--3{left:73%;top:20%;background:var(--c-support2);transform:rotate(40deg)}
 .hbc__conf--4{left:69%;bottom:22%;background:var(--c-accent);transform:rotate(-30deg)}
-.hbc__conf--5{left:45%;bottom:9%;background:var(--c-primary-2);transform:rotate(18deg)}
+.hbc__conf--5{left:50%;bottom:8%;background:var(--c-primary-2);transform:rotate(18deg)}
 .hbc__conf--6{left:86%;top:34%;background:var(--c-primary);transform:rotate(-8deg)}
 
 .hbc__foot{padding:0 0 18px;font-size:11px;color:var(--c-ink3);text-align:center}
@@ -273,6 +277,7 @@ ul,ol{padding:0;list-style:none}
   /* ★スマホは写真をCTAより上に */
   .hbc__ph{position:static;width:100%;padding-inline:22px;order:-1}
   .hbc__ph--a{display:none}
+  .hbc__ph img{filter:none}
   .hbc__ph img{border-radius:20px}
   .hbc__copy{padding-inline:22px;font-size:21px}
   .hbc__stats{padding-inline:22px;gap:26px}
@@ -1585,8 +1590,8 @@ ul,ol{padding:0;list-style:none}
     <div class="hbc__blob hbc__blob--a"></div>
     <div class="hbc__blob hbc__blob--b"></div>
 
-    <figure class="hbc__ph hbc__ph--a"><img src="img/p05.jpg" alt="オンラインでレッスンを受ける生徒"></figure>
-    <figure class="hbc__ph hbc__ph--b"><img src="img/p01.jpg" alt="教室で学習する生徒"></figure>
+    <figure class="hbc__ph hbc__ph--a"><img src="img/cut_girl.png" alt="オンラインで英検対策を受ける中高生"></figure>
+    <figure class="hbc__ph hbc__ph--b"><img src="img/cut_boy.png" alt="自宅で学習に取り組む小学生"></figure>
 
     <div class="hbc__head">
       <p class="hbc__logo"><img src="img/logo.svg" alt="ESL club"></p>
@@ -1740,7 +1745,7 @@ ul,ol{padding:0;list-style:none}
             <p class="vhr__label">（&nbsp;POINT&nbsp;01&nbsp;）</p>
             <h3 class="vhr__title">高い英検合格率を実現</h3>
           </div>
-          <figure class="vhr__fig"><img src="img/p01.jpg" alt="POINT1 の様子" loading="lazy"></figure>
+          <figure class="vhr__fig"><img src="img/p04.jpg" alt="移動中に本を読む小学生" loading="lazy"></figure>
         </div>
         <p class="vhr__sub">累計1,000名以上を合格に導いた英検ベースのカリキュラム</p>
         <p class="vhr__body">ESL clubでは2015年の開塾以降、英検をカリキュラムに用いて、着実な英語力の向上と英検合格に導いてきました。国際基準であるCEFRに対応した英検を用いることで、お子さまの英語スキルに合わせた個別カリキュラムを作成し、バランスよく4技能＋語彙力を高めていきます。</p>
@@ -1750,7 +1755,7 @@ ul,ol{padding:0;list-style:none}
             <p class="vhr__label">（&nbsp;POINT&nbsp;02&nbsp;）</p>
             <h3 class="vhr__title">受験勉強と並行可能</h3>
           </div>
-          <figure class="vhr__fig"><img src="img/p02.jpg" alt="POINT2 の様子" loading="lazy"></figure>
+          <figure class="vhr__fig"><img src="img/p11.jpg" alt="部活動を続けながら学習を並行する" loading="lazy"></figure>
         </div>
         <p class="vhr__sub">目標級・時期と現在のレベルから作成する個別の学習計画</p>
         <p class="vhr__body">目標とする級と受験の時期、現在の英語レベル、学習に充てられる時間の4点から逆算して個別の学習計画を作成します。学習時間そのものを増やすのではなく、限られた時間の使い方を組み立て直すため、中学受験や大学受験の受験勉強、部活動・他の習い事を続けながら英検合格を目指すことができます。</p>
@@ -1760,7 +1765,7 @@ ul,ol{padding:0;list-style:none}
             <p class="vhr__label">（&nbsp;POINT&nbsp;03&nbsp;）</p>
             <h3 class="vhr__title">学習効率を向上</h3>
           </div>
-          <figure class="vhr__fig"><img src="img/p03.jpg" alt="POINT3 の様子" loading="lazy"></figure>
+          <figure class="vhr__fig"><img src="img/p16.jpg" alt="オンラインでマンツーマンレッスンを受ける中高生" loading="lazy"></figure>
         </div>
         <p class="vhr__sub">バイリンガル講師のマンツーマンレッスン</p>
         <p class="vhr__body">ESL clubでは、英検1級・TOEFL iBT95点・TOEIC900点レベル以上のバイリンガル講師のみを採用しています。年齢の近い講師との距離感がそのままレッスンに表れ、日本語に切り替えて解説したり、英語で言い換えたりと、生徒一人ひとりの理解度に合わせて進めます。</p>
@@ -1770,7 +1775,7 @@ ul,ol{padding:0;list-style:none}
             <p class="vhr__label">（&nbsp;POINT&nbsp;04&nbsp;）</p>
             <h3 class="vhr__title">保護者様が忙しくても安心</h3>
           </div>
-          <figure class="vhr__fig"><img src="img/p04.jpg" alt="POINT4 の様子" loading="lazy"></figure>
+          <figure class="vhr__fig"><img src="img/p01.jpg" alt="すきま時間にオンラインで学ぶ小学生" loading="lazy"></figure>
         </div>
         <p class="vhr__sub">計画の実行をフォローするスクールマネジャー</p>
         <p class="vhr__body">スクールマネジャーが中心となり、学習計画どおりにレッスンが進むよう講師へ内容を伝達し、生徒様の進捗をレッスンごとに保護者様へ共有します。保護者様が学習内容を把握したり、レッスンに付き添っていただく必要はありません。お忙しいご家庭でも安心してお任せいただけます。</p>
