@@ -60,6 +60,11 @@
 /* 自社ヘッダだけ白100%＋一段大きく。ここは色ではなく明度と級数で立てる */
 .cmx__hc--own .cmx__hname{font-size:var(--fs-md);font-weight:900;letter-spacing:.01em;
   color:var(--c-on-dark)}
+/* 自社の列名をロゴで出す回。濃い面の上なので白へ抜く
+   （SVGの中の動きは filter を通しても残る） */
+.cmx__hlogo{display:block;line-height:0}
+.cmx__hlogo img{height:clamp(20px,2vw,28px);width:auto;
+  filter:brightness(0) invert(1)}
 .cmx__badge{display:inline-block;padding:var(--s1) var(--s3);border-radius:var(--r-pill);
   background:var(--c-on-dark);color:var(--c-dark);
   font-size:var(--fs-note);font-weight:700;line-height:var(--lh-head)}

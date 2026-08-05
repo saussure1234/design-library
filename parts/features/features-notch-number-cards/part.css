@@ -19,22 +19,14 @@
 .fnc__t{font-size:15px;font-weight:800;color:var(--c-ink);line-height:1.6}
 .fnc__d{margin-top:10px;font-size:12.5px;color:var(--c-ink2);line-height:1.85;flex:1}
 /* ── その節へ飛ぶ ────────────────────────────
-   ::after でカード全面に広げるので、カードのどこを押しても飛ぶ。
-   文言は足さず、下向きの山かたちだけを置く（読み上げは aria-label で氏名代わりに見出しを渡す）*/
-.fnc__jump{position:absolute;right:14px;bottom:14px;z-index:3;
-  width:26px;height:26px;border-radius:50%;
-  display:inline-flex;align-items:center;justify-content:center;
-  color:var(--c-primary);background:var(--c-primary-l);
-  transition:background .16s var(--e),color .16s var(--e),transform .16s var(--e)}
-.fnc__jump::after{content:"";position:absolute;inset:-34px -18px -18px -18px}
-.fnc__jump i{width:8px;height:8px;margin-top:-3px;
-  border-right:2px solid currentColor;border-bottom:2px solid currentColor;
-  transform:rotate(45deg)}
-.fnc__jump:focus-visible{outline:3px solid var(--c-primary);outline-offset:3px}
-.fnc__card:has(.fnc__jump){padding-bottom:46px;cursor:pointer}
+   目印は置かず、箱そのものを押せる場所にする。
+   リンクは ::after でカード全面に広げ、文言は読み上げ用に隠す */
+.fnc__jump{position:absolute;inset:0;z-index:3}
+.fnc__jump span{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.fnc__jump:focus-visible{outline:3px solid var(--c-primary);outline-offset:3px;border-radius:14px}
+.fnc__card:has(.fnc__jump){cursor:pointer}
 @media(hover:hover) and (pointer:fine){
   .fnc__card:hover{transform:translateY(-3px);box-shadow:var(--shadow-s)}
-  .fnc__card:hover .fnc__jump{background:var(--c-primary);color:var(--c-on-primary);transform:translateY(2px)}
 }
 /* 4枚とも同じ色。濃い面の上なので白いブロックにする */
 .fnc__card{background:var(--c-bg)}

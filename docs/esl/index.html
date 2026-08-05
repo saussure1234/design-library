@@ -612,22 +612,14 @@ html:not(.js) .lm__i{transform:none}
 .fnc__t{font-size:15px;font-weight:800;color:var(--c-ink);line-height:1.6}
 .fnc__d{margin-top:10px;font-size:12.5px;color:var(--c-ink2);line-height:1.85;flex:1}
 /* ── その節へ飛ぶ ────────────────────────────
-   ::after でカード全面に広げるので、カードのどこを押しても飛ぶ。
-   文言は足さず、下向きの山かたちだけを置く（読み上げは aria-label で氏名代わりに見出しを渡す）*/
-.fnc__jump{position:absolute;right:14px;bottom:14px;z-index:3;
-  width:26px;height:26px;border-radius:50%;
-  display:inline-flex;align-items:center;justify-content:center;
-  color:var(--c-primary);background:var(--c-primary-l);
-  transition:background .16s var(--e),color .16s var(--e),transform .16s var(--e)}
-.fnc__jump::after{content:"";position:absolute;inset:-34px -18px -18px -18px}
-.fnc__jump i{width:8px;height:8px;margin-top:-3px;
-  border-right:2px solid currentColor;border-bottom:2px solid currentColor;
-  transform:rotate(45deg)}
-.fnc__jump:focus-visible{outline:3px solid var(--c-primary);outline-offset:3px}
-.fnc__card:has(.fnc__jump){padding-bottom:46px;cursor:pointer}
+   目印は置かず、箱そのものを押せる場所にする。
+   リンクは ::after でカード全面に広げ、文言は読み上げ用に隠す */
+.fnc__jump{position:absolute;inset:0;z-index:3}
+.fnc__jump span{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.fnc__jump:focus-visible{outline:3px solid var(--c-primary);outline-offset:3px;border-radius:14px}
+.fnc__card:has(.fnc__jump){cursor:pointer}
 @media(hover:hover) and (pointer:fine){
   .fnc__card:hover{transform:translateY(-3px);box-shadow:var(--shadow-s)}
-  .fnc__card:hover .fnc__jump{background:var(--c-primary);color:var(--c-on-primary);transform:translateY(2px)}
 }
 /* 4枚とも同じ色。濃い面の上なので白いブロックにする */
 .fnc__card{background:var(--c-bg)}
@@ -851,14 +843,15 @@ html:not(.js) .lm__i{transform:none}
    横スクロールバーが出る。hidden ではなく clip（位置指定の子を壊さない） */
 .pmp{overflow-x:clip}
 
-/* 左右対称に組む。版面を抜けて画面いっぱいを使い、左右の余白を同じにして、
-   箱と動画を【同じ幅・同じ高さ】の2本の柱として置く。 */
-.pmp__row{display:grid;grid-template-columns:minmax(0,540px) minmax(0,540px);
+/* 版面を抜けて画面いっぱいを使う。箱は他のPOINTの位置から
+   --pmp-shift だけ左へ出し、動画は右端の余白まで寄せる。 */
+.pmp__row{display:grid;grid-template-columns:minmax(0,540px) auto;
   justify-content:space-between;align-items:start;
   margin-inline:calc(50% - 50vw);
-  padding-inline:var(--pmp-side)}
-/* 左右の余白。箱と動画が540pxを保てる範囲でめいっぱい内側へ寄せる */
-.pmp{--pmp-side:max(24px, min(9.5vw, (100vw - 1140px) / 2))}
+  padding-left:max(24px,calc(50vw - 270px - var(--pmp-shift)));
+  padding-right:var(--pmp-side)}
+/* 寄せ幅は軽く。動いたと分かる程度で止める */
+.pmp{--pmp-shift:150px; --pmp-side:clamp(24px,4.6vw,74px)}
 
 /* 左：POINTの箱（白） */
 .pmp__box .vhr__item{background:var(--c-bg);border-radius:20px;
@@ -902,10 +895,9 @@ html:not(.js) .lm__i{transform:none}
 .pmp__row{--pp:0}
 .pmp__box,.pmp__media{transition:transform .2s linear,opacity .2s linear}
 .fx-on .fx[data-fx="pair"]{opacity:1;transform:none}         /* 既定のフェードは使わない */
-/* 進み0のとき、箱は他のPOINT（画面中央・幅540＝左端は 50vw-270px）にぴったり重なる。
-   ここの休み位置は左の余白 --pmp-side なので、差は 50vw-270px-余白 */
+/* 進み0のとき、箱は他のPOINT（画面中央・幅540）にぴったり重なる */
 .fx-on .fx[data-fx="pair"] .pmp__box{
-  transform:translateX(calc((50vw - 270px - var(--pmp-side)) * (1 - var(--pp))))}
+  transform:translateX(calc(var(--pmp-shift) * (1 - var(--pp))))}
 /* 動画はその場でフェードイン（滑らせない）。ほんの少しだけ上げて着地させる */
 .fx-on .fx[data-fx="pair"] .pmp__media{opacity:var(--pp);
   transform:translateY(calc(18px * (1 - var(--pp))))}
@@ -1621,6 +1613,11 @@ html:not(.js) .lm__i{transform:none}
 /* 自社ヘッダだけ白100%＋一段大きく。ここは色ではなく明度と級数で立てる */
 .cmx__hc--own .cmx__hname{font-size:var(--fs-md);font-weight:900;letter-spacing:.01em;
   color:var(--c-on-dark)}
+/* 自社の列名をロゴで出す回。濃い面の上なので白へ抜く
+   （SVGの中の動きは filter を通しても残る） */
+.cmx__hlogo{display:block;line-height:0}
+.cmx__hlogo img{height:clamp(20px,2vw,28px);width:auto;
+  filter:brightness(0) invert(1)}
 .cmx__badge{display:inline-block;padding:var(--s1) var(--s3);border-radius:var(--r-pill);
   background:var(--c-on-dark);color:var(--c-dark);
   font-size:var(--fs-note);font-weight:700;line-height:var(--lh-head)}
@@ -2175,28 +2172,28 @@ html:not(.js) .lm__i{transform:none}
           <span class="fnc__no">1</span>
           <p class="fnc__t">高い英検合格率を実現</p>
           <p class="fnc__d">累計1,000名以上を合格に導いた英検ベースのカリキュラム</p>
-          <a class="fnc__jump" href="#point1" aria-label="高い英検合格率を実現"><i></i></a>
+          <a class="fnc__jump" href="#point1"><span>高い英検合格率を実現</span></a>
         </div>
       </li><li class="fnc__item fx" data-fx="fadeup" data-d="90">
         <div class="fnc__card">
           <span class="fnc__no">2</span>
           <p class="fnc__t">受験勉強と並行可能</p>
           <p class="fnc__d">目標級・時期と現在のレベルから作成する個別の学習計画</p>
-          <a class="fnc__jump" href="#point2" aria-label="受験勉強と並行可能"><i></i></a>
+          <a class="fnc__jump" href="#point2"><span>受験勉強と並行可能</span></a>
         </div>
       </li><li class="fnc__item fx" data-fx="fadeup" data-d="180">
         <div class="fnc__card">
           <span class="fnc__no">3</span>
           <p class="fnc__t">学習効率を向上</p>
           <p class="fnc__d">バイリンガル講師のマンツーマンレッスン</p>
-          <a class="fnc__jump" href="#point3" aria-label="学習効率を向上"><i></i></a>
+          <a class="fnc__jump" href="#point3"><span>学習効率を向上</span></a>
         </div>
       </li><li class="fnc__item fx" data-fx="fadeup" data-d="270">
         <div class="fnc__card">
           <span class="fnc__no">4</span>
           <p class="fnc__t">保護者様が忙しくても安心</p>
           <p class="fnc__d">計画の実行をフォローするスクールマネージャー</p>
-          <a class="fnc__jump" href="#point4" aria-label="保護者様が忙しくても安心"><i></i></a>
+          <a class="fnc__jump" href="#point4"><span>保護者様が忙しくても安心</span></a>
         </div>
       </li>
     </ul>
@@ -2688,7 +2685,8 @@ html:not(.js) .lm__i{transform:none}
 
         <div class="cmx__hc cmx__hc--own fx" data-fx="fadeup" data-d="60">
           
-          <span class="cmx__hname">ESL club</span>
+          <span class="cmx__hlogo"><img src="img/logo_anim.svg" alt="ESL club"></span>
+          
           
         </div>
 
