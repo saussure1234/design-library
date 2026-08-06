@@ -44,8 +44,10 @@
 /* ヘッダ：このセクションで唯一の濃い面。
    行罫を6%まで落としたぶん、表の骨はこの1本の帯が受け持つ（輝度差 14.3:1）。
    下罫は引かない（面そのものが区切りになる） */
-.cmx__hc{display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;
-  gap:var(--s1);min-width:0;padding:var(--s4) var(--cmx-pad);
+/* ★列名は縦の中心でそろえる。下ぞろえにすると、背の高いロゴだけ
+   上に飛び出して A社・B社 と段が合わない */
+.cmx__hc{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;
+  gap:var(--s1);min-width:0;min-height:clamp(58px,5vw,74px);padding:var(--s4) var(--cmx-pad);
   background:var(--c-dark);line-height:var(--lh-head)}
 .cmx__hc--item{font-size:var(--fs-note);font-weight:700;letter-spacing:.06em;
   border-top-left-radius:var(--r-m)}
@@ -60,10 +62,11 @@
 /* 自社ヘッダだけ白100%＋一段大きく。ここは色ではなく明度と級数で立てる */
 .cmx__hc--own .cmx__hname{font-size:var(--fs-md);font-weight:900;letter-spacing:.01em;
   color:var(--c-on-dark)}
-/* 自社の列名をロゴで出す回。濃い面の上なので白へ抜く
-   （SVGの中の動きは filter を通しても残る） */
-.cmx__hlogo{display:block;line-height:0}
-.cmx__hlogo img{height:clamp(20px,2vw,28px);width:auto;
+/* 自社の列名をロゴで出す回。濃い面の上なので白へ抜く。
+   高さは A社・B社 の1行と同じ器に入れて、中心をそろえる */
+.cmx__hlogo{display:flex;align-items:center;
+  min-height:calc(var(--fs-sm) * var(--lh-head));line-height:0}
+.cmx__hlogo img{height:clamp(18px,1.75vw,24px);width:auto;
   filter:brightness(0) invert(1)}
 .cmx__badge{display:inline-block;padding:var(--s1) var(--s3);border-radius:var(--r-pill);
   background:var(--c-on-dark);color:var(--c-dark);
