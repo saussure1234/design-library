@@ -122,56 +122,59 @@
 .cmx__note{margin-top:var(--s5);font-size:var(--fs-note);color:var(--c-ink3);
   line-height:var(--lh-head)}
 
-/* ───────── SP：横スクロールにせず「1項目＝1ブロック」へ分解 ─────────
-   DOMの並びが 項目名 → 自社 → A社 → B社 なので、畳むだけで
-   「項目名＝見出し／自社が1つ目／競合が2つ目以降」になる。
-   ここでも罫は増やさない。ブロックの区切りは同じ6%の1本だけ。 */
+/* ───────── SP：表のまま【横に流す】────────────────────
+   1項目=1ブロックに分解すると、縦に長くなるうえ
+   「自社と他社を並べて見比べる」という表の目的が消える。
+   スマホの比較表で実際に使われている型は2つ:
+     (a) 表のまま横スクロール＋1列目（項目名）を固定
+     (b) 自社 vs 他社 の2列に畳む
+   ここは競合2社の答えが行ごとに違うので、消さずに済む (a) を採る。 */
 @media(max-width:900px){
-  /* 白いカードのまま中身を積むので、余白を持たせる。
-     無いと先頭の項目名がカードの上端で切れる */
-  .cmx__grid{display:block;padding:var(--s5)}
-  .cmx__thead{display:none}
+  /* 表を包んで横に流す。包みは版面いっぱいまで広げる */
+  /* 画面の端まで使う。内側に余白を持つと、貼りついた1列目の【左】を
+     残りの列がすり抜けて文字が漏れる */
+  .cmx__scroll{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;
+    margin-inline:calc(50% - 50vw);padding-inline:0}
+  /* ★overflow:hidden があると、その中の position:sticky は効かない
+     （切り抜きの箱が新しいスクロールの器になってしまう）。
+     角丸は残さず、ヘッダの左右のセルが持つ角丸で受ける */
+  .cmx__grid{min-width:514px;overflow:visible;border-radius:0;box-shadow:none}
+  .cmx__hc--item,.cmx__thead>:last-child{border-radius:0}
+  .cmx__row:last-child .cmx__c--own{border-radius:0}
+  /* 列幅：項目名は固定、データ列は等幅 */
+  /* 最初の画面に【項目・ESL club・A社】が丸ごと入る幅にする。
+     B社だけを横に流して見せる（1.5列しか見えないと比較にならない） */
+  .cmx{--cmx-cols:106px 152px 128px 128px; --cmx-pad:var(--s3)}
 
-  .cmx__row{display:block}
-  .cmx__row+.cmx__row{margin-top:var(--s5);padding-top:var(--s5);border-top:var(--cmx-rule)}
+  /* ★1列目は左に貼りつける。地を敷かないと下の列が透ける */
+  .cmx__hc--item,.cmx__item{position:sticky;left:0;z-index:2}
+  .cmx__hc--item{background:var(--c-dark)}
+  .cmx__item{background:var(--c-bg);
+    box-shadow:6px 0 8px -6px rgba(48,48,48,.18)}
+  .cmx__hc--item{box-shadow:6px 0 8px -6px rgba(0,0,0,.3)}
 
-  /* 項目名は色を持たせず、級数と太さだけで見出しにする */
-  .cmx__item{display:block;padding:0 0 var(--s3);border-bottom:0;
-    font-size:var(--fs-base)}
 
-  /* 競合は「罫ゼロの定義リスト」として、位置揃えと行間だけで表として読ませる */
-  .cmx__c{display:grid;grid-template-columns:var(--s8) 1fr;
-    column-gap:var(--s4);align-items:baseline;
-    padding:var(--s3) 0 0;border-bottom:0}
-  .cmx__c .cmx__sub{grid-column:2;margin-top:var(--s1)}
-  .cmx__lab{position:static;width:auto;height:auto;margin:0;padding:0;
-    overflow:visible;clip-path:none;white-space:normal;
-    font-size:var(--fs-note);font-weight:700;letter-spacing:.06em;
-    color:var(--c-ink3);line-height:var(--lh-head)}
+  .cmx__hc{min-height:56px;padding-block:var(--s3)}
+  .cmx__hname{font-size:var(--fs-sm)}
+  .cmx__hc--own .cmx__hname{font-size:var(--fs-sm)}
+  .cmx__hlogo img{height:18px}
+  .cmx__item{font-weight:800}
+  /* 表のセルは本文ではないので、列幅に収まる級数まで落とす */
+  .cmx__main{font-size:15px}
+  .cmx__c--own .cmx__main{font-size:16px}
+  .cmx__sub{font-size:13px}
+  .cmx__item{font-size:15px}
+  .cmx__mk{margin-right:4px;font-size:15px}
 
-  /* 自社だけ帯として1枚の面にする＝SPでも色を持つのはここだけ。
-     左に1本の太い罫を足して、A社・B社の行と一目で分ける */
-  .cmx__c--own{display:block;padding:var(--s4);border-radius:var(--r-m);
-    border-left:4px solid var(--c-primary)}
-  .cmx__c--own .cmx__lab{display:block;margin-bottom:var(--s1);
-    color:var(--c-primary);font-weight:800}
-  /* 項目名は「その行の見出し」。級数と余白で他と差をつける */
-  .cmx__item{font-size:var(--fs-md);font-weight:900;color:var(--c-ink);
-    padding-bottom:var(--s4)}
-  /* 競合の行は面を持たず、ラベルと値の2列だけ */
-  .cmx__c:not(.cmx__c--own){padding:var(--s3) var(--s4) 0}
-  /* 1項目＝1枚のかたまり。行と行のあいだをもっと空けて塊にする */
-  .cmx__row+.cmx__row{margin-top:var(--s6);padding-top:var(--s6)}
-
-  /* PC側の「最終行だけ」の指定を打ち消す */
-  .cmx__row:last-child .cmx__item{border-bottom:0}
-  .cmx__row:last-child .cmx__c--own{border-radius:var(--r-m)}
-
-  .cmx__note{margin-top:var(--s6)}
+  /* 横に流せることを1行で伝える */
+  .cmx__swipe{display:flex;align-items:center;gap:6px;justify-content:flex-end;
+    margin-bottom:var(--s3);font-size:var(--fs-note);font-weight:700;color:var(--c-ink3)}
+  .cmx__swipe i{width:18px;height:1px;background:currentColor;position:relative}
+  .cmx__swipe i::after{content:"";position:absolute;right:0;top:-3px;
+    width:6px;height:6px;border-top:1px solid currentColor;border-right:1px solid currentColor;
+    transform:rotate(45deg)}
+  .cmx__note{margin-top:var(--s5)}
 }
-
-@media(max-width:420px){
-  .cmx__c--own{padding:var(--s3) var(--s4)}
-}
+@media(min-width:901px){ .cmx__swipe{display:none} }
 
 /* rule/table-no-grid：格子罫を消し、行は不透明度6%の1本・列は余白で分ける */
