@@ -41,7 +41,12 @@
 
 @media(max-width:900px){
   .msc__grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  /* 3枚を2列に置くと最後の1枚が左に取り残される。半分の幅のまま中央へ */
+  .msc__item:last-child:nth-child(odd){grid-column:1 / -1;justify-self:center;
+    width:calc(50% - clamp(8px,1.2vw,16px))}
 }
 @media(max-width:560px){
   .msc__grid{grid-template-columns:minmax(0,1fr);gap:20px}
+  /* 1列に戻ったら、中央寄せの指定も戻す（残ると最後の1枚だけ半分の幅になる） */
+  .msc__item:last-child:nth-child(odd){grid-column:auto;justify-self:stretch;width:auto}
 }

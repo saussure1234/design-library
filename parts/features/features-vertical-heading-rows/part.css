@@ -92,6 +92,10 @@
   .vhr__title{font-size:17px;letter-spacing:.02em;line-height:1.6}
   .vhr__fig{flex:1;max-width:340px}
   .vhr__figs{max-width:340px}
+  /* 縦積みでは横に並べる相手がいないので、枠の比を固定しない。
+     固定したままだと、中身77pxのグラフに560pxの器が付いて空白だけが残る */
+  .vhr__figs,.vhr__chart{aspect-ratio:auto}
+  .vhr__chart{padding-block:clamp(18px,3vw,30px)}
   .vhr__ds{max-width:none}
   .vhr__fig img{border-width:5px}
 }

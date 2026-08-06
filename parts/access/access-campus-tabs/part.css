@@ -90,11 +90,11 @@
 .cts__msghead{display:contents}
 /* 写真は左に通しで置く */
 .cts__msgfigwrap{grid-column:1;grid-row:1 / span 2;align-self:start;position:relative}
-.cts__msgfig{position:relative;z-index:2;margin:0}
+/* 枠は要素の内側で作る（外向きの影は clip-path に切られる） */
+.cts__msgfig{position:relative;z-index:2;margin:0;
+  border:1px solid var(--c-line);border-radius:50%;padding:5px;background:var(--c-bg)}
 .cts__msgfig img{width:100%;aspect-ratio:1/1;object-fit:cover;object-position:50% 14%;display:block;
-  border-radius:50%;background:var(--c-bg);
-  /* 白い板の上では円の輪郭が消えるので、白い輪＋細い線で枠にする */
-  box-shadow:0 0 0 5px var(--c-bg),0 0 0 6px var(--c-line)}
+  border-radius:50%;background:var(--c-bg)}
 .cts__msgbody > .cts__msgid,
 .cts__msgbody > .mbl__fold,
 .cts__msgbody > .mbl__more{grid-column:2}

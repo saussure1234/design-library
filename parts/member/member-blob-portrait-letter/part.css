@@ -18,11 +18,12 @@
 
 .mbl__figwrap{position:relative}
 .mbl__fig{position:relative;z-index:2;margin:0}
-/* 素材は背景を抜いてある。円の地はこちらで持つ（白） */
+/* 素材は背景を抜いてある。円の地はこちらで持つ（白）。
+   ★枠は【要素の内側】で作る。外向きの影で描くと、
+     .fx.hh-in が掛ける clip-path:inset(0) に端を切り落とされる */
+.mbl__fig{border:1px solid var(--c-line);border-radius:50%;padding:5px;background:var(--c-bg)}
 .mbl__fig img{width:100%;aspect-ratio:1/1;object-fit:cover;object-position:50% 14%;display:block;
-  border-radius:50%;background:var(--c-bg);
-  /* 白い板の上では円の輪郭が消えるので、白い輪＋細い線で枠にする */
-  box-shadow:0 0 0 5px var(--c-bg),0 0 0 6px var(--c-line)}
+  border-radius:50%;background:var(--c-bg)}
 
 .mbl__role{font-size:clamp(10.5px,.88vw,12.5px);color:var(--c-ink3);font-weight:700;letter-spacing:.04em}
 .mbl__name{margin-top:3px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
