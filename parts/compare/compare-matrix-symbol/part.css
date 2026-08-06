@@ -66,7 +66,9 @@
    高さは A社・B社 の1行と同じ器に入れて、中心をそろえる */
 .cmx__hlogo{display:flex;align-items:center;
   min-height:calc(var(--fs-sm) * var(--lh-head));line-height:0}
-.cmx__hlogo img{height:clamp(18px,1.75vw,24px);width:auto;
+/* ★A社・B社の文字と同じ大きさに見えるところまで下げる。
+   ロゴは字面の上下に余白を持つので、字の高さ×1.15 が実測で一致する */
+.cmx__hlogo img{height:calc(var(--fs-sm) * 1.15);width:auto;
   filter:brightness(0) invert(1)}
 .cmx__badge{display:inline-block;padding:var(--s1) var(--s3);border-radius:var(--r-pill);
   background:var(--c-on-dark);color:var(--c-dark);
@@ -157,7 +159,6 @@
   .cmx__hc{min-height:56px;padding-block:var(--s3)}
   .cmx__hname{font-size:var(--fs-sm)}
   .cmx__hc--own .cmx__hname{font-size:var(--fs-sm)}
-  .cmx__hlogo img{height:18px}
   .cmx__item{font-weight:800}
   /* 表のセルは本文ではないので、列幅に収まる級数まで落とす */
   .cmx__main{font-size:15px}
