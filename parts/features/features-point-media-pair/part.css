@@ -15,8 +15,8 @@
   margin-inline:calc(50% - 50vw);
   padding-left:max(24px,calc(50vw - 270px - var(--pmp-shift)));
   padding-right:var(--pmp-side)}
-/* 寄せ幅は軽く。動いたと分かる程度で止める */
-.pmp{--pmp-shift:150px; --pmp-side:clamp(24px,4.6vw,74px)}
+/* 寄せ幅は軽く。動画は画面の右寄りへ */
+.pmp{--pmp-shift:150px; --pmp-side:clamp(18px,2.8vw,44px)}
 
 /* 左：POINTの箱（白） */
 .pmp__box .vhr__item{background:var(--c-bg);border-radius:20px;
@@ -26,10 +26,14 @@
 .pmp__media{background:none;padding:0;box-shadow:none}
 .pmp__mh{margin-bottom:clamp(12px,1.6vw,18px);text-align:center;
   font-size:clamp(14px,1.15vw,17px);font-weight:800;color:var(--c-on-primary)}
-/* 縦に1本ずつ。列いっぱいに広げず、幅を抑えて中央に置く */
+/* 縦に1本ずつ。列いっぱいに広げず、幅を抑えて中央に置く。
+   2本は器より少し細くして、上を左・下を右へ振る（真下に積むと単調） */
 .pmp__grid{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(16px,2vw,26px);
-  max-width:clamp(240px,22vw,330px);margin-inline:auto}
-.pmp__item{margin:0}
+  /* max-width だと器が中身ぴったりまで縮んで振り分ける余地が消える。width で押さえる */
+  width:clamp(250px,21.5vw,330px);max-width:100%;margin-inline:auto;justify-items:center}
+.pmp__item{width:clamp(220px,19vw,290px)}
+.pmp__item:nth-child(odd){justify-self:start}
+.pmp__item:nth-child(even){justify-self:end}
 .pmp__thumb{position:relative;display:block;width:100%;padding:0;border:0;cursor:pointer;
   border-radius:12px 9px 14px 10px;overflow:hidden;background:var(--c-bg2)}
 .pmp__thumb img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}

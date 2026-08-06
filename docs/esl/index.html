@@ -546,9 +546,9 @@ html:not(.js) .lm__i{transform:none}
   align-items:flex-start;gap:10px;margin-top:clamp(22px,3.2vw,40px)}
 .hbc__cta .btn{white-space:nowrap}
 /* CTAの下の約束。ただの注記に見えて素通りされていたので、
-   級数と太さを上げて墨で書く（面は敷かない） */
+   級数と太さを上げて、少し落としたグレーで書く（面は敷かない） */
 .hbc__note{font-size:clamp(12px,1.05vw,14.5px);font-weight:800;
-  color:var(--c-ink);letter-spacing:.01em;white-space:nowrap}
+  color:var(--c-ink2);letter-spacing:.01em;white-space:nowrap}
 
 /* 落書き */
 .hbc__dd{position:absolute;z-index:4;pointer-events:none}
@@ -858,8 +858,8 @@ html:not(.js) .lm__i{transform:none}
   margin-inline:calc(50% - 50vw);
   padding-left:max(24px,calc(50vw - 270px - var(--pmp-shift)));
   padding-right:var(--pmp-side)}
-/* 寄せ幅は軽く。動いたと分かる程度で止める */
-.pmp{--pmp-shift:150px; --pmp-side:clamp(24px,4.6vw,74px)}
+/* 寄せ幅は軽く。動画は画面の右寄りへ */
+.pmp{--pmp-shift:150px; --pmp-side:clamp(18px,2.8vw,44px)}
 
 /* 左：POINTの箱（白） */
 .pmp__box .vhr__item{background:var(--c-bg);border-radius:20px;
@@ -869,10 +869,14 @@ html:not(.js) .lm__i{transform:none}
 .pmp__media{background:none;padding:0;box-shadow:none}
 .pmp__mh{margin-bottom:clamp(12px,1.6vw,18px);text-align:center;
   font-size:clamp(14px,1.15vw,17px);font-weight:800;color:var(--c-on-primary)}
-/* 縦に1本ずつ。列いっぱいに広げず、幅を抑えて中央に置く */
+/* 縦に1本ずつ。列いっぱいに広げず、幅を抑えて中央に置く。
+   2本は器より少し細くして、上を左・下を右へ振る（真下に積むと単調） */
 .pmp__grid{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(16px,2vw,26px);
-  max-width:clamp(240px,22vw,330px);margin-inline:auto}
-.pmp__item{margin:0}
+  /* max-width だと器が中身ぴったりまで縮んで振り分ける余地が消える。width で押さえる */
+  width:clamp(250px,21.5vw,330px);max-width:100%;margin-inline:auto;justify-items:center}
+.pmp__item{width:clamp(220px,19vw,290px)}
+.pmp__item:nth-child(odd){justify-self:start}
+.pmp__item:nth-child(even){justify-self:end}
 .pmp__thumb{position:relative;display:block;width:100%;padding:0;border:0;cursor:pointer;
   border-radius:12px 9px 14px 10px;overflow:hidden;background:var(--c-bg2)}
 .pmp__thumb img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
@@ -1622,9 +1626,9 @@ html:not(.js) .lm__i{transform:none}
   border-top-left-radius:var(--r-m)}
 .cmx__thead>:last-child{border-top-right-radius:var(--r-m)}
 
-/* 競合の列名は白のまま彩度を持たせず、透過で一段落とす（コントラスト 7.9:1） */
-.cmx__hc--item,
-.cmx__hname{color:color-mix(in srgb,var(--c-on-dark) 74%,transparent)}
+/* 列名は白。項目列だけ一段落として、名前より前に出ないようにする */
+.cmx__hc--item{color:color-mix(in srgb,var(--c-on-dark) 74%,transparent)}
+.cmx__hname{color:var(--c-on-dark)}
 .cmx__hname{font-size:var(--fs-sm);font-weight:700}
 .cmx__hnote{font-size:var(--fs-note);font-weight:400;
   color:color-mix(in srgb,var(--c-on-dark) 58%,transparent)}
@@ -2703,7 +2707,7 @@ html:not(.js) .lm__i{transform:none}
 
         <div class="cmx__hc cmx__hc--own fx" data-fx="fadeup" data-d="60">
           
-          <span class="cmx__hlogo"><img src="img/logo_anim.svg" alt="ESL club"></span>
+          <span class="cmx__hlogo"><img src="img/logo_mark.svg" alt="ESL club"></span>
           
           
         </div>
