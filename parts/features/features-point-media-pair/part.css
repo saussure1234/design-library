@@ -8,15 +8,15 @@
    横スクロールバーが出る。hidden ではなく clip（位置指定の子を壊さない） */
 .pmp{overflow-x:clip}
 
-/* 版面を抜けて画面いっぱいを使う。箱は他のPOINTの位置から
-   --pmp-shift だけ左へ出し、動画は右端の余白まで寄せる。 */
+/* 版面を抜けて画面いっぱいを使い、左右の余白を同じにする。
+   箱は左端、動画は右端に置くので、画面のサイドからの距離が揃う。 */
 .pmp__row{display:grid;grid-template-columns:minmax(0,540px) auto;
   justify-content:space-between;align-items:start;
   margin-inline:calc(50% - 50vw);
-  padding-left:max(24px,calc(50vw - 270px - var(--pmp-shift)));
-  padding-right:var(--pmp-side)}
-/* 寄せ幅は軽く。動画は画面の右寄りへ */
-.pmp{--pmp-shift:150px; --pmp-side:clamp(18px,2.8vw,44px)}
+  padding-inline:var(--pmp-side)}
+/* 余白＝(画面幅 − 箱540 − 動画310 − あいだ140) ÷ 2。
+   広い画面では 260px で止める（離しすぎると一組に見えなくなる） */
+.pmp{--pmp-side:clamp(24px, (100vw - 990px) / 2, 260px)}
 
 /* 左：POINTの箱（白） */
 .pmp__box .vhr__item{background:var(--c-bg);border-radius:20px;
@@ -64,9 +64,10 @@
 .pmp__row{--pp:0}
 .pmp__box,.pmp__media{transition:transform .2s linear,opacity .2s linear}
 .fx-on .fx[data-fx="pair"]{opacity:1;transform:none}         /* 既定のフェードは使わない */
-/* 進み0のとき、箱は他のPOINT（画面中央・幅540）にぴったり重なる */
+/* 進み0のとき、箱は他のPOINT（画面中央・幅540＝左端は 50vw-270px）にぴったり重なる。
+   休み位置は左の余白なので、差は 50vw-270px-余白 */
 .fx-on .fx[data-fx="pair"] .pmp__box{
-  transform:translateX(calc(var(--pmp-shift) * (1 - var(--pp))))}
+  transform:translateX(calc((50vw - 270px - var(--pmp-side)) * (1 - var(--pp))))}
 /* 動画はその場でフェードイン（滑らせない）。ほんの少しだけ上げて着地させる */
 .fx-on .fx[data-fx="pair"] .pmp__media{opacity:var(--pp);
   transform:translateY(calc(18px * (1 - var(--pp))))}
