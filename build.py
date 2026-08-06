@@ -340,6 +340,22 @@ def build(kit_path, out_path):
         p = content if os.path.isabs(content) else os.path.join(os.path.dirname(kit_path), content)
         content = json.load(open(p, encoding="utf-8"))
 
+    # 固定ヘッダー。キットの "header" で差し替え、false を渡せば出さない
+    hdr = kit.get("header", {})
+    if hdr is False:
+        header_html = ""
+    else:
+        hdr = hdr if isinstance(hdr, dict) else {}
+        header_html = (
+            '<header class="hdr">\n'
+            f'  <a class="hdr__logo" href="{hdr.get("home", "#top")}" '
+            f'aria-label="{hdr.get("brand", "ESL club")}">'
+            f'<img src="{hdr.get("logo", "img/logo.svg")}" alt="{hdr.get("brand", "ESL club")}"></a>\n'
+            f'  <a class="btn btn--sm hdr__cta" href="{hdr.get("ctaHref", "https://eslclub.jp/trial/")}">'
+            f'{hdr.get("ctaLabel", "無料体験レッスンはこちら")}</a>\n'
+            '</header>'
+        )
+
     base_css = open(os.path.join(PARTS, "_base.css"), encoding="utf-8").read()
     tok_css = open(os.path.join(PARTS, "_tokens.css"), encoding="utf-8").read()
 
@@ -443,10 +459,7 @@ def build(kit_path, out_path):
     </svg>
   </div>
 </div>
-<header class="hdr">
-  <a class="hdr__logo" href="#top" aria-label="ESL club"><img src="img/logo.svg" alt="ESL club"></a>
-  <a class="btn btn--sm hdr__cta" href="https://eslclub.jp/trial/">無料体験レッスンはこちら</a>
-</header>
+{header_html}
 {chr(10).join(html_chunks)}
 <script>{RUNTIME_JS}</script>
 </body>

@@ -190,6 +190,9 @@ footer{position:relative;z-index:1}
 /* ★ヘッダーは position:fixed のまま。ここで relative にすると流れに戻って
    スクロールで消え、上に余白ができる */
 .hdr{z-index:60}
+/* パーツが自前で持つヘッダー（.hd）は、ページ側の固定ヘッダーと二重になる。
+   固定ヘッダーがあるときは出さない */
+.hdr ~ * .hd{display:none}
 
 @media(max-width:767px){
   /* 横に潰すとPC用パスの立ち上がりが右端に寄って消える。パスごと差し替える */
@@ -1813,6 +1816,8 @@ html:not(.js) .lm__i{transform:none}
 
 /* 料金：罫なし。価格だけが主役 */
 .cts__plans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s2)}
+/* 1つしかない回は3列の左端に取り残される。中央に1枚だけ置く */
+.cts__plans:has(> :only-child){grid-template-columns:minmax(0,340px);justify-content:center}
 /* 白地の上でグレーの箱は沈む。ブランド色の淡い面＋左に線で立てる */
 /* 面は無彩の薄グレー。--c-primary-l は黄緑寄りで、ブランド緑の横だと濁って見える */
 .cts__plan{background:var(--c-bg2);border-radius:var(--r-m);

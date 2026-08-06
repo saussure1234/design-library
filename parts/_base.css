@@ -91,6 +91,9 @@ footer{position:relative;z-index:1}
 /* ★ヘッダーは position:fixed のまま。ここで relative にすると流れに戻って
    スクロールで消え、上に余白ができる */
 .hdr{z-index:60}
+/* パーツが自前で持つヘッダー（.hd）は、ページ側の固定ヘッダーと二重になる。
+   固定ヘッダーがあるときは出さない */
+.hdr ~ * .hd{display:none}
 
 @media(max-width:767px){
   /* 横に潰すとPC用パスの立ち上がりが右端に寄って消える。パスごと差し替える */
