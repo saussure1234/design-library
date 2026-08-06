@@ -88,7 +88,8 @@ document.documentElement.classList.add('js');
     var vh=window.innerHeight, i;
     for(i=els.length-1;i>=0;i--){
       var el=els[i], r=el.getBoundingClientRect();
-      if(r.top < vh*0.88 && r.bottom > 0){ show(el); els.splice(i,1); }
+      /* 0.88 だと画面のいちばん下で始まって下端のまま終わり、動きが見えない */
+      if(r.top < vh*0.80 && r.bottom > 0){ show(el); els.splice(i,1); }
     }
   }
   function onScroll(){ scrolled=true; if(!ticking){ ticking=true; requestAnimationFrame(check); } }
@@ -250,12 +251,7 @@ document.documentElement.classList.add('js');
       f.allow='accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture';
       f.setAttribute('allowfullscreen','');
       b.innerHTML=''; b.appendChild(f); b.classList.add('is-play');
-      /* 埋め込みが拒否された場合の逃げ道（エラー153など）を必ず出す */
-      var esc=document.createElement('a');
-      esc.href='https://www.youtube.com/watch?v='+id;
-      esc.target='_blank'; esc.rel='noopener';
-      esc.className='gvb__esc'; esc.textContent='YouTubeで見る';
-      b.parentNode.appendChild(esc);
+      /* 逃げ道のリンクは出さない（埋め込みは両方とも許可済みなのを確認済み） */
     });
   });
 })();

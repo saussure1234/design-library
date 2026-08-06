@@ -865,10 +865,16 @@ html:not(.js) .lm__i{transform:none}
 .pmp__box .vhr__item{background:var(--c-bg);border-radius:20px;
   padding:clamp(20px,2.4vw,30px);box-shadow:var(--shadow-s)}
 
-/* 右：動画。板は敷かない（地の緑に直接置く）ので、文字は地に合わせて白 */
-.pmp__media{background:none;padding:0;box-shadow:none}
-.pmp__mh{margin-bottom:clamp(12px,1.6vw,18px);text-align:center;
-  font-size:clamp(14px,1.15vw,17px);font-weight:800;color:var(--c-on-primary)}
+/* 右：動画。板は敷かない（地の緑に直接置く）ので、文字は地に合わせて白。
+   見出しは【縦書き】にして動画の左へ。横書きだと上に1行ぶんの帯ができて、
+   POINTの箱と天地がそろわなくなる */
+.pmp__media{background:none;padding:0;box-shadow:none;
+  display:grid;grid-template-columns:auto minmax(0,1fr);
+  column-gap:clamp(10px,1.2vw,18px);align-items:start}
+.pmp__mh{writing-mode:vertical-rl;text-orientation:upright;
+  margin:0;padding-top:2px;justify-self:center;
+  font-size:clamp(14px,1.2vw,18px);font-weight:800;color:var(--c-on-primary);
+  letter-spacing:.16em;line-height:1.1}
 /* 縦に1本ずつ。列いっぱいに広げず、幅を抑えて中央に置く。
    2本は器より少し細くして、上を左・下を右へ振る（真下に積むと単調） */
 .pmp__grid{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(16px,2vw,26px);
@@ -909,19 +915,25 @@ html:not(.js) .lm__i{transform:none}
 .fx-on .fx[data-fx="pair"]{opacity:1;transform:none}         /* 既定のフェードは使わない */
 /* 進み0のとき、箱は他のPOINT（画面中央・幅540＝左端は 50vw-270px）にぴったり重なる。
    休み位置は左の余白なので、差は 50vw-270px-余白 */
+/* 箱は進みの前半（0→.55）で寄せきる */
 .fx-on .fx[data-fx="pair"] .pmp__box{
-  transform:translateX(calc((50vw - 270px - var(--pmp-side)) * (1 - var(--pp))))}
-/* 動画はその場でフェードイン（滑らせない）。ほんの少しだけ上げて着地させる */
-.fx-on .fx[data-fx="pair"] .pmp__media{opacity:var(--pp);
-  transform:translateY(calc(18px * (1 - var(--pp))))}
+  transform:translateX(calc((50vw - 270px - var(--pmp-side)) * (1 - min(1, var(--pp) / .55))))}
+/* 動画は【箱が寄り終わってから】フェードイン（.58→1）。滑らせず、少しだけ上げて着地 */
+.fx-on .fx[data-fx="pair"] .pmp__media{
+  --vp:max(0, (var(--pp) - .58) / .42);
+  opacity:var(--vp);transform:translateY(calc(18px * (1 - var(--vp))))}
 
 /* 横に並べると動画が細くなりすぎる幅からは、縦に積む */
 @media(max-width:1024px){
   .pmp__row{grid-template-columns:minmax(0,1fr);gap:16px;
     margin-inline:auto;padding-inline:0;max-width:540px}
+  /* 縦積みでは縦書きの見出しが間延びするので、横書きに戻して上に置く */
+  .pmp__media{grid-template-columns:minmax(0,1fr);row-gap:12px}
+  .pmp__mh{writing-mode:horizontal-tb;text-align:center;letter-spacing:.04em;
+    justify-self:stretch;padding-top:0}
   /* 縦積みでは左右に割れない。動画は下から入れる */
   .fx-on .fx[data-fx="pair"] .pmp__box{transform:none}
-  .fx-on .fx[data-fx="pair"] .pmp__media{transform:translateY(calc(28px * (1 - var(--pp))))}
+  .fx-on .fx[data-fx="pair"] .pmp__media{transform:translateY(calc(28px * (1 - var(--vp))))}
 }
 @media(prefers-reduced-motion:reduce){
   .pmp__row{--pp:1!important}          /* stylesheet の !important はJSのインラインに勝つ */
@@ -2331,7 +2343,7 @@ html:not(.js) .lm__i{transform:none}
       </div>
 
       <div class="pmp__media">
-        <p class="pmp__mh">レッスンの様子</p>
+        <p class="pmp__mh"><span>レッスンの様子</span></p>
         <ul class="pmp__grid">
           <li class="pmp__item">
             <button class="pmp__thumb" type="button" data-yt="d1pNo4ETKYc"
@@ -3250,7 +3262,8 @@ document.documentElement.classList.add('js');
     var vh=window.innerHeight, i;
     for(i=els.length-1;i>=0;i--){
       var el=els[i], r=el.getBoundingClientRect();
-      if(r.top < vh*0.88 && r.bottom > 0){ show(el); els.splice(i,1); }
+      /* 0.88 だと画面のいちばん下で始まって下端のまま終わり、動きが見えない */
+      if(r.top < vh*0.80 && r.bottom > 0){ show(el); els.splice(i,1); }
     }
   }
   function onScroll(){ scrolled=true; if(!ticking){ ticking=true; requestAnimationFrame(check); } }
@@ -3412,12 +3425,7 @@ document.documentElement.classList.add('js');
       f.allow='accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture';
       f.setAttribute('allowfullscreen','');
       b.innerHTML=''; b.appendChild(f); b.classList.add('is-play');
-      /* 埋め込みが拒否された場合の逃げ道（エラー153など）を必ず出す */
-      var esc=document.createElement('a');
-      esc.href='https://www.youtube.com/watch?v='+id;
-      esc.target='_blank'; esc.rel='noopener';
-      esc.className='gvb__esc'; esc.textContent='YouTubeで見る';
-      b.parentNode.appendChild(esc);
+      /* 逃げ道のリンクは出さない（埋め込みは両方とも許可済みなのを確認済み） */
     });
   });
 })();
