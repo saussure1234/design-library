@@ -33,15 +33,15 @@ ul,ol{padding:0;list-style:none}
 /* 固定。スクロールしても隠さない */
 .hdr__logo{display:flex;align-items:center}
 .hdr__logo img{height:38px;width:auto;display:block}
-.hdr__cta{min-width:238px;height:48px;font-size:14px;padding:0 22px;
-  box-shadow:0 5px 0 var(--c-primary-d)}
-.hdr__cta:hover{box-shadow:0 3px 0 var(--c-primary-d)}
+.hdr__cta{min-width:250px;height:52px;font-size:16px;padding:0 24px;
+  box-shadow:0 5px 0 var(--c-accent-d)}
+.hdr__cta:hover{box-shadow:0 3px 0 var(--c-accent-d)}
 body{padding-top:var(--hdr-h,60px)}
 .hdr__cta{white-space:nowrap}
 @media(max-width:900px){
   .hdr{height:64px;padding-inline:14px;gap:10px}
   .hdr__logo img{height:26px}
-  .hdr__cta{min-width:0;height:40px;font-size:12px;padding:0 14px;box-shadow:0 4px 0 var(--c-primary-d)}
+  .hdr__cta{min-width:0;height:44px;font-size:13px;padding:0 15px;box-shadow:0 4px 0 var(--c-accent-d)}
 }
 @media(max-width:380px){
   .hdr__cta{font-size:11px;padding:0 11px}
@@ -215,8 +215,8 @@ footer{position:relative;z-index:1}
   background:var(--c-primary);color:var(--c-on-primary);
   border-radius:28px;padding:clamp(28px,4vw,52px)}
 .tone-boxdark .cps__note,.tone-boxdark .nch__note{color:rgba(255,255,255,.84)}
-.tone-boxdark .btn{background:var(--c-bg);color:var(--c-primary);box-shadow:0 8px 0 rgba(0,0,0,.16)}
-.tone-boxdark .btn:hover{box-shadow:0 5px 0 rgba(0,0,0,.16)}
+.tone-boxdark .btn{background:var(--c-accent);color:var(--c-on-accent);box-shadow:0 8px 0 var(--c-accent-d)}
+.tone-boxdark .btn:hover{box-shadow:0 5px 0 var(--c-accent-d)}
 .tone-boxdark .nch__chip{background:rgba(255,255,255,.14);color:var(--c-on-primary);border-color:transparent}
 
 /* 白地にグラデーションのボックス */
@@ -253,18 +253,18 @@ footer{position:relative;z-index:1}
 
 /* ── ボタン：ピル＋下に8pxのベタ影。押すと沈む ────
    半透明の影ではなくベタ。これが「押せそう」を作っている。 */
-/* 色は3つの変数で受ける。地の色とボタンがかぶる節では、
-   キット側で --btn-bg / --btn-ink / --btn-sd を差し替える */
+/* ★CTAは差し色の黄。緑の面でも白い面でも同じ色で立つ、ページで唯一の「押す色」。
+   色は3つの変数で受ける。地とかぶる節では、キット側で差し替える */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5em;
-  background:var(--btn-bg,var(--c-primary));color:var(--btn-ink,var(--c-on-primary));
+  background:var(--btn-bg,var(--c-accent));color:var(--btn-ink,var(--c-on-accent));
   font-weight:800;font-size:19px;letter-spacing:.02em;
   padding:20px 46px;border-radius:50px;border:0;cursor:pointer;
-  box-shadow:0 8px 0 var(--btn-sd,var(--c-primary-d));
+  box-shadow:0 8px 0 var(--btn-sd,var(--c-accent-d));
   transition:transform .12s ease,box-shadow .12s ease}
-.btn:hover{transform:translateY(3px);box-shadow:0 5px 0 var(--btn-sd,var(--c-primary-d))}
-.btn:active{transform:translateY(6px);box-shadow:0 2px 0 var(--btn-sd,var(--c-primary-d))}
-.btn--sm{font-size:16px;padding:14px 30px;box-shadow:0 6px 0 var(--btn-sd,var(--c-primary-d))}
-.btn--sm:hover{box-shadow:0 3px 0 var(--btn-sd,var(--c-primary-d))}
+.btn:hover{transform:translateY(3px);box-shadow:0 5px 0 var(--btn-sd,var(--c-accent-d))}
+.btn:active{transform:translateY(6px);box-shadow:0 2px 0 var(--btn-sd,var(--c-accent-d))}
+.btn--sm{font-size:16px;padding:14px 30px;box-shadow:0 6px 0 var(--btn-sd,var(--c-accent-d))}
+.btn--sm:hover{box-shadow:0 3px 0 var(--btn-sd,var(--c-accent-d))}
 .btn .arr{font-size:.9em}
 
 /* ── 写真：白い縁＋角丸＋影 ───────────────────── */

@@ -8,15 +8,17 @@
    横スクロールバーが出る。hidden ではなく clip（位置指定の子を壊さない） */
 .pmp{overflow-x:clip}
 
-/* 版面を抜けて画面いっぱいを使い、左右の余白を同じにする。
-   箱は左端、動画は右端に置くので、画面のサイドからの距離が揃う。 */
+/* 版面を抜けて広く使うが、【1320pxで頭打ち】にして中央に置く。
+   画面幅にそのまま追従させると、2000px級のモニタで箱と動画が
+   左右の端まで離れ、真ん中に1000px近い空白ができる。 */
 .pmp__row{display:grid;grid-template-columns:minmax(0,540px) auto;
   justify-content:space-between;align-items:start;
-  margin-inline:calc(50% - 50vw);
+  width:min(100vw, var(--pmp-max));
+  margin-inline:calc(50% - min(50vw, var(--pmp-max) / 2));
   padding-inline:var(--pmp-side)}
-/* 余白＝(画面幅 − 箱540 − 動画310 − あいだ140) ÷ 2。
-   広い画面では 260px で止める（離しすぎると一組に見えなくなる） */
-.pmp{--pmp-side:clamp(24px, (100vw - 990px) / 2, 260px)}
+/* 余白＝(組の幅 − 箱540 − 動画310 − あいだ140) ÷ 2 */
+.pmp{--pmp-max:1320px;
+  --pmp-side:clamp(24px, (min(100vw, 1320px) - 990px) / 2, 165px)}
 
 /* 左：POINTの箱（白） */
 .pmp__box .vhr__item{background:var(--c-bg);border-radius:20px;
@@ -32,7 +34,7 @@
   column-gap:clamp(10px,1.2vw,18px);align-items:start}
 .pmp__mh{writing-mode:vertical-rl;text-orientation:upright;
   margin:0;padding-top:2px;justify-self:center;
-  font-size:clamp(14px,1.2vw,18px);font-weight:500;color:var(--c-on-primary);
+  font-size:clamp(17.0px,1.333vw,20.0px);font-weight:500;color:var(--c-on-primary);
   letter-spacing:.16em;line-height:1.1}
 /* 縦に1本ずつ。列いっぱいに広げず、幅を抑えて中央に置く。
    2本は器より少し細くして、上を左・下を右へ振る（真下に積むと単調） */
@@ -58,9 +60,9 @@
 @media(hover:hover) and (pointer:fine){
   .pmp__thumb:hover .pmp__play{transform:translate(-50%,-50%) scale(1.08)}}
 .pmp__cap{display:block;margin-top:8px;text-align:center}
-.pmp__cap b{display:block;font-size:clamp(10px,.8vw,11.5px);color:rgba(255,255,255,.8);font-weight:700}
+.pmp__cap b{display:block;font-size:18px;color:rgba(255,255,255,.8);font-weight:700}
 .pmp__cap em{display:block;margin-top:3px;font-style:normal;
-  font-size:clamp(12px,1vw,14px);font-weight:900;color:var(--c-on-primary)}
+  font-size:18px;font-weight:900;color:var(--c-on-primary)}
 .pmp__esc{display:block;margin-top:8px;text-align:center;font-size:11px;font-weight:700;
   color:var(--c-primary);text-decoration:underline}
 
@@ -75,8 +77,10 @@
 /* 進み0のとき、箱は他のPOINT（画面中央・幅540＝左端は 50vw-270px）にぴったり重なる。
    休み位置は左の余白なので、差は 50vw-270px-余白 */
 /* 箱は進みの前半（0→.55）で寄せきる */
+/* 進み0の休み位置＝箱の左端。他のPOINT（50vw-270px）との差だけ右へ戻す */
 .fx-on .fx[data-fx="pair"] .pmp__box{
-  transform:translateX(calc((50vw - 270px - var(--pmp-side)) * (1 - min(1, var(--pp) / .55))))}
+  transform:translateX(calc((50vw - 270px - max(0px, (100vw - min(100vw,1320px)) / 2) - var(--pmp-side))
+            * (1 - min(1, var(--pp) / .55))))}
 /* 動画は【箱が寄り終わってから】フェードイン（.58→1）。滑らせず、少しだけ上げて着地 */
 .fx-on .fx[data-fx="pair"] .pmp__media{
   --vp:max(0, (var(--pp) - .58) / .42);
@@ -84,7 +88,7 @@
 
 /* 横に並べると動画が細くなりすぎる幅からは、縦に積む */
 @media(max-width:1024px){
-  .pmp__row{grid-template-columns:minmax(0,1fr);gap:16px;
+  .pmp__row{grid-template-columns:minmax(0,1fr);gap:16px;width:auto;
     margin-inline:auto;padding-inline:0;max-width:540px}
   /* 縦積みでは縦書きの見出しが間延びするので、横書きに戻して上に置く */
   .pmp__media{grid-template-columns:minmax(0,1fr);row-gap:12px;margin-top:0}
