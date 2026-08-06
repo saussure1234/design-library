@@ -1,0 +1,24 @@
+<section class="evl">
+  <div class="wrap">
+    {{?headline}}<div class="sec-head">
+      {{?eyebrow}}<p class="sec-head__en">{{eyebrow}}</p>{{/eyebrow}}
+      <h2 class="sec-head__ja">{{headline}}</h2>
+    </div>{{/headline}}
+
+    {{?intro}}<p class="evl__intro fx" data-fx="fadeup">{{intro}}</p>{{/intro}}
+
+    <ul class="evl__list">
+      {{#items}}<li class="evl__item fx" data-fx="fadeup" data-d="{{.d}}">
+        <p class="evl__no">{{.i}}</p>
+        <div class="evl__main">
+          <p class="evl__label">{{.label}}</p>
+          <h3 class="evl__t">{{.title}}</h3>
+          <p class="evl__lead">{{.lead}}</p>
+          <p class="evl__text">{{.text}}</p>
+        </div>
+      </li>{{/items}}
+    </ul>
+
+    {{?note}}<p class="evl__note fx" data-fx="fadeup">{{note}}</p>{{/note}}
+  </div>
+</section>

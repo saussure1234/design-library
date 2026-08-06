@@ -475,369 +475,195 @@ html:not(.js) .lm__i{transform:none}
   *{animation-duration:.001s!important}
 }
 
-/* ===== hero/hero-split-diag ===== */
-/* hero/hero-split-diag — 写真2枚を斜めの継ぎ目で並走させるヒーロー
-   ┌ overlap/cross-the-band
-   │  数字＋CTAのブロックを、白地と写真帯の境界にまたがせる。
-   │  出す辺は「下」だけ（片側だけ）。左は画面端まで面一に抜き、
-   │  右は --hsd-inset ぶん内側で止めて、写真帯の上辺＝水平線をわざと残す。
-   │  ブロックの色は地と同じ白のまま越える（＝2面をつなぐ橋。色を変えるとただの重なりに戻る）。
-   └ type/size-gap-inline
-      数字と単位を同じ1行にベースライン揃えで置き、級数比を約4.0〜4.4倍つける。
-      字間も逆転させる（数字 -.02em／単位 +.08em）。 */
+/* ===== event/event-poster-hero ===== */
+/* event/event-poster-hero
+   写真を使わないイベントのFV。coffee city fes（_raw/pc/coffee_city_fes_com.jpg）の
+   組み方を借りて起こした型。
+   ・地は白。影は使わず【1.5pxの黒罫】と面の塗りだけで組む（いまの作り）
+   ・日付を版面の主役にする（数字だけ極大・曜日は小さく添える）
+   ・参加費はチケットの券面のように、罫で仕切った枠に並べる
+   ・下端に流れる帯を1本置いて、次の節との境目にする */
+.evh{padding-block:clamp(28px,4.4vw,64px) 0;background:var(--c-bg)}
 
-.hd{position:relative;z-index:5;background:var(--c-bg)}
-.hd__in{display:flex;align-items:center;justify-content:space-between;gap:var(--s4);height:68px}
-.hd__logo img{height:30px;width:auto}
-.hd__cta{padding:11px 22px;font-size:var(--fs-sm)}
+/* 最上段の1行。細い罫の下に置いて「掲示」らしくする */
+.evh__top{padding-bottom:clamp(12px,1.4vw,18px);border-bottom:1.5px solid var(--c-ink);
+  font-size:clamp(11.5px,1vw,13.5px);font-weight:700;letter-spacing:.04em;color:var(--c-ink)}
 
-.hsd{display:flex;flex-direction:column;
-  --hsd-cross:var(--s8);        /* またぎ量。写真帯へ出す量（76px） */
-  --hsd-inset:var(--w-gut);     /* 白い面の右端。本文の右端と面一で止める＝水平線が右に残る */
+.evh__grid{display:grid;grid-template-columns:minmax(0,1fr) auto;
+  gap:clamp(24px,3.4vw,56px);align-items:start;
+  padding-block:clamp(26px,3.6vw,52px)}
+
+.evh__venue{font-size:clamp(11px,.92vw,13px);font-weight:700;letter-spacing:.12em;
+  color:var(--c-primary)}
+/* ★見出しは大きく詰める。行間を1.12まで落として塊にする */
+.evh__h{margin-top:clamp(10px,1.2vw,16px);
+  font-family:var(--f-disp);font-weight:900;color:var(--c-ink);
+  font-size:clamp(30px,5.2vw,74px);line-height:1.12;letter-spacing:-.005em}
+
+.evh__tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:clamp(16px,2vw,26px)}
+.evh__tags li{padding:7px 16px;border-radius:var(--r-pill);
+  border:1.5px solid var(--c-ink);background:var(--c-bg);
+  font-size:clamp(11px,.92vw,13px);font-weight:800;color:var(--c-ink);line-height:1.2}
+.evh__tags li:first-child{background:var(--c-primary);border-color:var(--c-primary);color:var(--c-on-primary)}
+.evh__tags li:nth-child(2){background:var(--c-accent);border-color:var(--c-ink);color:var(--c-on-accent)}
+
+/* ── 日付。ここが版面の主役 ── */
+.evh__date{justify-self:end;text-align:right;min-width:0}
+.evh__y{font-family:var(--f-num);font-size:clamp(12px,1.1vw,15px);font-weight:800;
+  letter-spacing:.12em;color:var(--c-ink3)}
+.evh__md{display:flex;align-items:baseline;justify-content:flex-end;gap:2px;
+  font-family:var(--f-num);font-weight:900;color:var(--c-ink);
+  font-size:clamp(56px,10.5vw,150px);line-height:.92;letter-spacing:-.03em}
+.evh__md span{font-size:.52em;font-weight:800;color:var(--c-primary);margin-inline:.04em}
+.evh__md em{font-style:normal;font-size:.2em;font-weight:800;letter-spacing:.1em;
+  color:var(--c-primary);margin-left:.5em;align-self:flex-end;padding-bottom:.6em}
+
+.evh__times{margin-top:clamp(14px,1.8vw,22px);display:grid;gap:0;
+  border-top:1.5px solid var(--c-ink)}
+.evh__times li{display:flex;align-items:baseline;justify-content:flex-end;gap:clamp(10px,1.4vw,20px);
+  padding:9px 0;border-bottom:1px solid color-mix(in srgb,var(--c-ink) 18%,transparent)}
+.evh__times b{font-size:clamp(12px,1vw,14px);font-weight:800;color:var(--c-ink)}
+.evh__times span{font-family:var(--f-num);font-size:clamp(14px,1.35vw,19px);font-weight:800;
+  color:var(--c-ink);letter-spacing:.01em}
+
+/* ── 参加費＝券面 ── */
+.evh__ticket{border:1.5px solid var(--c-ink);border-radius:var(--r-m);overflow:hidden}
+.evh__tkh{padding:10px clamp(16px,2vw,24px);background:var(--c-ink);color:var(--c-bg);
+  font-size:clamp(11px,.92vw,13px);font-weight:800;letter-spacing:.06em}
+.evh__tk{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+.evh__tk li{display:flex;flex-direction:column;gap:2px;
+  padding:clamp(16px,2vw,24px);border-right:1.5px solid var(--c-ink)}
+.evh__tk li:last-child{border-right:0}
+.evh__tk b{font-size:clamp(13px,1.1vw,16px);font-weight:800;color:var(--c-ink)}
+.evh__tk span{font-family:var(--f-num);font-size:clamp(11px,.9vw,12.5px);color:var(--c-ink3);font-weight:700}
+.evh__tk em{margin-top:6px;font-style:normal;font-family:var(--f-num);
+  font-size:clamp(24px,2.8vw,38px);font-weight:900;color:var(--c-primary);line-height:1}
+
+.evh__act{display:flex;flex-direction:column;align-items:center;gap:10px;
+  padding:clamp(18px,2.4vw,28px);border-top:1.5px solid var(--c-ink);
+  background:color-mix(in srgb,var(--c-primary) 6%,var(--c-bg))}
+.evh__note{font-size:clamp(11.5px,.95vw,13.5px);font-weight:800;color:var(--c-ink2)}
+
+.evh__place{margin-top:clamp(14px,1.8vw,20px);font-size:clamp(11.5px,.95vw,13.5px);
+  color:var(--c-ink2);line-height:1.9}
+
+/* ── 流れる帯。節と節の境目を1本で受ける ── */
+.evh__marquee{margin-top:clamp(28px,4vw,56px);overflow:hidden;
+  border-block:1.5px solid var(--c-ink);background:var(--c-primary)}
+.evh__mrun{display:flex;width:max-content;animation:evhRun 26s linear infinite}
+.evh__mrun span{padding:10px 28px;white-space:nowrap;
+  font-size:clamp(12px,1.05vw,15px);font-weight:800;letter-spacing:.06em;
+  color:var(--c-on-primary)}
+@keyframes evhRun{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){.evh__mrun{animation:none}}
+
+@media(max-width:860px){
+  .evh__grid{grid-template-columns:minmax(0,1fr);gap:22px}
+  .evh__date{justify-self:stretch;text-align:left}
+  .evh__md{justify-content:flex-start}
+  .evh__times li{justify-content:space-between}
+  .evh__tk{grid-template-columns:minmax(0,1fr)}
+  .evh__tk li{border-right:0;border-bottom:1.5px solid var(--c-ink)}
+  .evh__tk li:last-child{border-bottom:0}
+  .evh__btn{width:100%}
 }
 
-.hsd__head{padding-block:clamp(18px,2.8vw,38px) 0}
-.hsd__eyebrow{text-wrap:balance}
-.hsd__h{margin-top:var(--s4);font-family:var(--f-disp);font-weight:900;color:var(--c-ink);
-  font-size:clamp(22px,3.9vw,var(--fs-3xl));line-height:1.42;letter-spacing:.004em}
-.hsd__h em{font-style:normal;color:var(--c-primary-d)}
-.hsd__h .sml{display:block;font-size:.56em;color:var(--c-ink2);margin-bottom:var(--s2)}
+/* ===== event/event-lead-blocks ===== */
+/* event/event-lead-blocks
+   写真を使わずに「誰に・何が」を3つ並べる。
+   ・番号を大きく、罫1本で区切るだけ。カードにも影にもしない
+   ・見出し → リード（太字・大きめ） → 本文（小さめ）の3段で読ませる
+   写真が無くても間が持つのは、番号と罫が版面の骨になっているから。 */
+.evl{padding-block:clamp(48px,6vw,92px)}
+.evl__intro{max-width:40em;margin-inline:auto;text-align:center;
+  font-size:clamp(13px,1.05vw,15.5px);line-height:2.05;color:var(--c-ink2)}
 
-/* ── またぐブロック ───────────────────────────────
-   .hsd__meta を負のマージンで写真帯へ沈める。z-index を持たせないと
-   order で後ろに回った写真帯が上に描かれて消える。 */
-.hsd__meta{position:relative;z-index:2;margin-bottom:calc(var(--hsd-cross) * -1)}
+.evl__list{margin-top:clamp(30px,4vw,58px);display:grid;gap:0;
+  border-top:1.5px solid var(--c-ink)}
+.evl__item{display:grid;grid-template-columns:clamp(56px,7vw,104px) minmax(0,1fr);
+  gap:clamp(16px,2.4vw,40px);align-items:start;
+  padding-block:clamp(24px,3.2vw,44px);
+  border-bottom:1px solid color-mix(in srgb,var(--c-ink) 16%,transparent)}
 
-.hsd__panel{position:relative;
-  display:flex;align-items:flex-end;justify-content:space-between;
-  gap:var(--s5) var(--sp-el);flex-wrap:wrap;
-  padding-block:var(--s6);
-  box-shadow:none}                     /* 白い面は ::before 側が持つ */
+/* 番号は数字だけ。色は持たせず、級数だけで立てる */
+.evl__no{font-family:var(--f-num);font-weight:900;line-height:.9;
+  font-size:clamp(30px,4.4vw,64px);color:color-mix(in srgb,var(--c-ink) 16%,transparent)}
 
-/* 白い面。左は画面外まで面一に抜き、右は本文の右端でぴたりと止める。
-   出す辺を「下」の1つに絞る（四辺から出すと版ズレに見える）。
-   親要素そのものに background を敷くと右の止めが効かないので ::before に持たせる。
-   境界より上は地と同色なので姿が消え、写真に乗った部分だけが見える＝2面をつなぐ橋。 */
-.hsd__panel::before{content:"";position:absolute;z-index:-1;
-  top:0;bottom:0;left:-100vw;right:var(--hsd-inset);
-  background:var(--c-bg);border-radius:0 0 var(--r-m) 0;
-  box-shadow:var(--shadow)}
+.evl__label{display:inline-block;padding:5px 13px;border-radius:var(--r-pill);
+  background:var(--c-primary);color:var(--c-on-primary);
+  font-size:clamp(10.5px,.88vw,12.5px);font-weight:800;letter-spacing:.06em;line-height:1.2}
+.evl__t{margin-top:clamp(10px,1.2vw,15px);
+  font-family:var(--f-disp);font-weight:900;color:var(--c-ink);
+  font-size:clamp(18px,2vw,29px);line-height:1.4;letter-spacing:.005em}
+.evl__lead{margin-top:clamp(8px,1vw,13px);
+  font-size:clamp(13.5px,1.15vw,17px);font-weight:800;color:var(--c-primary);line-height:1.75}
+.evl__text{margin-top:clamp(10px,1.3vw,17px);max-width:44em;
+  font-size:clamp(12.5px,1vw,14.5px);color:var(--c-ink2);line-height:2.05}
 
-.hsd__facts{display:flex;gap:var(--s5) clamp(24px,4vw,var(--s7))}
-.hsd__fact{min-width:0}
-/* 数字と単位：級数比 約4.0〜4.4倍。単位は小さく・字間を開けて従属させる */
-.hsd__fact b{display:block;white-space:nowrap;   /* 数字と単位を1行に固定（折れるとベースラインが崩れる） */
-  font-family:var(--f-num);font-weight:900;line-height:1;color:var(--c-ink);
-  font-size:clamp(44px,3.4vw,var(--fs-3xl));letter-spacing:-.02em;font-variant-numeric:tabular-nums}
-.hsd__fact b i{font-style:normal;font-family:var(--f-sans);font-weight:700;
-  font-size:clamp(11px,.23em,var(--fs-sm));letter-spacing:.08em;margin-left:var(--s1)}
-.hsd__fact span{display:block;margin-top:var(--s3);font-size:var(--fs-sm);font-weight:700;color:var(--c-ink2);line-height:1.55}
-.hsd__cta{display:flex;flex-direction:column;gap:var(--s3);align-items:flex-start}
-.hsd__ctanote{font-size:var(--fs-sm);color:var(--c-ink3);line-height:1.6}
-.btn__arw{width:20px;height:9px;flex:none}
-.btn__arw svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.8}
+.evl__note{margin-top:clamp(22px,3vw,38px);text-align:center;
+  font-size:clamp(13px,1.1vw,16px);font-weight:800;color:var(--c-ink)}
 
-/* 写真帯：PCは縦の斜め継ぎ目。
-   ★ レーンの箱は「見える幅」に合わせる。帯の全幅に伸ばすと
-      写真が細長い枠に cover され、極端に拡大されてしまう。 */
-.hsd__lanes{position:relative;width:100%;height:clamp(340px,34vw,520px);
-  overflow:hidden;background:var(--c-bg2)}
-.hsd__lane{position:absolute;top:0;bottom:0;margin:0}
-.hsd__lane img{width:100%;height:100%;object-fit:cover}
-.hsd__lane--a{left:0;width:50%;                                   /* 実寸 0〜50% */
-  clip-path:polygon(0 0, 92.4% 0, 84.4% 100%, 0 100%)}            /* 継ぎ目 46.2%→42.2% */
-.hsd__lane--b{right:0;width:58%;                                  /* 実寸 42〜100% */
-  clip-path:polygon(10% 0, 100% 0, 100% 100%, 3.1% 100%)}         /* 継ぎ目 47.8%→43.8% */
-.hsd__lane--a img{object-position:var(--pos-a,42% 50%)}
-.hsd__lane--b img{object-position:var(--pos-b,50% 68%)}
-
-.hsd__foot{padding-block:var(--s4) var(--s6)}
-.hsd__note{font-size:var(--fs-note);color:var(--c-ink3);line-height:1.8}
-
-/* ───────── SP ─────────
-   写真をCTAより上に置く。またぎ先が写真帯の【下辺】に変わるので、
-   沈める向き（margin）と角丸の位置も上下反転させる。 */
-@media(max-width:900px){
-  .hd__in{height:60px}
-  .hd__cta{display:none}
-
-  .hsd__head{order:1}
-  .hsd__lanes{order:2}
-  .hsd__meta{order:3}
-  .hsd__foot{order:4}
-
-  /* SPは白の右端より内側に数字しか無いので、残す水平線を少し長く取る */
-  .hsd{--hsd-inset:var(--s6)}
-  .hsd__meta{margin-bottom:0;margin-top:calc(var(--hsd-cross) * -1)}
-  /* SPは写真帯の【下辺】をまたぐ。影は下に落ちる＝白地側にしか出ないので消す
-     （写真との境目は白と写真の輝度差だけで足りる） */
-  .hsd__panel::before{border-radius:0 var(--r-m) 0 0;box-shadow:none}
-
-  .hsd__head{padding-block:var(--s5) 0}
-  .hsd__h{line-height:1.5}
-  .hsd__facts{gap:var(--s5)}
-  .hsd__cta{align-self:stretch;width:100%}
-  .hsd__cta .btn{width:100%}
-  .hsd__ctanote{text-align:center}
-
-  /* 写真は上下2段。箱も上下に分ける（左右に伸ばさない） */
-  .hsd__lanes{margin-top:var(--s5);height:clamp(400px,104vw,600px)}
-  .hsd__lane{left:0;right:0;width:auto;top:auto;bottom:auto}
-  .hsd__lane--a{top:0;height:54%;
-    clip-path:polygon(0 0, 100% 0, 100% 89%, 0 100%)}
-  .hsd__lane--b{bottom:0;height:54%;
-    clip-path:polygon(0 11%, 100% 0, 100% 100%, 0 100%)}
-  .hsd__lane--a img{object-position:var(--pos-a-sp,40% 46%)}
-  .hsd__lane--b img{object-position:var(--pos-b-sp,44% 72%)}
-}
-@media(max-width:420px){
-  .hsd__h{font-size:clamp(21px,5.7vw,26px)}
+@media(max-width:640px){
+  .evl__item{grid-template-columns:minmax(0,1fr);gap:6px}
+  .evl__no{font-size:26px}
 }
 
-.hsd__fact.is-hi b{color:var(--c-accent)}
+/* ===== event/event-spec-timeline ===== */
+/* event/event-spec-timeline
+   概要（細罫の定義リスト）＋ 当日の流れ（縦のレール）。
+   ・表を格子で囲まない。罫は行に1本だけ
+   ・タイムテーブルは箱を並べず、縦1本のレールに時刻を打つ
+     （箱で並べると「表」になり、時間の流れが読めない）
+   ・級が2つあるので、レールを2本並走させて同じ日の午前／午後だと分かるようにする */
+.evs{padding-block:clamp(48px,6vw,92px)}
 
-/* ===== features/features-alt-row-cards ===== */
-/* features/features-alt-row-cards
-   横長カードを縦積みし、写真とテキストは1枚ごと左右反転。
-   工夫: shape/one-corner-mega   … 四隅のうち1隅だけを極端に丸め、残り3隅は直角。影は付けない
-         space/heading-outside-block … POINTラベルと見出しはカードの外へ外置き。罫は引かず空白距離だけ
-   地はキット側の tone（このページでは accent var(--c-primary-l)）が敷く。
-   パーツ側で背景を敷くと地の階段が壊れるので、ここでは面を持たない。
-   接頭辞 .arc__ */
+/* ── 概要 ── */
+.evs__spec{max-width:860px;margin-inline:auto;border-top:1.5px solid var(--c-ink)}
+.evs__row{display:grid;grid-template-columns:8.5em minmax(0,1fr);gap:0 clamp(14px,2vw,32px);
+  padding-block:clamp(13px,1.6vw,19px);
+  border-bottom:1px solid color-mix(in srgb,var(--c-ink) 16%,transparent)}
+.evs__row dt{font-size:clamp(11.5px,.95vw,13.5px);font-weight:800;letter-spacing:.04em;
+  color:var(--c-ink3);padding-top:.15em}
+.evs__row dd{margin:0;font-size:clamp(13px,1.05vw,15.5px);color:var(--c-ink);line-height:1.9}
 
-/* 角丸のスケールだけはトークンの外側に出る。「極大R」そのものが工夫の本体で、
-   6/12/24px では成立しないため。固定pxは置かず余白トークンで組む。
-   375px→36px / 1120px→90px / 1375px以上→110px。
-   極大Rを固定pxのままにすると狭い画面で角が要素を食い潰すので必ず clamp する。 */
-.arc{--arc-r:clamp(var(--s6),8vw,var(--s9))}
+/* ── 当日の流れ ── */
+.evs__tl{margin-top:clamp(38px,5vw,72px)}
+.evs__tlh{text-align:center;font-family:var(--f-disp);font-weight:900;color:var(--c-ink);
+  font-size:clamp(17px,1.7vw,24px);letter-spacing:.02em}
+.evs__cols{margin-top:clamp(22px,3vw,40px);
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(20px,3vw,48px)}
 
-/* ── カードの積み ──────────────────────────────
-   罫も影も無いので、離すのは余白だけ。
-   カード間 --sp-blk に対して、外置き見出し→カードは --s5。
-   この差だけで「この見出しは下のカードのもの」と読ませる。 */
-.arc__list{display:flex;flex-direction:column;gap:var(--sp-blk)}
+.evs__lv{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
+  padding-bottom:11px;border-bottom:1.5px solid var(--c-ink)}
+.evs__lv b{font-size:clamp(14px,1.25vw,18px);font-weight:900;color:var(--c-ink)}
+.evs__lv span{font-family:var(--f-num);font-size:clamp(12px,1vw,14px);font-weight:800;
+  color:var(--c-primary);letter-spacing:.01em}
 
-/* ── 1項目 ────────────────────────────────────
-   行1＝外置きの見出し／行2＝カード（全幅）。
-   列は カード内の 写真42% : 本文58% と同じ比で割り、見出しは本文側の帯にだけ置く。
-   空いた42%には罫も飾りも入れず、白のまま残す。 */
-.arc__item{display:grid;grid-template-columns:minmax(0,42fr) minmax(0,58fr);row-gap:var(--s5)}
-/* padding-inline はカードの内側余白と同じ値。ここが揃うと罫が無くても縦の線が通る */
-.arc__hgroup{grid-row:1;grid-column:2;padding-inline:var(--sp-el)}
-.arc__card{grid-row:2;grid-column:1 / -1}
+/* レールは ::before の1本。丸は各段の ::before */
+.evs__steps{position:relative;margin-top:clamp(14px,1.8vw,22px);
+  padding-left:clamp(20px,2.4vw,30px)}
+.evs__steps::before{content:"";position:absolute;left:5px;top:7px;bottom:7px;width:1.5px;
+  background:color-mix(in srgb,var(--c-ink) 18%,transparent)}
+.evs__step{position:relative;padding-block:clamp(9px,1.1vw,13px)}
+.evs__step::before{content:"";position:absolute;left:calc(-1 * clamp(20px,2.4vw,30px) + 1px);top:calc(.85em);
+  width:11px;height:11px;border-radius:50%;
+  background:var(--c-bg);border:2.5px solid var(--c-primary)}
+.evs__time{font-family:var(--f-num);font-size:clamp(12.5px,1.05vw,15px);font-weight:800;
+  color:var(--c-ink);letter-spacing:.01em}
+.evs__what{margin-top:2px;font-size:clamp(12px,.98vw,13.5px);color:var(--c-ink2);line-height:1.85}
 
-/* 偶数枚目は左右反転。丸める隅も一緒に反転させる（列内でバラバラにはしない） */
-.arc__item:nth-child(even){grid-template-columns:minmax(0,58fr) minmax(0,42fr)}
-.arc__item:nth-child(even) .arc__hgroup{grid-column:1}
+.evs__tlnote{margin-top:clamp(16px,2vw,24px);font-size:clamp(11px,.9vw,12.5px);
+  color:var(--c-ink3);line-height:1.85}
 
-/* ── 外置きの見出し ── */
-.arc__label{display:flex;align-items:baseline;gap:var(--s2);line-height:1}
-.arc__labelword{font-size:var(--fs-note);font-weight:700;letter-spacing:.16em;color:var(--c-ink3)}
-.arc__num{font-family:var(--f-num);font-weight:700;font-size:var(--fs-xl);line-height:1;
-  color:var(--c-ink);font-variant-numeric:tabular-nums}
-.arc__sub{margin-top:var(--s3);font-size:var(--fs-sm);font-weight:700;
-  color:var(--c-ink3);line-height:var(--lh-head)}
-.arc__title{margin-top:var(--s3);font-family:var(--f-disp);font-weight:900;color:var(--c-ink);
-  font-size:clamp(var(--fs-lg),1.9vw,var(--fs-xl));line-height:var(--lh-head);letter-spacing:.01em}
-/* 原稿の <em> は和文だと合成イタリックになって書体が崩れる。傾きだけ止める。
-   色は変えない（緑は押せる場所だけ・橙はページで2箇所と決まっているため）。 */
-.arc .sec-head__ja em,
-.arc__title em{font-style:normal}
+/* ── 注意事項 ── */
+.evs__notes{margin-top:clamp(30px,4vw,56px);max-width:860px;margin-inline:auto;
+  display:grid;gap:9px;padding-top:clamp(18px,2.2vw,26px);
+  border-top:1px solid color-mix(in srgb,var(--c-ink) 16%,transparent)}
+.evs__notes li{font-size:clamp(11px,.9vw,12.5px);color:var(--c-ink3);line-height:1.95}
 
-/* ── カード：1隅だけ極大R、残り3隅は直角。影は付けない ──
-   影を残すと「四隅が丸いカードの角を1つ大きくしただけ」に見え、非対称が方向として読まれない。
-   面は 地(accent var(--c-primary-l)) → カード(base #FFFFFF) の1段と、
-   削れた隅から三角に覗く地色、そして裁ち落とした写真の塊で立てる。
-   丸めるのは「写真側の上の隅」＝外置き見出しの向かい側。空いた帯の白がそのまま
-   削れた隅へ流れ込む。写真の下に置くキャプションや本文末のボタンとは当たらない。 */
-.arc__card{display:flex;align-items:stretch;overflow:hidden;
-  background:var(--c-bg);box-shadow:none;
-  border-radius:var(--arc-r) 0 0 0}
-.arc__item:nth-child(even) .arc__card{flex-direction:row-reverse;
-  border-radius:0 var(--arc-r) 0 0}
-
-/* 写真はカードの外側3辺まで裁ち落とす。丸めた隅は overflow で写真ごと削れる */
-.arc__media{flex:0 0 42%;margin:0;min-width:0;display:flex;flex-direction:column}
-.arc__media img{width:100%;flex:1 1 auto;min-height:calc(var(--s9) * 2.4);object-fit:cover}
-.arc__cap{flex:none;padding:var(--s3) var(--s5);
-  font-size:var(--fs-note);color:var(--c-ink3);line-height:var(--lh-body)}
-
-.arc__body{flex:1 1 auto;min-width:0;padding:var(--sp-el)}
-/* 写真が無い項目（＝本文がカードの唯一の中身）。全幅に伸ばすと読みにくいので
-   写真ありの本文と同じ 58% の帯に収め、外置き見出しの真下へ寄せて縦の線を保つ。
-   空いた側に極大Rが来るので、削れた隅がコピーに当たらない。 */
-.arc__body:first-child{max-width:58%;margin-inline-start:auto}
-.arc__item:nth-child(even) .arc__body:first-child{margin-inline-start:0;margin-inline-end:auto}
-.arc__text{font-size:var(--fs-base);color:var(--c-ink2);line-height:var(--lh-body)}
-
-/* CTA は _base.css の .btn 1形のまま。ここでは位置だけ決める */
-.arc__act{margin-top:var(--s5)}
-
-.arc__note{margin-top:var(--sp-el);font-size:var(--fs-note);color:var(--c-ink3);line-height:var(--lh-body)}
-
-/* ───────── 900px以下（写真上・テキスト下の1列。左右反転は解除） ─────────
-   外置きはPCだけの表情と割り切り、見出しは版面の左端へ戻す。
-   丸める隅の左右反転だけは残すので、縦に読んでも1枚ごとの向きが分かる。 */
-@media(max-width:900px){
-  .arc__list{gap:var(--sp-el)}
-
-  .arc__item,
-  .arc__item:nth-child(even){grid-template-columns:minmax(0,1fr);row-gap:var(--s4)}
-  .arc__hgroup,
-  .arc__item:nth-child(even) .arc__hgroup{grid-column:1;padding-inline:0}
-  .arc__card{grid-column:1}
-  .arc__card,
-  .arc__item:nth-child(even) .arc__card{flex-direction:column}
-
-  .arc__num{font-size:var(--fs-lg)}
-  .arc__title{font-size:clamp(var(--fs-md),4.6vw,var(--fs-lg))}
-
-  .arc__media{flex:none}
-  .arc__media img{flex:none;min-height:0;aspect-ratio:16/10}
-
-  .arc__body,
-  .arc__body:first-child,
-  .arc__item:nth-child(even) .arc__body:first-child{padding:var(--s5);max-width:none;margin-inline:0}
-  .arc__act{margin-top:var(--s4)}
-  .arc__act .btn{width:100%}
-}
-@media(max-width:520px){
-  .arc__body,
-  .arc__body:first-child,
-  .arc__item:nth-child(even) .arc__body:first-child{padding:var(--s4)}
-  .arc__cap{padding:var(--s3) var(--s4)}
-  .arc__media img{aspect-ratio:3/2}
-}
-
-/* shape/one-corner-mega：四隅のうち1隅だけ極端に丸め、残り3隅は直角のまま。
-   左右反転する行では、丸める隅も反転させる */
-.arc__card{border-radius:0 0 0 64px;overflow:hidden}
-.arc__item:nth-child(even) .arc__card{border-radius:0 0 64px 0}
-@media(max-width:900px){.arc__card,.arc__item:nth-child(even) .arc__card{border-radius:0 0 0 40px}}
-
-/* ===== access/access-campus-tabs ===== */
-/* access/access-campus-tabs
-   校舎ごとに「情報・料金・タイムテーブル・挨拶」を1つのタブの中へ入れる。
-   原稿の構成そのもの。同じ表が校舎別に2回ずつ直列に並ぶのを避ける。
-   切り替えは JS なし（ラジオ＋:checked）。
-   ─ 使っている工夫 ─
-   rule/table-no-grid        … 表の格子罫を全部消し、行は不透明度6%の1本だけにする
-   rule/dissolve-into-ground … 面は影を持たず、地との明度差だけで立てる */
-.cts__box{position:relative}
-.cts__radio{position:absolute;opacity:0;pointer-events:none;width:0;height:0}
-
-/* ── タブ ── */
-.cts__tabs{display:flex;justify-content:center;gap:var(--s2);margin-bottom:var(--sp-el);flex-wrap:wrap}
-.cts__tab{display:inline-flex;align-items:center;justify-content:center;
-  min-width:180px;height:52px;padding:0 var(--s5);cursor:pointer;
-  font-weight:700;font-size:var(--fs-md);color:var(--c-ink3);
-  background:var(--c-bg2);border-radius:var(--r-pill);
-  transition:background .16s var(--e),color .16s var(--e)}
-@media(hover:hover) and (pointer:fine){.cts__tab:hover{color:var(--c-ink)}}
-.cts__radio:nth-of-type(1):checked ~ .cts__tabs .cts__tab:nth-of-type(1),
-.cts__radio:nth-of-type(2):checked ~ .cts__tabs .cts__tab:nth-of-type(2),
-.cts__radio:nth-of-type(3):checked ~ .cts__tabs .cts__tab:nth-of-type(3){
-  background:var(--c-primary);color:var(--c-on-primary)}
-.cts__radio:focus-visible ~ .cts__tabs .cts__tab{outline:3px solid var(--c-primary);outline-offset:3px}
-
-/* ── パネル ── */
-.cts__panel{display:none}
-.cts__radio:nth-of-type(1):checked ~ .cts__panels .cts__panel:nth-of-type(1),
-.cts__radio:nth-of-type(2):checked ~ .cts__panels .cts__panel:nth-of-type(2),
-.cts__radio:nth-of-type(3):checked ~ .cts__panels .cts__panel:nth-of-type(3){display:block}
-/* JSもCSSも効かない環境では先頭を出す保険 */
-.cts__panels .cts__panel:first-child{display:block}
-.cts__radio:checked ~ .cts__panels .cts__panel:first-child{display:none}
-.cts__radio:nth-of-type(1):checked ~ .cts__panels .cts__panel:first-child{display:block}
-
-/* ── 上段：写真＋情報 ── */
-.cts__top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--sp-el);align-items:start}
-.cts__figure{margin:0;border-radius:var(--r-m);overflow:hidden;background:var(--c-bg2)}
-/* 教室の写真は切らない。枠の比を画像そのものの比に合わせる
-   （オンライン校は横長で、16:10に収めると左右が大きく欠ける） */
-.cts__figure img{width:100%;height:auto;aspect-ratio:auto;object-fit:contain;display:block}
-/* 説明文は表の【下】。上に置くと、先に読みたい営業時間・対象が押し下がる */
-.cts__body{margin-top:var(--sp-el);font-size:var(--fs-sm);line-height:1.95;color:var(--c-ink2)}
-.cts__tel{display:flex;align-items:baseline;gap:var(--s3);margin-bottom:var(--s5)}
-.cts__tel span{font-size:var(--fs-note);color:var(--c-ink3);font-weight:700}
-.cts__tel a{font-family:var(--f-num);font-weight:900;font-size:clamp(24px,2.6vw,32px);
-  color:var(--c-primary);letter-spacing:.01em;line-height:1}
-/* 罫は引かず、行は不透明度6%の1本だけ */
-.cts__dl{display:grid;grid-template-columns:7.5em minmax(0,1fr);gap:0 var(--s4);font-size:var(--fs-sm)}
-.cts__dl dt{padding:12px 0;color:var(--c-ink3);font-weight:700;border-top:1px solid rgba(48,48,48,.06)}
-.cts__dl dd{padding:12px 0;margin:0;color:var(--c-ink2);line-height:1.75;border-top:1px solid rgba(48,48,48,.06)}
-.cts__dl dt:first-of-type,.cts__dl dd:first-of-type{border-top:0}
-
-/* ── 各ブロック ── */
-.cts__block{margin-top:var(--sp-blk)}
-.cts__h3{font-family:var(--f-disp);font-weight:900;font-size:var(--fs-lg);color:var(--c-ink);
-  margin-bottom:var(--sp-el)}
-
-/* 料金：罫なし。価格だけが主役 */
-.cts__plans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s2)}
-/* 1つしかない回は3列の左端に取り残される。中央に1枚だけ置く */
-.cts__plans:has(> :only-child){grid-template-columns:minmax(0,340px);justify-content:center}
-/* 白地の上でグレーの箱は沈む。ブランド色の淡い面＋左に線で立てる */
-/* 面は無彩の薄グレー。--c-primary-l は黄緑寄りで、ブランド緑の横だと濁って見える */
-.cts__plan{background:var(--c-bg2);border-radius:var(--r-m);
-  padding:var(--s5) var(--s4);text-align:center;border-top:4px solid var(--c-primary)}
-.cts__planname{font-weight:700;font-size:var(--fs-md);color:var(--c-ink)}
-.cts__planname span{display:block;margin-top:2px;font-size:var(--fs-note);color:var(--c-ink3);font-weight:400}
-.cts__price{margin-top:var(--s4);font-family:var(--f-num);font-weight:900;
-  font-size:clamp(21px,2.4vw,28px);color:var(--c-primary);line-height:1}
-
-/* タイムテーブル：格子罫なし。列は余白だけで分ける */
-.cts__tt{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s2)}
-.cts__day{background:var(--c-bg2);border-radius:var(--r-m);padding:var(--s5) var(--s4)}
-/* 休校日は面を持たせず、破線の枠だけにして開講日と分ける */
-.cts__day.is-off{background:transparent;border:1px dashed var(--c-line);color:var(--c-ink3)}
-.cts__dayname{font-weight:900;font-size:var(--fs-md);color:var(--c-ink);text-align:center;
-  padding-bottom:var(--s4);border-bottom:1px solid rgba(48,48,48,.06)}
-.cts__day.is-off .cts__dayname{color:var(--c-ink3)}
-.cts__off{padding:var(--sp-el) 0;text-align:center;color:var(--c-ink3);font-size:var(--fs-sm)}
-.cts__slots{margin-top:var(--s4);display:grid;gap:var(--s2)}
-.cts__slots li{font-size:var(--fs-sm);color:var(--c-ink2);text-align:center;padding:6px 0}
-.cts__slots li span{display:block;margin-top:2px;font-size:var(--fs-note);color:var(--c-ink3)}
-.cts__notes{margin-top:var(--s5);display:grid;gap:4px}
-.cts__notes li{font-size:var(--fs-note);color:var(--c-ink3);line-height:1.8}
-
-/* 挨拶（渋谷校のみ） */
-/* スクールマネジャー紹介（member-blob-portrait-letter）と同じ組み。
-   写真を左に通しで置き、肩書・氏名・本文はすべて右の列へ。
-   .cts__msghead を display:contents にして、中の2つを直接この格子へ参加させる。 */
-.cts__msgbody{display:grid;grid-template-columns:clamp(92px,8.2vw,116px) minmax(0,1fr);
-  column-gap:clamp(20px,2.6vw,40px);row-gap:0;align-items:start}
-.cts__msghead{display:contents}
-/* 写真は左に通しで置く */
-.cts__msgfigwrap{grid-column:1;grid-row:1 / span 2;align-self:start;position:relative}
-/* 枠は要素の内側で作る（外向きの影は clip-path に切られる） */
-.cts__msgfig{position:relative;z-index:2;margin:0;
-  border:1px solid var(--c-line);border-radius:50%;padding:5px;background:var(--c-bg)}
-.cts__msgfig img{width:100%;aspect-ratio:1/1;object-fit:cover;object-position:50% 14%;display:block;
-  border-radius:50%;background:var(--c-bg)}
-.cts__msgbody > .cts__msgid,
-.cts__msgbody > .mbl__fold,
-.cts__msgbody > .mbl__more{grid-column:2}
-/* ボタンは格子の升に引き伸ばさない（既定の stretch だと列幅いっぱいになる） */
-.cts__msgbody > .mbl__more{justify-self:start}
-.cts__msgrole{font-size:clamp(10.5px,.88vw,12.5px);color:var(--c-ink3);font-weight:700;letter-spacing:.04em}
-.cts__msgname{margin-top:3px;font-family:var(--f-disp);font-weight:900;
-  font-size:clamp(19px,1.65vw,23px);color:var(--c-ink);letter-spacing:.04em}
-/* 罫はたたむ箱の【外】に置く。中に入れると、たたんだ高さから罫と余白のぶんが
-   本文に食い込み、開閉の実測ともズレる（マネジャー紹介と同じ扱い） */
-.cts__msgid{padding-bottom:clamp(14px,1.7vw,22px);border-bottom:1px solid var(--c-line)}
-.cts__msgbody > .mbl__fold{margin-top:clamp(14px,1.7vw,22px)}
-.cts__msgtext{max-width:44em;font-size:var(--fs-sm);line-height:2.05;color:var(--c-ink2)}
-.cts__msgtext p + p{margin-top:1.4em}
-
-@media(max-width:900px){
-  .cts__tab{min-width:0;flex:1;height:48px;font-size:var(--fs-sm);padding:0 var(--s4)}
-  .cts__top{grid-template-columns:minmax(0,1fr);gap:var(--s5)}
-  .cts__plans,.cts__tt{grid-template-columns:minmax(0,1fr)}
-  .cts__dl{grid-template-columns:6.5em minmax(0,1fr)}
-  .cts__msgbody{grid-template-columns:minmax(0,1fr);row-gap:16px}
-  .cts__msgfigwrap{grid-row:auto;width:104px}
-  .cts__msgid,.cts__msgtext{grid-column:1}
+@media(max-width:760px){
+  .evs__row{grid-template-columns:minmax(0,1fr);gap:4px}
+  .evs__cols{grid-template-columns:minmax(0,1fr);gap:32px}
 }
 
 /* ===== cta/cta-priority-stack ===== */
@@ -1130,282 +956,176 @@ html:not(.js) .lm__i{transform:none}
   <a class="hdr__logo" href="https://eslclub.jp/" aria-label="ESL club"><img src="img/logo.svg" alt="ESL club"></a>
   <a class="btn btn--sm hdr__cta" href="#apply">申し込みフォームへ</a>
 </header>
-<!-- hero/hero-split-diag (clear) -->
-<div class="tone-clear">
-<header class="hd">
-  <div class="wrap hd__in">
-    <p class="hd__logo"><a href="https://eslclub.jp/"><img src="img/logo.svg" alt="ESL club"></a></p>
-    <a class="btn btn--sm hd__cta" href="#apply">申し込みフォームへ</a>
-  </div>
-</header>
-
-<section class="hsd">
-
-  <div class="hsd__head">
-    <div class="wrap">
-      <p class="h-eyebrow hsd__eyebrow fx" data-fx="left">秋の英検®受験を予定している皆さんへ</p>
-      <h1 class="hsd__h fx" data-fx="fadeup" data-d="70">英検®プレテスト（模擬試験）<wbr><br>＆<span class="nb">個別相談会</span></h1>
-    </div>
-  </div>
-
-  <div class="hsd__meta">
-    <div class="wrap hsd__panel">
-      <ul class="hsd__facts">
-        <li class="hsd__fact  fx" data-fx="fadeup" data-d="0">
-          <b>8/30<i>(日)</i></b><span>2026年</span>
-        </li><li class="hsd__fact  fx" data-fx="fadeup" data-d="90">
-          <b>5<i>級</i></b><span>10:00〜12:15</span>
-        </li><li class="hsd__fact  fx" data-fx="fadeup" data-d="180">
-          <b>準2<i>級</i></b><span>14:00〜16:50</span>
-        </li>
-      </ul>
-      <div class="hsd__cta fx" data-fx="fadeup" data-d="240">
-        <a class="btn" href="#apply">申し込みフォームへ
-          <span class="btn__arw"><svg viewBox="0 0 22 10" aria-hidden="true"><path d="M0 5h19M15 1l4 4-4 4"/></svg></span>
-        </a>
-        <p class="hsd__ctanote">お申込み期限：2026年8月21日(金)</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="hsd__lanes fx" data-fx="clip" data-d="120">
-    <figure class="hsd__lane hsd__lane--a"><img src="img/p06.jpg" alt="机に向かって問題を解く小学生"></figure>
-    <figure class="hsd__lane hsd__lane--b"><img src="img/p16.jpg" alt="机に向かって学習する様子"></figure>
-  </div>
-
-  <div class="hsd__foot"><div class="wrap"><p class="hsd__note">会場：ESL club 渋谷校（〒150-0002　東京都渋谷区渋谷1丁目8−6　宮益坂STビル 10F）</p></div></div>
-
-</section>
-
-</div>
-<!-- features/features-alt-row-cards (base) -->
+<!-- event/event-poster-hero (base) -->
 <div class="tone-base">
-<section class="sec arc">
+<section class="evh">
   <div class="wrap">
 
-    
-    <div class="sec-head">
-      
-      <h2 class="sec-head__ja fx" data-fx="fadeup" data-d="70">英検®5級・準2級の模擬試験を、<wbr><span class="nb">英検®準会場のESL club 渋谷校で。</span></h2>
-      <p class="sec-head__sub fx" data-fx="fadeup" data-d="140">「今の実力で合格できそう？」「本番まであと1か月、何を勉強すればいい？」そんな不安や疑問を解消するために、英検®プレテスト（模擬試験）＆個別相談会を開催します。今回は、英検®5級・英検®準2級の模擬試験を、英検®準会場でもあるESL club 渋谷校で実施します。</p>
+    <p class="evh__top fx" data-fx="left">秋の英検®受験を予定している皆さんへ</p>
+
+    <div class="evh__grid">
+      <div class="evh__title fx" data-fx="fadeup" data-d="60">
+        <p class="evh__venue">ESL club 渋谷校（英検®準会場）</p>
+        <h1 class="evh__h">英検®プレテスト<wbr><br>（模擬試験）<wbr><br>＆<span class="nb">個別相談会</span></h1>
+        <ul class="evh__tags"><li>英検®5級</li><li>英検®準2級</li><li>個別相談つき</li></ul>
+      </div>
+
+      <div class="evh__date fx" data-fx="fadeup" data-d="130">
+        <p class="evh__y">2026</p>
+        <p class="evh__md">8<span>/</span>30<em>SUN</em></p>
+        <ul class="evh__times">
+          <li><b>英検®5級</b><span>10:00–12:15</span></li><li><b>英検®準2級</b><span>14:00–16:50</span></li>
+        </ul>
+      </div>
     </div>
-    
 
-    <ol class="arc__list">
-      
-      <li class="arc__item fx" data-fx="fadeup" data-d="0">
+    <div class="evh__ticket fx" data-fx="fadeup" data-d="200">
+      <p class="evh__tkh">参加費（クレジットカード払いのみ）</p>
+      <ul class="evh__tk">
+        <li><b>英検®5級</b><span>10:00–12:15</span><em>1,000円</em></li><li><b>英検®準2級</b><span>14:00–16:50</span><em>1,500円</em></li>
+      </ul>
+      <div class="evh__act">
+        <a class="btn evh__btn" href="#apply">申し込みフォームへ
+          <span class="btn__arw"><svg viewBox="0 0 22 10" aria-hidden="true"><path d="M0 5h19M15 1l4 4-4 4"/></svg></span>
+        </a>
+        <p class="evh__note">お申込み期限：2026年8月21日(金)</p>
+      </div>
+    </div>
 
-        <div class="arc__hgroup">
-          <p class="arc__label">
-            <span class="arc__labelword">5級</span><span class="arc__num">1</span>
-          </p>
-          <p class="arc__sub">本番と同じような環境で、試験当日の流れを事前に体験できます。</p>
-          <h3 class="arc__title">英検®5級を受験予定の方へ</h3>
-        </div>
+    <p class="evh__place fx" data-fx="fadeup" data-d="260">会場：ESL club 渋谷校　〒150-0002　東京都渋谷区渋谷1丁目8−6　宮益坂STビル 10F</p>
 
-        <article class="arc__card">
-          
-          <figure class="arc__media">
-            <img src="img/p02.jpg" alt="ヘッドホンで音声を聞きながら学習する小学生" loading="lazy" decoding="async">
-            
-          </figure>
-          
+  </div>
 
-          <div class="arc__body">
-            <p class="arc__text">初めて英検®を受験する方は、「準会場ってどんな雰囲気？」「試験はどのように進むの？」「マークシートはどう書くの？」など、不安を感じることも多いと思います。本番と同じような環境で模擬試験を受けることで、試験当日の流れを事前に体験できます。安心して本番に臨むための練習として、ぜひご活用ください。</p>
-            
-          </div>
-        </article>
-
-      </li>
-      
-      <li class="arc__item fx" data-fx="fadeup" data-d="90">
-
-        <div class="arc__hgroup">
-          <p class="arc__label">
-            <span class="arc__labelword">準2級</span><span class="arc__num">2</span>
-          </p>
-          <p class="arc__sub">本番前の実力チェックとして、現在の到達度や課題を確認できる絶好の機会です。</p>
-          <h3 class="arc__title">英検®準2級を受験予定の方へ</h3>
-        </div>
-
-        <article class="arc__card">
-          
-          <figure class="arc__media">
-            <img src="img/p20.jpg" alt="テキストとパソコンで学習する中高生" loading="lazy" decoding="async">
-            
-          </figure>
-          
-
-          <div class="arc__body">
-            <p class="arc__text">プレテストの結果をもとに、本番までの約1か月で取り組むべき学習内容を明確にし、効率よく合格を目指しましょう。</p>
-            
-          </div>
-        </article>
-
-      </li>
-      
-      <li class="arc__item fx" data-fx="fadeup" data-d="180">
-
-        <div class="arc__hgroup">
-          <p class="arc__label">
-            <span class="arc__labelword">個別相談会</span><span class="arc__num">3</span>
-          </p>
-          <p class="arc__sub">保護者・生徒・ESL clubスクールマネジャーによる個別相談会を行います。</p>
-          <h3 class="arc__title">模擬試験後は個別相談会を実施</h3>
-        </div>
-
-        <article class="arc__card">
-          
-          <figure class="arc__media">
-            <img src="img/teachers_kv.jpg" alt="ESL clubのスクールマネジャーと講師" loading="lazy" decoding="async">
-            
-          </figure>
-          
-
-          <div class="arc__body">
-            <p class="arc__text">プレテストの結果をもとに、得意・不得意や今後の学習方法を一緒に確認し、一人ひとりに合わせた学習アドバイスをお伝えします。「あと何点必要？」「家庭ではどんな勉強をすればいい？」など、気になることもお気軽にご相談ください。</p>
-            
-          </div>
-        </article>
-
-      </li>
-      
-    </ol>
-
-    <p class="arc__note fx" data-fx="fadeup">みなさまのご参加を心よりお待ちしております！</p>
-
+  <div class="evh__marquee" aria-hidden="true">
+    <div class="evh__mrun"><span>英検®プレテスト（模擬試験）＆個別相談会　—　2026.8.30 SUN　ESL club 渋谷校　—</span><span>英検®プレテスト（模擬試験）＆個別相談会　—　2026.8.30 SUN　ESL club 渋谷校　—</span><span>英検®プレテスト（模擬試験）＆個別相談会　—　2026.8.30 SUN　ESL club 渋谷校　—</span><span>英検®プレテスト（模擬試験）＆個別相談会　—　2026.8.30 SUN　ESL club 渋谷校　—</span></div>
   </div>
 </section>
 
 </div>
-<!-- access/access-campus-tabs (brand) -->
-<div class="tone-brand">
-<section class="sec cts" >
+<!-- event/event-lead-blocks (base) -->
+<div class="tone-base">
+<section class="evl">
+  <div class="wrap">
+    <div class="sec-head">
+      
+      <h2 class="sec-head__ja">英検®5級・準2級の模擬試験を、<wbr><span class="nb">英検®準会場のESL club 渋谷校で。</span></h2>
+    </div>
+
+    <p class="evl__intro fx" data-fx="fadeup">「今の実力で合格できそう？」「本番まであと1か月、何を勉強すればいい？」そんな不安や疑問を解消するために、英検®プレテスト（模擬試験）＆個別相談会を開催します。今回は、英検®5級・英検®準2級の模擬試験を、英検®準会場でもあるESL club 渋谷校で実施します。</p>
+
+    <ul class="evl__list">
+      <li class="evl__item fx" data-fx="fadeup" data-d="0">
+        <p class="evl__no">1</p>
+        <div class="evl__main">
+          <p class="evl__label">英検®5級</p>
+          <h3 class="evl__t">英検®5級を受験予定の方へ</h3>
+          <p class="evl__lead">本番と同じような環境で模擬試験を受けることで、試験当日の流れを事前に体験できます。</p>
+          <p class="evl__text">初めて英検®を受験する方は、「準会場ってどんな雰囲気？」「試験はどのように進むの？」「マークシートはどう書くの？」など、不安を感じることも多いと思います。安心して本番に臨むための練習として、ぜひご活用ください。</p>
+        </div>
+      </li><li class="evl__item fx" data-fx="fadeup" data-d="90">
+        <p class="evl__no">2</p>
+        <div class="evl__main">
+          <p class="evl__label">英検®準2級</p>
+          <h3 class="evl__t">英検®準2級を受験予定の方へ</h3>
+          <p class="evl__lead">本番前の実力チェックとして、現在の到達度や課題を確認できる絶好の機会です。</p>
+          <p class="evl__text">プレテストの結果をもとに、本番までの約1か月で取り組むべき学習内容を明確にし、効率よく合格を目指しましょう。</p>
+        </div>
+      </li><li class="evl__item fx" data-fx="fadeup" data-d="180">
+        <p class="evl__no">3</p>
+        <div class="evl__main">
+          <p class="evl__label">全員</p>
+          <h3 class="evl__t">模擬試験後は個別相談会を実施</h3>
+          <p class="evl__lead">模擬試験終了後には、保護者・生徒・ESL clubスクールマネジャーによる個別相談会を行います。</p>
+          <p class="evl__text">プレテストの結果をもとに、得意・不得意や今後の学習方法を一緒に確認し、一人ひとりに合わせた学習アドバイスをお伝えします。「あと何点必要？」「家庭ではどんな勉強をすればいい？」など、気になることもお気軽にご相談ください。</p>
+        </div>
+      </li>
+    </ul>
+
+    <p class="evl__note fx" data-fx="fadeup">みなさまのご参加を心よりお待ちしております！</p>
+  </div>
+</section>
+
+</div>
+<!-- event/event-spec-timeline (tint) -->
+<div class="tone-tint">
+<section class="evs">
   <div class="wrap">
     <div class="sec-head">
       
       <h2 class="sec-head__ja">実施概要</h2>
-      
     </div>
 
-    <div class="cts__box">
-      <input class="cts__radio" type="radio" name="cts-lv" id="cts-lv-1" checked><input class="cts__radio" type="radio" name="cts-lv" id="cts-lv-2" >
-
-      <div class="cts__tabs" role="tablist">
-        <label class="cts__tab" for="cts-lv-1">英検®5級</label><label class="cts__tab" for="cts-lv-2">英検®準2級</label>
+    <dl class="evs__spec">
+      <div class="evs__row fx" data-fx="fadeup" data-d="0">
+        <dt>イベント名</dt><dd>英検®プレテスト（模擬試験）＆個別相談会</dd>
+      </div><div class="evs__row fx" data-fx="fadeup" data-d="90">
+        <dt>日程</dt><dd>2026年8月30日(日)</dd>
+      </div><div class="evs__row fx" data-fx="fadeup" data-d="180">
+        <dt>会場</dt><dd>ESL club 渋谷校（〒150-0002　東京都渋谷区渋谷1丁目8−6　宮益坂STビル 10F）</dd>
+      </div><div class="evs__row fx" data-fx="fadeup" data-d="270">
+        <dt>対象</dt><dd>＜5級イベント＞英検5級未受験者、または5級の受験を検討中の小学生<br>＜準2級イベント＞英検準2級未受験者、または準2級の受験を検討中の小中高生</dd>
+      </div><div class="evs__row fx" data-fx="fadeup" data-d="360">
+        <dt>参加費</dt><dd>＜5級イベント＞1,000円　／　＜準2級イベント＞1,500円</dd>
+      </div><div class="evs__row fx" data-fx="fadeup" data-d="450">
+        <dt>定員</dt><dd>各級 4名（最低遂行人数：各級2名）</dd>
+      </div><div class="evs__row fx" data-fx="fadeup" data-d="540">
+        <dt>お申込み期限</dt><dd>2026年8月21日(金)　※定員に達した場合は期間内であっても受付を終了いたします。</dd>
+      </div><div class="evs__row fx" data-fx="fadeup" data-d="630">
+        <dt>申し込み方法</dt><dd>まずは申し込みフォームよりお申し込みください。お支払い方法については追って、メールでご案内いたします。</dd>
       </div>
+    </dl>
 
-      <div class="cts__panels">
-        <div class="cts__panel">
-
-          <div class="cts__top">
-            <figure class="cts__figure">
-              <img src="img/classroom.jpg" alt="ESL club 渋谷校の教室">
-            </figure>
-            <div class="cts__info">
-              
-              <dl class="cts__dl">
-                <dt>日程</dt><dd>2026年8月30日(日)　10:00〜12:15</dd>
-                <dt>会場</dt><dd>ESL club 渋谷校（〒150-0002　東京都渋谷区渋谷1丁目8−6　宮益坂STビル 10F）</dd>
-                <dt>対象</dt><dd>英検5級未受験者、または5級の受験を検討中の小学生</dd>
-                <dt>定員</dt><dd>4名（最低遂行人数：2名）</dd>
-                <dt>参加費</dt><dd>1,000円</dd>
-                <dt>申込期限</dt><dd>2026年8月21日(金)　※定員に達した場合は期間内であっても受付を終了いたします。</dd>
-              </dl>
-              
-            </div>
-          </div>
-
-          <div class="cts__block">
-            <h3 class="cts__h3">参加費</h3>
-            <ul class="cts__plans">
-              <li class="cts__plan">
-                <p class="cts__planname">英検®5級<span>10:00〜12:15</span></p>
-                <p class="cts__price">1,000円</p>
-              </li>
-            </ul>
-            <ul class="cts__notes"><li>※クレジットカード支払いのみとなります。お申し込み後、イベント1週間前までのクレジットカードのご登録の確認ができない場合は自動キャンセルとさせていただきますのでご了承ください。</li><li>※イベント2日前（8月27日(木) 23:59）以降のキャンセルは、ご欠席扱いとなり、ご返金はできませんのでご了承ください。キャンセルはメールまたはお電話にてご連絡をお願いいたします。</li></ul>
-          </div>
-
-          <div class="cts__block">
-            <h3 class="cts__h3">タイムテーブル</h3>
-            <div class="cts__tt">
-              <div class="cts__day">
-                <p class="cts__dayname">受付・練習</p>
-                
-                <ul class="cts__slots"><li>10:00〜10:15<span>受付、マークシートの練習、個人情報記入の練習</span></li></ul>
-              </div><div class="cts__day">
-                <p class="cts__dayname">模擬試験</p>
-                
-                <ul class="cts__slots"><li>10:20〜11:10<span>模擬試験（Reading & Listening）</span></li><li>11:10〜11:20<span>解答用紙回収、ラップアップ</span></li></ul>
-              </div><div class="cts__day">
-                <p class="cts__dayname">個別相談会</p>
-                
-                <ul class="cts__slots"><li>11:25〜11:45<span>個別相談会①</span></li><li>11:55〜12:15<span>個別相談会②</span></li></ul>
-              </div>
-            </div>
-            <ul class="cts__notes"><li>※ラップアップと個別相談会①のあいだに、次の方の採点を行います。</li></ul>
-          </div>
-
-          
-
-        </div><div class="cts__panel">
-
-          <div class="cts__top">
-            <figure class="cts__figure">
-              <img src="img/classroom.jpg" alt="ESL club 渋谷校の教室">
-            </figure>
-            <div class="cts__info">
-              
-              <dl class="cts__dl">
-                <dt>日程</dt><dd>2026年8月30日(日)　14:00〜16:50</dd>
-                <dt>会場</dt><dd>ESL club 渋谷校（〒150-0002　東京都渋谷区渋谷1丁目8−6　宮益坂STビル 10F）</dd>
-                <dt>対象</dt><dd>英検準2級未受験者、または準2級の受験を検討中の小中高生</dd>
-                <dt>定員</dt><dd>4名（最低遂行人数：2名）</dd>
-                <dt>参加費</dt><dd>1,500円</dd>
-                <dt>申込期限</dt><dd>2026年8月21日(金)　※定員に達した場合は期間内であっても受付を終了いたします。</dd>
-              </dl>
-              
-            </div>
-          </div>
-
-          <div class="cts__block">
-            <h3 class="cts__h3">参加費</h3>
-            <ul class="cts__plans">
-              <li class="cts__plan">
-                <p class="cts__planname">英検®準2級<span>14:00〜16:50</span></p>
-                <p class="cts__price">1,500円</p>
-              </li>
-            </ul>
-            <ul class="cts__notes"><li>※クレジットカード支払いのみとなります。お申し込み後、イベント1週間前までのクレジットカードのご登録の確認ができない場合は自動キャンセルとさせていただきますのでご了承ください。</li><li>※イベント2日前（8月27日(木) 23:59）以降のキャンセルは、ご欠席扱いとなり、ご返金はできませんのでご了承ください。キャンセルはメールまたはお電話にてご連絡をお願いいたします。</li></ul>
-          </div>
-
-          <div class="cts__block">
-            <h3 class="cts__h3">タイムテーブル</h3>
-            <div class="cts__tt">
-              <div class="cts__day">
-                <p class="cts__dayname">受付・練習</p>
-                
-                <ul class="cts__slots"><li>14:00〜14:15<span>受付、個人情報記入の練習</span></li></ul>
-              </div><div class="cts__day">
-                <p class="cts__dayname">模擬試験</p>
-                
-                <ul class="cts__slots"><li>14:20〜15:40<span>模擬試験（Reading & Writing）</span></li><li>15:40〜15:55<span>解答用紙回収、ラップアップ</span></li></ul>
-              </div><div class="cts__day">
-                <p class="cts__dayname">個別相談会</p>
-                
-                <ul class="cts__slots"><li>16:00〜16:20<span>個別相談会①</span></li><li>16:30〜16:50<span>個別相談会②</span></li></ul>
-              </div>
-            </div>
-            <ul class="cts__notes"><li>※ラップアップと個別相談会①のあいだに、Reading のみ採点を行います。</li></ul>
-          </div>
-
-          
-
+    <div class="evs__tl">
+      <p class="evs__tlh fx" data-fx="fadeup">当日の流れ</p>
+      <div class="evs__cols">
+        <div class="evs__col fx" data-fx="fadeup" data-d="0">
+          <p class="evs__lv"><b>英検®5級</b><span>10:00–12:15</span></p>
+          <ol class="evs__steps">
+            <li class="evs__step">
+              <p class="evs__time">10:00〜10:15</p>
+              <p class="evs__what">受付、マークシートの練習、個人情報記入の練習</p>
+            </li><li class="evs__step">
+              <p class="evs__time">10:20〜11:10</p>
+              <p class="evs__what">模擬試験（Reading & Listening）</p>
+            </li><li class="evs__step">
+              <p class="evs__time">11:10〜11:20</p>
+              <p class="evs__what">解答用紙回収、ラップアップ</p>
+            </li><li class="evs__step">
+              <p class="evs__time">11:25〜11:45</p>
+              <p class="evs__what">個別相談会①</p>
+            </li><li class="evs__step">
+              <p class="evs__time">11:55〜12:15</p>
+              <p class="evs__what">個別相談会②</p>
+            </li>
+          </ol>
+        </div><div class="evs__col fx" data-fx="fadeup" data-d="90">
+          <p class="evs__lv"><b>英検®準2級</b><span>14:00–16:50</span></p>
+          <ol class="evs__steps">
+            <li class="evs__step">
+              <p class="evs__time">14:00〜14:15</p>
+              <p class="evs__what">受付、個人情報記入の練習</p>
+            </li><li class="evs__step">
+              <p class="evs__time">14:20〜15:40</p>
+              <p class="evs__what">模擬試験（Reading & Writing）</p>
+            </li><li class="evs__step">
+              <p class="evs__time">15:40〜15:55</p>
+              <p class="evs__what">解答用紙回収、ラップアップ</p>
+            </li><li class="evs__step">
+              <p class="evs__time">16:00〜16:20</p>
+              <p class="evs__what">個別相談会①</p>
+            </li><li class="evs__step">
+              <p class="evs__time">16:30〜16:50</p>
+              <p class="evs__what">個別相談会②</p>
+            </li>
+          </ol>
         </div>
       </div>
+      <p class="evs__tlnote">※ラップアップと個別相談会のあいだに採点を行います。</p>
     </div>
+
+    <ul class="evs__notes fx" data-fx="fadeup">
+      <li>※クレジットカード支払いのみとなります。お申し込み後、イベント1週間前までのクレジットカードのご登録の確認ができない場合は自動キャンセルとさせていただきますのでご了承ください。</li><li>※イベント2日前（8月27日(木) 23:59）以降のキャンセルは、ご欠席扱いとなり、ご返金はできませんのでご了承ください。キャンセルはメールまたはお電話にてご連絡をお願いいたします。</li>
+    </ul>
   </div>
 </section>
 
@@ -1428,7 +1148,7 @@ html:not(.js) .lm__i{transform:none}
              eyebrow→__en / heading→__ja。両方空の回は箱ごと消える -->
         <div class="sec-head cps__head">
           
-          <h2 class="sec-head__ja fx" data-fx="fadeup" data-d="60">申し込み方法</h2>
+          <h2 class="sec-head__ja fx" data-fx="fadeup" data-d="60">申し込み</h2>
         </div>
 
         <div class="cps__stack">
@@ -1456,7 +1176,7 @@ html:not(.js) .lm__i{transform:none}
 
 </div>
 <!-- footer/footer-two-tier-cta (ink) -->
-<div class="tone-ink wave-top" style="--wave-from:var(--c-bg)">
+<div class="tone-ink">
 <footer class="ftc">
 
   <!-- 写真ストリップ（任意）。導線帯の“上”に置くので、PCでもSPでも写真はCTAより上になる。

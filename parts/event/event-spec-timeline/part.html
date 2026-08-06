@@ -1,0 +1,34 @@
+<section class="evs">
+  <div class="wrap">
+    <div class="sec-head">
+      {{?eyebrow}}<p class="sec-head__en">{{eyebrow}}</p>{{/eyebrow}}
+      <h2 class="sec-head__ja">{{headline}}</h2>
+    </div>
+
+    <dl class="evs__spec">
+      {{#spec}}<div class="evs__row fx" data-fx="fadeup" data-d="{{.d}}">
+        <dt>{{.k}}</dt><dd>{{.v}}</dd>
+      </div>{{/spec}}
+    </dl>
+
+    <div class="evs__tl">
+      <p class="evs__tlh fx" data-fx="fadeup">{{timeHeading}}</p>
+      <div class="evs__cols">
+        {{#levels}}<div class="evs__col fx" data-fx="fadeup" data-d="{{.d}}">
+          <p class="evs__lv"><b>{{.name}}</b><span>{{.span}}</span></p>
+          <ol class="evs__steps">
+            {{#.steps}}<li class="evs__step">
+              <p class="evs__time">{{.time}}</p>
+              <p class="evs__what">{{.what}}</p>
+            </li>{{/.steps}}
+          </ol>
+        </div>{{/levels}}
+      </div>
+      {{?timeNote}}<p class="evs__tlnote">{{timeNote}}</p>{{/timeNote}}
+    </div>
+
+    {{?notesOn}}<ul class="evs__notes fx" data-fx="fadeup">
+      {{#notes}}<li>{{.t}}</li>{{/notes}}
+    </ul>{{/notesOn}}
+  </div>
+</section>

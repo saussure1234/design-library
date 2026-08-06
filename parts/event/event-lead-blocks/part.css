@@ -1,0 +1,38 @@
+/* event/event-lead-blocks
+   写真を使わずに「誰に・何が」を3つ並べる。
+   ・番号を大きく、罫1本で区切るだけ。カードにも影にもしない
+   ・見出し → リード（太字・大きめ） → 本文（小さめ）の3段で読ませる
+   写真が無くても間が持つのは、番号と罫が版面の骨になっているから。 */
+.evl{padding-block:clamp(48px,6vw,92px)}
+.evl__intro{max-width:40em;margin-inline:auto;text-align:center;
+  font-size:clamp(13px,1.05vw,15.5px);line-height:2.05;color:var(--c-ink2)}
+
+.evl__list{margin-top:clamp(30px,4vw,58px);display:grid;gap:0;
+  border-top:1.5px solid var(--c-ink)}
+.evl__item{display:grid;grid-template-columns:clamp(56px,7vw,104px) minmax(0,1fr);
+  gap:clamp(16px,2.4vw,40px);align-items:start;
+  padding-block:clamp(24px,3.2vw,44px);
+  border-bottom:1px solid color-mix(in srgb,var(--c-ink) 16%,transparent)}
+
+/* 番号は数字だけ。色は持たせず、級数だけで立てる */
+.evl__no{font-family:var(--f-num);font-weight:900;line-height:.9;
+  font-size:clamp(30px,4.4vw,64px);color:color-mix(in srgb,var(--c-ink) 16%,transparent)}
+
+.evl__label{display:inline-block;padding:5px 13px;border-radius:var(--r-pill);
+  background:var(--c-primary);color:var(--c-on-primary);
+  font-size:clamp(10.5px,.88vw,12.5px);font-weight:800;letter-spacing:.06em;line-height:1.2}
+.evl__t{margin-top:clamp(10px,1.2vw,15px);
+  font-family:var(--f-disp);font-weight:900;color:var(--c-ink);
+  font-size:clamp(18px,2vw,29px);line-height:1.4;letter-spacing:.005em}
+.evl__lead{margin-top:clamp(8px,1vw,13px);
+  font-size:clamp(13.5px,1.15vw,17px);font-weight:800;color:var(--c-primary);line-height:1.75}
+.evl__text{margin-top:clamp(10px,1.3vw,17px);max-width:44em;
+  font-size:clamp(12.5px,1vw,14.5px);color:var(--c-ink2);line-height:2.05}
+
+.evl__note{margin-top:clamp(22px,3vw,38px);text-align:center;
+  font-size:clamp(13px,1.1vw,16px);font-weight:800;color:var(--c-ink)}
+
+@media(max-width:640px){
+  .evl__item{grid-template-columns:minmax(0,1fr);gap:6px}
+  .evl__no{font-size:26px}
+}

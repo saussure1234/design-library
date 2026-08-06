@@ -1,0 +1,42 @@
+<section class="evh">
+  <div class="wrap">
+
+    <p class="evh__top fx" data-fx="left">{{topline}}</p>
+
+    <div class="evh__grid">
+      <div class="evh__title fx" data-fx="fadeup" data-d="60">
+        {{?venue}}<p class="evh__venue">{{venue}}</p>{{/venue}}
+        <h1 class="evh__h">{{headline}}</h1>
+        {{?tagsOn}}<ul class="evh__tags">{{#tags}}<li>{{.t}}</li>{{/tags}}</ul>{{/tagsOn}}
+      </div>
+
+      <div class="evh__date fx" data-fx="fadeup" data-d="130">
+        <p class="evh__y">{{year}}</p>
+        <p class="evh__md">{{month}}<span>/</span>{{day}}<em>{{dow}}</em></p>
+        <ul class="evh__times">
+          {{#times}}<li><b>{{.name}}</b><span>{{.time}}</span></li>{{/times}}
+        </ul>
+      </div>
+    </div>
+
+    <div class="evh__ticket fx" data-fx="fadeup" data-d="200">
+      <p class="evh__tkh">{{feeLabel}}</p>
+      <ul class="evh__tk">
+        {{#fees}}<li><b>{{.name}}</b><span>{{.sub}}</span><em>{{.price}}</em></li>{{/fees}}
+      </ul>
+      <div class="evh__act">
+        <a class="btn evh__btn" href="{{ctaHref}}">{{ctaLabel}}
+          <span class="btn__arw"><svg viewBox="0 0 22 10" aria-hidden="true"><path d="M0 5h19M15 1l4 4-4 4"/></svg></span>
+        </a>
+        {{?ctaNote}}<p class="evh__note">{{ctaNote}}</p>{{/ctaNote}}
+      </div>
+    </div>
+
+    {{?place}}<p class="evh__place fx" data-fx="fadeup" data-d="260">{{place}}</p>{{/place}}
+
+  </div>
+
+  {{?marquee}}<div class="evh__marquee" aria-hidden="true">
+    <div class="evh__mrun"><span>{{marquee}}</span><span>{{marquee}}</span><span>{{marquee}}</span><span>{{marquee}}</span></div>
+  </div>{{/marquee}}
+</section>
