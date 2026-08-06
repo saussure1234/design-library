@@ -577,27 +577,35 @@ html:not(.js) .lm__i{transform:none}
      行を明示して置く（order だけだと自動配置と噛み合わない）。
      下の余白は、次の節が持ち上げている山（clamp(46px,6.2vw,110px)）ぶん空ける */
   .hbc__in{display:grid;
-    grid-template-columns:1.45fr 1fr;      /* 右（女の子）を一回り小さく */
+    /* minmax(0,…) にしないと fr の最小が min-content になり、
+       中身の分だけ格子が画面より広がって右へはみ出す */
+    grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);
     grid-template-rows:auto auto auto auto;
     column-gap:10px;row-gap:16px;
     padding:28px 0 clamp(64px,14vw,96px);height:auto}
   /* ★円は残す。写真の裏に大きく置いて、白場が続くのを防ぐ。
      落書きと紙吹雪だけは細かすぎるので落とす */
   .hbc__dd,.hbc__conf{display:none}
-  /* 写真は角丸の四角なので、円は【白場】に置かないと見えない。
-     見出しの右わきと、CTAの左下の余白に1つずつ */
-  .hbc__blob{display:block;z-index:0;opacity:.9}
-  .hbc__blob--a{left:auto;right:-12%;top:4%;bottom:auto;width:44%;aspect-ratio:1/.96;
-    background:color-mix(in srgb,var(--c-primary) 15%,#fff)}
-  .hbc__blob--b{left:-16%;right:auto;top:auto;bottom:2%;width:50%;aspect-ratio:1/1;
-    background:color-mix(in srgb,var(--c-accent) 22%,#fff)}
-  .hbc__ph{z-index:3}
+  /* 円は【写真の裏】。位置が動く写真に付いて回るよう、
+     節に絶対配置するのをやめて、写真そのものの ::before で描く */
+  .hbc__blob{display:none}
+  .hbc__ph::before{content:"";position:absolute;z-index:-1;bottom:4%;
+    background:#E2EFD6;border-radius:44% 56% 61% 39% / 57% 43% 57% 43%}
+  .hbc__ph--a::before{left:-8%;width:98%;aspect-ratio:1/.98}
+  .hbc__ph--b::before{right:-10%;width:106%;aspect-ratio:1/1;
+    background:#F2E9CE;border-radius:57% 43% 41% 59% / 46% 57% 43% 54%}
   .hbc__head{grid-column:1 / -1;grid-row:1;width:auto;max-width:none;margin-top:0;padding-inline:22px}
-  .hbc__ph{position:static;width:auto;filter:none;align-self:end;margin:0}
+  /* ★relative。static のままだと ::before の % が【画面幅】基準になり、円が巨大化する */
+  .hbc__ph{position:relative;width:auto;filter:none;align-self:end;margin:0;z-index:3}
+  /* ★PC用の left/top を打ち消す。static のときは無視されていたが、
+     relative にした瞬間に「そのぶん right へずらす」指定として復活する */
+  .hbc__ph--a,.hbc__ph--b{left:auto;right:auto;top:auto;bottom:auto}
   .hbc__ph--a{grid-column:1;grid-row:2;padding-left:22px}
   .hbc__ph--b{grid-column:2;grid-row:2;padding-right:22px}
-  .hbc__ph img{filter:none;border-radius:16px;
-    width:100%;aspect-ratio:3/4;object-fit:cover}
+  /* ★背景を抜いた素材。比が違う（男の子0.96／女の子1.32）ので、
+     同じ比に押し込むと欠ける。それぞれの比のまま置いて下でそろえる */
+  .hbc__ph img{filter:none;border-radius:0;
+    width:100%;height:auto;aspect-ratio:auto;object-fit:contain}
   .hbc__copy{grid-column:1 / -1;grid-row:3}
   .hbc__cta{grid-column:1 / -1;grid-row:4;width:auto;max-width:none;margin-top:0}
   .hbc__h1{font-size:23px;line-height:1.5}
