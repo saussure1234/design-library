@@ -99,8 +99,9 @@ footer{position:relative;z-index:1}
   /* 横に潰すとPC用パスの立ち上がりが右端に寄って消える。パスごと差し替える */
   #growth .gr1,#growth .gr2,#growth .gr3{display:none}
   #growth .gm1,#growth .gm2{display:block}
-  /* 曲線が入る帯を確保するため、スマホではFVを全画面に */
-  .hbc__in{min-height:100vh}
+  /* 曲線の層は画面に固定なので、FVを全画面まで伸ばす必要はない。
+     伸ばすと写真2枚＋18pxの本文のあとに大きな空白が残る */
+  .hbc__in{min-height:auto}
 }
 @media(prefers-reduced-motion:reduce){
   #growth .gl{transform:none!important}

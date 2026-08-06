@@ -119,5 +119,10 @@
   .cts__dl{grid-template-columns:6.5em minmax(0,1fr)}
   .cts__msgbody{grid-template-columns:minmax(0,1fr);row-gap:16px}
   .cts__msgfigwrap{grid-row:auto;width:104px}
-  .cts__msgid,.cts__msgtext{grid-column:1}
+  /* ★本文はたたむ箱（.mbl__fold）の中へ移したので、
+     .cts__msgtext ではなく箱とボタンを1列目へ戻す。
+     古い指定のままだと氏名と本文が2列目の細い升に残り、1文字ずつ折り返す */
+  .cts__msgbody > .cts__msgid,
+  .cts__msgbody > .mbl__fold,
+  .cts__msgbody > .mbl__more{grid-column:1}
 }

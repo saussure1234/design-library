@@ -93,19 +93,24 @@
   .hbc__growth svg{transform:translateY(9%)}
 }
 @media(max-width:900px){
+  /* 下の余白は、次の節が持ち上げている山（clamp(46px,6.2vw,110px)）ぶんを空ける。
+     足りないと補助コピーが山に食われる */
   .hbc__in{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto;
-    padding-inline:0;height:auto;padding:28px 0 24px;display:grid;gap:16px}
+    padding-inline:0;height:auto;padding:28px 0 clamp(64px,14vw,96px);display:grid;gap:16px}
   .hbc__blob,.hbc__dd,.hbc__conf{display:none}
   .hbc__head,.hbc__cta{grid-column:1;grid-row:auto;width:auto;max-width:none;margin-top:0}
   .hbc__head{padding-inline:22px}
   .hbc__h1{font-size:23px;line-height:1.5}
   .hbc__h1 .nb{white-space:normal}   /* 狭い画面では折り返しを許す */
-  /* ★スマホは写真をCTAより上に */
-  .hbc__ph{position:static;width:100%;padding-inline:22px;order:-1}
-  /* スマホは主役の1枚だけ（左＝男の子）。2枚だと縦に伸びすぎる */
-  .hbc__ph--b{display:none}
-  .hbc__ph img{filter:none}
-  .hbc__ph img{border-radius:20px}
+  /* ★スマホは写真をCTAより上に。2枚とも出して横に並べる
+     （1枚だけにすると「教室と自宅」の2場面が伝わらない）*/
+  .hbc__in{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:10px}
+  .hbc__head,.hbc__cta,.hbc__copy{grid-column:1 / -1}
+  .hbc__ph{position:static;width:auto;order:-1;filter:none;align-self:end}
+  .hbc__ph--a{grid-column:1;padding-left:22px}
+  .hbc__ph--b{grid-column:2;padding-right:22px}
+  .hbc__ph img{filter:none;border-radius:16px;
+    width:100%;aspect-ratio:3/4;object-fit:cover}
   .hbc__copy{padding-inline:22px;font-size:21px}
   .hbc__stats{display:none}
   .hbc__cta{padding-inline:22px}

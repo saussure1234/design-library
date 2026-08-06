@@ -198,8 +198,9 @@ footer{position:relative;z-index:1}
   /* 横に潰すとPC用パスの立ち上がりが右端に寄って消える。パスごと差し替える */
   #growth .gr1,#growth .gr2,#growth .gr3{display:none}
   #growth .gm1,#growth .gm2{display:block}
-  /* 曲線が入る帯を確保するため、スマホではFVを全画面に */
-  .hbc__in{min-height:100vh}
+  /* 曲線の層は画面に固定なので、FVを全画面まで伸ばす必要はない。
+     伸ばすと写真2枚＋18pxの本文のあとに大きな空白が残る */
+  .hbc__in{min-height:auto}
 }
 @media(prefers-reduced-motion:reduce){
   #growth .gl{transform:none!important}
@@ -571,19 +572,24 @@ html:not(.js) .lm__i{transform:none}
   .hbc__growth svg{transform:translateY(9%)}
 }
 @media(max-width:900px){
+  /* 下の余白は、次の節が持ち上げている山（clamp(46px,6.2vw,110px)）ぶんを空ける。
+     足りないと補助コピーが山に食われる */
   .hbc__in{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto;
-    padding-inline:0;height:auto;padding:28px 0 24px;display:grid;gap:16px}
+    padding-inline:0;height:auto;padding:28px 0 clamp(64px,14vw,96px);display:grid;gap:16px}
   .hbc__blob,.hbc__dd,.hbc__conf{display:none}
   .hbc__head,.hbc__cta{grid-column:1;grid-row:auto;width:auto;max-width:none;margin-top:0}
   .hbc__head{padding-inline:22px}
   .hbc__h1{font-size:23px;line-height:1.5}
   .hbc__h1 .nb{white-space:normal}   /* 狭い画面では折り返しを許す */
-  /* ★スマホは写真をCTAより上に */
-  .hbc__ph{position:static;width:100%;padding-inline:22px;order:-1}
-  /* スマホは主役の1枚だけ（左＝男の子）。2枚だと縦に伸びすぎる */
-  .hbc__ph--b{display:none}
-  .hbc__ph img{filter:none}
-  .hbc__ph img{border-radius:20px}
+  /* ★スマホは写真をCTAより上に。2枚とも出して横に並べる
+     （1枚だけにすると「教室と自宅」の2場面が伝わらない）*/
+  .hbc__in{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:10px}
+  .hbc__head,.hbc__cta,.hbc__copy{grid-column:1 / -1}
+  .hbc__ph{position:static;width:auto;order:-1;filter:none;align-self:end}
+  .hbc__ph--a{grid-column:1;padding-left:22px}
+  .hbc__ph--b{grid-column:2;padding-right:22px}
+  .hbc__ph img{filter:none;border-radius:16px;
+    width:100%;aspect-ratio:3/4;object-fit:cover}
   .hbc__copy{padding-inline:22px;font-size:21px}
   .hbc__stats{display:none}
   .hbc__cta{padding-inline:22px}
@@ -1679,8 +1685,9 @@ html:not(.js) .lm__i{transform:none}
 /* データセル。競合列は地を持たない＝セクションの地がそのまま出る */
 .cmx__c{position:relative;display:flex;flex-direction:column;justify-content:center;
   min-width:0;padding:var(--cmx-pad);border-bottom:var(--cmx-rule)}
-/* 自社列だけが色を持つ。ヘッダ直下から最終行まで1本の帯として通る */
-.cmx__c--own{background:var(--c-bg3)}
+/* 自社列だけが色を持つ。ヘッダ直下から最終行まで1本の帯として通る。
+   ★--c-bg3 は未定義だった＝面が透明になり、この型の要（帯）が消えていた */
+.cmx__c--own{background:color-mix(in srgb,var(--c-primary) 7%,var(--c-bg))}
 /* 地が色付きの tone に置かれても帯が消えないよう、そのときは白抜きに反転させる */
 .tone-tint .cmx__c--own,
 .tone-accent .cmx__c--own{background:var(--c-bg)}
@@ -1725,7 +1732,9 @@ html:not(.js) .lm__i{transform:none}
    「項目名＝見出し／自社が1つ目／競合が2つ目以降」になる。
    ここでも罫は増やさない。ブロックの区切りは同じ6%の1本だけ。 */
 @media(max-width:900px){
-  .cmx__grid{display:block}
+  /* 白いカードのまま中身を積むので、余白を持たせる。
+     無いと先頭の項目名がカードの上端で切れる */
+  .cmx__grid{display:block;padding:var(--s5)}
   .cmx__thead{display:none}
 
   .cmx__row{display:block}
@@ -1745,9 +1754,19 @@ html:not(.js) .lm__i{transform:none}
     font-size:var(--fs-note);font-weight:700;letter-spacing:.06em;
     color:var(--c-ink3);line-height:var(--lh-head)}
 
-  /* 自社だけ帯として1枚の面にする＝SPでも色を持つのはここだけ */
-  .cmx__c--own{display:block;padding:var(--s4);border-radius:var(--r-m)}
-  .cmx__c--own .cmx__lab{display:block;margin-bottom:var(--s1);color:var(--c-ink2)}
+  /* 自社だけ帯として1枚の面にする＝SPでも色を持つのはここだけ。
+     左に1本の太い罫を足して、A社・B社の行と一目で分ける */
+  .cmx__c--own{display:block;padding:var(--s4);border-radius:var(--r-m);
+    border-left:4px solid var(--c-primary)}
+  .cmx__c--own .cmx__lab{display:block;margin-bottom:var(--s1);
+    color:var(--c-primary);font-weight:800}
+  /* 項目名は「その行の見出し」。級数と余白で他と差をつける */
+  .cmx__item{font-size:var(--fs-md);font-weight:900;color:var(--c-ink);
+    padding-bottom:var(--s4)}
+  /* 競合の行は面を持たず、ラベルと値の2列だけ */
+  .cmx__c:not(.cmx__c--own){padding:var(--s3) var(--s4) 0}
+  /* 1項目＝1枚のかたまり。行と行のあいだをもっと空けて塊にする */
+  .cmx__row+.cmx__row{margin-top:var(--s6);padding-top:var(--s6)}
 
   /* PC側の「最終行だけ」の指定を打ち消す */
   .cmx__row:last-child .cmx__item{border-bottom:0}
@@ -1884,7 +1903,12 @@ html:not(.js) .lm__i{transform:none}
   .cts__dl{grid-template-columns:6.5em minmax(0,1fr)}
   .cts__msgbody{grid-template-columns:minmax(0,1fr);row-gap:16px}
   .cts__msgfigwrap{grid-row:auto;width:104px}
-  .cts__msgid,.cts__msgtext{grid-column:1}
+  /* ★本文はたたむ箱（.mbl__fold）の中へ移したので、
+     .cts__msgtext ではなく箱とボタンを1列目へ戻す。
+     古い指定のままだと氏名と本文が2列目の細い升に残り、1文字ずつ折り返す */
+  .cts__msgbody > .cts__msgid,
+  .cts__msgbody > .mbl__fold,
+  .cts__msgbody > .mbl__more{grid-column:1}
 }
 
 /* ===== cta/cta-priority-stack ===== */

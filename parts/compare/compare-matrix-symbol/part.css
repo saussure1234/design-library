@@ -80,8 +80,9 @@
 /* データセル。競合列は地を持たない＝セクションの地がそのまま出る */
 .cmx__c{position:relative;display:flex;flex-direction:column;justify-content:center;
   min-width:0;padding:var(--cmx-pad);border-bottom:var(--cmx-rule)}
-/* 自社列だけが色を持つ。ヘッダ直下から最終行まで1本の帯として通る */
-.cmx__c--own{background:var(--c-bg3)}
+/* 自社列だけが色を持つ。ヘッダ直下から最終行まで1本の帯として通る。
+   ★--c-bg3 は未定義だった＝面が透明になり、この型の要（帯）が消えていた */
+.cmx__c--own{background:color-mix(in srgb,var(--c-primary) 7%,var(--c-bg))}
 /* 地が色付きの tone に置かれても帯が消えないよう、そのときは白抜きに反転させる */
 .tone-tint .cmx__c--own,
 .tone-accent .cmx__c--own{background:var(--c-bg)}
@@ -126,7 +127,9 @@
    「項目名＝見出し／自社が1つ目／競合が2つ目以降」になる。
    ここでも罫は増やさない。ブロックの区切りは同じ6%の1本だけ。 */
 @media(max-width:900px){
-  .cmx__grid{display:block}
+  /* 白いカードのまま中身を積むので、余白を持たせる。
+     無いと先頭の項目名がカードの上端で切れる */
+  .cmx__grid{display:block;padding:var(--s5)}
   .cmx__thead{display:none}
 
   .cmx__row{display:block}
@@ -146,9 +149,19 @@
     font-size:var(--fs-note);font-weight:700;letter-spacing:.06em;
     color:var(--c-ink3);line-height:var(--lh-head)}
 
-  /* 自社だけ帯として1枚の面にする＝SPでも色を持つのはここだけ */
-  .cmx__c--own{display:block;padding:var(--s4);border-radius:var(--r-m)}
-  .cmx__c--own .cmx__lab{display:block;margin-bottom:var(--s1);color:var(--c-ink2)}
+  /* 自社だけ帯として1枚の面にする＝SPでも色を持つのはここだけ。
+     左に1本の太い罫を足して、A社・B社の行と一目で分ける */
+  .cmx__c--own{display:block;padding:var(--s4);border-radius:var(--r-m);
+    border-left:4px solid var(--c-primary)}
+  .cmx__c--own .cmx__lab{display:block;margin-bottom:var(--s1);
+    color:var(--c-primary);font-weight:800}
+  /* 項目名は「その行の見出し」。級数と余白で他と差をつける */
+  .cmx__item{font-size:var(--fs-md);font-weight:900;color:var(--c-ink);
+    padding-bottom:var(--s4)}
+  /* 競合の行は面を持たず、ラベルと値の2列だけ */
+  .cmx__c:not(.cmx__c--own){padding:var(--s3) var(--s4) 0}
+  /* 1項目＝1枚のかたまり。行と行のあいだをもっと空けて塊にする */
+  .cmx__row+.cmx__row{margin-top:var(--s6);padding-top:var(--s6)}
 
   /* PC側の「最終行だけ」の指定を打ち消す */
   .cmx__row:last-child .cmx__item{border-bottom:0}
