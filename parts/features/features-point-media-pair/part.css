@@ -26,6 +26,8 @@
    見出しは【縦書き】にして動画の左へ。横書きだと上に1行ぶんの帯ができて、
    POINTの箱と天地がそろわなくなる */
 .pmp__media{background:none;padding:0;box-shadow:none;
+  /* 箱と天を揃えず、気持ち下げて置く（同じ高さだと2枚の板が並んだように見える） */
+  margin-top:clamp(16px,2.2vw,34px);
   display:grid;grid-template-columns:auto minmax(0,1fr);
   column-gap:clamp(10px,1.2vw,18px);align-items:start}
 .pmp__mh{writing-mode:vertical-rl;text-orientation:upright;
@@ -85,7 +87,7 @@
   .pmp__row{grid-template-columns:minmax(0,1fr);gap:16px;
     margin-inline:auto;padding-inline:0;max-width:540px}
   /* 縦積みでは縦書きの見出しが間延びするので、横書きに戻して上に置く */
-  .pmp__media{grid-template-columns:minmax(0,1fr);row-gap:12px}
+  .pmp__media{grid-template-columns:minmax(0,1fr);row-gap:12px;margin-top:0}
   .pmp__mh{writing-mode:horizontal-tb;text-align:center;letter-spacing:.04em;
     justify-self:stretch;padding-top:0}
   /* 縦積みでは左右に割れない。動画は下から入れる */
