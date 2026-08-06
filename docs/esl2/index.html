@@ -483,8 +483,9 @@ html:not(.js) .lm__i{transform:none}
    ・手描き風の落書きを散らす
    ・下に大きなキャッチコピー。1語だけ色を変える
    再現の記録: repro/fv/ */
-/* 地は敷かない。body直下の曲線レイヤを透かす */
-.hbc{position:relative;background:transparent}
+/* 地は敷かない。body直下の曲線レイヤを透かす。
+   円は画面の外まで出すので、この節で切る（切らないと横スクロールが出る） */
+.hbc{position:relative;background:transparent;overflow-x:clip}
 
 /* 左＝キーメッセージとCTA ／ 右＝写真2枚。写真だけ絶対配置で右半分に置く */
 .hbc__in{position:relative;width:100%;max-width:1440px;margin-inline:auto;
@@ -572,24 +573,35 @@ html:not(.js) .lm__i{transform:none}
   .hbc__growth svg{transform:translateY(9%)}
 }
 @media(max-width:900px){
-  /* 下の余白は、次の節が持ち上げている山（clamp(46px,6.2vw,110px)）ぶんを空ける。
-     足りないと補助コピーが山に食われる */
-  .hbc__in{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto;
-    padding-inline:0;height:auto;padding:28px 0 clamp(64px,14vw,96px);display:grid;gap:16px}
-  .hbc__blob,.hbc__dd,.hbc__conf{display:none}
-  .hbc__head,.hbc__cta{grid-column:1;grid-row:auto;width:auto;max-width:none;margin-top:0}
-  .hbc__head{padding-inline:22px}
-  .hbc__h1{font-size:23px;line-height:1.5}
-  .hbc__h1 .nb{white-space:normal}   /* 狭い画面では折り返しを許す */
-  /* ★スマホは写真をCTAより上に。2枚とも出して横に並べる
-     （1枚だけにすると「教室と自宅」の2場面が伝わらない）*/
-  .hbc__in{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:10px}
-  .hbc__head,.hbc__cta,.hbc__copy{grid-column:1 / -1}
-  .hbc__ph{position:static;width:auto;order:-1;filter:none;align-self:end}
-  .hbc__ph--a{grid-column:1;padding-left:22px}
-  .hbc__ph--b{grid-column:2;padding-right:22px}
+  /* ★スマホの順番は キーメッセージ → 写真2枚 → CTA。
+     行を明示して置く（order だけだと自動配置と噛み合わない）。
+     下の余白は、次の節が持ち上げている山（clamp(46px,6.2vw,110px)）ぶん空ける */
+  .hbc__in{display:grid;
+    grid-template-columns:1.45fr 1fr;      /* 右（女の子）を一回り小さく */
+    grid-template-rows:auto auto auto auto;
+    column-gap:10px;row-gap:16px;
+    padding:28px 0 clamp(64px,14vw,96px);height:auto}
+  /* ★円は残す。写真の裏に大きく置いて、白場が続くのを防ぐ。
+     落書きと紙吹雪だけは細かすぎるので落とす */
+  .hbc__dd,.hbc__conf{display:none}
+  /* 写真は角丸の四角なので、円は【白場】に置かないと見えない。
+     見出しの右わきと、CTAの左下の余白に1つずつ */
+  .hbc__blob{display:block;z-index:0;opacity:.9}
+  .hbc__blob--a{left:auto;right:-12%;top:4%;bottom:auto;width:44%;aspect-ratio:1/.96;
+    background:color-mix(in srgb,var(--c-primary) 15%,#fff)}
+  .hbc__blob--b{left:-16%;right:auto;top:auto;bottom:2%;width:50%;aspect-ratio:1/1;
+    background:color-mix(in srgb,var(--c-accent) 22%,#fff)}
+  .hbc__ph{z-index:3}
+  .hbc__head{grid-column:1 / -1;grid-row:1;width:auto;max-width:none;margin-top:0;padding-inline:22px}
+  .hbc__ph{position:static;width:auto;filter:none;align-self:end;margin:0}
+  .hbc__ph--a{grid-column:1;grid-row:2;padding-left:22px}
+  .hbc__ph--b{grid-column:2;grid-row:2;padding-right:22px}
   .hbc__ph img{filter:none;border-radius:16px;
     width:100%;aspect-ratio:3/4;object-fit:cover}
+  .hbc__copy{grid-column:1 / -1;grid-row:3}
+  .hbc__cta{grid-column:1 / -1;grid-row:4;width:auto;max-width:none;margin-top:0}
+  .hbc__h1{font-size:23px;line-height:1.5}
+  .hbc__h1 .nb{white-space:normal}   /* 狭い画面では折り返しを許す */
   .hbc__copy{padding-inline:22px;font-size:21px}
   .hbc__stats{display:none}
   .hbc__cta{padding-inline:22px}
@@ -2182,13 +2194,13 @@ html:not(.js) .lm__i{transform:none}
   <div class="gl" data-speed="0.30">
     <svg viewBox="0 0 1440 1584" preserveAspectRatio="none">
       <path class="gr1" d="M-80 1182 C 420 1172, 980 992, 1560 552"/>
-      <path class="gm1" d="M-120 1150 C 380 1130, 860 1060, 1560 960"/>
+      <path class="gm1" d="M-120 1092 C 380 1052, 860 902, 1560 700"/>
     </svg>
   </div>
   <div class="gl" data-speed="0.40">
     <svg viewBox="0 0 1440 1584" preserveAspectRatio="none">
       <path class="gr2" d="M-80 1252 C 460 1232, 1020 1042, 1560 662"/>
-      <path class="gm2" d="M-120 1216 C 400 1200, 880 1140, 1560 1050"/>
+      <path class="gm2" d="M-120 1166 C 400 1126, 880 986, 1560 792"/>
     </svg>
   </div>
   <div class="gl" data-speed="0.52">

@@ -444,13 +444,13 @@ def build(kit_path, out_path):
   <div class="gl" data-speed="0.30">
     <svg viewBox="0 0 1440 1584" preserveAspectRatio="none">
       <path class="gr1" d="M-80 1182 C 420 1172, 980 992, 1560 552"/>
-      <path class="gm1" d="M-120 1150 C 380 1130, 860 1060, 1560 960"/>
+      <path class="gm1" d="M-120 1092 C 380 1052, 860 902, 1560 700"/>
     </svg>
   </div>
   <div class="gl" data-speed="0.40">
     <svg viewBox="0 0 1440 1584" preserveAspectRatio="none">
       <path class="gr2" d="M-80 1252 C 460 1232, 1020 1042, 1560 662"/>
-      <path class="gm2" d="M-120 1216 C 400 1200, 880 1140, 1560 1050"/>
+      <path class="gm2" d="M-120 1166 C 400 1126, 880 986, 1560 792"/>
     </svg>
   </div>
   <div class="gl" data-speed="0.52">
