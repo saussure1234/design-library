@@ -69,6 +69,83 @@ def tokens_css(tokens):
     return ":root{\n" + body + "}\n"
 
 
+
+# ── FVの背景の柄 ─────────────────────────────────────
+# kit の "bg" で選ぶ。既定は "growth"（成長の曲線＝本体LPと同じ）。
+BG_LAYERS = {
+# ① 成長の曲線（本体LPと同じ）
+"growth": """<!-- FV背景「成長の曲線」。body直下・fixed で、スクロールについてくる -->
+<div id="growth" aria-hidden="true">
+  <div class="gl" data-speed="0.30">
+    <svg viewBox="0 0 1440 1584" preserveAspectRatio="none">
+      <path class="gr1" d="M-80 1182 C 420 1172, 980 992, 1560 552"/>
+      <path class="gm1" d="M-120 1092 C 380 1052, 860 902, 1560 700"/>
+    </svg>
+  </div>
+  <div class="gl" data-speed="0.40">
+    <svg viewBox="0 0 1440 1584" preserveAspectRatio="none">
+      <path class="gr2" d="M-80 1252 C 460 1232, 1020 1042, 1560 662"/>
+      <path class="gm2" d="M-120 1166 C 400 1126, 880 986, 1560 792"/>
+    </svg>
+  </div>
+  <div class="gl" data-speed="0.52">
+    <svg viewBox="0 0 1440 1584" preserveAspectRatio="none">
+      <path class="gr3" d="M-80 1312 C 500 1297, 1060 1152, 1560 792"/>
+    </svg>
+  </div>
+</div>""",
+
+# ② マークシート ── 当日の練習内容そのもの。淡い丸を格子に敷く
+"marksheet": """<div id="growth" class="bg-dots" aria-hidden="true">
+  <div class="gl" data-speed="0.22"><span class="bgfill"></span></div>
+</div>""",
+
+# ③ 答案用紙の方眼 ── 細い罫の格子。文字の邪魔をしない
+"grid": """<div id="growth" class="bg-grid" aria-hidden="true">
+  <div class="gl" data-speed="0.18"><span class="bgfill"></span></div>
+</div>""",
+
+# ④ 斜めの帯 ── 曲線をやめて直線に。上りの向きだけ残す
+"stripe": """<div id="growth" class="bg-stripe" aria-hidden="true">
+  <div class="gl" data-speed="0.26"><span class="bgfill"></span></div>
+</div>""",
+
+# ⑤ 大きな円 ── 線を使わず、面だけで奥行きを作る
+"circles": """<div id="growth" class="bg-circles" aria-hidden="true">
+  <div class="gl" data-speed="0.20">
+    <svg viewBox="0 0 1440 1584" preserveAspectRatio="xMidYMid slice">
+      <circle cx="1180" cy="300" r="380"/><circle cx="250" cy="980" r="300"/>
+      <circle cx="880" cy="1180" r="200"/><circle cx="1380" cy="900" r="150"/>
+    </svg>
+  </div>
+</div>""",
+
+# ⑥〜⑨ 右下だけに置く静かな柄。画面全体には広げない
+"corner-grid": """<div id="growth" class="bg-cnr bg-cnr--grid" aria-hidden="true">
+  <div class="gl" data-speed="0.14"><span class="bgfill"></span></div>
+</div>""",
+"corner-dots": """<div id="growth" class="bg-cnr bg-cnr--dots" aria-hidden="true">
+  <div class="gl" data-speed="0.14"><span class="bgfill"></span></div>
+</div>""",
+"corner-arcs": """<div id="growth" class="bg-cnr bg-cnr--arcs" aria-hidden="true">
+  <div class="gl" data-speed="0.12">
+    <svg viewBox="0 0 1440 1000" preserveAspectRatio="xMaxYMax slice">
+      <g fill="none" stroke-linecap="round">
+        <circle cx="1400" cy="960" r="240"/><circle cx="1400" cy="960" r="380"/>
+        <circle cx="1400" cy="960" r="520"/><circle cx="1400" cy="960" r="660"/>
+      </g>
+    </svg>
+  </div>
+</div>""",
+"cnr2-grid": """<div id="growth" class="bg-cnr2 bg-cnr2--grid" aria-hidden="true"><div class="gl" data-speed="0.14"><span class="bgfill"></span></div></div>""",
+"cnr2-gridS": """<div id="growth" class="bg-cnr2 bg-cnr2--gridS" aria-hidden="true"><div class="gl" data-speed="0.14"><span class="bgfill"></span></div></div>""",
+"cnr2-dots": """<div id="growth" class="bg-cnr2 bg-cnr2--dots" aria-hidden="true"><div class="gl" data-speed="0.14"><span class="bgfill"></span></div></div>""",
+"cnr2-dotsS": """<div id="growth" class="bg-cnr2 bg-cnr2--dotsS" aria-hidden="true"><div class="gl" data-speed="0.14"><span class="bgfill"></span></div></div>""",
+"corner-shape": """<div id="growth" class="bg-cnr bg-cnr--shape" aria-hidden="true">
+  <div class="gl" data-speed="0.12"><span class="bgfill"></span></div>
+</div>""",
+}
+
 RUNTIME_JS = """
 document.documentElement.classList.add('js');
 
@@ -361,6 +438,9 @@ def build(kit_path, out_path):
             '</header>'
         )
 
+    # FVの背景。既定は「成長の曲線」。kit の "bg" で他の柄に差し替えられる
+    bg_layer = BG_LAYERS.get(kit.get("bg", "growth"), BG_LAYERS["growth"])
+
     base_css = open(os.path.join(PARTS, "_base.css"), encoding="utf-8").read()
     tok_css = open(os.path.join(PARTS, "_tokens.css"), encoding="utf-8").read()
 
@@ -444,26 +524,7 @@ def build(kit_path, out_path):
 </style>
 </head>
 <body>
-<!-- FV背景「成長の曲線」。body直下・fixed で、スクロールについてくる -->
-<div id="growth" aria-hidden="true">
-  <div class="gl" data-speed="0.30">
-    <svg viewBox="0 0 1440 1584" preserveAspectRatio="none">
-      <path class="gr1" d="M-80 1182 C 420 1172, 980 992, 1560 552"/>
-      <path class="gm1" d="M-120 1092 C 380 1052, 860 902, 1560 700"/>
-    </svg>
-  </div>
-  <div class="gl" data-speed="0.40">
-    <svg viewBox="0 0 1440 1584" preserveAspectRatio="none">
-      <path class="gr2" d="M-80 1252 C 460 1232, 1020 1042, 1560 662"/>
-      <path class="gm2" d="M-120 1166 C 400 1126, 880 986, 1560 792"/>
-    </svg>
-  </div>
-  <div class="gl" data-speed="0.52">
-    <svg viewBox="0 0 1440 1584" preserveAspectRatio="none">
-      <path class="gr3" d="M-80 1312 C 500 1297, 1060 1152, 1560 792"/>
-    </svg>
-  </div>
-</div>
+{bg_layer}
 {header_html}
 {chr(10).join(html_chunks)}
 <script>{RUNTIME_JS}</script>

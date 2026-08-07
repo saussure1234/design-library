@@ -396,3 +396,101 @@ html:not(.js) .lm__i{transform:none}
   .floaty{animation:none}
   *{animation-duration:.001s!important}
 }
+
+/* ── FV背景の柄（growth 以外）─────────────────────────
+   どれも #growth の器をそのまま使う（fixed・スクロール追従・
+   FVを過ぎたら切り取る、という仕掛けを共有するため）。
+   .bgfill は器いっぱいの1枚の面。柄は background で描く。 */
+#growth .bgfill{position:absolute;inset:-10% -10% 0;display:block}
+
+/* ② マークシート。当日「マークシートの練習」をする回なので、
+   その丸をそのまま地紋にする。塗りつぶし途中の列を1本だけ混ぜる */
+.bg-dots .bgfill{
+  background:
+    radial-gradient(circle at 50% 50%, color-mix(in srgb,var(--c-primary) 26%,transparent) 44%, transparent 46%);
+  background-size:74px 74px}
+.bg-dots .bgfill::after{content:"";position:absolute;inset:0;
+  background:
+    radial-gradient(circle at 50% 50%, color-mix(in srgb,var(--c-primary) 58%,transparent) 44%, transparent 46%);
+  background-size:74px 74px;
+  /* 左下から右上へ、塗られた丸が増えていく＝伸びていく含み */
+  -webkit-mask-image:linear-gradient(58deg, #000 4%, transparent 46%);
+          mask-image:linear-gradient(58deg, #000 4%, transparent 46%)}
+
+/* ③ 方眼。答案用紙の罫。細く・薄くして文字の邪魔をしない */
+.bg-grid .bgfill{
+  background:
+    repeating-linear-gradient(0deg, color-mix(in srgb,var(--c-primary) 15%,transparent) 0 1px, transparent 1px 88px),
+    repeating-linear-gradient(90deg, color-mix(in srgb,var(--c-primary) 15%,transparent) 0 1px, transparent 1px 88px);
+  -webkit-mask-image:radial-gradient(120% 90% at 78% 22%, #000 22%, transparent 78%);
+          mask-image:radial-gradient(120% 90% at 78% 22%, #000 22%, transparent 78%)}
+
+/* ④ 斜めの帯。曲線をやめて直線に。右上がりの向きだけ残す */
+.bg-stripe .bgfill{
+  background:repeating-linear-gradient(58deg,
+    color-mix(in srgb,var(--c-primary) 11%,transparent) 0 46px,
+    transparent 46px 132px,
+    color-mix(in srgb,var(--c-accent) 30%,transparent) 132px 152px,
+    transparent 152px 240px)}
+
+/* ⑤ 大きな円。線を1本も使わず、面だけで奥行きを作る */
+.bg-circles svg{width:100%;height:100%;display:block}
+.bg-circles circle{fill:color-mix(in srgb,var(--c-primary) 9%,transparent)}
+.bg-circles circle:nth-child(2){fill:color-mix(in srgb,var(--c-accent) 26%,transparent)}
+.bg-circles circle:nth-child(4){fill:color-mix(in srgb,var(--c-primary) 15%,transparent)}
+
+@media(prefers-reduced-motion:reduce){#growth .gl{transform:none!important}}
+
+/* ── FV背景：右下だけに置く静かな柄 ────────────────────
+   画面全体に敷かず、右下の隅から出て、上と左へ消えていく。
+   落ち着かせるのが目的なので、濃度は最も濃いところで8〜14%まで。 */
+.bg-cnr .gl{top:0;height:100%}
+.bg-cnr .bgfill{position:absolute;inset:0;display:block;
+  -webkit-mask-image:radial-gradient(115% 105% at 104% 108%, #000 0%, #000 26%, transparent 72%);
+          mask-image:radial-gradient(115% 105% at 104% 108%, #000 0%, #000 26%, transparent 72%)}
+
+/* ⑥ 方眼。答案用紙の罫を右下だけに */
+.bg-cnr--grid .bgfill{
+  background:
+    repeating-linear-gradient(0deg,  color-mix(in srgb,var(--c-ink) 14%,transparent) 0 1px, transparent 1px 76px),
+    repeating-linear-gradient(90deg, color-mix(in srgb,var(--c-ink) 14%,transparent) 0 1px, transparent 1px 76px)}
+
+/* ⑦ マークシートの丸。塗りつぶさず、輪郭だけにして静かにする */
+.bg-cnr--dots .bgfill{
+  background:radial-gradient(circle at 50% 50%,
+    transparent 34%, color-mix(in srgb,var(--c-primary) 30%,transparent) 35% 41%, transparent 42%);
+  background-size:68px 68px}
+
+/* ⑧ 同心円。右下の隅を中心に、細い線を4本だけ */
+.bg-cnr--arcs svg{width:100%;height:100%;display:block}
+.bg-cnr--arcs circle{stroke:color-mix(in srgb,var(--c-primary) 26%,transparent);stroke-width:2;
+  vector-effect:non-scaling-stroke}
+.bg-cnr--arcs .gl{-webkit-mask-image:radial-gradient(110% 100% at 104% 106%, #000 12%, transparent 70%);
+                          mask-image:radial-gradient(110% 100% at 104% 106%, #000 12%, transparent 70%)}
+
+/* ⑨ 面ひとつ。柄を持たず、右下がほんのり色づくだけ */
+.bg-cnr--shape .bgfill{
+  background:radial-gradient(78% 88% at 100% 104%,
+    color-mix(in srgb,var(--c-primary) 13%,transparent) 0%,
+    color-mix(in srgb,var(--c-primary) 6%,transparent) 46%, transparent 74%);
+  -webkit-mask-image:none;mask-image:none}
+
+/* 右下の柄：見えるところまで濃さを上げた版。
+   写真と山で隠れるので、可視域は【写真の左と上のわずかな帯】しかない。
+   マスクの中心を少し上げて（92%）、その帯に柄が来るようにする。 */
+.bg-cnr2 .gl{top:0;height:100%}
+.bg-cnr2 .bgfill{position:absolute;inset:0;display:block;
+  -webkit-mask-image:radial-gradient(86% 78% at 101% 92%, #000 0%, #000 30%, transparent 76%);
+          mask-image:radial-gradient(86% 78% at 101% 92%, #000 0%, #000 30%, transparent 76%)}
+.bg-cnr2--grid .bgfill{background:
+  repeating-linear-gradient(0deg,  color-mix(in srgb,var(--c-ink) 22%,transparent) 0 1px, transparent 1px 72px),
+  repeating-linear-gradient(90deg, color-mix(in srgb,var(--c-ink) 22%,transparent) 0 1px, transparent 1px 72px)}
+.bg-cnr2--gridS .bgfill{background:
+  repeating-linear-gradient(0deg,  color-mix(in srgb,var(--c-ink) 34%,transparent) 0 1px, transparent 1px 72px),
+  repeating-linear-gradient(90deg, color-mix(in srgb,var(--c-ink) 34%,transparent) 0 1px, transparent 1px 72px)}
+.bg-cnr2--dots .bgfill{background:radial-gradient(circle at 50% 50%,
+  transparent 33%, color-mix(in srgb,var(--c-primary) 45%,transparent) 34% 41%, transparent 42%);
+  background-size:64px 64px}
+.bg-cnr2--dotsS .bgfill{background:radial-gradient(circle at 50% 50%,
+  transparent 33%, color-mix(in srgb,var(--c-primary) 70%,transparent) 34% 41%, transparent 42%);
+  background-size:64px 64px}
