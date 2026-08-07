@@ -141,6 +141,8 @@ BG_LAYERS = {
 "cnr2-gridS": """<div id="growth" class="bg-cnr2 bg-cnr2--gridS" aria-hidden="true"><div class="gl" data-speed="0.14"><span class="bgfill"></span></div></div>""",
 "cnr2-dots": """<div id="growth" class="bg-cnr2 bg-cnr2--dots" aria-hidden="true"><div class="gl" data-speed="0.14"><span class="bgfill"></span></div></div>""",
 "cnr2-dotsS": """<div id="growth" class="bg-cnr2 bg-cnr2--dotsS" aria-hidden="true"><div class="gl" data-speed="0.14"><span class="bgfill"></span></div></div>""",
+"cnr2-gridV": """<div id="growth" class="bg-cnr2 bg-cnr2--gridV" aria-hidden="true"><div class="gl" data-speed="0.14"><span class="bgfill"></span></div></div>""",
+"cnr2-gridR": """<div id="growth" class="bg-cnr2 bg-cnr2--gridR" aria-hidden="true"><div class="gl" data-speed="0.14"><span class="bgfill"></span></div></div>""",
 "corner-shape": """<div id="growth" class="bg-cnr bg-cnr--shape" aria-hidden="true">
   <div class="gl" data-speed="0.12"><span class="bgfill"></span></div>
 </div>""",
