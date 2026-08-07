@@ -923,7 +923,11 @@ html:not(.js) .lm__i{transform:none}
   .vhr__list{gap:34px;max-width:none}
   /* 狭い画面は1列。見出し → 写真 → サブ → 本文 の順に積む */
   .vhr__item{grid-template-columns:minmax(0,1fr);row-gap:12px}
-  .vhr__vert,.vhr__fig,.vhr__figs,.vhr__chart,.vhr__sub,.vhr__body{
+  /* ★写真の配置は `.vhr__top > …`（詳細度 0,2,0）で書いてあるので、
+     ここも同じ形で打ち消さないと2列のまま残り、左の列が0pxに潰れる */
+  .vhr__item{grid-template-rows:none}
+  .vhr__vert,.vhr__sub,.vhr__body,
+  .vhr__top > .vhr__fig,.vhr__top > .vhr__figs,.vhr__top > .vhr__chart{
     grid-column:1;grid-row:auto}
   .vhr__vert{flex-direction:row-reverse;justify-content:flex-end;
     align-items:baseline;gap:12px;padding-top:0}
@@ -1051,7 +1055,11 @@ html:not(.js) .lm__i{transform:none}
   .vhr__list{gap:34px;max-width:none}
   /* 狭い画面は1列。見出し → 写真 → サブ → 本文 の順に積む */
   .vhr__item{grid-template-columns:minmax(0,1fr);row-gap:12px}
-  .vhr__vert,.vhr__fig,.vhr__figs,.vhr__chart,.vhr__sub,.vhr__body{
+  /* ★写真の配置は `.vhr__top > …`（詳細度 0,2,0）で書いてあるので、
+     ここも同じ形で打ち消さないと2列のまま残り、左の列が0pxに潰れる */
+  .vhr__item{grid-template-rows:none}
+  .vhr__vert,.vhr__sub,.vhr__body,
+  .vhr__top > .vhr__fig,.vhr__top > .vhr__figs,.vhr__top > .vhr__chart{
     grid-column:1;grid-row:auto}
   .vhr__vert{flex-direction:row-reverse;justify-content:flex-end;
     align-items:baseline;gap:12px;padding-top:0}
@@ -1291,7 +1299,11 @@ html:not(.js) .lm__i{transform:none}
   .vhr__list{gap:34px;max-width:none}
   /* 狭い画面は1列。見出し → 写真 → サブ → 本文 の順に積む */
   .vhr__item{grid-template-columns:minmax(0,1fr);row-gap:12px}
-  .vhr__vert,.vhr__fig,.vhr__figs,.vhr__chart,.vhr__sub,.vhr__body{
+  /* ★写真の配置は `.vhr__top > …`（詳細度 0,2,0）で書いてあるので、
+     ここも同じ形で打ち消さないと2列のまま残り、左の列が0pxに潰れる */
+  .vhr__item{grid-template-rows:none}
+  .vhr__vert,.vhr__sub,.vhr__body,
+  .vhr__top > .vhr__fig,.vhr__top > .vhr__figs,.vhr__top > .vhr__chart{
     grid-column:1;grid-row:auto}
   .vhr__vert{flex-direction:row-reverse;justify-content:flex-end;
     align-items:baseline;gap:12px;padding-top:0}
