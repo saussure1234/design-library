@@ -751,8 +751,11 @@ html:not(.js) .lm__i{transform:none}
    ・見出し → リード（太字・大きめ） → 本文（小さめ）の3段で読ませる
    写真が無くても間が持つのは、番号と罫が版面の骨になっているから。 */
 .evl{padding-block:clamp(48px,6vw,92px)}
-.evl__intro{max-width:38em;margin-inline:auto;text-align:center;
-  font-size:clamp(18px,1.4vw,20px);line-height:2.0;color:var(--c-ink2)}
+.evl__intro{max-width:40em;margin-inline:auto;text-align:center;
+  font-size:clamp(18px,1.4vw,20px);line-height:2.0;color:var(--c-ink2);
+  /* ★折り返しは原稿側の nb スパンで決める（balance だと最後の1〜2文字が
+     取り残されるのを直せない）。nb の中は切らず、あいだの wbr でだけ折る */
+  text-wrap:wrap}
 
 .evl__list{margin-top:clamp(30px,4vw,58px);display:grid;gap:0;
   border-top:1.5px solid var(--c-ink)}
@@ -809,6 +812,9 @@ html:not(.js) .lm__i{transform:none}
 .evl__fig--cut img{filter:drop-shadow(0 10px 22px rgba(48,48,48,.10))}
 
 @media(max-width:900px){
+  /* ★狭い画面では nb を解除する。文節がそのまま1行に収まらず、
+     切らないまま画面の外へ溢れる（nowrap のため折り返せない） */
+  .evl__intro .nb{white-space:normal}
   /* 写真は本文の下へ回す（3列だと写真も本文も細くなる） */
   .evl__item:has(.evl__fig){grid-template-columns:clamp(56px,7vw,104px) minmax(0,1fr)}
   .evl__fig{grid-column:2;grid-row:auto;margin-top:clamp(14px,2.4vw,22px);
@@ -1192,7 +1198,7 @@ html:not(.js) .lm__i{transform:none}
   <div class="wrap">
     
 
-    <p class="evl__intro fx" data-fx="fadeup">「今の実力で合格できそう？」「本番まであと1か月、何を勉強すればいい？」そんな不安や疑問を解消するために、英検®プレテスト（模擬試験）＆個別相談会を開催します。<br>今回は、英検®5級・英検®準2級の模擬試験を、英検®準会場でもあるESL club 渋谷校で実施します。</p>
+    <p class="evl__intro fx" data-fx="fadeup">「今の実力で合格できそう？」<wbr><span class="nb">「本番まであと1か月、何を勉強すればいい？」</span><br>そんな不安や疑問を解消するために、<wbr><span class="nb">英検®プレテスト（模擬試験）＆個別相談会を開催します。</span><br>今回は、<wbr><span class="nb">英検®5級・英検®準2級の模擬試験を、</span><wbr><span class="nb">英検®準会場でもあるESL club 渋谷校で実施します。</span></p>
 
     <ul class="evl__list">
       <li class="evl__item fx" data-fx="fadeup" data-d="0">
