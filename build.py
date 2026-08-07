@@ -346,11 +346,16 @@ def build(kit_path, out_path):
         header_html = ""
     else:
         hdr = hdr if isinstance(hdr, dict) else {}
+        # ロゴは本家（eslclub.jp）と同じくPC用とSP用の2ファイル。
+        # SP用は横に詰めた別の版で、1枚を縮めたものではない
+        logo_pc = hdr.get("logo", "img/logo.svg")
+        logo_sp = hdr.get("logoSp", logo_pc)
         header_html = (
             '<header class="hdr">\n'
             f'  <a class="hdr__logo" href="{hdr.get("home", "#top")}" '
             f'aria-label="{hdr.get("brand", "ESL club")}">'
-            f'<img src="{hdr.get("logo", "img/logo.svg")}" alt="{hdr.get("brand", "ESL club")}"></a>\n'
+            f'<img class="hdr__logo--pc" src="{logo_pc}" alt="{hdr.get("brand", "ESL club")}">'
+            f'<img class="hdr__logo--sp" src="{logo_sp}" alt="" aria-hidden="true"></a>\n'
             f'  <a class="btn btn--sm hdr__cta" href="{hdr.get("ctaHref", "https://eslclub.jp/trial/")}">'
             f'{hdr.get("ctaLabel", "無料体験レッスンはこちら")}</a>\n'
             '</header>'

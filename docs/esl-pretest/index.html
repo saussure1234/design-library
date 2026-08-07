@@ -131,15 +131,27 @@ ul,ol{padding:0;list-style:none}
 .hdr.is-stuck{border-bottom-color:var(--c-line)}
 /* 固定。スクロールしても隠さない */
 .hdr__logo{display:flex;align-items:center}
-.hdr__logo img{height:38px;width:auto;display:block}
+/* ★本家（eslclub.jp）の実測とぴったり同じ大きさで置く。
+   PC 208.021 x 38.217 ／ SP 92.159 x 38.217（SPは横に詰めた別ファイル）。
+   高さはPC・SPとも同じで、幅だけが変わる。
+   height だけ指定して width:auto にすると、SVG側の viewBox に
+   余白があるぶん字が小さくなる。だから【幅も高さも実寸で指定する】 */
+/* ★出し分けは `.hdr__logo img` より詳細度を上げて書く。
+   `.hdr__logo--sp{display:none}` だけだと (0,1,0) で
+   `.hdr__logo img` (0,1,1) に負け、2枚とも出てしまう */
+.hdr__logo img{display:block;flex:none}
+.hdr__logo img.hdr__logo--pc{width:208px;height:38.2px}
+.hdr__logo img.hdr__logo--sp{display:none;width:92px;height:38.2px}
 .hdr__cta{min-width:250px;height:52px;font-size:16px;padding:0 24px;
   box-shadow:0 5px 0 var(--c-accent-d)}
 .hdr__cta:hover{box-shadow:0 3px 0 var(--c-accent-d)}
 body{padding-top:var(--hdr-h,60px)}
 .hdr__cta{white-space:nowrap}
 @media(max-width:900px){
-  .hdr{height:64px;padding-inline:14px;gap:10px}
-  .hdr__logo img{height:26px}
+  /* ロゴの高さは本家と同じ38.2pxのまま。それが収まるだけの高さを持たせる */
+  .hdr{height:70px;padding-inline:14px;gap:10px}
+  .hdr__logo img.hdr__logo--pc{display:none}
+  .hdr__logo img.hdr__logo--sp{display:block}
   .hdr__cta{min-width:0;height:44px;font-size:13px;padding:0 15px;box-shadow:0 4px 0 var(--c-accent-d)}
 }
 @media(max-width:380px){
@@ -1030,7 +1042,7 @@ html:not(.js) .lm__i{transform:none}
   </div>
 </div>
 <header class="hdr">
-  <a class="hdr__logo" href="https://eslclub.jp/" aria-label="ESL club"><img src="img/logo.svg" alt="ESL club"></a>
+  <a class="hdr__logo" href="https://eslclub.jp/" aria-label="ESL club"><img class="hdr__logo--pc" src="img/logo.svg" alt="ESL club"><img class="hdr__logo--sp" src="img/logo_s.svg" alt="" aria-hidden="true"></a>
   <a class="btn btn--sm hdr__cta" href="#apply">申し込みフォーム</a>
 </header>
 <!-- hero/hero-blob-event (clear) -->
