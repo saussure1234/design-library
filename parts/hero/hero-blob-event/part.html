@@ -1,0 +1,26 @@
+<section class="hbe">
+  <div class="hbe__in">
+    <div class="hbe__blob hbe__blob--a"></div>
+    <div class="hbe__blob hbe__blob--b"></div>
+
+    <figure class="hbe__ph"><img src="{{photo}}" alt="{{photoAlt}}"></figure>
+
+    <div class="hbe__head">
+      {{?eyebrow}}<p class="hbe__eyebrow">{{eyebrow}}</p>{{/eyebrow}}
+      <h1 class="hbe__h1">{{heading}}</h1>
+      {{?venue}}<p class="hbe__venue">{{venue}}</p>{{/venue}}
+    </div>
+
+    <div class="hbe__when">
+      <p class="hbe__date"><span class="hbe__y">{{year}}</span><b>{{month}}<i>/</i>{{day}}</b><em>{{dow}}</em></p>
+      <ul class="hbe__times">
+        {{#times}}<li><b>{{.name}}</b><span>{{.time}}</span></li>{{/times}}
+      </ul>
+    </div>
+
+    <p class="hbe__cta">
+      <a class="btn" href="{{ctaHref}}">{{ctaLabel}}<span class="arr">→</span></a>
+      {{?ctaNote}}<span class="hbe__note">{{ctaNote}}</span>{{/ctaNote}}
+    </p>
+  </div>
+</section>

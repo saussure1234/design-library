@@ -16,6 +16,9 @@
           <p class="evl__lead">{{.lead}}</p>
           <p class="evl__text">{{.text}}</p>
         </div>
+        {{?.photo}}<figure class="evl__fig evl__fig--{{.photoKind}}">
+          <img src="{{.photo}}" alt="{{.photoAlt}}" loading="lazy" decoding="async">
+        </figure>{{/.photo}}
       </li>{{/items}}
     </ul>
 

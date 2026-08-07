@@ -13,6 +13,9 @@
   gap:clamp(16px,2.4vw,40px);align-items:start;
   padding-block:clamp(24px,3.2vw,44px);
   border-bottom:1px solid color-mix(in srgb,var(--c-ink) 16%,transparent)}
+/* 写真がある行だけ3列にする（番号・本文・写真）。
+   写真の無い行と本文の左端を揃えたいので、番号と本文の列幅は変えない */
+.evl__item:has(.evl__fig){grid-template-columns:clamp(56px,7vw,104px) minmax(0,1fr) clamp(200px,24vw,340px)}
 
 /* 番号は数字だけ。色は持たせず、級数だけで立てる */
 .evl__no{font-family:var(--f-num);font-weight:900;line-height:.9;
@@ -32,7 +35,42 @@
 .evl__note{margin-top:clamp(22px,3vw,38px);text-align:center;
   font-size:clamp(13px,1.1vw,16px);font-weight:800;color:var(--c-ink)}
 
+/* ── 緑の地に置くとき（本体LPのPOINT群と同じ面）────────────
+   墨の罫と墨の文字は緑の上では沈む。白へ反転させる。
+   ラベルだけは地と同じ緑では消えるので、白地に緑文字へ裏返す。 */
+.tone-brand .evl__list{border-top-color:rgba(255,255,255,.75)}
+.tone-brand .evl__item{border-bottom-color:rgba(255,255,255,.28)}
+.tone-brand .evl__no{color:rgba(255,255,255,.34)}
+.tone-brand .evl__t{color:var(--c-on-primary)}
+.tone-brand .evl__intro,
+.tone-brand .evl__text{color:rgba(255,255,255,.88)}
+.tone-brand .evl__lead{color:var(--c-accent)}
+.tone-brand .evl__note{color:var(--c-on-primary)}
+.tone-brand .evl__label{background:var(--c-bg);color:var(--c-primary-d)}
+.tone-brand .evl__fig--photo img{border-color:rgba(255,255,255,.6)}
+
+/* ── 写真 ────────────────────────────────
+   この節は白地に細罫だけで組んである。写真に影や角丸を足すと
+   そこだけ別の様式になるので、【切り取り方】だけで見せる。
+   ・photo（ふつうの写真）＝ 罫と同じ1pxの枠に収める。角は丸めない
+   ・cut（背景を抜いた素材）＝ 枠も地も持たせない。白地に直接置く */
+.evl__fig{grid-column:3;grid-row:1 / span 2;margin:0;align-self:start}
+.evl__fig img{display:block;width:100%;height:auto}
+.evl__fig--photo img{aspect-ratio:4/3;object-fit:cover;border:1px solid var(--c-ink)}
+/* 切り抜きは版面より少し大きく見せたいので、下の罫に触れるところまで伸ばす */
+.evl__fig--cut{margin-bottom:calc(-1 * clamp(24px,3.2vw,44px))}
+.evl__fig--cut img{filter:drop-shadow(0 10px 22px rgba(48,48,48,.10))}
+
+@media(max-width:900px){
+  /* 写真は本文の下へ回す（3列だと写真も本文も細くなる） */
+  .evl__item:has(.evl__fig){grid-template-columns:clamp(56px,7vw,104px) minmax(0,1fr)}
+  .evl__fig{grid-column:2;grid-row:auto;margin-top:clamp(14px,2.4vw,22px);
+    width:min(100%,340px)}
+  .evl__fig--cut{margin-bottom:calc(-1 * clamp(24px,3.2vw,44px))}
+}
 @media(max-width:640px){
   .evl__item{grid-template-columns:minmax(0,1fr);gap:6px}
+  .evl__item:has(.evl__fig){grid-template-columns:minmax(0,1fr)}
+  .evl__fig{grid-column:1;width:100%}
   .evl__no{font-size:26px}
 }

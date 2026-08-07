@@ -1,0 +1,114 @@
+/* hero/hero-blob-event
+   本体LP（hero-blob-cutout）と同じ作りのイベント版。
+   ・地は敷かない。body直下の「成長の曲線」を透かす
+   ・有機的な色の面（ブロブ）の上に、背景を抜いた人物を重ねる
+   ・人物は枠から はみ出す ように一回り大きく置く
+   ・CTAは黄色（本体LPと同じ扱い）
+   本体との違いは、写真が1枚で、右にあった2枚目の代わりに【日付】が入ること。 */
+.hbe{position:relative;background:transparent;overflow-x:clip}
+
+/* ★下の余白は【次の節の山】のぶん（最大110px）を必ず足す。
+   足りないとCTAの注記と人物の足元が、せり上がってきた山に食われる */
+.hbe__in{position:relative;width:100%;max-width:1440px;margin-inline:auto;
+  min-height:clamp(520px,48vw,700px);
+  display:grid;grid-template-columns:minmax(0,54%) minmax(0,46%);
+  grid-template-rows:auto auto auto;align-content:start;
+  padding-top:clamp(24px,3.4vw,52px);
+  padding-bottom:calc(clamp(46px,6.2vw,110px) + clamp(20px,2.6vw,40px));
+  padding-inline:clamp(20px,4vw,56px)}
+
+/* 色の面。丸くしない（四隅の曲率をばらす）／ゆっくり揺らす。
+   本体LPと同じ配色・同じ動き方にそろえる */
+.hbe__blob{position:absolute;z-index:1}
+.hbe__blob--a{left:57%;top:14%;width:20%;aspect-ratio:1/.98;background:#E2EFD6;
+  border-radius:44% 56% 61% 39% / 57% 43% 57% 43%;
+  animation:hbeBlobA 23s ease-in-out infinite}
+.hbe__blob--b{left:76%;top:44%;width:15%;aspect-ratio:1/1;background:#F2E9CE;
+  border-radius:57% 43% 41% 59% / 46% 57% 43% 54%;
+  animation:hbeBlobB 29s ease-in-out infinite}
+@keyframes hbeBlobA{
+  0%,100%{border-radius:44% 56% 61% 39% / 57% 43% 57% 43%;transform:translate(0,0) scale(1)}
+  34%    {border-radius:58% 42% 44% 56% / 43% 58% 42% 57%;transform:translate(3%,-4%) scale(1.06)}
+  67%    {border-radius:39% 61% 57% 43% / 60% 40% 60% 40%;transform:translate(-3%,3%) scale(.95)}}
+@keyframes hbeBlobB{
+  0%,100%{border-radius:57% 43% 41% 59% / 46% 57% 43% 54%;transform:translate(0,0) scale(1)}
+  40%    {border-radius:41% 59% 58% 42% / 59% 42% 58% 41%;transform:translate(-4%,4%) scale(1.07)}
+  72%    {border-radius:62% 38% 45% 55% / 40% 60% 40% 60%;transform:translate(3%,-3%) scale(.94)}}
+@media(prefers-reduced-motion:reduce){.hbe__blob{animation:none!important}}
+
+/* 人物（背景を抜いた素材）。面より大きくして、はみ出させる。
+   ★下端は山の上で止める。山にかかると机ごと切れて、切り抜きが台無しになる */
+/* ★素材は机と答案が写真の枠で断ち切られている（切り抜きの外周が直線）。
+   右の断面が版面の中に見えると「切り忘れ」に見えるので、
+   画面の外へ逃がして、断面そのものを見せない（節が overflow-x:clip で切る）。 */
+.hbe__ph{position:absolute;z-index:3;left:58%;top:10%;width:42%;margin:0;
+  max-height:calc(100% - clamp(46px,6.2vw,110px) - 8%);
+  filter:drop-shadow(0 8px 18px rgba(48,48,48,.10))}
+.hbe__ph img{width:100%;height:100%;object-fit:contain;object-position:0 0;display:block}
+
+/* 見出し */
+.hbe__head{grid-column:1;grid-row:1;z-index:5}
+/* 助走。本体LPと同じ扱い（本文より一段上・太字・墨） */
+.hbe__eyebrow{font-size:clamp(17.0px,1.438vw,20.0px);font-weight:800;
+  color:var(--c-ink2);line-height:1.6;letter-spacing:.01em}
+.hbe__h1{margin-top:10px;font-size:clamp(27px,3.1vw,46px);font-weight:900;color:var(--c-ink);
+  line-height:1.28;letter-spacing:.01em}
+.hbe__h1 em{font-style:normal;color:var(--c-primary)}
+/* 会場は見出しの下。ブランド色で、準会場であることを先に立てる */
+.hbe__venue{margin-top:14px;font-size:clamp(15px,1.25vw,18px);font-weight:800;
+  color:var(--c-primary);letter-spacing:.02em}
+
+/* 日付。ここがイベントLPの主役なので、見出しに次ぐ大きさで置く */
+.hbe__when{grid-column:1;grid-row:2;z-index:5;margin-top:clamp(20px,2.6vw,34px)}
+.hbe__date{display:flex;align-items:baseline;gap:.34em;
+  font-family:var(--f-num);color:var(--c-ink);line-height:.92}
+.hbe__y{font-size:clamp(13px,1.05vw,15px);font-weight:800;letter-spacing:.1em;
+  color:var(--c-ink3);align-self:flex-start;padding-top:.4em}
+.hbe__date b{font-size:clamp(52px,6.6vw,96px);font-weight:900;letter-spacing:-.02em}
+.hbe__date b i{font-style:normal;font-weight:700;color:var(--c-primary);
+  margin-inline:.02em;font-size:.86em}
+.hbe__date em{font-style:normal;font-size:clamp(17px,1.7vw,25px);font-weight:900;
+  color:var(--c-primary);letter-spacing:.06em}
+/* 2つの級の時間。罫1本ずつで分ける（箱にしない） */
+.hbe__times{margin-top:clamp(12px,1.5vw,20px);display:grid;gap:0;max-width:390px}
+.hbe__times li{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+  padding-block:clamp(7px,.9vw,11px);
+  border-top:1px solid color-mix(in srgb,var(--c-ink) 14%,transparent)}
+.hbe__times li:last-child{border-bottom:1px solid color-mix(in srgb,var(--c-ink) 14%,transparent)}
+.hbe__times b{font-size:clamp(14px,1.15vw,17px);font-weight:800;color:var(--c-ink)}
+.hbe__times span{font-family:var(--f-num);font-size:clamp(15px,1.3vw,19px);
+  font-weight:900;color:var(--c-ink);letter-spacing:.01em}
+
+/* CTA。本体LPと同じく黄色 */
+.hbe__cta{grid-column:1;grid-row:3;z-index:5;display:flex;flex-direction:column;
+  align-items:flex-start;gap:10px;margin-top:clamp(22px,3vw,38px)}
+.hbe__cta .btn{white-space:nowrap;
+  --btn-bg:var(--c-accent);--btn-ink:var(--c-on-accent);--btn-sd:var(--c-accent-d)}
+.hbe__note{font-size:18px;font-weight:800;color:var(--c-ink2);
+  letter-spacing:.01em;line-height:1.7;text-wrap:pretty}
+
+@media(max-width:900px){
+  /* スマホは キーメッセージ → 写真 → 日付 → CTA の順に積む。
+     ★写真をCTAの上に出すのは全LP共通の決まり */
+  .hbe__in{grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto auto auto;
+    row-gap:0;min-height:0;padding:26px 22px clamp(56px,13vw,88px)}
+  .hbe__blob{display:none}
+  .hbe__head{grid-row:1}
+  .hbe__h1{font-size:24px;line-height:1.5}
+  .hbe__h1 .nb{white-space:normal}
+  /* 写真は流れに戻す。円は写真そのものの ::before で描く
+     （節に絶対配置すると、位置の動く写真から離れてしまう） */
+  /* ★PC用の max-height と img{height:100%} を必ず戻す。
+     残ったままだと器だけが高くなり、写真の下に空白の帯ができる */
+  .hbe__ph{position:relative;grid-row:2;left:auto;top:auto;width:min(88%,330px);
+    max-height:none;justify-self:center;margin-top:16px;filter:none}
+  .hbe__ph img{height:auto;object-fit:contain}
+  .hbe__ph::before{content:"";position:absolute;z-index:-1;left:-9%;bottom:2%;
+    width:104%;aspect-ratio:1/.98;background:#E2EFD6;
+    border-radius:44% 56% 61% 39% / 57% 43% 57% 43%}
+  .hbe__when{grid-row:3;margin-top:20px}
+  .hbe__times{max-width:none}
+  .hbe__cta{grid-row:4}
+  .hbe__cta .btn{width:100%}
+  .hbe__note{font-size:15px;font-weight:700;line-height:1.75}
+}
