@@ -10,41 +10,62 @@
 
 .vhr .wrap{position:relative;z-index:1}
 
-/* 本文の幅を写真の幅に合わせる（右端が揃う）。版面を絞ってコンパクトに */
+/* ★540pxだと縦に細長くなる。横長の箱にして、写真も一回り大きく見せる */
 .vhr__list{display:grid;grid-template-columns:minmax(0,1fr);
-  gap:clamp(24px,3.2vw,40px);max-width:540px;margin-inline:auto}
+  gap:clamp(24px,3.2vw,40px);max-width:900px;margin-inline:auto}
 /* 1項目 ＝ 白いボックス。濃い面の上に置くための条件でもある */
 .vhr__item{margin:0;background:var(--c-bg);border-radius:20px;
   padding:clamp(20px,2.6vw,32px);box-shadow:var(--shadow-s)}
 
-/* ── 上段：縦書きの見出し ｜ 写真 ── */
-.vhr__top{display:flex;align-items:flex-start;justify-content:flex-start;gap:clamp(10px,1.4vw,18px)}
-.vhr__vert{writing-mode:vertical-rl;text-orientation:upright;
-  display:flex;gap:9px;padding-top:4px;overflow:hidden}
-.vhr__label{writing-mode:vertical-rl;text-orientation:mixed;
-  font-family:var(--f-num);font-size:clamp(10.4px,0.803vw,12.3px);font-weight:700;
-  letter-spacing:.22em;color:var(--c-ink3);white-space:nowrap;align-self:flex-start}
-.vhr__title{font-size:clamp(17.0px,1.353vw,20.0px);font-weight:800;color:var(--c-ink);
-  letter-spacing:.14em;line-height:1.55}
-.vhr__fig{flex:1;min-width:0;margin:0}
+/* ── 組み方（PC）──
+   ★見出しは【横書き】。縦書きだと箱が縦に伸びて細長くなるうえ、
+   POINT番号と見出しが目で追いにくい。
+   左＝POINT番号・見出し・サブ見出し ／ 右＝写真（2行ぶん通し）／ 下＝本文（全幅）。
+   サブ見出しを左へ入れるのは、写真が縦に大きいぶん左列が空くのを埋めるため。 */
+/* ★行は auto / 1fr / auto。1fr を置かないと、2行にまたがる写真の高さが
+   上下の行へ等分され、見出しとサブ見出しのあいだに大きな空白ができる */
+.vhr__item{display:grid;
+  grid-template-columns:clamp(160px,19vw,270px) minmax(0,1fr);
+  grid-template-rows:auto 1fr auto;
+  column-gap:clamp(16px,2.2vw,30px);row-gap:0;align-items:start}
+.vhr__top{display:contents}
+.vhr__vert{grid-column:1;grid-row:1;display:flex;flex-direction:column;gap:8px;
+  padding-top:2px;min-width:0}
+.vhr__label{font-family:var(--f-num);font-size:clamp(13px,1.05vw,15px);font-weight:800;
+  letter-spacing:.16em;color:var(--c-primary);white-space:nowrap}
+.vhr__title{font-size:clamp(19px,1.6vw,24px);font-weight:900;color:var(--c-ink);
+  letter-spacing:.02em;line-height:1.5}
+.vhr__fig{min-width:0;margin:0}
+.vhr__top > .vhr__fig{grid-column:2;grid-row:1 / span 2;align-self:start}
+.vhr__fig picture{display:block}
 .vhr__fig img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;
   border:4px solid #fff;box-shadow:var(--shadow-s);
   border-radius:12px 9px 14px 10px}
+
+/* ★スマホ用の縦版を持つ図版（本家LPと同じ差し替え）。
+   横長の図をスマホで縮めると字が読めないので、picture で入れ替える。
+   縦版は比が違うので、枠の比の指定を外す */
+.vhr__fig--sp picture{display:block}
+@media(max-width:900px){
+  .vhr__fig--sp img{aspect-ratio:auto;object-fit:contain;max-height:none}
+}
 
 /* 図版など、切ってはいけないもの（原稿で figFit を指定した回）。
    枠の比を画像そのものの比に合わせるので、端が欠けず、
    contain にしたときのような上下の余白も出ない */
 .vhr__fig--fit img{aspect-ratio:auto;object-fit:contain;background:var(--c-bg)}
 
-/* 写真・写真2枚・グラフ を同じ大きさの枠に収める（白い縁＋角丸＋影） */
-.vhr__figs,.vhr__chart{flex:1;min-width:0;
-  aspect-ratio:4/3;box-sizing:border-box;
-  border:0;border-radius:12px 9px 14px 10px;
-  background:var(--c-bg);overflow:hidden}
+/* 写真2枚は写真と同じ4:3の枠。グラフは中身なりの高さにする
+   ★グラフに4:3を掛けると、箱を横長にした今は下に巨大な空白が残る */
+.vhr__figs{min-width:0;aspect-ratio:4/3;box-sizing:border-box;
+  border:0;border-radius:12px 9px 14px 10px;background:var(--c-bg);overflow:hidden}
+.vhr__chart{min-width:0;box-sizing:border-box;
+  border:0;border-radius:12px 9px 14px 10px;background:var(--c-bg);overflow:hidden}
 
-/* 写真2枚は枠の中で半々 */
+.vhr__top > .vhr__figs,.vhr__top > .vhr__chart{grid-column:2;grid-row:1 / span 2;align-self:start}
+/* 写真2枚は枠の中で半々。★中の figure は外側の格子に置かない（打ち消す） */
 .vhr__figs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;padding:0}
-.vhr__figs .vhr__fig{flex:none;height:100%}
+.vhr__figs .vhr__fig{grid-column:auto;grid-row:auto;height:100%}
 .vhr__figs .vhr__fig img{width:100%;height:100%;aspect-ratio:auto;object-fit:cover;
   border:0;border-radius:0;box-shadow:none}
 
@@ -64,31 +85,35 @@
 .vhr__dv i{font-style:normal;font-size:.5em;margin-left:1px}
 .vhr__cnote{margin-top:9px;text-align:center;font-size:clamp(12px,1.02vw,14px);color:var(--c-ink3);line-height:1.7}
 
-/* ── 破線 → 下段：横書きの見出し → 本文 ── */
-.vhr__sub{margin-top:clamp(16px,2vw,24px);padding-top:clamp(14px,1.8vw,22px);
-  border-top:1px dashed var(--c-line);
+/* サブ見出しは左列の下。罫は持たせない（罫は本文の上に1本だけ） */
+.vhr__sub{grid-column:1;grid-row:2;align-self:start;
+  margin-top:clamp(12px,1.6vw,18px);padding-top:0;border-top:0;
   font-size:18px;font-weight:800;color:var(--c-ink);line-height:1.7}
-.vhr__body{margin-top:9px;font-size:18px;color:var(--c-ink2);line-height:2.0}
+/* 本文は全幅。ここで初めて破線を引く */
+.vhr__body{grid-column:1 / -1;grid-row:3;
+  margin-top:clamp(16px,2vw,24px);padding-top:clamp(14px,1.8vw,22px);
+  border-top:1px dashed var(--c-line);
+  font-size:18px;color:var(--c-ink2);line-height:2.0}
 
 /* 図版を持たない項目は、本文を図版の位置（縦書き見出しの右）へ入れる */
-.vhr__item:not(:has(.vhr__fig,.vhr__figs,.vhr__chart)){
-  display:grid;grid-template-columns:auto minmax(0,1fr);gap:0 clamp(10px,1.4vw,18px)}
-.vhr__item:not(:has(.vhr__fig,.vhr__figs,.vhr__chart)) .vhr__top{display:contents}
-.vhr__item:not(:has(.vhr__fig,.vhr__figs,.vhr__chart)) .vhr__vert{
-  grid-column:1;grid-row:1 / span 2}
+/* 図版を持たない項目は、左＝見出し／右＝サブと本文 */
+.vhr__item:not(:has(.vhr__fig,.vhr__figs,.vhr__chart)) .vhr__vert{grid-row:1 / span 2}
 .vhr__item:not(:has(.vhr__fig,.vhr__figs,.vhr__chart)) .vhr__sub{
-  grid-column:2;grid-row:1;margin-top:0;padding-top:4px;border-top:0}
+  grid-column:2;grid-row:1;margin-top:0;padding-top:4px}
 .vhr__item:not(:has(.vhr__fig,.vhr__figs,.vhr__chart)) .vhr__body{
-  grid-column:2;grid-row:2;margin-top:clamp(13px,1.7vw,18px);
-  padding-top:clamp(13px,1.7vw,18px);border-top:1px dashed var(--c-line)}
+  grid-column:2;grid-row:2;margin-top:clamp(13px,1.7vw,18px)}
 
 @media(max-width:900px){
   .vhr__list{gap:34px;max-width:none}
-  /* 狭い画面では縦書きをやめ、見出しを写真の上へ */
-  .vhr__top{flex-direction:column;align-items:stretch;gap:12px}
-  .vhr__vert{writing-mode:horizontal-tb;flex-direction:row-reverse;
-    justify-content:flex-end;align-items:baseline;gap:12px;padding-top:0}
-  .vhr__label{writing-mode:horizontal-tb;letter-spacing:.12em}
+  /* 狭い画面は1列。見出し → 写真 → サブ → 本文 の順に積む */
+  .vhr__item{grid-template-columns:minmax(0,1fr);row-gap:12px}
+  .vhr__vert,.vhr__fig,.vhr__figs,.vhr__chart,.vhr__sub,.vhr__body{
+    grid-column:1;grid-row:auto}
+  .vhr__vert{flex-direction:row-reverse;justify-content:flex-end;
+    align-items:baseline;gap:12px;padding-top:0}
+  .vhr__sub{margin-top:0}
+  .vhr__body{margin-top:0;padding-top:clamp(13px,2.4vw,18px)}
+  .vhr__label{letter-spacing:.12em}
   .vhr__title{font-size:17px;letter-spacing:.02em;line-height:1.6}
   .vhr__fig{flex:1;max-width:340px}
   .vhr__figs{max-width:340px}

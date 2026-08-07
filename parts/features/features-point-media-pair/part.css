@@ -44,9 +44,15 @@
 .pmp__item{width:clamp(220px,19vw,290px)}
 .pmp__item:nth-child(odd){justify-self:start}
 .pmp__item:nth-child(even){justify-self:end}
-.pmp__thumb{position:relative;display:block;width:100%;padding:0;border:0;cursor:pointer;
-  border-radius:12px 9px 14px 10px;overflow:hidden;background:var(--c-bg2)}
+/* ★地の緑に直接置くと、動画の中の緑や木目と同化して境目が消える。
+   白い縁と影で締める（本体LPの写真の扱いと同じ） */
+.pmp__thumb{position:relative;display:block;width:100%;cursor:pointer;
+  padding:5px;border:0;background:var(--c-bg);
+  border-radius:14px 11px 16px 12px;
+  box-shadow:0 10px 26px rgba(0,0,0,.16)}
+.pmp__thumb > img,.pmp__thumb > iframe{border-radius:10px 7px 12px 8px}
 .pmp__thumb img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
+.pmp__thumb{overflow:hidden}
 .pmp__thumb iframe{width:100%;aspect-ratio:4/3;display:block;border:0}
 .pmp__thumb.is-play .pmp__play{display:none}
 /* 再生ボタンはサムネの真ん中 */

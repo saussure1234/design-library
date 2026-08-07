@@ -9,17 +9,21 @@
 .cts__radio{position:absolute;opacity:0;pointer-events:none;width:0;height:0}
 
 /* ── タブ ── */
-.cts__tabs{display:flex;justify-content:center;gap:var(--s2);margin-bottom:var(--sp-el);flex-wrap:wrap}
+.cts__tabs{display:flex;justify-content:center;gap:var(--s4);margin-bottom:var(--sp-el);flex-wrap:wrap}
+/* ★校舎の切り替えはこの節の入口。小さいと「押せる」ことに気づかれない。
+   幅・高さ・級数を上げ、選ばれていない側にも枠を持たせて押せると分かるようにする */
 .cts__tab{display:inline-flex;align-items:center;justify-content:center;
-  min-width:180px;height:52px;padding:0 var(--s5);cursor:pointer;
-  font-weight:700;font-size:var(--fs-md);color:var(--c-ink3);
-  background:var(--c-bg2);border-radius:var(--r-pill);
-  transition:background .16s var(--e),color .16s var(--e)}
+  min-width:clamp(220px,26vw,320px);height:66px;padding:0 var(--s6);cursor:pointer;
+  font-weight:800;font-size:clamp(18px,1.5vw,22px);color:var(--c-ink2);
+  background:var(--c-bg);border:2px solid var(--c-line);border-radius:var(--r-pill);
+  transition:background .16s var(--e),color .16s var(--e),border-color .16s var(--e),
+             box-shadow .16s var(--e)}
 @media(hover:hover) and (pointer:fine){.cts__tab:hover{color:var(--c-ink)}}
 .cts__radio:nth-of-type(1):checked ~ .cts__tabs .cts__tab:nth-of-type(1),
 .cts__radio:nth-of-type(2):checked ~ .cts__tabs .cts__tab:nth-of-type(2),
 .cts__radio:nth-of-type(3):checked ~ .cts__tabs .cts__tab:nth-of-type(3){
-  background:var(--c-primary);color:var(--c-on-primary)}
+  background:var(--c-primary);color:var(--c-on-primary);border-color:var(--c-primary);
+  box-shadow:0 6px 0 var(--c-primary-d)}
 .cts__radio:focus-visible ~ .cts__tabs .cts__tab{outline:3px solid var(--c-primary);outline-offset:3px}
 
 /* ── パネル ── */
@@ -113,7 +117,7 @@
 .cts__msgtext p + p{margin-top:1.4em}
 
 @media(max-width:900px){
-  .cts__tab{min-width:0;flex:1;height:48px;font-size:var(--fs-sm);padding:0 var(--s4)}
+  .cts__tab{min-width:0;flex:1;height:58px;font-size:18px;padding:0 var(--s3)}
   .cts__top{grid-template-columns:minmax(0,1fr);gap:var(--s5)}
   .cts__plans,.cts__tt{grid-template-columns:minmax(0,1fr)}
   .cts__dl{grid-template-columns:6.5em minmax(0,1fr)}

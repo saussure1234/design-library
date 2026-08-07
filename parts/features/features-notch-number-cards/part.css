@@ -6,17 +6,22 @@
 .fnc__grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
 .fnc__item{margin:0}
 .fnc__card{position:relative;display:flex;flex-direction:column;height:100%;
-  border-radius:14px;padding:34px 18px 20px;
+  border-radius:14px;padding:46px 18px 20px;
   transition:transform .14s ease,box-shadow .14s ease}
 /* ★左上の切り欠き。地の白でカードの角を削り、そこに番号を置く */
 /* 左上の切り欠きは地の色で抜く（節ごとに変わるので変数で受ける） */
-.fnc__card::before{content:"";position:absolute;left:0;top:0;width:40px;height:28px;
-  background:var(--fnc-notch,var(--c-bg));border-bottom-right-radius:12px}
+/* ★切り欠きを大きくして、番号を丸い座に載せる。
+   もとは地色に抜いた小さな窓に数字を置くだけで、緑の上でも白の上でも読みにくかった */
+.fnc__card::before{content:"";position:absolute;left:0;top:0;width:54px;height:40px;
+  background:var(--fnc-notch,var(--c-bg));border-bottom-right-radius:16px}
 .tone-tint .fnc{--fnc-notch:var(--c-bg2)}
 .tone-brand .fnc{--fnc-notch:var(--c-primary)}
-.fnc__no{position:absolute;left:5px;top:2px;z-index:2;
-  font-family:var(--f-num);font-size:24px;font-weight:800;line-height:1;letter-spacing:-.02em}
-.fnc__t{font-size:18px;font-weight:800;color:var(--c-ink);line-height:1.6}
+.fnc__no{position:absolute;left:2px;top:0;z-index:2;
+  width:40px;height:40px;border-radius:50%;
+  display:grid;place-content:center;
+  background:var(--c-primary);color:var(--c-on-primary);
+  font-family:var(--f-num);font-size:22px;font-weight:900;line-height:1;letter-spacing:-.02em}
+.fnc__t{margin-top:2px;font-size:18px;font-weight:800;color:var(--c-ink);line-height:1.6}
 .fnc__d{margin-top:12px;font-size:17px;color:var(--c-ink2);line-height:1.85;flex:1}
 /* ── その節へ飛ぶ ────────────────────────────
    目印は置かず、箱そのものを押せる場所にする。
@@ -30,13 +35,13 @@
 }
 /* 4枚とも同じ色。濃い面の上なので白いブロックにする */
 .fnc__card{background:var(--c-bg)}
-.fnc__no{color:var(--c-primary)}
-/* 切り欠きが濃い面の色で抜かれる節では、番号を白にしないと見えない */
-.tone-brand .fnc__no{color:var(--c-on-primary)}
+
+/* 濃い面の上では、丸の地を白・数字を緑に反転させる（切り欠きが緑で抜かれるため） */
+.tone-brand .fnc__no{background:var(--c-bg);color:var(--c-primary-d)}
 
 
 @media(max-width:900px){.fnc__grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){
   .fnc__grid{grid-template-columns:minmax(0,1fr);gap:10px}
-  .fnc__card{padding:30px 16px 18px}
+  .fnc__card{padding:46px 16px 18px}
 }

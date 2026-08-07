@@ -13,7 +13,10 @@
             <p class="vhr__label">（&nbsp;{{labelPrefix}}&nbsp;{{.no}}&nbsp;）</p>
             <h3 class="vhr__title">{{.title}}</h3>
           </div>
-          {{?.photo}}<figure class="vhr__fig{{?.figFit}} vhr__fig--fit{{/.figFit}}"><img src="{{.photo}}" alt="{{.photoAlt}}" loading="lazy"></figure>{{/.photo}}
+          {{?.photo}}<figure class="vhr__fig{{?.figFit}} vhr__fig--fit{{/.figFit}}{{?.photoSp}} vhr__fig--sp{{/.photoSp}}"><picture>
+            {{?.photoSp}}<source media="(max-width:900px)" srcset="{{.photoSp}}">{{/.photoSp}}
+            <img src="{{.photo}}" alt="{{.photoAlt}}" loading="lazy">
+          </picture></figure>{{/.photo}}
           {{?.photosOn}}<div class="vhr__figs">
             {{#.photos}}<figure class="vhr__fig"><img src="{{.src}}" alt="{{.alt}}" loading="lazy"></figure>{{/.photos}}
           </div>{{/.photosOn}}
