@@ -10,7 +10,7 @@
 /* ★下の余白は【次の節の山】のぶん（最大110px）を必ず足す。
    足りないとCTAの注記と人物の足元が、せり上がってきた山に食われる */
 .hbe__in{position:relative;width:100%;max-width:1440px;margin-inline:auto;
-  min-height:clamp(520px,48vw,700px);
+  min-height:clamp(560px,52vw,760px);
   display:grid;grid-template-columns:minmax(0,54%) minmax(0,46%);
   grid-template-rows:auto auto auto;align-content:start;
   padding-top:clamp(24px,3.4vw,52px);
@@ -41,17 +41,25 @@
 /* ★素材は机と答案が写真の枠で断ち切られている（切り抜きの外周が直線）。
    右の断面が版面の中に見えると「切り忘れ」に見えるので、
    画面の外へ逃がして、断面そのものを見せない（節が overflow-x:clip で切る）。 */
-.hbe__ph{position:absolute;z-index:3;left:58%;top:10%;width:42%;margin:0;
+.hbe__ph{position:absolute;z-index:3;left:54%;top:8%;width:46%;margin:0;
   max-height:calc(100% - clamp(46px,6.2vw,110px) - 8%);
   filter:drop-shadow(0 8px 18px rgba(48,48,48,.10))}
-.hbe__ph img{width:100%;height:100%;object-fit:contain;object-position:0 0;display:block}
+.hbe__ph img{width:100%;height:100%;object-fit:contain;object-position:0 0;display:block;
+  /* 右と下の断面を短く溶かす。1440px超では写真の右端が版面の内側に来るので、
+     逃がしきれない。ぼかしてしまえば「切り忘れ」に見えない */
+  -webkit-mask-image:linear-gradient(to right,#000 90%,transparent 99%),
+                     linear-gradient(to bottom,#000 93%,transparent 100%);
+  -webkit-mask-composite:source-in;
+          mask-image:linear-gradient(to right,#000 90%,transparent 99%),
+                     linear-gradient(to bottom,#000 93%,transparent 100%);
+          mask-composite:intersect}
 
 /* 見出し */
 .hbe__head{grid-column:1;grid-row:1;z-index:5}
 /* 助走。本体LPと同じ扱い（本文より一段上・太字・墨） */
 .hbe__eyebrow{font-size:clamp(18px,1.5vw,21px);font-weight:800;
   color:var(--c-ink2);line-height:1.6;letter-spacing:.01em}
-.hbe__h1{margin-top:10px;font-size:clamp(27px,3.1vw,46px);font-weight:900;color:var(--c-ink);
+.hbe__h1{margin-top:10px;font-size:clamp(27px,3.45vw,50px);font-weight:900;color:var(--c-ink);
   line-height:1.28;letter-spacing:.01em}
 .hbe__h1 em{font-style:normal;color:var(--c-primary)}
 /* 会場は見出しの下。ブランド色で、準会場であることを先に立てる */
@@ -69,8 +77,11 @@
   margin-inline:.02em;font-size:.86em}
 .hbe__date em{font-style:normal;font-size:clamp(17px,1.7vw,25px);font-weight:900;
   color:var(--c-primary);letter-spacing:.06em}
-/* 2つの級の時間。罫1本ずつで分ける（箱にしない） */
-.hbe__times{margin-top:clamp(12px,1.5vw,20px);display:grid;gap:0;max-width:390px}
+/* 2つの級の時間。罫1本ずつで分ける（箱にしない）。
+   ★幅は見出しの1行目に合わせる。ここが細いと、左の文字と右の写真のあいだに
+   何もない帯ができて「離れて見える」 */
+.hbe__times{margin-top:clamp(12px,1.5vw,20px);display:grid;gap:0;
+  width:min(100%, clamp(390px, 39vw, 560px))}
 .hbe__times li{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
   padding-block:clamp(7px,.9vw,11px);
   border-top:1px solid color-mix(in srgb,var(--c-ink) 14%,transparent)}
