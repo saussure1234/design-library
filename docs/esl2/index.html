@@ -142,9 +142,14 @@ ul,ol{padding:0;list-style:none}
 .hdr__logo img{display:block;flex:none}
 .hdr__logo img.hdr__logo--pc{width:208px;height:38.2px}
 .hdr__logo img.hdr__logo--sp{display:none;width:92px;height:38.2px}
-.hdr__cta{min-width:250px;height:52px;font-size:16px;padding:0 24px;
-  box-shadow:0 5px 0 var(--c-accent-d)}
-.hdr__cta:hover{box-shadow:0 3px 0 var(--c-accent-d)}
+/* ★本家（eslclub.jp）の実測とぴったり同じ。PC・SPとも 221 x 34・文字14px。
+   本家は影のない角丸4pxの板なので、ここも影を持たせない
+   （52px用の5pxの影を34pxの板に残すと、ボタンが浮いて別物に見える） */
+/* ★セレクタは `.hdr .hdr__cta`。`.hdr__cta` 単体だと
+   後ろに書かれた `.btn--sm`（同じ詳細度）に font-size と padding を奪われる */
+.hdr .hdr__cta{width:221px;min-width:0;height:34px;font-size:14px;padding:0;
+  border-radius:4px;box-shadow:none}
+.hdr .hdr__cta:hover{box-shadow:none}
 body{padding-top:var(--hdr-h,60px)}
 .hdr__cta{white-space:nowrap}
 @media(max-width:900px){
@@ -152,7 +157,10 @@ body{padding-top:var(--hdr-h,60px)}
   .hdr{height:70px;padding-inline:14px;gap:10px}
   .hdr__logo img.hdr__logo--pc{display:none}
   .hdr__logo img.hdr__logo--sp{display:block}
-  .hdr__cta{min-width:0;height:44px;font-size:13px;padding:0 15px;box-shadow:0 4px 0 var(--c-accent-d)}
+  /* SPも本家と同寸（221 x 34・14px）。ただし390pxより狭い画面では
+     ロゴ92px＋余白に収まらないので、そこだけ縮める */
+  .hdr .hdr__cta{width:min(221px, calc(100% - 92px - 24px));min-width:0;
+    height:34px;font-size:14px;padding:0;border-radius:4px;box-shadow:none}
 }
 @media(max-width:380px){
   .hdr__cta{font-size:11px;padding:0 11px}
