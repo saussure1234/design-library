@@ -610,6 +610,13 @@ html:not(.js) .lm__i{transform:none}
                      radial-gradient(86% 78% at 101% 92%, #000 0%, #000 30%, transparent 76%);
           mask-composite:intersect}
 
+/* ★スマホでは背景の柄を出さない。
+   1段組みなので版面に余白がなく、どこへ置いてもキーメッセージか
+   時間の表の罫にかぶる。PCの「右側の余白に置く」前提が成り立たない。 */
+@media(max-width:900px){
+  #growth[class*="bg-cnr"]{display:none}
+}
+
 /* ===== hero/hero-blob-event ===== */
 /* hero/hero-blob-event
    本体LP（hero-blob-cutout）と同じ作りのイベント版。
