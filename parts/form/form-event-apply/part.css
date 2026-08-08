@@ -1,0 +1,65 @@
+/* form/form-event-apply
+   イベントの申し込みフォーム。外部サービスへ飛ばさず、ページの中で完結させる。
+   送信先は Google Apps Script の Web App（無料・自前）。
+   ・入力欄は罫だけ。箱を並べると「フォームの壁」に見えて離脱する
+   ・必須は色ではなく【文字】で示す（色だけだと見分けられない人がいる）
+   ・級の選択で、返信メールに入る支払いリンクが変わる（判定はGAS側） */
+.fea{padding-block:clamp(48px,6vw,92px)}
+.fea__intro{max-width:38em;margin-inline:auto;text-align:center;
+  font-size:clamp(18px,1.4vw,20px);line-height:2.0;color:var(--c-ink2)}
+
+.fea__form{max-width:720px;margin:clamp(28px,4vw,48px) auto 0}
+.fea__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:clamp(18px,2.4vw,28px)}
+.fea__row--wide{grid-column:1 / -1}
+
+.fea__label{display:flex;align-items:center;gap:8px;
+  font-size:18px;font-weight:800;color:var(--c-ink);line-height:1.6}
+/* 必須の印。色を使わず、小さな面と文字で示す */
+.fea__label i{font-style:normal;font-size:13px;font-weight:800;letter-spacing:.04em;
+  padding:3px 8px;border-radius:4px;background:var(--c-primary);color:var(--c-on-primary)}
+.fea__note{margin-top:6px;font-size:15px;color:var(--c-ink3);line-height:1.8}
+
+/* 入力欄は下の罫だけ。枠で囲うと項目数だけ箱が並んで圧が出る */
+.fea__in{display:block;width:100%;margin-top:10px;
+  padding:12px 2px;border:0;border-bottom:2px solid var(--c-line);
+  background:transparent;font-family:inherit;font-size:18px;color:var(--c-ink);
+  line-height:1.7;border-radius:0;transition:border-color .16s var(--e)}
+.fea__in:focus{outline:none;border-bottom-color:var(--c-primary)}
+.fea__in::placeholder{color:color-mix(in srgb,var(--c-ink3) 70%,transparent)}
+textarea.fea__in{resize:vertical;min-height:110px}
+/* 入力に不備がある欄だけ、送信を試みたあとに赤くする */
+.fea__form.is-checked .fea__in:invalid{border-bottom-color:#D6382F}
+
+.fea__fs{margin:0;padding:0;border:0;min-width:0}
+.fea__opts{display:grid;gap:10px;margin-top:12px}
+.fea__opt{display:flex;align-items:flex-start;gap:10px;cursor:pointer;
+  padding:13px 16px;border:2px solid var(--c-line);border-radius:10px;
+  font-size:18px;line-height:1.6;color:var(--c-ink2);
+  transition:border-color .16s var(--e),background .16s var(--e)}
+.fea__opt input{flex:none;width:20px;height:20px;margin-top:2px;accent-color:var(--c-primary)}
+.fea__opt:has(input:checked){border-color:var(--c-primary);
+  background:color-mix(in srgb,var(--c-primary) 7%,var(--c-bg));color:var(--c-ink)}
+.fea__opt:has(input:focus-visible){outline:3px solid var(--c-primary);outline-offset:2px}
+@media(hover:hover) and (pointer:fine){.fea__opt:hover{border-color:var(--c-primary)}}
+
+.fea__consent{margin-top:clamp(22px,3vw,32px);font-size:15px;color:var(--c-ink3);line-height:1.9}
+.fea__submit{margin-top:clamp(22px,3vw,32px);text-align:center}
+.fea__btn{min-width:min(100%,340px);height:60px;font-size:19px;
+  --btn-bg:var(--c-accent);--btn-ink:var(--c-on-accent);--btn-sd:var(--c-accent-d)}
+.fea__btn[disabled]{opacity:.55;pointer-events:none}
+.fea__status{margin-top:14px;text-align:center;font-size:16px;font-weight:700;
+  color:var(--c-ink2);line-height:1.8;min-height:1.8em}
+.fea__status.is-err{color:#D6382F}
+
+/* 送信後。フォームと入れ替えて出す */
+.fea__done{max-width:640px;margin:clamp(28px,4vw,48px) auto 0;text-align:center;
+  padding:clamp(28px,4vw,44px);border-radius:18px;
+  background:color-mix(in srgb,var(--c-primary) 8%,var(--c-bg))}
+.fea__donet{font-size:clamp(21px,2vw,26px);font-weight:900;color:var(--c-ink);line-height:1.6}
+.fea__donebody{margin-top:14px;font-size:18px;color:var(--c-ink2);line-height:2.0}
+
+@media(max-width:760px){
+  .fea__grid{grid-template-columns:minmax(0,1fr)}
+  .fea__btn{width:100%;min-width:0}
+}

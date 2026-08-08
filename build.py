@@ -149,6 +149,47 @@ BG_LAYERS = {
 }
 
 RUNTIME_JS = """
+/* ── 申し込みフォーム ────────────────────────
+   ページの中で完結させる。送信先は Google Apps Script の Web App。
+   Content-Type を text/plain にしているのは、事前確認（preflight）を
+   起こさないため。application/json にすると GAS 側が OPTIONS に
+   応答できず、ブラウザが送信そのものを止める。 */
+(function(){
+  var f=document.getElementById('applyForm'); if(!f) return;
+  var st=document.getElementById('applyStatus');
+  var done=document.getElementById('applyDone');
+  var btn=f.querySelector('button[type=submit]');
+  var URL_=f.dataset.endpoint||'';
+  f.addEventListener('submit',function(ev){
+    ev.preventDefault();
+    f.classList.add('is-checked');
+    if(!f.checkValidity()){
+      st.textContent='未入力の項目があります。ご確認ください。';
+      st.classList.add('is-err');
+      var bad=f.querySelector(':invalid'); if(bad) bad.focus();
+      return;
+    }
+    if(!URL_){ st.textContent='送信先が未設定です。'; st.classList.add('is-err'); return; }
+    st.classList.remove('is-err'); st.textContent='送信しています…';
+    btn.disabled=true;
+    var d={}; new FormData(f).forEach(function(v,k){ d[k]=v; });
+    d.page=location.href;
+    fetch(URL_,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},
+                body:JSON.stringify(d)})
+      .then(function(r){ return r.json(); })
+      .then(function(j){
+        if(j && j.ok){ f.hidden=true; done.hidden=false;
+          done.scrollIntoView({behavior:'smooth',block:'center'}); }
+        else { throw new Error((j&&j.error)||'送信に失敗しました'); }
+      })
+      .catch(function(e){
+        btn.disabled=false;
+        st.classList.add('is-err');
+        st.textContent='送信できませんでした。お手数ですが時間をおいて再度お試しいただくか、お電話（03-3797-3380）でご連絡ください。';
+      });
+  });
+})();
+
 document.documentElement.classList.add('js');
 
 /* スクロール表示：画面に入ったら .hh-in を付ける（IO不使用） */

@@ -890,112 +890,72 @@ html:not(.js) .lm__i{transform:none}
   .evs__cols{grid-template-columns:minmax(0,1fr);gap:32px}
 }
 
-/* ===== cta/cta-priority-stack ===== */
-/* cta/cta-priority-stack — 主CTAを地の上に直接置く（白カードを持たない）
-   ── 効かせている工夫 ─────────────────────────────
-   color/accent-means-clickable : 有彩色が出るのは「押せる場所」だけ。
-     ボタンの塗り（--c-primary）1点に緑を集約し、注記・小タグ・罫・写真の下地は
-     すべて無彩色に落とす。旧版は小タグを橙（--c-accent）にしていたが、
-     橙はページ全体で2箇所の予算なので外した。ゴースト（枠だけの緑ボタン）も廃止。
-   edge/panel-not-full-width : 面を全幅の矩形にしない。版面（.wrap）より狭い
-     「1枚の板」として置き、角は1箇所（右下）だけ大きく丸める。
-     R=--r-l×2.5（60px）、560px以下は×1.6（38px）。
-     板に塗りは持たせない（塗ると kit の tone が敷く地の階段が壊れる）ので、
-     輪郭は 1px の罫だけで示し、余った地色がそのまま余白として働く。
-   ───────────────────────────────────────────── */
+/* ===== form/form-event-apply ===== */
+/* form/form-event-apply
+   イベントの申し込みフォーム。外部サービスへ飛ばさず、ページの中で完結させる。
+   送信先は Google Apps Script の Web App（無料・自前）。
+   ・入力欄は罫だけ。箱を並べると「フォームの壁」に見えて離脱する
+   ・必須は色ではなく【文字】で示す（色だけだと見分けられない人がいる）
+   ・級の選択で、返信メールに入る支払いリンクが変わる（判定はGAS側） */
+.fea{padding-block:clamp(48px,6vw,92px)}
+.fea__intro{max-width:38em;margin-inline:auto;text-align:center;
+  font-size:clamp(18px,1.4vw,20px);line-height:2.0;color:var(--c-ink2)}
 
-/* 地は敷かない。--cps-edge は地に対して見える濃さを地ごとに持ち替える。
-   淡い地：ink 20%（罫と地で 1.54:1）／濃い地：白 30%（2.60:1） */
-.cps{
-  --cps-r:calc(var(--r-l) * 2.5);
-  --cps-edge:color-mix(in srgb,var(--c-ink) 20%,transparent);
+.fea__form{max-width:720px;margin:clamp(28px,4vw,48px) auto 0}
+.fea__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:clamp(18px,2.4vw,28px)}
+.fea__row--wide{grid-column:1 / -1}
+
+.fea__label{display:flex;align-items:center;gap:8px;
+  font-size:18px;font-weight:800;color:var(--c-ink);line-height:1.6}
+/* 必須の印。色を使わず、小さな面と文字で示す */
+.fea__label i{font-style:normal;font-size:13px;font-weight:800;letter-spacing:.04em;
+  padding:3px 8px;border-radius:4px;background:var(--c-primary);color:var(--c-on-primary)}
+.fea__note{margin-top:6px;font-size:15px;color:var(--c-ink3);line-height:1.8}
+
+/* 入力欄は下の罫だけ。枠で囲うと項目数だけ箱が並んで圧が出る */
+.fea__in{display:block;width:100%;margin-top:10px;
+  padding:12px 2px;border:0;border-bottom:2px solid var(--c-line);
+  background:transparent;font-family:inherit;font-size:18px;color:var(--c-ink);
+  line-height:1.7;border-radius:0;transition:border-color .16s var(--e)}
+.fea__in:focus{outline:none;border-bottom-color:var(--c-primary)}
+.fea__in::placeholder{color:color-mix(in srgb,var(--c-ink3) 70%,transparent)}
+textarea.fea__in{resize:vertical;min-height:110px}
+/* 入力に不備がある欄だけ、送信を試みたあとに赤くする */
+.fea__form.is-checked .fea__in:invalid{border-bottom-color:#D6382F}
+
+.fea__fs{margin:0;padding:0;border:0;min-width:0}
+.fea__opts{display:grid;gap:10px;margin-top:12px}
+.fea__opt{display:flex;align-items:flex-start;gap:10px;cursor:pointer;
+  padding:13px 16px;border:2px solid var(--c-line);border-radius:10px;
+  font-size:18px;line-height:1.6;color:var(--c-ink2);
+  transition:border-color .16s var(--e),background .16s var(--e)}
+.fea__opt input{flex:none;width:20px;height:20px;margin-top:2px;accent-color:var(--c-primary)}
+.fea__opt:has(input:checked){border-color:var(--c-primary);
+  background:color-mix(in srgb,var(--c-primary) 7%,var(--c-bg));color:var(--c-ink)}
+.fea__opt:has(input:focus-visible){outline:3px solid var(--c-primary);outline-offset:2px}
+@media(hover:hover) and (pointer:fine){.fea__opt:hover{border-color:var(--c-primary)}}
+
+.fea__consent{margin-top:clamp(22px,3vw,32px);font-size:15px;color:var(--c-ink3);line-height:1.9}
+.fea__submit{margin-top:clamp(22px,3vw,32px);text-align:center}
+.fea__btn{min-width:min(100%,340px);height:60px;font-size:19px;
+  --btn-bg:var(--c-accent);--btn-ink:var(--c-on-accent);--btn-sd:var(--c-accent-d)}
+.fea__btn[disabled]{opacity:.55;pointer-events:none}
+.fea__status{margin-top:14px;text-align:center;font-size:16px;font-weight:700;
+  color:var(--c-ink2);line-height:1.8;min-height:1.8em}
+.fea__status.is-err{color:#D6382F}
+
+/* 送信後。フォームと入れ替えて出す */
+.fea__done{max-width:640px;margin:clamp(28px,4vw,48px) auto 0;text-align:center;
+  padding:clamp(28px,4vw,44px);border-radius:18px;
+  background:color-mix(in srgb,var(--c-primary) 8%,var(--c-bg))}
+.fea__donet{font-size:clamp(21px,2vw,26px);font-weight:900;color:var(--c-ink);line-height:1.6}
+.fea__donebody{margin-top:14px;font-size:18px;color:var(--c-ink2);line-height:2.0}
+
+@media(max-width:760px){
+  .fea__grid{grid-template-columns:minmax(0,1fr)}
+  .fea__btn{width:100%;min-width:0}
 }
-.tone-dark .cps{--cps-edge:color-mix(in srgb,var(--c-on-dark) 30%,transparent)}
-
-/* 本文の途中に挟む回。上下はブロック間の値まで詰める（独自のpxは置かない） */
-.cps--tight{padding-block:var(--sp-blk)}
-
-/* ── 板 ───────────────────────────────────────
-   全幅の矩形にしない。幅は中身に合わせて縮み（最小 32em＝512px、上限は版面）、
-   角は右下の1箇所だけ大きく丸める。余った地色がそのまま余白として働く。
-   版面いっぱいに広げると、ボタン1本の回で中が空洞に見える（実描画で確認）。
-   クラス名に __panel / __card を使わない（_base.css が自動で影を付けるため） */
-.cps__field{
-  width:fit-content;min-width:min(32em,100%);max-width:100%;margin-inline:auto;
-  display:flex;flex-direction:column;align-items:center;text-align:center;
-  padding:var(--sp-el);
-}
-
-/* 写真（任意）。既定はCTAより上（全画面幅で共通） */
-.cps__ph{margin:0 0 var(--s5);width:100%;overflow:hidden;
-  border-radius:var(--r-m);aspect-ratio:16/10;background:var(--c-bg2)}
-.cps__ph img{width:100%;height:100%;object-fit:cover}
-
-.cps__body{width:100%;min-width:0;
-  display:flex;flex-direction:column;align-items:center}
-
-/* 見出し。様式は .sec-head のまま、中央寄せだけ足す。
-   eyebrow も heading も無い回は箱ごと消す（--sp-el の空白が残らないように） */
-.cps__head{text-align:center}
-.cps__head .sec-head__en{justify-content:center}
-.cps__head:not(:has(*)){display:none}
-
-/* ── ボタン ───────────────────────────────────
-   _base.css の .btn を1形のまま使う。高さ・角丸・左右パディング・丸矢印・色は触らない。
-   ここで足すのは版面に収めるための上限幅と、2行に折れたときの行間だけ */
-.cps__stack{width:100%;display:flex;flex-direction:column;align-items:center;gap:var(--s4)}
-.cps__btn{max-width:100%;line-height:var(--lh-tight)}
-.cps__label{min-width:0;text-wrap:balance}
-
-/* 小タグ（無料／簡単30秒）。押せる場所の中に置く無彩色のチップにする */
-.cps__tag{flex:none;padding:var(--s1) var(--s2);border-radius:var(--r-pill);
-  background:var(--c-on-primary);color:var(--c-ink);
-  font-size:var(--fs-note);font-weight:700;line-height:var(--lh-tight)}
-
-.cps__ico{flex:none;display:grid;place-items:center;width:1.4em;height:1.4em}
-.cps__ico svg{width:100%;height:100%;fill:none;stroke:currentColor;
-  stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-
-/* _base.css の .hh-in は表示後も clip-path:inset(0) を残す。
-   そのままだと :focus-visible のリング（outline-offset 3px）が切り落とされるので、
-   ボタンだけ解除する（.fx の定義自体は触らない） */
-.fx-on .cps__btn.hh-in{clip-path:none}
-
-.cps__note{margin-top:var(--s5);max-width:36em;
-  font-size:var(--fs-md);font-weight:700;color:var(--c-ink2);line-height:var(--lh-head)}
-/* --c-ink3 は濃色地で 2.89:1 しかない。淡色へ振り替える（11.9:1） */
-.tone-dark .cps__note{color:var(--c-bg3)}
-
-/* ── 写真を渡した回だけ、PCは横に添える ─────────
-   2段組を抱える回だけ、板の幅は工夫の既定値どおり版面の82%で止める（78〜85%の中） */
-@media(min-width:901px){
-  .cps__field:has(.cps__ph){width:100%;max-width:82%;flex-direction:row;gap:var(--sp-el)}
-  .cps__field:has(.cps__ph) .cps__ph{flex:0 0 34%;margin:0;aspect-ratio:4/5}
-  .cps__field:has(.cps__ph) .cps__body{flex:1 1 auto}
-}
-
-/* ───────── SP ───────── */
-@media(max-width:900px){
-  .cps__field{padding:var(--s5)}
-  .cps__stack{gap:var(--s3)}
-}
-@media(max-width:560px){
-  /* R60は板の高さに対して大きすぎて“カプセル”に見えるので落とす */
-  .cps{--cps-r:calc(var(--r-l) * 1.6)}
-  .cps__field{width:100%}
-  .cps__btn{width:100%}
-  .cps__btn:not(.cps__btn--sub){font-size:var(--fs-base)}
-}
-@media(max-width:420px){
-  .cps__field{padding-inline:var(--s4)}
-}
-
-/* ①見えるか：白カードは地に溶ける。面をやめ、地の上に直接ボタンを置く。
-   色は「押せる場所」だけ＝ボタンだけが緑になる（color/accent-means-clickable） */
-.cps__panel,[class*="cps__panel"],[class*="cps"] .panel{
-  background:transparent;box-shadow:none;border:0;padding-inline:0}
-.cps__panel::before,[class*="cps__panel"]::before{display:none}
-.tone-dark .cps__note,.tone-dark [class*="note"]{color:var(--c-on-dark2)}
 
 /* ===== footer/footer-two-tier-cta ===== */
 /* footer/footer-two-tier-cta — 二段構えフッター（受け皿＋事務フッター）
@@ -1318,46 +1278,123 @@ html:not(.js) .lm__i{transform:none}
 </section>
 
 </div>
-<!-- cta/cta-priority-stack (brand) -->
-<div class="tone-brand wave-top" style="--wave-from:var(--c-bg);--cps-panel:transparent;--cps-pad:0;--cps-ink:rgba(255,255,255,.9);--cps-head:#FFFFFF;--btn-bg:var(--c-accent);--btn-ink:var(--c-on-accent);--btn-sd:var(--c-accent-d)">
-<section class="sec cps" id="apply">
+<!-- form/form-event-apply (base) -->
+<div class="tone-base wave-top" style="--wave-from:var(--c-bg2)">
+<section class="sec fea" id="apply">
   <div class="wrap">
+    <div class="sec-head">
+      <h2 class="sec-head__ja">申し込み方法</h2>
+    </div>
 
-    <!-- 地は敷かない。外側の kit tone（tint／dark）がそのまま面になる。
-         白カードは持たず、地の上に直接ボタンと注釈を置く。
-         版面より狭い「1枚の板」であることは、罫と角1箇所の大Rだけで示す。 -->
-    <div class="cps__field">
+    <p class="fea__intro">まずは申し込みフォームよりお申し込みください。お支払い方法については追って、メールでご案内いたします。</p>
 
-      
+    <form class="fea__form" id="applyForm" novalidate data-endpoint="">
+      <div class="fea__grid">
 
-      <div class="cps__body">
-
-        <!-- 見出しは .sec-head の2段（欧文ラベル＋和文）に統一。
-             eyebrow→__en / heading→__ja。両方空の回は箱ごと消える -->
-        <div class="sec-head cps__head">
+        <div class="fea__row">
+          <label class="fea__label" for="f-childName">お子さまのお名前<i>必須</i></label>
           
-          <h2 class="sec-head__ja fx" data-fx="fadeup" data-d="60">申し込み方法</h2>
+          <input class="fea__in" id="f-childName" name="childName" type="text"
+             
+            required autocomplete="name">
+          
+        </div><div class="fea__row">
+          <label class="fea__label" for="f-kana">フリガナ<i>必須</i></label>
+          
+          <input class="fea__in" id="f-kana" name="kana" type="text"
+             
+            required autocomplete="off">
+          
+        </div><div class="fea__row">
+          <label class="fea__label" for="f-zip">郵便番号<i>必須</i></label>
+          
+          <input class="fea__in" id="f-zip" name="zip" type="text"
+            inputmode="numeric" placeholder="150-0002"
+            required autocomplete="postal-code">
+          
+        </div><div class="fea__row">
+          <label class="fea__label" for="f-addr">住所（任意）</label>
+          
+          <input class="fea__in" id="f-addr" name="addr" type="text"
+             
+             autocomplete="street-address">
+          
+        </div><div class="fea__row">
+          <label class="fea__label" for="f-tel">電話番号<i>必須</i></label>
+          
+          <input class="fea__in" id="f-tel" name="tel" type="tel"
+            inputmode="tel" 
+            required autocomplete="tel">
+          
+        </div><div class="fea__row">
+          <label class="fea__label" for="f-email">メールアドレス<i>必須</i></label>
+          
+          <input class="fea__in" id="f-email" name="email" type="email"
+            inputmode="email" 
+            required autocomplete="email">
+          
+        </div><div class="fea__row">
+          <label class="fea__label" for="f-grade">学年<i>必須</i></label>
+          
+          <input class="fea__in" id="f-grade" name="grade" type="text"
+             
+            required autocomplete="off">
+          
         </div>
 
-        <div class="cps__stack">
-
-          <!-- 主：_base.css の .btn そのまま（矢印は .btn::after が持つ） -->
-          <a class="btn cps__btn fx" data-fx="fadeup" data-d="120" href="#apply">
-            
-            
-            <span class="cps__label">申し込みフォーム</span>
-          </a>
-
-          <!-- 副1／副2：同じ .btn の小さい方（.btn--sm）。主従は大きさだけでつける -->
+        <fieldset class="fea__row fea__row--wide fea__fs">
+          <legend class="fea__label">お申込み級<i>必須</i></legend>
           
+          <div class="fea__opts">
+            <label class="fea__opt">
+              <input type="radio" name="level" value="5級" required>
+              <span>5級</span>
+            </label><label class="fea__opt">
+              <input type="radio" name="level" value="準2級" required>
+              <span>準2級</span>
+            </label>
+          </div>
+        </fieldset><fieldset class="fea__row fea__row--wide fea__fs">
+          <legend class="fea__label">個別相談会の希望<i>必須</i></legend>
+          <p class="fea__note">以下いずれか必須</p>
+          <div class="fea__opts">
+            <label class="fea__opt">
+              <input type="radio" name="consult" value="5級　個別相談会①（11:20～11:40）" required>
+              <span>5級　個別相談会①（11:20～11:40）</span>
+            </label><label class="fea__opt">
+              <input type="radio" name="consult" value="5級　個別相談会②（11:50～12:10）" required>
+              <span>5級　個別相談会②（11:50～12:10）</span>
+            </label><label class="fea__opt">
+              <input type="radio" name="consult" value="準2級　個別相談会①（16:00～16:20）" required>
+              <span>準2級　個別相談会①（16:00～16:20）</span>
+            </label><label class="fea__opt">
+              <input type="radio" name="consult" value="準2級　個別相談会②（16:30～16:50）" required>
+              <span>準2級　個別相談会②（16:30～16:50）</span>
+            </label><label class="fea__opt">
+              <input type="radio" name="consult" value="内部生のため個別相談不要" required>
+              <span>内部生のため個別相談不要</span>
+            </label>
+          </div>
+        </fieldset>
 
-          
-
+        <div class="fea__row fea__row--wide">
+          <label class="fea__label" for="f-question">ご質問</label>
+          <textarea class="fea__in" id="f-question" name="question" rows="4"></textarea>
         </div>
-
-        <p class="cps__note fx" data-fx="fadeup" data-d="240">まずは申し込みフォームよりお申し込みください。お支払い方法については追って、メールでご案内いたします。</p>
 
       </div>
+
+      <p class="fea__consent">※内部生のみなさまで相談をご希望の場合は別途調整いたします。ご希望の場合は備考欄にその旨、ご記載ください。</p>
+
+      <p class="fea__submit">
+        <button class="btn fea__btn" type="submit">この内容で申し込む<span class="arr">→</span></button>
+      </p>
+      <p class="fea__status" id="applyStatus" role="status" aria-live="polite"></p>
+    </form>
+
+    <div class="fea__done" id="applyDone" hidden>
+      <p class="fea__donet">お申し込みを受け付けました</p>
+      <p class="fea__donebody">ご入力のメールアドレスへ確認のメールをお送りしました。参加費のお支払い手続きのご案内が含まれていますので、ご確認をお願いいたします。</p>
     </div>
   </div>
 </section>
@@ -1498,6 +1535,47 @@ html:not(.js) .lm__i{transform:none}
 
 </div>
 <script>
+/* ── 申し込みフォーム ────────────────────────
+   ページの中で完結させる。送信先は Google Apps Script の Web App。
+   Content-Type を text/plain にしているのは、事前確認（preflight）を
+   起こさないため。application/json にすると GAS 側が OPTIONS に
+   応答できず、ブラウザが送信そのものを止める。 */
+(function(){
+  var f=document.getElementById('applyForm'); if(!f) return;
+  var st=document.getElementById('applyStatus');
+  var done=document.getElementById('applyDone');
+  var btn=f.querySelector('button[type=submit]');
+  var URL_=f.dataset.endpoint||'';
+  f.addEventListener('submit',function(ev){
+    ev.preventDefault();
+    f.classList.add('is-checked');
+    if(!f.checkValidity()){
+      st.textContent='未入力の項目があります。ご確認ください。';
+      st.classList.add('is-err');
+      var bad=f.querySelector(':invalid'); if(bad) bad.focus();
+      return;
+    }
+    if(!URL_){ st.textContent='送信先が未設定です。'; st.classList.add('is-err'); return; }
+    st.classList.remove('is-err'); st.textContent='送信しています…';
+    btn.disabled=true;
+    var d={}; new FormData(f).forEach(function(v,k){ d[k]=v; });
+    d.page=location.href;
+    fetch(URL_,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},
+                body:JSON.stringify(d)})
+      .then(function(r){ return r.json(); })
+      .then(function(j){
+        if(j && j.ok){ f.hidden=true; done.hidden=false;
+          done.scrollIntoView({behavior:'smooth',block:'center'}); }
+        else { throw new Error((j&&j.error)||'送信に失敗しました'); }
+      })
+      .catch(function(e){
+        btn.disabled=false;
+        st.classList.add('is-err');
+        st.textContent='送信できませんでした。お手数ですが時間をおいて再度お試しいただくか、お電話（03-3797-3380）でご連絡ください。';
+      });
+  });
+})();
+
 document.documentElement.classList.add('js');
 
 /* スクロール表示：画面に入ったら .hh-in を付ける（IO不使用） */

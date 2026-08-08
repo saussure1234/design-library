@@ -1,0 +1,53 @@
+<section class="sec fea"{{?anchorId}} id="{{anchorId}}"{{/anchorId}}>
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 class="sec-head__ja">{{heading}}</h2>
+    </div>
+
+    {{?intro}}<p class="fea__intro">{{intro}}</p>{{/intro}}
+
+    <form class="fea__form" id="applyForm" novalidate data-endpoint="{{endpoint}}">
+      <div class="fea__grid">
+
+        {{#fields}}<div class="fea__row{{?.wide}} fea__row--wide{{/.wide}}">
+          <label class="fea__label" for="f-{{.name}}">{{.label}}{{?.req}}<i>必須</i>{{/.req}}</label>
+          {{?.textarea}}<textarea class="fea__in" id="f-{{.name}}" name="{{.name}}" rows="4"
+            {{?.req}}required{{/.req}}></textarea>{{/.textarea}}
+          {{?.input}}<input class="fea__in" id="f-{{.name}}" name="{{.name}}" type="{{.type}}"
+            {{?.mode}}inputmode="{{.mode}}"{{/.mode}} {{?.ph}}placeholder="{{.ph}}"{{/.ph}}
+            {{?.req}}required{{/.req}} autocomplete="{{.ac}}">{{/.input}}
+          {{?.note}}<p class="fea__note">{{.note}}</p>{{/.note}}
+        </div>{{/fields}}
+
+        {{#radios}}<fieldset class="fea__row fea__row--wide fea__fs">
+          <legend class="fea__label">{{.label}}<i>必須</i></legend>
+          {{?.note}}<p class="fea__note">{{.note}}</p>{{/.note}}
+          <div class="fea__opts">
+            {{#.options}}<label class="fea__opt">
+              <input type="radio" name="{{.group}}" value="{{.v}}" required>
+              <span>{{.v}}</span>
+            </label>{{/.options}}
+          </div>
+        </fieldset>{{/radios}}
+
+        {{#tail}}<div class="fea__row fea__row--wide">
+          <label class="fea__label" for="f-{{.name}}">{{.label}}{{?.req}}<i>必須</i>{{/.req}}</label>
+          <textarea class="fea__in" id="f-{{.name}}" name="{{.name}}" rows="4"></textarea>
+        </div>{{/tail}}
+
+      </div>
+
+      {{?consent}}<p class="fea__consent">{{consent}}</p>{{/consent}}
+
+      <p class="fea__submit">
+        <button class="btn fea__btn" type="submit">{{submitLabel}}<span class="arr">→</span></button>
+      </p>
+      <p class="fea__status" id="applyStatus" role="status" aria-live="polite"></p>
+    </form>
+
+    <div class="fea__done" id="applyDone" hidden>
+      <p class="fea__donet">{{doneHeading}}</p>
+      <p class="fea__donebody">{{doneBody}}</p>
+    </div>
+  </div>
+</section>
