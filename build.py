@@ -178,8 +178,21 @@ RUNTIME_JS = """
                 body:JSON.stringify(d)})
       .then(function(r){ return r.json(); })
       .then(function(j){
-        if(j && j.ok){ f.hidden=true; done.hidden=false;
-          done.scrollIntoView({behavior:'smooth',block:'center'}); return; }
+        if(j && j.ok){
+          /* ★フォームだけでなく、この節の見出しと導入文も引っ込める。
+             残っていると「まだ入力する場所がある」ように見える */
+          f.hidden=true;
+          var sec=f.closest('.fea');
+          if(sec){ var h=sec.querySelector('.sec-head'); if(h) h.hidden=true;
+                   var it=sec.querySelector('.fea__intro'); if(it) it.hidden=true; }
+          done.hidden=false;
+          /* 画面の先頭に持ってくる。中央に寄せると上に前の節が残って紛らわしい */
+          var y=done.getBoundingClientRect().top+window.pageYOffset-16;
+          window.scrollTo({top:y,behavior:'smooth'});
+          if(history.replaceState) history.replaceState(null,'','#done');
+          done.setAttribute('tabindex','-1'); done.focus({preventScroll:true});
+          document.title='お申し込みを受け付けました｜'+document.title;
+          return; }
         /* ★サーバが返した理由をそのまま出す。
            「定員に達した」「すでに申し込み済み」などは、通信の失敗ではないので
            同じ文言に潰すと、利用者は何度も再送してしまう。 */

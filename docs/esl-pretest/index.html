@@ -947,12 +947,35 @@ textarea.fea__in{resize:vertical;min-height:110px}
   color:var(--c-ink2);line-height:1.8;min-height:1.8em}
 .fea__status.is-err{color:#D6382F}
 
-/* 送信後。フォームと入れ替えて出す */
-.fea__done{max-width:640px;margin:clamp(28px,4vw,48px) auto 0;text-align:center;
-  padding:clamp(28px,4vw,44px);border-radius:18px;
-  background:color-mix(in srgb,var(--c-primary) 8%,var(--c-bg))}
-.fea__donet{font-size:clamp(21px,2vw,26px);font-weight:900;color:var(--c-ink);line-height:1.6}
-.fea__donebody{margin-top:14px;font-size:18px;color:var(--c-ink2);line-height:2.0}
+/* ── 送信後 ────────────────────────────────
+   ★同じ場所で小さく入れ替わると「本当に送れたのか」が分からない。
+   画面の高さいっぱいを使って、これだけを見せる。 */
+.fea__done{min-height:min(78vh,720px);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:clamp(40px,6vw,72px) clamp(20px,4vw,44px);
+  margin:clamp(20px,3vw,36px) auto 0;max-width:720px;
+  border-radius:24px;background:color-mix(in srgb,var(--c-primary) 8%,var(--c-bg))}
+/* 丸のなかのチェック。線を描いてから出す（送信が「済んだ」ことの合図） */
+.fea__check{width:clamp(72px,8vw,96px);aspect-ratio:1;border-radius:50%;
+  display:grid;place-content:center;background:var(--c-primary);color:var(--c-on-primary);
+  animation:feaPop .42s var(--e) both}
+.fea__check svg{width:56%;height:auto;display:block}
+.fea__check .dw{stroke-dasharray:44;stroke-dashoffset:44;
+  animation:feaDraw .5s var(--e) .22s forwards}
+@keyframes feaPop{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes feaDraw{to{stroke-dashoffset:0}}
+@media(prefers-reduced-motion:reduce){
+  .fea__check{animation:none}.fea__check .dw{animation:none;stroke-dashoffset:0}}
+
+.fea__donet{margin-top:clamp(20px,2.6vw,30px);
+  font-size:clamp(24px,2.6vw,34px);font-weight:900;color:var(--c-ink);line-height:1.55}
+.fea__donebody{margin-top:16px;max-width:30em;font-size:18px;color:var(--c-ink2);line-height:2.0}
+.fea__donenote{margin-top:18px;padding-top:18px;max-width:30em;
+  border-top:1px solid color-mix(in srgb,var(--c-ink) 12%,transparent);
+  font-size:15px;color:var(--c-ink3);line-height:1.9}
+.fea__doneback{margin-top:clamp(24px,3vw,34px)}
+.fea__backbtn{min-width:min(100%,300px);height:56px;font-size:18px;
+  --btn-bg:var(--c-accent);--btn-ink:var(--c-on-accent);--btn-sd:var(--c-accent-d)}
 
 @media(max-width:760px){
   .fea__grid{grid-template-columns:minmax(0,1fr)}
@@ -1395,8 +1418,16 @@ textarea.fea__in{resize:vertical;min-height:110px}
     </form>
 
     <div class="fea__done" id="applyDone" hidden>
+      <span class="fea__check" aria-hidden="true">
+        <svg viewBox="0 0 48 48" fill="none"><path class="dw" d="M13 25.5 L21 33 L36 16"
+          stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
       <p class="fea__donet">お申し込みを受け付けました</p>
       <p class="fea__donebody">ご入力のメールアドレスへ確認のメールをお送りしました。参加費のお支払い手続きのご案内が含まれていますので、ご確認をお願いいたします。</p>
+      <p class="fea__donenote">メールが届かない場合は、迷惑メールフォルダをご確認ください。それでも見当たらないときは、お電話（03-3797-3380）でご連絡ください。</p>
+      <p class="fea__doneback">
+        <a class="btn fea__backbtn" href="https://eslclub.jp/">ESL club のサイトへ</a>
+      </p>
     </div>
   </div>
 </section>
@@ -1566,8 +1597,21 @@ textarea.fea__in{resize:vertical;min-height:110px}
                 body:JSON.stringify(d)})
       .then(function(r){ return r.json(); })
       .then(function(j){
-        if(j && j.ok){ f.hidden=true; done.hidden=false;
-          done.scrollIntoView({behavior:'smooth',block:'center'}); return; }
+        if(j && j.ok){
+          /* ★フォームだけでなく、この節の見出しと導入文も引っ込める。
+             残っていると「まだ入力する場所がある」ように見える */
+          f.hidden=true;
+          var sec=f.closest('.fea');
+          if(sec){ var h=sec.querySelector('.sec-head'); if(h) h.hidden=true;
+                   var it=sec.querySelector('.fea__intro'); if(it) it.hidden=true; }
+          done.hidden=false;
+          /* 画面の先頭に持ってくる。中央に寄せると上に前の節が残って紛らわしい */
+          var y=done.getBoundingClientRect().top+window.pageYOffset-16;
+          window.scrollTo({top:y,behavior:'smooth'});
+          if(history.replaceState) history.replaceState(null,'','#done');
+          done.setAttribute('tabindex','-1'); done.focus({preventScroll:true});
+          document.title='お申し込みを受け付けました｜'+document.title;
+          return; }
         /* ★サーバが返した理由をそのまま出す。
            「定員に達した」「すでに申し込み済み」などは、通信の失敗ではないので
            同じ文言に潰すと、利用者は何度も再送してしまう。 */
