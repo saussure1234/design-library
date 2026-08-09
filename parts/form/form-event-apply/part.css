@@ -43,7 +43,9 @@ textarea.fea__in{resize:vertical;min-height:110px}
 .fea__opt:has(input:focus-visible){outline:3px solid var(--c-primary);outline-offset:2px}
 @media(hover:hover) and (pointer:fine){.fea__opt:hover{border-color:var(--c-primary)}}
 
-.fea__consent{margin-top:clamp(22px,3vw,32px);font-size:15px;color:var(--c-ink3);line-height:1.9}
+/* 選択肢の直下に置く但し書き。ここは本文ではないので小さく、罫も面も持たせない */
+.fea__after{margin-top:10px;font-size:15px;color:var(--c-ink3);line-height:1.85;
+  text-indent:-1em;padding-left:1em}
 .fea__submit{margin-top:clamp(22px,3vw,32px);text-align:center}
 .fea__btn{min-width:min(100%,340px);height:60px;font-size:19px;
   --btn-bg:var(--c-accent);--btn-ink:var(--c-on-accent);--btn-sd:var(--c-accent-d)}

@@ -936,7 +936,9 @@ textarea.fea__in{resize:vertical;min-height:110px}
 .fea__opt:has(input:focus-visible){outline:3px solid var(--c-primary);outline-offset:2px}
 @media(hover:hover) and (pointer:fine){.fea__opt:hover{border-color:var(--c-primary)}}
 
-.fea__consent{margin-top:clamp(22px,3vw,32px);font-size:15px;color:var(--c-ink3);line-height:1.9}
+/* 選択肢の直下に置く但し書き。ここは本文ではないので小さく、罫も面も持たせない */
+.fea__after{margin-top:10px;font-size:15px;color:var(--c-ink3);line-height:1.85;
+  text-indent:-1em;padding-left:1em}
 .fea__submit{margin-top:clamp(22px,3vw,32px);text-align:center}
 .fea__btn{min-width:min(100%,340px);height:60px;font-size:19px;
   --btn-bg:var(--c-accent);--btn-ink:var(--c-on-accent);--btn-sd:var(--c-accent-d)}
@@ -1354,6 +1356,7 @@ textarea.fea__in{resize:vertical;min-height:110px}
               <span>準2級</span>
             </label>
           </div>
+          
         </fieldset><fieldset class="fea__row fea__row--wide fea__fs">
           <legend class="fea__label">個別相談会の希望<i>必須</i></legend>
           <p class="fea__note">以下いずれか必須</p>
@@ -1375,6 +1378,7 @@ textarea.fea__in{resize:vertical;min-height:110px}
               <span>内部生のため個別相談不要</span>
             </label>
           </div>
+          <p class="fea__after">※内部生のみなさまで相談をご希望の場合は別途調整いたします。ご希望の場合は備考欄にその旨、ご記載ください。</p>
         </fieldset>
 
         <div class="fea__row fea__row--wide">
@@ -1383,8 +1387,6 @@ textarea.fea__in{resize:vertical;min-height:110px}
         </div>
 
       </div>
-
-      <p class="fea__consent">※内部生のみなさまで相談をご希望の場合は別途調整いたします。ご希望の場合は備考欄にその旨、ご記載ください。</p>
 
       <p class="fea__submit">
         <button class="btn fea__btn" type="submit">この内容で申し込む<span class="arr">→</span></button>
