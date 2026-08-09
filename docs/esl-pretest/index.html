@@ -950,6 +950,9 @@ textarea.fea__in{resize:vertical;min-height:110px}
 /* ── 送信後 ────────────────────────────────
    ★同じ場所で小さく入れ替わると「本当に送れたのか」が分からない。
    画面の高さいっぱいを使って、これだけを見せる。 */
+/* ★hidden より display の指定が強い（作者のCSSはブラウザ既定に勝つ）。
+   これを書かないと、送信していないのに完了画面が最初から出てしまう */
+.fea__done[hidden],.fea__form[hidden],.sec-head[hidden],.fea__intro[hidden]{display:none!important}
 .fea__done{min-height:min(78vh,720px);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   text-align:center;padding:clamp(40px,6vw,72px) clamp(20px,4vw,44px);
