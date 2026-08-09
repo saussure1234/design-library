@@ -179,13 +179,18 @@ RUNTIME_JS = """
       .then(function(r){ return r.json(); })
       .then(function(j){
         if(j && j.ok){ f.hidden=true; done.hidden=false;
-          done.scrollIntoView({behavior:'smooth',block:'center'}); }
-        else { throw new Error((j&&j.error)||'送信に失敗しました'); }
+          done.scrollIntoView({behavior:'smooth',block:'center'}); return; }
+        /* ★サーバが返した理由をそのまま出す。
+           「定員に達した」「すでに申し込み済み」などは、通信の失敗ではないので
+           同じ文言に潰すと、利用者は何度も再送してしまう。 */
+        var e=new Error((j&&j.error)||'送信に失敗しました'); e.fromServer=!!(j&&j.error); throw e;
       })
       .catch(function(e){
         btn.disabled=false;
         st.classList.add('is-err');
-        st.textContent='送信できませんでした。お手数ですが時間をおいて再度お試しいただくか、お電話（03-3797-3380）でご連絡ください。';
+        st.textContent = e && e.fromServer
+          ? e.message
+          : '送信できませんでした。お手数ですが時間をおいて再度お試しいただくか、お電話（03-3797-3380）でご連絡ください。';
       });
   });
 })();
