@@ -50,7 +50,7 @@
   --f-num:"Helvetica Neue",Arial,var(--f-sans);
 
   /* --- 文字サイズ（PC基準・clampはパーツ側で組む） --- */
-  --fs-note:14px; --fs-sm:17px; --fs-base:18px; --fs-md:20px;
+  --fs-note:18px; --fs-sm:18px; --fs-base:18px; --fs-md:20px;
   --fs-lg:24px;   --fs-xl:31px; --fs-2xl:41px;  --fs-3xl:53px; --fs-4xl:68px;
   --lh-tight:1.35; --lh-head:1.5; --lh-body:1.9;
 
@@ -106,7 +106,7 @@
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
 body{margin:0;font-family:var(--f-sans);color:var(--c-ink2);background:var(--c-bg);
-  line-height:1.8;font-size:16px;-webkit-font-smoothing:antialiased;overflow-x:clip;
+  line-height:1.8;font-size:18px;-webkit-font-smoothing:antialiased;overflow-x:clip;
   font-feature-settings:"palt" 1}   /* ★日本語は約物を詰める。無いと1行の字数が変わる */
 img,svg,video{display:block;max-width:100%;height:auto}
 a{color:inherit;text-decoration:none}
@@ -354,7 +354,7 @@ footer{position:relative;z-index:1}
 .sec-head__en{display:block;font-family:var(--f-num);font-size:54px;line-height:1;
   font-weight:900;letter-spacing:.02em;color:var(--c-primary);opacity:.9}
 .sec-head__ja{margin-top:10px;font-size:28px;font-weight:800;line-height:1.4;color:var(--c-ink)}
-.sec-head__sub{margin-top:14px;font-size:15.5px;color:var(--c-ink2);max-width:38em;margin-inline:auto}
+.sec-head__sub{margin-top:14px;font-size:18px;color:var(--c-ink2);max-width:38em;margin-inline:auto}
 .sec-head::after{content:"";display:inline-block;margin-top:16px;
   width:60px;height:5px;border-radius:5px;background:var(--c-accent)}
 .tone-deep .sec-head__ja,.tone-dark .sec-head__ja{color:var(--c-on-dark)}
@@ -383,7 +383,7 @@ footer{position:relative;z-index:1}
   transition:transform .12s ease,box-shadow .12s ease}
 .btn:hover{transform:translateY(3px);box-shadow:0 5px 0 var(--btn-sd,var(--c-accent-d))}
 .btn:active{transform:translateY(6px);box-shadow:0 2px 0 var(--btn-sd,var(--c-accent-d))}
-.btn--sm{font-size:16px;padding:14px 30px;box-shadow:0 6px 0 var(--btn-sd,var(--c-accent-d))}
+.btn--sm{font-size:18px;padding:14px 30px;box-shadow:0 6px 0 var(--btn-sd,var(--c-accent-d))}
 .btn--sm:hover{box-shadow:0 3px 0 var(--btn-sd,var(--c-accent-d))}
 .btn .arr{font-size:.9em}
 
@@ -484,8 +484,8 @@ html:not(.js) .lm__i{transform:none}
   .sec-head{margin-bottom:32px}
   .sec-head__en{font-size:40px}
   .sec-head__ja{font-size:22px}
-  .sec-head__sub{font-size:14.5px}
-  .btn{font-size:17px;padding:17px 32px}
+  .sec-head__sub{font-size:18px}
+  .btn{font-size:18px;padding:17px 32px}
   .ph{border-radius:20px;border-width:5px}
   .card{border-radius:18px;padding:22px}
 }
@@ -690,12 +690,12 @@ html:not(.js) .lm__i{transform:none}
 .hbe__when{grid-column:1;grid-row:2;z-index:5;margin-top:clamp(20px,2.6vw,34px)}
 .hbe__date{display:flex;align-items:baseline;gap:.34em;
   font-family:var(--f-num);color:var(--c-ink);line-height:.92}
-.hbe__y{font-size:clamp(16px,1.15vw,17px);font-weight:800;letter-spacing:.1em;
+.hbe__y{font-size:clamp(18px,1.15vw,18px);font-weight:800;letter-spacing:.1em;
   color:var(--c-ink3);align-self:flex-start;padding-top:.4em}
 .hbe__date b{font-size:clamp(52px,6.6vw,96px);font-weight:900;letter-spacing:-.02em}
 .hbe__date b i{font-style:normal;font-weight:700;color:var(--c-primary);
   margin-inline:.02em;font-size:.86em}
-.hbe__date em{font-style:normal;font-size:clamp(17px,1.7vw,25px);font-weight:900;
+.hbe__date em{font-style:normal;font-size:clamp(18px,1.7vw,25px);font-weight:900;
   color:var(--c-primary);letter-spacing:.06em}
 /* 2つの級の時間。罫1本ずつで分ける（箱にしない）。
    ★罫は左の段いっぱいに引く。ここで幅を絞ると、罫の右端と写真のあいだに
@@ -773,7 +773,7 @@ html:not(.js) .lm__i{transform:none}
 
 .evl__label{display:inline-block;padding:5px 13px;border-radius:var(--r-pill);
   background:var(--c-primary);color:var(--c-on-primary);
-  font-size:clamp(16px,1.2vw,18px);font-weight:800;letter-spacing:.06em;line-height:1.2}
+  font-size:clamp(18px,1.2vw,18px);font-weight:800;letter-spacing:.06em;line-height:1.2}
 .evl__t{margin-top:clamp(10px,1.2vw,15px);
   font-family:var(--f-disp);font-weight:900;color:var(--c-ink);
   font-size:clamp(21px,2.1vw,30px);line-height:1.45;letter-spacing:.005em}
@@ -846,14 +846,14 @@ html:not(.js) .lm__i{transform:none}
   color:var(--c-ink3);padding-top:.15em}
 .evs__row dd{margin:0;font-size:clamp(18px,1.35vw,19px);color:var(--c-ink);line-height:1.9}
 /* ※ の但し書き。値の下にぶら下げる。ここは本文ではないので級数を落とす */
-.evs__sm{display:block;margin-top:.5em;font-size:clamp(14px,1.05vw,15px);
+.evs__sm{display:block;margin-top:.5em;font-size:clamp(18px,1.05vw,18px);
   color:var(--c-ink3);line-height:1.8;text-indent:-1em;padding-left:1em}
 .evs__sm + .evs__sm{margin-top:.35em}
 
 /* ── 当日の流れ ── */
 .evs__tl{margin-top:clamp(38px,5vw,72px)}
 .evs__tlh{text-align:center;font-family:var(--f-disp);font-weight:900;color:var(--c-ink);
-  font-size:clamp(17px,1.7vw,24px);letter-spacing:.02em}
+  font-size:clamp(18px,1.7vw,24px);letter-spacing:.02em}
 .evs__cols{margin-top:clamp(22px,3vw,40px);
   display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(20px,3vw,48px)}
 
@@ -909,9 +909,9 @@ html:not(.js) .lm__i{transform:none}
 .fea__label{display:flex;align-items:center;gap:8px;
   font-size:18px;font-weight:800;color:var(--c-ink);line-height:1.6}
 /* 必須の印。色を使わず、小さな面と文字で示す */
-.fea__label i{font-style:normal;font-size:13px;font-weight:800;letter-spacing:.04em;
+.fea__label i{font-style:normal;font-size:18px;font-weight:800;letter-spacing:.04em;
   padding:3px 8px;border-radius:4px;background:var(--c-primary);color:var(--c-on-primary)}
-.fea__note{margin-top:6px;font-size:15px;color:var(--c-ink3);line-height:1.8}
+.fea__note{margin-top:6px;font-size:18px;color:var(--c-ink3);line-height:1.8}
 
 /* 入力欄は下の罫だけ。枠で囲うと項目数だけ箱が並んで圧が出る */
 .fea__in{display:block;width:100%;margin-top:10px;
@@ -937,13 +937,13 @@ textarea.fea__in{resize:vertical;min-height:110px}
 @media(hover:hover) and (pointer:fine){.fea__opt:hover{border-color:var(--c-primary)}}
 
 /* 選択肢の直下に置く但し書き。ここは本文ではないので小さく、罫も面も持たせない */
-.fea__after{margin-top:10px;font-size:15px;color:var(--c-ink3);line-height:1.85;
+.fea__after{margin-top:10px;font-size:18px;color:var(--c-ink3);line-height:1.85;
   text-indent:-1em;padding-left:1em}
 .fea__submit{margin-top:clamp(22px,3vw,32px);text-align:center}
 .fea__btn{min-width:min(100%,340px);height:60px;font-size:19px;
   --btn-bg:var(--c-accent);--btn-ink:var(--c-on-accent);--btn-sd:var(--c-accent-d)}
 .fea__btn[disabled]{opacity:.55;pointer-events:none}
-.fea__status{margin-top:14px;text-align:center;font-size:16px;font-weight:700;
+.fea__status{margin-top:14px;text-align:center;font-size:18px;font-weight:700;
   color:var(--c-ink2);line-height:1.8;min-height:1.8em}
 .fea__status.is-err{color:#D6382F}
 
@@ -978,7 +978,7 @@ textarea.fea__in{resize:vertical;min-height:110px}
 .fea__donebody{margin-top:16px;max-width:30em;font-size:18px;color:var(--c-ink2);line-height:2.0}
 .fea__donenote{margin-top:18px;padding-top:18px;max-width:30em;
   border-top:1px solid color-mix(in srgb,var(--c-ink) 12%,transparent);
-  font-size:15px;color:var(--c-ink3);line-height:1.9}
+  font-size:18px;color:var(--c-ink3);line-height:1.9}
 .fea__doneback{margin-top:clamp(24px,3vw,34px)}
 .fea__backbtn{min-width:min(100%,300px);height:56px;font-size:18px;
   --btn-bg:var(--c-accent);--btn-ink:var(--c-on-accent);--btn-sd:var(--c-accent-d)}
