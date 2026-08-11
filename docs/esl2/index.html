@@ -661,7 +661,10 @@ html:not(.js) .lm__i{transform:none}
 .hbc__ph{position:absolute;z-index:3;margin:0;filter:drop-shadow(0 8px 18px rgba(48,48,48,.10))}
 /* ★背景を抜いた人物。枠（色の面）から はみ出す ように大きめに重ねる */
 .hbc__ph img{width:100%;display:block}
-.hbc__ph--a{left:34%;top:24%;width:32%}
+/* ★写真を差し替えたとき、器の幅だけ揃えても【人物の大きさ】は揃わない。
+   素材の比が違うと頭の大きさが変わる。差し替え前と頭幅が同じになる値にする
+   （旧素材 1300x1360・32% のとき頭幅295px → 新素材 1300x1849 では24.6%） */
+.hbc__ph--a{left:34%;top:24%;width:24.6%}
 .hbc__ph--b{left:66%;top:35%;width:28%}
 
 /* 見出し */
