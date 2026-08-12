@@ -6,21 +6,21 @@
 .fnc__grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
 .fnc__item{margin:0}
 .fnc__card{position:relative;display:flex;flex-direction:column;height:100%;
-  border-radius:14px;padding:46px 18px 20px;
+  border-radius:14px;padding:20px 18px;
   transition:transform .14s ease,box-shadow .14s ease}
 /* ★左上の切り欠き。地の白でカードの角を削り、そこに番号を置く */
 /* 左上の切り欠きは地の色で抜く（節ごとに変わるので変数で受ける） */
 /* ★切り欠きを大きくして、番号を丸い座に載せる。
    もとは地色に抜いた小さな窓に数字を置くだけで、緑の上でも白の上でも読みにくかった */
-.fnc__card::before{content:"";position:absolute;left:0;top:0;width:54px;height:40px;
-  background:var(--fnc-notch,var(--c-bg));border-bottom-right-radius:16px}
-.tone-tint .fnc{--fnc-notch:var(--c-bg2)}
-.tone-brand .fnc{--fnc-notch:var(--c-primary)}
-.fnc__no{position:absolute;left:2px;top:0;z-index:2;
-  width:40px;height:40px;border-radius:50%;
-  display:grid;place-content:center;
-  background:var(--c-primary);color:var(--c-on-primary);
-  font-family:var(--f-num);font-size:22px;font-weight:900;line-height:1;letter-spacing:-.02em}
+/* ★切り欠きも丸もやめた。
+   白いカードの上に白い丸を置いていたため丸そのものが見えず、
+   背後の切り欠きだけが残って「角が欠けた」ように見えていた。
+   番号は数字そのものを大きく出し、下に細い罫を1本引くだけにする */
+.fnc__no{display:block;
+  margin-bottom:12px;padding-bottom:10px;
+  border-bottom:2px solid var(--c-primary);
+  color:var(--c-primary);
+  font-family:var(--f-num);font-size:34px;font-weight:900;line-height:1;letter-spacing:0}
 .fnc__t{margin-top:2px;font-size:18px;font-weight:800;color:var(--c-ink);line-height:1.6}
 .fnc__d{margin-top:12px;font-size:18px;color:var(--c-ink2);line-height:1.85;flex:1}
 /* ── その節へ飛ぶ ────────────────────────────
@@ -36,12 +36,12 @@
 /* 4枚とも同じ色。濃い面の上なので白いブロックにする */
 .fnc__card{background:var(--c-bg)}
 
-/* 濃い面の上では、丸の地を白・数字を緑に反転させる（切り欠きが緑で抜かれるため） */
-.tone-brand .fnc__no{background:var(--c-bg);color:var(--c-primary-d)}
+/* 白いカードの中なので、濃い面の上でも数字は緑のまま */
+.tone-brand .fnc__no{color:var(--c-primary)}
 
 
 @media(max-width:900px){.fnc__grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){
   .fnc__grid{grid-template-columns:minmax(0,1fr);gap:10px}
-  .fnc__card{padding:46px 16px 18px}
+  .fnc__card{padding:18px 16px}
 }

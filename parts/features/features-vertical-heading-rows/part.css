@@ -72,8 +72,12 @@
 /* グラフも同じ枠の中。数値は0から回る（--p も0%から描かれる） */
 .vhr__chart{display:flex;flex-direction:column;align-items:center;justify-content:center;
   padding:14px 12px 10px}
-.vhr__ds{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;max-width:100%}
-.vhr__d{position:relative;width:clamp(74px,9.2vw,100px);aspect-ratio:1;border-radius:50%;
+/* ★5つを必ず1行に。flex-wrap だと「丸100px×5 + 隙間6px×4 = 524px」が
+   入れ物512pxを12px超えて、5つ目だけ下段に落ちていた。
+   等分の列にすれば、幅がいくつでも1行に収まる */
+.vhr__ds{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;
+  justify-items:center;width:100%;max-width:100%}
+.vhr__d{position:relative;width:100%;max-width:100px;aspect-ratio:1;border-radius:50%;
   display:grid;place-content:center;text-align:center}
 .vhr__d::before{content:"";position:absolute;inset:0;border-radius:50%;
   background:conic-gradient(var(--c-primary) 0 var(--p), #e8e8e8 var(--p) 100%)}
@@ -125,6 +129,10 @@
      固定したままだと、中身77pxのグラフに560pxの器が付いて空白だけが残る */
   .vhr__figs,.vhr__chart{aspect-ratio:auto}
   .vhr__chart{padding-block:clamp(18px,3vw,30px)}
-  .vhr__ds{max-width:none}
+  /* スマホは丸が74pxまでしか縮まない（中の文字が18pxを下回らないため）。
+     5列だと1つ62pxになって文字が入らないので、3つ＋2つに分けて中央に置く */
+  .vhr__ds{display:flex;flex-wrap:wrap;justify-content:center;
+    width:auto;max-width:calc(74px * 3 + 6px * 2);margin-inline:auto}
+  .vhr__d{width:74px}
   .vhr__fig img{border-width:5px}
 }

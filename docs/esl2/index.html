@@ -776,21 +776,21 @@ html:not(.js) .lm__i{transform:none}
 .fnc__grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
 .fnc__item{margin:0}
 .fnc__card{position:relative;display:flex;flex-direction:column;height:100%;
-  border-radius:14px;padding:46px 18px 20px;
+  border-radius:14px;padding:20px 18px;
   transition:transform .14s ease,box-shadow .14s ease}
 /* ★左上の切り欠き。地の白でカードの角を削り、そこに番号を置く */
 /* 左上の切り欠きは地の色で抜く（節ごとに変わるので変数で受ける） */
 /* ★切り欠きを大きくして、番号を丸い座に載せる。
    もとは地色に抜いた小さな窓に数字を置くだけで、緑の上でも白の上でも読みにくかった */
-.fnc__card::before{content:"";position:absolute;left:0;top:0;width:54px;height:40px;
-  background:var(--fnc-notch,var(--c-bg));border-bottom-right-radius:16px}
-.tone-tint .fnc{--fnc-notch:var(--c-bg2)}
-.tone-brand .fnc{--fnc-notch:var(--c-primary)}
-.fnc__no{position:absolute;left:2px;top:0;z-index:2;
-  width:40px;height:40px;border-radius:50%;
-  display:grid;place-content:center;
-  background:var(--c-primary);color:var(--c-on-primary);
-  font-family:var(--f-num);font-size:22px;font-weight:900;line-height:1;letter-spacing:-.02em}
+/* ★切り欠きも丸もやめた。
+   白いカードの上に白い丸を置いていたため丸そのものが見えず、
+   背後の切り欠きだけが残って「角が欠けた」ように見えていた。
+   番号は数字そのものを大きく出し、下に細い罫を1本引くだけにする */
+.fnc__no{display:block;
+  margin-bottom:12px;padding-bottom:10px;
+  border-bottom:2px solid var(--c-primary);
+  color:var(--c-primary);
+  font-family:var(--f-num);font-size:34px;font-weight:900;line-height:1;letter-spacing:0}
 .fnc__t{margin-top:2px;font-size:18px;font-weight:800;color:var(--c-ink);line-height:1.6}
 .fnc__d{margin-top:12px;font-size:18px;color:var(--c-ink2);line-height:1.85;flex:1}
 /* ── その節へ飛ぶ ────────────────────────────
@@ -806,14 +806,14 @@ html:not(.js) .lm__i{transform:none}
 /* 4枚とも同じ色。濃い面の上なので白いブロックにする */
 .fnc__card{background:var(--c-bg)}
 
-/* 濃い面の上では、丸の地を白・数字を緑に反転させる（切り欠きが緑で抜かれるため） */
-.tone-brand .fnc__no{background:var(--c-bg);color:var(--c-primary-d)}
+/* 白いカードの中なので、濃い面の上でも数字は緑のまま */
+.tone-brand .fnc__no{color:var(--c-primary)}
 
 
 @media(max-width:900px){.fnc__grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){
   .fnc__grid{grid-template-columns:minmax(0,1fr);gap:10px}
-  .fnc__card{padding:46px 16px 18px}
+  .fnc__card{padding:18px 16px}
 }
 
 /* ===== features/features-vertical-heading-rows ===== */
@@ -891,8 +891,12 @@ html:not(.js) .lm__i{transform:none}
 /* グラフも同じ枠の中。数値は0から回る（--p も0%から描かれる） */
 .vhr__chart{display:flex;flex-direction:column;align-items:center;justify-content:center;
   padding:14px 12px 10px}
-.vhr__ds{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;max-width:100%}
-.vhr__d{position:relative;width:clamp(74px,9.2vw,100px);aspect-ratio:1;border-radius:50%;
+/* ★5つを必ず1行に。flex-wrap だと「丸100px×5 + 隙間6px×4 = 524px」が
+   入れ物512pxを12px超えて、5つ目だけ下段に落ちていた。
+   等分の列にすれば、幅がいくつでも1行に収まる */
+.vhr__ds{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;
+  justify-items:center;width:100%;max-width:100%}
+.vhr__d{position:relative;width:100%;max-width:100px;aspect-ratio:1;border-radius:50%;
   display:grid;place-content:center;text-align:center}
 .vhr__d::before{content:"";position:absolute;inset:0;border-radius:50%;
   background:conic-gradient(var(--c-primary) 0 var(--p), #e8e8e8 var(--p) 100%)}
@@ -944,7 +948,11 @@ html:not(.js) .lm__i{transform:none}
      固定したままだと、中身77pxのグラフに560pxの器が付いて空白だけが残る */
   .vhr__figs,.vhr__chart{aspect-ratio:auto}
   .vhr__chart{padding-block:clamp(18px,3vw,30px)}
-  .vhr__ds{max-width:none}
+  /* スマホは丸が74pxまでしか縮まない（中の文字が18pxを下回らないため）。
+     5列だと1つ62pxになって文字が入らないので、3つ＋2つに分けて中央に置く */
+  .vhr__ds{display:flex;flex-wrap:wrap;justify-content:center;
+    width:auto;max-width:calc(74px * 3 + 6px * 2);margin-inline:auto}
+  .vhr__d{width:74px}
   .vhr__fig img{border-width:5px}
 }
 
@@ -1023,8 +1031,12 @@ html:not(.js) .lm__i{transform:none}
 /* グラフも同じ枠の中。数値は0から回る（--p も0%から描かれる） */
 .vhr__chart{display:flex;flex-direction:column;align-items:center;justify-content:center;
   padding:14px 12px 10px}
-.vhr__ds{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;max-width:100%}
-.vhr__d{position:relative;width:clamp(74px,9.2vw,100px);aspect-ratio:1;border-radius:50%;
+/* ★5つを必ず1行に。flex-wrap だと「丸100px×5 + 隙間6px×4 = 524px」が
+   入れ物512pxを12px超えて、5つ目だけ下段に落ちていた。
+   等分の列にすれば、幅がいくつでも1行に収まる */
+.vhr__ds{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;
+  justify-items:center;width:100%;max-width:100%}
+.vhr__d{position:relative;width:100%;max-width:100px;aspect-ratio:1;border-radius:50%;
   display:grid;place-content:center;text-align:center}
 .vhr__d::before{content:"";position:absolute;inset:0;border-radius:50%;
   background:conic-gradient(var(--c-primary) 0 var(--p), #e8e8e8 var(--p) 100%)}
@@ -1076,7 +1088,11 @@ html:not(.js) .lm__i{transform:none}
      固定したままだと、中身77pxのグラフに560pxの器が付いて空白だけが残る */
   .vhr__figs,.vhr__chart{aspect-ratio:auto}
   .vhr__chart{padding-block:clamp(18px,3vw,30px)}
-  .vhr__ds{max-width:none}
+  /* スマホは丸が74pxまでしか縮まない（中の文字が18pxを下回らないため）。
+     5列だと1つ62pxになって文字が入らないので、3つ＋2つに分けて中央に置く */
+  .vhr__ds{display:flex;flex-wrap:wrap;justify-content:center;
+    width:auto;max-width:calc(74px * 3 + 6px * 2);margin-inline:auto}
+  .vhr__d{width:74px}
   .vhr__fig img{border-width:5px}
 }
 
@@ -1113,12 +1129,16 @@ html:not(.js) .lm__i{transform:none}
 .pmp__media{background:none;padding:0;box-shadow:none;
   /* 箱と天を揃えず、気持ち下げて置く（同じ高さだと2枚の板が並んだように見える） */
   margin-top:clamp(16px,2.2vw,34px);
-  display:grid;grid-template-columns:auto minmax(0,1fr);
-  column-gap:clamp(10px,1.2vw,18px);align-items:start}
-.pmp__mh{writing-mode:vertical-rl;text-orientation:upright;
-  margin:0;padding-top:2px;justify-self:center;
-  font-size:clamp(18px,1.333vw,20.0px);font-weight:500;color:var(--c-on-primary);
-  letter-spacing:.16em;line-height:1.1}
+  display:block}
+/* ★見出しは動画の上に横書きで、節見出しと同じ扱い（太字＋黄色の短い罫）にする。
+   もとは縦書き19pxの細字で動画の脇に添えているだけだったので、
+   動画を大きくしても節が目立たなかった。目立ちは見出しで作る */
+.pmp__mh{writing-mode:horizontal-tb;text-orientation:mixed;
+  margin:0 0 16px;padding-top:0;text-align:center;
+  font-size:clamp(22px,1.8vw,26px);font-weight:800;color:var(--c-on-primary);
+  letter-spacing:.06em;line-height:1.4}
+.pmp__mh::after{content:"";display:block;margin:12px auto 0;
+  width:48px;height:5px;border-radius:5px;background:var(--c-accent)}
 /* 縦に1本ずつ。列いっぱいに広げず、幅を抑えて中央に置く。
    2本は器より少し細くして、上を左・下を右へ振る（真下に積むと単調） */
 .pmp__grid{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(16px,2vw,26px);
@@ -1181,8 +1201,7 @@ html:not(.js) .lm__i{transform:none}
     margin-inline:auto;padding-inline:0;max-width:540px}
   /* 縦積みでは縦書きの見出しが間延びするので、横書きに戻して上に置く */
   .pmp__media{grid-template-columns:minmax(0,1fr);row-gap:12px;margin-top:0}
-  .pmp__mh{writing-mode:horizontal-tb;text-align:center;letter-spacing:.04em;
-    justify-self:stretch;padding-top:0}
+  .pmp__mh{font-size:22px;letter-spacing:.04em}
   /* 縦積みでは左右に割れない。動画は下から入れる */
   .fx-on .fx[data-fx="pair"] .pmp__box{transform:none}
   .fx-on .fx[data-fx="pair"] .pmp__media{transform:translateY(calc(28px * (1 - var(--vp))))}
@@ -1267,8 +1286,12 @@ html:not(.js) .lm__i{transform:none}
 /* グラフも同じ枠の中。数値は0から回る（--p も0%から描かれる） */
 .vhr__chart{display:flex;flex-direction:column;align-items:center;justify-content:center;
   padding:14px 12px 10px}
-.vhr__ds{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;max-width:100%}
-.vhr__d{position:relative;width:clamp(74px,9.2vw,100px);aspect-ratio:1;border-radius:50%;
+/* ★5つを必ず1行に。flex-wrap だと「丸100px×5 + 隙間6px×4 = 524px」が
+   入れ物512pxを12px超えて、5つ目だけ下段に落ちていた。
+   等分の列にすれば、幅がいくつでも1行に収まる */
+.vhr__ds{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;
+  justify-items:center;width:100%;max-width:100%}
+.vhr__d{position:relative;width:100%;max-width:100px;aspect-ratio:1;border-radius:50%;
   display:grid;place-content:center;text-align:center}
 .vhr__d::before{content:"";position:absolute;inset:0;border-radius:50%;
   background:conic-gradient(var(--c-primary) 0 var(--p), #e8e8e8 var(--p) 100%)}
@@ -1320,7 +1343,11 @@ html:not(.js) .lm__i{transform:none}
      固定したままだと、中身77pxのグラフに560pxの器が付いて空白だけが残る */
   .vhr__figs,.vhr__chart{aspect-ratio:auto}
   .vhr__chart{padding-block:clamp(18px,3vw,30px)}
-  .vhr__ds{max-width:none}
+  /* スマホは丸が74pxまでしか縮まない（中の文字が18pxを下回らないため）。
+     5列だと1つ62pxになって文字が入らないので、3つ＋2つに分けて中央に置く */
+  .vhr__ds{display:flex;flex-wrap:wrap;justify-content:center;
+    width:auto;max-width:calc(74px * 3 + 6px * 2);margin-inline:auto}
+  .vhr__d{width:74px}
   .vhr__fig img{border-width:5px}
 }
 
@@ -2517,28 +2544,28 @@ html:not(.js) .lm__i{transform:none}
     <ul class="fnc__grid">
       <li class="fnc__item fx" data-fx="fadeup" data-d="0">
         <div class="fnc__card">
-          <span class="fnc__no">1</span>
+          <span class="fnc__no">01</span>
           <p class="fnc__t">高い英検合格率を実現</p>
           <p class="fnc__d">累計1,000名以上を合格に導いた英検ベースのカリキュラム</p>
           <a class="fnc__jump" href="#point1"><span>高い英検合格率を実現</span></a>
         </div>
       </li><li class="fnc__item fx" data-fx="fadeup" data-d="90">
         <div class="fnc__card">
-          <span class="fnc__no">2</span>
+          <span class="fnc__no">02</span>
           <p class="fnc__t">受験勉強と並行可能</p>
           <p class="fnc__d">目標級・時期と現在のレベルから作成する個別の学習計画</p>
           <a class="fnc__jump" href="#point2"><span>受験勉強と並行可能</span></a>
         </div>
       </li><li class="fnc__item fx" data-fx="fadeup" data-d="180">
         <div class="fnc__card">
-          <span class="fnc__no">3</span>
+          <span class="fnc__no">03</span>
           <p class="fnc__t">学習効率を向上</p>
           <p class="fnc__d">バイリンガル講師のマンツーマンレッスン</p>
           <a class="fnc__jump" href="#point3"><span>学習効率を向上</span></a>
         </div>
       </li><li class="fnc__item fx" data-fx="fadeup" data-d="270">
         <div class="fnc__card">
-          <span class="fnc__no">4</span>
+          <span class="fnc__no">04</span>
           <p class="fnc__t">保護者様が忙しくても安心</p>
           <p class="fnc__d">計画の実行をフォローするスクールマネージャー</p>
           <a class="fnc__jump" href="#point4"><span>保護者様が忙しくても安心</span></a>

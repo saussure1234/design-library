@@ -30,12 +30,16 @@
 .pmp__media{background:none;padding:0;box-shadow:none;
   /* 箱と天を揃えず、気持ち下げて置く（同じ高さだと2枚の板が並んだように見える） */
   margin-top:clamp(16px,2.2vw,34px);
-  display:grid;grid-template-columns:auto minmax(0,1fr);
-  column-gap:clamp(10px,1.2vw,18px);align-items:start}
-.pmp__mh{writing-mode:vertical-rl;text-orientation:upright;
-  margin:0;padding-top:2px;justify-self:center;
-  font-size:clamp(18px,1.333vw,20.0px);font-weight:500;color:var(--c-on-primary);
-  letter-spacing:.16em;line-height:1.1}
+  display:block}
+/* ★見出しは動画の上に横書きで、節見出しと同じ扱い（太字＋黄色の短い罫）にする。
+   もとは縦書き19pxの細字で動画の脇に添えているだけだったので、
+   動画を大きくしても節が目立たなかった。目立ちは見出しで作る */
+.pmp__mh{writing-mode:horizontal-tb;text-orientation:mixed;
+  margin:0 0 16px;padding-top:0;text-align:center;
+  font-size:clamp(22px,1.8vw,26px);font-weight:800;color:var(--c-on-primary);
+  letter-spacing:.06em;line-height:1.4}
+.pmp__mh::after{content:"";display:block;margin:12px auto 0;
+  width:48px;height:5px;border-radius:5px;background:var(--c-accent)}
 /* 縦に1本ずつ。列いっぱいに広げず、幅を抑えて中央に置く。
    2本は器より少し細くして、上を左・下を右へ振る（真下に積むと単調） */
 .pmp__grid{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(16px,2vw,26px);
@@ -98,8 +102,7 @@
     margin-inline:auto;padding-inline:0;max-width:540px}
   /* 縦積みでは縦書きの見出しが間延びするので、横書きに戻して上に置く */
   .pmp__media{grid-template-columns:minmax(0,1fr);row-gap:12px;margin-top:0}
-  .pmp__mh{writing-mode:horizontal-tb;text-align:center;letter-spacing:.04em;
-    justify-self:stretch;padding-top:0}
+  .pmp__mh{font-size:22px;letter-spacing:.04em}
   /* 縦積みでは左右に割れない。動画は下から入れる */
   .fx-on .fx[data-fx="pair"] .pmp__box{transform:none}
   .fx-on .fx[data-fx="pair"] .pmp__media{transform:translateY(calc(28px * (1 - var(--vp))))}
