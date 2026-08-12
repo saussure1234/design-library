@@ -48,7 +48,12 @@ ul,ol{padding:0;list-style:none}
    （52px用の5pxの影を34pxの板に残すと、ボタンが浮いて別物に見える） */
 /* ★セレクタは `.hdr .hdr__cta`。`.hdr__cta` 単体だと
    後ろに書かれた `.btn--sm`（同じ詳細度）に font-size と padding を奪われる */
-.hdr .hdr__cta{width:221px;min-width:0;height:34px;font-size:14px;padding:0;
+/* ★幅221px・角丸4pxは eslclub.jp と同じ。高さだけ 34→46px に上げている。
+   本家はヘッダーが41pxでボタンが83%を占めるが、こちらのヘッダーは90px。
+   同じ34pxだと上下の余白が大きすぎて、ボタンが細く・脇役に見える。
+   46pxならロゴ（38.2px）より一回り大きく、主役として立つ。
+   厚くしたぶん文字も14→15pxに上げる（14pxのままだと中で文字が浮く） */
+.hdr .hdr__cta{width:221px;min-width:0;height:46px;font-size:15px;padding:0;
   border-radius:4px;box-shadow:none}
 .hdr .hdr__cta:hover{box-shadow:none}
 body{padding-top:var(--hdr-h,60px)}
@@ -61,7 +66,7 @@ body{padding-top:var(--hdr-h,60px)}
   /* SPも本家と同寸（221 x 34・14px）。ただし390pxより狭い画面では
      ロゴ92px＋余白に収まらないので、そこだけ縮める */
   .hdr .hdr__cta{width:min(221px, calc(100% - 92px - 24px));min-width:0;
-    height:34px;font-size:14px;padding:0;border-radius:4px;box-shadow:none}
+    height:46px;font-size:15px;padding:0;border-radius:4px;box-shadow:none}
 }
 @media(max-width:380px){
   .hdr__cta{font-size:11px;padding:0 11px}
