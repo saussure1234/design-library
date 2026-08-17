@@ -7,29 +7,48 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
 :root{--ink:#1c1c1c;--ink2:#4a4a4a;--ink3:#7a7a7a;--line:#e2e4e6;
-  --bg:#fff;--bg2:#f6f7f8;--accent:#111;--err:#c0392b;--r:10px}
+  --bg:#fff;--bg2:#f6f7f8;--err:#c0392b;--ok:#0a8a2f;--r:12px}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg2);color:var(--ink);
   font-family:"Noto Sans JP",-apple-system,"Hiragino Sans",sans-serif;
   font-size:16px;line-height:1.8;-webkit-text-size-adjust:100%}
-.wrap{max-width:720px;margin-inline:auto;padding:0 20px}
+.wrap{max-width:700px;margin-inline:auto;padding:0 20px}
 
-header{background:var(--bg);border-bottom:1px solid var(--line);padding:20px 0}
-.brand{font-size:19px;font-weight:900;letter-spacing:.02em}
+header{background:var(--bg);border-bottom:1px solid var(--line);padding:18px 0}
+.brand{font-size:18px;font-weight:900;letter-spacing:.02em}
 .brand span{color:var(--ink3);font-weight:500;font-size:13px;margin-left:8px}
 
-.lead{background:var(--bg);padding:38px 0 32px;border-bottom:1px solid var(--line)}
-h1{font-size:clamp(23px,4.4vw,31px);font-weight:900;line-height:1.45;margin:0 0 14px}
-.lead p{margin:0 0 8px;color:var(--ink2);font-size:15px}
-.lead .fast{display:inline-block;margin-top:12px;background:#eaf7ee;color:#0a6b28;
-  font-size:14px;font-weight:700;border-radius:20px;padding:5px 16px}
+.lead{background:var(--bg);padding:34px 0 28px;border-bottom:1px solid var(--line)}
+h1{font-size:clamp(22px,4.2vw,29px);font-weight:900;line-height:1.45;margin:0 0 12px}
+.lead p{margin:0;color:var(--ink2);font-size:15px}
+.fast{display:inline-block;margin-top:12px;background:#eaf7ee;color:#0a6b28;
+  font-size:13px;font-weight:700;border-radius:20px;padding:5px 15px}
 
-form{padding:30px 0 60px}
-fieldset{border:0;margin:0 0 26px;padding:0;background:var(--bg);border-radius:var(--r);overflow:hidden}
-fieldset[hidden]{display:none}
-legend{float:left;width:100%;margin:0;padding:14px 20px;background:var(--ink);color:#fff;
-  font-size:15px;font-weight:700}
-.fs-body{clear:both;padding:22px 20px 6px}
+form{padding:26px 0 40px}
+
+/* ── ステップ ── */
+.step{border:0;margin:0 0 14px;padding:0;background:var(--bg);border-radius:var(--r);overflow:hidden}
+.step[hidden]{display:none}
+.step>.hd{display:flex;align-items:center;gap:11px;padding:15px 18px;
+  background:var(--ink);color:#fff;font-size:15px;font-weight:700}
+.num{flex:none;width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.18);
+  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900}
+.hd .ttl{flex:1;min-width:0}
+.ans{display:none;align-items:center;gap:10px;font-size:14px;font-weight:500}
+.ans b{font-weight:700}
+.edit{font:inherit;font-size:12px;font-weight:700;color:#fff;background:rgba(255,255,255,.16);
+  border:0;border-radius:20px;padding:3px 12px;cursor:pointer;white-space:nowrap}
+.edit:hover{background:rgba(255,255,255,.3)}
+.body{padding:22px 18px 4px}
+
+/* 答えたら畳む */
+.step.done>.hd{background:#2f3437}
+.step.done>.hd .ttl{flex:none;color:rgba(255,255,255,.62);font-weight:500;font-size:13px}
+.step.done>.hd .ans{display:flex;flex:1;min-width:0}
+.step.done>.hd .ans b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.step.done>.body{display:none}
+.step.done .num{background:var(--ok)}
+
 .f{margin-bottom:20px}
 label{display:block;font-size:15px;font-weight:700;margin-bottom:6px}
 .req{color:var(--err);font-size:12px;margin-left:6px;font-weight:700}
@@ -38,24 +57,35 @@ label{display:block;font-size:15px;font-weight:700;margin-bottom:6px}
 input[type=text],input[type=email],input[type=tel],input[type=url],textarea,select{
   width:100%;font:inherit;font-size:16px;padding:11px 13px;border:1px solid #cfd3d6;
   border-radius:8px;background:#fff;color:var(--ink)}
-textarea{min-height:104px;resize:vertical;line-height:1.8}
-input:focus,textarea:focus,select:focus,.pick input:focus-visible+span{
-  outline:2px solid var(--ink);outline-offset:1px;border-color:var(--ink)}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+textarea{min-height:96px;resize:vertical;line-height:1.8}
+input:focus,textarea:focus{outline:2px solid var(--ink);outline-offset:1px;border-color:var(--ink)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:13px}
 @media(max-width:560px){.two{grid-template-columns:1fr}}
 
-/* 大きな選択肢 */
-.pick{display:grid;gap:10px}
+.pick{display:grid;gap:9px}
 .pick.c2{grid-template-columns:1fr 1fr}
 @media(max-width:560px){.pick.c2{grid-template-columns:1fr}}
 .pick label{margin:0;font-weight:400}
 .pick input{position:absolute;opacity:0;width:0;height:0}
-.pick span{display:block;border:2px solid #d8dcdf;border-radius:10px;padding:15px 17px;
+.pick span{display:block;border:2px solid #d8dcdf;border-radius:10px;padding:14px 16px;
   cursor:pointer;background:#fff;transition:border-color .12s,background .12s}
-.pick b{display:block;font-size:16px;font-weight:700;margin-bottom:2px}
-.pick small{display:block;font-size:13px;color:var(--ink3);line-height:1.65}
+.pick b{display:block;font-size:15px;font-weight:700}
+.pick small{display:block;font-size:13px;color:var(--ink3);line-height:1.65;margin-top:2px}
 .pick input:checked+span{border-color:var(--ink);background:#f4f6f7}
 .pick span:hover{border-color:#aeb4b8}
+.pick input:focus-visible+span{outline:2px solid var(--ink);outline-offset:2px}
+
+details.more{border:2px solid #d8dcdf;border-radius:10px;background:#fff;margin-bottom:20px}
+details.more>summary{cursor:pointer;padding:14px 16px;font-size:15px;font-weight:700;
+  list-style:none;display:flex;gap:10px;align-items:flex-start}
+details.more>summary::-webkit-details-marker{display:none}
+details.more>summary::before{content:"＋";font-size:17px;color:var(--ink3);line-height:1.5}
+details.more[open]>summary::before{content:"−"}
+details.more>summary small{display:block;font-weight:400;font-size:13px;color:var(--ink3);
+  margin-top:2px;line-height:1.6}
+details.more .inner{padding:4px 16px 2px;border-top:1px solid var(--line)}
+.upgrade{background:#f4f6f7;border-radius:8px;padding:13px 15px;font-size:13px;
+  color:var(--ink2);line-height:1.75;margin:0 0 18px}
 
 .files{border:2px dashed #cfd3d6;border-radius:8px;padding:15px;background:#fafbfb}
 .files input{font-size:14px}
@@ -63,41 +93,28 @@ input:focus,textarea:focus,select:focus,.pick input:focus-visible+span{
 .filelist li{padding:3px 0;border-bottom:1px dotted var(--line)}
 .err{color:var(--err);font-size:13px;font-weight:700;margin-top:5px;display:none}
 .f.is-err input,.f.is-err textarea{border-color:var(--err);background:#fffafa}
-.f.is-err .err,.f.is-err .pick+.err{display:block}
+.f.is-err .err{display:block}
 
-.submit{background:var(--bg);border-radius:var(--r);padding:26px 20px;text-align:center}
-button{font:inherit;font-size:17px;font-weight:900;color:#fff;background:var(--accent);
-  border:0;border-radius:8px;padding:16px 44px;cursor:pointer;width:100%;max-width:420px}
-button:disabled{opacity:.5;cursor:default}
-.status{margin-top:14px;font-size:14px;font-weight:700;min-height:1.6em}
+.submit{background:var(--bg);border-radius:var(--r);padding:26px 20px;text-align:center;margin-top:14px}
+.submit[hidden]{display:none}
+button.go{font:inherit;font-size:17px;font-weight:900;color:#fff;background:var(--ink);
+  border:0;border-radius:8px;padding:16px 44px;cursor:pointer;width:100%;max-width:400px}
+button.go:disabled{opacity:.5;cursor:default}
+.status{margin-top:13px;font-size:14px;font-weight:700;min-height:1.6em}
 .status.is-err{color:var(--err)}
-.agree{font-size:13px;color:var(--ink3);margin-top:14px;line-height:1.8}
-/* 精度メーター */
-.meter{position:sticky;bottom:0;z-index:30;background:rgba(255,255,255,.96);
-  border-top:1px solid var(--line);padding:11px 0;backdrop-filter:blur(6px)}
-.meter[hidden]{display:none}
-.meter .in{max-width:720px;margin-inline:auto;padding:0 20px;
-  display:flex;align-items:center;gap:14px}
-.bar{flex:1;height:8px;background:#e6e9eb;border-radius:20px;overflow:hidden}
-.bar i{display:block;height:100%;width:0;background:#111;border-radius:20px;
-  transition:width .3s ease}
-.meter b{font-size:13px;font-weight:700;white-space:nowrap}
-.meter small{font-size:12px;color:var(--ink3);white-space:nowrap}
-@media(max-width:560px){.meter small{display:none}}
+.agree{font-size:13px;color:var(--ink3);margin-top:13px;line-height:1.8}
 
-/* 折りたたみ */
-details.more{border:2px solid #d8dcdf;border-radius:10px;background:#fff;margin-bottom:20px}
-details.more>summary{cursor:pointer;padding:15px 17px;font-size:15px;font-weight:700;
-  list-style:none;display:flex;align-items:center;gap:10px}
-details.more>summary::-webkit-details-marker{display:none}
-details.more>summary::before{content:"＋";font-size:17px;color:var(--ink3);font-weight:700}
-details.more[open]>summary::before{content:"−"}
-details.more>summary small{display:block;font-weight:400;font-size:13px;color:var(--ink3);
-  margin-top:2px;line-height:1.6}
-details.more .inner{padding:4px 17px 2px;border-top:1px solid var(--line)}
-.upgrade{background:#f4f6f7;border-radius:8px;padding:13px 15px;font-size:13px;
-  color:var(--ink2);line-height:1.75;margin:0 0 18px}
-footer{border-top:1px solid var(--line);background:var(--bg);padding:24px 0;font-size:13px;color:var(--ink3)}
+.meter{position:sticky;bottom:0;z-index:30;background:rgba(255,255,255,.96);
+  border-top:1px solid var(--line);padding:10px 0;backdrop-filter:blur(6px)}
+.meter[hidden]{display:none}
+.meter .in{max-width:700px;margin-inline:auto;padding:0 20px;display:flex;align-items:center;gap:13px}
+.bar{flex:1;height:8px;background:#e6e9eb;border-radius:20px;overflow:hidden}
+.bar i{display:block;height:100%;width:6%;background:var(--ink);border-radius:20px;transition:width .3s}
+.meter b{font-size:13px;font-weight:700;white-space:nowrap}
+.meter small{font-size:12px;color:var(--ink3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:600px){.meter small{display:none}}
+
+footer{border-top:1px solid var(--line);background:var(--bg);padding:22px 0;font-size:13px;color:var(--ink3)}
 </style>
 </head>
 <body>
@@ -108,13 +125,12 @@ footer{border-top:1px solid var(--line);background:var(--bg);padding:24px 0;font
 
 <section class="lead"><div class="wrap">
   <h1>LP制作のお申し込み</h1>
-  <p>まず、どんなLPを作るかを選んでください。それに応じて必要な項目だけをお伺いします。</p>
-  <p>完成しましたら、ご記入のメールアドレスにURLをお送りします。</p>
-  <span class="fast">記入は3分ほどで終わります</span>
+  <p>質問に答えていくだけで終わります。完成したらメールでURLをお送りします。</p>
+  <span class="fast">最短1分。詳しく書くほど精度が上がります</span>
 </div></section>
 
 <div class="wrap">
-<form id="orderForm" novalidate
+<form id="f" novalidate
       action="https://formsubmit.co/so@samurai-style.tokyo"
       method="POST" enctype="multipart/form-data">
 
@@ -122,34 +138,21 @@ footer{border-top:1px solid var(--line);background:var(--bg);padding:24px 0;font
   <input type="hidden" name="_template" value="table">
   <input type="hidden" name="_captcha" value="false">
   <input type="hidden" name="_next" value="https://saussure1234.github.io/design-library/lp-order/thanks/">
-  <input type="hidden" name="_autoresponse" value="LP制作のお申し込みをいただき、ありがとうございます。
-下記の内容で受け付けいたしました。
+  <input type="hidden" name="_autoresponse" value="">
 
-いただいたURLを拝見したうえで、制作を進めます。
-足りない情報があれば、このメールへの返信でお伺いします。
-
-完成しましたら、このメールアドレスにURLをお送りします。
-数日お時間をいただきます。恐れ入りますが、今しばらくお待ちください。
-
-ロゴや写真などの素材がお手元にある場合は、
-このメールにそのままご返信いただき、添付してお送りください。
-
-何卒よろしくお願いいたします。
-
-samurai-style
-so@samurai-style.tokyo">
-
-  <!-- ① 種類 -->
-  <fieldset>
-    <legend>1. どんなLPを作りますか</legend>
-    <div class="fs-body">
+  <!-- 1 種類 -->
+  <fieldset class="step" id="s1">
+    <div class="hd"><span class="num">1</span>
+      <span class="ttl">どんなLPを作りますか</span>
+      <span class="ans"><b></b><button type="button" class="edit">変更</button></span></div>
+    <div class="body">
       <div class="f">
-        <div class="pick c2" id="kindPick">
+        <div class="pick c2">
           <label><input type="radio" name="kind" value="イベント・体験会">
-            <span><b>イベント・体験会</b><small>説明会・体験会・セミナーなど、日程が決まっているもの</small></span></label>
+            <span><b>イベント・体験会</b><small>説明会・体験会・セミナー。日程が決まっているもの</small></span></label>
           <label><input type="radio" name="kind" value="サービス・商品の紹介">
             <span><b>サービス・商品の紹介</b><small>常設のLP。強みや料金を伝えて申し込みにつなげる</small></span></label>
-          <label><input type="radio" name="kind" value="既存LPの作り直し">
+          <label><input type="radio" name="kind" value="いまあるLPの作り直し">
             <span><b>いまあるLPの作り直し</b><small>成果が出ていない・見た目が古い</small></span></label>
           <label><input type="radio" name="kind" value="採用">
             <span><b>採用</b><small>人を集めたい</small></span></label>
@@ -159,45 +162,32 @@ so@samurai-style.tokyo">
     </div>
   </fieldset>
 
-  <!-- ② 深さ -->
-  <fieldset id="fsDepth" hidden>
-    <legend>2. どこまで作り込みますか</legend>
-    <div class="fs-body">
+  <!-- 2 深さ -->
+  <fieldset class="step" id="s2" hidden>
+    <div class="hd"><span class="num">2</span>
+      <span class="ttl">どこまで作り込みますか</span>
+      <span class="ans"><b></b><button type="button" class="edit">変更</button></span></div>
+    <div class="body">
       <div class="f">
-        <div class="pick c2" id="depthPick">
-          <label><input type="radio" name="depth" value="たたき台を見てみたい" checked>
+        <div class="pick c2">
+          <label><input type="radio" name="depth" value="たたき台を見てみたい">
             <span><b>まず、どんなものができるか見てみたい</b>
-              <small>最小限の記入で送れます。構成とデザインの方向が分かる、たたき台をお送りします</small></span></label>
+              <small>最小限の記入で送れます。構成とデザインの方向が分かるたたき台をお送りします</small></span></label>
           <label><input type="radio" name="depth" value="実際に使うLPを作りたい">
             <span><b>実際に使うLPを作りたい</b>
               <small>ご記入いただく項目が増えます。そのまま公開できるものをお送りします</small></span></label>
         </div>
+        <p class="err">選んでください</p>
       </div>
     </div>
   </fieldset>
 
-  <!-- ③ 連絡先 -->
-  <fieldset id="fsContact" hidden>
-    <legend>3. ご連絡先</legend>
-    <div class="fs-body">
-      <div class="two">
-        <div class="f"><label>お名前<span class="req">必須</span></label>
-          <input type="text" name="name" autocomplete="name"><p class="err">ご入力ください</p></div>
-        <div class="f"><label>会社・団体名<span class="opt">任意</span></label>
-          <input type="text" name="company" autocomplete="organization"></div>
-      </div>
-      <div class="f"><label>メールアドレス<span class="req">必須</span></label>
-        <p class="hint">完成したLPのURLをこちらにお送りします</p>
-        <input type="email" name="email" autocomplete="email"><p class="err">正しい形式でご入力ください</p></div>
-    </div>
-  </fieldset>
-
-  <!-- ③ 種類ごとの中身 ─────────────────────── -->
-
-  <!-- イベント -->
-  <fieldset id="fsEvent" hidden>
-    <legend>4. イベントの内容</legend>
-    <div class="fs-body">
+  <!-- 3 内容（種類別） -->
+  <fieldset class="step" id="s3ev" hidden data-grp="3">
+    <div class="hd"><span class="num">3</span>
+      <span class="ttl">イベントの内容</span>
+      <span class="ans"><b></b><button type="button" class="edit">変更</button></span></div>
+    <div class="body">
       <div class="f"><label>イベント名<span class="req">必須</span></label>
         <input type="text" name="ev_title"><p class="err">ご入力ください</p></div>
       <div class="two">
@@ -216,57 +206,65 @@ so@samurai-style.tokyo">
       </div>
       <div class="f"><label>当日の流れ<span class="opt">任意</span></label>
         <p class="hint">分かる範囲で。箇条書きで構いません</p>
-        <textarea name="ev_flow" style="min-height:90px"></textarea></div>
-      <div class="f"><label>申し込み先のURL<span class="opt">任意</span></label>
-        <p class="hint">既存の申込フォームがあれば。無ければLPの中に作ります</p>
-        <input type="url" name="ev_apply" placeholder="https://"></div>
+        <textarea name="ev_flow" style="min-height:84px"></textarea></div>
+      <div class="f"><label>主催者のサイトURL<span class="opt">任意</span></label>
+        <p class="hint">拝見して、雰囲気やロゴを合わせます</p>
+        <input type="url" name="ev_site" placeholder="https://"></div>
+      <p style="text-align:center;margin:4px 0 18px"><button type="button" class="go next" style="max-width:280px;font-size:15px;padding:13px">次へ</button></p>
     </div>
   </fieldset>
 
-  <!-- 作り直し -->
-  <fieldset id="fsRenew" hidden>
-    <legend>4. いまのLP</legend>
-    <div class="fs-body">
-      <div class="f"><label>いまのLPのURL<span class="req">必須</span></label>
-        <input type="url" name="rn_url" placeholder="https://"><p class="err">ご入力ください</p></div>
-      <div class="f"><label>気になっている点<span class="opt">任意</span></label>
-        <p class="hint">「反応が少ない」「スマホで見づらい」など、ひとことで構いません</p>
-        <textarea name="rn_issue" style="min-height:88px"></textarea></div>
-    </div>
-  </fieldset>
-
-  <!-- サービス紹介 -->
-  <fieldset id="fsService" hidden>
-    <legend>4. サービスについて</legend>
-    <div class="fs-body">
+  <fieldset class="step" id="s3sv" hidden data-grp="3">
+    <div class="hd"><span class="num">3</span>
+      <span class="ttl">サービスについて</span>
+      <span class="ans"><b></b><button type="button" class="edit">変更</button></span></div>
+    <div class="body">
       <div class="f"><label>既存のサイト・SNSのURL<span class="req">必須</span></label>
-        <p class="hint">拝見して、強み・料金・お客様の声などを読み取ります。<br>
-          複数ある場合は改行で並べてください</p>
-        <textarea name="sv_url" style="min-height:82px" placeholder="https://"></textarea>
+        <p class="hint">拝見して、強み・料金・お客様の声などを読み取ります。複数ある場合は改行で</p>
+        <textarea name="sv_url" style="min-height:78px" placeholder="https://"></textarea>
         <p class="err">ご入力ください</p></div>
       <div class="f"><label>誰に向けたLPですか<span class="opt">任意</span></label>
         <p class="hint">ひとことで構いません。例：中学生の子を持つ保護者</p>
         <input type="text" name="sv_target"></div>
+      <p style="text-align:center;margin:4px 0 18px"><button type="button" class="go next" style="max-width:280px;font-size:15px;padding:13px">次へ</button></p>
     </div>
   </fieldset>
 
-  <!-- 採用 -->
-  <fieldset id="fsRecruit" hidden>
-    <legend>4. 募集について</legend>
-    <div class="fs-body">
+  <fieldset class="step" id="s3rn" hidden data-grp="3">
+    <div class="hd"><span class="num">3</span>
+      <span class="ttl">いまのLP</span>
+      <span class="ans"><b></b><button type="button" class="edit">変更</button></span></div>
+    <div class="body">
+      <div class="f"><label>いまのLPのURL<span class="req">必須</span></label>
+        <input type="url" name="rn_url" placeholder="https://"><p class="err">ご入力ください</p></div>
+      <div class="f"><label>気になっている点<span class="opt">任意</span></label>
+        <p class="hint">「反応が少ない」「スマホで見づらい」など、ひとことで構いません</p>
+        <textarea name="rn_issue" style="min-height:82px"></textarea></div>
+      <p style="text-align:center;margin:4px 0 18px"><button type="button" class="go next" style="max-width:280px;font-size:15px;padding:13px">次へ</button></p>
+    </div>
+  </fieldset>
+
+  <fieldset class="step" id="s3rc" hidden data-grp="3">
+    <div class="hd"><span class="num">3</span>
+      <span class="ttl">募集について</span>
+      <span class="ans"><b></b><button type="button" class="edit">変更</button></span></div>
+    <div class="body">
       <div class="f"><label>会社サイト・求人ページのURL<span class="req">必須</span></label>
         <p class="hint">求人票や募集要項のページがあれば、それも。改行で並べてください</p>
-        <textarea name="rc_url" style="min-height:82px" placeholder="https://"></textarea>
+        <textarea name="rc_url" style="min-height:78px" placeholder="https://"></textarea>
         <p class="err">ご入力ください</p></div>
       <div class="f"><label>募集する職種<span class="opt">任意</span></label>
         <input type="text" name="rc_role"></div>
+      <p style="text-align:center;margin:4px 0 18px"><button type="button" class="go next" style="max-width:280px;font-size:15px;padding:13px">次へ</button></p>
     </div>
   </fieldset>
 
-  <!-- ④ 共通 -->
-  <fieldset id="fsCommon" hidden>
-    <legend>5. 最後に</legend>
-    <div class="fs-body">
+  <!-- 4 ゴールと見た目 -->
+  <fieldset class="step" id="s4" hidden>
+    <div class="hd"><span class="num">4</span>
+      <span class="ttl">ゴールと見た目</span>
+      <span class="ans"><b></b><button type="button" class="edit">変更</button></span></div>
+    <div class="body">
       <div class="f"><label>LPを見た人に、何をしてほしいですか<span class="req">必須</span></label>
         <div class="pick c2">
           <label><input type="radio" name="goal" value="申し込み・予約"><span><b>申し込み・予約</b></span></label>
@@ -277,12 +275,6 @@ so@samurai-style.tokyo">
           <label><input type="radio" name="goal" value="LINEの友だち追加"><span><b>LINEの友だち追加</b></span></label>
         </div>
         <p class="err">選んでください</p></div>
-
-      <div class="f"><label>これだけは伝えたいこと<span class="opt">任意</span></label>
-        <p class="hint">文章にしなくて構いません。箇条書きで、思いつくままに。<br>
-          空欄でも構いません。いただいたURLから読み取ります</p>
-        <textarea name="must" style="min-height:96px"></textarea></div>
-
       <div class="f"><label>雰囲気<span class="opt">任意</span></label>
         <div class="pick c2">
           <label><input type="radio" name="tone" value="落ち着いた・信頼感"><span><b>落ち着いた・信頼感</b></span></label>
@@ -290,39 +282,47 @@ so@samurai-style.tokyo">
           <label><input type="radio" name="tone" value="高級感・洗練"><span><b>高級感・洗練</b></span></label>
           <label><input type="radio" name="tone" value="親しみやすい・やわらかい"><span><b>親しみやすい・やわらかい</b></span></label>
         </div></div>
+      <p style="text-align:center;margin:4px 0 18px"><button type="button" class="go next" style="max-width:280px;font-size:15px;padding:13px">次へ</button></p>
+    </div>
+  </fieldset>
 
-      <div class="upgrade" id="upgradeNote">
-        ここから下はすべて任意です。<b>書いていただくほど、精度の高いLPになります。</b><br>
-        空欄でも構いません。いただいたURLから読み取れる範囲で作ります。
-      </div>
+  <!-- 5 詳しく（任意） -->
+  <fieldset class="step" id="s5" hidden>
+    <div class="hd"><span class="num">5</span>
+      <span class="ttl">伝えたいこと・素材</span>
+      <span class="ans"><b></b><button type="button" class="edit">変更</button></span></div>
+    <div class="body">
+      <div class="upgrade" id="up"></div>
 
-      <details class="more" id="moreBox">
+      <div class="f"><label>これだけは伝えたいこと<span class="opt">任意</span></label>
+        <p class="hint">文章にしなくて構いません。箇条書きで、思いつくままに</p>
+        <textarea name="must" style="min-height:88px"></textarea></div>
+
+      <details class="more" id="more">
         <summary>もっと詳しく伝える
-          <small>ここを開いて書いていただくと、精度が上がります（すべて任意）</small></summary>
+          <small>開いて書いていただくほど、精度が上がります（すべて任意）</small></summary>
         <div class="inner">
           <div class="f"><label>誰に向けたLPですか<span class="opt">任意</span></label>
-            <p class="hint">年齢・立場・悩みなど。例：中学生の子を持つ保護者で、英検2級を取らせたいが塾選びに迷っている方</p>
-            <textarea name="d_target" style="min-height:82px"></textarea></div>
+            <p class="hint">年齢・立場・悩みなど。例：中学生の子を持つ保護者で、塾選びに迷っている方</p>
+            <textarea name="d_target" style="min-height:78px"></textarea></div>
           <div class="f"><label>その人がいま困っていること<span class="opt">任意</span></label>
-            <p class="hint">箇条書きで3つほど</p>
-            <textarea name="d_pain" style="min-height:82px"></textarea></div>
+            <textarea name="d_pain" style="min-height:78px"></textarea></div>
           <div class="f"><label>他と違う点を3つ<span class="opt">任意</span></label>
             <p class="hint">1行に1つ。「なぜそう言えるか」も添えていただけると助かります</p>
-            <textarea name="d_strengths" style="min-height:92px"></textarea></div>
+            <textarea name="d_strengths" style="min-height:88px"></textarea></div>
           <div class="f"><label>使える数字<span class="opt">任意</span></label>
             <p class="hint">合格率・実績・年数・人数など。出典もあれば</p>
-            <textarea name="d_numbers" style="min-height:78px"></textarea></div>
+            <textarea name="d_numbers" style="min-height:74px"></textarea></div>
           <div class="f"><label>お客様の声<span class="opt">任意</span></label>
-            <p class="hint">お持ちのものをそのまま貼ってください</p>
-            <textarea name="d_voices" style="min-height:82px"></textarea></div>
+            <textarea name="d_voices" style="min-height:78px"></textarea></div>
           <div class="f"><label>よくある質問<span class="opt">任意</span></label>
-            <textarea name="d_faq" style="min-height:82px"></textarea></div>
+            <textarea name="d_faq" style="min-height:78px"></textarea></div>
           <div class="f"><label>価格<span class="opt">任意</span></label>
             <p class="hint">非公開の場合は「非公開」と</p>
-            <textarea name="d_price" style="min-height:70px"></textarea></div>
+            <textarea name="d_price" style="min-height:68px"></textarea></div>
           <div class="f"><label>入れたくないもの<span class="opt">任意</span></label>
             <p class="hint">使ってはいけない表現・色・写真など</p>
-            <textarea name="d_ng" style="min-height:70px"></textarea></div>
+            <textarea name="d_ng" style="min-height:68px"></textarea></div>
         </div>
       </details>
 
@@ -334,12 +334,31 @@ so@samurai-style.tokyo">
           <ul class="filelist" id="filelist"></ul>
         </div>
         <p class="err" id="fileErr"></p></div>
+      <p style="text-align:center;margin:4px 0 18px"><button type="button" class="go next" style="max-width:280px;font-size:15px;padding:13px">次へ</button></p>
     </div>
   </fieldset>
 
-  <div class="submit" id="submitBox" hidden>
-    <button type="submit" id="btn">この内容で申し込む</button>
-    <p class="status" id="status"></p>
+  <!-- 6 連絡先（最後） -->
+  <fieldset class="step" id="s6" hidden>
+    <div class="hd"><span class="num">6</span>
+      <span class="ttl">ご連絡先</span>
+      <span class="ans"><b></b><button type="button" class="edit">変更</button></span></div>
+    <div class="body">
+      <div class="two">
+        <div class="f"><label>お名前<span class="req">必須</span></label>
+          <input type="text" name="name" autocomplete="name"><p class="err">ご入力ください</p></div>
+        <div class="f"><label>会社・団体名<span class="opt">任意</span></label>
+          <input type="text" name="company" autocomplete="organization"></div>
+      </div>
+      <div class="f"><label>メールアドレス<span class="req">必須</span></label>
+        <p class="hint">完成したLPのURLをこちらにお送りします</p>
+        <input type="email" name="email" autocomplete="email"><p class="err">正しい形式でご入力ください</p></div>
+    </div>
+  </fieldset>
+
+  <div class="submit" id="box" hidden>
+    <button type="submit" class="go" id="btn">この内容で申し込む</button>
+    <p class="status" id="st"></p>
     <p class="agree">送信すると、受付のメールが自動で届きます。<br>
       いただいた情報は本件の制作のみに使用します。</p>
   </div>
@@ -347,191 +366,232 @@ so@samurai-style.tokyo">
 </div>
 
 <div class="meter" id="meter" hidden><div class="in">
-  <b id="meterLabel">精度：低</b>
-  <span class="bar"><i id="meterBar"></i></span>
-  <small id="meterHint">書くほど精度が上がります</small>
+  <b id="mLabel">精度：低</b><span class="bar"><i id="mBar"></i></span>
+  <small id="mHint">書くほど精度が上がります</small>
 </div></div>
 
 <footer><div class="wrap">samurai-style　so@samurai-style.tokyo</div></footer>
 
 <script>
 (function(){
-  var f=document.getElementById('orderForm');
-  var btn=document.getElementById('btn');
-  var st=document.getElementById('status');
-  var box=document.getElementById('submitBox');
-  var fileInput=document.getElementById('files');
-  var fileList=document.getElementById('filelist');
-  var LIMIT=10*1024*1024, sizeOk=true;
+var f=document.getElementById('f'), btn=document.getElementById('btn'),
+    st=document.getElementById('st'), box=document.getElementById('box'),
+    meter=document.getElementById('meter'), up=document.getElementById('up'),
+    more=document.getElementById('more'),
+    fileInput=document.getElementById('files'), fileList=document.getElementById('filelist');
+var LIMIT=10*1024*1024, sizeOk=true;
 
-  // 種類ごとに出す節と、そのときの必須項目
-  var MAP={
-    'イベント・体験会':      {fs:'fsEvent',   need:['ev_title','ev_when','ev_where']},
-    'サービス・商品の紹介':  {fs:'fsService', need:['sv_url']},
-    '既存LPの作り直し':      {fs:'fsRenew',   need:['rn_url']},
-    '採用':                 {fs:'fsRecruit', need:['rc_url']}
-  };
-  var ALL=['fsEvent','fsService','fsRenew','fsRecruit'];
-  var cur=null;
+var KIND={
+ 'イベント・体験会':     {id:'s3ev', need:['ev_title','ev_when','ev_where']},
+ 'サービス・商品の紹介': {id:'s3sv', need:['sv_url']},
+ 'いまあるLPの作り直し': {id:'s3rn', need:['rn_url']},
+ '採用':                {id:'s3rc', need:['rc_url']}
+};
+var GRP3=['s3ev','s3sv','s3rn','s3rc'];
+var ORDER=['s1','s2','s3','s4','s5','s6'];
+var cur=null;
 
-  // 隠した節の入力は送信しない（通知メールが余計な空欄で埋まるのを防ぐ）
-  function setActive(kind){
-    cur=MAP[kind]||null;
-    ALL.forEach(function(id){
-      var el=document.getElementById(id);
-      var on = cur && cur.fs===id;
-      el.hidden=!on;
-      el.querySelectorAll('input,textarea,select').forEach(function(x){ x.disabled=!on; });
-    });
-    document.getElementById('fsDepth').hidden=false;
-    document.getElementById('fsContact').hidden=false;
-    document.getElementById('fsCommon').hidden=false;
-    box.hidden=false;
-    document.getElementById('meter').hidden=false;
-    applyDepth(); score();
-  }
+function el(id){ return document.getElementById(id); }
+function step(id){ return id==='s3' ? (cur?el(cur.id):null) : el(id); }
+function val(n){ var e=f.elements[n]; if(!e) return '';
+  if(e.length!==undefined&&e.tagName===undefined){
+    var c=[].filter.call(e,function(x){return x.checked;})[0]; return c?c.value:''; }
+  return String(e.value||'').trim(); }
 
-  document.getElementById('kindPick').addEventListener('change',function(e){
-    setActive(e.target.value);
-    var w=e.target.closest('.f'); if(w) w.classList.remove('is-err');
-    var next=document.getElementById('fsDepth');
-    window.scrollTo({top:next.getBoundingClientRect().top+window.pageYOffset-20,behavior:'smooth'});
+// 節を「答え済み」にして畳む
+function fold(id,text){
+  var s=step(id); if(!s) return;
+  s.classList.add('done');
+  var b=s.querySelector('.ans b'); if(b) b.textContent=text;
+}
+function unfold(id){
+  var s=step(id); if(!s) return;
+  s.classList.remove('done');
+  window.scrollTo({top:s.getBoundingClientRect().top+window.pageYOffset-16,behavior:'smooth'});
+}
+function show(id){
+  var s=step(id); if(!s) return;
+  s.hidden=false;
+  window.scrollTo({top:s.getBoundingClientRect().top+window.pageYOffset-16,behavior:'smooth'});
+}
+
+// 3の中身を種類で切り替える。隠した節は送信しない
+function setKind(kind){
+  cur=KIND[kind];
+  GRP3.forEach(function(id){
+    var s=el(id), on = cur && cur.id===id;
+    s.hidden=!on;
+    if(!on) s.classList.remove('done');
+    s.querySelectorAll('input,textarea,select').forEach(function(x){ x.disabled=!on; });
   });
+}
 
-  fileInput.addEventListener('change',function(){
-    var wrap=fileInput.closest('.f'), err=document.getElementById('fileErr');
-    fileList.innerHTML=''; wrap.classList.remove('is-err');
-    var total=0;
-    [].forEach.call(fileInput.files,function(x){
-      total+=x.size;
-      var li=document.createElement('li');
-      li.textContent=x.name+'　'+Math.round(x.size/1024)+' KB';
-      fileList.appendChild(li);
-    });
-    if(fileInput.files.length){
-      var li=document.createElement('li');
-      li.style.fontWeight='700'; li.style.borderBottom='0';
-      li.textContent='合計 '+(total/1048576).toFixed(1)+' MB';
-      fileList.appendChild(li);
-    }
-    sizeOk=total<=LIMIT;
-    if(!sizeOk){
-      err.textContent='合計 '+(total/1048576).toFixed(1)+'MB です。10MBまでにしてください。空欄のままでも申し込めます';
-      wrap.classList.add('is-err');
-    }
+// 深さで文面と折りたたみを変える
+var R_TRY='LP制作のお申し込みをいただき、ありがとうございます。\n\n'
+ +'まずはたたき台として、構成とデザインの方向が分かるLPをお送りします。\n'
+ +'いただいたURLを拝見したうえで、読み取れる範囲で作ります。\n\n'
+ +'完成しましたら、このメールアドレスにURLをお送りします。\n'
+ +'数日お時間をいただきます。恐れ入りますが、今しばらくお待ちください。\n\n'
+ +'ご覧いただいたうえで「ここをこうしたい」がございましたら、\n'
+ +'このメールへの返信でお知らせください。作り込んでいきます。\n\n'
+ +'ロゴや写真などの素材がお手元にある場合も、返信に添付してお送りください。\n\n'
+ +'何卒よろしくお願いいたします。\n\nsamurai-style\nso@samurai-style.tokyo';
+var R_REAL='LP制作のお申し込みをいただき、ありがとうございます。\n\n'
+ +'いただいた内容とURLをもとに、そのまま公開できるLPをお作りします。\n\n'
+ +'足りない情報があれば、このメールへの返信でお伺いします。\n'
+ +'完成しましたら、このメールアドレスにURLをお送りします。\n\n'
+ +'数日お時間をいただきます。恐れ入りますが、今しばらくお待ちください。\n\n'
+ +'ロゴや写真などの素材がお手元にある場合は、\n'
+ +'このメールにそのままご返信いただき、添付してお送りください。\n\n'
+ +'何卒よろしくお願いいたします。\n\nsamurai-style\nso@samurai-style.tokyo';
+
+function applyDepth(){
+  var real = val('depth')==='実際に使うLPを作りたい';
+  if(real){ more.open=true;
+    up.innerHTML='ここから下はすべて任意です。<b>書いていただくほど、精度の高いLPになります。</b><br>'
+      +'実際に使うLPをご希望とのことなので、できる範囲でご記入ください。'; }
+  else { up.innerHTML='ここから下はすべて任意です。<b>すべて空欄でも申し込めます。</b><br>'
+      +'いただいたURLから読み取れる範囲で、たたき台をお作りします。'; }
+  f.elements['_autoresponse'].value = real ? R_REAL : R_TRY;
+}
+
+// 精度メーター
+var M=['must','tone','company','d_target','d_pain','d_strengths','d_numbers','d_voices',
+       'd_faq','d_price','d_ng','ev_price','ev_capacity','ev_flow','ev_site','sv_target',
+       'rn_issue','rc_role'];
+function score(){
+  var have=0,total=1;
+  M.forEach(function(n){
+    var e=f.elements[n]; if(!e) return;
+    if(e.length!==undefined&&e.tagName===undefined){
+      total++; if([].filter.call(e,function(x){return x.checked;}).length) have++; return; }
+    if(e.disabled) return;
+    total++; if(String(e.value||'').trim()) have++;
   });
+  if(fileInput.files.length) have++;
+  var p=Math.round(have/total*100);
+  el('mBar').style.width=Math.max(6,p)+'%';
+  el('mLabel').textContent = p>=70?'精度：高' : p>=35?'精度：中' : '精度：低';
+  el('mHint').textContent = p>=70?'そのまま使えるものをお作りできます'
+    : p>=35?'もう少し書いていただくと、精度が上がります' : '書くほど精度が上がります（空欄でも申し込めます）';
+}
 
-  function bad(el,on){ var w=el.closest('.f'); if(w) w.classList.toggle('is-err',on); }
-
-  // ── 深さ ──────────────────────────────
-  //   「見てみたい」なら折りたたみは閉じたまま。「作りたい」なら開いて促す。
-  //   どちらでも送信はできる（必須は増やさない）
-  var moreBox=document.getElementById('moreBox');
-  var note=document.getElementById('upgradeNote');
-  var RES_TRY = 'LP制作のお申し込みをいただき、ありがとうございます。\n\n' +
-    'まずはたたき台として、構成とデザインの方向が分かるLPをお送りします。\n' +
-    'いただいたURLを拝見したうえで、読み取れる範囲で作ります。\n\n' +
-    '完成しましたら、このメールアドレスにURLをお送りします。\n' +
-    '数日お時間をいただきます。恐れ入りますが、今しばらくお待ちください。\n\n' +
-    'ご覧いただいたうえで「ここをこうしたい」がございましたら、\n' +
-    'このメールへの返信でお知らせください。作り込んでいきます。\n\n' +
-    'ロゴや写真などの素材がお手元にある場合も、返信に添付してお送りください。\n\n' +
-    '何卒よろしくお願いいたします。\n\nsamurai-style\nso@samurai-style.tokyo';
-  var RES_REAL = 'LP制作のお申し込みをいただき、ありがとうございます。\n\n' +
-    'いただいた内容とURLをもとに、そのまま公開できるLPをお作りします。\n\n' +
-    '足りない情報があれば、このメールへの返信でお伺いします。\n' +
-    '完成しましたら、このメールアドレスにURLをお送りします。\n\n' +
-    '数日お時間をいただきます。恐れ入りますが、今しばらくお待ちください。\n\n' +
-    'ロゴや写真などの素材がお手元にある場合は、\n' +
-    'このメールにそのままご返信いただき、添付してお送りください。\n\n' +
-    '何卒よろしくお願いいたします。\n\nsamurai-style\nso@samurai-style.tokyo';
-
-  function depth(){
-    var el=[].filter.call(f.elements['depth'],function(x){return x.checked;})[0];
-    return el?el.value:'';
-  }
-  function applyDepth(){
-    var real = depth()==='実際に使うLPを作りたい';
-    if(real){ moreBox.open=true;
-      note.innerHTML='ここから下はすべて任意です。<b>書いていただくほど、精度の高いLPになります。</b><br>'
-        +'実際に使うLPをご希望の場合は、下の欄をできる範囲でご記入ください。'; }
-    else { note.innerHTML='ここから下はすべて任意です。<b>すべて空欄でも申し込めます。</b><br>'
-        +'いただいたURLから読み取れる範囲で、たたき台をお作りします。'; }
-    f.elements['_autoresponse'].value = real ? RES_REAL : RES_TRY;
-  }
-  document.getElementById('depthPick').addEventListener('change',function(){ applyDepth(); score(); });
-
-  // ── 精度メーター ────────────────────────
-  //   任意欄がどれだけ埋まったかを見る。強制はしない
-  var METER=['d_target','d_pain','d_strengths','d_numbers','d_voices','d_faq','d_price','d_ng',
-             'must','tone','company','ev_price','ev_capacity','ev_flow','ev_apply',
-             'sv_target','rn_issue','rc_role'];
-  var bar=document.getElementById('meterBar');
-  var lab=document.getElementById('meterLabel');
-  var hint=document.getElementById('meterHint');
-  function score(){
-    var have=0, total=0;
-    METER.forEach(function(n){
-      var el=f.elements[n]; if(!el) return;
-      if(el.length!==undefined && el.tagName===undefined){       // ラジオ群
-        total++; if([].filter.call(el,function(x){return x.checked;}).length) have++;
-        return; }
-      if(el.disabled) return;
-      total++; if(String(el.value||'').trim()) have++;
-    });
-    if(fileInput.files.length) { have++; }
-    total++;
-    var pct=Math.round(have/Math.max(1,total)*100);
-    bar.style.width=Math.max(6,pct)+'%';
-    var t = pct>=70?'精度：高' : pct>=35?'精度：中' : '精度：低';
-    lab.textContent=t;
-    hint.textContent = pct>=70 ? 'このまま送っていただければ、そのまま使えるものをお作りできます'
-      : pct>=35 ? 'もう少し書いていただくと、精度が上がります'
-      : '書くほど精度が上がります（空欄でも申し込めます）';
-  }
-  f.addEventListener('input',score);
-  f.addEventListener('change',score);
-
-  f.addEventListener('submit',function(ev){
-    st.className='status'; st.textContent='';
-    var ok=true, first=null;
-
-    if(!cur){
-      ev.preventDefault();
-      var kp=document.getElementById('kindPick').closest('.f');
-      kp.classList.add('is-err');
-      st.classList.add('is-err'); st.textContent='作りたいLPの種類を選んでください';
-      window.scrollTo({top:kp.getBoundingClientRect().top+window.pageYOffset-90,behavior:'smooth'});
-      return;
-    }
-
-    ['name','email'].concat(cur.need).forEach(function(n){
-      var el=f.elements[n]; if(!el) return;
-      var v=(el.value||'').trim();
-      var no = !v || (n==='email' && !/^[^@\s]+@[^@\s.]+\.[^@\s]+$/.test(v));
-      bad(el,no); if(no){ ok=false; if(!first) first=el; }
-    });
-    var g=f.elements['goal'];
-    var gv=[].filter.call(g,function(x){return x.checked;}).length>0;
-    var gw=g[0].closest('.f'); gw.classList.toggle('is-err',!gv);
-    if(!gv){ ok=false; if(!first) first=g[0]; }
-
-    if(!ok){
-      ev.preventDefault();
-      var t=first.closest('.f')||first;
-      window.scrollTo({top:t.getBoundingClientRect().top+window.pageYOffset-90,behavior:'smooth'});
-      if(first.type!=='radio') first.focus();
-      st.classList.add('is-err'); st.textContent='未入力の項目があります';
-      return;
-    }
-    if(!sizeOk){
-      ev.preventDefault();
-      st.classList.add('is-err'); st.textContent='添付の合計が10MBを超えています';
-      fileInput.scrollIntoView({behavior:'smooth',block:'center'});
-      return;
-    }
-    btn.disabled=true; st.textContent='送信しています…';
+// 必須チェック
+function check(id){
+  var need = id==='s1' ? ['kind'] : id==='s2' ? ['depth']
+    : id==='s3' ? (cur?cur.need:[]) : id==='s4' ? ['goal'] : id==='s6' ? ['name','email'] : [];
+  var ok=true, first=null;
+  need.forEach(function(n){
+    var e=f.elements[n];
+    if(!e){ ok=false; return; }
+    var v=val(n);
+    var no = !v || (n==='email' && !/^[^@\s]+@[^@\s.]+\.[^@\s]+$/.test(v));
+    var node = (e.length!==undefined&&e.tagName===undefined) ? e[0] : e;
+    var w=node.closest('.f'); if(w) w.classList.toggle('is-err',no);
+    if(no){ ok=false; if(!first) first=node; }
   });
+  if(!ok&&first){
+    var t=first.closest('.f')||first;
+    window.scrollTo({top:t.getBoundingClientRect().top+window.pageYOffset-90,behavior:'smooth'});
+    if(first.type!=='radio'&&first.type!=='file') first.focus();
+  }
+  return ok;
+}
+
+// 畳むときに出す文字
+function summary(id){
+  if(id==='s1') return val('kind');
+  if(id==='s2') return val('depth');
+  if(id==='s3'){
+    if(!cur) return '';
+    if(cur.id==='s3ev') return val('ev_title')+'　'+val('ev_when');
+    if(cur.id==='s3sv') return val('sv_url').split('\n')[0];
+    if(cur.id==='s3rn') return val('rn_url');
+    return val('rc_url').split('\n')[0];
+  }
+  if(id==='s4') return val('goal')+(val('tone')?'　／　'+val('tone'):'');
+  if(id==='s5'){
+    var n=0; M.forEach(function(x){ if(x!=='tone'&&x!=='company'&&val(x)) n++; });
+    if(fileInput.files.length) n+=fileInput.files.length;
+    return n? n+'件ご記入いただきました' : '記入なし（URLから読み取ります）';
+  }
+  if(id==='s6') return val('name')+'　'+val('email');
+  return '';
+}
+
+function advance(id){
+  if(!check(id)) return false;
+  fold(id,summary(id));
+  var i=ORDER.indexOf(id);
+  if(i>=0&&i<ORDER.length-1){
+    var nx=ORDER[i+1];
+    show(nx);
+    if(nx==='s6') box.hidden=false;
+  }
+  score();
+  return true;
+}
+
+// 1と2はラジオを押した時点で進む
+f.addEventListener('change',function(e){
+  if(e.target.name==='kind'){ setKind(e.target.value); meter.hidden=false; advance('s1'); return; }
+  if(e.target.name==='depth'){ applyDepth(); advance('s2'); return; }
+  score();
+});
+f.addEventListener('input',score);
+
+// 「次へ」
+f.addEventListener('click',function(e){
+  var b=e.target.closest('.next'); if(!b) return;
+  var s=b.closest('.step');
+  advance(GRP3.indexOf(s.id)>=0 ? 's3' : s.id);
+});
+
+// 「変更」
+f.addEventListener('click',function(e){
+  var b=e.target.closest('.edit'); if(!b) return;
+  var s=b.closest('.step');
+  s.classList.remove('done');
+  window.scrollTo({top:s.getBoundingClientRect().top+window.pageYOffset-16,behavior:'smooth'});
+});
+
+fileInput.addEventListener('change',function(){
+  var w=fileInput.closest('.f'), err=el('fileErr');
+  fileList.innerHTML=''; w.classList.remove('is-err');
+  var total=0;
+  [].forEach.call(fileInput.files,function(x){
+    total+=x.size;
+    var li=document.createElement('li');
+    li.textContent=x.name+'　'+Math.round(x.size/1024)+' KB';
+    fileList.appendChild(li);
+  });
+  if(fileInput.files.length){
+    var li=document.createElement('li');
+    li.style.fontWeight='700'; li.style.borderBottom='0';
+    li.textContent='合計 '+(total/1048576).toFixed(1)+' MB';
+    fileList.appendChild(li);
+  }
+  sizeOk = total<=LIMIT;
+  if(!sizeOk){ err.textContent='合計 '+(total/1048576).toFixed(1)
+      +'MB です。10MBまでにしてください。空欄のままでも申し込めます';
+    w.classList.add('is-err'); }
+  score();
+});
+
+f.addEventListener('submit',function(ev){
+  st.className='status'; st.textContent='';
+  var bad=null;
+  ['s1','s2','s3','s4','s6'].forEach(function(id){ if(!bad&&!check(id)) bad=id; });
+  if(bad){ ev.preventDefault();
+    st.classList.add('is-err'); st.textContent='未入力の項目があります'; return; }
+  if(!sizeOk){ ev.preventDefault();
+    st.classList.add('is-err'); st.textContent='添付の合計が10MBを超えています';
+    fileInput.scrollIntoView({behavior:'smooth',block:'center'}); return; }
+  ['s1','s2','s3','s4','s5','s6'].forEach(function(id){ fold(id,summary(id)); });
+  btn.disabled=true; st.textContent='送信しています…';
+});
+
+applyDepth();
 })();
 </script>
 </body>
