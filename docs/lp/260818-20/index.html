@@ -731,6 +731,9 @@ html:not(.js) .lm__i{transform:none}
    ・カードごとに淡い面の色を変える（同系のトーン違い）
    再現の記録: repro/gakken/ （score 8.27・残差の大半は先方のイラスト）*/
 .fnc__grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+/* ★枚数に合わせる。4列固定だと3枚のとき右に空きができる */
+.fnc__grid:has(> :last-child:nth-child(3)){grid-template-columns:repeat(3,minmax(0,1fr))}
+.fnc__grid:has(> :last-child:nth-child(2)){grid-template-columns:repeat(2,minmax(0,1fr))}
 .fnc__item{margin:0}
 .fnc__card{position:relative;display:flex;flex-direction:column;height:100%;
   border-radius:14px;padding:20px 18px;
@@ -774,7 +777,10 @@ html:not(.js) .lm__i{transform:none}
   .fnc__grid:has(> :last-child:nth-child(3)){grid-template-columns:repeat(3,minmax(0,1fr))}
 }
 @media(max-width:560px){
-  .fnc__grid{grid-template-columns:minmax(0,1fr);gap:10px}
+  /* ★560px以下は1列。3枚のときの3列指定より後に書く必要がある
+     （後の指定が勝つため。順番を逆にすると3列のまま潰れる） */
+  .fnc__grid,
+  .fnc__grid:has(> :last-child:nth-child(3)){grid-template-columns:minmax(0,1fr);gap:10px}
   .fnc__card{padding:18px 16px}
 }
 
@@ -919,8 +925,12 @@ html:not(.js) .lm__i{transform:none}
   .vhr__figs,.vhr__chart{aspect-ratio:auto}
   .vhr__chart{padding-block:clamp(18px,3vw,30px)}
     /* ★スマホは丸が74pxで止まる（中の文字を18px以上に保つため）。
-     4個は1行に入らないので、2×2に整える。3+1で1つだけ浮くのを防ぐ */
-  .vhr__ds:has(> :last-child:nth-child(4)){max-width:calc(74px * 2 + 6px)}
+     4個は1行に入らないので2×2、6個は3×2に整える。
+     基本の :has と同じ詳細度なので、こちらを後に置いて勝たせる */
+  .vhr__ds:has(> :last-child:nth-child(4)),
+  .vhr__ds:has(> :last-child:nth-child(2)){max-width:calc(74px * 2 + 6px)}
+  .vhr__ds:has(> :last-child:nth-child(5)),
+  .vhr__ds:has(> :last-child:nth-child(6)){max-width:calc(74px * 3 + 12px)}
   .vhr__fig img{border-width:5px}
 }
 
@@ -1065,8 +1075,12 @@ html:not(.js) .lm__i{transform:none}
   .vhr__figs,.vhr__chart{aspect-ratio:auto}
   .vhr__chart{padding-block:clamp(18px,3vw,30px)}
     /* ★スマホは丸が74pxで止まる（中の文字を18px以上に保つため）。
-     4個は1行に入らないので、2×2に整える。3+1で1つだけ浮くのを防ぐ */
-  .vhr__ds:has(> :last-child:nth-child(4)){max-width:calc(74px * 2 + 6px)}
+     4個は1行に入らないので2×2、6個は3×2に整える。
+     基本の :has と同じ詳細度なので、こちらを後に置いて勝たせる */
+  .vhr__ds:has(> :last-child:nth-child(4)),
+  .vhr__ds:has(> :last-child:nth-child(2)){max-width:calc(74px * 2 + 6px)}
+  .vhr__ds:has(> :last-child:nth-child(5)),
+  .vhr__ds:has(> :last-child:nth-child(6)){max-width:calc(74px * 3 + 12px)}
   .vhr__fig img{border-width:5px}
 }
 
@@ -1211,8 +1225,12 @@ html:not(.js) .lm__i{transform:none}
   .vhr__figs,.vhr__chart{aspect-ratio:auto}
   .vhr__chart{padding-block:clamp(18px,3vw,30px)}
     /* ★スマホは丸が74pxで止まる（中の文字を18px以上に保つため）。
-     4個は1行に入らないので、2×2に整える。3+1で1つだけ浮くのを防ぐ */
-  .vhr__ds:has(> :last-child:nth-child(4)){max-width:calc(74px * 2 + 6px)}
+     4個は1行に入らないので2×2、6個は3×2に整える。
+     基本の :has と同じ詳細度なので、こちらを後に置いて勝たせる */
+  .vhr__ds:has(> :last-child:nth-child(4)),
+  .vhr__ds:has(> :last-child:nth-child(2)){max-width:calc(74px * 2 + 6px)}
+  .vhr__ds:has(> :last-child:nth-child(5)),
+  .vhr__ds:has(> :last-child:nth-child(6)){max-width:calc(74px * 3 + 12px)}
   .vhr__fig img{border-width:5px}
 }
 
