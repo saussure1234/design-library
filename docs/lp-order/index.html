@@ -72,6 +72,31 @@ button:disabled{opacity:.5;cursor:default}
 .status{margin-top:14px;font-size:14px;font-weight:700;min-height:1.6em}
 .status.is-err{color:var(--err)}
 .agree{font-size:13px;color:var(--ink3);margin-top:14px;line-height:1.8}
+/* 精度メーター */
+.meter{position:sticky;bottom:0;z-index:30;background:rgba(255,255,255,.96);
+  border-top:1px solid var(--line);padding:11px 0;backdrop-filter:blur(6px)}
+.meter[hidden]{display:none}
+.meter .in{max-width:720px;margin-inline:auto;padding:0 20px;
+  display:flex;align-items:center;gap:14px}
+.bar{flex:1;height:8px;background:#e6e9eb;border-radius:20px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:#111;border-radius:20px;
+  transition:width .3s ease}
+.meter b{font-size:13px;font-weight:700;white-space:nowrap}
+.meter small{font-size:12px;color:var(--ink3);white-space:nowrap}
+@media(max-width:560px){.meter small{display:none}}
+
+/* 折りたたみ */
+details.more{border:2px solid #d8dcdf;border-radius:10px;background:#fff;margin-bottom:20px}
+details.more>summary{cursor:pointer;padding:15px 17px;font-size:15px;font-weight:700;
+  list-style:none;display:flex;align-items:center;gap:10px}
+details.more>summary::-webkit-details-marker{display:none}
+details.more>summary::before{content:"＋";font-size:17px;color:var(--ink3);font-weight:700}
+details.more[open]>summary::before{content:"−"}
+details.more>summary small{display:block;font-weight:400;font-size:13px;color:var(--ink3);
+  margin-top:2px;line-height:1.6}
+details.more .inner{padding:4px 17px 2px;border-top:1px solid var(--line)}
+.upgrade{background:#f4f6f7;border-radius:8px;padding:13px 15px;font-size:13px;
+  color:var(--ink2);line-height:1.75;margin:0 0 18px}
 footer{border-top:1px solid var(--line);background:var(--bg);padding:24px 0;font-size:13px;color:var(--ink3)}
 </style>
 </head>
@@ -134,9 +159,26 @@ so@samurai-style.tokyo">
     </div>
   </fieldset>
 
-  <!-- ② 連絡先 -->
+  <!-- ② 深さ -->
+  <fieldset id="fsDepth" hidden>
+    <legend>2. どこまで作り込みますか</legend>
+    <div class="fs-body">
+      <div class="f">
+        <div class="pick c2" id="depthPick">
+          <label><input type="radio" name="depth" value="たたき台を見てみたい" checked>
+            <span><b>まず、どんなものができるか見てみたい</b>
+              <small>最小限の記入で送れます。構成とデザインの方向が分かる、たたき台をお送りします</small></span></label>
+          <label><input type="radio" name="depth" value="実際に使うLPを作りたい">
+            <span><b>実際に使うLPを作りたい</b>
+              <small>ご記入いただく項目が増えます。そのまま公開できるものをお送りします</small></span></label>
+        </div>
+      </div>
+    </div>
+  </fieldset>
+
+  <!-- ③ 連絡先 -->
   <fieldset id="fsContact" hidden>
-    <legend>2. ご連絡先</legend>
+    <legend>3. ご連絡先</legend>
     <div class="fs-body">
       <div class="two">
         <div class="f"><label>お名前<span class="req">必須</span></label>
@@ -154,7 +196,7 @@ so@samurai-style.tokyo">
 
   <!-- イベント -->
   <fieldset id="fsEvent" hidden>
-    <legend>3. イベントの内容</legend>
+    <legend>4. イベントの内容</legend>
     <div class="fs-body">
       <div class="f"><label>イベント名<span class="req">必須</span></label>
         <input type="text" name="ev_title"><p class="err">ご入力ください</p></div>
@@ -183,7 +225,7 @@ so@samurai-style.tokyo">
 
   <!-- 作り直し -->
   <fieldset id="fsRenew" hidden>
-    <legend>3. いまのLP</legend>
+    <legend>4. いまのLP</legend>
     <div class="fs-body">
       <div class="f"><label>いまのLPのURL<span class="req">必須</span></label>
         <input type="url" name="rn_url" placeholder="https://"><p class="err">ご入力ください</p></div>
@@ -195,7 +237,7 @@ so@samurai-style.tokyo">
 
   <!-- サービス紹介 -->
   <fieldset id="fsService" hidden>
-    <legend>3. サービスについて</legend>
+    <legend>4. サービスについて</legend>
     <div class="fs-body">
       <div class="f"><label>既存のサイト・SNSのURL<span class="req">必須</span></label>
         <p class="hint">拝見して、強み・料金・お客様の声などを読み取ります。<br>
@@ -210,7 +252,7 @@ so@samurai-style.tokyo">
 
   <!-- 採用 -->
   <fieldset id="fsRecruit" hidden>
-    <legend>3. 募集について</legend>
+    <legend>4. 募集について</legend>
     <div class="fs-body">
       <div class="f"><label>会社サイト・求人ページのURL<span class="req">必須</span></label>
         <p class="hint">求人票や募集要項のページがあれば、それも。改行で並べてください</p>
@@ -223,7 +265,7 @@ so@samurai-style.tokyo">
 
   <!-- ④ 共通 -->
   <fieldset id="fsCommon" hidden>
-    <legend>4. 最後に</legend>
+    <legend>5. 最後に</legend>
     <div class="fs-body">
       <div class="f"><label>LPを見た人に、何をしてほしいですか<span class="req">必須</span></label>
         <div class="pick c2">
@@ -249,6 +291,41 @@ so@samurai-style.tokyo">
           <label><input type="radio" name="tone" value="親しみやすい・やわらかい"><span><b>親しみやすい・やわらかい</b></span></label>
         </div></div>
 
+      <div class="upgrade" id="upgradeNote">
+        ここから下はすべて任意です。<b>書いていただくほど、精度の高いLPになります。</b><br>
+        空欄でも構いません。いただいたURLから読み取れる範囲で作ります。
+      </div>
+
+      <details class="more" id="moreBox">
+        <summary>もっと詳しく伝える
+          <small>ここを開いて書いていただくと、精度が上がります（すべて任意）</small></summary>
+        <div class="inner">
+          <div class="f"><label>誰に向けたLPですか<span class="opt">任意</span></label>
+            <p class="hint">年齢・立場・悩みなど。例：中学生の子を持つ保護者で、英検2級を取らせたいが塾選びに迷っている方</p>
+            <textarea name="d_target" style="min-height:82px"></textarea></div>
+          <div class="f"><label>その人がいま困っていること<span class="opt">任意</span></label>
+            <p class="hint">箇条書きで3つほど</p>
+            <textarea name="d_pain" style="min-height:82px"></textarea></div>
+          <div class="f"><label>他と違う点を3つ<span class="opt">任意</span></label>
+            <p class="hint">1行に1つ。「なぜそう言えるか」も添えていただけると助かります</p>
+            <textarea name="d_strengths" style="min-height:92px"></textarea></div>
+          <div class="f"><label>使える数字<span class="opt">任意</span></label>
+            <p class="hint">合格率・実績・年数・人数など。出典もあれば</p>
+            <textarea name="d_numbers" style="min-height:78px"></textarea></div>
+          <div class="f"><label>お客様の声<span class="opt">任意</span></label>
+            <p class="hint">お持ちのものをそのまま貼ってください</p>
+            <textarea name="d_voices" style="min-height:82px"></textarea></div>
+          <div class="f"><label>よくある質問<span class="opt">任意</span></label>
+            <textarea name="d_faq" style="min-height:82px"></textarea></div>
+          <div class="f"><label>価格<span class="opt">任意</span></label>
+            <p class="hint">非公開の場合は「非公開」と</p>
+            <textarea name="d_price" style="min-height:70px"></textarea></div>
+          <div class="f"><label>入れたくないもの<span class="opt">任意</span></label>
+            <p class="hint">使ってはいけない表現・色・写真など</p>
+            <textarea name="d_ng" style="min-height:70px"></textarea></div>
+        </div>
+      </details>
+
       <div class="f"><label>ロゴ・写真などの素材<span class="opt">任意</span></label>
         <p class="hint">合計10MBまで。<b>空欄で構いません。</b>受付メールに返信して添付いただけます</p>
         <div class="files">
@@ -268,6 +345,12 @@ so@samurai-style.tokyo">
   </div>
 </form>
 </div>
+
+<div class="meter" id="meter" hidden><div class="in">
+  <b id="meterLabel">精度：低</b>
+  <span class="bar"><i id="meterBar"></i></span>
+  <small id="meterHint">書くほど精度が上がります</small>
+</div></div>
 
 <footer><div class="wrap">samurai-style　so@samurai-style.tokyo</div></footer>
 
@@ -300,15 +383,18 @@ so@samurai-style.tokyo">
       el.hidden=!on;
       el.querySelectorAll('input,textarea,select').forEach(function(x){ x.disabled=!on; });
     });
+    document.getElementById('fsDepth').hidden=false;
     document.getElementById('fsContact').hidden=false;
     document.getElementById('fsCommon').hidden=false;
     box.hidden=false;
+    document.getElementById('meter').hidden=false;
+    applyDepth(); score();
   }
 
   document.getElementById('kindPick').addEventListener('change',function(e){
     setActive(e.target.value);
     var w=e.target.closest('.f'); if(w) w.classList.remove('is-err');
-    var next=document.getElementById('fsContact');
+    var next=document.getElementById('fsDepth');
     window.scrollTo({top:next.getBoundingClientRect().top+window.pageYOffset-20,behavior:'smooth'});
   });
 
@@ -336,6 +422,75 @@ so@samurai-style.tokyo">
   });
 
   function bad(el,on){ var w=el.closest('.f'); if(w) w.classList.toggle('is-err',on); }
+
+  // ── 深さ ──────────────────────────────
+  //   「見てみたい」なら折りたたみは閉じたまま。「作りたい」なら開いて促す。
+  //   どちらでも送信はできる（必須は増やさない）
+  var moreBox=document.getElementById('moreBox');
+  var note=document.getElementById('upgradeNote');
+  var RES_TRY = 'LP制作のお申し込みをいただき、ありがとうございます。\n\n' +
+    'まずはたたき台として、構成とデザインの方向が分かるLPをお送りします。\n' +
+    'いただいたURLを拝見したうえで、読み取れる範囲で作ります。\n\n' +
+    '完成しましたら、このメールアドレスにURLをお送りします。\n' +
+    '数日お時間をいただきます。恐れ入りますが、今しばらくお待ちください。\n\n' +
+    'ご覧いただいたうえで「ここをこうしたい」がございましたら、\n' +
+    'このメールへの返信でお知らせください。作り込んでいきます。\n\n' +
+    'ロゴや写真などの素材がお手元にある場合も、返信に添付してお送りください。\n\n' +
+    '何卒よろしくお願いいたします。\n\nsamurai-style\nso@samurai-style.tokyo';
+  var RES_REAL = 'LP制作のお申し込みをいただき、ありがとうございます。\n\n' +
+    'いただいた内容とURLをもとに、そのまま公開できるLPをお作りします。\n\n' +
+    '足りない情報があれば、このメールへの返信でお伺いします。\n' +
+    '完成しましたら、このメールアドレスにURLをお送りします。\n\n' +
+    '数日お時間をいただきます。恐れ入りますが、今しばらくお待ちください。\n\n' +
+    'ロゴや写真などの素材がお手元にある場合は、\n' +
+    'このメールにそのままご返信いただき、添付してお送りください。\n\n' +
+    '何卒よろしくお願いいたします。\n\nsamurai-style\nso@samurai-style.tokyo';
+
+  function depth(){
+    var el=[].filter.call(f.elements['depth'],function(x){return x.checked;})[0];
+    return el?el.value:'';
+  }
+  function applyDepth(){
+    var real = depth()==='実際に使うLPを作りたい';
+    if(real){ moreBox.open=true;
+      note.innerHTML='ここから下はすべて任意です。<b>書いていただくほど、精度の高いLPになります。</b><br>'
+        +'実際に使うLPをご希望の場合は、下の欄をできる範囲でご記入ください。'; }
+    else { note.innerHTML='ここから下はすべて任意です。<b>すべて空欄でも申し込めます。</b><br>'
+        +'いただいたURLから読み取れる範囲で、たたき台をお作りします。'; }
+    f.elements['_autoresponse'].value = real ? RES_REAL : RES_TRY;
+  }
+  document.getElementById('depthPick').addEventListener('change',function(){ applyDepth(); score(); });
+
+  // ── 精度メーター ────────────────────────
+  //   任意欄がどれだけ埋まったかを見る。強制はしない
+  var METER=['d_target','d_pain','d_strengths','d_numbers','d_voices','d_faq','d_price','d_ng',
+             'must','tone','company','ev_price','ev_capacity','ev_flow','ev_apply',
+             'sv_target','rn_issue','rc_role'];
+  var bar=document.getElementById('meterBar');
+  var lab=document.getElementById('meterLabel');
+  var hint=document.getElementById('meterHint');
+  function score(){
+    var have=0, total=0;
+    METER.forEach(function(n){
+      var el=f.elements[n]; if(!el) return;
+      if(el.length!==undefined && el.tagName===undefined){       // ラジオ群
+        total++; if([].filter.call(el,function(x){return x.checked;}).length) have++;
+        return; }
+      if(el.disabled) return;
+      total++; if(String(el.value||'').trim()) have++;
+    });
+    if(fileInput.files.length) { have++; }
+    total++;
+    var pct=Math.round(have/Math.max(1,total)*100);
+    bar.style.width=Math.max(6,pct)+'%';
+    var t = pct>=70?'精度：高' : pct>=35?'精度：中' : '精度：低';
+    lab.textContent=t;
+    hint.textContent = pct>=70 ? 'このまま送っていただければ、そのまま使えるものをお作りできます'
+      : pct>=35 ? 'もう少し書いていただくと、精度が上がります'
+      : '書くほど精度が上がります（空欄でも申し込めます）';
+  }
+  f.addEventListener('input',score);
+  f.addEventListener('change',score);
 
   f.addEventListener('submit',function(ev){
     st.className='status'; st.textContent='';
