@@ -1,0 +1,17 @@
+<section class="sec hcf">
+  <div class="hcf__in wrap">
+    {{?en}}<span class="hcf__en" aria-hidden="true">{{en}}</span>{{/en}}
+    <div class="hcf__body">
+      {{?eyebrow}}<p class="hcf__eyebrow">{{eyebrow}}</p>{{/eyebrow}}
+      <h1 class="hcf__h1">{{heading}}</h1>
+      <div class="hcf__cta">
+        <a class="btn btn--lg" href="{{ctaHref}}">{{ctaLabel}}<span class="btn__arrow">→</span></a>
+        {{?ctaNote}}<p class="hcf__note">{{ctaNote}}</p>{{/ctaNote}}
+      </div>
+    </div>
+    {{?photo}}<figure class="hcf__fig"><img src="{{photo}}" alt="{{photoAlt}}"></figure>{{/photo}}
+  </div>
+  {{?factsOn}}<ul class="hcf__facts wrap">
+    {{#facts}}<li><span class="hcf__fv">{{v}}</span><span class="hcf__fl">{{l}}</span></li>{{/facts}}
+  </ul>{{/factsOn}}
+</section>
