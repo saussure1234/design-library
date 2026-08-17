@@ -767,7 +767,12 @@ html:not(.js) .lm__i{transform:none}
 .tone-brand .fnc__no{color:var(--c-primary)}
 
 
-@media(max-width:900px){.fnc__grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* ★2列に落とすのは4枚以上のときだけ。
+   3枚を2列にすると 2+1 に割れて、1枚だけ浮く（実測で確認） */
+@media(max-width:900px){
+  .fnc__grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .fnc__grid:has(> :last-child:nth-child(3)){grid-template-columns:repeat(3,minmax(0,1fr))}
+}
 @media(max-width:560px){
   .fnc__grid{grid-template-columns:minmax(0,1fr);gap:10px}
   .fnc__card{padding:18px 16px}
@@ -855,6 +860,12 @@ html:not(.js) .lm__i{transform:none}
 .vhr__ds{--dia:clamp(74px,9.2vw,100px);
   display:flex;flex-wrap:wrap;justify-content:center;gap:6px;
   width:100%;max-width:calc(var(--dia) * 3 + 12px);margin-inline:auto}
+/* ★個数で入れ物の幅を変える。3つぶんに固定すると
+   4個なら3+1、2個なら中央に寄りすぎる（実測で確認）。
+   :has で個数を見て、その数だけ横に並ぶ幅にする */
+.vhr__ds:has(> :last-child:nth-child(2)){max-width:calc(var(--dia) * 2 + 6px)}
+.vhr__ds:has(> :last-child:nth-child(4)){max-width:calc(var(--dia) * 4 + 18px)}
+.vhr__ds:has(> :last-child:nth-child(6)){max-width:calc(var(--dia) * 3 + 12px)}
 .vhr__d{position:relative;width:var(--dia);aspect-ratio:1;border-radius:50%;
   display:grid;place-content:center;text-align:center}
 .vhr__d::before{content:"";position:absolute;inset:0;border-radius:50%;
@@ -907,7 +918,9 @@ html:not(.js) .lm__i{transform:none}
      固定したままだと、中身77pxのグラフに560pxの器が付いて空白だけが残る */
   .vhr__figs,.vhr__chart{aspect-ratio:auto}
   .vhr__chart{padding-block:clamp(18px,3vw,30px)}
-    /* 入れ物の幅は基本ルール（丸3つぶん）がそのまま効く。ここでの上書きは不要 */
+    /* ★スマホは丸が74pxで止まる（中の文字を18px以上に保つため）。
+     4個は1行に入らないので、2×2に整える。3+1で1つだけ浮くのを防ぐ */
+  .vhr__ds:has(> :last-child:nth-child(4)){max-width:calc(74px * 2 + 6px)}
   .vhr__fig img{border-width:5px}
 }
 
@@ -993,6 +1006,12 @@ html:not(.js) .lm__i{transform:none}
 .vhr__ds{--dia:clamp(74px,9.2vw,100px);
   display:flex;flex-wrap:wrap;justify-content:center;gap:6px;
   width:100%;max-width:calc(var(--dia) * 3 + 12px);margin-inline:auto}
+/* ★個数で入れ物の幅を変える。3つぶんに固定すると
+   4個なら3+1、2個なら中央に寄りすぎる（実測で確認）。
+   :has で個数を見て、その数だけ横に並ぶ幅にする */
+.vhr__ds:has(> :last-child:nth-child(2)){max-width:calc(var(--dia) * 2 + 6px)}
+.vhr__ds:has(> :last-child:nth-child(4)){max-width:calc(var(--dia) * 4 + 18px)}
+.vhr__ds:has(> :last-child:nth-child(6)){max-width:calc(var(--dia) * 3 + 12px)}
 .vhr__d{position:relative;width:var(--dia);aspect-ratio:1;border-radius:50%;
   display:grid;place-content:center;text-align:center}
 .vhr__d::before{content:"";position:absolute;inset:0;border-radius:50%;
@@ -1045,7 +1064,9 @@ html:not(.js) .lm__i{transform:none}
      固定したままだと、中身77pxのグラフに560pxの器が付いて空白だけが残る */
   .vhr__figs,.vhr__chart{aspect-ratio:auto}
   .vhr__chart{padding-block:clamp(18px,3vw,30px)}
-    /* 入れ物の幅は基本ルール（丸3つぶん）がそのまま効く。ここでの上書きは不要 */
+    /* ★スマホは丸が74pxで止まる（中の文字を18px以上に保つため）。
+     4個は1行に入らないので、2×2に整える。3+1で1つだけ浮くのを防ぐ */
+  .vhr__ds:has(> :last-child:nth-child(4)){max-width:calc(74px * 2 + 6px)}
   .vhr__fig img{border-width:5px}
 }
 
@@ -1131,6 +1152,12 @@ html:not(.js) .lm__i{transform:none}
 .vhr__ds{--dia:clamp(74px,9.2vw,100px);
   display:flex;flex-wrap:wrap;justify-content:center;gap:6px;
   width:100%;max-width:calc(var(--dia) * 3 + 12px);margin-inline:auto}
+/* ★個数で入れ物の幅を変える。3つぶんに固定すると
+   4個なら3+1、2個なら中央に寄りすぎる（実測で確認）。
+   :has で個数を見て、その数だけ横に並ぶ幅にする */
+.vhr__ds:has(> :last-child:nth-child(2)){max-width:calc(var(--dia) * 2 + 6px)}
+.vhr__ds:has(> :last-child:nth-child(4)){max-width:calc(var(--dia) * 4 + 18px)}
+.vhr__ds:has(> :last-child:nth-child(6)){max-width:calc(var(--dia) * 3 + 12px)}
 .vhr__d{position:relative;width:var(--dia);aspect-ratio:1;border-radius:50%;
   display:grid;place-content:center;text-align:center}
 .vhr__d::before{content:"";position:absolute;inset:0;border-radius:50%;
@@ -1183,7 +1210,9 @@ html:not(.js) .lm__i{transform:none}
      固定したままだと、中身77pxのグラフに560pxの器が付いて空白だけが残る */
   .vhr__figs,.vhr__chart{aspect-ratio:auto}
   .vhr__chart{padding-block:clamp(18px,3vw,30px)}
-    /* 入れ物の幅は基本ルール（丸3つぶん）がそのまま効く。ここでの上書きは不要 */
+    /* ★スマホは丸が74pxで止まる（中の文字を18px以上に保つため）。
+     4個は1行に入らないので、2×2に整える。3+1で1つだけ浮くのを防ぐ */
+  .vhr__ds:has(> :last-child:nth-child(4)){max-width:calc(74px * 2 + 6px)}
   .vhr__fig img{border-width:5px}
 }
 
@@ -1654,11 +1683,8 @@ html:not(.js) .lm__i{transform:none}
       <img src="img/fv.jpg" alt="施術台で施術を受けている様子">
     </figure>
   </div>
-  
   <ul class="hcf__facts wrap">
-    <li><b></b><span></span></li>
-  </ul><li><b></b><span></span></li>
-  </ul><li><b></b><span></span></li>
+    <li><b>2万人</b><span>のべ来院数</span></li><li><b>10年</b><span>開業</span></li><li><b>87%</b><span>リピート率</span></li>
   </ul>
 </section>
 
@@ -1726,16 +1752,16 @@ html:not(.js) .lm__i{transform:none}
             <ul class="vhr__ds">
               <li class="vhr__d" style="--p:42%">
                 <span class="vhr__dl">腰痛</span>
-                <b class="vhr__dv"><span data-count=""></span><i>%</i></b>
+                <b class="vhr__dv"><span data-count="42">42</span><i>%</i></b>
               </li><li class="vhr__d" style="--p:28%">
                 <span class="vhr__dl">肩こり</span>
-                <b class="vhr__dv"><span data-count=""></span><i>%</i></b>
+                <b class="vhr__dv"><span data-count="28">28</span><i>%</i></b>
               </li><li class="vhr__d" style="--p:18%">
                 <span class="vhr__dl">膝の痛み</span>
-                <b class="vhr__dv"><span data-count=""></span><i>%</i></b>
+                <b class="vhr__dv"><span data-count="18">18</span><i>%</i></b>
               </li><li class="vhr__d" style="--p:12%">
                 <span class="vhr__dl">その他</span>
-                <b class="vhr__dv"><span data-count=""></span><i>%</i></b>
+                <b class="vhr__dv"><span data-count="12">12</span><i>%</i></b>
               </li>
             </ul>
             <p class="vhr__cnote">2025年の来院者2,140名の内訳</p>
@@ -1867,7 +1893,7 @@ html:not(.js) .lm__i{transform:none}
     <ul class="vbi__list">
       <li class="vbi__item fx" data-fx="fadeup" data-d="0">
         <div class="vbi__side">
-          <figure class="vbi__fig"><img src="" alt="" loading="lazy"></figure>
+          
         </div>
         <div class="vbi__main">
           <h3 class="vbi__t">3ヶ月続いた腰痛が改善したAさん（40代・会社員）</h3>
