@@ -2064,37 +2064,12 @@ html:not(.js) .lm__i{transform:none}
 
 </div>
 <script>
-/* ── 慣性スクロール ────────────────────────────
-   参考サイト10本のうち3本が Lenis（8KBの外部ライブラリ）を使っていた。
-   同じ体感は50行ほどで作れるので、外部ライブラリは入れない。
-   ・ホイールの入力を受けて、目標位置へ毎フレーム少しだけ近づける
-   ・触る操作（スマホ）と、動きを減らす設定の人には効かせない
-   ・kit で "smooth": false にすれば止まる                        */
-(function(){
-  var root=document.documentElement;
-  if (root.dataset.smooth === 'off') return;
-  if (window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
-  if (window.matchMedia('(hover:none)').matches) return;   /* スマホは既定の慣性に任せる */
-  var target=window.scrollY, cur=window.scrollY, running=false, EASE=0.10;
-  function max(){ return Math.max(0, document.body.scrollHeight - window.innerHeight); }
-  function tick(){
-    cur += (target - cur) * EASE;
-    if (Math.abs(target - cur) < 0.4){ cur = target; running=false; }
-    window.scrollTo(0, cur);
-    if (running) requestAnimationFrame(tick);
-  }
-  window.addEventListener('wheel', function(e){
-    if (e.ctrlKey) return;                 /* 拡大縮小は邪魔しない */
-    if (e.deltaMode !== 0) return;          /* 行単位の入力はそのまま */
-    e.preventDefault();
-    target = Math.min(max(), Math.max(0, target + e.deltaY));
-    if (!running){ running=true; requestAnimationFrame(tick); }
-  }, {passive:false});
-  /* キーやアンカー移動で位置がずれたら、目標を実際の位置に合わせ直す */
-  window.addEventListener('scroll', function(){
-    if (!running){ target = cur = window.scrollY; }
-  }, {passive:true});
-})();
+/* 慣性スクロール（Lenis相当の自作）は撤去した。
+   参考サイト3本が使っていたので入れてみたが、実際に触ると
+   ホイールに対して明らかに遅れてついてくる（EASE=0.10 は差の1割しか進まない）。
+   「上質」より「動かしにくい」が先に来るので、既定のスクロールに戻す。
+   参考が使っているからといって、そのまま真似すべきではなかった。 */
+
 
 /* ── 申し込みフォーム ────────────────────────
    ページの中で完結させる。送信先は Google Apps Script の Web App。
