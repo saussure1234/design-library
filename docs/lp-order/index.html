@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LP制作のお申し込み｜samurai-style</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c1c1c; --ink2:#4a4a4a; --ink3:#7a7a7a; --line:#e2e4e6;
+  --bg:#fff; --bg2:#f6f7f8; --accent:#111; --err:#c0392b; --ok:#0a8a2f;
+  --r:10px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg2);color:var(--ink);
+  font-family:"Noto Sans JP",-apple-system,"Hiragino Sans",sans-serif;
+  font-size:16px;line-height:1.8;-webkit-text-size-adjust:100%}
+.wrap{max-width:760px;margin-inline:auto;padding:0 20px}
+
+header{background:var(--bg);border-bottom:1px solid var(--line);padding:22px 0}
+header .wrap{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.brand{font-size:19px;font-weight:900;letter-spacing:.02em}
+.brand span{color:var(--ink3);font-weight:500;font-size:13px;margin-left:8px}
+
+.lead{background:var(--bg);padding:40px 0 34px;border-bottom:1px solid var(--line)}
+h1{font-size:clamp(24px,4.4vw,32px);font-weight:900;line-height:1.45;margin:0 0 16px}
+.lead p{margin:0 0 10px;color:var(--ink2);font-size:16px}
+.flow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:26px}
+.flow li{list-style:none;background:var(--bg2);border-radius:var(--r);padding:14px 14px 16px}
+.flow b{display:block;font-size:12px;color:var(--ink3);letter-spacing:.08em;margin-bottom:4px}
+.flow span{font-size:14px;font-weight:700;line-height:1.6}
+@media(max-width:640px){.flow{grid-template-columns:1fr}}
+
+form{padding:34px 0 60px}
+fieldset{border:0;margin:0 0 30px;padding:0;background:var(--bg);border-radius:var(--r);overflow:hidden}
+legend{float:left;width:100%;margin:0;padding:15px 20px;background:var(--ink);color:#fff;
+  font-size:15px;font-weight:700;letter-spacing:.02em}
+.fs-body{clear:both;padding:22px 20px 6px}
+.f{margin-bottom:22px}
+label{display:block;font-size:15px;font-weight:700;margin-bottom:6px}
+.req{color:var(--err);font-size:12px;margin-left:6px;font-weight:700}
+.opt{color:var(--ink3);font-size:12px;margin-left:6px;font-weight:500}
+.hint{font-size:13px;color:var(--ink3);margin:-2px 0 7px;line-height:1.7}
+input[type=text],input[type=email],input[type=tel],input[type=url],textarea,select{
+  width:100%;font:inherit;font-size:16px;padding:11px 13px;border:1px solid #cfd3d6;
+  border-radius:8px;background:#fff;color:var(--ink)}
+textarea{min-height:112px;resize:vertical;line-height:1.8}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--ink);outline-offset:1px;border-color:var(--ink)}
+input[type=color]{width:64px;height:42px;padding:3px;border:1px solid #cfd3d6;border-radius:8px;background:#fff;cursor:pointer}
+.colors{display:flex;gap:16px;flex-wrap:wrap}
+.colors div{display:flex;align-items:center;gap:8px}
+.colors small{font-size:13px;color:var(--ink2)}
+.files{border:2px dashed #cfd3d6;border-radius:8px;padding:16px;background:#fafbfb}
+.files input{font-size:14px}
+.filelist{margin:10px 0 0;padding:0;list-style:none;font-size:13px;color:var(--ink2)}
+.filelist li{padding:3px 0;border-bottom:1px dotted var(--line)}
+.err{color:var(--err);font-size:13px;font-weight:700;margin-top:5px;display:none}
+.f.is-err input,.f.is-err textarea{border-color:var(--err);background:#fffafa}
+.f.is-err .err{display:block}
+
+.submit{background:var(--bg);border-radius:var(--r);padding:26px 20px;text-align:center}
+button{font:inherit;font-size:17px;font-weight:900;letter-spacing:.02em;color:#fff;
+  background:var(--accent);border:0;border-radius:8px;padding:16px 44px;cursor:pointer;
+  width:100%;max-width:420px}
+button:disabled{opacity:.5;cursor:default}
+.status{margin-top:14px;font-size:14px;font-weight:700;min-height:1.6em}
+.status.is-err{color:var(--err)}
+.agree{font-size:13px;color:var(--ink3);margin-top:14px;line-height:1.8}
+
+.done{display:none;background:var(--bg);border-radius:var(--r);padding:56px 24px;text-align:center}
+.done h2{font-size:24px;font-weight:900;margin:0 0 14px}
+.done p{color:var(--ink2);margin:0 0 8px;font-size:15px}
+.check{width:78px;height:78px;border-radius:50%;background:#eaf7ee;
+  display:flex;align-items:center;justify-content:center;margin:0 auto 22px}
+.check svg{width:52%;height:52%;display:block;flex:none}
+footer{border-top:1px solid var(--line);background:var(--bg);padding:24px 0;
+  font-size:13px;color:var(--ink3)}
+</style>
+</head>
+<body>
+
+<header><div class="wrap">
+  <span class="brand">samurai-style<span>ランディングページ制作</span></span>
+</div></header>
+
+<section class="lead"><div class="wrap">
+  <h1>LP制作のお申し込み</h1>
+  <p>下のフォームにご記入ください。いただいた内容をもとに、制作いたします。</p>
+  <p>ご記入は15分ほどで終わります。分からない項目は空欄で構いません。</p>
+  <ul class="flow">
+    <li><b>STEP 1</b><span>フォームに記入</span></li>
+    <li><b>STEP 2</b><span>受付メールが届く</span></li>
+    <li><b>STEP 3</b><span>完成したLPのURLをメールでお送りします</span></li>
+  </ul>
+</div></section>
+
+<div class="wrap">
+<form id="orderForm" novalidate
+      action="https://formsubmit.co/so@samurai-style.tokyo"
+      method="POST" enctype="multipart/form-data">
+
+  <!-- FormSubmit への指示（画面には出ない） -->
+  <input type="hidden" name="_subject" value="【LP申込】新しい申し込みがありました">
+  <input type="hidden" name="_template" value="table">
+  <input type="hidden" name="_captcha" value="false">
+  <input type="hidden" name="_next" value="https://saussure1234.github.io/design-library/lp-order/thanks/">
+  <input type="hidden" name="_autoresponse" value="LP制作のお申し込みをいただき、ありがとうございます。
+下記の内容で受け付けいたしました。
+
+内容を確認のうえ、制作を進めます。
+完成しましたら、このメールアドレスにURLをお送りします。
+
+数日お時間をいただきます。恐れ入りますが、今しばらくお待ちください。
+
+なお、ロゴや写真などの素材がお手元にある場合は、
+このメールにそのままご返信いただき、添付してお送りください。
+
+ご記入内容の補足も、ご返信でお受けいたします。
+
+何卒よろしくお願いいたします。
+
+samurai-style
+so@samurai-style.tokyo">
+
+  <fieldset>
+    <legend>1. ご連絡先</legend>
+    <div class="fs-body">
+      <div class="f"><label>お名前<span class="req">必須</span></label>
+        <input type="text" name="name" autocomplete="name"><p class="err">ご入力ください</p></div>
+      <div class="f"><label>会社・団体名<span class="opt">任意</span></label>
+        <input type="text" name="company" autocomplete="organization"></div>
+      <div class="f"><label>メールアドレス<span class="req">必須</span></label>
+        <p class="hint">完成したLPのURLをこちらにお送りします</p>
+        <input type="email" name="email" autocomplete="email"><p class="err">正しい形式でご入力ください</p></div>
+      <div class="f"><label>お電話番号<span class="opt">任意</span></label>
+        <input type="tel" name="tel" autocomplete="tel"></div>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>2. 何を売るLPですか</legend>
+    <div class="fs-body">
+      <div class="f"><label>サービス・商品の名前<span class="req">必須</span></label>
+        <input type="text" name="product"><p class="err">ご入力ください</p></div>
+      <div class="f"><label>ひとことで言うと、何ですか<span class="req">必須</span></label>
+        <p class="hint">例：小学生から高校生までの英検専門オンライン英語塾</p>
+        <input type="text" name="oneline"><p class="err">ご入力ください</p></div>
+      <div class="f"><label>誰に向けたLPですか<span class="req">必須</span></label>
+        <p class="hint">年齢・立場・悩みなど、具体的に。例：中学生の子を持つ保護者で、英検2級を取らせたいが塾選びに迷っている方</p>
+        <textarea name="target"></textarea><p class="err">ご入力ください</p></div>
+      <div class="f"><label>その人は、いまどんなことで困っていますか<span class="opt">任意</span></label>
+        <p class="hint">思いつくものを、箇条書きで3つほど</p>
+        <textarea name="pain"></textarea></div>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>3. 強み</legend>
+    <div class="fs-body">
+      <div class="f"><label>他と違う点を3つ<span class="req">必須</span></label>
+        <p class="hint">1行に1つ。「なぜそう言えるか」も添えていただけると助かります</p>
+        <textarea name="strengths" placeholder="例）&#10;英検合格率88%（2023年度・受験者のうち1次2次双方に合格した割合）&#10;バイリンガル講師のマンツーマン&#10;受験勉強と並行できる個別計画"></textarea>
+        <p class="err">ご入力ください</p></div>
+      <div class="f"><label>使える数字はありますか<span class="opt">任意</span></label>
+        <p class="hint">合格率・実績・年数・人数など。出典もあれば</p>
+        <textarea name="numbers"></textarea></div>
+      <div class="f"><label>お客様の声<span class="opt">任意</span></label>
+        <p class="hint">お持ちのものをそのまま貼ってください</p>
+        <textarea name="voices"></textarea></div>
+      <div class="f"><label>よくある質問<span class="opt">任意</span></label>
+        <textarea name="faq"></textarea></div>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>4. 価格とゴール</legend>
+    <div class="fs-body">
+      <div class="f"><label>価格<span class="opt">任意</span></label>
+        <p class="hint">非公開の場合は「非公開」とご記入ください</p>
+        <textarea name="price" style="min-height:80px"></textarea></div>
+      <div class="f"><label>LPを見た人に、何をしてほしいですか<span class="req">必須</span></label>
+        <select name="goal">
+          <option value="">選んでください</option>
+          <option>無料体験・見学の申し込み</option>
+          <option>資料請求</option>
+          <option>問い合わせ</option>
+          <option>購入・申し込み</option>
+          <option>電話をかけてもらう</option>
+          <option>LINEの友だち追加</option>
+          <option>その他（下欄に記入）</option>
+        </select><p class="err">選んでください</p></div>
+      <div class="f"><label>ボタンに入れる言葉<span class="opt">任意</span></label>
+        <p class="hint">例：無料体験レッスンはこちら</p>
+        <input type="text" name="ctaLabel"></div>
+      <div class="f"><label>ボタンを押した先のURL<span class="opt">任意</span></label>
+        <p class="hint">申し込みフォームや問い合わせページのURL。無ければ空欄で構いません</p>
+        <input type="url" name="ctaHref" placeholder="https://"></div>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>5. 見た目</legend>
+    <div class="fs-body">
+      <div class="f"><label>ブランドの色<span class="opt">任意</span></label>
+        <p class="hint">分からない場合はそのままで構いません。既存サイトから合わせます</p>
+        <div class="colors">
+          <div><input type="color" name="color1" value="#1f6feb"><small>メインの色</small></div>
+          <div><input type="color" name="color2" value="#ffd400"><small>目立たせる色</small></div>
+        </div></div>
+      <div class="f"><label>既存のサイト・SNS<span class="opt">任意</span></label>
+        <p class="hint">トーンを合わせる参考にします</p>
+        <textarea name="siteUrls" style="min-height:76px" placeholder="https://"></textarea></div>
+      <div class="f"><label>「こんな感じにしたい」参考のLP<span class="opt">任意</span></label>
+        <p class="hint">URLでも「◯◯みたいに落ち着いた感じ」のような言葉でも構いません</p>
+        <textarea name="refs" style="min-height:76px"></textarea></div>
+      <div class="f"><label>入れたくないもの<span class="opt">任意</span></label>
+        <p class="hint">使ってはいけない表現・色・写真など</p>
+        <textarea name="ng" style="min-height:76px"></textarea></div>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>6. 素材</legend>
+    <div class="fs-body">
+      <div class="f"><label>ロゴ・写真・資料<span class="opt">任意</span></label>
+        <p class="hint">まとめて選べます。<b>合計10MBまで</b>。<br>
+          容量が大きい場合は空欄のままで構いません。受付メールに返信して添付いただけます。</p>
+        <div class="files">
+          <input type="file" name="attachment" id="files" multiple
+                 accept="image/*,.pdf,.svg,.ai,.psd,.zip,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
+          <ul class="filelist" id="filelist"></ul>
+        </div>
+        <p class="err" id="fileErr">ファイルが大きすぎます</p></div>
+      <div class="f"><label>そのほか、伝えておきたいこと<span class="opt">任意</span></label>
+        <textarea name="note"></textarea></div>
+    </div>
+  </fieldset>
+
+  <div class="submit">
+    <button type="submit" id="btn">この内容で申し込む</button>
+    <p class="status" id="status"></p>
+    <p class="agree">送信すると、受付のメールが自動で届きます。<br>
+      いただいた情報は本件の制作のみに使用します。</p>
+  </div>
+</form>
+
+<div class="done" id="done">
+  <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#0a8a2f" stroke-width="2.6"
+    stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+  <h2>お申し込みを受け付けました</h2>
+  <p>ご記入いただいたメールアドレスに、受付のメールをお送りしました。</p>
+  <p>完成しましたら、あらためてURLをメールでお送りします。</p>
+  <p style="margin-top:18px;font-size:13px;color:var(--ink3)">
+    メールが届かない場合は、迷惑メールフォルダをご確認ください。</p>
+</div>
+</div>
+
+<footer><div class="wrap">samurai-style　so@samurai-style.tokyo</div></footer>
+
+<script>
+(function(){
+  var f=document.getElementById('orderForm');
+  var btn=document.getElementById('btn');
+  var st=document.getElementById('status');
+  var fileInput=document.getElementById('files');
+  var fileList=document.getElementById('filelist');
+  var LIMIT=10*1024*1024;   // FormSubmit の上限（1回の送信で合計10MB）
+  var sizeOk=true;
+
+  fileInput.addEventListener('change',function(){
+    var wrap=fileInput.closest('.f');
+    var err=document.getElementById('fileErr');
+    fileList.innerHTML=''; wrap.classList.remove('is-err');
+    var total=0;
+    [].forEach.call(fileInput.files,function(x){
+      total+=x.size;
+      var li=document.createElement('li');
+      li.textContent=x.name+'　'+Math.round(x.size/1024)+' KB';
+      fileList.appendChild(li);
+    });
+    sizeOk = total<=LIMIT;
+    if(!sizeOk){
+      err.textContent='合計 '+(total/1048576).toFixed(1)+'MB です。10MBまでにしてください。'
+        +'（空欄のままでも申し込めます。あとからメールでお送りいただけます）';
+      wrap.classList.add('is-err');
+    }
+    if(fileInput.files.length){
+      var li=document.createElement('li');
+      li.style.fontWeight='700'; li.style.borderBottom='0';
+      li.textContent='合計 '+(total/1048576).toFixed(1)+' MB';
+      fileList.appendChild(li);
+    }
+  });
+
+  function bad(el,on){ var w=el.closest('.f'); if(w) w.classList.toggle('is-err',on); }
+
+  f.addEventListener('submit',function(ev){
+    st.className='status'; st.textContent='';
+    var ok=true, first=null;
+    ['name','email','product','oneline','target','strengths','goal'].forEach(function(n){
+      var el=f.elements[n]; if(!el) return;
+      var v=(el.value||'').trim();
+      var no = !v || (n==='email' && !/^[^@\s]+@[^@\s.]+\.[^@\s]+$/.test(v));
+      bad(el,no); if(no){ ok=false; if(!first) first=el; }
+    });
+    if(!ok){
+      ev.preventDefault();
+      if(first){ first.focus();
+        window.scrollTo({top:first.getBoundingClientRect().top+window.pageYOffset-90,behavior:'smooth'}); }
+      st.classList.add('is-err'); st.textContent='未入力の項目があります';
+      return;
+    }
+    if(!sizeOk){
+      ev.preventDefault();
+      st.classList.add('is-err');
+      st.textContent='添付の合計が10MBを超えています。ファイルを外すか、少なくしてください。';
+      fileInput.scrollIntoView({behavior:'smooth',block:'center'});
+      return;
+    }
+    btn.disabled=true; st.textContent='送信しています…';
+  });
+})();
+</script>
+</body>
+</html>
