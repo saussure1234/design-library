@@ -175,6 +175,9 @@ footer{border-top:1px solid var(--line);background:var(--bg);padding:22px 0;font
           <label><input type="radio" name="depth" value="実際に使うLPを作りたい">
             <span><b>実際に使うLPを作りたい</b>
               <small>ご記入いただく項目が増えます。そのまま公開できるものをお送りします</small></span></label>
+          <label><input type="radio" name="depth" value="原稿がすでにある">
+            <span><b>原稿がすでにある</b>
+              <small>構成・見出し・本文が決まっている場合。貼るだけで、そのとおりに作ります</small></span></label>
         </div>
         <p class="err">選んでください</p>
       </div>
@@ -254,6 +257,46 @@ footer{border-top:1px solid var(--line);background:var(--bg);padding:22px 0;font
         <p class="err">ご入力ください</p></div>
       <div class="f"><label>募集する職種<span class="opt">任意</span></label>
         <input type="text" name="rc_role"></div>
+      <p style="text-align:center;margin:4px 0 18px"><button type="button" class="go next" style="max-width:280px;font-size:15px;padding:13px">次へ</button></p>
+    </div>
+  </fieldset>
+
+  <!-- 3.5 原稿（すでにある場合） -->
+  <fieldset class="step" id="s3doc" hidden>
+    <div class="hd"><span class="num">3</span>
+      <span class="ttl">原稿</span>
+      <span class="ans"><b></b><button type="button" class="edit">変更</button></span></div>
+    <div class="body">
+      <div class="f"><label>原稿をそのまま貼ってください<span class="req">必須</span></label>
+        <p class="hint">構成・見出し・本文をそのまま貼っていただければ、そのとおりに作ります。<br>
+          Wordやスプレッドシートからのコピーでも構いません。整えていただく必要はありません。</p>
+        <textarea name="doc" style="min-height:300px;font-family:Menlo,monospace;font-size:13px;line-height:1.8"
+          placeholder="例）
+
+受験勉強と並走しながら小学生・中学生で英検2級を目指せる英語塾
+
+CTA（1回目）
+* ボタン：無料体験レッスンはこちら
+* 補助コピー：いつまでに2級合格できるかご案内します
+
+短期で合格を目指せる4つの特徴
+* POINT1　高い合格率｜累計1,000名以上を合格に導いたカリキュラム
+* POINT2　受験と並行可能｜目標と現在のレベルから作る個別の計画
+
+POINT1　高い合格率｜累計1,000名以上を合格に導いたカリキュラム
+本文をここに書きます。
+（表：級ごとの合格率）
+掲載数値：5級100%、4級88%、3級86%
+注記：2023年度の実績
+
+保護者さまの声
+Aさん（小4）のお父さま
+（画像：保護者イメージ）
+声の本文をここに書きます。"></textarea>
+        <p class="err">ご入力ください</p></div>
+      <div class="f"><label>既存のサイトURL<span class="opt">任意</span></label>
+        <p class="hint">ロゴや配色を合わせる参考にします</p>
+        <input type="url" name="doc_url" placeholder="https://"></div>
       <p style="text-align:center;margin:4px 0 18px"><button type="button" class="go next" style="max-width:280px;font-size:15px;padding:13px">次へ</button></p>
     </div>
   </fieldset>
@@ -387,12 +430,12 @@ var KIND={
  'いまあるLPの作り直し': {id:'s3rn', need:['rn_url']},
  '採用':                {id:'s3rc', need:['rc_url']}
 };
-var GRP3=['s3ev','s3sv','s3rn','s3rc'];
+var GRP3=['s3ev','s3sv','s3rn','s3rc','s3doc'];
 var ORDER=['s1','s2','s3','s4','s5','s6'];
 var cur=null;
 
 function el(id){ return document.getElementById(id); }
-function step(id){ return id==='s3' ? (cur?el(cur.id):null) : el(id); }
+function step(id){ return id==='s3' ? (activeId()?el(activeId()):null) : el(id); }
 function val(n){ var e=f.elements[n]; if(!e) return '';
   if(e.length!==undefined&&e.tagName===undefined){
     var c=[].filter.call(e,function(x){return x.checked;})[0]; return c?c.value:''; }
@@ -415,11 +458,20 @@ function show(id){
   window.scrollTo({top:s.getBoundingClientRect().top+window.pageYOffset-16,behavior:'smooth'});
 }
 
-// 3の中身を種類で切り替える。隠した節は送信しない
+// 3の中身を切り替える。隠した節は送信しない（通知メールが空欄で埋まらないように）
+// ★「原稿がすでにある」を選んだときは、種類ごとの節ではなく原稿の節を出す
+function depth(){ return val('depth'); }
+function activeId(){
+  return depth()==='原稿がすでにある' ? 's3doc' : (cur?cur.id:null);
+}
+function needList(){
+  return depth()==='原稿がすでにある' ? ['doc'] : (cur?cur.need:[]);
+}
 function setKind(kind){
-  cur=KIND[kind];
+  if(kind) cur=KIND[kind];
+  var act=activeId();
   GRP3.forEach(function(id){
-    var s=el(id), on = cur && cur.id===id;
+    var s=el(id), on = act===id;
     s.hidden=!on;
     if(!on) s.classList.remove('done');
     s.querySelectorAll('input,textarea,select').forEach(function(x){ x.disabled=!on; });
@@ -436,6 +488,14 @@ var R_TRY='LP制作のお申し込みをいただき、ありがとうござい�
  +'このメールへの返信でお知らせください。作り込んでいきます。\n\n'
  +'ロゴや写真などの素材がお手元にある場合も、返信に添付してお送りください。\n\n'
  +'何卒よろしくお願いいたします。\n\nsamurai-style\nso@samurai-style.tokyo';
+var R_DOC='LP制作のお申し込みをいただき、ありがとうございます。\n\n'
+ +'いただいた原稿のとおりに制作いたします。\n'
+ +'原稿にない文言を足すことはいたしません。\n\n'
+ +'画像は、ご指定の位置に業種に合うものを当てて仮組みします。\n'
+ +'ご用意の写真がある場合は、このメールに返信して添付してください。\n\n'
+ +'完成しましたら、このメールアドレスにURLをお送りします。\n'
+ +'数日お時間をいただきます。恐れ入りますが、今しばらくお待ちください。\n\n'
+ +'何卒よろしくお願いいたします。\n\nsamurai-style\nso@samurai-style.tokyo';
 var R_REAL='LP制作のお申し込みをいただき、ありがとうございます。\n\n'
  +'いただいた内容とURLをもとに、そのまま公開できるLPをお作りします。\n\n'
  +'足りない情報があれば、このメールへの返信でお伺いします。\n'
@@ -446,7 +506,15 @@ var R_REAL='LP制作のお申し込みをいただき、ありがとうござい
  +'何卒よろしくお願いいたします。\n\nsamurai-style\nso@samurai-style.tokyo';
 
 function applyDepth(){
-  var real = val('depth')==='実際に使うLPを作りたい';
+  var dv=val('depth');
+  if(dv==='原稿がすでにある'){
+    more.open=false;
+    up.innerHTML='原稿をそのまま使います。<b>下の欄はすべて任意です。</b><br>'
+      +'補足があればご記入ください。無ければ空欄で構いません。';
+    f.elements['_autoresponse'].value=R_DOC;
+    return;
+  }
+  var real = dv==='実際に使うLPを作りたい';
   if(real){ more.open=true;
     up.innerHTML='ここから下はすべて任意です。<b>書いていただくほど、精度の高いLPになります。</b><br>'
       +'実際に使うLPをご希望とのことなので、できる範囲でご記入ください。'; }
@@ -479,7 +547,7 @@ function score(){
 // 必須チェック
 function check(id){
   var need = id==='s1' ? ['kind'] : id==='s2' ? ['depth']
-    : id==='s3' ? (cur?cur.need:[]) : id==='s4' ? ['goal'] : id==='s6' ? ['name','email'] : [];
+    : id==='s3' ? needList() : id==='s4' ? ['goal'] : id==='s6' ? ['name','email'] : [];
   var ok=true, first=null;
   need.forEach(function(n){
     var e=f.elements[n];
@@ -503,6 +571,9 @@ function summary(id){
   if(id==='s1') return val('kind');
   if(id==='s2') return val('depth');
   if(id==='s3'){
+    if(depth()==='原稿がすでにある'){
+      var d=val('doc'); return d ? d.split('\n').length+'行の原稿' : '';
+    }
     if(!cur) return '';
     if(cur.id==='s3ev') return val('ev_title')+'　'+val('ev_when');
     if(cur.id==='s3sv') return val('sv_url').split('\n')[0];
@@ -535,7 +606,7 @@ function advance(id){
 // 1と2はラジオを押した時点で進む
 f.addEventListener('change',function(e){
   if(e.target.name==='kind'){ setKind(e.target.value); meter.hidden=false; advance('s1'); return; }
-  if(e.target.name==='depth'){ applyDepth(); advance('s2'); return; }
+  if(e.target.name==='depth'){ applyDepth(); setKind(null); advance('s2'); return; }
   score();
 });
 f.addEventListener('input',score);
