@@ -73,8 +73,15 @@
   --shadow-s:0 6px 16px rgba(48,48,48,.10);
 
   /* --- 動き --- */
-  --e:cubic-bezier(.23,1,.32,1);
-  --d:.5s;
+  /* ★動きの相場は、参考サイト10本の実測から決めた（~/lp-intake/motion/）
+     ・時間は 0.6s が最多、次に 0.8s。小さい動きは 0.2〜0.4s
+     ・凝ったサイトのイージングは cubic-bezier(.19,1,.22,1)
+       「最初に速く、最後にゆっくり止まる」動き。上質に見える定番 */
+  --e:cubic-bezier(.19,1,.22,1);   /* 出現・移動 */
+  --e2:cubic-bezier(.33,1,.68,1);  /* 小さい動き（ホバー等） */
+  --d:.6s;                          /* 出現 */
+  --d2:.25s;                        /* 小さい動き */
+  --d3:.9s;                         /* 大きい面・写真 */
 
   /* --- 版面 --- */
   --w-max:1120px;
@@ -140,6 +147,10 @@ ul,ol{padding:0;list-style:none}
    `.hdr__logo--sp{display:none}` だけだと (0,1,0) で
    `.hdr__logo img` (0,1,1) に負け、2枚とも出てしまう */
 .hdr__logo img{display:block;flex:none}
+/* ロゴ画像を持たない案件。社名を文字で置く（あとで画像に差し替える） */
+.hdr__logo--txt{display:block;flex:none;font-size:19px;font-weight:900;
+  letter-spacing:.02em;color:var(--c-ink);white-space:nowrap}
+@media(max-width:900px){.hdr__logo--txt{font-size:16px}}
 .hdr__logo img.hdr__logo--pc{width:208px;height:38.2px}
 .hdr__logo img.hdr__logo--sp{display:none;width:92px;height:38.2px}
 /* ★本家（eslclub.jp）の実測とぴったり同じ。PC・SPとも 221 x 34・文字14px。
@@ -470,6 +481,31 @@ footer{position:relative;z-index:1}
 .fx-on .fx[data-fx="scale"]{transform:scale(.94)}
 .fx-on .fx[data-fx="clip"]{clip-path:inset(0 100% 0 0)}
 .fx-on .fx[data-fx="mask"]{clip-path:inset(100% 0 0 0)}
+
+/* ── 写真にゆっくりズーム（Ken Burns） ───────────────────
+   動画ファイルは作らない。CSSのtransformだけで済む。
+   容量ゼロ・生成不要・どのブラウザでも動く。
+   図版や人物の切り抜きには効かせない（歪むため figure 直下の写真だけ）。
+
+   使い方: 節や figure に data-kb を付ける
+     data-kb        ゆっくり寄る（既定 14秒）
+     data-kb="out"  ゆっくり引く
+     data-kb="pan"  寄りながら少し横へ流れる                        */
+[data-kb] img,[data-kb] > picture > img{
+  will-change:transform;
+  animation:kb-zoom var(--kb-d,14s) var(--e2) both alternate infinite}
+[data-kb="out"] img{animation-name:kb-out}
+[data-kb="pan"] img{animation-name:kb-pan}
+@keyframes kb-zoom{from{transform:scale(1)}to{transform:scale(1.08)}}
+@keyframes kb-out {from{transform:scale(1.08)}to{transform:scale(1)}}
+@keyframes kb-pan {from{transform:scale(1.06) translateX(0)}
+                   to  {transform:scale(1.06) translateX(-2.5%)}}
+/* 器の外へはみ出さないように、写真を持つ側で切る */
+[data-kb]{overflow:hidden}
+/* ★動きを減らす設定の人には出さない（アクセシビリティ） */
+@media(prefers-reduced-motion:reduce){
+  [data-kb] img,[data-kb] > picture > img{animation:none!important}
+}
 .fx-on .fx.hh-in{opacity:1;transform:none;filter:none;clip-path:inset(0 0 0 0)}
 /* ── 見出しの行マスク：行ごとに下からせり上がる ── */
 .lm__l{display:block;overflow:hidden}
@@ -1577,6 +1613,38 @@ textarea.fea__in{resize:vertical;min-height:110px}
 
 </div>
 <script>
+/* ── 慣性スクロール ────────────────────────────
+   参考サイト10本のうち3本が Lenis（8KBの外部ライブラリ）を使っていた。
+   同じ体感は50行ほどで作れるので、外部ライブラリは入れない。
+   ・ホイールの入力を受けて、目標位置へ毎フレーム少しだけ近づける
+   ・触る操作（スマホ）と、動きを減らす設定の人には効かせない
+   ・kit で "smooth": false にすれば止まる                        */
+(function(){
+  var root=document.documentElement;
+  if (root.dataset.smooth === 'off') return;
+  if (window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  if (window.matchMedia('(hover:none)').matches) return;   /* スマホは既定の慣性に任せる */
+  var target=window.scrollY, cur=window.scrollY, running=false, EASE=0.10;
+  function max(){ return Math.max(0, document.body.scrollHeight - window.innerHeight); }
+  function tick(){
+    cur += (target - cur) * EASE;
+    if (Math.abs(target - cur) < 0.4){ cur = target; running=false; }
+    window.scrollTo(0, cur);
+    if (running) requestAnimationFrame(tick);
+  }
+  window.addEventListener('wheel', function(e){
+    if (e.ctrlKey) return;                 /* 拡大縮小は邪魔しない */
+    if (e.deltaMode !== 0) return;          /* 行単位の入力はそのまま */
+    e.preventDefault();
+    target = Math.min(max(), Math.max(0, target + e.deltaY));
+    if (!running){ running=true; requestAnimationFrame(tick); }
+  }, {passive:false});
+  /* キーやアンカー移動で位置がずれたら、目標を実際の位置に合わせ直す */
+  window.addEventListener('scroll', function(){
+    if (!running){ target = cur = window.scrollY; }
+  }, {passive:true});
+})();
+
 /* ── 申し込みフォーム ────────────────────────
    ページの中で完結させる。送信先は Google Apps Script の Web App。
    Content-Type を text/plain にしているのは、事前確認（preflight）を

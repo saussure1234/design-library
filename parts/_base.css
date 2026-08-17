@@ -41,6 +41,10 @@ ul,ol{padding:0;list-style:none}
    `.hdr__logo--sp{display:none}` だけだと (0,1,0) で
    `.hdr__logo img` (0,1,1) に負け、2枚とも出てしまう */
 .hdr__logo img{display:block;flex:none}
+/* ロゴ画像を持たない案件。社名を文字で置く（あとで画像に差し替える） */
+.hdr__logo--txt{display:block;flex:none;font-size:19px;font-weight:900;
+  letter-spacing:.02em;color:var(--c-ink);white-space:nowrap}
+@media(max-width:900px){.hdr__logo--txt{font-size:16px}}
 .hdr__logo img.hdr__logo--pc{width:208px;height:38.2px}
 .hdr__logo img.hdr__logo--sp{display:none;width:92px;height:38.2px}
 /* ★本家（eslclub.jp）の実測とぴったり同じ。PC・SPとも 221 x 34・文字14px。
@@ -371,6 +375,31 @@ footer{position:relative;z-index:1}
 .fx-on .fx[data-fx="scale"]{transform:scale(.94)}
 .fx-on .fx[data-fx="clip"]{clip-path:inset(0 100% 0 0)}
 .fx-on .fx[data-fx="mask"]{clip-path:inset(100% 0 0 0)}
+
+/* ── 写真にゆっくりズーム（Ken Burns） ───────────────────
+   動画ファイルは作らない。CSSのtransformだけで済む。
+   容量ゼロ・生成不要・どのブラウザでも動く。
+   図版や人物の切り抜きには効かせない（歪むため figure 直下の写真だけ）。
+
+   使い方: 節や figure に data-kb を付ける
+     data-kb        ゆっくり寄る（既定 14秒）
+     data-kb="out"  ゆっくり引く
+     data-kb="pan"  寄りながら少し横へ流れる                        */
+[data-kb] img,[data-kb] > picture > img{
+  will-change:transform;
+  animation:kb-zoom var(--kb-d,14s) var(--e2) both alternate infinite}
+[data-kb="out"] img{animation-name:kb-out}
+[data-kb="pan"] img{animation-name:kb-pan}
+@keyframes kb-zoom{from{transform:scale(1)}to{transform:scale(1.08)}}
+@keyframes kb-out {from{transform:scale(1.08)}to{transform:scale(1)}}
+@keyframes kb-pan {from{transform:scale(1.06) translateX(0)}
+                   to  {transform:scale(1.06) translateX(-2.5%)}}
+/* 器の外へはみ出さないように、写真を持つ側で切る */
+[data-kb]{overflow:hidden}
+/* ★動きを減らす設定の人には出さない（アクセシビリティ） */
+@media(prefers-reduced-motion:reduce){
+  [data-kb] img,[data-kb] > picture > img{animation:none!important}
+}
 .fx-on .fx.hh-in{opacity:1;transform:none;filter:none;clip-path:inset(0 0 0 0)}
 /* ── 見出しの行マスク：行ごとに下からせり上がる ── */
 .lm__l{display:block;overflow:hidden}

@@ -149,6 +149,38 @@ BG_LAYERS = {
 }
 
 RUNTIME_JS = """
+/* ── 慣性スクロール ────────────────────────────
+   参考サイト10本のうち3本が Lenis（8KBの外部ライブラリ）を使っていた。
+   同じ体感は50行ほどで作れるので、外部ライブラリは入れない。
+   ・ホイールの入力を受けて、目標位置へ毎フレーム少しだけ近づける
+   ・触る操作（スマホ）と、動きを減らす設定の人には効かせない
+   ・kit で "smooth": false にすれば止まる                        */
+(function(){
+  var root=document.documentElement;
+  if (root.dataset.smooth === 'off') return;
+  if (window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  if (window.matchMedia('(hover:none)').matches) return;   /* スマホは既定の慣性に任せる */
+  var target=window.scrollY, cur=window.scrollY, running=false, EASE=0.10;
+  function max(){ return Math.max(0, document.body.scrollHeight - window.innerHeight); }
+  function tick(){
+    cur += (target - cur) * EASE;
+    if (Math.abs(target - cur) < 0.4){ cur = target; running=false; }
+    window.scrollTo(0, cur);
+    if (running) requestAnimationFrame(tick);
+  }
+  window.addEventListener('wheel', function(e){
+    if (e.ctrlKey) return;                 /* 拡大縮小は邪魔しない */
+    if (e.deltaMode !== 0) return;          /* 行単位の入力はそのまま */
+    e.preventDefault();
+    target = Math.min(max(), Math.max(0, target + e.deltaY));
+    if (!running){ running=true; requestAnimationFrame(tick); }
+  }, {passive:false});
+  /* キーやアンカー移動で位置がずれたら、目標を実際の位置に合わせ直す */
+  window.addEventListener('scroll', function(){
+    if (!running){ target = cur = window.scrollY; }
+  }, {passive:true});
+})();
+
 /* ── 申し込みフォーム ────────────────────────
    ページの中で完結させる。送信先は Google Apps Script の Web App。
    Content-Type を text/plain にしているのは、事前確認（preflight）を
@@ -488,18 +520,27 @@ def build(kit_path, out_path):
         # SP用は横に詰めた別の版で、1枚を縮めたものではない
         logo_pc = hdr.get("logo", "img/logo.svg")
         logo_sp = hdr.get("logoSp", logo_pc)
+        brand   = hdr.get("brand", "ESL club")
+        # ★ロゴ画像を持たない案件では <img src=""> を出さない。
+        #   空srcは「読み込めない画像」として残り、壊れた枠が出る。
+        #   代わりに社名を文字で置く（あとで画像に差し替えられる）
+        if logo_pc:
+            logo_html = (
+                f'<img class="hdr__logo--pc" src="{logo_pc}" alt="{brand}">'
+                f'<img class="hdr__logo--sp" src="{logo_sp}" alt="" aria-hidden="true">')
+        else:
+            logo_html = f'<span class="hdr__logo--txt">{brand}</span>'
         header_html = (
             '<header class="hdr">\n'
             f'  <a class="hdr__logo" href="{hdr.get("home", "#top")}" '
-            f'aria-label="{hdr.get("brand", "ESL club")}">'
-            f'<img class="hdr__logo--pc" src="{logo_pc}" alt="{hdr.get("brand", "ESL club")}">'
-            f'<img class="hdr__logo--sp" src="{logo_sp}" alt="" aria-hidden="true"></a>\n'
+            f'aria-label="{brand}">{logo_html}</a>\n'
             f'  <a class="btn btn--sm hdr__cta" href="{hdr.get("ctaHref", "https://eslclub.jp/trial/")}">'
             f'{hdr.get("ctaLabel", "無料体験レッスンはこちら")}</a>\n'
             '</header>'
         )
 
     # FVの背景。既定は「成長の曲線」。kit の "bg" で他の柄に差し替えられる
+    smooth_attr = "" if kit.get("smooth", True) else ' data-smooth="off"'
     bg_layer = BG_LAYERS.get(kit.get("bg", "growth"), BG_LAYERS["growth"])
 
     base_css = open(os.path.join(PARTS, "_base.css"), encoding="utf-8").read()
@@ -569,7 +610,7 @@ def build(kit_path, out_path):
         html_chunks.append("</div>")
 
     page = f"""<!DOCTYPE html>
-<html lang="ja">
+<html lang="ja"{smooth_attr}>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
