@@ -2486,10 +2486,32 @@ html:not(.js) .lm__i{transform:none}
 #intro svg{position:absolute;inset:0;width:100%;height:100%;display:block}
 #intro.done{display:none}
 @media(prefers-reduced-motion:reduce){#intro{display:none}}
+
+/* スクロールすると背景にほんのり色がつく（UM English Lab. 方式）
+   向こうは巨大なSVG図形3枚を回して重ねているが、同じ絵は
+   radial-gradient 3枚で出せる（縁が自然にぼけるぶん、こちらの方が素直）。
+   #growth と同じ z-index:0 の帯に、DOM上は先に置く＝曲線より奥に来る。
+   地は白(--c-bg:#FFFFFF)のままで、その上に薄い色を載せているだけ */
+#wash{position:fixed;inset:-22%;z-index:0;pointer-events:none;opacity:0;
+  will-change:transform,opacity;
+  background:
+    radial-gradient(38% 34% at 17% 27%, rgba(108,187,0,.15), rgba(108,187,0,0) 68%),
+    radial-gradient(34% 30% at 83% 19%, rgba(255,238,3,.13), rgba(255,238,3,0) 68%),
+    radial-gradient(44% 39% at 65% 77%, rgba(0,178,31,.12), rgba(0,178,31,0) 70%)}
+@media(prefers-reduced-motion:reduce){#wash{display:none}}
+/* ★これが無いと #wash は一生見えない。
+   esl2 のセクションは自分で地を塗っており（.tone-base は白ベタ）、
+   透ける指定 .tone-clear が付いているのは FV の1箇所だけ。
+   body が同じ白(--c-bg:#FFFFFF)なので、透かしても地の色は変わらない。
+   薄い色だけが乗る。緑ベタの .tone-brand は塗ったままにする（元の設計どおり） */
+.tone-base{background:transparent}
 </style>
 </head>
 <body>
 <div id="intro" aria-hidden="true"><svg viewBox="0 0 1000 1000" preserveAspectRatio="none"><path id="introPath" fill="#00B21F" d="M0,0 L1000,0 L1000,1000 C1000,1000 750,1000 500,1000 C250,1000 0,1000 0,1000 Z"></path></svg></div>
+
+<!-- スクロールで薄く色がつく地。曲線より奥（DOM上で先）に置く -->
+<div id="wash" aria-hidden="true"></div>
 
 <!-- FV背景「成長の曲線」。body直下・fixed で、スクロールについてくる -->
 <div id="growth" aria-hidden="true">
@@ -3946,6 +3968,32 @@ document.documentElement.classList.add('js');
     if(p<1) requestAnimationFrame(step); else box.classList.add('done');
   }
   requestAnimationFrame(step);
+})();
+</script>
+<script>
+/* 背景の薄い色：スクロール量に連れて濃くなり、ゆっくり流れる。
+   URL に ?nowash を付けると切れる（有り無しの比較用） */
+(function(){
+  var w=document.getElementById('wash');
+  if(!w) return;
+  if(location.search.indexOf('nowash')>=0){ w.style.display='none'; return; }
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){ w.style.display='none'; return; }
+  var MAXOP=1,           /* 濃さの上限。薄くしたければここを下げる */
+      RAMP=0.9,          /* 画面の高さの何倍スクロールしたら上限に達するか */
+      ticking=false;
+  function draw(){
+    ticking=false;
+    var vh=window.innerHeight||1, y=window.pageYOffset||0;
+    var p=Math.min(1, y/(vh*RAMP));           /* 0→1 */
+    w.style.opacity = (p*MAXOP).toFixed(3);
+    /* 流れ。スクロールに対してごく僅かに動かす（動きを意識させない量） */
+    var t=y*0.035;
+    w.style.transform = 'translate3d(' + (-t*0.35).toFixed(1) + 'px,' + (-t).toFixed(1) + 'px,0) scale(' + (1+Math.min(0.12, y/26000)).toFixed(4) + ')';
+  }
+  function onScroll(){ if(!ticking){ ticking=true; requestAnimationFrame(draw); } }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  window.addEventListener('resize', onScroll, {passive:true});
+  draw();
 })();
 </script>
 </body>
