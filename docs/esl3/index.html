@@ -2505,7 +2505,87 @@ html:not(.js) .lm__i{transform:none}
    body が同じ白(--c-bg:#FFFFFF)なので、透かしても地の色は変わらない。
    薄い色だけが乗る。緑ベタの .tone-brand は塗ったままにする（元の設計どおり） */
 .tone-base{background:transparent}
+
+/* ══ FVの動き ══════════════════════════════════════════════
+   esl2 のFVで動いているのは blob と背景の曲線だけで、
+   主役（写真・見出し・CTA）は完全に静止していた。ここを足す。
+   ① 入口 …… 波が抜けた直後に、順に組み上がる
+   ② 最中 …… ごく緩やかに漂い続ける（既存の 19〜29秒の揺れに歩調を合わせる）
+   衝突を避けるため層を分ける：入口=figure / 最中=中のimg
+   ★ .nb / wbr は日本語の改行制御に使われているので触らない
+   ══════════════════════════════════════════════════════════ */
+html.fv-anim .hbc__eyebrow,
+html.fv-anim .hbc__h1,
+html.fv-anim .hbc__cta,
+html.fv-anim .hbc__ph{opacity:0}
+html.fv-anim .hbc__blob,
+html.fv-anim .hbc__conf{opacity:0;transition:opacity .9s ease-out}
+html.fv-anim .hbc.is-in .hbc__blob{opacity:1}
+html.fv-anim .hbc.is-in .hbc__conf{opacity:.85;transition-delay:.55s}
+
+@keyframes fvUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fvPh{from{opacity:0;transform:translateY(26px) scale(.972)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes fvPop{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
+
+html.fv-anim .hbc.is-in .hbc__eyebrow{animation:fvUp .62s cubic-bezier(.16,1,.3,1) .00s both}
+html.fv-anim .hbc.is-in .hbc__h1     {animation:fvUp .72s cubic-bezier(.16,1,.3,1) .09s both}
+html.fv-anim .hbc.is-in .hbc__ph--a  {animation:fvPh .86s cubic-bezier(.16,1,.3,1) .14s both}
+html.fv-anim .hbc.is-in .hbc__ph--b  {animation:fvPh .86s cubic-bezier(.16,1,.3,1) .28s both}
+html.fv-anim .hbc.is-in .hbc__cta    {animation:fvPop .58s cubic-bezier(.16,1,.3,1) .42s both}
+
+/* ② 最中：写真の中身だけを漂わせる。周期をずらして同じ揺れに見せない */
+@keyframes fvFloatA{
+  0%,100%{transform:translateY(0) rotate(0deg)}
+  46%    {transform:translateY(-10px) rotate(-.35deg)}}
+@keyframes fvFloatB{
+  0%,100%{transform:translateY(0) rotate(0deg)}
+  52%    {transform:translateY(9px) rotate(.3deg)}}
+html.fv-anim .hbc.is-in .hbc__ph--a img{animation:fvFloatA 17s ease-in-out 1.2s infinite}
+html.fv-anim .hbc.is-in .hbc__ph--b img{animation:fvFloatB 21s ease-in-out 1.6s infinite}
+/* 紙吹雪もゆっくり回す（1粒ずつ周期を変える） */
+@keyframes fvConf{
+  0%,100%{transform:translateY(0) rotate(var(--r,0deg))}
+  50%    {transform:translateY(-7px) rotate(calc(var(--r,0deg) + 14deg))}}
+html.fv-anim .hbc.is-in .hbc__conf--1{--r:24deg;animation:fvConf 13s ease-in-out 1.4s infinite}
+html.fv-anim .hbc.is-in .hbc__conf--2{--r:-16deg;animation:fvConf 16s ease-in-out 1.7s infinite}
+html.fv-anim .hbc.is-in .hbc__conf--3{--r:40deg;animation:fvConf 19s ease-in-out 2.0s infinite}
+html.fv-anim .hbc.is-in .hbc__conf--4{--r:-30deg;animation:fvConf 15s ease-in-out 2.3s infinite}
+html.fv-anim .hbc.is-in .hbc__conf--5{--r:18deg;animation:fvConf 22s ease-in-out 1.9s infinite}
+html.fv-anim .hbc.is-in .hbc__conf--6{--r:-8deg;animation:fvConf 18s ease-in-out 2.6s infinite}
+
+@media(prefers-reduced-motion:reduce){
+  html.fv-anim .hbc__eyebrow,html.fv-anim .hbc__h1,html.fv-anim .hbc__cta,
+  html.fv-anim .hbc__ph,html.fv-anim .hbc__blob,html.fv-anim .hbc__conf{opacity:1;animation:none!important}
+}
+
+/* ══ 背景の丸：もっと動かし、もっと崩す ════════════════════
+   元は 23秒/29秒・3ステップ・移動±3%・拡縮 .94〜1.07 と控えめだった。
+   ステップを6つに増やして「膨らむ／へこむ」が連続で起きるようにし、
+   移動と拡縮の幅も広げる。同名の @keyframes を後から書くと上書きされる。
+   ★元の設計方針どおり回転は入れない（面が回ると図形に見えてしまう） */
+.hbc__blob--a{animation-duration:15s}
+.hbc__blob--b{animation-duration:19s}
+@keyframes hbcBlobA{
+  0%,100%{border-radius:44% 56% 61% 39% / 57% 43% 57% 43%;transform:translate(0,0) scale(1)}
+  18%    {border-radius:63% 37% 38% 62% / 41% 66% 34% 59%;transform:translate(6%,-5%) scale(1.10)}
+  36%    {border-radius:33% 67% 70% 30% / 68% 36% 64% 32%;transform:translate(-4%,-7%) scale(.90)}
+  54%    {border-radius:58% 42% 34% 66% / 36% 61% 39% 64%;transform:translate(-7%,4%) scale(1.13)}
+  72%    {border-radius:39% 61% 66% 34% / 63% 31% 69% 37%;transform:translate(5%,7%) scale(.89)}
+  88%    {border-radius:52% 48% 45% 55% / 48% 55% 45% 52%;transform:translate(2%,-3%) scale(1.05)}}
+@keyframes hbcBlobB{
+  0%,100%{border-radius:57% 43% 41% 59% / 46% 57% 43% 54%;transform:translate(0,0) scale(1)}
+  16%    {border-radius:35% 65% 68% 32% / 66% 34% 66% 34%;transform:translate(-6%,6%) scale(1.12)}
+  34%    {border-radius:68% 32% 36% 64% / 33% 68% 32% 67%;transform:translate(7%,3%) scale(.88)}
+  52%    {border-radius:42% 58% 62% 38% / 59% 39% 61% 41%;transform:translate(4%,-7%) scale(1.14)}
+  70%    {border-radius:61% 39% 33% 67% / 38% 63% 37% 62%;transform:translate(-5%,-4%) scale(.91)}
+  86%    {border-radius:47% 53% 54% 46% / 52% 47% 53% 48%;transform:translate(-2%,4%) scale(1.06)}}
+@media(prefers-reduced-motion:reduce){.hbc__blob{animation:none!important}}
 </style>
+<script>
+/* FVの登場を仕込むフラグ。ここで初めて要素が隠れるので、
+   JSが動かない環境では何も隠れない（＝真っ白にならない） */
+document.documentElement.classList.add('fv-anim');
+</script>
 </head>
 <body>
 <div id="intro" aria-hidden="true"><svg viewBox="0 0 1000 1000" preserveAspectRatio="none"><path id="introPath" fill="#00B21F" d="M0,0 L1000,0 L1000,1000 C1000,1000 750,1000 500,1000 C250,1000 0,1000 0,1000 Z"></path></svg></div>
@@ -3965,10 +4045,19 @@ document.documentElement.classList.add('js');
     var p=Math.min(1,(ms-HOLD)/T), e=ease(p), edge=1000*(1-e);
     var bulge=0.24*Math.sin(Math.PI*Math.min(1,p*1.15)); /* 弧は途中で最大・両端で平ら */
     pa.setAttribute('d', d(edge, edge*(1-bulge)));
-    if(p<1) requestAnimationFrame(step); else box.classList.add('done');
+    if(p<1) requestAnimationFrame(step); else { box.classList.add('done'); fvIn(); }
   }
   requestAnimationFrame(step);
 })();
+
+/* FVの登場を始める。波の完了から呼ぶ。
+   波が出ない環境（reduced-motion / JSの途中失敗）でも必ず出るよう保険を置く */
+function fvIn(){
+  var s=document.querySelector('.hbc');
+  if(s && !s.classList.contains('is-in')) s.classList.add('is-in');
+}
+setTimeout(fvIn, 2600);
+document.addEventListener('DOMContentLoaded', function(){ setTimeout(fvIn, 2600); });
 </script>
 <script>
 /* 背景の薄い色：スクロール量に連れて濃くなり、ゆっくり流れる。
