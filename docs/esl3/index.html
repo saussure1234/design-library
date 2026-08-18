@@ -2657,30 +2657,9 @@ html.fv-anim .hbc.is-in .hbc__conf--6{--r:-8deg;animation:fvConf 18s ease-in-out
   86%    {border-radius:47% 53% 54% 46% / 52% 47% 53% 48%;transform:translate(-2%,4%) scale(1.06)}}
 @media(prefers-reduced-motion:reduce){.hbc__blob{animation:none!important}}
 
-/* ══ 「中学受験合格実績」の地に、ロゴを大きく薄く敷く ══════════
-   ★最初はFVに置いたが邪魔だったので、実績のセクション（緑地）へ移した。
-   グレーのロゴ画像は無い（logo系は全部グリーン、#303030 はタグラインの文字だけ）。
-   そこで logo_mark_static.svg を【マスク】として使い、下地の色を透かす形で
-   シルエットだけを出す。色も濃さも自由に決められる。緑地なので白で置く */
-.nch{position:relative;overflow:hidden}
-.nch > .wrap{position:relative;z-index:1}   /* 中身はロゴより手前 */
-/* ★セクションからはみ出して切れていたので、収まるように変えた。
-   箱をセクション大にして（内側に余白を取る）、マスク側の contain で
-   ロゴ全体を箱の中に収める。これなら幅や高さが変わっても切れない */
-.fvlogo{position:absolute;z-index:0;pointer-events:none;
-  inset:12% 7%;
-  background:#FFFFFF;opacity:.085;
-  -webkit-mask:url(img/logo_mark_static.svg) no-repeat center/contain;
-          mask:url(img/logo_mark_static.svg) no-repeat center/contain;
-  animation:fvLogoDrift 46s ease-in-out infinite}
-/* ゆっくり息をするように。回転は入れない（ロゴが傾くとブランドが崩れる）。
-   ★拡大は余白(上下12%・左右7%)に収まる範囲までにする */
-@keyframes fvLogoDrift{
-  0%,100%{transform:scale(1)     translate(0,0)}
-  30%    {transform:scale(1.030) translate(-.7%,.5%)}
-  62%    {transform:scale(.985)  translate(.8%,-.4%)}}
-@media(max-width:900px){ .fvlogo{inset:16% 5%;opacity:.075} }
-@media(prefers-reduced-motion:reduce){ .fvlogo{animation:none} }
+/* ※地に敷くロゴ（.fvlogo）は「余計」との判断で撤去した。
+   FV → 実績セクション と移したが、最終的に無しに。
+   併せて .nch の position/overflow、.wrap の z-index も元に戻している。 */
 
 /* ══ FV背景の3本の曲線：もっと動かす ══════════════════════
    元は 19/24/29秒・3ステップ・移動±0.9%・scaleY .984〜1.018 で、
@@ -3244,8 +3223,6 @@ document.documentElement.classList.add('fv-anim');
 <!-- numbers/numbers-chip-row (brand) -->
 <div class="tone-brand">
 <section class="sec nch nch--wordy">
-  <!-- 地に敷くロゴ。マスクで silhouette だけを出す -->
-  <div class="fvlogo" aria-hidden="true"></div>
   <div class="wrap">
 
     <div class="sec-head nch__head">
