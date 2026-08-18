@@ -2478,17 +2478,10 @@ html:not(.js) .lm__i{transform:none}
 
 /* ══════════════════════════════════════════════════════════════
    esl3 の追加分（esl2 からの差分はここだけ／消せば元に戻る）
-   ① ヘッダーを緑＋黄に  ② 開幕の波（Pikkas方式のSVGパス変形）
+   開幕の波（Pikkas方式のSVGパス変形）。ヘッダーは esl2 のまま触らない
    ══════════════════════════════════════════════════════════════ */
-.hdr{background:#00B21F;backdrop-filter:none;border-bottom-color:transparent}
-.hdr.is-stuck{border-bottom-color:rgba(0,0,0,.12)}
-/* ロゴは緑(#00b21f)と濃灰でできているため、緑地では緑が消える。白へ反転させる */
-.hdr__logo img{filter:brightness(0) invert(1)}
-.hdr .hdr__cta{background:#FFEE03;color:#262626;box-shadow:none}
-.hdr .hdr__cta:hover{background:#FFF44D;box-shadow:none}
 
-/* 開幕の波。緑が全面を覆った状態から、下端が弧を描いて上へ抜ける。
-   抜けた先が緑のヘッダーなので、そのまま溶けて着地する */
+/* 緑が全面を覆った状態から、下端が弧を描いて上へ抜ける */
 #intro{position:fixed;inset:0;z-index:100;pointer-events:none}
 #intro svg{position:absolute;inset:0;width:100%;height:100%;display:block}
 #intro.done{display:none}
