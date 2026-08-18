@@ -2576,7 +2576,18 @@ html.fv-anim .hbc.is-in .hbc__bb--a{
 html.fv-anim .hbc.is-in .hbc__bb--b{
   animation:bbIn .58s cubic-bezier(.34,1.42,.5,1) 1.55s both, bbFloat 7.8s ease-in-out 2.4s infinite}
 html:not(.fv-anim) .hbc__bb{opacity:1}
-@media(max-width:900px){ .hbc__bb{display:none} }
+/* スマホ：FVがグリッドに変わり写真の絶対座標が使えなくなるので、
+   別の座標で置き直す。写真の上に余白が無い（見出し下端と写真上端の差が16px）ため、
+   ★写真Aの右側にできる空き（実測 390px時 x200〜390 / y300〜480）に逃がす。
+   人物の顔は写真Aの中央〜左寄りなので、顔にはかからない */
+@media(max-width:900px){
+  .hbc__bb{font-size:12px;padding:7px 12px;border-radius:18px;border-width:1.4px}
+  .hbc__bb::after{width:10px;height:10px;bottom:-7px;margin-left:-5px;border-width:1.4px}
+  .hbc__bb--a{left:47%;top:31.5%;--o:14% 100%}
+  .hbc__bb--a::after{left:14%}
+  .hbc__bb--b{left:40%;top:51%;--o:86% 100%}
+  .hbc__bb--b::after{left:86%}
+}
 @media(prefers-reduced-motion:reduce){
   .hbc__bb{opacity:1}
   html.fv-anim .hbc.is-in .hbc__bb{animation:none}}
