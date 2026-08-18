@@ -2529,6 +2529,29 @@ html.fv-anim .hbc.is-in .hbc__conf{opacity:.85;transition-delay:.55s}
 
 html.fv-anim .hbc.is-in .hbc__eyebrow{animation:fvUp .62s cubic-bezier(.16,1,.3,1) .00s both}
 
+/* ── ”英検に特化” に線を引く ─────────────────────────────
+   ★下線は border でも ::after でもなく【背景】で描く。
+     .mk はインライン要素で、transform も clip-path も効かない
+     （clip-path は文字ごと消える。実測で確認済み）。
+     background-size なら安全で、折り返しても文字に追従する。
+   ★見出しが出そろってから引く（eyebrow のフェードは .62s で終わる） */
+.hbc__eyebrow .mk{
+  --mkw:8px;                       /* 線の太さはここ1箇所で決める */
+  background-image:linear-gradient(#FFEE03,#FFEE03);
+  background-repeat:no-repeat;
+  background-position:0 92%;
+  background-size:100% var(--mkw);  /* 既定は「引かれている」状態 */
+  padding-bottom:2px;border-radius:1px}
+@media(max-width:900px){ .hbc__eyebrow .mk{--mkw:7px} }
+/* JSが入っているときだけ、いったん消してから引く */
+html.fv-anim .hbc__eyebrow .mk{background-size:0% var(--mkw)}
+html.fv-anim .hbc.is-in .hbc__eyebrow .mk{
+  animation:mkIn .68s cubic-bezier(.16,1,.3,1) .58s both}
+@keyframes mkIn{from{background-size:0% var(--mkw)}to{background-size:100% var(--mkw)}}
+@media(prefers-reduced-motion:reduce){
+  html.fv-anim .hbc__eyebrow .mk{background-size:100% var(--mkw)}
+  html.fv-anim .hbc.is-in .hbc__eyebrow .mk{animation:none}}
+
 /* ── 見出しは「行ごと」に立ち上げる ─────────────────────────
    一気に出さず、実際に描画された行で区切って順に出す。
    行の切り方は JS が offsetTop を測って決めるので、
@@ -2719,7 +2742,7 @@ document.documentElement.classList.add('fv-anim');
     <figure class="hbc__ph hbc__ph--b"><img src="img/fv_girl.png" alt="オンラインで英検対策を受ける中高生"></figure>
 
     <div class="hbc__head">
-      <p class="hbc__eyebrow">2015年の開塾以降”英検に特化”してきたからできる</p>
+      <p class="hbc__eyebrow">2015年の開塾以降<span class="mk">”英検に特化”</span>してきたからできる</p>
       <h1 class="hbc__h1"><span class="nb">受験勉強と並走しながら</span><wbr><br><em><span class="nb">小学生・中学生で英検2級、</span></em><wbr><br><em><span class="nb">高校生で準1級</span></em>を<wbr><span class="nb">目指せる英語塾</span></h1>
     </div>
 
