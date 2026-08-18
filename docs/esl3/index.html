@@ -2552,28 +2552,8 @@ html.fv-anim .hbc.is-in .hbc__eyebrow .mk{
   html.fv-anim .hbc__eyebrow .mk{background-size:100% var(--mkw)}
   html.fv-anim .hbc.is-in .hbc__eyebrow .mk{animation:none}}
 
-/* ── 見出しの売り2行にも線を引く ───────────────────────
-   対象は「小学生・中学生で英検2級、」「高校生で準1級」。
-   ★.nb の中にもう1枚 span を噛ませている。.nb 自体には行ごとの
-     登場アニメ(fvLine)が乗っており、animation は上書きになるため、
-     線は別の要素に持たせないと共存できない。
-   ★色は --mk2c の1変数。緑の文字を邪魔しない濃度にしてある */
-.hbc__h1 .mk2{
-  --mk2c:#CFCFCF; --mk2w:11px;
-  background-image:linear-gradient(var(--mk2c),var(--mk2c));
-  background-repeat:no-repeat;
-  background-position:0 96%;
-  background-size:100% var(--mk2w);
-  border-radius:1px}
-@media(max-width:900px){ .hbc__h1 .mk2{--mk2w:7px} }
-html.fv-anim .hbc__h1 .mk2{background-size:0% var(--mk2w)}
-html.fv-anim .hbc.is-in .hbc__h1 .mk2{animation:mk2In .72s cubic-bezier(.16,1,.3,1) both}
-html.fv-anim .hbc.is-in .hbc__h1 em:nth-of-type(1) .mk2{animation-delay:.86s}
-html.fv-anim .hbc.is-in .hbc__h1 em:nth-of-type(2) .mk2{animation-delay:1.04s}
-@keyframes mk2In{from{background-size:0% var(--mk2w)}to{background-size:100% var(--mk2w)}}
-@media(prefers-reduced-motion:reduce){
-  html.fv-anim .hbc__h1 .mk2{background-size:100% var(--mk2w)}
-  html.fv-anim .hbc.is-in .hbc__h1 .mk2{animation:none}}
+/* ※見出しの売り2行に引いていたグレーの線（.mk2）は撤去した。
+   線は前置きの「”英検に特化”」だけに残している。 */
 
 /* ── 見出しは「行ごと」に立ち上げる ─────────────────────────
    一気に出さず、実際に描画された行で区切って順に出す。
@@ -2745,7 +2725,7 @@ document.documentElement.classList.add('fv-anim');
 
     <div class="hbc__head">
       <p class="hbc__eyebrow">2015年の開塾以降<span class="mk">”英検に特化”</span>してきたからできる</p>
-      <h1 class="hbc__h1"><span class="nb">受験勉強と並走しながら</span><wbr><br><em><span class="nb"><span class="mk2">小学生・中学生で英検2級、</span></span></em><wbr><br><em><span class="nb"><span class="mk2">高校生で準1級</span></span></em>を<wbr><span class="nb">目指せる英語塾</span></h1>
+      <h1 class="hbc__h1"><span class="nb">受験勉強と並走しながら</span><wbr><br><em><span class="nb">小学生・中学生で英検2級、</span></em><wbr><br><em><span class="nb">高校生で準1級</span></em>を<wbr><span class="nb">目指せる英語塾</span></h1>
     </div>
 
     <p class="hbc__copy"></p>
