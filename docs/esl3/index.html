@@ -2583,10 +2583,14 @@ html:not(.fv-anim) .hbc__bb{opacity:1}
 @media(max-width:900px){
   .hbc__bb{font-size:12px;padding:7px 12px;border-radius:18px;border-width:1.4px}
   .hbc__bb::after{width:10px;height:10px;bottom:-7px;margin-left:-5px;border-width:1.4px}
-  .hbc__bb--a{left:47%;top:31.5%;--o:14% 100%}
-  .hbc__bb--a::after{left:14%}
-  .hbc__bb--b{left:40%;top:51%;--o:86% 100%}
-  .hbc__bb--b::after{left:86%}
+  /* 女子の写真を cut_girl(縦長)に替えたことで空きが変わった。
+     実測(390px)：写真A x0〜225 y295〜584 ／ 写真B x235〜390 y397〜584
+     → 空きは「写真Bの上」x235〜390 / y295〜397。そこに女子ぶんを置き、
+       男子ぶんは自分の写真の上端（髪の上）に重ねる */
+  .hbc__bb--a{left:4%;top:29.5%;--o:60% 100%}
+  .hbc__bb--a::after{left:60%}
+  .hbc__bb--b{left:57%;top:31.5%;--o:40% 100%}
+  .hbc__bb--b::after{left:40%}
 }
 @media(prefers-reduced-motion:reduce){
   .hbc__bb{opacity:1}
@@ -2762,7 +2766,15 @@ document.documentElement.classList.add('fv-anim');
     <p class="hbc__bb hbc__bb--b" aria-hidden="true">年の近い先生と、準1級へ</p>
 
     <figure class="hbc__ph hbc__ph--a"><img src="img/fv_boy.webp" alt="自宅の机で学習に取り組む小学生"></figure>
-    <figure class="hbc__ph hbc__ph--b"><img src="img/fv_girl.png" alt="オンラインで英検対策を受ける中高生"></figure>
+    <!-- 女子はPCと SP で素材を変える。fv_girl は机ごと写った横長(比0.76)で、
+         スマホの升目に入れると男子(比1.42)の面積24%まで縮む。
+         cut_girl は人物だけの縦長(比1.40)なので、スマホではこちらを使う -->
+    <figure class="hbc__ph hbc__ph--b">
+      <picture>
+        <source media="(max-width:900px)" srcset="img/cut_girl.png">
+        <img src="img/fv_girl.png" alt="オンラインで英検対策を受ける中高生">
+      </picture>
+    </figure>
 
     <div class="hbc__head">
       <p class="hbc__eyebrow">2015年の開塾以降<span class="mk">”英検に特化”</span>してきたからできる</p>
