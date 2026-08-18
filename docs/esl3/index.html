@@ -2618,19 +2618,22 @@ html.fv-anim .hbc.is-in .hbc__conf--6{--r:-8deg;animation:fvConf 18s ease-in-out
    シルエットだけを出す。色も濃さも自由に決められる。緑地なので白で置く */
 .nch{position:relative;overflow:hidden}
 .nch > .wrap{position:relative;z-index:1}   /* 中身はロゴより手前 */
+/* ★セクションからはみ出して切れていたので、収まるように変えた。
+   箱をセクション大にして（内側に余白を取る）、マスク側の contain で
+   ロゴ全体を箱の中に収める。これなら幅や高さが変わっても切れない */
 .fvlogo{position:absolute;z-index:0;pointer-events:none;
-  left:50%;top:50%;translate:-50% -50%;
-  width:min(124%,1560px);aspect-ratio:96/48;
+  inset:12% 7%;
   background:#FFFFFF;opacity:.085;
   -webkit-mask:url(img/logo_mark_static.svg) no-repeat center/contain;
           mask:url(img/logo_mark_static.svg) no-repeat center/contain;
   animation:fvLogoDrift 46s ease-in-out infinite}
-/* ゆっくり息をするように。回転は入れない（ロゴが傾くとブランドが崩れる） */
+/* ゆっくり息をするように。回転は入れない（ロゴが傾くとブランドが崩れる）。
+   ★拡大は余白(上下12%・左右7%)に収まる範囲までにする */
 @keyframes fvLogoDrift{
-  0%,100%{transform:scale(1)      translate(0,0)}
-  30%    {transform:scale(1.055)  translate(-1.1%,.7%)}
-  62%    {transform:scale(.975)   translate(1.2%,-.6%)}}
-@media(max-width:900px){ .fvlogo{width:170%;opacity:.075} }
+  0%,100%{transform:scale(1)     translate(0,0)}
+  30%    {transform:scale(1.030) translate(-.7%,.5%)}
+  62%    {transform:scale(.985)  translate(.8%,-.4%)}}
+@media(max-width:900px){ .fvlogo{inset:16% 5%;opacity:.075} }
 @media(prefers-reduced-motion:reduce){ .fvlogo{animation:none} }
 
 /* ══ FV背景の3本の曲線：もっと動かす ══════════════════════
