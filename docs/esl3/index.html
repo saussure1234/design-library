@@ -2610,6 +2610,26 @@ html.fv-anim .hbc.is-in .hbc__conf--6{--r:-8deg;animation:fvConf 18s ease-in-out
   70%    {border-radius:61% 39% 33% 67% / 38% 63% 37% 62%;transform:translate(-5%,-4%) scale(.91)}
   86%    {border-radius:47% 53% 54% 46% / 52% 47% 53% 48%;transform:translate(-2%,4%) scale(1.06)}}
 @media(prefers-reduced-motion:reduce){.hbc__blob{animation:none!important}}
+
+/* ══ FVの地に、ロゴを大きく薄く敷く ══════════════════════
+   グレーのロゴ画像は無い（logo系は全部グリーン、#303030 はタグラインの文字だけ）。
+   そこで logo_mark_static.svg を【マスク】として使い、下地の色を透かす形で
+   シルエットだけをグレーで出す。こうすると濃さも色も自由に決められる。
+   ★z-index:0 ＝ 丸(1)・写真(3)・文字(5)より奥。文字の可読性は落とさない */
+.fvlogo{position:absolute;z-index:0;pointer-events:none;
+  left:50%;top:50%;translate:-50% -50%;
+  width:min(132%,1680px);aspect-ratio:96/48;
+  background:#303030;opacity:.055;
+  -webkit-mask:url(img/logo_mark_static.svg) no-repeat center/contain;
+          mask:url(img/logo_mark_static.svg) no-repeat center/contain;
+  animation:fvLogoDrift 46s ease-in-out infinite}
+/* ゆっくり息をするように。回転は入れない（ロゴが傾くとブランドが崩れる） */
+@keyframes fvLogoDrift{
+  0%,100%{transform:scale(1)      translate(0,0)}
+  30%    {transform:scale(1.055)  translate(-1.1%,.7%)}
+  62%    {transform:scale(.975)   translate(1.2%,-.6%)}}
+@media(max-width:900px){ .fvlogo{width:168%;opacity:.045} }
+@media(prefers-reduced-motion:reduce){ .fvlogo{animation:none} }
 </style>
 <script>
 /* FVの登場を仕込むフラグ。ここで初めて要素が隠れるので、
@@ -2651,6 +2671,8 @@ document.documentElement.classList.add('fv-anim');
 <div class="tone-clear">
 <section class="hbc">
   <div class="hbc__in">
+    <!-- 地に敷くロゴ。マスクで silhouette だけをグレーで出す -->
+    <div class="fvlogo" aria-hidden="true"></div>
     <div class="hbc__blob hbc__blob--a"></div>
     <div class="hbc__blob hbc__blob--b"></div>
 
