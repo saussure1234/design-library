@@ -2675,6 +2675,22 @@ html:not(.fv-anim) .hbc__bb{opacity:1}
   .hbc__bb--b{left:54%;top:46%;--o:40% 100%}
   .hbc__bb--b::after{left:40%}
 }
+/* 🚨 注記「いつまでに2級合格できるか…」が山に被っていた（実測：360〜600pxで
+   最大25px）。FVの器の下に余白を足して逃がす */
+@media(max-width:900px){
+  /* 🚨 注記「いつまでに2級合格できるか…」が山に被っていた（実測25px）。
+     山は器(.grad-band)の margin-top:-89px で上へ食い込む設計なので、
+     器の位置ではなく FV 側の下余白では逃げられない（試したら悪化した）。
+     → スマホでは山の食い込み量を減らして、注記の下から始める */
+  .grad-band{--hill-h:44px}
+  /* 🚨 esl2 はスマホで丸と紙吹雪を display:none にしていた。
+     「背景が動いていない」ように見えたのはそのため（実測：丸の振れ0px）。
+     動きを見せたいので出す。ただし写真と競合しないよう小さめ・薄めにする */
+  .hbc__blob{display:block;opacity:.55}
+  .hbc__blob--a{left:2%;top:30%;width:26%}
+  .hbc__blob--b{left:auto;right:2%;top:44%;width:22%}
+  .hbc__conf{display:block;opacity:.6}
+}
 @media(max-width:900px) and (min-width:481px){
   .hbc__bb--a{top:28%}
   .hbc__bb--b{top:40%}
