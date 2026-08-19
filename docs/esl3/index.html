@@ -2555,6 +2555,30 @@ html.fv-anim .hbc.is-in .hbc__eyebrow{animation:fvUp .62s cubic-bezier(.16,1,.3,
    → そのまま真似すると塾のLPとしては弱いので、太さは一段だけ落とす。
      ★font-weight は 900/800 を 700 に一括変換済み（本文中の43箇所）。
        ここでは行間と字間だけを足す。文言・色・レイアウトは変えない */
+/* ══ 「4つの特徴」〜「POINT 04」を緑のグラデーションにする ══════
+   参照＝brand.studysapuri.jp の Statement 節。実測した色：
+     右上 #2176C9（濃い青） → 中 #39B4FA → 左下 #4FD1E9（水色）
+     ＝ 斜め方向に「濃い→明るい」。色相も 210°→190° へわずかに振っている。
+   これを緑で再現する。esl2 の既存色をそのまま使い、新しい色は足さない：
+     濃 #009119（primary-d 相当）→ #00B21F（primary）→ 明 #6CBB00（primary-2）
+     ＝ 130°→ 90° へ振れる。青→水色と同じ「明るい方へ色相が動く」関係。
+   ★対象は .sec.fnc（4つの特徴）と、その直後の .tone-brand（POINT 01〜04）。
+     2つは別の親なので、まとめて包む器を作らず、それぞれに同じ面を敷いて
+     背景の位置を繋ぐ（background-attachment:fixed は使わない。スマホで効かないため）*/
+.tone-brand.is-grad{background:transparent;position:relative;z-index:0}
+/* 2つの節を1枚のグラデに見せるため、上の節は上半分・下の節は下半分を使う。
+   background-size を 100% 200% にして、位置で切り替える */
+.tone-brand.is-grad::before{
+  content:"";position:absolute;inset:0;z-index:-1;
+  background-image:linear-gradient(148deg,#009119 0%,#00A81C 22%,#00B21F 50%,#3FB812 78%,#6CBB00 100%);
+  background-size:100% 200%}
+.tone-brand.hill-top.is-grad::before{background-position:0 0}      /* 上の節＝グラデの上半分 */
+.tone-brand.is-grad:not(.hill-top)::before{background-position:0 100%} /* 下の節＝下半分 */
+/* 下端は次の白い節へ抜けさせる。継ぎ目を作らない */
+.tone-brand.is-grad:not(.hill-top)::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:150px;z-index:-1;
+  background:linear-gradient(0deg,#FFFFFF 0%,rgba(255,255,255,0) 100%)}
+
 /* ★行間は esl2 のまま据え置く（一度1.45まで空けたが、元の方が良いとの判断）。
    ここで足すのは字間だけ */
 .hbc__h1{letter-spacing:.04em}
@@ -2605,9 +2629,11 @@ html:not(.fv-anim) .hbc__bb{opacity:1}
        男子ぶんは自分の写真の上端（髪の上）に重ねる */
   /* 実測(390px)：見出し下端29.9% ／ 写真A上端32.2% ／ 写真B上端48.2%
      → 男子は自分の写真の上端（髪の上）、女子は写真Bの上の空きへ */
-  .hbc__bb--a{left:4%;top:32.5%;--o:60% 100%}
+  /* 実測(390px)：見出し下端 y=279 に対し吹き出し上端 y=292＝すき間13pxしか
+     無く窮屈だったので下げる。写真Aの上端(295)より下に置き、髪に重ねる */
+  .hbc__bb--a{left:4%;top:37%;--o:60% 100%}
   .hbc__bb--a::after{left:60%}
-  .hbc__bb--b{left:57%;top:39%;--o:40% 100%}
+  .hbc__bb--b{left:57%;top:43.5%;--o:40% 100%}
   .hbc__bb--b::after{left:40%}
 }
 @media(prefers-reduced-motion:reduce){
@@ -2812,7 +2838,7 @@ document.documentElement.classList.add('fv-anim');
 
 </div>
 <!-- features/features-notch-number-cards (brand) -->
-<div class="tone-brand hill-top">
+<div class="tone-brand hill-top is-grad">
 <span class="hill" aria-hidden="true"><svg viewBox="0 0 1440 120" preserveAspectRatio="none"><path d="M0 120 L0 78 C 78 18, 176 0, 286 16 C 600 62, 1010 102, 1440 108 L1440 120 Z"/></svg></span>
 <section class="sec fnc">
   <div class="wrap">
@@ -2856,7 +2882,7 @@ document.documentElement.classList.add('fv-anim');
 </section>
 
 </div>
-<div class="tone-brand">
+<div class="tone-brand is-grad">
 <!-- features/features-vertical-heading-rows (base) -->
 <span class="anc" id="point1" aria-hidden="true"></span>
 <div style="--b1x:4%;--b1y:5%;--b1w:23vw;--b1max:320px;--b2r:4%;--b2y:46%;--b2w:19vw;--b2max:270px">
