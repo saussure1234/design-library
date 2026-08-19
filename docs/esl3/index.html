@@ -2574,7 +2574,22 @@ html.fv-anim .hbc.is-in .hbc__eyebrow{animation:fvUp .62s cubic-bezier(.16,1,.3,
   position:relative;z-index:0;
   margin-top:calc(var(--hill-h) * -1);   /* 山のぶん上へ */
   padding-top:var(--hill-h);             /* 中身の位置は変えない */
-  background-image:linear-gradient(148deg,#009119 0%,#00A81C 22%,#00B21F 50%,#3FB812 78%,#6CBB00 100%);
+  /* ★上下1回きりの直線グラデをやめ、大きな円形グラデを重ねて
+     「濃い→薄い」が上下にも左右にも繰り返すようにする。
+     各層の繰り返し周期(background-size)をバラすことで、
+     揃った縞に見えず、まだら模様として長い周期に見える。
+     色は今の5色のまま。新しい色は足していない */
+  background-image:
+    /* ★1枚目の明るい円は、見出し「4つの特徴」に掛かると白文字が読みにくく
+       なるため（実測でコントラスト2.87→2.51）、開始位置を下へずらす */
+    radial-gradient(52% 30% at 12% 42%, #6CBB00 0%, rgba(108,187,0,0) 62%),
+    radial-gradient(46% 26% at 88% 42%, #009119 0%, rgba(0,145,25,0) 60%),
+    radial-gradient(58% 32% at 24% 68%, #3FB812 0%, rgba(63,184,18,0) 60%),
+    radial-gradient(44% 24% at 92% 88%, #009119 0%, rgba(0,145,25,0) 58%),
+    radial-gradient(60% 34% at 45% 108%, #6CBB00 0%, rgba(108,187,0,0) 62%),
+    linear-gradient(148deg,#009119 0%,#00A81C 22%,#00B21F 50%,#3FB812 78%,#6CBB00 100%);
+  background-size:100% 1180px, 100% 1520px, 100% 1340px, 100% 1720px, 100% 1600px, 100% 100%;
+  background-repeat:repeat, repeat, repeat, repeat, repeat, no-repeat;
   -webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201440%20120%22%20preserveAspectRatio%3D%22none%22%3E%3Cpath%20d%3D%22M0%20120%20L0%2078%20C%2078%2018%2C%20176%200%2C%20286%2016%20C%20600%2062%2C%201010%20102%2C%201440%20108%20L1440%20120%20Z%22%20fill%3D%22%23000%22%2F%3E%3C%2Fsvg%3E") top left/100% var(--hill-h) no-repeat,
                linear-gradient(#000,#000) bottom left/100% calc(100% - var(--hill-h)) no-repeat;
           mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%201440%20120%22%20preserveAspectRatio%3D%22none%22%3E%3Cpath%20d%3D%22M0%20120%20L0%2078%20C%2078%2018%2C%20176%200%2C%20286%2016%20C%20600%2062%2C%201010%20102%2C%201440%20108%20L1440%20120%20Z%22%20fill%3D%22%23000%22%2F%3E%3C%2Fsvg%3E") top left/100% var(--hill-h) no-repeat,
