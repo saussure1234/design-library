@@ -2505,6 +2505,10 @@ html:not(.js) .lm__i{transform:none}
    body が同じ白(--c-bg:#FFFFFF)なので、透かしても地の色は変わらない。
    薄い色だけが乗る。緑ベタの .tone-brand は塗ったままにする（元の設計どおり） */
 .tone-base{background:transparent}
+/* ★波の帯の上端。地は白(#FFFFFF)、波は #EDF9EF なので、そのままだと
+   帯の始まりに直線の段差が出る。上端40pxだけ白から繋いで消す */
+.wave-top--blend::after{content:"";position:absolute;left:0;right:0;top:0;height:40px;z-index:0;
+  background:linear-gradient(180deg,#FFFFFF 0%,#EDF9EF 100%)}
 
 /* ══ FVの動き ══════════════════════════════════════════════
    esl2 のFVで動いているのは blob と背景の曲線だけで、
@@ -2673,10 +2677,13 @@ html:not(.fv-anim) .hbc__bb{opacity:1}
   /* 🚨 esl2 はスマホで丸と紙吹雪を display:none にしていた。
      「背景が動いていない」ように見えたのはそのため（実測：丸の振れ0px）。
      動きを見せたいので出す。ただし写真と競合しないよう小さめ・薄めにする */
-  .hbc__blob{display:block;opacity:.55}
-  .hbc__blob--a{left:2%;top:30%;width:26%}
-  .hbc__blob--b{left:auto;right:2%;top:44%;width:22%}
-  .hbc__conf{display:block;opacity:.6}
+  /* ★丸と紙吹雪はスマホでは出さない（esl2 の元設計に戻す）。
+     「背景が動いていない」との指摘を受けて一度表示したが、
+     人物の裏に半端に掛かり画面端で切れる。逃がせる空きも無い
+     （実測：写真Aが x0〜190、写真Bが x200〜390 で横幅を使い切っている）。
+     スマホの動きは、写真の漂い・吹き出し・開幕の波・背景の薄い色で足りる */
+  .hbc__blob{display:none}
+  .hbc__conf{display:none}
 }
 @media(max-width:900px) and (min-width:481px){
   .hbc__bb--a{top:28%}
@@ -3161,7 +3168,11 @@ document.documentElement.classList.add('fv-anim');
 </div>
 <div class="tone-brand">
 <!-- member/member-blob-portrait-letter (base) -->
-<div class="wave-top" style="--wave-from:var(--c-bg)">
+<!-- ★波の上側は純白(--c-bg)だった。上の節(.tone-base)を透明にして #wash の
+       薄い緑(#EDF9EF)が出るようになったため、谷だけ純白で浮いていた。
+       transparent にすると波の形ごと消えて直線の段差になるので不可。
+       #wash と同じ薄い緑を直接指定して、谷を上の地に馴染ませる -->
+  <div class="wave-top wave-top--blend" style="--wave-from:#EDF9EF">
 <section class="sec mbl">
   <div class="wrap">
     <div class="sec-head">
