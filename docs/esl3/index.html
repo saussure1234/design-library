@@ -2505,10 +2505,28 @@ html:not(.js) .lm__i{transform:none}
    body が同じ白(--c-bg:#FFFFFF)なので、透かしても地の色は変わらない。
    薄い色だけが乗る。緑ベタの .tone-brand は塗ったままにする（元の設計どおり） */
 .tone-base{background:transparent}
-/* ★波の帯の上端。地は白(#FFFFFF)、波は #EDF9EF なので、そのままだと
-   帯の始まりに直線の段差が出る。上端40pxだけ白から繋いで消す */
-.wave-top--blend::after{content:"";position:absolute;left:0;right:0;top:0;height:40px;z-index:0;
-  background:linear-gradient(180deg,#FFFFFF 0%,#EDF9EF 100%)}
+/* ★波の境目。谷を「上と同じ色で塗る」やり方は原理的に合わない。
+   .wave-top::before は位置指定要素なので #wash より上に描かれ、
+   上の節にだけ乗っている薄緑が谷には乗らない。しかも #wash は
+   左右で濃さが違い、スクロールで濃さも変わるので、追いつけない
+   （実測：左端 x=30 で #F9FCF4 → #FFFFFF、中央では段差ゼロ）。
+   → 谷は「何も塗らない」に変え、緑の側をマスクで波形に切り抜く。
+     上の節の地がそのまま下へ続くので、どの位置でも段差が出ない。
+   マスク1枚目＝弧の帯[wh/2 〜 wh]、2枚目＝それより下を全面。
+   [0 〜 wh/2]はどちらも掛からない＝透明＝上の地がそのまま見える。 */
+.wave-cut{--wh:clamp(72px,9.5vw,170px)}
+.wave-cut{
+  -webkit-mask-image:radial-gradient(58% 100% at 50% 0%,transparent 98%,#000 100%),linear-gradient(#000,#000);
+          mask-image:radial-gradient(58% 100% at 50% 0%,transparent 98%,#000 100%),linear-gradient(#000,#000);
+  /* 2枚目は2px上に伸ばして1枚目と重ねる。--wh は小数(9.5vw)になるので
+     ぴったり継ぐと丸めで1pxの隙間＝白い線が出る（実測 y=312） */
+  -webkit-mask-size:100% calc(var(--wh)/2),100% calc(100% - var(--wh) + 2px);
+          mask-size:100% calc(var(--wh)/2),100% calc(100% - var(--wh) + 2px);
+  -webkit-mask-position:0 calc(var(--wh)/2),0 100%;
+          mask-position:0 calc(var(--wh)/2),0 100%;
+  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
+/* 谷を塗っていた楕円はもう要らない（縁に1pxの残りが出るので消す） */
+.wave-cut > .wave-top::before{display:none}
 
 /* ══ FVの動き ══════════════════════════════════════════════
    esl2 のFVで動いているのは blob と背景の曲線だけで、
@@ -3166,13 +3184,11 @@ document.documentElement.classList.add('fv-anim');
 </section>
 
 </div>
-<div class="tone-brand">
+<!-- ★波の谷の段差対策。谷を塗るのをやめ、緑の側をマスクで切り抜く（.wave-cut）。
+     谷は何も塗らないので、上の節の地（#wash の薄緑）がそのまま続く -->
+<div class="tone-brand wave-cut">
 <!-- member/member-blob-portrait-letter (base) -->
-<!-- ★波の上側は純白(--c-bg)だった。上の節(.tone-base)を透明にして #wash の
-       薄い緑(#EDF9EF)が出るようになったため、谷だけ純白で浮いていた。
-       transparent にすると波の形ごと消えて直線の段差になるので不可。
-       #wash と同じ薄い緑を直接指定して、谷を上の地に馴染ませる -->
-  <div class="wave-top wave-top--blend" style="--wave-from:#EDF9EF">
+  <div class="wave-top">
 <section class="sec mbl">
   <div class="wrap">
     <div class="sec-head">
