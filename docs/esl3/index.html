@@ -2555,14 +2555,14 @@ html.fv-anim .hbc.is-in .hbc__eyebrow{animation:fvUp .62s cubic-bezier(.16,1,.3,
    → そのまま真似すると塾のLPとしては弱いので、太さは一段だけ落とす。
      ★font-weight は 900/800 を 700 に一括変換済み（本文中の43箇所）。
        ここでは行間と字間だけを足す。文言・色・レイアウトは変えない */
-.hbc__h1{line-height:1.45;letter-spacing:.04em}
+/* ★行間は esl2 のまま据え置く（一度1.45まで空けたが、元の方が良いとの判断）。
+   ここで足すのは字間だけ */
+.hbc__h1{letter-spacing:.04em}
 .hbc__eyebrow{letter-spacing:.05em}
-.sec-head__ja{line-height:1.45;letter-spacing:.04em}
-.vhr__title,.fnc__t,.cts__h3,.mbl__lead{line-height:1.5;letter-spacing:.03em}
-/* 本文はスタサプの2.00には寄せきらず、1.9で止める（縦に伸びすぎるため） */
-.fnc__d,.vhr__body,.msc__text,.mbl__text,.cmx__note{line-height:1.9}
+.sec-head__ja{letter-spacing:.04em}
+.vhr__title,.fnc__t,.cts__h3,.mbl__lead{letter-spacing:.03em}
 @media(max-width:900px){
-  .hbc__h1{line-height:1.55;letter-spacing:.02em}   /* 狭い画面は字間を詰める */
+  .hbc__h1{letter-spacing:.02em}   /* 狭い画面は字間を詰める */
 }
 
 /* ── 写真に吹き出しを添える（破線・手書き風）────────────────
