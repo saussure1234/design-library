@@ -663,9 +663,11 @@ html:not(.js) .lm__i{transform:none}
 @media(prefers-reduced-motion:reduce){.hbc__blob{animation:none!important}}
 
 /* 写真 */
-.hbc__ph{position:absolute;z-index:3;margin:0;filter:drop-shadow(0 8px 18px rgba(48,48,48,.10))}
+/* ★影は figure ではなく img に掛ける。figure に掛けると、中に入れた
+   吹き出しにも同じ影が乗ってしまう（吹き出しは影なしの設計） */
+.hbc__ph{position:absolute;z-index:3;margin:0}
 /* ★背景を抜いた人物。枠（色の面）から はみ出す ように大きめに重ねる */
-.hbc__ph img{width:100%;display:block}
+.hbc__ph img{width:100%;display:block;filter:drop-shadow(0 8px 18px rgba(48,48,48,.10))}
 /* ★写真を差し替えたとき、器の幅だけ揃えても【人物の大きさ】は揃わない。
    素材の比が違うと頭の大きさが変わる。差し替え前と頭幅が同じになる値にする
    （旧素材 1300x1360・32% のとき頭幅295px → 新素材 1300x1849 では24.6%） */
@@ -745,7 +747,11 @@ html:not(.js) .lm__i{transform:none}
     background:#F2E9CE;border-radius:57% 43% 41% 59% / 46% 57% 43% 54%}
   .hbc__head{grid-column:1 / -1;grid-row:1;width:auto;max-width:none;margin-top:0;padding-inline:22px}
   /* ★relative。static のままだと ::before の % が【画面幅】基準になり、円が巨大化する */
-  .hbc__ph{position:relative;width:auto;filter:none;align-self:end;margin:0;z-index:3}
+  /* ★上に40pxの余白。見出しと写真のすき間は元々16pxしかなく、
+     吹き出し(34px)+しっぽ(7px)=41px が頭の上に入らなかった。
+     40px 足して合計56px＝吹き出し41px＋見出しとのすき間15px にする。
+     align-self:end なので、この余白ぶん段が伸びて写真が下がる（2枚とも下端は揃う） */
+  .hbc__ph{position:relative;width:auto;filter:none;align-self:end;margin:40px 0 0;z-index:3}
   /* ★PC用の left/top を打ち消す。static のときは無視されていたが、
      relative にした瞬間に「そのぶん right へずらす」指定として復活する */
   .hbc__ph--a,.hbc__ph--b{left:auto;right:auto;top:auto;bottom:auto}
@@ -2641,9 +2647,14 @@ html.fv-anim .hbc.is-in .hbc__eyebrow{animation:fvUp .62s cubic-bezier(.16,1,.3,
   margin-left:-6px;background:rgba(255,255,255,.94);
   border-right:1.6px solid var(--c-primary);border-bottom:1.6px solid var(--c-primary);
   transform:rotate(45deg)}
-.hbc__bb--a{left:42.5%;top:14.5%;--o:32% 100%}
+/* ★座標は【写真基準】。器基準だった旧値（A left:42.5% top:14.5% ／
+   B left:74% top:25%）を、写真の箱に対する比に置き換えたもの。
+   1100〜1920px で実測したところ器基準の値は写真に対して
+   A=34.56%/-13.0〜-13.3%、B=28.57%/-22.3〜-22.8% とほぼ一定だったので、
+   写真基準に移してもPCの見た目は変わらない（差は最大2px） */
+.hbc__bb--a{left:34.56%;top:-13.1%;--o:32% 100%}
 .hbc__bb--a::after{left:32%}
-.hbc__bb--b{left:74%;top:25%;--o:78% 100%}
+.hbc__bb--b{left:28.57%;top:-22.5%;--o:78% 100%}
 .hbc__bb--b::after{left:78%}
 @keyframes bbIn{from{opacity:0;transform:scale(.72) translateY(8px)}
                 to  {opacity:1;transform:scale(1) translateY(0)}}
@@ -2653,38 +2664,31 @@ html.fv-anim .hbc.is-in .hbc__bb--a{
 html.fv-anim .hbc.is-in .hbc__bb--b{
   animation:bbIn .58s cubic-bezier(.34,1.42,.5,1) 1.55s both, bbFloat 7.8s ease-in-out 2.4s infinite}
 html:not(.fv-anim) .hbc__bb{opacity:1}
-/* スマホ：FVがグリッドに変わり写真の絶対座標が使えなくなるので、
-   別の座標で置き直す。写真の上に余白が無い（見出し下端と写真上端の差が16px）ため、
-   ★写真Aの右側にできる空き（実測 390px時 x200〜390 / y300〜480）に逃がす。
-   人物の顔は写真Aの中央〜左寄りなので、顔にはかからない */
+/* スマホ：頭の真上に出す。
+   ── なぜ幅ごとの調整をやめたか ─────────────────────────
+   吹き出しを器(.hbc__in)の子にしていたため、写真が伸び縮みしても付いてこず、
+   幅ごとに top/left を総当たりで詰める羽目になっていた（3分岐）。
+   写真の子に移したので、いまは写真そのものの比で置ける＝1組の値で全幅が合う。
+   ── 位置の根拠（素材を画素で解析）───────────────────────
+   頭の中心：少年 画像幅の63% ／ 少女 73%（y=2〜10%で±1%以内）。
+   頭の上端：どちらも画像の最上端（y=0.5%で既に不透明）＝
+             写真の中に「頭の上」の空きは無い。だから写真の【外】へ出す。
+   ── 計算 ────────────────────────────────────────
+   写真Aは figure に padding-left:22px があるので、
+     頭の中心 = 22 + 0.63×(箱幅-22) = 箱幅の63% + 8.14px
+     吹き出しは幅166pxなので、左端 = 63% + 8.14 - 83 = calc(63% - 74.9px)
+   写真Bは padding-right:22px なので、
+     頭の中心 = 0.73×(箱幅-22) = 箱幅の73% - 16.06px
+     幅156px。中央合わせだと360px幅で画面右へ15pxはみ出すため、
+     しっぽを100px（中央より右）に寄せて左端 = calc(73% - 116px)
+   縦は 吹き出し34px + しっぽ7px = 41px。top:-41px でしっぽの先が頭頂に付く */
 @media(max-width:900px){
   .hbc__bb{font-size:12px;padding:7px 12px;border-radius:18px;border-width:1.4px}
   .hbc__bb::after{width:10px;height:10px;bottom:-7px;margin-left:-5px;border-width:1.4px}
-  /* 女子の写真を cut_girl(縦長)に替えたことで空きが変わった。
-     実測(390px)：写真A x0〜225 y295〜584 ／ 写真B x235〜390 y397〜584
-     → 空きは「写真Bの上」x235〜390 / y295〜397。そこに女子ぶんを置き、
-       男子ぶんは自分の写真の上端（髪の上）に重ねる */
-  /* 実測(390px)：見出し下端29.9% ／ 写真A上端32.2% ／ 写真B上端48.2%
-     → 男子は自分の写真の上端（髪の上）、女子は写真Bの上の空きへ */
-  /* 🚨 男子の吹き出しは顔に掛かりやすい。実測で 390〜768px の全域で
-     重なっていた（600pxで最大 48x34px）。顔は素材内の x44〜72%・y26〜48% で、
-     画面が広いほど顔が右下に来る。
-     → 吹き出しを「顔より上」に戻し、左端に寄せて逃がす。
-       すき間は見出しとの間に確保する（下の top 値は実測で詰めたもの）*/
-  /* 🚨 男子の吹き出しは「顔」と「見出し」の両方を避ける必要があり、
-     幅によって最適位置が動く（画面が広いほど顔が下がるので上へ寄せる）。
-     総当たりで検証した結果、1つの値では両立しないため3段階にする。
-       360px  … 38%（見出しが3行になり下がる）
-       390〜480px … 35%
-       481px〜   … 28%（顔が大きく下がるので上へ逃がす）
-     判定＝顔(素材内 x44〜72%/y26〜48%)・見出し・CTA と重ならず、
-          見出しとのすき間18px以上 */
-  /* 🚨 top の % は .hbc__in（約720px）基準なので 1% ≈ 7px。
-     「若干上げる」は % ではなく calc() の px で引く */
-  .hbc__bb--a{left:2%;top:calc(35% - 14px);--o:55% 100%}
-  .hbc__bb--a::after{left:55%}
-  .hbc__bb--b{left:54%;top:46%;--o:40% 100%}
-  .hbc__bb--b::after{left:40%}
+  .hbc__bb--a{left:calc(63% - 74.9px);top:-41px;--o:50% 100%}
+  .hbc__bb--a::after{left:83px}
+  .hbc__bb--b{left:calc(73% - 116px);top:-41px;--o:64% 100%}
+  .hbc__bb--b::after{left:100px}
 }
 /* 🚨 注記「いつまでに2級合格できるか…」が山に被っていた（実測：360〜600pxで
    最大25px）。FVの器の下に余白を足して逃がす */
@@ -2705,20 +2709,8 @@ html:not(.fv-anim) .hbc__bb{opacity:1}
   .hbc__blob{display:none}
   .hbc__conf{display:none}
 }
-@media(max-width:900px) and (min-width:481px){
-  /* 481px 付近は見出しと写真のすき間が16pxしか無く、吹き出しは既に写真の
-     上端に張り付いている。上げ幅はここだけ小さくする */
-  .hbc__bb--a{top:calc(28% - 4px)}
-  .hbc__bb--b{top:40%}
-}
-/* 🚨 境目が1pxズレていた。見出しが3行→2行に変わるのは 381px（実測：
-   380px までは高さ138px・下端314px、381px から 104px・279px）。
-   379px で切っていたため 380px だけ、3行の見出しに対して2行用の位置が
-   当たり、見出しとのすき間が 10px しか無かった。380px に直す */
-@media(max-width:380px){
-  .hbc__bb--a{top:calc(38% - 9px)}
-  .hbc__bb--b{top:49%;left:50%}
-}
+/* ★幅ごとの分岐（≤380px／481px〜）は、吹き出しを写真の子にしたことで
+   不要になったので削除した。写真の比で置いているので1組の値で全幅が合う */
 @media(prefers-reduced-motion:reduce){
   .hbc__bb{opacity:1}
   html.fv-anim .hbc.is-in .hbc__bb{animation:none}}
@@ -2888,16 +2880,17 @@ document.documentElement.classList.add('fv-anim');
     <div class="hbc__blob hbc__blob--a"></div>
     <div class="hbc__blob hbc__blob--b"></div>
 
-    <!-- 写真に添える吹き出し。文言は仮なので（仮）を外さない -->
-    <p class="hbc__bb hbc__bb--a" aria-hidden="true">部活と両立しながら、2級へ</p>
-    <p class="hbc__bb hbc__bb--b" aria-hidden="true">年の近い先生と、準1級へ</p>
-
-    <figure class="hbc__ph hbc__ph--a"><img src="img/fv_boy.webp" alt="自宅の机で学習に取り組む小学生"></figure>
+    <!-- 写真に添える吹き出し。文言は仮なので（仮）を外さない。
+         ★写真の【子】にしてある。器(.hbc__in)の子にすると、写真が伸び縮みしても
+           吹き出しが付いてこない（スマホで頭の上に乗らなかった原因）。
+           写真の子なら top/left が写真そのものの比になり、どの幅でも頭を追う -->
+    <figure class="hbc__ph hbc__ph--a"><img src="img/fv_boy.webp" alt="自宅の机で学習に取り組む小学生"><p class="hbc__bb hbc__bb--a" aria-hidden="true">部活と両立しながら、2級へ</p></figure>
     <!-- ★スマホで cut_girl(人物のみ)に差し替えたが、あの素材は胸で切れており
          「途切れて見える」ため取りやめ。fv_girl をフルで見せ、
          代わりにスマホの升目の比率を女子側に振って大きくする（下のCSS） -->
     <figure class="hbc__ph hbc__ph--b">
       <img src="img/fv_girl.png" alt="オンラインで英検対策を受ける中高生">
+      <p class="hbc__bb hbc__bb--b" aria-hidden="true">年の近い先生と、準1級へ</p>
     </figure>
 
     <div class="hbc__head">
