@@ -357,8 +357,8 @@ footer{position:relative;z-index:1}
 /* ── 見出し：英字（大きく淡く）＋和文＋装飾線 ────── */
 .sec-head{text-align:center;margin-bottom:44px}
 .sec-head__en{display:block;font-family:var(--f-num);font-size:54px;line-height:1;
-  font-weight:900;letter-spacing:.02em;color:var(--c-primary);opacity:.9}
-.sec-head__ja{margin-top:10px;font-size:28px;font-weight:800;line-height:1.4;color:var(--c-ink)}
+  font-weight:700;letter-spacing:.02em;color:var(--c-primary);opacity:.9}
+.sec-head__ja{margin-top:10px;font-size:28px;font-weight:700;line-height:1.4;color:var(--c-ink)}
 .sec-head__sub{margin-top:14px;font-size:18px;color:var(--c-ink2);max-width:38em;margin-inline:auto}
 .sec-head::after{content:"";display:inline-block;margin-top:16px;
   width:60px;height:5px;border-radius:5px;background:var(--c-accent)}
@@ -382,7 +382,7 @@ footer{position:relative;z-index:1}
    色は3つの変数で受ける。地とかぶる節では、キット側で差し替える */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5em;
   background:var(--btn-bg,var(--c-accent));color:var(--btn-ink,var(--c-on-accent));
-  font-weight:800;font-size:19px;letter-spacing:.02em;
+  font-weight:700;font-size:19px;letter-spacing:.02em;
   padding:20px 46px;border-radius:50px;border:0;cursor:pointer;
   box-shadow:0 8px 0 var(--btn-sd,var(--c-accent-d));
   transition:transform .12s ease,box-shadow .12s ease}
@@ -677,22 +677,22 @@ html:not(.js) .lm__i{transform:none}
 .hbc__logo img{height:clamp(22px,2.1vw,30px);width:auto}
 /* 見出しの助走。ここだけ小さいと読み飛ばされるので、
    本文級より一段上・太字・墨で置く */
-.hbc__eyebrow{margin-top:12px;font-size:clamp(18px,1.438vw,20.0px);font-weight:800;
+.hbc__eyebrow{margin-top:12px;font-size:clamp(18px,1.438vw,20.0px);font-weight:700;
   color:var(--c-ink2);line-height:1.6;letter-spacing:.01em}
-.hbc__h1{margin-top:8px;font-size:clamp(26px,2.9vw,42px);font-weight:900;color:var(--c-ink);
+.hbc__h1{margin-top:8px;font-size:clamp(26px,2.9vw,42px);font-weight:700;color:var(--c-ink);
   line-height:1.28;letter-spacing:.01em}
 .hbc__h1 em{font-style:normal;color:var(--c-primary)}
 
 /* キャッチ */
 .hbc__copy{position:absolute;left:6%;bottom:40%;max-width:30%;z-index:5;text-align:left;
-  font-size:clamp(20px,2.4vw,34px);font-weight:900;color:var(--c-ink);line-height:1.5}
+  font-size:clamp(20px,2.4vw,34px);font-weight:700;color:var(--c-ink);line-height:1.5}
 .hbc__copy em{font-style:normal;color:var(--c-primary)}
 
 /* 実績の数字 */
 .hbc__stats{display:none}
 .hbc__stats b{display:block;font-family:var(--f-num);font-size:clamp(28px,3.4vw,46px);
-  font-weight:900;color:var(--c-ink);line-height:1}
-.hbc__stats b span{font-size:.42em;margin-left:3px;font-weight:800}
+  font-weight:700;color:var(--c-ink);line-height:1}
+.hbc__stats b span{font-size:.42em;margin-left:3px;font-weight:700}
 .hbc__stats small{display:block;margin-top:6px;font-size:clamp(18px,1.05vw,18px);color:var(--c-ink3)}
 
 /* CTA */
@@ -703,7 +703,7 @@ html:not(.js) .lm__i{transform:none}
    級数と太さを上げて、少し落としたグレーで書く（面は敷かない） */
 /* 級数を上げたぶん1行に収まらない幅が出る。折り返しを許す
    （nowrap のままだと 390px で6px はみ出して横スクロールが出る） */
-.hbc__note{font-size:18px;font-weight:800;
+.hbc__note{font-size:18px;font-weight:700;
   color:var(--c-ink2);letter-spacing:.01em;line-height:1.7;text-wrap:pretty}
 
 /* 落書き */
@@ -795,8 +795,8 @@ html:not(.js) .lm__i{transform:none}
   margin-bottom:12px;padding-bottom:10px;
   border-bottom:2px solid var(--c-primary);
   color:var(--c-primary);
-  font-family:var(--f-num);font-size:34px;font-weight:900;line-height:1;letter-spacing:0}
-.fnc__t{margin-top:2px;font-size:18px;font-weight:800;color:var(--c-ink);line-height:1.6}
+  font-family:var(--f-num);font-size:34px;font-weight:700;line-height:1;letter-spacing:0}
+.fnc__t{margin-top:2px;font-size:18px;font-weight:700;color:var(--c-ink);line-height:1.6}
 .fnc__d{margin-top:12px;font-size:18px;color:var(--c-ink2);line-height:1.85;flex:1}
 /* ── その節へ飛ぶ ────────────────────────────
    目印は置かず、箱そのものを押せる場所にする。
@@ -855,9 +855,9 @@ html:not(.js) .lm__i{transform:none}
 .vhr__top{display:contents}
 .vhr__vert{grid-column:1;grid-row:1;display:flex;flex-direction:column;gap:8px;
   padding-top:2px;min-width:0}
-.vhr__label{font-family:var(--f-num);font-size:clamp(18px,1.05vw,18px);font-weight:800;
+.vhr__label{font-family:var(--f-num);font-size:clamp(18px,1.05vw,18px);font-weight:700;
   letter-spacing:.16em;color:var(--c-primary);white-space:nowrap}
-.vhr__title{font-size:clamp(19px,1.6vw,24px);font-weight:900;color:var(--c-ink);
+.vhr__title{font-size:clamp(19px,1.6vw,24px);font-weight:700;color:var(--c-ink);
   letter-spacing:.02em;line-height:1.5}
 .vhr__fig{min-width:0;margin:0}
 .vhr__top > .vhr__fig{grid-column:2;grid-row:1 / span 2;align-self:start}
@@ -911,14 +911,14 @@ html:not(.js) .lm__i{transform:none}
 .vhr__dl,.vhr__dv{position:relative;z-index:2}
 .vhr__dl{display:block;font-size:clamp(18px,1.09vw,18px);font-weight:700;color:var(--c-ink)}
 .vhr__dv{display:block;margin-top:2px;font-family:var(--f-num);font-size:clamp(18px,1.55vw,21px);
-  font-weight:900;color:var(--c-primary);line-height:1}
+  font-weight:700;color:var(--c-primary);line-height:1}
 .vhr__dv i{font-style:normal;font-size:.5em;margin-left:1px}
 .vhr__cnote{margin-top:9px;text-align:center;font-size:clamp(18px,1.02vw,18px);color:var(--c-ink3);line-height:1.7}
 
 /* サブ見出しは左列の下。罫は持たせない（罫は本文の上に1本だけ） */
 .vhr__sub{grid-column:1;grid-row:2;align-self:start;
   margin-top:clamp(12px,1.6vw,18px);padding-top:0;border-top:0;
-  font-size:18px;font-weight:800;color:var(--c-ink);line-height:1.7}
+  font-size:18px;font-weight:700;color:var(--c-ink);line-height:1.7}
 /* 本文は全幅。ここで初めて破線を引く */
 .vhr__body{grid-column:1 / -1;grid-row:3;
   margin-top:clamp(16px,2vw,24px);padding-top:clamp(14px,1.8vw,22px);
@@ -993,9 +993,9 @@ html:not(.js) .lm__i{transform:none}
 .vhr__top{display:contents}
 .vhr__vert{grid-column:1;grid-row:1;display:flex;flex-direction:column;gap:8px;
   padding-top:2px;min-width:0}
-.vhr__label{font-family:var(--f-num);font-size:clamp(18px,1.05vw,18px);font-weight:800;
+.vhr__label{font-family:var(--f-num);font-size:clamp(18px,1.05vw,18px);font-weight:700;
   letter-spacing:.16em;color:var(--c-primary);white-space:nowrap}
-.vhr__title{font-size:clamp(19px,1.6vw,24px);font-weight:900;color:var(--c-ink);
+.vhr__title{font-size:clamp(19px,1.6vw,24px);font-weight:700;color:var(--c-ink);
   letter-spacing:.02em;line-height:1.5}
 .vhr__fig{min-width:0;margin:0}
 .vhr__top > .vhr__fig{grid-column:2;grid-row:1 / span 2;align-self:start}
@@ -1049,14 +1049,14 @@ html:not(.js) .lm__i{transform:none}
 .vhr__dl,.vhr__dv{position:relative;z-index:2}
 .vhr__dl{display:block;font-size:clamp(18px,1.09vw,18px);font-weight:700;color:var(--c-ink)}
 .vhr__dv{display:block;margin-top:2px;font-family:var(--f-num);font-size:clamp(18px,1.55vw,21px);
-  font-weight:900;color:var(--c-primary);line-height:1}
+  font-weight:700;color:var(--c-primary);line-height:1}
 .vhr__dv i{font-style:normal;font-size:.5em;margin-left:1px}
 .vhr__cnote{margin-top:9px;text-align:center;font-size:clamp(18px,1.02vw,18px);color:var(--c-ink3);line-height:1.7}
 
 /* サブ見出しは左列の下。罫は持たせない（罫は本文の上に1本だけ） */
 .vhr__sub{grid-column:1;grid-row:2;align-self:start;
   margin-top:clamp(12px,1.6vw,18px);padding-top:0;border-top:0;
-  font-size:18px;font-weight:800;color:var(--c-ink);line-height:1.7}
+  font-size:18px;font-weight:700;color:var(--c-ink);line-height:1.7}
 /* 本文は全幅。ここで初めて破線を引く */
 .vhr__body{grid-column:1 / -1;grid-row:3;
   margin-top:clamp(16px,2vw,24px);padding-top:clamp(14px,1.8vw,22px);
@@ -1138,7 +1138,7 @@ html:not(.js) .lm__i{transform:none}
    動画を大きくしても節が目立たなかった。目立ちは見出しで作る */
 .pmp__mh{writing-mode:horizontal-tb;text-orientation:mixed;
   margin:0 0 16px;padding-top:0;text-align:center;
-  font-size:clamp(22px,1.8vw,26px);font-weight:800;color:var(--c-on-primary);
+  font-size:clamp(22px,1.8vw,26px);font-weight:700;color:var(--c-on-primary);
   letter-spacing:.06em;line-height:1.4}
 .pmp__mh::after{content:"";display:block;margin:12px auto 0;
   width:48px;height:5px;border-radius:5px;background:var(--c-accent)}
@@ -1174,7 +1174,7 @@ html:not(.js) .lm__i{transform:none}
 .pmp__cap{display:block;margin-top:8px;text-align:center}
 .pmp__cap b{display:block;font-size:18px;color:rgba(255,255,255,.8);font-weight:700}
 .pmp__cap em{display:block;margin-top:3px;font-style:normal;
-  font-size:18px;font-weight:900;color:var(--c-on-primary)}
+  font-size:18px;font-weight:700;color:var(--c-on-primary)}
 .pmp__esc{display:block;margin-top:8px;text-align:center;font-size:18px;font-weight:700;
   color:var(--c-primary);text-decoration:underline}
 
@@ -1248,9 +1248,9 @@ html:not(.js) .lm__i{transform:none}
 .vhr__top{display:contents}
 .vhr__vert{grid-column:1;grid-row:1;display:flex;flex-direction:column;gap:8px;
   padding-top:2px;min-width:0}
-.vhr__label{font-family:var(--f-num);font-size:clamp(18px,1.05vw,18px);font-weight:800;
+.vhr__label{font-family:var(--f-num);font-size:clamp(18px,1.05vw,18px);font-weight:700;
   letter-spacing:.16em;color:var(--c-primary);white-space:nowrap}
-.vhr__title{font-size:clamp(19px,1.6vw,24px);font-weight:900;color:var(--c-ink);
+.vhr__title{font-size:clamp(19px,1.6vw,24px);font-weight:700;color:var(--c-ink);
   letter-spacing:.02em;line-height:1.5}
 .vhr__fig{min-width:0;margin:0}
 .vhr__top > .vhr__fig{grid-column:2;grid-row:1 / span 2;align-self:start}
@@ -1304,14 +1304,14 @@ html:not(.js) .lm__i{transform:none}
 .vhr__dl,.vhr__dv{position:relative;z-index:2}
 .vhr__dl{display:block;font-size:clamp(18px,1.09vw,18px);font-weight:700;color:var(--c-ink)}
 .vhr__dv{display:block;margin-top:2px;font-family:var(--f-num);font-size:clamp(18px,1.55vw,21px);
-  font-weight:900;color:var(--c-primary);line-height:1}
+  font-weight:700;color:var(--c-primary);line-height:1}
 .vhr__dv i{font-style:normal;font-size:.5em;margin-left:1px}
 .vhr__cnote{margin-top:9px;text-align:center;font-size:clamp(18px,1.02vw,18px);color:var(--c-ink3);line-height:1.7}
 
 /* サブ見出しは左列の下。罫は持たせない（罫は本文の上に1本だけ） */
 .vhr__sub{grid-column:1;grid-row:2;align-self:start;
   margin-top:clamp(12px,1.6vw,18px);padding-top:0;border-top:0;
-  font-size:18px;font-weight:800;color:var(--c-ink);line-height:1.7}
+  font-size:18px;font-weight:700;color:var(--c-ink);line-height:1.7}
 /* 本文は全幅。ここで初めて破線を引く */
 .vhr__body{grid-column:1 / -1;grid-row:3;
   margin-top:clamp(16px,2vw,24px);padding-top:clamp(14px,1.8vw,22px);
@@ -1501,11 +1501,11 @@ html:not(.js) .lm__i{transform:none}
 
 .mbl__role{font-size:clamp(18px,1.1vw,18px);color:var(--c-ink3);font-weight:700;letter-spacing:.04em}
 .mbl__name{margin-top:3px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
-  font-size:clamp(19px,1.65vw,23px);font-weight:900;color:var(--c-ink);letter-spacing:.04em}
+  font-size:clamp(19px,1.65vw,23px);font-weight:700;color:var(--c-ink);letter-spacing:.04em}
 /* ★em で指定すると氏名の級数に連動して18pxを割る。実寸で持たせる */
-.mbl__name span{font-family:var(--f-num);font-size:18px;font-weight:800;color:var(--c-primary)}
+.mbl__name span{font-family:var(--f-num);font-size:18px;font-weight:700;color:var(--c-primary)}
 /* リードは本文の一段上まで。ここが大きいと2人ぶんで画面を占領する */
-.mbl__lead{margin-top:clamp(14px,1.7vw,22px);font-size:18px;font-weight:800;
+.mbl__lead{margin-top:clamp(14px,1.7vw,22px);font-size:18px;font-weight:700;
   color:var(--c-ink);line-height:1.9;align-self:start}
 /* 長文はたたむ。開閉は高さを実測して滑らかに動かす */
 .mbl__fold{overflow:hidden;transition:height .5s var(--e)}
@@ -1569,7 +1569,7 @@ html:not(.js) .lm__i{transform:none}
 .msc__name{grid-column:2;grid-row:1;min-width:0}
 .msc__name span{display:block;font-size:clamp(18px,0.91vw,18px);letter-spacing:.06em;
   color:var(--c-ink3);font-weight:700}
-.msc__name b{display:block;margin-top:3px;font-family:var(--f-disp);font-weight:900;
+.msc__name b{display:block;margin-top:3px;font-family:var(--f-disp);font-weight:700;
   font-size:clamp(18px,1.421vw,20.0px);color:var(--c-ink);letter-spacing:.03em}
 
 /* 下段：表とコメント。写真の下も使って全幅で置く */
@@ -1747,8 +1747,8 @@ html:not(.js) .lm__i{transform:none}
 .vbi__fig img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:50%;
   border:5px solid #fff;box-shadow:var(--shadow-s)}
 
-.vbi__t{font-size:clamp(18px,1.7vw,23px);font-weight:900;color:var(--c-primary);line-height:1.6}
-.vbi__who{margin-top:8px;font-size:18px;font-weight:800;color:var(--c-ink)}
+.vbi__t{font-size:clamp(18px,1.7vw,23px);font-weight:700;color:var(--c-primary);line-height:1.6}
+.vbi__who{margin-top:8px;font-size:18px;font-weight:700;color:var(--c-ink)}
 .vbi__body{margin-top:clamp(12px,1.6vw,20px);font-size:18px;
   color:var(--c-ink2);line-height:2.1}
 .vbi__body p + p{margin-top:1.3em}
@@ -1757,7 +1757,7 @@ html:not(.js) .lm__i{transform:none}
 .vbi__reply{margin-top:clamp(18px,2.4vw,30px);padding:clamp(16px,2vw,26px);
   background:var(--c-bg2);border-radius:16px}
 .vbi__replyhead span{display:inline-block;background:var(--c-primary);color:var(--c-on-primary);
-  font-size:clamp(18px,1.04vw,18px);font-weight:800;letter-spacing:.06em;
+  font-size:clamp(18px,1.04vw,18px);font-weight:700;letter-spacing:.06em;
   padding:6px 15px;border-radius:999px}
 /* 余白はたたむ箱の【外】に置く。中に入れると、たたんだ高さから
    その余白ぶんが本文に食い込み、開閉の実測ともズレる */
@@ -1848,7 +1848,7 @@ html:not(.js) .lm__i{transform:none}
 /* 値。数値は等幅・極大。名前は級数を落とし、ウェイトも1段下げる
    （6件が等価に並ぶので、6箇所を最大ウェイトで押さない）。
    overflow-wrap:anywhere は、長い固有名詞が器から溢れないための最終保険 */
-.nch__val{font-family:var(--f-num);font-weight:900;color:var(--c-ink);
+.nch__val{font-family:var(--f-num);font-weight:700;color:var(--c-ink);
   font-size:clamp(var(--fs-xl),3.6vw,var(--fs-2xl));line-height:var(--lh-tight);
   font-variant-numeric:tabular-nums;letter-spacing:.01em}
 .nch__unit{font-style:normal;font-family:var(--f-sans);font-weight:700;
@@ -1958,7 +1958,7 @@ html:not(.js) .lm__i{transform:none}
 .cmx__hnote{font-size:var(--fs-note);font-weight:400;
   color:color-mix(in srgb,var(--c-on-dark) 58%,transparent)}
 /* 自社ヘッダだけ白100%＋一段大きく。ここは色ではなく明度と級数で立てる */
-.cmx__hc--own .cmx__hname{font-size:var(--fs-md);font-weight:900;letter-spacing:.01em;
+.cmx__hc--own .cmx__hname{font-size:var(--fs-md);font-weight:700;letter-spacing:.01em;
   color:var(--c-on-dark)}
 /* 自社の列名をロゴで出す回。濃い面の上なので白へ抜く。
    高さは A社・B社 の1行と同じ器に入れて、中心をそろえる */
@@ -2057,7 +2057,7 @@ html:not(.js) .lm__i{transform:none}
   .cmx__hc{min-height:56px;padding-block:var(--s3)}
   .cmx__hname{font-size:var(--fs-sm)}
   .cmx__hc--own .cmx__hname{font-size:var(--fs-sm)}
-  .cmx__item{font-weight:800}
+  .cmx__item{font-weight:700}
   /* 表のセルは本文ではないので、列幅に収まる級数まで落とす */
   .cmx__main{font-size:18px}
   .cmx__c--own .cmx__main{font-size:18px}
@@ -2095,7 +2095,7 @@ html:not(.js) .lm__i{transform:none}
    幅・高さ・級数を上げ、選ばれていない側にも枠を持たせて押せると分かるようにする */
 .cts__tab{display:inline-flex;align-items:center;justify-content:center;
   min-width:clamp(220px,26vw,320px);height:66px;padding:0 var(--s6);cursor:pointer;
-  font-weight:800;font-size:clamp(18px,1.5vw,22px);color:var(--c-ink2);
+  font-weight:700;font-size:clamp(18px,1.5vw,22px);color:var(--c-ink2);
   background:var(--c-bg);border:2px solid var(--c-line);border-radius:var(--r-pill);
   transition:background .16s var(--e),color .16s var(--e),border-color .16s var(--e),
              box-shadow .16s var(--e)}
@@ -2127,7 +2127,7 @@ html:not(.js) .lm__i{transform:none}
 .cts__body{margin-top:var(--sp-el);font-size:var(--fs-sm);line-height:1.95;color:var(--c-ink2)}
 .cts__tel{display:flex;align-items:baseline;gap:var(--s3);margin-bottom:var(--s5)}
 .cts__tel span{font-size:var(--fs-note);color:var(--c-ink3);font-weight:700}
-.cts__tel a{font-family:var(--f-num);font-weight:900;font-size:clamp(24px,2.6vw,32px);
+.cts__tel a{font-family:var(--f-num);font-weight:700;font-size:clamp(24px,2.6vw,32px);
   color:var(--c-primary);letter-spacing:.01em;line-height:1}
 /* 罫は引かず、行は不透明度6%の1本だけ */
 .cts__dl{display:grid;grid-template-columns:7.5em minmax(0,1fr);gap:0 var(--s4);font-size:var(--fs-sm)}
@@ -2137,7 +2137,7 @@ html:not(.js) .lm__i{transform:none}
 
 /* ── 各ブロック ── */
 .cts__block{margin-top:var(--sp-blk)}
-.cts__h3{font-family:var(--f-disp);font-weight:900;font-size:var(--fs-lg);color:var(--c-ink);
+.cts__h3{font-family:var(--f-disp);font-weight:700;font-size:var(--fs-lg);color:var(--c-ink);
   margin-bottom:var(--sp-el)}
 
 /* 料金：罫なし。価格だけが主役 */
@@ -2150,7 +2150,7 @@ html:not(.js) .lm__i{transform:none}
   padding:var(--s5) var(--s4);text-align:center;border-top:4px solid var(--c-primary)}
 .cts__planname{font-weight:700;font-size:var(--fs-md);color:var(--c-ink)}
 .cts__planname span{display:block;margin-top:2px;font-size:var(--fs-note);color:var(--c-ink3);font-weight:400}
-.cts__price{margin-top:var(--s4);font-family:var(--f-num);font-weight:900;
+.cts__price{margin-top:var(--s4);font-family:var(--f-num);font-weight:700;
   font-size:clamp(21px,2.4vw,28px);color:var(--c-primary);line-height:1}
 
 /* タイムテーブル：格子罫なし。列は余白だけで分ける */
@@ -2158,7 +2158,7 @@ html:not(.js) .lm__i{transform:none}
 .cts__day{background:var(--c-bg2);border-radius:var(--r-m);padding:var(--s5) var(--s4)}
 /* 休校日は面を持たせず、破線の枠だけにして開講日と分ける */
 .cts__day.is-off{background:transparent;border:1px dashed var(--c-line);color:var(--c-ink3)}
-.cts__dayname{font-weight:900;font-size:var(--fs-md);color:var(--c-ink);text-align:center;
+.cts__dayname{font-weight:700;font-size:var(--fs-md);color:var(--c-ink);text-align:center;
   padding-bottom:var(--s4);border-bottom:1px solid rgba(48,48,48,.06)}
 .cts__day.is-off .cts__dayname{color:var(--c-ink3)}
 .cts__off{padding:var(--sp-el) 0;text-align:center;color:var(--c-ink3);font-size:var(--fs-sm)}
@@ -2188,7 +2188,7 @@ html:not(.js) .lm__i{transform:none}
 /* ボタンは格子の升に引き伸ばさない（既定の stretch だと列幅いっぱいになる） */
 .cts__msgbody > .mbl__more{justify-self:start}
 .cts__msgrole{font-size:clamp(18px,1.1vw,18px);color:var(--c-ink3);font-weight:700;letter-spacing:.04em}
-.cts__msgname{margin-top:3px;font-family:var(--f-disp);font-weight:900;
+.cts__msgname{margin-top:3px;font-family:var(--f-disp);font-weight:700;
   font-size:clamp(19px,1.65vw,23px);color:var(--c-ink);letter-spacing:.04em}
 /* 罫はたたむ箱の【外】に置く。中に入れると、たたんだ高さから罫と余白のぶんが
    本文に食い込み、開閉の実測ともズレる（マネジャー紹介と同じ扱い） */
@@ -2362,7 +2362,7 @@ html:not(.js) .lm__i{transform:none}
   padding:var(--s5);border-radius:var(--r-m);background:var(--c-bg2)}
 .ftc__tel-cap{font-size:var(--fs-sm);font-weight:700;color:var(--c-ink2);line-height:var(--lh-head)}
 .ftc__tel-num{display:inline-flex;align-items:center;gap:var(--s2);
-  margin-top:var(--s1);color:var(--c-ink);font-family:var(--f-num);font-weight:900;
+  margin-top:var(--s1);color:var(--c-ink);font-family:var(--f-num);font-weight:700;
   font-size:clamp(var(--fs-xl),3.2vw,var(--fs-2xl));line-height:var(--lh-tight);letter-spacing:.02em}
 .ftc__tel-ico{flex:none;display:grid;place-items:center;width:.78em;height:.78em;color:var(--c-primary)}
 .ftc__tel-ico svg{width:100%;height:100%;fill:none;stroke:currentColor;
@@ -2549,6 +2549,22 @@ html.fv-anim .hbc.is-in .hbc__eyebrow{animation:fvUp .62s cubic-bezier(.16,1,.3,
 /* ※見出しの売り2行に引いていたグレーの線（.mk2）は撤去した。
    線は前置きの「”英検に特化”」だけに残している。 */
 
+/* ══ 文字組み：スタディサプリを実測して中間に寄せた ══════════════
+   スタサプ実測 = 太さ400/600の2種類・見出し行間1.54・字間0.09em・本文行間2.00
+   esl2  実測 = 太さ700/800/900・見出し行間1.28・字間0.01em
+   → そのまま真似すると塾のLPとしては弱いので、太さは一段だけ落とす。
+     ★font-weight は 900/800 を 700 に一括変換済み（本文中の43箇所）。
+       ここでは行間と字間だけを足す。文言・色・レイアウトは変えない */
+.hbc__h1{line-height:1.45;letter-spacing:.04em}
+.hbc__eyebrow{letter-spacing:.05em}
+.sec-head__ja{line-height:1.45;letter-spacing:.04em}
+.vhr__title,.fnc__t,.cts__h3,.mbl__lead{line-height:1.5;letter-spacing:.03em}
+/* 本文はスタサプの2.00には寄せきらず、1.9で止める（縦に伸びすぎるため） */
+.fnc__d,.vhr__body,.msc__text,.mbl__text,.cmx__note{line-height:1.9}
+@media(max-width:900px){
+  .hbc__h1{line-height:1.55;letter-spacing:.02em}   /* 狭い画面は字間を詰める */
+}
+
 /* ── 写真に吹き出しを添える（破線・手書き風）────────────────
    位置は実測で決めた：男子＝頭頂の真上（すき間14px・しっぽのズレ12px）、
    女子＝頭のすぐ上。吹き出し同士は116px離し、前置き・見出し・CTAとは重ねない。
@@ -2556,13 +2572,13 @@ html.fv-anim .hbc.is-in .hbc__eyebrow{animation:fvUp .62s cubic-bezier(.16,1,.3,
    ★文言は仮。実在の生徒の写真なので、確定前に本人の発言に見える文にしない */
 .hbc__bb{position:absolute;z-index:9;opacity:0;
   background:rgba(255,255,255,.94);color:var(--c-primary);
-  border:1.6px dashed var(--c-primary);border-radius:22px;
-  padding:9px 16px;font-size:clamp(13px,1.14vw,17px);font-weight:800;
+  border:1.6px solid var(--c-primary);border-radius:22px;
+  padding:9px 16px;font-size:clamp(13px,1.14vw,17px);font-weight:700;
   line-height:1.5;white-space:nowrap;pointer-events:none;
   transform-origin:var(--o,50% 100%)}
 .hbc__bb::after{content:"";position:absolute;bottom:-8px;width:12px;height:12px;
   margin-left:-6px;background:rgba(255,255,255,.94);
-  border-right:1.6px dashed var(--c-primary);border-bottom:1.6px dashed var(--c-primary);
+  border-right:1.6px solid var(--c-primary);border-bottom:1.6px solid var(--c-primary);
   transform:rotate(45deg)}
 .hbc__bb--a{left:42.5%;top:14.5%;--o:32% 100%}
 .hbc__bb--a::after{left:32%}
