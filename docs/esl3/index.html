@@ -2679,7 +2679,9 @@ html:not(.fv-anim) .hbc__bb{opacity:1}
        481px〜   … 28%（顔が大きく下がるので上へ逃がす）
      判定＝顔(素材内 x44〜72%/y26〜48%)・見出し・CTA と重ならず、
           見出しとのすき間18px以上 */
-  .hbc__bb--a{left:2%;top:35%;--o:55% 100%}
+  /* 🚨 top の % は .hbc__in（約720px）基準なので 1% ≈ 7px。
+     「若干上げる」は % ではなく calc() の px で引く */
+  .hbc__bb--a{left:2%;top:calc(35% - 14px);--o:55% 100%}
   .hbc__bb--a::after{left:55%}
   .hbc__bb--b{left:54%;top:46%;--o:40% 100%}
   .hbc__bb--b::after{left:40%}
@@ -2704,11 +2706,17 @@ html:not(.fv-anim) .hbc__bb{opacity:1}
   .hbc__conf{display:none}
 }
 @media(max-width:900px) and (min-width:481px){
-  .hbc__bb--a{top:28%}
+  /* 481px 付近は見出しと写真のすき間が16pxしか無く、吹き出しは既に写真の
+     上端に張り付いている。上げ幅はここだけ小さくする */
+  .hbc__bb--a{top:calc(28% - 4px)}
   .hbc__bb--b{top:40%}
 }
-@media(max-width:379px){
-  .hbc__bb--a{top:38%}
+/* 🚨 境目が1pxズレていた。見出しが3行→2行に変わるのは 381px（実測：
+   380px までは高さ138px・下端314px、381px から 104px・279px）。
+   379px で切っていたため 380px だけ、3行の見出しに対して2行用の位置が
+   当たり、見出しとのすき間が 10px しか無かった。380px に直す */
+@media(max-width:380px){
+  .hbc__bb--a{top:calc(38% - 9px)}
   .hbc__bb--b{top:49%;left:50%}
 }
 @media(prefers-reduced-motion:reduce){
