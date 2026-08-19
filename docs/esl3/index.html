@@ -4214,8 +4214,15 @@ document.documentElement.classList.add('js');
   var growth=document.getElementById('growth'); if(!growth) return;
   var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
   var layers=[].slice.call(growth.querySelectorAll('.gl'));
+  /* ★クリップの基準は「FVの次に来る、独自の背景を持つ節」。
+     esl3 では .grad-band で包んだため基準がそちらに移り、山の高さ(89px)ぶん
+     曲線が余計に切られていた（esl2 は .tone-brand.hill-top が基準）。
+     器ではなく中の節を基準にして、esl2 と同じ切り位置に戻す */
   var stop=document.querySelector('.hbc') ?
            (document.querySelector('.hbc').closest('div')||{}).nextElementSibling : null;
+  if(stop && stop.classList.contains('grad-band')){
+    stop = stop.querySelector('.tone-brand') || stop;
+  }
   var ticking=false;
   function frame(){
     ticking=false;
