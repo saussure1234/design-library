@@ -728,7 +728,7 @@ html:not(.js) .lm__i{transform:none}
   .hbc__in{display:grid;
     /* minmax(0,…) にしないと fr の最小が min-content になり、
        中身の分だけ格子が画面より広がって右へはみ出す */
-    grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr);
     grid-template-rows:auto auto auto auto;
     column-gap:10px;row-gap:16px;
     padding:28px 0 clamp(64px,14vw,96px);height:auto}
@@ -2603,9 +2603,11 @@ html:not(.fv-anim) .hbc__bb{opacity:1}
      実測(390px)：写真A x0〜225 y295〜584 ／ 写真B x235〜390 y397〜584
      → 空きは「写真Bの上」x235〜390 / y295〜397。そこに女子ぶんを置き、
        男子ぶんは自分の写真の上端（髪の上）に重ねる */
-  .hbc__bb--a{left:4%;top:29.5%;--o:60% 100%}
+  /* 実測(390px)：見出し下端29.9% ／ 写真A上端32.2% ／ 写真B上端48.2%
+     → 男子は自分の写真の上端（髪の上）、女子は写真Bの上の空きへ */
+  .hbc__bb--a{left:4%;top:32.5%;--o:60% 100%}
   .hbc__bb--a::after{left:60%}
-  .hbc__bb--b{left:57%;top:31.5%;--o:40% 100%}
+  .hbc__bb--b{left:57%;top:39%;--o:40% 100%}
   .hbc__bb--b::after{left:40%}
 }
 @media(prefers-reduced-motion:reduce){
@@ -2782,14 +2784,11 @@ document.documentElement.classList.add('fv-anim');
     <p class="hbc__bb hbc__bb--b" aria-hidden="true">年の近い先生と、準1級へ</p>
 
     <figure class="hbc__ph hbc__ph--a"><img src="img/fv_boy.webp" alt="自宅の机で学習に取り組む小学生"></figure>
-    <!-- 女子はPCと SP で素材を変える。fv_girl は机ごと写った横長(比0.76)で、
-         スマホの升目に入れると男子(比1.42)の面積24%まで縮む。
-         cut_girl は人物だけの縦長(比1.40)なので、スマホではこちらを使う -->
+    <!-- ★スマホで cut_girl(人物のみ)に差し替えたが、あの素材は胸で切れており
+         「途切れて見える」ため取りやめ。fv_girl をフルで見せ、
+         代わりにスマホの升目の比率を女子側に振って大きくする（下のCSS） -->
     <figure class="hbc__ph hbc__ph--b">
-      <picture>
-        <source media="(max-width:900px)" srcset="img/cut_girl.png">
-        <img src="img/fv_girl.png" alt="オンラインで英検対策を受ける中高生">
-      </picture>
+      <img src="img/fv_girl.png" alt="オンラインで英検対策を受ける中高生">
     </figure>
 
     <div class="hbc__head">
