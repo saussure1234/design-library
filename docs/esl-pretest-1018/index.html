@@ -1166,24 +1166,32 @@ textarea.fea__in{resize:vertical;min-height:110px}
 
 /* ── タイムテーブルを実施概要の1行に入れる（2026-08-31） ──────────────
    独立した節をやめ、日程・会場と同じ dt/dd の並びに入れた。
-   スロットの通し時間（10:00〜10:50）は冗長なので載せない。 */
-.tt{display:grid;gap:10px}
-.tt__row{display:grid;grid-template-columns:auto auto 1fr;gap:4px 12px;align-items:baseline}
-.tt__no{grid-row:1 / span 2;align-self:center;font-size:13px;font-weight:700;
-  color:var(--c-primary,#159A5B);white-space:nowrap}
-.tt__t{font-size:13px;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--c-ink2)}
-.tt__w{font-size:13px}
-@media (max-width:600px){
-  /* ★span 3 だと4つ目（2本目のフィードバック行）が1列目に落ちて崩れた。
-     行数は 時刻2＋内容2＝4なので、スロット名は全行にまたがらせる。 */
-  .tt__row{grid-template-columns:auto minmax(0,1fr);row-gap:1px}
-  /* ★1 / -1 は「暗黙の行」では効かない（-1が先頭線を指してしまう）。
-     列2に入る子は 時刻2＋内容2＝4つなので span 4 と数で指定する。 */
-  .tt__no{grid-row:1 / span 4;align-self:start;padding-top:1px;font-size:12px}
-  .tt__t{font-size:11px;line-height:1.5}
-  .tt__w{font-size:12px;line-height:1.5;margin-bottom:6px}
-  .tt__w:last-of-type{margin-bottom:0}
+   スロットの通し時間（10:00〜10:50）は冗長なので載せない。
+   ★級数はこのページのルールに合わせる。最小は --fs-note / --fs-sm の18px。
+     11〜13pxで組んでいたのはルール外だった。 */
+.tt{display:grid;gap:clamp(20px,2.4vw,30px);margin-top:4px}
+.tt__row{display:grid;grid-template-columns:6.5em minmax(0,1fr);
+  gap:6px clamp(16px,2vw,28px);align-items:baseline}
+.tt__no{grid-row:1 / span 4;align-self:start;
+  font-size:var(--fs-base,18px);font-weight:700;
+  color:var(--c-primary,#159A5B);white-space:nowrap;line-height:1.7}
+.tt__t{font-size:var(--fs-note,18px);font-variant-numeric:tabular-nums;
+  white-space:nowrap;color:var(--c-ink3);line-height:1.7}
+.tt__w{font-size:var(--fs-base,18px);line-height:1.7;margin-bottom:10px}
+.tt__w:last-of-type{margin-bottom:0}
+@media (min-width:900px){
+  /* 広い画面では 時刻｜内容 を横に並べる */
+  .tt__row{grid-template-columns:6.5em 10.5em minmax(0,1fr)}
+  .tt__no{grid-row:1 / span 2}
+  .tt__w{margin-bottom:0}
 }
+@media (max-width:600px){
+  .tt{gap:22px}
+  .tt__row{grid-template-columns:minmax(0,1fr);gap:2px}
+  .tt__no{grid-row:auto;margin-bottom:4px}
+  .tt__w{margin-bottom:8px}
+}
+
 </style>
 </head>
 <body>
@@ -1229,7 +1237,7 @@ textarea.fea__in{resize:vertical;min-height:110px}
   <div class="wrap">
     
 
-    <p class="evl__intro fx" data-fx="fadeup">「面接試験ってどんな感じ？」<wbr><span class="nb">「英語での受け答え、できるかな？」</span><br>そんな不安や疑問を解消するために、<wbr><span class="nb">英検®二次試験プレテスト（模擬試験）＆個別相談会を開催します。</span><br><span class="nb">今回は、英検®3級・英検®準2級・英検®2級の二次面接を</span><wbr><span class="nb">本番形式で受験し、フィードバックを受けられる</span><wbr><span class="nb">個別相談も可能なイベントを ESL club 渋谷校で実施します。</span></p>
+    <p class="evl__intro fx" data-fx="fadeup">「面接試験ってどんな感じ？」<wbr><span class="nb">「英語での受け答え、できるかな？」</span><br>そんな不安や疑問を解消するために、<wbr><span class="nb">英検®二次試験プレテスト（模擬試験）＆個別相談会を開催します。</span><br><br><span class="nb">今回は、英検®3級・英検®準2級・英検®2級の二次面接を</span><wbr><span class="nb">本番形式で受験し、フィードバックを受けられる</span><wbr><span class="nb">個別相談も可能なイベントを ESL club 渋谷校で実施します。</span></p>
 
     <ul class="evl__list">
       <li class="evl__item fx" data-fx="fadeup" data-d="0">
@@ -1286,7 +1294,7 @@ textarea.fea__in{resize:vertical;min-height:110px}
       </div><div class="evs__row fx" data-fx="fadeup" data-d="180">
         <dt>対象</dt><dd>3級・準2級・2級、いずれかの二次試験（面接）を受験予定の小中高生と、その保護者</dd>
       </div><div class="evs__row fx" data-fx="fadeup" data-d="270">
-        <dt>参加費</dt><dd>1,100円（税込）<span class="evs__sm">※クレジットカード支払いのみとなります。お申し込み後、イベント1週間前までのクレジットカードのご登録の確認ができない場合は自動キャンセルとさせていただきますのでご了承ください。</span><span class="evs__sm">※イベント3日前（10月15日(木) 23:59）以降のキャンセルは、ご欠席扱いとなり、ご返金はできませんのでご了承ください。キャンセルはメールまたはお電話にてご連絡をお願いいたします。</span></dd>
+        <dt>参加費</dt><dd>1,000円（税抜）／1,100円（税込）<span class="evs__sm">※クレジットカード支払いのみとなります。お申し込み後、イベント1週間前までのクレジットカードのご登録の確認ができない場合は自動キャンセルとさせていただきますのでご了承ください。</span><span class="evs__sm">※イベント3日前（10月15日(木) 23:59）以降のキャンセルは、ご欠席扱いとなり、ご返金はできませんのでご了承ください。キャンセルはメールまたはお電話にてご連絡をお願いいたします。</span></dd>
       </div><div class="evs__row fx" data-fx="fadeup" data-d="360">
         <dt>定員</dt><dd>8名（各スロット2名まで）</dd>
       </div><div class="evs__row fx" data-fx="fadeup" data-d="500">
