@@ -1163,6 +1163,27 @@ textarea.fea__in{resize:vertical;min-height:110px}
 @media (max-width:560px){
   .evs__cols--4{grid-template-columns:minmax(0,1fr)}
 }
+
+/* ── タイムテーブルを実施概要の1行に入れる（2026-08-31） ──────────────
+   独立した節をやめ、日程・会場と同じ dt/dd の並びに入れた。
+   スロットの通し時間（10:00〜10:50）は冗長なので載せない。 */
+.tt{display:grid;gap:10px}
+.tt__row{display:grid;grid-template-columns:auto auto 1fr;gap:4px 12px;align-items:baseline}
+.tt__no{grid-row:1 / span 2;align-self:center;font-size:13px;font-weight:700;
+  color:var(--c-primary,#159A5B);white-space:nowrap}
+.tt__t{font-size:13px;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--c-ink2)}
+.tt__w{font-size:13px}
+@media (max-width:600px){
+  /* ★span 3 だと4つ目（2本目のフィードバック行）が1列目に落ちて崩れた。
+     行数は 時刻2＋内容2＝4なので、スロット名は全行にまたがらせる。 */
+  .tt__row{grid-template-columns:auto minmax(0,1fr);row-gap:1px}
+  /* ★1 / -1 は「暗黙の行」では効かない（-1が先頭線を指してしまう）。
+     列2に入る子は 時刻2＋内容2＝4つなので span 4 と数で指定する。 */
+  .tt__no{grid-row:1 / span 4;align-self:start;padding-top:1px;font-size:12px}
+  .tt__t{font-size:11px;line-height:1.5}
+  .tt__w{font-size:12px;line-height:1.5;margin-bottom:6px}
+  .tt__w:last-of-type{margin-bottom:0}
+}
 </style>
 </head>
 <body>
@@ -1208,7 +1229,7 @@ textarea.fea__in{resize:vertical;min-height:110px}
   <div class="wrap">
     
 
-    <p class="evl__intro fx" data-fx="fadeup">「面接試験ってどんな感じ？」<wbr><span class="nb">「英語での受け答え、できるかな？」</span><br>そんな不安や疑問を解消するために、<wbr><span class="nb">英検®二次試験プレテスト（模擬試験）＆個別相談会を開催します。</span><br>今回は、<wbr><span class="nb">英検®3級・英検®準2級・英検®2級の二次面接を本番形式で受験し、フィードバックを受けられる個別相談も可能なイベントを</span><wbr><span class="nb">ESL club 渋谷校で実施します。</span></p>
+    <p class="evl__intro fx" data-fx="fadeup">「面接試験ってどんな感じ？」<wbr><span class="nb">「英語での受け答え、できるかな？」</span><br>そんな不安や疑問を解消するために、<wbr><span class="nb">英検®二次試験プレテスト（模擬試験）＆個別相談会を開催します。</span><br><span class="nb">今回は、英検®3級・英検®準2級・英検®2級の二次面接を</span><wbr><span class="nb">本番形式で受験し、フィードバックを受けられる</span><wbr><span class="nb">個別相談も可能なイベントを ESL club 渋谷校で実施します。</span></p>
 
     <ul class="evl__list">
       <li class="evl__item fx" data-fx="fadeup" data-d="0">
@@ -1259,74 +1280,22 @@ textarea.fea__in{resize:vertical;min-height:110px}
 
     <dl class="evs__spec">
       <div class="evs__row fx" data-fx="fadeup" data-d="0">
-        <dt>日程</dt><dd>2026年10月18日(日)</dd>
+        <dt>日程</dt><dd>2026年10月18日(日)<span class="evs__sm">※お申込み期限：2026年10月7日(水)</span><span class="evs__sm">※定員に達した場合は期間内であっても受付を終了いたします。</span></dd>
       </div><div class="evs__row fx" data-fx="fadeup" data-d="90">
         <dt>会場</dt><dd>ESL club 渋谷校（〒150-0002　東京都渋谷区渋谷1丁目8−6　宮益坂STビル 10F）</dd>
       </div><div class="evs__row fx" data-fx="fadeup" data-d="180">
         <dt>対象</dt><dd>3級・準2級・2級、いずれかの二次試験（面接）を受験予定の小中高生と、その保護者</dd>
       </div><div class="evs__row fx" data-fx="fadeup" data-d="270">
-        <dt>参加費</dt><dd>1,000円（税抜）<span class="evs__sm">※クレジットカード支払いのみとなります。お申し込み後、イベント1週間前までのクレジットカードのご登録の確認ができない場合は自動キャンセルとさせていただきますのでご了承ください。</span><span class="evs__sm">※イベント3日前（10月15日(木) 23:59）以降のキャンセルは、ご欠席扱いとなり、ご返金はできませんのでご了承ください。キャンセルはメールまたはお電話にてご連絡をお願いいたします。</span></dd>
+        <dt>参加費</dt><dd>1,100円（税込）<span class="evs__sm">※クレジットカード支払いのみとなります。お申し込み後、イベント1週間前までのクレジットカードのご登録の確認ができない場合は自動キャンセルとさせていただきますのでご了承ください。</span><span class="evs__sm">※イベント3日前（10月15日(木) 23:59）以降のキャンセルは、ご欠席扱いとなり、ご返金はできませんのでご了承ください。キャンセルはメールまたはお電話にてご連絡をお願いいたします。</span></dd>
       </div><div class="evs__row fx" data-fx="fadeup" data-d="360">
         <dt>定員</dt><dd>8名（各スロット2名まで）</dd>
-      </div><div class="evs__row fx" data-fx="fadeup" data-d="450">
-        <dt>お申込み期限</dt><dd>2026年10月7日(水)<span class="evs__sm">※定員に達した場合は期間内であっても受付を終了いたします。</span></dd>
+      </div><div class="evs__row fx" data-fx="fadeup" data-d="500">
+        <dt>タイムテーブル</dt><dd><div class="tt"><div class="tt__row"><b class="tt__no">スロット1</b><span class="tt__t">10:00～10:20</span><span class="tt__w">模擬面接試験</span><span class="tt__t">10:20～10:50</span><span class="tt__w">フィードバック・<wbr>個別相談会</span></div><div class="tt__row"><b class="tt__no">スロット2</b><span class="tt__t">11:00～11:20</span><span class="tt__w">模擬面接試験</span><span class="tt__t">11:20～11:50</span><span class="tt__w">フィードバック・<wbr>個別相談会</span></div><div class="tt__row"><b class="tt__no">スロット3</b><span class="tt__t">12:00～12:20</span><span class="tt__w">模擬面接試験</span><span class="tt__t">12:20～12:50</span><span class="tt__w">フィードバック・<wbr>個別相談会</span></div><div class="tt__row"><b class="tt__no">スロット4</b><span class="tt__t">13:00～13:20</span><span class="tt__w">模擬面接試験</span><span class="tt__t">13:20～13:50</span><span class="tt__w">フィードバック・<wbr>個別相談会</span></div></div><span class="evs__sm">※お申込みのタイミング次第で、ご希望のスロットに入れない場合がございます。追って、メールでご案内いたしますので、ご確認ください。</span></dd>
       </div><div class="evs__row fx" data-fx="fadeup" data-d="540">
         <dt>申し込み方法</dt><dd>まずは申し込みフォームよりお申し込みください。お支払い方法、および確定のスケジュール（スロット）については追って、メールでご案内いたします。</dd>
       </div>
     </dl>
 
-    <div class="evs__tl">
-      <p class="evs__tlh fx" data-fx="fadeup">タイムテーブル</p>
-      <p class="evs__tlnote fx" data-fx="fadeup">※お申込みのタイミング次第で、ご希望のスロットに入れない場合がございます。追って、メールでご案内いたしますので、ご確認ください。</p>
-      <div class="evs__cols evs__cols--4">
-        <div class="evs__col fx" data-fx="fadeup" data-d="0">
-          <p class="evs__lv"><b>スロット1</b><span>10:00～10:50</span></p>
-          <ol class="evs__steps">
-            <li class="evs__step">
-              <p class="evs__time">10:00～10:20</p>
-              <p class="evs__what">模擬面接試験</p>
-            </li><li class="evs__step">
-              <p class="evs__time">10:20～10:50</p>
-              <p class="evs__what">フィードバック・<wbr>個別相談会</p>
-            </li>
-          </ol>
-        </div><div class="evs__col fx" data-fx="fadeup" data-d="90">
-          <p class="evs__lv"><b>スロット2</b><span>11:00～11:50</span></p>
-          <ol class="evs__steps">
-            <li class="evs__step">
-              <p class="evs__time">11:00～11:20</p>
-              <p class="evs__what">模擬面接試験</p>
-            </li><li class="evs__step">
-              <p class="evs__time">11:20～11:50</p>
-              <p class="evs__what">フィードバック・<wbr>個別相談会</p>
-            </li>
-          </ol>
-        </div><div class="evs__col fx" data-fx="fadeup" data-d="180">
-          <p class="evs__lv"><b>スロット3</b><span>12:00～12:50</span></p>
-          <ol class="evs__steps">
-            <li class="evs__step">
-              <p class="evs__time">12:00～12:20</p>
-              <p class="evs__what">模擬面接試験</p>
-            </li><li class="evs__step">
-              <p class="evs__time">12:20～12:50</p>
-              <p class="evs__what">フィードバック・<wbr>個別相談会</p>
-            </li>
-          </ol>
-        </div><div class="evs__col fx" data-fx="fadeup" data-d="270">
-          <p class="evs__lv"><b>スロット4</b><span>13:00～13:50</span></p>
-          <ol class="evs__steps">
-            <li class="evs__step">
-              <p class="evs__time">13:00～13:20</p>
-              <p class="evs__what">模擬面接試験</p>
-            </li><li class="evs__step">
-              <p class="evs__time">13:20～13:50</p>
-              <p class="evs__what">フィードバック・<wbr>個別相談会</p>
-            </li>
-          </ol>
-        </div>
-      </div>
-      </div>
-      
     </div>
 
     
