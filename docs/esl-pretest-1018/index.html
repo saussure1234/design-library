@@ -662,6 +662,62 @@ html:not(.js) .lm__i{transform:none}
   72%    {border-radius:62% 38% 45% 55% / 40% 60% 40% 60%;transform:translate(3%,-3%) scale(.94)}}
 @media(prefers-reduced-motion:reduce){.hbe__blob{animation:none!important}}
 
+/* ══ FVの動き ══════════════════════════════════════════════
+   オンライン校（esl6）と同じ組み方を移す。読む順に組み上がる：
+     前置き → 見出し（行ごと）→ 写真 → 日付 → 対象・時間 → ボタン
+   ★このページに開幕の波（#intro）は無いので、写真が用意でき次第すぐ始める。
+   ★写真に「漂い続ける動き」は入れない。
+     オンライン校で 0.6px/秒 の無限運動が、合成されない環境で
+     1pxずつ飛んで縦揺れに見えた（⑭で撤去済み）。入場だけにする。
+   ★.nb / wbr は日本語の改行制御に使っているので触らない。
+   ══════════════════════════════════════════════════════════ */
+html.fv-anim .hbe__eyebrow,
+html.fv-anim .hbe__ph,
+html.fv-anim .hbe__date,
+html.fv-anim .hbe__times li,
+html.fv-anim .hbe__cta{opacity:0}
+html.fv-anim .hbe__blob{opacity:0;transition:opacity .9s ease-out}
+html.fv-anim .hbe.is-in .hbe__blob{opacity:1}
+
+@keyframes fvUp  {from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fvPh  {from{opacity:0;transform:translateY(26px) scale(.972)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes fvPop {from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
+@keyframes fvDate{from{opacity:0;transform:translateY(14px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+html.fv-anim .hbe.is-in .hbe__eyebrow{animation:fvUp .62s cubic-bezier(.16,1,.3,1) 0s both}
+
+/* 見出しは「実際に描画された行」で区切って順に出す。行の束ね方は JS が
+   offsetTop を測って決めるので、PC・スマホ・折り返しの違いに自動で追従する。
+   🚨 インライン要素で安全に動かせるのは opacity と filter だけ。
+      inline-block は <em> を挟んだ行で余分な行ボックスが生まれ、
+      clip-path はインラインに掛けると文字が一切描画されなくなる（esl6で実測）。 */
+html.fv-anim .hbe__h1{opacity:1}
+html.fv-anim .hbe__h1 .ln{opacity:0}
+@keyframes fvLine  {from{opacity:0;filter:blur(7px)}to{opacity:1;filter:blur(0)}}
+@keyframes fvLineSP{from{opacity:0;filter:blur(4px)}to{opacity:1;filter:blur(0)}}
+@media(min-width:901px){
+  html.fv-anim .hbe.is-in .hbe__h1 .ln{animation:fvLine .78s cubic-bezier(.16,1,.3,1) both}
+}
+@media(max-width:900px){
+  html.fv-anim .hbe.is-in .hbe__h1 .ln{animation:fvLineSP .58s ease-out both}
+}
+
+html.fv-anim .hbe.is-in .hbe__ph  {animation:fvPh .86s cubic-bezier(.16,1,.3,1) .14s both}
+/* 日付はこのページの主役。左端を軸に「置かれる」ように出す
+   （中央を軸にすると数字が横に伸び縮みして見える） */
+html.fv-anim .hbe__date{transform-origin:0 70%}
+html.fv-anim .hbe.is-in .hbe__date{animation:fvDate .62s cubic-bezier(.16,1,.3,1) .40s both}
+html.fv-anim .hbe.is-in .hbe__times li:nth-child(1){animation:fvUp .55s cubic-bezier(.16,1,.3,1) .54s both}
+html.fv-anim .hbe.is-in .hbe__times li:nth-child(2){animation:fvUp .55s cubic-bezier(.16,1,.3,1) .63s both}
+html.fv-anim .hbe.is-in .hbe__cta {animation:fvPop .58s cubic-bezier(.16,1,.3,1) .74s both}
+
+@media(prefers-reduced-motion:reduce){
+  html.fv-anim .hbe__eyebrow,html.fv-anim .hbe__h1,html.fv-anim .hbe__h1 .ln,
+  html.fv-anim .hbe__ph,html.fv-anim .hbe__date,html.fv-anim .hbe__times li,
+  html.fv-anim .hbe__cta,html.fv-anim .hbe__blob{
+    opacity:1!important;animation:none!important;filter:none!important;transform:none!important}
+}
+
 /* 人物（背景を抜いた素材）。面より大きくして、はみ出させる。
    ★下端は山の上で止める。山にかかると机ごと切れて、切り抜きが台無しになる */
 /* ★素材は机と答案が写真の枠で断ち切られている（切り抜きの外周が直線）。
@@ -1197,6 +1253,11 @@ textarea.fea__in{resize:vertical;min-height:110px}
    全幅に伸ばす。 */
 .fea__grid > .fea__after{grid-column:1 / -1}
 </style>
+<script>
+/* FVの登場を仕込むフラグ。ここで初めて要素が隠れるので、
+   JSが動かない環境では何も隠れない（＝真っ白にならない） */
+document.documentElement.classList.add('fv-anim');
+</script>
 </head>
 <body>
 <div id="growth" class="bg-cnr2 bg-cnr2--gridR" aria-hidden="true"><div class="gl" data-speed="0.14"><span class="bgfill"></span></div></div>
@@ -1911,6 +1972,54 @@ document.documentElement.classList.add('js');
     btn.addEventListener('click', function(){ set(!open); });
     addEventListener('resize', function(){ if(open) set(true); }, {passive:true});
   });
+})();
+
+/* ── FVの登場 ────────────────────────────────
+   見出しを「実際に描画された行」で束ねて、行ごとに遅らせる。
+   行数を決め打ちしないので、PC・スマホ・折り返しの違いに自動で追従する */
+(function(){
+  var h1=document.querySelector('.hbe__h1');
+  if(h1){
+    /* 素のテキスト（「＆」）も包まないと、そこだけ先に出てしまう */
+    [].slice.call(h1.childNodes).forEach(function(n){
+      if(n.nodeType===3 && n.nodeValue.trim()){
+        var w=document.createElement('span'); w.className='ln';
+        n.parentNode.replaceChild(w,n); w.appendChild(n);
+      }
+    });
+    [].slice.call(h1.querySelectorAll('.nb')).forEach(function(e){ e.classList.add('ln'); });
+
+    var assign=function(){
+      var us=[].slice.call(h1.querySelectorAll('.ln')), lines=[], last=null;
+      us.forEach(function(u){
+        var t=Math.round(u.getBoundingClientRect().top);
+        if(last===null || Math.abs(t-last)>6){ lines.push([]); last=t; }
+        lines[lines.length-1].push(u);
+      });
+      lines.forEach(function(g,i){
+        g.forEach(function(u){ u.style.animationDelay=(0.09+i*0.115).toFixed(3)+'s'; });
+      });
+    };
+    assign();
+    /* まだ再生していなければ、幅が変わったとき行の束ね直しをする */
+    addEventListener('resize', function(){
+      var s=document.querySelector('.hbe');
+      if(s && !s.classList.contains('is-in')) assign();
+    }, {passive:true});
+  }
+
+  /* 始める合図。写真が用意できてからにするが、待つのは最長 600ms。
+     読み込みが遅いときに、いつまでも真っ白のFVを見せない */
+  function fvIn(){
+    var s=document.querySelector('.hbe');
+    if(s && !s.classList.contains('is-in')) s.classList.add('is-in');
+  }
+  var img=document.querySelector('.hbe__ph img');
+  if(img && !img.complete){
+    img.addEventListener('load', fvIn); img.addEventListener('error', fvIn);
+  }
+  requestAnimationFrame(function(){ if(!img || img.complete) fvIn(); });
+  setTimeout(fvIn, 600);
 })();
 </script>
 </body>
