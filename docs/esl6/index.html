@@ -706,7 +706,11 @@ html:not(.js) .lm__i{transform:none}
 /* 級数を上げたぶん1行に収まらない幅が出る。折り返しを許す
    （nowrap のままだと 390px で6px はみ出して横スクロールが出る） */
 .hbc__note{font-size:18px;font-weight:700;
-  color:var(--c-ink2);letter-spacing:.01em;line-height:1.7;text-wrap:pretty}
+  color:var(--c-ink2);letter-spacing:.01em;line-height:1.7;text-wrap:pretty;
+  /* ★PCで右の写真に食い込んでいた（実測：960〜1920pxのすべてで29〜40px重なり）。
+     文言が26字になり1行463pxに伸びたのに対し、写真の左端までは最大434pxしかない。
+     CTAボタンと同じ幅で頭打ちにして、必ず2行に折る。 */
+  max-width:336px}
 
 /* 落書き */
 .hbc__dd{position:absolute;z-index:4;pointer-events:none}
@@ -2841,8 +2845,10 @@ html.fv-anim .hbc.is-in .hbc__conf--6{--r:-8deg;animation:fvConf 18s ease-in-out
    ⑤ CTA下の注記：新しい文言は26字。360〜430pxで最後の1文字だけが
       2行目に落ちるので、意味の切れ目（「…スケジュールを」の後）で折る。
       PCでは1行に収まるので改行しない。 */
-.sp-br{display:none}
-@media (max-width:520px){ .sp-br{display:inline} }
+/* ★520px以下だけの改行にしていたが、PCでも写真に当たるので常に折る。
+   「目標級までの合格スケジュールを」15字＝270px／「レッスン後にご案内します」12字＝216px。
+   どちらも336px以内に収まる。 */
+.sp-br{display:inline}
 
 /* ③ 免責文「英検®は、公益財団法人…」：和文は同じpx数でも欧文より大きく見える。
       フッター下部の他の注記に合わせて1段落とし、行間を詰めすぎないようにする。 */
