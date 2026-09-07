@@ -3503,6 +3503,10 @@ document.documentElement.classList.add('fv-anim');
 @media(max-width:900px){
   .pmp__row{ grid-template-columns:minmax(0,1fr) !important }
   .pmp__item{ width:clamp(220px,60vw,290px) !important }
+  /* ★上の .pmp__box .vhr__item（1.15fr:0.85fr）は同じ詳細度で後ろにあるため、
+     狭い画面用の .tone-brand .vhr__item{1fr} に勝ってしまう。ここで打ち消す。
+     打ち消さないと POINT03 だけ緑の面が62%幅のまま、本文が1行8文字になる（実測375px）。 */
+  .pmp__box .vhr__item{ grid-template-columns:minmax(0,1fr) }
 }
 
 </style>
