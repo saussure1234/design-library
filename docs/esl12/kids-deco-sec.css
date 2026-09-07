@@ -1,0 +1,61 @@
+@charset "UTF-8";
+/* ══════════════════════════════════════════════════════════════════
+   小学生向け 装飾レイヤー ─ 【セクション】
+   採用案：fnc=案B / vbi=案A
+
+   ★このファイルは手書きしない。生成画像から機械的に起こす：
+       python3 trace.py fnc out/fnc_B.png    … 装飾だけを抜き出して形をなぞる
+       python3 mkcss.py                      … 箱の実測値から % を計算してCSS化
+     一度「同じ語彙で描き直し」をやって、向きも曲がり方も破線の刻みも
+     別物になった。描き直さない。なぞる。
+
+   ★箱の実測値（赤く塗って測った・撮影画像の座標系）
+       .fnc::before        top:-70px を足して   y-10 から 高さ584
+       .vbi>.wrap::before  top/bottom:-160px で y-16 から 高さ2030
+     生成画像の座標からこの箱の左上を引いてから % を出すこと。
+     忘れると縦に64px ずれる（一度やった）。
+
+   ★.vbi::before / ::after は背景の緑丸で埋まっているので .wrap 側を使う。
+     .wrap は max-width:1080px なので、left:calc(50% - 50vw)/width:100vw で
+     セクション幅に戻している。
+
+   ★マークアップ・文言・写真・並び・地の色・アニメーションには触らない。
+   ★戻すとき： python3 apply_deco.py --off
+   ══════════════════════════════════════════════════════════════════ */
+
+.fnc{position:relative}
+.fnc::before{
+  content:"";position:absolute;z-index:0;pointer-events:none;
+  top:-70px;left:0;right:0;bottom:0;
+  background-repeat:no-repeat;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 79 38'%3E%3Cpath d='M3.0 6.0 L5.0 6.0 L7.0 7.0 L9.0 8.0 L11.0 8.0 L13.0 8.0 L15.0 8.0 L17.0 8.0 L19.0 8.0 L21.0 7.0 L23.0 7.0 L25.0 6.0 L27.0 6.0 L29.0 5.0 L31.0 4.0 L33.0 3.0 L35.0 2.0 L37.0 1.0 L38.0 0.0' fill='none' stroke='%2300B21F' opacity='.6' stroke-width='1.8' stroke-linecap='round'/%3E%3Cpath d='M21.0 25.0 L24.0 25.0 L27.0 24.0 L30.0 23.0 L33.0 22.0 L36.0 21.0 L39.0 20.0 L42.0 18.0 L45.0 16.0 L48.0 14.0 L51.0 12.0 L54.0 9.0 L57.0 6.0 L60.0 2.0 L62.0 0.0' fill='none' stroke='%2300B21F' opacity='.6' stroke-width='1.8' stroke-linecap='round'/%3E%3Cpath d='M23.0 37.0 L27.0 37.0 L31.0 37.0 L35.0 37.0 L39.0 36.0 L43.0 35.0 L47.0 34.0 L51.0 32.0 L55.0 29.0 L59.0 27.0 L63.0 23.0 L67.0 19.0 L71.0 14.0 L75.0 6.0 L78.0 0.0' fill='none' stroke='%2300B21F' opacity='.6' stroke-width='1.8' stroke-linecap='round'/%3E%3Cpath d='M0.0 24.0 L1.0 24.0 L2.0 24.0 L3.0 24.0 L4.0 24.0 L5.0 24.0 L6.0 24.0 L7.0 25.0 L8.0 25.0 L9.0 25.0 L10.0 25.0 L11.0 25.0' fill='none' stroke='%2300B21F' opacity='.6' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 69 80'%3E%3Cpath d='M27.0 6.0 L28.0 6.0 L29.0 7.0 L30.0 9.0 L31.0 2.0 L32.0 10.0 L33.0 10.0 L34.0 10.0 L35.0 10.0 L36.0 9.0 L37.0 7.0 L38.0 6.0 L39.0 6.0' fill='none' stroke='%23FFEE03' stroke-width='2.2' stroke-linecap='round'/%3E%3Ccircle cx='63.5' cy='26.2' r='5.2' fill='%23FFEE03'/%3E%3Ccircle cx='4.2' cy='33.7' r='5.2' fill='%23FFEE03'/%3E%3Cpath d='M44.0 42.0 L45.0 43.0 L44.0 44.0 L48.0 45.0 L49.0 46.0 L49.0 47.0 L50.0 48.0 L50.0 49.0 L50.0 50.0 L50.0 51.0 L50.0 52.0 L49.0 53.0 L48.0 54.0 L41.0 55.0 L44.0 56.0 L44.0 57.0' fill='none' stroke='%23FFEE03' stroke-width='2.9' stroke-linecap='round'/%3E%3Ccircle cx='6.3' cy='74.3' r='5.5' fill='%23FFEE03'/%3E%3C/svg%3E");
+  background-position:
+     17.85%   1.83%,     /* 緑 79x38 生成の位置 x243 y0（成分4個をなぞった）*/
+     12.11%  36.90%;     /* 黄 69x80 生成の位置 x166 y176（成分5個をなぞった）*/
+  background-size: 79px 38px, 69px 80px;
+}
+
+.vbi > .wrap{position:relative}
+.vbi > .wrap::before{
+  content:"";position:absolute;z-index:0;pointer-events:none;
+  top:-160px;bottom:-160px;left:calc(50% - 50vw);width:100vw;
+  background-repeat:no-repeat;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 184 146'%3E%3Cpath d='M0.0 2.0 L1.0 3.0 L2.0 2.0 L3.0 2.0 L4.0 2.0 L5.0 2.0 L6.0 2.0 L7.0 2.0 L8.0 2.0 L9.0 2.0 L10.0 2.0 L11.0 2.0 L12.0 2.0 L13.0 2.0 L14.0 2.0 L15.0 2.0 L16.0 2.0' fill='none' stroke='%23FFEE03' stroke-width='3.5' stroke-linecap='round'/%3E%3Cpath d='M27.0 3.0 L28.0 3.0 L29.0 3.0 L30.0 3.0 L31.0 3.0 L32.0 3.0 L33.0 3.0 L34.0 3.0 L35.0 3.0 L36.0 3.0 L37.0 3.0 L38.0 3.0 L39.0 4.0 L40.0 4.0 L41.0 4.0 L42.0 4.0 L43.0 4.0' fill='none' stroke='%23FFEE03' stroke-width='3.8' stroke-linecap='round'/%3E%3Cpath d='M54.0 7.0 L55.0 7.0 L56.0 7.0 L57.0 7.0 L58.0 7.0 L59.0 7.0 L60.0 8.0 L61.0 8.0 L62.0 8.0 L63.0 8.0 L64.0 9.0 L65.0 9.0 L66.0 9.0 L67.0 9.0 L68.0 10.0 L69.0 10.0 L70.0 9.0' fill='none' stroke='%23FFEE03' stroke-width='3.3' stroke-linecap='round'/%3E%3Cpath d='M80.0 15.0 L81.0 15.0 L82.0 15.0 L83.0 15.0 L84.0 16.0 L85.0 16.0 L86.0 17.0 L87.0 17.0 L88.0 17.0 L89.0 18.0 L90.0 18.0 L91.0 19.0 L92.0 19.0 L93.0 20.0 L94.0 20.0 L95.0 20.0' fill='none' stroke='%23FFEE03' stroke-width='3.5' stroke-linecap='round'/%3E%3Cpath d='M104.0 27.0 L105.0 27.0 L106.0 27.0 L107.0 28.0 L108.0 29.0 L109.0 29.0 L110.0 30.0 L111.0 30.0 L112.0 31.0 L113.0 32.0 L114.0 32.0 L115.0 33.0 L116.0 33.0 L117.0 34.0 L118.0 33.0' fill='none' stroke='%23FFEE03' stroke-width='3.4' stroke-linecap='round'/%3E%3Cpath d='M126.0 43.0 L127.0 43.0 L128.0 43.0 L129.0 44.0 L130.0 45.0 L131.0 46.0 L132.0 46.0 L133.0 47.0 L134.0 48.0 L135.0 49.0 L136.0 50.0 L137.0 51.0 L138.0 51.0 L139.0 51.0' fill='none' stroke='%23FFEE03' stroke-width='3.7' stroke-linecap='round'/%3E%3Cpath d='M147.0 60.0 L147.0 61.0 L148.0 62.0 L148.0 63.0 L149.0 64.0 L150.0 65.0 L150.0 66.0 L151.0 67.0 L152.0 68.0 L153.0 69.0 L153.0 70.0 L154.0 71.0 L154.0 72.0 L154.0 73.0 L154.0 74.0' fill='none' stroke='%23FFEE03' stroke-width='3.7' stroke-linecap='round'/%3E%3Cpath d='M162.0 82.0 L162.0 83.0 L162.0 84.0 L163.0 85.0 L163.0 86.0 L164.0 87.0 L164.0 88.0 L165.0 89.0 L165.0 90.0 L166.0 91.0 L166.0 92.0 L167.0 93.0 L167.0 94.0 L168.0 95.0 L167.0 96.0 L167.0 97.0' fill='none' stroke='%23FFEE03' stroke-width='3.6' stroke-linecap='round'/%3E%3Cpath d='M173.0 107.0 L173.0 108.0 L173.0 109.0 L174.0 110.0 L174.0 111.0 L174.0 112.0 L174.0 113.0 L175.0 114.0 L175.0 115.0 L175.0 116.0 L176.0 117.0 L176.0 118.0 L176.0 119.0 L176.0 120.0 L177.0 121.0 L177.0 122.0' fill='none' stroke='%23FFEE03' stroke-width='3.8' stroke-linecap='round'/%3E%3Cpath d='M180.0 133.0 L180.0 134.0 L180.0 135.0 L180.0 136.0 L180.0 137.0 L181.0 138.0 L181.0 139.0 L181.0 140.0 L181.0 141.0 L181.0 142.0 L181.0 143.0 L181.0 144.0 L181.0 145.0' fill='none' stroke='%23FFEE03' stroke-width='4.0' stroke-linecap='round'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 72 65'%3E%3Cpath d='M24.0 1.0 L27.0 1.0 L30.0 2.0 L33.0 3.0 L36.0 3.0 L39.0 5.0 L42.0 6.0 L45.0 8.0 L48.0 10.0 L51.0 12.0 L54.0 15.0 L57.0 17.0 L60.0 21.0 L63.0 25.0 L66.0 31.0 L69.0 41.0 L71.0 45.0' fill='none' stroke='%2300B21F' opacity='.6' stroke-width='2.6' stroke-linecap='round'/%3E%3Cpath d='M0.0 17.0 L3.0 16.0 L6.0 16.0 L9.0 17.0 L12.0 17.0 L15.0 17.0 L18.0 18.0 L21.0 19.0 L24.0 20.0 L27.0 22.0 L30.0 24.0 L33.0 25.0 L36.0 28.0 L39.0 31.0 L42.0 34.0 L45.0 38.0 L48.0 44.0 L51.0 54.0 L54.0 61.0' fill='none' stroke='%2300B21F' opacity='.6' stroke-width='2.4' stroke-linecap='round'/%3E%3Cpath d='M4.0 35.0 L6.0 35.0 L8.0 35.0 L10.0 35.0 L12.0 36.0 L14.0 36.0 L16.0 37.0 L18.0 38.0 L20.0 39.0 L22.0 40.0 L24.0 42.0 L26.0 44.0 L28.0 46.0 L30.0 50.0 L32.0 54.0 L34.0 59.0 L35.0 60.0' fill='none' stroke='%2300B21F' opacity='.6' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 87 88'%3E%3Cpath d='M31.0 8.0 L32.0 8.0 L33.0 8.0 L34.0 8.0 L35.0 8.0 L36.0 8.0 L37.0 8.0 L38.0 8.0 L39.0 8.0 L40.0 8.0 L41.0 7.0 L42.0 8.0 L43.0 8.0 L44.0 8.0 L45.0 8.0 L46.0 8.0' fill='none' stroke='%23FFEE03' stroke-width='8.1' stroke-linecap='round'/%3E%3Ccircle cx='3.2' cy='21.8' r='2.4' fill='%23FFEE03'/%3E%3Cpath d='M78.0 40.0 L78.0 41.0 L78.0 42.0 L78.0 43.0 L78.0 44.0 L78.0 45.0 L78.0 46.0 L78.0 47.0 L78.0 48.0 L78.0 49.0 L78.0 50.0 L78.0 51.0 L78.0 52.0 L78.0 53.0 L78.0 54.0 L78.0 55.0 L78.0 56.0 L78.0 57.0 L78.0 58.0' fill='none' stroke='%23FFEE03' stroke-width='10.2' stroke-linecap='round'/%3E%3Cpath d='M19.0 66.0 L20.0 66.0 L21.0 66.0 L22.0 66.0 L23.0 66.0 L24.0 67.0 L25.0 66.0 L26.0 66.0 L27.0 66.0 L28.0 67.0 L29.0 66.0 L30.0 66.0 L31.0 66.0 L32.0 66.0 L33.0 66.0' fill='none' stroke='%23FFEE03' stroke-width='7.0' stroke-linecap='round'/%3E%3Ccircle cx='70.6' cy='84.1' r='2.2' fill='%23FFEE03'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 70 71'%3E%3Cpath d='M7.0 1.0 L9.0 3.0 L11.0 6.0 L13.0 8.0 L15.0 11.0 L17.0 13.0 L19.0 15.0 L21.0 17.0 L23.0 18.0 L25.0 20.0 L27.0 21.0 L29.0 22.0 L31.0 23.0 L33.0 23.0 L35.0 24.0 L37.0 24.0 L39.0 25.0 L41.0 25.0 L42.0 25.0' fill='none' stroke='%2300B21F' opacity='.6' stroke-width='2.6' stroke-linecap='round'/%3E%3Cpath d='M0.0 24.0 L3.0 27.0 L6.0 31.0 L9.0 34.0 L12.0 37.0 L15.0 39.0 L18.0 40.0 L21.0 42.0 L24.0 43.0 L27.0 44.0 L30.0 45.0 L33.0 46.0 L36.0 46.0 L39.0 46.0 L42.0 47.0 L45.0 47.0' fill='none' stroke='%2300B21F' opacity='.6' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M11.0 60.0 L15.0 61.0 L19.0 63.0 L23.0 65.0 L27.0 67.0 L31.0 68.0 L35.0 69.0 L39.0 69.0 L43.0 69.0 L47.0 69.0 L51.0 69.0 L55.0 69.0 L59.0 68.0 L63.0 67.0 L67.0 67.0 L69.0 66.0' fill='none' stroke='%2300B21F' opacity='.6' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-position:
+     12.82%   4.14%,     /* 黄 184x146 生成の位置 x161 y5（成分10個をなぞった） ★上マージンに乗っていたので縦に+57px 入れた*/
+     78.51%   6.56%,     /* 緑 72x65 生成の位置 x1074 y113（成分3個をなぞった）*/
+     14.86%  66.94%,     /* 黄 87x88 生成の位置 x201 y1284（成分5個をなぞった）*/
+     90.66%  80.50%;     /* 緑 70x71 生成の位置 x1242 y1561（成分3個をなぞった）*/
+  background-size: 184px 146px, 72px 65px, 87px 88px, 70px 71px;
+}
+
+/* ── スマホ：余白が無くなるので装飾は引っ込める（FVと同じ扱い）── */
+@media(max-width:900px){
+  .fnc::before,.vbi > .wrap::before{display:none}
+}

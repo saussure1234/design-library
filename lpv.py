@@ -355,7 +355,7 @@ def main():
     s.add_argument("--why", required=True, help="何を変えたか。後で用途不明にならないように")
     s.add_argument("--src", help="中身のフォルダ。省略時は派生元を複製")
     s.add_argument("--url", help="design-library 以外に公開する場合の実URL")
-    s.add_argument("--status", default="review", choices=STATUS)
+    s.add_argument("--status", default="live", choices=STATUS)  # リンクを作る＝見せる
     s.add_argument("--alert", help="管理画面の上に赤く出す注意書き（※要確認など）")
     s.add_argument("--date")
     s.set_defaults(f=cmd_new)
