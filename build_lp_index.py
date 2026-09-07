@@ -1,17 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""lp-registry.json / lp-flow.json から LP版管理ツールを生成する。
+"""lp-registry.json / video-registry.json / lp-flow.json から版管理ツールを生成する。
 
   python3 build_lp_index.py          … docs/lp/index.html を作る
   python3 build_lp_index.py --open   … 作ってブラウザで開く
 
 ★画面の作り
-    左： プロジェクト（要対応の件数つき）＋ しくみ（LP制作フロー / Claudeスキル）
+    左： LP案件 ／ 動画案件 ／ しくみ（LP制作フロー / Claudeスキル）
     右： 案件 → 版一覧・派生図・FB履歴
          しくみ → フローの各ステップと、そこで動くスキル・過去の事故
 
-★台帳（lp-registry.json）が正。ページは毎回そこから作り直す。
-  生成物を直接編集しないこと。次の生成で消える。
+★LPと動画は【同じリンク・別タブ】。ページは1枚（docs/lp/index.html）で、
+  台帳だけ2つに分かれている（lpv.py が LP、vv.py が動画を触る）。
+  動画の実体（mp4・ポスター・再生ページ）は docs/video/<版id>/ にあり、
+  この画面からは相対リンク ../video/<版id>/ で開く。
+
+★台帳が正。ページは毎回そこから作り直す。生成物を直接編集しないこと。次の生成で消える。
 ★スキル一覧は ~/.claude/skills/*/SKILL.md の frontmatter から拾う。
   拾うのは name / description / user-invocable だけ。本文は載せない
   （このリポジトリは公開なので、案件の中身を書き出さない）。
@@ -21,6 +25,7 @@ import json, os, re, subprocess, sys
 
 R = os.path.dirname(os.path.abspath(__file__))
 REG = os.path.join(R, "lp-registry.json")
+VREG = os.path.join(R, "video-registry.json")
 FLOW = os.path.join(R, "lp-flow.json")
 SKILLS_DIR = os.path.expanduser("~/.claude/skills")
 OUT_DIR = os.path.join(R, "docs", "lp")
@@ -158,6 +163,27 @@ tr:hover td{background:#fafbfc}
 .warn{color:#b91c1c;font-size:12px;margin-top:4px}
 .mainmark{background:#111827;color:#fff;font-size:10px;border-radius:3px;padding:1px 5px;margin-left:5px}
 
+/* 動画の版一覧＝サムネイルの札。動画は見出しだけでは区別がつかない。
+   ★一覧に <video> は置かない。開いた瞬間に全件読みに行って数十MB落ちる。
+     静止画だけ出して、再生は版ごとのページ（docs/video/<id>/）へ送る。 */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:16px}
+.card{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;
+  display:flex;flex-direction:column;border-top:4px solid var(--c)}
+.card .th{position:relative;display:block;aspect-ratio:16/9;background:#111;
+  text-decoration:none;overflow:hidden}
+.card .th img{width:100%;height:100%;object-fit:cover;display:block}
+.card .th .play{position:absolute;inset:0;display:grid;place-items:center;
+  color:#fff;font-size:34px;text-shadow:0 2px 10px rgba(0,0,0,.6);opacity:.9}
+.card .th .len{position:absolute;right:7px;bottom:6px;background:rgba(0,0,0,.72);
+  color:#fff;font-size:11px;font-weight:700;border-radius:4px;padding:1px 6px}
+.card .th.none{display:grid;place-items:center;background:#e5e7eb;color:#9ca3af;font-size:12px}
+.card .bd{padding:11px 13px 13px;flex:1}
+.card .t{font-size:13.5px;font-weight:800}
+.card .d{font-size:10.5px;color:var(--mute);margin-top:1px}
+.card .w{font-size:12.5px;margin-top:6px}
+.card .ft{font-size:11px;color:var(--mute);margin-top:7px;display:flex;
+  gap:8px;flex-wrap:wrap;align-items:center}
+
 /* 派生図 */
 .graph{position:relative;overflow-x:auto;padding:8px 4px 4px}
 .gcanvas{position:relative;z-index:1}
@@ -253,7 +279,8 @@ tr.rmiss{background:#fef2f2}
 .todo h3{font-size:14px;color:#b91c1c;margin-bottom:6px}
 .todo li{margin-left:18px;font-size:13px;margin-top:4px}
 .rules{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 18px;font-size:12.5px}
-.rules b{display:block;margin-bottom:4px}
+/* 見出しの b だけ block にする。li の中の b まで block にすると箇条書きが崩れる */
+.rules>b{display:block;margin-bottom:4px}
 .rules li{margin-left:18px}
 @media(max-width:820px){
   .app{flex-direction:column}
@@ -269,20 +296,42 @@ tr.rmiss{background:#fef2f2}
 
 JS = """
 // ★状態は3つ。shown（クライアントに見せた）になったリンクはそこで凍る。
-//   以降の直しは自動で新しいリンクへ逃がす（lpv.py update がやる）。
+//   以降の直しは自動で新しいリンクへ逃がす（lpv.py / vv.py update がやる）。
 const S={shown:['クライアントに提示','var(--live)','#f1fbf3'],
          internal:['自分の確認用','var(--review)','#fffbeb'],
          draft:['未公開','var(--draft)','#fff']};
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-let cur=DATA.projects[0].id, tab='graph';   // 最初に見たいのは系統。表は後
+
+// ★LPと動画は【同じリンク・別タブ】。画面は1枚、台帳は2つ（lp-registry / video-registry）。
+//   版の探し方（親の解決・リンクの組み立て）が台帳ごとに違うので、台帳ごとに小さな箱を作り、
+//   描画側は箱を渡されればどちらでも同じ関数で描けるようにしてある。
+function mkreg(reg,kind){
+  const ALL={}, OWNER={};
+  (reg.projects||[]).forEach(p=>p.versions.forEach(v=>{ALL[v.id]=v;OWNER[v.id]=p;}));
+  // 版は design-library の下にあるとは限らない（別リポ・別ドメインに出す案件がある）。
+  // 台帳に url があればそれを使う。無い時だけ組み立てる。
+  // 動画は mp4 とポスターが docs/video/<id>/ にあるので【相対】で指す。
+  // 絶対URLにすると、手元で開いた時にサムネイルが出ない。
+  const url = kind==='vid'
+    ? id=>{const v=ALL[id];return (v&&v.url)||'../video/'+id+'/';}
+    : id=>{const v=ALL[id];return (v&&v.url)||reg.base_url+id+'/';};
+  return {kind,reg,ALL,OWNER,url};
+}
+const LP=mkreg(DATA,'lp');
+const VID=(DATA.videos&&(DATA.videos.projects||[]).length)?mkreg(DATA.videos,'vid'):null;
+
+// cur は "lp:<案件id>" / "vid:<案件id>" / "__flow__"。
+// ★LPと動画で案件idがぶつかっても混ざらないよう、頭に台帳の種別を付けている。
+let cur='lp:'+DATA.projects[0].id, tab='graph';   // 最初に見たいのは系統。表は後
+const RG=()=>cur.slice(0,4)==='vid:'?VID:LP;
+const PID=()=>cur.slice(cur.indexOf(':')+1);
+// フッタの「更新」は2つの台帳の新しいほう。LPの日付だけ出すと、動画だけ更新した日に嘘になる
+const UPDATED=[DATA.updated, VID&&VID.reg.updated].filter(Boolean).sort().pop();
 
 function alerts(p){return p.versions.filter(v=>v.alert);}
-
-// 版は design-library の下にあるとは限らない（別リポ・別ドメインに出す案件がある）。
-// 台帳に url があればそれを使い、無い時だけ base_url + id で組み立てる。
-const ALL={}, OWNER={};
-DATA.projects.forEach(p=>p.versions.forEach(v=>{ALL[v.id]=v;OWNER[v.id]=p;}));
-function url(id){const v=ALL[id];return (v&&v.url)||DATA.base_url+id+'/';}
+const mmss=s=>{s=Math.round(s||0);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');};
+const mbs=b=>(b?(b/1e6).toFixed(1)+'MB':'');
+const vsec=p=>p.versions.reduce((x,v)=>x+((v.media&&v.media.duration)||0),0);
 
 const SK={}; (DATA.skills||[]).forEach(s=>SK[s.id]=s);
 const STEPS=(DATA.flow&&DATA.flow.steps)||[];
@@ -290,18 +339,22 @@ const STEPS=(DATA.flow&&DATA.flow.steps)||[];
 const MISSING=[...new Set(STEPS.filter(s=>s.skill&&!SK[s.skill]).map(s=>s.skill))];
 
 function sidebar(){
-  const tot=DATA.projects.reduce((a,p)=>a+alerts(p).length,0);
+  const tot=DATA.projects.reduce((a,p)=>a+alerts(p).length,0)
+    +(VID?VID.reg.projects.reduce((a,p)=>a+alerts(p).length,0):0);
   const gaps=STEPS.filter(s=>s.gap).length;
-  return `<h1>LP 版管理</h1>
-  <div class="cap">プロジェクト</div>
-  ${DATA.projects.map(p=>{const n=alerts(p).length;
-    return `<a data-p="${p.id}" class="${p.id===cur?'on':''}">${esc(p.name)}
-      <span class="n ${n?'bad':''}">${n||p.versions.length}</span></a>`}).join('')}
+  const row=(k,p)=>{const n=alerts(p).length, id=k+':'+p.id;
+    return `<a data-p="${id}" class="${id===cur?'on':''}">${esc(p.name)}
+      <span class="n ${n?'bad':''}">${n||p.versions.length}</span></a>`;};
+  return `<h1>版管理</h1>
+  <div class="cap">LP</div>
+  ${DATA.projects.map(p=>row('lp',p)).join('')}
+  ${VID?`<div class="cap">動画</div>
+    ${VID.reg.projects.map(p=>row('vid',p)).join('')}`:''}
   <div class="cap">しくみ</div>
   <a data-p="__flow__" class="${cur==='__flow__'?'on':''}">LP制作フローとスキル
     <span class="n ${gaps||MISSING.length?'bad':''}">${gaps?gaps+'欠':STEPS.length}</span></a>
-  <div class="foot">要対応 ${tot} 件<br>更新 ${esc(DATA.updated)}<br>
-  台帳 lp-registry.json</div>`;
+  <div class="foot">要対応 ${tot} 件<br>更新 ${esc(UPDATED)}<br>
+  台帳 lp-registry.json${VID?'<br>　　 video-registry.json':''}</div>`;
 }
 
 /* ── LP制作フロー ───────────────────────────────────────── */
@@ -435,19 +488,21 @@ function skillTable(){
       gaps.map(s=>`<li><b>${s.n}. ${esc(s.name)}</b> … ${esc(s.gap)}</li>`).join('')}</ul></div>`:''}`;
 }
 
-function linkCell(v){
+function linkCell(v,R){
   return v.status==='draft'
     ? `<span class="lk dead">${esc(v.id)}/</span>`
-    : `<a class="lk" href="${url(v.id)}" target="_blank" rel="noopener">${esc(v.id)}/ ↗</a>`;
+    : `<a class="lk" href="${R.url(v.id)}" target="_blank" rel="noopener">${esc(v.id)}/ ↗</a>`;
 }
 
-function listPane(p){
+/* ── 版一覧：LPは表、動画は札 ─────────────────────────── */
+function listPane(p,R){
   if(!p.versions.length)return '<p style="color:var(--mute)">まだ版がありません。'
-    +'<br>lpv.py new で最初の版を登録してください。</p>';
+    +`<br>${R.kind==='vid'?'vv.py':'lpv.py'} new で最初の版を登録してください。</p>`;
+  if(R.kind==='vid')return vListPane(p,R);
   const rows=p.versions.map(v=>{
     const [lab,c]=S[v.status]||S.draft;
     return `<tr>
-      <td>${linkCell(v)}</td>
+      <td>${linkCell(v,R)}</td>
       <td><span class="pill" style="background:${c}">${lab}</span></td>
       <td>${v.parent?esc(v.parent):'<span style="color:#9ca3af">初版</span>'}</td>
       <td>${esc(v.what)}
@@ -458,23 +513,54 @@ function listPane(p){
         ${v.shown_on?`<div style="font-size:11px">提示 ${esc(v.shown_on)}</div>`:''}</td></tr>`}).join('');
   return `<table><thead><tr><th>リンク</th><th>状態</th><th>派生元</th>
     <th>変更内容と更新</th><th>日付</th></tr></thead><tbody>${rows}</tbody></table>
-    ${glossary()}`;
+    ${glossary('lp')}`;
+}
+
+function thumb(v,R){
+  const m=v.media||{};
+  if(v.status==='draft')  return '<span class="th none">未公開</span>';
+  if(v.url)               return `<a class="th none" href="${R.url(v.id)}"
+                                    target="_blank" rel="noopener">別リポで公開 ↗</a>`;
+  return `<a class="th" href="${R.url(v.id)}" target="_blank" rel="noopener">
+    <img src="../video/${esc(v.id)}/poster.jpg" alt="" loading="lazy">
+    <span class="play">▶</span><span class="len">${mmss(m.duration)}</span></a>`;
+}
+
+function vListPane(p,R){
+  const cards=p.versions.map(v=>{
+    const [lab,c]=S[v.status]||S.draft, m=v.media||{};
+    return `<div class="card" style="--c:${c}">
+      ${thumb(v,R)}
+      <div class="bd">
+        <div class="t">${linkCell(v,R)}</div>
+        <div class="d">${esc(v.date)} · <span class="pill" style="background:${c}">${lab}</span></div>
+        <div class="w">${esc(v.what)}</div>
+        ${v.alert?`<div class="warn">▲ ${esc(v.alert)}</div>`:''}
+        <div class="ft">
+          <span>${esc(m.size||'')}</span><span>${mbs(m.bytes)}</span>
+          <span>派生元 ${v.parent?esc(v.parent):'—'}</span>
+          ${(v.fb||[]).length?`<span>FB${v.fb.length}件</span>`:''}
+        </div>
+      </div></div>`}).join('');
+  return `<div class="cards">${cards}</div>${glossary('vid')}`;
 }
 
 /* ★用語は説明を画面に置く。頭の中にしか無い言葉は、3日で意味が分からなくなる。 */
-function glossary(){
+function glossary(kind){
   const G=[
    ['未公開','まだリンクを作っていない。作りかけ'],
    ['自分の確認用','リンクはあるが、まだクライアントには渡していない。ここは何度でも直してよい'],
    ['クライアントに提示','渡した。<b>このリンクはここで凍る</b>。以降の直しは自動で新しいリンクへ逃がす'],
    ['派生元','そのリンクを作るとき、どのリンクをコピーして始めたか。ここが抜けると系統が追えなくなる'],
-   ['更新','<b>同じリンクのまま</b>中身を直した回数。提示前のリンクだけ増える'],
   ];
+  if(kind==='vid')G.push(['原本','ここにあるのは web用に圧縮したもの（CRF26）。'
+    +'原本と編集データは <code>~/video-edit-tool/projects/</code> が正']);
+  else G.push(['更新','<b>同じリンクのまま</b>中身を直した回数。提示前のリンクだけ増える']);
   return `<details class="glo"><summary>用語の意味</summary><dl>${
     G.map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl></details>`;
 }
 
-function graphPane(p){
+function graphPane(p,R){
   if(!p.versions.length)return '<p style="color:var(--mute)">まだ版がありません。</p>';
   const NW=212, GX=64, RH=116;              // 節の幅 / 横の間隔 / 1段の高さ
   const by={}; p.versions.forEach(v=>by[v.id]=v);
@@ -492,7 +578,7 @@ function graphPane(p){
     const pa=par(v); return depth[v.id]=pa?d(pa,seen)+1:0;};
   try{ p.versions.forEach(v=>d(v)); }
   catch(e){ return `<p style="color:var(--bad);font-weight:700">▲ ${esc(e.message)}<br>
-    <span style="font-weight:400;font-size:12.5px">lp-registry.json の parent を直してください。</span></p>`; }
+    <span style="font-weight:400;font-size:12.5px">台帳の parent を直してください。</span></p>`; }
 
   const kids={};
   p.versions.forEach(v=>{const pa=par(v); if(pa)(kids[pa.id]=kids[pa.id]||[]).push(v);});
@@ -515,12 +601,16 @@ function graphPane(p){
   const maxR=Math.max(...p.versions.map(v=>row[v.id]));
   const nodes=p.versions.map(v=>{const [lab,c,b]=S[v.status]||S.draft;
     // 親が別案件にいる版は、この図では根に見える。由来が消えるので明示する。
-    const out=v.parent&&!by[v.parent]&&ALL[v.parent];
-    const ext=out?`<div class="ext">← ${esc(OWNER[v.parent].name)} の ${esc(v.parent)} から</div>`:'';
+    const out=v.parent&&!by[v.parent]&&R.ALL[v.parent];
+    const ext=out?`<div class="ext">← ${esc(R.OWNER[v.parent].name)} の ${esc(v.parent)} から</div>`:'';
+    const m=v.media||{};
+    const sub=R.kind==='vid'
+      ? (m.duration?` · ${mmss(m.duration)}`:'')
+      : ((v.updates||[]).length?` · <b>更新${v.updates.length}回</b>`:'');
     return `<div class="gnode${out?' hasext':''}" id="g-${v.id}" style="--c:${c};--b:${b};`
       +`left:${depth[v.id]*(NW+GX)}px;top:${(row[v.id]*RH).toFixed(1)}px">
-      <div class="t">${linkCell(v)}</div>
-      <div class="d">${esc(v.date)} · ${lab}${(v.updates||[]).length?` · <b>更新${v.updates.length}回</b>`:''}</div>
+      <div class="t">${linkCell(v,R)}</div>
+      <div class="d">${esc(v.date)} · ${lab}${sub}</div>
       ${ext}<div class="w">${esc(v.what)}</div></div>`}).join('');
   // 世代が深いと画面に入り切らない。畳むと系統が読めなくなるので幅は変えず、断り書きだけ出す
   const hint=maxD>=5?`<p class="note" style="margin-bottom:8px">
@@ -560,6 +650,20 @@ function fbPane(p){
     </div></div>`).join('');
 }
 
+function rules(kind){
+  const cli=kind==='vid'?'vv.py':'lpv.py';
+  const last=kind==='vid'
+    ? 'ここにあるのは web用の圧縮版。<b>原本と編集データは ~/video-edit-tool/projects/ が正</b>'
+    : '作業は git の docs/ 配下で行う。Desktopの複製フォルダを正にしない';
+  return `<div class="rules" style="margin-top:16px"><b>運用ルール</b><ol>
+      <li>FBが来たら<b>直す前に</b>台帳へ1行足す（<code>${cli} fb</code>）</li>
+      <li><b>渡す前</b>のリンクは、同じリンクの中身を直して update に記録する</li>
+      <li><b>渡した後</b>のリンクは直さない。update すると自動で新しいリンクが出る</li>
+      <li>クライアントに渡したら <code>${cli} show &lt;id&gt;</code> を打つ。打った時点で凍る</li>
+      <li>${last}</li>
+    </ol></div>`;
+}
+
 function render(){
   document.querySelector('.side').innerHTML=sidebar();
   // 「しくみ」の画面は案件に属さないので、先に分岐して描き切る
@@ -577,15 +681,20 @@ function render(){
     addEventListener('load',drawFlow,{once:true});
     return;
   }
-  const p=DATA.projects.find(x=>x.id===cur);
+  const R=RG(), p=R.reg.projects.find(x=>x.id===PID());
+  if(!p){document.querySelector('.main').innerHTML=
+    '<p class="note">案件が見つかりません。</p>';return;}
   const al=alerts(p);
   const todo=al.length?`<div class="todo"><h3>要対応 ${al.length}件</h3><ul>${
     al.map(v=>`<li><b>${esc(v.id)}</b> … ${esc(v.alert)}</li>`).join('')}</ul></div>`:'';
-  const body = tab==='list'?listPane(p) : tab==='graph'?graphPane(p) : fbPane(p);
+  const body = tab==='list'?listPane(p,R) : tab==='graph'?graphPane(p,R) : fbPane(p);
+  const count = R.kind==='vid'
+    ? `${p.versions.length}本 / 計 ${mmss(vsec(p))}`
+    : `リンク ${p.versions.length}本`;
   document.querySelector('.main').innerHTML=`
     <div class="head"><h2>${esc(p.name)}</h2>
       <span class="cl">${esc(p.client||'')}</span>
-      <span class="mainlink">リンク ${p.versions.length}本</span>
+      <span class="mainlink">${count}</span>
     </div>
     <p class="note">${esc(p.note||'')}</p>
     ${todo}
@@ -594,13 +703,7 @@ function render(){
       <button data-t="graph" class="${tab==='graph'?'on':''}">派生図</button>
       <button data-t="fb" class="${tab==='fb'?'on':''}">FB履歴</button>
     </div><div class="pane">${body}</div>
-    <div class="rules" style="margin-top:16px"><b>運用ルール</b><ol>
-      <li>FBが来たら<b>直す前に</b>台帳へ1行足す</li>
-      <li><b>渡す前</b>のリンクは、同じリンクの中身を直して update に記録する</li>
-      <li><b>渡した後</b>のリンクは直さない。update すると自動で新しいリンクが出る</li>
-      <li>クライアントに渡したら <code>lpv.py show &lt;id&gt;</code> を打つ。打った時点で凍る</li>
-      <li>作業は git の docs/ 配下で行う。Desktopの複製フォルダを正にしない</li>
-    </ol></div>`;
+    ${rules(R.kind)}`;
   // ★requestAnimationFrame は【タブが非表示だと発火しない】。
   //   背面タブで開くと線が引かれない事故になるので rAF に依存しない。
   if(tab==='graph'){ setTimeout(()=>drawLines(p),0);
@@ -610,7 +713,9 @@ function render(){
 }
 
 document.addEventListener('click',e=>{
-  const a=e.target.closest('.side a'); if(a){cur=a.dataset.p;tab='graph';render();return;}
+  const a=e.target.closest('.side a[data-p]');
+  // 動画は現物を見たいので一覧が先。LPは系統が先
+  if(a){cur=a.dataset.p;tab=cur.slice(0,4)==='vid:'?'list':'graph';render();return;}
   const b=e.target.closest('.tabs button'); if(b){tab=b.dataset.t;render();return;}
   // フローの節を押したら、下の欄に詳細を出す（図は描き直さない）
   const fn=e.target.closest('.fnode');
@@ -618,13 +723,14 @@ document.addEventListener('click',e=>{
 });
 addEventListener('resize',()=>{
   if(cur==='__flow__')return drawFlow();
-  if(tab==='graph')drawLines(DATA.projects.find(x=>x.id===cur));});
+  if(tab==='graph'){const R=RG();drawLines(R.reg.projects.find(x=>x.id===PID()));}});
 render();
 """
 
 
 def main():
     reg = json.load(open(REG, encoding="utf-8"))
+    vreg = json.load(open(VREG, encoding="utf-8")) if os.path.exists(VREG) else None
     # ★おかしい台帳から画面を作らない。間違った図が出るほうが、出ないより危ない。
     #   lpv.py build 経由でなく、これを直接叩かれた時のための保険。
     if os.environ.get("LPV_CHECKED") != "1":   # lpv.py build 経由なら検査済み
@@ -634,11 +740,30 @@ def main():
                 sys.exit("\n  ★台帳にエラーがあるので生成しない（詳細は lpv.py check）")
         except ImportError:
             print("  ▲ lpv.py が無いので台帳を検査していない")
+    # ★動画の台帳が壊れていても LP の画面は作る。
+    #   動画のせいで LP の作業が止まるのは筋が悪いので、動画だけ落として警告する。
+    if vreg and os.environ.get("VV_CHECKED") != "1":
+        try:
+            import vv
+            if vv.check(vreg):
+                print("  ▲ 動画の台帳にエラー。動画は載せずに生成する（詳細は vv.py check）")
+                vreg = None
+        except ImportError:
+            print("  ▲ vv.py が無いので動画の台帳を検査していない")
     reg.pop("_readme", None)
     flow = json.load(open(FLOW, encoding="utf-8")) if os.path.exists(FLOW) else {"steps": []}
     flow.pop("_readme", None)
     reg["flow"] = flow
     reg["skills"], reg["bundle"] = read_skills()
+    if vreg:
+        vreg.pop("_readme", None)
+        # ★台帳は丸ごと DATA として公開ページに焼き込まれる。
+        #   画面が使わない内部の値は落とす。source は原本の【手元の絶対パス】なので、
+        #   残すと /Users/<ユーザー名>/… が公開HTMLに載る。
+        for p in vreg.get("projects", []):
+            for v in p.get("versions", []):
+                v.pop("source", None)
+        reg["videos"] = vreg
     doc = f"""<!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -646,7 +771,7 @@ def main():
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <!-- ★検索避け。リンクを知っている人だけが見る想定 -->
 <meta name="robots" content="noindex,nofollow,noarchive">
-<title>LP 版管理</title>
+<title>版管理（LP / 動画）</title>
 <style>{CSS}</style>
 </head>
 <body>
@@ -658,7 +783,9 @@ def main():
     open(OUT, "w", encoding="utf-8").write(doc)
     n = sum(len(p["versions"]) for p in reg["projects"])
     a = sum(len([v for v in p["versions"] if v.get("alert")]) for p in reg["projects"])
-    print(f"  生成: docs/lp/index.html（{len(reg['projects'])}案件 / {n}版 / 要対応 {a}件）")
+    vn = sum(len(p["versions"]) for p in (vreg or {}).get("projects", []))
+    print(f"  生成: docs/lp/index.html（LP {len(reg['projects'])}案件 / {n}版 / 要対応 {a}件"
+          + (f" ／ 動画 {len(vreg['projects'])}案件 / {vn}版" if vreg else "") + "）")
     if "--open" in sys.argv:
         subprocess.run(["open", OUT])
 

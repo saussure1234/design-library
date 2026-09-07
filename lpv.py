@@ -352,23 +352,6 @@ def cmd_build(a):
     say("── 台帳の検査 ──")
     if check(reg):
         sys.exit("\n  ★エラーがあるので生成しない。上を直してからやり直す")
-    # ★このリポジトリは公開。台帳に顧客名や金額が入っていたら push 前に気づけるようにする。
-    bl = os.path.join(ROOT, ".publish-blocklist")
-    if os.path.exists(bl):
-        words = [l.strip() for l in open(bl, encoding="utf-8")
-                 if l.strip() and not l.startswith("#")]
-        bad = []
-        for f in ("lp-registry.json", "lp-flow.json"):
-            t = open(os.path.join(ROOT, f), encoding="utf-8").read()
-            hit = sorted({w for w in words if w in t})
-            hit += ["金額らしき記述"] if re.search(r"[0-9][0-9,]{2,}円", t) else []
-            if hit:
-                bad.append(f"  ✗ {f} に公開できない語 → " + " / ".join(hit))
-        if bad:
-            for b in bad:
-                say(b, "r")
-            sys.exit("\n  ★このリポジトリは公開。顧客名・金額は符牒に置き換えてから build する\n"
-                     "    （許す語を増やすなら .publish-blocklist を編集）")
     r = subprocess.run([sys.executable, os.path.join(ROOT, "build_lp_index.py")],
                        cwd=ROOT, capture_output=True, text=True,
                        env={**os.environ, "LPV_CHECKED": "1"})
@@ -378,6 +361,12 @@ def cmd_build(a):
     if not a.push:
         say("\n  （公開していない。--push で commit & push）")
         return
+    # ★このリポジトリは公開。顧客名・金額・手元のパスが入っていたら push させない。
+    #   検査は publish_guard に一本化してある（押す口は lpv.py と vv.py の2つ、ガードは1つ）。
+    #   生成の【あと】に走らせるのが肝。台帳を綺麗にしても、生成物に焼き込まれていたら意味がない。
+    say("── 公開前の検査 ──")
+    import publish_guard
+    publish_guard.enforce(ROOT, say, sys.exit)
     subprocess.run(["git", "add", "-A"], cwd=ROOT, check=True)
     st = subprocess.run(["git", "status", "--porcelain"], cwd=ROOT,
                         capture_output=True, text=True).stdout.strip()
