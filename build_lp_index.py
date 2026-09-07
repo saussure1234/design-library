@@ -56,14 +56,15 @@ def scan_block(d, words):
 def read_skills(pack=True):
     """~/.claude/skills から name / description / user-invocable だけ拾う。
 
-    自作スキル（user-invocable: true）は docs/lp/skills/<id>.zip に固めて配る。
-    ★ただし禁止語を1語でも含むものは zip を作らない。公開リポなので取り返しがつかない。
+    自作スキル（user-invocable: true）は【1本の zip にまとめて】配る。
+    ★スキルごとにボタンを置くと、工程の詳細にまで出てきて煩い。入手口は1つでいい。
+    ★禁止語を1語でも含むものは束から外す。公開リポなので取り返しがつかない。
     """
-    import zipfile
-    out, words = [], blocklist()
+    import shutil, zipfile
+    out, words, ok = [], blocklist(), []
     zdir = os.path.join(OUT_DIR, "skills")
     if not os.path.isdir(SKILLS_DIR):
-        return out
+        return out, None
     for n in sorted(os.listdir(SKILLS_DIR)):
         d = os.path.join(SKILLS_DIR, n)
         f = os.path.join(d, "SKILL.md")
@@ -73,25 +74,33 @@ def read_skills(pack=True):
         fm = m.group(1) if m else ""
         g = lambda k: (re.search(rf"^{k}:\s*(.+)$", fm, re.M) or [None, ""])[1].strip().strip('"')
         s = {"id": n, "name": g("name") or n, "desc": g("description"),
-             "mine": g("user-invocable") == "true", "zip": None, "blocked": 0}
+             "mine": g("user-invocable") == "true", "blocked": 0}
         if pack and s["mine"]:
             hit = scan_block(d, words)
             if hit:
                 s["blocked"] = len(hit)
-                print(f"  ▲ {n}: 禁止語を含むので配布しない → " +
+                print(f"  ▲ {n}: 禁止語を含むので束に入れない → " +
                       ", ".join(f"{a}:「{b}」" for a, b in hit[:4]))
             else:
-                os.makedirs(zdir, exist_ok=True)
-                zp = os.path.join(zdir, n + ".zip")
-                with zipfile.ZipFile(zp, "w", zipfile.ZIP_DEFLATED) as z:
-                    for root, _, fs in os.walk(d):
-                        for fn in fs:
-                            p = os.path.join(root, fn)
-                            z.write(p, os.path.join(n, os.path.relpath(p, d)))
-                s["zip"] = f"skills/{n}.zip"
-                s["kb"] = round(os.path.getsize(zp) / 1024)
+                ok.append((n, d))
         out.append(s)
-    return out
+
+    bundle = None
+    if pack and ok:
+        if os.path.isdir(zdir):
+            shutil.rmtree(zdir)          # 古い個別zipを残さない
+        os.makedirs(zdir, exist_ok=True)
+        zp = os.path.join(zdir, "lp-skills.zip")
+        with zipfile.ZipFile(zp, "w", zipfile.ZIP_DEFLATED) as z:
+            for n, d in ok:
+                for root, _, fs in os.walk(d):
+                    for fn in fs:
+                        p = os.path.join(root, fn)
+                        z.write(p, os.path.join(n, os.path.relpath(p, d)))
+        bundle = {"path": "skills/lp-skills.zip", "n": len(ok),
+                  "kb": round(os.path.getsize(zp) / 1024),
+                  "ids": [n for n, _ in ok]}
+    return out, bundle
 
 CSS = """
 *{box-sizing:border-box;margin:0}
@@ -223,10 +232,17 @@ tr.rmiss{background:#fef2f2}
   padding-bottom:6px;border-bottom:2px solid #111827}
 .ghd h3{font-size:16px}
 .ghd span{font-size:12px;color:var(--mute)}
-.dlb{font-size:11px;font-weight:800;text-decoration:none;border-radius:6px;
-  padding:4px 10px;background:#111827;color:#fff;white-space:nowrap}
+.ghdb{margin-left:auto}
+.dlb{font-size:12px;font-weight:800;text-decoration:none;border-radius:7px;
+  padding:6px 14px;background:#111827;color:#fff;white-space:nowrap}
 .dlb:hover{background:#374151}
-.dlx{font-size:11px;color:#9ca3af}
+
+.glo{margin-top:14px;border:1px solid var(--line);border-radius:9px;background:#fafbfc}
+.glo summary{cursor:pointer;font-size:12.5px;font-weight:700;padding:9px 14px;color:var(--mute)}
+.glo summary:hover{color:var(--ink)}
+.glo dl{display:grid;grid-template-columns:88px 1fr;gap:5px 14px;padding:2px 16px 14px;font-size:12.5px}
+.glo dt{font-weight:800}
+.glo dd{color:var(--mute)}
 
 .todo{background:#fff;border:1px solid #fecaca;border-radius:10px;padding:14px 18px;margin-bottom:16px}
 .todo h3{font-size:14px;color:#b91c1c;margin-bottom:6px}
@@ -247,8 +263,8 @@ tr.rmiss{background:#fef2f2}
 """
 
 JS = """
-const S={live:['本番','var(--live)','#f1fbf3'],frozen:['凍結','var(--frozen)','#f8fafc'],
-         review:['確認用','var(--review)','#fffbeb'],draft:['未公開','var(--draft)','#fff']};
+const S={live:['公開中','var(--live)','#f1fbf3'],frozen:['旧版','var(--frozen)','#f8fafc'],
+         review:['確認待ち','var(--review)','#fffbeb'],draft:['作りかけ','var(--draft)','#fff']};
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 let cur=DATA.projects[0].id, tab='list';
 
@@ -286,12 +302,11 @@ function skillTag(id){
   if(!SK[id])return `<span class="sk miss">${esc(id)}／未作成</span>`;
   return `<span class="sk have">${esc(id)}</span>`;
 }
-function dl(id){
-  const s=SK[id];
-  if(!s||!s.mine)return '';
-  if(s.blocked)return '<span class="dlx">配布保留（案件名を含む）</span>';
-  if(!s.zip)return '';
-  return `<a class="dlb" href="${s.zip}" download>⇩ ${esc(id)}.zip ${s.kb}KB</a>`;
+// ★入手口は1つだけ。スキルごとにボタンを置くと工程の詳細にまで出てきて煩い。
+function dlAll(){
+  const b=DATA.bundle;
+  if(!b)return '';
+  return `<a class="dlb" href="${b.path}" download>⇩ スキル${b.n}本をまとめて取得（${b.kb}KB）</a>`;
 }
 
 /* 派生図と同じ描き方でフローを描く。
@@ -332,7 +347,8 @@ function flowPane(){
       <div class="fcanvas" style="width:${W}px;height:${H}px">${heads}${nodes}</div></div>
     <div class="fdp" id="fdp"><p class="fdph">工程を押すと、何をやるか・出るもの・過去にそこで何をやらかしたかが出ます。</p></div>
     <div class="ghd" style="margin-top:26px"><h3>スキル一覧</h3>
-      <span>~/.claude/skills/ の中身。自作のものは zip で配布する</span></div>
+      <span>~/.claude/skills/ の中身。展開先も同じ場所</span>
+      <span class="ghdb">${dlAll()}</span></div>
     ${skillTable()}`;
 }
 
@@ -368,7 +384,7 @@ function showStep(n){
   document.querySelectorAll('.fnode').forEach(x=>x.classList.toggle('on',+x.dataset.step===n));
   document.getElementById('fdp').innerHTML=`
     <div class="fdh"><span class="fno">${s.n}</span><h3>${esc(s.name)}</h3>
-      ${skillTag(s.skill)}${dl(s.skill)}</div>
+      ${skillTag(s.skill)}</div>
     <p class="fdw">${esc(s.what)}</p>
     ${s.tool?`<div class="fm"><i>道具</i>${esc(s.tool)}</div>`:''}
     ${s.out?`<div class="fm"><i>出るもの</i>${esc(s.out)}</div>`:''}
@@ -384,7 +400,7 @@ function skillTable(){
     return `<tr class="rmiss"><td><b>${esc(id)}</b></td>
       <td><span class="pill" style="background:var(--bad)">未作成</span></td>
       <td>フローが呼んでいるのに ~/.claude/skills/ に無い</td>
-      <td>${esc(at)}</td><td>—</td></tr>`}).join('');
+      <td>${esc(at)}</td></tr>`}).join('');
   const rows=list.map(s=>{
     const at=STEPS.filter(x=>x.skill===s.id);
     return `<tr>
@@ -393,13 +409,13 @@ function skillTable(){
                   :'<span class="pill" style="background:#94a3b8">既製</span>'}</td>
       <td class="sd">${esc(s.desc).slice(0,150)}</td>
       <td>${at.length?at.map(x=>esc(x.n+'. '+x.name)).join('<br>')
-                     :'<span style="color:#9ca3af">フロー未接続</span>'}</td>
-      <td>${s.mine?(dl(s.id)||'<span class="dlx">—</span>')
-                  :'<span class="dlx">既製のため配布しない</span>'}</td></tr>`}).join('');
+                     :'<span style="color:#9ca3af">フロー未接続</span>'}</td></tr>`}).join('');
   const gaps=STEPS.filter(s=>!s.skill&&s.gap);
+  const bl=list.filter(s=>s.mine&&s.blocked).map(s=>s.id);
   return `<table><thead><tr><th>スキル</th><th>種別</th><th>説明</th>
-      <th>フローのどこで動くか</th><th>入手</th></tr></thead><tbody>${miss}${rows}</tbody></table>
-    <p class="note" style="margin-top:8px">zip は <code>~/.claude/skills/</code> に展開すれば使える。</p>
+      <th>フローのどこで動くか</th></tr></thead><tbody>${miss}${rows}</tbody></table>
+    <p class="note" style="margin-top:8px">zip は <code>~/.claude/skills/</code> に展開すれば使える。
+      ${bl.length?`<b style="color:var(--bad)">${bl.map(esc).join(' / ')} は案件名を含むため束に入れていない。</b>`:''}</p>
     ${gaps.length?`<div class="todo" style="margin-top:16px"><h3>スキルにすべき工程 ${gaps.length}件</h3><ul>${
       gaps.map(s=>`<li><b>${s.n}. ${esc(s.name)}</b> … ${esc(s.gap)}</li>`).join('')}</ul></div>`:''}`;
 }
@@ -424,7 +440,24 @@ function listPane(p){
       <td>${esc(v.what)}${v.alert?`<div class="warn">▲ ${esc(v.alert)}</div>`:''}</td>
       <td>${mg}</td><td style="color:var(--mute);white-space:nowrap">${esc(v.date)}</td></tr>`}).join('');
   return `<table><thead><tr><th>リンク</th><th>状態</th><th>派生元</th>
-    <th>変更内容</th><th>本線</th><th>日付</th></tr></thead><tbody>${rows}</tbody></table>`;
+    <th>変更内容</th><th>完了</th><th>日付</th></tr></thead><tbody>${rows}</tbody></table>
+    ${glossary()}`;
+}
+
+/* ★用語は説明を画面に置く。頭の中にしか無い言葉は、3日で意味が分からなくなる。 */
+function glossary(){
+  const G=[
+   ['本線','いま施主に渡しているリンク。案件につき1本だけ'],
+   ['派生元','その版を作るとき、どの版をコピーして始めたか。ここが抜けると系統が追えなくなる'],
+   ['公開中','本線として出している版'],
+   ['旧版','かつて本線だった、または役目を終えた版。上書きしない（渡した相手がまだ見ている）'],
+   ['確認待ち','施主に見せて返事を待っている使い捨てのリンク。採用されなければ捨てる'],
+   ['作りかけ','まだ誰にも渡していない。公開もしていない'],
+   ['反映済','本線に取り込まれた＝<b>完了</b>'],
+   ['未反映','まだ本線になっていない。<b>リンクが出来ただけでは完了ではない</b>（これで事故った）'],
+  ];
+  return `<details class="glo"><summary>用語の意味</summary><dl>${
+    G.map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl></details>`;
 }
 
 function graphPane(p){
@@ -590,7 +623,7 @@ def main():
     flow = json.load(open(FLOW, encoding="utf-8")) if os.path.exists(FLOW) else {"steps": []}
     flow.pop("_readme", None)
     reg["flow"] = flow
-    reg["skills"] = read_skills()
+    reg["skills"], reg["bundle"] = read_skills()
     doc = f"""<!DOCTYPE html>
 <html lang="ja">
 <head>
