@@ -251,10 +251,20 @@
   align-self:center;
   margin:16px 0;
 }
+/* ★生成では罫が版面いっぱい。本文は箱（62%）の中なので border-top だと
+   そこで止まる。罫だけ疑似要素にして、行の幅（箱＋gap＋動画）まで伸ばす。 */
 .pmp__box .vhr__body{
   grid-column:1 / -1; grid-row:2;
+  position:relative;
   margin:0; padding-top:24px;
-  border-top:2px solid var(--c-primary);
+  border-top:0;
+}
+.pmp__box .vhr__body::before{
+  content:"";
+  position:absolute; top:0; left:0;
+  width: calc(100% / 0.62 + 40px);
+  height:2px;
+  background:var(--c-primary);
 }
 
 /* ══════════════════════════════════════════════════════════════
