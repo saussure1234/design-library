@@ -1,0 +1,58 @@
+@charset "UTF-8";
+/* ══════════════════════════════════════════════════════════════════
+   4つの特徴ブロックの手当て（施主指示 2026-09-08）
+     ・POINT 01 / 02 / 04 … いまの形のまま、版面を【ワイド】にする
+     ・POINT 03           … スクロール連動のスライドをやめ、
+                            左に本文の箱（55%）、右に動画（45%）で固定
+
+   ★文字・写真・地の緑・アニメーション（FVのもの）は触らない。
+     マークアップも1行も変えない。ここは幅と配置だけ。
+
+   ★.wrap は全ページ共通で max-width:1080px。ここだけ広げるので
+     セクションを絞って上書きする（他のセクションは1080のまま）。
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── ワイド化。1080 → 1280（+18%） ───────────────────── */
+.sec.vhr > .wrap,
+.sec.pmp > .wrap{ max-width:1280px }
+
+/* ★ここが本当の幅の親玉。.wrap を広げても、.vhr__list に
+     max-width:900px が掛かっていてカードは900pxで止まっていた。
+     測って初めて分かった（実測 x270..1168 ＝ 898px）。 */
+.sec.vhr .vhr__list{ max-width:1236px }
+
+/* ── POINT 03：スライドをやめる ──────────────────────
+   .fx-on .fx[data-fx="pair"] が、スクロール量 --pp から
+   translateX / opacity を作って左右から寄せる作りだった。
+   位置と不透明度を固定して、動かないようにする。 */
+.fx-on .fx[data-fx="pair"] .pmp__box,
+.fx-on .fx[data-fx="pair"] .pmp__media{
+  transform:none !important;
+  opacity:1 !important;
+  transition:none !important;
+}
+
+/* ── POINT 03：左に箱・右に動画で固定 ────────────────
+   元は「左540px固定＋右auto＋space-between」で、広い画面だと
+   真ん中に大きな空白が空く作りだった。割合で分ける。 */
+.pmp__row{
+  grid-template-columns: minmax(0, 56%) minmax(0, 44%) !important;
+  justify-content:stretch !important;
+  column-gap: clamp(24px, 3vw, 48px);
+  align-items:start;
+}
+.pmp__box{ width:100% }
+.pmp__box .vhr__item{ width:100% }
+
+/* 動画は右の列いっぱいに。元は 220〜290px 固定で、右に余白が残っていた */
+.pmp__media{ width:100% }
+.pmp__grid{ grid-template-columns:minmax(0,1fr) }
+.pmp__item{ width:100% !important }
+
+/* ── 狭い画面は元どおり1列に積む ────────────────────── */
+@media(max-width:900px){
+  .sec.vhr > .wrap,
+  .sec.pmp > .wrap{ max-width:1080px }
+  .pmp__row{ grid-template-columns:minmax(0,1fr) !important }
+  .pmp__item{ width:clamp(220px,60vw,290px) !important }
+}
