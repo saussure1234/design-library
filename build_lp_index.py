@@ -266,9 +266,9 @@ tr.rmiss{background:#fef2f2}
 """
 
 JS = """
-// ★リンクを作る＝クライアントに見せる、という前提。だから「確認用」という状態は無い。
-const S={live:['本線','var(--live)','#f1fbf3'],frozen:['旧版','var(--frozen)','#f8fafc'],
-         review:['別案','var(--review)','#fffbeb'],draft:['未公開','var(--draft)','#fff']};
+// ★リンクを作る＝クライアントに見せる、という前提。
+//   だから状態は【リンクがあるか無いか】の2つだけでいい。
+const S={live:['公開','var(--live)','#f1fbf3'],draft:['未公開','var(--draft)','#fff']};
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 let cur=DATA.projects[0].id, tab='graph';   // 最初に見たいのは系統。表は後
 
@@ -435,19 +435,17 @@ function listPane(p){
     +'<br>lpv.py new で最初の版を登録してください。</p>';
   const rows=p.versions.map(v=>{
     const [lab,c]=S[v.status]||S.draft;
-    const mg=v.status==='draft'?'<span class="mg n">未公開</span>'
-      :(v.merged?'<span class="mg y">反映済</span>':'<span class="mg n">未反映</span>');
     return `<tr>
-      <td>${linkCell(v)}${p.main===v.id?'<span class="mainmark">本線</span>':''}</td>
+      <td>${linkCell(v)}</td>
       <td><span class="pill" style="background:${c}">${lab}</span></td>
       <td>${v.parent?esc(v.parent):'<span style="color:#9ca3af">初版</span>'}</td>
       <td>${esc(v.what)}
         ${(v.updates||[]).length?`<div class="upd">同じリンクのまま ${v.updates.length}回 直した
           <ul>${v.updates.map(u=>`<li>${esc(u.date)} ${esc(u.what)}</li>`).join('')}</ul></div>`:''}
         ${v.alert?`<div class="warn">▲ ${esc(v.alert)}</div>`:''}</td>
-      <td>${mg}</td><td style="color:var(--mute);white-space:nowrap">${esc(v.date)}</td></tr>`}).join('');
+      <td style="color:var(--mute);white-space:nowrap">${esc(v.date)}</td></tr>`}).join('');
   return `<table><thead><tr><th>リンク</th><th>状態</th><th>派生元</th>
-    <th>変更内容</th><th>完了</th><th>日付</th></tr></thead><tbody>${rows}</tbody></table>
+    <th>変更内容と更新</th><th>日付</th></tr></thead><tbody>${rows}</tbody></table>
     ${glossary()}`;
 }
 
@@ -455,14 +453,10 @@ function listPane(p){
 function glossary(){
   const G=[
    ['リンク','<b>作った時点でクライアントに見せている</b>もの。作りかけを置く場所ではない'],
-   ['本線','クライアントが「これ」として見ているリンク。案件につき1本だけ'],
-   ['別案','比べてもらうために別に出したリンク（CTAの色違いを2本、など）'],
-   ['旧版','もう見せていないリンク。上書きしない（渡した相手がまだ開くことがある）'],
+   ['公開','リンクがあり、開けば見られる状態'],
    ['未公開','まだリンクを作っていない'],
-   ['派生元','その版を作るとき、どの版をコピーして始めたか。ここが抜けると系統が追えなくなる'],
+   ['派生元','そのリンクを作るとき、どのリンクをコピーして始めたか。ここが抜けると系統が追えなくなる'],
    ['更新','<b>同じリンクのまま</b>中身を直した回数。小さい直しでリンクは増やさない'],
-   ['反映済','本線に取り込まれた＝<b>完了</b>'],
-   ['未反映','まだ本線になっていない。<b>リンクが出来ただけでは完了ではない</b>（これで事故った）'],
   ];
   return `<details class="glo"><summary>用語の意味</summary><dl>${
     G.map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl></details>`;
@@ -492,9 +486,9 @@ function graphPane(p){
   p.versions.forEach(v=>{const pa=par(v); if(pa)(kids[pa.id]=kids[pa.id]||[]).push(v);});
 
   // ★縦位置：葉を上から1段ずつ積み、親は【最初の子と同じ高さ】に置く。
-  //   ・世代ごとに列の頭から詰めると、子が必ず親より上に来る（旧版の不具合）
+  //   ・世代ごとに列の頭から詰めると、子が必ず親より上に来る（前の実装の不具合）
   //   ・子の"中央"に置くのも駄目。枝分かれのたびに先頭の子が親より上に出る
-  //   この置き方だと本線が一番上を真横に走り、派生は必ず下へ垂れる。
+  //   この置き方だと最初の系統が一番上を真横に走り、派生は必ず下へ垂れる。
   const row={}; let slot=0;
   const place=v=>{
     if(row[v.id]!=null)return row[v.id];
@@ -514,7 +508,7 @@ function graphPane(p){
     return `<div class="gnode${out?' hasext':''}" id="g-${v.id}" style="--c:${c};--b:${b};`
       +`left:${depth[v.id]*(NW+GX)}px;top:${(row[v.id]*RH).toFixed(1)}px">
       <div class="t">${linkCell(v)}</div>
-      <div class="d">${esc(v.date)} · ${lab}${(v.updates||[]).length?` · 更新${v.updates.length}回`:''}${v.merged?'':' · <span style="color:var(--bad)">本線未反映</span>'}</div>
+      <div class="d">${esc(v.date)} · ${lab}${(v.updates||[]).length?` · <b>更新${v.updates.length}回</b>`:''}</div>
       ${ext}<div class="w">${esc(v.what)}</div></div>`}).join('');
   // 世代が深いと画面に入り切らない。畳むと系統が読めなくなるので幅は変えず、断り書きだけ出す
   const hint=maxD>=5?`<p class="note" style="margin-bottom:8px">
@@ -550,7 +544,7 @@ function fbPane(p){
   return all.map(f=>`<div class="fbrow"><div class="dt">${esc(f.date)}<br>
     <span style="font-size:11px">${esc(f.from||'')}</span></div>
     <div><div class="wh">${esc(f.what)}</div>
-    <div class="to">→ ${esc(f.ver.id)} で対応　${f.ver.merged?'（本線に反映済）':'（本線に未反映）'}</div>
+    <div class="to">→ ${esc(f.ver.id)} で対応</div>
     </div></div>`).join('');
 }
 
@@ -560,7 +554,7 @@ function render(){
   if(cur==='__flow__'){
     document.querySelector('.main').innerHTML=`
       <div class="head"><h2>LP制作フローとスキル</h2>
-        <span class="cl">問い合わせを受けてから、本線に取り込むまで</span></div>
+        <span class="cl">問い合わせを受けてから、直して見せ続けるまで</span></div>
       <p class="note">各工程で動くスキルと、過去にそこで何をやらかしたかを1枚にしてある。
         定義は lp-flow.json、説明は各 SKILL.md の先頭から。
         案件の中身は載せない（このリポジトリは公開）。</p>
@@ -579,7 +573,7 @@ function render(){
   document.querySelector('.main').innerHTML=`
     <div class="head"><h2>${esc(p.name)}</h2>
       <span class="cl">${esc(p.client||'')}</span>
-      <span class="mainlink">本線：${p.main?`<a class="lk" href="${url(p.main)}" target="_blank" rel="noopener">${esc(p.main)}/ ↗</a>`:'<span style="color:var(--bad)">未設定</span>'}</span>
+      <span class="mainlink">リンク ${p.versions.length}本</span>
     </div>
     <p class="note">${esc(p.note||'')}</p>
     ${todo}
@@ -590,8 +584,8 @@ function render(){
     </div><div class="pane">${body}</div>
     <div class="rules" style="margin-top:16px"><b>運用ルール</b><ol>
       <li>FBが来たら<b>直す前に</b>台帳へ1行足す</li>
-      <li>新しいリンクを作ったら<b>必ず派生元を書く</b></li>
-      <li><b>完了＝本線に取り込まれた状態</b>。確認用リンクの完成は完了ではない</li>
+      <li><b>小さい直しはリンクを増やさない。</b>同じリンクの中身を直して update に記録する</li>
+      <li>リンクを増やすのは<b>別案として並べて見せる時だけ</b>。その時は必ず派生元を書く</li>
       <li>作業は git の docs/ 配下で行う。Desktopの複製フォルダを正にしない</li>
     </ol></div>`;
   // ★requestAnimationFrame は【タブが非表示だと発火しない】。

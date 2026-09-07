@@ -15,7 +15,6 @@
     python3 lpv.py new <版id> -p <案件id> --from <派生元> --why "..." [--src DIR]
     python3 lpv.py fb <版id> --what "..."           ★直す前に打つ
     python3 lpv.py update <版id> --what "..."       小さい直し（同じリンクのまま）
-    python3 lpv.py merge <版id>                    本線に取り込んだ
     python3 lpv.py check                           台帳の検査だけ
     python3 lpv.py build [--push]                  検査→ツール生成→(--pushで公開)
 
@@ -23,15 +22,14 @@
     小さい直しは update（同じリンクのまま）。リンクを増やすのは
     【別案として並べて見せたい時】だけ（CTAの色違いを2本出す、など）。
   ★ new は --from を必ず要求する。省略できない（--root は初版のときだけ）。
-  ★ --from が案件の本線(main)と違うときは止まる。--branch を付けない限り進まない。
-    これが 8/31 に止めたかった一点。
+    これを書かせるのが台帳の目的。どこから枝が伸びたかを後から追えるようにする。
 """
 import argparse, datetime, json, os, re, shutil, subprocess, sys
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 REG = os.path.join(ROOT, "lp-registry.json")
 DOCS = os.path.join(ROOT, "docs")
-STATUS = ["live", "frozen", "review", "draft"]
+STATUS = ["live", "draft"]          # 公開（リンクあり）／未公開（リンクなし）
 TODAY = datetime.date.today().isoformat()
 
 C = {"r": "\033[31m", "y": "\033[33m", "g": "\033[32m", "b": "\033[1m", "_": "\033[0m"}
@@ -106,14 +104,6 @@ def check(reg, quiet=False):
                 cur = by.get(cur.get("parent"))
         for c in sorted(cyc):
             err.append(f"派生元が循環している: {c}")
-        # 本線
-        if not p.get("main"):
-            warn.append(f"{p['id']}: 本線(main)が未設定")
-        elif p["main"] not in ids:
-            err.append(f"{p['id']}: 本線 '{p['main']}' が版一覧に無い")
-        for v in p["versions"]:
-            if v.get("status") == "live" and not v.get("merged"):
-                warn.append(f"{v['id']}: 本番(live)なのに merged:false")
 
     if not quiet:
         for e in err:
@@ -131,18 +121,13 @@ def cmd_ls(a):
     for p in reg["projects"]:
         if a.project and p["id"] != a.project:
             continue
-        main = p.get("main") or "—"
-        say(f"\n■ {p['name']}  [{p['id']}]  本線: {main}", "b")
+        say(f"\n■ {p['name']}  [{p['id']}]  リンク {len(p['versions'])}本", "b")
         for v in p["versions"]:
-            m = "反映済" if v.get("merged") else "未反映"
-            head = "◀本線" if v["id"] == p.get("main") else "     "
-            say(f"   {head} {v['id']:<16} {v.get('status','?'):<7} {m:<5} "
-                f"親={v.get('parent') or '初版':<10} {v.get('date','')}  {v.get('what','')[:34]}")
+            u = f"更新{len(v['updates'])}回" if v.get("updates") else ""
+            say(f"   {v['id']:<16} {'公開' if v.get('status')=='live' else '未公開':<5} "
+                f"親={v.get('parent') or '初版':<10} {v.get('date','')} {u:<7} {v.get('what','')[:34]}")
             if v.get("alert"):
-                say(f"          ▲ {v['alert']}", "y")
-        n = len([v for v in p["versions"] if not v.get("merged")])
-        if n:
-            say(f"   → 本線未反映が {n} 件。どれを取り込むか決まったら lpv.py merge <版id>", "y")
+                say(f"       ▲ {v['alert']}", "y")
 
 
 def cmd_new_project(a):
@@ -150,7 +135,7 @@ def cmd_new_project(a):
     if any(p["id"] == a.id for p in reg["projects"]):
         sys.exit(f"  ★案件 '{a.id}' はもうある")
     reg["projects"].append({"id": a.id, "name": a.name, "client": a.client,
-                            "main": None, "note": a.note or "", "versions": []})
+                            "note": a.note or "", "versions": []})
     save(reg)
     say(f"  ○ 案件を作った: {a.name} [{a.id}]", "g")
     say(f"    次: python3 lpv.py new <版id> -p {a.id} --root --why \"初版\" --src <フォルダ>")
@@ -174,13 +159,13 @@ def cmd_new(a):
         if a.frm not in av:
             sys.exit(f"  ★派生元 '{a.frm}' が台帳に無い。lpv.py ls で確認する")
         parent = a.frm
-        # ★8/31 のミスを止める一点
-        if p.get("main") and parent != p["main"] and not a.branch:
-            say(f"\n  ▲ 本線は '{p['main']}' なのに、'{parent}' から派生させようとしている。", "y")
-            say("    このまま進めると本線から外れた枝で作業が続き、", "y")
-            say("    クライアントが見ているリンクだけ古いまま取り残される（前回これで事故った）。", "y")
-            say("\n    本当に枝を伸ばすなら --branch を付けて実行し直す。")
-            say(f"    本線を乗り換えるなら先に：python3 lpv.py merge {parent}")
+        # ★リンクを増やすのは「別案として並べて見せる」時だけ。
+        #   小さい直しでリンクが増えると、クライアントはどれを見ればいいか分からなくなる。
+        if not a.alt:
+            say(f"\n  ▲ 新しいリンクを作ろうとしている（{parent} から）。", "y")
+            say("    小さい直しなら、リンクを増やさずに中身を直す：", "y")
+            say(f"      python3 lpv.py update {parent} --what \"...\"")
+            say("\n    別案として並べて見せるなら --alt を付けて実行し直す。")
             sys.exit(1)
 
     # ── 中身を用意する ──
@@ -199,22 +184,16 @@ def cmd_new(a):
         sys.exit("  ★中身が無い。--src <フォルダ> か --url <外部URL> を指定する")
 
     v = {"id": a.id, "date": a.date or TODAY, "status": a.status,
-         "parent": parent, "what": a.why, "merged": False, "fb": []}
+         "parent": parent, "what": a.why, "updates": [], "fb": []}
     if a.url:
         v["url"] = a.url
     if a.alert:
         v["alert"] = a.alert
-    elif parent and p.get("main") and parent != p["main"]:
-        v["alert"] = f"本線 {p['main']} ではなく {parent} から派生した枝"
     p["versions"].append(v)
-    # 案件の最初の版が本番なら、それが本線。ここで決めておかないと main 未設定のまま残る
-    if not p.get("main") and a.status == "live":
-        p["main"] = a.id
-        v["merged"] = True
-        say(f"  ・案件 {p['id']} の本線を {a.id} にした（最初の本番版）")
     save(reg)
 
-    say(f"\n  ○ 版を登録した: {a.id}  （親 {parent or '初版'} / {a.status} / 本線未反映）", "g")
+    say(f"\n  ○ リンクを登録した: {a.id}  （派生元 {parent or '初版'} / "
+        f"{'公開' if a.status == 'live' else '未公開'}）", "g")
     say(f"    {vurl(reg, v)}")
     say(f"    次: python3 lpv.py build --push で公開＆管理ツールに反映")
 
@@ -230,7 +209,7 @@ def cmd_fb(a):
     say(f"  ○ FBを記録: {a.id} ←「{a.what}」", "g")
     say("    次はどっちか：")
     say(f"      小さい直し（同じリンクのまま）… lpv.py update {a.id} --what \"...\"")
-    say(f"      別案として見せる（新しいリンク）… lpv.py new <新id> -p {av[a.id][0]['id']} --from {a.id} --why \"...\"")
+    say(f"      別案として見せる（新しいリンク）… lpv.py new <新id> -p {av[a.id][0]['id']} --from {a.id} --alt --why \"...\"")
 
 
 def cmd_update(a):
@@ -250,49 +229,23 @@ def cmd_update(a):
     n = len(v["updates"])
     say(f"  ○ {a.id} を更新（通算 {n} 回目）: {a.what}", "g")
     say(f"    リンクは同じ: {vurl(reg, v)}")
-    if p.get("main") != a.id:
-        say(f"    ▲ これは本線（{p.get('main')}）ではない。"
-            f"採用が決まったら lpv.py merge {a.id}", "y")
-
-
-def cmd_merge(a):
-    reg = load()
-    av = allvers(reg)
-    if a.id not in av:
-        sys.exit(f"  ★版 '{a.id}' が台帳に無い")
-    p, v = av[a.id]
-    old = p.get("main")
-    v["merged"] = True
-    v["status"] = "live"
-    v.pop("alert", None)
-    p["main"] = a.id
-    for o in p["versions"]:
-        if o["id"] != a.id and o.get("status") == "live":
-            o["status"] = "frozen"
-            o.pop("alert", None)
-    save(reg)
-    say(f"  ○ 本線を {old or '—'} → {a.id} にした。{a.id} は反映済み・本番", "g")
-    say(f"    クライアントに渡すリンクはこれ: {vurl(reg, v)}")
 
 
 def cmd_rm(a):
-    """版を台帳から外す。★docs/ のファイルは消さない（公開中のリンクが死ぬため）。"""
+    """リンクを台帳から外す。★docs/ のファイルは消さない（開ける状態のまま殺さない）。"""
     reg = load()
     av = allvers(reg)
     if a.id not in av:
-        sys.exit(f"  ★版 '{a.id}' が台帳に無い")
+        sys.exit(f"  ★'{a.id}' が台帳に無い")
     p, v = av[a.id]
     kids = [x["id"] for x in p["versions"] if x.get("parent") == a.id]
     if kids and not a.force:
-        sys.exit(f"  ★{a.id} を派生元にしている版がある → {', '.join(kids)}\n"
-                 f"    先にそちらの派生元を直すか、--force で親を空にして外す")
+        sys.exit(f"  ★{a.id} を派生元にしているリンクがある → {', '.join(kids)}\n"
+                 f"    先にそちらの派生元を直すか、--force で祖父につなぎ直して外す")
     for x in p["versions"]:
         if x.get("parent") == a.id:
-            x["parent"] = v.get("parent")      # 祖父につなぎ直す
+            x["parent"] = v.get("parent")
     p["versions"] = [x for x in p["versions"] if x["id"] != a.id]
-    if p.get("main") == a.id:
-        p["main"] = None
-        say(f"  ▲ {a.id} は本線だった。本線を空にした。決まったら lpv.py merge <版id>", "y")
     save(reg)
     say(f"  ○ 台帳から外した: {a.id}", "g")
     if os.path.isdir(os.path.join(DOCS, a.id)):
@@ -301,20 +254,18 @@ def cmd_rm(a):
 
 
 def cmd_rm_project(a):
-    """案件を台帳から外す。★docs/ のファイルは消さない（公開中のリンクが死ぬため）。"""
+    """案件を台帳から外す。★docs/ のファイルは消さない。"""
     reg = load()
     p = proj(reg, a.id)
     ids = [v["id"] for v in p["versions"]]
     reg["projects"] = [x for x in reg["projects"] if x["id"] != a.id]
     save(reg)
-    say(f"  ○ 台帳から外した: {p['name']} [{a.id}]（版 {len(ids)}件）", "g")
+    say(f"  ○ 台帳から外した: {p['name']} [{a.id}]（リンク {len(ids)}本）", "g")
+    for i in ids:
+        if os.path.isdir(os.path.join(DOCS, i)):
+            say(f"      docs/{i}/  → {vurl(reg, {'id': i})}")
     if ids:
-        say("  ・公開ファイルは残っている。リンクは生きたまま：")
-        for i in ids:
-            d = os.path.join(DOCS, i)
-            if os.path.isdir(d):
-                say(f"      docs/{i}/  → {vurl(reg, {'id': i})}")
-        say("  ・本当に消すなら手で: git rm -r docs/<版id>", "y")
+        say("  ・公開ファイルは残っている。本当に消すなら手で: git rm -r docs/<id>", "y")
 
 
 def cmd_check(a):
@@ -382,7 +333,8 @@ def main():
     s.add_argument("-p", "--project", required=True)
     s.add_argument("--from", dest="frm", help="派生元の版id")
     s.add_argument("--root", action="store_true", help="初版（派生元なし）")
-    s.add_argument("--branch", action="store_true", help="本線以外から派生させることを承知した")
+    s.add_argument("--alt", action="store_true",
+                   help="別案として新しいリンクを増やすことを承知した（小さい直しは update）")
     s.add_argument("--why", required=True, help="何を変えたか。後で用途不明にならないように")
     s.add_argument("--src", help="中身のフォルダ。省略時は派生元を複製")
     s.add_argument("--url", help="design-library 以外に公開する場合の実URL")
@@ -399,9 +351,6 @@ def main():
     s = sp.add_parser("update", help="同じリンクのまま中身を直した（新しいリンクは作らない）")
     s.add_argument("id"); s.add_argument("--what", required=True); s.add_argument("--date")
     s.set_defaults(f=cmd_update)
-
-    s = sp.add_parser("merge", help="本線に取り込んだ")
-    s.add_argument("id"); s.set_defaults(f=cmd_merge)
 
     s = sp.add_parser("rm", help="版を台帳から外す（公開ファイルは消さない）")
     s.add_argument("id"); s.add_argument("--force", action="store_true",

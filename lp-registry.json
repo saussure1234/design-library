@@ -3,10 +3,9 @@
     "LP の版を管理する台帳。ここが正。ダッシュボードは build_lp_index.py で生成する。",
     "★ルール",
     "  1. FBが来たら【直す前に】ここへ1行足す",
+    "★status  live=公開（リンクがあり、開けば見られる） / draft=未公開（リンクなし）",
     "★リンクを作る＝クライアントに見せる。小さい直しは update（同じリンクのまま）。",
-    "★status  live=本線 / review=別案（比べてもらうため別に出した） / frozen=旧版（もう見せていない） / draft=未公開（リンクなし）",
     "  2. 新しいリンクを作ったら【必ず parent（派生元）を書く】",
-    "  3. 完了の定義＝ merged:true（本線に取り込まれた）。確認用リンクの完成は完了ではない",
     "  4. 作業は git の docs/ 配下で行う。Desktop の複製フォルダを正にしない",
     "★このページは noindex。リンクを知っている人だけが見る想定。",
     "★このリポジトリは公開。金額と、他案件の顧客名は書かない。許す語は .publish-blocklist（git管理外）で管理する。",
@@ -19,16 +18,14 @@
       "id": "eslclub-online",
       "name": "ESL club オンライン校",
       "client": "ESL club",
-      "main": "esl2",
       "note": "英検に特化した英語塾のLP。全学年向け。",
       "versions": [
         {
           "id": "esl",
           "date": "2026-08-06",
-          "status": "frozen",
+          "status": "live",
           "parent": null,
           "what": "初版。上司レビュー用に渡したリンク",
-          "merged": true,
           "fb": []
         },
         {
@@ -36,18 +33,16 @@
           "date": "2026-08-17",
           "status": "live",
           "parent": "esl",
-          "what": "本線。クライアント提示中のリンク",
-          "merged": true,
+          "what": "クライアントに提示中のリンク",
           "fb": [],
-          "alert": "9月の修正（半額CTA等）が未反映。クライアントはこの版を見ている"
+          "alert": "9月の修正（半額CTA等）が入っていない。クライアントはこのリンクを見ている"
         },
         {
           "id": "esl3",
           "date": "2026-08-19",
-          "status": "frozen",
+          "status": "live",
           "parent": "esl2",
           "what": "演出の実験（開幕の波・背景の色・FVの動き）",
-          "merged": false,
           "fb": [
             {
               "date": "2026-08-18",
@@ -61,7 +56,6 @@
           "status": "draft",
           "parent": "esl3",
           "what": "作りかけ（38KB）。用途の記録なし・未commit",
-          "merged": false,
           "fb": [],
           "alert": "用途不明。要棚卸し"
         },
@@ -71,42 +65,38 @@
           "status": "draft",
           "parent": "esl3",
           "what": "見出し違いの試作（部活と両立しながら、英検2級へ。）・未commit",
-          "merged": false,
           "fb": [],
           "alert": "用途不明。要棚卸し"
         },
         {
           "id": "esl6",
           "date": "2026-08-31",
-          "status": "frozen",
+          "status": "live",
           "parent": "esl3",
           "what": "用途の記録なし",
-          "merged": false,
           "fb": [],
           "alert": "用途不明。要棚卸し"
         },
         {
           "id": "esl7",
           "date": "2026-09-07",
-          "status": "review",
+          "status": "live",
           "parent": "esl6",
           "what": "半額キャンペーンCTAを追加（9-7〜10-31）",
-          "merged": false,
           "fb": [
             {
               "date": "2026-09-07",
               "what": "半額キャンペーンにCTAを差し替え"
             }
           ],
-          "alert": "本線 esl2 ではなく Desktop の複製から派生した。本線と1,114行の差"
+          "alert": "git の外（Desktop の複製）で作業して枝が伸びた。esl2 と1,114行の差"
         },
         {
           "id": "esl9",
           "date": "2026-09-07",
-          "status": "review",
+          "status": "live",
           "parent": "esl7",
           "what": "CTAボタンを緑→オレンジに",
-          "merged": false,
           "fb": [
             {
               "date": "2026-09-07",
@@ -117,10 +107,9 @@
         {
           "id": "esl10",
           "date": "2026-09-07",
-          "status": "review",
+          "status": "live",
           "parent": "esl7",
           "what": "半額価格を赤に（CTAは緑のまま）",
-          "merged": false,
           "fb": [
             {
               "date": "2026-09-07",
@@ -131,10 +120,9 @@
         {
           "id": "esl11",
           "date": "2026-09-07",
-          "status": "review",
+          "status": "live",
           "parent": "esl7",
           "what": "半額価格をオレンジに（CTAは緑のまま）",
-          "merged": false,
           "fb": [
             {
               "date": "2026-09-07",
@@ -148,16 +136,14 @@
       "id": "eslclub-kids",
       "name": "ESL club 小学生向け",
       "client": "ESL club",
-      "main": null,
       "note": "オンライン校を土台に、小学生向けへ寄せた版。",
       "versions": [
         {
           "id": "esl8",
           "date": "2026-09-07",
-          "status": "review",
+          "status": "live",
           "parent": "esl7",
           "what": "見出しを小学生に限定 / FVの生徒写真を小学生に差し替え / FVに軽い装飾",
-          "merged": false,
           "fb": [
             {
               "date": "2026-09-07",
@@ -171,16 +157,14 @@
       "id": "eslclub-pretest",
       "name": "ESL club 英検プレテスト",
       "client": "ESL club",
-      "main": "esl-pretest-1018",
       "note": "渋谷校の模擬試験＆個別相談会の告知LP。開催回ごとに作る。",
       "versions": [
         {
           "id": "esl-pretest",
           "date": "2026-08-17",
-          "status": "frozen",
+          "status": "live",
           "parent": null,
           "what": "英検プレテスト（模擬試験）＆個別相談会 渋谷校",
-          "merged": true,
           "fb": []
         },
         {
@@ -189,7 +173,6 @@
           "status": "live",
           "parent": "esl-pretest",
           "what": "二次面接プレテスト版（10/18開催）",
-          "merged": true,
           "fb": []
         }
       ]
@@ -198,7 +181,6 @@
       "id": "sharesec",
       "name": "SHARE Security",
       "client": "SHARE Security",
-      "main": "ss-lp-preview",
       "note": "design-library の外（別リポ）に公開する。deploy.sh が2箇所へ push する。",
       "versions": [
         {
@@ -207,17 +189,15 @@
           "status": "live",
           "parent": null,
           "what": "提示先。2026-09-02に公開再開",
-          "merged": true,
           "fb": [],
           "url": "https://saussure1234.github.io/ss-lp-preview/"
         },
         {
           "id": "ss-lp-preview2",
           "date": "2026-09-02",
-          "status": "review",
+          "status": "live",
           "parent": "ss-lp-preview",
           "what": "作業用ミラー。deploy.sh が提示先と同時に push する",
-          "merged": false,
           "fb": [],
           "url": "https://saussure1234.github.io/ss-lp-preview2/"
         }
@@ -227,16 +207,14 @@
       "id": "ads-redesign",
       "name": "ADS株式会社 LP改修",
       "client": "ADS株式会社",
-      "main": "ads-lp",
       "note": "会社案内・パンフレットのデザイン制作会社。作業は ~/ads-redesign/（2026-09-07にgit管理下へ。ローカルのみ・リモートなし）、公開は別リポ ads-lp-preview。",
       "versions": [
         {
           "id": "ads-site",
           "date": "2026-09-04",
-          "status": "frozen",
+          "status": "live",
           "parent": null,
           "what": "現行コーポレートサイトの再現。改修前の比較用",
-          "merged": false,
           "fb": [],
           "url": "https://saussure1234.github.io/ads-lp-preview/"
         },
@@ -246,7 +224,6 @@
           "status": "live",
           "parent": null,
           "what": "改修LPの初稿。実績ロゴ12点の無限スライダー・制作物写真を本物3社に・追従CTA",
-          "merged": true,
           "fb": [],
           "url": "https://saussure1234.github.io/ads-lp-preview/lp/",
           "alert": "FB履歴はこれから記録する。指摘が来たら直す前に lpv.py fb ads-lp --what \"...\""
