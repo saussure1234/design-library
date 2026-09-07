@@ -173,7 +173,7 @@ tr.rmiss{background:#fef2f2}
 const S={live:['公開中','var(--live)','#f1fbf3'],frozen:['旧版','var(--frozen)','#f8fafc'],
          review:['確認待ち','var(--review)','#fffbeb'],draft:['作りかけ','var(--draft)','#fff']};
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-let cur=DATA.projects[0].id, tab='list';
+let cur=DATA.projects[0].id, tab='graph';   // 最初に見たいのは系統。表は後
 
 function alerts(p){return p.versions.filter(v=>v.alert);}
 
@@ -502,7 +502,7 @@ function render(){
 }
 
 document.addEventListener('click',e=>{
-  const a=e.target.closest('.side a'); if(a){cur=a.dataset.p;tab='list';render();return;}
+  const a=e.target.closest('.side a'); if(a){cur=a.dataset.p;tab='graph';render();return;}
   const b=e.target.closest('.tabs button'); if(b){tab=b.dataset.t;render();return;}
   // フローの節を押したら、下の欄に詳細を出す（図は描き直さない）
   const fn=e.target.closest('.fnode');
