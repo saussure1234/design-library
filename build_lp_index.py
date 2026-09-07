@@ -1,24 +1,48 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""lp-registry.json から LP版管理ツールを生成する。
+"""lp-registry.json / lp-flow.json から LP版管理ツールを生成する。
 
   python3 build_lp_index.py          … docs/lp/index.html を作る
   python3 build_lp_index.py --open   … 作ってブラウザで開く
 
 ★画面の作り
-    左： プロジェクトのサイドバー（要対応の件数つき）
-    右： タブ ─ 版一覧（表）／派生図（線で結んだ図）／FB履歴
+    左： プロジェクト（要対応の件数つき）＋ しくみ（LP制作フロー / Claudeスキル）
+    右： 案件 → 版一覧・派生図・FB履歴
+         しくみ → フローの各ステップと、そこで動くスキル・過去の事故
 
 ★台帳（lp-registry.json）が正。ページは毎回そこから作り直す。
   生成物を直接編集しないこと。次の生成で消える。
+★スキル一覧は ~/.claude/skills/*/SKILL.md の frontmatter から拾う。
+  拾うのは name / description / user-invocable だけ。本文は載せない
+  （このリポジトリは公開なので、案件の中身を書き出さない）。
 ★このページは noindex（検索避け）。リンクを知っている人だけが見る想定。
 """
-import json, os, subprocess, sys
+import json, os, re, subprocess, sys
 
 R = os.path.dirname(os.path.abspath(__file__))
 REG = os.path.join(R, "lp-registry.json")
+FLOW = os.path.join(R, "lp-flow.json")
+SKILLS_DIR = os.path.expanduser("~/.claude/skills")
 OUT_DIR = os.path.join(R, "docs", "lp")
 OUT = os.path.join(OUT_DIR, "index.html")
+
+
+def read_skills():
+    """~/.claude/skills から name / description / user-invocable だけ拾う。"""
+    out = []
+    if not os.path.isdir(SKILLS_DIR):
+        return out
+    for n in sorted(os.listdir(SKILLS_DIR)):
+        f = os.path.join(SKILLS_DIR, n, "SKILL.md")
+        if not os.path.isfile(f):
+            continue
+        m = re.match(r"---\n(.*?)\n---", open(f, encoding="utf-8").read(), re.S)
+        fm = m.group(1) if m else ""
+        g = lambda k: (re.search(rf"^{k}:\s*(.+)$", fm, re.M) or [None, ""])[1].strip().strip('"')
+        out.append({"id": n, "name": g("name") or n,
+                    "desc": g("description"),
+                    "mine": g("user-invocable") == "true"})
+    return out
 
 CSS = """
 *{box-sizing:border-box;margin:0}
@@ -99,6 +123,35 @@ tr:hover td{background:#fafbfc}
 .fbrow .wh{font-size:13.5px}
 .fbrow .to{font-size:11.5px;color:var(--mute);margin-top:2px}
 
+/* LP制作フロー */
+.fstrip{display:flex;align-items:center;gap:4px;flex-wrap:wrap;background:#fff;
+  border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.fs{font-size:11.5px;border-radius:6px;padding:5px 9px;border:1px solid var(--line);white-space:nowrap}
+.fs b{display:inline-block;min-width:14px;font-weight:800}
+.fs.ok{background:#f1fbf3;border-color:#a7e0b5;color:#047a20}
+.fs.miss{background:#fef2f2;border-color:#fecaca;color:#b91c1c}
+.fs.none{background:#f8fafc;color:var(--mute)}
+.fsar{color:#cbd5e1;font-size:13px}
+.fcard{background:#fff;border:1px solid var(--line);border-radius:10px;
+  padding:13px 16px;margin-bottom:10px}
+.fhd{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.fhd h3{font-size:15px}
+.fno{width:23px;height:23px;flex:none;border-radius:50%;background:#111827;color:#fff;
+  font-size:12px;font-weight:800;display:grid;place-items:center}
+.fwhat{font-size:13px;margin-top:5px}
+.fmeta{display:flex;gap:18px;flex-wrap:wrap;margin-top:7px;font-size:12px;color:var(--mute)}
+.fmeta i{font-style:normal;font-weight:700;margin-right:6px;color:#9ca3af}
+.frisk,.fgap{font-size:12.5px;margin-top:8px;padding:8px 11px;border-radius:0 7px 7px 0;line-height:1.6}
+.frisk{background:#fef2f2;border-left:3px solid var(--bad);color:#7f1d1d}
+.fgap{background:#fffbeb;border-left:3px solid var(--review);color:#78350f}
+.frisk b,.fgap b{display:block;font-size:11px;letter-spacing:.06em;margin-bottom:2px}
+.sk{font-size:11px;font-weight:800;border-radius:999px;padding:3px 10px;border:1px solid}
+.sk.have{background:#f1fbf3;border-color:#a7e0b5;color:#047a20}
+.sk.miss{background:#fef2f2;border-color:#fecaca;color:#b91c1c}
+.sk.none{background:#f8fafc;border-color:var(--line);color:#9ca3af}
+.sd{color:var(--mute);font-size:12px}
+tr.rmiss{background:#fef2f2}
+
 .todo{background:#fff;border:1px solid #fecaca;border-radius:10px;padding:14px 18px;margin-bottom:16px}
 .todo h3{font-size:14px;color:#b91c1c;margin-bottom:6px}
 .todo li{margin-left:18px;font-size:13px;margin-top:4px}
@@ -126,15 +179,78 @@ const ALL={}, OWNER={};
 DATA.projects.forEach(p=>p.versions.forEach(v=>{ALL[v.id]=v;OWNER[v.id]=p;}));
 function url(id){const v=ALL[id];return (v&&v.url)||DATA.base_url+id+'/';}
 
+const SK={}; (DATA.skills||[]).forEach(s=>SK[s.id]=s);
+const STEPS=(DATA.flow&&DATA.flow.steps)||[];
+// フローが呼んでいるのに実物が無いスキル＝次に作るもの
+const MISSING=[...new Set(STEPS.filter(s=>s.skill&&!SK[s.skill]).map(s=>s.skill))];
+
 function sidebar(){
   const tot=DATA.projects.reduce((a,p)=>a+alerts(p).length,0);
+  const gaps=STEPS.filter(s=>s.gap).length;
   return `<h1>LP 版管理</h1>
   <div class="cap">プロジェクト</div>
   ${DATA.projects.map(p=>{const n=alerts(p).length;
     return `<a data-p="${p.id}" class="${p.id===cur?'on':''}">${esc(p.name)}
       <span class="n ${n?'bad':''}">${n||p.versions.length}</span></a>`}).join('')}
+  <div class="cap">しくみ</div>
+  <a data-p="__flow__" class="${cur==='__flow__'?'on':''}">LP制作フロー
+    <span class="n ${gaps?'bad':''}">${gaps?gaps+'欠':STEPS.length}</span></a>
+  <a data-p="__skills__" class="${cur==='__skills__'?'on':''}">Claude スキル
+    <span class="n ${MISSING.length?'bad':''}">${(DATA.skills||[]).length}</span></a>
   <div class="foot">要対応 ${tot} 件<br>更新 ${esc(DATA.updated)}<br>
   台帳 lp-registry.json</div>`;
+}
+
+/* ── LP制作フロー ───────────────────────────────────────── */
+function skillTag(id){
+  if(!id)return '<span class="sk none">スキルなし</span>';
+  if(!SK[id])return `<span class="sk miss">${esc(id)}／未作成</span>`;
+  return `<span class="sk have">${esc(id)}</span>`;
+}
+function flowPane(){
+  if(!STEPS.length)return '<p style="color:var(--mute)">lp-flow.json がありません。</p>';
+  const strip=STEPS.map(s=>`<div class="fs ${s.skill?(SK[s.skill]?'ok':'miss'):'none'}">
+    <b>${s.n}</b>${esc(s.name)}</div>`).join('<span class="fsar">›</span>');
+  const cards=STEPS.map(s=>`<div class="fcard">
+    <div class="fhd"><span class="fno">${s.n}</span><h3>${esc(s.name)}</h3>${skillTag(s.skill)}</div>
+    <p class="fwhat">${esc(s.what)}</p>
+    <div class="fmeta">
+      ${s.tool?`<span><i>道具</i>${esc(s.tool)}</span>`:''}
+      ${s.out?`<span><i>出るもの</i>${esc(s.out)}</span>`:''}
+    </div>
+    ${s.risk?`<div class="frisk"><b>過去の事故</b>${esc(s.risk)}</div>`:''}
+    ${s.gap?`<div class="fgap"><b>足りない</b>${esc(s.gap)}</div>`:''}
+  </div>`).join('');
+  const g=STEPS.filter(s=>s.gap).length;
+  return `<div class="fstrip">${strip}</div>
+    <p class="note" style="margin:14px 0 10px">全${STEPS.length}工程のうち、
+      スキルで型になっているのは ${STEPS.filter(s=>s.skill&&SK[s.skill]).length} 工程。
+      ${g?`<b style="color:var(--bad)">型が無い工程が ${g} つ</b>（下の「足りない」）。`:''}</p>
+    ${cards}`;
+}
+
+/* ── Claude スキル ──────────────────────────────────────── */
+function skillsPane(){
+  const list=DATA.skills||[];
+  if(!list.length)return '<p style="color:var(--mute)">スキルが見つかりません。</p>';
+  const miss=MISSING.map(id=>{
+    const at=STEPS.filter(s=>s.skill===id).map(s=>s.n+'. '+s.name).join(' / ');
+    return `<tr class="rmiss"><td><b>${esc(id)}</b></td><td><span class="pill" style="background:var(--bad)">未作成</span></td>
+      <td>フローが呼んでいるのに ~/.claude/skills/ に無い</td><td>${esc(at)}</td></tr>`}).join('');
+  const rows=list.map(s=>{
+    const at=STEPS.filter(x=>x.skill===s.id);
+    return `<tr>
+      <td><b>${esc(s.id)}</b></td>
+      <td>${s.mine?'<span class="pill" style="background:var(--live)">自作</span>'
+                  :'<span class="pill" style="background:#94a3b8">既製</span>'}</td>
+      <td class="sd">${esc(s.desc).slice(0,150)}</td>
+      <td>${at.length?at.map(x=>esc(x.n+'. '+x.name)).join('<br>')
+                     :'<span style="color:#9ca3af">フロー未接続</span>'}</td></tr>`}).join('');
+  const gaps=STEPS.filter(s=>!s.skill&&s.gap);
+  return `<table><thead><tr><th>スキル</th><th>種別</th><th>説明</th>
+      <th>LP制作フローのどこで動くか</th></tr></thead><tbody>${miss}${rows}</tbody></table>
+    ${gaps.length?`<div class="todo" style="margin-top:16px"><h3>スキルにすべき工程 ${gaps.length}件</h3><ul>${
+      gaps.map(s=>`<li><b>${s.n}. ${esc(s.name)}</b> … ${esc(s.gap)}</li>`).join('')}</ul></div>`:''}`;
 }
 
 function linkCell(v){
@@ -245,6 +361,18 @@ function fbPane(p){
 
 function render(){
   document.querySelector('.side').innerHTML=sidebar();
+  // 「しくみ」の画面は案件に属さないので、先に分岐して描き切る
+  if(cur==='__flow__'||cur==='__skills__'){
+    const isF=cur==='__flow__';
+    document.querySelector('.main').innerHTML=`
+      <div class="head"><h2>${isF?'LP制作フロー':'Claude スキル'}</h2>
+        <span class="cl">${isF?'引き合いから本線に取り込むまで':'~/.claude/skills/ の中身とフローの対応'}</span></div>
+      <p class="note">${isF
+        ?'各工程で動くスキルと、過去にそこで何をやらかしたかを1枚にしてある。定義は lp-flow.json。'
+        :'説明は SKILL.md の先頭から拾っている。案件の中身は載せない（このリポジトリは公開）。'}</p>
+      <div class="pane">${isF?flowPane():skillsPane()}</div>`;
+    return;
+  }
   const p=DATA.projects.find(x=>x.id===cur);
   const al=alerts(p);
   const todo=al.length?`<div class="todo"><h3>要対応 ${al.length}件</h3><ul>${
@@ -288,6 +416,10 @@ render();
 def main():
     reg = json.load(open(REG, encoding="utf-8"))
     reg.pop("_readme", None)
+    flow = json.load(open(FLOW, encoding="utf-8")) if os.path.exists(FLOW) else {"steps": []}
+    flow.pop("_readme", None)
+    reg["flow"] = flow
+    reg["skills"] = read_skills()
     doc = f"""<!DOCTYPE html>
 <html lang="ja">
 <head>
