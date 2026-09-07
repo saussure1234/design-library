@@ -133,7 +133,18 @@
 }
 
 /* ── 狭い画面：1列に積み、面は全幅 ─────────────────── */
+/* ★元CSSは狭い画面で .vhr__vert を flex-direction:row-reverse にして
+   「（POINT 0X）」と見出しを横に並べる。案bではリード文をこの中へ移したので、
+   3つが横一列に並んで画面外まではみ出した（実測・375px）。縦積みに戻す。 */
 @media(max-width:900px){
+  .tone-brand .vhr__vert{
+    display:flex; flex-direction:column; align-items:flex-start;
+    justify-content:flex-start;
+    gap:clamp(8px,2.4vw,13px);
+    padding:clamp(18px,4.8vw,26px) clamp(18px,4.8vw,26px) clamp(20px,5.2vw,28px);
+  }
+  .tone-brand .vhr__title{ font-size:clamp(19px,5.2vw,22px); margin-top:0 }
+  .tone-brand .vhr__sub{ margin-top:0; font-size:clamp(14px,3.8vw,16px) }
   .tone-brand .vhr__item{
     --pb-slant:0px;
     grid-template-columns: minmax(0,1fr);
