@@ -64,13 +64,16 @@ tr:hover td{background:#fafbfc}
 
 /* 派生図 */
 .graph{position:relative;overflow-x:auto;padding:8px 4px 4px}
-.gcols{display:flex;gap:64px;align-items:flex-start;position:relative;z-index:1;min-width:min-content}
-.gcol{display:flex;flex-direction:column;gap:16px}
-.gnode{width:212px;border:1px solid var(--line);border-left:4px solid var(--c);
+.gcanvas{position:relative;z-index:1}
+/* ★節は絶対配置。縦位置は graphPane が計算する（列の頭から詰めない）。
+   高さを固定しているのは、段の間隔と衝突させないため。 */
+.gnode{position:absolute;width:212px;height:100px;overflow:hidden;
+  border:1px solid var(--line);border-left:4px solid var(--c);
   background:var(--b);border-radius:8px;padding:9px 11px}
 .gnode .t{font-weight:800;font-size:13.5px}
 .gnode .d{font-size:10.5px;color:var(--mute)}
-.gnode .w{font-size:11.5px;margin-top:4px}
+.gnode .w{font-size:11.5px;margin-top:4px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .gsvg{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:visible}
 
 /* FB履歴 */
@@ -138,22 +141,44 @@ function listPane(p){
 }
 
 function graphPane(p){
-  const by={},depth={};
-  p.versions.forEach(v=>by[v.id]=v);
+  const NW=212, GX=64, RH=116;              // 節の幅 / 横の間隔 / 1段の高さ
+  const by={}; p.versions.forEach(v=>by[v.id]=v);
+  // 親が別プロジェクトにいる場合（例：小学生向けの親はオンライン校の版）は根として扱う
+  const par=v=>(v.parent&&by[v.parent])||null;
+
+  // 横位置＝世代
+  const depth={};
   const d=v=>{if(depth[v.id]!=null)return depth[v.id];
-    const pa=v.parent&&by[v.parent];
-    return depth[v.id]=pa?d(pa)+1:0;};
+    const pa=par(v); return depth[v.id]=pa?d(pa)+1:0;};
   p.versions.forEach(d);
-  const max=Math.max(...p.versions.map(v=>depth[v.id]));
-  const cols=[];
-  for(let i=0;i<=max;i++)cols.push(p.versions.filter(v=>depth[v.id]===i));
-  const col=vs=>`<div class="gcol">${vs.map(v=>{const [lab,c,b]=S[v.status]||S.draft;
-    return `<div class="gnode" id="g-${v.id}" style="--c:${c};--b:${b}">
+
+  const kids={};
+  p.versions.forEach(v=>{const pa=par(v); if(pa)(kids[pa.id]=kids[pa.id]||[]).push(v);});
+
+  // ★縦位置：葉を上から1段ずつ積み、親は【最初の子と同じ高さ】に置く。
+  //   ・世代ごとに列の頭から詰めると、子が必ず親より上に来る（旧版の不具合）
+  //   ・子の"中央"に置くのも駄目。枝分かれのたびに先頭の子が親より上に出る
+  //   この置き方だと本線が一番上を真横に走り、派生は必ず下へ垂れる。
+  const row={}; let slot=0;
+  const place=v=>{
+    if(row[v.id]!=null)return row[v.id];
+    const c=kids[v.id]||[];
+    if(!c.length)return row[v.id]=slot++;
+    return row[v.id]=c.map(place)[0];
+  };
+  p.versions.filter(v=>!par(v)).forEach(place);
+  p.versions.forEach(place);                // 取りこぼし（循環など）の保険
+
+  const maxD=Math.max(...p.versions.map(v=>depth[v.id]));
+  const maxR=Math.max(...p.versions.map(v=>row[v.id]));
+  const nodes=p.versions.map(v=>{const [lab,c,b]=S[v.status]||S.draft;
+    return `<div class="gnode" id="g-${v.id}" style="--c:${c};--b:${b};`
+      +`left:${depth[v.id]*(NW+GX)}px;top:${(row[v.id]*RH).toFixed(1)}px">
       <div class="t">${linkCell(v)}</div>
       <div class="d">${esc(v.date)} · ${lab}${v.merged?'':' · <span style="color:var(--bad)">本線未反映</span>'}</div>
-      <div class="w">${esc(v.what)}</div></div>`}).join('')}</div>`;
+      <div class="w">${esc(v.what)}</div></div>`}).join('');
   return `<div class="graph"><svg class="gsvg"></svg>
-    <div class="gcols">${cols.map(col).join('')}</div></div>`;
+    <div class="gcanvas" style="width:${(maxD+1)*(NW+GX)-GX}px;height:${maxR*RH+108}px">${nodes}</div></div>`;
 }
 
 function drawLines(p){
