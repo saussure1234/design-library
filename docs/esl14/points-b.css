@@ -175,11 +175,15 @@
   row-gap: clamp(24px,3vw,40px);
 }
 .vhr__list .vhr__item:has(.pb-tri) .vhr__vert{
-  --slant: clamp(90px, 16vw, 230px);
+/* ★斜めが深すぎるとリード文が面の外へ出て消える（実測）。
+     生成の比は「深さ ÷ 面の高さ ≒ 0.5」。実装の面は図の高さ（約300px）なので
+     深さは155px までにする。 */
+  --slant: clamp(70px, 11vw, 155px);
   grid-column:1; grid-row:1;
   align-self:stretch;
   margin-left: calc(-1 * var(--pb-side));
-  padding: 44px clamp(40px,7vw,100px) 52px var(--pb-side);
+  /* 12文字（216px）で折れて13文字目が乗らない幅にする */
+  padding: 44px clamp(40px,9vw,130px) 52px var(--pb-side);
   background:var(--c-primary);
   clip-path: polygon(0 0, 100% 0, calc(100% - var(--slant)) 100%, 0 100%);
 }
@@ -238,11 +242,13 @@
   row-gap: clamp(20px,2.6vw,34px);
 }
 .pmp__box .vhr__vert{
-  --slant: clamp(80px, 13vw, 190px);
+/* この器は面が低い（写真の高さ）ので、深さも比に合わせて浅くする */
+  --slant: clamp(50px, 8vw, 110px);
   grid-column:1; grid-row:1;
   align-self:stretch;
   margin-left: calc(-1 * var(--pb-side));
-  padding: 40px clamp(28px,4vw,58px) 46px var(--pb-side);
+  /* 面を高くすると、同じ深さでも文字の行での斜辺が右へ寄る（＝切れなくなる） */
+  padding: 40px clamp(28px,4vw,58px) 88px var(--pb-side);
   background:var(--c-primary);
   clip-path: polygon(0 0, 100% 0, calc(100% - var(--slant)) 100%, 0 100%);
 }
