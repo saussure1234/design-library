@@ -2,159 +2,174 @@
 /* ══════════════════════════════════════════════════════════════════
    POINT 01〜04 のリデザイン（採用＝案b：白地＋ブランド色）
 
-   ★型（4つとも同じ）
-       地は白
-       左  緑の面。右辺を斜めに切る。左は画面の端まで伸ばす
-           面の上に  黄のタグ「（ POINT 0X ）」／白の見出し／白のリード
+   ★生成4枚のうち POINT03／POINT04 の2枚が同じ型で出ている。
+     その型に4枚とも揃える（施主判断）。生成の実測は下の「実測」を見ること。
+
+   型
+       地は白。白いカードも枠も影も無い（＝素の地の上に置く）
+       左  緑の面。【画面の左端から】始まり、右辺が斜めに切られる
+           面の上に  白文字の「（ POINT 0X ）」／白の見出し／白のリード
        右  図・写真・動画を白い地の上に置く
-       下  本文。上に緑の細い罫を1本
+       下  緑の実線の罫を1本、その下に本文（版面いっぱい）
 
-   ★施主判断で決めたこと
-       ・緑の面の切り方は POINT03/04 の形（右辺が斜め）に揃える
-       ・生成に出ていた黄色い三角形は【入れない】。
-         FVの装飾（黄の弧・点・3本線）に三角形が無く、語彙が1つ増えるため
+   ★生成の実測（1440px幅・版面900px・版面の左端は x=270）
+       point03_b  緑 y=0..469  右端 上692 → 下271（＝版面の左端）
+       point04_b  緑 y=0..465  右端 上538 → 下300
+       罫         point03_b y=502 ／ point04_b y=584。どちらも幅いっぱい
+     → 上辺は版面の3〜5割、下辺は版面の左端あたりまで細くなる台形。
 
-   ★文字・写真・マークアップは1つも変えない。
+   ★入れないもの（施主判断）
+       ・黄色い三角形。FVの装飾（黄の弧・点・3本線）に三角形が無く、語彙が増える
+       ・黄色いタグ。生成の POINT03/04 は白文字。ここに揃える
 
-   ★左端まで伸ばす計算
-       .wrap は max-width:1080px、padding-inline:22px。
-       つまり中身の幅は 1036px で、画面の中央に置かれる。
-       画面の左端から中身の左端までは (100vw - 1036px) / 2。
-       その分だけ負の margin を掛ければ、緑の面が画面の端に届く。
-       画面が1080px未満のときは .wrap が全幅になるので 22px だけ戻す。
+   ★文字・写真・図は1つも変えない。
    ══════════════════════════════════════════════════════════════════ */
 
 /* ── 地を白にする ─────────────────────────────────── */
 .sec.vhr,
 .sec.pmp{ background:var(--c-bg) }
 
-/* ── 白カードをやめて、2列 × 2行に組み替える ─────────── */
-/* ★生成では「緑の細枠で囲んだ白いカード」の中に緑の面が入っている。
-   枠を落としていたのは再現漏れ。カードごと作る。
-   overflow:hidden で、緑の面がカードの角丸に沿って切れる。 */
+/* ── 面を版面の外へ出すための器 ──────────────────────
+   ★実測：.wrap(max-width:1080px) と .vhr__list(max-width:900px) が
+     子の描画を版面の幅で切っていた。overflow は visible で、
+     getBoundingClientRect も x0..677 と正しい値を返すのに、
+     背景もヒットテストも版面の左端(270px)で止まる。
+     負の margin でも絶対配置の負の left でも同じところで止まった。
+   → 器そのものを画面いっぱいにして、内側の余白で版面900pxを作り直す。
+     この形にして初めて面が x=0 まで出た（赤で塗って実測）。 */
+.sec.vhr > .wrap,
+.sec.pmp > .wrap{ max-width:none; padding-inline:0 }
+.sec.vhr > .wrap > .sec-head,
+.sec.pmp > .wrap > .sec-head{ max-width:1080px; margin-inline:auto; padding-inline:22px }
+.sec.vhr .vhr__list{ max-width:none }
+
+/* 版面900pxは、ここの内側の余白で作る（画面が狭いときは22px） */
+.tone-brand .vhr__item{ padding-inline: max(22px, calc(50vw - 450px)) }
+
+/* ── カード（白い地・枠・角丸・影・余白）を全部やめる ───── */
+/* ★一度ここに枠と白い地を足したが、生成4枚のうち枠があるのは POINT01 だけで、
+   揃える先に決めた POINT03/04 には無い。素の地に戻す。 */
 .tone-brand .vhr__item{
-  --pb-slant: 64px;                    /* 斜めの深さ */
   position:relative;
-  background:var(--c-bg);
-  border:2px solid var(--c-primary);
-  border-radius:20px;
-  overflow:hidden;
+  background:transparent;
+  border:0;
+  border-radius:0;
   box-shadow:none;
-  padding:0;
-  grid-template-columns: minmax(0,0.95fr) minmax(0,1.05fr);
+  padding-block:0;
+  overflow:visible;
+  grid-template-columns: minmax(0,1.05fr) minmax(0,0.95fr);
   column-gap: clamp(24px, 3vw, 44px);
+  row-gap: clamp(26px, 3.2vw, 46px);
   align-items:start;
 }
 
-/* 緑の面。
-   ★絶対配置にすると高さが item 全体になり、本文まで覆ってしまった（実測）。
-     格子の子に戻して align-self:stretch にすると、行1の高さに正しく収まる。
-   ★左端まで伸ばすのは、格子の子のままだと列幅が先に決まるので効かない。
-     ここでは版面の左端から始める（画面端までのブリードは入れていない）。 */
-.tone-brand .vhr__item::before{
-  content:"";
+/* ── 左：緑の面 ────────────────────────────────────
+   ★面は .vhr__vert（＝文字のかたまり）の背景として持たせる。
+     .vhr__item の子として置くと高さが行いっぱい＝図の高さまで伸びてしまい、
+     生成の「文字の下に余白を残して終わる面」にならない（実測で確認）。
+   ★画面の左端まで伸ばす計算
+       .vhr__list は max-width:900px の中央寄せ。
+       画面の左端から版面の左端までは (100vw - 900px) / 2 = 50vw - 450px。
+       その分を負の margin ではなく left の負値で取る（絶対配置なので確実）。
+   ★下辺の右端を版面の左端に合わせる
+       ::before の幅は「版面の左端までの距離 ＋ 左列の幅」。
+       clip-path の3点目を calc(50vw - 450px) にすると、
+       画面幅が変わっても下辺がちょうど版面の左端で終わる。
+   ─────────────────────────────────────────────── */
+/* ★はじめ ::before を絶対配置して left に負の値を入れたが、実測すると
+   left:-270px（calc でも固定値でも）が効かず、面は版面の左端で止まった。
+   要素そのものを負の margin で左へ広げ、padding で文字を元の位置に戻す。
+   この形なら格子の子でも確実に版面の外へ出る。 */
+/* ★斜めの深さ
+   下辺を版面の左端で終わらせると（＝深さが要素幅と同じ407px）、面の高さが
+   文字ぶんしかないので傾きが急になり、見出しもリードも面の外へ出た（実測）。
+   生成の傾きは 27〜42度。align-self:stretch で面を行いっぱいに伸ばし、
+   深さは固定値にして角度をその範囲に収める。 */
+.tone-brand .vhr__vert{
+  --pb-slant: clamp(70px, 12.5vw, 180px);
   grid-column:1; grid-row:1;
   align-self:stretch;
-  margin-right: calc(-1 * var(--pb-slant));
+  margin-left: calc(-1 * max(22px, 50vw - 450px));
+  padding: clamp(30px,3.6vw,52px) clamp(52px,6.6vw,96px)
+           clamp(34px,4.2vw,60px) max(22px, calc(50vw - 450px));
   background:var(--c-primary);
   clip-path: polygon(0 0, 100% 0, calc(100% - var(--pb-slant)) 100%, 0 100%);
-  z-index:0;
 }
-/* ★.vhr__top は display:contents。格子の子は .vhr__top の中にいるので、
-   .vhr__item > * だけだと写真に効かず、面に覆われて消える（前に踏んだ）。 */
-.tone-brand .vhr__item > *,
-.tone-brand .vhr__top > *{ position:relative; z-index:1 }
 
-/* ── 左：緑の面の上 ──────────────────────────────── */
-.tone-brand .vhr__vert{
-  grid-column:1; grid-row:1;
-  padding: clamp(26px,3vw,44px) clamp(30px,3.4vw,52px) clamp(30px,3.4vw,50px) 0;
-}
-/* （ POINT 0X ）は黄色いタグ */
+/* 「（ POINT 0X ）」は白文字。生成の POINT03/04 に合わせる */
 .tone-brand .vhr__label{
-  display:inline-block;
-  background:var(--c-accent);
-  color:var(--c-ink);
-  border-radius:999px;
-  padding:5px 16px;
-  font-weight:800;
+  display:block;
+  background:transparent;
+  color:var(--c-on-primary);
+  padding:0;
+  border-radius:0;
+  font-weight:700;
+  letter-spacing:.18em;
 }
-/* ★見出しが2〜3行に折れていた（「高い英検合格率を／実現」）。
-   生成では1行。左の列を広げ、文字を1段落として1行に収める。
-   いちばん長いのは「保護者さまが忙しくても安心」13文字。 */
 .tone-brand .vhr__title{
   color:var(--c-on-primary);
   line-break:strict;
-  font-size: clamp(19px, 2vw, 27px);
-  line-height:1.4;
+  font-size: clamp(19px, 1.95vw, 26px);
+  line-height:1.45;
   margin-top: clamp(12px,1.6vw,20px);
 }
-/* リード文は緑の面の上、見出しの下。
+/* リード文は面の上、見出しの下。
    ★別の格子セルに置くと右の図の高さに引っ張られて下へ落ちるので、
      マークアップで .vhr__vert の中へ移した（文字は1字も変えていない）。 */
 .tone-brand .vhr__sub{
   color:var(--c-on-primary);
-  line-break:strict;            /* 「ャー」が行頭に来るのを止める */
-  text-wrap:pretty;             /* 最終行に1〜2字だけ残すのを避ける */
+  line-break:strict;
+  text-wrap:pretty;
   margin-top: clamp(14px,1.8vw,22px);
   padding-top:0;
 }
 
-/* ★丸の大きさは元のまま触らない。
-   生成画像はカードを画面いっぱいに引き伸ばして描くので、
-   その中の丸が大きく見えただけだった。実測：生成の入力も出力もカードは900px。
-   大きくすると3+2で並ばず2+2+1に折れ、緑の面が下へ間延びする。 */
-
 /* ── 右：図・写真は白い地の上 ─────────────────────── */
 .tone-brand .vhr__top > .vhr__chart,
+.tone-brand .vhr__top > .vhr__fig,
 .tone-brand .vhr__top > .vhr__figs{
   grid-column:2; grid-row:1;
   align-self:center;
-  /* 右の余白を詰める。広げないと合格率の下の注記が3行に折れる（元は2行） */
-  margin: clamp(20px,2.4vw,34px) clamp(16px,1.8vw,26px) clamp(20px,2.4vw,34px) 0;
-}
-/* 写真はカードの右上の角に寄せる（生成では角に食い込んでいる） */
-.tone-brand .vhr__top > .vhr__fig{
-  grid-column:2; grid-row:1;
-  align-self:start;
-  margin: clamp(18px,2.2vw,30px) clamp(18px,2.2vw,30px) clamp(18px,2.2vw,30px) 0;
+  margin: clamp(14px,1.8vw,26px) 0;
 }
 
-/* ── 下：本文。上に緑の細い罫 ─────────────────────── */
-/* カードに padding を持たせると緑の面まで内側に入ってしまうので、
-   余白は要素ごとに持たせる */
-/* ★本文は白い地の上、カードの全幅。
-   一度これを右の列だけに寄せたが、生成は全幅。緑が縦に貫くのは誤り。 */
+/* ── 下：緑の実線の罫、その下に本文 ─────────────────── */
 .tone-brand .vhr__body{
   grid-column:1 / -1; grid-row:2;
-  margin: 0 clamp(24px,2.8vw,40px) clamp(24px,2.8vw,38px);
-  padding-top: clamp(16px,2vw,24px);
+  margin:0;
+  padding-top: clamp(22px,2.8vw,38px);
   border-top:2px solid var(--c-primary);
 }
 
-/* ── 狭い画面：1列に積み、面は全幅 ─────────────────── */
+/* ── 狭い画面：1列に積み、面は画面の全幅 ─────────────── */
 /* ★元CSSは狭い画面で .vhr__vert を flex-direction:row-reverse にして
-   「（POINT 0X）」と見出しを横に並べる。案bではリード文をこの中へ移したので、
+   「（ POINT 0X ）」と見出しを横に並べる。案bではリード文をこの中へ移したので、
    3つが横一列に並んで画面外まではみ出した（実測・375px）。縦積みに戻す。 */
 @media(max-width:900px){
+  .tone-brand .vhr__item{
+    grid-template-columns: minmax(0,1fr);
+    grid-template-rows: auto auto auto;
+    row-gap:18px;
+  }
+  /* 狭い画面では斜めをやめ、左右とも画面の端まで伸ばした帯にする */
   .tone-brand .vhr__vert{
+    grid-column:1; grid-row:1;
+    /* ★PC の align-self:stretch のままだと面が行の高さ（＝グラフの高さ）まで
+       伸び、グラフと本文が面の上に重なった（実測375px・POINT01）。 */
+    align-self:start;
     display:flex; flex-direction:column; align-items:flex-start;
     justify-content:flex-start;
     gap:clamp(8px,2.4vw,13px);
-    padding:clamp(18px,4.8vw,26px) clamp(18px,4.8vw,26px) clamp(20px,5.2vw,28px);
+    margin-inline:-22px;
+    padding:clamp(20px,5vw,28px) 22px clamp(24px,6vw,34px);
+    clip-path:none;
+    background:var(--c-primary);
   }
   .tone-brand .vhr__title{ font-size:clamp(19px,5.2vw,22px); margin-top:0 }
   .tone-brand .vhr__sub{ margin-top:0; font-size:clamp(14px,3.8vw,16px) }
-  .tone-brand .vhr__item{
-    --pb-slant:0px;
-    grid-template-columns: minmax(0,1fr);
-    row-gap:16px;
-  }
-  .tone-brand .vhr__item::before{ grid-column:1; grid-row:1; margin-right:0 }
-  .tone-brand .vhr__vert{ grid-column:1; grid-row:1 }
   .tone-brand .vhr__top > .vhr__chart,
   .tone-brand .vhr__top > .vhr__fig,
-  .tone-brand .vhr__top > .vhr__figs{ grid-column:1; grid-row:2 }
+  .tone-brand .vhr__top > .vhr__figs{ grid-column:1; grid-row:2; margin:0 }
   .tone-brand .vhr__body{ grid-column:1; grid-row:3 }
 }
 
@@ -178,21 +193,30 @@
 /* 左＝本文の箱、右＝動画。割合で分ける */
 /* ★実測：この行だけ 957px あり、他の3枚（900px）と左端が43pxずれていた。
    元は width:min(100vw,--pmp-max) と負の margin-inline で画面いっぱいに
-   広げる仕掛け。max-width を足すだけだと潰れるので、3つとも上書きする。 */
+   広げる仕掛け。max-width を足すだけだと潰れるので、3つとも上書きする。
+   900px に揃えることで、緑の面の left 計算（450px - 50vw）が他の3枚と共通になる。 */
 .pmp__row{
-  width:min(100%, 900px) !important;
-  margin-inline:auto !important;
-  padding-inline:0 !important;
+  width:100% !important;
+  margin-inline:0 !important;
+  padding-inline: max(22px, calc(50vw - 450px)) !important;
   grid-template-columns: minmax(0, 62%) minmax(0, 38%) !important;
   justify-content:stretch !important;
   column-gap: clamp(20px, 2.4vw, 40px);
   align-items:start;
 }
 .pmp__box{ width:100% }
+/* 版面の余白は .pmp__row が持つので、中の項目では持たせない（二重になる） */
+.pmp__box .vhr__item{ padding-inline:0 }
 /* ★POINT03 だけ器が 900px の62%＝558px。他の3枚と同じ比だと左列が242pxで、
    見出し「学習効率を向上」7文字が入らず2行に折れた（実測）。ここだけ比を変える。 */
 .pmp__box .vhr__item{ grid-template-columns: minmax(0,1.15fr) minmax(0,0.85fr) }
-.pmp__box .vhr__item{ width:100% }
+/* ★この器だけ 900px の62%＝558px しかない。他の3枚と同じ余白・傾きだと
+   文字の入る幅が166pxまで痩せ、「学習効率を向上」7文字が2行に折れた（実測）。
+   右の余白と斜めの深さをこの器に合わせて詰める。 */
+.pmp__box .vhr__vert{
+  --pb-slant: clamp(50px, 7vw, 96px);
+  padding-right: clamp(28px, 3.6vw, 56px);
+}
 .pmp__media{ width:100% }
 .pmp__grid{ grid-template-columns:minmax(0,1fr) }
 .pmp__item{ width:100% !important }
