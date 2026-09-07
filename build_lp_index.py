@@ -192,9 +192,11 @@ tr:hover td{background:#fafbfc}
 .fgraph{position:relative;overflow-x:auto;padding:6px 4px 10px;margin-top:14px}
 .fcanvas{position:relative;z-index:1}
 .fsvg{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:visible}
-.fgl{position:absolute;top:0;width:252px;font-size:13px;font-weight:800;
-  border-bottom:2px solid #111827;padding-bottom:6px}
-.fgl span{font-weight:400;font-size:11px;color:var(--mute);margin-left:7px}
+.fgl{position:absolute;top:0;width:252px;border-bottom:2px solid #111827;padding-bottom:6px}
+.fgt{font-size:13px;font-weight:800}
+.fgt span{font-weight:400;font-size:11px;color:var(--mute);margin-left:7px}
+.fgs{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
+.fgs .sk{font-size:10px;padding:2px 7px}
 
 .fnode{position:absolute;width:252px;height:44px;display:flex;align-items:center;gap:9px;
   background:#fff;border:1px solid var(--line);border-left:5px solid var(--live);
@@ -318,7 +320,7 @@ function dlAll(){
      16工程ぶんの説明を最初から並べると読む気が失せる（前の版で却下された）。
    ★列＝大きな塊（提案／制作／公開・管理）。線は SVG のベジェで引く。 */
 const FN={}; STEPS.forEach(s=>FN[s.n]=s);
-const FW=252, FGX=76, FRH=58, FTOP=32;   // 節の幅 / 列間 / 段の高さ / 見出しの分の余白
+const FW=252, FGX=76, FRH=58, FTOP=58;   // FTOP は見出し2行ぶん   // 節の幅 / 列間 / 段の高さ / 見出しの分の余白
 
 function flowPane(){
   if(!STEPS.length)return '<p style="color:var(--mute)">lp-flow.json がありません。</p>';
@@ -328,8 +330,15 @@ function flowPane(){
   GR.forEach((g,c)=>{
     const st=STEPS.filter(s=>s.group===g.id);
     if(!st.length)return;
-    heads+=`<div class="fgl" style="left:${c*(FW+FGX)}px">${esc(g.name)}
-      <span>${st.length}工程</span></div>`;
+    // ★どのスキルがこの塊を受け持つかを見出しに出す。
+    //   工程ごとのバッジだけだと「この塊は誰の担当か」が読み取れない。
+    const sk=[]; st.forEach(s=>{ if(!sk.includes(s.skill)) sk.push(s.skill); });
+    const chips=sk.map(id=>id
+      ? `<span class="sk ${SK[id]?'have':'miss'}">${esc(id)}${SK[id]?'':'／未作成'}</span>`
+      : '<span class="sk none">型なし</span>').join('');
+    heads+=`<div class="fgl" style="left:${c*(FW+FGX)}px">
+      <div class="fgt">${esc(g.name)}<span>${st.length}工程</span></div>
+      <div class="fgs">${chips}</div></div>`;
     st.forEach((s,r)=>{
       pos[s.n]=[c,r]; maxR=Math.max(maxR,r);
       const st8=s.skill?(SK[s.skill]?'ok':'miss'):'none';
