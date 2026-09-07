@@ -268,9 +268,11 @@ tr.rmiss{background:#fef2f2}
 """
 
 JS = """
-// ★リンクを作る＝クライアントに見せる、という前提。
-//   だから状態は【リンクがあるか無いか】の2つだけでいい。
-const S={live:['公開','var(--live)','#f1fbf3'],draft:['未公開','var(--draft)','#fff']};
+// ★状態は3つ。shown（クライアントに見せた）になったリンクはそこで凍る。
+//   以降の直しは自動で新しいリンクへ逃がす（lpv.py update がやる）。
+const S={shown:['クライアントに提示','var(--live)','#f1fbf3'],
+         internal:['自分の確認用','var(--review)','#fffbeb'],
+         draft:['未公開','var(--draft)','#fff']};
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 let cur=DATA.projects[0].id, tab='graph';   // 最初に見たいのは系統。表は後
 
@@ -452,7 +454,8 @@ function listPane(p){
         ${(v.updates||[]).length?`<div class="upd">同じリンクのまま ${v.updates.length}回 直した
           <ul>${v.updates.map(u=>`<li>${esc(u.date)} ${esc(u.what)}</li>`).join('')}</ul></div>`:''}
         ${v.alert?`<div class="warn">▲ ${esc(v.alert)}</div>`:''}</td>
-      <td style="color:var(--mute);white-space:nowrap">${esc(v.date)}</td></tr>`}).join('');
+      <td style="color:var(--mute);white-space:nowrap">${esc(v.date)}
+        ${v.shown_on?`<div style="font-size:11px">提示 ${esc(v.shown_on)}</div>`:''}</td></tr>`}).join('');
   return `<table><thead><tr><th>リンク</th><th>状態</th><th>派生元</th>
     <th>変更内容と更新</th><th>日付</th></tr></thead><tbody>${rows}</tbody></table>
     ${glossary()}`;
@@ -461,11 +464,11 @@ function listPane(p){
 /* ★用語は説明を画面に置く。頭の中にしか無い言葉は、3日で意味が分からなくなる。 */
 function glossary(){
   const G=[
-   ['リンク','<b>作った時点でクライアントに見せている</b>もの。作りかけを置く場所ではない'],
-   ['公開','リンクがあり、開けば見られる状態'],
-   ['未公開','まだリンクを作っていない'],
+   ['未公開','まだリンクを作っていない。作りかけ'],
+   ['自分の確認用','リンクはあるが、まだクライアントには渡していない。ここは何度でも直してよい'],
+   ['クライアントに提示','渡した。<b>このリンクはここで凍る</b>。以降の直しは自動で新しいリンクへ逃がす'],
    ['派生元','そのリンクを作るとき、どのリンクをコピーして始めたか。ここが抜けると系統が追えなくなる'],
-   ['更新','<b>同じリンクのまま</b>中身を直した回数。小さい直しでリンクは増やさない'],
+   ['更新','<b>同じリンクのまま</b>中身を直した回数。提示前のリンクだけ増える'],
   ];
   return `<details class="glo"><summary>用語の意味</summary><dl>${
     G.map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl></details>`;
@@ -593,8 +596,9 @@ function render(){
     </div><div class="pane">${body}</div>
     <div class="rules" style="margin-top:16px"><b>運用ルール</b><ol>
       <li>FBが来たら<b>直す前に</b>台帳へ1行足す</li>
-      <li><b>小さい直しはリンクを増やさない。</b>同じリンクの中身を直して update に記録する</li>
-      <li>リンクを増やすのは<b>別案として並べて見せる時だけ</b>。その時は必ず派生元を書く</li>
+      <li><b>渡す前</b>のリンクは、同じリンクの中身を直して update に記録する</li>
+      <li><b>渡した後</b>のリンクは直さない。update すると自動で新しいリンクが出る</li>
+      <li>クライアントに渡したら <code>lpv.py show &lt;id&gt;</code> を打つ。打った時点で凍る</li>
       <li>作業は git の docs/ 配下で行う。Desktopの複製フォルダを正にしない</li>
     </ol></div>`;
   // ★requestAnimationFrame は【タブが非表示だと発火しない】。

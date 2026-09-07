@@ -3,7 +3,8 @@
     "LP の版を管理する台帳。ここが正。ダッシュボードは build_lp_index.py で生成する。",
     "★ルール",
     "  1. FBが来たら【直す前に】ここへ1行足す",
-    "★status  live=公開（リンクがあり、開けば見られる） / draft=未公開（リンクなし）",
+    "★status  draft=未公開（リンクなし） / internal=公開（自分の確認用） / shown=公開（クライアントに見せた）",
+    "★shown になったリンクはそこで凍る。update すると自動で新しいリンクが出る。クライアントが見ている最中に中身が変わるのが一番まずいため。",
     "★リンクを作る＝クライアントに見せる。小さい直しは update（同じリンクのまま）。",
     "  2. 新しいリンクを作ったら【必ず parent（派生元）を書く】",
     "  4. 作業は git の docs/ 配下で行う。Desktop の複製フォルダを正にしない",
@@ -23,7 +24,7 @@
         {
           "id": "esl",
           "date": "2026-08-06",
-          "status": "live",
+          "status": "internal",
           "parent": null,
           "what": "初版。上司レビュー用に渡したリンク",
           "fb": []
@@ -31,16 +32,17 @@
         {
           "id": "esl2",
           "date": "2026-08-17",
-          "status": "live",
+          "status": "shown",
           "parent": "esl",
           "what": "クライアントに提示中のリンク",
           "fb": [],
-          "alert": "9月の修正（半額CTA等）が入っていない。クライアントはこのリンクを見ている"
+          "alert": "9月の修正（半額CTA等）が入っていない。クライアントはこのリンクを見ている",
+          "shown_on": "2026-08-17"
         },
         {
           "id": "esl3",
           "date": "2026-08-19",
-          "status": "live",
+          "status": "internal",
           "parent": "esl2",
           "what": "演出の実験（開幕の波・背景の色・FVの動き）",
           "fb": [
@@ -71,7 +73,7 @@
         {
           "id": "esl6",
           "date": "2026-08-31",
-          "status": "live",
+          "status": "internal",
           "parent": "esl3",
           "what": "用途の記録なし",
           "fb": [],
@@ -80,7 +82,7 @@
         {
           "id": "esl7",
           "date": "2026-09-07",
-          "status": "live",
+          "status": "shown",
           "parent": "esl6",
           "what": "半額キャンペーンCTAを追加（9-7〜10-31）",
           "fb": [
@@ -89,12 +91,13 @@
               "what": "半額キャンペーンにCTAを差し替え"
             }
           ],
-          "alert": "git の外（Desktop の複製）で作業して枝が伸びた。esl2 と1,114行の差"
+          "alert": "git の外（Desktop の複製）で作業して枝が伸びた。esl2 と1,114行の差",
+          "shown_on": "2026-09-07"
         },
         {
           "id": "esl9",
           "date": "2026-09-07",
-          "status": "live",
+          "status": "internal",
           "parent": "esl7",
           "what": "CTAボタンを緑→オレンジに",
           "fb": [
@@ -102,12 +105,13 @@
               "date": "2026-09-07",
               "what": "CTAが地の緑と同色で埋もれている"
             }
-          ]
+          ],
+          "alert": "※要確認 クライアントに見せたか未記録。見せたなら lpv.py show esl9 を打つ（打つとそのリンクは凍る）"
         },
         {
           "id": "esl10",
           "date": "2026-09-07",
-          "status": "live",
+          "status": "internal",
           "parent": "esl7",
           "what": "半額価格を赤に（CTAは緑のまま）",
           "fb": [
@@ -115,12 +119,13 @@
               "date": "2026-09-07",
               "what": "最初の赤も見比べたい"
             }
-          ]
+          ],
+          "alert": "※要確認 クライアントに見せたか未記録。見せたなら lpv.py show esl10 を打つ（打つとそのリンクは凍る）"
         },
         {
           "id": "esl11",
           "date": "2026-09-07",
-          "status": "live",
+          "status": "internal",
           "parent": "esl7",
           "what": "半額価格をオレンジに（CTAは緑のまま）",
           "fb": [
@@ -128,7 +133,8 @@
               "date": "2026-09-07",
               "what": "オレンジだとどうかも見たい"
             }
-          ]
+          ],
+          "alert": "※要確認 クライアントに見せたか未記録。見せたなら lpv.py show esl11 を打つ（打つとそのリンクは凍る）"
         }
       ]
     },
@@ -141,7 +147,7 @@
         {
           "id": "esl8",
           "date": "2026-09-07",
-          "status": "live",
+          "status": "internal",
           "parent": "esl7",
           "what": "見出しを小学生に限定 / FVの生徒写真を小学生に差し替え / FVに軽い装飾",
           "fb": [
@@ -154,7 +160,7 @@
         {
           "id": "esl12",
           "date": "2026-09-07",
-          "status": "live",
+          "status": "internal",
           "parent": "esl8",
           "what": "fnc（4つの特徴）と vbi（保護者さまの声）に装飾を追加。FVと同じ4種類の語彙",
           "updates": [],
@@ -171,18 +177,20 @@
         {
           "id": "esl-pretest",
           "date": "2026-08-17",
-          "status": "live",
+          "status": "shown",
           "parent": null,
           "what": "英検プレテスト（模擬試験）＆個別相談会 渋谷校",
-          "fb": []
+          "fb": [],
+          "shown_on": "2026-08-17"
         },
         {
           "id": "esl-pretest-1018",
           "date": "2026-09-01",
-          "status": "live",
+          "status": "shown",
           "parent": "esl-pretest",
           "what": "二次面接プレテスト版（10/18開催）",
-          "fb": []
+          "fb": [],
+          "shown_on": "2026-09-01"
         }
       ]
     },
@@ -195,16 +203,17 @@
         {
           "id": "ss-lp-preview",
           "date": "2026-09-02",
-          "status": "live",
+          "status": "shown",
           "parent": null,
           "what": "提示先。2026-09-02に公開再開",
           "fb": [],
-          "url": "https://saussure1234.github.io/ss-lp-preview/"
+          "url": "https://saussure1234.github.io/ss-lp-preview/",
+          "shown_on": "2026-09-02"
         },
         {
           "id": "ss-lp-preview2",
           "date": "2026-09-02",
-          "status": "live",
+          "status": "internal",
           "parent": "ss-lp-preview",
           "what": "作業用ミラー。deploy.sh が提示先と同時に push する",
           "fb": [],
@@ -221,7 +230,7 @@
         {
           "id": "ads-site",
           "date": "2026-09-04",
-          "status": "live",
+          "status": "internal",
           "parent": null,
           "what": "現行コーポレートサイトの再現。改修前の比較用",
           "fb": [],
@@ -230,12 +239,13 @@
         {
           "id": "ads-lp",
           "date": "2026-09-07",
-          "status": "live",
+          "status": "shown",
           "parent": null,
           "what": "改修LPの初稿。実績ロゴ12点の無限スライダー・制作物写真を本物3社に・追従CTA",
           "fb": [],
           "url": "https://saussure1234.github.io/ads-lp-preview/lp/",
-          "alert": "FB履歴はこれから記録する。指摘が来たら直す前に lpv.py fb ads-lp --what \"...\""
+          "alert": "FB履歴はこれから記録する。指摘が来たら直す前に lpv.py fb ads-lp --what \"...\"",
+          "shown_on": "2026-09-07"
         }
       ]
     }

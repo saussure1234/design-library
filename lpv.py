@@ -14,13 +14,17 @@
     python3 lpv.py new-project <案件id> --name ... --client ...
     python3 lpv.py new <版id> -p <案件id> --from <派生元> --why "..." [--src DIR]
     python3 lpv.py fb <版id> --what "..."           ★直す前に打つ
-    python3 lpv.py update <版id> --what "..."       小さい直し（同じリンクのまま）
+    python3 lpv.py update <版id> --what "..."       小さい直し
+    python3 lpv.py show <版id>                     クライアントに見せた（ここで凍る）
     python3 lpv.py check                           台帳の検査だけ
     python3 lpv.py build [--push]                  検査→ツール生成→(--pushで公開)
 
-  ★ リンクを作る＝クライアントに見せる、ということ。
-    小さい直しは update（同じリンクのまま）。リンクを増やすのは
-    【別案として並べて見せたい時】だけ（CTAの色違いを2本出す、など）。
+  ★ 状態は3つ。
+      未公開            まだリンクが無い
+      公開（自分用）    リンクはあるが、自分の確認用
+      公開（クライアント） 見せた。★ここでそのリンクは凍る
+    見せたリンクを update すると、自動で新しいリンクを作ってそちらへ逃がす。
+    クライアントが見ている最中に中身が変わるのが一番まずいため。
   ★ new は --from を必ず要求する。省略できない（--root は初版のときだけ）。
     これを書かせるのが台帳の目的。どこから枝が伸びたかを後から追えるようにする。
 """
@@ -29,7 +33,11 @@ import argparse, datetime, json, os, re, shutil, subprocess, sys
 ROOT = os.path.dirname(os.path.abspath(__file__))
 REG = os.path.join(ROOT, "lp-registry.json")
 DOCS = os.path.join(ROOT, "docs")
-STATUS = ["live", "draft"]          # 公開（リンクあり）／未公開（リンクなし）
+# ★状態は3つ。draft→internal→shown と一方通行で進む。
+#   shown（クライアントに見せた）になったリンクは、そこで凍る。
+#   以降の直しは自動で新しいリンクへ逃がす（update が勝手に new する）。
+STATUS = ["draft", "internal", "shown"]
+LABEL = {"draft": "未公開", "internal": "公開（自分用）", "shown": "公開（クライアント）"}
 TODAY = datetime.date.today().isoformat()
 
 C = {"r": "\033[31m", "y": "\033[33m", "g": "\033[32m", "b": "\033[1m", "_": "\033[0m"}
@@ -124,8 +132,8 @@ def cmd_ls(a):
         say(f"\n■ {p['name']}  [{p['id']}]  リンク {len(p['versions'])}本", "b")
         for v in p["versions"]:
             u = f"更新{len(v['updates'])}回" if v.get("updates") else ""
-            say(f"   {v['id']:<16} {'公開' if v.get('status')=='live' else '未公開':<5} "
-                f"親={v.get('parent') or '初版':<10} {v.get('date','')} {u:<7} {v.get('what','')[:34]}")
+            say(f"   {v['id']:<16} {LABEL.get(v.get('status'),'?'):<16} "
+                f"親={v.get('parent') or '初版':<10} {v.get('date','')} {u:<7} {v.get('what','')[:32]}")
             if v.get("alert"):
                 say(f"       ▲ {v['alert']}", "y")
 
@@ -225,6 +233,36 @@ def cmd_fb(a):
     say(f"      別案として見せる（新しいリンク）… lpv.py new <新id> -p {av[a.id][0]['id']} --from {a.id} --alt --why \"...\"")
 
 
+def next_id(cur, taken):
+    """esl12 → esl13 のように連番を進める。数字で終わらないものは -2, -3 と足す。"""
+    m = re.match(r"^(.*?)(\d+)$", cur)
+    if m:
+        head, n = m.group(1), int(m.group(2))
+        while f"{head}{n+1}" in taken:
+            n += 1
+        return f"{head}{n+1}"
+    i = 2
+    while f"{cur}-{i}" in taken:
+        i += 1
+    return f"{cur}-{i}"
+
+
+def cmd_show(a):
+    """クライアントに見せた、と記録する。ここから先そのリンクは凍る。"""
+    reg = load(); av = allvers(reg)
+    if a.id not in av:
+        sys.exit(f"  ★'{a.id}' が台帳に無い")
+    p, v = av[a.id]
+    if v.get("status") == "draft":
+        sys.exit(f"  ★{a.id} は未公開。まだリンクが無い")
+    v["status"] = "shown"
+    v.setdefault("shown_on", a.date or TODAY)
+    save(reg)
+    say(f"  ○ {a.id} を「クライアントに見せた」にした（{v['shown_on']}）", "g")
+    say(f"    {vurl(reg, v)}")
+    say("  ・このリンクはここで凍る。次に直すと自動で新しいリンクが出る", "y")
+
+
 def cmd_update(a):
     """同じリンクのまま中身を直した。★新しいリンクは作らない。
 
@@ -236,12 +274,36 @@ def cmd_update(a):
     if a.id not in av:
         sys.exit(f"  ★版 '{a.id}' が台帳に無い")
     p, v = av[a.id]
+
+    # ★クライアントに見せたリンクは直さない。見ている最中に中身が変わるのが一番まずい。
+    #   指示が無ければ自動で新しいリンクへ逃がす。
+    if v.get("status") == "shown" and not a.same:
+        nid = next_id(a.id, set(av))
+        src = os.path.join(DOCS, a.id)
+        if v.get("url"):
+            sys.exit(f"  ★{a.id} は外部URL（{v['url']}）。新しいリンク先を決めてから "
+                     f"lpv.py new を使う")
+        if not os.path.isdir(src):
+            sys.exit(f"  ★docs/{a.id}/ が無いので複製できない")
+        shutil.copytree(src, os.path.join(DOCS, nid))
+        p["versions"].append({"id": nid, "date": a.date or TODAY, "status": "internal",
+                              "parent": a.id, "what": a.what, "updates": [], "fb": []})
+        save(reg)
+        say(f"\n  ▲ {a.id} はクライアントに見せたリンク。中身は直さない。", "y")
+        say(f"  ○ 新しいリンクを作った: {nid}（派生元 {a.id} / 公開（自分用））", "g")
+        say(f"    {vurl(reg, {'id': nid})}")
+        say(f"    docs/{nid}/ を直してから lpv.py build --push")
+        say(f"    ※どうしても同じリンクを直すなら --same（クライアントの目の前で中身が変わる）")
+        return
+
     v.setdefault("updates", []).append({"date": a.date or TODAY, "what": a.what})
     v["date"] = a.date or TODAY
     save(reg)
     n = len(v["updates"])
     say(f"  ○ {a.id} を更新（通算 {n} 回目）: {a.what}", "g")
     say(f"    リンクは同じ: {vurl(reg, v)}")
+    if v.get("status") == "shown":
+        say("  ▲ クライアントに見せたリンクの中身を直した。相手の見え方が変わる", "y")
 
 
 def cmd_rm(a):
@@ -365,8 +427,13 @@ def main():
     s.add_argument("--what", required=True); s.add_argument("--date")
     s.set_defaults(f=cmd_fb)
 
-    s = sp.add_parser("update", help="同じリンクのまま中身を直した（新しいリンクは作らない）")
+    s = sp.add_parser("show", help="クライアントに見せた（ここからそのリンクは凍る）")
+    s.add_argument("id"); s.add_argument("--date"); s.set_defaults(f=cmd_show)
+
+    s = sp.add_parser("update", help="中身を直した。見せたリンクなら自動で新しいリンクを作る")
     s.add_argument("id"); s.add_argument("--what", required=True); s.add_argument("--date")
+    s.add_argument("--same", action="store_true",
+                   help="見せたリンクでも同じリンクの中身を直す（相手の見え方が変わる）")
     s.set_defaults(f=cmd_update)
 
     s = sp.add_parser("rm", help="版を台帳から外す（公開ファイルは消さない）")
