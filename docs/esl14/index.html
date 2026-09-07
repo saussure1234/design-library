@@ -3300,6 +3300,165 @@ document.documentElement.classList.add('fv-anim');
 }
 
 </style>
+<style id="points-b">
+@charset "UTF-8";
+/* ══════════════════════════════════════════════════════════════════
+   POINT 01〜04 のリデザイン（採用＝案b：白地＋ブランド色）
+
+   ★型（4つとも同じ）
+       地は白
+       左  緑の面。右辺を斜めに切る。左は画面の端まで伸ばす
+           面の上に  黄のタグ「（ POINT 0X ）」／白の見出し／白のリード
+       右  図・写真・動画を白い地の上に置く
+       下  本文。上に緑の細い罫を1本
+
+   ★施主判断で決めたこと
+       ・緑の面の切り方は POINT03/04 の形（右辺が斜め）に揃える
+       ・生成に出ていた黄色い三角形は【入れない】。
+         FVの装飾（黄の弧・点・3本線）に三角形が無く、語彙が1つ増えるため
+
+   ★文字・写真・マークアップは1つも変えない。
+
+   ★左端まで伸ばす計算
+       .wrap は max-width:1080px、padding-inline:22px。
+       つまり中身の幅は 1036px で、画面の中央に置かれる。
+       画面の左端から中身の左端までは (100vw - 1036px) / 2。
+       その分だけ負の margin を掛ければ、緑の面が画面の端に届く。
+       画面が1080px未満のときは .wrap が全幅になるので 22px だけ戻す。
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── 地を白にする ─────────────────────────────────── */
+.sec.vhr,
+.sec.pmp{ background:var(--c-bg) }
+
+/* ── 白カードをやめて、2列 × 2行に組み替える ─────────── */
+.tone-brand .vhr__item{
+  --pb-slant: 64px;                    /* 斜めの深さ */
+  position:relative;
+  background:transparent;
+  box-shadow:none;
+  padding:0;
+  grid-template-columns: minmax(0,.82fr) minmax(0,1.35fr);
+  column-gap: clamp(28px, 3.4vw, 56px);
+  align-items:start;
+}
+
+/* 緑の面。
+   ★絶対配置にすると高さが item 全体になり、本文まで覆ってしまった（実測）。
+     格子の子に戻して align-self:stretch にすると、行1の高さに正しく収まる。
+   ★左端まで伸ばすのは、格子の子のままだと列幅が先に決まるので効かない。
+     ここでは版面の左端から始める（画面端までのブリードは入れていない）。 */
+.tone-brand .vhr__item::before{
+  content:"";
+  grid-column:1; grid-row:1;
+  align-self:stretch;
+  margin-right: calc(-1 * var(--pb-slant));
+  background:var(--c-primary);
+  clip-path: polygon(0 0, 100% 0, calc(100% - var(--pb-slant)) 100%, 0 100%);
+  z-index:0;
+}
+/* ★.vhr__top は display:contents。格子の子は .vhr__top の中にいるので、
+   .vhr__item > * だけだと写真に効かず、面に覆われて消える（前に踏んだ）。 */
+.tone-brand .vhr__item > *,
+.tone-brand .vhr__top > *{ position:relative; z-index:1 }
+
+/* ── 左：緑の面の上 ──────────────────────────────── */
+.tone-brand .vhr__vert{
+  grid-column:1; grid-row:1;
+  padding: clamp(26px,3vw,44px) clamp(30px,3.4vw,52px) clamp(30px,3.4vw,50px) 0;
+}
+/* （ POINT 0X ）は黄色いタグ */
+.tone-brand .vhr__label{
+  display:inline-block;
+  background:var(--c-accent);
+  color:var(--c-ink);
+  border-radius:999px;
+  padding:5px 16px;
+  font-weight:800;
+}
+.tone-brand .vhr__title{
+  color:var(--c-on-primary);
+  font-size: clamp(21px, 2.4vw, 32px);
+  line-height:1.36;
+  margin-top: clamp(12px,1.6vw,20px);
+}
+/* リード文は緑の面の上、見出しの下。
+   ★別の格子セルに置くと右の図の高さに引っ張られて下へ落ちるので、
+     マークアップで .vhr__vert の中へ移した（文字は1字も変えていない）。 */
+.tone-brand .vhr__sub{
+  color:var(--c-on-primary);
+  margin-top: clamp(14px,1.8vw,22px);
+  padding-top:0;
+}
+
+/* ── 右：図・写真は白い地の上 ─────────────────────── */
+.tone-brand .vhr__top > .vhr__chart,
+.tone-brand .vhr__top > .vhr__fig,
+.tone-brand .vhr__top > .vhr__figs{
+  grid-column:2; grid-row:1;
+  align-self:center;
+  margin: clamp(20px,2.4vw,34px) 0;
+}
+
+/* ── 下：本文。上に緑の細い罫 ─────────────────────── */
+.tone-brand .vhr__body{
+  grid-column:1 / -1; grid-row:2;
+  margin: clamp(24px,2.8vw,40px) 0 0;
+  padding-top: clamp(16px,2vw,24px);
+  border-top:2px solid var(--c-primary);
+}
+
+/* ── 狭い画面：1列に積み、面は全幅 ─────────────────── */
+@media(max-width:900px){
+  .tone-brand .vhr__item{
+    --pb-slant:0px;
+    grid-template-columns: minmax(0,1fr);
+    row-gap:16px;
+  }
+  .tone-brand .vhr__item::before{ grid-column:1; grid-row:1; margin-right:0 }
+  .tone-brand .vhr__vert{ grid-column:1; grid-row:1 }
+  .tone-brand .vhr__top > .vhr__chart,
+  .tone-brand .vhr__top > .vhr__fig,
+  .tone-brand .vhr__top > .vhr__figs{ grid-column:1; grid-row:2 }
+  .tone-brand .vhr__body{ grid-column:1; grid-row:3 }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   POINT 03（.pmp）だけは器が違うので個別に合わせる
+
+   ★.pmp__row は「左540px固定＋右auto＋space-between」で、
+     さらに data-fx="pair" がスクロール量から transform/opacity を作って
+     左右から寄せていた。案bは動かない型なので、動きを止めて割合で分ける。
+   ★止めないと、撮影時に動画が薄いまま（--vp が 0 付近）になる。実測で確認。
+   ══════════════════════════════════════════════════════════════════ */
+
+/* 動きを止める */
+.fx-on .fx[data-fx="pair"] .pmp__box,
+.fx-on .fx[data-fx="pair"] .pmp__media{
+  transform:none !important;
+  opacity:1 !important;
+  transition:none !important;
+}
+
+/* 左＝本文の箱、右＝動画。割合で分ける */
+.pmp__row{
+  grid-template-columns: minmax(0, 62%) minmax(0, 38%) !important;
+  justify-content:stretch !important;
+  column-gap: clamp(20px, 2.4vw, 40px);
+  align-items:start;
+}
+.pmp__box{ width:100% }
+.pmp__box .vhr__item{ width:100%; background:transparent }
+.pmp__media{ width:100% }
+.pmp__grid{ grid-template-columns:minmax(0,1fr) }
+.pmp__item{ width:100% !important }
+
+@media(max-width:900px){
+  .pmp__row{ grid-template-columns:minmax(0,1fr) !important }
+  .pmp__item{ width:clamp(220px,60vw,290px) !important }
+}
+
+</style>
 </head>
 <body>
 <div id="intro" aria-hidden="true"><svg viewBox="0 0 1000 1000" preserveAspectRatio="none"><path id="introPath" fill="#00B21F" d="M0,0 L1000,0 L1000,1000 C1000,1000 750,1000 500,1000 C250,1000 0,1000 0,1000 Z"></path></svg></div>
@@ -3482,7 +3641,9 @@ document.documentElement.classList.add('fv-anim');
           <div class="vhr__vert">
             <p class="vhr__label">（&nbsp;POINT&nbsp;01&nbsp;）</p>
             <h3 class="vhr__title">高い英検合格率を実現</h3>
-          </div>
+          
+<p class="vhr__sub">累計1,000名以上を合格に導いた英検ベースのカリキュラム</p>
+</div>
           
           
           <div class="vhr__chart">
@@ -3507,7 +3668,7 @@ document.documentElement.classList.add('fv-anim');
             <p class="vhr__cnote">2023年度第2回の実績（ESL clubオンライン校）／受験者のうち1次・2次受験双方に合格した生徒の割合</p>
           </div>
         </div>
-        <p class="vhr__sub">累計1,000名以上を合格に導いた英検ベースのカリキュラム</p>
+        
         <p class="vhr__body">ESL clubでは2015年の開塾以降、英検をカリキュラムに用いて、着実な英語力の向上と英検合格に導いてきました。国際基準であるCEFRに対応した英検を用いることで、バランスよく4技能＋語彙力を高めていきます。一般的には、英検2級が高校卒業時の到達目標とされていますが、ESL clubでは、小学生、中学生の時点での高い合格率を誇っています。</p>
       </li>
     </ul>
@@ -3532,7 +3693,9 @@ document.documentElement.classList.add('fv-anim');
           <div class="vhr__vert">
             <p class="vhr__label">（&nbsp;POINT&nbsp;02&nbsp;）</p>
             <h3 class="vhr__title">受験勉強と並行可能</h3>
-          </div>
+          
+<p class="vhr__sub">目標級・時期と現在のレベルから作成する個別の学習計画</p>
+</div>
           
           <!-- ★2枚並べていたが、同じ場面の縦位置・横位置で内容が重複していた。
                1枚にして、POINT04と同じ「白フチ＋影」の単体表示にする。
@@ -3540,7 +3703,7 @@ document.documentElement.classList.add('fv-anim');
           <figure class="vhr__fig"><img src="img/p06.jpg" alt="受験勉強と並行して英語に取り組む生徒" loading="lazy"></figure>
           
         </div>
-        <p class="vhr__sub">目標級・時期と現在のレベルから作成する個別の学習計画</p>
+        
         <p class="vhr__body">目標とする級と受験の時期、そして現在の英語レベル、学習に充てられる時間の4点から逆算して個別の学習計画を作成し、確保できる学習時間に合わせてレッスンの進め方と宿題量を設計します。学習時間そのものを増やすのではなく、限られた時間の使い方を組み立て直すため、中学受験から大学受験までの受験勉強や、部活動・他の習い事を続けながら、英検合格を目指すことができます。</p>
       </li>
     </ul>
@@ -3560,10 +3723,12 @@ document.documentElement.classList.add('fv-anim');
             <div class="vhr__vert">
               <p class="vhr__label">（&nbsp;POINT&nbsp;03&nbsp;）</p>
               <h3 class="vhr__title">学習効率を向上</h3>
-            </div>
+            
+<p class="vhr__sub">バイリンガル講師のマンツーマンレッスン</p>
+</div>
             <figure class="vhr__fig"><img src="img/teachers_kv.jpg" alt="ESL clubのバイリンガル講師" loading="lazy"></figure>
           </div>
-          <p class="vhr__sub">バイリンガル講師のマンツーマンレッスン</p>
+          
           <p class="vhr__body">ESL clubでは、英検1級・TOEFL iBT95点・TOEIC900点レベル以上のバイリンガル講師のみを採用しています。年齢の近い講師との距離の近さがそのまま学習の動機づけになり、ライティングや長文読解では、その場で日本語に切り替えて解説します。必要な時に日本語で補えるため、疑問をその場で解消し、1回のレッスンで進める量を最大化できます。</p>
         </div>
       </div>
@@ -3610,7 +3775,9 @@ document.documentElement.classList.add('fv-anim');
           <div class="vhr__vert">
             <p class="vhr__label">（&nbsp;POINT&nbsp;04&nbsp;）</p>
             <h3 class="vhr__title">保護者さまが忙しくても安心</h3>
-          </div>
+          
+<p class="vhr__sub">計画の実行をフォローするスクールマネージャー</p>
+</div>
           <figure class="vhr__fig vhr__fig--fit vhr__fig--sp"><picture>
             <source media="(max-width:900px)" srcset="img/reason_diagram_sp.webp">
             <img src="img/reason_diagram.jpg" alt="スクールマネジャーを中心に、保護者さま・講師・生徒さまで情報を共有する図" loading="lazy">
@@ -3618,7 +3785,7 @@ document.documentElement.classList.add('fv-anim');
           
           
         </div>
-        <p class="vhr__sub">計画の実行をフォローするスクールマネージャー</p>
+        
         <p class="vhr__body">スクールマネージャーが中心となり、学習計画どおりにレッスンが進むよう講師へ内容を伝達し、生徒さまの進捗をレッスンごとに保護者さまへ共有します。レッスン後、保護者さまへフィードバックを行うので、レッスンに付き添わなくとも、お子さまの英語力の伸びを安心して見守っていただけます。</p>
       </li>
     </ul>
