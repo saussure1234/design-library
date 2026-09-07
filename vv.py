@@ -169,6 +169,11 @@ WORK = os.path.expanduser("~/video-edit-tool/projects")
 PART_W = 420           # 構成シートに出すサムネの幅
 
 
+def _stem(name):
+    """素材名からサムネのファイル名。動画でも静止画にするので必ず .jpg"""
+    return None if not name else os.path.splitext(os.path.basename(name))[0] + ".jpg"
+
+
 def _thumb(src, dst, at=None):
     """静止画 or 動画の1コマを小さくして置く。at を渡すとその秒数のコマ"""
     F = ffmpeg()
@@ -189,7 +194,21 @@ def compose_from_project(slug):
     """
     d = os.path.join(WORK, slug)
     cfg = json.load(open(os.path.join(d, "project.json"), encoding="utf-8"))
-    tm = json.load(open(os.path.join(d, "timing.json"), encoding="utf-8"))
+    tmf = os.path.join(d, "timing.json")
+    if not os.path.exists(tmf):
+        # ★まだ編集していない案件。素材の割り当てまでは決まっているので、
+        #   「どの枠にどの素材を当てる予定か」だけをシートに載せる。
+        #   photos の並びが hook/body1/body2… に対応する（CTAは余っていなければ画像なし）
+        photos = cfg.get("photos") or []
+        secs = []
+        for i, key in enumerate(SEC):
+            line = cfg["lines"][i] if i < len(cfg["lines"]) else ""
+            img = photos[i] if i < len(photos) else None
+            secs.append({"key": key, "text": line, "chars": len(line),
+                         "image": img, "thumb": _stem(img), "shots": []})
+        return {"sections": secs, "logo": bool(cfg.get("logo")),
+                "avatar": ["正面", "横"], "planned": True, "work": slug}
+    tm = json.load(open(tmf, encoding="utf-8"))
     S = tm["sections"]
     bounds = [0.0] + [(S[i - 1]["end"] + S[i]["start"]) / 2
                       for i in range(1, len(S))] + [1e9]
@@ -212,7 +231,7 @@ def compose_from_project(slug):
                               "dur": round(end - sh["start"], 2)})
         img = next((s["file"] for s in shots if s["kind"] == "image"), None)
         secs.append({"key": key, "text": line, "chars": len(line),
-                     "image": img, "shots": shots})
+                     "image": img, "thumb": _stem(img), "shots": shots})
     return {"sections": secs, "logo": bool(cfg.get("logo")),
             "avatar": ["正面", "横"], "work": slug}
 
@@ -223,18 +242,30 @@ def publish_parts(vid, slug, comp):
     os.makedirs(d, exist_ok=True)
     a = os.path.join(WORK, slug, "assets")
     for s in comp["sections"]:
-        if s["image"]:
-            src = os.path.join(a, s["image"])
-            if os.path.exists(src):
-                _thumb(src, os.path.join(d, s["image"]))
+        if not s.get("image"):
+            continue
+        src = os.path.join(a, s["image"])
+        if not os.path.exists(src):
+            continue
+        # 素材が動画なら中ほどの1コマを静止画にする
+        at = probe(src)["duration"] * 0.35 if src.lower().endswith(".mp4") else None
+        _thumb(src, os.path.join(d, _stem(s["image"])), at=at)
     logo = os.path.join(a, "logo.png")
     if os.path.exists(logo):
-        _thumb(logo, os.path.join(d, "logo.png"))
-    # アバターは2カメ。動画の中ほどの1コマを取る（頭は口が閉じていて表情が死ぬ）
+        # ロゴは背景が透けるので png のまま置く（jpg にすると白地が焼き付く）
+        shutil.copyfile(logo, os.path.join(d, "logo.png"))
+    # アバターは2カメ。動画の中ほどの1コマ。まだ作っていない案件は元画像から
+    vd = os.path.join(WORK, slug, "video")
+    rd = os.path.join(WORK, slug, "avatar_ref")
     for name, out in (("wide.mp4", "avatar_wide.jpg"), ("close.mp4", "avatar_close.jpg")):
-        src = os.path.join(WORK, slug, "video", name)
+        src = os.path.join(vd, name)
         if os.path.exists(src):
             _thumb(src, os.path.join(d, out), at=probe(src)["duration"] * 0.4)
+        elif os.path.isdir(rd):
+            key = name.split(".")[0]
+            hit = [f for f in sorted(os.listdir(rd)) if f.startswith(key)]
+            if hit:
+                _thumb(os.path.join(rd, hit[0]), os.path.join(d, out))
 
 
 def parse_tsv(path):
@@ -317,9 +348,23 @@ def cmd_compose(a):
     if a.copy:
         if a.copy not in vs:
             sys.exit(f"  ★写し元 '{a.copy}' が台帳に無い")
-        v["comp"] = json.loads(json.dumps(vs[a.copy][1].get("comp") or {}))
+        src = json.loads(json.dumps(vs[a.copy][1].get("comp") or {}))
+        # ★A/Bの本数は素材が同じで文面だけ違う。--keep-text で文面だけ残す
+        if a.keep_text and v.get("comp", {}).get("sections"):
+            mine = {s["key"]: s for s in v["comp"]["sections"]}
+            for s in src.get("sections", []):
+                if s["key"] in mine:
+                    s["text"] = mine[s["key"]]["text"]
+                    s["chars"] = mine[s["key"]]["chars"]
+        v["comp"] = src
+        # サムネは写し元の作業場から取り直す（版ごとに parts/ を持つ作りなので）
+        w = a.parts_from or src.get("work")
+        if w and os.path.isdir(os.path.join(WORK, w)):
+            publish_parts(a.id, w, src)
         save(reg)
-        say(f"  ○ {a.id} の構成を {a.copy} から写した", "g")
+        player_page(reg, p, v)
+        say(f"  ○ {a.id} の構成を {a.copy} から写した"
+            + ("（文面はそのまま）" if a.keep_text else ""), "g")
         return
     if a.json:
         comp = json.load(open(a.json, encoding="utf-8"))
@@ -708,6 +753,8 @@ def main():
     s.add_argument("--parts-from", dest="parts_from",
                    help="サムネだけ別の作業場から取る（素材が共通の時）")
     s.add_argument("--copy", help="別の版の構成をそのまま写す（型を配る時）")
+    s.add_argument("--keep-text", dest="keep_text", action="store_true",
+                   help="--copy と併用。素材だけ写して文面はこの版のまま（A/B用）")
     s.set_defaults(f=cmd_compose)
     s = sub.add_parser("plan", help="台本だけの版をまとめて登録（TSVを貼る）")
     s.add_argument("project")

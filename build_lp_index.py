@@ -584,7 +584,7 @@ function secCell(v,s){
     <div class="tx" style="color:var(--mute);margin-top:6px">${esc(s.text||'')}</div></td>`;
   const planned=v.comp&&v.comp.planned;      // まだ作っていない＝素材が決まっていない
   const img=s.image
-    ? `<img class="th" src="../video/${esc(v.id)}/parts/${esc(s.image)}" alt="" loading="lazy">`
+    ? `<img class="th" src="../video/${esc(v.id)}/parts/${esc(s.thumb||s.image)}" alt="" loading="lazy">`
     : `<div class="noimg">${planned?'素材未定':'画像なし（アバターのみ）'}</div>`;
   const chain=(s.shots||[]).map(x=>x.kind==='image'
     ? `<span class="sh img">${esc(x.file)} ${x.dur}s</span>`
@@ -619,7 +619,8 @@ function sheetPane(p,R){
         ? `<td class="sm"><div class="rule">全カット左上に固定</div></td>
            <td class="av"><div class="rule">正面（引き）と横（寄り）の2カメ。
              セクションをまたいで交代させる</div></td>`
-        : planned
+        // 素材が入っていれば未制作でも出す。「まだ編集していない」と「素材が無い」は別
+        : (!c.logo && !c.avatar)
         ? `<td class="sm"><span style="color:#9ca3af">未定</span></td>
            <td class="av"><span style="color:#9ca3af">未定</span></td>`
         : `<td class="sm">${c.logo?`<img class="logo" src="${parts}logo.png" alt="ロゴ" loading="lazy">`
