@@ -19,6 +19,7 @@
     python3 vv.py fb <版id> --what "..."          ★直す前に打つ
     python3 vv.py update <版id> --what "..." [--src <mp4>]   小さい直し
     python3 vv.py show <版id>                    クライアントに見せた（ここで凍る）
+    python3 vv.py compose <版id> --project <slug> 構成（文面・画像・アバター）を取り込む
     python3 vv.py check                          台帳と容量の検査だけ
     python3 vv.py build [--push]                 検査→ダッシュボード生成→(--pushで公開)
 
@@ -154,6 +155,114 @@ def publish_files(vid, src):
             if os.path.exists(t):
                 os.remove(t)
     return mp4, poster, probe(mp4)
+
+
+# ── 構成（1本を Hook / Body1 / Body2 / CTA の4枠で見る）──────────
+# ★台本の1行＝1セクション。この4つが動画の骨格で、
+#   「どの枠にどの文面と、どの画像と、どのアングルのアバターを置いたか」が
+#   案件をまたいで比べたい唯一の情報。だから台帳に持ってシートで並べる。
+SEC = ["hook", "body1", "body2", "cta"]
+SEC_LABEL = {"hook": "Hook", "body1": "Body1", "body2": "Body2", "cta": "CTA"}
+# Remotion に渡す素材名 → 人が読むアングル名
+ANGLE = {"video/wide.mp4": "正面", "video/close.mp4": "横"}
+WORK = os.path.expanduser("~/video-edit-tool/projects")
+PART_W = 420           # 構成シートに出すサムネの幅
+
+
+def _thumb(src, dst, at=None):
+    """静止画 or 動画の1コマを小さくして置く。at を渡すとその秒数のコマ"""
+    F = ffmpeg()
+    cmd = [F, "-hide_banner", "-y"]
+    if at is not None:
+        cmd += ["-ss", str(at)]
+    cmd += ["-i", src, "-frames:v", "1", "-vf", f"scale={PART_W}:-1", "-q:v", "4", dst]
+    _run(cmd, f"{os.path.basename(dst)} の書き出し", 300)
+
+
+def compose_from_project(slug):
+    """~/video-edit-tool/projects/<slug>/ から構成を組み立てる。
+
+    ★セクションの切れ目は timing.json（実際にそう喋った区間）が正。
+      ただし【喋り出しの位置では割らない】。絵は次の行より少し先に変わるのが普通で、
+      実測でも 0.2秒ほど早い。境目は「前の行の言い終わり」と「次の行の言い出し」の
+      真ん中＝無音の中央に置く。ここで割ると、実際のカット位置とちょうど一致する。
+    """
+    d = os.path.join(WORK, slug)
+    cfg = json.load(open(os.path.join(d, "project.json"), encoding="utf-8"))
+    tm = json.load(open(os.path.join(d, "timing.json"), encoding="utf-8"))
+    S = tm["sections"]
+    bounds = [0.0] + [(S[i - 1]["end"] + S[i]["start"]) / 2
+                      for i in range(1, len(S))] + [1e9]
+
+    secs = []
+    for i, key in enumerate(SEC):
+        line = cfg["lines"][i] if i < len(cfg["lines"]) else ""
+        shots = []
+        for sh in cfg["shots"]:
+            t = sh["start"]
+            if not (bounds[i] <= t < bounds[i + 1]):
+                continue
+            end = sh.get("end") or tm["total"] + cfg.get("tail", 0.55)
+            src = sh["src"]
+            if src in ANGLE:
+                shots.append({"kind": "avatar", "label": ANGLE[src],
+                              "dur": round(end - sh["start"], 2)})
+            else:
+                shots.append({"kind": "image", "file": os.path.basename(src),
+                              "dur": round(end - sh["start"], 2)})
+        img = next((s["file"] for s in shots if s["kind"] == "image"), None)
+        secs.append({"key": key, "text": line, "chars": len(line),
+                     "image": img, "shots": shots})
+    return {"sections": secs, "logo": bool(cfg.get("logo")),
+            "avatar": ["正面", "横"], "work": slug}
+
+
+def publish_parts(vid, slug, comp):
+    """構成シートに出す小さな画像を docs/video/<版id>/parts/ に置く"""
+    d = os.path.join(DOCS, vid, "parts")
+    os.makedirs(d, exist_ok=True)
+    a = os.path.join(WORK, slug, "assets")
+    for s in comp["sections"]:
+        if s["image"]:
+            src = os.path.join(a, s["image"])
+            if os.path.exists(src):
+                _thumb(src, os.path.join(d, s["image"]))
+    logo = os.path.join(a, "logo.png")
+    if os.path.exists(logo):
+        _thumb(logo, os.path.join(d, "logo.png"))
+    # アバターは2カメ。動画の中ほどの1コマを取る（頭は口が閉じていて表情が死ぬ）
+    for name, out in (("wide.mp4", "avatar_wide.jpg"), ("close.mp4", "avatar_close.jpg")):
+        src = os.path.join(WORK, slug, "video", name)
+        if os.path.exists(src):
+            _thumb(src, os.path.join(d, out), at=probe(src)["duration"] * 0.4)
+
+
+def cmd_compose(a):
+    reg = load()
+    vs = allvers(reg)
+    if a.id not in vs:
+        sys.exit(f"  ★版 '{a.id}' が台帳に無い")
+    p, v = vs[a.id]
+    if a.json:
+        comp = json.load(open(a.json, encoding="utf-8"))
+        slug = comp.get("work")
+    else:
+        if not os.path.isdir(os.path.join(WORK, a.project)):
+            sys.exit(f"  ★作業場が無い: {os.path.join(WORK, a.project)}")
+        comp = compose_from_project(a.project)
+        slug = a.project
+    # 素材は作業場から取る。--parts-from で別の作業場を指せる（1本目のように
+    # project.json が残っていない版でも、同じアバター・同じ素材なら流用できる）
+    publish_parts(a.id, a.parts_from or slug, comp)
+    v["comp"] = comp
+    save(reg)
+    player_page(reg, p, v)
+    say(f"  ○ {a.id} の構成を取り込んだ", "g")
+    for s in comp["sections"]:
+        chain = " → ".join((x["label"] if x["kind"] == "avatar" else x["file"])
+                           + f"({x['dur']}s)" for x in s["shots"])
+        say(f"    {SEC_LABEL[s['key']]:<6} {s['chars']:>2}字  {s['text']}")
+        say(f"           {chain or '—'}")
 
 
 def esc(s):
@@ -497,6 +606,13 @@ def main():
     s = sub.add_parser("fb"); s.add_argument("id"); s.add_argument("--what", required=True)
     s.set_defaults(f=cmd_fb)
     s = sub.add_parser("show"); s.add_argument("id"); s.set_defaults(f=cmd_show)
+    s = sub.add_parser("compose")
+    s.add_argument("id")
+    s.add_argument("--project", help="~/video-edit-tool/projects/<slug>")
+    s.add_argument("--json", help="構成を手で書いた json（project.json が無い版用）")
+    s.add_argument("--parts-from", dest="parts_from",
+                   help="サムネだけ別の作業場から取る（素材が共通の時）")
+    s.set_defaults(f=cmd_compose)
     s = sub.add_parser("update")
     s.add_argument("id"); s.add_argument("--what", required=True); s.add_argument("--src")
     s.set_defaults(f=cmd_update)

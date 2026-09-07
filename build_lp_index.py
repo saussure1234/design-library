@@ -184,6 +184,47 @@ tr:hover td{background:#fafbfc}
 .card .ft{font-size:11px;color:var(--mute);margin-top:7px;display:flex;
   gap:8px;flex-wrap:wrap;align-items:center}
 
+/* 構成シート＝1本を Hook/Body1/Body2/CTA の4枠で横に並べて、版どうしを縦に比べる。
+   ★これは表。カードで並べると「同じ枠の文面どうし」が縦に揃わず、比べられなくなる。
+   ★横に長いので、版の列だけ固定して中身を横スクロールさせる。 */
+.sheetwrap{overflow-x:auto;border:1px solid var(--line);border-radius:9px;background:#fff}
+table.sheet{border-collapse:separate;border-spacing:0;font-size:12.5px;min-width:1080px}
+table.sheet th,table.sheet td{border-bottom:1px solid #eef0f3;border-right:1px solid #f2f4f6;
+  padding:8px 10px;vertical-align:top}
+table.sheet thead th{position:sticky;top:0;z-index:3;background:#f8fafc;font-size:11.5px;
+  color:var(--mute);white-space:nowrap;border-bottom:2px solid var(--line)}
+table.sheet .vcol{position:sticky;left:0;z-index:2;background:#fff;width:150px;min-width:150px}
+table.sheet thead .vcol{z-index:4;background:#f8fafc}
+table.sheet tr:hover td{background:#fbfcfd}
+table.sheet tr:hover .vcol{background:#fbfcfd}
+.sheet .sec{width:238px;min-width:238px}
+.sheet .sm{width:96px;min-width:96px}
+.sheet .av{width:172px;min-width:172px}
+.sheet .th{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:5px;
+  background:#eef0f3;margin-bottom:6px}
+.sheet .noimg{display:grid;place-items:center;width:100%;aspect-ratio:16/9;border-radius:5px;
+  background:#f3f5f7;color:#aab1ba;font-size:11px;margin-bottom:6px;
+  border:1px dashed #dfe3e8}
+.sheet .tx{line-height:1.55}
+.sheet .ch{color:var(--mute);font-size:11px;margin-top:3px}
+.sheet .ch b{color:var(--ink)}
+.sheet .chain{margin-top:6px;display:flex;gap:3px;flex-wrap:wrap}
+.sheet .sh{font-size:10px;border-radius:4px;padding:1px 6px;white-space:nowrap;
+  border:1px solid #dfe3e8;color:#5b636d;background:#f8fafc}
+.sheet .sh.img{background:#eef7f1;border-color:#bfe3cc;color:#1f7a44}
+.sheet .rule{color:#78350f;background:#fffbeb;border-left:3px solid var(--review);
+  border-radius:0 6px 6px 0;padding:7px 9px;font-size:11.5px;line-height:1.55}
+.sheet .avpair{display:flex;gap:6px}
+.sheet .avpair figure{margin:0;flex:1}
+.sheet .avpair figcaption{font-size:10px;color:var(--mute);text-align:center;margin-top:2px}
+.sheet .logo{display:block;width:100%;border-radius:4px;background:#fff;
+  border:1px solid #eef0f3;padding:6px}
+.sheet .vid{font-weight:800;font-size:13px}
+.sheet .vmeta{font-size:10.5px;color:var(--mute);margin-top:2px}
+.sheet tr.tmpl td{background:#fffdf5}
+.sheet tr.tmpl:hover td,.sheet tr.tmpl:hover .vcol{background:#fffaeb}
+.sheet tr.tmpl .vcol{background:#fffdf5}
+
 /* 派生図 */
 .graph{position:relative;overflow-x:auto;padding:8px 4px 4px}
 .gcanvas{position:relative;z-index:1}
@@ -526,6 +567,70 @@ function thumb(v,R){
     <span class="play">▶</span><span class="len">${mmss(m.duration)}</span></a>`;
 }
 
+/* ── 構成シート ──────────────────────────────────────────────
+   横軸＝Hook / Body1 / Body2 / CTA ＋ ロゴ ＋ アバター（2カメ）
+   縦軸＝版。大元のテンプレを一番上に置いて、その下に各本を並べる。
+   ★1枠に「文面・字数・使った画像・ショットの並び」を全部入れる。
+     文面だけの表にすると、結局どの画像とどのアングルを当てたかを動画で確認しに戻ることになる。 */
+const SECS=[['hook','Hook','つかみ'],['body1','Body1','何が分かるか'],
+            ['body2','Body2','どう使えるか'],['cta','CTA','行動']];
+
+function secCell(v,s){
+  if(!s)return '<td class="sec"><span style="color:#9ca3af">—</span></td>';
+  if(s.rule)return `<td class="sec"><div class="rule">${esc(s.rule)}</div>
+    <div class="tx" style="color:var(--mute);margin-top:6px">${esc(s.text||'')}</div></td>`;
+  const img=s.image
+    ? `<img class="th" src="../video/${esc(v.id)}/parts/${esc(s.image)}" alt="" loading="lazy">`
+    : '<div class="noimg">画像なし（アバターのみ）</div>';
+  const chain=(s.shots||[]).map(x=>x.kind==='image'
+    ? `<span class="sh img">${esc(x.file)} ${x.dur}s</span>`
+    : `<span class="sh">${esc(x.label)} ${x.dur}s</span>`).join('');
+  return `<td class="sec">${img}
+    <div class="tx">${esc(s.text||'')}</div>
+    ${s.chars?`<div class="ch"><b>${s.chars}</b>字</div>`:''}
+    <div class="chain">${chain}</div></td>`;
+}
+
+function sheetPane(p,R){
+  if(!p.versions.length)return '<p style="color:var(--mute)">まだ版がありません。</p>';
+  const withComp=p.versions.filter(v=>v.comp);
+  if(!withComp.length)return '<p style="color:var(--mute)">構成が未登録です。'
+    +'<br><code>vv.py compose &lt;版id&gt; --project &lt;作業場&gt;</code> で取り込んでください。</p>';
+  const rows=p.versions.map(v=>{
+    const c=v.comp;
+    if(!c)return '';
+    const tmpl=!!c.template;
+    const by={}; (c.sections||[]).forEach(s=>by[s.key]=s);
+    const parts=`../video/${esc(v.id)}/parts/`;
+    return `<tr class="${tmpl?'tmpl':''}">
+      <td class="vcol">
+        <div class="vid">${tmpl?'テンプレ':linkCell(v,R)}</div>
+        <div class="vmeta">${esc(v.date)}${v.media&&v.media.duration?' · '+mmss(v.media.duration):''}</div>
+      </td>
+      ${SECS.map(([k])=>secCell(v,by[k])).join('')}
+      ${tmpl
+        // テンプレの行に素材のサムネは出さない。型そのものには素材が無い
+        ? `<td class="sm"><div class="rule">全カット左上に固定</div></td>
+           <td class="av"><div class="rule">正面（引き）と横（寄り）の2カメ。
+             セクションをまたいで交代させる</div></td>`
+        : `<td class="sm">${c.logo?`<img class="logo" src="${parts}logo.png" alt="ロゴ" loading="lazy">`
+                                  :'<span style="color:#9ca3af">—</span>'}</td>
+           <td class="av"><div class="avpair">
+            <figure><img class="th" style="margin:0" src="${parts}avatar_wide.jpg" alt="" loading="lazy">
+              <figcaption>正面</figcaption></figure>
+            <figure><img class="th" style="margin:0" src="${parts}avatar_close.jpg" alt="" loading="lazy">
+              <figcaption>横</figcaption></figure>
+           </div></td>`}</tr>`}).join('');
+  return `<p class="note" style="margin:0 0 10px">
+      台本の1行が1枠。緑のタグが画像、白がアバター、数字はその画になっている秒数。
+      一番上がテンプレ（守るべき型）で、その下が実際の各本。</p>
+    <div class="sheetwrap"><table class="sheet"><thead><tr>
+      <th class="vcol">版</th>
+      ${SECS.map(([,l,h])=>`<th class="sec">${l}<span style="font-weight:400;color:#9ca3af">　${h}</span></th>`).join('')}
+      <th class="sm">ロゴ</th><th class="av">アバター（2カメ）</th>
+    </tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
 function vListPane(p,R){
   const cards=p.versions.map(v=>{
     const [lab,c]=S[v.status]||S.draft, m=v.media||{};
@@ -661,6 +766,7 @@ function rules(kind){
       <li><b>渡した後</b>のリンクは直さない。update すると自動で新しいリンクが出る</li>
       <li>クライアントに渡したら <code>${cli} show &lt;id&gt;</code> を打つ。打った時点で凍る</li>
       <li>${last}</li>
+      ${kind==='vid'?'<li>文面と画像を変えたら <code>vv.py compose &lt;id&gt; --project &lt;作業場&gt;</code> で構成を取り直す</li>':''}
     </ol></div>`;
 }
 
@@ -687,7 +793,9 @@ function render(){
   const al=alerts(p);
   const todo=al.length?`<div class="todo"><h3>要対応 ${al.length}件</h3><ul>${
     al.map(v=>`<li><b>${esc(v.id)}</b> … ${esc(v.alert)}</li>`).join('')}</ul></div>`:'';
-  const body = tab==='list'?listPane(p,R) : tab==='graph'?graphPane(p,R) : fbPane(p);
+  const body = tab==='sheet'?sheetPane(p,R)
+             : tab==='list' ?listPane(p,R)
+             : tab==='graph'?graphPane(p,R) : fbPane(p);
   const count = R.kind==='vid'
     ? `${p.versions.length}本 / 計 ${mmss(vsec(p))}`
     : `リンク ${p.versions.length}本`;
@@ -699,6 +807,7 @@ function render(){
     <p class="note">${esc(p.note||'')}</p>
     ${todo}
     <div class="tabs">
+      ${R.kind==='vid'?`<button data-t="sheet" class="${tab==='sheet'?'on':''}">構成</button>`:''}
       <button data-t="list" class="${tab==='list'?'on':''}">版一覧</button>
       <button data-t="graph" class="${tab==='graph'?'on':''}">派生図</button>
       <button data-t="fb" class="${tab==='fb'?'on':''}">FB履歴</button>
@@ -714,8 +823,8 @@ function render(){
 
 document.addEventListener('click',e=>{
   const a=e.target.closest('.side a[data-p]');
-  // 動画は現物を見たいので一覧が先。LPは系統が先
-  if(a){cur=a.dataset.p;tab=cur.slice(0,4)==='vid:'?'list':'graph';render();return;}
+  // 動画は構成シートが先（ここで文面と画像を管理する）。LPは系統が先
+  if(a){cur=a.dataset.p;tab=cur.slice(0,4)==='vid:'?'sheet':'graph';render();return;}
   const b=e.target.closest('.tabs button'); if(b){tab=b.dataset.t;render();return;}
   // フローの節を押したら、下の欄に詳細を出す（図は描き直さない）
   const fn=e.target.closest('.fnode');

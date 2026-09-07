@@ -26,25 +26,154 @@
    "note": "電力調達の資料DLへ送る20秒アバター広告。台本4行＝hook/body1/body2/cta。原本と編集データは ~/video-edit-tool/projects/ が正",
    "versions": [
     {
+     "id": "tmpl",
+     "date": "2026-08-27",
+     "status": "draft",
+     "parent": null,
+     "what": "編集テンプレ。台本4行＝Hook/Body1/Body2/CTA。Hookは画像があっても最初にアバター正面／Body・CTAは先に画像で最後にアバター（正面と横が交代）／画像は1セクション1枚・使い回し禁止／画像1枚につきテロップ2枚。1本目を実測して決めた",
+     "fb": [],
+     "comp": {
+      "work": null,
+      "logo": true,
+      "avatar": [
+       "正面",
+       "横"
+      ],
+      "template": true,
+      "sections": [
+       {
+        "key": "hook",
+        "text": "つかみ。誰に向けた話かを1行で",
+        "chars": null,
+        "image": null,
+        "rule": "画像あり→アバター正面 → 画像（wipe）／画像なし→正面＋横（短ければ正面のみ）",
+        "shots": []
+       },
+       {
+        "key": "body1",
+        "text": "何が分かるか",
+        "chars": null,
+        "image": null,
+        "rule": "先に画像 → 最後にアバター1ショット（正面）",
+        "shots": []
+       },
+       {
+        "key": "body2",
+        "text": "どう使えるか",
+        "chars": null,
+        "image": null,
+        "rule": "先に画像 → 最後にアバター1ショット（前が正面なら横）",
+        "shots": []
+       },
+       {
+        "key": "cta",
+        "text": "行動を1つだけ",
+        "chars": null,
+        "image": null,
+        "rule": "画像が余っていれば画像／無ければアバター。ボタンは「資料をダウンロード」",
+        "shots": []
+       }
+      ]
+     }
+    },
+    {
      "id": "fps",
      "date": "2026-09-07",
      "status": "internal",
-     "parent": null,
-     "what": "1本目。中東情勢×電気代／燃料・市場価格の見通し→対応策。以降の編集ルールはこれを実測して決めた（アバター30%・画像70%、末尾アバター約1秒）",
+     "parent": "tmpl",
+     "what": "1本目。電力調達の戦略／中東情勢再燃→市場価格の見通し→社内説明で使える資料。編集ルールはこの1本を実測して決めた（アバター30%・画像70%、末尾アバター約1秒）",
      "fb": [],
      "source": "~/video-edit-tool/outputs/fps_ad_final.mp4",
      "media": {
       "duration": 20.37,
       "size": "1920x1080",
       "bytes": 4137439
+     },
+     "comp": {
+      "_note": "1本目は project.json が残っていないので手で起こした。区間は完成mp4の実測（hook 0.00-3.56 / body1 -9.17 / body2 -14.57 / cta -20.37）、文面は台本、素材は fps_denryoku_01 と共通。",
+      "work": null,
+      "logo": true,
+      "avatar": [
+       "正面",
+       "横"
+      ],
+      "sections": [
+       {
+        "key": "hook",
+        "text": "電力調達の戦略を立てられている方へ",
+        "chars": 17,
+        "image": null,
+        "shots": [
+         {
+          "kind": "avatar",
+          "label": "正面",
+          "dur": 1.9
+         },
+         {
+          "kind": "avatar",
+          "label": "横",
+          "dur": 1.66
+         }
+        ]
+       },
+       {
+        "key": "body1",
+        "text": "中東情勢再燃の電気代への影響が気になりませんか",
+        "chars": 23,
+        "image": "hook.jpg",
+        "shots": [
+         {
+          "kind": "image",
+          "file": "hook.jpg",
+          "dur": 4.2
+         },
+         {
+          "kind": "avatar",
+          "label": "正面",
+          "dur": 1.1
+         }
+        ]
+       },
+       {
+        "key": "body2",
+        "text": "市場価格の見通しから対応策まで解説しています",
+        "chars": 22,
+        "image": "body1.jpg",
+        "shots": [
+         {
+          "kind": "image",
+          "file": "body1.jpg",
+          "dur": 4.2
+         },
+         {
+          "kind": "avatar",
+          "label": "横",
+          "dur": 0.9
+         }
+        ]
+       },
+       {
+        "key": "cta",
+        "text": "社内説明で使える資料をダウンロード",
+        "chars": 17,
+        "image": "body2.jpg",
+        "shots": [
+         {
+          "kind": "image",
+          "file": "body2.jpg",
+          "dur": 5.8
+         }
+        ]
+       }
+      ]
      }
     },
     {
      "id": "fps2",
      "date": "2026-09-07",
      "status": "internal",
-     "parent": "fps",
-     "what": "2本目。台本は1本目と同系。1本目のルールに合わせて作り直した版（末尾アバター1ショット・テロップ5枚・SEはテロップ起点）。CTA文字は「資料をダウンロード」",
+     "parent": "tmpl",
+     "what": "2本目。中東情勢×電気代／燃料・市場価格の見通し→対応策→調達戦略の判断材料。1本目のルールに合わせて作り直した版（末尾アバター1ショット・テロップ5枚・SEはテロップ起点）",
      "fb": [
       {
        "date": "2026-09-07",
@@ -84,13 +213,90 @@
       "duration": 19.24,
       "size": "1920x1080",
       "bytes": 3986856
+     },
+     "comp": {
+      "sections": [
+       {
+        "key": "hook",
+        "text": "中東情勢の電気代への影響が気になる方へ",
+        "chars": 19,
+        "image": "hook.jpg",
+        "shots": [
+         {
+          "kind": "avatar",
+          "label": "正面",
+          "dur": 1.95
+         },
+         {
+          "kind": "image",
+          "file": "hook.jpg",
+          "dur": 2.9
+         }
+        ]
+       },
+       {
+        "key": "body1",
+        "text": "燃料価格・市場価格の見通しから対応策まで解説",
+        "chars": 22,
+        "image": "body1.jpg",
+        "shots": [
+         {
+          "kind": "image",
+          "file": "body1.jpg",
+          "dur": 4.32
+         },
+         {
+          "kind": "avatar",
+          "label": "正面",
+          "dur": 1.13
+         }
+        ]
+       },
+       {
+        "key": "body2",
+        "text": "調達戦略の判断材料として、ご活用いただけます",
+        "chars": 22,
+        "image": "body2.jpg",
+        "shots": [
+         {
+          "kind": "image",
+          "file": "body2.jpg",
+          "dur": 4.75
+         },
+         {
+          "kind": "avatar",
+          "label": "横",
+          "dur": 1.03
+         }
+        ]
+       },
+       {
+        "key": "cta",
+        "text": "資料をダウンロードする",
+        "chars": 11,
+        "image": null,
+        "shots": [
+         {
+          "kind": "avatar",
+          "label": "正面",
+          "dur": 3.11
+         }
+        ]
+       }
+      ],
+      "logo": true,
+      "avatar": [
+       "正面",
+       "横"
+      ],
+      "work": "fps_denryoku_01"
      }
     },
     {
      "id": "fps3",
      "date": "2026-09-07",
      "status": "internal",
-     "parent": "fps2",
+     "parent": "tmpl",
      "what": "3本目。中東情勢再燃／7月の価格上昇の実態→今後の見通し→社内説明で使える判断材料。音声の末尾を0.9秒伸ばしてHeyGenに再投入し、終わりの静止を解消",
      "fb": [
       {
@@ -115,6 +321,83 @@
       "duration": 18.9,
       "size": "1920x1080",
       "bytes": 3991064
+     },
+     "comp": {
+      "sections": [
+       {
+        "key": "hook",
+        "text": "中東情勢再燃、電気代への影響が気になる方へ",
+        "chars": 21,
+        "image": "hook.jpg",
+        "shots": [
+         {
+          "kind": "avatar",
+          "label": "正面",
+          "dur": 1.95
+         },
+         {
+          "kind": "image",
+          "file": "hook.jpg",
+          "dur": 3.5
+         }
+        ]
+       },
+       {
+        "key": "body1",
+        "text": "7月の価格上昇の実態と今後の見通しを解説",
+        "chars": 20,
+        "image": "body1.jpg",
+        "shots": [
+         {
+          "kind": "image",
+          "file": "body1.jpg",
+          "dur": 3.38
+         },
+         {
+          "kind": "avatar",
+          "label": "正面",
+          "dur": 1.13
+         }
+        ]
+       },
+       {
+        "key": "body2",
+        "text": "社内説明で使える判断材料としてご活用ください",
+        "chars": 22,
+        "image": "body2.jpg",
+        "shots": [
+         {
+          "kind": "image",
+          "file": "body2.jpg",
+          "dur": 3.89
+         },
+         {
+          "kind": "avatar",
+          "label": "横",
+          "dur": 1.03
+         }
+        ]
+       },
+       {
+        "key": "cta",
+        "text": "今すぐ資料をダウンロードする",
+        "chars": 14,
+        "image": null,
+        "shots": [
+         {
+          "kind": "avatar",
+          "label": "正面",
+          "dur": 3.97
+         }
+        ]
+       }
+      ],
+      "logo": true,
+      "avatar": [
+       "正面",
+       "横"
+      ],
+      "work": "fps_denryoku_02"
      }
     }
    ]
