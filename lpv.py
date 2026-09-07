@@ -248,6 +248,23 @@ def cmd_merge(a):
     say(f"    施主に渡すリンクはこれ: {vurl(reg, v)}")
 
 
+def cmd_rm_project(a):
+    """案件を台帳から外す。★docs/ のファイルは消さない（公開中のリンクが死ぬため）。"""
+    reg = load()
+    p = proj(reg, a.id)
+    ids = [v["id"] for v in p["versions"]]
+    reg["projects"] = [x for x in reg["projects"] if x["id"] != a.id]
+    save(reg)
+    say(f"  ○ 台帳から外した: {p['name']} [{a.id}]（版 {len(ids)}件）", "g")
+    if ids:
+        say("  ・公開ファイルは残っている。リンクは生きたまま：")
+        for i in ids:
+            d = os.path.join(DOCS, i)
+            if os.path.isdir(d):
+                say(f"      docs/{i}/  → {vurl(reg, {'id': i})}")
+        say("  ・本当に消すなら手で: git rm -r docs/<版id>", "y")
+
+
 def cmd_check(a):
     sys.exit(1 if check(load()) else 0)
 
@@ -329,6 +346,9 @@ def main():
 
     s = sp.add_parser("merge", help="本線に取り込んだ")
     s.add_argument("id"); s.set_defaults(f=cmd_merge)
+
+    s = sp.add_parser("rm-project", help="案件を台帳から外す（公開ファイルは消さない）")
+    s.add_argument("id"); s.set_defaults(f=cmd_rm_project)
 
     s = sp.add_parser("check", help="台帳の検査だけ")
     s.set_defaults(f=cmd_check)
