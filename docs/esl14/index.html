@@ -3300,6 +3300,113 @@ document.documentElement.classList.add('fv-anim');
 }
 
 </style>
+<style id="points-a">
+@charset "UTF-8";
+/* ══════════════════════════════════════════════════════════════════
+   POINT 01〜04 のリデザイン（採用＝案A）
+   画像生成の案Aを実測して再現。方向は「見出しは緑の上、中身は白カード」。
+
+   ★守っているもの
+     ・文字と画像は1つも変えない。マークアップも1行も変えない
+     ・地の緑（body直下のグラデーション層）は触らない
+     ・.vhr__top は display:contents なので、vert / chart / sub / body の
+       4つが .vhr__item の格子に直接並ぶ。並べ替えは grid だけで足りる
+
+   ★組み方（1〜2列 × 2行）
+       行1  左=（POINT 0X）＋見出し      右=図・グラフ・写真
+       行2  左=リード文                  右=本文
+     右の列だけに白い板を敷く。マークアップを足せないので
+     .vhr__item::before を格子の2列目に置いて板にする（擬似要素は空いていた）。
+
+   ★戻すとき： <style id="points-a"> のブロックを消す
+   ══════════════════════════════════════════════════════════════════ */
+
+.tone-brand .vhr__item{
+  --pa-pad: clamp(22px, 2.6vw, 40px);   /* 白い板の内側の余白 */
+  position:relative;
+  background:transparent;               /* 白カードを外す */
+  box-shadow:none;
+  padding:0;
+  grid-template-columns: minmax(0,1fr) minmax(0,1.5fr);
+  column-gap: clamp(24px, 3.2vw, 52px);
+  align-items:start;
+}
+
+/* 右の列だけ白い板。中身より下に敷く。
+   ★align-self:stretch を付けないと、.vhr__item の align-items:start に
+     引っ張られて板が row1 の高さしか無くなり、本文が緑の上へはみ出す。 */
+.tone-brand .vhr__item::before{
+  content:"";
+  align-self:stretch;
+  grid-column:2; grid-row:1 / span 2;
+  background:var(--c-bg);
+  border-radius:20px;
+  box-shadow:0 10px 30px rgba(0,0,0,.10);
+  z-index:0;
+}
+/* ★.vhr__top は display:contents なので、格子の子は .vhr__top の中にいる。
+   .vhr__item > * だけだと写真（figure）に効かず、白い板に覆われて消える。
+   実際に POINT02 の写真がこれで消えた。両方に掛ける。 */
+.tone-brand .vhr__item > *,
+.tone-brand .vhr__top > *{position:relative; z-index:1}
+
+/* ── 左：緑の地の上に白文字。2行にまたがる1つの塊 ────────
+   ★リード文（.vhr__sub）は .vhr__vert の中へ移した。
+     別々の行に置くと、右の図の高さに引っ張られてリードが下へ落ちる。 */
+.tone-brand .vhr__vert{
+  grid-column:1; grid-row:1 / span 2;
+  align-self:start;
+  padding-top: clamp(10px, 1.6vw, 26px);
+}
+.tone-brand .vhr__label{ color:var(--c-accent) }        /* （ POINT 0X ）＝黄 */
+.tone-brand .vhr__title{
+  color:var(--c-on-primary);
+  font-size: clamp(22px, 2.5vw, 34px);
+  line-height:1.34;
+  letter-spacing:.01em;
+}
+/* 見出しの下に短い黄の罫。生成案にあったもの */
+.tone-brand .vhr__title::after{
+  content:""; display:block;
+  width:56px; height:4px; border-radius:2px;
+  background:var(--c-accent);
+  margin-top: clamp(12px, 1.4vw, 18px);
+}
+.tone-brand .vhr__sub{
+  color:var(--c-on-primary);
+  margin-top: clamp(16px, 2vw, 24px);
+  padding-top:0;
+}
+
+/* ── 右：白い板の中 ──────────────────────────────── */
+.tone-brand .vhr__top > .vhr__chart,
+.tone-brand .vhr__top > .vhr__fig,
+.tone-brand .vhr__top > .vhr__figs{
+  grid-column:2; grid-row:1;
+  margin: var(--pa-pad) var(--pa-pad) 0;
+  align-self:start;
+}
+.tone-brand .vhr__body{
+  grid-column:2; grid-row:2;
+  margin: 0 var(--pa-pad) var(--pa-pad);
+  padding-top: clamp(14px, 1.8vw, 22px);
+}
+
+/* ── 狭い画面：1列に戻す。板は全幅にする ───────────── */
+@media(max-width:900px){
+  .tone-brand .vhr__item{
+    grid-template-columns: minmax(0,1fr);
+    row-gap:14px;
+  }
+  .tone-brand .vhr__item::before{ grid-column:1; grid-row:2 / span 2 }
+  .tone-brand .vhr__vert{ grid-column:1; grid-row:1; padding-top:0 }
+  .tone-brand .vhr__top > .vhr__chart,
+  .tone-brand .vhr__top > .vhr__fig,
+  .tone-brand .vhr__top > .vhr__figs{ grid-column:1; grid-row:2 }
+  .tone-brand .vhr__body{ grid-column:1; grid-row:3 }
+}
+
+</style>
 </head>
 <body>
 <div id="intro" aria-hidden="true"><svg viewBox="0 0 1000 1000" preserveAspectRatio="none"><path id="introPath" fill="#00B21F" d="M0,0 L1000,0 L1000,1000 C1000,1000 750,1000 500,1000 C250,1000 0,1000 0,1000 Z"></path></svg></div>
@@ -3482,7 +3589,9 @@ document.documentElement.classList.add('fv-anim');
           <div class="vhr__vert">
             <p class="vhr__label">（&nbsp;POINT&nbsp;01&nbsp;）</p>
             <h3 class="vhr__title">高い英検合格率を実現</h3>
-          </div>
+          
+<p class="vhr__sub">累計1,000名以上を合格に導いた英検ベースのカリキュラム</p>
+</div>
           
           
           <div class="vhr__chart">
@@ -3507,7 +3616,7 @@ document.documentElement.classList.add('fv-anim');
             <p class="vhr__cnote">2023年度第2回の実績（ESL clubオンライン校）／受験者のうち1次・2次受験双方に合格した生徒の割合</p>
           </div>
         </div>
-        <p class="vhr__sub">累計1,000名以上を合格に導いた英検ベースのカリキュラム</p>
+        
         <p class="vhr__body">ESL clubでは2015年の開塾以降、英検をカリキュラムに用いて、着実な英語力の向上と英検合格に導いてきました。国際基準であるCEFRに対応した英検を用いることで、バランスよく4技能＋語彙力を高めていきます。一般的には、英検2級が高校卒業時の到達目標とされていますが、ESL clubでは、小学生、中学生の時点での高い合格率を誇っています。</p>
       </li>
     </ul>
@@ -3532,7 +3641,9 @@ document.documentElement.classList.add('fv-anim');
           <div class="vhr__vert">
             <p class="vhr__label">（&nbsp;POINT&nbsp;02&nbsp;）</p>
             <h3 class="vhr__title">受験勉強と並行可能</h3>
-          </div>
+          
+<p class="vhr__sub">目標級・時期と現在のレベルから作成する個別の学習計画</p>
+</div>
           
           <!-- ★2枚並べていたが、同じ場面の縦位置・横位置で内容が重複していた。
                1枚にして、POINT04と同じ「白フチ＋影」の単体表示にする。
@@ -3540,7 +3651,7 @@ document.documentElement.classList.add('fv-anim');
           <figure class="vhr__fig"><img src="img/p06.jpg" alt="受験勉強と並行して英語に取り組む生徒" loading="lazy"></figure>
           
         </div>
-        <p class="vhr__sub">目標級・時期と現在のレベルから作成する個別の学習計画</p>
+        
         <p class="vhr__body">目標とする級と受験の時期、そして現在の英語レベル、学習に充てられる時間の4点から逆算して個別の学習計画を作成し、確保できる学習時間に合わせてレッスンの進め方と宿題量を設計します。学習時間そのものを増やすのではなく、限られた時間の使い方を組み立て直すため、中学受験から大学受験までの受験勉強や、部活動・他の習い事を続けながら、英検合格を目指すことができます。</p>
       </li>
     </ul>
@@ -3560,10 +3671,12 @@ document.documentElement.classList.add('fv-anim');
             <div class="vhr__vert">
               <p class="vhr__label">（&nbsp;POINT&nbsp;03&nbsp;）</p>
               <h3 class="vhr__title">学習効率を向上</h3>
-            </div>
+            
+<p class="vhr__sub">バイリンガル講師のマンツーマンレッスン</p>
+</div>
             <figure class="vhr__fig"><img src="img/teachers_kv.jpg" alt="ESL clubのバイリンガル講師" loading="lazy"></figure>
           </div>
-          <p class="vhr__sub">バイリンガル講師のマンツーマンレッスン</p>
+          
           <p class="vhr__body">ESL clubでは、英検1級・TOEFL iBT95点・TOEIC900点レベル以上のバイリンガル講師のみを採用しています。年齢の近い講師との距離の近さがそのまま学習の動機づけになり、ライティングや長文読解では、その場で日本語に切り替えて解説します。必要な時に日本語で補えるため、疑問をその場で解消し、1回のレッスンで進める量を最大化できます。</p>
         </div>
       </div>
@@ -3610,7 +3723,9 @@ document.documentElement.classList.add('fv-anim');
           <div class="vhr__vert">
             <p class="vhr__label">（&nbsp;POINT&nbsp;04&nbsp;）</p>
             <h3 class="vhr__title">保護者さまが忙しくても安心</h3>
-          </div>
+          
+<p class="vhr__sub">計画の実行をフォローするスクールマネージャー</p>
+</div>
           <figure class="vhr__fig vhr__fig--fit vhr__fig--sp"><picture>
             <source media="(max-width:900px)" srcset="img/reason_diagram_sp.webp">
             <img src="img/reason_diagram.jpg" alt="スクールマネジャーを中心に、保護者さま・講師・生徒さまで情報を共有する図" loading="lazy">
@@ -3618,7 +3733,7 @@ document.documentElement.classList.add('fv-anim');
           
           
         </div>
-        <p class="vhr__sub">計画の実行をフォローするスクールマネージャー</p>
+        
         <p class="vhr__body">スクールマネージャーが中心となり、学習計画どおりにレッスンが進むよう講師へ内容を伝達し、生徒さまの進捗をレッスンごとに保護者さまへ共有します。レッスン後、保護者さまへフィードバックを行うので、レッスンに付き添わなくとも、お子さまの英語力の伸びを安心して見守っていただけます。</p>
       </li>
     </ul>
