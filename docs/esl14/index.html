@@ -3303,234 +3303,326 @@ document.documentElement.classList.add('fv-anim');
 <style id="points-b">
 @charset "UTF-8";
 /* ══════════════════════════════════════════════════════════════════
-   POINT 01〜04 のリデザイン（採用＝案b：白地＋ブランド色）
+   POINT 01〜04（案b：白地＋ブランド色）
 
-   ★生成4枚のうち POINT03／POINT04 の2枚が同じ型で出ている。
-     その型に4枚とも揃える（施主判断）。生成の実測は下の「実測」を見ること。
+   ★生成4枚は【1枚ずつ形が違う】。同じ型に揃えず、1枚ずつそのまま作る。
 
-   型
-       地は白。白いカードも枠も影も無い（＝素の地の上に置く）
-       左  緑の面。【画面の左端から】始まり、右辺が斜めに切られる
-           面の上に  白文字の「（ POINT 0X ）」／白の見出し／白のリード
-       右  図・写真・動画を白い地の上に置く
-       下  緑の実線の罫を1本、その下に本文（版面いっぱい）
+   生成の実測（生成は版面を画面いっぱいに引き伸ばして描くので、
+   形と要素だけを取り、寸法は版面900pxに換算した）
 
-   ★生成の実測（1440px幅・版面900px・版面の左端は x=270）
-       point03_b  緑 y=0..469  右端 上692 → 下271（＝版面の左端）
-       point04_b  緑 y=0..465  右端 上538 → 下300
-       罫         point03_b y=502 ／ point04_b y=584。どちらも幅いっぱい
-     → 上辺は版面の3〜5割、下辺は版面の左端あたりまで細くなる台形。
+   POINT01（pair12_b 上）  白いカード（緑1px枠・角丸）の中に、
+       カードの上から下まで貫く緑の面。右辺が斜め（上591→下374／高さ657）。
+       ラベルは【黄色いタグ】。右にグラフ、その下に【グレーの点線】、本文。
+   POINT02（pair12_b 下）  カード枠は無い。緑の面が上部の全幅で、
+       下辺が右へ86px上がる。緑の下に【黄色い帯】が少しずれて覗く。
+       写真は緑の上に重なる。本文は緑の下、白い地に全幅。罫は無い。
+   POINT03（point03_b）    緑の面が【画面の左端から】、右辺が斜め
+       （上692→下271／高さ469＝42度）。ラベルは【白文字】。
+       黄色い小さな三角が斜辺の下に1つ。面の下に【緑の実線の罫】、本文。
+   POINT04（point04_b）    POINT03 と同型。斜めは緩い（上538→下300／高さ465＝27度）。
+       見出しは2行。黄色い三角が1つ。
 
-   ★入れないもの（施主判断）
-       ・黄色い三角形。FVの装飾（黄の弧・点・3本線）に三角形が無く、語彙が増える
-       ・黄色いタグ。生成の POINT03/04 は白文字。ここに揃える
-
-   ★文字・写真・図は1つも変えない。
+   ★文字・写真・図は1つも変えていない。
+     装飾のために <i class="pb-band"> と <i class="pb-tri"> を足しただけ。
    ══════════════════════════════════════════════════════════════════ */
 
-/* ── 地を白にする ─────────────────────────────────── */
+/* ── 地は白 ─────────────────────────────────────── */
 .sec.vhr,
 .sec.pmp{ background:var(--c-bg) }
 
-/* ── 面を版面の外へ出すための器 ──────────────────────
-   ★実測：.wrap(max-width:1080px) と .vhr__list(max-width:900px) が
-     子の描画を版面の幅で切っていた。overflow は visible で、
-     getBoundingClientRect も x0..677 と正しい値を返すのに、
-     背景もヒットテストも版面の左端(270px)で止まる。
-     負の margin でも絶対配置の負の left でも同じところで止まった。
-   → 器そのものを画面いっぱいにして、内側の余白で版面900pxを作り直す。
-     この形にして初めて面が x=0 まで出た（赤で塗って実測）。 */
+/* ── 器を画面いっぱいにして、版面900pxは内側の余白で作る ────
+   ★.wrap(max-width:1080px) と .vhr__list(max-width:900px) は、
+     overflow:visible でも子の描画を版面の幅で切る（実測）。
+     負の margin でも絶対配置の負の left でも版面の左端で止まった。
+     器を全幅にして初めて、面が画面の左端まで出た。 */
 .sec.vhr > .wrap,
 .sec.pmp > .wrap{ max-width:none; padding-inline:0 }
 .sec.vhr > .wrap > .sec-head,
 .sec.pmp > .wrap > .sec-head{ max-width:1080px; margin-inline:auto; padding-inline:22px }
 .sec.vhr .vhr__list{ max-width:none }
 
-/* 版面900pxは、ここの内側の余白で作る（画面が狭いときは22px） */
-.tone-brand .vhr__item{ padding-inline: max(22px, calc(50vw - 450px)) }
+/* 版面の左端までの距離。狭い画面では22px */
+:root{ --pb-side: max(22px, calc(50vw - 450px)) }
 
-/* ── カード（白い地・枠・角丸・影・余白）を全部やめる ───── */
-/* ★一度ここに枠と白い地を足したが、生成4枚のうち枠があるのは POINT01 だけで、
-   揃える先に決めた POINT03/04 には無い。素の地に戻す。 */
 .tone-brand .vhr__item{
   position:relative;
   background:transparent;
-  border:0;
-  border-radius:0;
-  box-shadow:none;
+  border:0; border-radius:0; box-shadow:none;
   padding-block:0;
+  padding-inline: var(--pb-side);
   overflow:visible;
-  grid-template-columns: minmax(0,1.05fr) minmax(0,0.95fr);
-  column-gap: clamp(24px, 3vw, 44px);
-  row-gap: clamp(26px, 3.2vw, 46px);
   align-items:start;
 }
 
-/* ── 左：緑の面 ────────────────────────────────────
-   ★面は .vhr__vert（＝文字のかたまり）の背景として持たせる。
-     .vhr__item の子として置くと高さが行いっぱい＝図の高さまで伸びてしまい、
-     生成の「文字の下に余白を残して終わる面」にならない（実測で確認）。
-   ★画面の左端まで伸ばす計算
-       .vhr__list は max-width:900px の中央寄せ。
-       画面の左端から版面の左端までは (100vw - 900px) / 2 = 50vw - 450px。
-       その分を負の margin ではなく left の負値で取る（絶対配置なので確実）。
-   ★下辺の右端を版面の左端に合わせる
-       ::before の幅は「版面の左端までの距離 ＋ 左列の幅」。
-       clip-path の3点目を calc(50vw - 450px) にすると、
-       画面幅が変わっても下辺がちょうど版面の左端で終わる。
-   ─────────────────────────────────────────────── */
-/* ★はじめ ::before を絶対配置して left に負の値を入れたが、実測すると
-   left:-270px（calc でも固定値でも）が効かず、面は版面の左端で止まった。
-   要素そのものを負の margin で左へ広げ、padding で文字を元の位置に戻す。
-   この形なら格子の子でも確実に版面の外へ出る。 */
-/* ★斜めの深さ
-   下辺を版面の左端で終わらせると（＝深さが要素幅と同じ407px）、面の高さが
-   文字ぶんしかないので傾きが急になり、見出しもリードも面の外へ出た（実測）。
-   生成の傾きは 27〜42度。align-self:stretch で面を行いっぱいに伸ばし、
-   深さは固定値にして角度をその範囲に収める。 */
-.tone-brand .vhr__vert{
-  --pb-slant: clamp(70px, 12.5vw, 180px);
-  grid-column:1; grid-row:1;
-  align-self:stretch;
-  margin-left: calc(-1 * max(22px, 50vw - 450px));
-  padding: clamp(30px,3.6vw,52px) clamp(52px,6.6vw,96px)
-           clamp(34px,4.2vw,60px) max(22px, calc(50vw - 450px));
-  background:var(--c-primary);
-  clip-path: polygon(0 0, 100% 0, calc(100% - var(--pb-slant)) 100%, 0 100%);
-}
-
-/* 「（ POINT 0X ）」は白文字。生成の POINT03/04 に合わせる */
-.tone-brand .vhr__label{
-  display:block;
-  background:transparent;
-  color:var(--c-on-primary);
-  padding:0;
-  border-radius:0;
-  font-weight:700;
-  letter-spacing:.18em;
-}
+/* ── 面の上に乗る文字（4枚共通） ───────────────────── */
 .tone-brand .vhr__title{
   color:var(--c-on-primary);
   line-break:strict;
   font-size: clamp(19px, 1.95vw, 26px);
-  line-height:1.45;
-  margin-top: clamp(12px,1.6vw,20px);
+  line-height:1.5;
+  margin-top: clamp(12px,1.6vw,18px);
 }
-/* リード文は面の上、見出しの下。
-   ★別の格子セルに置くと右の図の高さに引っ張られて下へ落ちるので、
-     マークアップで .vhr__vert の中へ移した（文字は1字も変えていない）。 */
 .tone-brand .vhr__sub{
   color:var(--c-on-primary);
   line-break:strict;
   text-wrap:pretty;
-  margin-top: clamp(14px,1.8vw,22px);
+  margin-top: clamp(12px,1.6vw,18px);
   padding-top:0;
 }
-
-/* ── 右：図・写真は白い地の上 ─────────────────────── */
-.tone-brand .vhr__top > .vhr__chart,
-.tone-brand .vhr__top > .vhr__fig,
-.tone-brand .vhr__top > .vhr__figs{
-  grid-column:2; grid-row:1;
-  align-self:center;
-  margin: clamp(14px,1.8vw,26px) 0;
+/* ★元CSSの .vhr__label は緑。緑の面の上に置くと消える（実測）。白にする。 */
+.tone-brand .vhr__label{
+  color:var(--c-on-primary);
+  background:transparent; padding:0; border-radius:0;
+  letter-spacing:.18em; font-weight:700;
 }
 
-/* ── 下：緑の実線の罫、その下に本文 ─────────────────── */
-.tone-brand .vhr__body{
+/* 装飾だけの要素 */
+.pb-band,.pb-tri{ display:block; pointer-events:none }
+
+/* ══════════════════════════════════════════════════════════════
+   POINT 01 ── 白いカード ＋ 上下を貫く緑の面 ＋ 黄タグ ＋ 点線
+   ══════════════════════════════════════════════════════════════ */
+.tone-brand .vhr__item:has(.vhr__chart){
+  padding-inline:0;
+  margin-inline: var(--pb-side);
+  background:var(--c-bg);
+  border:1px solid var(--c-primary);
+  border-radius:22px;
+  overflow:hidden;
+  grid-template-columns: minmax(0,0.43fr) minmax(0,0.57fr);
+  column-gap:0; row-gap:0;
+}
+/* 緑の面はカードの上から下まで。上下にわずかな余白（生成は上14px・下2px） */
+.tone-brand .vhr__item:has(.vhr__chart) .vhr__vert{
+  --slant:142px;
+  grid-column:1; grid-row:1 / -1;
+  align-self:stretch;
+  margin:14px 0 2px 0;
+  /* 生成：緑の上辺は版面の43%＝387px、見出しは275pxで1行。余白は74px */
+  padding:42px 74px 42px 38px;
+  background:var(--c-primary);
+  clip-path: polygon(0 0, 100% 0, calc(100% - var(--slant)) 100%, 0 100%);
+}
+/* この1枚だけラベルは黄色いタグ */
+.tone-brand .vhr__item:has(.vhr__chart) .vhr__label{
+  display:inline-block;
+  background:var(--c-accent);
+  color:var(--c-ink);
+  border-radius:999px;
+  padding:7px 20px;
+  font-weight:700;
+}
+.tone-brand .vhr__item:has(.vhr__chart) .vhr__top > .vhr__chart{
+  grid-column:2; grid-row:1;
+  align-self:center;
+  margin:26px 26px 6px 0;
+}
+/* 罫はグレーの点線。本文は緑の右側 */
+.tone-brand .vhr__item:has(.vhr__chart) .vhr__body{
+  grid-column:2; grid-row:2;
+  margin:0 26px 32px 0;
+  padding-top:22px;
+  border-top:1px dashed #cacbcb;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   POINT 02 ── 緑が上部の全幅（下辺が右上がり）＋ 黄の帯 ＋ 写真が重なる
+   ══════════════════════════════════════════════════════════════ */
+.tone-brand .vhr__item:has(.pb-band){
+  --pb-rise:56px;                    /* 下辺が右へ上がる量 */
+  grid-template-columns: minmax(0,0.47fr) minmax(0,0.53fr);
+  row-gap:30px;
+}
+.tone-brand .vhr__item:has(.pb-band) .vhr__vert{
+  grid-column:1 / -1; grid-row:1;
+  align-self:stretch;
+  z-index:2;
+  margin-inline:0;
+  padding:44px 54% 56px 40px;
+  background:var(--c-primary);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--pb-rise)), 0 100%);
+}
+/* 黄色い帯。緑と同じ形を16px下にずらして敷き、下からのぞかせる */
+.tone-brand .vhr__item:has(.pb-band) .pb-band{
+  grid-column:1 / -1; grid-row:1;
+  align-self:stretch;
+  z-index:1;
+  margin-inline:0;
+  /* ★align-self:stretch のまま margin-top だけ足すと高さが縮むだけで下がらない。
+     下の margin を同じだけ負にして、形を変えずに16px下へずらす。 */
+  margin-top:16px; margin-bottom:-16px;
+  background:var(--c-accent);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--pb-rise)), 0 100%);
+}
+/* 写真は緑と同じ升に置いて重ねる */
+.tone-brand .vhr__item:has(.pb-band) .vhr__top > .vhr__fig{
+  grid-column:2; grid-row:1;
+  align-self:center;
+  z-index:3;
+  margin:24px 0;
+}
+/* 本文は緑の下、白い地に全幅。罫は無い */
+.tone-brand .vhr__item:has(.pb-band) .vhr__body{
   grid-column:1 / -1; grid-row:2;
-  margin:0;
-  padding-top: clamp(22px,2.8vw,38px);
+  margin:0; padding-top:0; border-top:0;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   POINT 04 ── 緑が画面の左端から、右辺が斜め ＋ 白文字 ＋ 黄の三角 ＋ 緑の罫
+   ══════════════════════════════════════════════════════════════ */
+/* ★POINT04 の図は .vhr__figs ではなく .vhr__fig（実測）。
+   .pb-tri を持ち .vhr__list の中にいる＝POINT04。POINT03 は .pmp__box の中。 */
+.vhr__list .vhr__item:has(.pb-tri){
+  grid-template-columns: minmax(0,0.40fr) minmax(0,0.60fr);
+  column-gap: clamp(24px,3vw,44px);
+  row-gap: clamp(24px,3vw,40px);
+}
+.vhr__list .vhr__item:has(.pb-tri) .vhr__vert{
+  --slant: clamp(90px, 16vw, 230px);
+  grid-column:1; grid-row:1;
+  align-self:stretch;
+  margin-left: calc(-1 * var(--pb-side));
+  padding: 44px clamp(40px,7vw,100px) 52px var(--pb-side);
+  background:var(--c-primary);
+  clip-path: polygon(0 0, 100% 0, calc(100% - var(--slant)) 100%, 0 100%);
+}
+.vhr__list .vhr__item:has(.pb-tri) .vhr__top > .vhr__fig{
+  grid-column:2; grid-row:1;
+  align-self:center;
+  margin:20px 0;
+}
+.vhr__list .vhr__item:has(.pb-tri) .vhr__body{
+  grid-column:1 / -1; grid-row:2;
+  margin:0; padding-top:26px;
   border-top:2px solid var(--c-primary);
 }
 
-/* ── 狭い画面：1列に積み、面は画面の全幅 ─────────────── */
-/* ★元CSSは狭い画面で .vhr__vert を flex-direction:row-reverse にして
-   「（ POINT 0X ）」と見出しを横に並べる。案bではリード文をこの中へ移したので、
-   3つが横一列に並んで画面外まではみ出した（実測・375px）。縦積みに戻す。 */
-@media(max-width:900px){
-  .tone-brand .vhr__item{
-    grid-template-columns: minmax(0,1fr);
-    grid-template-rows: auto auto auto;
-    row-gap:18px;
-  }
-  /* 狭い画面では斜めをやめ、左右とも画面の端まで伸ばした帯にする */
-  .tone-brand .vhr__vert{
-    grid-column:1; grid-row:1;
-    /* ★PC の align-self:stretch のままだと面が行の高さ（＝グラフの高さ）まで
-       伸び、グラフと本文が面の上に重なった（実測375px・POINT01）。 */
-    align-self:start;
-    display:flex; flex-direction:column; align-items:flex-start;
-    justify-content:flex-start;
-    gap:clamp(8px,2.4vw,13px);
-    margin-inline:-22px;
-    padding:clamp(20px,5vw,28px) 22px clamp(24px,6vw,34px);
-    clip-path:none;
-    background:var(--c-primary);
-  }
-  .tone-brand .vhr__title{ font-size:clamp(19px,5.2vw,22px); margin-top:0 }
-  .tone-brand .vhr__sub{ margin-top:0; font-size:clamp(14px,3.8vw,16px) }
-  .tone-brand .vhr__top > .vhr__chart,
-  .tone-brand .vhr__top > .vhr__fig,
-  .tone-brand .vhr__top > .vhr__figs{ grid-column:1; grid-row:2; margin:0 }
-  .tone-brand .vhr__body{ grid-column:1; grid-row:3 }
+/* 黄色い三角。斜辺の下に、直角が左上を向いた形で1つ */
+.tone-brand .pb-tri{
+  grid-column:1; grid-row:1;
+  align-self:end; justify-self:end;
+  width:clamp(28px,3.4vw,50px); aspect-ratio:1;
+  margin:0 clamp(24px,4vw,70px) -10px 0;
+  background:var(--c-accent);
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+  z-index:3;
 }
 
-/* ══════════════════════════════════════════════════════════════════
-   POINT 03（.pmp）だけは器が違うので個別に合わせる
-
-   ★.pmp__row は「左540px固定＋右auto＋space-between」で、
-     さらに data-fx="pair" がスクロール量から transform/opacity を作って
-     左右から寄せていた。案bは動かない型なので、動きを止めて割合で分ける。
-   ★止めないと、撮影時に動画が薄いまま（--vp が 0 付近）になる。実測で確認。
-   ══════════════════════════════════════════════════════════════════ */
-
-/* 動きを止める */
+/* ══════════════════════════════════════════════════════════════
+   POINT 03 ── 器が「左＝箱／右＝動画」の2列なので個別に合わせる
+   ★.pmp__row は「左540px固定＋右auto＋space-between」で、さらに
+     data-fx="pair" がスクロール量から transform/opacity を作って寄せていた。
+     案bは動かない型なので、動きを止めて割合で分ける。
+   ══════════════════════════════════════════════════════════════ */
 .fx-on .fx[data-fx="pair"] .pmp__box,
 .fx-on .fx[data-fx="pair"] .pmp__media{
   transform:none !important;
   opacity:1 !important;
   transition:none !important;
 }
-
-/* 左＝本文の箱、右＝動画。割合で分ける */
-/* ★実測：この行だけ 957px あり、他の3枚（900px）と左端が43pxずれていた。
-   元は width:min(100vw,--pmp-max) と負の margin-inline で画面いっぱいに
-   広げる仕掛け。max-width を足すだけだと潰れるので、3つとも上書きする。
-   900px に揃えることで、緑の面の left 計算（450px - 50vw）が他の3枚と共通になる。 */
 .pmp__row{
   width:100% !important;
   margin-inline:0 !important;
-  padding-inline: max(22px, calc(50vw - 450px)) !important;
+  padding-inline: var(--pb-side) !important;
   grid-template-columns: minmax(0, 62%) minmax(0, 38%) !important;
   justify-content:stretch !important;
   column-gap: clamp(20px, 2.4vw, 40px);
   align-items:start;
 }
 .pmp__box{ width:100% }
-/* 版面の余白は .pmp__row が持つので、中の項目では持たせない（二重になる） */
-.pmp__box .vhr__item{ padding-inline:0 }
-/* ★POINT03 だけ器が 900px の62%＝558px。他の3枚と同じ比だと左列が242pxで、
-   見出し「学習効率を向上」7文字が入らず2行に折れた（実測）。ここだけ比を変える。 */
-.pmp__box .vhr__item{ grid-template-columns: minmax(0,1.15fr) minmax(0,0.85fr) }
-/* ★この器だけ 900px の62%＝558px しかない。他の3枚と同じ余白・傾きだと
-   文字の入る幅が166pxまで痩せ、「学習効率を向上」7文字が2行に折れた（実測）。
-   右の余白と斜めの深さをこの器に合わせて詰める。 */
-.pmp__box .vhr__vert{
-  --pb-slant: clamp(50px, 7vw, 96px);
-  padding-right: clamp(28px, 3.6vw, 56px);
-}
 .pmp__media{ width:100% }
 .pmp__grid{ grid-template-columns:minmax(0,1fr) }
 .pmp__item{ width:100% !important }
 
+.pmp__box .vhr__item{
+  padding-inline:0;
+  grid-template-columns: minmax(0,0.62fr) minmax(0,0.38fr);
+  column-gap: clamp(16px,2vw,28px);
+  row-gap: clamp(20px,2.6vw,34px);
+}
+.pmp__box .vhr__vert{
+  --slant: clamp(80px, 13vw, 190px);
+  grid-column:1; grid-row:1;
+  align-self:stretch;
+  margin-left: calc(-1 * var(--pb-side));
+  padding: 40px clamp(28px,4vw,58px) 46px var(--pb-side);
+  background:var(--c-primary);
+  clip-path: polygon(0 0, 100% 0, calc(100% - var(--slant)) 100%, 0 100%);
+}
+.pmp__box .vhr__top > .vhr__fig{
+  grid-column:2; grid-row:1;
+  align-self:center;
+  margin:16px 0;
+}
+.pmp__box .vhr__body{
+  grid-column:1 / -1; grid-row:2;
+  margin:0; padding-top:24px;
+  border-top:2px solid var(--c-primary);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   狭い画面（〜900px）── 1列に積み、面は画面の全幅の帯にする
+   ★元CSSは狭い画面で .vhr__vert を flex-direction:row-reverse にして
+     「（ POINT 0X ）」と見出しを横に並べる。案bではリード文をこの中へ
+     移したので、3つが横一列に並んで画面外まではみ出した（実測375px）。
+   ══════════════════════════════════════════════════════════════ */
 @media(max-width:900px){
-  .pmp__row{ grid-template-columns:minmax(0,1fr) !important }
+  .tone-brand .vhr__item,
+  .tone-brand .vhr__item:has(.vhr__chart),
+  .tone-brand .vhr__item:has(.pb-band),
+  .vhr__list .vhr__item:has(.pb-tri),
+  .pmp__box .vhr__item{
+    grid-template-columns: minmax(0,1fr);
+    grid-template-rows: auto auto auto;
+    row-gap:18px;
+    margin-inline:0;
+    padding-inline:22px;
+    border:0; border-radius:0; overflow:visible;
+    background:transparent;
+  }
+  /* ★PC側の :has() 付きセレクタ（詳細度 0,4,0）が、狭い画面用の
+     .tone-brand .vhr__vert（0,2,0）に勝ってしまう。align-self:stretch が
+     残ると緑が行全体へ伸び、写真も本文も面の上に乗った（実測375px・POINT02）。
+     4枚ぶんのセレクタを並べて確実に上書きする。 */
+  .tone-brand .vhr__vert,
+  .tone-brand .vhr__item:has(.vhr__chart) .vhr__vert,
+  .tone-brand .vhr__item:has(.pb-band) .vhr__vert,
+  .vhr__list .vhr__item:has(.pb-tri) .vhr__vert,
+  .pmp__box .vhr__vert{
+    grid-column:1 !important; grid-row:1 !important;
+    align-self:start !important;
+    display:flex; flex-direction:column; align-items:flex-start;
+    justify-content:flex-start;
+    gap:clamp(8px,2.4vw,13px);
+    margin:0 -22px !important;
+    padding:clamp(20px,5vw,28px) 22px clamp(24px,6vw,34px) !important;
+    background:var(--c-primary);
+    clip-path:none !important;
+  }
+  .tone-brand .vhr__title{ font-size:clamp(19px,5.2vw,22px); margin-top:0 }
+  .tone-brand .vhr__sub{ margin-top:0; font-size:clamp(14px,3.8vw,16px) }
+  .tone-brand .vhr__top > .vhr__chart,
+  .tone-brand .vhr__top > .vhr__fig,
+  .tone-brand .vhr__item:has(.pb-band) .vhr__top > .vhr__fig,
+  .vhr__list .vhr__item:has(.pb-tri) .vhr__top > .vhr__fig,
+  .pmp__box .vhr__top > .vhr__fig{
+    grid-column:1 !important; grid-row:2 !important;
+    align-self:start !important; margin:0 !important; z-index:auto !important
+  }
+  .tone-brand .vhr__body,
+  .tone-brand .vhr__item:has(.vhr__chart) .vhr__body,
+  .tone-brand .vhr__item:has(.pb-band) .vhr__body,
+  .vhr__list .vhr__item:has(.pb-tri) .vhr__body,
+  .pmp__box .vhr__body{
+    grid-column:1 !important; grid-row:3 !important; margin:0 !important;
+  }
+  /* 狭い画面では帯も三角も出さない（縦積みでは意味を持たない） */
+  .pb-band,.pb-tri{ display:none }
+  .pmp__row{
+    grid-template-columns:minmax(0,1fr) !important;
+    padding-inline:22px !important;
+  }
   .pmp__item{ width:clamp(220px,60vw,290px) !important }
-  /* ★上の .pmp__box .vhr__item（1.15fr:0.85fr）は同じ詳細度で後ろにあるため、
-     狭い画面用の .tone-brand .vhr__item{1fr} に勝ってしまう。ここで打ち消す。
-     打ち消さないと POINT03 だけ緑の面が62%幅のまま、本文が1行8文字になる（実測375px）。 */
-  .pmp__box .vhr__item{ grid-template-columns:minmax(0,1fr) }
 }
 
 </style>
@@ -3771,6 +3863,7 @@ document.documentElement.classList.add('fv-anim');
           
 <p class="vhr__sub">目標級・時期と現在のレベルから作成する個別の学習計画</p>
 </div>
+<i class="pb-band" aria-hidden="true"></i>
           
           <!-- ★2枚並べていたが、同じ場面の縦位置・横位置で内容が重複していた。
                1枚にして、POINT04と同じ「白フチ＋影」の単体表示にする。
@@ -3801,6 +3894,7 @@ document.documentElement.classList.add('fv-anim');
             
 <p class="vhr__sub">バイリンガル講師のマンツーマンレッスン</p>
 </div>
+<i class="pb-tri" aria-hidden="true"></i>
             <figure class="vhr__fig"><img src="img/teachers_kv.jpg" alt="ESL clubのバイリンガル講師" loading="lazy"></figure>
           </div>
           
@@ -3853,6 +3947,7 @@ document.documentElement.classList.add('fv-anim');
           
 <p class="vhr__sub">計画の実行をフォローするスクールマネージャー</p>
 </div>
+<i class="pb-tri" aria-hidden="true"></i>
           <figure class="vhr__fig vhr__fig--fit vhr__fig--sp"><picture>
             <source media="(max-width:900px)" srcset="img/reason_diagram_sp.webp">
             <img src="img/reason_diagram.jpg" alt="スクールマネジャーを中心に、保護者さま・講師・生徒さまで情報を共有する図" loading="lazy">
