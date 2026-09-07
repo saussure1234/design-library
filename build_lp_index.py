@@ -172,51 +172,42 @@ tr:hover td{background:#fafbfc}
 .fbrow .wh{font-size:13.5px}
 .fbrow .to{font-size:11.5px;color:var(--mute);margin-top:2px}
 
-/* LP制作フロー ─ 縦のフローチャート */
+/* LP制作フロー ─ 派生図と同じ描き方（節＋SVGの線）*/
 .fbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
   background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:12.5px}
-.allb{font-size:11.5px;font-weight:700;border:1px solid var(--line);background:#f8fafc;
-  border-radius:6px;padding:5px 12px;cursor:pointer;color:var(--ink)}
-.allb:hover{background:#eef2f6}
-.lane{display:grid;grid-template-columns:minmax(0,1fr) 200px;column-gap:16px;row-gap:30px}
-.lnk{height:26px;border-left:2px dashed #cbd5e1;margin-left:calc((100% - 216px)/2)}
+.fleg{color:var(--mute);font-size:11.5px}
+.fleg i{display:inline-block;width:9px;height:9px;border-radius:2px;margin:0 5px 0 14px}
+.fleg i.ok{background:var(--live)} .fleg i.miss{background:var(--bad)}
+.fleg i.none{background:var(--review)}
 
-.fbox{grid-column:1;position:relative;background:#fff;border:1px solid var(--line);
-  border-left:4px solid #111827;border-radius:10px;padding:10px 14px;cursor:pointer}
-.fbox:hover{border-color:#94a3b8}
-.fbox.gapy{border-left-color:var(--review)}
-/* 次の箱へ下りる矢印。最後の箱には出さない */
-.fbox::before{content:"";position:absolute;left:50%;bottom:-30px;width:2px;height:20px;
-  background:#cbd5e1;transform:translateX(-50%)}
-.fbox::after{content:"▼";position:absolute;left:50%;bottom:-32px;transform:translateX(-50%);
-  font-size:10px;line-height:1;color:#cbd5e1}
-.fbox.end::before,.fbox.end::after{display:none}
-.fbh{display:flex;align-items:center;gap:9px}
-.fbh b{font-size:14px;flex:1;min-width:0}
-.fchev{color:#9ca3af;font-size:11px;flex:none}
-.fbox.open .fchev{transform:rotate(180deg)}
+.fgraph{position:relative;overflow-x:auto;padding:6px 4px 10px;margin-top:14px}
+.fcanvas{position:relative;z-index:1}
+.fsvg{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:visible}
+.fgl{position:absolute;top:0;width:252px;font-size:13px;font-weight:800;
+  border-bottom:2px solid #111827;padding-bottom:6px}
+.fgl span{font-weight:400;font-size:11px;color:var(--mute);margin-left:7px}
+
+.fnode{position:absolute;width:252px;height:44px;display:flex;align-items:center;gap:9px;
+  background:#fff;border:1px solid var(--line);border-left:5px solid var(--live);
+  border-radius:9px;padding:0 12px;cursor:pointer}
+.fnode.miss{border-left-color:var(--bad)}
+.fnode.none{border-left-color:var(--review)}
+.fnode:hover{border-color:#94a3b8;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+.fnode.on{background:#111827;border-color:#111827}
+.fnode.on .fnm{color:#fff}
+.fnode.on .fno{background:#fff;color:#111827}
+.fnm{font-size:13px;font-weight:700;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .fno{width:22px;height:22px;flex:none;border-radius:50%;background:#111827;color:#fff;
   font-size:11.5px;font-weight:800;display:grid;place-items:center}
-.fone{font-size:12.5px;color:var(--mute);margin-top:4px;
-  display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
-.fbox.open .fone{-webkit-line-clamp:99;color:var(--ink)}
-.fdet{margin-top:8px;border-top:1px solid #f0f2f4;padding-top:8px}
+
+.fdp{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px;
+  margin-top:16px;min-height:64px}
+.fdph{color:var(--mute);font-size:12.5px}
+.fdh{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.fdh h3{font-size:15px}
+.fdw{font-size:13px;margin:7px 0 8px}
 .fm{font-size:12px;color:var(--mute);margin-bottom:3px}
 .fm i{font-style:normal;font-weight:700;margin-right:7px;color:#9ca3af}
-.skm{display:none;font-size:10.5px;color:#9ca3af}
-
-/* 右側：スキルの担当範囲 */
-.brk{grid-column:2;display:flex;flex-direction:column;align-items:flex-start;gap:7px;
-  justify-content:center;border:1.5px solid;border-left-width:5px;border-radius:0 10px 10px 0;
-  padding:10px 12px}
-.brk.ok{border-color:#a7e0b5;background:#f1fbf3}
-.brk.miss{border-color:#fecaca;background:#fef2f2}
-.brk.none{border-color:#e5e7eb;background:#f8fafc}
-.bn{font-size:12px;font-weight:800}
-.brk.ok .bn{color:#047a20}
-.brk.miss .bn{color:#b91c1c}
-.brk.none .bn{color:#9ca3af}
-.bx{font-size:10.5px;font-weight:700}
 
 .frisk,.fgap{font-size:12.5px;margin-top:8px;padding:8px 11px;border-radius:0 7px 7px 0;line-height:1.6}
 .frisk{background:#fef2f2;border-left:3px solid var(--bad);color:#7f1d1d}
@@ -303,62 +294,86 @@ function dl(id){
   return `<a class="dlb" href="${s.zip}" download>⇩ ${esc(id)}.zip ${s.kb}KB</a>`;
 }
 
-/* 工程を縦に並べ、矢印でつなぎ、右側にスキルの担当範囲をブラケットで括る。
-   ★工程が16もあるので、箱には「番号・名前・何をやるか1行」だけ出す。
-     出るもの／過去の事故／足りない は、箱を押した時だけ開く。
-     全部出すと読む気が失せる（前の版がそれで分かりにくかった）。 */
+/* 派生図と同じ描き方でフローを描く。
+   ★節は【番号と工程名だけ】。何をやるかも事故も、押すまで出さない。
+     16工程ぶんの説明を最初から並べると読む気が失せる（前の版で却下された）。
+   ★列＝大きな塊（提案／制作／公開・管理）。線は SVG のベジェで引く。 */
+const FN={}; STEPS.forEach(s=>FN[s.n]=s);
+const FW=252, FGX=76, FRH=58, FTOP=32;   // 節の幅 / 列間 / 段の高さ / 見出しの分の余白
+
 function flowPane(){
   if(!STEPS.length)return '<p style="color:var(--mute)">lp-flow.json がありません。</p>';
   const GR=(DATA.flow.groups||[{id:null,name:''}]);
-  const shown={};                       // zipボタンは同じスキルで1回だけ
-
-  const box=(s,i,last)=>`<div class="fbox${last?' end':''}${s.gap?' gapy':''}"
-      style="grid-row:${i+1}" data-step="${s.n}">
-    <div class="fbh"><span class="fno">${s.n}</span><b>${esc(s.name)}</b>
-      <span class="skm">${s.skill?esc(s.skill):'型なし'}</span>
-      <span class="fchev">▾</span></div>
-    <p class="fone">${esc(s.what)}</p>
-    <div class="fdet" hidden>
-      ${s.tool?`<div class="fm"><i>道具</i>${esc(s.tool)}</div>`:''}
-      ${s.out?`<div class="fm"><i>出るもの</i>${esc(s.out)}</div>`:''}
-      ${s.risk?`<div class="frisk"><b>過去の事故</b>${esc(s.risk)}</div>`:''}
-      ${s.gap?`<div class="fgap"><b>足りない</b>${esc(s.gap)}</div>`:''}
-    </div></div>`;
-
-  // 同じスキルが続く区間をまとめて1本のブラケットにする
-  const brackets=st=>{
-    const out=[]; let i=0;
-    while(i<st.length){
-      let j=i; while(j+1<st.length && st[j+1].skill===st[i].skill) j++;
-      const id=st[i].skill;
-      const cls=id?(SK[id]?'ok':'miss'):'none';
-      const lab=id?(SK[id]?esc(id):esc(id)+'<br><span class="bx">未作成</span>')
-                 :'<span class="bx">スキルなし</span>';
-      const b=id&&!shown[id]&&(shown[id]=1)?dl(id):'';
-      out.push(`<div class="brk ${cls}" style="grid-row:${i+1}/${j+2}">
-        <span class="bn">${lab}</span>${b}</div>`);
-      i=j+1;
-    }
-    return out.join('');
-  };
-
-  const secs=GR.map(g=>{
+  const pos={};
+  let nodes='', heads='', maxR=0;
+  GR.forEach((g,c)=>{
     const st=STEPS.filter(s=>s.group===g.id);
-    if(!st.length)return '';
-    return `<div class="ghd"><h3>${esc(g.name)}</h3><span>${esc(g.note||'')}</span></div>
-      <div class="lane">${st.map((s,i)=>box(s,i,i===st.length-1)).join('')}${brackets(st)}</div>`;
-  }).join('<div class="lnk"></div>');
-
+    if(!st.length)return;
+    heads+=`<div class="fgl" style="left:${c*(FW+FGX)}px">${esc(g.name)}
+      <span>${st.length}工程</span></div>`;
+    st.forEach((s,r)=>{
+      pos[s.n]=[c,r]; maxR=Math.max(maxR,r);
+      const st8=s.skill?(SK[s.skill]?'ok':'miss'):'none';
+      nodes+=`<div class="fnode ${st8}" id="f-${s.n}" data-step="${s.n}"
+        style="left:${c*(FW+FGX)}px;top:${FTOP+r*FRH}px">
+        <span class="fno">${s.n}</span><span class="fnm">${esc(s.name)}</span></div>`;
+    });
+  });
+  FLOWPOS=pos;
   const g=STEPS.filter(s=>s.gap).length;
   const have=STEPS.filter(s=>s.skill&&SK[s.skill]).length;
+  const W=GR.length*(FW+FGX)-FGX, H=FTOP+(maxR+1)*FRH;
   return `<div class="fbar">
-      <span>全${STEPS.length}工程 ／ 型になっているのは ${have} 工程
+      <span>全${STEPS.length}工程 ／ スキルで型になっているのは ${have}
       ${g?`／ <b style="color:var(--bad)">型が無い工程 ${g}</b>`:''}</span>
-      <button class="allb" data-all="1">すべて開く</button></div>
-    ${secs}
+      <span class="fleg"><i class="ok"></i>スキルあり<i class="miss"></i>未作成<i class="none"></i>型なし</span>
+    </div>
+    <div class="fgraph"><svg class="fsvg"></svg>
+      <div class="fcanvas" style="width:${W}px;height:${H}px">${heads}${nodes}</div></div>
+    <div class="fdp" id="fdp"><p class="fdph">工程を押すと、何をやるか・出るもの・過去にそこで何をやらかしたかが出ます。</p></div>
     <div class="ghd" style="margin-top:26px"><h3>スキル一覧</h3>
       <span>~/.claude/skills/ の中身。自作のものは zip で配布する</span></div>
     ${skillTable()}`;
+}
+
+let FLOWPOS={};
+function drawFlow(){
+  const wrap=document.querySelector('.fgraph'); if(!wrap)return;
+  const svg=wrap.querySelector('.fsvg'), R=wrap.getBoundingClientRect();
+  svg.setAttribute('width',wrap.scrollWidth); svg.setAttribute('height',wrap.scrollHeight);
+  let d='<defs><marker id="ah" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">'
+       +'<path d="M0 0 L7 3.5 L0 7 z" fill="#cbd5e1"/></marker></defs>';
+  for(let i=0;i<STEPS.length-1;i++){
+    const a=document.getElementById('f-'+STEPS[i].n), b=document.getElementById('f-'+STEPS[i+1].n);
+    if(!a||!b)continue;
+    const ra=a.getBoundingClientRect(), rb=b.getBoundingClientRect();
+    const L=x=>x-R.left+wrap.scrollLeft, T=y=>y-R.top+wrap.scrollTop;
+    const same=FLOWPOS[STEPS[i].n][0]===FLOWPOS[STEPS[i+1].n][0];
+    let p;
+    if(same){   // 同じ塊の中は真下へ
+      const x=L(ra.left+ra.width/2);
+      p=`M${x} ${T(ra.bottom)} L${x} ${T(rb.top)-3}`;
+    }else{      // 塊をまたぐ時は右へ回す
+      const x1=L(ra.right), y1=T(ra.top+ra.height/2);
+      const x2=L(rb.left)-3, y2=T(rb.top+rb.height/2), mx=(x1+x2)/2;
+      p=`M${x1} ${y1} C${mx} ${y1} ${mx} ${y2} ${x2} ${y2}`;
+    }
+    d+=`<path d="${p}" fill="none" stroke="#cbd5e1" stroke-width="2" marker-end="url(#ah)"/>`;
+  }
+  svg.innerHTML=d;
+}
+
+function showStep(n){
+  const s=FN[n]; if(!s)return;
+  document.querySelectorAll('.fnode').forEach(x=>x.classList.toggle('on',+x.dataset.step===n));
+  document.getElementById('fdp').innerHTML=`
+    <div class="fdh"><span class="fno">${s.n}</span><h3>${esc(s.name)}</h3>
+      ${skillTag(s.skill)}${dl(s.skill)}</div>
+    <p class="fdw">${esc(s.what)}</p>
+    ${s.tool?`<div class="fm"><i>道具</i>${esc(s.tool)}</div>`:''}
+    ${s.out?`<div class="fm"><i>出るもの</i>${esc(s.out)}</div>`:''}
+    ${s.risk?`<div class="frisk"><b>過去の事故</b>${esc(s.risk)}</div>`:''}
+    ${s.gap?`<div class="fgap"><b>足りない</b>${esc(s.gap)}</div>`:''}`;
 }
 
 function skillTable(){
@@ -509,6 +524,10 @@ function render(){
         定義は lp-flow.json、説明は各 SKILL.md の先頭から。
         案件の中身は載せない（このリポジトリは公開）。</p>
       <div class="pane">${flowPane()}</div>`;
+    // 派生図と同じ理由で rAF に頼らない（背面タブだと発火しない）
+    setTimeout(drawFlow,0);
+    if(document.fonts&&document.fonts.ready) document.fonts.ready.then(drawFlow);
+    addEventListener('load',drawFlow,{once:true});
     return;
   }
   const p=DATA.projects.find(x=>x.id===cur);
@@ -545,18 +564,13 @@ function render(){
 document.addEventListener('click',e=>{
   const a=e.target.closest('.side a'); if(a){cur=a.dataset.p;tab='list';render();return;}
   const b=e.target.closest('.tabs button'); if(b){tab=b.dataset.t;render();return;}
-  // フローチャート：全部開く／閉じる
-  const ab=e.target.closest('.allb');
-  if(ab){const on=ab.dataset.all==='1';
-    document.querySelectorAll('.fbox').forEach(x=>{
-      x.classList.toggle('open',on); x.querySelector('.fdet').hidden=!on;});
-    ab.dataset.all=on?'0':'1'; ab.textContent=on?'すべて閉じる':'すべて開く'; return;}
-  // 箱を押したら詳細（出るもの・過去の事故・足りない）を開く
-  const fb=e.target.closest('.fbox');
-  if(fb&&!e.target.closest('a')){const o=fb.classList.toggle('open');
-    fb.querySelector('.fdet').hidden=!o;}
+  // フローの節を押したら、下の欄に詳細を出す（図は描き直さない）
+  const fn=e.target.closest('.fnode');
+  if(fn){showStep(+fn.dataset.step);}
 });
-addEventListener('resize',()=>{if(tab==='graph')drawLines(DATA.projects.find(x=>x.id===cur));});
+addEventListener('resize',()=>{
+  if(cur==='__flow__')return drawFlow();
+  if(tab==='graph')drawLines(DATA.projects.find(x=>x.id===cur));});
 render();
 """
 

@@ -85,51 +85,42 @@ tr:hover td{background:#fafbfc}
 .fbrow .wh{font-size:13.5px}
 .fbrow .to{font-size:11.5px;color:var(--mute);margin-top:2px}
 
-/* LP制作フロー ─ 縦のフローチャート */
+/* LP制作フロー ─ 派生図と同じ描き方（節＋SVGの線）*/
 .fbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
   background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:12.5px}
-.allb{font-size:11.5px;font-weight:700;border:1px solid var(--line);background:#f8fafc;
-  border-radius:6px;padding:5px 12px;cursor:pointer;color:var(--ink)}
-.allb:hover{background:#eef2f6}
-.lane{display:grid;grid-template-columns:minmax(0,1fr) 200px;column-gap:16px;row-gap:30px}
-.lnk{height:26px;border-left:2px dashed #cbd5e1;margin-left:calc((100% - 216px)/2)}
+.fleg{color:var(--mute);font-size:11.5px}
+.fleg i{display:inline-block;width:9px;height:9px;border-radius:2px;margin:0 5px 0 14px}
+.fleg i.ok{background:var(--live)} .fleg i.miss{background:var(--bad)}
+.fleg i.none{background:var(--review)}
 
-.fbox{grid-column:1;position:relative;background:#fff;border:1px solid var(--line);
-  border-left:4px solid #111827;border-radius:10px;padding:10px 14px;cursor:pointer}
-.fbox:hover{border-color:#94a3b8}
-.fbox.gapy{border-left-color:var(--review)}
-/* 次の箱へ下りる矢印。最後の箱には出さない */
-.fbox::before{content:"";position:absolute;left:50%;bottom:-30px;width:2px;height:20px;
-  background:#cbd5e1;transform:translateX(-50%)}
-.fbox::after{content:"▼";position:absolute;left:50%;bottom:-32px;transform:translateX(-50%);
-  font-size:10px;line-height:1;color:#cbd5e1}
-.fbox.end::before,.fbox.end::after{display:none}
-.fbh{display:flex;align-items:center;gap:9px}
-.fbh b{font-size:14px;flex:1;min-width:0}
-.fchev{color:#9ca3af;font-size:11px;flex:none}
-.fbox.open .fchev{transform:rotate(180deg)}
+.fgraph{position:relative;overflow-x:auto;padding:6px 4px 10px;margin-top:14px}
+.fcanvas{position:relative;z-index:1}
+.fsvg{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:visible}
+.fgl{position:absolute;top:0;width:252px;font-size:13px;font-weight:800;
+  border-bottom:2px solid #111827;padding-bottom:6px}
+.fgl span{font-weight:400;font-size:11px;color:var(--mute);margin-left:7px}
+
+.fnode{position:absolute;width:252px;height:44px;display:flex;align-items:center;gap:9px;
+  background:#fff;border:1px solid var(--line);border-left:5px solid var(--live);
+  border-radius:9px;padding:0 12px;cursor:pointer}
+.fnode.miss{border-left-color:var(--bad)}
+.fnode.none{border-left-color:var(--review)}
+.fnode:hover{border-color:#94a3b8;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+.fnode.on{background:#111827;border-color:#111827}
+.fnode.on .fnm{color:#fff}
+.fnode.on .fno{background:#fff;color:#111827}
+.fnm{font-size:13px;font-weight:700;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .fno{width:22px;height:22px;flex:none;border-radius:50%;background:#111827;color:#fff;
   font-size:11.5px;font-weight:800;display:grid;place-items:center}
-.fone{font-size:12.5px;color:var(--mute);margin-top:4px;
-  display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
-.fbox.open .fone{-webkit-line-clamp:99;color:var(--ink)}
-.fdet{margin-top:8px;border-top:1px solid #f0f2f4;padding-top:8px}
+
+.fdp{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px;
+  margin-top:16px;min-height:64px}
+.fdph{color:var(--mute);font-size:12.5px}
+.fdh{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.fdh h3{font-size:15px}
+.fdw{font-size:13px;margin:7px 0 8px}
 .fm{font-size:12px;color:var(--mute);margin-bottom:3px}
 .fm i{font-style:normal;font-weight:700;margin-right:7px;color:#9ca3af}
-.skm{display:none;font-size:10.5px;color:#9ca3af}
-
-/* 右側：スキルの担当範囲 */
-.brk{grid-column:2;display:flex;flex-direction:column;align-items:flex-start;gap:7px;
-  justify-content:center;border:1.5px solid;border-left-width:5px;border-radius:0 10px 10px 0;
-  padding:10px 12px}
-.brk.ok{border-color:#a7e0b5;background:#f1fbf3}
-.brk.miss{border-color:#fecaca;background:#fef2f2}
-.brk.none{border-color:#e5e7eb;background:#f8fafc}
-.bn{font-size:12px;font-weight:800}
-.brk.ok .bn{color:#047a20}
-.brk.miss .bn{color:#b91c1c}
-.brk.none .bn{color:#9ca3af}
-.bx{font-size:10.5px;font-weight:700}
 
 .frisk,.fgap{font-size:12.5px;margin-top:8px;padding:8px 11px;border-radius:0 7px 7px 0;line-height:1.6}
 .frisk{background:#fef2f2;border-left:3px solid var(--bad);color:#7f1d1d}
@@ -170,7 +161,7 @@ tr.rmiss{background:#fef2f2}
 </head>
 <body>
 <div class="app"><nav class="side"></nav><main class="main"></main></div>
-<script>const DATA={"updated": "2026-09-07", "base_url": "https://saussure1234.github.io/design-library/", "projects": [{"id": "eslclub-online", "name": "ESL club オンライン校", "client": "ESL club", "main": "esl2", "note": "英検に特化した英語塾のLP。全学年向け。", "versions": [{"id": "esl", "date": "2026-08-06", "status": "frozen", "parent": null, "what": "初版。上司レビュー用に渡したリンク", "merged": true, "fb": []}, {"id": "esl2", "date": "2026-08-17", "status": "live", "parent": "esl", "what": "本線。クライアント提示中のリンク", "merged": true, "fb": [], "alert": "9月の修正（半額CTA等）が未反映。クライアントはこの版を見ている"}, {"id": "esl3", "date": "2026-08-19", "status": "frozen", "parent": "esl2", "what": "演出の実験（開幕の波・背景の色・FVの動き）", "merged": false, "fb": [{"date": "2026-08-18", "from": "施主", "what": "動きを付けた版も見たい"}]}, {"id": "esl4", "date": "2026-08-20", "status": "draft", "parent": "esl3", "what": "作りかけ（38KB）。用途の記録なし・未commit", "merged": false, "fb": [], "alert": "用途不明。要棚卸し"}, {"id": "esl5", "date": "2026-08-26", "status": "draft", "parent": "esl3", "what": "見出し違いの試作（部活と両立しながら、英検2級へ。）・未commit", "merged": false, "fb": [], "alert": "用途不明。要棚卸し"}, {"id": "esl6", "date": "2026-08-31", "status": "frozen", "parent": "esl3", "what": "用途の記録なし", "merged": false, "fb": [], "alert": "用途不明。要棚卸し"}, {"id": "esl7", "date": "2026-09-07", "status": "review", "parent": "esl6", "what": "半額キャンペーンCTAを追加（9-7〜10-31）", "merged": false, "fb": [{"date": "2026-09-07", "from": "施主", "what": "半額キャンペーンにCTAを差し替え"}], "alert": "本線 esl2 ではなく Desktop の複製から派生した。本線と1,114行の差"}, {"id": "esl9", "date": "2026-09-07", "status": "review", "parent": "esl7", "what": "CTAボタンを緑→オレンジに", "merged": false, "fb": [{"date": "2026-09-07", "from": "施主", "what": "CTAが地の緑と同色で埋もれている"}]}, {"id": "esl10", "date": "2026-09-07", "status": "review", "parent": "esl7", "what": "半額価格を赤に（CTAは緑のまま）", "merged": false, "fb": [{"date": "2026-09-07", "from": "施主", "what": "最初の赤も見比べたい"}]}, {"id": "esl11", "date": "2026-09-07", "status": "review", "parent": "esl7", "what": "半額価格をオレンジに（CTAは緑のまま）", "merged": false, "fb": [{"date": "2026-09-07", "from": "施主", "what": "オレンジだとどうかも見たい"}]}]}, {"id": "eslclub-kids", "name": "ESL club 小学生向け", "client": "ESL club", "main": null, "note": "オンライン校を土台に、小学生向けへ寄せた版。", "versions": [{"id": "esl8", "date": "2026-09-07", "status": "review", "parent": "esl7", "what": "見出しを小学生に限定 / FVの生徒写真を小学生に差し替え / FVに軽い装飾", "merged": false, "fb": [{"date": "2026-09-07", "from": "施主", "what": "小学生向けにリデザイン。装飾は軽く"}]}]}], "flow": {"updated": "2026-09-07", "groups": [{"id": "propose", "name": "提案", "note": "問い合わせを受けてから、初回ミーティング資料とLP構成案までを作る。進行役はClaude、1フェーズずつ進める"}, {"id": "build", "name": "制作", "note": "構成が決まってから初稿ができるまで"}, {"id": "manage", "name": "公開・管理", "note": "初稿を出してから本線に取り込むまで。ここまでやって完了"}], "steps": [{"n": 0, "group": "propose", "name": "材料を揃える", "what": "対象企業名とコーポレートサイトURL / 問い合わせメールの原文 / 入口になった営業オファーの内容（何を無料と案内したか）", "skill": "lp-proposal", "tool": null, "out": "メール本文から明示的に求められているものの箇条書き（認識ズレの確認）", "risk": "3点が揃わないうちに始めると、後半で前提が崩れて全部やり直しになる", "gap": null}, {"n": 1, "group": "propose", "name": "企業実態と公開情報のリサーチ", "what": "正式社名・法人番号・所在地・設立・資本金・代表者名・従業員数・事業内容・許認可・収益構造の推定 / 実績（サイト外含む）/ 想定される集客経路 / 市場相場", "skill": "lp-proposal", "tool": null, "out": "事実（出典URL付き）と推測を分けたリサーチ結果、取得できなかった項目のリスト", "risk": "同名の別会社と混同する。必ず所在地・ドメイン・電話番号で同定する", "gap": null}, {"n": 2, "group": "propose", "name": "サイト内全ページの精読", "what": "実績一覧とカテゴリから個別ページURLを全て辿り、1件ずつ本文を取得。特色をどうデザイン判断に変換したかを原文に近い形で抜く", "skill": "lp-proposal", "tool": null, "out": "事例ごとの制作意図（URL・クライアント名を紐づけ）/ トップで伝わっていない資産のリスト", "risk": "一覧のリード文で止めた結果、47件を件数と社名としてしか扱えず、提案の背骨になる材料をまるごと逃した。キービジュアルの画像内文言も見落とし、既に公開済みのものを追加提案しかけた", "gap": null}, {"n": 3, "group": "propose", "name": "強みの言語化とギャップ抽出", "what": "事例を読んでから共通点を帰納し、型に名前をつける。型が鮮明に出ている事例を3件選び、トップで語られているかを確認する", "skill": "lp-proposal", "tool": null, "out": "型の名前 / 事例3件（選定理由・外した理由つき）/ トップとのギャップ", "risk": "強みを先に決めて事例を後から探すと、どの同業にも当てはまる一般論になる。社名の知名度で選ぶのも同じ結果になる", "gap": null}, {"n": 4, "group": "propose", "name": "顧客側の時間軸の整理", "what": "クライアントの見込み客が、発生（課題が生まれる）→ 空白期間（動けない）→ 発火（問い合わせを押す）のどこで動くかを場面として書き出す", "skill": "lp-proposal", "tool": null, "out": "発火のトリガー3つと、それぞれにLPで何をすれば答えられるかの対応", "risk": "トリガーがずれるとLPの構成順序ごと変わる。ここは必ず相手の実感と突き合わせる", "gap": null}, {"n": 5, "group": "propose", "name": "提案スライドを作る", "what": "初回ミーティング用の7枚。カラーは3段階（濃紺=主役／青=次／グレー=既存）、文字サイズは 24/18/14/12/11 で固定", "skill": "lp-proposal", "tool": "PPTX→PDF化して全枚を目視", "out": "提案スライド 7枚", "risk": "強みを断言するスライドを作ったのに、根拠となる事例が資料のどこにも無かった。相手が専門家だと、根拠のない称賛は営業の持ち上げに見える", "gap": null}, {"n": 6, "group": "propose", "name": "LP構成案を作る", "what": "FV→共感→強みの実例→実績と規模→進め方→3つの安心→料金→お客様の声→他との違い→FAQ→会社情報→クロージング。各セクションに『なぜその位置か』を1行添える", "skill": "lp-proposal", "tool": null, "out": "セクション構成と主要コピー案 / 素材依頼リスト（空欄がそのままリストになる）", "risk": "証拠より先に料金を出すと、比較の土俵が価格になる。実績ロゴ単独では権威の提示に留まり強みの証明にならない", "gap": null}, {"n": 7, "group": "propose", "name": "確認事項を抽出する", "what": "納品形式 / 掲載許諾の範囲 / 現在の集客施策と反応 / 現在の問い合わせ件数と目標。後から出てくると見積が崩れる項目を優先", "skill": "lp-proposal", "tool": null, "out": "確認事項リスト（スライドP.7とLP構成案の両方に反映）", "risk": "こちらがかけたフォーム営業を、先方が実施している施策として資料に書いた。営業行為と先方の実態を混ぜない", "gap": null}, {"n": 8, "group": "build", "name": "雰囲気テンプレを選ぶ", "what": "構成が決まった後、雰囲気6型のテンプレから合うものを選ぶ。あわせて『写真が何枚・文字が何行』で構成の合う実物FVをベンチマークとして2〜3本押さえる", "skill": null, "tool": "雰囲気6型テンプレ（design-library内）/ BENCHMARK_METHOD.md", "out": "採用する雰囲気 1つ＋参照する実物LP 2〜3本", "risk": "参照なしで作ると出力が頭打ちになる。一覧のサムネだけで選ぶと必ず外す。静かな雰囲気はCTAが沈むので要注意", "gap": "手順書はあるがスキルになっていない。lp-benchmark にすべき"}, {"n": 9, "group": "build", "name": "デザイン案を出す", "what": "選んだ雰囲気で、本物のLPのスクショを /images/edits で着せ替える。ゼロから生成しない", "skill": null, "tool": "gen_edit.py --mood", "out": "案 3〜6枚（1枚 約¥30）", "risk": "ゼロ生成は『AIくさい発明レイアウト』になって全部ボツ。edits は元をなぞるので文字が化けずレイアウトも本物のまま", "gap": "手順は確立済みだがスキル化されていない。lp-restyle にすべき"}, {"n": 10, "group": "build", "name": "コードに起こす", "what": "採用した画像を実測してHTML/CSSに落とす。目分量で書かない", "skill": "lp-repro", "tool": "measure.py / shot.py / diff.py", "out": "index.html", "risk": "測定窓が隣の要素を拾って誤った値を採る。字面ではなく字送りで測る", "gap": null}, {"n": 11, "group": "build", "name": "仕上げる", "what": "配色のメリハリ・アクセントの置き場所・スマホの崩れ・背景の動き", "skill": "lp-polish", "tool": null, "out": "index.html（初稿）", "risk": "日本語の改行は auto-phrase が Safari で効かない。nbスパン＋wbr を必ず入れる。入れないと画面外へ溢れる", "gap": null}, {"n": 12, "group": "build", "name": "検証する", "what": "同じ物差しで再測 / headlessで撮る / 375pxのモバイルで見る", "skill": null, "tool": "shot.py / Claude_Browser の mobile preset", "out": "撮った画像と差分の数値", "risk": "headlessの375pxは実機と違う見え方をする。切れて見えても実機では切れていない。誤検知に注意", "gap": "検証だけのスキルは不要。lp-repro と lp-polish に含まれている"}, {"n": 13, "group": "manage", "name": "初稿を版として登録して公開する", "what": "派生元を必ず記録してから公開する。cp -r で版を作らない", "skill": "lp-version", "tool": "lpv.py new / lpv.py build --push", "out": "確認用リンク＋台帳の1行", "risk": "本線ではなく実験用の枝の上に作業を積んだ。誰も乗り換えを決めていないのに実験の枝が作業線になり、本線は2週間止まった", "gap": null}, {"n": 14, "group": "manage", "name": "提示してFBを受ける", "what": "FBが来たら【直す前に】台帳へ1行入れる", "skill": "lp-version", "tool": "lpv.py fb", "out": "FB履歴", "risk": "直してから記録しようとすると、直した内容しか残らず『何を言われたか』が消える", "gap": null}, {"n": 15, "group": "manage", "name": "本線に取り込む", "what": "採用が決まった版を本線にする。ここまでやって初めて完了", "skill": "lp-version", "tool": "lpv.py merge", "out": "施主に渡すリンクの更新", "risk": "確認用リンクが出来た時点で完了にすると、施主は古い本線を見続ける。2026-09-07にこれで注意を受けた", "gap": null}]}, "skills": [{"id": "banner-design", "name": "banner-design", "desc": "Design banners for social media, ads, website heroes, creative assets, and print. Multiple art direction options with AI-generated visuals. Actions: design, create, generate banner. Platforms: Facebook, Twitter/X, LinkedIn, YouTube, Instagram, Google Display, website hero, print. Styles: minimalist, gradient, bold typography, photo-based, illustrated, geometric, retro, glassmorphism, 3D, neon, duotone, editorial, collage. Uses ui-ux-pro-max, frontend-design, ai-artist, ai-multimodal skills.", "mine": false, "zip": null, "blocked": 0}, {"id": "brand", "name": "brand", "desc": "Brand voice, visual identity, messaging frameworks, asset management, brand consistency. Activate for branded content, tone of voice, marketing assets, brand compliance, style guides.", "mine": false, "zip": null, "blocked": 0}, {"id": "design", "name": "design", "desc": "Comprehensive design skill: brand identity, design tokens, UI styling, logo generation (55 styles, Gemini AI), corporate identity program (50 deliverables, CIP mockups), HTML presentations (Chart.js), banner design (22 styles, social/ads/web/print), icon design (15 styles, SVG, Gemini 3.1 Pro), social photos (HTML→screenshot, multi-platform). Actions: design logo, create CIP, generate mockups, build slides, design banner, generate icon, create social photos, social media images, brand identity, design system. Platforms: Facebook, Twitter, LinkedIn, YouTube, Instagram, Pinterest, TikTok, Threads, Google Ads.", "mine": false, "zip": null, "blocked": 0}, {"id": "design-system", "name": "design-system", "desc": "Token architecture, component specifications, and slide generation. Three-layer tokens (primitive→semantic→component), CSS variables, spacing/typography scales, component specs, strategic slide creation. Use for design tokens, systematic design, brand-compliant presentations.", "mine": false, "zip": null, "blocked": 0}, {"id": "lp-polish", "name": "lp-polish", "desc": "組み終わったLPを仕上げる。「ここ変じゃない？」「もっとメリハリ」「スマホで崩れてる」「背景に動きを入れて」「色がマッチしてない」「表が読みにくい」といったクライアント指摘に、目分量でなく実測で答えるための手順と道具。配色のメリハリ設計・保護色（アクセント）の作り方と置き場所・SVG背景の常時アニメーション・図解の連結線・日本語LPのレスポンシブ・検証の罠が入っている。画像からの起こしは lp-repro、こちらはその後の工程。", "mine": true, "zip": "skills/lp-polish.zip", "blocked": 0, "kb": 25}, {"id": "lp-proposal", "name": "lp-proposal", "desc": "LP改修提案の進行役。問い合わせを受けてから、初回ミーティング資料7枚とLP構成案までを1フェーズずつ導く。「LP改修の提案を作りたい」「問い合わせが来た」「初回ミーティングの資料」「この会社を調べて提案して」と言われたら使う。フェーズを飛ばさない・原文にない制作意図を創作しない・こちらの営業行為を先方の実態として書かないための手順。", "mine": true, "zip": "skills/lp-proposal.zip", "blocked": 0, "kb": 7}, {"id": "lp-repro", "name": "lp-repro", "desc": "デザイン画像（ChatGPT等で作ったモック・スクショ・カンプ）を、目分量ではなく実測でHTML/CSSに起こす。「この画像をコードにして」「再現して」「LPに組んで」「この通りに作って」と言われたら使う。文字位置±2px・背景の階調±3/255まで詰めるための測定スクリプトと手順が入っている。", "mine": true, "zip": "skills/lp-repro.zip", "blocked": 0, "kb": 15}, {"id": "lp-version", "name": "lp-version", "desc": "LPの版を作る・公開する・FBを記録する・本線に取り込む。「LPをデプロイして」「◯◯にして別リンクで」「esl12を作って」「FBが来た」「これを本線にして」と言われたら必ず使う。版のフォルダを cp -r で作ってはいけない。派生元を記録せずにリンクを渡すと、施主が古い版を見続ける事故になる（2026-09-07に発生）。", "mine": true, "zip": "skills/lp-version.zip", "blocked": 0, "kb": 3}, {"id": "slides", "name": "slides", "desc": "Create strategic HTML presentations with Chart.js, design tokens, responsive layouts, copywriting formulas, and contextual slide strategies.", "mine": false, "zip": null, "blocked": 0}, {"id": "ui-styling", "name": "ui-styling", "desc": "Create beautiful, accessible user interfaces with shadcn/ui components (built on Radix UI + Tailwind), Tailwind CSS utility-first styling, and canvas-based visual designs. Use when building user interfaces, implementing design systems, creating responsive layouts, adding accessible components (dialogs, dropdowns, forms, tables), customizing themes and colors, implementing dark mode, generating visual designs and posters, or establishing consistent styling patterns across applications.", "mine": false, "zip": null, "blocked": 0}, {"id": "ui-ux-pro-max", "name": "ui-ux-pro-max", "desc": "UI/UX design intelligence for web and mobile. Searchable local database with 84 styles, 192 color palettes, 74 font pairings, 192 product types, 98 UX guidelines, 104 icon entries, 16 GSAP motion presets, and 25 chart types across 22 stacks (React, Next.js, Vue, Nuxt, Svelte, Astro, SwiftUI, React Native, Flutter, Tailwind, shadcn/ui, Jetpack Compose, Angular, Laravel, JavaFX, WPF, WinUI, Avalonia, Uno Platform, UWP, Three.js, and HTML/CSS). Use when designing, building, or reviewing UI: pages, components, color schemes, typography, layout, accessibility, animation, or data visualization.", "mine": false, "zip": null, "blocked": 0}]};</script>
+<script>const DATA={"updated": "2026-09-07", "base_url": "https://saussure1234.github.io/design-library/", "projects": [{"id": "eslclub-online", "name": "ESL club オンライン校", "client": "ESL club", "main": "esl2", "note": "英検に特化した英語塾のLP。全学年向け。", "versions": [{"id": "esl", "date": "2026-08-06", "status": "frozen", "parent": null, "what": "初版。上司レビュー用に渡したリンク", "merged": true, "fb": []}, {"id": "esl2", "date": "2026-08-17", "status": "live", "parent": "esl", "what": "本線。クライアント提示中のリンク", "merged": true, "fb": [], "alert": "9月の修正（半額CTA等）が未反映。クライアントはこの版を見ている"}, {"id": "esl3", "date": "2026-08-19", "status": "frozen", "parent": "esl2", "what": "演出の実験（開幕の波・背景の色・FVの動き）", "merged": false, "fb": [{"date": "2026-08-18", "from": "施主", "what": "動きを付けた版も見たい"}]}, {"id": "esl4", "date": "2026-08-20", "status": "draft", "parent": "esl3", "what": "作りかけ（38KB）。用途の記録なし・未commit", "merged": false, "fb": [], "alert": "用途不明。要棚卸し"}, {"id": "esl5", "date": "2026-08-26", "status": "draft", "parent": "esl3", "what": "見出し違いの試作（部活と両立しながら、英検2級へ。）・未commit", "merged": false, "fb": [], "alert": "用途不明。要棚卸し"}, {"id": "esl6", "date": "2026-08-31", "status": "frozen", "parent": "esl3", "what": "用途の記録なし", "merged": false, "fb": [], "alert": "用途不明。要棚卸し"}, {"id": "esl7", "date": "2026-09-07", "status": "review", "parent": "esl6", "what": "半額キャンペーンCTAを追加（9-7〜10-31）", "merged": false, "fb": [{"date": "2026-09-07", "from": "施主", "what": "半額キャンペーンにCTAを差し替え"}], "alert": "本線 esl2 ではなく Desktop の複製から派生した。本線と1,114行の差"}, {"id": "esl9", "date": "2026-09-07", "status": "review", "parent": "esl7", "what": "CTAボタンを緑→オレンジに", "merged": false, "fb": [{"date": "2026-09-07", "from": "施主", "what": "CTAが地の緑と同色で埋もれている"}]}, {"id": "esl10", "date": "2026-09-07", "status": "review", "parent": "esl7", "what": "半額価格を赤に（CTAは緑のまま）", "merged": false, "fb": [{"date": "2026-09-07", "from": "施主", "what": "最初の赤も見比べたい"}]}, {"id": "esl11", "date": "2026-09-07", "status": "review", "parent": "esl7", "what": "半額価格をオレンジに（CTAは緑のまま）", "merged": false, "fb": [{"date": "2026-09-07", "from": "施主", "what": "オレンジだとどうかも見たい"}]}]}, {"id": "eslclub-kids", "name": "ESL club 小学生向け", "client": "ESL club", "main": null, "note": "オンライン校を土台に、小学生向けへ寄せた版。", "versions": [{"id": "esl8", "date": "2026-09-07", "status": "review", "parent": "esl7", "what": "見出しを小学生に限定 / FVの生徒写真を小学生に差し替え / FVに軽い装飾", "merged": false, "fb": [{"date": "2026-09-07", "from": "施主", "what": "小学生向けにリデザイン。装飾は軽く"}]}]}], "flow": {"updated": "2026-09-07", "groups": [{"id": "propose", "name": "提案", "note": "問い合わせを受けてから、初回ミーティング資料とLP構成案までを作る。進行役はClaude、1フェーズずつ進める"}, {"id": "build", "name": "制作", "note": "構成が決まってから初稿ができるまで"}, {"id": "manage", "name": "公開・管理", "note": "初稿を出してから本線に取り込むまで。ここまでやって完了"}], "steps": [{"n": 0, "group": "propose", "name": "材料を揃える", "what": "対象企業名とコーポレートサイトURL / 問い合わせメールの原文 / 入口になった営業オファーの内容（何を無料と案内したか）", "skill": "lp-proposal", "tool": null, "out": "メール本文から明示的に求められているものの箇条書き（認識ズレの確認）", "risk": "3点が揃わないうちに始めると、後半で前提が崩れて全部やり直しになる", "gap": null}, {"n": 1, "group": "propose", "name": "企業と公開情報のリサーチ", "what": "正式社名・法人番号・所在地・設立・資本金・代表者名・従業員数・事業内容・許認可・収益構造の推定 / 実績（サイト外含む）/ 想定される集客経路 / 市場相場", "skill": "lp-proposal", "tool": null, "out": "事実（出典URL付き）と推測を分けたリサーチ結果、取得できなかった項目のリスト", "risk": "同名の別会社と混同する。必ず所在地・ドメイン・電話番号で同定する", "gap": null}, {"n": 2, "group": "propose", "name": "サイト内全ページの精読", "what": "実績一覧とカテゴリから個別ページURLを全て辿り、1件ずつ本文を取得。特色をどうデザイン判断に変換したかを原文に近い形で抜く", "skill": "lp-proposal", "tool": null, "out": "事例ごとの制作意図（URL・クライアント名を紐づけ）/ トップで伝わっていない資産のリスト", "risk": "一覧のリード文で止めた結果、47件を件数と社名としてしか扱えず、提案の背骨になる材料をまるごと逃した。キービジュアルの画像内文言も見落とし、既に公開済みのものを追加提案しかけた", "gap": null}, {"n": 3, "group": "propose", "name": "強みの言語化とギャップ抽出", "what": "事例を読んでから共通点を帰納し、型に名前をつける。型が鮮明に出ている事例を3件選び、トップで語られているかを確認する", "skill": "lp-proposal", "tool": null, "out": "型の名前 / 事例3件（選定理由・外した理由つき）/ トップとのギャップ", "risk": "強みを先に決めて事例を後から探すと、どの同業にも当てはまる一般論になる。社名の知名度で選ぶのも同じ結果になる", "gap": null}, {"n": 4, "group": "propose", "name": "顧客側の時間軸の整理", "what": "クライアントの見込み客が、発生（課題が生まれる）→ 空白期間（動けない）→ 発火（問い合わせを押す）のどこで動くかを場面として書き出す", "skill": "lp-proposal", "tool": null, "out": "発火のトリガー3つと、それぞれにLPで何をすれば答えられるかの対応", "risk": "トリガーがずれるとLPの構成順序ごと変わる。ここは必ず相手の実感と突き合わせる", "gap": null}, {"n": 5, "group": "propose", "name": "提案スライドを作る", "what": "初回ミーティング用の7枚。カラーは3段階（濃紺=主役／青=次／グレー=既存）、文字サイズは 24/18/14/12/11 で固定", "skill": "lp-proposal", "tool": "PPTX→PDF化して全枚を目視", "out": "提案スライド 7枚", "risk": "強みを断言するスライドを作ったのに、根拠となる事例が資料のどこにも無かった。相手が専門家だと、根拠のない称賛は営業の持ち上げに見える", "gap": null}, {"n": 6, "group": "propose", "name": "LP構成案を作る", "what": "FV→共感→強みの実例→実績と規模→進め方→3つの安心→料金→お客様の声→他との違い→FAQ→会社情報→クロージング。各セクションに『なぜその位置か』を1行添える", "skill": "lp-proposal", "tool": null, "out": "セクション構成と主要コピー案 / 素材依頼リスト（空欄がそのままリストになる）", "risk": "証拠より先に料金を出すと、比較の土俵が価格になる。実績ロゴ単独では権威の提示に留まり強みの証明にならない", "gap": null}, {"n": 7, "group": "propose", "name": "確認事項を抽出する", "what": "納品形式 / 掲載許諾の範囲 / 現在の集客施策と反応 / 現在の問い合わせ件数と目標。後から出てくると見積が崩れる項目を優先", "skill": "lp-proposal", "tool": null, "out": "確認事項リスト（スライドP.7とLP構成案の両方に反映）", "risk": "こちらがかけたフォーム営業を、先方が実施している施策として資料に書いた。営業行為と先方の実態を混ぜない", "gap": null}, {"n": 8, "group": "build", "name": "雰囲気テンプレを選ぶ", "what": "構成が決まった後、雰囲気6型のテンプレから合うものを選ぶ。あわせて『写真が何枚・文字が何行』で構成の合う実物FVをベンチマークとして2〜3本押さえる", "skill": null, "tool": "雰囲気6型テンプレ（design-library内）/ BENCHMARK_METHOD.md", "out": "採用する雰囲気 1つ＋参照する実物LP 2〜3本", "risk": "参照なしで作ると出力が頭打ちになる。一覧のサムネだけで選ぶと必ず外す。静かな雰囲気はCTAが沈むので要注意", "gap": "手順書はあるがスキルになっていない。lp-benchmark にすべき"}, {"n": 9, "group": "build", "name": "デザイン案を出す", "what": "選んだ雰囲気で、本物のLPのスクショを /images/edits で着せ替える。ゼロから生成しない", "skill": null, "tool": "gen_edit.py --mood", "out": "案 3〜6枚（1枚 約¥30）", "risk": "ゼロ生成は『AIくさい発明レイアウト』になって全部ボツ。edits は元をなぞるので文字が化けずレイアウトも本物のまま", "gap": "手順は確立済みだがスキル化されていない。lp-restyle にすべき"}, {"n": 10, "group": "build", "name": "コードに起こす", "what": "採用した画像を実測してHTML/CSSに落とす。目分量で書かない", "skill": "lp-repro", "tool": "measure.py / shot.py / diff.py", "out": "index.html", "risk": "測定窓が隣の要素を拾って誤った値を採る。字面ではなく字送りで測る", "gap": null}, {"n": 11, "group": "build", "name": "仕上げる", "what": "配色のメリハリ・アクセントの置き場所・スマホの崩れ・背景の動き", "skill": "lp-polish", "tool": null, "out": "index.html（初稿）", "risk": "日本語の改行は auto-phrase が Safari で効かない。nbスパン＋wbr を必ず入れる。入れないと画面外へ溢れる", "gap": null}, {"n": 12, "group": "build", "name": "検証する", "what": "同じ物差しで再測 / headlessで撮る / 375pxのモバイルで見る", "skill": null, "tool": "shot.py / Claude_Browser の mobile preset", "out": "撮った画像と差分の数値", "risk": "headlessの375pxは実機と違う見え方をする。切れて見えても実機では切れていない。誤検知に注意", "gap": "検証だけのスキルは不要。lp-repro と lp-polish に含まれている"}, {"n": 13, "group": "manage", "name": "初稿を版として公開する", "what": "派生元を必ず記録してから公開する。cp -r で版を作らない", "skill": "lp-version", "tool": "lpv.py new / lpv.py build --push", "out": "確認用リンク＋台帳の1行", "risk": "本線ではなく実験用の枝の上に作業を積んだ。誰も乗り換えを決めていないのに実験の枝が作業線になり、本線は2週間止まった", "gap": null}, {"n": 14, "group": "manage", "name": "提示してFBを受ける", "what": "FBが来たら【直す前に】台帳へ1行入れる", "skill": "lp-version", "tool": "lpv.py fb", "out": "FB履歴", "risk": "直してから記録しようとすると、直した内容しか残らず『何を言われたか』が消える", "gap": null}, {"n": 15, "group": "manage", "name": "本線に取り込む", "what": "採用が決まった版を本線にする。ここまでやって初めて完了", "skill": "lp-version", "tool": "lpv.py merge", "out": "施主に渡すリンクの更新", "risk": "確認用リンクが出来た時点で完了にすると、施主は古い本線を見続ける。2026-09-07にこれで注意を受けた", "gap": null}]}, "skills": [{"id": "banner-design", "name": "banner-design", "desc": "Design banners for social media, ads, website heroes, creative assets, and print. Multiple art direction options with AI-generated visuals. Actions: design, create, generate banner. Platforms: Facebook, Twitter/X, LinkedIn, YouTube, Instagram, Google Display, website hero, print. Styles: minimalist, gradient, bold typography, photo-based, illustrated, geometric, retro, glassmorphism, 3D, neon, duotone, editorial, collage. Uses ui-ux-pro-max, frontend-design, ai-artist, ai-multimodal skills.", "mine": false, "zip": null, "blocked": 0}, {"id": "brand", "name": "brand", "desc": "Brand voice, visual identity, messaging frameworks, asset management, brand consistency. Activate for branded content, tone of voice, marketing assets, brand compliance, style guides.", "mine": false, "zip": null, "blocked": 0}, {"id": "design", "name": "design", "desc": "Comprehensive design skill: brand identity, design tokens, UI styling, logo generation (55 styles, Gemini AI), corporate identity program (50 deliverables, CIP mockups), HTML presentations (Chart.js), banner design (22 styles, social/ads/web/print), icon design (15 styles, SVG, Gemini 3.1 Pro), social photos (HTML→screenshot, multi-platform). Actions: design logo, create CIP, generate mockups, build slides, design banner, generate icon, create social photos, social media images, brand identity, design system. Platforms: Facebook, Twitter, LinkedIn, YouTube, Instagram, Pinterest, TikTok, Threads, Google Ads.", "mine": false, "zip": null, "blocked": 0}, {"id": "design-system", "name": "design-system", "desc": "Token architecture, component specifications, and slide generation. Three-layer tokens (primitive→semantic→component), CSS variables, spacing/typography scales, component specs, strategic slide creation. Use for design tokens, systematic design, brand-compliant presentations.", "mine": false, "zip": null, "blocked": 0}, {"id": "lp-polish", "name": "lp-polish", "desc": "組み終わったLPを仕上げる。「ここ変じゃない？」「もっとメリハリ」「スマホで崩れてる」「背景に動きを入れて」「色がマッチしてない」「表が読みにくい」といったクライアント指摘に、目分量でなく実測で答えるための手順と道具。配色のメリハリ設計・保護色（アクセント）の作り方と置き場所・SVG背景の常時アニメーション・図解の連結線・日本語LPのレスポンシブ・検証の罠が入っている。画像からの起こしは lp-repro、こちらはその後の工程。", "mine": true, "zip": "skills/lp-polish.zip", "blocked": 0, "kb": 25}, {"id": "lp-proposal", "name": "lp-proposal", "desc": "LP改修提案の進行役。問い合わせを受けてから、初回ミーティング資料7枚とLP構成案までを1フェーズずつ導く。「LP改修の提案を作りたい」「問い合わせが来た」「初回ミーティングの資料」「この会社を調べて提案して」と言われたら使う。フェーズを飛ばさない・原文にない制作意図を創作しない・こちらの営業行為を先方の実態として書かないための手順。", "mine": true, "zip": "skills/lp-proposal.zip", "blocked": 0, "kb": 7}, {"id": "lp-repro", "name": "lp-repro", "desc": "デザイン画像（ChatGPT等で作ったモック・スクショ・カンプ）を、目分量ではなく実測でHTML/CSSに起こす。「この画像をコードにして」「再現して」「LPに組んで」「この通りに作って」と言われたら使う。文字位置±2px・背景の階調±3/255まで詰めるための測定スクリプトと手順が入っている。", "mine": true, "zip": "skills/lp-repro.zip", "blocked": 0, "kb": 15}, {"id": "lp-version", "name": "lp-version", "desc": "LPの版を作る・公開する・FBを記録する・本線に取り込む。「LPをデプロイして」「◯◯にして別リンクで」「esl12を作って」「FBが来た」「これを本線にして」と言われたら必ず使う。版のフォルダを cp -r で作ってはいけない。派生元を記録せずにリンクを渡すと、施主が古い版を見続ける事故になる（2026-09-07に発生）。", "mine": true, "zip": "skills/lp-version.zip", "blocked": 0, "kb": 3}, {"id": "slides", "name": "slides", "desc": "Create strategic HTML presentations with Chart.js, design tokens, responsive layouts, copywriting formulas, and contextual slide strategies.", "mine": false, "zip": null, "blocked": 0}, {"id": "ui-styling", "name": "ui-styling", "desc": "Create beautiful, accessible user interfaces with shadcn/ui components (built on Radix UI + Tailwind), Tailwind CSS utility-first styling, and canvas-based visual designs. Use when building user interfaces, implementing design systems, creating responsive layouts, adding accessible components (dialogs, dropdowns, forms, tables), customizing themes and colors, implementing dark mode, generating visual designs and posters, or establishing consistent styling patterns across applications.", "mine": false, "zip": null, "blocked": 0}, {"id": "ui-ux-pro-max", "name": "ui-ux-pro-max", "desc": "UI/UX design intelligence for web and mobile. Searchable local database with 84 styles, 192 color palettes, 74 font pairings, 192 product types, 98 UX guidelines, 104 icon entries, 16 GSAP motion presets, and 25 chart types across 22 stacks (React, Next.js, Vue, Nuxt, Svelte, Astro, SwiftUI, React Native, Flutter, Tailwind, shadcn/ui, Jetpack Compose, Angular, Laravel, JavaFX, WPF, WinUI, Avalonia, Uno Platform, UWP, Three.js, and HTML/CSS). Use when designing, building, or reviewing UI: pages, components, color schemes, typography, layout, accessibility, animation, or data visualization.", "mine": false, "zip": null, "blocked": 0}]};</script>
 <script>
 const S={live:['本番','var(--live)','#f1fbf3'],frozen:['凍結','var(--frozen)','#f8fafc'],
          review:['確認用','var(--review)','#fffbeb'],draft:['未公開','var(--draft)','#fff']};
@@ -219,62 +210,86 @@ function dl(id){
   return `<a class="dlb" href="${s.zip}" download>⇩ ${esc(id)}.zip ${s.kb}KB</a>`;
 }
 
-/* 工程を縦に並べ、矢印でつなぎ、右側にスキルの担当範囲をブラケットで括る。
-   ★工程が16もあるので、箱には「番号・名前・何をやるか1行」だけ出す。
-     出るもの／過去の事故／足りない は、箱を押した時だけ開く。
-     全部出すと読む気が失せる（前の版がそれで分かりにくかった）。 */
+/* 派生図と同じ描き方でフローを描く。
+   ★節は【番号と工程名だけ】。何をやるかも事故も、押すまで出さない。
+     16工程ぶんの説明を最初から並べると読む気が失せる（前の版で却下された）。
+   ★列＝大きな塊（提案／制作／公開・管理）。線は SVG のベジェで引く。 */
+const FN={}; STEPS.forEach(s=>FN[s.n]=s);
+const FW=252, FGX=76, FRH=58, FTOP=32;   // 節の幅 / 列間 / 段の高さ / 見出しの分の余白
+
 function flowPane(){
   if(!STEPS.length)return '<p style="color:var(--mute)">lp-flow.json がありません。</p>';
   const GR=(DATA.flow.groups||[{id:null,name:''}]);
-  const shown={};                       // zipボタンは同じスキルで1回だけ
-
-  const box=(s,i,last)=>`<div class="fbox${last?' end':''}${s.gap?' gapy':''}"
-      style="grid-row:${i+1}" data-step="${s.n}">
-    <div class="fbh"><span class="fno">${s.n}</span><b>${esc(s.name)}</b>
-      <span class="skm">${s.skill?esc(s.skill):'型なし'}</span>
-      <span class="fchev">▾</span></div>
-    <p class="fone">${esc(s.what)}</p>
-    <div class="fdet" hidden>
-      ${s.tool?`<div class="fm"><i>道具</i>${esc(s.tool)}</div>`:''}
-      ${s.out?`<div class="fm"><i>出るもの</i>${esc(s.out)}</div>`:''}
-      ${s.risk?`<div class="frisk"><b>過去の事故</b>${esc(s.risk)}</div>`:''}
-      ${s.gap?`<div class="fgap"><b>足りない</b>${esc(s.gap)}</div>`:''}
-    </div></div>`;
-
-  // 同じスキルが続く区間をまとめて1本のブラケットにする
-  const brackets=st=>{
-    const out=[]; let i=0;
-    while(i<st.length){
-      let j=i; while(j+1<st.length && st[j+1].skill===st[i].skill) j++;
-      const id=st[i].skill;
-      const cls=id?(SK[id]?'ok':'miss'):'none';
-      const lab=id?(SK[id]?esc(id):esc(id)+'<br><span class="bx">未作成</span>')
-                 :'<span class="bx">スキルなし</span>';
-      const b=id&&!shown[id]&&(shown[id]=1)?dl(id):'';
-      out.push(`<div class="brk ${cls}" style="grid-row:${i+1}/${j+2}">
-        <span class="bn">${lab}</span>${b}</div>`);
-      i=j+1;
-    }
-    return out.join('');
-  };
-
-  const secs=GR.map(g=>{
+  const pos={};
+  let nodes='', heads='', maxR=0;
+  GR.forEach((g,c)=>{
     const st=STEPS.filter(s=>s.group===g.id);
-    if(!st.length)return '';
-    return `<div class="ghd"><h3>${esc(g.name)}</h3><span>${esc(g.note||'')}</span></div>
-      <div class="lane">${st.map((s,i)=>box(s,i,i===st.length-1)).join('')}${brackets(st)}</div>`;
-  }).join('<div class="lnk"></div>');
-
+    if(!st.length)return;
+    heads+=`<div class="fgl" style="left:${c*(FW+FGX)}px">${esc(g.name)}
+      <span>${st.length}工程</span></div>`;
+    st.forEach((s,r)=>{
+      pos[s.n]=[c,r]; maxR=Math.max(maxR,r);
+      const st8=s.skill?(SK[s.skill]?'ok':'miss'):'none';
+      nodes+=`<div class="fnode ${st8}" id="f-${s.n}" data-step="${s.n}"
+        style="left:${c*(FW+FGX)}px;top:${FTOP+r*FRH}px">
+        <span class="fno">${s.n}</span><span class="fnm">${esc(s.name)}</span></div>`;
+    });
+  });
+  FLOWPOS=pos;
   const g=STEPS.filter(s=>s.gap).length;
   const have=STEPS.filter(s=>s.skill&&SK[s.skill]).length;
+  const W=GR.length*(FW+FGX)-FGX, H=FTOP+(maxR+1)*FRH;
   return `<div class="fbar">
-      <span>全${STEPS.length}工程 ／ 型になっているのは ${have} 工程
+      <span>全${STEPS.length}工程 ／ スキルで型になっているのは ${have}
       ${g?`／ <b style="color:var(--bad)">型が無い工程 ${g}</b>`:''}</span>
-      <button class="allb" data-all="1">すべて開く</button></div>
-    ${secs}
+      <span class="fleg"><i class="ok"></i>スキルあり<i class="miss"></i>未作成<i class="none"></i>型なし</span>
+    </div>
+    <div class="fgraph"><svg class="fsvg"></svg>
+      <div class="fcanvas" style="width:${W}px;height:${H}px">${heads}${nodes}</div></div>
+    <div class="fdp" id="fdp"><p class="fdph">工程を押すと、何をやるか・出るもの・過去にそこで何をやらかしたかが出ます。</p></div>
     <div class="ghd" style="margin-top:26px"><h3>スキル一覧</h3>
       <span>~/.claude/skills/ の中身。自作のものは zip で配布する</span></div>
     ${skillTable()}`;
+}
+
+let FLOWPOS={};
+function drawFlow(){
+  const wrap=document.querySelector('.fgraph'); if(!wrap)return;
+  const svg=wrap.querySelector('.fsvg'), R=wrap.getBoundingClientRect();
+  svg.setAttribute('width',wrap.scrollWidth); svg.setAttribute('height',wrap.scrollHeight);
+  let d='<defs><marker id="ah" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">'
+       +'<path d="M0 0 L7 3.5 L0 7 z" fill="#cbd5e1"/></marker></defs>';
+  for(let i=0;i<STEPS.length-1;i++){
+    const a=document.getElementById('f-'+STEPS[i].n), b=document.getElementById('f-'+STEPS[i+1].n);
+    if(!a||!b)continue;
+    const ra=a.getBoundingClientRect(), rb=b.getBoundingClientRect();
+    const L=x=>x-R.left+wrap.scrollLeft, T=y=>y-R.top+wrap.scrollTop;
+    const same=FLOWPOS[STEPS[i].n][0]===FLOWPOS[STEPS[i+1].n][0];
+    let p;
+    if(same){   // 同じ塊の中は真下へ
+      const x=L(ra.left+ra.width/2);
+      p=`M${x} ${T(ra.bottom)} L${x} ${T(rb.top)-3}`;
+    }else{      // 塊をまたぐ時は右へ回す
+      const x1=L(ra.right), y1=T(ra.top+ra.height/2);
+      const x2=L(rb.left)-3, y2=T(rb.top+rb.height/2), mx=(x1+x2)/2;
+      p=`M${x1} ${y1} C${mx} ${y1} ${mx} ${y2} ${x2} ${y2}`;
+    }
+    d+=`<path d="${p}" fill="none" stroke="#cbd5e1" stroke-width="2" marker-end="url(#ah)"/>`;
+  }
+  svg.innerHTML=d;
+}
+
+function showStep(n){
+  const s=FN[n]; if(!s)return;
+  document.querySelectorAll('.fnode').forEach(x=>x.classList.toggle('on',+x.dataset.step===n));
+  document.getElementById('fdp').innerHTML=`
+    <div class="fdh"><span class="fno">${s.n}</span><h3>${esc(s.name)}</h3>
+      ${skillTag(s.skill)}${dl(s.skill)}</div>
+    <p class="fdw">${esc(s.what)}</p>
+    ${s.tool?`<div class="fm"><i>道具</i>${esc(s.tool)}</div>`:''}
+    ${s.out?`<div class="fm"><i>出るもの</i>${esc(s.out)}</div>`:''}
+    ${s.risk?`<div class="frisk"><b>過去の事故</b>${esc(s.risk)}</div>`:''}
+    ${s.gap?`<div class="fgap"><b>足りない</b>${esc(s.gap)}</div>`:''}`;
 }
 
 function skillTable(){
@@ -425,6 +440,10 @@ function render(){
         定義は lp-flow.json、説明は各 SKILL.md の先頭から。
         案件の中身は載せない（このリポジトリは公開）。</p>
       <div class="pane">${flowPane()}</div>`;
+    // 派生図と同じ理由で rAF に頼らない（背面タブだと発火しない）
+    setTimeout(drawFlow,0);
+    if(document.fonts&&document.fonts.ready) document.fonts.ready.then(drawFlow);
+    addEventListener('load',drawFlow,{once:true});
     return;
   }
   const p=DATA.projects.find(x=>x.id===cur);
@@ -461,18 +480,13 @@ function render(){
 document.addEventListener('click',e=>{
   const a=e.target.closest('.side a'); if(a){cur=a.dataset.p;tab='list';render();return;}
   const b=e.target.closest('.tabs button'); if(b){tab=b.dataset.t;render();return;}
-  // フローチャート：全部開く／閉じる
-  const ab=e.target.closest('.allb');
-  if(ab){const on=ab.dataset.all==='1';
-    document.querySelectorAll('.fbox').forEach(x=>{
-      x.classList.toggle('open',on); x.querySelector('.fdet').hidden=!on;});
-    ab.dataset.all=on?'0':'1'; ab.textContent=on?'すべて閉じる':'すべて開く'; return;}
-  // 箱を押したら詳細（出るもの・過去の事故・足りない）を開く
-  const fb=e.target.closest('.fbox');
-  if(fb&&!e.target.closest('a')){const o=fb.classList.toggle('open');
-    fb.querySelector('.fdet').hidden=!o;}
+  // フローの節を押したら、下の欄に詳細を出す（図は描き直さない）
+  const fn=e.target.closest('.fnode');
+  if(fn){showStep(+fn.dataset.step);}
 });
-addEventListener('resize',()=>{if(tab==='graph')drawLines(DATA.projects.find(x=>x.id===cur));});
+addEventListener('resize',()=>{
+  if(cur==='__flow__')return drawFlow();
+  if(tab==='graph')drawLines(DATA.projects.find(x=>x.id===cur));});
 render();
 </script>
 </body></html>
