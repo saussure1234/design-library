@@ -13,11 +13,15 @@
     python3 lpv.py ls [案件id]                     いま何がどうなっているか
     python3 lpv.py new-project <案件id> --name ... --client ...
     python3 lpv.py new <版id> -p <案件id> --from <派生元> --why "..." [--src DIR]
-    python3 lpv.py fb <版id> --who <誰が> --what "..."     ★直す前に打つ
+    python3 lpv.py fb <版id> --what "..."           ★直す前に打つ
+    python3 lpv.py update <版id> --what "..."       小さい直し（同じリンクのまま）
     python3 lpv.py merge <版id>                    本線に取り込んだ
     python3 lpv.py check                           台帳の検査だけ
     python3 lpv.py build [--push]                  検査→ツール生成→(--pushで公開)
 
+  ★ リンクを作る＝クライアントに見せる、ということ。
+    小さい直しは update（同じリンクのまま）。リンクを増やすのは
+    【別案として並べて見せたい時】だけ（CTAの色違いを2本出す、など）。
   ★ new は --from を必ず要求する。省略できない（--root は初版のときだけ）。
   ★ --from が案件の本線(main)と違うときは止まる。--branch を付けない限り進まない。
     これが 8/31 に止めたかった一点。
@@ -221,11 +225,34 @@ def cmd_fb(a):
     if a.id not in av:
         sys.exit(f"  ★版 '{a.id}' が台帳に無い")
     _, v = av[a.id]
-    v.setdefault("fb", []).append({"date": a.date or TODAY, "from": a.who, "what": a.what})
+    v.setdefault("fb", []).append({"date": a.date or TODAY, "what": a.what})
     save(reg)
-    say(f"  ○ FBを記録: {a.id} ← {a.who}「{a.what}」", "g")
-    say(f"    次: 直す前にこれで良い。直したら新しい版を作る →")
-    say(f"    python3 lpv.py new <新しい版id> -p {av[a.id][0]['id']} --from {a.id} --why \"...\"")
+    say(f"  ○ FBを記録: {a.id} ←「{a.what}」", "g")
+    say("    次はどっちか：")
+    say(f"      小さい直し（同じリンクのまま）… lpv.py update {a.id} --what \"...\"")
+    say(f"      別案として見せる（新しいリンク）… lpv.py new <新id> -p {av[a.id][0]['id']} --from {a.id} --why \"...\"")
+
+
+def cmd_update(a):
+    """同じリンクのまま中身を直した。★新しいリンクは作らない。
+
+    小さい直しでリンクを増やすと、クライアントは「どれを見ればいいのか」が分からなくなる。
+    リンクを増やすのは【別案として並べて見せたい時】だけ。
+    """
+    reg = load()
+    av = allvers(reg)
+    if a.id not in av:
+        sys.exit(f"  ★版 '{a.id}' が台帳に無い")
+    p, v = av[a.id]
+    v.setdefault("updates", []).append({"date": a.date or TODAY, "what": a.what})
+    v["date"] = a.date or TODAY
+    save(reg)
+    n = len(v["updates"])
+    say(f"  ○ {a.id} を更新（通算 {n} 回目）: {a.what}", "g")
+    say(f"    リンクは同じ: {vurl(reg, v)}")
+    if p.get("main") != a.id:
+        say(f"    ▲ これは本線（{p.get('main')}）ではない。"
+            f"採用が決まったら lpv.py merge {a.id}", "y")
 
 
 def cmd_merge(a):
@@ -246,6 +273,31 @@ def cmd_merge(a):
     save(reg)
     say(f"  ○ 本線を {old or '—'} → {a.id} にした。{a.id} は反映済み・本番", "g")
     say(f"    クライアントに渡すリンクはこれ: {vurl(reg, v)}")
+
+
+def cmd_rm(a):
+    """版を台帳から外す。★docs/ のファイルは消さない（公開中のリンクが死ぬため）。"""
+    reg = load()
+    av = allvers(reg)
+    if a.id not in av:
+        sys.exit(f"  ★版 '{a.id}' が台帳に無い")
+    p, v = av[a.id]
+    kids = [x["id"] for x in p["versions"] if x.get("parent") == a.id]
+    if kids and not a.force:
+        sys.exit(f"  ★{a.id} を派生元にしている版がある → {', '.join(kids)}\n"
+                 f"    先にそちらの派生元を直すか、--force で親を空にして外す")
+    for x in p["versions"]:
+        if x.get("parent") == a.id:
+            x["parent"] = v.get("parent")      # 祖父につなぎ直す
+    p["versions"] = [x for x in p["versions"] if x["id"] != a.id]
+    if p.get("main") == a.id:
+        p["main"] = None
+        say(f"  ▲ {a.id} は本線だった。本線を空にした。決まったら lpv.py merge <版id>", "y")
+    save(reg)
+    say(f"  ○ 台帳から外した: {a.id}", "g")
+    if os.path.isdir(os.path.join(DOCS, a.id)):
+        say(f"  ・docs/{a.id}/ は残っている。リンクは生きたまま：{vurl(reg, v)}")
+        say("  ・本当に消すなら手で: git rm -r docs/" + a.id, "y")
 
 
 def cmd_rm_project(a):
@@ -341,14 +393,20 @@ def main():
 
     s = sp.add_parser("fb", help="FBを記録する（直す前に打つ）")
     s.add_argument("id")
-    s.add_argument("--who", default="クライアント",
-                   help="実際に言った相手。クライアント / 上司 / So など。"
-                        "まとめて「クライアント」にすると、後で誰の判断か分からなくなる")
     s.add_argument("--what", required=True); s.add_argument("--date")
     s.set_defaults(f=cmd_fb)
 
+    s = sp.add_parser("update", help="同じリンクのまま中身を直した（新しいリンクは作らない）")
+    s.add_argument("id"); s.add_argument("--what", required=True); s.add_argument("--date")
+    s.set_defaults(f=cmd_update)
+
     s = sp.add_parser("merge", help="本線に取り込んだ")
     s.add_argument("id"); s.set_defaults(f=cmd_merge)
+
+    s = sp.add_parser("rm", help="版を台帳から外す（公開ファイルは消さない）")
+    s.add_argument("id"); s.add_argument("--force", action="store_true",
+                                         help="子がいても外す（子の派生元は祖父に付け替える）")
+    s.set_defaults(f=cmd_rm)
 
     s = sp.add_parser("rm-project", help="案件を台帳から外す（公開ファイルは消さない）")
     s.add_argument("id"); s.set_defaults(f=cmd_rm_project)

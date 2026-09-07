@@ -237,6 +237,9 @@ tr.rmiss{background:#fef2f2}
   padding:6px 14px;background:#111827;color:#fff;white-space:nowrap}
 .dlb:hover{background:#374151}
 
+.upd{font-size:11.5px;color:var(--mute);margin-top:4px;
+  border-left:2px solid var(--line);padding-left:8px}
+.upd ul{margin:2px 0 0 14px}
 .glo{margin-top:14px;border:1px solid var(--line);border-radius:9px;background:#fafbfc}
 .glo summary{cursor:pointer;font-size:12.5px;font-weight:700;padding:9px 14px;color:var(--mute)}
 .glo summary:hover{color:var(--ink)}
@@ -263,8 +266,9 @@ tr.rmiss{background:#fef2f2}
 """
 
 JS = """
-const S={live:['公開中','var(--live)','#f1fbf3'],frozen:['旧版','var(--frozen)','#f8fafc'],
-         review:['確認待ち','var(--review)','#fffbeb'],draft:['作りかけ','var(--draft)','#fff']};
+// ★リンクを作る＝クライアントに見せる、という前提。だから「確認用」という状態は無い。
+const S={live:['本線','var(--live)','#f1fbf3'],frozen:['旧版','var(--frozen)','#f8fafc'],
+         review:['別案','var(--review)','#fffbeb'],draft:['未公開','var(--draft)','#fff']};
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 let cur=DATA.projects[0].id, tab='graph';   // 最初に見たいのは系統。表は後
 
@@ -437,7 +441,10 @@ function listPane(p){
       <td>${linkCell(v)}${p.main===v.id?'<span class="mainmark">本線</span>':''}</td>
       <td><span class="pill" style="background:${c}">${lab}</span></td>
       <td>${v.parent?esc(v.parent):'<span style="color:#9ca3af">初版</span>'}</td>
-      <td>${esc(v.what)}${v.alert?`<div class="warn">▲ ${esc(v.alert)}</div>`:''}</td>
+      <td>${esc(v.what)}
+        ${(v.updates||[]).length?`<div class="upd">同じリンクのまま ${v.updates.length}回 直した
+          <ul>${v.updates.map(u=>`<li>${esc(u.date)} ${esc(u.what)}</li>`).join('')}</ul></div>`:''}
+        ${v.alert?`<div class="warn">▲ ${esc(v.alert)}</div>`:''}</td>
       <td>${mg}</td><td style="color:var(--mute);white-space:nowrap">${esc(v.date)}</td></tr>`}).join('');
   return `<table><thead><tr><th>リンク</th><th>状態</th><th>派生元</th>
     <th>変更内容</th><th>完了</th><th>日付</th></tr></thead><tbody>${rows}</tbody></table>
@@ -447,12 +454,13 @@ function listPane(p){
 /* ★用語は説明を画面に置く。頭の中にしか無い言葉は、3日で意味が分からなくなる。 */
 function glossary(){
   const G=[
-   ['本線','いまクライアントに渡しているリンク。案件につき1本だけ'],
+   ['リンク','<b>作った時点でクライアントに見せている</b>もの。作りかけを置く場所ではない'],
+   ['本線','クライアントが「これ」として見ているリンク。案件につき1本だけ'],
+   ['別案','比べてもらうために別に出したリンク（CTAの色違いを2本、など）'],
+   ['旧版','もう見せていないリンク。上書きしない（渡した相手がまだ開くことがある）'],
+   ['未公開','まだリンクを作っていない'],
    ['派生元','その版を作るとき、どの版をコピーして始めたか。ここが抜けると系統が追えなくなる'],
-   ['公開中','本線として出している版'],
-   ['旧版','かつて本線だった、または役目を終えた版。上書きしない（渡した相手がまだ見ている）'],
-   ['確認待ち','クライアントに見せて返事を待っている使い捨てのリンク。採用されなければ捨てる'],
-   ['作りかけ','まだ誰にも渡していない。公開もしていない'],
+   ['更新','<b>同じリンクのまま</b>中身を直した回数。小さい直しでリンクは増やさない'],
    ['反映済','本線に取り込まれた＝<b>完了</b>'],
    ['未反映','まだ本線になっていない。<b>リンクが出来ただけでは完了ではない</b>（これで事故った）'],
   ];
@@ -506,7 +514,7 @@ function graphPane(p){
     return `<div class="gnode${out?' hasext':''}" id="g-${v.id}" style="--c:${c};--b:${b};`
       +`left:${depth[v.id]*(NW+GX)}px;top:${(row[v.id]*RH).toFixed(1)}px">
       <div class="t">${linkCell(v)}</div>
-      <div class="d">${esc(v.date)} · ${lab}${v.merged?'':' · <span style="color:var(--bad)">本線未反映</span>'}</div>
+      <div class="d">${esc(v.date)} · ${lab}${(v.updates||[]).length?` · 更新${v.updates.length}回`:''}${v.merged?'':' · <span style="color:var(--bad)">本線未反映</span>'}</div>
       ${ext}<div class="w">${esc(v.what)}</div></div>`}).join('');
   // 世代が深いと画面に入り切らない。畳むと系統が読めなくなるので幅は変えず、断り書きだけ出す
   const hint=maxD>=5?`<p class="note" style="margin-bottom:8px">
