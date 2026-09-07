@@ -27,21 +27,70 @@ OUT_DIR = os.path.join(R, "docs", "lp")
 OUT = os.path.join(OUT_DIR, "index.html")
 
 
-def read_skills():
-    """~/.claude/skills から name / description / user-invocable だけ拾う。"""
-    out = []
+def blocklist():
+    """公開してはいけない語（顧客名など）。git管理外の .publish-blocklist に置く。"""
+    f = os.path.join(R, ".publish-blocklist")
+    if not os.path.exists(f):
+        print("  ▲ .publish-blocklist が無い。顧客名の検査をしていない")
+        return []
+    return [l.strip() for l in open(f, encoding="utf-8")
+            if l.strip() and not l.startswith("#")]
+
+
+def scan_block(d, words):
+    """フォルダ配下に禁止語が入っているか。入っていれば (ファイル, 語) を返す。"""
+    hit = []
+    for root, _, fs in os.walk(d):
+        for fn in fs:
+            p = os.path.join(root, fn)
+            try:
+                t = open(p, encoding="utf-8", errors="ignore").read()
+            except OSError:
+                continue
+            for w in words:
+                if w in t:
+                    hit.append((os.path.relpath(p, d), w))
+    return hit
+
+
+def read_skills(pack=True):
+    """~/.claude/skills から name / description / user-invocable だけ拾う。
+
+    自作スキル（user-invocable: true）は docs/lp/skills/<id>.zip に固めて配る。
+    ★ただし禁止語を1語でも含むものは zip を作らない。公開リポなので取り返しがつかない。
+    """
+    import zipfile
+    out, words = [], blocklist()
+    zdir = os.path.join(OUT_DIR, "skills")
     if not os.path.isdir(SKILLS_DIR):
         return out
     for n in sorted(os.listdir(SKILLS_DIR)):
-        f = os.path.join(SKILLS_DIR, n, "SKILL.md")
+        d = os.path.join(SKILLS_DIR, n)
+        f = os.path.join(d, "SKILL.md")
         if not os.path.isfile(f):
             continue
         m = re.match(r"---\n(.*?)\n---", open(f, encoding="utf-8").read(), re.S)
         fm = m.group(1) if m else ""
         g = lambda k: (re.search(rf"^{k}:\s*(.+)$", fm, re.M) or [None, ""])[1].strip().strip('"')
-        out.append({"id": n, "name": g("name") or n,
-                    "desc": g("description"),
-                    "mine": g("user-invocable") == "true"})
+        s = {"id": n, "name": g("name") or n, "desc": g("description"),
+             "mine": g("user-invocable") == "true", "zip": None, "blocked": 0}
+        if pack and s["mine"]:
+            hit = scan_block(d, words)
+            if hit:
+                s["blocked"] = len(hit)
+                print(f"  ▲ {n}: 禁止語を含むので配布しない → " +
+                      ", ".join(f"{a}:「{b}」" for a, b in hit[:4]))
+            else:
+                os.makedirs(zdir, exist_ok=True)
+                zp = os.path.join(zdir, n + ".zip")
+                with zipfile.ZipFile(zp, "w", zipfile.ZIP_DEFLATED) as z:
+                    for root, _, fs in os.walk(d):
+                        for fn in fs:
+                            p = os.path.join(root, fn)
+                            z.write(p, os.path.join(n, os.path.relpath(p, d)))
+                s["zip"] = f"skills/{n}.zip"
+                s["kb"] = round(os.path.getsize(zp) / 1024)
+        out.append(s)
     return out
 
 CSS = """
@@ -151,6 +200,14 @@ tr:hover td{background:#fafbfc}
 .sk.none{background:#f8fafc;border-color:var(--line);color:#9ca3af}
 .sd{color:var(--mute);font-size:12px}
 tr.rmiss{background:#fef2f2}
+.ghd{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:22px 0 8px;
+  padding-bottom:6px;border-bottom:2px solid #111827}
+.ghd h3{font-size:16px}
+.ghd span{font-size:12px;color:var(--mute)}
+.dlb{font-size:11px;font-weight:800;text-decoration:none;border-radius:6px;
+  padding:4px 10px;background:#111827;color:#fff;white-space:nowrap}
+.dlb:hover{background:#374151}
+.dlx{font-size:11px;color:#9ca3af}
 
 .todo{background:#fff;border:1px solid #fecaca;border-radius:10px;padding:14px 18px;margin-bottom:16px}
 .todo h3{font-size:14px;color:#b91c1c;margin-bottom:6px}
@@ -193,10 +250,8 @@ function sidebar(){
     return `<a data-p="${p.id}" class="${p.id===cur?'on':''}">${esc(p.name)}
       <span class="n ${n?'bad':''}">${n||p.versions.length}</span></a>`}).join('')}
   <div class="cap">しくみ</div>
-  <a data-p="__flow__" class="${cur==='__flow__'?'on':''}">LP制作フロー
-    <span class="n ${gaps?'bad':''}">${gaps?gaps+'欠':STEPS.length}</span></a>
-  <a data-p="__skills__" class="${cur==='__skills__'?'on':''}">Claude スキル
-    <span class="n ${MISSING.length?'bad':''}">${(DATA.skills||[]).length}</span></a>
+  <a data-p="__flow__" class="${cur==='__flow__'?'on':''}">LP制作フローとスキル
+    <span class="n ${gaps||MISSING.length?'bad':''}">${gaps?gaps+'欠':STEPS.length}</span></a>
   <div class="foot">要対応 ${tot} 件<br>更新 ${esc(DATA.updated)}<br>
   台帳 lp-registry.json</div>`;
 }
@@ -207,12 +262,22 @@ function skillTag(id){
   if(!SK[id])return `<span class="sk miss">${esc(id)}／未作成</span>`;
   return `<span class="sk have">${esc(id)}</span>`;
 }
+function dl(id){
+  const s=SK[id];
+  if(!s||!s.mine)return '';
+  if(s.blocked)return '<span class="dlx">配布保留（案件名を含む）</span>';
+  if(!s.zip)return '';
+  return `<a class="dlb" href="${s.zip}" download>⇩ ${esc(id)}.zip ${s.kb}KB</a>`;
+}
+
 function flowPane(){
   if(!STEPS.length)return '<p style="color:var(--mute)">lp-flow.json がありません。</p>';
-  const strip=STEPS.map(s=>`<div class="fs ${s.skill?(SK[s.skill]?'ok':'miss'):'none'}">
-    <b>${s.n}</b>${esc(s.name)}</div>`).join('<span class="fsar">›</span>');
-  const cards=STEPS.map(s=>`<div class="fcard">
-    <div class="fhd"><span class="fno">${s.n}</span><h3>${esc(s.name)}</h3>${skillTag(s.skill)}</div>
+  const GR=(DATA.flow.groups||[{id:null,name:''}]);
+  // 同じスキルが連続する工程で何度もボタンが出ると煩い。最初の1回だけ出す。
+  const shown={};
+  const card=s=>`<div class="fcard">
+    <div class="fhd"><span class="fno">${s.n}</span><h3>${esc(s.name)}</h3>
+      ${skillTag(s.skill)}${(s.skill&&!shown[s.skill]&&(shown[s.skill]=1))?dl(s.skill):''}</div>
     <p class="fwhat">${esc(s.what)}</p>
     <div class="fmeta">
       ${s.tool?`<span><i>道具</i>${esc(s.tool)}</span>`:''}
@@ -220,23 +285,36 @@ function flowPane(){
     </div>
     ${s.risk?`<div class="frisk"><b>過去の事故</b>${esc(s.risk)}</div>`:''}
     ${s.gap?`<div class="fgap"><b>足りない</b>${esc(s.gap)}</div>`:''}
-  </div>`).join('');
+  </div>`;
+  const secs=GR.map(g=>{
+    const st=STEPS.filter(s=>s.group===g.id);
+    if(!st.length)return '';
+    const strip=st.map(s=>`<div class="fs ${s.skill?(SK[s.skill]?'ok':'miss'):'none'}">
+      <b>${s.n}</b>${esc(s.name)}</div>`).join('<span class="fsar">›</span>');
+    return `<div class="ghd"><h3>${esc(g.name)}</h3><span>${esc(g.note||'')}</span></div>
+      <div class="fstrip">${strip}</div>
+      <div style="margin-top:10px">${st.map(card).join('')}</div>`;
+  }).join('');
   const g=STEPS.filter(s=>s.gap).length;
-  return `<div class="fstrip">${strip}</div>
-    <p class="note" style="margin:14px 0 10px">全${STEPS.length}工程のうち、
-      スキルで型になっているのは ${STEPS.filter(s=>s.skill&&SK[s.skill]).length} 工程。
-      ${g?`<b style="color:var(--bad)">型が無い工程が ${g} つ</b>（下の「足りない」）。`:''}</p>
-    ${cards}`;
+  const have=STEPS.filter(s=>s.skill&&SK[s.skill]).length;
+  return `<p class="note" style="margin-bottom:14px">全${STEPS.length}工程のうち、
+      スキルで型になっているのは ${have} 工程。
+      ${g?`<b style="color:var(--bad)">型が無い工程が ${g} つ</b>（各カードの「足りない」）。`:''}</p>
+    ${secs}
+    <div class="ghd" style="margin-top:26px"><h3>スキル一覧</h3>
+      <span>~/.claude/skills/ の中身。自作のものは zip で配布する</span></div>
+    ${skillTable()}`;
 }
 
-/* ── Claude スキル ──────────────────────────────────────── */
-function skillsPane(){
+function skillTable(){
   const list=DATA.skills||[];
   if(!list.length)return '<p style="color:var(--mute)">スキルが見つかりません。</p>';
   const miss=MISSING.map(id=>{
     const at=STEPS.filter(s=>s.skill===id).map(s=>s.n+'. '+s.name).join(' / ');
-    return `<tr class="rmiss"><td><b>${esc(id)}</b></td><td><span class="pill" style="background:var(--bad)">未作成</span></td>
-      <td>フローが呼んでいるのに ~/.claude/skills/ に無い</td><td>${esc(at)}</td></tr>`}).join('');
+    return `<tr class="rmiss"><td><b>${esc(id)}</b></td>
+      <td><span class="pill" style="background:var(--bad)">未作成</span></td>
+      <td>フローが呼んでいるのに ~/.claude/skills/ に無い</td>
+      <td>${esc(at)}</td><td>—</td></tr>`}).join('');
   const rows=list.map(s=>{
     const at=STEPS.filter(x=>x.skill===s.id);
     return `<tr>
@@ -245,10 +323,13 @@ function skillsPane(){
                   :'<span class="pill" style="background:#94a3b8">既製</span>'}</td>
       <td class="sd">${esc(s.desc).slice(0,150)}</td>
       <td>${at.length?at.map(x=>esc(x.n+'. '+x.name)).join('<br>')
-                     :'<span style="color:#9ca3af">フロー未接続</span>'}</td></tr>`}).join('');
+                     :'<span style="color:#9ca3af">フロー未接続</span>'}</td>
+      <td>${s.mine?(dl(s.id)||'<span class="dlx">—</span>')
+                  :'<span class="dlx">既製のため配布しない</span>'}</td></tr>`}).join('');
   const gaps=STEPS.filter(s=>!s.skill&&s.gap);
   return `<table><thead><tr><th>スキル</th><th>種別</th><th>説明</th>
-      <th>LP制作フローのどこで動くか</th></tr></thead><tbody>${miss}${rows}</tbody></table>
+      <th>フローのどこで動くか</th><th>入手</th></tr></thead><tbody>${miss}${rows}</tbody></table>
+    <p class="note" style="margin-top:8px">zip は <code>~/.claude/skills/</code> に展開すれば使える。</p>
     ${gaps.length?`<div class="todo" style="margin-top:16px"><h3>スキルにすべき工程 ${gaps.length}件</h3><ul>${
       gaps.map(s=>`<li><b>${s.n}. ${esc(s.name)}</b> … ${esc(s.gap)}</li>`).join('')}</ul></div>`:''}`;
 }
@@ -324,7 +405,10 @@ function graphPane(p){
       <div class="t">${linkCell(v)}</div>
       <div class="d">${esc(v.date)} · ${lab}${v.merged?'':' · <span style="color:var(--bad)">本線未反映</span>'}</div>
       ${ext}<div class="w">${esc(v.what)}</div></div>`}).join('');
-  return `<div class="graph"><svg class="gsvg"></svg>
+  // 世代が深いと画面に入り切らない。畳むと系統が読めなくなるので幅は変えず、断り書きだけ出す
+  const hint=maxD>=5?`<p class="note" style="margin-bottom:8px">
+    ${maxD+1}世代あります。図は右に続くので横にスクロールしてください。</p>`:'';
+  return `${hint}<div class="graph"><svg class="gsvg"></svg>
     <div class="gcanvas" style="width:${(maxD+1)*(NW+GX)-GX}px;height:${maxR*RH+108}px">${nodes}</div></div>`;
 }
 
@@ -362,15 +446,14 @@ function fbPane(p){
 function render(){
   document.querySelector('.side').innerHTML=sidebar();
   // 「しくみ」の画面は案件に属さないので、先に分岐して描き切る
-  if(cur==='__flow__'||cur==='__skills__'){
-    const isF=cur==='__flow__';
+  if(cur==='__flow__'){
     document.querySelector('.main').innerHTML=`
-      <div class="head"><h2>${isF?'LP制作フロー':'Claude スキル'}</h2>
-        <span class="cl">${isF?'引き合いから本線に取り込むまで':'~/.claude/skills/ の中身とフローの対応'}</span></div>
-      <p class="note">${isF
-        ?'各工程で動くスキルと、過去にそこで何をやらかしたかを1枚にしてある。定義は lp-flow.json。'
-        :'説明は SKILL.md の先頭から拾っている。案件の中身は載せない（このリポジトリは公開）。'}</p>
-      <div class="pane">${isF?flowPane():skillsPane()}</div>`;
+      <div class="head"><h2>LP制作フローとスキル</h2>
+        <span class="cl">問い合わせを受けてから、本線に取り込むまで</span></div>
+      <p class="note">各工程で動くスキルと、過去にそこで何をやらかしたかを1枚にしてある。
+        定義は lp-flow.json、説明は各 SKILL.md の先頭から。
+        案件の中身は載せない（このリポジトリは公開）。</p>
+      <div class="pane">${flowPane()}</div>`;
     return;
   }
   const p=DATA.projects.find(x=>x.id===cur);
@@ -415,6 +498,15 @@ render();
 
 def main():
     reg = json.load(open(REG, encoding="utf-8"))
+    # ★おかしい台帳から画面を作らない。間違った図が出るほうが、出ないより危ない。
+    #   lpv.py build 経由でなく、これを直接叩かれた時のための保険。
+    if os.environ.get("LPV_CHECKED") != "1":   # lpv.py build 経由なら検査済み
+        try:
+            import lpv
+            if lpv.check(reg):
+                sys.exit("\n  ★台帳にエラーがあるので生成しない（詳細は lpv.py check）")
+        except ImportError:
+            print("  ▲ lpv.py が無いので台帳を検査していない")
     reg.pop("_readme", None)
     flow = json.load(open(FLOW, encoding="utf-8")) if os.path.exists(FLOW) else {"steps": []}
     flow.pop("_readme", None)

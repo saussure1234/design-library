@@ -255,8 +255,20 @@ def cmd_build(a):
     say("── 台帳の検査 ──")
     if check(reg):
         sys.exit("\n  ★エラーがあるので生成しない。上を直してからやり直す")
+    # ★このリポジトリは公開。台帳に顧客名や金額が入っていたら push 前に気づけるようにする。
+    bl = os.path.join(ROOT, ".publish-blocklist")
+    if os.path.exists(bl):
+        words = [l.strip() for l in open(bl, encoding="utf-8")
+                 if l.strip() and not l.startswith("#")]
+        for f in ("lp-registry.json", "lp-flow.json"):
+            t = open(os.path.join(ROOT, f), encoding="utf-8").read()
+            hit = sorted({w for w in words if w in t})
+            hit += ["金額らしき記述"] if re.search(r"[0-9][0-9,]{2,}円", t) else []
+            if hit:
+                say(f"  ▲ {f} に公開したくない語が入っている → " + " / ".join(hit), "y")
     r = subprocess.run([sys.executable, os.path.join(ROOT, "build_lp_index.py")],
-                       cwd=ROOT, capture_output=True, text=True)
+                       cwd=ROOT, capture_output=True, text=True,
+                       env={**os.environ, "LPV_CHECKED": "1"})
     print(r.stdout.strip() or r.stderr.strip())
     if r.returncode:
         sys.exit("  ★生成に失敗")
