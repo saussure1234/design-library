@@ -1,0 +1,92 @@
+{
+  "_readme": [
+    "LP の版を管理する台帳。ここが正。ダッシュボードは build_lp_index.py で生成する。",
+    "★ルール",
+    "  1. FBが来たら【直す前に】ここへ1行足す",
+    "  2. 新しいリンクを作ったら【必ず parent（派生元）を書く】",
+    "  3. 完了の定義＝ merged:true（本線に取り込まれた）。確認用リンクの完成は完了ではない",
+    "  4. 作業は git の docs/ 配下で行う。Desktop の複製フォルダを正にしない",
+    "★status  live=本番 / frozen=凍結（上書き禁止） / review=確認用（使い捨て） / draft=未公開",
+    "★このページは noindex。リンクを知っている人だけが見る想定。",
+    "★FBは事実だけ短く書く（公開リポジトリのため、生のやり取りや金額の詳細は載せない）"
+  ],
+  "updated": "2026-09-07",
+  "base_url": "https://saussure1234.github.io/design-library/",
+  "projects": [
+    {
+      "id": "eslclub-online",
+      "name": "ESL club オンライン校",
+      "client": "ESL club",
+      "main": "esl2",
+      "note": "英検に特化した英語塾のLP。全学年向け。",
+      "versions": [
+        {
+          "id": "esl", "date": "2026-08-06", "status": "frozen", "parent": null,
+          "what": "初版。上司レビュー用に渡したリンク", "merged": true,
+          "fb": []
+        },
+        {
+          "id": "esl2", "date": "2026-08-17", "status": "live", "parent": "esl",
+          "what": "本線。クライアント提示中のリンク", "merged": true,
+          "fb": [],
+          "alert": "9月の修正（半額CTA等）が未反映。クライアントはこの版を見ている"
+        },
+        {
+          "id": "esl3", "date": "2026-08-19", "status": "frozen", "parent": "esl2",
+          "what": "演出の実験（開幕の波・背景の色・FVの動き）", "merged": false,
+          "fb": [{ "date": "2026-08-18", "from": "施主", "what": "動きを付けた版も見たい" }]
+        },
+        {
+          "id": "esl4", "date": "2026-08-20", "status": "draft", "parent": "esl3",
+          "what": "作りかけ（38KB）。用途の記録なし・未commit", "merged": false,
+          "fb": [], "alert": "用途不明。要棚卸し"
+        },
+        {
+          "id": "esl5", "date": "2026-08-26", "status": "draft", "parent": "esl3",
+          "what": "見出し違いの試作（部活と両立しながら、英検2級へ。）・未commit", "merged": false,
+          "fb": [], "alert": "用途不明。要棚卸し"
+        },
+        {
+          "id": "esl6", "date": "2026-08-31", "status": "frozen", "parent": "esl3",
+          "what": "用途の記録なし", "merged": false,
+          "fb": [], "alert": "用途不明。要棚卸し"
+        },
+        {
+          "id": "esl7", "date": "2026-09-07", "status": "review", "parent": "esl6",
+          "what": "半額キャンペーンCTAを追加（入会金 22,000円→11,000円 / 9-7〜10-31）", "merged": false,
+          "fb": [{ "date": "2026-09-07", "from": "施主", "what": "半額キャンペーンにCTAを差し替え" }],
+          "alert": "本線 esl2 ではなく Desktop の複製から派生した。本線と1,114行の差"
+        },
+        {
+          "id": "esl9", "date": "2026-09-07", "status": "review", "parent": "esl7",
+          "what": "CTAボタンを緑→オレンジに", "merged": false,
+          "fb": [{ "date": "2026-09-07", "from": "施主", "what": "CTAが地の緑と同色で埋もれている" }]
+        },
+        {
+          "id": "esl10", "date": "2026-09-07", "status": "review", "parent": "esl7",
+          "what": "半額価格を赤に（CTAは緑のまま）", "merged": false,
+          "fb": [{ "date": "2026-09-07", "from": "施主", "what": "最初の赤も見比べたい" }]
+        },
+        {
+          "id": "esl11", "date": "2026-09-07", "status": "review", "parent": "esl7",
+          "what": "半額価格をオレンジに（CTAは緑のまま）", "merged": false,
+          "fb": [{ "date": "2026-09-07", "from": "施主", "what": "オレンジだとどうかも見たい" }]
+        }
+      ]
+    },
+    {
+      "id": "eslclub-kids",
+      "name": "ESL club 小学生向け",
+      "client": "ESL club",
+      "main": null,
+      "note": "オンライン校を土台に、小学生向けへ寄せた版。",
+      "versions": [
+        {
+          "id": "esl8", "date": "2026-09-07", "status": "review", "parent": "esl7",
+          "what": "見出しを小学生に限定 / FVの生徒写真を小学生に差し替え / FVに軽い装飾", "merged": false,
+          "fb": [{ "date": "2026-09-07", "from": "施主", "what": "小学生向けにリデザイン。装飾は軽く" }]
+        }
+      ]
+    }
+  ]
+}

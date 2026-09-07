@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- ★検索避け。リンクを知っている人だけが見る想定 -->
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>LP 版管理</title>
+<style>
+*{box-sizing:border-box;margin:0}
+body{font-family:"Hiragino Sans","Yu Gothic",Meiryo,sans-serif;background:#f6f7f9;color:#1f2937;
+  line-height:1.7;padding:32px 20px 80px}
+.wrap{max-width:960px;margin:0 auto}
+h1{font-size:23px}
+.sub{font-size:13px;color:#6b7280;margin:4px 0 26px}
+.rules{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:14px 18px;font-size:13px;margin-bottom:26px}
+.rules b{display:block;margin-bottom:4px;font-size:13.5px}
+.rules li{margin-left:18px}
+.proj{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:20px 22px;margin-bottom:20px}
+.proj h2{font-size:18px}
+.proj__meta{font-size:12.5px;color:#6b7280;margin:2px 0 16px}
+.tree{display:flex;flex-direction:column;gap:9px}
+.node{border:1px solid #e5e7eb;border-left:4px solid var(--c);background:var(--bg);
+  border-radius:8px;padding:10px 14px}
+.depth-1{margin-left:34px} .depth-2{margin-left:68px} .depth-3{margin-left:102px}
+.node__head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.link{font-weight:800;font-size:15px;color:#0b64c8;text-decoration:none}
+.link:hover{text-decoration:underline}
+.link--dead{color:#9ca3af;font-weight:700;font-size:15px}
+.badge{font-size:11px;font-weight:800;color:#fff;background:var(--c);
+  border-radius:999px;padding:2px 9px}
+.badge--main{background:#111827}
+.merge{font-size:11px;font-weight:700;border-radius:999px;padding:2px 9px;border:1px solid}
+.merge--yes{color:#047a20;border-color:#a7e0b5;background:#f1fbf3}
+.merge--no{color:#b91c1c;border-color:#fecaca;background:#fef2f2}
+.node__meta{font-size:11.5px;color:#6b7280;margin-top:3px}
+.from{color:#9ca3af}
+.node__what{font-size:13.5px;margin-top:5px}
+.fb{margin:7px 0 0 0;list-style:none;font-size:12.5px}
+.fb li{background:#fff;border:1px dashed #d1d5db;border-radius:6px;padding:4px 9px;margin-top:4px}
+.fb-d{color:#6b7280;margin-right:8px}
+.alert{margin-top:7px;font-size:12.5px;color:#b91c1c;background:#fef2f2;
+  border-left:3px solid #dc2626;border-radius:0 6px 6px 0;padding:6px 10px}
+.todo{background:#fff;border:1px solid #fecaca;border-radius:12px;padding:18px 22px}
+.todo h2{font-size:17px;color:#b91c1c}
+.todo li{margin-left:18px;font-size:13.5px;margin-top:6px}
+@media(max-width:640px){
+  .depth-1,.depth-2,.depth-3{margin-left:14px}
+}
+</style>
+</head>
+<body><div class="wrap">
+<h1>LP 版管理</h1>
+<p class="sub">更新 2026-09-07　|　台帳 <code>lp-registry.json</code> から自動生成（このページは直接編集しない）</p>
+
+<div class="rules"><b>運用ルール</b>
+<ol>
+<li>FBが来たら<b>直す前に</b>台帳へ1行足す</li>
+<li>新しいリンクを作ったら<b>必ず派生元を書く</b></li>
+<li><b>完了＝本線に取り込まれた状態</b>。確認用リンクの完成は完了ではない</li>
+<li>作業は git の <code>docs/</code> 配下で行う。Desktopの複製フォルダを正にしない</li>
+</ol></div>
+
+<section class="todo"><h2>要対応</h2><ul><li><b>esl2</b>（ESL club オンライン校）… 9月の修正（半額CTA等）が未反映。クライアントはこの版を見ている</li><li><b>esl4</b>（ESL club オンライン校）… 用途不明。要棚卸し</li><li><b>esl5</b>（ESL club オンライン校）… 用途不明。要棚卸し</li><li><b>esl6</b>（ESL club オンライン校）… 用途不明。要棚卸し</li><li><b>esl7</b>（ESL club オンライン校）… 本線 esl2 ではなく Desktop の複製から派生した。本線と1,114行の差</li></ul></section>
+<section class="proj">
+  <h2>ESL club オンライン校</h2>
+  <p class="proj__meta">ESL club　|　本線：<a href="https://saussure1234.github.io/design-library/esl2/" target="_blank" rel="noopener">esl2/</a>　|　英検に特化した英語塾のLP。全学年向け。</p>
+  <div class="tree"><div class="node depth-0" style="--bg:#f8fafc;--c:#94a3b8">
+  <div class="node__head"><a class="link" href="https://saussure1234.github.io/design-library/esl/" target="_blank" rel="noopener">esl/ ↗</a><span class="badge" style="--c:#94a3b8">凍結</span><span class="merge merge--yes">本線に反映済</span></div>
+  <div class="node__meta">2026-08-06　<span class="from">← 初版</span></div>
+  <p class="node__what">初版。上司レビュー用に渡したリンク</p>
+  
+</div><div class="node depth-1" style="--bg:#f1fbf3;--c:#00B21F">
+  <div class="node__head"><a class="link" href="https://saussure1234.github.io/design-library/esl2/" target="_blank" rel="noopener">esl2/ ↗</a><span class="badge" style="--c:#00B21F">本番</span><span class="badge badge--main">本線</span><span class="merge merge--yes">本線に反映済</span></div>
+  <div class="node__meta">2026-08-17　<span class="from">← esl から</span></div>
+  <p class="node__what">本線。クライアント提示中のリンク</p>
+  <p class="alert">9月の修正（半額CTA等）が未反映。クライアントはこの版を見ている</p>
+</div><div class="node depth-2" style="--bg:#f8fafc;--c:#94a3b8">
+  <div class="node__head"><a class="link" href="https://saussure1234.github.io/design-library/esl3/" target="_blank" rel="noopener">esl3/ ↗</a><span class="badge" style="--c:#94a3b8">凍結</span><span class="merge merge--no">本線に未反映</span></div>
+  <div class="node__meta">2026-08-19　<span class="from">← esl2 から</span></div>
+  <p class="node__what">演出の実験（開幕の波・背景の色・FVの動き）</p>
+  <ul class="fb"><li><span class="fb-d">2026-08-18</span><span class="fb-w">動きを付けた版も見たい</span></li></ul>
+</div><div class="node depth-3" style="--bg:#ffffff;--c:#cbd5e1">
+  <div class="node__head"><span class="link link--dead">esl4/（未commit）</span><span class="badge" style="--c:#cbd5e1">未公開</span><span class="merge merge--no">未公開</span></div>
+  <div class="node__meta">2026-08-20　<span class="from">← esl3 から</span></div>
+  <p class="node__what">作りかけ（38KB）。用途の記録なし・未commit</p>
+  <p class="alert">用途不明。要棚卸し</p>
+</div><div class="node depth-3" style="--bg:#ffffff;--c:#cbd5e1">
+  <div class="node__head"><span class="link link--dead">esl5/（未commit）</span><span class="badge" style="--c:#cbd5e1">未公開</span><span class="merge merge--no">未公開</span></div>
+  <div class="node__meta">2026-08-26　<span class="from">← esl3 から</span></div>
+  <p class="node__what">見出し違いの試作（部活と両立しながら、英検2級へ。）・未commit</p>
+  <p class="alert">用途不明。要棚卸し</p>
+</div><div class="node depth-3" style="--bg:#f8fafc;--c:#94a3b8">
+  <div class="node__head"><a class="link" href="https://saussure1234.github.io/design-library/esl6/" target="_blank" rel="noopener">esl6/ ↗</a><span class="badge" style="--c:#94a3b8">凍結</span><span class="merge merge--no">本線に未反映</span></div>
+  <div class="node__meta">2026-08-31　<span class="from">← esl3 から</span></div>
+  <p class="node__what">用途の記録なし</p>
+  <p class="alert">用途不明。要棚卸し</p>
+</div><div class="node depth-4" style="--bg:#fffbeb;--c:#f59e0b">
+  <div class="node__head"><a class="link" href="https://saussure1234.github.io/design-library/esl7/" target="_blank" rel="noopener">esl7/ ↗</a><span class="badge" style="--c:#f59e0b">確認用</span><span class="merge merge--no">本線に未反映</span></div>
+  <div class="node__meta">2026-09-07　<span class="from">← esl6 から</span></div>
+  <p class="node__what">半額キャンペーンCTAを追加（入会金 22,000円→11,000円 / 9-7〜10-31）</p>
+  <ul class="fb"><li><span class="fb-d">2026-09-07</span><span class="fb-w">半額キャンペーンにCTAを差し替え</span></li></ul><p class="alert">本線 esl2 ではなく Desktop の複製から派生した。本線と1,114行の差</p>
+</div><div class="node depth-5" style="--bg:#fffbeb;--c:#f59e0b">
+  <div class="node__head"><a class="link" href="https://saussure1234.github.io/design-library/esl9/" target="_blank" rel="noopener">esl9/ ↗</a><span class="badge" style="--c:#f59e0b">確認用</span><span class="merge merge--no">本線に未反映</span></div>
+  <div class="node__meta">2026-09-07　<span class="from">← esl7 から</span></div>
+  <p class="node__what">CTAボタンを緑→オレンジに</p>
+  <ul class="fb"><li><span class="fb-d">2026-09-07</span><span class="fb-w">CTAが地の緑と同色で埋もれている</span></li></ul>
+</div><div class="node depth-5" style="--bg:#fffbeb;--c:#f59e0b">
+  <div class="node__head"><a class="link" href="https://saussure1234.github.io/design-library/esl10/" target="_blank" rel="noopener">esl10/ ↗</a><span class="badge" style="--c:#f59e0b">確認用</span><span class="merge merge--no">本線に未反映</span></div>
+  <div class="node__meta">2026-09-07　<span class="from">← esl7 から</span></div>
+  <p class="node__what">半額価格を赤に（CTAは緑のまま）</p>
+  <ul class="fb"><li><span class="fb-d">2026-09-07</span><span class="fb-w">最初の赤も見比べたい</span></li></ul>
+</div><div class="node depth-5" style="--bg:#fffbeb;--c:#f59e0b">
+  <div class="node__head"><a class="link" href="https://saussure1234.github.io/design-library/esl11/" target="_blank" rel="noopener">esl11/ ↗</a><span class="badge" style="--c:#f59e0b">確認用</span><span class="merge merge--no">本線に未反映</span></div>
+  <div class="node__meta">2026-09-07　<span class="from">← esl7 から</span></div>
+  <p class="node__what">半額価格をオレンジに（CTAは緑のまま）</p>
+  <ul class="fb"><li><span class="fb-d">2026-09-07</span><span class="fb-w">オレンジだとどうかも見たい</span></li></ul>
+</div></div>
+</section><section class="proj">
+  <h2>ESL club 小学生向け</h2>
+  <p class="proj__meta">ESL club　|　本線：未設定　|　オンライン校を土台に、小学生向けへ寄せた版。</p>
+  <div class="tree"><div class="node depth-0" style="--bg:#fffbeb;--c:#f59e0b">
+  <div class="node__head"><a class="link" href="https://saussure1234.github.io/design-library/esl8/" target="_blank" rel="noopener">esl8/ ↗</a><span class="badge" style="--c:#f59e0b">確認用</span><span class="merge merge--no">本線に未反映</span></div>
+  <div class="node__meta">2026-09-07　<span class="from">← esl7 から</span></div>
+  <p class="node__what">見出しを小学生に限定 / FVの生徒写真を小学生に差し替え / FVに軽い装飾</p>
+  <ul class="fb"><li><span class="fb-d">2026-09-07</span><span class="fb-w">小学生向けにリデザイン。装飾は軽く</span></li></ul>
+</div></div>
+</section>
+</div></body></html>
