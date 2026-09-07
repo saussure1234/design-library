@@ -218,7 +218,11 @@ def compose_from_project(slug):
         line = cfg["lines"][i] if i < len(cfg["lines"]) else ""
         shots = []
         for sh in cfg["shots"]:
-            t = sh["start"]
+            # ★境界ぴったりに置いたショットを取りこぼさない。
+            #   project.json の時刻は小数2桁で書くのが普通なので、
+            #   無音の中央（小数3桁）より数ミリ秒手前になることがある。
+            #   それで1枠ずれると、シートの割り当てだけが実際と食い違う。
+            t = sh["start"] + 0.03
             if not (bounds[i] <= t < bounds[i + 1]):
                 continue
             end = sh.get("end") or tm["total"] + cfg.get("tail", 0.55)
@@ -658,6 +662,11 @@ def cmd_update(a):
         _, _, meta = publish_files(v["id"], a.src)
         v["media"] = meta
         v["source"] = tilde(a.src)
+        # ★台本だけの版に動画が付いたら、それは「未公開」ではなくなる。
+        #   draft のまま media を持つと、検査が「実体が無い」と食い違う
+        if v["status"] == "draft":
+            v["status"] = "internal"
+            say("    （台本だけの版に動画が付いたので『公開（自分用）』にした）", "y")
     v["what"] = a.what
     v["date"] = TODAY
     save(reg)
