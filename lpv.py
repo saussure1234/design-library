@@ -13,7 +13,7 @@
     python3 lpv.py ls [案件id]                     いま何がどうなっているか
     python3 lpv.py new-project <案件id> --name ... --client ...
     python3 lpv.py new <版id> -p <案件id> --from <派生元> --why "..." [--src DIR]
-    python3 lpv.py fb <版id> --who 施主 --what "..."      ★直す前に打つ
+    python3 lpv.py fb <版id> --who <誰が> --what "..."     ★直す前に打つ
     python3 lpv.py merge <版id>                    本線に取り込んだ
     python3 lpv.py check                           台帳の検査だけ
     python3 lpv.py build [--push]                  検査→ツール生成→(--pushで公開)
@@ -174,7 +174,7 @@ def cmd_new(a):
         if p.get("main") and parent != p["main"] and not a.branch:
             say(f"\n  ▲ 本線は '{p['main']}' なのに、'{parent}' から派生させようとしている。", "y")
             say("    このまま進めると本線から外れた枝で作業が続き、", "y")
-            say("    施主が見ているリンクだけ古いまま取り残される（前回これで事故った）。", "y")
+            say("    クライアントが見ているリンクだけ古いまま取り残される（前回これで事故った）。", "y")
             say("\n    本当に枝を伸ばすなら --branch を付けて実行し直す。")
             say(f"    本線を乗り換えるなら先に：python3 lpv.py merge {parent}")
             sys.exit(1)
@@ -245,7 +245,7 @@ def cmd_merge(a):
             o.pop("alert", None)
     save(reg)
     say(f"  ○ 本線を {old or '—'} → {a.id} にした。{a.id} は反映済み・本番", "g")
-    say(f"    施主に渡すリンクはこれ: {vurl(reg, v)}")
+    say(f"    クライアントに渡すリンクはこれ: {vurl(reg, v)}")
 
 
 def cmd_rm_project(a):
@@ -340,7 +340,10 @@ def main():
     s.set_defaults(f=cmd_new)
 
     s = sp.add_parser("fb", help="FBを記録する（直す前に打つ）")
-    s.add_argument("id"); s.add_argument("--who", default="施主")
+    s.add_argument("id")
+    s.add_argument("--who", default="クライアント",
+                   help="実際に言った相手。クライアント / 上司 / So など。"
+                        "まとめて「クライアント」にすると、後で誰の判断か分からなくなる")
     s.add_argument("--what", required=True); s.add_argument("--date")
     s.set_defaults(f=cmd_fb)
 
