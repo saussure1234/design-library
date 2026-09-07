@@ -141,6 +141,19 @@ def cmd_new_project(a):
     say(f"    次: python3 lpv.py new <版id> -p {a.id} --root --why \"初版\" --src <フォルダ>")
 
 
+def cmd_rename_project(a):
+    """案件の表示名などを直す。台帳を手で開かないための入口。"""
+    reg = load()
+    p = proj(reg, a.id)
+    for k in ("name", "client", "note"):
+        v = getattr(a, k)
+        if v is not None:
+            old = p.get(k, "")
+            p[k] = v
+            say(f"  ○ {k}: {old} → {v}", "g")
+    save(reg)
+
+
 def cmd_new(a):
     reg = load()
     p = proj(reg, a.project)
@@ -328,7 +341,11 @@ def main():
     s.add_argument("--client", required=True); s.add_argument("--note")
     s.set_defaults(f=cmd_new_project)
 
-    s = sp.add_parser("new", help="版を作る（派生元は省略できない）")
+    s = sp.add_parser("rename-project", help="案件の名前・クライアント・メモを直す")
+    s.add_argument("id"); s.add_argument("--name"); s.add_argument("--client"); s.add_argument("--note")
+    s.set_defaults(f=cmd_rename_project)
+
+    s = sp.add_parser("new", help="リンクを作る（派生元は省略できない）")
     s.add_argument("id")
     s.add_argument("-p", "--project", required=True)
     s.add_argument("--from", dest="frm", help="派生元の版id")
