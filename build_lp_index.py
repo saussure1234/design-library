@@ -172,24 +172,52 @@ tr:hover td{background:#fafbfc}
 .fbrow .wh{font-size:13.5px}
 .fbrow .to{font-size:11.5px;color:var(--mute);margin-top:2px}
 
-/* LP制作フロー */
-.fstrip{display:flex;align-items:center;gap:4px;flex-wrap:wrap;background:#fff;
-  border:1px solid var(--line);border-radius:10px;padding:12px 14px}
-.fs{font-size:11.5px;border-radius:6px;padding:5px 9px;border:1px solid var(--line);white-space:nowrap}
-.fs b{display:inline-block;min-width:14px;font-weight:800}
-.fs.ok{background:#f1fbf3;border-color:#a7e0b5;color:#047a20}
-.fs.miss{background:#fef2f2;border-color:#fecaca;color:#b91c1c}
-.fs.none{background:#f8fafc;color:var(--mute)}
-.fsar{color:#cbd5e1;font-size:13px}
-.fcard{background:#fff;border:1px solid var(--line);border-radius:10px;
-  padding:13px 16px;margin-bottom:10px}
-.fhd{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.fhd h3{font-size:15px}
-.fno{width:23px;height:23px;flex:none;border-radius:50%;background:#111827;color:#fff;
-  font-size:12px;font-weight:800;display:grid;place-items:center}
-.fwhat{font-size:13px;margin-top:5px}
-.fmeta{display:flex;gap:18px;flex-wrap:wrap;margin-top:7px;font-size:12px;color:var(--mute)}
-.fmeta i{font-style:normal;font-weight:700;margin-right:6px;color:#9ca3af}
+/* LP制作フロー ─ 縦のフローチャート */
+.fbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-size:12.5px}
+.allb{font-size:11.5px;font-weight:700;border:1px solid var(--line);background:#f8fafc;
+  border-radius:6px;padding:5px 12px;cursor:pointer;color:var(--ink)}
+.allb:hover{background:#eef2f6}
+.lane{display:grid;grid-template-columns:minmax(0,1fr) 200px;column-gap:16px;row-gap:30px}
+.lnk{height:26px;border-left:2px dashed #cbd5e1;margin-left:calc((100% - 216px)/2)}
+
+.fbox{grid-column:1;position:relative;background:#fff;border:1px solid var(--line);
+  border-left:4px solid #111827;border-radius:10px;padding:10px 14px;cursor:pointer}
+.fbox:hover{border-color:#94a3b8}
+.fbox.gapy{border-left-color:var(--review)}
+/* 次の箱へ下りる矢印。最後の箱には出さない */
+.fbox::before{content:"";position:absolute;left:50%;bottom:-30px;width:2px;height:20px;
+  background:#cbd5e1;transform:translateX(-50%)}
+.fbox::after{content:"▼";position:absolute;left:50%;bottom:-32px;transform:translateX(-50%);
+  font-size:10px;line-height:1;color:#cbd5e1}
+.fbox.end::before,.fbox.end::after{display:none}
+.fbh{display:flex;align-items:center;gap:9px}
+.fbh b{font-size:14px;flex:1;min-width:0}
+.fchev{color:#9ca3af;font-size:11px;flex:none}
+.fbox.open .fchev{transform:rotate(180deg)}
+.fno{width:22px;height:22px;flex:none;border-radius:50%;background:#111827;color:#fff;
+  font-size:11.5px;font-weight:800;display:grid;place-items:center}
+.fone{font-size:12.5px;color:var(--mute);margin-top:4px;
+  display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+.fbox.open .fone{-webkit-line-clamp:99;color:var(--ink)}
+.fdet{margin-top:8px;border-top:1px solid #f0f2f4;padding-top:8px}
+.fm{font-size:12px;color:var(--mute);margin-bottom:3px}
+.fm i{font-style:normal;font-weight:700;margin-right:7px;color:#9ca3af}
+.skm{display:none;font-size:10.5px;color:#9ca3af}
+
+/* 右側：スキルの担当範囲 */
+.brk{grid-column:2;display:flex;flex-direction:column;align-items:flex-start;gap:7px;
+  justify-content:center;border:1.5px solid;border-left-width:5px;border-radius:0 10px 10px 0;
+  padding:10px 12px}
+.brk.ok{border-color:#a7e0b5;background:#f1fbf3}
+.brk.miss{border-color:#fecaca;background:#fef2f2}
+.brk.none{border-color:#e5e7eb;background:#f8fafc}
+.bn{font-size:12px;font-weight:800}
+.brk.ok .bn{color:#047a20}
+.brk.miss .bn{color:#b91c1c}
+.brk.none .bn{color:#9ca3af}
+.bx{font-size:10.5px;font-weight:700}
+
 .frisk,.fgap{font-size:12.5px;margin-top:8px;padding:8px 11px;border-radius:0 7px 7px 0;line-height:1.6}
 .frisk{background:#fef2f2;border-left:3px solid var(--bad);color:#7f1d1d}
 .fgap{background:#fffbeb;border-left:3px solid var(--review);color:#78350f}
@@ -219,6 +247,11 @@ tr.rmiss{background:#fef2f2}
   .app{flex-direction:column}
   .side{width:auto;height:auto;position:static}
   .main{padding:16px}
+  /* 幅が足りないのでブラケットは畳み、担当スキルを箱の中に出す */
+  .lane{grid-template-columns:1fr}
+  .brk{display:none}
+  .skm{display:inline}
+  .lnk{margin-left:calc(50% - 1px)}
 }
 """
 
@@ -270,36 +303,58 @@ function dl(id){
   return `<a class="dlb" href="${s.zip}" download>⇩ ${esc(id)}.zip ${s.kb}KB</a>`;
 }
 
+/* 工程を縦に並べ、矢印でつなぎ、右側にスキルの担当範囲をブラケットで括る。
+   ★工程が16もあるので、箱には「番号・名前・何をやるか1行」だけ出す。
+     出るもの／過去の事故／足りない は、箱を押した時だけ開く。
+     全部出すと読む気が失せる（前の版がそれで分かりにくかった）。 */
 function flowPane(){
   if(!STEPS.length)return '<p style="color:var(--mute)">lp-flow.json がありません。</p>';
   const GR=(DATA.flow.groups||[{id:null,name:''}]);
-  // 同じスキルが連続する工程で何度もボタンが出ると煩い。最初の1回だけ出す。
-  const shown={};
-  const card=s=>`<div class="fcard">
-    <div class="fhd"><span class="fno">${s.n}</span><h3>${esc(s.name)}</h3>
-      ${skillTag(s.skill)}${(s.skill&&!shown[s.skill]&&(shown[s.skill]=1))?dl(s.skill):''}</div>
-    <p class="fwhat">${esc(s.what)}</p>
-    <div class="fmeta">
-      ${s.tool?`<span><i>道具</i>${esc(s.tool)}</span>`:''}
-      ${s.out?`<span><i>出るもの</i>${esc(s.out)}</span>`:''}
-    </div>
-    ${s.risk?`<div class="frisk"><b>過去の事故</b>${esc(s.risk)}</div>`:''}
-    ${s.gap?`<div class="fgap"><b>足りない</b>${esc(s.gap)}</div>`:''}
-  </div>`;
+  const shown={};                       // zipボタンは同じスキルで1回だけ
+
+  const box=(s,i,last)=>`<div class="fbox${last?' end':''}${s.gap?' gapy':''}"
+      style="grid-row:${i+1}" data-step="${s.n}">
+    <div class="fbh"><span class="fno">${s.n}</span><b>${esc(s.name)}</b>
+      <span class="skm">${s.skill?esc(s.skill):'型なし'}</span>
+      <span class="fchev">▾</span></div>
+    <p class="fone">${esc(s.what)}</p>
+    <div class="fdet" hidden>
+      ${s.tool?`<div class="fm"><i>道具</i>${esc(s.tool)}</div>`:''}
+      ${s.out?`<div class="fm"><i>出るもの</i>${esc(s.out)}</div>`:''}
+      ${s.risk?`<div class="frisk"><b>過去の事故</b>${esc(s.risk)}</div>`:''}
+      ${s.gap?`<div class="fgap"><b>足りない</b>${esc(s.gap)}</div>`:''}
+    </div></div>`;
+
+  // 同じスキルが続く区間をまとめて1本のブラケットにする
+  const brackets=st=>{
+    const out=[]; let i=0;
+    while(i<st.length){
+      let j=i; while(j+1<st.length && st[j+1].skill===st[i].skill) j++;
+      const id=st[i].skill;
+      const cls=id?(SK[id]?'ok':'miss'):'none';
+      const lab=id?(SK[id]?esc(id):esc(id)+'<br><span class="bx">未作成</span>')
+                 :'<span class="bx">スキルなし</span>';
+      const b=id&&!shown[id]&&(shown[id]=1)?dl(id):'';
+      out.push(`<div class="brk ${cls}" style="grid-row:${i+1}/${j+2}">
+        <span class="bn">${lab}</span>${b}</div>`);
+      i=j+1;
+    }
+    return out.join('');
+  };
+
   const secs=GR.map(g=>{
     const st=STEPS.filter(s=>s.group===g.id);
     if(!st.length)return '';
-    const strip=st.map(s=>`<div class="fs ${s.skill?(SK[s.skill]?'ok':'miss'):'none'}">
-      <b>${s.n}</b>${esc(s.name)}</div>`).join('<span class="fsar">›</span>');
     return `<div class="ghd"><h3>${esc(g.name)}</h3><span>${esc(g.note||'')}</span></div>
-      <div class="fstrip">${strip}</div>
-      <div style="margin-top:10px">${st.map(card).join('')}</div>`;
-  }).join('');
+      <div class="lane">${st.map((s,i)=>box(s,i,i===st.length-1)).join('')}${brackets(st)}</div>`;
+  }).join('<div class="lnk"></div>');
+
   const g=STEPS.filter(s=>s.gap).length;
   const have=STEPS.filter(s=>s.skill&&SK[s.skill]).length;
-  return `<p class="note" style="margin-bottom:14px">全${STEPS.length}工程のうち、
-      スキルで型になっているのは ${have} 工程。
-      ${g?`<b style="color:var(--bad)">型が無い工程が ${g} つ</b>（各カードの「足りない」）。`:''}</p>
+  return `<div class="fbar">
+      <span>全${STEPS.length}工程 ／ 型になっているのは ${have} 工程
+      ${g?`／ <b style="color:var(--bad)">型が無い工程 ${g}</b>`:''}</span>
+      <button class="allb" data-all="1">すべて開く</button></div>
     ${secs}
     <div class="ghd" style="margin-top:26px"><h3>スキル一覧</h3>
       <span>~/.claude/skills/ の中身。自作のものは zip で配布する</span></div>
@@ -489,7 +544,17 @@ function render(){
 
 document.addEventListener('click',e=>{
   const a=e.target.closest('.side a'); if(a){cur=a.dataset.p;tab='list';render();return;}
-  const b=e.target.closest('.tabs button'); if(b){tab=b.dataset.t;render();}
+  const b=e.target.closest('.tabs button'); if(b){tab=b.dataset.t;render();return;}
+  // フローチャート：全部開く／閉じる
+  const ab=e.target.closest('.allb');
+  if(ab){const on=ab.dataset.all==='1';
+    document.querySelectorAll('.fbox').forEach(x=>{
+      x.classList.toggle('open',on); x.querySelector('.fdet').hidden=!on;});
+    ab.dataset.all=on?'0':'1'; ab.textContent=on?'すべて閉じる':'すべて開く'; return;}
+  // 箱を押したら詳細（出るもの・過去の事故・足りない）を開く
+  const fb=e.target.closest('.fbox');
+  if(fb&&!e.target.closest('a')){const o=fb.classList.toggle('open');
+    fb.querySelector('.fdet').hidden=!o;}
 });
 addEventListener('resize',()=>{if(tab==='graph')drawLines(DATA.projects.find(x=>x.id===cur));});
 render();
