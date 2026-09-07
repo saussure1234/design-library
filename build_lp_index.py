@@ -221,6 +221,9 @@ table.sheet tr:hover .vcol{background:#fbfcfd}
   border:1px solid #eef0f3;padding:6px}
 .sheet .vid{font-weight:800;font-size:13px}
 .sheet .vmeta{font-size:10.5px;color:var(--mute);margin-top:2px}
+.sheet tr.planned .tx{color:#4b5563}
+.sheet .todo-pill{display:inline-block;font-size:10px;font-weight:800;border-radius:999px;
+  padding:1px 7px;background:#eef2f7;border:1px solid #dbe2ea;color:#5b636d;margin-top:3px}
 .sheet tr.tmpl td{background:#fffdf5}
 .sheet tr.tmpl:hover td,.sheet tr.tmpl:hover .vcol{background:#fffaeb}
 .sheet tr.tmpl .vcol{background:#fffdf5}
@@ -579,9 +582,10 @@ function secCell(v,s){
   if(!s)return '<td class="sec"><span style="color:#9ca3af">—</span></td>';
   if(s.rule)return `<td class="sec"><div class="rule">${esc(s.rule)}</div>
     <div class="tx" style="color:var(--mute);margin-top:6px">${esc(s.text||'')}</div></td>`;
+  const planned=v.comp&&v.comp.planned;      // まだ作っていない＝素材が決まっていない
   const img=s.image
     ? `<img class="th" src="../video/${esc(v.id)}/parts/${esc(s.image)}" alt="" loading="lazy">`
-    : '<div class="noimg">画像なし（アバターのみ）</div>';
+    : `<div class="noimg">${planned?'素材未定':'画像なし（アバターのみ）'}</div>`;
   const chain=(s.shots||[]).map(x=>x.kind==='image'
     ? `<span class="sh img">${esc(x.file)} ${x.dur}s</span>`
     : `<span class="sh">${esc(x.label)} ${x.dur}s</span>`).join('');
@@ -602,10 +606,12 @@ function sheetPane(p,R){
     const tmpl=!!c.template;
     const by={}; (c.sections||[]).forEach(s=>by[s.key]=s);
     const parts=`../video/${esc(v.id)}/parts/`;
-    return `<tr class="${tmpl?'tmpl':''}">
+    const planned=!!c.planned;
+    return `<tr class="${tmpl?'tmpl':''}${planned?' planned':''}">
       <td class="vcol">
         <div class="vid">${tmpl?'テンプレ':linkCell(v,R)}</div>
-        <div class="vmeta">${esc(v.date)}${v.media&&v.media.duration?' · '+mmss(v.media.duration):''}</div>
+        <div class="vmeta">${esc(v.date)}${v.media&&v.media.duration?' · '+mmss(v.media.duration):''}
+          ${planned?'<br><span class="todo-pill">台本のみ</span>':''}</div>
       </td>
       ${SECS.map(([k])=>secCell(v,by[k])).join('')}
       ${tmpl
@@ -613,6 +619,9 @@ function sheetPane(p,R){
         ? `<td class="sm"><div class="rule">全カット左上に固定</div></td>
            <td class="av"><div class="rule">正面（引き）と横（寄り）の2カメ。
              セクションをまたいで交代させる</div></td>`
+        : planned
+        ? `<td class="sm"><span style="color:#9ca3af">未定</span></td>
+           <td class="av"><span style="color:#9ca3af">未定</span></td>`
         : `<td class="sm">${c.logo?`<img class="logo" src="${parts}logo.png" alt="ロゴ" loading="lazy">`
                                   :'<span style="color:#9ca3af">—</span>'}</td>
            <td class="av"><div class="avpair">
@@ -796,8 +805,11 @@ function render(){
   const body = tab==='sheet'?sheetPane(p,R)
              : tab==='list' ?listPane(p,R)
              : tab==='graph'?graphPane(p,R) : fbPane(p);
+  // テンプレは「未制作の本数」に数えない。作る対象ではなく型なので
+  const nd = p.versions.filter(v=>v.status==='draft'&&!(v.comp&&v.comp.template)).length;
+  const nmade = p.versions.filter(v=>v.status!=='draft').length;
   const count = R.kind==='vid'
-    ? `${p.versions.length}本 / 計 ${mmss(vsec(p))}`
+    ? `${nmade}本 / 計 ${mmss(vsec(p))}` + (nd?`　未制作 ${nd}`:'')
     : `リンク ${p.versions.length}本`;
   document.querySelector('.main').innerHTML=`
     <div class="head"><h2>${esc(p.name)}</h2>

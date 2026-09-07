@@ -237,12 +237,90 @@ def publish_parts(vid, slug, comp):
             _thumb(src, os.path.join(d, out), at=probe(src)["duration"] * 0.4)
 
 
+def parse_tsv(path):
+    """スプレッドシートから貼った台本を読む。
+
+    1行＝1本。タブ区切りで「文面・字数・文面・字数…」と並ぶ形をそのまま受ける。
+    ★空セルと数字セルは読み飛ばして、残った文字列を頭から Hook/Body1/Body2/CTA に当てる。
+      列の空き方はシートによって変わるので、位置ではなく「数字でないもの」で拾う。
+    ★字数はシート側の数字を信じない。文面から数え直して、食い違ったらその場で言う。
+    """
+    rows = []
+    for n, line in enumerate(open(path, encoding="utf-8"), 1):
+        line = line.rstrip("\n")
+        if not line.strip():
+            continue
+        cells = [c.strip() for c in line.split("\t")]
+        texts = [c for c in cells if c and not re.fullmatch(r"[0-9]+", c)]
+        nums = [int(c) for c in cells if re.fullmatch(r"[0-9]+", c)]
+        if len(texts) != len(SEC):
+            sys.exit(f"  ★{n}行目: 文面が{len(texts)}個。{len(SEC)}個"
+                     f"（{' / '.join(SEC_LABEL[k] for k in SEC)}）で書く\n    → {texts}")
+        rows.append((texts, nums))
+    if not rows:
+        sys.exit(f"  ★{path} に台本が無い")
+    return rows
+
+
+def cmd_plan(a):
+    """台本だけの版をまとめて登録する。動画はまだ無い＝draft。"""
+    reg = load()
+    p = proj(reg, a.project)
+    vs = allvers(reg)
+    if a.parent and a.parent not in vs:
+        sys.exit(f"  ★派生元 '{a.parent}' が台帳に無い")
+    rows = parse_tsv(a.tsv)
+    made = []
+    for i, (texts, nums) in enumerate(rows):
+        vid = a.prefix if i == 0 else f"{a.prefix}{i + 1}"
+        if vid in vs:
+            sys.exit(f"  ★版id '{vid}' はもうある。--prefix を変える")
+        secs = []
+        for j, key in enumerate(SEC):
+            txt = texts[j]
+            secs.append({"key": key, "text": txt, "chars": len(txt),
+                         "image": None, "shots": []})
+            if j < len(nums) and nums[j] != len(txt):
+                say(f"    ▲ {vid} {SEC_LABEL[key]}: シートは{nums[j]}字だが"
+                    f"数え直すと{len(txt)}字", "y")
+        v = {"id": vid, "date": TODAY, "status": "draft", "parent": a.parent,
+             "what": (a.why or "") + ("　" if a.why else "") + f"Hook「{texts[0]}」",
+             "fb": [],
+             "comp": {"work": None, "logo": None, "avatar": None,
+                      "planned": True, "sections": secs}}
+        p["versions"].append(v)
+        made.append(v)
+        vs[vid] = (p, v)
+    save(reg)
+    say(f"  ○ 台本 {len(made)}本を登録した（未公開・動画なし）", "g")
+    for v in made:
+        say(f"    {v['id']:<8} " + " / ".join(
+            f"{s['chars']}字" for s in v["comp"]["sections"]))
+        for s in v["comp"]["sections"]:
+            say(f"       {SEC_LABEL[s['key']]:<6} {s['text']}")
+    # 全部の版で同じ文面になっている枠＝変えていない枠。何を試しているのかを言う
+    cols = {k: {v["comp"]["sections"][i]["text"] for v in made}
+            for i, k in enumerate(SEC)}
+    var = [SEC_LABEL[k] for k in SEC if len(cols[k]) > 1]
+    fix = [SEC_LABEL[k] for k in SEC if len(cols[k]) == 1]
+    if var and fix:
+        say(f"    → 変えているのは {'・'.join(var)} だけ。"
+            f"{'・'.join(fix)} は全本共通＝{'・'.join(var)}のA/Bになっている")
+
+
 def cmd_compose(a):
     reg = load()
     vs = allvers(reg)
     if a.id not in vs:
         sys.exit(f"  ★版 '{a.id}' が台帳に無い")
     p, v = vs[a.id]
+    if a.copy:
+        if a.copy not in vs:
+            sys.exit(f"  ★写し元 '{a.copy}' が台帳に無い")
+        v["comp"] = json.loads(json.dumps(vs[a.copy][1].get("comp") or {}))
+        save(reg)
+        say(f"  ○ {a.id} の構成を {a.copy} から写した", "g")
+        return
     if a.json:
         comp = json.load(open(a.json, encoding="utf-8"))
         slug = comp.get("work")
@@ -443,6 +521,20 @@ def cmd_new(a):
         sys.exit("  ★--from（派生元）が要る。初版なら --root を付ける")
     if a.parent and a.parent not in vs:
         sys.exit(f"  ★派生元 '{a.parent}' が台帳に無い")
+
+    # ★動画がまだ無い版（型そのもの・これから作る台本）も版として持つ。
+    #   台本の段階から系統に載せておかないと、あとで「どの案から派生したか」が消える。
+    if getattr(a, "draft", False):
+        if a.src:
+            sys.exit("  ★--draft と --src は一緒に使えない")
+        v = {"id": a.id, "date": TODAY, "status": "draft",
+             "parent": a.parent, "what": a.why, "fb": []}
+        p["versions"].append(v)
+        save(reg)
+        say(f"  ○ {a.id} を作った（未公開・動画なし）", "g")
+        return v
+    if not a.src:
+        sys.exit("  ★--src が要る（動画のない版なら --draft）")
     if not os.path.exists(a.src):
         sys.exit(f"  ★元動画が無い: {a.src}")
 
@@ -457,6 +549,7 @@ def cmd_new(a):
     say(f"  ○ {a.id} を作った  {meta['duration']}秒 "
         f"{round(meta['bytes']/1e6,1)}MB（原本 {round(os.path.getsize(a.src)/1e6,1)}MB）", "g")
     say(f"    {vurl(reg, v)}")
+    return v
 
 
 def cmd_fb(a):
@@ -511,7 +604,7 @@ def cmd_update(a):
         if not os.path.exists(src):
             sys.exit(f"  ★元動画が無い: {src}")
         ns = argparse.Namespace(id=nid, project=p["id"], parent=v["id"],
-                                root=False, why=a.what, src=src)
+                                root=False, draft=False, why=a.what, src=src)
         return cmd_new(ns)
     if a.src:
         if not os.path.exists(a.src):
@@ -601,7 +694,9 @@ def main():
     s = sub.add_parser("new")
     s.add_argument("id"); s.add_argument("-p", "--project", required=True)
     s.add_argument("--from", dest="parent"); s.add_argument("--root", action="store_true")
-    s.add_argument("--why", required=True); s.add_argument("--src", required=True)
+    s.add_argument("--why", required=True); s.add_argument("--src")
+    s.add_argument("--draft", action="store_true",
+                   help="動画のない版（型・これから作る台本）を作る")
     s.set_defaults(f=cmd_new)
     s = sub.add_parser("fb"); s.add_argument("id"); s.add_argument("--what", required=True)
     s.set_defaults(f=cmd_fb)
@@ -612,7 +707,15 @@ def main():
     s.add_argument("--json", help="構成を手で書いた json（project.json が無い版用）")
     s.add_argument("--parts-from", dest="parts_from",
                    help="サムネだけ別の作業場から取る（素材が共通の時）")
+    s.add_argument("--copy", help="別の版の構成をそのまま写す（型を配る時）")
     s.set_defaults(f=cmd_compose)
+    s = sub.add_parser("plan", help="台本だけの版をまとめて登録（TSVを貼る）")
+    s.add_argument("project")
+    s.add_argument("--tsv", required=True, help="1行=1本。文面と字数がタブ区切り")
+    s.add_argument("--prefix", required=True, help="版idの頭（例 mpure → mpure/mpure2/mpure3）")
+    s.add_argument("--from", dest="parent", help="派生元の版id")
+    s.add_argument("--why", help="what の頭に付ける説明")
+    s.set_defaults(f=cmd_plan)
     s = sub.add_parser("update")
     s.add_argument("id"); s.add_argument("--what", required=True); s.add_argument("--src")
     s.set_defaults(f=cmd_update)

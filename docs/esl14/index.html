@@ -3332,14 +3332,20 @@ document.documentElement.classList.add('fv-anim');
 .sec.pmp{ background:var(--c-bg) }
 
 /* ── 白カードをやめて、2列 × 2行に組み替える ─────────── */
+/* ★生成では「緑の細枠で囲んだ白いカード」の中に緑の面が入っている。
+   枠を落としていたのは再現漏れ。カードごと作る。
+   overflow:hidden で、緑の面がカードの角丸に沿って切れる。 */
 .tone-brand .vhr__item{
   --pb-slant: 64px;                    /* 斜めの深さ */
   position:relative;
-  background:transparent;
+  background:var(--c-bg);
+  border:2px solid var(--c-primary);
+  border-radius:20px;
+  overflow:hidden;
   box-shadow:none;
   padding:0;
-  grid-template-columns: minmax(0,.82fr) minmax(0,1.35fr);
-  column-gap: clamp(28px, 3.4vw, 56px);
+  grid-template-columns: minmax(0,1.05fr) minmax(0,1.2fr);
+  column-gap: clamp(24px, 3vw, 44px);
   align-items:start;
 }
 
@@ -3350,7 +3356,7 @@ document.documentElement.classList.add('fv-anim');
      ここでは版面の左端から始める（画面端までのブリードは入れていない）。 */
 .tone-brand .vhr__item::before{
   content:"";
-  grid-column:1; grid-row:1;
+  grid-column:1; grid-row:1 / -1;
   align-self:stretch;
   margin-right: calc(-1 * var(--pb-slant));
   background:var(--c-primary);
@@ -3376,10 +3382,13 @@ document.documentElement.classList.add('fv-anim');
   padding:5px 16px;
   font-weight:800;
 }
+/* ★見出しが2〜3行に折れていた（「高い英検合格率を／実現」）。
+   生成では1行。左の列を広げ、文字を1段落として1行に収める。
+   いちばん長いのは「保護者さまが忙しくても安心」13文字。 */
 .tone-brand .vhr__title{
   color:var(--c-on-primary);
-  font-size: clamp(21px, 2.4vw, 32px);
-  line-height:1.36;
+  font-size: clamp(19px, 2vw, 27px);
+  line-height:1.4;
   margin-top: clamp(12px,1.6vw,20px);
 }
 /* リード文は緑の面の上、見出しの下。
@@ -3391,19 +3400,31 @@ document.documentElement.classList.add('fv-anim');
   padding-top:0;
 }
 
+/* 合格率の丸は生成に合わせて一回り大きく */
+.tone-brand .vhr__ds{ --dia: clamp(88px, 10.5vw, 118px) }
+
 /* ── 右：図・写真は白い地の上 ─────────────────────── */
 .tone-brand .vhr__top > .vhr__chart,
-.tone-brand .vhr__top > .vhr__fig,
 .tone-brand .vhr__top > .vhr__figs{
   grid-column:2; grid-row:1;
   align-self:center;
-  margin: clamp(20px,2.4vw,34px) 0;
+  margin: clamp(20px,2.4vw,34px) clamp(24px,2.8vw,40px) clamp(20px,2.4vw,34px) 0;
+}
+/* 写真はカードの右上の角に寄せる（生成では角に食い込んでいる） */
+.tone-brand .vhr__top > .vhr__fig{
+  grid-column:2; grid-row:1;
+  align-self:start;
+  margin: clamp(18px,2.2vw,30px) clamp(18px,2.2vw,30px) clamp(18px,2.2vw,30px) 0;
 }
 
 /* ── 下：本文。上に緑の細い罫 ─────────────────────── */
+/* カードに padding を持たせると緑の面まで内側に入ってしまうので、
+   余白は要素ごとに持たせる */
+/* ★生成では緑の面がカードの上から下まで貫き、本文はその右側にある。
+   本文を全幅に置くと緑が上半分で止まって別物になる（1回それで出した）。 */
 .tone-brand .vhr__body{
-  grid-column:1 / -1; grid-row:2;
-  margin: clamp(24px,2.8vw,40px) 0 0;
+  grid-column:2; grid-row:2;
+  margin: 0 clamp(24px,2.8vw,40px) clamp(24px,2.8vw,38px) 0;
   padding-top: clamp(16px,2vw,24px);
   border-top:2px solid var(--c-primary);
 }
