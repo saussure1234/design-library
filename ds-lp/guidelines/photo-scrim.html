@@ -1,0 +1,27 @@
+<!-- @dsCard group="Photo" -->
+<!doctype html><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>
+body{margin:0;padding:34px;background:var(--ground);font-size:15px}
+h2{font-size:15px;margin:0 0 4px}
+p.n{font-size:12px;color:var(--ink-2);margin:0 0 20px;line-height:1.7}
+.row{display:flex;gap:18px;flex-wrap:wrap;margin:0 0 12px}
+.sw{width:186px}
+.box{height:104px;border-radius:6px;display:grid;place-content:center;
+  font-size:12px;font-weight:700;text-align:center;padding:8px}
+.cap{font-size:11px;color:var(--ink-2);margin:6px 0 0;line-height:1.6}
+.ok{color:var(--brand);font-weight:700}
+.ng{color:#C0392B;font-weight:700}
+</style>
+
+<h2>② 読めるか — 写真の上の文字</h2>
+<p class="n">白抜き(輝度1.0)でコントラスト比3.0を満たすには、背景の輝度が <b>(1.0+0.05)/3.0 − 0.05 ＝ 0.30 以下</b>。写真の明るい側を0.85とすると、必要な黒の不透明度は <b>0.65以上</b>。</p>
+<div class="row">
+  <div class="sw"><div class="box" style="background:linear-gradient(#d8cbb4,#cbbfa6);color:#fff;text-shadow:none">読めない</div>
+    <p class="cap"><span class="ng">比 1.36</span> — スクリム無し</p></div>
+  <div class="sw"><div class="box" style="background:linear-gradient(#8a8272,#4a4a3e);color:#fff">読める</div>
+    <p class="cap"><span class="ok">比 4.7</span> — 必要十分</p></div>
+  <div class="sw"><div class="box" style="background:#151a12;color:#fff">濃すぎる</div>
+    <p class="cap">比 12.4 — <b>写真が潰れている</b>。可読性は「足りていればよい」もので、濃いほど良いわけではない</p></div>
+</div>
+<p class="n">スクリムは <code>--scrim</code>。<b>測るときは見出しを一時的に隠して撮り直すこと</b>。白いグリフ自体を「背景の明るい側」として拾ってしまう。</p>

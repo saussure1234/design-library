@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>esl2 FV｜動きの見比べ（4種）</title>
+<style>
+  :root{
+    --g1:#00B63A; --g2:#6CBB00; --g3:#00B21F; --yel:#FFEE03;
+    --ink:#262626; --ink2:#303030; --cream:#F6F3E7; --line:#e6e6e6;
+    --ease:cubic-bezier(.23,1,.32,1);
+    --easeout:cubic-bezier(.16,1,.3,1);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Noto Sans JP",system-ui,sans-serif;
+    color:var(--ink); background:#fafafa; -webkit-font-smoothing:antialiased;
+    padding:28px 22px 80px;
+  }
+  .head{max-width:1180px;margin:0 auto 22px}
+  .head h1{font-size:clamp(18px,2.4vw,24px);margin:0 0 6px;letter-spacing:.01em}
+  .head p{margin:0;color:#666;font-size:13.5px;line-height:1.7}
+  .head .hint{margin-top:10px;font-size:13px;color:#444;background:#fff;border:1px solid var(--line);
+    border-radius:10px;padding:10px 12px;display:inline-block}
+  .bar{max-width:1180px;margin:14px auto 0;display:flex;gap:10px;flex-wrap:wrap}
+  .bar button{font:inherit;font-size:13px;border:1px solid var(--line);background:#fff;color:#333;
+    padding:8px 14px;border-radius:999px;cursor:pointer;transition:transform .1s var(--ease),background .15s}
+  .bar button:hover{background:#f2f2f2}
+  .bar button:active{transform:scale(.97)}
+
+  .grid{max-width:1180px;margin:22px auto 0;display:grid;gap:22px;
+    grid-template-columns:repeat(2,1fr)}
+  @media(max-width:820px){.grid{grid-template-columns:1fr}}
+
+  .card{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;
+    box-shadow:0 1px 2px rgba(0,0,0,.04),0 12px 30px -18px rgba(0,0,0,.25)}
+  .card__hd{display:flex;align-items:center;justify-content:space-between;gap:8px;
+    padding:12px 14px;border-bottom:1px solid #f0f0f0}
+  .card__hd .no{display:inline-flex;align-items:center;gap:9px}
+  .card__hd .num{width:24px;height:24px;border-radius:7px;background:var(--ink);color:#fff;
+    font-size:13px;font-weight:700;display:grid;place-items:center}
+  .card__hd .ttl{font-size:14.5px;font-weight:700}
+  .card__hd .sub{font-size:11.5px;color:#888;margin-left:2px}
+  .card__hd .replay{font:inherit;font-size:12px;border:1px solid var(--line);background:#fff;color:#444;
+    padding:6px 11px;border-radius:999px;cursor:pointer;transition:transform .1s var(--ease),background .15s}
+  .card__hd .replay:hover{background:#f4f4f4}
+  .card__hd .replay:active{transform:scale(.96)}
+
+  /* ── ステージ（ミニFV）─────────────────────── */
+  .stage{position:relative;height:430px;overflow:hidden;background:var(--cream)}
+  .stage .blob{position:absolute;inset:auto -18% -42% -18%;height:78%;
+    background:radial-gradient(120% 90% at 60% 20%,var(--g2),var(--g1) 55%,var(--g3));
+    border-radius:48% 52% 44% 56%/60% 58% 42% 40%;filter:saturate(1.05)}
+  .stage .curve{position:absolute;left:-10%;right:-10%;bottom:-2px;height:46%;
+    background:linear-gradient(180deg,transparent,rgba(0,182,58,.10));
+    border-radius:50% 50% 0 0/70% 70% 0 0}
+  .copy{position:absolute;left:26px;top:30px;right:50%;z-index:3}
+  .eyebrow{font-size:11.5px;font-weight:700;color:#2f7a2f;margin:0 0 8px;letter-spacing:.02em}
+  .h1{font-size:clamp(15px,1.5vw,18px);line-height:1.5;font-weight:800;color:var(--ink);margin:0 0 16px}
+  .h1 em{font-style:normal;color:var(--g3)}
+  .h1 .l{display:block}
+  .cta{display:inline-flex;align-items:center;gap:8px;background:var(--g3);color:#fff;
+    font-size:13px;font-weight:700;padding:11px 16px;border-radius:999px;text-decoration:none;
+    box-shadow:0 8px 18px -8px rgba(0,178,31,.7)}
+  .cta .arw{transition:transform .2s var(--ease)}
+  .card:hover .cta .arw{transform:translateX(3px)}
+
+  .boy{position:absolute;right:-4%;bottom:-3px;height:92%;width:auto;z-index:2;
+    filter:drop-shadow(0 24px 26px rgba(0,0,0,.18));will-change:transform,opacity}
+  .girl{position:absolute;right:20%;top:14px;width:116px;height:116px;object-fit:cover;object-position:50% 30%;
+    border-radius:50%;background:#fff;padding:4px;z-index:3;
+    box-shadow:0 12px 26px -10px rgba(0,0,0,.3);will-change:transform,opacity}
+
+  .badge{position:absolute;right:12px;bottom:12px;z-index:4;background:var(--yel);color:#222;
+    font-size:11px;font-weight:800;padding:6px 11px;border-radius:999px;
+    box-shadow:0 6px 14px -6px rgba(0,0,0,.35)}
+
+  /* ══ ① フロート（常時ゆらす）══ */
+  #s1 .boy{animation:floatA 6s ease-in-out infinite}
+  #s1 .girl{animation:floatB 7.2s ease-in-out infinite}
+  @keyframes floatA{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-15px) rotate(-.6deg)}}
+  @keyframes floatB{0%,100%{transform:translateY(0)}50%{transform:translateY(11px)}}
+
+  /* ══ ② パララックス（スクロール連動）══ */
+  #s2 .scroller{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;z-index:5;scroll-behavior:smooth}
+  #s2 .spacer{height:200%}
+  #s2 .plx{position:absolute;left:0;right:0;top:0;bottom:0;pointer-events:none}
+  #s2 .hintline{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);z-index:6;
+    background:rgba(0,0,0,.55);color:#fff;font-size:11px;padding:5px 10px;border-radius:999px;pointer-events:none}
+
+  /* ══ ③ リビール（読込で組み上がる）══ */
+  #s3 .eyebrow,#s3 .h1 .l,#s3 .cta,#s3 .boy,#s3 .girl{opacity:0}
+  #s3.play .eyebrow{animation:up .5s var(--easeout) .05s forwards}
+  #s3.play .h1 .l:nth-child(1){animation:up .55s var(--easeout) .16s forwards}
+  #s3.play .h1 .l:nth-child(2){animation:up .55s var(--easeout) .24s forwards}
+  #s3.play .h1 .l:nth-child(3){animation:up .55s var(--easeout) .32s forwards}
+  #s3.play .boy{animation:boyin .7s var(--easeout) .18s forwards}
+  #s3.play .girl{animation:pop .5s var(--ease) .5s forwards}
+  #s3.play .cta{animation:pop .5s var(--ease) .62s forwards}
+  @keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes boyin{from{opacity:0;transform:translateY(24px) scale(.965)}to{opacity:1;transform:translateY(0) scale(1)}}
+  @keyframes pop{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+
+  /* ══ ④ Ken Burns＋光 ══ */
+  #s4 .boy{animation:kb 12s ease-in-out infinite alternate;transform-origin:60% 100%}
+  @keyframes kb{from{transform:scale(1)}to{transform:scale(1.11)}}
+  #s4 .sheen{position:absolute;inset:-20% -40%;z-index:3;pointer-events:none;
+    background:linear-gradient(105deg,transparent 38%,rgba(255,255,255,.55) 50%,transparent 62%);
+    transform:translateX(-120%);animation:sheen 5.5s ease-in-out infinite;mix-blend-mode:soft-light}
+  @keyframes sheen{0%{transform:translateX(-120%)}60%,100%{transform:translateX(120%)}}
+
+  .foot{max-width:1180px;margin:30px auto 0;color:#555;font-size:13px;line-height:1.8;
+    background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+  .foot b{color:#111}
+  kbd{background:#eee;border-radius:5px;padding:1px 6px;font-size:12px;border:1px solid #ddd}
+
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+    #s3 .eyebrow,#s3 .h1 .l,#s3 .cta,#s3 .boy,#s3 .girl{opacity:1}
+  }
+</style>
+</head>
+<body>
+
+<div class="head">
+  <h1>esl2 FV｜動きの見比べ（4種）</h1>
+  <p>いまの esl2 のFV素材（切り抜き2枚＋実際の見出し・配色）に、4種類の動きを付けたもの。<b>見た目・文言は全部同じ。違うのは“動き”だけ</b>です。</p>
+  <div class="hint">気に入った番号を教えてください → その動きを esl2 本体のFVに実装します。</div>
+</div>
+
+<div class="bar">
+  <button id="all">▶ ③リビールを一斉再生</button>
+  <span style="align-self:center;color:#999;font-size:12px">①④は常時ループ／②はカード内をスクロール</span>
+</div>
+
+<div class="grid">
+
+  <!-- ① フロート -->
+  <div class="card">
+    <div class="card__hd">
+      <span class="no"><span class="num">1</span><span class="ttl">フロート（浮遊）</span><span class="sub">生きてる感・常時ゆれる</span></span>
+    </div>
+    <div class="stage" id="s1">
+      <div class="blob"></div><div class="curve"></div>
+      <div class="copy">
+        <p class="eyebrow">2015年の開塾以降”英検に特化”してきたからできる</p>
+        <h1 class="h1"><span class="l">受験勉強と並走しながら</span><span class="l"><em>小学生・中学生で英検2級、</em></span><span class="l"><em>高校生で準1級</em>を目指せる英語塾</span></h1>
+        <a class="cta" href="#">無料体験レッスンはこちら<span class="arw">→</span></a>
+      </div>
+      <img class="girl" src="img/fv_girl.png" alt="">
+      <img class="boy" src="img/fv_boy.png" alt="">
+    </div>
+  </div>
+
+  <!-- ② パララックス -->
+  <div class="card">
+    <div class="card__hd">
+      <span class="no"><span class="num">2</span><span class="ttl">パララックス</span><span class="sub">スクロールで奥行き</span></span>
+      <button class="replay" data-scroll="s2">▶ 自動スクロール</button>
+    </div>
+    <div class="stage" id="s2">
+      <div class="plx">
+        <div class="blob" data-depth="0.05"></div><div class="curve"></div>
+        <div class="copy" data-depth="0.12">
+          <p class="eyebrow">2015年の開塾以降”英検に特化”してきたからできる</p>
+          <h1 class="h1"><span class="l">受験勉強と並走しながら</span><span class="l"><em>小学生・中学生で英検2級、</em></span><span class="l"><em>高校生で準1級</em>を目指せる英語塾</span></h1>
+          <a class="cta" href="#">無料体験レッスンはこちら<span class="arw">→</span></a>
+        </div>
+        <img class="girl" src="img/fv_girl.png" alt="" data-depth="0.32">
+        <img class="boy" src="img/fv_boy.png" alt="" data-depth="0.18">
+      </div>
+      <div class="scroller" id="s2scroll"><div class="spacer"></div></div>
+      <div class="hintline">↕ カード内をスクロール</div>
+    </div>
+  </div>
+
+  <!-- ③ リビール -->
+  <div class="card">
+    <div class="card__hd">
+      <span class="no"><span class="num">3</span><span class="ttl">リビール（組み上がる）</span><span class="sub">読込時に順に出現</span></span>
+      <button class="replay" data-play="s3">▶ もう一度</button>
+    </div>
+    <div class="stage play" id="s3">
+      <div class="blob"></div><div class="curve"></div>
+      <div class="copy">
+        <p class="eyebrow">2015年の開塾以降”英検に特化”してきたからできる</p>
+        <h1 class="h1"><span class="l">受験勉強と並走しながら</span><span class="l"><em>小学生・中学生で英検2級、</em></span><span class="l"><em>高校生で準1級</em>を目指せる英語塾</span></h1>
+        <a class="cta" href="#">無料体験レッスンはこちら<span class="arw">→</span></a>
+      </div>
+      <img class="girl" src="img/fv_girl.png" alt="">
+      <img class="boy" src="img/fv_boy.png" alt="">
+    </div>
+  </div>
+
+  <!-- ④ Ken Burns＋光 -->
+  <div class="card">
+    <div class="card__hd">
+      <span class="no"><span class="num">4</span><span class="ttl">Ken Burns＋光</span><span class="sub">ゆっくり寄り＋光沢</span></span>
+    </div>
+    <div class="stage" id="s4">
+      <div class="blob"></div><div class="curve"></div>
+      <div class="sheen"></div>
+      <div class="copy">
+        <p class="eyebrow">2015年の開塾以降”英検に特化”してきたからできる</p>
+        <h1 class="h1"><span class="l">受験勉強と並走しながら</span><span class="l"><em>小学生・中学生で英検2級、</em></span><span class="l"><em>高校生で準1級</em>を目指せる英語塾</span></h1>
+        <a class="cta" href="#">無料体験レッスンはこちら<span class="arw">→</span></a>
+      </div>
+      <img class="girl" src="img/fv_girl.png" alt="">
+      <img class="boy" src="img/fv_boy.png" alt="">
+    </div>
+  </div>
+
+</div>
+
+<div class="foot">
+  <b>見方</b>：①④は放っておけばループします。②はカード内を上下スクロール（または「自動スクロール」）。③は「もう一度」で再生。<br>
+  <b>本音の注釈</b>：動きは“素材を活かす”手段です。土屋鞄が効いてたのは<b>撮り下ろし写真の質</b>。この切り抜きは元がストック写真なので、動かしても上限があります。<b>③リビール</b>が一番ローリスクで効果大（高級LPの定番）。<b>①フロート</b>は子ども向けで親しみが出る。<kbd>④</kbd>は光が下品になりやすいので弱めています。<br>
+  reduced-motion をONにしているPCでは、全部止まって静止画になります（アクセシビリティ配慮・実装済）。
+</div>
+
+<script>
+  // ③ リビール：再生
+  function play(id){ var s=document.getElementById(id); s.classList.remove('play'); void s.offsetWidth; s.classList.add('play'); }
+  document.querySelectorAll('[data-play]').forEach(function(b){ b.addEventListener('click',function(){ play(b.dataset.play); }); });
+  document.getElementById('all').addEventListener('click',function(){ play('s3'); });
+
+  // ② パララックス：スクロール量で各層をtransform
+  (function(){
+    var sc=document.getElementById('s2scroll');
+    var layers=document.querySelectorAll('#s2 [data-depth]');
+    function upd(){ var y=sc.scrollTop; layers.forEach(function(el){ var d=parseFloat(el.dataset.depth)||0; el.style.transform='translateY('+(-y*d)+'px)'; }); }
+    sc.addEventListener('scroll',upd,{passive:true}); upd();
+    document.querySelector('[data-scroll="s2"]').addEventListener('click',function(){
+      sc.scrollTo({top:0}); setTimeout(function(){ sc.scrollTo({top:sc.scrollHeight,behavior:'smooth'}); },60);
+      setTimeout(function(){ sc.scrollTo({top:0,behavior:'smooth'}); },2600);
+    });
+  })();
+
+  // ③ を画面内に入ったら1回再生
+  var io=new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting){ play('s3'); io.unobserve(e.target); } }); },{threshold:.5});
+  io.observe(document.getElementById('s3'));
+</script>
+</body>
+</html>

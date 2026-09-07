@@ -1,0 +1,158 @@
+<!doctype html><html lang="ja"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>FV案1 egaco型 v02｜ESL club オンライン校</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════════
+   FV案1 ── ベンチマーク：egaco（comic.smiles55.jp／MUUUUU掲載2022）
+   イラスト・マンガ教室。個別指導・成果の約束・無料体験へ落とす。
+   ESL clubと【FVの仕事が一致】していて、かつギャラリー掲載。
+   ★見たのはスクリーンショットのみ。コードは読んでいない
+   ★文言・数字・画像・リンク先は esl3 から一字一句そのまま
+   ── egacoから取った構造 ────────────────────────────
+   1 白地。色は小さなアクセントだけ
+   2 背景に極薄の縦罫グリッド（版面が見える）
+   3 巨大タイポを【塗らず輪郭線だけ】にして画面外へ流す
+   4 見出しは極太。色を散らさない。下は1行だけ
+   5 切り抜き人物を右半分に大きく置き、下端で切る
+   6 CTAを2つ並べる（主＝無料体験／副）
+   7 白い角丸カードを浮かせて副次的な導線
+   ══════════════════════════════════════════════════════════
+   v01 = 1回目
+   v04 = ①人物が右に寄りすぎて中央が空いていた → 人物Aを右2%→14%、
+           女の子を人物Aの手前・左寄りに出して2人を見せる
+         ②輪郭タイポが画面上端で切れていた → top:2%→5%、級数を落とす
+         ③女の子が男の子の完全に後ろに隠れていた → z順と位置を変える
+   v03 = ①スマホでカードが901px＝画面外だった。egacoはFV内に収める
+           → スマホでは card を人物のすぐ下に持ち上げる
+         ②スマホの縦が長い（CTA下端764px）→ 各余白を1段詰める
+   v02 = ①輪郭タイポが見出しの真後ろで読みにくい（重なり104,831px²）
+           → egaco同様、見出しの【上】へ移す
+         ②人物が小さい → 82%→96%、右10%→2%
+         ③スマホでカードが901px＝画面外 → 表示順を見直す
+   ══════════════════════════════════════════════════════════ */
+:root{--ink:#12262C;--ink2:#5A6E75;--line:#E3EAEC;
+  --g:#00B21F;--g2:#0A7A2B;--y:#FFEE03;--u:8px;
+  --f1:13px;--f2:15px;--f3:18px;--f4:24px;
+  --pad:calc(max(0px,(100vw - 1280px)/2) + 32px)}
+*{box-sizing:border-box}html,body{margin:0}
+html,body{overflow-x:clip}
+body{font-family:"Noto Sans JP","Hiragino Sans",system-ui,sans-serif;color:var(--ink);
+  background:#fff;font-size:var(--f3);line-height:1.85;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+.nb{white-space:nowrap}
+
+/* 2 縦罫のグリッド */
+.g-lines{position:absolute;inset:0;z-index:0;pointer-events:none;
+  background-image:repeating-linear-gradient(90deg,rgba(18,38,44,.055) 0 1px,transparent 1px 320px)}
+
+.hd{position:relative;z-index:20;display:flex;align-items:center;gap:20px;
+  padding:calc(var(--u)*2) var(--pad)}
+.hd__logo img{height:32px;width:auto}
+.hd__nav{display:flex;gap:24px;font-size:var(--f2);font-weight:700;margin-left:auto}
+.hd__btns{display:flex;gap:8px}
+.hd__btn{font-size:var(--f2);font-weight:700;padding:11px 18px;border-radius:999px;
+  white-space:nowrap;border:1.6px solid var(--g);color:var(--g2);background:#fff}
+.hd__btn--main{background:var(--y);border-color:var(--y);color:var(--ink);box-shadow:0 4px 0 #D9C900}
+
+.fv{position:relative;overflow:hidden;min-height:min(86vh,780px)}
+/* 3 輪郭線だけの巨大タイポ */
+.ghost{position:absolute;left:-3%;top:5%;z-index:1;margin:0;
+  font-size:clamp(84px,10.8vw,158px);font-weight:900;line-height:.84;letter-spacing:-.04em;
+  white-space:nowrap;pointer-events:none;color:transparent;
+  -webkit-text-stroke:2.2px rgba(0,178,31,.22)}
+.fv__in{position:relative;z-index:6;padding:calc(var(--u)*12) 0 calc(var(--u)*6);
+  max-width:min(600px,50vw);margin-left:var(--pad)}
+.pill{display:inline-block;padding:6px 18px;border-radius:999px;border:1.6px solid var(--g);
+  color:var(--g2);background:#fff;font-size:var(--f1);font-weight:700;letter-spacing:.1em}
+.eyebrow{font-size:var(--f2);font-weight:700;color:var(--ink2);margin:calc(var(--u)*2) 0}
+.eyebrow .mk{background:linear-gradient(var(--y),var(--y)) no-repeat 0 88%/100% 7px;color:var(--ink)}
+/* 4 見出しは極太。色を散らさない */
+.h1{font-size:clamp(30px,3.8vw,50px);font-weight:900;line-height:1.36;letter-spacing:.01em;
+  margin:0 0 calc(var(--u)*3)}
+.h1 .hi{background:linear-gradient(var(--y),var(--y)) no-repeat 0 84%/100% 12px}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin:0}
+.btn{display:inline-flex;align-items:center;gap:11px;font-weight:700;font-size:var(--f4);
+  padding:18px 30px;border-radius:12px}
+.btn--main{background:var(--y);color:var(--ink);box-shadow:0 8px 0 #D9C900,0 16px 26px rgba(11,95,35,.16)}
+.btn--sub{background:#fff;color:var(--g2);border:2px solid var(--g);font-size:var(--f3);padding:16px 24px}
+.btn::after{content:"";width:9px;height:9px;border-top:2.4px solid currentColor;
+  border-right:2.4px solid currentColor;transform:rotate(45deg)}
+.note{font-size:var(--f1);color:var(--ink2);margin:calc(var(--u)*2) 0 0}
+/* 5 切り抜き人物 */
+.kids{position:absolute;inset:0;z-index:3;pointer-events:none}
+.kid{position:absolute;bottom:0;filter:drop-shadow(0 18px 26px rgba(11,95,35,.18))}
+.kid--a{right:14%;height:96%;width:auto;z-index:2}
+.kid--b{right:1%;height:60%;width:auto;z-index:1}
+/* 7 白い角丸カード */
+.card{position:absolute;left:var(--pad);bottom:calc(var(--u)*3);z-index:8;
+  display:flex;align-items:center;gap:12px;background:#fff;border-radius:14px;
+  padding:10px 16px 10px 10px;box-shadow:0 10px 26px rgba(18,38,44,.14);max-width:340px}
+.card img{width:60px;height:60px;object-fit:cover;border-radius:10px;flex:none}
+.card b{display:block;font-size:var(--f1);font-weight:700;line-height:1.7}
+.card em{font-style:normal;display:inline-flex;align-items:center;gap:5px;font-size:var(--f1);
+  font-weight:700;color:var(--g2);margin-top:2px}
+.card em::before{content:"";width:0;height:0;border-left:7px solid var(--g);
+  border-top:5px solid transparent;border-bottom:5px solid transparent}
+
+@media(max-width:900px){
+  :root{--pad:20px}
+  .hd{padding:calc(var(--u)*1.5) var(--pad);flex-wrap:wrap}
+  .hd__nav{display:none}
+  .fv{min-height:0;padding-bottom:calc(var(--u)*3);display:flex;flex-direction:column}
+  /* ★スマホは 人物 → カード → 文字 の順。カードをFV内に収める */
+  .kids{position:relative;height:268px;order:1;flex:none}
+  .kid--a{right:34%;height:100%}
+  .kid--b{right:4%;height:56%}
+  .card{position:static;order:2;margin:calc(var(--u)*1.5) 20px 0;max-width:none}
+  .fv__in{order:3;max-width:none;padding:calc(var(--u)*2) 20px 0;margin:0}
+  .ghost{position:absolute;font-size:70px;top:auto;bottom:1%;left:-4%;order:0}
+  .h1{font-size:25px;line-height:1.48;margin-bottom:calc(var(--u)*2.5)}
+  .eyebrow{margin:calc(var(--u)*1.5) 0}
+  .cta{flex-direction:column;gap:10px}
+  .btn{width:100%;justify-content:center;font-size:var(--f3);padding:15px 20px}
+}
+</style></head><body>
+
+<header class="hd">
+  <a class="hd__logo" href="#"><img src="../img/logo.svg" alt="ESL club"></a>
+  <nav class="hd__nav"><a href="#">4つの特徴</a><a href="#">保護者さまの声</a><a href="#">他塾との違い</a><a href="#">教室紹介</a></nav>
+  <div class="hd__btns">
+    <a class="hd__btn" href="https://eslclub.jp/">資料を見る</a>
+    <a class="hd__btn hd__btn--main" href="https://eslclub.jp/trial/">無料体験レッスン</a>
+  </div>
+</header>
+
+<section class="fv">
+  <span class="g-lines"></span>
+  <p class="ghost" aria-hidden="true">ESL club ESL club</p>
+
+  <div class="kids">
+    <img class="kid kid--a" src="../img/fv_boy_cut.png" alt="自宅の机で学習に取り組む小学生">
+    <img class="kid kid--b" src="../img/fv_girl_cut.png" alt="オンラインで英検対策を受ける中高生">
+  </div>
+
+  <div class="fv__in">
+    <span class="pill">英検®︎特化・オンライン</span>
+    <p class="eyebrow">2015年の開塾以降<span class="mk">”英検に特化”</span>してきたからできる</p>
+    <h1 class="h1"><span class="nb">受験勉強と並走しながら</span><wbr>
+      <span class="nb"><span class="hi">小学生・中学生で英検2級、</span></span><wbr>
+      <span class="nb"><span class="hi">高校生で準1級</span>を目指せる英語塾</span></h1>
+    <div class="cta">
+      <a class="btn btn--main" href="https://eslclub.jp/trial/">無料体験レッスンはこちら</a>
+      <a class="btn btn--sub" href="#">4つの特徴を見る</a>
+    </div>
+    <p class="note">いつまでに2級合格できるかレッスン後にご案内します</p>
+  </div>
+
+  <a class="card" href="#">
+    <img src="../img/fv_girl.png" alt="" aria-hidden="true">
+    <span><b>3ヶ月で英検準2級を取得した<br>ご家庭の声</b><em>読む</em></span>
+  </a>
+</section>
+
+</body></html>

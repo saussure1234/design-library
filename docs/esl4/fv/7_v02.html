@@ -1,0 +1,207 @@
+<!doctype html><html lang="ja"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>FV案7 茗溪型 v02｜ESL club オンライン校</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════════
+   FV案7 ── ベンチマーク：茗溪学園 Meikei High School
+   https://meikei.ac.jp/  （_shortlist.json 000／ユーザーが選択）
+   ★見たのは ref/bench/000_meikei_ac_jp.png のみ。コードは読んでいない
+
+   ── v02 で直したこと ─────────────────────────────
+   (1) ★「”英語”を教えない英語塾」を削除。
+       これは私が勝手に足したもの。ロゴの中のタグラインを、
+       茗溪の巨大スローガンの位置に昇格させていた。
+       → 茗溪の最下部の巨大タイポは【ブランドのスローガン】。
+         ESL clubにスローガンは存在しない。この要素は借りられない。
+         無いものを借りるために既存の文字を流用しない。
+
+   (2) ★訴求の重複を1回にまとめた。指摘は「被っている内容もあるから
+       訴求は一回に留めておくこと」。洗い出した重複は3つ：
+         a 前置き「2015年の開塾以降 ”英検に特化” してきたからできる」
+           ＝ 数字②「開塾から / 2015年 / 英検に特化」
+           → 完全に同じ内容。【前置きを削除】して数字に一本化
+         b ヘッダー「無料体験レッスン」＝ 本文CTA「無料体験レッスンはこちら」
+           → ヘッダーを esl3 にある「資料を見る」に変更。
+             黄はCTA1箇所だけに（CRITERIA.md ⑥）
+         c タグラインの「英語塾」＝ 見出し末尾の「英語塾」
+           → (1)の削除で解消
+       ★数字の3つ組（小見出し／数値／補足）の作りは維持。
+         「こういう感じに工夫するのは良い」との評価をもらったもの
+
+   (3) ★写真が矩形のまま出ていた問題。
+       茗溪の写真は【教室のシーン写真】で、周りが写っているから
+       有機的な形で抜くと「窓」になる。
+       ESL clubの fv_boy は【人物切り抜きの透過PNG】。周りが無いので、
+       同じマスクをかけても形が見えない。素材の種類が違う。
+       → 人物の背後に有機的な形の面を敷き、そこに人物を立たせる。
+         シーン写真が用意できたら、その面を写真に差し替えれば
+         茗溪と同じ「窓」になる（要素は増やさず、面を1つ置くだけ）
+
+   (4) v01の衝突3つを解消
+       縦組み×前置 9,042px² → 前置きを削除
+       写真×実績 20,415px² → 実績ブロックを写真の左外に出す
+       縦組み×タグ（未計測だった）→ タグ削除
+       ★v01では「縦組み×タグ」のペアを測っていなかった。
+         数字が全部OKでも見れば一発で分かる壊れ方。計測側も疑う
+
+   ── 茗溪から借りた構造 ───────────────────────────
+   1 地は淡い色。ベタ塗り
+   2 中央に有機的な形で抜いた1枚
+   3 右に縦組みの日本語
+   4 左下に細い罫線1本で区切った小さいブロック
+   5 ヘッダー右上にボタン1つ
+   6 色は実質2色。カード無し・影無し・角丸の箱無し
+
+   ── ★禁止事項 ──────────────────────────────
+     × カードを使わない        × 影を使わない
+     × 角丸の箱を使わない      × 均等3カラムにしない
+     × 写真を矩形で置かない    × 色を3色目に増やさない
+     × 黄色のマーカーを使わない
+     × ESL clubに無い言葉を作らない（英字スローガンも、既存文字の流用も）
+     × 同じ訴求を2回出さない
+
+   ── CRITERIA.md の当て方 ────────────────────────
+   (1)見えるか … 地の輝度0.872（#E8F3EA）。白地(0.94)だと面が段差を作れない
+   (2)読めるか … 装飾を本文にかけない
+   (3)自然か  … 動きを入れない
+   (4)品     … ブランド色の外を持ち込まない
+   (5)位置   … コピーは esl3 から一字一句そのまま
+   (6)過剰でない … 強調は【黄のCTA】1箇所のみ
+   ══════════════════════════════════════════════════════════ */
+:root{
+  --ink:#12262C;
+  --ink2:#5F7266;
+  --g:#0A7A2B;
+  --y:#FFEE03;
+  --bg:#E8F3EA;        /* 地。輝度0.872 */
+  --field:#D6E9DB;     /* 人物の背後に敷く面。地より一段濃い */
+  --line:#C3D8C8;
+  --u:8px;
+  --pad:calc(max(0px,(100vw - 1360px)/2) + 40px);
+}
+*{box-sizing:border-box}
+html,body{margin:0;overflow-x:clip}
+body{font-family:"Noto Sans JP","Hiragino Sans",system-ui,sans-serif;
+  color:var(--ink);background:var(--bg);font-size:16px;line-height:1.9;
+  -webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+
+/* ── ヘッダー ── */
+.hd{position:relative;z-index:30;display:flex;align-items:center;gap:24px;
+  padding:calc(var(--u)*2.5) var(--pad)}
+.hd__logo img{height:34px;width:auto}
+.hd__nav{display:flex;gap:26px;font-size:14px;font-weight:700;margin-left:auto}
+/* 黄はここでは使わない。CTAと訴求が重複しないよう「資料を見る」に */
+.hd__btn{font-size:14px;font-weight:700;padding:11px 22px;border-radius:2px;
+  border:1.5px solid var(--g);color:var(--g);white-space:nowrap}
+
+/* ── FV ── */
+.fv{position:relative;min-height:min(88vh,806px);overflow:hidden}
+
+/* 2 人物の背後に敷く有機的な面。茗溪の「窓」の役割。
+     シーン写真が用意できたら、この面を写真に差し替える */
+.ph{position:absolute;left:31%;top:5%;width:min(38%,520px);z-index:2;margin:0}
+.ph::before{content:"";display:block;padding-top:100%;
+  background:var(--field);
+  border-radius:49% 51% 44% 56% / 53% 46% 54% 47%}
+.ph img{position:absolute;left:-6%;bottom:0;width:112%;height:auto;
+  max-height:none;object-fit:contain}
+
+/* 3 右に縦組み3行（39字。茗溪は18字2行なので行数を増やして級数を保つ） */
+.vt{position:absolute;right:calc(var(--pad) + 20px);top:9%;z-index:6;
+  writing-mode:vertical-rl;
+  font-size:clamp(22px,3.0vw,43px);font-weight:900;
+  line-height:1.66;letter-spacing:.03em;margin:0}
+.vt .l{display:block}
+
+/* 4 左下：茗溪の「重要なお知らせ」と同じ扱い。罫線1本だけ。
+      ★カードにしない・影を付けない・角丸の箱にしない */
+.facts{position:absolute;left:var(--pad);bottom:calc(var(--u)*8);z-index:6;
+  width:min(360px,27%)}
+.facts__hd{font-size:12px;font-weight:700;color:var(--ink2);letter-spacing:.14em;
+  margin:0 0 calc(var(--u)*1.5)}
+.nums{display:flex;gap:calc(var(--u)*3);margin:0;padding:calc(var(--u)*2) 0 0;
+  border-top:1px solid var(--line)}
+.num small{display:block;font-size:11px;font-weight:700;color:var(--ink2);
+  line-height:1.4;margin:0 0 2px}
+.num b{display:block;font-size:30px;font-weight:900;color:var(--g);line-height:1;
+  letter-spacing:-.01em}
+.num b i{font-style:normal;font-size:13px;margin-left:1px}
+.num em{font-style:normal;display:block;font-size:11px;font-weight:700;
+  color:var(--ink2);margin-top:3px}
+
+/* CTA。★強調はここ1箇所だけ */
+.cta{margin:calc(var(--u)*4) 0 0}
+.btn{display:inline-flex;align-items:center;gap:10px;font-size:15px;font-weight:700;
+  padding:15px 26px;background:var(--y);color:var(--ink);border-radius:2px;
+  white-space:nowrap}
+.btn::after{content:"";width:7px;height:7px;border-top:2px solid currentColor;
+  border-right:2px solid currentColor;transform:rotate(45deg)}
+.note{font-size:11px;color:var(--ink2);line-height:1.6;margin:calc(var(--u)*1.5) 0 0}
+
+@media(max-width:900px){
+  :root{--pad:20px}
+  .hd{padding:calc(var(--u)*1.5) var(--pad);gap:12px}
+  .hd__nav{display:none}
+  .fv{min-height:0;padding:0 0 calc(var(--u)*5)}
+  /* スマホ：写真をCTAより上に（全LP共通の決めごと） */
+  .ph{position:relative;left:auto;top:auto;width:74%;margin:calc(var(--u)*2) auto 0}
+  .vt{position:relative;right:auto;top:auto;
+    writing-mode:horizontal-tb;font-size:23px;line-height:1.55;
+    padding:calc(var(--u)*3.5) var(--pad) 0}
+  .facts{position:relative;left:auto;bottom:auto;width:auto;
+    padding:calc(var(--u)*3.5) var(--pad) 0}
+  .nums{gap:calc(var(--u)*2);justify-content:space-between}
+  .num b{font-size:25px}
+  .btn{width:100%;justify-content:center}
+}
+</style></head><body>
+
+<header class="hd">
+  <a class="hd__logo" href="#"><img src="../img/logo.svg" alt="ESL club"></a>
+  <nav class="hd__nav">
+    <a href="#">4つの特徴</a><a href="#">保護者さまの声</a>
+    <a href="#">他塾との違い</a><a href="#">教室紹介</a>
+  </nav>
+  <!-- CTAの文言と重ならないよう「資料を見る」。訴求は一回に留める -->
+  <a class="hd__btn" href="https://eslclub.jp/">資料を見る</a>
+</header>
+
+<section class="fv">
+
+  <!-- 2 有機的な形の面＋人物。茗溪の「窓」の役割 -->
+  <figure class="ph">
+    <img src="../img/fv_boy_cut.png" alt="自宅の机で英検対策に取り組む小学生">
+  </figure>
+
+  <!-- 3 縦組み。文言は esl3 から一字一句そのまま。
+       ★前置きは削除した（数字②と内容が完全に重複していたため） -->
+  <h1 class="vt">
+    <span class="l">受験勉強と並走しながら</span>
+    <span class="l">小学生・中学生で英検2級、</span>
+    <span class="l">高校生で準1級を目指せる英語塾</span>
+  </h1>
+
+  <!-- 4 左下。罫線1本だけで区切る -->
+  <div class="facts">
+    <p class="facts__hd">これまでの実績</p>
+    <!-- ★数字は esl3 のコピーにあるものだけ。捏造しない -->
+    <div class="nums">
+      <div class="num"><small>合格に導いた</small><b>1,000<i>名</i></b><em>以上</em></div>
+      <div class="num"><small>開塾から</small><b>2015<i>年</i></b><em>英検に特化</em></div>
+      <div class="num"><small>講師は全員</small><b>英検1<i>級</i></b><em>以上</em></div>
+    </div>
+    <div class="cta">
+      <a class="btn" href="https://eslclub.jp/trial/">無料体験レッスンはこちら</a>
+      <p class="note">いつまでに2級合格できるかレッスン後にご案内します</p>
+    </div>
+  </div>
+
+</section>
+
+</body></html>

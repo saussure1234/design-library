@@ -1,0 +1,181 @@
+<!doctype html><html lang="ja"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>FV案E 二層タイポ型 v01｜ESL club オンライン校</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════════
+   FV案E 二層タイポ型 ── ベンチマーク：046 神戸電子専門学校
+   https://www.kobedenshi.ac.jp/
+   ★見たのは ref/bench/046_www_kobedenshi_ac_jp.png のみ。コードは読んでいない
+
+   ── 046の構成（実寸で見て書き出した）──────────────────
+   1 写真が全面（工房で4人が作業している一場面）
+   2 その上に【巨大な白い英字が半透明で2行】重なる。左右で切れている
+   3 さらにその上に【黒い日本語見出し】が中央上部に置かれる
+     ★タイポが二層。奥＝半透明の英字／手前＝黒の日本語
+   4 日本語見出しの上に小さく "KOBE DENSHI"
+   5 右下に小さいカード（写真＋テキスト＋矢印）
+   6 FVは写真の下端で終わる（y≒790）。下は白いセクション
+
+   ── 046の実測値（PNGから数値で出したもの）──────────────
+   巨大英字   cap高256px → font-size 約356px ／ 行送り279px（比0.78）
+   日本語見出し 字面144px → font-size 約164px
+   ★英字と日本語の級数比 356:164 ＝ 約2.2倍
+   FV下端     y≒790
+
+   ── ★禁止事項 ──────────────────────────────
+     × カードを使わない        × 影を使わない
+     × 角丸の箱を使わない
+     × 英字のスローガンを創作しない（046の巨大英字はそのままでは借りられない）
+     × 色を3色目に増やさない
+     × ESL clubに無い言葉を作らない
+     × 同じ訴求を2回出さない
+
+   ── ★置き換えたもの（tailoring）────────────────────
+   (1) 巨大な奥のタイポ
+       046は "LEARN BY CREATION" という英語のスローガン。
+       ESL clubに英語のスローガンは無く、創作は禁止。
+       ブランド名やタグラインを昇格させるのも、以前これをやって
+       「勝手に入れるな」と指摘を受けている。
+       → ESL clubに実在して、かつ一番強い札は【数字】。
+         「1,000」を巨大な半透明の白で敷く。
+         これは捏造ではなく esl3 のコピーにある数字そのもの
+   (2) 数字の重複を作らない
+       巨大な「1,000」を出すので、下の数字の並びからは
+       「合格に導いた 1,000名 以上」を外し、②③だけにする。
+       訴求は1回。巨大版がその1回を担う
+   (3) 見出しの色
+       046は写真の上部が白い天井なので【黒】で読める。
+       ESL clubの写真(p07)は木目の中間調で、黒も白も読みにくい。
+       → 白抜き＋スクリム。背景輝度0.30以下を逆算して敷く
+   (4) 級数比
+       046は 356:164 ＝ 2.2倍。
+       ESL clubの見出しは39字で、実測上限は 1360÷15字＝90px。
+       2.2倍だと巨大数字が198pxで奥の層として弱い。
+       → 奥の層は【幅で決める】。「1,000」5字が画面幅を使う 300px にする
+
+   ── ★訴求の重複（1回ずつ）──────────────────────
+   ・前置きは入れない ＝ 数字②と同内容
+   ・ヘッダーは「資料を見る」＝ 本文CTAと文言を分ける
+   ・注記は入れない ＝ 見出しの「英検2級」と重複
+   ・「1,000名」は巨大版のみ。下の並びには出さない
+   ・残す重複：見出し「準1級」と数字③「英検1級」＝ 主体が違う
+   v01 = 1回目
+   ══════════════════════════════════════════════════════════ */
+:root{
+  --ink:#12262C; --g:#0A7A2B; --y:#FFEE03; --u:8px;
+  --pad:calc(max(0px,(100vw - 1360px)/2) + 40px);
+}
+*{box-sizing:border-box}
+html,body{margin:0;overflow-x:clip}
+body{font-family:"Noto Sans JP","Hiragino Sans",system-ui,sans-serif;
+  color:var(--ink);background:#0B1A10;font-size:16px;line-height:1.9;
+  -webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+
+.hd{position:relative;z-index:30;display:flex;align-items:center;gap:24px;
+  padding:calc(var(--u)*2.5) var(--pad);background:#fff}
+.hd__logo img{height:32px;width:auto}
+.hd__nav{display:flex;gap:24px;font-size:14px;font-weight:700;margin-left:auto}
+.hd__btn{font-size:14px;font-weight:700;padding:11px 22px;border-radius:2px;
+  border:1.5px solid var(--g);color:var(--g);white-space:nowrap}
+
+/* 1 写真が全面。6 FVは写真の下端で終わる */
+.fv{position:relative;height:min(calc(100vh - 90px),700px);overflow:hidden;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:0 var(--pad)}
+.bg{position:absolute;inset:0;z-index:0}
+.bg img{width:100%;height:100%;object-fit:cover;object-position:48% 44%}
+/* ★046はスクリム無し（写真の上部が白い天井なので黒文字が読める）。
+   ESL clubの写真は木目の中間調なので、白抜きで比3.0を満たす
+   背景輝度0.30以下まで落とす */
+.bg::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(
+    rgba(6,22,12,.30) 0%,
+    rgba(6,22,12,.52) 30%,
+    rgba(6,22,12,.74) 52%,
+    rgba(6,22,12,.82) 100%)}
+
+/* 2 奥の層：巨大な半透明の文字。046は英字スローガン、こちらは実在の数字 */
+.deep{position:absolute;left:0;right:0;top:50%;z-index:1;
+  transform:translateY(-52%);text-align:center;pointer-events:none;
+  color:rgba(255,255,255,.19);
+  font-size:clamp(120px,20.8vw,300px);font-weight:900;line-height:.82;
+  letter-spacing:-.02em;white-space:nowrap}
+.deep sub{font-size:.26em;font-weight:900;vertical-align:baseline;
+  margin-left:.04em;letter-spacing:0}
+.deep .cap{display:block;font-size:.062em;font-weight:700;letter-spacing:.34em;
+  color:rgba(255,255,255,.34);margin:0 0 .06em}
+
+/* 3 手前の層：見出し。046は黒。こちらは写真が中間調なので白抜き */
+.h1{position:relative;z-index:4;margin:0;color:#fff;text-align:center;
+  font-size:clamp(23px,5.42vw,78px);font-weight:900;line-height:1.3;
+  letter-spacing:.005em}
+.h1 .l{display:block}
+
+.under{position:relative;z-index:4;display:flex;align-items:flex-end;
+  gap:calc(var(--u)*5);flex-wrap:wrap;margin:calc(var(--u)*5) 0 0;color:#fff}
+.nums{display:flex;gap:calc(var(--u)*5)}
+.num small{display:block;font-size:11px;font-weight:700;opacity:.82;line-height:1.4}
+.num b{display:block;font-size:26px;font-weight:900;line-height:1.1;letter-spacing:-.01em}
+.num b i{font-style:normal;font-size:12px;margin-left:1px}
+.num em{font-style:normal;display:block;font-size:11px;font-weight:700;opacity:.82}
+.btn{display:inline-flex;align-items:center;gap:10px;font-size:15px;font-weight:700;
+  padding:15px 26px;background:var(--y);color:var(--ink);border-radius:2px;
+  white-space:nowrap;margin-left:auto}
+.btn::after{content:"";width:7px;height:7px;border-top:2px solid currentColor;
+  border-right:2px solid currentColor;transform:rotate(45deg)}
+
+@media(max-width:900px){
+  :root{--pad:20px}
+  .hd{padding:calc(var(--u)*1.5) var(--pad);gap:12px}
+  .hd__nav{display:none}
+  .fv{height:auto;min-height:0;padding:calc(var(--u)*7) var(--pad) calc(var(--u)*5)}
+  .deep{font-size:120px;top:44%}
+  .h1{font-size:23px;line-height:1.5}
+  .under{display:block}
+  .nums{gap:calc(var(--u)*3)}
+  .num b{font-size:22px}
+  .btn{width:100%;justify-content:center;margin:calc(var(--u)*4) 0 0}
+}
+</style></head><body>
+
+<header class="hd">
+  <a class="hd__logo" href="#"><img src="../img/logo.svg" alt="ESL club"></a>
+  <nav class="hd__nav">
+    <a href="#">4つの特徴</a><a href="#">保護者さまの声</a>
+    <a href="#">他塾との違い</a><a href="#">教室紹介</a>
+  </nav>
+  <a class="hd__btn" href="https://eslclub.jp/">資料を見る</a>
+</header>
+
+<section class="fv">
+
+  <div class="bg"><img src="../img/p07.jpg" alt="自宅の机で英検対策に取り組む小学生"></div>
+
+  <!-- 2 奥の層。★数字は esl3 のコピーにあるものだけ。捏造しない -->
+  <p class="deep" aria-hidden="true"><span class="cap">合格に導いた</span>1,000<sub>名以上</sub></p>
+
+  <!-- 3 手前の層。文言は esl3 から一字一句そのまま -->
+  <h1 class="h1">
+    <span class="l">受験勉強と並走しながら</span>
+    <span class="l">小学生・中学生で英検2級、</span>
+    <span class="l">高校生で準1級を目指せる英語塾</span>
+  </h1>
+
+  <div class="under">
+    <!-- 「合格に導いた1,000名以上」は奥の層で1回出しているのでここには置かない -->
+    <div class="nums">
+      <div class="num"><small>開塾から</small><b>2015<i>年</i></b><em>英検に特化</em></div>
+      <div class="num"><small>講師は全員</small><b>英検1<i>級</i></b><em>以上</em></div>
+    </div>
+    <a class="btn" href="https://eslclub.jp/trial/">無料体験レッスンはこちら</a>
+  </div>
+
+</section>
+
+</body></html>

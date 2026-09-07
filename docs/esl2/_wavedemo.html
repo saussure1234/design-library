@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>esl2 FV｜色が波のように走る（Pikkas方式の再現）</title>
+<style>
+  :root{
+    --g1:#00B63A; --g2:#6CBB00; --g3:#00B21F; --yel:#FFEE03;
+    --ink:#262626; --cream:#F6F3E7; --line:#e6e6e6;
+    --ease:cubic-bezier(.16,1,.3,1);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Noto Sans JP",system-ui,sans-serif;
+    color:var(--ink);background:#fafafa;padding:26px 22px 80px;-webkit-font-smoothing:antialiased}
+  .head{max-width:1180px;margin:0 auto 16px}
+  .head h1{font-size:clamp(18px,2.3vw,23px);margin:0 0 6px}
+  .head p{margin:0;color:#666;font-size:13.5px;line-height:1.75}
+  .bar{max-width:1180px;margin:14px auto 0;display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+  .bar button{font:inherit;font-size:13px;border:1px solid #d5d5d5;background:#fff;padding:8px 15px;
+    border-radius:999px;cursor:pointer;transition:transform .1s var(--ease),background .15s}
+  .bar button:hover{background:#f2f2f2}.bar button:active{transform:scale(.97)}
+  .bar .go{background:#111;color:#fff;border-color:#111;font-weight:700}
+  .bar .sp{font-size:12.5px;color:#999}
+
+  .grid{max-width:1180px;margin:20px auto 0;display:grid;gap:20px;grid-template-columns:repeat(2,1fr)}
+  @media(max-width:900px){.grid{grid-template-columns:1fr}}
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .card__hd{padding:11px 14px;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;gap:9px}
+  .num{width:23px;height:23px;border-radius:7px;background:var(--ink);color:#fff;font-size:12.5px;
+    font-weight:700;display:grid;place-items:center;flex:none}
+  .ttl{font-size:14px;font-weight:700}.sub{font-size:11.5px;color:#888}
+  .replay{margin-left:auto;font:inherit;font-size:12px;border:1px solid #ddd;background:#fff;
+    padding:5px 11px;border-radius:999px;cursor:pointer}
+
+  /* ── ステージ（esl2のFVを再現） ── */
+  .stage{position:relative;height:400px;overflow:hidden;background:var(--cream)}
+  .hdr{position:absolute;top:0;left:0;right:0;height:42px;background:#fff;z-index:6;
+    display:flex;align-items:center;padding:0 14px;border-bottom:1px solid #eee}
+  .hdr .lg{font-size:13px;font-weight:800;letter-spacing:.02em}
+  .hdr .lg em{font-style:normal;color:var(--g3)}
+  .hdr .hcta{margin-left:auto;background:var(--yel);color:#222;font-size:10.5px;font-weight:800;
+    padding:6px 11px;border-radius:5px}
+  .fv{position:absolute;inset:42px 0 0 0;z-index:1}
+  .blob{position:absolute;inset:auto -18% -46% -18%;height:76%;
+    background:radial-gradient(120% 90% at 60% 20%,var(--g2),var(--g1) 55%,var(--g3));
+    border-radius:48% 52% 44% 56%/60% 58% 42% 40%}
+  .copy{position:absolute;left:24px;top:26px;right:48%;z-index:3}
+  .eyebrow{font-size:11px;font-weight:700;color:#2f7a2f;margin:0 0 7px}
+  .h1{font-size:clamp(14px,1.4vw,17px);line-height:1.5;font-weight:800;margin:0 0 14px}
+  .h1 em{font-style:normal;color:var(--g3)}
+  .cta{display:inline-flex;align-items:center;gap:7px;background:var(--g3);color:#fff;font-size:12.5px;
+    font-weight:700;padding:10px 15px;border-radius:999px;text-decoration:none;
+    box-shadow:0 7px 0 #E0CF00}
+  .boy{position:absolute;right:-3%;bottom:0;height:88%;z-index:2;
+    filter:drop-shadow(0 20px 22px rgba(0,0,0,.18))}
+  .girl{position:absolute;right:20%;top:12px;width:104px;height:104px;object-fit:cover;object-position:50% 30%;
+    border-radius:50%;background:#fff;padding:4px;z-index:3;box-shadow:0 10px 22px -9px rgba(0,0,0,.3)}
+
+  /* 波レイヤー（ヘッダーより下・FVより上） */
+  .wave{position:absolute;inset:0;z-index:5;pointer-events:none}
+  .wave svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+
+  /* ── 方式B：純CSS（border-radiusの楕円） ── */
+  .cssv{position:absolute;left:-25%;right:-25%;top:0;height:100%;z-index:5;pointer-events:none;
+    background:var(--g3);border-radius:0 0 50% 50%/0 0 22% 22%;
+    transform:translateY(0)}
+  .cssv.run{transition:transform 1.15s cubic-bezier(.55,0,.28,1);transform:translateY(-118%)}
+
+  .note{padding:10px 14px;border-top:1px solid #f4f4f4;font-size:11.5px;color:#777;line-height:1.65}
+  .note code{background:#f2f2f2;padding:1px 5px;border-radius:4px;font-size:11px}
+  .foot{max-width:1180px;margin:24px auto 0;background:#fff;border:1px solid var(--line);
+    border-radius:12px;padding:16px 18px;font-size:13px;color:#555;line-height:1.85}
+  .foot b{color:#111}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<div class="head">
+  <h1>esl2 FV｜色が波のように走ってヘッダーに消える</h1>
+  <p>Pikkas International の開幕アニメを解析して、<b>esl2 の実際のFV（見出し・緑・写真）</b>に当てたもの。<br>
+  向こうは <b>SVGパスをGSAPで変形</b>させています。①はそれを<b>ライブラリなし</b>で再現。②は<b>純CSSだけ</b>の簡易版です。</p>
+</div>
+
+<div class="bar">
+  <button class="go" id="all">▶ 両方いっぺんに再生</button>
+  <span class="sp">読み込み時に1回だけ走る想定。ループはしません</span>
+</div>
+
+<div class="grid">
+
+  <!-- ① SVGパス変形（Pikkasと同じ方式・ライブラリなし） -->
+  <div class="card">
+    <div class="card__hd"><span class="num">1</span><span class="ttl">SVGパス変形</span>
+      <span class="sub">Pikkasと同じ方式／依存ゼロ</span>
+      <button class="replay" data-p="a">▶ もう一度</button></div>
+    <div class="stage" id="a">
+      <div class="hdr"><span class="lg">ESL <em>club</em></span><span class="hcta">無料体験レッスンはこちら</span></div>
+      <div class="fv">
+        <div class="blob"></div>
+        <div class="copy">
+          <p class="eyebrow">2015年の開塾以降”英検に特化”してきたからできる</p>
+          <h1 class="h1">受験勉強と並走しながら<br><em>小学生・中学生で英検2級、</em><br><em>高校生で準1級</em>を目指せる英語塾</h1>
+          <a class="cta" href="#">無料体験レッスンはこちら →</a>
+        </div>
+        <img class="girl" src="img/fv_girl.png" alt="">
+        <img class="boy" src="img/fv_boy.png" alt="">
+      </div>
+      <div class="wave"><svg viewBox="0 0 1000 1000" preserveAspectRatio="none">
+        <path id="pa" fill="#00B21F" d="M0,0 L1000,0 L1000,1000 C1000,1000 750,1000 500,1000 C250,1000 0,1000 0,1000 Z"></path>
+      </svg></div>
+    </div>
+    <div class="note">緑が全面を覆った状態から、<b>下端が「中央を先頭にした弧」を描いて上へ抜ける</b>。実測どおり <code>中央 = 端 × 0.76</code> で膨らませています。</div>
+  </div>
+
+  <!-- ② 純CSS -->
+  <div class="card">
+    <div class="card__hd"><span class="num">2</span><span class="ttl">純CSS（簡易版）</span>
+      <span class="sub">JSなし・4行</span>
+      <button class="replay" data-p="b">▶ もう一度</button></div>
+    <div class="stage" id="b">
+      <div class="hdr"><span class="lg">ESL <em>club</em></span><span class="hcta">無料体験レッスンはこちら</span></div>
+      <div class="fv">
+        <div class="blob"></div>
+        <div class="copy">
+          <p class="eyebrow">2015年の開塾以降”英検に特化”してきたからできる</p>
+          <h1 class="h1">受験勉強と並走しながら<br><em>小学生・中学生で英検2級、</em><br><em>高校生で準1級</em>を目指せる英語塾</h1>
+          <a class="cta" href="#">無料体験レッスンはこちら →</a>
+        </div>
+        <img class="girl" src="img/fv_girl.png" alt="">
+        <img class="boy" src="img/fv_boy.png" alt="">
+      </div>
+      <div class="cssv" id="cb"></div>
+    </div>
+    <div class="note"><code>border-radius:0 0 50% 50%/0 0 22% 22%</code> で下端を楕円にした板を <code>translateY</code> で上へ。<b>弧の深さは一定</b>なので①ほど生々しくないが、JSゼロ。</div>
+  </div>
+
+</div>
+
+<div class="foot">
+  <b>結論：真似できます。しかもGSAPは要りません。</b> ①は素のJavaScript（requestAnimationFrame）だけで、Pikkasと同じSVGパス変形を再現しています。約30行。<br>
+  <b>①と②の違い</b>：①は進むにつれて<b>弧の深さが変わる</b>（本家と同じ）。②は弧が固定。並べると①の方が「水が引く」感じが出ます。<br>
+  <b>esl2に入れる場合の注意</b>：この演出は<b>初回訪問の1回だけ</b>にすべきです（sessionStorageで制御）。毎回1.2秒待たされるとフォーム到達率が落ちます。また、緑が抜けた先に<b>緑のヘッダーが無い</b>ので、esl2では「ヘッダーに隠れる」ではなく「上に抜けて消える」形にしています。ヘッダーを緑にするなら本家と同じ着地にできます。
+</div>
+
+<script>
+(function(){
+  // ── ① SVGパス変形：Pikkasの実測値を再現 ──
+  var pa=document.getElementById('pa');
+  function d(edge,center){
+    return "M0,0 L1000,0 L1000,"+edge.toFixed(1)+
+           " C1000,"+edge.toFixed(1)+" 750,"+center.toFixed(1)+" 500,"+center.toFixed(1)+
+           " C250,"+center.toFixed(1)+" 0,"+center.toFixed(1)+" 0,"+edge.toFixed(1)+" Z";
+  }
+  function ease(t){ return t<.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2; }  // easeInOutCubic
+  var raf=null;
+  function playA(){
+    if(raf) cancelAnimationFrame(raf);
+    var T=1150, t0=null;
+    pa.setAttribute('d', d(1000,1000));
+    function step(ts){
+      if(!t0) t0=ts;
+      var p=Math.min(1,(ts-t0)/T), e=ease(p);
+      var edge=1000*(1-e);
+      // 実測：中央 = 端 × 0.76／ただし始点と終点では平らに戻す
+      var bulge=0.24*Math.sin(Math.PI*Math.min(1,p*1.15));
+      pa.setAttribute('d', d(edge, edge*(1-bulge)));
+      if(p<1) raf=requestAnimationFrame(step);
+    }
+    raf=requestAnimationFrame(step);
+  }
+  // ── ② 純CSS ──
+  var cb=document.getElementById('cb');
+  function playB(){ cb.classList.remove('run'); void cb.offsetWidth; cb.classList.add('run'); }
+
+  document.querySelectorAll('.replay').forEach(function(b){
+    b.addEventListener('click', function(){ b.dataset.p==='a'?playA():playB(); });
+  });
+  document.getElementById('all').addEventListener('click', function(){ playA(); playB(); });
+
+  // 画面に入ったら1回だけ自動再生
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ playA(); playB(); io.disconnect(); } });
+  },{threshold:.4});
+  io.observe(document.getElementById('a'));
+})();
+</script>
+</body>
+</html>

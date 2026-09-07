@@ -1,0 +1,29 @@
+<!-- @dsCard group="Colors" -->
+<!doctype html><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>
+body{margin:0;padding:34px;background:var(--ground);font-size:15px}
+h2{font-size:15px;margin:0 0 4px}
+p.n{font-size:12px;color:var(--ink-2);margin:0 0 20px;line-height:1.7}
+.row{display:flex;gap:18px;flex-wrap:wrap;margin:0 0 12px}
+.sw{width:186px}
+.box{height:104px;border-radius:6px;display:grid;place-content:center;
+  font-size:12px;font-weight:700;text-align:center;padding:8px}
+.cap{font-size:11px;color:var(--ink-2);margin:6px 0 0;line-height:1.6}
+.ok{color:var(--brand);font-weight:700}
+.ng{color:#C0392B;font-weight:700}
+</style>
+
+<h2>① 見えるか — 面と地の段差</h2>
+<p class="n">CRITERIA.md の最頻・最再発の指摘。白ベース＋白いカードは、放っておくと全部が同じ明るさに潰れる。好みではなく構造上の弱点。</p>
+<div class="row">
+  <div class="sw"><div class="box" style="background:#fff;color:#12262C;border:0">白い面</div>
+    <p class="cap">地 <b>#FFFFFF</b>（輝度0.939）<br><span class="ng">比 1.00 — 潰れる</span><br>だから枠線を引く羽目になる</p></div>
+  <div class="sw" style="background:var(--ground);padding:10px;border-radius:8px">
+    <div class="box" style="background:#fff;color:#12262C">白い面</div>
+    <p class="cap">地 <b>#E8F3EA</b>（輝度0.872）<br><span class="ok">比 1.16 — 枠線なしで浮く</span></p></div>
+  <div class="sw" style="background:var(--brand);padding:10px;border-radius:8px">
+    <div class="box" style="background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.5)">白い文字</div>
+    <p class="cap" style="color:#cfe6d6">濃地 <b>#0A7A2B</b>（輝度0.142）<br><span style="color:#9ee6b6;font-weight:700">白文字との比 5.48</span></p></div>
+</div>
+<p class="n">★例外：面を1つも作らない設計（文字と丸だけ）なら、潰れる面が無いので白地でよい。<br>判定は「地が明るいか」ではなく「<b>面があるとき、その面が地から段差を作れているか</b>」。</p>

@@ -1,0 +1,181 @@
+<!doctype html><html lang="ja"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>FV案F 横並び＋角の色型 v02｜ESL club オンライン校</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════════
+   FV案F 横並び＋角の色型 ── ベンチマーク：049 Career Palette
+   https://career-palette.kobe-wu.ac.jp/
+   ★見たのは ref/bench/049_career-palette_kobe-wu_ac_jp.png のみ。コードは読んでいない
+
+   ── 049の構成（実寸で見て書き出した）──────────────────
+   1 地は【淡いグラデーション】が全面（左が黄／中央が桃／右が緑）
+   2 巨大なロゴタイプが中央上。文字ごとに色が変わる
+   3 その下に説明文2行（中央揃え・小さめ・行間広め）
+   4 【人物写真を横一列】に並べる。角丸。等間隔。左右で切れて続く
+   5 各写真の【左上の角に色の三角】が乗る。写真ごとに色が違う
+   6 右に SCROLL の丸バッジ
+   7 写真の下は白
+
+   ── 049の実測値 ────────────────────────────
+   写真   幅約236px／間隔約21px／高さ313px（縦横比 0.75）
+   角の三角 約90×50px、写真の左上
+   見出し  cap高 約75px → font-size 約104px
+   説明文  15px前後、行間広め、中央揃え
+
+   ── ★禁止事項 ──────────────────────────────
+     × カードを使わない        × 影を使わない
+     × 地のグラデーションを多色にしない
+       049は黄・桃・緑の3系統。ESL clubの色数が増えるので
+       【ブランド緑の濃淡だけ】で組む（CRITERIA.md ④）
+     × 角の三角を写真ごとに違う色にしない（同じ理由）
+     × 写真を角丸の【箱】に見せない（角丸は写真の縁だけ。枠線を付けない）
+     × ESL clubに無い言葉を作らない
+     × 同じ訴求を2回出さない
+
+   ── ★置き換えたもの（tailoring）────────────────────
+   (1) 写真の枚数
+       049は6枚。ESL clubは2枚。
+       6枚の「一列に流れる」リズムは2枚では作れない。
+       → 縦横比0.75と角の三角はそのまま使い、幅を広げて2枚を中央に置く。
+         枚数を偽装して同じ写真を並べたりはしない
+   (2) 見出し
+       049の中央上の巨大文字はロゴタイプ（ブランド名）。
+       ESL clubで同じ位置に置けるのは見出し本文。
+       実測上限は 1360÷15字＝90px。049の104pxには届かないが、
+       中央揃え・その下に情報、という順番は同じ
+   (3) 説明文の位置
+       049は説明文2行。ESL clubに対応する説明文は無いので【作らない】。
+       同じ位置に【数字3つ】を中央揃えで置く
+   (4) 地のグラデーション
+       049は虹色。こちらは淡緑→白→淡緑のブランド内グラデーションにする
+
+   ── ★訴求の重複（1回ずつ）──────────────────────
+   ・前置きは入れない ＝ 数字②と同内容
+   ・ヘッダーは「資料を見る」＝ 本文CTAと文言を分ける
+   ・注記は入れない ＝ 見出しの「英検2級」と重複
+   ・残す重複：見出し「準1級」と数字③「英検1級」＝ 主体が違う
+   v02 = 3行目が折り返して4行になっていた。
+         90px×15字＝1350pxで使える幅1360に収まる計算だったが、
+         字間(.005em)のぶんで溢れた。→ 86pxに下げる（15字＝1290px）
+   v01 = 1回目
+   ══════════════════════════════════════════════════════════ */
+:root{
+  --ink:#12262C; --ink2:#5F7266; --g:#0A7A2B; --g2:#4FA86A; --g3:#A8D2B6;
+  --y:#FFEE03; --line:#C3D8C8; --u:8px;
+  --pad:calc(max(0px,(100vw - 1360px)/2) + 40px);
+}
+*{box-sizing:border-box}
+html,body{margin:0;overflow-x:clip}
+body{font-family:"Noto Sans JP","Hiragino Sans",system-ui,sans-serif;
+  color:var(--ink);font-size:16px;line-height:1.9;-webkit-font-smoothing:antialiased;
+  /* 1 地は淡いグラデーションが全面。★多色にしない。ブランド緑の濃淡だけ */
+  background:linear-gradient(105deg,#DCEDE2 0%,#F4FAF6 38%,#EAF4EC 66%,#D8EBDE 100%)}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+
+.hd{position:relative;z-index:30;display:flex;align-items:center;gap:24px;
+  padding:calc(var(--u)*2.5) var(--pad)}
+.hd__logo img{height:32px;width:auto}
+.hd__nav{display:flex;gap:24px;font-size:14px;font-weight:700;margin-left:auto}
+.hd__btn{font-size:14px;font-weight:700;padding:11px 22px;border-radius:2px;
+  border:1.5px solid var(--g);color:var(--g);white-space:nowrap}
+
+.fv{position:relative;min-height:min(calc(100vh - 90px),820px);
+  display:flex;flex-direction:column;justify-content:center;
+  padding:calc(var(--u)*3) var(--pad) 0;overflow:hidden}
+
+/* 2 見出しは中央上に大きく */
+.h1{margin:0;text-align:center;
+  font-size:clamp(23px,5.97vw,86px);font-weight:900;line-height:1.26;
+  letter-spacing:.005em}
+.h1 .l{display:block}
+
+/* 3 049の説明文の位置に、数字3つを中央揃えで置く */
+.nums{display:flex;justify-content:center;gap:calc(var(--u)*8);
+  margin:calc(var(--u)*4) 0 0}
+.num{text-align:center}
+.num small{display:block;font-size:11px;font-weight:700;color:var(--ink2);line-height:1.4}
+.num b{display:block;font-size:30px;font-weight:900;color:var(--g);line-height:1.15;
+  letter-spacing:-.01em}
+.num b i{font-style:normal;font-size:12px;margin-left:1px}
+.num em{font-style:normal;display:block;font-size:11px;font-weight:700;color:var(--ink2)}
+
+.cta{display:flex;justify-content:center;margin:calc(var(--u)*4) 0 0}
+.btn{display:inline-flex;align-items:center;gap:10px;font-size:15px;font-weight:700;
+  padding:15px 28px;background:var(--y);color:var(--ink);border-radius:2px;white-space:nowrap}
+.btn::after{content:"";width:7px;height:7px;border-top:2px solid currentColor;
+  border-right:2px solid currentColor;transform:rotate(45deg)}
+
+/* 4 写真を横一列。縦横比0.75・間隔21px（049の実測値）。
+     ★2枚しかないので幅を広げる。同じ写真を並べて枚数を偽装しない */
+.row{display:flex;justify-content:center;gap:21px;margin:calc(var(--u)*5) 0 0}
+.row figure{position:relative;margin:0;width:min(31%,414px);aspect-ratio:.75;
+  border-radius:14px;overflow:hidden}
+.row img{width:100%;height:100%;object-fit:cover}
+.row figure:nth-of-type(1) img{object-position:44% 48%}
+.row figure:nth-of-type(2) img{object-position:58% 42%}
+/* 5 左上の角に色の三角。★写真ごとに色を変えない（色数を増やさない） */
+.row figure::before{content:"";position:absolute;left:0;top:0;z-index:2;
+  border-style:solid;border-width:52px 94px 0 0;
+  border-color:var(--g3) transparent transparent transparent}
+
+@media(max-width:900px){
+  :root{--pad:20px}
+  .hd{padding:calc(var(--u)*1.5) var(--pad);gap:12px}
+  .hd__nav{display:none}
+  .fv{min-height:0;padding:calc(var(--u)*4) var(--pad) calc(var(--u)*5)}
+  .h1{font-size:23px;line-height:1.5;text-align:left}
+  .nums{gap:calc(var(--u)*2);justify-content:space-between}
+  .num b{font-size:24px}
+  .cta{justify-content:stretch}
+  .btn{width:100%;justify-content:center}
+  /* スマホ：写真をCTAより上に（全LP共通の決めごと） */
+  .fv{display:flex;flex-direction:column}
+  .row{order:-1;margin:0 0 calc(var(--u)*4);gap:12px}
+  .row figure{width:50%}
+  .row figure::before{border-width:32px 58px 0 0}
+}
+</style></head><body>
+
+<header class="hd">
+  <a class="hd__logo" href="#"><img src="../img/logo.svg" alt="ESL club"></a>
+  <nav class="hd__nav">
+    <a href="#">4つの特徴</a><a href="#">保護者さまの声</a>
+    <a href="#">他塾との違い</a><a href="#">教室紹介</a>
+  </nav>
+  <a class="hd__btn" href="https://eslclub.jp/">資料を見る</a>
+</header>
+
+<section class="fv">
+
+  <!-- 2 中央上の見出し。文言は esl3 から一字一句そのまま -->
+  <h1 class="h1">
+    <span class="l">受験勉強と並走しながら</span>
+    <span class="l">小学生・中学生で英検2級、</span>
+    <span class="l">高校生で準1級を目指せる英語塾</span>
+  </h1>
+
+  <!-- 3 049の説明文の位置。★数字は esl3 のコピーにあるものだけ -->
+  <div class="nums">
+    <div class="num"><small>合格に導いた</small><b>1,000<i>名</i></b><em>以上</em></div>
+    <div class="num"><small>開塾から</small><b>2015<i>年</i></b><em>英検に特化</em></div>
+    <div class="num"><small>講師は全員</small><b>英検1<i>級</i></b><em>以上</em></div>
+  </div>
+
+  <div class="cta">
+    <a class="btn" href="https://eslclub.jp/trial/">無料体験レッスンはこちら</a>
+  </div>
+
+  <!-- 4・5 横並びの写真＋左上の角の色 -->
+  <div class="row">
+    <figure><img src="../img/p07.jpg" alt="自宅の机で英検対策に取り組む小学生"></figure>
+    <figure><img src="../img/p20.jpg" alt="オンラインで英検対策を受ける中高生"></figure>
+  </div>
+
+</section>
+
+</body></html>

@@ -1,0 +1,185 @@
+<!doctype html><html lang="ja"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>FV案B 丸埋め込み型 v05｜ESL club オンライン校</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════════
+   FV案B 丸埋め込み型 ── ベンチマーク：011 UM English Lab.
+   https://um-english-lab.com/   （_shortlist.json 011）
+   ★見たのは ref/bench/011_um-english-lab_com.png のみ。コードは読んでいない
+
+   ── なぜこのベンチか ────────────────────────────
+   素材は【シーン写真2枚＋見出し39字＋数字3つ】。
+   011は【円形に抜いた写真を、文字列の中に埋め込む】構成で、
+   写真の枚数を増やしても構図が崩れない。2枚にちょうど合う。
+   しかも英語スクールで、業種も一致する（業種は選定条件ではないが）。
+
+   ── 011の構成（実物を見て書き出した）──────────────────
+   1 大きな文字を横一列に組み、語と語の【あいだ】に丸を差し込む
+   2 丸の中身は写真だったり、単色の図形だったり混ざる
+   3 文字は細めで字間が広い。極太にしない
+   4 地は白に近い。丸の色だけが差し色
+   5 カード・影・角丸の箱を使わない
+   6 下部にカラフルな面が続く（FVの外なので借りない）
+
+   ── ★禁止事項 ──────────────────────────────
+     × カードを使わない          × 影を使わない
+     × 角丸の箱を使わない        × 見出しを極太にしない（011は細め）
+     × 丸を正円以外にしない      × 色を3色目に増やさない
+     × 011の下部のカラフルな面は借りない（ESL clubの色数が増える）
+     × ESL clubに無い言葉を作らない
+     × 同じ訴求を2回出さない
+
+   ── ★置き換えたもの（tailoring）────────────────────
+   (1) 011の見出しは英単語の羅列（Trend / Wicked / Curious Lab / 探究）。
+       ESL clubの見出しは39字の日本語1文なので、
+       【文の切れ目】に丸を差し込む。語を作らない・並べ替えない
+   (2) 011は丸が4個以上。ESL clubの写真は2枚なので
+       【写真の丸2個】＋【数字の丸1個】の計3個にする。
+       数字を丸にするのは、011が「写真の丸と図形の丸を混ぜている」のと同じ扱い
+   (3) 残り2つの数字は見出しの下に横並び。カードにしない
+   (4) 丸に文字を入れるときの寸法：直径Dの円に内接する正方形は D÷√2。
+       案6のv09で「円122pxに中身120pxは物理的に入らない」を実測済み。
+       数字の丸は直径168px → 内接正方形118px。中身はその内側に収める
+
+   ── ★訴求の重複（1回ずつ）──────────────────────
+   ・前置きは入れない ＝ 数字②と同内容
+   ・ヘッダーは「資料を見る」＝ 本文CTAと文言を分ける
+   ・注記は入れない ＝ 見出しの「英検2級」と重複
+   ・残す重複：見出し「準1級」と数字③「英検1級」＝ 主体が違う
+
+   ── CRITERIA.md ─────────────────────────────
+   (1)見えるか   地の輝度0.872。丸の縁で面の段差を作る
+   (2)読めるか   丸は文字にかからない。行の高さの中に収める
+   (3)自然か     動きを入れない
+   (4)品        ブランド色の外を持ち込まない
+   (5)位置      コピーは esl3 から一字一句そのまま
+   (6)過剰でない 強調は【黄のCTA】1箇所のみ
+   v05 = ★2つ直す（どちらもスクショで見つけたもの。数字は全部OKだった）
+         ①リングが行に入りきらず【4行目に単独で落ちて】いた。
+           3行目は15字＝1200px、リング152pxで計1352px。使える幅1360に対し
+           丸のマージンぶんで溢れる。→ リングを外す。
+           011も全ての切れ目に丸があるわけではない。無理に3つ置かない
+         ②行の高さが不揃いだった。丸のある行(1.9em)だけ背が高く、
+           1〜2行目の間隔だけ広かった。
+           → 丸に負のマージン(-.33em)を与え、行の高さを丸で変えない
+   v04 = CTAが画面外に9px出ていた。見出しを80pxに上げたぶん縦が足りない。
+         → 見出しの行間 1.32→1.24、数字とCTAの上マージンを詰める
+   v03 = ★011の肝は【見出しが画面幅いっぱいに走ること】。
+         私のは左半分で止まり、インク率8%（案Aは60%）でスカスカだった。
+         実測で級数を出した：使える横幅1360、3行目は15字＋丸1.9em＝16.9F。
+         1360 ÷ 16.9 ＝ 80px。→ 56px から 80px に上げて幅を使い切る
+         ★単色のベタ丸が意味なく浮いていた。011の図形の丸は
+           【リング】で中が抜けている。ベタ→リングに
+   v02 = ★011を見直したら【丸の中に文字は入っていない】。中身は写真か単色。
+         私は数字を丸に入れて、そこだけ直径168pxになり浮いていた。逸脱。
+         → 丸は「写真2つ＋単色1つ」に。数字3つは全部下の横並びへ。
+         ★あわせて：写真の丸が1.42em(約70px)で装飾に見えていた。
+           011の丸は文字と同じ重さで並ぶ。1.9em(約106px)に上げる。
+         ★インク率7%＝薄すぎ（案Aは60%）。見出し49→56pxにして版面を埋める
+   v01 = 1回目
+   ══════════════════════════════════════════════════════════ */
+:root{
+  --ink:#12262C; --ink2:#5F7266; --g:#0A7A2B; --y:#FFEE03;
+  --bg:#E8F3EA; --line:#C3D8C8; --u:8px;
+  --pad:calc(max(0px,(100vw - 1360px)/2) + 40px);
+}
+*{box-sizing:border-box}
+html,body{margin:0;overflow-x:clip}
+body{font-family:"Noto Sans JP","Hiragino Sans",system-ui,sans-serif;
+  color:var(--ink);background:var(--bg);font-size:16px;line-height:1.9;
+  -webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+
+.hd{position:relative;z-index:30;display:flex;align-items:center;gap:24px;
+  padding:calc(var(--u)*2.5) var(--pad)}
+.hd__logo img{height:34px;width:auto}
+.hd__nav{display:flex;gap:26px;font-size:14px;font-weight:700;margin-left:auto}
+.hd__btn{font-size:14px;font-weight:700;padding:11px 22px;border-radius:2px;
+  border:1.5px solid var(--g);color:var(--g);white-space:nowrap}
+
+.fv{position:relative;min-height:min(calc(100vh - 90px),820px);
+  display:flex;flex-direction:column;justify-content:center;
+  padding:calc(var(--u)*4) var(--pad);overflow:hidden}
+
+/* 1・3 大きな文字を組み、語のあいだに丸を差し込む。
+       011は極太にしない。字間を広めに取る */
+.h1{font-size:clamp(23px,5.56vw,80px);font-weight:700;line-height:1.24;
+  letter-spacing:.02em;margin:0}
+.h1 .l{display:flex;align-items:center;flex-wrap:wrap;gap:0 .12em}
+
+/* 2 丸。正円。写真の丸と数字の丸を混ぜる（011と同じ扱い） */
+.o{flex:none;border-radius:50%;overflow:hidden;display:inline-block;vertical-align:middle}
+/* ★丸で行の高さを変えない。1.9emの丸を1.24emの行に入れるため上下に -.33em */
+.o--ph{width:1.9em;height:1.9em;margin:-.33em .1em}
+.o--ph img{width:100%;height:100%;object-fit:cover}
+.o--a img{object-position:44% 40%}
+.o--b img{object-position:58% 42%}
+/* ★単色の丸。011は写真の丸と単色の丸を混ぜている。文字は入れない */
+.o--n{width:1.9em;height:1.9em;background:transparent;
+  border:.17em solid var(--g);margin:0 .1em}
+
+/* 3 残りの数字2つは見出しの下に横並び。カードにしない */
+.nums{display:flex;gap:calc(var(--u)*6);margin:calc(var(--u)*4) 0 0;
+  padding:calc(var(--u)*2.5) 0 0;border-top:1px solid var(--line);max-width:820px}
+.num small{display:block;font-size:11px;font-weight:700;color:var(--ink2);line-height:1.4}
+.num b{display:block;font-size:30px;font-weight:900;color:var(--g);line-height:1.1;
+  letter-spacing:-.01em}
+.num b i{font-style:normal;font-size:13px;margin-left:1px}
+.num em{font-style:normal;display:block;font-size:11px;font-weight:700;color:var(--ink2)}
+
+.cta{margin:calc(var(--u)*3.5) 0 0}
+.btn{display:inline-flex;align-items:center;gap:10px;font-size:15px;font-weight:700;
+  padding:15px 26px;background:var(--y);color:var(--ink);border-radius:2px;white-space:nowrap}
+.btn::after{content:"";width:7px;height:7px;border-top:2px solid currentColor;
+  border-right:2px solid currentColor;transform:rotate(45deg)}
+
+@media(max-width:900px){
+  :root{--pad:20px}
+  .hd{padding:calc(var(--u)*1.5) var(--pad);gap:12px}
+  .hd__nav{display:none}
+  .fv{min-height:0;padding:calc(var(--u)*4) var(--pad) calc(var(--u)*5)}
+  .h1{font-size:23px;line-height:1.5}
+  .nums{gap:calc(var(--u)*3);margin-top:calc(var(--u)*4)}
+  .num b{font-size:24px}
+  .btn{width:100%;justify-content:center}
+}
+</style></head><body>
+
+<header class="hd">
+  <a class="hd__logo" href="#"><img src="../img/logo.svg" alt="ESL club"></a>
+  <nav class="hd__nav">
+    <a href="#">4つの特徴</a><a href="#">保護者さまの声</a>
+    <a href="#">他塾との違い</a><a href="#">教室紹介</a>
+  </nav>
+  <a class="hd__btn" href="https://eslclub.jp/">資料を見る</a>
+</header>
+
+<section class="fv">
+
+  <!-- 1 文の切れ目に丸を差し込む。語は作らない・並べ替えない。
+       文言は esl3 から一字一句そのまま -->
+  <h1 class="h1">
+    <span class="l">受験勉強と並走しながら<span class="o o--ph o--a"><img src="../img/p07.jpg" alt="自宅の机で英検対策に取り組む小学生"></span></span>
+    <span class="l">小学生・中学生で英検2級、<span class="o o--ph o--b"><img src="../img/p20.jpg" alt="オンラインで英検対策を受ける中高生"></span></span>
+    <span class="l">高校生で準1級を目指せる英語塾</span>
+  </h1>
+
+  <!-- ★数字は esl3 のコピーにあるものだけ。捏造しない -->
+  <div class="nums">
+    <div class="num"><small>合格に導いた</small><b>1,000<i>名</i></b><em>以上</em></div>
+    <div class="num"><small>開塾から</small><b>2015<i>年</i></b><em>英検に特化</em></div>
+    <div class="num"><small>講師は全員</small><b>英検1<i>級</i></b><em>以上</em></div>
+  </div>
+
+  <div class="cta">
+    <a class="btn" href="https://eslclub.jp/trial/">無料体験レッスンはこちら</a>
+  </div>
+
+</section>
+
+</body></html>

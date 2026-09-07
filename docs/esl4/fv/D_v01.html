@@ -1,0 +1,178 @@
+<!doctype html><html lang="ja"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>FV案D 全面写真型 v01｜ESL club オンライン校</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════════
+   FV案D 全面写真型 ── ベンチマーク：009 Pikkas International Preschool
+   https://pikkasinternational.com/
+   ★見たのは ref/bench/009_pikkasinternational_com.png のみ。コードは読んでいない
+
+   ── 009の構成（実寸で見て書き出した）──────────────────
+   1 写真が画面の全面。ヘッダーは白い丸みのあるバーが【浮いている】
+   2 白抜きの大文字が【中央下】に3行・中央揃え
+   3 文字と文字のあいだに【小さい矩形の写真】が差し込まれている（角丸）
+     ★011は丸、009は矩形。同じ発想だが形が違う
+   4 左下に小さい3行のテキスト
+   5 右下にスクロール指示の小さな楕円
+
+   ── 009の実測値（PNGから数値で出したもの）──────────────
+   cap高      56px → font-size 約78px
+   行送り     80px（font-size比 1.03。ラテンの大文字だから成立する詰め方）
+   文字ブロック 画面幅の50%（x=363〜1081）
+   スクリム   上部の明るさ196 / 文字帯151 → 下を暗くしている
+   文字の背後 明るさ123（＝白抜きが読める程度に落としてある）
+
+   ── ★禁止事項 ──────────────────────────────
+     × カードを使わない        × 影を使わない
+     × 文字間の写真を【丸】にしない（009は矩形。丸はB案＝011の型）
+     × 行送りを1.03のままにしない（後述）
+     × 色を3色目に増やさない
+     × ESL clubに無い言葉を作らない
+     × 同じ訴求を2回出さない
+
+   ── ★置き換えたもの（tailoring）────────────────────
+   (1) 行送り
+       009は1.03。これは【ラテンの大文字だけ】だから成立する詰め方で、
+       日本語は仮名も漢字も全角の高さを使うので1.03だと行同士がぶつかる。
+       → 1.28にする。ここは数値をそのまま借りられない
+   (2) 級数
+       009は文字ブロックが画面の50%（13字程度）。ESL clubは39字。
+       実測で決めた：使える幅1360 ÷ 最長15字 ＝ 90px。
+       009の78pxに合わせて78pxを採る（余白が残るぶん中央揃えが効く）
+   (3) 写真2枚の割り当て
+       背景の全面写真＝少年(p07)／文字間の小写真＝少女(p20)。
+       009も「大きい写真＋文字間の小写真」の2階層なので構成が一致する
+   (4) 数字とCTA
+       009のFVには数字もCTAも無い。ESL clubには必要。
+       → 数字は009の【左下の小さいテキスト】の位置に白抜きで置く。
+         CTAは見出しの下に中央で置く（009に無い要素なので位置は自分で決めた）
+   (5) スクリム
+       009は下を暗くしている（196→151）が、それでも文字の背後は123。
+       ESL clubの写真はもっと明るいので、
+       白抜きで比3.0を満たす【背景輝度0.30以下】を逆算して敷く
+
+   ── ★訴求の重複（1回ずつ）──────────────────────
+   ・前置きは入れない ＝ 数字②と同内容
+   ・ヘッダーは「資料を見る」＝ 本文CTAと文言を分ける
+   ・注記は入れない ＝ 見出しの「英検2級」と重複
+   ・残す重複：見出し「準1級」と数字③「英検1級」＝ 主体が違う
+   v01 = 1回目
+   ══════════════════════════════════════════════════════════ */
+:root{
+  --ink:#12262C; --g:#0A7A2B; --y:#FFEE03; --u:8px;
+  --pad:calc(max(0px,(100vw - 1360px)/2) + 40px);
+}
+*{box-sizing:border-box}
+html,body{margin:0;overflow-x:clip}
+body{font-family:"Noto Sans JP","Hiragino Sans",system-ui,sans-serif;
+  color:var(--ink);background:#0B1A10;font-size:16px;line-height:1.9;
+  -webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+
+/* 1 ヘッダーは白いバーが浮いている（009と同じ） */
+.hd{position:absolute;left:var(--pad);right:var(--pad);top:calc(var(--u)*2);z-index:30;
+  display:flex;align-items:center;gap:24px;background:#fff;border-radius:6px;
+  padding:calc(var(--u)*1.5) calc(var(--u)*3)}
+.hd__logo img{height:30px;width:auto}
+.hd__nav{display:flex;gap:24px;font-size:14px;font-weight:700;margin-left:auto}
+.hd__btn{font-size:14px;font-weight:700;padding:10px 20px;border-radius:2px;
+  background:var(--y);color:var(--ink);white-space:nowrap}
+
+/* 1 写真が画面の全面 */
+.fv{position:relative;min-height:min(100vh,880px);overflow:hidden;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:0 var(--pad) calc(var(--u)*7)}
+.bg{position:absolute;inset:0;z-index:0}
+.bg img{width:100%;height:100%;object-fit:cover;object-position:46% 46%}
+/* ★009も下を暗くしている（196→151）。ESL clubの写真はさらに明るいので
+   白抜きで比3.0を満たす背景輝度0.30以下まで落とす */
+.bg::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(
+    rgba(6,22,12,.18) 0%,
+    rgba(6,22,12,.30) 34%,
+    rgba(6,22,12,.68) 56%,
+    rgba(6,22,12,.86) 82%,
+    rgba(6,22,12,.90) 100%)}
+
+/* 2 白抜きの大文字を中央下に3行・中央揃え */
+.h1{position:relative;z-index:4;margin:0;color:#fff;text-align:center;
+  font-size:clamp(23px,5.42vw,78px);font-weight:900;
+  line-height:1.28;   /* ★009は1.03。日本語は全角なので1.03だと行がぶつかる */
+  letter-spacing:.005em}
+.h1 .l{display:flex;align-items:center;justify-content:center;gap:0 .14em}
+
+/* 3 文字と文字のあいだに小さい【矩形】の写真。★丸にしない（009は矩形） */
+.chip{flex:none;width:1.62em;height:1.02em;border-radius:.09em;overflow:hidden;
+  margin:-.06em .06em}
+.chip img{width:100%;height:100%;object-fit:cover;object-position:56% 42%}
+
+/* 4 左下に小さいテキスト → ESL clubはここに数字を置く */
+.under{position:relative;z-index:4;display:flex;align-items:flex-end;
+  gap:calc(var(--u)*5);flex-wrap:wrap;margin:calc(var(--u)*5) 0 0;color:#fff}
+.nums{display:flex;gap:calc(var(--u)*5)}
+.num small{display:block;font-size:11px;font-weight:700;opacity:.82;line-height:1.4}
+.num b{display:block;font-size:27px;font-weight:900;line-height:1.1;letter-spacing:-.01em}
+.num b i{font-style:normal;font-size:12px;margin-left:1px}
+.num em{font-style:normal;display:block;font-size:11px;font-weight:700;opacity:.82}
+.btn{display:inline-flex;align-items:center;gap:10px;font-size:15px;font-weight:700;
+  padding:15px 26px;background:var(--y);color:var(--ink);border-radius:2px;
+  white-space:nowrap;margin-left:auto}
+.btn::after{content:"";width:7px;height:7px;border-top:2px solid currentColor;
+  border-right:2px solid currentColor;transform:rotate(45deg)}
+
+@media(max-width:900px){
+  :root{--pad:16px}
+  .hd{padding:calc(var(--u)*1.2) calc(var(--u)*2);gap:10px}
+  .hd__nav{display:none}
+  .fv{min-height:0;padding:calc(var(--u)*13) var(--pad) calc(var(--u)*5);
+    justify-content:flex-start}
+  .bg img{object-position:48% 40%}
+  .h1{font-size:23px;line-height:1.5;margin-top:calc(var(--u)*22)}
+  .h1 .l{flex-wrap:wrap}
+  .under{display:block}
+  .nums{gap:calc(var(--u)*2);justify-content:space-between}
+  .num b{font-size:22px}
+  .btn{width:100%;justify-content:center;margin:calc(var(--u)*4) 0 0}
+}
+</style></head><body>
+
+<section class="fv">
+
+  <header class="hd">
+    <a class="hd__logo" href="#"><img src="../img/logo.svg" alt="ESL club"></a>
+    <nav class="hd__nav">
+      <a href="#">4つの特徴</a><a href="#">保護者さまの声</a>
+      <a href="#">他塾との違い</a><a href="#">教室紹介</a>
+    </nav>
+    <a class="hd__btn" href="https://eslclub.jp/">資料を見る</a>
+  </header>
+
+  <!-- 1 全面写真＝少年 -->
+  <div class="bg"><img src="../img/p07.jpg" alt="自宅の机で英検対策に取り組む小学生"></div>
+
+  <!-- 2・3 中央下に白抜き3行。文字間に小さい矩形写真＝少女
+       文言は esl3 から一字一句そのまま -->
+  <h1 class="h1">
+    <span class="l">受験勉強と並走しながら</span>
+    <span class="l">小学生・中学生で英検2級、<span class="chip"><img src="../img/p20.jpg" alt="オンラインで英検対策を受ける中高生"></span></span>
+    <span class="l">高校生で準1級を目指せる英語塾</span>
+  </h1>
+
+  <div class="under">
+    <!-- ★数字は esl3 のコピーにあるものだけ。捏造しない -->
+    <div class="nums">
+      <div class="num"><small>合格に導いた</small><b>1,000<i>名</i></b><em>以上</em></div>
+      <div class="num"><small>開塾から</small><b>2015<i>年</i></b><em>英検に特化</em></div>
+      <div class="num"><small>講師は全員</small><b>英検1<i>級</i></b><em>以上</em></div>
+    </div>
+    <a class="btn" href="https://eslclub.jp/trial/">無料体験レッスンはこちら</a>
+  </div>
+
+</section>
+
+</body></html>

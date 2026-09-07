@@ -1,0 +1,19 @@
+<!doctype html><meta charset="utf-8">
+<style>body{margin:0;background:#fff;font-family:system-ui;width:1240px}
+.row{display:grid;grid-template-columns:100px 1fr 1fr;align-items:center;border-bottom:1px solid #eee}
+.box{width:100%;aspect-ratio:16/9;background:#fff}
+.lbl{font-size:12px;padding:6px}
+.hd{display:grid;grid-template-columns:100px 1fr 1fr;font-size:12px;font-weight:700;background:#F2F2F2}
+.hd div{padding:6px}</style>
+<div class="hd"><div></div><div>元のまま</div><div>ブランド色に差し替え</div></div>
+<div id="w"></div>
+<script src="../vendor/lottie_light.min.js"></script>
+<script>
+const N=["teacher-in-classroom", "english-teacher", "learning", "student", "letters"]; window.__a=[];
+N.forEach(n=>{const r=document.createElement('div');r.className='row';
+ r.innerHTML='<div class="lbl">'+n+'</div><div class="box a"></div><div class="box b"></div>';
+ document.getElementById('w').appendChild(r);
+ [['a','./lf/'],['b','./recolor/']].forEach(([c,d])=>{
+  try{window.__a.push(lottie.loadAnimation({container:r.querySelector('.'+c),renderer:'svg',
+   loop:true,autoplay:true,path:d+n+'.json'}));}catch(e){}});});
+</script>

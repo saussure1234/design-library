@@ -1,0 +1,463 @@
+<!doctype html><html lang="ja"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>FV案2 UGOKKO型 v01｜ESL club オンライン校</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700;800;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════════
+   FV案2 ── ベンチマーク：UGOKKO（ugokko.jp／MUUUUU掲載2026）
+   全面グラデ／白の極太丸ゴシック巨大タイポ／切り抜き人物が
+   タイポと噛み合う／目つきの浮遊モチーフ／右端に縦ピルCTA／
+   右上に白い凹み（SVGパス1本）
+   ★見たのはスクショのみ。コードは読んでいない
+   ★文言・数字・画像・リンク先は esl3 から一字一句そのまま
+   v01 = 1回目（esl4/index.html から切り出したもの）
+   ══════════════════════════════════════════════════════════ */
+
+/* ══════════════════════════════════════════════════════════
+   ESL club オンライン校 ── 白紙から。骨格ごと egaco 型に組み直す
+   ★esl3 は凍結。一切触っていない。引き継いだのは素材だけ
+     （文言・数字・画像・リンク先は esl3 から一字一句そのまま）
+   ── 1回目の失敗 ────────────────────────────────────
+   最初は esl3 を複製して装飾を足した → 骨格が残って見た目が変わらず
+   2回目は白紙に書いたが「左テキスト・右写真・緑と黄」という骨格を
+   そのまま持ってきた → まだ似ていた
+   4回目＝人物が見出しに被って読めなかった → 人物を右へ寄せ、
+     文字欄を 52vw で止めた。被りは 0px² になった
+   5回目＝横スクロールが 115px 出た。人物のせいだと思って2度直したが
+     直らず、要素ごとに実測したら犯人は【輪郭タイポ】だった
+     （右端1870px／画面より430px外）。overflow:hidden は見た目を切るだけで
+     文書の幅は広がったまま。body に overflow-x:clip を掛けて止める。
+     ★見た目で犯人を推測して2回外した。実測すれば1回で分かった
+   3回目＝ egaco の【構造】を取る：
+     ・人物を切り抜いて画面の右半分に大きく置き、下端で切る
+     ・巨大な輪郭タイポを画面外まで流す
+     ・見出しは極太で色を散らさない。下は1行だけ
+     ・CTAを2つ（主＝無料体験／副＝資料）並べる
+     ・地は白。緑は節の地としてだけ使う
+   ── 縛り ───────────────────────────────────────────
+   色4つ／級数6段／太さ3種／余白は8の倍数
+   ══════════════════════════════════════════════════════ */
+:root{
+  --bg:#FFFFFF; --ink:#12262C; --ink2:#5A6E75; --line:#E3EAEC;
+  --g:#00B21F; --g2:#0A7A2B; --y:#FFEE03;
+  --f1:12px; --f2:14px; --f3:17px; --f4:22px; --f5:32px;
+  --u:8px; --pad:calc(max(0px,(100vw - 1280px)/2) + 32px);
+}
+*{box-sizing:border-box}html,body{margin:0}
+html,body{overflow-x:clip}
+html{scroll-behavior:smooth}
+body{font-family:"Noto Sans JP","Hiragino Sans",system-ui,sans-serif;color:var(--ink);
+  background:var(--bg);font-size:var(--f3);line-height:1.85;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit}
+.nb{white-space:nowrap}
+.wrap{max-width:1280px;margin:0 auto;padding-inline:32px}
+
+.grid-lines{position:absolute;inset:0;z-index:0;pointer-events:none;
+  background-image:repeating-linear-gradient(90deg,rgba(18,38,44,.05) 0 1px,transparent 1px 320px)}
+.grid-lines--light{background-image:repeating-linear-gradient(90deg,rgba(255,255,255,.10) 0 1px,transparent 1px 320px)}
+
+/* ── ヘッダー：CTAを2つ（egacoは右上に2本並ぶ）── */
+.hd{position:absolute;left:0;right:0;top:0;z-index:30;display:flex;align-items:center;gap:20px;
+  padding:calc(var(--u)*2) var(--pad)}
+.hd__logo img{height:32px;width:auto;filter:brightness(0) invert(1)}
+.hd__nav{display:flex;gap:24px;font-size:var(--f2);font-weight:700;margin-left:auto}
+.hd__nav a{text-decoration:none;color:#fff}
+.hd__nav a:hover{color:var(--g2)}
+.hd__btns{display:flex;gap:8px}
+.hd__btn{font-size:var(--f2);font-weight:700;padding:11px 18px;border-radius:999px;
+  text-decoration:none;white-space:nowrap;border:1.6px solid rgba(255,255,255,.75);color:#fff;background:rgba(255,255,255,.14)}
+.hd__btn--main{background:var(--y);border-color:var(--y);color:var(--ink);
+  box-shadow:0 4px 0 #D9C900}
+.hd__btn--main:active{transform:translateY(2px);box-shadow:0 2px 0 #D9C900}
+
+
+/* ══════════════════════════════════════════════════════════
+   UGOKKO 型に載せ替える（ugokko.jp／MUUUUU掲載2026）
+   ★スイミングの練習で11回回して検証済みの技法をそのまま使う。
+     色だけ ESL club の緑・黄に置き換える。
+   ── UGOKKO から取った構造 ──────────────────────────
+     A 全面の斜めグラデ地（左下→右上）
+     B 白の極太【丸ゴシック】の巨大タイポを上部に
+     C 切り抜き人物がタイポと前後で噛み合う
+     D 浮遊モチーフに影。色も形も全部変える
+     E 右端に縦書きのピル型CTA
+     F 右上に白い凹み（SVGパス1本。::before と mask は失敗する）
+     G 人物に drop-shadow
+   ── 検証で分かっていること ───────────────────────────
+     ・書体は M PLUS Rounded 1c 900（Zen Maru/Kosugi/Notoは落選）
+     ・凹み形は SVG パス以外では作れない
+     ・モチーフは「目」を付けないと記号のままで生き物にならない
+     ・噛み合いは z-index だけで作れるが、人物のポーズ依存
+   ══════════════════════════════════════════════════════ */
+.fv{position:relative;overflow:hidden;height:min(94vh,880px);min-height:620px;
+  background:linear-gradient(38deg,#00A81C 0%,#4FC21A 46%,#9ACD07 100%)}
+.fv .grid-lines{background-image:repeating-linear-gradient(90deg,rgba(255,255,255,.10) 0 1px,transparent 1px 320px)}
+
+/* F 右上の白い凹み */
+.notch{position:absolute;top:0;right:0;z-index:12;line-height:0}
+.notch svg{display:block}
+.notch__i{position:absolute;top:24px;right:32px;text-align:center;color:var(--ink)}
+.notch__i i{display:block;width:32px;height:4px;border-radius:99px;background:#9BB3BC;margin:0 auto 5px}
+.notch__i span{font-size:11px;font-weight:800;letter-spacing:.12em}
+
+/* B 巨大タイポ */
+/* ★1回目は 11.4vw で画面外へ出た。ESL club は8文字なので
+     UGOKKO(11文字)より1文字が大きくなる。7.4vw に落とす */
+.fv__ghost{position:absolute;left:3.2%;top:-.02em;z-index:2;margin:0;
+  font-family:"M PLUS Rounded 1c",sans-serif;font-size:7.4vw;font-weight:900;
+  line-height:1;letter-spacing:-.035em;white-space:nowrap;pointer-events:none;
+  color:#fff;-webkit-text-stroke:0}
+
+/* 見出し（白・タイポの下） */
+.fv__in{position:absolute;left:var(--pad);top:19%;z-index:8;max-width:min(560px,46vw);
+  padding:0;margin:0;color:#fff}
+.pill{display:inline-block;padding:6px 18px;border-radius:999px;
+  border:1.6px solid rgba(255,255,255,.7);color:#fff;background:rgba(255,255,255,.16);
+  font-family:"M PLUS Rounded 1c",sans-serif;font-size:var(--f1);font-weight:800;letter-spacing:.1em}
+.fv__eyebrow{font-size:var(--f2);font-weight:700;color:rgba(255,255,255,.94);
+  margin:calc(var(--u)*2) 0 calc(var(--u)*1.5);text-shadow:0 2px 10px rgba(0,60,10,.22)}
+.fv__eyebrow .mk{background:linear-gradient(var(--y),var(--y)) no-repeat 0 88%/100% 6px;
+  color:var(--ink);padding:0 3px}
+.fv__h1{font-family:"M PLUS Rounded 1c",sans-serif;
+  font-size:clamp(24px,2.9vw,38px);font-weight:900;line-height:1.44;letter-spacing:.01em;
+  margin:0 0 calc(var(--u)*3);text-shadow:0 2px 14px rgba(0,60,10,.22)}
+.fv__h1 .hi{background:linear-gradient(var(--y),var(--y)) no-repeat 0 84%/100% 10px;
+  color:var(--ink);padding:0 4px}
+.fv__cta{display:flex;gap:12px;flex-wrap:wrap;margin:0}
+.btn{display:inline-flex;align-items:center;gap:11px;font-weight:800;font-size:var(--f4);
+  font-family:"M PLUS Rounded 1c",sans-serif;padding:17px 30px;border-radius:999px;text-decoration:none}
+.btn--main{background:var(--y);color:var(--ink);box-shadow:0 8px 0 #D9C900,0 16px 26px rgba(0,60,10,.22)}
+.btn--main:hover{transform:translateY(3px);box-shadow:0 5px 0 #D9C900,0 11px 18px rgba(0,60,10,.18)}
+.btn--main:active{transform:translateY(6px);box-shadow:0 2px 0 #D9C900}
+.btn--sub{background:#fff;color:var(--g2);font-size:var(--f3);padding:15px 24px;
+  box-shadow:0 6px 16px rgba(0,60,10,.2)}
+.btn::after{content:"";width:9px;height:9px;border-top:2.4px solid currentColor;
+  border-right:2.4px solid currentColor;transform:rotate(45deg)}
+.btn--main::after{border-color:var(--ink)}
+.fv__note{font-size:var(--f1);color:rgba(255,255,255,.9);margin:calc(var(--u)*2) 0 0}
+
+/* C 切り抜き人物。タイポ(z2)より前に置いて噛み合わせる */
+/* ★スマホ用に .fv__kids で包んだら、PCで人物が消えた。
+   包み箱に z-index が無く、モチーフ(z3)と同じ層に沈んでいた。
+   包み箱に z-index:5 を与えて、中の人物はその中で前後させる */
+.fv__kids{position:absolute;inset:0;z-index:5;pointer-events:none}
+.fv__kids .fv__kid{z-index:auto}
+.fv__kid--b{z-index:-1 !important}
+.fv__kid{position:absolute;bottom:0;z-index:5;pointer-events:none;
+  filter:drop-shadow(0 16px 24px rgba(0,60,10,.3))}
+.fv__kid--a{right:15%;height:78%;width:auto}
+.fv__kid--b{right:1%;height:44%;width:auto;z-index:4}
+
+/* D 浮遊モチーフ。目を付けて生き物にする */
+.mo{position:absolute;z-index:4;filter:drop-shadow(0 8px 12px rgba(0,60,10,.22))}
+.mo--front{z-index:6}
+.bdg{background:var(--c,#FFD629);border-radius:var(--r,50%);
+  width:calc(var(--w,110px)*var(--k,1));height:calc(var(--h,110px)*var(--k,1))}
+.eyes{position:absolute;left:50%;top:26%;transform:translateX(-50%);display:flex;gap:16%;width:54%}
+.eyes i{flex:1;aspect-ratio:1/1.15;background:#fff;border-radius:50%;position:relative}
+.eyes i::after{content:"";position:absolute;left:26%;top:30%;width:46%;height:44%;
+  background:#16323C;border-radius:50%}
+.bdg::after{content:"";position:absolute;left:50%;top:56%;transform:translateX(-50%);
+  width:24%;height:22%;background:rgba(14,59,20,.3);border-radius:50% 50% 45% 45%}
+.bub{border-radius:50%;background:transparent;border:calc(5px*var(--k,1)) solid rgba(255,255,255,.82);
+  width:calc(var(--w,60px)*var(--k,1));height:calc(var(--w,60px)*var(--k,1))}
+
+/* E 右端の縦ピルCTA */
+.pills{position:absolute;right:16px;top:26%;z-index:12;display:flex;flex-direction:column;gap:10px}
+.pill-v{width:46px;border-radius:999px;color:#fff;text-decoration:none;writing-mode:vertical-rl;
+  font-family:"M PLUS Rounded 1c",sans-serif;font-weight:800;font-size:14px;letter-spacing:.16em;
+  padding:22px 0;text-align:center;box-shadow:0 6px 16px rgba(0,60,10,.26)}
+.pill-v--a{background:#FF4E8B}.pill-v--b{background:#6C5BD4}.pill-v--c{background:#0E7A3C}
+
+/* ロゴ・カードは白地の上に置き直す */
+.card-lite{position:absolute;left:var(--pad);bottom:calc(var(--u)*3);z-index:8}
+
+/* 見出しの丸ゴシック化（節の見出しも） */
+.sh__ja,.fnc__no,.pt__h,.ppl__nm,.vo__t,.cts__tel{font-family:"M PLUS Rounded 1c",sans-serif}
+
+/* ══ セクション ══════════════════════════════════════ */
+.sec{position:relative;padding:calc(var(--u)*11) 0}
+.sec--g{background:var(--g);color:#fff}
+.curve-top::before{content:"";position:absolute;left:-8%;right:-8%;top:-1px;
+  height:clamp(46px,5.4vw,92px);background:var(--bg);border-radius:0 0 50% 50%;z-index:1}
+.sec--g > *{position:relative;z-index:2}
+.sh{text-align:center;margin-bottom:calc(var(--u)*6)}
+.sh__en{display:block;font-size:var(--f1);font-weight:700;letter-spacing:.22em;
+  color:rgba(255,255,255,.78);margin:calc(var(--u)*1.5) 0 calc(var(--u)*1)}
+.sh__ja{font-size:var(--f5);font-weight:900;line-height:1.4;margin:0}
+.sh__bar{display:block;width:52px;height:4px;background:var(--y);border-radius:99px;margin:calc(var(--u)*2) auto 0}
+.fnc__grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:calc(var(--u)*2)}
+.fnc__card{position:relative;display:block;background:#fff;color:var(--ink);border-radius:16px;
+  padding:calc(var(--u)*3) calc(var(--u)*3) calc(var(--u)*8);text-decoration:none;
+  box-shadow:0 10px 24px rgba(11,95,35,.14);transition:transform .18s ease,box-shadow .18s ease}
+.fnc__card:hover{transform:translateY(-4px);box-shadow:0 16px 32px rgba(11,95,35,.2)}
+.fnc__no{display:block;font-size:var(--f5);font-weight:900;color:var(--g);line-height:1}
+.fnc__card hr{border:0;border-top:1.5px solid var(--line);margin:calc(var(--u)*1.5) 0 calc(var(--u)*2)}
+.fnc__t{font-size:var(--f3);font-weight:700;color:var(--g2);line-height:1.6;margin:0}
+.fnc__d{font-size:var(--f2);color:var(--ink2);line-height:1.85;margin:calc(var(--u)*1.5) 0 0}
+.fnc__card::after{content:"";position:absolute;right:16px;bottom:16px;width:32px;height:32px;
+  border-radius:50%;background:var(--y);transition:transform .18s ease}
+.fnc__card::before{content:"";position:absolute;right:26px;bottom:27px;z-index:2;width:8px;height:8px;
+  border-top:2px solid var(--ink);border-right:2px solid var(--ink);transform:rotate(45deg);
+  transition:transform .18s ease}
+.fnc__card:hover::after{transform:translateX(3px)}
+.fnc__card:hover::before{transform:rotate(45deg) translate(2px,-2px)}
+
+
+/* ══ POINT（vhr/pmp）── egaco「特徴は写真つきカードを左右交互に」 ══ */
+.pt{position:relative;padding:calc(var(--u)*11) 0}
+.pt:nth-of-type(even){background:#F5FAF6}
+.pt__in{max-width:1280px;margin:0 auto;padding-inline:32px;
+  display:grid;gap:calc(var(--u)*6);align-items:center;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.pt--rev .pt__in{direction:rtl}
+.pt--rev .pt__in > *{direction:ltr}
+.pt__no{display:inline-block;font-size:var(--f1);font-weight:700;letter-spacing:.2em;
+  color:var(--g2);border:1.6px solid var(--g);border-radius:999px;padding:5px 16px}
+.pt__t{font-size:var(--f4);font-weight:700;color:var(--g2);margin:calc(var(--u)*2) 0 calc(var(--u)*1)}
+.pt__h{font-size:clamp(22px,2.4vw,30px);font-weight:900;line-height:1.5;margin:0 0 calc(var(--u)*2)}
+.pt__d{font-size:var(--f2);color:var(--ink2);line-height:2;margin:0}
+.pt__fig{margin:0;border-radius:18px;overflow:hidden;box-shadow:0 14px 30px rgba(11,95,35,.14)}
+.pt__figs{display:grid;gap:12px;grid-template-columns:1fr 1fr}
+/* 合格率のドーナツ */
+.rate{display:flex;flex-wrap:wrap;gap:calc(var(--u)*2);justify-content:center}
+.rate__i{width:118px;text-align:center}
+.rate__ring{position:relative;width:100%;aspect-ratio:1;border-radius:50%;
+  display:grid;place-items:center;
+  background:conic-gradient(var(--g) calc(var(--v)*1%), #E6F2E8 0)}
+.rate__ring::after{content:"";position:absolute;inset:11px;background:#fff;border-radius:50%}
+.rate__ring b{position:relative;z-index:2;font-size:26px;font-weight:900;line-height:1}
+.rate__ring b i{font-style:normal;font-size:13px;margin-left:1px}
+.rate__lb{display:block;font-size:var(--f2);font-weight:700;margin-top:calc(var(--u)*1)}
+.rate__note{font-size:var(--f1);color:var(--ink2);margin:calc(var(--u)*3) 0 0;line-height:1.9}
+
+/* ══ CTA帯 ══ */
+.cta{position:relative;background:var(--g);color:#fff;text-align:center;padding:calc(var(--u)*8) 0}
+.cta > *{position:relative;z-index:2}
+.cta__note{font-size:var(--f2);margin:calc(var(--u)*2) 0 0;opacity:.94}
+
+/* ══ バナー帯 ══ */
+.bnr{padding:calc(var(--u)*6) 0;background:#F5FAF6}
+.bnr__grid{display:grid;gap:16px;grid-template-columns:1fr 1fr;max-width:1000px;margin:0 auto}
+.bnr__grid a{display:block;border-radius:14px;overflow:hidden;box-shadow:0 8px 20px rgba(11,95,35,.12);
+  transition:transform .18s ease}
+.bnr__grid a:hover{transform:translateY(-3px)}
+
+/* ══ 人物カード（スクールマネジャー／講師）══ */
+.ppl{display:grid;gap:calc(var(--u)*3);grid-template-columns:1fr 1fr}
+.ppl--3{grid-template-columns:repeat(3,1fr)}
+.ppl__c{background:#fff;border-radius:18px;padding:calc(var(--u)*3);
+  box-shadow:0 10px 26px rgba(11,95,35,.12)}
+.ppl__hd{display:flex;align-items:center;gap:14px;margin-bottom:calc(var(--u)*2)}
+.ppl__hd img{width:78px;height:78px;border-radius:50%;object-fit:cover;background:#EDF4EF;flex:none}
+.ppl__role{font-size:var(--f1);color:var(--ink2);font-weight:700}
+.ppl__nm{font-size:var(--f4);font-weight:900;line-height:1.3;margin:2px 0}
+.ppl__yr{display:inline-block;font-size:var(--f1);font-weight:700;color:var(--g2);
+  background:#EAF6EC;border-radius:999px;padding:3px 11px}
+.ppl__b{font-size:var(--f2);color:var(--ink2);line-height:2;margin:0}
+.ppl__b + .ppl__b{margin-top:calc(var(--u)*1.5)}
+.ppl__spec{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:var(--f1);
+  margin:0 0 calc(var(--u)*2);padding:calc(var(--u)*1.5) 0;border-block:1px solid var(--line)}
+.ppl__spec dt{color:var(--ink2);font-weight:700}
+.ppl__spec dd{margin:0;font-weight:700}
+details.more{margin-top:calc(var(--u)*1.5)}
+details.more summary{list-style:none;cursor:pointer;font-size:var(--f2);font-weight:700;
+  color:var(--g2);display:inline-flex;align-items:center;gap:7px}
+details.more summary::-webkit-details-marker{display:none}
+details.more summary::after{content:"";width:7px;height:7px;border-right:2px solid var(--g);
+  border-bottom:2px solid var(--g);transform:rotate(45deg);margin-top:-4px}
+details.more[open] summary::after{transform:rotate(-135deg);margin-top:2px}
+
+/* ══ 保護者さまの声 ══ */
+.vo{display:grid;gap:calc(var(--u)*3)}
+.vo__c{background:#fff;border-radius:18px;padding:calc(var(--u)*4);
+  box-shadow:0 10px 26px rgba(11,95,35,.12)}
+.vo__t{font-size:var(--f4);font-weight:900;color:var(--g2);line-height:1.5;margin:0 0 calc(var(--u)*2)}
+.vo__hd{display:flex;align-items:center;gap:12px;margin-bottom:calc(var(--u)*2)}
+.vo__hd img{width:56px;height:56px;border-radius:50%;object-fit:cover;background:#EDF4EF}
+.vo__who{font-size:var(--f2);font-weight:700}
+.vo__b{font-size:var(--f2);color:var(--ink2);line-height:2;margin:0}
+.vo__b + .vo__b{margin-top:calc(var(--u)*1.5)}
+.vo__cm{margin-top:calc(var(--u)*3);padding:calc(var(--u)*3);background:#F5FAF6;border-radius:14px}
+.vo__cm h4{font-size:var(--f2);font-weight:700;color:var(--g2);margin:0 0 calc(var(--u)*1.5)}
+
+/* ══ 合格実績 ══ */
+.nch__grid{display:grid;gap:12px;grid-template-columns:repeat(3,1fr)}
+.nch__grid span{display:grid;place-items:center;text-align:center;background:#fff;
+  border:1.5px solid var(--line);border-radius:12px;padding:18px 12px;
+  font-size:var(--f2);font-weight:700;line-height:1.6}
+.nch__note{text-align:center;font-size:var(--f1);color:var(--ink2);margin:calc(var(--u)*2) 0 0}
+
+/* ══ 比較表 ══ */
+.cmx__scroll{overflow-x:auto}
+.cmx__tbl{border-collapse:separate;border-spacing:0;width:100%;min-width:720px;font-size:var(--f2)}
+.cmx__tbl th,.cmx__tbl td{padding:16px 14px;border-bottom:1px solid var(--line);text-align:left;
+  vertical-align:middle}
+.cmx__tbl thead th{background:var(--ink);color:#fff;font-weight:700;text-align:center}
+.cmx__tbl thead th:first-child{background:transparent}
+.cmx__tbl tbody th{font-weight:700;width:180px}
+.cmx__tbl .own{background:#F0FAF2;font-weight:700;color:var(--g2);text-align:center}
+.cmx__tbl td:not(.own){text-align:center;color:var(--ink2)}
+.cmx__tbl tbody tr:last-child th,.cmx__tbl tbody tr:last-child td{border-bottom:0}
+.cmx__hint{font-size:var(--f1);color:var(--ink2);margin:0 0 calc(var(--u)*1.5)}
+
+/* ══ 教室紹介 ══ */
+.cts__grid{display:grid;gap:calc(var(--u)*4);grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);
+  align-items:start}
+.cts__fig{margin:0;border-radius:18px;overflow:hidden;box-shadow:0 12px 28px rgba(11,95,35,.14)}
+.cts__dl{display:grid;grid-template-columns:auto 1fr;gap:12px 20px;margin:0;font-size:var(--f2)}
+.cts__dl dt{color:var(--ink2);font-weight:700;white-space:nowrap}
+.cts__dl dd{margin:0;line-height:1.9}
+.cts__tel{font-size:var(--f5);font-weight:900;color:var(--g2);text-decoration:none;line-height:1.2}
+.price{display:grid;gap:10px;margin:calc(var(--u)*3) 0 0}
+.price div{display:flex;align-items:baseline;justify-content:space-between;gap:14px;
+  background:#F5FAF6;border-radius:12px;padding:14px 18px}
+.price b{font-size:var(--f2);font-weight:700}
+.price em{font-style:normal;font-size:var(--f4);font-weight:900;color:var(--g2)}
+
+@media(max-width:900px){
+  :root{--pad:20px;--f5:24px;--f4:19px}
+  .wrap{padding-inline:20px}
+  /* ── FV：UGOKKOのスマホに倣う ─────────────────────
+     参照 ugokko.jp のスマホ：
+       ・タイポを2行に折る／サブコピーは1行目の右
+       ・モチーフと人物を1つの塊にする（散らさない）
+       ・CTAは画面下の固定バー（FVの外なのでモチーフと衝突しない）
+     ★1回目は PC の絶対配置がそのまま出て、人物が画面外・見出しに
+       22,978px² 被った。フロー配置に変える */
+  :root{--k:.34}
+  .hd{position:static;padding:calc(var(--u)*1.5) var(--pad);flex-wrap:wrap;
+    background:linear-gradient(38deg,#00A81C,#4FC21A)}
+  .hd__nav{display:none}
+  .hd__btn{font-size:var(--f1);padding:9px 13px}
+  .fv{height:auto;min-height:0;padding:0 0 84px}
+  .notch,.pills{display:none}
+  .fv__ghost{position:static;font-size:13.4vw;padding:12px 20px 0;white-space:normal;line-height:1.02}
+  .fv__in{position:static;max-width:none;padding:6px 20px 0}
+  .fv__h1{font-size:23px;line-height:1.5}
+  .fv__cta{flex-direction:column}
+  .btn{width:100%;justify-content:center;font-size:var(--f3);padding:15px 20px}
+  /* ★スマホは画像をCTAより上に（案件横断の共通ルール） */
+  .fv__kids{position:relative;height:280px;order:-1}
+  .fv__kid{position:absolute;bottom:0}
+  .fv__kid--a{right:32%;height:100%}
+  .fv__kid--b{right:3%;height:56%}
+  .card-lite{position:static;margin:calc(var(--u)*2) 20px 0;max-width:none}
+  /* モチーフは4個だけ、人物の周りに */
+  .mo{display:none}
+  .mo:nth-of-type(1){display:block;left:2%;bottom:auto;top:44%;transform:rotate(-12deg)}
+  .mo:nth-of-type(2){display:block;left:6%;top:64%;bottom:auto;transform:rotate(9deg)}
+  .mo:nth-of-type(4){display:block;right:2%;top:46%;transform:rotate(13deg)}
+  .mo:nth-of-type(6){display:block;left:40%;top:70%;bottom:auto;transform:rotate(-8deg)}
+  .sec{padding:calc(var(--u)*7) 0}
+  .fnc__grid{grid-template-columns:1fr;gap:calc(var(--u)*1.5)}
+  .pt__in{grid-template-columns:1fr;gap:calc(var(--u)*3);padding-inline:20px}
+  .pt--rev .pt__in{direction:ltr}
+  .pt{padding:calc(var(--u)*7) 0}
+  .rate__i{width:96px}
+  .ppl,.ppl--3{grid-template-columns:1fr}
+  .bnr__grid{grid-template-columns:1fr}
+  .nch__grid{grid-template-columns:1fr 1fr}
+  .cts__grid{grid-template-columns:1fr}
+  .cts__dl{grid-template-columns:1fr;gap:4px 0}
+  .cts__dl dt{margin-top:calc(var(--u)*1.5)}
+}
+/* ══ ベンチマークの出典（画面に出す）══════════════════ */
+.src{background:#F4F4F3;border-top:4px solid var(--ink);color:#2A2A2A;
+  padding:calc(var(--u)*5) 0 calc(var(--u)*7);font-size:var(--f2);line-height:1.85}
+.src h2{font-size:var(--f3);margin:0 0 4px}
+.src .sub{font-size:var(--f1);color:#6A6A6A;margin:0 0 20px}
+.src__grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.src figure{margin:0;background:#fff;border:1px solid #DDD;border-radius:8px;overflow:hidden}
+.src figure img{width:100%;height:auto;border-bottom:1px solid #EEE;filter:grayscale(1) opacity(.72)}
+.src figcaption{padding:10px 12px;font-size:var(--f1);line-height:1.8}
+.src figcaption b{display:block;font-size:12.5px}
+.src figcaption span{color:#0C6E8E}
+.src .warn{background:#FDECEA;border:1px solid #F3C6C0;color:#8A2018;border-radius:8px;
+  padding:11px 14px;font-size:var(--f1);line-height:1.9;margin:16px 0 0}
+
+@media(max-width:900px){
+  :root{--pad:20px;--f5:24px;--f4:19px}
+  .wrap{padding-inline:20px}
+  .hd{padding:calc(var(--u)*1.5) var(--pad);flex-wrap:wrap}
+  .hd__nav{display:none}
+  .hd__btn{font-size:var(--f1);padding:9px 13px}
+  .fv{min-height:0;padding-bottom:calc(var(--u)*3)}
+  .fv__in{margin:0;padding:calc(var(--u)*2) 20px 0;max-width:none}
+  .fv__ghost{font-size:78px;top:auto;bottom:2%;left:-4%}
+  .fv__h1{font-size:26px;line-height:1.46}
+  .fv__cta{flex-direction:column}
+  .btn{width:100%;justify-content:center;font-size:var(--f3);padding:16px 20px}
+  /* ★スマホは画像をCTAより上に（案件横断の共通ルール） */
+  .fv__kids{position:relative;display:flex;align-items:flex-end;justify-content:center;
+    height:290px;margin:calc(var(--u)*1) 0 calc(var(--u)*2);order:-1}
+  .fv__kid{position:absolute;bottom:0}
+  .fv__kid--a{right:38%;height:100%}
+  .fv__kid--b{right:6%;height:58%}
+  .card-lite{position:static;margin:calc(var(--u)*2) 20px 0;max-width:none}
+  .sec{padding:calc(var(--u)*7) 0}
+  .fnc__grid{grid-template-columns:1fr;gap:calc(var(--u)*1.5)}
+}
+</style></head><body>
+<header class="hd">
+  <a class="hd__logo" href="#top"><img src="../img/logo.svg" alt="ESL club"></a>
+  <nav class="hd__nav">
+    <a href="#fnc">4つの特徴</a><a href="#voice">保護者さまの声</a><a href="#cmx">他塾との違い</a><a href="#cts">教室紹介</a>
+  </nav>
+  <div class="hd__btns">
+    <a class="hd__btn" href="https://eslclub.jp/">資料を見る</a>
+    <a class="hd__btn hd__btn--main" href="https://eslclub.jp/trial/">無料体験レッスン</a>
+  </div>
+</header>
+<!-- ══ FV：UGOKKO型 ══ -->
+<section class="fv" id="top">
+  <span class="grid-lines"></span>
+
+  <div class="notch">
+    <svg width="164" height="116" viewBox="0 0 164 116" aria-hidden="true"><path fill="#fff"
+      d="M164,0 L164,116 L116,116 A44,44 0 0 1 72,72 L72,44 A44,44 0 0 0 28,0 Z"/></svg>
+    <div class="notch__i"><i></i><i></i><i></i><span>MENU</span></div>
+  </div>
+
+  <p class="fv__ghost" aria-hidden="true">ESL club</p>
+
+  <!-- D 浮遊モチーフ -->
+  <span class="mo bdg" style="left:2%;bottom:6%;--c:#FFD629;--w:132px;--h:132px;transform:rotate(-12deg)"><span class="eyes"><i></i><i></i></span></span>
+  <span class="mo bdg" style="left:17%;bottom:2%;--c:#7C5BE0;--w:104px;--h:104px;transform:rotate(9deg)"><span class="eyes"><i></i><i></i></span></span>
+  <span class="mo bub" style="left:31%;bottom:22%;--w:56px"></span>
+  <span class="mo bdg" style="right:5%;top:33%;--c:#FF5B8E;--w:132px;--h:92px;--r:26px 26px 34px 34px/30px 30px 46px 46px;transform:rotate(13deg)"><span class="eyes"><i></i><i></i></span></span>
+  <span class="mo bub" style="right:26%;top:20%;--w:44px"></span>
+  <span class="mo mo--front bdg" style="left:36%;bottom:2%;--c:#FF9036;--w:126px;--h:86px;--r:44px/44px;transform:rotate(-8deg)"><span class="eyes"><i></i><i></i></span></span>
+
+  <!-- C 切り抜き人物（タイポより前） -->
+  <div class="fv__kids">
+    <img class="fv__kid fv__kid--a" src="../img/fv_boy_cut.png" alt="自宅の机で学習に取り組む小学生">
+    <img class="fv__kid fv__kid--b" src="../img/fv_girl_cut.png" alt="オンラインで英検対策を受ける中高生">
+  </div>
+
+  <div class="fv__in">
+    <span class="pill">英検®︎特化・オンライン</span>
+    <p class="fv__eyebrow">2015年の開塾以降<span class="mk">”英検に特化”</span>してきたからできる</p>
+    <h1 class="fv__h1"><span class="nb">受験勉強と並走しながら</span><wbr>
+      <span class="nb"><span class="hi">小学生・中学生で英検2級、</span></span><wbr>
+      <span class="nb"><span class="hi">高校生で準1級</span>を目指せる英語塾</span></h1>
+    <div class="fv__cta">
+      <a class="btn btn--main" href="https://eslclub.jp/trial/">無料体験レッスンはこちら</a>
+    </div>
+    <p class="fv__note">いつまでに2級合格できるかレッスン後にご案内します</p>
+  </div>
+
+  <!-- E 縦ピルCTA -->
+  <div class="pills">
+    <a class="pill-v pill-v--a" href="https://eslclub.jp/trial/">無料体験レッスン</a>
+    <a class="pill-v pill-v--b" href="#cts">教室・料金を見る</a>
+    <a class="pill-v pill-v--c" href="#fnc">4つの特徴</a>
+  </div>
+</section>
+
+
+</body></html>

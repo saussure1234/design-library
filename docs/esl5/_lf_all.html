@@ -1,0 +1,16 @@
+<!doctype html><meta charset="utf-8">
+<style>body{margin:0;background:#fff;font-family:system-ui;display:grid;
+grid-template-columns:repeat(4,1fr);width:1240px}
+figure{margin:0;text-align:center;padding:5px}
+.box{width:100%;aspect-ratio:1;background:#F7F7F7;border:1px solid #eee}
+figcaption{font-size:11px;color:#333;margin-top:3px}</style>
+<div id="w" style="display:contents"></div>
+<script src="./vendor/lottie_light.min.js"></script>
+<script>
+const N=["abc-blocks", "desk-eng", "drawing", "english", "english-teacher", "exams-preparation", "girl-studying-on-laptop", "gold-medal", "happy-students", "kids-home", "learning", "letters", "spaced-repetition", "story", "student", "teacher-in-classroom"]; window.__a=[];
+N.forEach(n=>{const f=document.createElement('figure');
+ f.innerHTML='<div class="box"></div><figcaption>'+n+'</figcaption>';
+ document.getElementById('w').appendChild(f);
+ try{window.__a.push(lottie.loadAnimation({container:f.querySelector('.box'),renderer:'svg',
+  loop:true,autoplay:true,path:'./lottie/lf/'+n+'.json'}));}catch(e){}});
+</script>

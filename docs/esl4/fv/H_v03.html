@@ -1,0 +1,197 @@
+<!doctype html><html lang="ja"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>FV案H 楕円地＋散らしラベル型 v03｜ESL club オンライン校</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════════
+   FV案H 楕円地＋散らしラベル型 ── ベンチマーク：003 日経電子版 for Education
+   https://www.nikkei.com/promotion/education/
+   ★見たのは ref/bench/003_www_nikkei_com_promotion_education.png のみ。
+     コードは読んでいない
+
+   ── 003の構成（実寸で見て書き出した）──────────────────
+   1 地は白。中央に【画面より大きい薄いグレーの楕円】が置かれる
+   2 巨大な明朝の英字が横一列に走り、左右で切れる。楕円と重なる
+   3 中央に【少し傾けた写真】（角丸）
+   4 写真の周りに【形の違うラベルが散る】
+       黄色い楕円「AI活用」／オレンジの三角「社会課題」／
+       白い角丸ピル「活用事例」／縦組みの小さいテキスト2種
+   5 右下に前後の丸い矢印ボタン
+   6 下部にティッカー
+
+   ── ★禁止事項 ──────────────────────────────
+     × ブランド名を巨大タイポに昇格させない
+       003の巨大英字は "The Nikkei for Education"＝ブランド名。
+       以前ロゴのタグラインを巨大見出しに昇格させて指摘を受けている。
+       同じ構図なので【借りない】
+     × ラベルを多色にしない（003は黄・橙・白。ブランド内の緑と黄だけで組む）
+     × 三角のラベルに長い語を入れない
+       三角は内接する矩形が極端に小さい。案6 v09で
+       「円122pxに中身120pxは入らない」を実測している。同じ理由で使わない
+     × カードを使わない        × 影を使わない
+     × ESL clubに無い言葉を作らない
+     × 同じ訴求を2回出さない
+
+   ── ★置き換えたもの（tailoring）────────────────────
+   (1) 巨大英字を借りない代わりに、003で二番目に効いている
+       【薄い巨大楕円】と【傾けた写真】と【散らすラベル】を主機能にする
+   (2) 003には大きな見出しが無い（ブランド名がその役）。
+       ESL clubは見出しが主役なので、楕円に重ねて横組みで置く。
+       位置は003の巨大英字と同じ「楕円を横切る」位置
+   (3) 散らすラベル＝数字3つ。
+       003はラベルごとに形が違う（楕円／三角／ピル）ので、
+       こちらも形を変える。ただし三角は使わない（上記の理由）。
+       楕円・角丸ピル・下線付きの3種で差をつける
+   (4) 写真は2枚。003は1枚だが、傾ける角度を変えて重ねる
+
+   ── ★訴求の重複（1回ずつ）──────────────────────
+   ・前置きは入れない ＝ 数字②と同内容
+   ・ヘッダーは「資料を見る」＝ 本文CTAと文言を分ける
+   ・注記は入れない ＝ 見出しの「英検2級」と重複
+   ・残す重複：見出し「準1級」と数字③「英検1級」＝ 主体が違う
+   v03 = v02でもまだ折り返していた。実測で決め直す。
+         左の列＝1440−80(左右余白)−470(写真)−40(すき間)＝850px
+         3行目は15字。850 ÷ 15 ＝ 56px …だが字間(.005em)と
+         グリッドの最小幅の丸めで溢れる。安全側に 50px にする（15字＝750px）
+   v02 = 見出しが折り返して4行になっていた。
+         53px×15字＝795px。左の列は 1440−80(余白)−520(写真)−40(すき間)＝800px で
+         5pxしか余裕が無く、字間のぶんで溢れた。
+         → 写真を520→470pxにして左の列を850pxに広げ、見出しは53pxのまま
+   v01 = 1回目
+   ══════════════════════════════════════════════════════════ */
+:root{
+  --ink:#12262C; --ink2:#5F7266; --g:#0A7A2B; --g3:#DCEDE2;
+  --y:#FFEE03; --u:8px;
+  --pad:calc(max(0px,(100vw - 1360px)/2) + 40px);
+}
+*{box-sizing:border-box}
+html,body{margin:0;overflow-x:clip}
+body{font-family:"Noto Sans JP","Hiragino Sans",system-ui,sans-serif;
+  color:var(--ink);background:#fff;font-size:16px;line-height:1.9;
+  -webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+
+.hd{position:relative;z-index:30;display:flex;align-items:center;gap:24px;
+  padding:calc(var(--u)*2.5) var(--pad)}
+.hd__logo img{height:32px;width:auto}
+.hd__nav{display:flex;gap:24px;font-size:14px;font-weight:700;margin-left:auto}
+.hd__btn{font-size:14px;font-weight:700;padding:11px 22px;border-radius:999px;
+  border:1.5px solid var(--g);color:var(--g);white-space:nowrap}
+
+.fv{position:relative;min-height:min(calc(100vh - 90px),820px);
+  display:flex;flex-direction:column;justify-content:center;
+  padding:calc(var(--u)*2) var(--pad);overflow:hidden}
+
+/* 1 中央に画面より大きい薄い楕円。地は白のまま */
+.oval{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:min(126%,1620px);aspect-ratio:1.06;border-radius:50%;
+  background:var(--g3);z-index:0;pointer-events:none}
+
+.in{position:relative;z-index:4;display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,auto);
+  align-items:center;gap:calc(var(--u)*5)}
+
+/* 2 003の巨大英字と同じ「楕円を横切る」位置に見出しを置く */
+.h1{margin:0;font-size:clamp(23px,3.47vw,50px);font-weight:900;line-height:1.42;
+  letter-spacing:.005em}
+.h1 .l{display:block}
+
+/* 4 形の違うラベルを散らす。★三角は使わない（内接する矩形が小さすぎる） */
+.tags{position:relative;margin:calc(var(--u)*4) 0 0;height:126px}
+.tag{position:absolute;background:#fff;text-align:center;line-height:1.3;
+  padding:12px 20px}
+.tag small{display:block;font-size:11px;font-weight:700;color:var(--ink2)}
+.tag b{display:block;font-size:26px;font-weight:900;color:var(--g);line-height:1.05;
+  letter-spacing:-.01em}
+.tag b i{font-style:normal;font-size:11px;margin-left:1px}
+.tag em{font-style:normal;display:block;font-size:11px;font-weight:700;color:var(--ink2)}
+/* 形をそれぞれ変える（003はラベルごとに形が違う） */
+.tag--a{left:0;top:0;border-radius:50%/44%;background:var(--y);transform:rotate(-3.5deg)}
+.tag--a b,.tag--a small,.tag--a em{color:var(--ink)}
+.tag--b{left:216px;top:26px;border-radius:999px;transform:rotate(2deg)}
+.tag--c{left:434px;top:2px;border-radius:0;border-bottom:3px solid var(--g);
+  transform:rotate(-1.5deg)}
+
+.cta{margin:calc(var(--u)*4) 0 0}
+.btn{display:inline-flex;align-items:center;gap:10px;font-size:15px;font-weight:700;
+  padding:15px 26px;background:var(--ink);color:#fff;border-radius:999px;white-space:nowrap}
+.btn::after{content:"";width:7px;height:7px;border-top:2px solid currentColor;
+  border-right:2px solid currentColor;transform:rotate(45deg)}
+
+/* 3 少し傾けた写真。003は1枚、こちらは2枚で角度を変えて重ねる */
+.ph{position:relative;width:min(470px,38vw);height:500px}
+.ph figure{position:absolute;margin:0;overflow:hidden;border-radius:12px}
+.ph figure:nth-of-type(1){left:0;top:0;width:74%;aspect-ratio:.82;
+  transform:rotate(-3.2deg);z-index:2}
+.ph figure:nth-of-type(2){right:0;bottom:0;width:66%;aspect-ratio:.86;
+  transform:rotate(2.6deg);z-index:3}
+.ph img{width:100%;height:100%;object-fit:cover}
+.ph figure:nth-of-type(1) img{object-position:44% 48%}
+.ph figure:nth-of-type(2) img{object-position:58% 42%}
+
+@media(max-width:900px){
+  :root{--pad:20px}
+  .hd{padding:calc(var(--u)*1.5) var(--pad);gap:12px}
+  .hd__nav{display:none}
+  .fv{min-height:0;padding:calc(var(--u)*3) var(--pad) calc(var(--u)*5)}
+  .oval{width:190%;top:34%}
+  .in{display:flex;flex-direction:column;align-items:stretch}
+  /* スマホ：写真をCTAより上に（全LP共通の決めごと） */
+  .ph{order:-1;width:100%;height:300px;margin:0 0 calc(var(--u)*3)}
+  .h1{font-size:23px;line-height:1.55}
+  .tags{height:auto;display:flex;gap:10px;flex-wrap:wrap}
+  .tag{position:static;transform:none;padding:9px 14px}
+  .tag b{font-size:20px}
+  .btn{width:100%;justify-content:center}
+}
+</style></head><body>
+
+<header class="hd">
+  <a class="hd__logo" href="#"><img src="../img/logo.svg" alt="ESL club"></a>
+  <nav class="hd__nav">
+    <a href="#">4つの特徴</a><a href="#">保護者さまの声</a>
+    <a href="#">他塾との違い</a><a href="#">教室紹介</a>
+  </nav>
+  <a class="hd__btn" href="https://eslclub.jp/">資料を見る</a>
+</header>
+
+<section class="fv">
+
+  <!-- 1 画面より大きい薄い楕円 -->
+  <span class="oval" aria-hidden="true"></span>
+
+  <div class="in">
+    <div>
+      <!-- 2 楕円を横切る位置に見出し。文言は esl3 から一字一句そのまま -->
+      <h1 class="h1">
+        <span class="l">受験勉強と並走しながら</span>
+        <span class="l">小学生・中学生で英検2級、</span>
+        <span class="l">高校生で準1級を目指せる英語塾</span>
+      </h1>
+
+      <!-- 4 形の違うラベルを散らす。★数字は esl3 のコピーにあるものだけ -->
+      <div class="tags">
+        <span class="tag tag--a"><small>合格に導いた</small><b>1,000<i>名</i></b><em>以上</em></span>
+        <span class="tag tag--b"><small>開塾から</small><b>2015<i>年</i></b><em>英検に特化</em></span>
+        <span class="tag tag--c"><small>講師は全員</small><b>英検1<i>級</i></b><em>以上</em></span>
+      </div>
+
+      <div class="cta">
+        <a class="btn" href="https://eslclub.jp/trial/">無料体験レッスンはこちら</a>
+      </div>
+    </div>
+
+    <!-- 3 少し傾けた写真2枚 -->
+    <div class="ph">
+      <figure><img src="../img/p07.jpg" alt="自宅の机で英検対策に取り組む小学生"></figure>
+      <figure><img src="../img/p20.jpg" alt="オンラインで英検対策を受ける中高生"></figure>
+    </div>
+  </div>
+
+</section>
+
+</body></html>

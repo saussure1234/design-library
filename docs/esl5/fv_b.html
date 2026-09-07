@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ESL club オンライン校 | 英検に特化したオンライン英語塾</title>
+<style>
+/* ─── Reset & Base ─── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN",Meiryo,sans-serif;color:#1a2744;line-height:1.8;background:#fff;overflow-x:hidden}
+img{max-width:100%;height:auto;display:block}
+a{color:inherit;text-decoration:none}
+
+/* ─── Colors ─── */
+:root{
+  --navy:#1a2744;
+  --green:#00b21f;
+  --green-light:#6cbb00;
+  --bg:#f7f7f7;
+  --text:#333;
+  --text-light:#888;
+}
+
+/* ─── World Map Dot Pattern ─── */
+.dot-bg{position:relative}
+.dot-bg::before{
+  content:"";
+  position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cg fill='%2300b21f' fill-opacity='0.05'%3E%3Ccircle cx='20' cy='20' r='1.5'/%3E%3Ccircle cx='60' cy='40' r='1.5'/%3E%3Ccircle cx='100' cy='30' r='1.5'/%3E%3Ccircle cx='140' cy='50' r='1.5'/%3E%3Ccircle cx='180' cy='25' r='1.5'/%3E%3Ccircle cx='40' cy='80' r='1.5'/%3E%3Ccircle cx='90' cy='100' r='1.5'/%3E%3Ccircle cx='130' cy='90' r='1.5'/%3E%3Ccircle cx='170' cy='110' r='1.5'/%3E%3Ccircle cx='30' cy='140' r='1.5'/%3E%3Ccircle cx='70' cy='160' r='1.5'/%3E%3Ccircle cx='120' cy='150' r='1.5'/%3E%3Ccircle cx='160' cy='170' r='1.5'/%3E%3Ccircle cx='50' cy='60' r='1'/%3E%3Ccircle cx='110' cy='70' r='1'/%3E%3Ccircle cx='150' cy='120' r='1'/%3E%3Ccircle cx='80' cy='130' r='1'/%3E%3Ccircle cx='190' cy='80' r='1'/%3E%3C/g%3E%3C/svg%3E");
+  background-size:200px 200px;
+  pointer-events:none;z-index:0;
+}
+
+/* ─── Header ─── */
+.header{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(255,255,255,0.96);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(0,0,0,0.06);
+}
+.header-inner{
+  max-width:1200px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 32px;
+}
+.header-logo img{height:32px;width:auto}
+.header-nav{display:flex;gap:36px;align-items:center}
+.header-nav a{font-size:13px;font-weight:500;color:var(--navy);letter-spacing:0.05em;transition:color 0.3s}
+.header-nav a:hover{color:var(--green)}
+/* ★ .header-nav a (0,1,1) が .btn-primary (0,1,0) に勝って文字がネイビーになる。同じ詳細度で上書き */
+.header-nav a.btn-primary{color:#fff}
+.header-nav a.btn-primary:hover{color:#fff}
+.btn-primary{
+  display:inline-block;padding:14px 36px;
+  background:var(--navy);color:#fff;font-size:13px;font-weight:700;
+  letter-spacing:0.05em;border-radius:0;transition:all 0.3s;
+}
+.btn-primary:hover{background:#2a3a5c;transform:translateY(-1px)}
+.btn-large{padding:18px 48px;font-size:15px}
+
+/* ─── Section Common ─── */
+.section{position:relative;z-index:1}
+.section-inner{max-width:1000px;margin:0 auto;padding:120px 32px}
+.section-title{
+  font-size:28px;font-weight:700;color:var(--navy);
+  letter-spacing:0.08em;margin-bottom:12px;line-height:1.4;
+}
+.section-subtitle{
+  font-size:11px;color:var(--text-light);font-weight:700;
+  letter-spacing:0.2em;text-transform:uppercase;margin-bottom:56px;
+}
+
+/* ─── English Tagline ─── */
+.en-tagline{
+  font-family:"Helvetica Neue",Arial,sans-serif;
+  font-size:clamp(40px,6vw,80px);font-weight:800;
+  color:var(--navy);letter-spacing:-0.02em;
+  line-height:1.1;margin:80px 0;text-align:center;
+}
+.en-tagline span{color:var(--green)}
+
+/* ─── FV ─── */
+.fv{
+  min-height:100vh;display:flex;align-items:center;
+  background:linear-gradient(180deg,#fafcfb 0%,#fff 100%);
+  padding-top:80px;
+}
+.fv-inner{
+  max-width:1200px;margin:0 auto;padding:80px 32px;
+  display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;
+}
+/* ★ 絶対配置は列幅が変わると必ず円に食い込む。フロー（横並び）にして衝突を構造的に無くす */
+.fv-visual{position:relative;display:flex;align-items:center;justify-content:center;gap:16px}
+.fv-circle{
+  flex:0 0 auto;
+  width:400px;height:400px;border-radius:50%;overflow:hidden;
+  box-shadow:0 32px 96px rgba(0,0,0,0.08);
+  position:relative;
+}
+.fv-circle img{width:100%;height:100%;object-fit:cover;filter:saturate(0.9)}
+.fv-vertical{
+  flex:0 0 auto;
+  writing-mode:vertical-rl;font-size:18px;font-weight:700;
+  color:var(--navy);letter-spacing:0.34em;line-height:2.2;
+}
+.fv-copy h1{
+  font-size:38px;font-weight:700;color:var(--navy);
+  line-height:1.5;letter-spacing:0.02em;margin-bottom:28px;
+}
+.fv-copy h1 span{color:var(--green)}
+.fv-tagline{
+  font-family:"Helvetica Neue",Arial,sans-serif;
+  font-size:64px;font-weight:800;color:var(--navy);
+  letter-spacing:-0.02em;line-height:1;margin-bottom:48px;
+}
+.fv-tagline span{color:var(--green)}
+.fv-note{
+  font-size:13px;color:var(--text-light);margin-top:20px;
+}
+
+/* ─── Features ─── */
+.features{background:#fff}
+.features-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:40px;
+}
+.feature-card{
+  text-align:center;
+}
+.feature-icon{
+  width:80px;height:80px;border-radius:50%;overflow:hidden;
+  margin:0 auto 24px;border:1px solid rgba(0,178,31,0.15);
+}
+.feature-icon img{width:100%;height:100%;object-fit:cover;filter:saturate(0.9)}
+.feature-num{
+  font-size:11px;font-weight:700;color:var(--text-light);
+  letter-spacing:0.15em;margin-bottom:12px;
+}
+.feature-card h3{font-size:16px;font-weight:700;color:var(--navy);margin-bottom:10px;letter-spacing:0.02em}
+.feature-card p{font-size:13px;color:var(--text-light);line-height:1.9}
+
+/* ─── Points ─── */
+.points{background:var(--bg)}
+/* ★ 1fr 1fr は中身(画像420px / 円88px×5)の最小幅に押し負けて、列の合計が
+      入れ物936pxを68px超える。1440pxでは余白が吸収して見えないが1024pxで横スクロールになる。
+      画像列に上限を、テキスト列に minmax(0,…) を与えて縮めるようにする */
+.point-block{
+  display:grid;grid-template-columns:minmax(0,420px) minmax(0,1fr);gap:80px;
+  align-items:center;margin-bottom:120px;
+}
+.point-block:last-child{margin-bottom:0}
+.point-block.reverse{direction:rtl}
+.point-block.reverse>*{direction:ltr}
+.point-visual{position:relative}
+.point-visual .square-img{
+  width:100%;max-width:420px;aspect-ratio:1/1;height:auto;
+  border-radius:0;overflow:hidden;
+  margin:0 auto;box-shadow:0 24px 64px rgba(0,0,0,0.08);
+}
+.point-visual .square-img img{width:100%;height:100%;object-fit:cover;filter:saturate(0.9)}
+.point-label{
+  font-size:11px;color:var(--green);font-weight:700;
+  letter-spacing:0.15em;margin-bottom:14px;
+}
+.point-title{font-size:24px;font-weight:700;color:var(--navy);margin-bottom:20px;letter-spacing:0.02em}
+.point-body{font-size:14px;color:var(--text);line-height:2.2}
+
+/* Pass rate */
+.pass-rates{
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;
+  margin-top:36px;
+}
+.rate-item{text-align:center;min-width:0}
+.rate-circle{
+  width:100%;max-width:88px;aspect-ratio:1/1;height:auto;border-radius:50%;
+  border:3px solid var(--navy);display:flex;
+  flex-direction:column;align-items:center;justify-content:center;
+  margin:0 auto 10px;
+}
+.rate-circle span:first-child{font-size:24px;font-weight:800;color:var(--navy)}
+.rate-circle span:last-child{font-size:11px;color:var(--text-light)}
+.rate-label{font-size:12px;font-weight:700;color:var(--navy)}
+
+/* ─── CTA Mid ─── */
+.cta-mid{
+  background:var(--navy);text-align:center;color:#fff;padding:120px 32px;
+}
+.cta-mid .en-tagline{color:#fff;margin:0 0 40px}
+.cta-mid .en-tagline span{color:var(--green-light)}
+
+/* ─── Teachers ─── */
+.teachers{background:#fff}
+.teacher-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:56px;
+}
+.teacher-card{text-align:center}
+.teacher-photo{
+  width:240px;height:240px;border-radius:0;overflow:hidden;
+  margin:0 auto 28px;
+}
+.teacher-photo img{width:100%;height:100%;object-fit:cover;filter:saturate(0.9)}
+.teacher-badge{
+  font-size:10px;color:var(--green);font-weight:700;
+  letter-spacing:0.15em;margin-bottom:8px;
+}
+.teacher-name{font-size:18px;font-weight:700;color:var(--navy);margin-bottom:10px;letter-spacing:0.02em}
+.teacher-meta{
+  font-size:12px;color:var(--text-light);margin-bottom:16px;line-height:1.8;
+}
+.teacher-comment{font-size:13px;color:var(--text);line-height:1.9;text-align:left}
+
+/* ─── Managers ─── */
+.managers{background:var(--bg)}
+.manager-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:48px;
+}
+.manager-card{
+  background:#fff;padding:56px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.04);
+}
+.manager-header{
+  display:flex;align-items:center;gap:28px;margin-bottom:28px;
+}
+.manager-photo{
+  width:80px;height:80px;border-radius:0;overflow:hidden;flex-shrink:0;
+}
+.manager-photo img{width:100%;height:100%;object-fit:cover;filter:saturate(0.9)}
+.manager-info h3{font-size:18px;font-weight:700;color:var(--navy);letter-spacing:0.02em}
+.manager-info p{font-size:12px;color:var(--text-light);margin-top:4px}
+.manager-body{font-size:13px;color:var(--text);line-height:2.2}
+
+/* ─── Voices ─── */
+.voices{background:#fff}
+.voice-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:40px;
+}
+.voice-card{
+  background:var(--bg);padding:40px;
+  position:relative;
+}
+.voice-card::before{
+  content:'"';position:absolute;top:16px;left:24px;
+  font-size:64px;color:var(--navy);opacity:0.08;
+  font-family:Georgia,serif;line-height:1;
+}
+.voice-header{
+  display:flex;align-items:center;gap:16px;margin-bottom:20px;
+}
+.voice-photo{
+  width:56px;height:56px;border-radius:0;overflow:hidden;
+}
+.voice-photo img{width:100%;height:100%;object-fit:cover;filter:saturate(0.9)}
+.voice-name{font-size:14px;font-weight:700;color:var(--navy)}
+.voice-child{font-size:12px;color:var(--text-light)}
+.voice-body{font-size:13px;color:var(--text);line-height:2}
+
+/* ─── Results ─── */
+.results{background:var(--bg)}
+.results-schools{
+  display:flex;flex-wrap:wrap;gap:12px;justify-content:center;
+  margin-bottom:56px;
+}
+.school-tag{
+  padding:12px 28px;background:#fff;
+  font-size:14px;font-weight:700;color:var(--navy);
+  box-shadow:0 2px 8px rgba(0,0,0,0.04);
+}
+.compare-table{
+  width:100%;border-collapse:collapse;background:#fff;
+  box-shadow:0 8px 32px rgba(0,0,0,0.04);
+}
+.compare-table th,.compare-table td{
+  padding:18px 24px;text-align:left;font-size:13px;
+}
+.compare-table thead th{
+  background:var(--navy);color:#fff;font-weight:700;
+}
+.compare-table tbody tr{border-bottom:1px solid #eee}
+.compare-table tbody tr:last-child{border-bottom:none}
+.compare-table td:first-child{font-weight:700;color:var(--navy)}
+.compare-table .highlight{color:var(--navy);font-weight:700;background:rgba(0,178,31,0.06)}
+
+/* ─── Price ─── */
+.price{background:#fff}
+.price-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:40px;
+}
+.price-block{background:var(--bg);padding:48px}
+.price-block h3{font-size:18px;font-weight:700;color:var(--navy);margin-bottom:28px;letter-spacing:0.02em}
+.price-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 0;border-bottom:1px solid #ddd;
+}
+.price-row:last-child{border-bottom:none}
+.price-label{font-size:13px;color:var(--text)}
+.price-value{font-size:15px;font-weight:700;color:var(--navy)}
+.price-note{font-size:12px;color:var(--text-light);margin-top:8px}
+
+/* ─── CTA Final ─── */
+.cta-final{
+  background:var(--navy);text-align:center;color:#fff;padding:120px 32px;
+}
+.cta-final .section-title{color:#fff;font-size:32px}
+.cta-final p{color:rgba(255,255,255,0.7);font-size:15px;margin-bottom:36px}
+.cta-phone{font-size:28px;font-weight:700;margin-top:28px}
+.cta-hours{font-size:12px;color:rgba(255,255,255,0.5);margin-top:8px}
+
+/* ─── Footer ─── */
+.footer{
+  background:#0f1520;color:rgba(255,255,255,0.5);
+  padding:56px 32px 24px;font-size:12px;
+}
+.footer-inner{max-width:1000px;margin:0 auto}
+.footer-grid{
+  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;
+  margin-bottom:40px;
+}
+.footer-logo img{height:28px;margin-bottom:16px;filter:brightness(0) invert(1)}
+.footer-col h4{font-size:12px;color:#fff;margin-bottom:14px;letter-spacing:0.05em}
+.footer-col a{display:block;color:rgba(255,255,255,0.5);margin-bottom:8px;transition:color 0.3s;font-size:12px}
+.footer-col a:hover{color:#fff}
+.footer-bottom{
+  border-top:1px solid rgba(255,255,255,0.08);padding-top:24px;
+  text-align:center;
+}
+
+/* ─── Responsive ─── */
+@media(max-width:900px){
+  .fv-inner{grid-template-columns:1fr;text-align:center}
+  .fv-circle{width:300px;height:300px}
+  .fv-vertical{display:none}
+  .fv-tagline{font-size:40px}
+  .features-grid{grid-template-columns:repeat(2,1fr)}
+  .point-block,.point-block.reverse{grid-template-columns:1fr;direction:ltr}
+  .point-visual .square-img{width:300px;height:300px}
+  .teacher-grid{grid-template-columns:1fr}
+  .manager-grid{grid-template-columns:1fr}
+  .voice-grid{grid-template-columns:1fr}
+  .price-grid{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .pass-rates{grid-template-columns:repeat(3,1fr)}
+  .en-tagline{font-size:36px}
+}
+@media(max-width:600px){
+  .header-nav{display:none}
+  .features-grid{grid-template-columns:1fr}
+  .pass-rates{grid-template-columns:repeat(2,1fr)}
+  .section-inner{padding:80px 20px}
+  .section-title{font-size:22px}
+  .fv-copy h1{font-size:26px}
+  .en-tagline{font-size:28px}
+  .compare-table{font-size:11px}
+  .compare-table th,.compare-table td{padding:10px}
+}
+
+/* ─── Scroll Animation ─── */
+.fade-in{opacity:0;transform:translateY(40px);transition:all 0.9s cubic-bezier(0.16,1,0.3,1)}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+
+/* ══════ 装飾レイヤー（ベンチマーク実測・DECOR.md 参照） ══════ */
+.fv{overflow:visible}
+.fv-visual{position:relative}
+.fv-circle{position:relative;z-index:1}
+.fv-vertical{position:relative;z-index:1}
+.dc{position:absolute;z-index:0;pointer-events:none}
+.dc svg{display:block;width:100%;height:100%}
+@media (prefers-reduced-motion:reduce){.dc{display:none}}
+
+.features{position:relative}
+/* ★ overflow:hidden を付けると top:-104px の部分が切られて五角形が消える。付けない。
+   ★ right:-2% は画面外にはみ出す。内側に入れる。 */
+.dc-pent1{left:46%; top:-96px; width:11.8vw;min-width:130px;max-width:190px;aspect-ratio:1/1;height:auto}
+.dc-pent2{right:3%; top:-44px; width:7vw;  min-width:80px; max-width:120px;aspect-ratio:1/1;height:auto}
+@media (max-width:820px){.dc-pent2{display:none}.dc-pent1{top:-64px;left:52%}}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <div class="header-inner">
+    <a href="#" class="header-logo"><img src="img/logo.svg" alt="ESL club"></a>
+    <nav class="header-nav">
+      <a href="#features">特徴</a>
+      <a href="#teachers">講師</a>
+      <a href="#voices">保護者の声</a>
+      <a href="#price">料金</a>
+      <a href="#cta" class="btn-primary">無料体験レッスン</a>
+    </nav>
+  </div>
+</header>
+
+<!-- FV -->
+<section class="fv dot-bg" id="fv">
+  <div class="fv-inner">
+    <div class="fv-copy">
+      <h1>部活と両立しながら、<br><span>英検2級</span>へ。</h1>
+      <p class="fv-tagline">MAKING <span>ENGLISH</span><br>WORK FOR YOU.</p>
+      <a href="#cta" class="btn-primary btn-large">無料体験レッスンはこちら →</a>
+      <p class="fv-note">いつまでに2級合格できるか、レッスン後にご案内します</p>
+    </div>
+    <div class="fv-visual">
+      <div class="fv-circle">
+        <img src="img/fv_boy.webp" alt="自宅の机で学習に取り組む小学生">
+      </div>
+      <p class="fv-vertical">世界を舞台に<br>自分だけのストーリーを描く。</p>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="section features" id="features">
+      <div class="dc dc-pent1" data-lot="blob-green" aria-hidden="true"></div>
+      <div class="dc dc-pent2" data-lot="blob-green" aria-hidden="true"></div>
+  <div class="section-inner">
+    <p class="section-subtitle">Features</p>
+    <h2 class="section-title">短期で英検合格を目指せる<br>4つの特徴</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon"><img src="img/p08.jpg" alt=""></div>
+        <p class="feature-num">POINT 01</p>
+        <h3>高い英検合格率を実現</h3>
+        <p>累計1,000名以上を合格に導いた英検ベースのカリキュラム</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><img src="img/p11.jpg" alt=""></div>
+        <p class="feature-num">POINT 02</p>
+        <h3>受験勉強と並行可能</h3>
+        <p>目標級・時期と現在のレベルから個別の学習計画を作成</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><img src="img/teachers_kv.jpg" alt=""></div>
+        <p class="feature-num">POINT 03</p>
+        <h3>学習効率を向上</h3>
+        <p>英検1級以上のバイリンガル講師によるマンツーマン</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon"><img src="img/reason_diagram.jpg" alt=""></div>
+        <p class="feature-num">POINT 04</p>
+        <h3>保護者様が忙しくても安心</h3>
+        <p>計画の実行をフォローするスクールマネージャー</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- English Tagline -->
+<section class="section" style="padding:60px 32px">
+  <p class="en-tagline">ONE STUDENT.<br>ONE GOAL.<br><span>ONE JOURNEY.</span></p>
+</section>
+
+<!-- Point 01 -->
+<section class="section points" id="points">
+  <div class="section-inner">
+    <div class="point-block fade-in">
+      <div class="point-visual">
+        <div class="square-img"><img src="img/p08.jpg" alt=""></div>
+      </div>
+      <div class="point-content">
+        <p class="point-label">POINT 01</p>
+        <h3 class="point-title">高い英検合格率を実現</h3>
+        <p class="point-body">ESL clubでは2015年の開塾以降、英検をカリキュラムの核として、4技能＋語彙力をバランスよく高めてきました。小学生・中学生の時点での高い合格率を誇ります。</p>
+        <div class="pass-rates">
+          <div class="rate-item">
+            <div class="rate-circle"><span>100</span><span>%</span></div>
+            <div class="rate-label">5級</div>
+          </div>
+          <div class="rate-item">
+            <div class="rate-circle"><span>88</span><span>%</span></div>
+            <div class="rate-label">4級</div>
+          </div>
+          <div class="rate-item">
+            <div class="rate-circle"><span>86</span><span>%</span></div>
+            <div class="rate-label">3級</div>
+          </div>
+          <div class="rate-item">
+            <div class="rate-circle"><span>64</span><span>%</span></div>
+            <div class="rate-label">準2級</div>
+          </div>
+          <div class="rate-item">
+            <div class="rate-circle"><span>75</span><span>%</span></div>
+            <div class="rate-label">2級</div>
+          </div>
+        </div>
+        <p style="font-size:11px;color:var(--text-light);margin-top:16px">2023年度第2回の実績／1次・2次受験双方に合格した生徒の割合</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Point 02 -->
+<section class="section" style="background:#fff">
+  <div class="section-inner">
+    <div class="point-block reverse fade-in">
+      <div class="point-visual">
+        <div class="square-img"><img src="img/p11.jpg" alt=""></div>
+      </div>
+      <div class="point-content">
+        <p class="point-label">POINT 02</p>
+        <h3 class="point-title">受験勉強と並行可能</h3>
+        <p class="point-body">目標とする級と受験の時期、現在の英語レベル、学習に充てられる時間の4点から逆算して個別の学習計画を作成。中学受験から大学受験まで、部活動や他の習い事を続けながら英検合格を目指せます。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Point 03 -->
+<section class="section" style="background:var(--bg)">
+  <div class="section-inner">
+    <div class="point-block fade-in">
+      <div class="point-visual">
+        <div class="square-img"><img src="img/teachers_kv.jpg" alt=""></div>
+      </div>
+      <div class="point-content">
+        <p class="point-label">POINT 03</p>
+        <h3 class="point-title">学習効率を向上</h3>
+        <p class="point-body">英検1級・TOEFL iBT95点・TOEIC900点レベル以上のバイリンガル講師のみを採用。年齢の近い講師との距離の近さがそのまま学習の動機づけになり、必要な時に日本語で補えます。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Point 04 -->
+<section class="section" style="background:#fff">
+  <div class="section-inner">
+    <div class="point-block reverse fade-in">
+      <div class="point-visual">
+        <div class="square-img"><img src="img/reason_diagram.jpg" alt=""></div>
+      </div>
+      <div class="point-content">
+        <p class="point-label">POINT 04</p>
+        <h3 class="point-title">保護者様が忙しくても安心</h3>
+        <p class="point-body">スクールマネージャーが学習計画どおりにレッスンが進むよう講師へ内容を伝達し、生徒様の進捗をレッスンごとに保護者様へ共有。お忙しいご家庭でも安心してお任せいただけます。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Mid -->
+<section class="cta-mid">
+  <div class="section-inner" style="padding:0">
+    <p class="en-tagline">BEGIN YOUR<br><span>JOURNEY</span></p>
+    <a href="#cta" class="btn-primary btn-large" style="background:#fff;color:var(--navy)">無料体験レッスンはこちら →</a>
+  </div>
+</section>
+
+<!-- Teachers -->
+<section class="section teachers" id="teachers">
+  <div class="section-inner">
+    <p class="section-subtitle">Bilingual Teachers</p>
+    <h2 class="section-title">講師紹介</h2>
+    <div class="teacher-grid">
+      <div class="teacher-card">
+        <div class="teacher-photo"><img src="img/teacher01_cut.png" alt="A.M.先生"></div>
+        <p class="teacher-badge">BILINGUAL TEACHER</p>
+        <h3 class="teacher-name">A.M. 先生</h3>
+        <p class="teacher-meta">英検1級／IELTS 8.0<br>アメリカ9年／シンガポール1年</p>
+        <p class="teacher-comment">英語を学ぶことで様々な価値観に触れ、これまで以上に広い世界が見えてきます。</p>
+      </div>
+      <div class="teacher-card">
+        <div class="teacher-photo"><img src="img/teacher02_cut.png" alt="K.N.先生"></div>
+        <p class="teacher-badge">BILINGUAL TEACHER</p>
+        <h3 class="teacher-name">K.N. 先生</h3>
+        <p class="teacher-meta">英検1級／TOEFL ITP 623点<br>エチオピア2年／アメリカ2年／オランダ1年</p>
+        <p class="teacher-comment">英語は異なる国の多様な価値観を持った人々と対話をするためのツールです。</p>
+      </div>
+      <div class="teacher-card">
+        <div class="teacher-photo"><img src="img/teacher03_cut.png" alt="A.M.先生"></div>
+        <p class="teacher-badge">BILINGUAL TEACHER</p>
+        <h3 class="teacher-name">A.M. 先生</h3>
+        <p class="teacher-meta">英検1級<br>タイ5年／ロシア5年／パキスタン2年</p>
+        <p class="teacher-comment">英語が話せればどこへ行っても自分の思いを伝えられます。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- English Tagline -->
+<section class="section" style="padding:60px 32px;background:var(--bg)">
+  <p class="en-tagline">DREAM BIG.<br><span>START SMALL.</span></p>
+</section>
+
+<!-- Managers -->
+<section class="section managers" id="managers">
+  <div class="section-inner">
+    <p class="section-subtitle">School Managers</p>
+    <h2 class="section-title">スクールマネージャー紹介</h2>
+    <div class="manager-grid">
+      <div class="manager-card">
+        <div class="manager-header">
+          <div class="manager-photo"><img src="img/manager01_cut.png" alt="梶玲菜"></div>
+          <div class="manager-info">
+            <h3>梶 玲菜</h3>
+            <p>オンライン校スクールマネージャー／指導歴7年</p>
+          </div>
+        </div>
+        <p class="manager-body">みなさんにとっての『英語』とは何でしょうか。私にとっては、子どもたちの世界や視野を広げてくれるツールです。一生モノの英語力を身に付けて、世界を広げる準備を一緒に始めませんか。</p>
+      </div>
+      <div class="manager-card">
+        <div class="manager-header">
+          <div class="manager-photo"><img src="img/manager02_cut.png" alt="楠山理紀"></div>
+          <div class="manager-info">
+            <h3>楠山 理紀</h3>
+            <p>オンライン校スクールマネージャー／指導歴5年</p>
+          </div>
+        </div>
+        <p class="manager-body">英語は、勉強として身につけるのだけではなく、自分の人生を楽しくするためにも身につけて欲しい。ゴールだけでなく、その過程も楽しくしてあげたい。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Voices -->
+<section class="section voices" id="voices">
+  <div class="section-inner">
+    <p class="section-subtitle">Testimonials</p>
+    <h2 class="section-title">保護者さまの声</h2>
+    <div class="voice-grid">
+      <div class="voice-card">
+        <div class="voice-header">
+          <div class="voice-photo"><img src="img/voice_parent01.jpg" alt=""></div>
+          <div>
+            <p class="voice-name">Aさん（小4）のお父さま</p>
+            <p class="voice-child">3ヶ月で英検準2級を取得</p>
+          </div>
+        </div>
+        <p class="voice-body">ESL clubによる毎日の取り組みにより勉強習慣が身につきました。毎日やることによる継続力、単語テストを通じて得た自信、結果として残った英検準2級の合格が本人の成功体験へと繋がりました。</p>
+      </div>
+      <div class="voice-card">
+        <div class="voice-header">
+          <div class="voice-photo"><img src="img/voice_parent02.jpg" alt=""></div>
+          <div>
+            <p class="voice-name">Tくん（小6）のお母さま</p>
+            <p class="voice-child">入会8ヶ月で5級・4級・3級をスピード合格</p>
+          </div>
+        </div>
+        <p class="voice-body">3級合格の目標達成ありがとうございます！本人も『やっぱりESL clubスゴい！』と言っていて、ESLさんの力を肌で実感しているようです。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Results -->
+<section class="section results" id="results">
+  <div class="section-inner">
+    <p class="section-subtitle">Achievements</p>
+    <h2 class="section-title">中学受験合格実績</h2>
+    <div class="results-schools">
+      <span class="school-tag">東京学芸大学附属国際中等教育学校</span>
+      <span class="school-tag">広尾学園中学校</span>
+      <span class="school-tag">渋谷教育学園渋谷中学校</span>
+      <span class="school-tag">開智学園日本橋中学校</span>
+      <span class="school-tag">サレジアン国際中学校</span>
+      <span class="school-tag">文化学園杉並中学校</span>
+    </div>
+
+    <p class="section-subtitle" style="margin-top:80px">Comparison</p>
+    <h2 class="section-title" style="margin-bottom:32px">他の英語スクールとの違い</h2>
+    <div style="overflow-x:auto">
+      <table class="compare-table">
+        <thead>
+          <tr><th>項目</th><th>ESL club</th><th>A社</th><th>B社</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>講師</td><td class="highlight">英検1級以上のバイリンガル</td><td>バイリンガル</td><td>バイリンガル</td></tr>
+          <tr><td>レッスン形式</td><td class="highlight">マンツーマン</td><td>マンツーマン</td><td>グループ</td></tr>
+          <tr><td>日々の保護者フォロー</td><td class="highlight">ほぼ不要</td><td>必要</td><td>必要</td></tr>
+          <tr><td>カリキュラム</td><td class="highlight">目標とレベルに応じて個別作成</td><td>画一的</td><td>画一的</td></tr>
+          <tr><td>宿題設計</td><td class="highlight">あり</td><td>なし</td><td>なし</td></tr>
+          <tr><td>英検対策</td><td class="highlight">5級〜1級、1次・面接指導可能</td><td>5級〜準2級</td><td>4級〜準2級</td></tr>
+          <tr><td>受験・編入対策</td><td class="highlight">インターナショナルスクール〜大学受験まで</td><td>不可</td><td>不可</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- Price -->
+<section class="section price" id="price">
+  <div class="section-inner">
+    <p class="section-subtitle">Pricing</p>
+    <h2 class="section-title">教室紹介・料金</h2>
+    <div class="price-grid">
+      <div class="price-block">
+        <h3>渋谷校</h3>
+        <div class="price-row"><span class="price-label">住所</span><span class="price-value">〒150-0002 渋谷区渋谷1-8-6 宮益坂STビル10階</span></div>
+        <div class="price-row"><span class="price-label">営業時間</span><span class="price-value">火〜金 14:00〜20:00／土 14:00〜19:00</span></div>
+        <div class="price-row"><span class="price-label">対象</span><span class="price-value">小1〜高3（既卒含む）</span></div>
+        <div class="price-row"><span class="price-label">レッスン</span><span class="price-value">マンツーマン 90分</span></div>
+        <div class="price-row"><span class="price-label">週1回（月4回）</span><span class="price-value">58,300円（税込）</span></div>
+        <div class="price-row"><span class="price-label">週2回（月8回）</span><span class="price-value">85,800円（税込）</span></div>
+        <div class="price-row"><span class="price-label">週3回（月12回）</span><span class="price-value">113,300円（税込）</span></div>
+        <div class="price-row"><span class="price-label">入会金</span><span class="price-value">22,000円（税込）</span></div>
+      </div>
+      <div class="price-block">
+        <h3>オンライン校</h3>
+        <div class="price-row"><span class="price-label">営業時間</span><span class="price-value">火〜金 14:00〜20:00／土 14:00〜19:00</span></div>
+        <div class="price-row"><span class="price-label">対象</span><span class="price-value">小1〜高3（既卒含む）</span></div>
+        <div class="price-row"><span class="price-label">レッスン</span><span class="price-value">マンツーマン 45分</span></div>
+        <div class="price-row"><span class="price-label">週1回（月4回）</span><span class="price-value">33,000円（税込）</span></div>
+        <div class="price-row"><span class="price-label">週2回（月8回）</span><span class="price-value">52,800円（税込）</span></div>
+        <div class="price-row"><span class="price-label">週3回（月12回）</span><span class="price-value">79,200円（税込）</span></div>
+        <div class="price-row"><span class="price-label">入会金</span><span class="price-value">22,000円（税込）</span></div>
+        <p class="price-note">※教材は別途ご購入いただきます</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Final CTA -->
+<section class="cta-final" id="cta">
+  <div class="section-inner" style="padding:0">
+    <p class="section-subtitle" style="color:rgba(255,255,255,0.5)">Free Trial Lesson</p>
+    <h2 class="section-title" style="color:#fff">無料体験レッスンはこちら</h2>
+    <p>いつまでに2級合格できるかレッスン後にご案内します</p>
+    <a href="#" class="btn-primary btn-large" style="background:#fff;color:var(--navy)">今すぐ予約する →</a>
+    <p class="cta-phone">03-3797-3380</p>
+    <p class="cta-hours">火曜日から金曜日 14:00から20:00（土曜日14:00から19:00）</p>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <img src="img/logo.svg" alt="ESL club" style="height:28px;filter:brightness(0) invert(1);margin-bottom:16px">
+        <p>英検に特化したオンライン英語塾</p>
+      </div>
+      <div class="footer-col">
+        <h4>コース</h4>
+        <a href="#">小学部</a>
+        <a href="#">中高部</a>
+      </div>
+      <div class="footer-col">
+        <h4>コンテンツ</h4>
+        <a href="#">ブログ</a>
+        <a href="#">注目記事</a>
+      </div>
+      <div class="footer-col">
+        <h4>会社情報</h4>
+        <a href="#">会社概要</a>
+        <a href="#">プライバシーポリシー</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>Copyright © 2024 ESL club</p>
+      <p style="margin-top:8px;font-size:11px">英検®は、公益財団法人日本英語検定協会の登録商標です。このコンテンツは、公益財団法人日本英語検定協会の承認や推奨、その他の検討を受けたものではありません。</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+
+<script src="./vendor/lottie_light.min.js"></script>
+<script>
+document.querySelectorAll('[data-lot]').forEach(function(el){
+  lottie.loadAnimation({container:el,renderer:'svg',loop:true,autoplay:true,
+                        path:'./lottie/own/'+el.dataset.lot+'.json'});
+});
+</script>
+</body>
+</html>

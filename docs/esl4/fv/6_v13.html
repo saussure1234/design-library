@@ -1,0 +1,185 @@
+<!doctype html><html lang="ja"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>FV案6 数字型 v13｜ESL club オンライン校</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════════
+   FV案6 ── ベンチマーク2本（どちらもMUUUUU掲載）
+     067 ウズウズカレッジ  uzuz-college.jp
+         見出し極太2行／数字バッジ3つ横並び（15万人・88%・1,500）／
+         見出しの直下・左／主役は右にイラスト／CTA2本／白地
+     072 日本速読解力協会  sokunousokudoku.net
+         見出し極太2行／数字バッジ2つ（25年以上・92%）／
+         見出しの直下・左／主役は右に人物写真1枚／白地
+   ★見たのはスクリーンショットのみ。コードは読んでいない
+   ── なぜこの2本か ──────────────────────────────────
+   133本を確認して「人物写真2枚＋見出し1本」は1本しか無かった。
+   条件を「いま何があるか」でなく【一番強い札は何か】で立て直した。
+   ESL clubの一番強い札は数字（累計1,000名・2015年から・合格率）。
+   ★数字は esl3 のコピーにあるものだけを使う。捏造しない。
+   v01 = 1回目
+   v13 = ★v12の実測でこう出た（1440pxでの見出し1行の必要幅）：
+           いまの区切り 11字/13字/15字 → A+B=1049 B+C=1210
+           使える幅は【925px】（左余白72 〜 人物写真の左端997）
+           → どの2つを繋いでも入らない。3行になるのは必然だった
+         【犯人は級数ではなく区切りの位置】。「、」で2つに切ると
+           前24字=1049px(44px時) / 後15字=649px
+           38pxまで落とすと前906px < 925px で入る
+         ★1つだけ変える：区切りを3→2に。合わせて級数44→38、
+           版面760→920、人物78%→70%（人物の左端を右へ逃がす）
+         ★スマホは24字を1行に置けない（350px幅では14px相当になる）。
+           .nb の nowrap を900px以下で解除して自然に折る
+   v11 = バッジの数字が見出しより弱い。072は数字が見出しと並ぶ強さで、
+         色も本文と変えている。
+         ★1つだけ変える：数字を 44→52px、色を --g2 → --g（明るい緑）に
+   v10 = ①写真が小さく右に余白が広い。072は写真が版面の半分を占める
+           → 高さ64%→78%、右余白を --pad から 2% に
+         ②PCで下半分が空。中身が上に寄っている
+           → 文字ブロックを上下中央に置く
+   v09 = ★PCでバッジの数字が円からはみ出していた。実測：
+         円122px に対して中身が 幅120・高124。円に内接する正方形は
+         122÷√2 ≒ 86px しかないので、中身120pxは物理的に入らない。
+         → 円をやめて【角丸の四角】にする。067は円だが3つとも短い語。
+           ESL clubは「合格に導いた」「英検に特化」と語が長いので
+           円では入らない。形は寄せず、収まりを優先する
+   v08 = ★級数を実測で列挙したら、7段の中身はこうだった：
+           50(見出し) / 44(数字) / 24(主CTA) / 18(副CTA) / 15(ナビ) /
+           13(単位) / 11(小見出し・注記)
+         無駄な段は無い。数字を主役にする型では【数字の段】が要る。
+         → 縛りを「6段」から「7段（うち数字1段は別枠）」に更新する。
+           縛りを守るために数字を小さくするのは本末転倒
+   v07 = ★v05で級数が6→7段に増えていた。縛り違反。
+         原因はバッジの小見出し・単位を 11px の固定値にしたこと。
+         --f1(13px) に戻すと円に収まらないので、
+         【--f0:11px を段として正式に足す】。6段→7段ではなく、
+         11/13/15/18/24/44 の6段に整理し直す
+   v06 = 072の写真は矩形で枠があり、地から分離している。
+         私は切り抜きで背景の白に溶けて輪郭が曖昧だった。
+         ★ただし切り抜きは案1で有効だった。ここでは【072に寄せる】ため
+           矩形＋角丸に戻す。切り抜き版は v05 に残っている
+   v05 = ①072はバッジの数字が円いっぱいに大きい。私は円の中に余白が多い
+           → 数字38→44px、上下の小見出しを詰める
+         ②円の直径を132→122pxに落として、数字の占有率を上げる
+   v04 = ①スマホのCTA下端が772pxで画面外（390x844では入るが
+           iPhone SE 667pxでは要スクロール）→ 人物236→196px、
+           バッジの円を小さくして縦を詰める
+         ②見出しが3行で重い。067・072は2行。改行制御を見直して
+           2行に近づける（文言は変えない）
+   v03 = ①067はバッジの円が細線で軽い。私は緑の太線(2.5px)でうるさい
+           → 1.5px・薄いグレーに。数字だけ緑で立たせる
+         ②067はバッジが見出しの真下に密着。私は間が空いていた
+           → 見出しの下マージン 24→12px
+         ③左の余白が広く文字が中央寄りに見える → 版面を1280→1360px
+   v02 = ①067・072ともバッジの数字がもっと大きい。私のは30pxで小さい
+           → 円を118→132px、数字を30→38pxに
+         ②067はCTAがバッジのすぐ下。私は間が空いていた → 32→24px
+         ③級数が8段（縛りは6段）。バッジで3段増えた
+           → バッジの小見出しと単位を統一して6段に戻す
+   ══════════════════════════════════════════════════════════ */
+:root{--ink:#12262C;--ink2:#5A6E75;--line:#E3EAEC;--g:#00B21F;--g2:#0A7A2B;--y:#FFEE03;
+  --u:8px;--f0:11px;--f1:13px;--f2:15px;--f3:18px;--f4:24px;
+  --pad:calc(max(0px,(100vw - 1360px)/2) + 32px)}
+*{box-sizing:border-box}html,body{margin:0}html,body{overflow-x:clip}
+body{font-family:"Noto Sans JP","Hiragino Sans",system-ui,sans-serif;color:var(--ink);
+  background:#fff;font-size:var(--f3);line-height:1.85;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}a{color:inherit;text-decoration:none}.nb{white-space:nowrap}
+
+.hd{position:relative;z-index:20;display:flex;align-items:center;gap:20px;padding:calc(var(--u)*2) var(--pad)}
+.hd__logo img{height:32px;width:auto}
+.hd__nav{display:flex;gap:24px;font-size:var(--f2);font-weight:700;margin-left:auto}
+.hd__btns{display:flex;gap:8px}
+.hd__btn{font-size:var(--f2);font-weight:700;padding:11px 18px;border-radius:999px;white-space:nowrap;
+  border:1.6px solid var(--g);color:var(--g2);background:#fff}
+.hd__btn--main{background:var(--y);border-color:var(--y);color:var(--ink);box-shadow:0 4px 0 #D9C900}
+
+.fv{position:relative;overflow:hidden;min-height:min(84vh,760px)}
+.fv{display:flex;align-items:center}
+.fv__in{position:relative;z-index:5;max-width:min(920px,66vw);margin-left:var(--pad);
+  padding:calc(var(--u)*4) 0}
+.eyebrow{font-size:var(--f2);font-weight:700;color:var(--ink2);margin:0 0 calc(var(--u)*2)}
+.eyebrow .mk{background:linear-gradient(var(--y),var(--y)) no-repeat 0 88%/100% 7px;color:var(--ink)}
+/* 067・072に共通：見出しは極太2行 */
+.h1{font-size:clamp(24px,2.7vw,38px);font-weight:900;line-height:1.36;letter-spacing:.01em;
+  margin:0 0 calc(var(--u)*1.5);width:max-content;max-width:100%}
+.h1 .hi{background:linear-gradient(var(--y),var(--y)) no-repeat 0 84%/100% 12px}
+
+/* ★肝：見出しの直下・左に数字バッジを横並び */
+.nums{display:flex;gap:calc(var(--u)*2);margin:0 0 calc(var(--u)*3);flex-wrap:wrap}
+.num{min-width:132px;border-radius:14px;background:#fff;
+  border:1.5px solid #CFE3D4;padding:12px 16px;text-align:center;
+  box-shadow:0 6px 16px rgba(11,95,35,.10)}
+.num small{display:block;font-size:var(--f0);font-weight:700;color:var(--ink2);line-height:1.3;
+  margin-bottom:1px}
+.num b{display:block;font-size:52px;font-weight:900;color:var(--g);line-height:1;
+  letter-spacing:-.01em}
+.num b i{font-style:normal;font-size:var(--f1);margin-left:1px}
+.num em{font-style:normal;display:block;font-size:var(--f0);font-weight:700;color:var(--ink2);margin-top:0}
+
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin:0}
+.btn{display:inline-flex;align-items:center;gap:11px;font-weight:700;font-size:var(--f4);
+  padding:18px 30px;border-radius:12px}
+.btn--main{background:var(--y);color:var(--ink);box-shadow:0 8px 0 #D9C900,0 16px 26px rgba(11,95,35,.16)}
+.btn--sub{background:#fff;color:var(--g2);border:2px solid var(--g);font-size:var(--f3);padding:16px 24px}
+.btn::after{content:"";width:9px;height:9px;border-top:2.4px solid currentColor;
+  border-right:2.4px solid currentColor;transform:rotate(45deg)}
+.note{font-size:var(--f0);color:var(--ink2);margin:calc(var(--u)*2) 0 0}
+
+/* 072：主役は右に人物写真1枚 */
+.kids{position:absolute;right:2%;top:50%;transform:translateY(-50%);z-index:2;
+  pointer-events:none;height:70%}
+.kids img{height:100%;width:auto;border-radius:18px;object-fit:cover;
+  box-shadow:0 16px 34px rgba(11,95,35,.16)}
+
+@media(max-width:900px){
+  :root{--pad:20px}
+  .hd{padding:calc(var(--u)*1.5) var(--pad);flex-wrap:wrap}
+  .hd__nav{display:none}
+  .fv{min-height:0;padding-bottom:calc(var(--u)*3);display:flex;flex-direction:column}
+  .kids{position:relative;right:auto;top:auto;transform:none;height:200px;order:1;display:flex;justify-content:center}
+  .fv__in{order:2;max-width:none;margin:0;padding:calc(var(--u)*2) 20px 0}
+  .h1{font-size:24px;line-height:1.46;width:auto}
+  /* 24字のかたまりはスマホ幅に置けない。nowrapを解いて自然に折る */
+  .h1 .nb{white-space:normal}
+  .nums{gap:10px;justify-content:space-between}
+  .num{min-width:0;flex:1;padding:10px 6px;border-width:1.5px}
+  .num b{font-size:21px}
+  .cta{flex-direction:column;gap:10px}
+  .btn{width:100%;justify-content:center;font-size:var(--f3);padding:15px 20px}
+}
+</style></head><body>
+
+<header class="hd">
+  <a class="hd__logo" href="#"><img src="../img/logo.svg" alt="ESL club"></a>
+  <nav class="hd__nav"><a href="#">4つの特徴</a><a href="#">保護者さまの声</a><a href="#">他塾との違い</a><a href="#">教室紹介</a></nav>
+  <div class="hd__btns">
+    <a class="hd__btn" href="https://eslclub.jp/">資料を見る</a>
+    <a class="hd__btn hd__btn--main" href="https://eslclub.jp/trial/">無料体験レッスン</a>
+  </div>
+</header>
+
+<section class="fv">
+  <div class="kids"><img src="../img/fv_boy.webp" alt="自宅の机で学習に取り組む小学生"></div>
+
+  <div class="fv__in">
+    <p class="eyebrow">2015年の開塾以降<span class="mk">”英検に特化”</span>してきたからできる</p>
+    <h1 class="h1"><span class="nb">受験勉強と並走しながら<span class="hi">小学生・中学生で英検2級、</span></span><wbr><span class="nb"><span class="hi">高校生で準1級</span>を目指せる英語塾</span></h1>
+
+    <!-- ★数字は esl3 のコピーにあるものだけ。捏造しない -->
+    <div class="nums">
+      <div class="num"><small>合格に導いた</small><b>1,000<i>名</i></b><em>以上</em></div>
+      <div class="num"><small>開塾から</small><b>2015<i>年</i></b><em>英検に特化</em></div>
+      <div class="num"><small>講師は全員</small><b>英検1<i>級</i></b><em>以上</em></div>
+    </div>
+
+    <div class="cta">
+      <a class="btn btn--main" href="https://eslclub.jp/trial/">無料体験レッスンはこちら</a>
+      <a class="btn btn--sub" href="#">4つの特徴を見る</a>
+    </div>
+    <p class="note">いつまでに2級合格できるかレッスン後にご案内します</p>
+  </div>
+</section>
+
+</body></html>

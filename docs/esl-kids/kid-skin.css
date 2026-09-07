@@ -1,0 +1,104 @@
+@charset "UTF-8";
+/* ══════════════════════════════════════════════════════════════════
+   esl-kids 着せ替えスキン（esl6本体は無傷。これを最後に読ませて上書き）
+
+   狙い：既存オンライン校(esl6)の実レイアウト・実テキスト・実写真はそのまま、
+        見た目だけ「小学生向け」（着せ替え画像 _ref/kid_*.png）に寄せる。
+   ★AIが勝手に足した子供写真は入れない。esl6の実写真だけを使う。
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── ① トークンを上書き（:root を後から書けば勝つ）────────────── */
+:root{
+  --c-primary:#00b53a;          /* ブランド緑を少し明るく（キッズ向け） */
+  --c-primary-d:#029b34;
+  --c-accent:#ffee02;           /* 黄（元から） */
+  --c-accent-d:#e6cf00;
+  /* 見出しだけ丸ゴシック。本文はNotoのまま（可読性） */
+  --f-disp:"Zen Maru Gothic","M PLUS Rounded 1c",var(--f-sans);
+  /* 角を大きく丸く */
+  --r-s:12px; --r-m:20px; --r-l:32px;
+}
+
+/* 見出し系を丸ゴシックに */
+h1,h2,h3,.hbc__h1,[class*="__h2"],[class*="__ttl"],[class*="ttl"]{
+  font-family:var(--f-disp)}
+
+/* ── 共通：セクション見出しの下に黄色い手書き下線 ──────────────
+   ★kid_*.png はどのセクションも見出しの下に黄色い波線が1本。
+     esl6の見出しは中央寄せの h2 が多いので、それに擬似要素で足す。 */
+.kx-underline{position:relative;display:inline-block}
+.kx-underline::after{
+  content:"";position:absolute;left:-2%;right:-2%;bottom:-.28em;height:.34em;
+  background:var(--c-accent);border-radius:999px;z-index:-1;
+  transform:rotate(-.6deg)}
+
+/* ══ FV（.hbc）══════════════════════════════════════════════════
+   ★女の子（中高生）は消す。男の子1枚を主役に大きくする。
+     淡い緑の楕円を敷いて、下端に緑の波を入れる。 */
+.hbc{background:#fff}
+/* 女の子を消す */
+.hbc__ph--b{display:none !important}
+/* 男の子を右側で大きく */
+.hbc__ph--a{left:52% !important;top:12% !important;width:40% !important;z-index:3}
+/* 男の子の後ろに淡い緑の楕円（着せ替え画像の色面） */
+.hbc__ph--a::before{
+  content:"";position:absolute;left:-14%;top:-8%;width:128%;height:118%;
+  background:radial-gradient(closest-side,#EAF7EE 78%,transparent 80%);
+  z-index:-1}
+/* 吹き出しの残り（部活と両立…/年の近い先生と…）は中高生向けなので消す */
+.hbc__bb{display:none !important}
+
+/* 見出しの緑強調（em）の下に黄色い手書き下線（細め・文字の少し下）*/
+.hbc__h1 em{position:relative;color:var(--c-primary);font-style:normal}
+.hbc__h1 em::after{
+  content:"";position:absolute;left:.05em;right:.05em;bottom:-.08em;height:.14em;
+  background:var(--c-accent);border-radius:999px;z-index:-1}
+
+/* ボタン：ぷっくり黄色（元のまま）＋文字は濃い緑で読めるように */
+.hbc .btn,.btn{
+  color:#0a7d30 !important;font-family:var(--f-disp);font-weight:800;
+  border-radius:999px}
+
+/* FV下端の緑の波（着せ替え画像の締め）*/
+.hbc::after{
+  content:"";position:absolute;left:0;right:0;bottom:-1px;height:64px;z-index:1;
+  background:var(--c-primary);
+  -webkit-mask:radial-gradient(80px 64px at 50% 0,transparent 62px,#000 63px) repeat-x;
+  mask:radial-gradient(80px 64px at 50% 0,transparent 62px,#000 63px) repeat-x;
+  mask-size:160px 64px}
+
+/* ══════════════════════════════════════════════════════════════════
+   v2：AI着せ替え画像に寄せる（波線見出し・あしらい・POINT白カード）
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── 見出しの下線を「直線バー」→「黄色い手書き波線」に ────────────
+   esl6は .sec-head::after が 60×5px の直線。波線SVGで上書き。 */
+.sec-head::after{
+  width:132px !important;height:16px !important;border-radius:0 !important;
+  margin-top:12px !important;background:var(--c-accent) !important;
+  -webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='132' height='16' viewBox='0 0 132 16'><path d='M4,10 C20,3 32,3 48,9 C64,15 76,15 92,9 C106,4 118,5 128,8' fill='none' stroke='black' stroke-width='6' stroke-linecap='round'/></svg>") no-repeat center/contain;
+          mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='132' height='16' viewBox='0 0 132 16'><path d='M4,10 C20,3 32,3 48,9 C64,15 76,15 92,9 C106,4 118,5 128,8' fill='none' stroke='black' stroke-width='6' stroke-linecap='round'/></svg>") no-repeat center/contain}
+
+/* 見出しキーワード（HTMLで <em class="kx-hl"> を巻く）*/
+.kx-hl{font-style:normal;color:var(--c-primary)}
+.tone-brand .kx-hl,.grad-band .kx-hl,.tone-ink .kx-hl{color:var(--c-accent)}  /* 緑地では黄 */
+
+/* POINT見出し(.vhr__title)も少しキッズに：色を濃い緑＋下に細い黄波線 */
+.vhr__title{color:var(--c-ink)}
+.vhr__title .kx-hl{color:var(--c-primary)}
+
+/* ── POINT を白い角丸カードに乗せる（AIは白カード）───────────────
+   esl6のPOINTは緑帯に直置き。白パネルを敷いて浮かせる。 */
+.vhr{background:#fff;border-radius:32px;
+  padding:clamp(28px,3.4vw,46px) clamp(26px,3vw,44px);
+  box-shadow:0 14px 30px rgba(48,48,48,.10)}
+.vhr__body{border-top-color:#EAF0E8}
+
+/* ── 写真は角を丸く（AIはやわらかい角丸/丸抜き）──────────────── */
+.hbc__ph--a img,.vhr__fig img,.vhr img,.cts__box img,.msc img,
+figure img{border-radius:24px}
+.hbc__ph--a img{border-radius:28px}
+
+/* ── あしらい（JSで挿入する .kx-acc の見た目）────────────────── */
+.kx-acc{position:absolute;z-index:4;pointer-events:none;line-height:0}
+.kx-acc svg{display:block}

@@ -1,0 +1,181 @@
+<!doctype html><html lang="ja"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>FV案C 下部2枚型 v01｜ESL club オンライン校</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════════
+   FV案C 下部2枚型 ── ベンチマーク：028 ひろがり保育プロジェクト
+   https://seiwagakuen.ed.jp/hhp/   （_shortlist.json 028）
+   ★見たのは ref/bench/028_seiwagakuen_ed_jp_hhp.png のみ。コードは読んでいない
+
+   ── なぜこのベンチか ────────────────────────────
+   素材は【シーン写真2枚＋見出し39字＋数字3つ】。
+   028は【上に見出し／下に写真2枚を横並び／その間を帯が走る】構成で、
+   写真がちょうど2枚。素材の構成が一致する。
+
+   ── 028の構成（実物を見て書き出した）──────────────────
+   1 上半分は白い地。見出しと英語の補足だけ
+   2 見出しは中くらいの級数。極太にしない。カギ括弧で一部を括る
+   3 下半分に写真を横並び。写真どうしは密着
+   4 その境目を【細い色の帯が斜めに走る】。帯は複数色のストライプ
+   5 カード・影・角丸の箱は無い
+   6 左上にロゴ、右上にSNSアイコン
+
+   ── ★禁止事項 ──────────────────────────────
+     × カードを使わない          × 影を使わない
+     × 角丸の箱を使わない        × 見出しを極太にしない（028は中くらい）
+     × 写真の間に隙間を作らない
+     × 帯を多色にしない          028は多色だがESL clubの色数が増える。
+                                 ブランド色の濃淡だけで組む（CRITERIA.md ④）
+     × ESL clubに無い言葉を作らない
+     × 同じ訴求を2回出さない
+
+   ── ★置き換えたもの（tailoring）────────────────────
+   (1) 028の帯は赤・青・黄・緑の多色ストライプ。
+       そのまま借りると色が4つ増えて CRITERIA.md ⑥「強調は1〜2箇所」を割る。
+       → 帯は【ブランド緑の濃淡3本】だけにする。役割（斜めに走って
+         上下を分ける）は残し、色数は増やさない
+   (2) 028の見出しは2行・約30字。ESL clubは39字なので3行。
+       級数は上げずに行数で吸収する（028は極太にしていない）
+   (3) 数字3つは見出しの下に横並び。カードにしない。
+       028の英語の補足文がある位置と同じ扱い
+
+   ── ★訴求の重複（1回ずつ）──────────────────────
+   ・前置きは入れない ＝ 数字②と同内容
+   ・ヘッダーは「資料を見る」＝ 本文CTAと文言を分ける
+   ・注記は入れない ＝ 見出しの「英検2級」と重複
+   ・残す重複：見出し「準1級」と数字③「英検1級」＝ 主体が違う
+
+   ── CRITERIA.md ─────────────────────────────
+   (1)見えるか   地の輝度0.872。帯が上下の面に段差を作る
+   (2)読めるか   文字は写真に重ねない（028も重ねていない）
+   (3)自然か     動きを入れない
+   (4)品        ブランド色の外を持ち込まない（帯を多色にしない）
+   (5)位置      コピーは esl3 から一字一句そのまま
+   (6)過剰でない 強調は【黄のCTA】1箇所のみ
+   v01 = 1回目
+   ══════════════════════════════════════════════════════════ */
+:root{
+  --ink:#12262C; --ink2:#5F7266; --g:#0A7A2B; --g2:#4FA86A; --g3:#9CCBAA;
+  --y:#FFEE03; --bg:#E8F3EA; --line:#C3D8C8; --u:8px;
+  --pad:calc(max(0px,(100vw - 1280px)/2) + 40px);
+}
+*{box-sizing:border-box}
+html,body{margin:0;overflow-x:clip}
+body{font-family:"Noto Sans JP","Hiragino Sans",system-ui,sans-serif;
+  color:var(--ink);background:var(--bg);font-size:16px;line-height:1.9;
+  -webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+
+.hd{position:relative;z-index:30;display:flex;align-items:center;gap:24px;
+  padding:calc(var(--u)*2.5) var(--pad)}
+.hd__logo img{height:34px;width:auto}
+.hd__nav{display:flex;gap:26px;font-size:14px;font-weight:700;margin-left:auto}
+.hd__btn{font-size:14px;font-weight:700;padding:11px 22px;border-radius:2px;
+  border:1.5px solid var(--g);color:var(--g);white-space:nowrap}
+
+/* 上＝文字／下＝写真2枚。028と同じ上下の割り */
+.fv{position:relative;min-height:min(calc(100vh - 90px),820px);
+  display:grid;grid-template-rows:1fr auto;overflow:hidden}
+
+.fv__in{position:relative;z-index:4;
+  padding:calc(var(--u)*3) var(--pad) calc(var(--u)*9)}
+/* 2 見出しは中くらいの級数。極太にしない */
+.h1{font-size:clamp(23px,2.72vw,39px);font-weight:700;line-height:1.52;
+  letter-spacing:.01em;margin:0}
+.h1 .l{display:block}
+.h1 .hi{font-weight:900}
+
+/* 3 数字は見出しの下に横並び。カードにしない */
+.nums{display:flex;gap:calc(var(--u)*6);margin:calc(var(--u)*4) 0 0;
+  padding:calc(var(--u)*2.5) 0 0;border-top:1px solid var(--line);max-width:700px}
+.num small{display:block;font-size:11px;font-weight:700;color:var(--ink2);line-height:1.4}
+.num b{display:block;font-size:30px;font-weight:900;color:var(--g);line-height:1.1;
+  letter-spacing:-.01em}
+.num b i{font-style:normal;font-size:13px;margin-left:1px}
+.num em{font-style:normal;display:block;font-size:11px;font-weight:700;color:var(--ink2)}
+
+.cta{margin:calc(var(--u)*4) 0 0}
+.btn{display:inline-flex;align-items:center;gap:10px;font-size:15px;font-weight:700;
+  padding:15px 26px;background:var(--y);color:var(--ink);border-radius:2px;white-space:nowrap}
+.btn::after{content:"";width:7px;height:7px;border-top:2px solid currentColor;
+  border-right:2px solid currentColor;transform:rotate(45deg)}
+
+/* 4 上下の境目を斜めに走る帯。028は多色だが、こちらは緑の濃淡3本だけ */
+.ribbon{position:absolute;left:-6%;right:-6%;z-index:3;pointer-events:none;
+  bottom:calc(46% - 40px);height:120px;transform:rotate(-4.2deg);
+  display:grid;grid-template-rows:1fr 1fr 1fr}
+.ribbon i{display:block}
+.ribbon i:nth-child(1){background:var(--g3)}
+.ribbon i:nth-child(2){background:var(--g2)}
+.ribbon i:nth-child(3){background:var(--g)}
+
+/* 3 下半分に写真を横並び。写真どうしは密着（隙間を作らない） */
+.ph{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;
+  height:46%;min-height:300px}
+.ph figure{position:relative;margin:0;overflow:hidden}
+.ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.ph figure:nth-child(1) img{object-position:44% 52%}
+.ph figure:nth-child(2) img{object-position:56% 44%}
+
+@media(max-width:900px){
+  :root{--pad:20px}
+  .hd{padding:calc(var(--u)*1.5) var(--pad);gap:12px}
+  .hd__nav{display:none}
+  /* スマホ：写真をCTAより上に（全LP共通の決めごと）→ 上下を入れ替える */
+  .fv{min-height:0;display:flex;flex-direction:column;padding:0 0 calc(var(--u)*5)}
+  .ph{order:1;height:230px;min-height:0}
+  .fv__in{order:2;padding:calc(var(--u)*4) var(--pad) 0}
+  .ribbon{bottom:auto;top:196px;height:66px;left:-10%;right:-10%}
+  .h1{font-size:23px;line-height:1.55}
+  .nums{gap:calc(var(--u)*3)}
+  .num b{font-size:24px}
+  .btn{width:100%;justify-content:center}
+}
+</style></head><body>
+
+<header class="hd">
+  <a class="hd__logo" href="#"><img src="../img/logo.svg" alt="ESL club"></a>
+  <nav class="hd__nav">
+    <a href="#">4つの特徴</a><a href="#">保護者さまの声</a>
+    <a href="#">他塾との違い</a><a href="#">教室紹介</a>
+  </nav>
+  <a class="hd__btn" href="https://eslclub.jp/">資料を見る</a>
+</header>
+
+<section class="fv">
+
+  <div class="fv__in">
+    <!-- 文言は esl3 から一字一句そのまま -->
+    <h1 class="h1">
+      <span class="l">受験勉強と並走しながら</span>
+      <span class="l"><span class="hi">小学生・中学生で英検2級、</span></span>
+      <span class="l"><span class="hi">高校生で準1級</span>を目指せる英語塾</span>
+    </h1>
+    <!-- ★数字は esl3 のコピーにあるものだけ。捏造しない -->
+    <div class="nums">
+      <div class="num"><small>合格に導いた</small><b>1,000<i>名</i></b><em>以上</em></div>
+      <div class="num"><small>開塾から</small><b>2015<i>年</i></b><em>英検に特化</em></div>
+      <div class="num"><small>講師は全員</small><b>英検1<i>級</i></b><em>以上</em></div>
+    </div>
+    <div class="cta">
+      <a class="btn" href="https://eslclub.jp/trial/">無料体験レッスンはこちら</a>
+    </div>
+  </div>
+
+  <!-- 4 斜めに走る帯。緑の濃淡3本だけ（028の多色は借りない） -->
+  <span class="ribbon" aria-hidden="true"><i></i><i></i><i></i></span>
+
+  <!-- 3 下半分に写真2枚を横並び。密着 -->
+  <div class="ph">
+    <figure><img src="../img/p07.jpg" alt="自宅の机で英検対策に取り組む小学生"></figure>
+    <figure><img src="../img/p20.jpg" alt="オンラインで英検対策を受ける中高生"></figure>
+  </div>
+
+</section>
+
+</body></html>

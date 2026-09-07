@@ -1,0 +1,164 @@
+<!doctype html><html lang="ja"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>FV案B 丸埋め込み型 v06｜ESL club オンライン校</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════════
+   FV案B 丸埋め込み型 v06 ── ベンチマーク：011 UM English Lab.
+   https://um-english-lab.com/
+   ★見たのは ref/bench/011_um-english-lab_com.png のみ。コードは読んでいない
+
+   ── ★v01〜v05 は読み取りを間違えていた ────────────────
+   480pxの一覧サムネだけで書いていた。実寸で開いたら4つ違っていた。
+     私が書いたこと        実物
+     文字は画面内に収まる  → 【左右の端で切れて溢れている】"t Trend" と語の途中から
+     見出しは太め(700)     → 【細い】Regular〜Medium
+     丸は写真か単色        → 【同心円が多い】赤+青+黄の3層など
+     地は淡い色            → 【純白 #FFFFFF】
+
+   ── 011の実測値（PNGから数値で出したもの）──────────────
+   地        #FFFFFF
+   見出し    字面(cap)高 119px → font-size 約165px
+   行送り    219px（font-size比 1.33）
+   丸        直径173px ＝ 約1.05em（字面の1.45倍）
+   両端      切れている（左端6pxの明るさ58＝文字がある）
+
+   ★私は丸を 1.9em にしていた。実物の1.8倍。字面比だと2.6倍で、
+     丸だけが浮いていた原因はここ
+
+   ── ★禁止事項 ──────────────────────────────
+     × 見出しを太くしない（011は細い。900や700にしない）
+     × 丸を大きくしすぎない（1.05em。字面の1.45倍まで）
+     × カードを使わない        × 影を使わない
+     × 角丸の箱を使わない      × 面を作らない
+     × 色を3色目に増やさない
+     × ESL clubに無い言葉を作らない
+     × 同じ訴求を2回出さない
+
+   ── ★借りられなかったもの（正直に書く）──────────────
+   【両端で文字が切れる】。011の見出しは単語の羅列（Trend / Wicked /
+   Curious Lab / 探究）なので、端で切れても意味が壊れない。
+   ESL clubの見出しは「受験勉強と並走しながら…」という1文で、
+   端で切ると読めなくなる。→ 切らない。幅いっぱいまで使うに留める。
+   実測で級数を出した：使える幅1360、3行目は15字＋丸1.05em＝16.05F
+   1360 ÷ 16.05 ＝ 84px
+
+   ── ★地を白にする件（CRITERIA.md ①との関係）──────────
+   ①は「白ベース＋白いカードは全部同じ明るさに潰れる」。
+   011は【面を1つも作っていない】（文字と丸だけ）ので白地で成立する。
+   こちらも面を作らない。数字は罫線1本だけで区切る。
+   面を作らない限り、潰れる面が無いので白地でよい
+
+   ── ★訴求の重複（1回ずつ）──────────────────────
+   ・前置きは入れない ＝ 数字②と同内容
+   ・ヘッダーは「資料を見る」＝ 本文CTAと文言を分ける
+   ・注記は入れない ＝ 見出しの「英検2級」と重複
+   ・残す重複：見出し「準1級」と数字③「英検1級」＝ 主体が違う
+   ══════════════════════════════════════════════════════════ */
+:root{
+  --ink:#12262C; --ink2:#5F7266; --g:#0A7A2B; --y:#FFEE03;
+  --bg:#FFFFFF;              /* 011に合わせて純白。面を作らないので潰れない */
+  --line:#DCE6DE; --u:8px;
+  --pad:calc(max(0px,(100vw - 1360px)/2) + 40px);
+}
+*{box-sizing:border-box}
+html,body{margin:0;overflow-x:clip}
+body{font-family:"Noto Sans JP","Hiragino Sans",system-ui,sans-serif;
+  color:var(--ink);background:var(--bg);font-size:16px;line-height:1.9;
+  -webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+
+.hd{position:relative;z-index:30;display:flex;align-items:center;gap:24px;
+  padding:calc(var(--u)*2.5) var(--pad)}
+.hd__logo img{height:34px;width:auto}
+.hd__nav{display:flex;gap:26px;font-size:14px;font-weight:700;margin-left:auto}
+.hd__btn{font-size:14px;font-weight:700;padding:11px 22px;border-radius:2px;
+  border:1.5px solid var(--g);color:var(--g);white-space:nowrap}
+
+.fv{position:relative;min-height:min(calc(100vh - 90px),820px);
+  display:flex;flex-direction:column;justify-content:center;
+  padding:calc(var(--u)*4) var(--pad);overflow:hidden}
+
+/* ★011は細い。太くしない。実測の行送り1.33をそのまま使う */
+.h1{font-size:clamp(23px,5.83vw,84px);font-weight:400;line-height:1.33;
+  letter-spacing:.005em;margin:0}
+.h1 .l{display:flex;align-items:center;flex-wrap:nowrap;gap:0 .1em}
+
+/* ★丸は1.05em（実測173px÷165px）。行の高さは丸で変えない */
+.o{flex:none;border-radius:50%;overflow:hidden;display:inline-block;
+  width:1.05em;height:1.05em;margin:-.1em .08em}
+.o--ph img{width:100%;height:100%;object-fit:cover}
+.o--a img{object-position:44% 42%}
+.o--b img{object-position:58% 42%}
+/* 011の図形の丸は【同心円】。単色のベタではない */
+.o--ring{background:
+  radial-gradient(circle,
+    var(--y) 0 22%,
+    var(--g) 22% 46%,
+    #CFE6D6 46% 100%)}
+
+/* 数字は罫線1本だけ。★面を作らない（白地で潰れないための条件） */
+.nums{display:flex;gap:calc(var(--u)*7);margin:calc(var(--u)*6) 0 0;
+  padding:calc(var(--u)*2.5) 0 0;border-top:1px solid var(--line);max-width:860px}
+.num small{display:block;font-size:11px;font-weight:700;color:var(--ink2);line-height:1.4}
+.num b{display:block;font-size:30px;font-weight:900;color:var(--g);line-height:1.1;
+  letter-spacing:-.01em}
+.num b i{font-style:normal;font-size:13px;margin-left:1px}
+.num em{font-style:normal;display:block;font-size:11px;font-weight:700;color:var(--ink2)}
+
+.cta{margin:calc(var(--u)*4) 0 0}
+.btn{display:inline-flex;align-items:center;gap:10px;font-size:15px;font-weight:700;
+  padding:15px 26px;background:var(--y);color:var(--ink);border-radius:2px;white-space:nowrap}
+.btn::after{content:"";width:7px;height:7px;border-top:2px solid currentColor;
+  border-right:2px solid currentColor;transform:rotate(45deg)}
+
+@media(max-width:900px){
+  :root{--pad:20px}
+  .hd{padding:calc(var(--u)*1.5) var(--pad);gap:12px}
+  .hd__nav{display:none}
+  .fv{min-height:0;padding:calc(var(--u)*5) var(--pad) calc(var(--u)*6)}
+  .h1{font-size:23px;line-height:1.5}
+  .h1 .l{flex-wrap:wrap}
+  .nums{gap:calc(var(--u)*3);margin-top:calc(var(--u)*4)}
+  .num b{font-size:24px}
+  .btn{width:100%;justify-content:center}
+}
+</style></head><body>
+
+<header class="hd">
+  <a class="hd__logo" href="#"><img src="../img/logo.svg" alt="ESL club"></a>
+  <nav class="hd__nav">
+    <a href="#">4つの特徴</a><a href="#">保護者さまの声</a>
+    <a href="#">他塾との違い</a><a href="#">教室紹介</a>
+  </nav>
+  <a class="hd__btn" href="https://eslclub.jp/">資料を見る</a>
+</header>
+
+<section class="fv">
+
+  <!-- 文の切れ目に丸を差し込む。語は作らない・並べ替えない。
+       文言は esl3 から一字一句そのまま -->
+  <h1 class="h1">
+    <span class="l">受験勉強と並走しながら<span class="o o--ph o--a"><img src="../img/p07.jpg" alt="自宅の机で英検対策に取り組む小学生"></span></span>
+    <span class="l">小学生・中学生で英検2級、<span class="o o--ph o--b"><img src="../img/p20.jpg" alt="オンラインで英検対策を受ける中高生"></span></span>
+    <span class="l">高校生で準1級を目指せる英語塾<span class="o o--ring" aria-hidden="true"></span></span>
+  </h1>
+
+  <!-- ★数字は esl3 のコピーにあるものだけ。捏造しない -->
+  <div class="nums">
+    <div class="num"><small>合格に導いた</small><b>1,000<i>名</i></b><em>以上</em></div>
+    <div class="num"><small>開塾から</small><b>2015<i>年</i></b><em>英検に特化</em></div>
+    <div class="num"><small>講師は全員</small><b>英検1<i>級</i></b><em>以上</em></div>
+  </div>
+
+  <div class="cta">
+    <a class="btn" href="https://eslclub.jp/trial/">無料体験レッスンはこちら</a>
+  </div>
+
+</section>
+
+</body></html>

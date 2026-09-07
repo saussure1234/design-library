@@ -74,6 +74,8 @@ tr:hover td{background:#fafbfc}
 .gnode .d{font-size:10.5px;color:var(--mute)}
 .gnode .w{font-size:11.5px;margin-top:4px;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.gnode .ext{font-size:10.5px;color:#0b64c8;margin-top:2px}
+.gnode.hasext .w{-webkit-line-clamp:1}   /* 由来の1行が増えるぶん本文を1行に */
 .gsvg{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:visible}
 
 /* FB履歴 */
@@ -106,7 +108,12 @@ const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&g
 let cur=DATA.projects[0].id, tab='list';
 
 function alerts(p){return p.versions.filter(v=>v.alert);}
-function url(id){return DATA.base_url+id+'/';}
+
+// 版は design-library の下にあるとは限らない（別リポ・別ドメインに出す案件がある）。
+// 台帳に url があればそれを使い、無い時だけ base_url + id で組み立てる。
+const ALL={}, OWNER={};
+DATA.projects.forEach(p=>p.versions.forEach(v=>{ALL[v.id]=v;OWNER[v.id]=p;}));
+function url(id){const v=ALL[id];return (v&&v.url)||DATA.base_url+id+'/';}
 
 function sidebar(){
   const tot=DATA.projects.reduce((a,p)=>a+alerts(p).length,0);
@@ -126,6 +133,8 @@ function linkCell(v){
 }
 
 function listPane(p){
+  if(!p.versions.length)return '<p style="color:var(--mute)">まだ版がありません。'
+    +'<br>lpv.py new で最初の版を登録してください。</p>';
   const rows=p.versions.map(v=>{
     const [lab,c]=S[v.status]||S.draft;
     const mg=v.status==='draft'?'<span class="mg n">未公開</span>'
@@ -141,16 +150,24 @@ function listPane(p){
 }
 
 function graphPane(p){
+  if(!p.versions.length)return '<p style="color:var(--mute)">まだ版がありません。</p>';
   const NW=212, GX=64, RH=116;              // 節の幅 / 横の間隔 / 1段の高さ
   const by={}; p.versions.forEach(v=>by[v.id]=v);
   // 親が別プロジェクトにいる場合（例：小学生向けの親はオンライン校の版）は根として扱う
   const par=v=>(v.parent&&by[v.parent])||null;
 
   // 横位置＝世代
+  // ★循環（a→b→a）を踏むと無限再帰でページごと固まる。必ず seen で止める。
   const depth={};
-  const d=v=>{if(depth[v.id]!=null)return depth[v.id];
-    const pa=par(v); return depth[v.id]=pa?d(pa)+1:0;};
-  p.versions.forEach(d);
+  const d=(v,seen)=>{
+    if(depth[v.id]!=null)return depth[v.id];
+    seen=seen||{};
+    if(seen[v.id])throw new Error('派生元が循環しています：'+v.id);
+    seen[v.id]=1;
+    const pa=par(v); return depth[v.id]=pa?d(pa,seen)+1:0;};
+  try{ p.versions.forEach(v=>d(v)); }
+  catch(e){ return `<p style="color:var(--bad);font-weight:700">▲ ${esc(e.message)}<br>
+    <span style="font-weight:400;font-size:12.5px">lp-registry.json の parent を直してください。</span></p>`; }
 
   const kids={};
   p.versions.forEach(v=>{const pa=par(v); if(pa)(kids[pa.id]=kids[pa.id]||[]).push(v);});
@@ -172,11 +189,14 @@ function graphPane(p){
   const maxD=Math.max(...p.versions.map(v=>depth[v.id]));
   const maxR=Math.max(...p.versions.map(v=>row[v.id]));
   const nodes=p.versions.map(v=>{const [lab,c,b]=S[v.status]||S.draft;
-    return `<div class="gnode" id="g-${v.id}" style="--c:${c};--b:${b};`
+    // 親が別案件にいる版は、この図では根に見える。由来が消えるので明示する。
+    const out=v.parent&&!by[v.parent]&&ALL[v.parent];
+    const ext=out?`<div class="ext">← ${esc(OWNER[v.parent].name)} の ${esc(v.parent)} から</div>`:'';
+    return `<div class="gnode${out?' hasext':''}" id="g-${v.id}" style="--c:${c};--b:${b};`
       +`left:${depth[v.id]*(NW+GX)}px;top:${(row[v.id]*RH).toFixed(1)}px">
       <div class="t">${linkCell(v)}</div>
       <div class="d">${esc(v.date)} · ${lab}${v.merged?'':' · <span style="color:var(--bad)">本線未反映</span>'}</div>
-      <div class="w">${esc(v.what)}</div></div>`}).join('');
+      ${ext}<div class="w">${esc(v.what)}</div></div>`}).join('');
   return `<div class="graph"><svg class="gsvg"></svg>
     <div class="gcanvas" style="width:${(maxD+1)*(NW+GX)-GX}px;height:${maxR*RH+108}px">${nodes}</div></div>`;
 }
