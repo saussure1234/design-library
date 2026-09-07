@@ -3344,7 +3344,7 @@ document.documentElement.classList.add('fv-anim');
   overflow:hidden;
   box-shadow:none;
   padding:0;
-  grid-template-columns: minmax(0,1.05fr) minmax(0,1.2fr);
+  grid-template-columns: minmax(0,0.95fr) minmax(0,1.05fr);
   column-gap: clamp(24px, 3vw, 44px);
   align-items:start;
 }
@@ -3356,7 +3356,7 @@ document.documentElement.classList.add('fv-anim');
      ここでは版面の左端から始める（画面端までのブリードは入れていない）。 */
 .tone-brand .vhr__item::before{
   content:"";
-  grid-column:1; grid-row:1 / -1;
+  grid-column:1; grid-row:1;
   align-self:stretch;
   margin-right: calc(-1 * var(--pb-slant));
   background:var(--c-primary);
@@ -3387,6 +3387,7 @@ document.documentElement.classList.add('fv-anim');
    いちばん長いのは「保護者さまが忙しくても安心」13文字。 */
 .tone-brand .vhr__title{
   color:var(--c-on-primary);
+  line-break:strict;
   font-size: clamp(19px, 2vw, 27px);
   line-height:1.4;
   margin-top: clamp(12px,1.6vw,20px);
@@ -3396,19 +3397,24 @@ document.documentElement.classList.add('fv-anim');
      マークアップで .vhr__vert の中へ移した（文字は1字も変えていない）。 */
 .tone-brand .vhr__sub{
   color:var(--c-on-primary);
+  line-break:strict;            /* 「ャー」が行頭に来るのを止める */
+  text-wrap:pretty;             /* 最終行に1〜2字だけ残すのを避ける */
   margin-top: clamp(14px,1.8vw,22px);
   padding-top:0;
 }
 
-/* 合格率の丸は生成に合わせて一回り大きく */
-.tone-brand .vhr__ds{ --dia: clamp(88px, 10.5vw, 118px) }
+/* ★丸の大きさは元のまま触らない。
+   生成画像はカードを画面いっぱいに引き伸ばして描くので、
+   その中の丸が大きく見えただけだった。実測：生成の入力も出力もカードは900px。
+   大きくすると3+2で並ばず2+2+1に折れ、緑の面が下へ間延びする。 */
 
 /* ── 右：図・写真は白い地の上 ─────────────────────── */
 .tone-brand .vhr__top > .vhr__chart,
 .tone-brand .vhr__top > .vhr__figs{
   grid-column:2; grid-row:1;
   align-self:center;
-  margin: clamp(20px,2.4vw,34px) clamp(24px,2.8vw,40px) clamp(20px,2.4vw,34px) 0;
+  /* 右の余白を詰める。広げないと合格率の下の注記が3行に折れる（元は2行） */
+  margin: clamp(20px,2.4vw,34px) clamp(16px,1.8vw,26px) clamp(20px,2.4vw,34px) 0;
 }
 /* 写真はカードの右上の角に寄せる（生成では角に食い込んでいる） */
 .tone-brand .vhr__top > .vhr__fig{
@@ -3420,11 +3426,11 @@ document.documentElement.classList.add('fv-anim');
 /* ── 下：本文。上に緑の細い罫 ─────────────────────── */
 /* カードに padding を持たせると緑の面まで内側に入ってしまうので、
    余白は要素ごとに持たせる */
-/* ★生成では緑の面がカードの上から下まで貫き、本文はその右側にある。
-   本文を全幅に置くと緑が上半分で止まって別物になる（1回それで出した）。 */
+/* ★本文は白い地の上、カードの全幅。
+   一度これを右の列だけに寄せたが、生成は全幅。緑が縦に貫くのは誤り。 */
 .tone-brand .vhr__body{
-  grid-column:2; grid-row:2;
-  margin: 0 clamp(24px,2.8vw,40px) clamp(24px,2.8vw,38px) 0;
+  grid-column:1 / -1; grid-row:2;
+  margin: 0 clamp(24px,2.8vw,40px) clamp(24px,2.8vw,38px);
   padding-top: clamp(16px,2vw,24px);
   border-top:2px solid var(--c-primary);
 }
@@ -3462,14 +3468,23 @@ document.documentElement.classList.add('fv-anim');
 }
 
 /* 左＝本文の箱、右＝動画。割合で分ける */
+/* ★実測：この行だけ 957px あり、他の3枚（900px）と左端が43pxずれていた。
+   元は width:min(100vw,--pmp-max) と負の margin-inline で画面いっぱいに
+   広げる仕掛け。max-width を足すだけだと潰れるので、3つとも上書きする。 */
 .pmp__row{
+  width:min(100%, 900px) !important;
+  margin-inline:auto !important;
+  padding-inline:0 !important;
   grid-template-columns: minmax(0, 62%) minmax(0, 38%) !important;
   justify-content:stretch !important;
   column-gap: clamp(20px, 2.4vw, 40px);
   align-items:start;
 }
 .pmp__box{ width:100% }
-.pmp__box .vhr__item{ width:100%; background:transparent }
+/* ★POINT03 だけ器が 900px の62%＝558px。他の3枚と同じ比だと左列が242pxで、
+   見出し「学習効率を向上」7文字が入らず2行に折れた（実測）。ここだけ比を変える。 */
+.pmp__box .vhr__item{ grid-template-columns: minmax(0,1.15fr) minmax(0,0.85fr) }
+.pmp__box .vhr__item{ width:100% }
 .pmp__media{ width:100% }
 .pmp__grid{ grid-template-columns:minmax(0,1fr) }
 .pmp__item{ width:100% !important }
