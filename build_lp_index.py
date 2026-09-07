@@ -1,129 +1,249 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""lp-registry.json から LPの版一覧ページを生成する。
+"""lp-registry.json から LP版管理ツールを生成する。
 
   python3 build_lp_index.py          … docs/lp/index.html を作る
   python3 build_lp_index.py --open   … 作ってブラウザで開く
 
-★このページは noindex（検索避け）。リンクを知っている人だけが見る想定。
+★画面の作り
+    左： プロジェクトのサイドバー（要対応の件数つき）
+    右： タブ ─ 版一覧（表）／派生図（線で結んだ図）／FB履歴
+
 ★台帳（lp-registry.json）が正。ページは毎回そこから作り直す。
-  ページを直接編集しないこと。次の生成で消える。
+  生成物を直接編集しないこと。次の生成で消える。
+★このページは noindex（検索避け）。リンクを知っている人だけが見る想定。
 """
-import json, os, subprocess, sys, html
+import json, os, subprocess, sys
 
 R = os.path.dirname(os.path.abspath(__file__))
 REG = os.path.join(R, "lp-registry.json")
 OUT_DIR = os.path.join(R, "docs", "lp")
 OUT = os.path.join(OUT_DIR, "index.html")
 
-STATUS = {
-    "live":   ("本番",   "#00B21F", "#f1fbf3"),
-    "frozen": ("凍結",   "#94a3b8", "#f8fafc"),
-    "review": ("確認用", "#f59e0b", "#fffbeb"),
-    "draft":  ("未公開", "#cbd5e1", "#ffffff"),
+CSS = """
+*{box-sizing:border-box;margin:0}
+:root{
+  --bg:#f5f6f8; --panel:#fff; --line:#e3e6ea; --ink:#1f2937; --mute:#6b7280;
+  --live:#00B21F; --frozen:#94a3b8; --review:#f59e0b; --draft:#cbd5e1; --bad:#dc2626;
+}
+html,body{height:100%}
+body{font-family:"Hiragino Sans","Yu Gothic",Meiryo,sans-serif;background:var(--bg);
+  color:var(--ink);line-height:1.65;font-size:14px}
+.app{display:flex;min-height:100vh}
+
+/* ── 左：サイドバー ─────────────────────────── */
+.side{width:248px;flex:none;background:#111827;color:#e5e7eb;padding:20px 0;
+  position:sticky;top:0;height:100vh;overflow:auto}
+.side h1{font-size:15px;padding:0 18px 14px;border-bottom:1px solid #263041;color:#fff}
+.side .cap{font-size:10.5px;letter-spacing:.14em;color:#7d8797;padding:16px 18px 6px}
+.side a{display:block;padding:9px 18px;color:#cbd5e1;text-decoration:none;font-size:13.5px;
+  border-left:3px solid transparent;cursor:pointer}
+.side a:hover{background:#1b2433;color:#fff}
+.side a.on{background:#1b2433;color:#fff;border-left-color:var(--live);font-weight:700}
+.side .n{float:right;font-size:11px;background:#374151;border-radius:999px;padding:1px 8px;color:#e5e7eb}
+.side .n.bad{background:var(--bad);color:#fff}
+.side .foot{font-size:11px;color:#6b7280;padding:18px;border-top:1px solid #263041;margin-top:14px}
+
+/* ── 右：本体 ──────────────────────────────── */
+.main{flex:1;min-width:0;padding:22px 26px 70px}
+.head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.head h2{font-size:20px}
+.head .cl{font-size:12.5px;color:var(--mute)}
+.head .mainlink{font-size:12.5px}
+.note{font-size:12.5px;color:var(--mute);margin-top:2px}
+.tabs{display:flex;gap:4px;margin:18px 0 0;border-bottom:2px solid var(--line)}
+.tabs button{border:0;background:none;font:inherit;font-size:13.5px;padding:9px 16px;
+  cursor:pointer;color:var(--mute);border-bottom:2px solid transparent;margin-bottom:-2px}
+.tabs button.on{color:var(--ink);font-weight:800;border-bottom-color:var(--live)}
+.pane{background:var(--panel);border:1px solid var(--line);border-top:0;
+  border-radius:0 0 10px 10px;padding:18px}
+
+/* 版一覧の表 */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;font-size:11.5px;color:var(--mute);font-weight:700;
+  padding:6px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:9px 10px;border-bottom:1px solid #f0f2f4;vertical-align:top}
+tr:hover td{background:#fafbfc}
+.lk{font-weight:800;color:#0b64c8;text-decoration:none}
+.lk:hover{text-decoration:underline}
+.lk.dead{color:#9ca3af}
+.pill{display:inline-block;font-size:10.5px;font-weight:800;color:#fff;
+  border-radius:999px;padding:1px 8px;white-space:nowrap}
+.mg{display:inline-block;font-size:10.5px;font-weight:700;border-radius:999px;
+  padding:1px 8px;border:1px solid;white-space:nowrap}
+.mg.y{color:#047a20;border-color:#a7e0b5;background:#f1fbf3}
+.mg.n{color:#b91c1c;border-color:#fecaca;background:#fef2f2}
+.warn{color:#b91c1c;font-size:12px;margin-top:4px}
+.mainmark{background:#111827;color:#fff;font-size:10px;border-radius:3px;padding:1px 5px;margin-left:5px}
+
+/* 派生図 */
+.graph{position:relative;overflow-x:auto;padding:8px 4px 4px}
+.gcols{display:flex;gap:64px;align-items:flex-start;position:relative;z-index:1;min-width:min-content}
+.gcol{display:flex;flex-direction:column;gap:16px}
+.gnode{width:212px;border:1px solid var(--line);border-left:4px solid var(--c);
+  background:var(--b);border-radius:8px;padding:9px 11px}
+.gnode .t{font-weight:800;font-size:13.5px}
+.gnode .d{font-size:10.5px;color:var(--mute)}
+.gnode .w{font-size:11.5px;margin-top:4px}
+.gsvg{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:visible}
+
+/* FB履歴 */
+.fbrow{display:grid;grid-template-columns:96px 1fr;gap:12px;padding:10px 4px;
+  border-bottom:1px solid #f0f2f4}
+.fbrow .dt{font-size:12px;color:var(--mute)}
+.fbrow .wh{font-size:13.5px}
+.fbrow .to{font-size:11.5px;color:var(--mute);margin-top:2px}
+
+.todo{background:#fff;border:1px solid #fecaca;border-radius:10px;padding:14px 18px;margin-bottom:16px}
+.todo h3{font-size:14px;color:#b91c1c;margin-bottom:6px}
+.todo li{margin-left:18px;font-size:13px;margin-top:4px}
+.rules{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 18px;font-size:12.5px}
+.rules b{display:block;margin-bottom:4px}
+.rules li{margin-left:18px}
+@media(max-width:820px){
+  .app{flex-direction:column}
+  .side{width:auto;height:auto;position:static}
+  .main{padding:16px}
+}
+"""
+
+JS = """
+const S={live:['本番','var(--live)','#f1fbf3'],frozen:['凍結','var(--frozen)','#f8fafc'],
+         review:['確認用','var(--review)','#fffbeb'],draft:['未公開','var(--draft)','#fff']};
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let cur=DATA.projects[0].id, tab='list';
+
+function alerts(p){return p.versions.filter(v=>v.alert);}
+function url(id){return DATA.base_url+id+'/';}
+
+function sidebar(){
+  const tot=DATA.projects.reduce((a,p)=>a+alerts(p).length,0);
+  return `<h1>LP 版管理</h1>
+  <div class="cap">プロジェクト</div>
+  ${DATA.projects.map(p=>{const n=alerts(p).length;
+    return `<a data-p="${p.id}" class="${p.id===cur?'on':''}">${esc(p.name)}
+      <span class="n ${n?'bad':''}">${n||p.versions.length}</span></a>`}).join('')}
+  <div class="foot">要対応 ${tot} 件<br>更新 ${esc(DATA.updated)}<br>
+  台帳 lp-registry.json</div>`;
 }
 
+function linkCell(v){
+  return v.status==='draft'
+    ? `<span class="lk dead">${esc(v.id)}/</span>`
+    : `<a class="lk" href="${url(v.id)}" target="_blank" rel="noopener">${esc(v.id)}/ ↗</a>`;
+}
 
-def esc(s):
-    return html.escape(str(s), quote=True)
+function listPane(p){
+  const rows=p.versions.map(v=>{
+    const [lab,c]=S[v.status]||S.draft;
+    const mg=v.status==='draft'?'<span class="mg n">未公開</span>'
+      :(v.merged?'<span class="mg y">反映済</span>':'<span class="mg n">未反映</span>');
+    return `<tr>
+      <td>${linkCell(v)}${p.main===v.id?'<span class="mainmark">本線</span>':''}</td>
+      <td><span class="pill" style="background:${c}">${lab}</span></td>
+      <td>${v.parent?esc(v.parent):'<span style="color:#9ca3af">初版</span>'}</td>
+      <td>${esc(v.what)}${v.alert?`<div class="warn">▲ ${esc(v.alert)}</div>`:''}</td>
+      <td>${mg}</td><td style="color:var(--mute);white-space:nowrap">${esc(v.date)}</td></tr>`}).join('');
+  return `<table><thead><tr><th>リンク</th><th>状態</th><th>派生元</th>
+    <th>変更内容</th><th>本線</th><th>日付</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
 
+function graphPane(p){
+  const by={},depth={};
+  p.versions.forEach(v=>by[v.id]=v);
+  const d=v=>{if(depth[v.id]!=null)return depth[v.id];
+    const pa=v.parent&&by[v.parent];
+    return depth[v.id]=pa?d(pa)+1:0;};
+  p.versions.forEach(d);
+  const max=Math.max(...p.versions.map(v=>depth[v.id]));
+  const cols=[];
+  for(let i=0;i<=max;i++)cols.push(p.versions.filter(v=>depth[v.id]===i));
+  const col=vs=>`<div class="gcol">${vs.map(v=>{const [lab,c,b]=S[v.status]||S.draft;
+    return `<div class="gnode" id="g-${v.id}" style="--c:${c};--b:${b}">
+      <div class="t">${linkCell(v)}</div>
+      <div class="d">${esc(v.date)} · ${lab}${v.merged?'':' · <span style="color:var(--bad)">本線未反映</span>'}</div>
+      <div class="w">${esc(v.what)}</div></div>`}).join('')}</div>`;
+  return `<div class="graph"><svg class="gsvg"></svg>
+    <div class="gcols">${cols.map(col).join('')}</div></div>`;
+}
 
-def build_tree(versions):
-    """parent を辿って表示順と深さを決める。親が先、子はその直後。"""
-    by_id = {v["id"]: v for v in versions}
-    children = {}
-    roots = []
-    for v in versions:
-        p = v.get("parent")
-        if p and p in by_id:
-            children.setdefault(p, []).append(v)
-        else:
-            roots.append(v)
-    order = []
+function drawLines(p){
+  const wrap=document.querySelector('.graph'); if(!wrap)return;
+  const svg=wrap.querySelector('.gsvg'); const R=wrap.getBoundingClientRect();
+  svg.setAttribute('width',wrap.scrollWidth); svg.setAttribute('height',wrap.scrollHeight);
+  let d='';
+  p.versions.forEach(v=>{
+    if(!v.parent)return;
+    const a=document.getElementById('g-'+v.parent), b=document.getElementById('g-'+v.id);
+    if(!a||!b)return;
+    const ra=a.getBoundingClientRect(), rb=b.getBoundingClientRect();
+    const x1=ra.right-R.left+wrap.scrollLeft, y1=ra.top-R.top+ra.height/2+wrap.scrollTop;
+    const x2=rb.left-R.left+wrap.scrollLeft,  y2=rb.top-R.top+rb.height/2+wrap.scrollTop;
+    const mx=(x1+x2)/2;
+    d+=`<path d="M${x1} ${y1} C${mx} ${y1} ${mx} ${y2} ${x2} ${y2}"
+         fill="none" stroke="#cbd5e1" stroke-width="2"/>`;
+  });
+  svg.innerHTML=d;
+}
 
-    def walk(v, depth):
-        order.append((v, depth))
-        for c in children.get(v["id"], []):
-            walk(c, depth + 1)
+function fbPane(p){
+  const all=[];
+  p.versions.forEach(v=>(v.fb||[]).forEach(f=>all.push({...f,ver:v})));
+  all.sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+  if(!all.length)return '<p style="color:var(--mute)">記録されたFBはありません。</p>';
+  return all.map(f=>`<div class="fbrow"><div class="dt">${esc(f.date)}<br>
+    <span style="font-size:11px">${esc(f.from||'')}</span></div>
+    <div><div class="wh">${esc(f.what)}</div>
+    <div class="to">→ ${esc(f.ver.id)} で対応　${f.ver.merged?'（本線に反映済）':'（本線に未反映）'}</div>
+    </div></div>`).join('');
+}
 
-    for r in roots:
-        walk(r, 0)
-    # ツリーに載らなかったもの（親が別プロジェクトにいる等）は末尾に
-    seen = {v["id"] for v, _ in order}
-    for v in versions:
-        if v["id"] not in seen:
-            order.append((v, 0))
-    return order
+function render(){
+  document.querySelector('.side').innerHTML=sidebar();
+  const p=DATA.projects.find(x=>x.id===cur);
+  const al=alerts(p);
+  const todo=al.length?`<div class="todo"><h3>要対応 ${al.length}件</h3><ul>${
+    al.map(v=>`<li><b>${esc(v.id)}</b> … ${esc(v.alert)}</li>`).join('')}</ul></div>`:'';
+  const body = tab==='list'?listPane(p) : tab==='graph'?graphPane(p) : fbPane(p);
+  document.querySelector('.main').innerHTML=`
+    <div class="head"><h2>${esc(p.name)}</h2>
+      <span class="cl">${esc(p.client||'')}</span>
+      <span class="mainlink">本線：${p.main?`<a class="lk" href="${url(p.main)}" target="_blank" rel="noopener">${esc(p.main)}/ ↗</a>`:'<span style="color:var(--bad)">未設定</span>'}</span>
+    </div>
+    <p class="note">${esc(p.note||'')}</p>
+    ${todo}
+    <div class="tabs">
+      <button data-t="list" class="${tab==='list'?'on':''}">版一覧</button>
+      <button data-t="graph" class="${tab==='graph'?'on':''}">派生図</button>
+      <button data-t="fb" class="${tab==='fb'?'on':''}">FB履歴</button>
+    </div><div class="pane">${body}</div>
+    <div class="rules" style="margin-top:16px"><b>運用ルール</b><ol>
+      <li>FBが来たら<b>直す前に</b>台帳へ1行足す</li>
+      <li>新しいリンクを作ったら<b>必ず派生元を書く</b></li>
+      <li><b>完了＝本線に取り込まれた状態</b>。確認用リンクの完成は完了ではない</li>
+      <li>作業は git の docs/ 配下で行う。Desktopの複製フォルダを正にしない</li>
+    </ol></div>`;
+  // ★requestAnimationFrame は【タブが非表示だと発火しない】。
+  //   背面タブで開くと線が引かれない事故になるので rAF に依存しない。
+  if(tab==='graph'){ setTimeout(()=>drawLines(p),0);
+    // Webフォントの読み込みで箱の高さが動くので、確定後にもう一度引く
+    if(document.fonts&&document.fonts.ready) document.fonts.ready.then(()=>drawLines(p));
+    addEventListener('load',()=>drawLines(p),{once:true}); }
+}
 
-
-def render_version(v, depth, base, main_id):
-    lab, col, bg = STATUS.get(v.get("status", "draft"), STATUS["draft"])
-    url = base + v["id"] + "/"
-    is_main = v["id"] == main_id
-    merged = v.get("merged")
-    alert = v.get("alert")
-    fbs = v.get("fb") or []
-
-    badge = f'<span class="badge" style="--c:{col}">{lab}</span>'
-    main_badge = '<span class="badge badge--main">本線</span>' if is_main else ""
-    merge_badge = ('<span class="merge merge--yes">本線に反映済</span>' if merged
-                   else '<span class="merge merge--no">本線に未反映</span>')
-    if v.get("status") == "draft":
-        merge_badge = '<span class="merge merge--no">未公開</span>'
-        link = f'<span class="link link--dead">{esc(v["id"])}/（未commit）</span>'
-    else:
-        link = f'<a class="link" href="{esc(url)}" target="_blank" rel="noopener">{esc(v["id"])}/ ↗</a>'
-
-    fb_html = ""
-    if fbs:
-        items = "".join(
-            f'<li><span class="fb-d">{esc(f.get("date",""))}</span>'
-            f'<span class="fb-w">{esc(f.get("what",""))}</span></li>' for f in fbs)
-        fb_html = f'<ul class="fb">{items}</ul>'
-
-    alert_html = f'<p class="alert">{esc(alert)}</p>' if alert else ""
-    parent = v.get("parent")
-    parent_html = (f'<span class="from">← {esc(parent)} から</span>' if parent
-                   else '<span class="from">← 初版</span>')
-
-    return f'''<div class="node depth-{depth}" style="--bg:{bg};--c:{col}">
-  <div class="node__head">{link}{badge}{main_badge}{merge_badge}</div>
-  <div class="node__meta">{esc(v.get("date",""))}　{parent_html}</div>
-  <p class="node__what">{esc(v.get("what",""))}</p>
-  {fb_html}{alert_html}
-</div>'''
+document.addEventListener('click',e=>{
+  const a=e.target.closest('.side a'); if(a){cur=a.dataset.p;tab='list';render();return;}
+  const b=e.target.closest('.tabs button'); if(b){tab=b.dataset.t;render();}
+});
+addEventListener('resize',()=>{if(tab==='graph')drawLines(DATA.projects.find(x=>x.id===cur));});
+render();
+"""
 
 
 def main():
     reg = json.load(open(REG, encoding="utf-8"))
-    base = reg["base_url"]
-
-    # 要対応：本線に未反映の確認用／用途不明／本線が古い
-    todos = []
-    for p in reg["projects"]:
-        for v in p["versions"]:
-            if v.get("alert"):
-                todos.append((p["name"], v["id"], v["alert"]))
-
-    proj_html = []
-    for p in reg["projects"]:
-        rows = "".join(render_version(v, d, base, p.get("main"))
-                       for v, d in build_tree(p["versions"]))
-        main_txt = (f'本線：<a href="{base}{p["main"]}/" target="_blank" rel="noopener">{p["main"]}/</a>'
-                    if p.get("main") else '本線：未設定')
-        proj_html.append(f'''<section class="proj">
-  <h2>{esc(p["name"])}</h2>
-  <p class="proj__meta">{esc(p.get("client",""))}　|　{main_txt}　|　{esc(p.get("note",""))}</p>
-  <div class="tree">{rows}</div>
-</section>''')
-
-    todo_html = ""
-    if todos:
-        li = "".join(f'<li><b>{esc(pid)}</b>（{esc(name)}）… {esc(msg)}</li>'
-                     for name, pid, msg in todos)
-        todo_html = f'<section class="todo"><h2>要対応</h2><ul>{li}</ul></section>'
-
-    doc = f'''<!DOCTYPE html>
+    reg.pop("_readme", None)
+    doc = f"""<!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -131,69 +251,18 @@ def main():
 <!-- ★検索避け。リンクを知っている人だけが見る想定 -->
 <meta name="robots" content="noindex,nofollow,noarchive">
 <title>LP 版管理</title>
-<style>
-*{{box-sizing:border-box;margin:0}}
-body{{font-family:"Hiragino Sans","Yu Gothic",Meiryo,sans-serif;background:#f6f7f9;color:#1f2937;
-  line-height:1.7;padding:32px 20px 80px}}
-.wrap{{max-width:960px;margin:0 auto}}
-h1{{font-size:23px}}
-.sub{{font-size:13px;color:#6b7280;margin:4px 0 26px}}
-.rules{{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:14px 18px;font-size:13px;margin-bottom:26px}}
-.rules b{{display:block;margin-bottom:4px;font-size:13.5px}}
-.rules li{{margin-left:18px}}
-.proj{{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:20px 22px;margin-bottom:20px}}
-.proj h2{{font-size:18px}}
-.proj__meta{{font-size:12.5px;color:#6b7280;margin:2px 0 16px}}
-.tree{{display:flex;flex-direction:column;gap:9px}}
-.node{{border:1px solid #e5e7eb;border-left:4px solid var(--c);background:var(--bg);
-  border-radius:8px;padding:10px 14px}}
-.depth-1{{margin-left:34px}} .depth-2{{margin-left:68px}} .depth-3{{margin-left:102px}}
-.node__head{{display:flex;align-items:center;gap:8px;flex-wrap:wrap}}
-.link{{font-weight:800;font-size:15px;color:#0b64c8;text-decoration:none}}
-.link:hover{{text-decoration:underline}}
-.link--dead{{color:#9ca3af;font-weight:700;font-size:15px}}
-.badge{{font-size:11px;font-weight:800;color:#fff;background:var(--c);
-  border-radius:999px;padding:2px 9px}}
-.badge--main{{background:#111827}}
-.merge{{font-size:11px;font-weight:700;border-radius:999px;padding:2px 9px;border:1px solid}}
-.merge--yes{{color:#047a20;border-color:#a7e0b5;background:#f1fbf3}}
-.merge--no{{color:#b91c1c;border-color:#fecaca;background:#fef2f2}}
-.node__meta{{font-size:11.5px;color:#6b7280;margin-top:3px}}
-.from{{color:#9ca3af}}
-.node__what{{font-size:13.5px;margin-top:5px}}
-.fb{{margin:7px 0 0 0;list-style:none;font-size:12.5px}}
-.fb li{{background:#fff;border:1px dashed #d1d5db;border-radius:6px;padding:4px 9px;margin-top:4px}}
-.fb-d{{color:#6b7280;margin-right:8px}}
-.alert{{margin-top:7px;font-size:12.5px;color:#b91c1c;background:#fef2f2;
-  border-left:3px solid #dc2626;border-radius:0 6px 6px 0;padding:6px 10px}}
-.todo{{background:#fff;border:1px solid #fecaca;border-radius:12px;padding:18px 22px}}
-.todo h2{{font-size:17px;color:#b91c1c}}
-.todo li{{margin-left:18px;font-size:13.5px;margin-top:6px}}
-@media(max-width:640px){{
-  .depth-1,.depth-2,.depth-3{{margin-left:14px}}
-}}
-</style>
+<style>{CSS}</style>
 </head>
-<body><div class="wrap">
-<h1>LP 版管理</h1>
-<p class="sub">更新 {esc(reg.get("updated",""))}　|　台帳 <code>lp-registry.json</code> から自動生成（このページは直接編集しない）</p>
-
-<div class="rules"><b>運用ルール</b>
-<ol>
-<li>FBが来たら<b>直す前に</b>台帳へ1行足す</li>
-<li>新しいリンクを作ったら<b>必ず派生元を書く</b></li>
-<li><b>完了＝本線に取り込まれた状態</b>。確認用リンクの完成は完了ではない</li>
-<li>作業は git の <code>docs/</code> 配下で行う。Desktopの複製フォルダを正にしない</li>
-</ol></div>
-
-{todo_html}
-{"".join(proj_html)}
-</div></body></html>'''
-
+<body>
+<div class="app"><nav class="side"></nav><main class="main"></main></div>
+<script>const DATA={json.dumps(reg, ensure_ascii=False)};</script>
+<script>{JS}</script>
+</body></html>"""
     os.makedirs(OUT_DIR, exist_ok=True)
     open(OUT, "w", encoding="utf-8").write(doc)
     n = sum(len(p["versions"]) for p in reg["projects"])
-    print(f"  生成: docs/lp/index.html（{len(reg['projects'])}案件 / {n}版 / 要対応 {len(todos)}件）")
+    a = sum(len([v for v in p["versions"] if v.get("alert")]) for p in reg["projects"])
+    print(f"  生成: docs/lp/index.html（{len(reg['projects'])}案件 / {n}版 / 要対応 {a}件）")
     if "--open" in sys.argv:
         subprocess.run(["open", OUT])
 
