@@ -223,9 +223,31 @@
   .pmp__box .vhr__body{ grid-column:1 !important; grid-row:3 !important; margin:0 !important }
   /* 帯は縦積みでは意味を持たないので出さない */
   .pb-band{ display:none !important }
+  /* ★POINT03 は PC で「箱を全幅にして動画を右へ重ねる」形にしてある。
+     その列指定が残ると、狭い画面で存在しない2列目が作られて崩れる（実測375px）。
+     縦に積み直す：緑 → 動画 → 講師写真 → 本文。 */
   .pmp__row{
     grid-template-columns:minmax(0,1fr) !important;
+    grid-template-rows:auto auto !important;
     padding-inline:22px !important;
+    row-gap:20px;
   }
-  .pmp__item{ width:clamp(220px,60vw,290px) !important }
+  .pmp__row > .pmp__box{ grid-column:1 !important; grid-row:1 !important }
+  .pmp__row > .pmp__media{
+    grid-column:1 !important; grid-row:2 !important;
+    margin-top:0 !important;
+  }
+  .pmp__grid{
+    grid-template-columns:minmax(0,1fr) !important;
+    width:100% !important;
+  }
+  .pmp__item,
+  .pmp__item:nth-child(odd),
+  .pmp__item:nth-child(even){ width:100% !important; justify-self:stretch !important }
+  .pmp__media .pmp__mh,
+  .pmp__media .pmp__mh span{ color:var(--c-ink) }
+  .pmp__box .vhr__top > .vhr__fig{
+    grid-column:1 !important; grid-row:2 !important;
+    align-self:start !important; margin:0 !important;
+  }
 }
