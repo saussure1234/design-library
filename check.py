@@ -71,6 +71,31 @@ addEventListener("load",function(){
       if (hid && !scrollable(e) && (e.scrollHeight > e.clientHeight + 4 || e.scrollWidth > e.clientWidth + 4) && clip.length < 6)
         clip.push(nm(e) + "「" + txt.trim().slice(0,12) + "」が枠から溢れて切れている");
     });
+    // ★短いコピーで最終行が1〜2文字だけ落ちる「孤立行」。
+    //   実機で「改行が意味わからん」と言われる原因。本文の長文は自然なので除外。
+    var orphan=[];
+    document.querySelectorAll("body *").forEach(function(e){
+      var s=getComputedStyle(e);
+      if(s.display==="none"||s.visibility==="hidden") return;
+      // 見るのは段落と見出しだけ。li/td/span は器の都合で折れるのが自然
+      if(!/^(P|H1|H2|H3|H4)$/.test(e.tagName)) return;
+      var t=""; e.childNodes.forEach(function(n){ if(n.nodeType===3) t+=n.nodeValue });
+      t=t.trim();
+      if(t.length<8 || t.length>40) return;          // 本文の長文は対象外
+      // 長文が <span>/<br> で区切られていると、断片だけ短く見える。親で判定して除く
+      if(e.parentElement && e.parentElement.textContent.trim().length > 80) return;
+      var rg=document.createRange(); rg.selectNodeContents(e);
+      var rs=[].slice.call(rg.getClientRects()).filter(function(r){return r.width>1&&r.height>1});
+      if(rs.length<2) return;
+      var ws=rs.map(function(r){return r.width});
+      var mx=Math.max.apply(null,ws), last=ws[ws.length-1];
+      // 狭い器（カード・表のセル）の中で折れるのは自然。広い場所のものだけ見る
+      if(mx < W*0.55) return;
+      if(e.closest("table")) return;                 // 表の中は器の都合で折れる
+      if(last < mx*0.22 && orphan.length<6)
+        orphan.push("「"+t.slice(0,18)+"」最終行"+Math.round(last)+"/"+Math.round(mx)+"px");
+    });
+    if(orphan.length) out.push("最終行が1〜2文字だけ落ちている: "+orphan.join(" / "));
     if(over.length) out.push("文字が画面外へ: "+over.join(" / "));
     if(clip.length) out.push("文字が切れている: "+clip.join(" / "));
     var d=document.createElement("div");

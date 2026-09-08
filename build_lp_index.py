@@ -214,6 +214,15 @@ table.sheet tr:hover .vcol{background:#fbfcfd}
 .sheet .av{width:172px;min-width:172px}
 .sheet .th{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:5px;
   background:#eef0f3;margin-bottom:6px}
+/* 素材の落とし口。サムネ自体は押せない（意図せず数MB落とさないため） */
+.thw{position:relative}
+a.dl{position:absolute;right:4px;top:4px;background:rgba(8,12,18,.78);color:#fff;
+  font-size:10px;font-weight:700;line-height:1;border-radius:4px;padding:3px 6px;
+  text-decoration:none;opacity:.55;transition:.12s}
+.thw:hover a.dl{opacity:1;background:#111827}
+a.dl:hover{transform:translateY(-1px)}
+.vdl{font-size:11px;color:var(--mute);margin-top:6px;position:relative;padding-right:52px}
+.vdl a.dl{position:absolute;right:0;top:-2px;opacity:.75}
 .sheet .noimg{display:grid;place-items:center;width:100%;aspect-ratio:16/9;border-radius:5px;
   background:#f3f5f7;color:#aab1ba;font-size:11px;margin-bottom:6px;
   border:1px dashed #dfe3e8}
@@ -379,6 +388,33 @@ const VID=(DATA.videos&&(DATA.videos.projects||[]).length)?mkreg(DATA.videos,'vi
 // cur は "lp:<案件id>" / "vid:<案件id>" / "__flow__"。
 // ★LPと動画で案件idがぶつかっても混ざらないよう、頭に台帳の種別を付けている。
 let cur='lp:'+DATA.projects[0].id, tab='graph';   // 最初に見たいのは系統。表は後
+
+// ★開いている場所を URL に持たせる。
+//   これが無いと、リロードのたびに先頭のLP案件へ戻される（毎回やり直しで面倒）。
+//   ついでにリンクを送れば相手も同じ場所が開く。
+const TABS=['sheet','list','graph','fb'];
+function exists(id){
+  if(id==='__flow__') return true;
+  const kind=id.slice(0,4)==='vid:'?VID:LP, pid=id.slice(id.indexOf(':')+1);
+  return !!(kind && kind.reg.projects.some(p=>p.id===pid));
+}
+function readHash(){
+  const h=decodeURIComponent((location.hash||'').replace(/^#/,''));
+  if(!h) return false;
+  const i=h.lastIndexOf('/');
+  const id=i<0?h:h.slice(0,i), tb=i<0?'':h.slice(i+1);
+  if(!exists(id)) return false;
+  cur=id;
+  // タブは「その画面に在るもの」だけ。無ければ既定に落とす
+  const okTabs = id==='__flow__' ? [] : (id.slice(0,4)==='vid:'?TABS:TABS.filter(x=>x!=='sheet'));
+  tab = okTabs.includes(tb) ? tb : (id.slice(0,4)==='vid:'?'sheet':'graph');
+  return true;
+}
+function writeHash(){
+  const h = cur==='__flow__' ? cur : cur+'/'+tab;
+  if(decodeURIComponent((location.hash||'').replace(/^#/,''))!==h)
+    history.replaceState(null,'','#'+encodeURIComponent(h));
+}
 const RG=()=>cur.slice(0,4)==='vid:'?VID:LP;
 const PID=()=>cur.slice(cur.indexOf(':')+1);
 // フッタの「更新」は2つの台帳の新しいほう。LPの日付だけ出すと、動画だけ更新した日に嘘になる
@@ -590,13 +626,25 @@ function thumb(v,R){
 const SECS=[['hook','Hook','つかみ'],['body1','Body1','何が分かるか'],
             ['body2','Body2','どう使えるか'],['cta','CTA','行動']];
 
+/* 素材の落とし口。サムネの角に小さく ⇩ を出す。
+   ★サムネ自体をリンクにしない。押すつもりが無いのに数MB落ちるのは事故。 */
+const mbs2=b=>(b>=1e6?(b/1e6).toFixed(1)+'MB':Math.round(b/1e3)+'KB');
+function dl(v,role){
+  const f=v.comp&&v.comp.files&&v.comp.files[role];
+  if(!f)return '';
+  const t=esc(f.label)+'　'+mbs2(f.bytes)+(f.compressed?'（圧縮版）':'');
+  return `<a class="dl" download href="../video/${esc(v.id)}/files/${esc(f.name)}"
+     title="${t}">⇩ ${mbs2(f.bytes)}</a>`;
+}
+
 function secCell(v,s){
   if(!s)return '<td class="sec"><span style="color:#9ca3af">—</span></td>';
   if(s.rule)return `<td class="sec"><div class="rule">${esc(s.rule)}</div>
     <div class="tx" style="color:var(--mute);margin-top:6px">${esc(s.text||'')}</div></td>`;
   const planned=v.comp&&v.comp.planned;      // まだ作っていない＝素材が決まっていない
   const img=s.image
-    ? `<img class="th" src="../video/${esc(v.id)}/parts/${esc(s.thumb||s.image)}" alt="" loading="lazy">`
+    ? `<div class="thw"><img class="th" src="../video/${esc(v.id)}/parts/${esc(s.thumb||s.image)}"
+         alt="" loading="lazy">${dl(v,s.key)}</div>`
     : `<div class="noimg">${planned?'素材未定':'画像なし（アバターのみ）'}</div>`;
   const chain=(s.shots||[]).map(x=>x.kind==='image'
     ? `<span class="sh img">${esc(x.file)} ${x.dur}s</span>`
@@ -638,6 +686,7 @@ function sheetPane(p,R){
         <div class="vid">${tmpl?'テンプレ':linkCell(v,R)}</div>
         <div class="vmeta">${esc(v.date)}${v.media&&v.media.duration?' · '+mmss(v.media.duration):''}
           ${planned?'<br><span class="todo-pill">台本のみ</span>':''}</div>
+        ${dl(v,'voice')?`<div class="vdl">音声 ${dl(v,'voice')}</div>`:''}
       </td>
       ${playCell(v,tmpl)}
       ${SECS.map(([k])=>secCell(v,by[k])).join('')}
@@ -650,17 +699,21 @@ function sheetPane(p,R){
         : (!c.logo && !c.avatar)
         ? `<td class="sm"><span style="color:#9ca3af">未定</span></td>
            <td class="av"><span style="color:#9ca3af">未定</span></td>`
-        : `<td class="sm">${c.logo?`<img class="logo" src="${parts}logo.png" alt="ロゴ" loading="lazy">`
+        : `<td class="sm">${c.logo?`<div class="thw"><img class="logo" src="${parts}logo.png"
+              alt="ロゴ" loading="lazy">${dl(v,'logo')}</div>`
                                   :'<span style="color:#9ca3af">—</span>'}</td>
            <td class="av"><div class="avpair">
-            <figure><img class="th" style="margin:0" src="${parts}avatar_wide.jpg" alt="" loading="lazy">
+            <figure><div class="thw"><img class="th" style="margin:0" src="${parts}avatar_wide.jpg"
+                alt="" loading="lazy">${dl(v,'wide')}</div>
               <figcaption>正面</figcaption></figure>
-            <figure><img class="th" style="margin:0" src="${parts}avatar_close.jpg" alt="" loading="lazy">
+            <figure><div class="thw"><img class="th" style="margin:0" src="${parts}avatar_close.jpg"
+                alt="" loading="lazy">${dl(v,'close')}</div>
               <figcaption>横</figcaption></figure>
            </div></td>`}</tr>`}).join('');
   return `<p class="note" style="margin:0 0 10px">
       台本の1行が1枠。緑のタグが画像、白がアバター、数字はその画になっている秒数。
-      一番上がテンプレ（守るべき型）で、その下が実際の各本。</p>
+      一番上がテンプレ（守るべき型）で、その下が実際の各本。
+      <b>⇩ を押すとその素材が落ちる</b>（動画は原本ではなく圧縮版。原本は ~/video-edit-tool/projects/ に）。</p>
     <div class="sheetwrap"><table class="sheet"><thead><tr>
       <th class="vcol">版</th><th class="play">動画</th>
       ${SECS.map(([,l,h])=>`<th class="sec">${l}<span style="font-weight:400;color:#9ca3af">　${h}</span></th>`).join('')}
@@ -808,6 +861,7 @@ function rules(kind){
 }
 
 function render(){
+  writeHash();
   document.querySelector('.side').innerHTML=sidebar();
   // 「しくみ」の画面は案件に属さないので、先に分岐して描き切る
   if(cur==='__flow__'){
@@ -883,9 +937,11 @@ document.addEventListener('click',e=>{
   const fn=e.target.closest('.fnode');
   if(fn){showStep(+fn.dataset.step);}
 });
+addEventListener('hashchange',()=>{ if(readHash()) render(); else writeHash(); });   // 壊れたURLは黙って今の場所に直す
 addEventListener('resize',()=>{
   if(cur==='__flow__')return drawFlow();
   if(tab==='graph'){const R=RG();drawLines(R.reg.projects.find(x=>x.id===PID()));}});
+readHash();          // URLに書いてあればそこを開く
 render();
 """
 

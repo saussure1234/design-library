@@ -343,6 +343,71 @@ def cmd_plan(a):
             f"{'・'.join(fix)} は全本共通＝{'・'.join(var)}のA/Bになっている")
 
 
+# ── シートから落とせるようにする素材 ────────────────────────
+# 役割 → (作業場の中の場所, 公開名, 動画か)
+ASSETS = [
+    ("hook",  "assets/hook.jpg",   "hook.jpg",         False, "Hook 画像"),
+    ("body1", "assets/body1.mp4",  "body1.mp4",        True,  "Body1 動画"),
+    ("body2", "assets/body2.jpg",  "body2.jpg",        False, "Body2 画像"),
+    ("logo",  "assets/logo.png",   "logo.png",         False, "ロゴ（透過）"),
+    ("wide",  "video/wide.mp4",    "avatar_wide.mp4",  True,  "アバター 正面"),
+    ("close", "video/close.mp4",   "avatar_close.mp4", True,  "アバター 横"),
+    ("voice", "audio/voice.mp3",   "voice.mp3",        False, "音声"),
+]
+
+
+def publish_assets(vid, slug):
+    """シートから落とせるように docs/video/<版id>/files/ へ素材を置く。
+
+    ★動画は原本のままだと3本で141MBになり、公開リポの履歴を潰す。
+      ad.mp4 と同じ CRF26（PSNR43dB＝実質劣化なし）に圧縮して置く。
+      画像・音声はそのまま（もともと軽い）。原本は作業場が正。
+    """
+    d = os.path.join(DOCS, vid, "files")
+    os.makedirs(d, exist_ok=True)
+    F = ffmpeg()
+    out = {}
+    for role, rel, name, is_video, label in ASSETS:
+        src = os.path.join(WORK, slug, rel)
+        if not os.path.exists(src):
+            continue
+        dst = os.path.join(d, name)
+        if is_video:
+            tmp = dst + ".tmp.mp4"
+            _run([F, "-hide_banner", "-y", "-i", src,
+                  "-c:v", "libx264", "-crf", str(CRF), "-preset", "slow",
+                  "-pix_fmt", "yuv420p", "-movflags", "+faststart",
+                  "-c:a", "aac", "-b:a", "128k", tmp], f"{name} の圧縮", 1800)
+            os.replace(tmp, dst)
+        else:
+            shutil.copyfile(src, dst)
+        out[role] = {"name": name, "label": label,
+                     "bytes": os.path.getsize(dst),
+                     "raw": os.path.getsize(src),
+                     "compressed": bool(is_video)}
+    return out
+
+
+def cmd_assets(a):
+    reg = load()
+    vs = allvers(reg)
+    if a.id not in vs:
+        sys.exit(f"  ★版 '{a.id}' が台帳に無い")
+    p, v = vs[a.id]
+    slug = a.project or (v.get("comp") or {}).get("work")
+    if not slug or not os.path.isdir(os.path.join(WORK, slug)):
+        sys.exit("  ★--project で作業場を指定する")
+    say(f"  … {slug} の素材を書き出し中（動画はCRF{CRF}に圧縮）")
+    files = publish_assets(a.id, slug)
+    v.setdefault("comp", {})["files"] = files
+    save(reg)
+    tot = sum(f["bytes"] for f in files.values())
+    for r, f in files.items():
+        mark = f"（原本 {f['raw']/1e6:.1f}MB を圧縮）" if f["compressed"] else ""
+        say(f"    {f['label']:<14} {f['name']:<18} {f['bytes']/1e6:5.2f}MB {mark}")
+    say(f"  ○ {a.id} に素材{len(files)}点（計 {tot/1e6:.1f}MB）", "g")
+
+
 def cmd_compose(a):
     reg = load()
     vs = allvers(reg)
@@ -765,6 +830,9 @@ def main():
     s.add_argument("--keep-text", dest="keep_text", action="store_true",
                    help="--copy と併用。素材だけ写して文面はこの版のまま（A/B用）")
     s.set_defaults(f=cmd_compose)
+    s = sub.add_parser("assets", help="シートから落とせるように素材を公開する")
+    s.add_argument("id"); s.add_argument("--project")
+    s.set_defaults(f=cmd_assets)
     s = sub.add_parser("plan", help="台本だけの版をまとめて登録（TSVを貼る）")
     s.add_argument("project")
     s.add_argument("--tsv", required=True, help="1行=1本。文面と字数がタブ区切り")
