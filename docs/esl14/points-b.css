@@ -129,7 +129,7 @@
   opacity:1 !important;
   transition:none !important;
 }
-/* 版面は他の3枚と同じ900pxに戻す */
+/* 版面も組みも他の3枚と同じ。動画だけ本文の下に足す */
 
 /* 器は1列。中身はすべて .pmp__box の中で組む */
 .pmp__row{
@@ -140,39 +140,34 @@
 }
 .pmp__box{ width:100% !important }
 
-/* ★左＝ボックス（緑の面・見出し・講師写真・本文）／右＝動画2本 */
+/* 上段＝緑の面（全幅）＋講師写真を重ねて右／中段＝本文（全幅）／下段＝動画2本 */
 .pmp__box .vhr__item{
   padding-inline:0;
-  grid-template-columns: minmax(0,0.60fr) minmax(0,0.40fr);
-  column-gap: clamp(20px,2.4vw,36px);
-  row-gap: 26px;
+  grid-template-columns: minmax(0,0.47fr) minmax(0,0.53fr);
+  column-gap:0;
+  row-gap:30px;
 }
-.pmp__box .vhr__vert,
-.pmp__box .pb-band{ grid-column:1; grid-row:1 }
-/* 講師写真は緑の上、左ボックスの右寄せ */
 .pmp__box .vhr__top > .vhr__fig{
-  grid-column:1; grid-row:1;
-  align-self:center; justify-self:end;
+  grid-column:2; grid-row:1;
+  align-self:center;
   z-index:3;
-  width:clamp(170px,20vw,246px);
-  margin:20px 0;
+  margin:24px 0;
 }
 .pmp__box .vhr__body{
-  grid-column:1; grid-row:2;
+  grid-column:1 / -1; grid-row:2;
   margin:0; padding-top:0; border-top:0;
 }
-/* 動画は右列。上から下まで通す */
 .pmp__box .pmp__media{
-  grid-column:2; grid-row:1 / -1;
-  align-self:start;
+  grid-column:1 / -1; grid-row:3;
   width:100% !important; max-width:none !important;
-  margin:0 !important;
+  margin:clamp(8px,1.2vw,18px) 0 0 !important;
 }
-/* 右列は幅が狭いので縦2本。元の左右振り分けと幅の上限は外す */
+/* ★元は 1列＋左右振り分け（odd=start / even=end）で、器の幅も
+   width:clamp(250px,21.5vw,330px) で絞ってあった。横2本にするので全部外す。 */
 .pmp__box .pmp__grid{
   display:grid !important;
-  grid-template-columns:minmax(0,1fr) !important;
-  gap:clamp(14px,1.8vw,22px) !important;
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  gap:clamp(16px,2vw,28px) !important;
   width:100% !important; max-width:none !important;
   margin-inline:0 !important;
   justify-items:stretch !important;
@@ -185,8 +180,7 @@
 /* ★元は緑地のセクションだったので、見出しもキャプションも白文字。
    白い地では消えるので墨色に戻す（実測）。 */
 .pmp__box .pmp__mh,
-.pmp__box .pmp__mh span{ color:var(--c-ink); text-align:left }
-.pmp__box .pmp__mh::after{ margin-inline:0 }
+.pmp__box .pmp__mh span{ color:var(--c-ink) }
 .pmp__box .pmp__cap b{ color:var(--c-ink3) }
 .pmp__box .pmp__cap em{ color:var(--c-ink) }
 
