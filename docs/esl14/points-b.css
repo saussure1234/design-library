@@ -20,8 +20,10 @@
    ══════════════════════════════════════════════════════════════════ */
 
 /* ── 地は白 ─────────────────────────────────────── */
+/* ★このセクションは .grad-band（緑のグラデ）と #growth（緑のブロブ）に
+   包まれている。白を敷くだけでは装飾が上に乗るので、重なり順も上げる。 */
 .sec.vhr,
-.sec.pmp{ background:var(--c-bg) }
+.sec.pmp{ background:var(--c-bg); position:relative; z-index:1 }
 
 /* ── 器を画面いっぱいにして、版面900pxは内側の余白で作る ────
    ★.wrap(max-width:1080px) と .vhr__list(max-width:900px) は、
@@ -397,19 +399,52 @@
 }
 
 /* ══════════════════════════════════════════════════════════════
-   狭い画面の詰め（実測820px）
-   ・帯の斜めが残ると、縦積みで高さが低いぶん右側が大きく欠ける
-   ・写真に max-width:340px が効いていて、器の半分以下になる
+   狭い画面でも【PCと同じ型】に見せる
+
+   ★一度ここで斜めも黄の帯も切っていたが、それだと縦積みの
+     「ただの緑の帯」になり、PCの見た目と別物になる。
+     幅に合わせて傾きを浅くしたうえで、斜め・帯・図の重なりを残す。
    ══════════════════════════════════════════════════════════════ */
 @media(max-width:900px){
+  /* 傾きは画面幅なりに浅く（PCは56px） */
+  .tone-brand .vhr__item,
+  .pmp__box .vhr__item{ --pb-rise: clamp(16px, 5vw, 34px) }
+
+  /* 面：斜めを残す。斜めのぶんだけ下に余白を足して文字が欠けないようにする */
   .tone-brand .vhr__vert,
   .vhr__list .vhr__item .vhr__vert,
   .pmp__box .vhr__vert,
-  .fx-on .tone-brand .vhr__vert,
-  .fx-on .vhr__list .vhr__item .vhr__vert,
+  .fx-on .tone-brand .vhr__item.hh-in .vhr__vert,
   .fx-on .vhr__list .vhr__item:not(:has(.vhr__chart)) .vhr__vert,
-  .fx-on .pmp__row .vhr__vert{ clip-path:none !important }
+  .fx-on .pmp__row .vhr__vert{
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--pb-rise)), 0 100%) !important;
+    z-index:2;
+  }
+  .tone-brand .vhr__vert,
+  .pmp__box .vhr__vert{
+    padding-bottom: calc(clamp(46px,13vw,78px) + var(--pb-rise)) !important;
+  }
+  /* 面が左から開く動き（POINT01）の開始状態も、斜めを保ったまま */
+  .fx-on .tone-brand .vhr__item:has(.vhr__chart) .vhr__vert{
+    clip-path: polygon(0 0, 0 0, 0 calc(100% - var(--pb-rise)), 0 100%) !important;
+  }
+  .fx-on .tone-brand .vhr__item:has(.vhr__chart).hh-in .vhr__vert{
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--pb-rise)), 0 100%) !important;
+  }
 
+  /* 黄の帯：縦積みでも出す。面と同じ形を12px下へ */
+  .pb-band{
+    display:block !important;
+    grid-column:1 !important; grid-row:1 !important;
+    align-self:stretch !important;
+    z-index:1 !important;
+    margin:12px -22px -12px !important;
+    background:var(--c-accent) !important;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--pb-rise)), 0 100%) !important;
+    opacity:1 !important; transform:none !important;
+  }
+
+  /* 図・写真・動画：PCと同じく面に少し重ねる */
   .tone-brand .vhr__top > .vhr__fig,
   .tone-brand .vhr__top > .vhr__figs,
   .tone-brand .vhr__top > .vhr__chart,
@@ -417,6 +452,50 @@
     max-width:none !important;
     width:100% !important;
     flex:none !important;
+    position:relative;
+    z-index:3 !important;
+    /* PCと同じく面に食い込ませる。斜めのぶんも含めて引き上げる */
+    margin-top: calc(-1 * (clamp(34px,11vw,64px) + var(--pb-rise))) !important;
   }
   .tone-brand .vhr__fig img{ width:100% }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   狭い画面の動きは【箱ごと1回】に統一する
+   ★中を時間差で動かすと、面・ラベル・見出しの出る順が絡んで
+     表示が安定しなかった（実測375px：見出しだけ出ない）。
+     見た目（斜め・帯・図の重なり）はそのまま、動きだけ単純にする。
+   ══════════════════════════════════════════════════════════════ */
+@media(max-width:900px){
+  .fx-on .tone-brand .vhr__label,
+  .fx-on .tone-brand .vhr__title,
+  .fx-on .tone-brand .vhr__sub,
+  .fx-on .tone-brand .vhr__top > *,
+  .fx-on .tone-brand .vhr__body,
+  .fx-on .pmp__box .pmp__media,
+  .fx-on .tone-brand .pb-band{
+    opacity:1 !important;
+    transform:none !important;
+    transition:none !important;
+    transition-delay:0s !important;
+  }
+  .fx-on .tone-brand .vhr__vert,
+  .fx-on .tone-brand .vhr__item:has(.vhr__chart) .vhr__vert,
+  .fx-on .tone-brand .vhr__item:has(.vhr__chart).hh-in .vhr__vert,
+  .fx-on .pmp__row .vhr__vert{
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--pb-rise)), 0 100%) !important;
+    transition:none !important;
+  }
+  /* 出方は箱ごとに1回だけ */
+  .fx-on .tone-brand .vhr__item.fx,
+  .fx-on .pmp__row.fx{
+    opacity:0 !important;
+    transform:translateY(22px) !important;
+    transition:opacity .5s ease, transform .5s cubic-bezier(.22,.72,.2,1) !important;
+  }
+  .fx-on .tone-brand .vhr__item.fx.hh-in,
+  .fx-on .pmp__row.fx.hh-in{
+    opacity:1 !important;
+    transform:none !important;
+  }
 }
