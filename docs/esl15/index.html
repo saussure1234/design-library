@@ -3722,6 +3722,15 @@ document.documentElement.classList.add('fv-anim');
   .btn__main{ font-size:clamp(17px,4.6vw,19px) }
 }
 </style>
+<style id="note-sp">
+/* 🚨 実機（Safari）で CTA の補助コピーが4行に割れていた。
+   原因は text-wrap:pretty。明示的な <br> で区切った短い区間まで
+   「均等に配分」しようとして、「お子さまのレッスン／での様子と」と割れる。
+   スマホでは pretty を切り、文字を一段落として 2行に収める。 */
+@media(max-width:900px){
+  .hbc__note{ text-wrap:wrap; font-size:15px; line-height:1.7 }
+}
+</style>
 </head>
 <body>
 <div id="intro" aria-hidden="true"><svg viewBox="0 0 1000 1000" preserveAspectRatio="none"><path id="introPath" fill="#00B21F" d="M0,0 L1000,0 L1000,1000 C1000,1000 750,1000 500,1000 C250,1000 0,1000 0,1000 Z"></path></svg></div>
@@ -3831,7 +3840,7 @@ document.documentElement.classList.add('fv-anim');
       
         </div>
       </section>
-      <span class="hbc__note">お子さまのレッスンでの様子と<br class="br-sp">現レベルから、<br class="sp-br">学習の進め方をご案内します</span>
+      <span class="hbc__note">お子さまのレッスンでの様子と現レベルから、<br class="sp-br">学習の進め方をご案内します</span>
     </div>
   </div>
   
@@ -4138,7 +4147,7 @@ document.documentElement.classList.add('fv-anim');
 
         </div>
 
-        <p class="cps__note fx" data-fx="fadeup" data-d="240">お子さまのレッスンでの様子と<br class="br-sp">現レベルから、<br class="sp-br">学習の進め方をご案内します</p>
+        <p class="cps__note fx" data-fx="fadeup" data-d="240">お子さまのレッスンでの様子と現レベルから、<br class="sp-br">学習の進め方をご案内します</p>
 
       </div>
     </div>
