@@ -111,12 +111,17 @@
 }
 
 /* ══════════════════════════════════════════════════════════════
-   POINT 03 だけ器が「左＝箱／右＝動画」の2列
+   POINT 03 ── 器を版面いっぱいの横長にし、中を2行に組む
 
-   ★.pmp__row は「左540px固定＋右auto＋space-between」で、さらに
+   上段  緑の面（全幅）＋ 黄の帯 ＋ 講師写真を緑の上へ重ねて右
+   下段  左に本文、右に動画2本
+
+   ★動画（.pmp__media）はもともと箱の【外】にあり、親の grid が違うので
+     「緑の下の右」に置けなかった。箱の中（本文の直後）へ移してある。
+     動かしたのは要素の位置だけで、文字・写真・動画は変えていない。
+   ★.pmp__row は元は「左540px固定＋右auto＋space-between」で、さらに
      data-fx="pair" がスクロール量から transform/opacity を作って寄せていた。
-     この型は動かないので、動きを止めて割合で分ける。
-   ★緑と帯と罫は箱（62%）で止まるので、幅を行いっぱいまで伸ばして他の3枚と揃える。
+     この型は動かないので、動きを止めて1列にする。
    ══════════════════════════════════════════════════════════════ */
 .fx-on .fx[data-fx="pair"] .pmp__box,
 .fx-on .fx[data-fx="pair"] .pmp__media{
@@ -124,65 +129,53 @@
   opacity:1 !important;
   transition:none !important;
 }
+/* 器は版面いっぱいの1列。中身はすべて .pmp__box の中で組む */
 .pmp__row{
+  display:block !important;
   width:100% !important;
   margin-inline:0 !important;
   padding-inline: var(--pb-side) !important;
-  /* 緑は全幅なので、この比は動画の幅だけを決める。
-     0.53fr（各229px）ではキャプションが3〜4行に折れた（実測） */
-  grid-template-columns: minmax(0,0.38fr) minmax(0,0.62fr) !important;
-  justify-content:stretch !important;
-  column-gap:0;
-  align-items:start;
 }
-/* ★箱を行いっぱいに広げ、動画をその上に重ねる。
-   箱の幅（62%）のままだと緑と帯がそこで止まり、他の3枚と揃わない。
-   width で広げても箱の外へは描かれなかった（実測）ので、器ごと広げる。 */
-.pmp__row > .pmp__box{ grid-column:1 / -1; grid-row:1; width:100% }
-/* ★他の3枚は図が大きいので緑（行1）が自動で高くなるが、この枚は
-   緑の高さが文字ぶんしかない。動画がはみ出して本文と写真に被ったので、
-   緑に下余白を足して高くし、動画は上寄せで中に収める（実測）。 */
-.pmp__row > .pmp__media{
-  grid-column:2; grid-row:1;
-  align-self:start;
-  position:relative; z-index:3;
-  width:100%;
-  margin-top: clamp(18px,2.4vw,32px);
-}
-/* ★動画は縦2本だと緑より高くなり、本文の上に被る（実測）。横2本にして収める */
-.pmp__grid{
-  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-  gap:clamp(10px,1.4vw,18px) !important;
-  /* ★元は width:clamp(250px,21.5vw,330px) で器を絞っていた（縦1列＋左右振り分け用）。
-     max-width では外れないので width ごと上書きする。 */
-  width:100% !important; max-width:none !important;
-  justify-items:stretch !important;
-}
-/* ★元は 1列＋左右振り分け（odd=start / even=end）。横2本にするので
-   幅の上限も振り分けも外さないと、動画が小さいままキャプションが折れる。 */
-.pmp__item,
-.pmp__item:nth-child(odd),
-.pmp__item:nth-child(even){ width:100% !important; justify-self:stretch !important }
-/* 「レッスンの様子」は緑の上に乗るので白文字にする */
-.pmp__media .pmp__mh,
-.pmp__media .pmp__mh span{ color:var(--c-on-primary) }
+.pmp__box{ width:100% !important }
 
-.pmp__box .vhr__vert{ padding-bottom: clamp(104px,17vw,258px) }
 .pmp__box .vhr__item{
   padding-inline:0;
-  grid-template-columns: minmax(0,0.60fr) minmax(0,0.40fr);
-  column-gap: clamp(20px,2.4vw,32px);
+  grid-template-columns: minmax(0,0.52fr) minmax(0,0.48fr);
+  column-gap: clamp(22px,2.6vw,40px);
+  row-gap: 30px;
 }
-/* 講師写真は動画と重ならないよう、本文の横（行2）へ置く */
+/* 講師写真は上段の右、緑の上に重ねる（他の3枚の図と同じ扱い） */
 .pmp__box .vhr__top > .vhr__fig{
-  grid-column:2; grid-row:2;
-  align-self:start; justify-self:stretch;
-  z-index:auto;
-  margin:0;
+  grid-column:2; grid-row:1;
+  align-self:center; justify-self:stretch;
+  z-index:3;
+  margin:24px 0;
 }
+/* 下段：左に本文 */
 .pmp__box .vhr__body{
   grid-column:1; grid-row:2;
   margin:0; padding-top:0; border-top:0;
+}
+/* 下段：右に動画2本 */
+.pmp__box .pmp__media{
+  grid-column:2; grid-row:2;
+  width:100% !important; max-width:none !important;
+  margin:0 !important;
+}
+/* ★元は 1列＋左右振り分け（odd=start / even=end）で、器の幅も
+   width:clamp(250px,21.5vw,330px) で絞ってあった。横2本にするので全部外す。 */
+.pmp__box .pmp__grid{
+  display:grid !important;
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  gap:clamp(10px,1.4vw,18px) !important;
+  width:100% !important; max-width:none !important;
+  margin-inline:0 !important;
+  justify-items:stretch !important;
+}
+.pmp__box .pmp__item,
+.pmp__box .pmp__item:nth-child(odd),
+.pmp__box .pmp__item:nth-child(even){
+  width:100% !important; justify-self:stretch !important;
 }
 
 /* ══════════════════════════════════════════════════════════════
