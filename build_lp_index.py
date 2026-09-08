@@ -198,6 +198,18 @@ table.sheet thead .vcol{z-index:4;background:#f8fafc}
 table.sheet tr:hover td{background:#fbfcfd}
 table.sheet tr:hover .vcol{background:#fbfcfd}
 .sheet .sec{width:238px;min-width:238px}
+/* 動画列。押すまでは静止画だけ（勝手に読み込ませない） */
+.sheet .play{width:250px;min-width:250px}
+.sheet thead th.play{text-align:left}
+.vbox{position:relative;width:100%;aspect-ratio:16/9;border-radius:6px;overflow:hidden;
+  background:#0d1117;cursor:pointer}
+.vbox img,.vbox video{width:100%;height:100%;object-fit:cover;display:block}
+.vbox video{cursor:auto;object-fit:contain;background:#000}
+.vbox .pbtn{position:absolute;inset:0;display:grid;place-items:center;color:#fff;
+  font-size:30px;text-shadow:0 2px 12px rgba(0,0,0,.65);opacity:.92}
+.vbox:hover .pbtn{opacity:1;transform:scale(1.08);transition:.15s}
+.vbox .plen{position:absolute;right:6px;bottom:5px;background:rgba(0,0,0,.72);color:#fff;
+  font-size:11px;font-weight:700;border-radius:4px;padding:1px 6px}
 .sheet .sm{width:96px;min-width:96px}
 .sheet .av{width:172px;min-width:172px}
 .sheet .th{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:5px;
@@ -595,6 +607,20 @@ function secCell(v,s){
     <div class="chain">${chain}</div></td>`;
 }
 
+/* シートの中で再生する。
+   ★<video> は【押した時に作る】。最初から置くと開いただけで全件（1本6MB）読みに行く。
+     ポスターだけ出して、クリックで player を差し込む。 */
+function playCell(v,tmpl){
+  if(tmpl) return '<td class="play"><span style="color:#9ca3af">—</span></td>';
+  if(v.status==='draft'||v.url)
+    return '<td class="play"><span style="color:#9ca3af">未制作</span></td>';
+  const d=v.media&&v.media.duration ? mmss(v.media.duration) : '';
+  return `<td class="play"><div class="vbox" data-play="${esc(v.id)}">
+      <img src="../video/${esc(v.id)}/poster.jpg" alt="" loading="lazy">
+      <span class="pbtn">▶</span><span class="plen">${d}</span>
+    </div></td>`;
+}
+
 function sheetPane(p,R){
   if(!p.versions.length)return '<p style="color:var(--mute)">まだ版がありません。</p>';
   const withComp=p.versions.filter(v=>v.comp);
@@ -613,6 +639,7 @@ function sheetPane(p,R){
         <div class="vmeta">${esc(v.date)}${v.media&&v.media.duration?' · '+mmss(v.media.duration):''}
           ${planned?'<br><span class="todo-pill">台本のみ</span>':''}</div>
       </td>
+      ${playCell(v,tmpl)}
       ${SECS.map(([k])=>secCell(v,by[k])).join('')}
       ${tmpl
         // テンプレの行に素材のサムネは出さない。型そのものには素材が無い
@@ -635,7 +662,7 @@ function sheetPane(p,R){
       台本の1行が1枠。緑のタグが画像、白がアバター、数字はその画になっている秒数。
       一番上がテンプレ（守るべき型）で、その下が実際の各本。</p>
     <div class="sheetwrap"><table class="sheet"><thead><tr>
-      <th class="vcol">版</th>
+      <th class="vcol">版</th><th class="play">動画</th>
       ${SECS.map(([,l,h])=>`<th class="sec">${l}<span style="font-weight:400;color:#9ca3af">　${h}</span></th>`).join('')}
       <th class="sm">ロゴ</th><th class="av">アバター（2カメ）</th>
     </tr></thead><tbody>${rows}</tbody></table></div>`;
@@ -839,6 +866,19 @@ document.addEventListener('click',e=>{
   // 動画は構成シートが先（ここで文面と画像を管理する）。LPは系統が先
   if(a){cur=a.dataset.p;tab=cur.slice(0,4)==='vid:'?'sheet':'graph';render();return;}
   const b=e.target.closest('.tabs button'); if(b){tab=b.dataset.t;render();return;}
+  // シートの中の再生。押されたセルだけ <video> に差し替える
+  const pc=e.target.closest('.vbox[data-play]');
+  if(pc){
+    const id=pc.dataset.play;
+    pc.removeAttribute('data-play');
+    pc.innerHTML=`<video src="../video/${id}/ad.mp4" poster="../video/${id}/poster.jpg"
+      controls autoplay playsinline preload="metadata"></video>`;
+    const vd=pc.querySelector('video');
+    // 音が重ならないよう、再生し始めたら他は止める
+    vd.addEventListener('play',()=>document.querySelectorAll('.vbox video').forEach(o=>{
+      if(o!==vd) o.pause();}));
+    return;
+  }
   // フローの節を押したら、下の欄に詳細を出す（図は描き直さない）
   const fn=e.target.closest('.fnode');
   if(fn){showStep(+fn.dataset.step);}
