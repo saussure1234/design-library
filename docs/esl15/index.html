@@ -3306,6 +3306,49 @@ document.documentElement.classList.add('fv-anim');
 }
 
 </style>
+<style id="fv-br">
+/* 🚨 FVの改行：.nb(nowrap) は Mac の Chrome では収まっても、実機 iPhone は
+   フォント幅が違うぶん溢れて意味の切れ目で折れなくなる（実測・実機で確認）。
+   → .nb をやめ、スマホだけ効く改行で明示的に切る。 */
+.br-sp{display:none}
+@media(max-width:900px){
+  .br-sp{display:inline}
+  .hbc__eyebrow{font-size:15px;line-height:1.65}
+}
+</style>
+<style id="btn-sp">
+/* 🚨 スマホ実測：ボタン「無料体験レッスンはこちら」の最終行が1文字だけ落ちていた。
+   ボタン内で折るのは不自然なので、狭い画面だけ一段小さくして1行に収める。 */
+@media(max-width:900px){
+  .cps__btn .btn__main,
+  .camp__btn .btn__main,
+  .btn__main{ font-size:clamp(17px,4.6vw,19px) }
+}
+</style>
+<style id="note-sp">
+/* 🚨 実機（Safari）で CTA の補助コピーが4行に割れていた。
+   原因は text-wrap:pretty。明示的な <br> で区切った短い区間まで
+   「均等に配分」しようとして、「お子さまのレッスン／での様子と」と割れる。
+   スマホでは pretty を切り、文字を一段落として 2行に収める。 */
+@media(max-width:900px){
+  /* FV も 2回目以降の CTA も、補助コピーは同じ扱いにする。
+     .cps__note は --fs-md のままで大きく、「から、」だけが行頭に落ちていた（実機）。 */
+  .hbc__note,
+  .cps__note,
+  .camp__note{ text-wrap:wrap; font-size:15px; line-height:1.7 }
+}
+</style>
+<style id="vhr-sp">
+/* 🚨 スマホで見出し(.vhr__title)とリード(.vhr__sub)が両方18pxで、
+   どちらが見出しか分からなくなっていた（実機で指摘）。差をつける。 */
+@media(max-width:900px){
+  /* 見出しとリードは同じ 18px に戻す。差は【色】でつける
+     （リードを 15px にしたら小さすぎた／実機で指摘）。
+     --c-ink #303030 → --c-ink3 #707070 で一段落とす。 */
+  .vhr__title{ font-size:18px; line-height:1.6; color:var(--c-ink) }
+  .vhr__sub{ font-size:18px; line-height:1.7; color:var(--c-ink3) }
+}
+</style>
 <style id="points-b">
 @charset "UTF-8";
 /* ★POINT 01〜04 の案b（白地＋緑の面）は【901px 以上】だけに適用する。
@@ -3618,31 +3661,31 @@ document.documentElement.classList.add('fv-anim');
      ★中を時間差で動かすのは POINT01 だけ。
        ここでは上の段取りを全部打ち消して、箱そのものを1回で出す。
      ══════════════════════════════════════════════════════════════ */
-  .fx-on .vhr__list .vhr__item.fx:not(:has(.vhr__chart)),
+  .fx-on .vhr__list .vhr__item.fx,
   .fx-on .pmp__row.fx[data-fx="pair"]{
     opacity:0 !important;
     transform:translateY(28px) !important;
     transition:opacity .5s ease, transform .55s cubic-bezier(.22,.72,.2,1) !important;
   }
-  .fx-on .vhr__list .vhr__item.fx:not(:has(.vhr__chart)).hh-in,
+  .fx-on .vhr__list .vhr__item.fx.hh-in,
   .fx-on .pmp__row.fx[data-fx="pair"].hh-in{
     opacity:1 !important;
     transform:none !important;
   }
 
   /* 中の要素は動かさない（面は開いた形のまま、文字と図はそのまま） */
-  .fx-on .vhr__list .vhr__item:not(:has(.vhr__chart)) .vhr__vert,
-  .fx-on .vhr__list .vhr__item:not(:has(.vhr__chart)) .pb-band,
+  .fx-on .vhr__list .vhr__item .vhr__vert,
+  .fx-on .vhr__list .vhr__item .pb-band,
   .fx-on .pmp__row .vhr__vert,
   .fx-on .pmp__row .pb-band{
     clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--pb-rise)), 0 100%) !important;
     transition:none !important;
   }
-  .fx-on .vhr__list .vhr__item:not(:has(.vhr__chart)) .vhr__label,
-  .fx-on .vhr__list .vhr__item:not(:has(.vhr__chart)) .vhr__title,
-  .fx-on .vhr__list .vhr__item:not(:has(.vhr__chart)) .vhr__sub,
-  .fx-on .vhr__list .vhr__item:not(:has(.vhr__chart)) .vhr__top > *,
-  .fx-on .vhr__list .vhr__item:not(:has(.vhr__chart)) .vhr__body,
+  .fx-on .vhr__list .vhr__item .vhr__label,
+  .fx-on .vhr__list .vhr__item .vhr__title,
+  .fx-on .vhr__list .vhr__item .vhr__sub,
+  .fx-on .vhr__list .vhr__item .vhr__top > *,
+  .fx-on .vhr__list .vhr__item .vhr__body,
   .fx-on .pmp__row .vhr__label,
   .fx-on .pmp__row .vhr__title,
   .fx-on .pmp__row .vhr__sub,
@@ -3705,49 +3748,6 @@ document.documentElement.classList.add('fv-anim');
   .pmp__box .pmp__cap em{ color:var(--c-ink) }
 }
 
-</style>
-<style id="fv-br">
-/* 🚨 FVの改行：.nb(nowrap) は Mac の Chrome では収まっても、実機 iPhone は
-   フォント幅が違うぶん溢れて意味の切れ目で折れなくなる（実測・実機で確認）。
-   → .nb をやめ、スマホだけ効く改行で明示的に切る。 */
-.br-sp{display:none}
-@media(max-width:900px){
-  .br-sp{display:inline}
-  .hbc__eyebrow{font-size:15px;line-height:1.65}
-}
-</style>
-<style id="btn-sp">
-/* 🚨 スマホ実測：ボタン「無料体験レッスンはこちら」の最終行が1文字だけ落ちていた。
-   ボタン内で折るのは不自然なので、狭い画面だけ一段小さくして1行に収める。 */
-@media(max-width:900px){
-  .cps__btn .btn__main,
-  .camp__btn .btn__main,
-  .btn__main{ font-size:clamp(17px,4.6vw,19px) }
-}
-</style>
-<style id="note-sp">
-/* 🚨 実機（Safari）で CTA の補助コピーが4行に割れていた。
-   原因は text-wrap:pretty。明示的な <br> で区切った短い区間まで
-   「均等に配分」しようとして、「お子さまのレッスン／での様子と」と割れる。
-   スマホでは pretty を切り、文字を一段落として 2行に収める。 */
-@media(max-width:900px){
-  /* FV も 2回目以降の CTA も、補助コピーは同じ扱いにする。
-     .cps__note は --fs-md のままで大きく、「から、」だけが行頭に落ちていた（実機）。 */
-  .hbc__note,
-  .cps__note,
-  .camp__note{ text-wrap:wrap; font-size:15px; line-height:1.7 }
-}
-</style>
-<style id="vhr-sp">
-/* 🚨 スマホで見出し(.vhr__title)とリード(.vhr__sub)が両方18pxで、
-   どちらが見出しか分からなくなっていた（実機で指摘）。差をつける。 */
-@media(max-width:900px){
-  /* 見出しとリードは同じ 18px に戻す。差は【色】でつける
-     （リードを 15px にしたら小さすぎた／実機で指摘）。
-     --c-ink #303030 → --c-ink3 #707070 で一段落とす。 */
-  .vhr__title{ font-size:18px; line-height:1.6; color:var(--c-ink) }
-  .vhr__sub{ font-size:18px; line-height:1.7; color:var(--c-ink3) }
-}
 </style>
 </head>
 <body>
