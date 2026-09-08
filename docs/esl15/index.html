@@ -5391,7 +5391,12 @@ document.documentElement.classList.add('js');
       n.parentNode.replaceChild(s,n); s.appendChild(n);
     }
   });
-  [].slice.call(h1.querySelectorAll('.nb')).forEach(function(e){ e.classList.add('ln'); });
+  /* ★.nb を目印にしていたが、FVの改行を .nb から <br> に変えたので
+     <em> に .ln が付かず、そこだけ最初から見えていた（実測）。
+     br 以外の直接の子は全部 .ln にする。 */
+  [].slice.call(h1.children).forEach(function(e){
+    if(e.tagName!=='BR' && !e.classList.contains('ln')) e.classList.add('ln');
+  });
 
   function assign(){
     var us=[].slice.call(h1.querySelectorAll('.ln')), lines=[], last=null;
