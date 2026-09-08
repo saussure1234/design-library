@@ -2689,8 +2689,11 @@ html:not(.fv-anim) .hbc__bb{opacity:1}
   /* 🚨 実測(375px)：left:calc(73% - 116px) だと吹き出しの右端が407pxになり、
      画面(375px)から32pxはみ出して「年の近い先生と〜」が読めなかった。
      40px 左へ寄せ、しっぽ(::after)も同じだけ右へ動かして頭の位置を保つ。 */
-  .hbc__bb--b{left:calc(73% - 180px);top:-41px;--o:64% 100%}
-  .hbc__bb--b::after{left:164px}
+  /* 🚨 2行にして幅が223→約150pxに縮んだので、左へ寄せる量を戻す。
+     寄せすぎると左の写真（少年）の頭に被る（実機で確認）。
+     縦は2行ぶん高くなるので top も深くする。 */
+  .hbc__bb--b{left:calc(73% - 108px);top:-59px;--o:64% 100%}
+  .hbc__bb--b::after{left:92px}
 }
 /* 🚨 注記「いつまでに2級合格できるか…」が山に被っていた（実測：360〜600pxで
    最大25px）。FVの器の下に余白を足して逃がす */
@@ -3714,7 +3717,7 @@ document.documentElement.classList.add('fv-anim');
 }
 </style>
 <style id="btn-sp">
-/* 🚨 スマホ実測：ボタン「無料体験レッスンに申し込む」の最終行が1文字だけ落ちていた。
+/* 🚨 スマホ実測：ボタン「無料体験レッスンはこちら」の最終行が1文字だけ落ちていた。
    ボタン内で折るのは不自然なので、狭い画面だけ一段小さくして1行に収める。 */
 @media(max-width:900px){
   .cps__btn .btn__main,
@@ -3779,7 +3782,7 @@ document.documentElement.classList.add('fv-anim');
          代わりにスマホの升目の比率を女子側に振って大きくする（下のCSS） -->
     <figure class="hbc__ph hbc__ph--b">
       <img src="img/fv_girl.png" alt="オンラインで英検対策を受ける中高生">
-      <p class="hbc__bb hbc__bb--b" aria-hidden="true">年の近い先生と、おうちでマンツーマン</p>
+      <p class="hbc__bb hbc__bb--b" aria-hidden="true">年の近い先生と、<br class="br-sp">おうちでマンツーマン</p>
     </figure>
 
     <div class="hbc__head">
@@ -3823,7 +3826,7 @@ document.documentElement.classList.add('fv-anim');
               </g></svg>
             </span>
             <span class="camp__btn-sub">お子さまからの「通いたい！」が聞ける</span>
-            <span class="camp__btn-main">無料体験レッスンに申し込む</span>
+            <span class="camp__btn-main">無料体験レッスンはこちら</span>
           </a>
       
           <!-- ギザギザのバッジ。SVG 1本で作ってあるので拡大しても崩れない。
@@ -4122,7 +4125,7 @@ document.documentElement.classList.add('fv-anim');
                   </g></svg>
                 </span>
                 <span class="camp__btn-sub">お子さまからの「通いたい！」が聞ける</span>
-                <span class="camp__btn-main">無料体験レッスンに申し込む</span>
+                <span class="camp__btn-main">無料体験レッスンはこちら</span>
               </a>
           
               <!-- ギザギザのバッジ。SVG 1本で作ってあるので拡大しても崩れない。
@@ -4319,7 +4322,7 @@ document.documentElement.classList.add('fv-anim');
                   </g></svg>
                 </span>
                 <span class="camp__btn-sub">お子さまからの「通いたい！」が聞ける</span>
-                <span class="camp__btn-main">無料体験レッスンに申し込む</span>
+                <span class="camp__btn-main">無料体験レッスンはこちら</span>
               </a>
           
               <!-- ギザギザのバッジ。SVG 1本で作ってあるので拡大しても崩れない。
@@ -4853,7 +4856,7 @@ document.documentElement.classList.add('fv-anim');
                   </g></svg>
                 </span>
                 <span class="camp__btn-sub">お子さまからの「通いたい！」が聞ける</span>
-                <span class="camp__btn-main">無料体験レッスンに申し込む</span>
+                <span class="camp__btn-main">無料体験レッスンはこちら</span>
               </a>
           
               <!-- ギザギザのバッジ。SVG 1本で作ってあるので拡大しても崩れない。
