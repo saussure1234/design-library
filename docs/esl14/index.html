@@ -3702,52 +3702,33 @@ document.documentElement.classList.add('fv-anim');
 }
 
 /* ══════════════════════════════════════════════════════════════
-   狭い画面でも【PCと同じ型】に見せる
+   狭い画面は【シンプルな縦積み】（施主判断）
 
-   ★一度ここで斜めも黄の帯も切っていたが、それだと縦積みの
-     「ただの緑の帯」になり、PCの見た目と別物になる。
-     幅に合わせて傾きを浅くしたうえで、斜め・帯・図の重なりを残す。
+   ★一度ここで PC と同じ斜め・黄の帯・図の重なりを再現したが、
+     スマホでは前の素直な縦積みの方が良い、との判断。
+     面は矩形の帯に戻し、帯と重なりは出さない。
+     ただし POINT03 の動画は【本文の下】のまま（PCと同じ並び順）。
    ══════════════════════════════════════════════════════════════ */
 @media(max-width:900px){
-  /* 傾きは画面幅なりに浅く（PCは56px） */
-  .tone-brand .vhr__item,
-  .pmp__box .vhr__item{ --pb-rise: clamp(16px, 5vw, 34px) }
-
-  /* 面：斜めを残す。斜めのぶんだけ下に余白を足して文字が欠けないようにする */
+  /* 面は斜めなしの帯 */
   .tone-brand .vhr__vert,
   .vhr__list .vhr__item .vhr__vert,
   .pmp__box .vhr__vert,
-  .fx-on .tone-brand .vhr__item.hh-in .vhr__vert,
+  .fx-on .tone-brand .vhr__vert,
+  .fx-on .tone-brand .vhr__item:has(.vhr__chart) .vhr__vert,
+  .fx-on .tone-brand .vhr__item:has(.vhr__chart).hh-in .vhr__vert,
   .fx-on .vhr__list .vhr__item:not(:has(.vhr__chart)) .vhr__vert,
-  .fx-on .pmp__row .vhr__vert{
-    clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--pb-rise)), 0 100%) !important;
-    z-index:2;
-  }
+  .fx-on .pmp__row .vhr__vert{ clip-path:none !important }
+
   .tone-brand .vhr__vert,
   .pmp__box .vhr__vert{
-    padding-bottom: calc(clamp(46px,13vw,78px) + var(--pb-rise)) !important;
-  }
-  /* 面が左から開く動き（POINT01）の開始状態も、斜めを保ったまま */
-  .fx-on .tone-brand .vhr__item:has(.vhr__chart) .vhr__vert{
-    clip-path: polygon(0 0, 0 0, 0 calc(100% - var(--pb-rise)), 0 100%) !important;
-  }
-  .fx-on .tone-brand .vhr__item:has(.vhr__chart).hh-in .vhr__vert{
-    clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--pb-rise)), 0 100%) !important;
+    padding-bottom: clamp(24px,6vw,34px) !important;
   }
 
-  /* 黄の帯：縦積みでも出す。面と同じ形を12px下へ */
-  .pb-band{
-    display:block !important;
-    grid-column:1 !important; grid-row:1 !important;
-    align-self:stretch !important;
-    z-index:1 !important;
-    margin:12px -22px -12px !important;
-    background:var(--c-accent) !important;
-    clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--pb-rise)), 0 100%) !important;
-    opacity:1 !important; transform:none !important;
-  }
+  /* 黄の帯は出さない */
+  .pb-band{ display:none !important }
 
-  /* 図・写真・動画：PCと同じく面に少し重ねる */
+  /* 図・写真・動画は面の下に素直に置く。器いっぱいの幅で */
   .tone-brand .vhr__top > .vhr__fig,
   .tone-brand .vhr__top > .vhr__figs,
   .tone-brand .vhr__top > .vhr__chart,
@@ -3755,10 +3736,8 @@ document.documentElement.classList.add('fv-anim');
     max-width:none !important;
     width:100% !important;
     flex:none !important;
-    position:relative;
-    z-index:3 !important;
-    /* PCと同じく面に食い込ませる。斜めのぶんも含めて引き上げる */
-    margin-top: calc(-1 * (clamp(34px,11vw,64px) + var(--pb-rise))) !important;
+    margin:0 !important;
+    z-index:auto !important;
   }
   .tone-brand .vhr__fig img{ width:100% }
 }
@@ -3782,11 +3761,13 @@ document.documentElement.classList.add('fv-anim');
     transition:none !important;
     transition-delay:0s !important;
   }
+  /* ★狭い画面は矩形の帯。ここで polygon を入れると、同じ詳細度で後ろにある分
+     POINT03（.pmp__row）だけ斜めが残ってしまう（実測375px）。 */
   .fx-on .tone-brand .vhr__vert,
   .fx-on .tone-brand .vhr__item:has(.vhr__chart) .vhr__vert,
   .fx-on .tone-brand .vhr__item:has(.vhr__chart).hh-in .vhr__vert,
   .fx-on .pmp__row .vhr__vert{
-    clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--pb-rise)), 0 100%) !important;
+    clip-path:none !important;
     transition:none !important;
   }
   /* 出方は箱ごとに1回だけ */
