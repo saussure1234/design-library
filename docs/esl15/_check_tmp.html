@@ -5428,5 +5428,57 @@ document.addEventListener('DOMContentLoaded', function(){ setTimeout(fvIn, 2600)
   draw();
 })();
 </script>
+
+<script>
+addEventListener("load",function(){
+  // 画面に入ったとき出る演出を全部出し切る（headless では発火しないことがある）
+  setInterval(function(){document.querySelectorAll(".fx").forEach(function(e){e.classList.add("hh-in")})},60);
+  setTimeout(function(){
+    var W=innerWidth, out=[];
+    if(document.documentElement.scrollWidth > W+1)
+      out.push("横スクロール scrollWidth="+document.documentElement.scrollWidth+" > "+W);
+    var over=[], clip=[];
+    function nm(e){
+      var c = e.className;
+      if (c && c.baseVal !== undefined) c = c.baseVal;   // SVG は SVGAnimatedString
+      return (String(c || "").trim().split(/\s+/)[0] || e.tagName);
+    }
+    // 横スクロールできる器（比較表など）の中は、はみ出していて正常
+    function scrollable(e){
+      for (var p=e.parentElement; p; p=p.parentElement){
+        var s=getComputedStyle(p);
+        if (s.overflowX==="auto" || s.overflowX==="scroll") return true;
+      }
+      return false;
+    }
+    document.querySelectorAll("body *").forEach(function(e){
+      if (e instanceof SVGElement) return;               // 装飾のSVGは対象外
+      var s = getComputedStyle(e);
+      if (s.position==="fixed" || s.display==="none" || s.visibility==="hidden" || s.opacity==="0") return;
+      // ★見るのは「文字を直接持つ要素」だけ。
+      //   器や装飾は画面いっぱいに広げたり中身を切ったりするのが正しいので、拾うと誤検出になる。
+      var txt = "";
+      e.childNodes.forEach(function(n){ if (n.nodeType===3) txt += n.nodeValue; });
+      if (!txt.trim()) return;
+      var r = e.getBoundingClientRect();
+      if (r.width < 2 || r.height < 2) return;
+      if (r.right > W + 1 && !scrollable(e) && over.length < 6)
+        over.push(nm(e) + "「" + txt.trim().slice(0,12) + "」右端" + Math.round(r.right));
+      var hid = (s.overflow==="hidden" || s.overflowY==="hidden" || s.overflowX==="hidden");
+      if (hid && !scrollable(e) && (e.scrollHeight > e.clientHeight + 4 || e.scrollWidth > e.clientWidth + 4) && clip.length < 6)
+        clip.push(nm(e) + "「" + txt.trim().slice(0,12) + "」が枠から溢れて切れている");
+    });
+    if(over.length) out.push("文字が画面外へ: "+over.join(" / "));
+    if(clip.length) out.push("文字が切れている: "+clip.join(" / "));
+    var d=document.createElement("div");
+    d.id="__chk";
+    d.setAttribute("data-result", JSON.stringify(out));
+    d.style.cssText="position:absolute;left:0;top:0;z-index:2147483647;background:"+
+      (out.length?"#c00":"#063")+";color:#fff;font:12px/1.5 monospace;padding:6px;max-width:100%;white-space:pre-wrap";
+    d.textContent=(out.length? "NG " : "OK ")+W+"px\n"+out.join("\n");
+    document.body.appendChild(d);
+  },2600);
+});
+</script>
 </body>
 </html>
