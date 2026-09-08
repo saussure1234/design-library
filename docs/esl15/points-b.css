@@ -134,11 +134,12 @@
        data-fx="pair" がスクロール量から transform/opacity を作って寄せていた。
        この型は動かないので、動きを止めて1列にする。
      ══════════════════════════════════════════════════════════════ */
+  /* ★元CSSの pair（左右から寄せる）は使わないが、
+     ここで opacity:1 !important を掛けると POINT01 の動画が出たままになる。
+     transform だけ止めて、出方は下の POINT01 用の指定に任せる。 */
   .fx-on .fx[data-fx="pair"] .pmp__box,
   .fx-on .fx[data-fx="pair"] .pmp__media{
     transform:none !important;
-    opacity:1 !important;
-    transition:none !important;
   }
   /* 版面も組みも他の3枚と同じ。動画だけ本文の下に足す */
 
@@ -309,23 +310,19 @@
      ★中を時間差で動かすのは POINT01 だけ。
        ここでは上の段取りを全部打ち消して、箱そのものを1回で出す。
      ══════════════════════════════════════════════════════════════ */
-  .fx-on .vhr__list .vhr__item.fx,
-  .fx-on .pmp__row.fx[data-fx="pair"]{
+  .fx-on .vhr__list .vhr__item.fx{
     opacity:0 !important;
     transform:translateY(28px) !important;
     transition:opacity .5s ease, transform .55s cubic-bezier(.22,.72,.2,1) !important;
   }
-  .fx-on .vhr__list .vhr__item.fx.hh-in,
-  .fx-on .pmp__row.fx[data-fx="pair"].hh-in{
+  .fx-on .vhr__list .vhr__item.fx.hh-in{
     opacity:1 !important;
     transform:none !important;
   }
 
   /* 中の要素は動かさない（面は開いた形のまま、文字と図はそのまま） */
   .fx-on .vhr__list .vhr__item .vhr__vert,
-  .fx-on .vhr__list .vhr__item .pb-band,
-  .fx-on .pmp__row .vhr__vert,
-  .fx-on .pmp__row .pb-band{
+  .fx-on .vhr__list .vhr__item .pb-band{
     clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--pb-rise)), 0 100%) !important;
     transition:none !important;
   }
@@ -333,13 +330,7 @@
   .fx-on .vhr__list .vhr__item .vhr__title,
   .fx-on .vhr__list .vhr__item .vhr__sub,
   .fx-on .vhr__list .vhr__item .vhr__top > *,
-  .fx-on .vhr__list .vhr__item .vhr__body,
-  .fx-on .pmp__row .vhr__label,
-  .fx-on .pmp__row .vhr__title,
-  .fx-on .pmp__row .vhr__sub,
-  .fx-on .pmp__row .vhr__top > *,
-  .fx-on .pmp__row .vhr__body,
-  .fx-on .pmp__row .pmp__media{
+  .fx-on .vhr__list .vhr__item .vhr__body{
     opacity:1 !important;
     transform:none !important;
     transition:none !important;
@@ -394,4 +385,44 @@
   .pmp__box .pmp__mh span{ color:var(--c-ink) }
   .pmp__box .pmp__cap b{ color:var(--c-ink3) }
   .pmp__box .pmp__cap em{ color:var(--c-ink) }
+
+  /* ══════════════════════════════════════════════════════════════
+     POINT01（.pmp__row）だけ【中を時間差で出す】（施主判断）
+     順番：緑の面が左から開く → 黄の帯が追う → ラベル → 見出し → リード
+           → 講師写真 → 本文 → 動画
+     ══════════════════════════════════════════════════════════════ */
+  .fx-on .pmp__row.fx[data-fx="pair"]{
+    opacity:1 !important; transform:none !important;
+  }
+  /* 面と帯：頂点の数を変えずに polygon を閉じ→開きへ */
+  .fx-on .pmp__row.fx[data-fx="pair"] .vhr__vert,
+  .fx-on .pmp__row.fx[data-fx="pair"] .pb-band{
+    clip-path: polygon(0 0, 0 0, 0 calc(100% - var(--pb-rise)), 0 100%) !important;
+    transition: clip-path .8s cubic-bezier(.22,.72,.2,1) !important;
+  }
+  .fx-on .pmp__row.fx[data-fx="pair"].hh-in .vhr__vert{
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--pb-rise)), 0 100%) !important;
+  }
+  .fx-on .pmp__row.fx[data-fx="pair"].hh-in .pb-band{
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--pb-rise)), 0 100%) !important;
+    transition-delay:.14s !important;
+  }
+  /* 文字・写真・本文・動画は少し遅れて順に */
+  .fx-on .pmp__row.fx[data-fx="pair"] .vhr__label,
+  .fx-on .pmp__row.fx[data-fx="pair"] .vhr__title,
+  .fx-on .pmp__row.fx[data-fx="pair"] .vhr__sub,
+  .fx-on .pmp__row.fx[data-fx="pair"] .vhr__top > .vhr__fig,
+  .fx-on .pmp__row.fx[data-fx="pair"] .vhr__body,
+  .fx-on .pmp__row.fx[data-fx="pair"] .pmp__media{
+    opacity:0 !important;
+    transform:translateY(14px) !important;
+    transition:opacity .5s ease, transform .5s cubic-bezier(.22,.72,.2,1) !important;
+  }
+  .fx-on .pmp__row.fx[data-fx="pair"].hh-in .vhr__label{ opacity:1 !important; transform:none !important; transition-delay:.30s !important }
+  .fx-on .pmp__row.fx[data-fx="pair"].hh-in .vhr__title{ opacity:1 !important; transform:none !important; transition-delay:.38s !important }
+  .fx-on .pmp__row.fx[data-fx="pair"].hh-in .vhr__sub  { opacity:1 !important; transform:none !important; transition-delay:.46s !important }
+  .fx-on .pmp__row.fx[data-fx="pair"].hh-in .vhr__top > .vhr__fig{
+    opacity:1 !important; transform:none !important; transition-delay:.34s !important }
+  .fx-on .pmp__row.fx[data-fx="pair"].hh-in .vhr__body { opacity:1 !important; transform:none !important; transition-delay:.54s !important }
+  .fx-on .pmp__row.fx[data-fx="pair"].hh-in .pmp__media{ opacity:1 !important; transform:none !important; transition-delay:.62s !important }
 }
