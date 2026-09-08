@@ -94,7 +94,13 @@
   padding-top:0;
 }
 
-/* ── 図・写真・動画は緑の上に重ねて右へ ───────────── */
+/* ── 図・写真・動画は緑の上に重ねて右へ ─────────────
+   ★.vhr__chart / .vhr__figs には aspect-ratio が入っていて、
+     画面が狭くなると器が縮み、中の注記が overflow:hidden で切れる（実測940px）。
+     中身の高さに合わせる。 */
+.tone-brand .vhr__chart,
+.tone-brand .vhr__figs{ aspect-ratio:auto }
+
 .tone-brand .vhr__top > .vhr__fig,
 .tone-brand .vhr__top > .vhr__figs,
 .tone-brand .vhr__top > .vhr__chart{
@@ -388,4 +394,29 @@
 @media(max-width:900px){
   .fx-on .vhr__list .vhr__item:not(:has(.vhr__chart)) .vhr__vert,
   .fx-on .pmp__row .vhr__vert{ clip-path:none !important }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   狭い画面の詰め（実測820px）
+   ・帯の斜めが残ると、縦積みで高さが低いぶん右側が大きく欠ける
+   ・写真に max-width:340px が効いていて、器の半分以下になる
+   ══════════════════════════════════════════════════════════════ */
+@media(max-width:900px){
+  .tone-brand .vhr__vert,
+  .vhr__list .vhr__item .vhr__vert,
+  .pmp__box .vhr__vert,
+  .fx-on .tone-brand .vhr__vert,
+  .fx-on .vhr__list .vhr__item .vhr__vert,
+  .fx-on .vhr__list .vhr__item:not(:has(.vhr__chart)) .vhr__vert,
+  .fx-on .pmp__row .vhr__vert{ clip-path:none !important }
+
+  .tone-brand .vhr__top > .vhr__fig,
+  .tone-brand .vhr__top > .vhr__figs,
+  .tone-brand .vhr__top > .vhr__chart,
+  .pmp__box .vhr__top > .vhr__fig{
+    max-width:none !important;
+    width:100% !important;
+    flex:none !important;
+  }
+  .tone-brand .vhr__fig img{ width:100% }
 }
