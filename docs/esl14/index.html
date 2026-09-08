@@ -3443,7 +3443,7 @@ document.documentElement.classList.add('fv-anim');
 
 .pmp__box .vhr__item{
   padding-inline:0;
-  grid-template-columns: minmax(0,0.52fr) minmax(0,0.48fr);
+  grid-template-columns: minmax(0,0.46fr) minmax(0,0.54fr);
   column-gap: clamp(22px,2.6vw,40px);
   row-gap: 30px;
 }
@@ -3480,6 +3480,14 @@ document.documentElement.classList.add('fv-anim');
 .pmp__box .pmp__item:nth-child(even){
   width:100% !important; justify-self:stretch !important;
 }
+/* ★元は緑地のセクションだったので、見出しもキャプションも白文字。
+   下段は白い地なので墨色に戻さないと消える（実測）。 */
+.pmp__box .pmp__mh,
+.pmp__box .pmp__mh span{ color:var(--c-ink); text-align:left }
+.pmp__box .pmp__mh::after{ margin-inline:0 }
+/* キャプションは b と em それぞれに白が指定されている。両方戻す */
+.pmp__box .pmp__cap b{ color:var(--c-ink3) }
+.pmp__box .pmp__cap em{ color:var(--c-ink) }
 
 /* ══════════════════════════════════════════════════════════════
    狭い画面（〜900px）── 1列に積み、面は画面の全幅の帯にする
@@ -3519,32 +3527,22 @@ document.documentElement.classList.add('fv-anim');
   .pmp__box .vhr__body{ grid-column:1 !important; grid-row:3 !important; margin:0 !important }
   /* 帯は縦積みでは意味を持たないので出さない */
   .pb-band{ display:none !important }
-  /* ★POINT03 は PC で「箱を全幅にして動画を右へ重ねる」形にしてある。
-     その列指定が残ると、狭い画面で存在しない2列目が作られて崩れる（実測375px）。
-     縦に積み直す：緑 → 動画 → 講師写真 → 本文。 */
-  .pmp__row{
-    grid-template-columns:minmax(0,1fr) !important;
-    grid-template-rows:auto auto !important;
-    padding-inline:22px !important;
-    row-gap:20px;
-  }
-  .pmp__row > .pmp__box{ grid-column:1 !important; grid-row:1 !important }
-  .pmp__row > .pmp__media{
-    grid-column:1 !important; grid-row:2 !important;
-    margin-top:0 !important;
-  }
-  .pmp__grid{
-    grid-template-columns:minmax(0,1fr) !important;
-    width:100% !important;
-  }
-  .pmp__item,
-  .pmp__item:nth-child(odd),
-  .pmp__item:nth-child(even){ width:100% !important; justify-self:stretch !important }
-  .pmp__media .pmp__mh,
-  .pmp__media .pmp__mh span{ color:var(--c-ink) }
+  /* ★POINT03 は PC で2行2列に組んである。狭い画面では
+     緑 → 講師写真 → 本文 → 動画 の順に1列で積む。 */
+  .pmp__row{ padding-inline:22px !important }
+  .pmp__box .vhr__item{ grid-template-rows:auto auto auto auto !important }
   .pmp__box .vhr__top > .vhr__fig{
     grid-column:1 !important; grid-row:2 !important;
     align-self:start !important; margin:0 !important;
+  }
+  .pmp__box .vhr__body{ grid-column:1 !important; grid-row:3 !important }
+  .pmp__box .pmp__media{
+    grid-column:1 !important; grid-row:4 !important;
+    margin-top:8px !important;
+  }
+  .pmp__box .pmp__grid{
+    grid-template-columns:minmax(0,1fr) !important;
+    width:100% !important;
   }
 }
 
