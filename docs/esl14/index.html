@@ -3641,6 +3641,54 @@ document.documentElement.classList.add('fv-anim');
   }
 }
 
+/* ══════════════════════════════════════════════════════════════
+   POINT02・03・04 は【ボックスごと一気に出す】（施主判断）
+   ★中を時間差で動かすのは POINT01 だけ。
+     ここでは上の段取りを全部打ち消して、箱そのものを1回で出す。
+   ══════════════════════════════════════════════════════════════ */
+.fx-on .vhr__list .vhr__item.fx:not(:has(.vhr__chart)),
+.fx-on .pmp__row.fx[data-fx="pair"]{
+  opacity:0 !important;
+  transform:translateY(28px) !important;
+  transition:opacity .5s ease, transform .55s cubic-bezier(.22,.72,.2,1) !important;
+}
+.fx-on .vhr__list .vhr__item.fx:not(:has(.vhr__chart)).hh-in,
+.fx-on .pmp__row.fx[data-fx="pair"].hh-in{
+  opacity:1 !important;
+  transform:none !important;
+}
+
+/* 中の要素は動かさない（面は開いた形のまま、文字と図はそのまま） */
+.fx-on .vhr__list .vhr__item:not(:has(.vhr__chart)) .vhr__vert,
+.fx-on .vhr__list .vhr__item:not(:has(.vhr__chart)) .pb-band,
+.fx-on .pmp__row .vhr__vert,
+.fx-on .pmp__row .pb-band{
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--pb-rise)), 0 100%) !important;
+  transition:none !important;
+}
+.fx-on .vhr__list .vhr__item:not(:has(.vhr__chart)) .vhr__label,
+.fx-on .vhr__list .vhr__item:not(:has(.vhr__chart)) .vhr__title,
+.fx-on .vhr__list .vhr__item:not(:has(.vhr__chart)) .vhr__sub,
+.fx-on .vhr__list .vhr__item:not(:has(.vhr__chart)) .vhr__top > *,
+.fx-on .vhr__list .vhr__item:not(:has(.vhr__chart)) .vhr__body,
+.fx-on .pmp__row .vhr__label,
+.fx-on .pmp__row .vhr__title,
+.fx-on .pmp__row .vhr__sub,
+.fx-on .pmp__row .vhr__top > *,
+.fx-on .pmp__row .vhr__body,
+.fx-on .pmp__row .pmp__media{
+  opacity:1 !important;
+  transform:none !important;
+  transition:none !important;
+  transition-delay:0s !important;
+}
+
+/* 狭い画面でも同じ（面は最初から見えている） */
+@media(max-width:900px){
+  .fx-on .vhr__list .vhr__item:not(:has(.vhr__chart)) .vhr__vert,
+  .fx-on .pmp__row .vhr__vert{ clip-path:none !important }
+}
+
 </style>
 </head>
 <body>
