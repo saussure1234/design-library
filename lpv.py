@@ -124,12 +124,58 @@ def check(reg, quiet=False):
 
 
 # ── 各コマンド ────────────────────────────────────────────────
+FLOW = os.path.join(ROOT, "lp-flow.json")
+
+
+def steps():
+    """16工程を読む。無ければ空。"""
+    try:
+        return json.load(open(FLOW, encoding="utf-8"))["steps"]
+    except Exception:
+        return []
+
+
+def step_label(n):
+    """台帳の工程番号を「工程6：LP構成案を作る」の形にする。"""
+    if n is None:
+        return "工程：未記録"
+    for s in steps():
+        if s.get("n") == n:
+            return f"工程{n}：{s.get('name','')}"
+    return f"工程{n}"
+
+
+def cmd_step(a):
+    reg = load()
+    p = next((x for x in reg["projects"] if x["id"] == a.project), None)
+    if not p:
+        sys.exit(f"  ★案件 '{a.project}' が台帳に無い")
+    if a.n is None:
+        say(f"  {p['name']}  {step_label(p.get('step'))}")
+        nxt = p.get("step")
+        if nxt is not None:
+            say(f"    次: {step_label(nxt + 1)}")
+        return
+    ss = steps()
+    if ss and not any(s.get("n") == a.n for s in ss):
+        sys.exit(f"  ★工程 {a.n} は lp-flow.json に無い（0〜{max(s['n'] for s in ss)}）")
+    p["step"] = a.n
+    save(reg)
+    say(f"  ○ {p['name']} → {step_label(a.n)}", "g")
+    cur = next((s for s in ss if s.get("n") == a.n), None)
+    if cur:
+        say(f"    出来上がるもの: {cur.get('out') or '-'}")
+        if cur.get("skill"):
+            say(f"    使う手順書: ~/.claude/skills/{cur['skill']}/")
+
+
 def cmd_ls(a):
     reg = load()
     for p in reg["projects"]:
         if a.project and p["id"] != a.project:
             continue
-        say(f"\n■ {p['name']}  [{p['id']}]  リンク {len(p['versions'])}本", "b")
+        say(f"\n■ {p['name']}  [{p['id']}]  リンク {len(p['versions'])}本"
+            + ("   " + step_label(p.get("step")) if p.get("step") is not None else "   工程：未記録"), "b")
         for v in p["versions"]:
             u = f"更新{len(v['updates'])}回" if v.get("updates") else ""
             say(f"   {v['id']:<16} {LABEL.get(v.get('status'),'?'):<16} "
@@ -432,6 +478,11 @@ def main():
 
     s = sp.add_parser("rm-project", help="案件を台帳から外す（公開ファイルは消さない）")
     s.add_argument("id"); s.set_defaults(f=cmd_rm_project)
+
+    s = sp.add_parser("step", help="いまの工程を見る／記録する")
+    s.add_argument("project")
+    s.add_argument("n", nargs="?", type=int)
+    s.set_defaults(f=cmd_step)
 
     s = sp.add_parser("check", help="台帳の検査だけ")
     s.set_defaults(f=cmd_check)
