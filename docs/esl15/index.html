@@ -3742,8 +3742,11 @@ document.documentElement.classList.add('fv-anim');
 /* 🚨 スマホで見出し(.vhr__title)とリード(.vhr__sub)が両方18pxで、
    どちらが見出しか分からなくなっていた（実機で指摘）。差をつける。 */
 @media(max-width:900px){
-  .vhr__title{ font-size:20px; line-height:1.5 }
-  .vhr__sub{ font-size:15px; line-height:1.7 }
+  /* 見出しとリードは同じ 18px に戻す。差は【色】でつける
+     （リードを 15px にしたら小さすぎた／実機で指摘）。
+     --c-ink #303030 → --c-ink3 #707070 で一段落とす。 */
+  .vhr__title{ font-size:18px; line-height:1.6; color:var(--c-ink) }
+  .vhr__sub{ font-size:18px; line-height:1.7; color:var(--c-ink3) }
 }
 </style>
 </head>
