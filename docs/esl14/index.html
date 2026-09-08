@@ -3435,9 +3435,13 @@ document.documentElement.classList.add('fv-anim');
 /* 版面も組みも他の3枚と同じ。動画だけ本文の下に足す */
 
 /* 器は1列。中身はすべて .pmp__box の中で組む */
+/* ★元CSSに @media(max-width:1024px){ .pmp__row{max-width:540px} } がある。
+   width だけ上書きしても max-width が残り、901〜1024px で
+   この1枚だけ540pxに潰れていた（実測1024px）。max-width も外す。 */
 .pmp__row{
   display:block !important;
   width:100% !important;
+  max-width:none !important;
   margin-inline:0 !important;
   padding-inline: var(--pb-side) !important;
 }
