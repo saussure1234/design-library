@@ -3544,6 +3544,103 @@ document.documentElement.classList.add('fv-anim');
   }
 }
 
+/* ══════════════════════════════════════════════════════════════
+   画像の角 ── 右の2つは四角、左の2つは元の丸みのまま
+   （元は 12px 9px 14px 10px の不揃いな手描き風。左だけ残す）
+   ══════════════════════════════════════════════════════════════ */
+.tone-brand .vhr__fig img,
+.tone-brand .vhr__figs,
+.tone-brand .vhr__figs .vhr__fig img,
+.tone-brand .vhr__chart{ border-radius:12px 0 0 10px }
+.pmp__box .pmp__thumb,
+.pmp__box .pmp__thumb img{ border-radius:14px 0 0 12px }
+
+/* ══════════════════════════════════════════════════════════════
+   スクロールで見えたときの動き
+
+   ★仕組みは元からある .fx ／ .hh-in をそのまま使う。
+     html.fx-on が付いた状態で、JS が画面に入った .fx へ .hh-in を足す。
+   ★カード全体の fadeup は使わない（面と中身を別々に動かすため）。
+     順番：緑の面が左から開く → 黄の帯が追う → ラベル・見出し・リード →
+           図・写真・動画が右から寄る。
+   ══════════════════════════════════════════════════════════════ */
+.fx-on .tone-brand .vhr__item.fx,
+.fx-on .pmp__row.fx[data-fx="pair"]{
+  opacity:1 !important; transform:none !important; filter:none !important;
+}
+
+/* 面と帯：頂点の数を変えずに polygon を閉じ→開きへ動かす */
+.fx-on .tone-brand .vhr__vert,
+.fx-on .tone-brand .pb-band{
+  clip-path: polygon(0 0, 0 0, 0 calc(100% - var(--pb-rise)), 0 100%);
+  transition: clip-path .8s cubic-bezier(.22,.72,.2,1);
+}
+.fx-on .tone-brand .vhr__item.hh-in .vhr__vert,
+.fx-on .pmp__row.hh-in .vhr__vert{
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--pb-rise)), 0 100%);
+}
+.fx-on .tone-brand .vhr__item.hh-in .pb-band,
+.fx-on .pmp__row.hh-in .pb-band{
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--pb-rise)), 0 100%);
+  transition-delay:.14s;
+}
+
+/* 面の上の文字：少し遅れて順に上がる */
+.fx-on .tone-brand .vhr__label,
+.fx-on .tone-brand .vhr__title,
+.fx-on .tone-brand .vhr__sub{
+  opacity:0; transform:translateY(14px);
+  transition:opacity .5s ease, transform .5s cubic-bezier(.22,.72,.2,1);
+}
+.fx-on .tone-brand .vhr__item.hh-in .vhr__label,
+.fx-on .pmp__row.hh-in .vhr__label{ opacity:1; transform:none; transition-delay:.30s }
+.fx-on .tone-brand .vhr__item.hh-in .vhr__title,
+.fx-on .pmp__row.hh-in .vhr__title{ opacity:1; transform:none; transition-delay:.38s }
+.fx-on .tone-brand .vhr__item.hh-in .vhr__sub,
+.fx-on .pmp__row.hh-in .vhr__sub{ opacity:1; transform:none; transition-delay:.46s }
+
+/* 図・写真・グラフ：右から寄る */
+.fx-on .tone-brand .vhr__top > .vhr__fig,
+.fx-on .tone-brand .vhr__top > .vhr__figs,
+.fx-on .tone-brand .vhr__top > .vhr__chart{
+  opacity:0; transform:translateX(34px);
+  transition:opacity .6s ease, transform .6s cubic-bezier(.22,.72,.2,1);
+}
+.fx-on .tone-brand .vhr__item.hh-in .vhr__top > .vhr__fig,
+.fx-on .tone-brand .vhr__item.hh-in .vhr__top > .vhr__figs,
+.fx-on .tone-brand .vhr__item.hh-in .vhr__top > .vhr__chart,
+.fx-on .pmp__row.hh-in .vhr__top > .vhr__fig{
+  opacity:1; transform:none; transition-delay:.34s;
+}
+
+/* 本文と動画：最後に軽く上がる */
+.fx-on .tone-brand .vhr__body,
+.fx-on .pmp__box .pmp__media{
+  opacity:0; transform:translateY(16px);
+  transition:opacity .55s ease, transform .55s cubic-bezier(.22,.72,.2,1);
+}
+.fx-on .tone-brand .vhr__item.hh-in .vhr__body,
+.fx-on .pmp__row.hh-in .vhr__body{ opacity:1; transform:none; transition-delay:.52s }
+.fx-on .pmp__row.hh-in .pmp__media{ opacity:1; transform:none; transition-delay:.60s }
+
+/* 動きを減らす設定の人には出さない（元CSSと同じ扱い） */
+@media(prefers-reduced-motion:reduce){
+  .fx-on .tone-brand .vhr__vert,
+  .fx-on .tone-brand .pb-band,
+  .fx-on .tone-brand .vhr__label,
+  .fx-on .tone-brand .vhr__title,
+  .fx-on .tone-brand .vhr__sub,
+  .fx-on .tone-brand .vhr__top > *,
+  .fx-on .tone-brand .vhr__body,
+  .fx-on .pmp__box .pmp__media{
+    opacity:1 !important; transform:none !important; transition:none !important;
+  }
+  .fx-on .tone-brand .vhr__vert,
+  .fx-on .tone-brand .pb-band{
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--pb-rise)), 0 100%) !important;
+  }
+}
+
 </style>
 </head>
 <body>
