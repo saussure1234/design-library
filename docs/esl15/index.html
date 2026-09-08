@@ -3703,6 +3703,16 @@ document.documentElement.classList.add('fv-anim');
 }
 
 </style>
+<style id="fv-br">
+/* 🚨 FVの改行：.nb(nowrap) は Mac の Chrome では収まっても、実機 iPhone は
+   フォント幅が違うぶん溢れて意味の切れ目で折れなくなる（実測・実機で確認）。
+   → .nb をやめ、スマホだけ効く改行で明示的に切る。 */
+.br-sp{display:none}
+@media(max-width:900px){
+  .br-sp{display:inline}
+  .hbc__eyebrow{font-size:15px;line-height:1.65}
+}
+</style>
 </head>
 <body>
 <div id="intro" aria-hidden="true"><svg viewBox="0 0 1000 1000" preserveAspectRatio="none"><path id="introPath" fill="#00B21F" d="M0,0 L1000,0 L1000,1000 C1000,1000 750,1000 500,1000 C250,1000 0,1000 0,1000 Z"></path></svg></div>
@@ -3755,8 +3765,8 @@ document.documentElement.classList.add('fv-anim');
     </figure>
 
     <div class="hbc__head">
-      <p class="hbc__eyebrow"><span class="nb">バイリンガル講師の</span><wbr><span class="nb">マンツーマンレッスンで</span><wbr><span class="nb">オンラインでも集中が続く</span></p>
-      <h1 class="hbc__h1"><em><span class="nb">”小学生で英検2級”</span></em>を<wbr><br><span class="nb">目指せる英語塾</span></h1>
+      <p class="hbc__eyebrow">バイリンガル講師のマンツーマンレッスンで<br class="br-sp">オンラインでも集中が続く</p>
+      <h1 class="hbc__h1"><em>”小学生で英検2級”</em>を<br>目指せる英語塾</h1>
     </div>
 
     <p class="hbc__copy"></p>
