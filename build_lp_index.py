@@ -225,6 +225,10 @@ tr:hover td{background:#fafbfc}
 .dt__l li.human span,.dt__l li.warn span{color:#9a6b12}
 .dt__l li b{color:#2b3138}
 .dt__l li i{font-style:normal;color:#5b6472;overflow-wrap:anywhere}
+.dt__l li u{grid-column:2/-1;display:block;text-decoration:none;margin-top:5px;
+  font-size:11.5px;line-height:1.75;color:#1f2937;background:#f4f7fb;
+  border-left:3px solid #cfe0f2;border-radius:0 5px 5px 0;padding:6px 9px;
+  overflow-wrap:anywhere}
 .dt__md{white-space:pre-wrap;font-size:12px;line-height:1.85;color:#3c434c;background:#f8fafc;
   border:1px solid #eef0f3;border-radius:8px;padding:12px 14px;margin:0;max-height:52vh;overflow:auto}
 .dt__none{color:#8b94a3;font-size:12.5px;line-height:1.8}
@@ -236,6 +240,9 @@ tr:hover td{background:#fafbfc}
 .ck__sum{padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:700}
 .ck__sum.ok{background:#e8f7ee;color:#1a7f45}
 .ck__sum.ng{background:#fdeaea;color:#b3261e}
+.ck__go{margin-left:10px;font-size:11.5px;color:#2563eb;text-decoration:none;
+  border:1px solid currentColor;border-radius:999px;padding:2px 9px;white-space:nowrap}
+.ck__go:hover{background:#2563eb;color:#fff}
 .ck__at{margin-left:auto;color:#98a1ad;font-size:11.5px}
 .ck__box{padding:8px 14px 10px;border-bottom:1px solid #f4f6f8}
 .ck__box.ng{background:#fff6f5}
@@ -953,7 +960,10 @@ function detailPane(vid){
   if(!v) return '';
   const ck=CHECKS[vid];
   const sc=(SCRIPTS[p.id]||{});
-  const sv=v.script||Object.keys(sc).sort((a,b)=>+b.slice(1)-+a.slice(1))[0];
+  // 原稿は「この版に記録されたもの」。無ければ派生元をたどる（最新を当てにいかない）
+  let sv=null,cv=v,seen={};
+  while(cv&&!seen[cv.id]){ if(cv.script){sv=cv.script;break;} seen[cv.id]=1;
+    cv=p.versions.find(x=>x.id===cv.parent); }
   const body=sc[sv]||'';
 
   let notes='';
@@ -963,11 +973,13 @@ function detailPane(vid){
   }else{
     const ng=ck.items.filter(i=>i.state==='ng');
     const mind=ck.items.filter(i=>['claude','human','warn'].includes(i.state));
+    // ★「どこ・何が・どう直すか」を出す。項目名だけだと何をすればいいか分からない。
     const li=(i,m,cls)=>`<li class="${cls}"><span>${m}</span>
-      <b>${esc(i.name)}</b><i>${esc(i.done||i.msg||'')}</i></li>`;
-    notes=`${ng.length?`<div class="dt__cap ng">直さないと出せない（${ng.length}）</div>
+      <b>${esc(i.name)}</b><i>${esc(i.where?i.where+' — ':'')}${esc(i.what||i.msg||'')}</i>
+      ${i.how?`<u>→ ${esc(i.how)}</u>`:''}</li>`;
+    notes=`${ng.length?`<div class="dt__cap ng">直した方がよい（${ng.length}）・直すかはあなたが決める</div>
         <ul class="dt__l">${ng.map(i=>li(i,'✗','ng')).join('')}</ul>`:''}
-      ${mind.length?`<div class="dt__cap">直した方がよさそう・見るところ（${mind.length}）</div>
+      ${mind.length?`<div class="dt__cap">あなたが見る・公開前に確かめる（${mind.length}）</div>
         <ul class="dt__l">${mind.map(i=>li(i,i.state==='human'?'□':i.state==='warn'?'△':'◇',i.state)).join('')}</ul>`:''}
       <details class="dt__f"><summary>通過した ${ck.items.filter(i=>i.state==='ok').length} 項目</summary>
         <ul class="dt__l">${ck.items.filter(i=>i.state==='ok').map(i=>li(i,'○','ok')).join('')}</ul></details>
@@ -1027,7 +1039,8 @@ function checkPane(p){
     return `<div class="ck">
       <div class="ck__h"><b>${vid}</b>
         <span class="ck__sum ${ng.length?'ng':'ok'}">${ng.length?`要対応 ${ng.length}`:'機械はすべて通過'}</span>
-        <span class="ck__at">${c.at}</span></div>
+        <span class="ck__at">${c.at}</span>
+        <a class="ck__go" href="./review.html?v=${vid}" target="_blank">原稿と並べて見る ↗</a></div>
 
       ${ng.length?`<div class="ck__box ng"><div class="ck__cap">直してから出す</div>
         ${ng.map(i=>row(i,'✗')).join('')}</div>`:''}
@@ -1244,6 +1257,9 @@ pre.md{white-space:pre-wrap;font:12.5px/1.95 inherit;margin:0;color:#3c434c}
 .sum .a{background:#fdeaea;color:#b3261e}
 .sum .b{background:#fff4e0;color:#9a6b12}
 .sum .c{background:#e8f7ee;color:#1a7f45}
+.sum .d{background:#eef1f5;color:#6b7480}
+.f.todo{border-style:dashed;border-color:#d7dce4}
+.f.todo>.t{background:#fafbfc;color:#78818e}
 .cap{font-size:11.5px;letter-spacing:.05em;color:#8b94a3;margin:16px 0 8px}
 .cap:first-child{margin-top:0}
 .f{border:1px solid #e6e9ee;border-radius:10px;padding:0;margin:0 0 10px;overflow:hidden}
@@ -1283,31 +1299,51 @@ function card(i){
   const who=i.by==='machine'?'機械':i.by==='claude'?'Claude':'目視';
   const rows=[];
   if(i.where) rows.push('<dt>どこ</dt><dd>'+esc(i.where)+'</dd>');
-  rows.push('<dt>何が</dt><dd>'+esc(i.what||i.msg||'')+'</dd>');
+  rows.push('<dt>何が</dt><dd>'+esc(i.what||i.msg||'判定をまだ書いていないので、この観点は誰も見ていない')+'</dd>');
   if(i.how) rows.push('<dt>どう直す</dt><dd class="how">'+esc(i.how)+'</dd>');
   return '<div class="f '+i.state+'"><div class="t">'+esc(i.name)+
     '<span class="w" style="margin-left:auto">'+who+'</span></div><dl>'+rows.join('')+'</dl></div>';
 }
 function draw(){
   const d=D[cur];
-  document.getElementById('h-s').textContent='原稿 '+(d.script_v||'（未登録）');
+  document.getElementById('h-s').innerHTML='原稿 '+(d.script_v||'（未登録）')+
+    (d.inherit?' <span style="font-weight:400;color:#a7b0bd">（'+esc(cur)+' 自身には記録が無いので派生元から）</span>':'');
   document.getElementById('md').innerHTML=d.script?esc(d.script)
     :'<span class="none">原稿がまだ無い。<br>lpv.py script &lt;案件id&gt; --new で登録する。</span>';
-  const g={ng:[],claude:[],human:[],warn:[],ok:[]};
-  (d.items||[]).forEach(function(i){ if(g[i.state]) g[i.state].push(i); });
+  // ★どの項目も必ずどこかに出す。落ちた項目があると「見たつもり」になるのが一番危ない。
+  const g={ng:[],claude:[],human:[],warn:[],ok:[],todo:[]};
+  (d.items||[]).forEach(function(i){
+    (g[i.state]||g[['todo','skip','pending'].indexOf(i.state)>=0?'todo':'ok']).push(i); });
   let h='<div class="sum">'+
     (g.ng.length?'<span class="a">直す '+g.ng.length+'</span>':'')+
     (g.human.length?'<span class="b">あなたが見る '+g.human.length+'</span>':'')+
+    (g.warn.length?'<span class="b">公開前 '+g.warn.length+'</span>':'')+
+    (g.todo.length?'<span class="d">未判定 '+g.todo.length+'</span>':'')+
     '<span class="c">問題なし '+(g.ok.length+g.claude.length)+'</span></div>';
   if(g.ng.length)    h+='<div class="cap">直した方がよい</div>'+g.ng.map(card).join('');
   if(g.human.length) h+='<div class="cap">あなたが実機で見る</div>'+g.human.map(card).join('');
   if(g.warn.length)  h+='<div class="cap">公開前に確かめる</div>'+g.warn.map(card).join('');
+  if(g.todo.length)  h+='<div class="cap">まだ誰も見ていない（判定を書いていない項目）</div>'
+                       +g.todo.map(card).join('');
   const fine=g.ok.concat(g.claude);
   if(fine.length)    h+='<div class="cap">見たが問題なかった</div>'+fine.map(card).join('');
   document.getElementById('notes').innerHTML=h||'<p class="none">まだチェックしていない。</p>';
 }
 draw();
 </script></body></html>"""
+
+
+def script_of(p, v):
+    """この版が使った原稿。記録が無ければ派生元をたどる。
+    ★最新の原稿を当てにいかない。原稿が来る前に作った版に v2 と出ると嘘になる。"""
+    by = {x["id"]: x for x in p["versions"]}
+    seen = set()
+    while v and v["id"] not in seen:
+        if v.get("script"):
+            return v["script"]
+        seen.add(v["id"])
+        v = by.get(v.get("parent"))
+    return None
 
 
 def build_review(reg, checks, scripts):
@@ -1317,12 +1353,15 @@ def build_review(reg, checks, scripts):
         for v in p["versions"]:
             ck = checks.get(v["id"])
             sc = scripts.get(p["id"], {})
-            sv = v.get("script") or (sorted(sc, key=lambda s: int(s[1:]))[-1] if sc else None)
+            sv, inherit = script_of(p, v), False
+            if sv and not v.get("script"):
+                inherit = True
             shot = f"../{v['id']}/_shot.jpg" if os.path.isfile(
                 os.path.join(R, "docs", v["id"], "_shot.jpg")) else None
             if not (ck or sv):
                 continue
             data[v["id"]] = {"project": p["name"], "script_v": sv,
+                             "inherit": inherit,
                              "at": (ck or {}).get("at", ""),
                              "script": sc.get(sv, ""), "shot": shot,
                              "items": (ck or {}).get("items", [])}
