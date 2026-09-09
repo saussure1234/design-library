@@ -201,6 +201,35 @@ tr:hover td{background:#fafbfc}
 .sheetwrap{overflow-x:auto;border:1px solid var(--line);border-radius:9px;background:#fff}
 
 
+.gck{margin-left:6px;font-size:10.5px;font-weight:700;padding:1px 5px;border-radius:999px;vertical-align:middle}
+.gck.ok{background:#e8f7ee;color:#1a7f45}
+.gck.ng{background:#fdeaea;color:#b3261e}
+.gck.no{background:#f1f3f6;color:#a8b0ba}
+.gnode{cursor:pointer}
+.dt{position:fixed;right:0;top:0;bottom:0;width:min(560px,92vw);background:#fff;z-index:60;
+  box-shadow:-14px 0 40px rgba(20,26,36,.14);display:flex;flex-direction:column}
+.dt__h{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid #eef0f3}
+.dt__h b{font-size:15px}
+.dt__w{color:#6b7480;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dt__x{margin-left:auto;border:0;background:#f1f3f6;border-radius:8px;width:28px;height:28px;cursor:pointer;color:#5b6472}
+.dt__b{overflow:auto;padding:6px 16px 24px}
+.dt__sec{margin:12px 0 18px}
+.dt__cap{font-size:11.5px;letter-spacing:.05em;color:#8b94a3;margin:0 0 6px}
+.dt__cap.ng{color:#b3261e;font-weight:700}
+.dt__l{list-style:none;margin:0;padding:0}
+.dt__l li{display:grid;grid-template-columns:18px 150px 1fr;gap:8px;align-items:baseline;
+  padding:5px 0;border-top:1px solid #f4f6f8;font-size:12.5px}
+.dt__l li span{text-align:center;font-weight:700;color:#9aa3af}
+.dt__l li.ng span{color:#b3261e}
+.dt__l li.human span,.dt__l li.warn span{color:#9a6b12}
+.dt__l li b{color:#2b3138}
+.dt__l li i{font-style:normal;color:#5b6472;overflow-wrap:anywhere}
+.dt__md{white-space:pre-wrap;font-size:12px;line-height:1.85;color:#3c434c;background:#f8fafc;
+  border:1px solid #eef0f3;border-radius:8px;padding:12px 14px;margin:0;max-height:52vh;overflow:auto}
+.dt__none{color:#8b94a3;font-size:12.5px;line-height:1.8}
+.dt__f>summary{cursor:pointer;font-size:12px;color:#78818e;padding:6px 0}
+.dt__at{color:#a6adb8;font-size:11.5px;margin:10px 0 0}
+
 .ck{border:1px solid #e6e9ee;border-radius:10px;margin:0 0 14px;overflow:hidden;background:#fff}
 .ck__h{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid #eef0f3;font-size:13px}
 .ck__sum{padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:700}
@@ -814,7 +843,7 @@ function vListPane(p,R){
     return `<div class="card" style="--c:${c}">
       ${thumb(v,R)}
       <div class="bd">
-        <div class="t">${linkCell(v,R)}</div>
+        <div class="t">${linkCell(v,R)}${flag}</div>
         <div class="d">${esc(v.date)} · <span class="pill" style="background:${c}">${lab}</span></div>
         <div class="w">${esc(v.what)}</div>
         ${v.alert?`<div class="warn">▲ ${esc(v.alert)}</div>`:''}
@@ -889,9 +918,20 @@ function graphPane(p,R){
     const sub=R.kind==='vid'
       ? (m.duration?` · ${mmss(m.duration)}`:'')
       : ((v.updates||[]).length?` · <b>更新${v.updates.length}回</b>`:'');
-    return `<div class="gnode${out?' hasext':''}" id="g-${v.id}" style="--c:${c};--b:${b};`
+    // ★チェックの状態を節に出す。○＝機械はすべて通過 ／ ⚠n＝指摘n件 ／ 無印＝未チェック
+    const ck=CHECKS[v.id];
+    let flag='';
+    if(ck){
+      const bad=ck.items.filter(i=>i.state==='ng').length;
+      const memo=ck.items.filter(i=>['claude','human','warn'].includes(i.state)).length;
+      flag=bad?`<span class="gck ng" title="要対応 ${bad}">✗${bad}</span>`
+            :`<span class="gck ok" title="機械はすべて通過。見どころ ${memo}">○${memo?' '+memo:''}</span>`;
+    }else{
+      flag=`<span class="gck no" title="まだチェックしていない">−</span>`;
+    }
+    return `<div class="gnode${out?' hasext':''}" id="g-${v.id}" data-v="${v.id}" style="--c:${c};--b:${b};`
       +`left:${depth[v.id]*(NW+GX)}px;top:${(row[v.id]*RH).toFixed(1)}px">
-      <div class="t">${linkCell(v,R)}</div>
+      <div class="t">${linkCell(v,R)}${flag}</div>
       <div class="d">${esc(v.date)} · ${lab}${sub}</div>
       ${ext}<div class="w">${esc(v.what)}</div></div>`}).join('');
   // 世代が深いと画面に入り切らない。畳むと系統が読めなくなるので幅は変えず、断り書きだけ出す
@@ -899,6 +939,51 @@ function graphPane(p,R){
     ${maxD+1}世代あります。図は右に続くので横にスクロールしてください。</p>`:'';
   return `${hint}<div class="graph"><svg class="gsvg"></svg>
     <div class="gcanvas" style="width:${(maxD+1)*(NW+GX)-GX}px;height:${maxR*RH+108}px">${nodes}</div></div>`;
+}
+
+
+// ── 版の詳細（派生図の節を押すと右から出る） ──────────────
+// 見るのは2つだけ：この版の【原稿】と、【直した方がよさそうな箇所】。
+// 直すかどうかは So が決める。ここは指摘を並べるだけで、勝手に直さない。
+function detailPane(vid){
+  const own=Object.values(LP.OWNER||{}).length?LP.OWNER[vid]:null;
+  const p=own||DATA.projects.find(x=>x.versions.some(v=>v.id===vid));
+  const v=p&&p.versions.find(x=>x.id===vid);
+  if(!v) return '';
+  const ck=CHECKS[vid];
+  const sc=(SCRIPTS[p.id]||{});
+  const sv=v.script||Object.keys(sc).sort((a,b)=>+b.slice(1)-+a.slice(1))[0];
+  const body=sc[sv]||'';
+
+  let notes='';
+  if(!ck){
+    notes=`<p class="dt__none">まだチェックしていない。<br>
+      <code>python3 check.py docs/${vid}/index.html</code></p>`;
+  }else{
+    const ng=ck.items.filter(i=>i.state==='ng');
+    const mind=ck.items.filter(i=>['claude','human','warn'].includes(i.state));
+    const li=(i,m,cls)=>`<li class="${cls}"><span>${m}</span>
+      <b>${esc(i.name)}</b><i>${esc(i.done||i.msg||'')}</i></li>`;
+    notes=`${ng.length?`<div class="dt__cap ng">直さないと出せない（${ng.length}）</div>
+        <ul class="dt__l">${ng.map(i=>li(i,'✗','ng')).join('')}</ul>`:''}
+      ${mind.length?`<div class="dt__cap">直した方がよさそう・見るところ（${mind.length}）</div>
+        <ul class="dt__l">${mind.map(i=>li(i,i.state==='human'?'□':i.state==='warn'?'△':'◇',i.state)).join('')}</ul>`:''}
+      <details class="dt__f"><summary>通過した ${ck.items.filter(i=>i.state==='ok').length} 項目</summary>
+        <ul class="dt__l">${ck.items.filter(i=>i.state==='ok').map(i=>li(i,'○','ok')).join('')}</ul></details>
+      <p class="dt__at">最後にチェックしたのは ${esc(ck.at)}</p>`;
+  }
+  return `<aside class="dt" id="dt">
+    <div class="dt__h"><b>${esc(vid)}</b>
+      <span class="dt__w">${esc(v.what||'')}</span>
+      <button class="dt__x" data-close>✕</button></div>
+    <div class="dt__b">
+      <div class="dt__sec">${notes}</div>
+      <div class="dt__sec">
+        <div class="dt__cap">原稿 ${sv?esc(sv):'（未登録）'}</div>
+        ${body?`<pre class="dt__md">${esc(body)}</pre>`
+              :`<p class="dt__none">原稿がまだ無い。<br><code>lpv.py script ${p.id} --new</code></p>`}
+      </div>
+    </div></aside>`;
 }
 
 function drawLines(p){
@@ -1053,6 +1138,14 @@ document.addEventListener('click',e=>{
   // 動画は構成シートが先（ここで文面と画像を管理する）。LPは系統が先
   if(a){cur=a.dataset.p;tab=cur.slice(0,4)==='vid:'?'sheet':'graph';render();return;}
   const b=e.target.closest('.tabs button'); if(b){tab=b.dataset.t;render();return;}
+  // 派生図の節 → その版の原稿と指摘を右に出す
+  const gn=e.target.closest('.gnode[data-v]');
+  if(gn && !e.target.closest('a')){
+    document.getElementById('dt')?.remove();
+    document.body.insertAdjacentHTML('beforeend', detailPane(gn.dataset.v));
+    return;
+  }
+  if(e.target.closest('[data-close]')){ document.getElementById('dt')?.remove(); return; }
   // シートの中の再生。押されたセルだけ <video> に差し替える
   const pc=e.target.closest('.vbox[data-play]');
   if(pc){
@@ -1090,6 +1183,25 @@ def read_checks():
                 out[d] = json.load(open(f, encoding="utf-8"))
             except Exception:
                 pass
+    return out
+
+
+def read_scripts():
+    """案件ごとの原稿（scripts/<案件id>/vN.md）を全部読む。画面で開けるように。"""
+    out = {}
+    d0 = os.path.join(R, "scripts")
+    if not os.path.isdir(d0):
+        return out
+    for pid in sorted(os.listdir(d0)):
+        d = os.path.join(d0, pid)
+        if not os.path.isdir(d):
+            continue
+        vs = {}
+        for f in sorted(os.listdir(d)):
+            if f.endswith(".md"):
+                vs[f[:-3]] = open(os.path.join(d, f), encoding="utf-8").read()
+        if vs:
+            out[pid] = vs
     return out
 
 
@@ -1156,7 +1268,8 @@ def main():
 <body>
 <div class="app"><nav class="side"></nav><main class="main"></main></div>
 <script>const DATA={json.dumps(reg, ensure_ascii=False)};
-const CHECKS={json.dumps(read_checks(), ensure_ascii=False)};</script>
+const CHECKS={json.dumps(read_checks(), ensure_ascii=False)};
+const SCRIPTS={json.dumps(read_scripts(), ensure_ascii=False)};</script>
 <script>{JS}</script>
 </body></html>"""
     os.makedirs(OUT_DIR, exist_ok=True)
