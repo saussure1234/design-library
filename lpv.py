@@ -170,6 +170,20 @@ def cmd_script(a):
     d = script_dir(a.project)
     vs = script_versions(a.project)
 
+    # ★どのリンクがどの原稿から出来たか、だけを記録する。
+    #   update と違って更新履歴を増やさない（後から系統を書き足すのが目的なので）。
+    if a.set:
+        vid, sn = a.set
+        v = next((x for x in p["versions"] if x["id"] == vid), None)
+        if not v:
+            sys.exit(f"  ★版 '{vid}' は {p['name']} に無い")
+        if sn not in vs:
+            sys.exit(f"  ★原稿 '{sn}' が無い（あるのは {', '.join(vs) or 'なし'}）")
+        v["script"] = sn
+        save(reg)
+        say(f"  ○ {vid} は原稿 {sn} から出来た、と記録した", "g")
+        return
+
     if a.new:
         os.makedirs(d, exist_ok=True)
         nxt = f"v{(int(vs[0][1:]) + 1) if vs else 1}"
@@ -441,6 +455,111 @@ def cmd_rm_project(a):
         say("  ・公開ファイルは残っている。本当に消すなら手で: git rm -r docs/<id>", "y")
 
 
+
+# ── doctor ─────────────────────────────────────────────────
+# ★台帳（言っていること）と実態（起きていること）を突き合わせる。
+#   2026-09-10 に、これが無かったせいで4件やらかした：
+#     ・手元が29コミット古いのに気づかず「提示版」だと思い込んだ
+#     ・curl に -L を付けず 181KB と誤読して「別物」と断定した
+#     ・新リンクの派生元を、作業用ではなく提示中の版にした
+#   どれも「1つの情報源だけ見て裏を取らずに断定した」。人が気をつけても再発する。
+LOCALS = {                      # 案件id → 手元の作業フォルダ（あるものだけ）
+    "sharesec":     ["~/sharesec-lp", "~/sharesec-lp-v3"],
+    "ads-redesign": ["~/ads-redesign"],
+}
+
+
+def _sh(cmd, cwd=None):
+    try:
+        r = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, timeout=60)
+        return r.returncode, (r.stdout or "").strip(), (r.stderr or "").strip()
+    except Exception as e:
+        return 1, "", str(e)[:120]
+
+
+def _fetch(url):
+    """必ずリダイレクトを追う。-L を落とすと別物に見える（2026-09-10 の誤り）"""
+    code, out, _ = _sh(["curl", "-sL", "-o", "-", "-w", "\n@@%{http_code}", url])
+    if code or "@@" not in out:
+        return None, None
+    body, _, status = out.rpartition("@@")
+    return status.strip(), len(body.encode())
+
+
+def cmd_doctor(a):
+    reg = load()
+    projs = [p for p in reg["projects"] if not a.project or p["id"] == a.project]
+    if not projs:
+        sys.exit(f"  ★そんな案件は無い: {a.project}")
+    bad = 0
+    for p in projs:
+        say(f"\n■ {p['name']}  [{p['id']}]", "b")
+
+        # ① 手元のgitが remote より遅れていないか
+        for d in LOCALS.get(p["id"], []):
+            d = os.path.expanduser(d)
+            if not os.path.isdir(os.path.join(d, ".git")):
+                continue
+            _sh(["git", "fetch", "-q", "origin"], cwd=d)
+            br = _sh(["git", "rev-parse", "--abbrev-ref", "HEAD"], cwd=d)[1] or "main"
+            code, out, _ = _sh(["git", "rev-list", "--left-right", "--count",
+                                f"HEAD...origin/{br}"], cwd=d)
+            ahead, behind = (out.split() + ["?", "?"])[:2] if code == 0 else ("?", "?")
+            dirty = _sh(["git", "status", "--short"], cwd=d)[1]
+            nm = d.replace(os.path.expanduser("~"), "~")
+            if behind not in ("0", "?") :
+                say(f"  ✗ {nm}  remote より {behind} コミット遅れている（先に git pull）", "r"); bad += 1
+            elif ahead not in ("0", "?") and int(ahead) > 0:
+                say(f"  △ {nm}  未pushが {ahead} コミット", "y")
+            else:
+                say(f"  ○ {nm}  remote と同じ", "g")
+            if dirty:
+                say(f"    … 未コミットの変更 {len(dirty.splitlines())} 件", "y")
+
+        # ② 公開ページが生きているか・手元と同じ中身か
+        for v in p["versions"]:
+            url = v.get("url") or (reg["base_url"] + v["id"] + "/")
+            st, size = _fetch(url)
+            mark, col = ("○", "g")
+            if st != "200":
+                mark, col = ("✗", "r"); bad += 1
+            tag = {"shown": "クライアントに提示中", "internal": "自分の確認用",
+                   "draft": "未公開"}.get(v.get("status"), v.get("status"))
+            say(f"  {mark} {v['id']:<18} {st or '接続できない'}  {size or 0:>7} bytes  {tag}", col)
+
+        # ③ 台帳の派生元が実在するか・自分を指していないか
+        ids = {v["id"] for v in p["versions"]}
+        for v in p["versions"]:
+            par = v.get("parent")
+            if par and par not in ids:
+                say(f"  ✗ {v['id']} の派生元 {par} が台帳に無い", "r"); bad += 1
+            if par == v["id"]:
+                say(f"  ✗ {v['id']} の派生元が自分自身", "r"); bad += 1
+
+        # ④ 提示中（shown）の版に、まだ返していないFBが残っていないか
+        for v in p["versions"]:
+            if v.get("status") == "shown" and v.get("fb"):
+                # 🚨 子だけでなく子孫をぜんぶ辿る。preview→preview2→preview3 のように
+                #    1段はさむと、子だけ見ていては「反映した版が無い」と誤検出する
+                desc, stack = [], [v["id"]]
+                while stack:
+                    cur = stack.pop()
+                    for x in p["versions"]:
+                        if x.get("parent") == cur and x not in desc:
+                            desc.append(x); stack.append(x["id"])
+                last_fb = max(f.get("date", "") for f in v["fb"])
+                after = [x for x in desc if x.get("date", "") >= last_fb]
+                if not after:
+                    say(f"  ✗ {v['id']} にFB {len(v['fb'])}件。反映した版が無い", "r"); bad += 1
+                else:
+                    say(f"  ○ {v['id']} のFB {len(v['fb'])}件 → {after[-1]['id']} で反映", "g")
+
+    if bad:
+        say(f"\n  ★食い違い {bad} 件。直してから作業を始める。", "r")
+        sys.exit(1)
+    say("\n  ○ 台帳と実態は一致している。作業を始めてよい。", "g")
+
+
 def cmd_check(a):
     sys.exit(1 if check(load()) else 0)
 
@@ -537,6 +656,8 @@ def main():
     s.add_argument("project")
     s.add_argument("--new", action="store_true", help="新しい版を作る（前の版を写して開く）")
     s.add_argument("--file", help="原稿のファイルを取り込む")
+    s.add_argument("--set", nargs=2, metavar=("版id", "vN"),
+                   help="どのリンクがどの原稿から出来たかを記録する（更新履歴は増やさない）")
     s.set_defaults(f=cmd_script)
 
     s = sp.add_parser("step", help="いまの工程を見る／記録する")
@@ -544,6 +665,9 @@ def main():
     s.add_argument("n", nargs="?", type=int)
     s.set_defaults(f=cmd_step)
 
+    s = sp.add_parser("doctor", help="台帳と実態の食い違いを出す（作業を始める前に叩く）")
+    s.add_argument("project", nargs="?")
+    s.set_defaults(f=cmd_doctor)
     s = sp.add_parser("check", help="台帳の検査だけ")
     s.set_defaults(f=cmd_check)
 
