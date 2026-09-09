@@ -96,12 +96,92 @@ addEventListener("load",function(){
         orphan.push("「"+t.slice(0,18)+"」最終行"+Math.round(last)+"/"+Math.round(mx)+"px");
     });
     if(orphan.length) out.push("最終行が1〜2文字だけ落ちている: "+orphan.join(" / "));
+
+    // ★同じ役割で横に並ぶ要素（比較表の見出し・カード）の【中身の大きさ】が揃っているか。
+    //   ロゴだけ極端に小さい、注記だけ大きい、を拾う。過去FBで最多の観点。
+    var scale=[];
+    function inner(e){                       // その要素の「中身の実寸」
+      var im=e.querySelector("img,svg");
+      if(im) return im.getBoundingClientRect().height;
+      return parseFloat(getComputedStyle(e).fontSize)||0;
+    }
+    document.querySelectorAll("body *").forEach(function(par){
+      var ch=[].slice.call(par.children).filter(function(c){
+        var s=getComputedStyle(c); if(s.display==="none") return false;
+        var r=c.getBoundingClientRect(); return r.width>20&&r.height>10;
+      });
+      if(ch.length<2||ch.length>6) return;
+      // ★役割が同じもの同士でだけ比べる。ロゴとボタンのように役目が違うものは対象外
+      var key=function(c){var s=String(c.className||"").split(" ")[0];return s.replace(/--.*$/,"")||c.tagName};
+      var k0=key(ch[0]); if(!ch.every(function(c){return key(c)===k0})) return;
+      var top=ch[0].getBoundingClientRect().top;
+      if(!ch.every(function(c){return Math.abs(c.getBoundingClientRect().top-top)<12})) return; // 横並びだけ
+      var vs=ch.map(inner).filter(function(v){return v>0});
+      if(vs.length<2) return;
+      var mx=Math.max.apply(null,vs), mn=Math.min.apply(null,vs);
+      if(mx/mn>1.8 && scale.length<5){
+        var sm=ch[vs.indexOf(mn)];
+        scale.push((sm.className&&String(sm.className).split(" ")[0]||sm.tagName)
+          +"「"+(sm.textContent.trim().slice(0,10)||"画像")+"」"+Math.round(mn)+"px ／ 隣は"+Math.round(mx)+"px");
+      }
+    });
+    if(scale.length) out.push("［参考］横に並ぶ要素で大きさに差: "+scale.join(" / "));
+
+    // ★文字が読めない：何かに覆われている／地と同系色で沈んでいる
+    function lum(c){
+      var m=c.match(/\d+/g); if(!m) return null;
+      var v=m.slice(0,3).map(function(x){x/=255;return x<=.03928?x/12.92:Math.pow((x+.055)/1.055,2.4)});
+      return .2126*v[0]+.7152*v[1]+.0722*v[2];
+    }
+    // ★背景がグラデーションや画像だと色で判定できない（白文字がオレンジのボタンに
+    //   乗っているのに「白地に白」と誤判定した）。そういう要素は見送る。
+    function bg(e){
+      for(var p=e;p;p=p.parentElement){
+        var s=getComputedStyle(p);
+        if(s.backgroundImage&&s.backgroundImage!=="none") return null;
+        var c=s.backgroundColor;
+        if(c&&c!=="rgba(0, 0, 0, 0)"&&!/, 0\)$/.test(c)) return c;
+      }
+      return "rgb(255,255,255)";
+    }
+    var unread=[];
+    document.querySelectorAll("body *").forEach(function(e){
+      if(!/^(P|H1|H2|H3|H4|SPAN|A|LI|EM|B|STRONG)$/.test(e.tagName)) return;
+      var s=getComputedStyle(e);
+      if(s.display==="none"||s.visibility==="hidden"||parseFloat(s.opacity)<0.9) return;
+      var t=""; e.childNodes.forEach(function(n){ if(n.nodeType===3) t+=n.nodeValue });
+      t=t.trim(); if(t.length<3) return;
+      var r=e.getBoundingClientRect();
+      if(r.width<8||r.height<8) return;
+      var bgc=bg(e); if(bgc===null) return;
+      var f=lum(s.color), b=lum(bgc);
+      if(f!==null&&b!==null){
+        var cr=(Math.max(f,b)+.05)/(Math.min(f,b)+.05);
+        if(cr<1.35&&unread.length<5) unread.push("「"+t.slice(0,12)+"」地と同系色（比 "+cr.toFixed(1)+"）");
+      }
+    });
+    if(unread.length) out.push("［参考］地と近い色の文字: "+unread.join(" / "));
     if(over.length) out.push("文字が画面外へ: "+over.join(" / "));
     if(clip.length) out.push("文字が切れている: "+clip.join(" / "));
+    // ★判定は画像からしか読めないので、項目ごとに16pxの色マーカーを左上に並べる。
+    //   緑=通過 / 赤=要対応。順は resp / orphan / scale / unreadable。
+    var FLAGS=[
+      out.some(function(x){return /横スクロール|画面外|切れている/.test(x)}),
+      out.some(function(x){return /最終行が1〜2文字/.test(x)}),
+    ];
+    var fl=document.createElement("div");
+    fl.style.cssText="position:absolute;left:0;top:0;z-index:2147483647;display:flex";
+    FLAGS.forEach(function(bad){
+      var s=document.createElement("i");
+      s.style.cssText="width:16px;height:16px;display:block;background:"+(bad?"#e00000":"#00a000");
+      fl.appendChild(s);
+    });
+    document.body.appendChild(fl);
+
     var d=document.createElement("div");
     d.id="__chk";
     d.setAttribute("data-result", JSON.stringify(out));
-    d.style.cssText="position:absolute;left:0;top:0;z-index:2147483647;background:"+
+    d.style.cssText="position:absolute;left:0;top:16px;z-index:2147483646;background:"+
       (out.length?"#c00":"#063")+";color:#fff;font:12px/1.5 monospace;padding:6px;max-width:100%;white-space:pre-wrap";
     d.textContent=(out.length? "NG " : "OK ")+W+"px\\n"+out.join("\\n");
     document.body.appendChild(d);
@@ -135,10 +215,20 @@ def shoot(page, out, w, h=20000):
     return False
 
 
+def read_flags(png):
+    """左上に並べた16pxの色マーカーを読む。resp / orphan / scale / unreadable の順。"""
+    px = Image.open(png).convert("RGB").load()
+    out = []
+    for i in range(4):
+        c = px[i * 16 + 8, 8]
+        out.append("ng" if (c[0] > 150 and c[1] < 90) else ("ok" if (c[1] > 110 and c[0] < 90) else "?"))
+    return out
+
+
 def read_badge(png, w):
     """左上に描かせた判定バッジを読む。赤(#c00)ならNG、緑(#063)ならOK。"""
     px = Image.open(png).convert("RGB").load()
-    hits = [px[x, y] for y in range(2, 40, 4) for x in range(2, min(60, w), 4)]
+    hits = [px[x, y] for y in range(18, 56, 4) for x in range(2, min(60, w), 4)]
     ng = sum(1 for c in hits if c[0] > 150 and c[1] < 80 and c[2] < 80)
     ok = sum(1 for c in hits if c[0] < 60 and 80 < c[1] < 150 and c[2] < 90)
     return "NG" if ng > ok else ("OK" if ok else "?")
@@ -276,6 +366,41 @@ def check_lineage(vid):
     return ("ok", f"派生元 {par} は最新のFB反映版")
 
 
+def check_publish(html):
+    """公開前の設定。noindex の外し忘れ・OGP・favicon・計測タグ。"""
+    bad, warn = [], []
+    # ★提示用のリンクでは noindex が入っているのが正しい。本番公開の直前に外す。
+    noindex = bool(re.search(r'<meta[^>]+name=["\']robots["\'][^>]*noindex', html, re.I))
+    for k, label in (("og:title", "OGPタイトル"), ("og:image", "OGP画像"), ("og:description", "OGP説明")):
+        if f'property="{k}"' not in html and f"property='{k}'" not in html:
+            warn.append(label)
+    if 'rel="icon"' not in html and "rel='icon'" not in html and 'rel="shortcut icon"' not in html:
+        warn.append("favicon")
+    if not re.search(r"gtag\(|googletagmanager|GTM-|analytics", html, re.I):
+        warn.append("計測タグ")
+    msg = []
+    msg.append("noindex あり＝提示用。本番公開の前に外す" if noindex else "noindex なし＝本番公開できる状態")
+    if warn:
+        msg.append("未設定: " + " / ".join(warn) + "（提示用なら不要）")
+    return ("warn" if (noindex or warn) else "ok", " ／ ".join(msg))
+
+
+def check_secrets(src):
+    """公開リポに出してはいけないもの。publish_guard と同じ観点を1ファイルで見る。"""
+    html = open(src, encoding="utf-8").read()
+    hit = []
+    for m in re.finditer(r"[0-9][0-9,]{2,}\s*円", html):
+        hit.append(f"金額「{m.group(0)}」")
+    for m in re.finditer(r"/Users/[A-Za-z0-9_.-]+/", html):
+        hit.append(f"手元のパス「{m.group(0)}」")
+    for m in re.finditer(r"(sk-[A-Za-z0-9]{16,}|AIza[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9]{20,})", html):
+        hit.append("APIキーらしき文字列")
+    # 金額は料金表のあるLPでは正しい。ページに「料金」があれば許す
+    if hit and all(h.startswith("金額") for h in hit) and re.search(r"料金|入会金|税込", html):
+        return ("ok", f"金額はあるが料金表のページ（{len(hit)}件）。手元のパス・鍵は無い")
+    return ("ng", " / ".join(sorted(set(hit))[:5])) if hit else ("ok", "金額・手元のパス・鍵とも無い")
+
+
 def run_checklist(src, vid, out_json):
     """checklist.json に沿って判定し、結果を JSON で残す。"""
     try:
@@ -300,7 +425,9 @@ def run_checklist(src, vid, out_json):
            "script-diff": lambda: check_script(lines, sp),
            "self-consistency": lambda: check_self(html),
            "links": lambda: check_links(html, base),
-           "lineage": lambda: check_lineage(vid)}
+           "lineage": lambda: check_lineage(vid),
+           "publish": lambda: check_publish(html),
+           "secrets": lambda: check_secrets(src)}
     res = []
     for it in cl:
         if it["id"] in fns:
@@ -340,6 +467,7 @@ def main():
 
     say(f"\n■ {os.path.basename(os.path.dirname(src))} を {len(WIDTHS)}幅で検査", "b")
     shots, ng = [], []
+    shot_flags = []
     try:
         for w in WIDTHS:
             png = os.path.join(tmp, f"{w}.png")
@@ -348,6 +476,7 @@ def main():
                 ng.append(f"{w}px 撮影失敗")
                 continue
             v = read_badge(png, w)
+            shot_flags.append(read_flags(png))
             say(f"  {w:>5}px  {v}", "g" if v == "OK" else ("r" if v == "NG" else "y"))
             if v != "OK":
                 ng.append(f"{w}px {v}")
@@ -404,23 +533,34 @@ def main():
     vid = os.path.basename(os.path.dirname(src))
     items = run_checklist(src, vid, None)
     if items:
-        for it in items:
-            if it["id"] in ("responsive", "orphan-line"):
-                it["state"] = "ng" if ng else "ok"
-                it["msg"] = (" / ".join(ng) if ng else "5幅とも通った")
-        out = {"version": vid, "at": __import__("datetime").datetime.now().strftime("%Y-%m-%d %H:%M"),
+        # 撮影で得たフラグ（5幅ぶん）を項目へ振り分ける。1幅でも ng なら ng
+        order = ["responsive", "orphan-line"]
+        okmsg = {"responsive": "5幅とも崩れなし", "orphan-line": "孤立した行なし"}
+        for k, name in enumerate(order):
+            st = "ok"
+            for f in shot_flags:
+                if k < len(f) and f[k] == "ng":
+                    st = "ng"; break
+            for it in items:
+                if it["id"] == name:
+                    it["state"] = st if shot_flags else "skip"
+                    it["msg"] = (okmsg[name] if st == "ok" else
+                                 "5幅のいずれかで検出（まとめ画像の左上を見る）")
+        out = {"version": vid,
+               "at": __import__("datetime").datetime.now().strftime("%Y-%m-%d %H:%M"),
                "items": items}
         json.dump(out, open(os.path.join(os.path.dirname(src), "_check.json"), "w", encoding="utf-8"),
                   ensure_ascii=False, indent=1)
         say("\n── チェックリスト ──", "b")
-        mark = {"ok": ("○", "g"), "ng": ("✗", "r"), "skip": ("−", "y"),
+        mark = {"ok": ("○", "g"), "ng": ("✗", "r"), "warn": ("△", "y"), "skip": ("−", "y"),
                 "todo": ("…", "y"), "human": ("□", "y"), "claude": ("◇", "y")}
         for it in items:
             m, c = mark.get(it["state"], ("?", ""))
-            say(f"  {m} {it['name']:<16} {it['msg'][:64]}", c)
+            say(f"  {m} {it['name']:<16} {it['msg'][:62]}", c)
         bad = [i for i in items if i["state"] == "ng"]
+        ng = [x for x in ng if "px NG" not in x]      # 内訳は下のリストで出す
         if bad:
-            ng.append(f"チェックリスト{len(bad)}件")
+            ng.append("チェックリスト " + "・".join(i["name"] for i in bad))
 
     if ng:
         say("\n  ★通っていない: " + " / ".join(ng), "r")

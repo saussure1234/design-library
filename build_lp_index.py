@@ -494,7 +494,7 @@ function moodsPane(){
   }).join('');
 
   return `<div class="head"><h2>雰囲気テンプレ</h2>
-      <span class="cl">選ぶ基準は業種ではなく「素材が何枚あるか」</span></div>
+      <span class="cl">選ぶ基準は「FVで何をさせたいか」</span></div>
     <p class="note">実物は手元の <code>${esc(M.local.root)}</code> にある。
       このページは公開なので、載せているのは仕様の数字だけ。<br>
       見るには <code>${esc(M.local.serve)}</code> を叩いてから、下のリンクを開く。</p>

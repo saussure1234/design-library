@@ -1,6 +1,6 @@
 {
  "version": "esl17",
- "at": "2026-09-10 03:38",
+ "at": "2026-09-10 03:59",
  "items": [
   {
    "id": "script-diff",
@@ -48,7 +48,7 @@
    "name": "レスポンシブの崩れ",
    "by": "machine",
    "state": "ok",
-   "msg": "5幅とも通った"
+   "msg": "5幅とも崩れなし"
   },
   {
    "id": "orphan-line",
@@ -56,23 +56,23 @@
    "name": "改行の孤立",
    "by": "machine",
    "state": "ok",
-   "msg": "5幅とも通った"
+   "msg": "孤立した行なし"
   },
   {
    "id": "unreadable",
    "group": "見た目",
    "name": "読めない文字",
    "by": "machine",
-   "state": "todo",
-   "msg": "自動判定はこれから"
+   "state": "ng",
+   "msg": "5幅のいずれかで検出（まとめ画像の左上を見る）"
   },
   {
    "id": "scale",
    "group": "見た目",
    "name": "要素の大きさの釣り合い",
-   "by": "machine",
-   "state": "todo",
-   "msg": "自動判定はこれから"
+   "by": "claude",
+   "state": "claude",
+   "msg": "私が意味を見る（context/<案件>.md を前提に）"
   },
   {
    "id": "alignment",
@@ -111,16 +111,16 @@
    "group": "公開前",
    "name": "公開前の設定",
    "by": "machine",
-   "state": "todo",
-   "msg": "自動判定はこれから"
+   "state": "warn",
+   "msg": "noindex あり＝提示用。本番公開の前に外す ／ 未設定: OGPタイトル / OGP画像 / OGP説明 / favicon / 計測タグ（提示用なら不要）"
   },
   {
    "id": "secrets",
    "group": "公開前",
    "name": "出してはいけないもの",
    "by": "machine",
-   "state": "todo",
-   "msg": "自動判定はこれから"
+   "state": "ok",
+   "msg": "金額はあるが料金表のページ（19件）。手元のパス・鍵は無い"
   },
   {
    "id": "real-device",
