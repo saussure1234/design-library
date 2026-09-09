@@ -514,6 +514,15 @@ def main():
     sheet.save(a.out)
     say(f"\n  ○ まとめ画像: {a.out}", "g")
 
+    # ★レビュー画面（原稿・実物・指摘の3列）が使う 1440px の全体像を版の隣に残す
+    wide = dict(shots).get(1440)
+    if wide:
+        im = Image.open(wide).convert("RGB")
+        w = 720
+        im.resize((w, int(im.height * w / im.width)), Image.LANCZOS)\
+          .save(os.path.join(os.path.dirname(src), "_shot.jpg"), quality=82, optimize=True)
+        say("  ○ 実物の縦長スクショ: _shot.jpg", "g")
+
     if a.ref and os.path.exists(os.path.expanduser(a.ref)):
         ref = Image.open(os.path.expanduser(a.ref)).convert("RGB")
         big = Image.open(shots[0][1]).convert("RGB").crop((0, 0, WIDTHS[0], min(4600, Image.open(shots[0][1]).height)))

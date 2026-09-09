@@ -211,7 +211,8 @@ tr:hover td{background:#fafbfc}
 .dt__h{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid #eef0f3}
 .dt__h b{font-size:15px}
 .dt__w{color:#6b7480;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.dt__x{margin-left:auto;border:0;background:#f1f3f6;border-radius:8px;width:28px;height:28px;cursor:pointer;color:#5b6472}
+.dt__go{margin-left:auto;font-size:12px;color:#1a6ee0;text-decoration:none;white-space:nowrap}
+.dt__x{border:0;background:#f1f3f6;border-radius:8px;width:28px;height:28px;cursor:pointer;color:#5b6472}
 .dt__b{overflow:auto;padding:6px 16px 24px}
 .dt__sec{margin:12px 0 18px}
 .dt__cap{font-size:11.5px;letter-spacing:.05em;color:#8b94a3;margin:0 0 6px}
@@ -975,6 +976,7 @@ function detailPane(vid){
   return `<aside class="dt" id="dt">
     <div class="dt__h"><b>${esc(vid)}</b>
       <span class="dt__w">${esc(v.what||'')}</span>
+      <a class="dt__go" href="./review.html?v=${vid}" target="_blank">レビューを開く ↗</a>
       <button class="dt__x" data-close>✕</button></div>
     <div class="dt__b">
       <div class="dt__sec">${notes}</div>
@@ -1212,6 +1214,108 @@ def read_checklist():
         return []
 
 
+
+# ══════════════════════════════════════════════════════════════════
+#  レビュー画面（docs/lp/review.html）
+#  ★左＝原稿 ／ 中＝実物のスクショ ／ 右＝直した方がよさそうな箇所。
+#    3つを横に並べて、原稿を読みながら実物と指摘を突き合わせられるようにする。
+#    /lp/ の派生図から「レビュー」で開く。?v=<版id> で切り替え。
+# ══════════════════════════════════════════════════════════════════
+REVIEW = """<!doctype html><html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>レビュー ─ LP版管理</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font:14px/1.7 -apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+  color:#2b3138;background:#eef1f5}
+.bar{display:flex;align-items:center;gap:12px;padding:10px 16px;background:#141a24;color:#fff}
+.bar b{font-size:14px}
+.bar select{margin-left:auto;background:#232b38;color:#fff;border:0;border-radius:8px;padding:6px 10px;font-size:13px}
+.bar a{color:#9fb6d4;font-size:12.5px;text-decoration:none}
+.wrap{display:grid;grid-template-columns:minmax(280px,1fr) minmax(360px,1.15fr) minmax(300px,1fr);
+  gap:12px;padding:12px;height:calc(100vh - 44px)}
+.col{background:#fff;border:1px solid #e3e7ee;border-radius:10px;display:flex;flex-direction:column;min-height:0}
+.col>h2{margin:0;padding:10px 14px;font-size:12px;letter-spacing:.06em;color:#78818e;
+  border-bottom:1px solid #eef0f3;font-weight:700}
+.col>div{overflow:auto;padding:12px 14px}
+pre.md{white-space:pre-wrap;font:12.5px/1.9 inherit;margin:0;color:#3c434c}
+pre.md b{background:#fff6cc}
+.shot{padding:0}
+.shot img{width:100%;display:block}
+.n{list-style:none;margin:0;padding:0}
+.n li{border:1px solid #eef0f3;border-radius:9px;padding:9px 11px;margin:0 0 8px}
+.n li.ng{border-color:#f3c9c5;background:#fff6f5}
+.n li.human{border-color:#efdcb0;background:#fffaf0}
+.n li.warn{border-color:#efe4b0;background:#fffdf4}
+.n li h3{margin:0 0 3px;font-size:13px}
+.n li p{margin:0;font-size:12.5px;color:#5b6472;overflow-wrap:anywhere}
+.n li .w{display:inline-block;margin:0 0 4px;font-size:10.5px;font-weight:700;
+  padding:1px 6px;border-radius:999px;background:#f1f3f6;color:#6b7480}
+.cap{font-size:11.5px;color:#8b94a3;margin:14px 0 6px}
+.cap:first-child{margin-top:0}
+.none{color:#98a1ad;font-size:12.5px}
+@media(max-width:900px){.wrap{grid-template-columns:1fr;height:auto}.col{height:auto}}
+</style></head><body>
+<div class="bar"><b>レビュー</b>
+  <a href="./">← 版管理へ</a>
+  <select id="sel"></select></div>
+<div class="wrap">
+  <section class="col"><h2 id="h-s">原稿</h2><div><pre class="md" id="md"></pre></div></section>
+  <section class="col"><h2>実物（1440px）</h2><div class="shot" id="shot"></div></section>
+  <section class="col"><h2>直した方がよさそう</h2><div id="notes"></div></section>
+</div>
+<script>const D=__DATA__;
+const q=new URLSearchParams(location.search);
+const sel=document.getElementById('sel');
+Object.keys(D).forEach(function(v){
+  const o=document.createElement('option');o.value=v;
+  o.textContent=D[v].project+'  '+v; sel.appendChild(o);});
+let cur=q.get('v')&&D[q.get('v')]?q.get('v'):Object.keys(D)[0];
+sel.value=cur;
+sel.addEventListener('change',function(){location.search='?v='+sel.value});
+function esc(s){return String(s||'').replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c]})}
+function draw(){
+  const d=D[cur];
+  document.getElementById('h-s').textContent='原稿 '+(d.script_v||'（未登録）');
+  document.getElementById('md').innerHTML=d.script?esc(d.script):'<span class="none">原稿がまだ無い。<br>lpv.py script &lt;案件id&gt; --new で登録する。</span>';
+  document.getElementById('shot').innerHTML=d.shot?'<img src="'+d.shot+'" alt="">':'<p class="none" style="padding:12px 14px">スクショがまだ無い。check.py を通すと出る。</p>';
+  const g={ng:[],human:[],warn:[],claude:[]};
+  (d.items||[]).forEach(function(i){ if(g[i.state]) g[i.state].push(i); });
+  const li=function(i){return '<li class="'+i.state+'"><span class="w">'+
+    (i.by==='machine'?'機械':i.by==='claude'?'Claude':'目視')+'</span>'+
+    '<h3>'+esc(i.name)+'</h3><p>'+esc(i.done||i.msg||'')+'</p></li>'};
+  let h='';
+  if(g.ng.length)   h+='<div class="cap">直さないと出せない</div><ul class="n">'+g.ng.map(li).join('')+'</ul>';
+  if(g.claude.length)h+='<div class="cap">私が画像を見て判断する</div><ul class="n">'+g.claude.map(li).join('')+'</ul>';
+  if(g.human.length) h+='<div class="cap">あなたが見る</div><ul class="n">'+g.human.map(li).join('')+'</ul>';
+  if(g.warn.length)  h+='<div class="cap">公開前に確かめる</div><ul class="n">'+g.warn.map(li).join('')+'</ul>';
+  document.getElementById('notes').innerHTML=h||'<p class="none">まだチェックしていない。</p>';
+}
+draw();
+</script></body></html>"""
+
+
+def build_review(reg, checks, scripts):
+    """レビュー画面のデータを作る。版id → 原稿・スクショ・指摘。"""
+    data = {}
+    for p in reg["projects"]:
+        for v in p["versions"]:
+            ck = checks.get(v["id"])
+            sc = scripts.get(p["id"], {})
+            sv = v.get("script") or (sorted(sc, key=lambda s: int(s[1:]))[-1] if sc else None)
+            shot = f"../{v['id']}/_shot.jpg" if os.path.isfile(
+                os.path.join(R, "docs", v["id"], "_shot.jpg")) else None
+            if not (ck or sv):
+                continue
+            data[v["id"]] = {"project": p["name"], "script_v": sv,
+                             "script": sc.get(sv, ""), "shot": shot,
+                             "items": (ck or {}).get("items", [])}
+    out = os.path.join(OUT_DIR, "review.html")
+    open(out, "w", encoding="utf-8").write(
+        REVIEW.replace("__DATA__", json.dumps(data, ensure_ascii=False)))
+    return len(data)
+
+
 def main():
     reg = json.load(open(REG, encoding="utf-8"))
     vreg = json.load(open(VREG, encoding="utf-8")) if os.path.exists(VREG) else None
@@ -1274,6 +1378,7 @@ const SCRIPTS={json.dumps(read_scripts(), ensure_ascii=False)};</script>
 </body></html>"""
     os.makedirs(OUT_DIR, exist_ok=True)
     open(OUT, "w", encoding="utf-8").write(doc)
+    nrev = build_review(reg, read_checks(), read_scripts())
     n = sum(len(p["versions"]) for p in reg["projects"])
     a = sum(len([v for v in p["versions"] if v.get("alert")]) for p in reg["projects"])
     vn = sum(len(p["versions"]) for p in (vreg or {}).get("projects", []))
