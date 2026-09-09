@@ -108,6 +108,17 @@ def read_skills(pack=True):
     return out, bundle
 
 CSS = """
+/* ── 雰囲気テンプレの画面 ───────────────────────── */
+.tb{border-collapse:collapse;width:100%;margin:0 0 22px;font-size:12.5px;line-height:1.6}
+.tb th,.tb td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.tb th{color:var(--live);font-weight:800;white-space:nowrap;background:rgba(0,0,0,.02)}
+.tb td.k{color:var(--live);font-weight:800;white-space:nowrap;width:120px}
+.tb code{font-size:11.5px}
+.mh{font-size:15px;margin:34px 0 4px;padding-top:20px;border-top:2px solid var(--line)}
+.mh .cl{font-size:12px;font-weight:400}
+.ul{margin:6px 0 20px;padding-left:20px;font-size:12.5px;line-height:1.85}
+.ul.bad li{color:var(--bad,#b4342a)}
+
 *{box-sizing:border-box;margin:0}
 :root{
   --bg:#f5f6f8; --panel:#fff; --line:#e3e6ea; --ink:#1f2937; --mute:#6b7280;
@@ -382,6 +393,7 @@ function mkreg(reg,kind){
     : id=>{const v=ALL[id];return (v&&v.url)||reg.base_url+id+'/';};
   return {kind,reg,ALL,OWNER,url};
 }
+const MOODS=DATA.moods||null;
 const LP=mkreg(DATA,'lp');
 const VID=(DATA.videos&&(DATA.videos.projects||[]).length)?mkreg(DATA.videos,'vid'):null;
 
@@ -394,7 +406,7 @@ let cur='lp:'+DATA.projects[0].id, tab='graph';   // 最初に見たいのは系
 //   ついでにリンクを送れば相手も同じ場所が開く。
 const TABS=['sheet','list','graph','fb'];
 function exists(id){
-  if(id==='__flow__') return true;
+  if(id==='__flow__'||id==='__moods__') return true;
   const kind=id.slice(0,4)==='vid:'?VID:LP, pid=id.slice(id.indexOf(':')+1);
   return !!(kind && kind.reg.projects.some(p=>p.id===pid));
 }
@@ -406,12 +418,12 @@ function readHash(){
   if(!exists(id)) return false;
   cur=id;
   // タブは「その画面に在るもの」だけ。無ければ既定に落とす
-  const okTabs = id==='__flow__' ? [] : (id.slice(0,4)==='vid:'?TABS:TABS.filter(x=>x!=='sheet'));
+  const okTabs = (id==='__flow__'||id==='__moods__') ? [] : (id.slice(0,4)==='vid:'?TABS:TABS.filter(x=>x!=='sheet'));
   tab = okTabs.includes(tb) ? tb : (id.slice(0,4)==='vid:'?'sheet':'graph');
   return true;
 }
 function writeHash(){
-  const h = cur==='__flow__' ? cur : cur+'/'+tab;
+  const h = (cur==='__flow__'||cur==='__moods__') ? cur : cur+'/'+tab;
   if(decodeURIComponent((location.hash||'').replace(/^#/,''))!==h)
     history.replaceState(null,'','#'+encodeURIComponent(h));
 }
@@ -430,6 +442,50 @@ const STEPS=(DATA.flow&&DATA.flow.steps)||[];
 // フローが呼んでいるのに実物が無いスキル＝次に作るもの
 const MISSING=[...new Set(STEPS.filter(s=>s.skill&&!SK[s.skill]).map(s=>s.skill))];
 
+// ── 雰囲気テンプレ ─────────────────────────────────────
+// ★実物（HTML・スクショ）はここに置かない。このページは公開なので、
+//   載せるのは仕様の数字だけ。実物は手元の localhost からだけ開ける。
+function moodsPane(){
+  const M=MOODS, T=M.types;
+  const cmp=`<table class="tb"><tr><th></th>${T.map(t=>`<th>${esc(t.name)}</th>`).join('')}</tr>
+    <tr><td class="k">向く案件</td>${T.map(t=>`<td>${esc(t.note)}</td>`).join('')}</tr>
+    <tr><td class="k">節数</td>${T.map(t=>`<td>${t.sections}</td>`).join('')}</tr>
+    <tr><td class="k">必要な画像</td>${T.map(t=>`<td><b>${t.images}枚</b></td>`).join('')}</tr>
+    <tr><td class="k">見出し</td>${T.map(t=>`<td>${esc(t.h1)}</td>`).join('')}</tr>
+    <tr><td class="k">写真の扱い</td>${T.map(t=>`<td>${esc(t.photo)}</td>`).join('')}</tr>
+    <tr><td class="k">手元の場所</td>${T.map(t=>`<td><code>${esc(t.path)}</code></td>`).join('')}</tr></table>`;
+
+  const blocks = T.map(t=>{
+    const moods=`<table class="tb"><tr><th>雰囲気</th><th>言葉</th><th>見出しの書体</th>
+      <th>h1</th><th>h2/太さ</th><th>余白</th><th>角丸</th><th>桁</th></tr>
+      ${t.moods.map(m=>`<tr><td><b>${esc(m.name)}</b></td><td>${esc(m.words)}</td>
+        <td>${esc(m.head)}</td><td>${m.h1}</td><td>${esc(String(m.h2))}</td>
+        <td>${esc(String(m.pad))}</td><td>${esc(m.radius)}</td><td>${esc(m.cols)}</td></tr>`).join('')}</table>`;
+    const copy=`<table class="tb"><tr><th>場所</th><th>級数</th><th>字数</th><th>個数</th></tr>
+      ${t.copy.map(c=>`<tr><td>${esc(c.place)}</td><td>${esc(c.size)}</td>
+        <td>${esc(c.chars)}</td><td>${c.count}</td></tr>`).join('')}</table>`;
+    const asset=`<table class="tb"><tr><th>場所</th><th>枚数</th><th>条件</th></tr>
+      ${t.assets.map(a=>`<tr><td>${esc(a.place)}</td><td>${a.n}</td><td>${esc(a.cond)}</td></tr>`).join('')}</table>`;
+    return `<h3 class="mh">${esc(t.name)}　<span class="cl">${esc(t.note)}</span></h3>
+      <p class="note">雰囲気の振り分け</p>${moods}
+      <p class="note">受け入れ仕様 ── 文字（工程6でコピーを書くときの上限）</p>${copy}
+      <p class="note">受け入れ仕様 ── 画像</p>${asset}
+      <p class="note"><a href="${esc(t.url)}" target="_blank">手元で開く → ${esc(t.url)}</a></p>`;
+  }).join('');
+
+  return `<div class="head"><h2>雰囲気テンプレ</h2>
+      <span class="cl">選ぶ基準は業種ではなく「素材が何枚あるか」</span></div>
+    <p class="note">実物は手元の <code>${esc(M.local.root)}</code> にある。
+      このページは公開なので、載せているのは仕様の数字だけ。<br>
+      見るには <code>${esc(M.local.serve)}</code> を叩いてから、下のリンクを開く。</p>
+    ${cmp}
+    ${blocks}
+    <h3 class="mh">守ること</h3>
+    <ul class="ul">${M.rules.map(r=>`<li>${esc(r)}</li>`).join('')}</ul>
+    <h3 class="mh">まだやっていないこと</h3>
+    <ul class="ul bad">${M.gaps.map(r=>`<li>${esc(r)}</li>`).join('')}</ul>`;
+}
+
 function sidebar(){
   const tot=DATA.projects.reduce((a,p)=>a+alerts(p).length,0)
     +(VID?VID.reg.projects.reduce((a,p)=>a+alerts(p).length,0):0);
@@ -445,6 +501,8 @@ function sidebar(){
   <div class="cap">しくみ</div>
   <a data-p="__flow__" class="${cur==='__flow__'?'on':''}">LP制作フローとスキル
     <span class="n ${gaps||MISSING.length?'bad':''}">${gaps?gaps+'欠':STEPS.length}</span></a>
+  ${MOODS?`<a data-p="__moods__" class="${cur==='__moods__'?'on':''}">雰囲気テンプレ
+    <span class="n">${MOODS.types.length}</span></a>`:''}
   <div class="foot">要対応 ${tot} 件<br>更新 ${esc(UPDATED)}<br>
   台帳 lp-registry.json${VID?'<br>　　 video-registry.json':''}</div>`;
 }
@@ -864,6 +922,10 @@ function render(){
   writeHash();
   document.querySelector('.side').innerHTML=sidebar();
   // 「しくみ」の画面は案件に属さないので、先に分岐して描き切る
+  if(cur==='__moods__'){
+    document.querySelector('.main').innerHTML = moodsPane();
+    return;
+  }
   if(cur==='__flow__'){
     document.querySelector('.main').innerHTML=`
       <div class="head"><h2>LP制作フローとスキル</h2>
@@ -973,6 +1035,13 @@ def main():
     flow.pop("_readme", None)
     reg["flow"] = flow
     reg["skills"], reg["bundle"] = read_skills()
+    # ★雰囲気テンプレ。実物（HTML・スクショ）は手元の ~/lp-moods/ にあり、ここには載せない。
+    #   このリポジトリは公開なので、載せるのは仕様の数字だけ
+    mp = os.path.join(R, "lp-moods.json")
+    if os.path.exists(mp):
+        moods = json.load(open(mp, encoding="utf-8"))
+        moods.pop("_readme", None)
+        reg["moods"] = moods
     if vreg:
         vreg.pop("_readme", None)
         # ★台帳は丸ごと DATA として公開ページに焼き込まれる。
