@@ -144,6 +144,180 @@ def read_badge(png, w):
     return "NG" if ng > ok else ("OK" if ok else "?")
 
 
+# ══════════════════════════════════════════════════════════════════
+#  チェックリスト（checklist.json）に沿った判定
+#  ここが「学習するシステム」の本体。指摘が来たら項目を足す。
+# ══════════════════════════════════════════════════════════════════
+ROOT = os.path.dirname(os.path.abspath(__file__))
+
+
+def _reg():
+    try:
+        return json.load(open(os.path.join(ROOT, "lp-registry.json"), encoding="utf-8"))
+    except Exception:
+        return {"projects": []}
+
+
+def find_version(vid):
+    """版idから、その案件と版の記録を引く。"""
+    for p in _reg().get("projects", []):
+        for v in p.get("versions", []):
+            if v["id"] == vid:
+                return p, v
+    return None, None
+
+
+def plain(html):
+    """タグを落として本文だけにする。突き合わせ用。"""
+    h = re.sub(r"(?is)<(script|style|svg)[^>]*>.*?</\1>", " ", html)
+    h = re.sub(r"(?s)<!--.*?-->", " ", h)
+    h = re.sub(r"<[^>]+>", "\n", h)
+    h = h.replace("&nbsp;", " ").replace("&amp;", "&").replace("&#39;", "'")
+    return [x.strip() for x in h.split("\n") if x.strip()]
+
+
+def check_wording(lines):
+    """表記ゆれ。過去FBで3回指摘された。"""
+    bad = []
+    for w in ("お子様", "保護者様", "生徒様"):
+        n = sum(l.count(w) for l in lines)
+        if n:
+            bad.append(f"{w} ×{n}")
+    return ("ng", " / ".join(bad)) if bad else ("ok", "「さま」に統一されている")
+
+
+def check_script(lines, sp):
+    """原稿との突き合わせ。原稿にあってLPに無い文を出す。"""
+    if not sp or not os.path.exists(sp):
+        return ("skip", "原稿が未登録（lpv.py script <案件> --new）")
+    raw = open(sp, encoding="utf-8").read()
+    raw = raw.split("## v1 からの変更")[0].split("## v2 からの変更")[0]
+    src = [x.strip() for x in raw.split("\n")]
+    body = "".join(lines)
+    miss = []
+    for s in src:
+        s = re.sub(r"^[-#\s*]+", "", s).strip()
+        # ★見出し・ラベル・注記は「LPにそのまま出る文」ではないので対象外
+        if len(s) < 20 or s.startswith(("（", "注記", "見出し", "受領", "反映先", "現状のLP")):
+            continue
+        if "：" in s[:12]:              # 「補助コピー：」「ボタン：」など
+            s = s.split("：", 1)[1].strip()
+        if s.startswith("ESL club オンライン校") and "原稿" in s:
+            continue
+        if len(s) < 20:
+            continue
+        # ★原稿の「POINT1　見出し｜リード」は、LPでは別々の要素に分かれる。
+        #   区切って、それぞれがLPにあるかを見る。
+        parts = [x for x in re.split(r"[｜|／/　]", s) if len(re.sub(r"[\s　]", "", x)) >= 12]
+        parts = parts or [s]
+        nb = re.sub(r"[\s　]", "", body)
+        for q in parts:
+            core = re.sub(r"[\s　]", "", re.sub(r"^POINT\d+", "", q))
+            if core[:22] and core[:22] not in nb:
+                miss.append(q.strip()[:36])
+    if miss:
+        return ("ng", f"原稿にあってLPに無い: " + " / ".join(miss[:4]))
+    return ("ok", f"原稿（{os.path.basename(sp)}）の文はすべてLPにある")
+
+
+def check_self(html):
+    """ページ内の不一致。POINT の一覧と詳細で見出しが違わないか。"""
+    li = re.findall(r'<li class="fnc__item.*?</li>', html, re.S)
+    ti = re.findall(r'<h3 class="vhr__title">(.*?)</h3>', html, re.S)
+    if not li or not ti:
+        return ("skip", "対象の型ではない")
+    bad = []
+    for i, (a, b) in enumerate(zip(li, ti), 1):
+        at = [x.strip() for x in re.sub(r"<[^>]+>", "\n", a).split("\n") if x.strip()]
+        at = [x for x in at if not re.fullmatch(r"0?\d+", x)]   # 「01」などの番号は見出しではない
+        head = at[0] if at else ""
+        det = re.sub(r"<[^>]+>", "", b).strip()
+        if head and det and head != det:
+            bad.append(f"POINT{i}: 一覧「{head}」/ 詳細「{det}」")
+    return ("ng", " / ".join(bad)) if bad else ("ok", f"一覧と詳細の見出しが一致（{len(ti)}件）")
+
+
+def check_links(html, base):
+    """画像の実在と YouTube の再生可否。"""
+    miss = []
+    for u in set(re.findall(r'(?:src|href)="((?!http|#|mailto:|tel:|data:|/)[^"]+)"', html)):
+        u = u.split("?")[0]
+        if u.endswith((".html", "/")) or not os.path.splitext(u)[1]:
+            continue
+        if not os.path.isfile(os.path.join(base, u)):
+            miss.append(u)
+    dead = []
+    for yid in set(re.findall(r'data-yt="([^"]+)"', html)):
+        try:
+            r = subprocess.run(["curl", "-s", "-o", "/dev/null", "-w", "%{http_code}",
+                                f"https://www.youtube.com/oembed?url=https://youtu.be/{yid}&format=json"],
+                               capture_output=True, text=True, timeout=20)
+            if r.stdout.strip() != "200":
+                dead.append(f"{yid}({r.stdout.strip()})")
+        except Exception:
+            dead.append(f"{yid}(確認できず)")
+    msg = []
+    if miss: msg.append("見つからないファイル: " + " / ".join(miss[:4]))
+    if dead: msg.append("再生できない動画: " + " / ".join(dead))
+    return ("ng", " ／ ".join(msg)) if msg else ("ok", "画像・動画とも生きている")
+
+
+def check_lineage(vid):
+    """先祖返り。派生元が、その案件で一番あとにFBを反映した版か。"""
+    p, v = find_version(vid)
+    if not p or not v or not v.get("parent"):
+        return ("skip", "派生元が無い（初版）")
+    ids = [x["id"] for x in p["versions"]]
+    par = v["parent"]
+    later = [x for x in p["versions"]
+             if x.get("fb") and x["id"] != vid and ids.index(x["id"]) > ids.index(par)] if par in ids else []
+    if later:
+        return ("ng", f"派生元 {par} より後に FB を持つ版がある: " + ", ".join(x["id"] for x in later))
+    return ("ok", f"派生元 {par} は最新のFB反映版")
+
+
+def run_checklist(src, vid, out_json):
+    """checklist.json に沿って判定し、結果を JSON で残す。"""
+    try:
+        cl = json.load(open(os.path.join(ROOT, "checklist.json"), encoding="utf-8"))["items"]
+    except Exception:
+        return None
+    html = open(src, encoding="utf-8").read()
+    lines = plain(html)
+    base = os.path.dirname(src)
+    p, v = find_version(vid)
+    sp = None
+    if p and v and v.get("script"):
+        sp = os.path.join(ROOT, "scripts", p["id"], v["script"] + ".md")
+    elif p:
+        d = os.path.join(ROOT, "scripts", p["id"])
+        if os.path.isdir(d):
+            vs = sorted([f for f in os.listdir(d) if re.fullmatch(r"v\d+\.md", f)],
+                        key=lambda s: int(s[1:-3]))
+            sp = os.path.join(d, vs[-1]) if vs else None
+
+    fns = {"wording": lambda: check_wording(lines),
+           "script-diff": lambda: check_script(lines, sp),
+           "self-consistency": lambda: check_self(html),
+           "links": lambda: check_links(html, base),
+           "lineage": lambda: check_lineage(vid)}
+    res = []
+    for it in cl:
+        if it["id"] in fns:
+            st, msg = fns[it["id"]]()
+        elif it["id"] in ("responsive", "orphan-line"):
+            st, msg = ("pending", "5幅の撮影で判定")
+        elif it["by"] == "human":
+            st, msg = ("human", it["what"])
+        elif it["by"] == "claude":
+            st, msg = ("claude", "私が意味を見る（context/<案件>.md を前提に）")
+        else:
+            st, msg = ("todo", "自動判定はこれから")
+        res.append({"id": it["id"], "group": it["group"], "name": it["name"],
+                    "by": it["by"], "state": st, "msg": msg})
+    return res
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("html")
@@ -225,6 +399,28 @@ def main():
         p2 = a.out.replace(".png", "_ref.png")
         cmp_.save(p2)
         say(f"  ○ 案との比較: {p2}", "g")
+
+    # ── チェックリストの判定を JSON で残す（画面がこれを読む） ──
+    vid = os.path.basename(os.path.dirname(src))
+    items = run_checklist(src, vid, None)
+    if items:
+        for it in items:
+            if it["id"] in ("responsive", "orphan-line"):
+                it["state"] = "ng" if ng else "ok"
+                it["msg"] = (" / ".join(ng) if ng else "5幅とも通った")
+        out = {"version": vid, "at": __import__("datetime").datetime.now().strftime("%Y-%m-%d %H:%M"),
+               "items": items}
+        json.dump(out, open(os.path.join(os.path.dirname(src), "_check.json"), "w", encoding="utf-8"),
+                  ensure_ascii=False, indent=1)
+        say("\n── チェックリスト ──", "b")
+        mark = {"ok": ("○", "g"), "ng": ("✗", "r"), "skip": ("−", "y"),
+                "todo": ("…", "y"), "human": ("□", "y"), "claude": ("◇", "y")}
+        for it in items:
+            m, c = mark.get(it["state"], ("?", ""))
+            say(f"  {m} {it['name']:<16} {it['msg'][:64]}", c)
+        bad = [i for i in items if i["state"] == "ng"]
+        if bad:
+            ng.append(f"チェックリスト{len(bad)}件")
 
     if ng:
         say("\n  ★通っていない: " + " / ".join(ng), "r")

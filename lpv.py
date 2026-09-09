@@ -145,6 +145,58 @@ def step_label(n):
     return f"工程{n}"
 
 
+SCRIPTS = os.path.join(ROOT, "scripts")
+
+
+def script_dir(pid):
+    return os.path.join(SCRIPTS, pid)
+
+
+def script_versions(pid):
+    """その案件の原稿の版を新しい順で返す。v1.md, v2.md ... """
+    d = script_dir(pid)
+    if not os.path.isdir(d):
+        return []
+    vs = [f[:-3] for f in os.listdir(d) if re.fullmatch(r"v\d+\.md", f)]
+    return sorted(vs, key=lambda s: int(s[1:]), reverse=True)
+
+
+def cmd_script(a):
+    """原稿を版で管理する。台帳が正、原稿は scripts/<案件id>/vN.md。"""
+    reg = load()
+    p = next((x for x in reg["projects"] if x["id"] == a.project), None)
+    if not p:
+        sys.exit(f"  ★案件 '{a.project}' が台帳に無い")
+    d = script_dir(a.project)
+    vs = script_versions(a.project)
+
+    if a.new:
+        os.makedirs(d, exist_ok=True)
+        nxt = f"v{(int(vs[0][1:]) + 1) if vs else 1}"
+        path = os.path.join(d, nxt + ".md")
+        if a.file:
+            shutil.copy(os.path.expanduser(a.file), path)
+        else:
+            base = open(os.path.join(d, vs[0] + ".md"), encoding="utf-8").read() if vs else ""
+            open(path, "w", encoding="utf-8").write(base)
+            subprocess.run([os.environ.get("EDITOR", "open"), path])
+        say(f"  ○ 原稿 {nxt} を作った: {path}", "g")
+        say(f"    次: lpv.py update <版id> --script {nxt} で、どのリンクがこの原稿から出来たかを残す")
+        return
+
+    if not vs:
+        say(f"  原稿はまだ無い。作る: lpv.py script {a.project} --new", "y")
+        return
+    say(f"\n■ {p['name']} の原稿  {len(vs)}版", "b")
+    used = {}
+    for v in p["versions"]:
+        if v.get("script"):
+            used.setdefault(v["script"], []).append(v["id"])
+    for v in vs:
+        say(f"   {v:<5} {os.path.join(d, v + '.md')}"
+            + (f"   → {', '.join(used.get(v, []))}" if used.get(v) else "   （まだどのリンクにも紐づいていない）"))
+
+
 def cmd_step(a):
     reg = load()
     p = next((x for x in reg["projects"] if x["id"] == a.project), None)
@@ -449,6 +501,7 @@ def main():
     s.add_argument("--root", action="store_true", help="初版（派生元なし）")
     s.add_argument("--alt", action="store_true",
                    help="別案として新しいリンクを増やすことを承知した（小さい直しは update）")
+    s.add_argument("--script", help="この版のもとになった原稿（v1 / v2 …）")
     s.add_argument("--why", required=True, help="何を変えたか。後で用途不明にならないように")
     s.add_argument("--src", help="中身のフォルダ。省略時は派生元を複製")
     s.add_argument("--url", help="design-library 以外に公開する場合の実URL")
@@ -466,6 +519,7 @@ def main():
     s.add_argument("id"); s.add_argument("--date"); s.set_defaults(f=cmd_show)
 
     s = sp.add_parser("update", help="中身を直した。見せたリンクなら自動で新しいリンクを作る")
+    s.add_argument("--script", help="この版のもとになった原稿（v1 / v2 …）")
     s.add_argument("id"); s.add_argument("--what", required=True); s.add_argument("--date")
     s.add_argument("--same", action="store_true",
                    help="見せたリンクでも同じリンクの中身を直す（相手の見え方が変わる）")
@@ -478,6 +532,12 @@ def main():
 
     s = sp.add_parser("rm-project", help="案件を台帳から外す（公開ファイルは消さない）")
     s.add_argument("id"); s.set_defaults(f=cmd_rm_project)
+
+    s = sp.add_parser("script", help="原稿を版で管理する（vN.md）")
+    s.add_argument("project")
+    s.add_argument("--new", action="store_true", help="新しい版を作る（前の版を写して開く）")
+    s.add_argument("--file", help="原稿のファイルを取り込む")
+    s.set_defaults(f=cmd_script)
 
     s = sp.add_parser("step", help="いまの工程を見る／記録する")
     s.add_argument("project")

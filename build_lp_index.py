@@ -199,6 +199,26 @@ tr:hover td{background:#fafbfc}
    ★これは表。カードで並べると「同じ枠の文面どうし」が縦に揃わず、比べられなくなる。
    ★横に長いので、版の列だけ固定して中身を横スクロールさせる。 */
 .sheetwrap{overflow-x:auto;border:1px solid var(--line);border-radius:9px;background:#fff}
+
+.ck{border:1px solid #e6e9ee;border-radius:10px;margin:0 0 14px;overflow:hidden;background:#fff}
+.ck__h{display:flex;align-items:center;gap:10px;padding:9px 12px;background:#f8fafc;
+  border-bottom:1px solid #eef0f3;font-size:13px}
+.ck__sum{padding:2px 8px;border-radius:999px;font-size:11.5px;font-weight:700}
+.ck__sum.ok{background:#e8f7ee;color:#1a7f45}
+.ck__sum.ng{background:#fdeaea;color:#b3261e}
+.ck__at{margin-left:auto;color:#8b94a3;font-size:11.5px}
+.ck__g{padding:7px 12px 3px;color:#8b94a3;font-size:11px;letter-spacing:.06em}
+.ck__r{display:grid;grid-template-columns:22px 150px 1fr 44px;gap:8px;align-items:baseline;
+  padding:5px 12px;font-size:12.5px;border-top:1px solid #f4f6f8}
+.ck__m{text-align:center;font-weight:700}
+.ck__n{font-weight:700;color:#2b3138}
+.ck__d{color:#5b6472;overflow-wrap:anywhere}
+.ck__b{color:#a6adb8;font-size:11px;text-align:right}
+.ck__r.ok .ck__m{color:#1a7f45}
+.ck__r.ng{background:#fff7f6}
+.ck__r.ng .ck__m{color:#b3261e}
+.ck__r.hu .ck__m,.ck__r.cl .ck__m{color:#b07d1a}
+.ck__r.sk{opacity:.62}
 table.sheet{border-collapse:separate;border-spacing:0;font-size:12.5px;min-width:1080px}
 table.sheet th,table.sheet td{border-bottom:1px solid #eef0f3;border-right:1px solid #f2f4f6;
   padding:8px 10px;vertical-align:top}
@@ -404,7 +424,7 @@ let cur='lp:'+DATA.projects[0].id, tab='graph';   // 最初に見たいのは系
 // ★開いている場所を URL に持たせる。
 //   これが無いと、リロードのたびに先頭のLP案件へ戻される（毎回やり直しで面倒）。
 //   ついでにリンクを送れば相手も同じ場所が開く。
-const TABS=['sheet','list','graph','fb'];
+const TABS=['sheet','list','graph','fb','check'];
 function exists(id){
   if(id==='__flow__'||id==='__moods__') return true;
   const kind=id.slice(0,4)==='vid:'?VID:LP, pid=id.slice(id.indexOf(':')+1);
@@ -418,7 +438,7 @@ function readHash(){
   if(!exists(id)) return false;
   cur=id;
   // タブは「その画面に在るもの」だけ。無ければ既定に落とす
-  const okTabs = (id==='__flow__'||id==='__moods__') ? [] : (id.slice(0,4)==='vid:'?TABS:TABS.filter(x=>x!=='sheet'));
+  const okTabs = (id==='__flow__'||id==='__moods__') ? [] : (id.slice(0,4)==='vid:'?TABS.filter(x=>x!=='check'):TABS.filter(x=>x!=='sheet'));
   tab = okTabs.includes(tb) ? tb : (id.slice(0,4)==='vid:'?'sheet':'graph');
   return true;
 }
@@ -891,6 +911,42 @@ function drawLines(p){
   svg.innerHTML=d;
 }
 
+
+// ── チェック ─────────────────────────────────────────
+// check.py が各版に残した _check.json を読む。
+// 機械が判定したものは色で、人が見るものは□で出す。項目の定義は checklist.json。
+function checkPane(p){
+  const vs=p.versions.filter(v=>CHECKS[v.id]).map(v=>v.id).reverse();
+  if(!vs.length) return `<p class="empty">まだチェックしていない。<br>
+    <code>python3 check.py docs/&lt;版id&gt;/index.html</code> を通すとここに出る。</p>`;
+  const MARK={ok:['○','ok'],ng:['✗','ng'],skip:['−','sk'],todo:['…','sk'],
+               human:['□','hu'],claude:['◇','cl'],pending:['…','sk']};
+  return vs.map(vid=>{
+    const c=CHECKS[vid], g={};
+    c.items.forEach(i=>{ (g[i.group]=g[i.group]||[]).push(i); });
+    const nng=c.items.filter(i=>i.state==='ng').length;
+    const nok=c.items.filter(i=>i.state==='ok').length;
+    const rest=c.items.filter(i=>['human','claude','todo','skip','pending'].includes(i.state)).length;
+    return `<div class="ck">
+      <div class="ck__h">
+        <b>${vid}</b>
+        <span class="ck__sum ${nng?'ng':'ok'}">${nng?`要対応 ${nng}`:'機械はすべて通過'}</span>
+        <span class="ck__at">通過 ${nok} ／ 残り ${rest}　${c.at}</span>
+      </div>
+      ${Object.keys(g).map(gr=>`
+        <div class="ck__g">${gr}</div>
+        ${g[gr].map(i=>{const m=MARK[i.state]||['?','sk'];return `
+          <div class="ck__r ${m[1]}">
+            <span class="ck__m">${m[0]}</span>
+            <span class="ck__n">${esc(i.name)}</span>
+            <span class="ck__d">${esc(i.msg||'')}</span>
+            <span class="ck__b">${i.by==='machine'?'機械':i.by==='claude'?'Claude':'目視'}</span>
+          </div>`;}).join('')}
+      `).join('')}
+    </div>`;
+  }).join('');
+}
+
 function fbPane(p){
   const all=[];
   p.versions.forEach(v=>(v.fb||[]).forEach(f=>all.push({...f,ver:v})));
@@ -948,7 +1004,8 @@ function render(){
     al.map(v=>`<li><b>${esc(v.id)}</b> … ${esc(v.alert)}</li>`).join('')}</ul></div>`:'';
   const body = tab==='sheet'?sheetPane(p,R)
              : tab==='list' ?listPane(p,R)
-             : tab==='graph'?graphPane(p,R) : fbPane(p);
+             : tab==='graph'?graphPane(p,R)
+             : tab==='check'?checkPane(p) : fbPane(p);
   // テンプレは「未制作の本数」に数えない。作る対象ではなく型なので
   const nd = p.versions.filter(v=>v.status==='draft'&&!(v.comp&&v.comp.template)).length;
   const nmade = p.versions.filter(v=>v.status!=='draft').length;
@@ -967,6 +1024,7 @@ function render(){
       <button data-t="list" class="${tab==='list'?'on':''}">版一覧</button>
       <button data-t="graph" class="${tab==='graph'?'on':''}">派生図</button>
       <button data-t="fb" class="${tab==='fb'?'on':''}">FB履歴</button>
+      ${R.kind==='vid'?'':`<button data-t="check" class="${tab==='check'?'on':''}">チェック</button>`}
     </div><div class="pane">${body}</div>
     ${rules(R.kind)}`;
   // ★requestAnimationFrame は【タブが非表示だと発火しない】。
@@ -1006,6 +1064,27 @@ addEventListener('resize',()=>{
 readHash();          // URLに書いてあればそこを開く
 render();
 """
+
+
+def read_checks():
+    """各版の _check.json（check.py が残したチェック結果）を集める。"""
+    out = {}
+    docs = os.path.join(R, "docs")
+    for d in sorted(os.listdir(docs)):
+        f = os.path.join(docs, d, "_check.json")
+        if os.path.isfile(f):
+            try:
+                out[d] = json.load(open(f, encoding="utf-8"))
+            except Exception:
+                pass
+    return out
+
+
+def read_checklist():
+    try:
+        return json.load(open(os.path.join(R, "checklist.json"), encoding="utf-8"))["items"]
+    except Exception:
+        return []
 
 
 def main():
@@ -1063,7 +1142,8 @@ def main():
 </head>
 <body>
 <div class="app"><nav class="side"></nav><main class="main"></main></div>
-<script>const DATA={json.dumps(reg, ensure_ascii=False)};</script>
+<script>const DATA={json.dumps(reg, ensure_ascii=False)};
+const CHECKS={json.dumps(read_checks(), ensure_ascii=False)};</script>
 <script>{JS}</script>
 </body></html>"""
     os.makedirs(OUT_DIR, exist_ok=True)
