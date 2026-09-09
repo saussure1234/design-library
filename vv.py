@@ -784,16 +784,23 @@ def cmd_build(a):
     import publish_guard
     publish_guard.enforce(ROOT, say, sys.exit)
     say("  … push", "b")
-    for cmd in (["git", "-C", ROOT, "add", "-A"],):
-        if subprocess.run(cmd).returncode:
-            sys.exit("  ★git add に失敗")
-    st = subprocess.run(["git", "-C", ROOT, "status", "--porcelain"],
+    # ★自分が作ったものだけ stage する。git add -A は隣で走っている別の作業の
+    #   途中のファイルまで巻き込む。実際に3回やった（手元用サーバ・検証中の
+    #   一時HTML・別案件の作りかけ）。動画の公開で触るのはこの3つだけ。
+    MINE = ["video-registry.json", "docs/video", "docs/lp/index.html"]
+    if subprocess.run(["git", "-C", ROOT, "add", "--"] + MINE).returncode:
+        sys.exit("  ★git add に失敗")
+    st = subprocess.run(["git", "-C", ROOT, "diff", "--cached", "--name-only"],
                         capture_output=True, text=True).stdout.strip()
     if not st:
         say("  ・変更なし"); return
+    say("  ・上げるもの: " + " ".join(sorted({p.split("/")[0] + ("/" + p.split("/")[1]
+                                              if "/" in p else "")
+                                             for p in st.splitlines()})))
     if subprocess.run(["git", "-C", ROOT, "commit", "-q", "-m",
                        f"動画の版を更新 ({TODAY})\n\n"
-                       "Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"]).returncode:
+                       "Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>",
+                       "--"] + MINE).returncode:
         sys.exit("  ★commit に失敗")
     if subprocess.run(["git", "-C", ROOT, "push", "-q", "origin", "main"]).returncode:
         sys.exit("  ★push に失敗（手元は commit 済み。原因を直して git push）")
