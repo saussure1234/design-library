@@ -200,25 +200,34 @@ tr:hover td{background:#fafbfc}
    ★横に長いので、版の列だけ固定して中身を横スクロールさせる。 */
 .sheetwrap{overflow-x:auto;border:1px solid var(--line);border-radius:9px;background:#fff}
 
+
 .ck{border:1px solid #e6e9ee;border-radius:10px;margin:0 0 14px;overflow:hidden;background:#fff}
-.ck__h{display:flex;align-items:center;gap:10px;padding:9px 12px;background:#f8fafc;
-  border-bottom:1px solid #eef0f3;font-size:13px}
-.ck__sum{padding:2px 8px;border-radius:999px;font-size:11.5px;font-weight:700}
+.ck__h{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid #eef0f3;font-size:13px}
+.ck__sum{padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:700}
 .ck__sum.ok{background:#e8f7ee;color:#1a7f45}
 .ck__sum.ng{background:#fdeaea;color:#b3261e}
-.ck__at{margin-left:auto;color:#8b94a3;font-size:11.5px}
-.ck__g{padding:7px 12px 3px;color:#8b94a3;font-size:11px;letter-spacing:.06em}
-.ck__r{display:grid;grid-template-columns:22px 150px 1fr 44px;gap:8px;align-items:baseline;
-  padding:5px 12px;font-size:12.5px;border-top:1px solid #f4f6f8}
-.ck__m{text-align:center;font-weight:700}
+.ck__at{margin-left:auto;color:#98a1ad;font-size:11.5px}
+.ck__box{padding:8px 14px 10px;border-bottom:1px solid #f4f6f8}
+.ck__box.ng{background:#fff6f5}
+.ck__box.you{background:#fffaf0}
+.ck__box.mine{background:#f9fafb}
+.ck__box.warn{background:#fffdf4}
+.ck__cap{font-size:11px;letter-spacing:.06em;color:#8b94a3;margin:0 0 4px}
+.ck__box.ng .ck__cap{color:#b3261e;font-weight:700}
+.ck__box.you .ck__cap{color:#9a6b12;font-weight:700}
+.ck__r{display:grid;grid-template-columns:20px 148px 1fr;gap:8px;align-items:baseline;
+  padding:3px 0;font-size:12.5px}
+.ck__m{text-align:center;font-weight:700;color:#9aa3af}
+.ck__box.ng .ck__m{color:#b3261e}
+.ck__box.you .ck__m{color:#9a6b12}
 .ck__n{font-weight:700;color:#2b3138}
 .ck__d{color:#5b6472;overflow-wrap:anywhere}
-.ck__b{color:#a6adb8;font-size:11px;text-align:right}
-.ck__r.ok .ck__m{color:#1a7f45}
-.ck__r.ng{background:#fff7f6}
-.ck__r.ng .ck__m{color:#b3261e}
-.ck__r.hu .ck__m,.ck__r.cl .ck__m{color:#b07d1a}
-.ck__r.sk{opacity:.62}
+.ck__f{border-bottom:1px solid #f4f6f8}
+.ck__f>summary{padding:8px 14px;font-size:12px;color:#78818e;cursor:pointer;list-style:none}
+.ck__f>summary::-webkit-details-marker{display:none}
+.ck__f>summary::before{content:"▸ ";color:#b6bdc7}
+.ck__f[open]>summary::before{content:"▾ "}
+.ck__f .ck__r{padding:3px 14px}
 table.sheet{border-collapse:separate;border-spacing:0;font-size:12.5px;min-width:1080px}
 table.sheet th,table.sheet td{border-bottom:1px solid #eef0f3;border-right:1px solid #f2f4f6;
   padding:8px 10px;vertical-align:top}
@@ -919,30 +928,34 @@ function checkPane(p){
   const vs=p.versions.filter(v=>CHECKS[v.id]).map(v=>v.id).reverse();
   if(!vs.length) return `<p class="empty">まだチェックしていない。<br>
     <code>python3 check.py docs/&lt;版id&gt;/index.html</code> を通すとここに出る。</p>`;
-  const MARK={ok:['○','ok'],ng:['✗','ng'],skip:['−','sk'],todo:['…','sk'],
-               human:['□','hu'],claude:['◇','cl'],pending:['…','sk']};
   return vs.map(vid=>{
-    const c=CHECKS[vid], g={};
-    c.items.forEach(i=>{ (g[i.group]=g[i.group]||[]).push(i); });
-    const nng=c.items.filter(i=>i.state==='ng').length;
-    const nok=c.items.filter(i=>i.state==='ok').length;
-    const rest=c.items.filter(i=>['human','claude','todo','skip','pending'].includes(i.state)).length;
+    const c=CHECKS[vid];
+    const pick=s=>c.items.filter(i=>s.includes(i.state));
+    const ng=pick(['ng']), you=pick(['human']), mine=pick(['claude']),
+          ok=pick(['ok']), warn=pick(['warn']), todo=pick(['todo','skip','pending']);
+    const row=(i,m)=>`<div class="ck__r"><span class="ck__m">${m}</span>
+      <span class="ck__n">${esc(i.name)}</span><span class="ck__d">${esc(i.msg||'')}</span></div>`;
+    const fold=(t,n,items,m)=>n?`<details class="ck__f"><summary>${t} <b>${n}</b> 項目</summary>
+      ${items.map(i=>row(i,m)).join('')}</details>`:'';
     return `<div class="ck">
-      <div class="ck__h">
-        <b>${vid}</b>
-        <span class="ck__sum ${nng?'ng':'ok'}">${nng?`要対応 ${nng}`:'機械はすべて通過'}</span>
-        <span class="ck__at">通過 ${nok} ／ 残り ${rest}　${c.at}</span>
-      </div>
-      ${Object.keys(g).map(gr=>`
-        <div class="ck__g">${gr}</div>
-        ${g[gr].map(i=>{const m=MARK[i.state]||['?','sk'];return `
-          <div class="ck__r ${m[1]}">
-            <span class="ck__m">${m[0]}</span>
-            <span class="ck__n">${esc(i.name)}</span>
-            <span class="ck__d">${esc(i.msg||'')}</span>
-            <span class="ck__b">${i.by==='machine'?'機械':i.by==='claude'?'Claude':'目視'}</span>
-          </div>`;}).join('')}
-      `).join('')}
+      <div class="ck__h"><b>${vid}</b>
+        <span class="ck__sum ${ng.length?'ng':'ok'}">${ng.length?`要対応 ${ng.length}`:'機械はすべて通過'}</span>
+        <span class="ck__at">${c.at}</span></div>
+
+      ${ng.length?`<div class="ck__box ng"><div class="ck__cap">直してから出す</div>
+        ${ng.map(i=>row(i,'✗')).join('')}</div>`:''}
+
+      ${you.length?`<div class="ck__box you"><div class="ck__cap">あなたが見る</div>
+        ${you.map(i=>row(i,'□')).join('')}</div>`:''}
+
+      ${mine.length?`<div class="ck__box mine"><div class="ck__cap">私が画像を見て判断する</div>
+        ${mine.map(i=>`<div class="ck__r"><span class="ck__m">◇</span>
+          <span class="ck__n">${esc(i.name)}</span>
+          <span class="ck__d">${esc(i.done||'まだ見ていない')}</span></div>`).join('')}</div>`:''}
+
+      ${warn.map(i=>`<div class="ck__box warn">${row(i,'△')}</div>`).join('')}
+      ${fold('機械が通した',ok.length,ok,'○')}
+      ${fold('これから作る',todo.length,todo,'…')}
     </div>`;
   }).join('');
 }
