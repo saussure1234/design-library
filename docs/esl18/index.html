@@ -3284,6 +3284,26 @@ document.documentElement.classList.add('fv-anim');
   .pmp__item:nth-child(even){ justify-self:stretch }
 }
 </style>
+
+<style id="yt-tap">
+/* 🚨 押すと白くなる／2回押さないと再生されない件（2026-09-11）。
+   プレイヤーを先に用意するが、【見た目はこちらのサムネと緑のボタンのまま】にする。
+   ・重ね順は 下から iframe(1) → こちらのサムネ(2) → 緑のボタン(3)
+   ・サムネと緑のボタンは pointer-events:none にして、指を下の
+     YouTube の再生ボタンまで通す → 1回押すだけで音つきで鳴る
+   ・再生が始まったら、こちらのサムネと緑のボタンを引っ込めて映像を見せる
+   ★サムネは display:none にしない。器の高さ（aspect-ratio 4/3）を
+     作っているのがこの img なので、消すと箱がつぶれる。visibility で隠す。 */
+.pmp__thumb{position:relative}
+.pmp__thumb iframe{position:absolute;left:5px;top:5px;
+  width:calc(100% - 10px);height:calc(100% - 10px);z-index:1}  /* 白縁5pxの内側 */
+.pmp__thumb img{position:relative;z-index:2}
+.pmp__thumb .pmp__play{z-index:3}
+.pmp__thumb.is-ready img,
+.pmp__thumb.is-ready .pmp__play{pointer-events:none}
+.pmp__thumb.is-play img{visibility:hidden}
+.pmp__thumb.is-play .pmp__play{display:none}
+</style>
 </head>
 <body>
 <div id="intro" aria-hidden="true"><svg viewBox="0 0 1000 1000" preserveAspectRatio="none"><path id="introPath" fill="#00B21F" d="M0,0 L1000,0 L1000,1000 C1000,1000 750,1000 500,1000 C250,1000 0,1000 0,1000 Z"></path></svg></div>
@@ -4798,28 +4818,95 @@ document.documentElement.classList.add('js');
 })();
 
 /* ── 動画をその場で再生 ─────────────────────
-   サムネイルを押したら YouTube の埋め込みに差し替える。
-   最初から iframe を置くと読み込みが重く、外部に足跡も残るため押されてから作る。 */
+   🚨 2026-09-11：スマホで「押すと白くなって、2回押さないと再生されない」。
+   原因は2つあって、どちらも【押してから iframe を作る】ことから来ていた。
+     ① b.innerHTML='' でサムネを消してから iframe を足していたので、
+        YouTube が描き終わるまで .pmp__thumb の白地（--c-bg）が見えていた。
+     ② iOS は「音つきの自動再生」を許さない。押した瞬間に作った別ドメインの
+        iframe に指のジェスチャーは引き継がれないので autoplay=1 が効かず、
+        YouTube 自身の再生ボタンが出るだけ＝2回目の指が必要だった。
+   直し方：画面に入った時点でプレイヤーだけ先に用意しておく（自動再生はしない）。
+     ・サムネは消さず、iframe をその上に重ねる → 白くならない
+     ・用意できたら緑の再生ボタンは【見た目だけ残して指を通す】
+       （pointer-events:none）。指はYouTubeの再生ボタンに直接届くので1回で鳴る
+     ・再生が始まったら緑のボタンを消す（enablejsapi の状態通知で判定。
+       API のスクリプトは読まない＝postMessage だけで済ませる）
+   ※代わりに【その節までスクロールした時点で YouTube を読み込む】ことになる。
+     押されるまで一切読まない前の作りより重い。1回で鳴らすには他に手が無い。 */
 (function(){
-  document.querySelectorAll('[data-yt]').forEach(function(b){
+  var vids=[].slice.call(document.querySelectorAll('[data-yt]'));
+  if(!vids.length) return;
+
+  function build(b, auto){
+    if(b.dataset.built) return b.querySelector('iframe');
+    var id=b.dataset.yt; if(!id) return null;
+    var q='rel=0&playsinline=1&fs=1&enablejsapi=1'+(auto?'&autoplay=1':'');
+    /* origin は http(s) のときだけ付ける。file:// だと origin=null になり
+       YouTube が「エラー153」で再生を拒否する */
+    if(location.protocol==='http:'||location.protocol==='https:')
+      q+='&origin='+encodeURIComponent(location.origin);
+    var f=document.createElement('iframe');
+    f.src='https://www.youtube-nocookie.com/embed/'+id+'?'+q;
+    f.referrerPolicy='strict-origin-when-cross-origin';
+    f.title=b.getAttribute('aria-label')||'';
+    /* allow に fullscreen が無いと、古い allowfullscreen 属性だけでは
+       全画面が許可されない環境がある（YouTube 公式の埋め込みコードも入れている） */
+    f.allow='accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture;fullscreen';
+    f.setAttribute('allowfullscreen','');
+    b.appendChild(f);                    /* ★サムネは消さない。下に残して白飛びを防ぐ */
+    b.dataset.built='1';
+    if(!auto) b.classList.add('is-ready');   /* 緑ボタンは見た目だけ残して指を通す */
+    else      b.classList.add('is-play');
+    /* 再生が始まったかを見る（状態が来たら緑のボタンを消す） */
+    f.addEventListener('load',function(){
+      try{ f.contentWindow.postMessage(
+        '{"event":"listening","id":"'+id+'","channel":"widget"}','*'); }catch(e){}
+    });
+    return f;
+  }
+
+  /* ★出どころは丸ごと突き合わせる。正規表現の後方一致だと
+     evilyoutube.com のような別ドメインも通ってしまう。 */
+  var YT_OK={'www.youtube.com':1,'youtube.com':1,
+             'www.youtube-nocookie.com':1,'youtube-nocookie.com':1};
+  addEventListener('message',function(e){
+    var host=''; try{ host=new URL(e.origin).hostname; }catch(x){ return; }
+    if(!YT_OK[host]) return;
+    var d=e.data; if(typeof d!=='string') return;
+    try{ d=JSON.parse(d); }catch(x){ return; }
+    if(d.event!=='onStateChange' && d.event!=='infoDelivery') return;
+    var st=(d.info&&typeof d.info==='object')?d.info.playerState:d.info;
+    if(st!==1 && st!==3) return;          /* 1=再生中 3=読み込み中 */
+    vids.forEach(function(b){
+      var f=b.querySelector('iframe');
+      if(f && f.contentWindow===e.source) b.classList.add('is-play');
+    });
+  });
+
+  /* ★保険：指がプレイヤーに触れると iframe にフォーカスが移り、
+     親側に focusin が飛んでくる。widget の状態通知が来なかった時でも
+     これで緑のボタンは消える（再生中の映像の真ん中に緑丸が残るのが一番まずい）。 */
+  document.addEventListener('focusin',function(ev){
+    var t=ev.target, b=(t&&t.closest)?t.closest('[data-yt]'):null;
+    if(b&&b.classList.contains('is-ready')) b.classList.add('is-play');
+  });
+
+  /* 画面に入る少し前にプレイヤーを用意する */
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(!e.isIntersecting) return;
+        build(e.target,false); io.unobserve(e.target);
+      });
+    },{rootMargin:'300px 0px'});
+    vids.forEach(function(b){ io.observe(b); });
+  }
+
+  /* 保険：用意が間に合っていない／IntersectionObserver が無いときは、
+     従来どおり押した時に作る（この場合だけ2回押しが残る） */
+  vids.forEach(function(b){
     b.addEventListener('click',function(){
-      var id=b.dataset.yt; if(!id||b.classList.contains('is-play')) return;
-      var f=document.createElement('iframe');
-      /* origin は http(s) のときだけ付ける。file:// だと origin=null になり
-         YouTube が「エラー153」で再生を拒否する */
-      var q='autoplay=1&rel=0&playsinline=1&fs=1';
-      if(location.protocol==='http:'||location.protocol==='https:') q+='&origin='+encodeURIComponent(location.origin);
-      f.src='https://www.youtube-nocookie.com/embed/'+id+'?'+q;
-      f.referrerPolicy='strict-origin-when-cross-origin';
-      f.title=b.getAttribute('aria-label')||'';
-      /* 🚨 スマホで全画面ボタンが出ない件（2026-09-10）。
-         allow に fullscreen が無いと、古い allowfullscreen 属性だけでは
-         全画面が許可されない環境がある（YouTube 公式の埋め込みコードも
-         allow に fullscreen を入れている）。fs=1 は既定だが明示しておく。 */
-      f.allow='accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture;fullscreen';
-      f.setAttribute('allowfullscreen','');
-      b.innerHTML=''; b.appendChild(f); b.classList.add('is-play');
-      /* 逃げ道のリンクは出さない（埋め込みは両方とも許可済みなのを確認済み） */
+      if(!b.dataset.built) build(b,true);
     });
   });
 })();
