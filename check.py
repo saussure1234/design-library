@@ -34,6 +34,18 @@ def prep(src, tmp):
     probe = """
 <script>
 addEventListener("load",function(){
+  // ★演出を出し切る【前】に記録する。画面より下にある .fx が最初から opacity:1 で
+  //   変形も無いなら、スクロールしても何も起きない＝動きが効いていない。
+  //   （「リロードすると小学生で英検2級がデフォルトで表示される」で実際に起きた）
+  var pre=[];
+  document.querySelectorAll(".fx").forEach(function(e){
+    var r=e.getBoundingClientRect();
+    if(r.top < innerHeight || r.width<4 || r.height<4) return;   // 画面内は出ていて当然
+    var s=getComputedStyle(e);
+    if(parseFloat(s.opacity)>0.95 && s.transform==="none" && s.clipPath==="none" && pre.length<6)
+      pre.push((String(e.className||"").split(" ")[0]||e.tagName)
+        +"「"+e.textContent.trim().slice(0,14)+"」");
+  });
   // 画面に入ったとき出る演出を全部出し切る（headless では発火しないことがある）
   setInterval(function(){document.querySelectorAll(".fx").forEach(function(e){e.classList.add("hh-in")})},60);
   setTimeout(function(){
@@ -161,6 +173,7 @@ addEventListener("load",function(){
       }
     });
     if(unread.length) out.push("［参考］地と近い色の文字: "+unread.join(" / "));
+    if(pre.length) out.push("最初から見えている（スクロール演出が効いていない）: "+pre.join(" / "));
     if(over.length) out.push("文字が画面外へ: "+over.join(" / "));
     if(clip.length) out.push("文字が切れている: "+clip.join(" / "));
     // ★判定は画像からしか読めないので、項目ごとに16pxの色マーカーを左上に並べる。
@@ -401,6 +414,67 @@ def check_secrets(src):
     return ("ng", " / ".join(sorted(set(hit))[:5])) if hit else ("ok", "金額・手元のパス・鍵とも無い")
 
 
+def check_motion(html):
+    """動き。出る順が DOM の順になっているか（data-d が並べ替えで取り残されていないか）。
+
+    ★実際に起きた事故：カードを並べ替えたのに data-d が元のカードに付いたままで、
+      「4つの特徴」が 3→4→1→2 の順に出た。目では気づきにくいので機械で見る。
+    ★見るのは【同じ親の兄弟どうし】だけ。見出しと一覧のように役目が違うものは
+      別の束なので、まとめて比べると誤検出になる（セクション単位で見て実際に外した）。
+    """
+    from html.parser import HTMLParser
+
+    VOID = {"br", "img", "hr", "input", "meta", "link", "source", "area", "base", "col",
+            "embed", "param", "track", "wbr"}
+
+    class P(HTMLParser):
+        def __init__(self):
+            super().__init__(convert_charrefs=True)
+            self.stack = [("#root", 0)]
+            self.nid = 0
+            self.groups = {}     # 親の識別子 → [(出現順, data-d, 目印)]
+
+        def handle_starttag(self, tag, attrs):
+            a = dict(attrs)
+            self.nid += 1
+            if "data-d" in a:
+                try:
+                    d = int(str(a["data-d"]).strip())
+                except ValueError:
+                    d = None
+                if d is not None:
+                    key = self.stack[-1]
+                    lab = (a.get("class") or tag).split(" ")[0]
+                    self.groups.setdefault(key, []).append((self.nid, d, lab))
+            if tag not in VOID:
+                self.stack.append((a.get("class", tag).split(" ")[0], self.nid))
+
+        def handle_startendtag(self, tag, attrs):
+            self.handle_starttag(tag, attrs)
+
+        def handle_endtag(self, tag):
+            if len(self.stack) > 1 and tag not in VOID:
+                self.stack.pop()
+
+    p = P()
+    p.feed(html)
+    total = sum(len(v) for v in p.groups.values())
+    if not total:
+        return ("ok", "data-d による順番指定は無い（順番の事故は起きない作り）")
+    bad = []
+    for (pname, _), items in p.groups.items():
+        if len(items) < 2:
+            continue
+        ds = [d for _, d, _ in items]
+        if ds != sorted(ds):
+            labs = [lab for _, _, lab in items]
+            bad.append(f"{pname} の中：{'→'.join(map(str, ds))}（並びは {'／'.join(labs[:4])}）")
+    if bad:
+        return ("ng", "出る順が DOM の順と違う: " + " / ".join(bad[:4]))
+    return ("ok", f"出る順は DOM の順（data-d {total}箇所）。"
+                  f"最初から見えていないかは5幅の撮影で判定")
+
+
 def run_checklist(src, vid, out_json):
     """checklist.json に沿って判定し、結果を JSON で残す。"""
     try:
@@ -411,21 +485,24 @@ def run_checklist(src, vid, out_json):
     lines = plain(html)
     base = os.path.dirname(src)
     p, v = find_version(vid)
+    # ★原稿は「この版に記録されたもの」。無ければ派生元をたどる。
+    #   最新の原稿を勝手に当てない（原稿が来る前の版と比べると、差分が全部嘘になる）。
     sp = None
-    if p and v and v.get("script"):
-        sp = os.path.join(ROOT, "scripts", p["id"], v["script"] + ".md")
-    elif p:
-        d = os.path.join(ROOT, "scripts", p["id"])
-        if os.path.isdir(d):
-            vs = sorted([f for f in os.listdir(d) if re.fullmatch(r"v\d+\.md", f)],
-                        key=lambda s: int(s[1:-3]))
-            sp = os.path.join(d, vs[-1]) if vs else None
+    if p and v:
+        by, cur, seen = {x["id"]: x for x in p["versions"]}, v, set()
+        while cur and cur["id"] not in seen:
+            if cur.get("script"):
+                sp = os.path.join(ROOT, "scripts", p["id"], cur["script"] + ".md")
+                break
+            seen.add(cur["id"])
+            cur = by.get(cur.get("parent"))
 
     fns = {"wording": lambda: check_wording(lines),
            "script-diff": lambda: check_script(lines, sp),
            "self-consistency": lambda: check_self(html),
            "links": lambda: check_links(html, base),
            "lineage": lambda: check_lineage(vid),
+           "motion": lambda: check_motion(html),
            "publish": lambda: check_publish(html),
            "secrets": lambda: check_secrets(src)}
     res = []
@@ -555,17 +632,49 @@ def main():
                     it["state"] = st if shot_flags else "skip"
                     it["msg"] = (okmsg[name] if st == "ok" else
                                  "5幅のいずれかで検出（まとめ画像の左上を見る）")
-        out = {"version": vid,
+        # ★私が画像を見て書いた「どこ・何が・どう直すか」を、再実行で消さない。
+        #   ただしページが変わっていたら見直しが必要なので、その時だけ捨てて claude に戻す。
+        import hashlib
+        dst = os.path.join(os.path.dirname(src), "_check.json")
+        sig = hashlib.sha1(open(src, "rb").read()).hexdigest()[:12]
+        keep = {}
+        if os.path.exists(dst):
+            try:
+                old_ = json.load(open(dst, encoding="utf-8"))
+                if old_.get("sig") == sig:            # ページが変わっていない
+                    for it in old_.get("items", []):
+                        if it.get("by") == "claude" and (it.get("what") or it.get("how")):
+                            keep[it["id"]] = it
+            except Exception:
+                pass
+        for it in items:
+            k = keep.get(it["id"])
+            if not k:
+                continue
+            it["state"] = k.get("state", it["state"])
+            for f in ("where", "what", "how"):
+                if k.get(f):
+                    it[f] = k[f]
+        n_keep = len(keep)
+        out = {"version": vid, "sig": sig,
                "at": __import__("datetime").datetime.now().strftime("%Y-%m-%d %H:%M"),
                "items": items}
-        json.dump(out, open(os.path.join(os.path.dirname(src), "_check.json"), "w", encoding="utf-8"),
-                  ensure_ascii=False, indent=1)
+        json.dump(out, open(dst, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
         say("\n── チェックリスト ──", "b")
         mark = {"ok": ("○", "g"), "ng": ("✗", "r"), "warn": ("△", "y"), "skip": ("−", "y"),
                 "todo": ("…", "y"), "human": ("□", "y"), "claude": ("◇", "y")}
         for it in items:
             m, c = mark.get(it["state"], ("?", ""))
-            say(f"  {m} {it['name']:<16} {it['msg'][:62]}", c)
+            txt = it.get("what") or it["msg"]
+            say(f"  {m} {it['name']:<16} {txt[:62]}", c)
+        if n_keep:
+            say(f"\n  ・前回私が見た判定 {n_keep}件はそのまま残した（ページが変わっていないため）")
+        else:
+            need = [i["name"] for i in items if i["state"] == "claude"]
+            if need:
+                say(f"\n  ▲ 私が画像を見て埋める項目が {len(need)}件（{'・'.join(need)}）。"
+                    f"\n    _shot.jpg を見て _check.json に where/what/how を書く。"
+                    f"\n    それをしないと画面に「私が意味を見る」としか出ず、So には何も伝わらない", "y")
         bad = [i for i in items if i["state"] == "ng"]
         ng = [x for x in ng if "px NG" not in x]      # 内訳は下のリストで出す
         if bad:
