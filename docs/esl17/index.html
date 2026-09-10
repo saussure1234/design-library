@@ -3337,8 +3337,26 @@ document.documentElement.classList.add('fv-anim');
      .cps__note は --fs-md のままで大きく、「から、」だけが行頭に落ちていた（実機）。 */
   .hbc__note,
   .cps__note,
-  .camp__note{ text-wrap:wrap; font-size:15px; line-height:1.7 }
+  .camp__note{ text-wrap:wrap; line-height:1.7 }
+
+  /* ★15px だと1文目「お子さまのレッスンでの様子と現レベルから、」が
+     375px の端末で 290px、器は 299px ＝ 余りが3%しかなかった。
+     Safari は Chrome より字が数%広いので、この余りでは溢れて3行になる
+     （同じ原因でオンライン校が3行に割れていた／2026-09-10）。
+     14px でも 271/299px ＝ 余り9% しかない。
+     ここは3回踏んでいるので、余りが1割を切る大きさは使わない。
+     13px なら 252/299px ＝ 余り16%、FVは 254/331px ＝ 23%。 */
+  .hbc__note,
+  .cps__note,
+  .camp__note{ font-size:13px }
 }
+
+/* ★360px以下（iPhone SE 1st など）は器が244pxしかなく、14px でも
+   1文目271pxが入らずどこかで勝手に折れていた。折れる場所をこちらで決める。
+   3行になるが「お子さまのレッスンでの様子と／現レベルから、／学習の進め方をご案内します」
+   ＝190/95/177px で、意味の切れ目で折れる。 */
+.xs-br{display:none}
+@media(max-width:360px){ .xs-br{display:inline} }
 </style>
 <style id="vhr-sp">
 /* 🚨 スマホで見出し(.vhr__title)とリード(.vhr__sub)が両方18pxで、
@@ -3786,6 +3804,20 @@ document.documentElement.classList.add('fv-anim');
 /* クライアントFB：合格率の下の注記が大きいので一段小さく */
 .vhr__cnote{ font-size:clamp(14px,0.98vw,15px) !important; line-height:1.65 !important }
 </style>
+<style id="pmp-sp">
+/* 🚨 スマホで全画面ボタンが出ない件（2026-09-10）。
+   .pmp__item が width:clamp(220px,19vw,290px) のため、375pxの端末でも
+   動画は【220px】しか無かった（使える幅は331px）。
+   YouTube の埋め込みプレイヤーは小さいと右側のボタン（全画面・設定）を
+   落とすので、全画面ボタンごと消えていた。スマホでは幅いっぱいに使う。
+   ★PCの「上を左・下を右へ振る」千鳥の並びはそのまま（901px以上）。 */
+@media(max-width:900px){
+  .pmp__grid{ width:100%; max-width:520px }
+  .pmp__item{ width:100% }
+  .pmp__item:nth-child(odd),
+  .pmp__item:nth-child(even){ justify-self:stretch }
+}
+</style>
 </head>
 <body>
 <div id="intro" aria-hidden="true"><svg viewBox="0 0 1000 1000" preserveAspectRatio="none"><path id="introPath" fill="#00B21F" d="M0,0 L1000,0 L1000,1000 C1000,1000 750,1000 500,1000 C250,1000 0,1000 0,1000 Z"></path></svg></div>
@@ -3895,7 +3927,7 @@ document.documentElement.classList.add('fv-anim');
       
         </div>
       </section>
-      <span class="hbc__note">お子さまのレッスンでの様子と現レベルから、<br class="sp-br">学習の進め方をご案内します</span>
+      <span class="hbc__note">お子さまのレッスンでの様子と<br class="xs-br">現レベルから、<br class="sp-br">学習の進め方をご案内します</span>
     </div>
   </div>
   
@@ -4204,7 +4236,7 @@ document.documentElement.classList.add('fv-anim');
 
         </div>
 
-        <p class="cps__note fx" data-fx="fadeup" data-d="240">お子さまのレッスンでの様子と現レベルから、<br class="sp-br">学習の進め方をご案内します</p>
+        <p class="cps__note fx" data-fx="fadeup" data-d="240">お子さまのレッスンでの様子と<br class="xs-br">現レベルから、<br class="sp-br">学習の進め方をご案内します</p>
 
       </div>
     </div>
@@ -4401,7 +4433,7 @@ document.documentElement.classList.add('fv-anim');
 
         </div>
 
-        <p class="cps__note fx" data-fx="fadeup" data-d="240">お子さまのレッスンでの様子と現レベルから、<br class="sp-br">学習の進め方をご案内します</p>
+        <p class="cps__note fx" data-fx="fadeup" data-d="240">お子さまのレッスンでの様子と<br class="xs-br">現レベルから、<br class="sp-br">学習の進め方をご案内します</p>
 
       </div>
     </div>
@@ -4935,7 +4967,7 @@ document.documentElement.classList.add('fv-anim');
 
         </div>
 
-        <p class="cps__note fx" data-fx="fadeup" data-d="240">お子さまのレッスンでの様子と現レベルから、<br class="sp-br">学習の進め方をご案内します</p>
+        <p class="cps__note fx" data-fx="fadeup" data-d="240">お子さまのレッスンでの様子と<br class="xs-br">現レベルから、<br class="sp-br">学習の進め方をご案内します</p>
 
       </div>
     </div>
@@ -5324,12 +5356,16 @@ document.documentElement.classList.add('js');
       var f=document.createElement('iframe');
       /* origin は http(s) のときだけ付ける。file:// だと origin=null になり
          YouTube が「エラー153」で再生を拒否する */
-      var q='autoplay=1&rel=0&playsinline=1';
+      var q='autoplay=1&rel=0&playsinline=1&fs=1';
       if(location.protocol==='http:'||location.protocol==='https:') q+='&origin='+encodeURIComponent(location.origin);
       f.src='https://www.youtube-nocookie.com/embed/'+id+'?'+q;
       f.referrerPolicy='strict-origin-when-cross-origin';
       f.title=b.getAttribute('aria-label')||'';
-      f.allow='accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture';
+      /* 🚨 スマホで全画面ボタンが出ない件（2026-09-10）。
+         allow に fullscreen が無いと、古い allowfullscreen 属性だけでは
+         全画面が許可されない環境がある（YouTube 公式の埋め込みコードも
+         allow に fullscreen を入れている）。fs=1 は既定だが明示しておく。 */
+      f.allow='accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture;fullscreen';
       f.setAttribute('allowfullscreen','');
       b.innerHTML=''; b.appendChild(f); b.classList.add('is-play');
       /* 逃げ道のリンクは出さない（埋め込みは両方とも許可済みなのを確認済み） */

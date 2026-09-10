@@ -3243,6 +3243,47 @@ document.documentElement.classList.add('fv-anim');
 .br-sp{display:none}
 @media(max-width:900px){ .br-sp{display:inline} }
 </style>
+<style id="note-sp">
+/* 🚨 実機（Safari）で CTA・FV の補助コピーが3行に割れる。
+   「目標級までの合格スケジュールを」＋<br>＋「レッスン後にご案内します」の
+   1文目だけで器がいっぱいになり、Safari のほうが字幅が広いぶん溢れて折れる。
+
+   ★Chrome で測った実寸（375px）：
+       .hbc__note  器261 / 18px=261（余り0）→ 16px=232 / 15px=218
+       .cps__note  器258 / 18px=258（余り0）→ 16px=230 / 15px=215
+     Chrome でぴったり0ということは、Safari では必ず溢れる。
+     この件は同じ原因で3回目なので、1割以上の余りが出る大きさにする。
+   ★320px では器が230まで縮む（15px=215 で余り6%しかない）ので、
+     360px以下はもう一段落として14px（=201 / 余り12%）にする。
+   ★text-wrap:pretty は明示的な <br> で切った短い区間まで均等配分しようとして
+     「お子さまのレッスン／での様子と」のような割り方をする。スマホでは切る。
+   ★あわせて、ボタン本文（.camp__btn-main 18px）と同じ大きさだったのが
+     15px になり、どちらが主役か分かるようになる。 */
+@media(max-width:900px){
+  .hbc__note,
+  .cps__note,
+  .camp__note{ text-wrap:wrap; font-size:15px; line-height:1.7 }
+}
+@media(max-width:360px){
+  .hbc__note,
+  .cps__note,
+  .camp__note{ font-size:14px }
+}
+</style>
+<style id="pmp-sp">
+/* 🚨 スマホで全画面ボタンが出ない件（2026-09-10）。
+   .pmp__item が width:clamp(220px,19vw,290px) のため、375pxの端末でも
+   動画は【220px】しか無かった（使える幅は331px）。
+   YouTube の埋め込みプレイヤーは小さいと右側のボタン（全画面・設定）を
+   落とすので、全画面ボタンごと消えていた。スマホでは幅いっぱいに使う。
+   ★PCの「上を左・下を右へ振る」千鳥の並びはそのまま（901px以上）。 */
+@media(max-width:900px){
+  .pmp__grid{ width:100%; max-width:520px }
+  .pmp__item{ width:100% }
+  .pmp__item:nth-child(odd),
+  .pmp__item:nth-child(even){ justify-self:stretch }
+}
+</style>
 </head>
 <body>
 <div id="intro" aria-hidden="true"><svg viewBox="0 0 1000 1000" preserveAspectRatio="none"><path id="introPath" fill="#00B21F" d="M0,0 L1000,0 L1000,1000 C1000,1000 750,1000 500,1000 C250,1000 0,1000 0,1000 Z"></path></svg></div>
@@ -4766,12 +4807,16 @@ document.documentElement.classList.add('js');
       var f=document.createElement('iframe');
       /* origin は http(s) のときだけ付ける。file:// だと origin=null になり
          YouTube が「エラー153」で再生を拒否する */
-      var q='autoplay=1&rel=0&playsinline=1';
+      var q='autoplay=1&rel=0&playsinline=1&fs=1';
       if(location.protocol==='http:'||location.protocol==='https:') q+='&origin='+encodeURIComponent(location.origin);
       f.src='https://www.youtube-nocookie.com/embed/'+id+'?'+q;
       f.referrerPolicy='strict-origin-when-cross-origin';
       f.title=b.getAttribute('aria-label')||'';
-      f.allow='accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture';
+      /* 🚨 スマホで全画面ボタンが出ない件（2026-09-10）。
+         allow に fullscreen が無いと、古い allowfullscreen 属性だけでは
+         全画面が許可されない環境がある（YouTube 公式の埋め込みコードも
+         allow に fullscreen を入れている）。fs=1 は既定だが明示しておく。 */
+      f.allow='accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture;fullscreen';
       f.setAttribute('allowfullscreen','');
       b.innerHTML=''; b.appendChild(f); b.classList.add('is-play');
       /* 逃げ道のリンクは出さない（埋め込みは両方とも許可済みなのを確認済み） */

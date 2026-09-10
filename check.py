@@ -176,11 +176,74 @@ addEventListener("load",function(){
     if(pre.length) out.push("最初から見えている（スクロール演出が効いていない）: "+pre.join(" / "));
     if(over.length) out.push("文字が画面外へ: "+over.join(" / "));
     if(clip.length) out.push("文字が切れている: "+clip.join(" / "));
+
+    /* ★ここから下は soft（幅の合否は変えない。見立てとして出すだけ） */
+    var soft=[];
+
+    // ★明示的な <br> で切ったコピーの「余り」。
+    //   Chrome でぴったり収まっていても、実機Safariは字が数%広いので溢れて1行増える。
+    //   実際に3回起きている（「から、」が行頭／CTA注記が3行／4行に割れる）。
+    var tight=[];
+    document.querySelectorAll("p,span,h1,h2,h3,h4").forEach(function(e){
+      if(!e.querySelector("br")) return;
+      var s=getComputedStyle(e);
+      if(s.display==="none"||s.visibility==="hidden") return;
+      var par=e.parentElement; if(!par) return;
+      var ps=getComputedStyle(par);
+      var avail=par.getBoundingClientRect().width
+              - parseFloat(ps.paddingLeft) - parseFloat(ps.paddingRight);
+      // ★狭い器（カード・表のセル）の中で折れるのは自然。広い場所の短いコピーだけ見る。
+      //   （orphan-line で同じ誤検出を踏んだので、同じ物差しを使う）
+      if(avail < W*0.45) return;
+      if(e.closest("table")) return;
+      if(e.textContent.trim().length > 60) return;   // 本文の長文は対象外
+      // ★display:none の <br>（幅ごとに出し分けている改行）は改行しない。
+      //   これを数えると「実際は1行なのに2つに割れている」と誤って測る。
+      var segs=[], cur="";
+      e.childNodes.forEach(function(n){
+        if(n.nodeName==="BR" && getComputedStyle(n).display!=="none"){ segs.push(cur); cur=""; }
+        else cur+=n.textContent;
+      });
+      segs.push(cur);
+      segs=segs.map(function(x){return x.trim()}).filter(Boolean);
+      if(segs.length<2) return;
+      var m=document.createElement("span");
+      m.style.cssText="position:absolute;visibility:hidden;white-space:nowrap;left:-9999px";
+      m.style.fontFamily=s.fontFamily; m.style.fontSize=s.fontSize;
+      m.style.fontWeight=s.fontWeight; m.style.letterSpacing=s.letterSpacing;
+      document.body.appendChild(m);
+      segs.forEach(function(tx){
+        m.textContent=tx;
+        var w=m.getBoundingClientRect().width, sl=(avail-w)/avail;
+        if(sl<0.10 && tight.length<6)
+          tight.push("「"+tx.slice(0,14)+"」"+Math.round(w)+"/"+Math.round(avail)
+                     +"px（余り"+Math.round(sl*100)+"%）");
+      });
+      m.remove();
+    });
+    if(tight.length) soft.push("明示改行の余りが1割未満＝実機Safariで1行増える: "+tight.join(" / "));
+
+    // ★埋め込み動画が小さいと、YouTube は右側のボタン（全画面・設定）を落とす。
+    //   「スマホで大きい画面にするボタンが無い」の正体。
+    var vid=[];
+    document.querySelectorAll("[data-yt],iframe").forEach(function(e){
+      var r=e.getBoundingClientRect();
+      if(r.width<4) return;
+      var why=[];
+      if(r.width<280) why.push("幅"+Math.round(r.width)+"px（280px未満だと全画面ボタンが出ない）");
+      var al=e.getAttribute&&e.getAttribute("allow");
+      if(e.tagName==="IFRAME" && al && al.indexOf("fullscreen")<0)
+        why.push("allow に fullscreen が無い");
+      if(why.length && vid.length<4) vid.push(why.join(" / "));
+    });
+    if(vid.length) soft.push("動画の全画面ボタンが出ない条件: "+vid.join(" ／ "));
     // ★判定は画像からしか読めないので、項目ごとに16pxの色マーカーを左上に並べる。
     //   緑=通過 / 赤=要対応。順は resp / orphan / scale / unreadable。
     var FLAGS=[
       out.some(function(x){return /横スクロール|画面外|切れている/.test(x)}),
       out.some(function(x){return /最終行が1〜2文字/.test(x)}),
+      soft.some(function(x){return /明示改行の余り/.test(x)}),
+      soft.some(function(x){return /全画面ボタン/.test(x)}),
     ];
     var fl=document.createElement("div");
     fl.style.cssText="position:absolute;left:0;top:0;z-index:2147483647;display:flex";
@@ -196,7 +259,8 @@ addEventListener("load",function(){
     d.setAttribute("data-result", JSON.stringify(out));
     d.style.cssText="position:absolute;left:0;top:16px;z-index:2147483646;background:"+
       (out.length?"#c00":"#063")+";color:#fff;font:12px/1.5 monospace;padding:6px;max-width:100%;white-space:pre-wrap";
-    d.textContent=(out.length? "NG " : "OK ")+W+"px\\n"+out.join("\\n");
+    d.textContent=(out.length? "NG " : "OK ")+W+"px\\n"+out.concat(
+      soft.map(function(x){return "［見立て］"+x})).join("\\n");
     document.body.appendChild(d);
   },2600);
 });
@@ -618,10 +682,17 @@ def main():
     # ── チェックリストの判定を JSON で残す（画面がこれを読む） ──
     vid = os.path.basename(os.path.dirname(src))
     items = run_checklist(src, vid, None)
+    try:
+        cl_items = json.load(open(os.path.join(ROOT, "checklist.json"),
+                                  encoding="utf-8"))["items"]
+    except Exception:
+        cl_items = []
     if items:
         # 撮影で得たフラグ（5幅ぶん）を項目へ振り分ける。1幅でも ng なら ng
-        order = ["responsive", "orphan-line"]
-        okmsg = {"responsive": "5幅とも崩れなし", "orphan-line": "孤立した行なし"}
+        order = ["responsive", "orphan-line", "br-margin", "embed-controls"]
+        okmsg = {"responsive": "5幅とも崩れなし", "orphan-line": "孤立した行なし",
+                 "br-margin": "明示改行はどの区間も1割以上の余りがある（実機で溢れにくい）",
+                 "embed-controls": "動画は280px以上あり、allow に fullscreen も入っている"}
         for k, name in enumerate(order):
             st = "ok"
             for f in shot_flags:
@@ -678,8 +749,13 @@ def main():
         # ★止めるのは【機械が測ったもの】だけ。
         #   私が画像を見て「こうした方がよい」と思ったものは提案であって、
         #   直す必要が無い可能性がある。判断は So。勝手に止めない・勝手に直さない。
-        bad  = [i for i in items if i["state"] == "ng" and i["by"] == "machine"]
-        mine = [i for i in items if i["state"] == "ng" and i["by"] != "machine"]
+        # ★止めるのは【実測で崩れているもの】だけ。
+        #   blocking:false（実機で溢れそう、などの予測）は見立てとして出すに留める。
+        blk = {i["id"] for i in cl_items if i.get("blocking", True)}
+        bad  = [i for i in items if i["state"] == "ng"
+                and i["by"] == "machine" and i["id"] in blk]
+        mine = [i for i in items if i["state"] == "ng"
+                and (i["by"] != "machine" or i["id"] not in blk)]
         ng = [x for x in ng if "px NG" not in x]      # 内訳は下のリストで出す
         if bad:
             ng.append("チェックリスト " + "・".join(i["name"] for i in bad))
