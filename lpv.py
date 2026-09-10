@@ -464,8 +464,10 @@ def cmd_rm_project(a):
 #     ・新リンクの派生元を、作業用ではなく提示中の版にした
 #   どれも「1つの情報源だけ見て裏を取らずに断定した」。人が気をつけても再発する。
 LOCALS = {                      # 案件id → 手元の作業フォルダ（あるものだけ）
-    "sharesec":     ["~/sharesec-lp", "~/sharesec-lp-v3"],
-    "ads-redesign": ["~/ads-redesign"],
+    "sharesec":     ["~/sharesec-lp", "~/sharesec-lp-v3", "~/sharesec-lp-v4"],
+    # 🚨 ~/ads-redesign 自体は remote を持たない（作業用）。git の遅れが出るのは
+    #    deploy 先の .deploy/ads-lp-preview なので、そちらも見る
+    "ads-redesign": ["~/ads-redesign", "~/ads-redesign/.deploy/ads-lp-preview"],
 }
 
 

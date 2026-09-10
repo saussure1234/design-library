@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>スタディサプリの文字組みを esl2 に当てる</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{--g:#00B21F;--yel:#FFEE03;--ink:#262626;--ink2:#303030;--ink3:#6b6b6b;--line:#e6e6e6}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{font-family:"Noto Sans JP","Hiragino Sans",system-ui,sans-serif;color:var(--ink);
+    background:#fafafa;padding:26px 22px 90px;-webkit-font-smoothing:antialiased}
+  .head{max-width:1280px;margin:0 auto 10px}
+  .head h1{font-size:clamp(18px,2.3vw,23px);margin:0 0 6px}
+  .head p{margin:0;color:#666;font-size:13.5px;line-height:1.8}
+  table.spec{max-width:1280px;margin:14px auto 0;border-collapse:collapse;font-size:13px;background:#fff;
+    border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  table.spec th,table.spec td{border-bottom:1px solid #f0f0f0;padding:10px 14px;text-align:left}
+  table.spec th{background:#f7f7f7;font-weight:700;font-size:12.5px}
+  table.spec td.n{font-variant-numeric:tabular-nums}
+  table.spec tr:last-child td{border-bottom:0}
+  .hl{color:#b26b00;font-weight:700}
+
+  .grid{max-width:1280px;margin:20px auto 0;display:grid;gap:18px;grid-template-columns:1fr}
+  
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .hd{padding:11px 14px;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;gap:9px}
+  .num{width:23px;height:23px;border-radius:7px;background:var(--ink);color:#fff;font-size:12.5px;
+    font-weight:700;display:grid;place-items:center;flex:none}
+  .ttl{font-size:14px;font-weight:700}.sub{font-size:11.5px;color:#888}
+  .stage{padding:34px 36px 40px;min-height:auto}
+  .stage .body{max-width:760px}
+
+  /* ── A：いまの esl2（実測値） ── */
+  .a .eyebrow{font-size:20px;font-weight:800;color:var(--ink2);line-height:1.6;letter-spacing:.01em;margin:0 0 8px}
+  .a .h1{font-size:42px;font-weight:900;line-height:1.28;letter-spacing:.01em;margin:0 0 18px}
+  .a .body{font-size:16px;font-weight:500;line-height:1.7;color:#444;margin:0}
+
+  /* ── B：スタディサプリの作法を当てる ── */
+  .b .eyebrow{font-size:15px;font-weight:600;color:var(--ink3);line-height:1.6;letter-spacing:.08em;margin:0 0 14px}
+  .b .h1{font-size:42px;font-weight:600;line-height:1.54;letter-spacing:.09em;margin:0 0 22px}
+  .b .body{font-size:16px;font-weight:400;line-height:2.0;color:#444;margin:0}
+
+  /* ── C：中間（現実解の案） ── */
+  .c .eyebrow{font-size:17px;font-weight:700;color:var(--ink3);line-height:1.6;letter-spacing:.05em;margin:0 0 12px}
+  .c .h1{font-size:42px;font-weight:700;line-height:1.45;letter-spacing:.04em;margin:0 0 20px}
+  .c .body{font-size:16px;font-weight:400;line-height:1.9;color:#444;margin:0}
+
+  .h1 em{font-style:normal;color:var(--g)}
+  .nb{white-space:nowrap}
+  .note{padding:11px 14px;border-top:1px solid #f4f4f4;font-size:12px;color:#777;line-height:1.75}
+  .foot{max-width:1280px;margin:22px auto 0;background:#fff;border:1px solid var(--line);
+    border-radius:12px;padding:16px 18px;font-size:13px;color:#555;line-height:1.9}
+  .foot b{color:#111}
+  code{background:#f2f2f2;padding:1px 6px;border-radius:4px;font-size:12px}
+</style>
+</head>
+<body>
+
+<div class="head">
+  <h1>スタディサプリの文字組みを esl2 に当てる</h1>
+  <p>両方のページを実測して比べました。<b>文言・書体・色は一切変えていません。</b>変えたのは太さ・行間・字間だけです。</p>
+</div>
+
+<table class="spec">
+  <tr><th></th><th>スタディサプリ</th><th>いまの esl2</th></tr>
+  <tr><td>書体</td><td class="n"><b>-apple-system</b>（OS標準）</td><td class="n">Noto Sans JP（webfont）</td></tr>
+  <tr><td>@font-face の数</td><td class="n"><b>2</b>（数字用のみ）</td><td class="n hl">496</td></tr>
+  <tr><td>使っている太さ</td><td class="n"><b>400 と 600 の2種類だけ</b></td><td class="n hl">700 / 800 / 900（ほぼ全部太い）</td></tr>
+  <tr><td>見出しの太さ</td><td class="n"><b>600</b></td><td class="n hl">900</td></tr>
+  <tr><td>見出しの行間</td><td class="n"><b>1.54</b></td><td class="n hl">1.28</td></tr>
+  <tr><td>見出しの字間</td><td class="n"><b>0.09em</b>（4.32px）</td><td class="n hl">0.01em（0.42px）</td></tr>
+  <tr><td>本文の行間</td><td class="n"><b>2.00</b></td><td class="n">1.5〜1.8</td></tr>
+  <tr><td>級数の段数</td><td class="n"><b>6段</b>（48/34/24/18/16/14）</td><td class="n hl">9段以上（42/41/34/32/28/26/24/23/21/20…）</td></tr>
+</table>
+
+<div class="grid">
+  <div class="card"><div class="hd"><span class="num">A</span><span class="ttl">いまの esl2</span><span class="sub">w900・行間1.28・字間0.01em</span></div>
+    <div class="stage a">
+      <p class="eyebrow">2015年の開塾以降”英検に特化”してきたからできる</p>
+      <h1 class="h1"><span class="nb">受験勉強と並走しながら</span><br><em><span class="nb">小学生・中学生で英検2級、</span></em><br><em><span class="nb">高校生で準1級</span></em>を<span class="nb">目指せる英語塾</span></h1>
+      <p class="body">ESL clubでは2015年の開塾以降、英検をカリキュラムに用いて、着実な英語力の向上と英検合格に導いてきました。国際基準であるCEFRに対応した英検を用いることで、バランスよく技能＋語彙力を高めていきます。</p>
+    </div>
+    <div class="note">太さが全部900なので、<b>どこが強調なのか分かりません</b>。行間1.28で行同士がくっつき、字間もほぼゼロで詰まって見えます。</div></div>
+
+  <div class="card"><div class="hd"><span class="num">B</span><span class="ttl">スタサプの作法を当てる</span><span class="sub">w600・行間1.54・字間0.09em</span></div>
+    <div class="stage b">
+      <p class="eyebrow">2015年の開塾以降”英検に特化”してきたからできる</p>
+      <h1 class="h1"><span class="nb">受験勉強と並走しながら</span><br><em><span class="nb">小学生・中学生で英検2級、</span></em><br><em><span class="nb">高校生で準1級</span></em>を<span class="nb">目指せる英語塾</span></h1>
+      <p class="body">ESL clubでは2015年の開塾以降、英検をカリキュラムに用いて、着実な英語力の向上と英検合格に導いてきました。国際基準であるCEFRに対応した英検を用いることで、バランスよく技能＋語彙力を高めていきます。</p>
+    </div>
+    <div class="note">同じ文言・同じ書体・同じ色。<b>太さを900→600、行間を1.28→1.54、字間を0.01→0.09em にしただけ</b>です。</div></div>
+
+  <div class="card"><div class="hd"><span class="num">C</span><span class="ttl">中間（現実解）</span><span class="sub">w700・行間1.45・字間0.04em</span></div>
+    <div class="stage c">
+      <p class="eyebrow">2015年の開塾以降”英検に特化”してきたからできる</p>
+      <h1 class="h1"><span class="nb">受験勉強と並走しながら</span><br><em><span class="nb">小学生・中学生で英検2級、</span></em><br><em><span class="nb">高校生で準1級</span></em>を<span class="nb">目指せる英語塾</span></h1>
+      <p class="body">ESL clubでは2015年の開塾以降、英検をカリキュラムに用いて、着実な英語力の向上と英検合格に導いてきました。国際基準であるCEFRに対応した英検を用いることで、バランスよく技能＋語彙力を高めていきます。</p>
+    </div>
+    <div class="note">太さを<b>一段だけ</b>落とし（900→700）、行間と字間を空けた案。<b>強さは残しつつ、詰まりが取れます</b>。塾のLPならここが落とし所だと思います。</div></div>
+</div>
+
+<div class="foot">
+  <b>スタサプが洗練されて見える理由は、書体ではありませんでした。</b><br>
+  ① <b>太さを2種類しか使わない</b>（400と600）。esl2 は 700/800/900 で、全部が主役なので主役が居ません。<br>
+  ② <b>行間と字間を空ける</b>。見出しでも行間1.54・字間0.09em。日本語は字間を空けると一気に上品になります。<br>
+  ③ <b>級数を6段に絞る</b>。esl2 は9段以上あり、統一感が出ません。<br>
+  ④ <b>webfontを使っていない</b>。OS標準の <code>-apple-system</code> だけ。@font-face は数字用の2個だけです（esl2 は496個）。<br><br>
+  <b>ただし、そのまま真似すべきではありません。</b>スタサプは「ブランドサイト」で、資料請求を取るLPではありません。w600 まで落とすと、<b>塾のLPとしては弱く見えるリスク</b>があります。<br>
+  <b>私の提案は、太さだけ一段落とす（900→700）＋行間と字間を空ける</b>です。上のBは振り切った状態なので、実際はその中間が現実解だと思います。
+</div>
+
+</body>
+</html>

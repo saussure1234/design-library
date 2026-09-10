@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>FVの写真に吹き出し｜3案</title>
+<style>
+  :root{--g:#00B21F;--g2:#6CBB00;--yel:#FFEE03;--ink:#262626;--ink3:#6b6b6b;--line:#e6e6e6;
+        --ease:cubic-bezier(.16,1,.3,1)}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Noto Sans JP",system-ui,sans-serif;
+    color:var(--ink);background:#fafafa;padding:26px 22px 90px;-webkit-font-smoothing:antialiased}
+  .head{max-width:1280px;margin:0 auto 8px}
+  .head h1{font-size:clamp(18px,2.3vw,23px);margin:0 0 6px}
+  .head p{margin:0;color:#666;font-size:13.5px;line-height:1.75}
+  .bar{max-width:1280px;margin:12px auto 0;display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+  .bar button{font:inherit;font-size:13px;border:1px solid #d5d5d5;background:#fff;padding:8px 15px;
+    border-radius:999px;cursor:pointer}
+  .bar .go{background:#111;color:#fff;border-color:#111;font-weight:700}
+  .wrapg{max-width:1280px;margin:18px auto 0;display:grid;gap:20px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .hd{padding:11px 14px;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;gap:9px}
+  .num{width:23px;height:23px;border-radius:7px;background:var(--ink);color:#fff;font-size:12.5px;
+    font-weight:700;display:grid;place-items:center;flex:none}
+  .ttl{font-size:14px;font-weight:700}.sub{font-size:11.5px;color:#888}
+
+  /* ── FVを実寸比で再現（esl3の実測値どおり） ── */
+  .fv{position:relative;width:100%;aspect-ratio:1440/677;background:#fff;overflow:hidden}
+  .fv .blob-a{position:absolute;left:36%;top:19%;width:17%;aspect-ratio:1/.98;background:#E2EFD6;
+    border-radius:44% 56% 61% 39%/57% 43% 57% 43%}
+  .fv .blob-b{position:absolute;left:70%;top:29%;width:15%;aspect-ratio:1/1;background:#F2E9CE;
+    border-radius:57% 43% 41% 59%/46% 57% 43% 54%}
+  .fv .hill{position:absolute;left:-8%;right:-8%;bottom:-14%;height:32%;background:var(--g);
+    border-radius:50% 50% 0 0/70% 70% 0 0}
+  .fv .copy{position:absolute;left:3.9%;top:15%;width:34%}
+  .fv .eyebrow{font-size:1.39vw;font-weight:800;margin:0 0 .5vw;line-height:1.6}
+  .fv .h1{font-size:2.9vw;font-weight:900;line-height:1.28;margin:0}
+  .fv .h1 em{font-style:normal;color:var(--g)}
+  .fv .nb{white-space:nowrap}
+  .fv .cta{display:inline-flex;align-items:center;gap:.5vw;margin-top:2.2vw;background:var(--yel);
+    color:#262626;font-size:1.25vw;font-weight:800;padding:1vw 1.8vw;border-radius:.4vw;
+    box-shadow:0 .55vw 0 #E0CF00}
+  .fv .pa{position:absolute;left:34%;top:24%;width:24.6%}
+  .fv .pb{position:absolute;left:66%;top:35%;width:28%}
+  .fv img{width:100%;display:block;filter:drop-shadow(0 8px 18px rgba(48,48,48,.10))}
+
+  /* ── 吹き出し 共通 ── */
+  .bb{position:absolute;z-index:9;font-weight:800;line-height:1.5;white-space:nowrap;
+      transform-origin:var(--o,50% 100%);opacity:0}
+  .play .bb{animation:bbIn .58s cubic-bezier(.34,1.42,.5,1) both}
+  .play .bb.b1{animation-delay:1.15s} .play .bb.b2{animation-delay:1.45s}
+  @keyframes bbIn{from{opacity:0;transform:scale(.72) translateY(8px)}
+                  to  {opacity:1;transform:scale(1) translateY(0)}}
+  /* 出たあとゆっくり漂う */
+  .play .bb.b1{animation:bbIn .58s cubic-bezier(.34,1.42,.5,1) 1.15s both, bbFloat 6.5s ease-in-out 1.9s infinite}
+  .play .bb.b2{animation:bbIn .58s cubic-bezier(.34,1.42,.5,1) 1.45s both, bbFloat 7.8s ease-in-out 2.3s infinite}
+  @keyframes bbFloat{0%,100%{translate:0 0}50%{translate:0 -.5vw}}
+
+  /* 位置（空いている場所に置く） */
+  .b1{left:42.5%;top:17%;--o:32% 100%}
+  .b2{left:74%;top:25%;--o:78% 100%}
+
+  /* ── ① 白い吹き出し（王道） ── */
+  .s1 .bb{background:#fff;color:#262626;border:.16vw solid #262626;
+    padding:.75vw 1.15vw;border-radius:.7vw;font-size:1.18vw;
+    box-shadow:0 .5vw 1.2vw -.5vw rgba(0,0,0,.22)}
+  .s1 .bb::after{content:"";position:absolute;bottom:-.58vw;
+    width:1vw;height:1vw;background:#fff;border-right:.16vw solid #262626;
+    border-bottom:.16vw solid #262626}
+  .s1 .b1::after{left:32%;margin-left:-.5vw;transform:rotate(45deg)}
+  .s1 .b2::after{left:78%;margin-left:-.5vw;transform:rotate(45deg)}
+
+  /* ── ② 緑の吹き出し（ブランド色） ── */
+  .s2 .bb{background:var(--g);color:#fff;padding:.78vw 1.2vw;border-radius:.7vw;font-size:1.18vw;
+    box-shadow:0 .5vw 1.2vw -.5vw rgba(0,120,30,.4)}
+  .s2 .bb::after{content:"";position:absolute;bottom:-.48vw;
+    width:1vw;height:1vw;background:var(--g)}
+  .s2 .b1::after{left:32%;margin-left:-.5vw;transform:rotate(45deg)}
+  .s2 .b2::after{left:78%;margin-left:-.5vw;transform:rotate(45deg)}
+
+  /* ── ③ 手書き風（線だけ・軽い） ── */
+  .s3 .bb{background:rgba(255,255,255,.92);color:var(--g);border:.12vw dashed var(--g);
+    padding:.7vw 1.1vw;border-radius:1.6vw;font-size:1.14vw}
+  .s3 .bb::after{content:"";position:absolute;bottom:-.52vw;
+    width:.85vw;height:.85vw;background:rgba(255,255,255,.92);
+    border-right:.12vw dashed var(--g);border-bottom:.12vw dashed var(--g)}
+  .s3 .b1::after{left:32%;margin-left:-.5vw;transform:rotate(45deg)}
+  .s3 .b2::after{left:78%;margin-left:-.5vw;transform:rotate(45deg)}
+
+  .note{padding:11px 14px;border-top:1px solid #f4f4f4;font-size:12px;color:#777;line-height:1.7}
+  .foot{max-width:1280px;margin:22px auto 0;background:#fff;border:1px solid var(--line);
+    border-radius:12px;padding:16px 18px;font-size:13px;color:#555;line-height:1.85}
+  .foot b{color:#111}
+  .warn{background:#FFF8E1;border:1px solid #F0DFA0;border-radius:10px;padding:12px 14px;margin-top:10px}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important}.bb{opacity:1}}
+</style>
+</head>
+<body>
+
+<div class="head">
+  <h1>FVの写真に吹き出しを足す｜3案</h1>
+  <p>写真2枚の空いている側に吹き出しを置き、<b>見出し→写真→CTAが出そろったあと（1.15秒／1.45秒）に、跳ねながら現れて、そのあとゆっくり漂います</b>。<br>
+  <b style="color:#b26b00">文言は仮です。</b>実在の生徒さんの写真なので、何を言わせるかは明光さんの確認が要ります（下に詳細）。</p>
+</div>
+
+<div class="bar"><button class="go" id="replay">▶ もう一度</button>
+  <span style="font-size:12px;color:#999">3案とも同時に再生されます</span></div>
+
+<div class="wrapg">
+
+  <div class="card"><div class="hd"><span class="num">1</span><span class="ttl">白い吹き出し</span><span class="sub">王道・どんな背景でも読める</span></div>
+    <div class="fv s1 play" id="f1">
+      <div class="blob-a"></div><div class="blob-b"></div>
+      <div class="copy">
+        <p class="eyebrow">2015年の開塾以降”英検に特化”してきたからできる</p>
+        <h1 class="h1"><span class="nb">受験勉強と並走しながら</span><br><em><span class="nb">小学生・中学生で英検2級、</span></em><br><em><span class="nb">高校生で準1級</span></em>を<span class="nb">目指せる英語塾</span></h1>
+        <span class="cta">無料体験レッスンはこちら →</span>
+      </div>
+      <div class="bb b1">部活を続けたまま、2級へ<span style="color:#b26b00">（仮）</span></div>
+      <div class="bb b2">自宅から、週1回<span style="color:#b26b00">（仮）</span></div>
+      <figure class="pa"><img src="img/fv_boy.png" alt=""></figure>
+      <figure class="pb"><img src="img/fv_girl.png" alt=""></figure>
+      <div class="hill"></div>
+    </div>
+    <div class="note">黒フチの白。<b>写真の上でも緑の上でも確実に読めます</b>。いちばん外しません。</div></div>
+
+  <div class="card"><div class="hd"><span class="num">2</span><span class="ttl">緑の吹き出し</span><span class="sub">ブランド色でまとめる</span></div>
+    <div class="fv s2 play" id="f2">
+      <div class="blob-a"></div><div class="blob-b"></div>
+      <div class="copy">
+        <p class="eyebrow">2015年の開塾以降”英検に特化”してきたからできる</p>
+        <h1 class="h1"><span class="nb">受験勉強と並走しながら</span><br><em><span class="nb">小学生・中学生で英検2級、</span></em><br><em><span class="nb">高校生で準1級</span></em>を<span class="nb">目指せる英語塾</span></h1>
+        <span class="cta">無料体験レッスンはこちら →</span>
+      </div>
+      <div class="bb b1">部活を続けたまま、2級へ<span style="color:#FFEE03">（仮）</span></div>
+      <div class="bb b2">自宅から、週1回<span style="color:#FFEE03">（仮）</span></div>
+      <figure class="pa"><img src="img/fv_boy.png" alt=""></figure>
+      <figure class="pb"><img src="img/fv_girl.png" alt=""></figure>
+      <div class="hill"></div>
+    </div>
+    <div class="note">緑が増えるぶん<b>統一感は出ますが、見出しの緑と競合します</b>。FVの緑が多くなりすぎないか要確認。</div></div>
+
+  <div class="card"><div class="hd"><span class="num">3</span><span class="ttl">手書き風（破線）</span><span class="sub">軽い・邪魔をしない</span></div>
+    <div class="fv s3 play" id="f3">
+      <div class="blob-a"></div><div class="blob-b"></div>
+      <div class="copy">
+        <p class="eyebrow">2015年の開塾以降”英検に特化”してきたからできる</p>
+        <h1 class="h1"><span class="nb">受験勉強と並走しながら</span><br><em><span class="nb">小学生・中学生で英検2級、</span></em><br><em><span class="nb">高校生で準1級</span></em>を<span class="nb">目指せる英語塾</span></h1>
+        <span class="cta">無料体験レッスンはこちら →</span>
+      </div>
+      <div class="bb b1">部活を続けたまま、2級へ<span style="color:#b26b00">（仮）</span></div>
+      <div class="bb b2">自宅から、週1回<span style="color:#b26b00">（仮）</span></div>
+      <figure class="pa"><img src="img/fv_boy.png" alt=""></figure>
+      <figure class="pb"><img src="img/fv_girl.png" alt=""></figure>
+      <div class="hill"></div>
+    </div>
+    <div class="note">主張が弱いぶん<b>写真と見出しの邪魔をしません</b>。ただし小さい画面では読みにくくなります。</div></div>
+
+</div>
+
+<div class="foot">
+  <b>動きの設計</b>：跳ねながら出る（0.58秒・わずかにオーバーシュート）→ そのあと 6.5秒／7.8秒でゆっくり上下に漂う。2つの吹き出しは<b>0.3秒ずらして</b>出るので、同時にポンと出る不自然さがありません。<br>
+  <b>置き場所</b>：実測した空きに合わせています。見出しは x56〜534・y191〜405、CTAは y445〜560、写真Aは x490〜844、写真Bは x950〜1354。吹き出しは<b>写真の頭より上の空き</b>に置いたので、どれとも重なりません。
+
+  <div class="warn">
+  <b>⚠ 文言は必ず差し替えてください（いまは仮）</b><br>
+  写真は<b>実在の生徒さん</b>です。吹き出しは「その子が言った言葉」として読まれるので、<b>本人が言っていないことを書くと、体験談の捏造になります</b>。<br>
+  安全な選択肢は3つ：<br>
+  ① <b>本人の実際の声をもらう</b>（明光さん経由でアンケートの一文を引く）／
+  ② <b>事実だけを書く</b>（「週1回・オンライン」など、発話ではなく状況の注記にする）／
+  ③ <b>吹き出しをやめて、注記の帯にする</b>（発話に見せない）<br>
+  私の推しは②です。吹き出しの形は保ちつつ、<b>主語を生徒にしない</b>書き方なら捏造になりません。
+  </div>
+</div>
+
+<script>
+  document.getElementById('replay').addEventListener('click',function(){
+    ['f1','f2','f3'].forEach(function(id){
+      var e=document.getElementById(id); e.classList.remove('play'); void e.offsetWidth; e.classList.add('play');
+    });
+  });
+</script>
+</body>
+</html>
