@@ -237,13 +237,94 @@ addEventListener("load",function(){
       if(why.length && vid.length<4) vid.push(why.join(" / "));
     });
     if(vid.length) soft.push("動画の全画面ボタンが出ない条件: "+vid.join(" ／ "));
+    // ── 高さ・位置の揃い（2026-09-11 実装）
+    //   きっかけ：SHAREの比較2箱が 左243.7 / 右363.1 で119.4px違っていたのに、
+    //   この項目は「未判定」しか出しておらず、見つけたのは人だった。
+    //   物差し：同じ親の直下で横に並ぶ（＝縦位置が重なる）兄弟の、上端と下端の差。
+    //   🚨 4px までは字送りの丸めで出るので通す。5px 以上を拾う。
+    //   🚨 grid/flex で意図的に高さを変えている列（align-items:start 等）も拾う。
+    //      それが今回の SHARE の原因そのものだったので、除外しない。
+    //   🚨 最初に書いた版は「上限6件」で先に雑音が埋まり、本命の119pxに届かなかった。
+    //      2つ直した：①同種の兄弟だけ見る（タグ＋第1クラスが全員そろっているもの。
+    //      アイコンと本文のような別物の対を除ける）②全部集めて差の大きい順に並べる。
+    //   🚨 閾値は8px。過去FBの実測が 19px（人・AIの開始点）と 119px（比較の2箱）なので、
+    //      5pxだと字送りの丸めまで拾って雑音になる。
+    var alignAll=[];
+    document.querySelectorAll("body *").forEach(function(par){
+      var ks=[].slice.call(par.children).filter(function(e){
+        if(e instanceof SVGElement) return false;
+        var s=getComputedStyle(e);
+        if(s.display==="none"||s.visibility==="hidden"||s.position==="absolute") return false;
+        var r=e.getBoundingClientRect();
+        return r.width>60 && r.height>40;
+      });
+      if(ks.length<2 || ks.length>6) return;
+      var key=function(e){return e.tagName+"."+nm(e)};
+      var kinds={}; ks.forEach(function(e){kinds[key(e)]=1});
+      if(Object.keys(kinds).length!==1) return;                    // 同種でないものの対は見ない
+      var rs=ks.map(function(e){return e.getBoundingClientRect()});
+      // 横に並んでいる＝縦の範囲が重なっている、かつ左端が違う
+      for(var i=1;i<rs.length;i++){
+        if(rs[i].left <= rs[i-1].left + 4) return;                 // 縦積み
+        if(rs[i].top > rs[i-1].bottom - 8) return;                 // 段が違う
+      }
+      var tops=rs.map(function(r){return r.top}), bots=rs.map(function(r){return r.bottom});
+      var dt=Math.max.apply(null,tops)-Math.min.apply(null,tops);
+      var db=Math.max.apply(null,bots)-Math.min.apply(null,bots);
+      var d=Math.max(dt,db);
+      if(d>=8) alignAll.push({d:d, s:nm(par)+" の"+ks.length+"つ("+key(ks[0])+"): 上端差"
+        +Math.round(dt)+"px / 下端差"+Math.round(db)+"px"});
+    });
+    alignAll.sort(function(a,b){return b.d-a.d});
+    var align=alignAll.slice(0,6).map(function(x){return x.s});
+    //   🚨 out（＝リンクを止める）に入れてはいけない。棒グラフのように「高さが違うことが
+    //      意味を持つ」並びがあり、実際に /4 で bars の72px差を誤検出した。
+    //      止めるのは「機械が実測で崩れている」ものだけ（checklist の決めごと）。
+    //      ここは見立てとして出し、直すかどうかは人が決める。
+    if(align.length) soft.push("横に並ぶ要素の高さ・位置がそろっていない（差の大きい順）: "+align.join(" / "));
+
+    // ── 地との差（罫・枠だけ。2026-09-11 追加）
+    //   きっかけ：見出し下の .s-notch が白地に対して比1.26で、実質見えていなかった。
+    //   🚨 文字のコントラストは上の unread（閾値1.35）で既に見ている。ここを4.5に
+    //      上げようとして25件の偽陽性を出した（濃色地がグラデーションで backgroundColor が
+    //      透明なため、白文字を「白地に白」と誤判定した）。既存の bg() は
+    //      グラデーションのとき null を返して判定を見送る作りなので、それを使う。
+    //   🚨 既存が見ているのは文字要素（P/H1-H4/SPAN/A/LI/EM/B/STRONG）だけ。
+    //      1pxの罫・<i>・<hr> は対象外だった。そこがまさに抜けていた穴。
+    //   物差し：高さ4px以下・幅24px以上の面（＝罫）で、地との比が1.35未満。
+    //   🚨 最初 3.0（WCAG 1.4.11）にしたら11件出て、全部「本物だが普通の設計」だった
+    //      （#cdd4dc の罫を白地に＝比1.5。薄い1px罫は正常な組み方）。
+    //      3.0 は「部品や状態を見分けるための線」の基準で、装飾の区切り罫には厳しすぎる。
+    //      既存の文字判定（unread）が使っている 1.35 に合わせる。ここは
+    //      「意味を持っているのに見えていない」ものだけを拾いたい（.s-notch は1.26）。
+    var lowc=[];
+    document.querySelectorAll("hr, i, span, div, li").forEach(function(e){
+      if(lowc.length>=6) return;
+      if(e instanceof SVGElement) return;
+      var s=getComputedStyle(e);
+      if(s.display==="none"||s.visibility==="hidden"||parseFloat(s.opacity)<0.5) return;
+      var r=e.getBoundingClientRect();
+      if(r.height>4 || r.height<1 || r.width<24) return;      // 罫だけ
+      if(e.textContent.trim()) return;                        // 文字があるものは罫ではない
+      var c=s.backgroundColor;
+      if(!c || c==="rgba(0, 0, 0, 0)" || /, 0\)$/.test(c)) return;
+      var bgc=bg(e.parentElement||e); if(bgc===null) return;  // グラデーションは見送る
+      var f=lum(c), b=lum(bgc);
+      if(f===null||b===null) return;
+      var cr=(Math.max(f,b)+0.05)/(Math.min(f,b)+0.05);
+      if(cr<1.35) lowc.push("罫 "+nm(e)+"（幅"+Math.round(r.width)+"px）比"+cr.toFixed(2)+"（地とほぼ同じ＝見えていない）");
+    });
+    if(lowc.length) soft.push("地との差が小さくて沈んでいる罫: "+lowc.join(" / "));
+
     // ★判定は画像からしか読めないので、項目ごとに16pxの色マーカーを左上に並べる。
-    //   緑=通過 / 赤=要対応。順は resp / orphan / scale / unreadable。
+    //   緑=通過 / 赤=要対応。順は resp / orphan / br / embed / align / contrast。
     var FLAGS=[
       out.some(function(x){return /横スクロール|画面外|切れている/.test(x)}),
       out.some(function(x){return /最終行が1〜2文字/.test(x)}),
       soft.some(function(x){return /明示改行の余り/.test(x)}),
       soft.some(function(x){return /全画面ボタン/.test(x)}),
+      soft.some(function(x){return /高さ・位置がそろっていない/.test(x)}),
+      soft.some(function(x){return /地との差が小さくて/.test(x)}),
     ];
     var fl=document.createElement("div");
     fl.style.cssText="position:absolute;left:0;top:0;z-index:2147483647;display:flex";
@@ -293,10 +374,11 @@ def shoot(page, out, w, h=20000):
 
 
 def read_flags(png):
-    """左上に並べた16pxの色マーカーを読む。resp / orphan / scale / unreadable の順。"""
+    """左上に並べた16pxの色マーカーを読む。
+    順は resp / orphan / br-margin / embed / alignment / contrast（probe の FLAGS と同じ）。"""
     px = Image.open(png).convert("RGB").load()
     out = []
-    for i in range(4):
+    for i in range(6):
         c = px[i * 16 + 8, 8]
         out.append("ng" if (c[0] > 150 and c[1] < 90) else ("ok" if (c[1] > 110 and c[0] < 90) else "?"))
     return out
@@ -741,19 +823,33 @@ def main():
         cl_items = []
     if items:
         # 撮影で得たフラグ（5幅ぶん）を項目へ振り分ける。1幅でも ng なら ng
-        order = ["responsive", "orphan-line", "br-margin", "embed-controls"]
+        order = ["responsive", "orphan-line", "br-margin", "embed-controls",
+                 "alignment", "contrast"]
+        # 🚨 マーカーが読めない（"?"）のを「ok」にしてはいけない。
+        #    probe が途中で例外を投げるとマーカーが描かれず、全項目が緑に見える。
+        #    2026-09-11 に実際に踏んだ（alignment を足した直後、6件の上限で
+        #    本命に届かず＝別の原因だったが、読めない時に通す作りは同じ穴）。
         okmsg = {"responsive": "5幅とも崩れなし", "orphan-line": "孤立した行なし",
                  "br-margin": "明示改行はどの区間も1割以上の余りがある（実機で溢れにくい）",
-                 "embed-controls": "動画は280px以上あり、allow に fullscreen も入っている"}
+                 "embed-controls": "動画は280px以上あり、allow に fullscreen も入っている",
+                 "alignment": "横に並ぶ要素の上端・下端は5px以内でそろっている",
+                 "contrast": "文字は4.5以上、罫・枠は3.0以上の差がある"}
         for k, name in enumerate(order):
             st = "ok"
+            unknown = False
             for f in shot_flags:
-                if k < len(f) and f[k] == "ng":
+                if k >= len(f) or f[k] == "?":
+                    unknown = True
+                elif f[k] == "ng":
                     st = "ng"; break
+            if st == "ok" and unknown:
+                st = "pending"
             for it in items:
                 if it["id"] == name:
                     it["state"] = st if shot_flags else "skip"
                     it["msg"] = (okmsg[name] if st == "ok" else
+                                 "★判定できていない（画面の左上にマーカーが出ていない＝"
+                                 "計測が途中で落ちた可能性）" if st == "pending" else
                                  "5幅のいずれかで検出（まとめ画像の左上を見る）")
         # ★私が画像を見て書いた「どこ・何が・どう直すか」を、再実行で消さない。
         #   ただしページが変わっていたら見直しが必要なので、その時だけ捨てて claude に戻す。

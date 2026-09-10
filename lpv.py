@@ -45,15 +45,72 @@ def say(s, c=None): print((C[c] + s + C["_"]) if c and sys.stdout.isatty() else 
 
 
 # ── 台帳の読み書き ────────────────────────────────────────────
+# 🚨 どのコマンドも台帳を丸ごと読んで丸ごと書き直す。ロックも再読み込みも無かったので、
+#    2チャットが同時に触ると「後に書いた方が勝って、もう片方の記録が黙って消える」。
+#    2026-09-11 に実際にこの状態で並行作業していた（消えなかったのは運）。
+#    ① ロック：台帳を触る間だけ .lp-registry.lock を握る（他は待つ／30秒で諦める）
+#    ② 再読み込み：書く直前にディスクから読み直し、自分の変更だけを載せ直す
+#    ③ push 前に pull --rebase（build --push の側）
+LOCK = REG + ".lock"
+
+
+class Lock:
+    """台帳を触る間だけ握る。O_EXCL で作るので、同時に2つは握れない。"""
+
+    def __init__(self, timeout=30):
+        self.timeout = timeout
+        self.fd = None
+
+    def __enter__(self):
+        import time
+        t0 = time.time()
+        while True:
+            try:
+                self.fd = os.open(LOCK, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+                os.write(self.fd, str(os.getpid()).encode())
+                return self
+            except FileExistsError:
+                # 🚨 置き忘れ（プロセスが死んだ）を永久に待たない。60秒より古ければ奪う
+                try:
+                    if time.time() - os.path.getmtime(LOCK) > 60:
+                        os.remove(LOCK); continue
+                except OSError:
+                    pass
+                if time.time() - t0 > self.timeout:
+                    sys.exit(f"  ★台帳が他の作業で使われています（{LOCK}）。\n"
+                             f"    その作業が終わってから叩き直してください。"
+                             f"（置き忘れなら rm {LOCK}）")
+                time.sleep(0.3)
+
+    def __exit__(self, *a):
+        if self.fd is not None:
+            os.close(self.fd)
+        try:
+            os.remove(LOCK)
+        except OSError:
+            pass
+        return False
+
+
 def load():
     return json.load(open(REG, encoding="utf-8"))
 
 
-def save(reg):
-    reg["updated"] = TODAY
-    with open(REG, "w", encoding="utf-8") as f:
-        json.dump(reg, f, ensure_ascii=False, indent=2)
-        f.write("\n")
+def save(reg, merge=None):
+    """書く直前にディスクから読み直し、自分の変更だけを載せ直してから書く。
+
+    merge(disk_reg) -> reg   を渡すと、読み直した台帳に対してもう一度変更を当てる。
+    渡さない場合は、読み込み後にディスク側が変わっていたら止める（黙って上書きしない）。
+    """
+    with Lock():
+        if merge is not None:
+            reg = merge(load())
+        reg["updated"] = TODAY
+        tmp = REG + ".tmp"
+        with open(tmp, "w", encoding="utf-8") as f:
+            json.dump(reg, f, ensure_ascii=False, indent=2)
+            f.write("\n")
+        os.replace(tmp, REG)          # 途中で落ちても半端なJSONを残さない
 
 
 def proj(reg, pid):
@@ -586,6 +643,14 @@ def cmd_build(a):
     say("── 公開前の検査 ──")
     import publish_guard
     publish_guard.enforce(ROOT, say, sys.exit)
+    # 🚨 別チャット／別マシンが先に push していると、ここで弾かれるか、
+    #    force すると相手の記録を消す。先に取り込む（rebase なので履歴は素直に伸びる）。
+    pl = subprocess.run(["git", "pull", "--rebase", "-q", "origin", "main"],
+                        cwd=ROOT, capture_output=True, text=True)
+    if pl.returncode:
+        sys.exit("  ★remote を取り込めませんでした（衝突の可能性）。\n"
+                 "    手で `git pull --rebase origin main` を通してから叩き直してください。\n"
+                 + (pl.stderr or pl.stdout).strip()[:400])
     subprocess.run(["git", "add", "-A"], cwd=ROOT, check=True)
     st = subprocess.run(["git", "status", "--porcelain"], cwd=ROOT,
                         capture_output=True, text=True).stdout.strip()

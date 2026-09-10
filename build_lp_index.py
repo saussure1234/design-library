@@ -156,6 +156,10 @@ body{font-family:"Hiragino Sans","Yu Gothic",Meiryo,sans-serif;background:var(--
 /* 雰囲気テンプレ：タブが7つ並ぶので折り返しを許す */
 .mtabs{flex-wrap:wrap;border-bottom-width:2px}
 .mtabs button{padding:9px 13px;font-size:13px}
+.mtabs .mt__n{margin-left:6px;font-size:11px;color:var(--mute)}
+/* 雰囲気のタブは型のタブより一段小さく（軸が2つあることを形で示す） */
+.mtabs--m{margin-top:6px;border-bottom-width:1px}
+.mtabs--m button{padding:6px 11px;font-size:12.5px}
 /* 埋め込み枠。テンプレは1440px設計なので、縮小して全幅に収める。
    🚨 iframe に直接 transform をかけると親の高さが縮まないので、外箱で高さを作る */
 .mframe{position:relative;width:100%;padding-top:56%;margin:14px 0 6px;
@@ -489,13 +493,28 @@ function exists(id){
   const kind=id.slice(0,4)==='vid:'?VID:LP, pid=id.slice(id.indexOf(':')+1);
   return !!(kind && kind.reg.projects.some(p=>p.id===pid));
 }
-// 雰囲気テンプレのタブid。A型の6雰囲気＋B型
-const MOOD_IDS = (MOODS ? MOODS.types[0].moods.map(m=>m.id) : []).concat(MOODS?['b']:[]);
+// 雰囲気テンプレのタブid。「型/雰囲気」の2軸（a/03_seijitsu など）。
+// 🚨 型（骨格）と雰囲気（見た目）は別の軸。型は「決め方」で分かれる（業界では分かれない）。
+const MOOD_IDS = (function(){
+  if(!MOODS) return [];
+  var o=[];
+  MOODS.types.forEach(function(t){
+    (t.moods||[]).forEach(function(m){ o.push(t.key+'/'+m.id); });
+  });
+  return o;
+})();
 function readHash(){
   const h=decodeURIComponent((location.hash||'').replace(/^#/,''));
   if(!h) return false;
-  const i=h.lastIndexOf('/');
-  const id=i<0?h:h.slice(0,i), tb=i<0?'':h.slice(i+1);
+  // 🚨 雰囲気テンプレのタブは「a/03_seijitsu」とスラッシュを含む。
+  //    lastIndexOf('/') で切ると型が id 側に食われるので、先に __moods__ を見る。
+  let id, tb;
+  if(h==='__moods__' || h.indexOf('__moods__/')===0){
+    id='__moods__'; tb=h.slice('__moods__/'.length);
+  }else{
+    const i=h.lastIndexOf('/');
+    id=i<0?h:h.slice(0,i); tb=i<0?'':h.slice(i+1);
+  }
   if(!exists(id)) return false;
   cur=id;
   // タブは「その画面に在るもの」だけ。無ければ既定に落とす
@@ -529,56 +548,55 @@ const MISSING=[...new Set(STEPS.filter(s=>s.skill&&!SK[s.skill]).map(s=>s.skill)
 // ★実物（HTML・スクショ）はここに置かない。このページは公開なので、
 //   載せるのは仕様の数字だけ。実物は手元の localhost からだけ開ける。
 function moodsPane(sel){
-  const M=MOODS, T=M.types, A=T[0], B=T[1];
-  const mood = A.moods.find(m=>m.id===sel) || A.moods[0];
-  const isB  = sel==='b';
+  const M=MOODS, T=M.types;
+  // sel は「型/雰囲気」。壊れていたら先頭に落とす
+  let [tk, mk] = String(sel||'').split('/');
+  let ty = T.find(x=>x.key===tk) || T[0];
+  let mood = (ty.moods||[]).find(m=>m.id===mk) || (ty.moods||[])[0];
 
-  // ── タブ。A型の6雰囲気＋B型
-  const tabs = `<div class="tabs mtabs">
-    ${A.moods.map(m=>`<button data-t="${esc(m.id)}" class="${m.id===sel?'on':''}">${esc(m.name)}</button>`).join('')}
-    <button data-t="b" class="${isB?'on':''}">B型（フォーム常駐）</button></div>`;
+  const tyTabs = `<div class="tabs mtabs">${T.map(t=>
+    `<button data-t="${esc(t.key)}/${esc((t.moods||[])[0]?.id||'')}" class="${t.key===ty.key?'on':''}">
+       ${esc(t.name)}<span class="mt__n">${t.sections}節</span></button>`).join('')}</div>
+    <p class="note">${esc(ty.note)}</p>`;
 
-  // ── 埋め込み。無名化した複製を同じリポジトリに置いてあるので相対で開ける
-  const src  = isB ? '' : `moods/${esc(sel)}/index.html`;
-  const frame = isB
-    ? `<p class="note bad">B型はまだ無名化した複製を置いていない。
-         手元では <code>${esc(B.url)}</code> で見られる。</p>`
-    : `<div class="mframe"><iframe src="${src}" loading="lazy" title="${esc(mood.name)}"></iframe></div>
-       <p class="note"><a href="${src}" target="_blank">別タブで原寸で開く →</a>
-         　このテンプレは社名・ロゴ・写真をプレースホルダに差し替えた公開用の複製。
-         中身入りの実物は手元の <code>${esc(M.local.root)}</code>。</p>`;
+  const moodTabs = (ty.moods||[]).length>1 ? `<div class="tabs mtabs mtabs--m">${ty.moods.map(m=>
+    `<button data-t="${esc(ty.key)}/${esc(m.id)}" class="${m.id===mood.id?'on':''}">${esc(m.name)}</button>`
+    ).join('')}</div>` : '';
 
-  // ── いま選んでいる雰囲気の数字
-  const spec = isB ? '' : `<table class="tb"><tr>
-      <th>見出しの書体</th><th>h1</th><th>h2/太さ</th><th>余白</th><th>角丸</th><th>桁 文字:写真</th><th>言葉</th></tr>
+  const src = `moods/${esc(ty.key)}/${esc(mood?mood.id:'')}/index.html`;
+  const frame = `<div class="mframe"><iframe src="${src}" loading="lazy"
+      title="${esc(ty.name)} ${esc(mood?mood.name:'')}"></iframe></div>
+    <p class="note"><a href="${src}" target="_blank">別タブで原寸で開く →</a>
+      　社名・ロゴ・写真はプレースホルダに差し替えた公開用の複製。
+      中身入りの実物は手元の <code>${esc(M.local.root)}</code>。</p>`;
+
+  const spec = mood ? `<table class="tb"><tr>
+      <th>見出しの書体</th><th>h1</th><th>h2/太さ</th><th>余白</th><th>角丸</th><th>桁</th><th>言葉</th></tr>
     <tr><td><b>${esc(mood.head)}</b></td><td>${mood.h1}</td><td>${esc(String(mood.h2))}</td>
       <td>${esc(String(mood.pad))}</td><td>${esc(mood.radius)}</td><td>${esc(mood.cols)}</td>
       <td>${esc(mood.words)}</td></tr></table>
-    <p class="note">案件で使うときは <code>cp ~/lp-moods/tokens/${esc(sel)}.css &lt;案件&gt;/tokens.css</code>
-      　これ1枚で書体・級数・余白・角丸・桁が入れ替わる。</p>`;
+    <p class="note">案件で使うとき：<code>python3 ~/lp-moods/build.py ${esc(mood.id)}${ty.key==='a'?'':' --type='+esc(ty.key)}</code>
+      　→ <code>cp ~/lp-moods/tokens/${esc(mood.id)}.css &lt;案件&gt;/tokens.css</code></p>` : '';
 
-  const t = isB ? B : A;
   const copy=`<table class="tb"><tr><th>場所</th><th>級数</th><th>字数</th><th>個数</th></tr>
-    ${t.copy.map(c=>`<tr><td>${esc(c.place)}</td><td>${esc(c.size)}</td>
+    ${ty.copy.map(c=>`<tr><td>${esc(c.place)}</td><td>${esc(c.size)}</td>
       <td>${esc(c.chars)}</td><td>${c.count}</td></tr>`).join('')}</table>`;
   const asset=`<table class="tb"><tr><th>場所</th><th>枚数</th><th>条件</th></tr>
-    ${t.assets.map(a=>`<tr><td>${esc(a.place)}</td><td>${a.n}</td><td>${esc(a.cond)}</td></tr>`).join('')}</table>`;
-
+    ${ty.assets.map(a=>`<tr><td>${esc(a.place)}</td><td>${a.n}</td><td>${esc(a.cond)}</td></tr>`).join('')}</table>`;
   const cmp=`<table class="tb"><tr><th></th>${T.map(x=>`<th>${esc(x.name)}</th>`).join('')}</tr>
-    <tr><td class="k">向く案件</td>${T.map(x=>`<td>${esc(x.note)}</td>`).join('')}</tr>
-    <tr><td class="k">節数</td>${T.map(x=>`<td>${x.sections}</td>`).join('')}</tr>
-    <tr><td class="k">必要な画像</td>${T.map(x=>`<td><b>${x.images}枚</b></td>`).join('')}</tr>
+    <tr><td class="k">決め方</td>${T.map(x=>`<td>${esc(x.note)}</td>`).join('')}</tr>
+    <tr><td class="k">節数</td>${T.map(x=>`<td><b>${x.sections}</b></td>`).join('')}</tr>
+    <tr><td class="k">必要な画像</td>${T.map(x=>`<td>${x.images}枚</td>`).join('')}</tr>
     <tr><td class="k">FV</td>${T.map(x=>`<td>${esc(x.photo)}</td>`).join('')}</tr></table>`;
 
   return `<div class="head"><h2>雰囲気テンプレ</h2>
-      <span class="cl">選ぶ基準は「FVで何をさせたいか」</span></div>
-    ${tabs}
-    <h3 class="mh">${esc(isB ? B.name : mood.name)}</h3>
-    ${spec}
-    ${frame}
+      <span class="cl">型（骨格）＝決め方で選ぶ ／ 雰囲気（見た目）＝書体と余白で選ぶ</span></div>
+    ${tyTabs}${moodTabs}
+    <h3 class="mh">${esc(ty.name)}　${esc(mood?mood.name:'')}</h3>
+    ${spec}${frame}
     <h3 class="mh">受け入れ仕様 ── 文字（工程6でコピーを書くときの上限）</h3>${copy}
     <h3 class="mh">受け入れ仕様 ── 画像</h3>${asset}
-    <h3 class="mh">A型とB型</h3>${cmp}
+    <h3 class="mh">型の使い分け</h3>${cmp}
     <h3 class="mh">守ること</h3>
     <ul class="ul">${M.rules.map(r=>`<li>${esc(r)}</li>`).join('')}</ul>
     <h3 class="mh">まだやっていないこと</h3>

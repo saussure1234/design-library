@@ -1,0 +1,3245 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>会社案内・パンフレットのデザイン制作｜サンプル株式会社</title>
+<meta name="description" content="御社の“らしさ”を読み解いて、伝わる一冊に翻訳します。企画・取材・撮影・コピー・デザイン・印刷まで一貫対応。デザインは3案以上、修正回数は無制限。">
+<style>
+
+:root{
+  
+  --bg:#eff4fa;              
+  --navy:#0f2b4a;          
+  --blue:#1765ab;          
+  --blue-dark:#0b56a2;    
+  --ink:#111;             
+  --text:#2b3440;         
+  --mute:#5a6b7d;         
+  --line:#d5e0ec;         
+  --card:#fff;            
+
+  
+  --wrap:1200px;
+  --head-h:clamp(62px,5.55vw,80px);   
+  --pad:clamp(20px,4.93vw,71px);
+
+  
+  
+  --h1:clamp(30px,3.47vw,50px);        
+  --h2:clamp(24px,2.5vw,36px);        
+
+  
+  --h2-w:700;                          
+  --h2-lh:1.4;
+  --h2-ls:.02em;
+  --lead:clamp(15px,1.25vw,18px);      
+  --body:clamp(14px,1.11vw,16px);      
+  --small:clamp(12px,.9vw,13px);       
+
+  
+  --g-eyebrow:clamp(18px,2.0vw,29px);
+  --g-lead:clamp(24px,2.7vw,39px);
+  --g-body:clamp(34px,4.2vw,60px);
+  --sec-y:clamp(48px,6.64vw,96px);
+
+  
+  --font-head:"Klee","Tsukushi A Round Gothic","Hiragino Maru Gothic ProN",sans-serif;
+  --font-body:"Tsukushi A Round Gothic","Hiragino Maru Gothic ProN","Hiragino Sans",sans-serif;
+  --r-s:3px;   
+  --r-l:6px;   
+
+  
+  --font-head:"Klee","Tsukushi A Round Gothic","Hiragino Maru Gothic ProN",sans-serif;
+  --font-body:"Tsukushi A Round Gothic","Hiragino Maru Gothic ProN","Hiragino Sans",sans-serif;
+  --r-s:999px;   
+  --r-l:24px;   
+  
+  --fv-cols:minmax(0,10fr) minmax(0,10fr);
+}
+
+*{box-sizing:border-box}
+html{
+  scroll-behavior:smooth;
+  scroll-padding-top:calc(var(--head-h) + 8px);   
+}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",system-ui,sans-serif;
+  font-size:var(--body); line-height:1.9; letter-spacing:.02em;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%; height:auto}
+a{color:inherit}
+
+
+.lph{
+  position:sticky; top:0; z-index:50;
+  height:var(--head-h); display:flex; align-items:stretch;
+  background:var(--bg); border-bottom:1px solid var(--line);
+  
+  padding-inline:max(var(--pad), calc((100% - var(--wrap)) / 2));
+}
+.lph__left{
+  display:flex; align-items:center; gap:clamp(14px,2.5vw,36px);
+  flex:0 0 auto;
+}
+.lph__logo{display:flex; align-items:center; min-height:44px}
+.lph__logo img{height:clamp(30px,3.19vw,46px); width:auto; display:block}
+.lph__tag{
+  margin:0; font-size:clamp(12px,.861vw,12.4px);
+  color:var(--mute); letter-spacing:.02em; white-space:nowrap;
+}
+.lph__nav{
+  margin-left:auto; display:flex; align-items:center;
+  gap:clamp(13px,2.4vw,34.5px);
+  font-size:clamp(12px,.97vw,14px); color:var(--text); white-space:nowrap;
+  padding-right:clamp(16px,2.57vw,37px);
+}
+.lph__nav a{display:flex; align-items:center; align-self:stretch; text-decoration:none}
+.lph__nav a:hover{color:var(--blue)}
+.lph__cta{
+  flex:0 0 clamp(170px,19.58vw,282px);
+  background:var(--blue); color:#fff; text-decoration:none;
+  display:flex; align-items:center; justify-content:flex-start;
+  padding-left:clamp(14px,2.29vw,33px);
+  gap:clamp(14px,2.78vw,40px);
+  font-size:clamp(12px,1.02vw,14.5px); font-weight:700; letter-spacing:.04em;
+  transition:background .2s;
+}
+.lph__cta:hover{background:var(--blue-dark)}
+.lph__arw{width:clamp(24px,3.47vw,50px); height:1px; background:#fff; position:relative}
+.lph__arw::after{
+  content:""; position:absolute; right:-1px; top:50%;
+  width:11px; height:1px; background:#fff;
+  transform-origin:right center; transform:translateY(-50%) rotate(-38deg);
+}
+@media (max-width:1180px){
+  .lph__tag{display:none}
+  .lph__nav{gap:clamp(12px,2.4vw,30px); padding-right:clamp(12px,1.8vw,24px)}
+  .lph__cta{flex:0 0 clamp(150px,19vw,240px)}
+}
+@media (max-width:900px){
+  .lph__nav{display:none}
+  .lph{padding-inline:var(--pad)}
+  .lph__cta{flex:0 0 auto; margin-left:auto; padding-inline:16px; font-size:12px}
+  .lph__arw{display:none}
+}
+
+
+.lpf{
+  background:var(--navy); color:rgba(255,255,255,.86);
+  
+  padding:clamp(40px,5.56vw,80px) var(--pad) clamp(90px,7.64vw,110px);
+}
+.lpf__nav,.lpf__cr{max-width:var(--wrap); margin-inline:auto}
+.lpf__nav{
+  display:flex; flex-wrap:wrap; justify-content:center;
+  gap:clamp(6px,1.6vw,23px); font-size:clamp(12px,.97vw,14px);
+}
+.lpf__nav a{display:flex; align-items:center; min-height:44px; padding:0 10px; text-decoration:none}
+.lpf__nav a:hover{color:#fff}
+.lpf__cr{
+  
+  margin:clamp(24px,2.78vw,40px) auto 0; text-align:center;
+  font-size:12px; color:rgba(255,255,255,.55);
+}
+@media (max-width:900px){
+  body{padding-bottom:70px}          
+}
+
+
+body.cta-hide .scontact__fixed{
+  opacity:0; visibility:hidden; pointer-events:none;
+}
+.scontact__fixed{transition:background-color .2s, opacity .3s, visibility .3s}
+
+
+[data-rv]{
+  opacity:0; transform:translateY(18px);
+  transition:opacity .72s cubic-bezier(.22,.61,.36,1),
+             transform .72s cubic-bezier(.22,.61,.36,1);
+  transition-delay:var(--rv-d,0ms);
+}
+[data-rv].is-in{opacity:1; transform:none}
+@media (prefers-reduced-motion:reduce){
+  [data-rv],[data-rv].is-in{opacity:1 !important; transform:none !important; transition:none !important}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *{animation:none !important; transition:none !important}
+}
+
+
+
+
+.scamp{
+  background:var(--blue);
+  color:#fff;
+  padding:clamp(11px,1.1vw,16px) var(--pad);
+}
+.scamp__inner{
+  max-width:var(--wrap);
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  gap:clamp(10px,1.4vw,20px);
+}
+
+.scamp__tag{
+  flex:0 0 auto;
+  background:var(--navy);
+  border-radius:var(--r-s);
+  padding:.42em 1em;
+  font-family:var(--font-head);
+  font-size:var(--small);
+  font-weight:700;
+  letter-spacing:.06em;
+  white-space:nowrap;
+}
+.scamp__txt{
+  margin:0;
+  font-size:var(--small);
+  line-height:1.6;
+  
+  word-break:keep-all;
+  overflow-wrap:anywhere;
+}
+.scamp__txt b{ font-weight:700 }
+
+.scamp__btn{
+  flex:0 0 auto;
+  margin-left:auto;
+  background:#fff;
+  color:var(--blue);
+  border-radius:999px;
+  padding:.5em 1.15em;
+  font-size:var(--small);
+  font-weight:700;
+  text-decoration:none;
+  white-space:nowrap;
+  
+  min-height:36px;
+  display:inline-flex;
+  align-items:center;
+}
+.scamp__btn:hover{ background:rgba(255,255,255,.88) }
+
+@media (max-width:900px){
+  
+  .scamp__inner{ flex-wrap:wrap; gap:8px }
+  .scamp__txt{ flex:1 1 100%; order:3; font-size:12.5px }
+  .scamp__btn{ order:4; margin-left:0 }
+}
+
+
+
+.sfv{
+  background:var(--bg);
+  color:var(--text);
+  overflow-x:clip;                                  
+  
+  position:relative;
+  
+  --fv-padt:clamp(34px,4.44vw,64px);                
+  --fv-padb:clamp(36px,4.03vw,58px);
+  padding-block:var(--fv-padt) var(--fv-padb);
+  
+  --fv-pad:max(var(--pad), calc((100% - var(--wrap)) / 2));
+  padding-inline:var(--fv-pad);
+  font-family:var(--font-body);
+}
+
+.sfv__top{
+  
+  width:100%;                                       
+  margin-inline:auto;
+  
+  display:grid;
+  
+  --fv-colgap:clamp(24px,2.78vw,40px);
+  
+  
+  grid-template-columns:var(--fv-cols);
+  column-gap:var(--fv-colgap);
+  align-items:stretch;
+}
+
+
+.sfv__left{
+  grid-area:1 / 1;
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+}
+
+
+.sfv__copy,
+.sfv__act{ position:relative; z-index:1; }
+
+.sfv__copy{ width:min(660px, 110%); }               
+
+.sfv__h1{
+  margin:0;
+  font-family:var(--font-head);
+  font-weight:400;
+  font-size:var(--h1);                              
+  line-height:1.5;                                  
+  letter-spacing:0;                                 
+  color:var(--ink);
+}
+.sfv__h1 .sfv__gloss{ font-size:.58em; }            
+
+
+.sfv__spbr{ display:none; }
+
+
+.sfv__h1 .sfv__hl{ color:var(--blue); }
+
+.sfv__lead{
+  
+  margin:clamp(16px,1.88vw,27px) 0 var(--g-lead);   
+  max-width:590px;
+  font-size:var(--lead);                            
+  line-height:1.83;                                 
+  letter-spacing:0;
+  color:var(--text);
+}
+
+
+.sfv__act{
+  
+  width:min(532px, 100%);
+  
+  margin:0 0 0;
+  margin-top:auto;
+}
+
+
+.sfv__badges{
+  flex:0 0 auto;
+  display:flex;
+  gap:12px;
+  margin:auto 0 0;                                  
+  padding:0;
+  list-style:none;
+  
+  height:calc(62px + 22px + var(--small) * 1.7);
+}
+.sfv__badge{
+  flex:1 1 0;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  
+  gap:clamp(8px,1.1vw,12px);                        
+  padding:14px clamp(8px,1vw,12px);
+  border-radius:var(--r-s);                                
+  background:var(--card);                           
+}
+.sfv__badge svg{
+  display:block;
+  width:auto;
+  height:clamp(29px,2.78vw,40px);                   
+  color:var(--navy);                                
+}
+.sfv__badge span{
+  font-size:var(--body);                            
+  
+  line-height:1.4;
+  letter-spacing:0;
+  text-align:center;                                
+  color:var(--ink);
+}
+
+
+.sfv__cta{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0,1fr));    
+  gap:28px;                                          
+  max-width:532px;                                   
+  
+  margin:0;
+}
+.sfv__btn{
+  display:grid;
+  place-items:center;
+  min-height:62px;                                   
+  border-radius:var(--r-s);                                 
+  font-size:var(--lead);                             
+  line-height:1;
+  letter-spacing:.02em;
+  text-decoration:none;
+  transition:background-color .2s, color .2s;
+}
+.sfv__btn--main{
+  background:var(--blue);                            
+  color:#fff;                                        
+}
+.sfv__btn--main:hover,
+.sfv__btn--main:focus-visible{ background:var(--blue-dark); }   
+
+
+.sfv__btn--sub{
+  background:var(--card);
+  color:var(--blue);                                 
+}
+.sfv__btn--sub:hover,
+.sfv__btn--sub:focus-visible{ background:#fff; color:var(--blue-dark); }
+
+.sfv__note{
+  margin:22px 0 0;                                   
+  font-size:var(--small);                            
+  line-height:1.7;
+  color:var(--mute);                                 
+}
+
+
+.sfv__side{
+  grid-area:1 / 2;                                   
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+}
+
+
+.sfv__art{
+  flex:0 0 auto;
+  
+  width:calc(100% + var(--fv-colgap));
+  margin-left:calc(var(--fv-colgap) * -1);
+  aspect-ratio:1536 / 1024;                          
+  
+  margin-bottom:clamp(18px,2.2vw,32px);
+}
+.sfv__art img{
+  
+  display:block;
+  width:100%; height:100%;
+  object-fit:contain;                                
+  object-position:center;
+  
+  filter:brightness(1.06);
+  mix-blend-mode:darken;                             
+}
+
+
+.sfvbar{
+  background:var(--bg);
+  padding:clamp(28px,3.4vw,49px) var(--pad) clamp(28px,3.4vw,49px);
+  border-top:1px solid var(--line);                  
+}
+.sfv__bar{
+  
+  width:100%;
+  max-width:var(--wrap);
+  margin-inline:auto;
+}
+.sfv__logos{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:space-between;
+  gap:clamp(20px,2.6vw,38px) clamp(24px,4.9vw,70px); 
+  margin:0; padding:0;
+  list-style:none;
+}
+.sfv__logos img{
+  display:block;
+  width:auto; height:clamp(40px,4.03vw,58px);        
+  object-fit:contain;
+  mix-blend-mode:multiply;                           
+}
+.sfv__logos .sfv__etc{
+  font-size:var(--small);                            
+  line-height:1;
+  color:var(--text);
+}
+
+
+@media (max-width:1024px){
+  
+  .sfv{ --fv-pad:var(--pad); }
+  
+  .sfv__top{ display:flex; flex-direction:column; }
+  .sfv__left{ display:contents; }        
+  .sfv__copy{ order:1; width:auto; max-width:none; }
+  .sfv__side{ order:2; grid-area:auto; }
+  .sfv__act{  order:3; width:auto; max-width:none; margin-top:clamp(24px,3.4vw,36px); }
+  .sfv__lead{ margin-bottom:0; }         
+  .sfv__art{
+    width:auto;                          
+    margin:clamp(28px,4vw,48px) 0 clamp(18px,2.2vw,32px);
+  }
+  
+  .sfv__badges{ margin-top:0; height:auto; }
+  .sfv__badges{ flex-wrap:wrap; }
+  .sfv__badge{ flex:1 1 200px; }
+}
+
+
+@media (max-width:700px){
+  .sfv__pcbr{ display:none; }                        
+  .sfv__spbr{ display:inline; }                      
+  .sfv__lead{ max-width:none; }
+  .sfv__badges{ flex-direction:column; gap:8px; }
+  .sfv__badge{ flex:0 0 auto; flex-direction:row; justify-content:flex-start; gap:14px; padding:14px 18px; }
+  .sfv__badge span{ text-align:left; }
+  .sfv__badge svg{ height:30px; flex:0 0 auto; }
+  .sfv__cta{ grid-template-columns:minmax(0,1fr); gap:12px; }
+  
+  .sfv__logos{ justify-content:center; gap:18px 26px; }
+}
+
+
+.nbwrap{ word-break:keep-all; overflow-wrap:anywhere }
+.nbwrap .nb{ white-space:nowrap }
+
+
+
+.spain{
+  background:var(--bg);                     
+  padding:var(--sec-y) var(--pad);
+}
+
+
+.spain__box{
+  
+  max-width:1322px;
+  margin:0 auto;
+  background:var(--navy);                   
+  color:#fff;                               
+  border-radius:var(--r-s);                        
+  
+  padding:clamp(46px,7.15vw,103px) clamp(24px,8.75vw,126px) clamp(36px,5.42vw,78px);
+  
+  font-feature-settings:"palt" 1;
+}
+
+
+.spain__h{  margin:0;
+  font-family:var(--font-head);
+  font-size:var(--h2);
+  
+  font-weight:var(--h2-w);
+  line-height:var(--h2-lh);
+  letter-spacing:var(--h2-ls);
+}
+
+.spain__h::after{
+  content:"";
+  display:block;
+  width:clamp(96px,41.5%,433px);
+  height:1px;
+  margin-top:.33em;                         
+  background:rgba(255,255,255,.88);
+}
+
+
+.spain__lead{
+  margin:1.3em 0 0;                         
+  font-family:var(--font-body);
+  font-size:var(--lead);
+  line-height:1.7;                          
+}
+
+
+.spain__list{
+  --spain-pad-y:14px;
+  margin:1.45em 0 0;                        
+  padding:0;
+  list-style:none;
+  font-family:var(--font-body);
+  font-size:var(--body);                    
+  line-height:1.8;
+}
+.spain__item{
+  position:relative;
+  padding:var(--spain-pad-y) 0 var(--spain-pad-y) 1.05em;  
+  
+  border-bottom:1px solid rgba(255,255,255,.55);
+}
+
+.spain__item::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:calc(var(--spain-pad-y) + .9em);      
+  width:.33em;
+  height:.33em;
+  margin-top:-.165em;
+  border-radius:50%;
+  background:#fff;
+}
+
+
+.spain__close{
+  margin:1.4em 0 0;                         
+  font-family:var(--font-body);
+  font-size:var(--body);
+  line-height:1.75;
+}
+
+
+@media (max-width:767px){
+  .spain__brp{display:none}
+  .spain__box{padding-inline:clamp(18px,5.9vw,24px)}
+}
+
+
+
+.sassure{
+  background:var(--bg);
+  padding:var(--sec-y) var(--pad);
+}
+.sassure__inner{
+  max-width:var(--wrap);
+  margin:0 auto;
+}
+
+
+.sassure__h2{  margin:0;
+  text-align:center;
+  font-family:var(--font-head);
+  font-size:var(--h2);
+  color:var(--navy);
+  
+  font-weight:var(--h2-w);
+  line-height:var(--h2-lh);
+  letter-spacing:var(--h2-ls);
+}
+
+
+.sassure__label{
+  margin:clamp(12px,1.53vw,22px) 0 0;
+  text-align:center;
+  font-family:var(--font-body);
+  font-size:var(--lead);
+  line-height:1.5;
+  letter-spacing:.08em;
+  color:var(--blue);
+}
+
+
+.sassure__rule{
+  display:block;
+  width:44px;
+  height:1px;
+  margin:clamp(15px,1.6vw,23px) auto 0;   
+  background:var(--blue);
+}
+
+
+.sassure__grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:clamp(14px,1.4vw,20px);
+  margin-top:clamp(24px,2.6vw,38px);   
+}
+
+
+.sassure__card{
+  background:var(--card);              
+  border-radius:var(--r-s);
+  box-shadow:0 3px 10px rgba(15,43,74,.045);
+  padding:clamp(30px,3.2vw,46px) clamp(22px,2.64vw,38px) clamp(36px,4.24vw,61px);
+}
+
+
+.sassure__num{
+  margin:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:clamp(28px,2.36vw,34px);
+  height:clamp(28px,2.36vw,34px);
+  border-radius:50%;
+  background:var(--blue);
+  font-family:var(--font-body);
+  font-size:clamp(19px,1.53vw,22px);
+  font-weight:600;
+  line-height:1;
+  color:#fff;                          
+}
+
+
+.sassure__title{
+  margin:clamp(20px,2.22vw,32px) 0 0;
+  font-family:var(--font-head);
+  font-weight:600;
+  font-size:clamp(19px,1.53vw,22px);
+  line-height:1.58;
+  letter-spacing:.03em;
+  color:var(--blue);
+}
+
+
+.sassure__text{
+  margin:clamp(16px,1.81vw,26px) 0 0;
+  font-family:var(--font-body);
+  font-size:var(--body);
+  line-height:2.33;
+  letter-spacing:.02em;
+  color:var(--text);
+  text-align:justify;
+  text-justify:inter-character;
+}
+
+
+@media (max-width:860px){
+  .sassure__grid{grid-template-columns:1fr;gap:16px}
+  .sassure__card{padding:30px 24px 34px}
+  .sassure__text{line-height:2.1}     
+}
+
+
+.strans,.strans *{box-sizing:border-box}
+.strans{
+  --_gap:clamp(28px,4.17vw,60px);  
+  background:var(--navy);      
+  padding:var(--sec-y) var(--pad);
+  font-family:var(--font-body);
+  font-feature-settings:"palt" 1;   
+}
+
+
+.strans__panel{
+  max-width:calc(var(--wrap) + 96px);   
+  margin-inline:auto;
+  background:var(--card);
+  padding:30px var(--pad) 40px;         
+}
+
+
+.strans__h2{  margin:0;
+  font-family:var(--font-head);
+  font-size:var(--h2);                 
+  color:var(--ink);            
+  text-align:center;
+  
+  font-weight:var(--h2-w);
+  line-height:var(--h2-lh);
+  letter-spacing:var(--h2-ls);
+}
+
+
+.strans__lead{
+  margin:.6em auto 0;          
+  max-width:40em;              
+  font-size:var(--lead);       
+  line-height:1.65;            
+  color:var(--text);           
+  text-align:center;
+}
+.strans__nb{display:inline-block}   
+
+
+.strans__grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  grid-template-rows:auto 1fr auto;    
+  column-gap:var(--_gap);
+  margin-top:clamp(24px,2.36vw,34px);  
+}
+.strans__card{
+  position:relative;
+  grid-row:span 3;
+  display:grid;
+  grid-template-rows:subgrid;
+  color:inherit;
+  text-decoration:none;
+}
+
+.strans__card + .strans__card::before{
+  content:"";
+  position:absolute;
+  left:calc(var(--_gap) / -2);
+  top:0;
+  bottom:0;
+  width:1px;
+  background:var(--line);
+}
+
+
+.strans__head{
+  display:grid;
+  grid-template-columns:40px 1fr;   
+  align-items:baseline;
+  padding-bottom:12px;              
+  border-bottom:1px solid var(--line);  
+}
+.strans__num{
+  font-family:var(--font-head);
+  font-size:calc(var(--lead) * 1.5);  
+  line-height:1;
+  color:var(--blue);                  
+}
+.strans__name{
+  margin:0;
+  font-size:var(--lead);        
+  font-weight:600;
+  line-height:1.5;
+  color:var(--ink);
+}
+.strans__spec{
+  margin:3px 0 0;               
+  font-size:var(--small);       
+  line-height:1.6;
+  color:var(--text);            
+}
+
+
+.strans__note-block{
+  padding-top:14px;             
+}
+.strans__label{
+  margin:0;
+  font-size:var(--body);        
+  font-weight:600;
+  line-height:1.6;
+  color:var(--blue);            
+}
+.strans__txt{
+  margin:2px 0 0;               
+  font-size:var(--body);        
+  line-height:1.6;              
+  color:var(--text);            
+}
+.strans__arrow{
+  display:block;
+  margin:9px auto 13px;         
+  color:var(--blue);
+}
+
+
+.strans__shot{
+  margin:34px 0 0;              
+  aspect-ratio:43 / 25;         
+  background:var(--bg);
+  overflow:hidden;
+}
+.strans__shot img{
+  width:100%;
+  height:100%;
+  
+  object-fit:contain;
+  display:block;
+}
+
+
+.strans__close{
+  margin:clamp(18px,1.74vw,25px) auto 0;  
+  max-width:56em;               
+  font-size:var(--body);        
+  line-height:1.72;             
+  color:var(--text);            
+  text-align:center;
+}
+
+
+.strans__btn{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:430px;                  
+  height:47px;                  
+  margin:13px auto 0;           
+  border:1px solid var(--blue);
+  font-size:var(--lead);        
+  letter-spacing:.06em;         
+  color:var(--blue);            
+  text-decoration:none;
+  transition:background-color .2s, color .2s;
+}
+.strans__btn svg{
+  position:absolute;
+  right:26px;                   
+  top:50%;
+  transform:translateY(-50%);
+}
+
+
+@media (hover:hover){
+  .strans__card:hover .strans__name{color:var(--blue)}
+  .strans__btn:hover{background:var(--blue);color:var(--card)}  
+}
+.strans__card:focus-visible,
+.strans__btn:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+
+
+@media (max-width:900px){
+  .strans__grid{grid-template-columns:1fr;grid-template-rows:none}
+  .strans__card{grid-row:auto;grid-template-rows:none;display:flex;flex-direction:column}
+  .strans__card + .strans__card{margin-top:clamp(28px,5vw,40px)}
+  .strans__card + .strans__card::before{display:none}
+  .strans__btn{width:100%;max-width:430px}
+}
+@media (max-width:700px){
+  .strans__nb{display:inline}   
+  .strans__panel{padding:clamp(20px,4vw,30px) var(--pad) clamp(28px,5vw,40px)}
+}
+
+
+
+
+.strans__txt{ word-break:keep-all; overflow-wrap:break-word }
+.strans__txt .strans__nb{ display:inline }
+
+
+.nbwrap{ word-break:keep-all; overflow-wrap:anywhere }
+.nbwrap .nb{ white-space:nowrap }
+
+
+
+.scamp{
+  background:var(--blue);
+  color:#fff;
+  padding:clamp(11px,1.1vw,16px) var(--pad);
+}
+.scamp__inner{
+  max-width:var(--wrap);
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  gap:clamp(10px,1.4vw,20px);
+}
+
+.scamp__tag{
+  flex:0 0 auto;
+  background:var(--navy);
+  border-radius:var(--r-s);
+  padding:.42em 1em;
+  font-family:var(--font-head);
+  font-size:var(--small);
+  font-weight:700;
+  letter-spacing:.06em;
+  white-space:nowrap;
+}
+.scamp__txt{
+  margin:0;
+  font-size:var(--small);
+  line-height:1.6;
+  
+  word-break:keep-all;
+  overflow-wrap:anywhere;
+}
+.scamp__txt b{ font-weight:700 }
+
+.scamp__btn{
+  flex:0 0 auto;
+  margin-left:auto;
+  background:#fff;
+  color:var(--blue);
+  border-radius:999px;
+  padding:.5em 1.15em;
+  font-size:var(--small);
+  font-weight:700;
+  text-decoration:none;
+  white-space:nowrap;
+  
+  min-height:36px;
+  display:inline-flex;
+  align-items:center;
+}
+.scamp__btn:hover{ background:rgba(255,255,255,.88) }
+
+@media (max-width:900px){
+  
+  .scamp__inner{ flex-wrap:wrap; gap:8px }
+  .scamp__txt{ flex:1 1 100%; order:3; font-size:12.5px }
+  .scamp__btn{ order:4; margin-left:0 }
+}
+
+
+
+.speople{
+  background:var(--bg);
+  padding:var(--sec-y) var(--pad);
+}
+.speople__inner{ max-width:var(--wrap); margin:0 auto }
+
+.speople__h2{
+  margin:0;
+  text-align:center;
+  font-family:var(--font-head);
+  font-size:var(--h2);
+  font-weight:var(--h2-w);
+  line-height:var(--h2-lh);
+  letter-spacing:var(--h2-ls);
+  color:var(--ink);
+}
+
+.speople__rule{
+  width:46px; height:3px; margin:clamp(14px,1.2vw,18px) auto 0;
+  background:var(--blue); border:0;
+}
+
+.speople__grid{
+  margin-top:clamp(30px,3.2vw,46px);
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0,1fr));
+  gap:clamp(14px,1.7vw,24px);
+}
+.speople__card{
+  background:var(--card);
+  border-radius:var(--r-l);
+  padding:clamp(24px,2.4vw,34px) clamp(16px,1.6vw,24px) clamp(24px,2.4vw,32px);
+  text-align:center;
+  
+  display:flex; flex-direction:column;
+}
+
+.speople__ph{
+  width:96px; height:96px; margin:0 auto;
+  border-radius:50%;
+  background:color-mix(in srgb, var(--blue) 14%, var(--card));
+  overflow:hidden;
+}
+.speople__ph img{ width:100%; height:100%; object-fit:cover; display:block }
+
+.speople__name{
+  margin:clamp(14px,1.3vw,20px) 0 0;
+  font-family:var(--font-head);
+  font-size:var(--lead);
+  font-weight:700;
+  line-height:1.5;
+  color:var(--ink);
+}
+
+.speople__role{
+  margin:.35em 0 0;
+  font-size:var(--small);
+  color:var(--mute);
+  letter-spacing:.02em;
+}
+.speople__txt{
+  margin:clamp(12px,1.2vw,18px) 0 0;
+  font-size:var(--body);
+  line-height:1.9;
+  color:var(--text);
+  text-align:left;
+  word-break:keep-all;
+  overflow-wrap:anywhere;
+}
+
+@media (max-width:900px){
+  
+  .speople__grid{ grid-template-columns:1fr; gap:12px }
+  
+  .speople__card{ flex-direction:row; align-items:flex-start; text-align:left; gap:14px }
+  .speople__ph{ flex:0 0 auto; width:72px; height:72px; margin:0 }
+  .speople__name{ margin-top:0 }
+}
+
+
+
+.svoice{
+  background:var(--bg);
+  padding:var(--sec-y) var(--pad);
+}
+.svoice__inner{ max-width:var(--wrap); margin:0 auto }
+
+.svoice__h2{
+  margin:0; text-align:center;
+  font-family:var(--font-head);
+  font-size:var(--h2); font-weight:var(--h2-w);
+  line-height:var(--h2-lh); letter-spacing:var(--h2-ls);
+  color:var(--ink);
+}
+.svoice__rule{
+  width:46px; height:3px; margin:clamp(14px,1.2vw,18px) auto 0;
+  background:var(--blue); border:0;
+}
+
+.svoice__grid{
+  margin-top:clamp(30px,3.2vw,46px);
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0,1fr));
+  gap:clamp(14px,1.7vw,24px);
+}
+.svoice__card{
+  background:var(--card);
+  border-radius:var(--r-l);
+  padding:clamp(22px,2.2vw,32px) clamp(18px,1.8vw,26px) clamp(20px,2vw,28px);
+  display:flex; flex-direction:column;
+}
+
+.svoice__q{
+  font-family:var(--font-head);
+  font-size:clamp(34px,3.6vw,52px);
+  line-height:1;
+  color:color-mix(in srgb, var(--blue) 30%, var(--card));
+  
+  margin:0 0 -.18em;
+}
+.svoice__txt{
+  margin:0;
+  font-size:var(--body);
+  line-height:1.95;
+  color:var(--text);
+  word-break:keep-all;
+  overflow-wrap:anywhere;
+  
+  flex:1 1 auto;
+}
+.svoice__sep{
+  width:100%; height:1px; margin:clamp(16px,1.5vw,22px) 0 0;
+  background:var(--line); border:0;
+}
+.svoice__who{
+  margin:clamp(13px,1.2vw,18px) 0 0;
+  display:flex; align-items:center; gap:10px;
+}
+.svoice__ph{
+  flex:0 0 auto;
+  width:44px; height:44px; border-radius:50%;
+  background:color-mix(in srgb, var(--blue) 14%, var(--card));
+  overflow:hidden;
+}
+.svoice__ph img{ width:100%; height:100%; object-fit:cover; display:block }
+.svoice__name{
+  margin:0;
+  font-family:var(--font-head);
+  font-size:var(--small); font-weight:700; line-height:1.5;
+  color:var(--ink);
+}
+.svoice__attr{
+  margin:0; font-size:var(--small); color:var(--mute); line-height:1.5;
+}
+
+@media (max-width:900px){
+  .svoice__grid{ grid-template-columns:1fr; gap:12px }
+  .svoice__q{ font-size:30px }
+}
+
+
+.srecord{
+  background:var(--bg);
+  padding:var(--sec-y) var(--pad);
+  color:var(--ink);
+  font-family:var(--font-body);
+}
+.srecord__wrap{
+  max-width:var(--wrap);   
+  margin-inline:auto;
+  text-align:center;       
+}
+
+
+.srecord__h{  margin:0;
+  font-family:var(--font-head);
+  font-size:var(--h2);
+  color:var(--navy);
+  
+  font-weight:var(--h2-w);
+  line-height:var(--h2-lh);
+  letter-spacing:var(--h2-ls);
+}
+.srecord__h::after{
+  content:"";
+  display:block;
+  width:62px; height:2px;
+  margin:clamp(11px,1.32vw,19px) auto 0;   
+  background:var(--blue);
+}
+
+
+.srecord__lead{
+  margin:clamp(18px,2.08vw,30px) 0 0;      
+  font-size:var(--lead);
+  line-height:1.75;
+  color:var(--ink);
+}
+
+
+.srecord__bandhead{
+  margin-top:clamp(24px,2.78vw,40px);      
+  display:flex;
+  align-items:center;
+  gap:clamp(14px,1.6vw,23px);
+}
+.srecord__bandhead::before,
+.srecord__bandhead::after{
+  content:"";
+  flex:1 1 0;
+  height:1px;
+  background:var(--line);
+}
+.srecord__bandlabel{
+  margin:0;
+  font-size:var(--body);
+  font-weight:700;
+  line-height:1.5;
+  color:var(--blue);
+}
+
+
+.srecord__clients{
+  margin-top:clamp(13px,1.53vw,22px);      
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.srecord__row{
+  margin:0; padding:0; list-style:none;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  align-items:baseline;
+  font-size:var(--body);
+  line-height:1.9;
+  color:var(--ink);
+}
+.srecord__row li{ white-space:nowrap; }
+.srecord__sep{
+  color:var(--mute);
+  margin:0 .55em;
+}
+
+.srecord__etc{ margin-left:1.1em; }
+
+
+.srecord__stats{
+  margin:calc(var(--g-body) - 4px) 0 0;    
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+}
+
+.srecord__stat{
+  min-width:0;
+  padding:clamp(6px,.63vw,9px) clamp(10px,1.4vw,20px) clamp(4px,.35vw,5px);
+}
+.srecord__stat + .srecord__stat{ border-left:1px solid var(--line); }
+
+
+.srecord__stat dt{
+  margin:0;
+  font-size:var(--body);
+  font-weight:700;
+  line-height:1.5;
+  letter-spacing:.127em;
+  text-indent:.127em;
+  color:var(--blue);
+}
+
+.srecord__stat dt::after{
+  content:"";
+  display:block;
+  width:36px; height:1px;
+  margin:clamp(7px,.7vw,10px) auto 0;      
+  background:var(--blue);
+}
+.srecord__stat dd{
+  margin:clamp(18px,2.01vw,29px) 0 0;      
+  color:var(--navy);
+}
+
+
+.srecord__fig{
+  position:relative;          
+  display:inline-block;
+  font-family:var(--font-head);
+  font-weight:600;
+  font-size:calc(var(--h2) * .82);
+  line-height:1.3;
+  letter-spacing:.16em;
+  text-indent:.16em;
+}
+
+.srecord__num{
+  font-size:var(--h2);
+  letter-spacing:.04em;
+}
+
+.srecord__note{
+  font-family:inherit;
+  font-size:var(--body);
+  font-weight:400;
+  line-height:1.78;
+  letter-spacing:.02em;
+  color:var(--ink);
+}
+
+.srecord__tbc{
+  position:absolute;
+  left:100%; top:50%;
+  transform:translateY(-45%);
+  margin-left:.5em;
+  white-space:nowrap;
+  text-indent:0;
+  font-family:var(--font-body);
+  font-weight:400;
+  font-size:var(--small);
+  line-height:1;
+  letter-spacing:.04em;
+  color:var(--mute);
+}
+
+
+.srecord__box{
+  margin-top:var(--g-body);
+  background:var(--bg);                 
+  border:1px solid var(--line);
+  border-top:2px solid var(--blue);
+  
+  padding:clamp(16px,1.67vw,24px) var(--pad) clamp(17px,1.88vw,27px);
+}
+
+.srecord__boxlabel{
+  margin:0;
+  font-size:var(--body);
+  font-weight:700;
+  line-height:1.5;
+  letter-spacing:.22em;
+  text-indent:.22em;
+  color:var(--blue);
+}
+
+.srecord__boxlabel::after{
+  content:"";
+  display:block;
+  width:36px; height:1px;
+  margin:clamp(8px,.9vw,13px) auto 0;      
+  background:var(--blue);
+}
+
+.srecord__boxbody{
+  margin:clamp(11px,1.18vw,17px) 0 0;      
+  font-size:var(--body);
+  line-height:2.1;
+  letter-spacing:.04em;
+  color:var(--ink);
+}
+
+.srecord__nb{ white-space:nowrap; }
+
+
+@media (max-width:860px){
+  
+  .srecord__sep{ display:none; }
+  .srecord__row{ column-gap:1.5em; row-gap:.2em; }
+  .srecord__stats{ grid-template-columns:1fr; }
+  .srecord__stat{ padding-inline:0; }
+  .srecord__stat + .srecord__stat{
+    border-left:0;
+    border-top:1px solid var(--line);
+    margin-top:clamp(18px,3.5vw,28px);
+    padding-top:clamp(18px,3.5vw,28px);
+  }
+  .srecord__box{ padding-inline:clamp(16px,4vw,32px); }
+  
+  .srecord__fig{ letter-spacing:.1em; text-indent:.1em; }
+  .srecord__boxlabel{ letter-spacing:.16em; text-indent:.16em; }
+}
+
+
+.srecord__marquee{
+  
+  margin-top:clamp(28px,3.4vw,49px);
+  overflow:hidden;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 7%,#000 93%,transparent 100%);
+          mask-image:linear-gradient(90deg,transparent 0,#000 7%,#000 93%,transparent 100%);
+}
+.srecord__track{
+  display:flex; width:max-content;
+  animation:srecordScroll 46s linear infinite;
+}
+.srecord__marquee:hover .srecord__track{animation-play-state:paused}
+.srecord__set{
+  display:flex; align-items:center;
+  gap:clamp(34px,4.7vw,68px);
+  padding-right:clamp(34px,4.7vw,68px);
+}
+.srecord__logo{display:flex; align-items:center; justify-content:center}
+.srecord__logo img{
+  
+  
+  max-width:clamp(150px,18.4vw,265px);
+  max-height:clamp(46px,5.21vw,75px);
+  width:auto; height:auto; object-fit:contain; display:block;
+  
+}
+@keyframes srecordScroll{ from{transform:translateX(0)} to{transform:translateX(-50%)} }
+@media (prefers-reduced-motion:reduce){
+  .srecord__track{animation:none; flex-wrap:wrap; justify-content:center}
+  .srecord__set[aria-hidden="true"]{display:none}
+}
+
+
+
+.scompare{
+  background:var(--bg);
+  padding:var(--sec-y) 0;
+  font-family:var(--font-body);
+}
+
+.scompare__box{
+  
+  width:min(1293px, calc(100% - var(--pad) * 2));
+  margin-inline:auto;
+  box-sizing:border-box;
+  
+  padding:39px clamp(22px, 4.3vw, 62px) 40px;
+  background:var(--navy);
+  
+  border-radius:var(--r-l);
+  color:#fff;
+}
+
+
+.scompare__h{  margin:0;
+  font-family:var(--font-head);
+  
+  font-size:var(--h2);
+  
+  text-align:center;
+  
+  font-weight:var(--h2-w);
+  line-height:var(--h2-lh);
+  letter-spacing:var(--h2-ls);
+}
+
+.scompare__rule{
+  
+  width:61px;
+  height:1px;
+  margin:16px auto 0;      
+  border:0;
+  background:rgba(255,255,255,.68);
+}
+
+
+.scompare__lead{
+  
+  margin:17px 0 0;          
+  font-size:var(--lead);
+  font-weight:700;
+  line-height:1.5;
+  letter-spacing:.02em;
+  text-align:center;
+}
+
+
+.scompare__note{
+  
+  margin:23px 0 0;          
+  font-size:var(--body);
+  font-weight:400;          
+  line-height:1.8;
+  text-align:center;
+}
+
+
+.scompare__scroll{
+  
+  margin-top:15px;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+}
+
+.scompare__table{
+  
+  width:100%;
+  table-layout:fixed;
+  border-collapse:collapse;
+  
+  font-size:var(--body);
+}
+
+
+.scompare__table col{ width:19.4%; }
+.scompare__table col:first-child{ width:22.4%; }
+
+.scompare__table th,
+.scompare__table td{
+  
+  padding:14px 12px;
+  line-height:1.66;
+  text-align:center;
+  vertical-align:middle;
+}
+
+.scompare__table thead th{
+  font-weight:700;
+  
+  border-bottom:1px solid rgba(255,255,255,.85);
+}
+
+.scompare__table tbody th,
+.scompare__table tbody td{
+  
+  border-bottom:1px solid rgba(255,255,255,.5);
+}
+
+
+
+
+.scompare__table tbody th.scompare__row{
+  
+  padding-left:10px;
+  font-weight:700;
+  text-align:left;
+}
+
+
+.scompare__close{
+  
+  margin:21px 0 0;          
+  font-size:var(--lead);
+  font-weight:700;
+  line-height:1.9;
+  text-align:center;
+}
+
+
+.scompare__nb{ display:inline-block; }
+
+@media (max-width:1099px){
+  
+  .scompare__table th,
+  .scompare__table td{ padding-inline:8px; }
+}
+
+@media (max-width:899px){
+  
+  .scompare__box{ padding-block:32px 34px; border-radius:var(--r-s); }
+  
+  .scompare__table{ min-width:732px; }
+  .scompare__table col{ width:19%; }
+  .scompare__table col:first-child{ width:24%; }
+  .scompare__table th,
+  .scompare__table td{ padding:12px 5px; }
+  .scompare__table tbody th.scompare__row{ padding-left:4px; }
+}
+
+@media (max-width:767px){
+  
+  .scompare__close br{ display:none; }
+}
+
+
+.scompare__ads{padding-inline:6px}
+.scompare__ads img{
+  display:block; margin-inline:auto;
+  width:min(100%, 152px); height:auto;
+}
+@media (max-width:900px){
+  .scompare__ads img{width:min(100%, 108px)}
+}
+
+
+.scompare__table thead th:nth-child(2),
+.scompare__table tbody td:nth-child(2){
+  background:#0d5693;
+}
+.scompare__table thead th:nth-child(2){
+  padding-top:10px;
+  padding-bottom:10px;
+  border-radius:var(--r-s) var(--r-s) 0 0;
+}
+.scompare__table tbody tr:last-child td:nth-child(2){
+  border-radius:0 0 var(--r-s) var(--r-s);
+}
+
+.scompare__table tbody td:nth-child(2){
+  border-bottom-color:rgba(255,255,255,.18);
+}
+.scompare__table thead th:nth-child(2){
+  border-bottom-color:rgba(255,255,255,.30);
+}
+
+
+
+.scamp{
+  background:var(--blue);
+  color:#fff;
+  padding:clamp(11px,1.1vw,16px) var(--pad);
+}
+.scamp__inner{
+  max-width:var(--wrap);
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  gap:clamp(10px,1.4vw,20px);
+}
+
+.scamp__tag{
+  flex:0 0 auto;
+  background:var(--navy);
+  border-radius:var(--r-s);
+  padding:.42em 1em;
+  font-family:var(--font-head);
+  font-size:var(--small);
+  font-weight:700;
+  letter-spacing:.06em;
+  white-space:nowrap;
+}
+.scamp__txt{
+  margin:0;
+  font-size:var(--small);
+  line-height:1.6;
+  
+  word-break:keep-all;
+  overflow-wrap:anywhere;
+}
+.scamp__txt b{ font-weight:700 }
+
+.scamp__btn{
+  flex:0 0 auto;
+  margin-left:auto;
+  background:#fff;
+  color:var(--blue);
+  border-radius:999px;
+  padding:.5em 1.15em;
+  font-size:var(--small);
+  font-weight:700;
+  text-decoration:none;
+  white-space:nowrap;
+  
+  min-height:36px;
+  display:inline-flex;
+  align-items:center;
+}
+.scamp__btn:hover{ background:rgba(255,255,255,.88) }
+
+@media (max-width:900px){
+  
+  .scamp__inner{ flex-wrap:wrap; gap:8px }
+  .scamp__txt{ flex:1 1 100%; order:3; font-size:12.5px }
+  .scamp__btn{ order:4; margin-left:0 }
+}
+
+
+.sprice{
+  
+  --pr-ico:clamp(58px,5.8vw,84px);      
+  --pr-icoh:clamp(38px,3.75vw,54px);    
+  --pr-pad:clamp(14px,1.53vw,22px);
+
+  background:var(--bg);
+  color:var(--text);
+  padding:var(--sec-y) var(--pad);
+  font-family:var(--font-body);
+}
+.sprice__wrap{ width:min(var(--wrap), 100%); margin-inline:auto }
+
+
+.sprice__h{  margin:0;
+  font-family:var(--font-head);
+  font-size:var(--h2);
+  color:var(--navy);                 
+  
+  font-weight:var(--h2-w);
+  line-height:var(--h2-lh);
+  letter-spacing:var(--h2-ls);
+}
+.sprice__h::after{
+  content:""; display:block;
+  width:56px; height:2px;
+  margin:clamp(14px,1.6vw,23px) 0 0;
+  background:var(--blue);
+}
+.sprice__sub{
+  margin:clamp(18px,2.1vw,30px) 0 0;
+  font-size:var(--lead); font-weight:700; line-height:1.6; letter-spacing:.02em;
+  color:var(--ink);
+}
+.sprice__lead{
+  margin:clamp(12px,1.25vw,18px) 0 0;
+  font-size:var(--body); line-height:1.9; color:var(--text);
+}
+
+
+.sprice__tabs{ margin:clamp(22px,2.6vw,38px) 0 0 }
+.sprice__radio{
+  position:absolute; width:1px; height:1px;
+  margin:0; padding:0; border:0; opacity:0;
+  clip-path:inset(50%); overflow:hidden;
+}
+.sprice__tablist{
+  display:flex; flex-wrap:wrap; gap:4px;
+}
+.sprice__tab{
+  display:inline-flex; align-items:center; min-height:44px;
+  padding:0 clamp(14px,1.6vw,23px);
+  border-radius:var(--r-l) var(--r-l) 0 0;
+  
+  border:1px solid var(--line);
+  border-bottom:0;
+  background:transparent;
+  color:var(--mute);                 
+  font-size:var(--body); font-weight:700; letter-spacing:.04em; line-height:1.4;
+  cursor:pointer; user-select:none;
+  transition:background-color .18s, color .18s, border-color .18s;
+}
+.sprice__tab:hover{ color:var(--blue) }
+.sprice__panel{ display:none }
+.sprice__panels{ margin:0 }
+
+
+#prtab-1:checked ~ .sprice__tablist .sprice__tab[for="prtab-1"],
+#prtab-2:checked ~ .sprice__tablist .sprice__tab[for="prtab-2"],
+#prtab-3:checked ~ .sprice__tablist .sprice__tab[for="prtab-3"],
+#prtab-4:checked ~ .sprice__tablist .sprice__tab[for="prtab-4"]{
+  background:var(--card);
+  color:var(--blue);                 
+  
+  border-top:2px solid var(--blue);
+  border-color:var(--blue) var(--line) var(--line);
+  border-bottom:0;
+}
+#prtab-1:checked ~ .sprice__panels .sprice__panel:nth-child(1),
+#prtab-2:checked ~ .sprice__panels .sprice__panel:nth-child(2),
+#prtab-3:checked ~ .sprice__panels .sprice__panel:nth-child(3),
+#prtab-4:checked ~ .sprice__panels .sprice__panel:nth-child(4){ display:block }
+
+
+#prtab-1:focus-visible ~ .sprice__tablist .sprice__tab[for="prtab-1"],
+#prtab-2:focus-visible ~ .sprice__tablist .sprice__tab[for="prtab-2"],
+#prtab-3:focus-visible ~ .sprice__tablist .sprice__tab[for="prtab-3"],
+#prtab-4:focus-visible ~ .sprice__tablist .sprice__tab[for="prtab-4"]{
+  outline:2px solid var(--blue); outline-offset:2px;
+}
+
+
+.sprice__panel{
+  background:var(--card);            
+  border-radius:0 var(--r-l) var(--r-l) var(--r-l);
+  padding:clamp(18px,2.1vw,30px) clamp(14px,1.94vw,28px) clamp(16px,1.8vw,26px);
+}
+@media (max-width:600px){
+  
+  .sprice__tab{
+    flex:1 1 calc(50% - 2px);
+    justify-content:center;
+    padding:0 10px; font-size:13px; min-height:42px;
+    
+    border:1px solid var(--line);
+    border-radius:var(--r-l);
+  }
+  #prtab-1:checked ~ .sprice__tablist .sprice__tab[for="prtab-1"],
+  #prtab-2:checked ~ .sprice__tablist .sprice__tab[for="prtab-2"],
+  #prtab-3:checked ~ .sprice__tablist .sprice__tab[for="prtab-3"],
+  #prtab-4:checked ~ .sprice__tablist .sprice__tab[for="prtab-4"]{
+    border-color:var(--blue) var(--line) var(--line);
+    border-bottom:1px solid var(--line);
+  }
+  
+  .sprice__panels{ margin-top:8px }
+  .sprice__panel{ border-radius:var(--r-l) }
+}
+.sprice__cardh{
+  margin:0 0 clamp(10px,1.1vw,16px);
+  padding-left:var(--pr-pad);
+  font-size:var(--body); font-weight:700; letter-spacing:.06em; line-height:1.6;
+  color:var(--blue);                 
+}
+
+
+.sprice__table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:var(--body);
+  line-height:1.8;
+}
+.sprice__table th,
+.sprice__table td{
+  padding:var(--pr-pad);
+  text-align:left;
+  vertical-align:middle;
+}
+.sprice__table thead th{
+  font-weight:700;
+  color:var(--blue);
+  background:#f2f6fb;                
+  white-space:nowrap;
+}
+.sprice__table tbody tr:nth-child(even){ background:#f7fafd }
+.sprice__table td:last-child,
+.sprice__table th:last-child{ text-align:right; padding-right:clamp(14px,2.5vw,36px) }
+
+
+.sprice__spec{
+  display:grid;
+  grid-template-columns:var(--pr-ico) 1fr;
+  column-gap:clamp(10px,1.1vw,16px);
+  align-items:center;
+}
+
+.sprice__ico{
+  grid-column:1; justify-self:center;
+  width:100%; height:var(--pr-icoh);
+  object-fit:contain;
+  opacity:.85;                       
+}
+.sprice__specname{ grid-column:2; min-width:0 }
+.sprice__note{
+  display:block;
+  margin-top:2px;
+  font-size:var(--small); line-height:1.7; color:var(--mute);   
+}
+.sprice__price{ white-space:nowrap; font-weight:700; color:var(--ink) }
+.sprice__price small{ display:block; font-weight:400; font-size:var(--small); color:var(--mute) }
+
+
+.sprice__notes{
+  margin:clamp(12px,1.25vw,18px) 0 0;
+  padding:0 0 0 var(--pr-pad);
+  list-style:none;
+}
+.sprice__notes li{
+  margin:0; font-size:var(--small); line-height:1.9; color:var(--mute);
+}
+.sprice__close{
+  margin:clamp(22px,2.4vw,34px) 0 0;
+  font-size:var(--body); line-height:1.9; color:var(--text);
+}
+.sprice__tax{
+  margin:clamp(10px,1.1vw,16px) 0 0;
+  font-size:var(--small); line-height:1.8; color:var(--mute);
+}
+
+
+@media (max-width:820px){
+  .sprice{--pr-ico:46px; --pr-icoh:34px; --pr-pad:10px}
+  .sprice__table{font-size:14px}
+  .sprice__table thead th:nth-child(2){display:none}
+  .sprice__table tbody td:nth-child(2){display:none}
+}
+@media (max-width:600px){
+  
+  .sprice{--pr-ico:40px; --pr-icoh:26px}
+  .sprice__spec{column-gap:8px}
+}
+
+
+.sprice__tabico{
+  height:clamp(18px,1.6vw,23px); width:auto;
+  margin-right:8px; opacity:.7;
+  flex:0 0 auto;
+}
+@media (max-width:600px){
+  .sprice__tabico{height:16px; margin-right:5px}
+}
+
+
+
+.sfaq{
+  
+  --sfaq-q:clamp(34px,4.58vw,66px);
+  background:var(--bg);
+  padding:var(--sec-y) var(--pad);
+  color:var(--text);
+  font-family:var(--font-body);
+}
+.sfaq__wrap{
+  max-width:var(--wrap);   
+  margin-inline:auto;
+}
+
+
+.sfaq__h{  margin:0;
+  font-family:var(--font-head);
+  font-size:var(--h2);
+  color:var(--navy);
+  
+  font-weight:var(--h2-w);
+  line-height:var(--h2-lh);
+  letter-spacing:var(--h2-ls);
+}
+
+
+.sfaq__list{ margin-top:13px; }
+
+
+.sfaq__item + .sfaq__item{ border-top:1px solid var(--line); }
+
+
+.sfaq__q{
+  display:grid;
+  grid-template-columns:var(--sfaq-q) minmax(0,1fr) 18px;
+  align-items:baseline;
+  
+  padding:17px 0 0;
+  cursor:pointer;
+  list-style:none;
+}
+.sfaq__q::-webkit-details-marker{ display:none; }
+.sfaq__q::marker{ content:""; }
+.sfaq__q:focus-visible{ outline:2px solid var(--blue); outline-offset:3px; }
+
+.sfaq__qmark{
+  font-family:var(--font-head);
+  font-weight:600;
+  font-size:calc(var(--lead) * 1.5);   
+  line-height:1;
+  color:var(--blue);
+}
+
+.sfaq__qtext{
+  font-family:var(--font-head);
+  font-weight:600;
+  font-size:var(--lead);
+  line-height:1.5;
+  letter-spacing:.02em;
+  color:var(--navy);
+  
+  padding-right:32px;
+}
+
+
+.sfaq__mark{
+  position:relative;
+  
+  align-self:start;
+  
+  margin-top:calc(var(--lead) * .194);
+  width:18px;
+  height:calc(var(--lead) * 1.5);   
+}
+.sfaq__mark::before,
+.sfaq__mark::after{
+  content:"";
+  position:absolute;
+  left:50%; top:50%;
+  background:var(--blue);
+}
+.sfaq__mark::after{ width:18px; height:2px;  margin:-1px 0 0 -9px; }
+
+.sfaq__mark::before{
+  width:2px; height:18px; margin:-9px 0 0 -1px;
+  transform:rotate(0deg);
+  transition:transform .3s cubic-bezier(.4,0,.2,1);
+}
+
+.sfaq__item[open] .sfaq__mark::before{ transform:rotate(90deg); }
+
+.sfaq--js .sfaq__item .sfaq__mark::before{ transform:rotate(0deg); }
+.sfaq--js .sfaq__item.is-open .sfaq__mark::before{ transform:rotate(90deg); }
+
+
+.sfaq__item:not([open]) .sfaq__q{ padding-bottom:19px; }
+
+
+.sfaq__a{
+  margin:0;
+  padding:9px 0 17px var(--sfaq-q);
+  
+  max-width:calc(54em + var(--sfaq-q));
+  font-size:var(--body);
+  line-height:1.67;
+  letter-spacing:.02em;
+  color:var(--text);
+}
+
+
+.sfaq__nb{ white-space:nowrap; }
+
+
+@media (max-width:767px){
+  .sfaq__qtext{ padding-right:16px; }
+  .sfaq__q{ padding-top:15px; }
+  .sfaq__a{ padding-bottom:16px; }
+}
+
+
+.scompany{
+  background:var(--bg);
+  color:var(--text);
+  padding:var(--sec-y) var(--pad);
+  font-family:var(--font-body);
+}
+.scompany__in{
+  max-width:var(--wrap);
+  margin-inline:auto;
+}
+
+
+.scompany__h{  margin:0;
+  text-align:center;
+  font-family:var(--font-head);
+  font-size:var(--h2);
+  color:var(--navy);           
+  
+  font-weight:var(--h2-w);
+  line-height:var(--h2-lh);
+  letter-spacing:var(--h2-ls);
+}
+.scompany__h::after{
+  content:"";
+  display:block;
+  width:62px; height:2px;
+  margin:clamp(16px,2.29vw,33px) auto 0;   
+  background:var(--blue);
+}
+.scompany__lead{
+  margin:clamp(24px,3.26vw,47px) 0 0;      
+  text-align:center;
+  font-size:var(--lead);
+  line-height:1.75;
+  color:var(--ink);
+}
+
+
+.scompany__dl{
+  --co-c1:298px;
+  --co-pad:clamp(18px,1.94vw,28px);  
+  margin:clamp(28px,3.75vw,54px) 0 0; 
+  display:grid;
+  grid-template-columns:var(--co-c1) 1fr;
+  border-top:1px solid var(--line);
+}
+.scompany__dl dt,
+.scompany__dl dd{
+  margin:0;
+  padding:var(--co-pad) 0;
+  border-bottom:1px solid var(--line);
+  font-size:var(--body);
+  line-height:1.9;
+}
+.scompany__dl dt{
+  font-weight:700;
+  letter-spacing:.06em;
+  color:var(--blue);           
+}
+.scompany__dl dd{
+  color:var(--text);           
+}
+
+
+
+.scompany__list{
+  word-break:keep-all;
+  overflow-wrap:anywhere;
+}
+
+
+.scompany__link{
+  color:var(--blue);
+  text-decoration:underline;
+  text-underline-offset:2px;
+}
+.scompany__link:hover,
+.scompany__link:focus-visible{ color:var(--blue-dark); }
+
+
+@media (max-width:820px){
+  .scompany__dl{
+    grid-template-columns:1fr;
+  }
+  .scompany__dl dt{
+    padding:var(--co-pad) 0 4px;
+    border-bottom:0;
+  }
+  .scompany__dl dd{
+    padding:0 0 var(--co-pad);
+  }
+}
+
+
+
+.scontact{
+  background:var(--navy);
+  padding-block:var(--sec-y);
+  font-family:var(--font-body);
+  -webkit-font-smoothing:antialiased;
+}
+
+
+.scontact__card{
+  
+  width:min(1305px, calc(100% - 2 * clamp(16px,4.69vw,67px)));
+  margin-inline:auto;
+  box-sizing:border-box;
+  
+  padding:clamp(32px,7.01vw,101px) clamp(20px,7.29vw,105px) clamp(28px,5.49vw,79px);
+  border-radius:var(--r-l);
+  background:var(--card);
+}
+
+.scontact__cols{
+  display:grid;
+  
+  grid-template-columns:minmax(0,548fr) minmax(0,484fr);
+  column-gap:clamp(28px,4.24vw,61px);
+  align-items:start;
+}
+
+
+.scontact__eyebrow{
+  margin:0;
+  
+  font-size:var(--body);
+  letter-spacing:.07em;
+  line-height:1.4;
+  color:var(--blue);
+}
+
+.scontact__rule{
+  
+  width:53px;
+  height:2px;
+  margin:11px 0 0;          
+  border:0;
+  background:var(--blue);
+}
+
+
+.scontact__h{  margin:35px 0 0;          
+  font-family:var(--font-head);
+  
+  font-size:var(--h2);
+  color:var(--ink);
+  
+  font-weight:var(--h2-w);
+  line-height:var(--h2-lh);
+  letter-spacing:var(--h2-ls);
+}
+
+
+.scontact__lead{
+  margin:64px 0 0;          
+  
+  font-size:var(--lead);
+  line-height:1.85;         
+  color:var(--text);
+}
+
+
+.scontact__ctawrap{
+  margin:51px 0 0;          
+}
+.scontact__cta{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  
+  width:min(288px,100%);
+  height:60px;
+  box-sizing:border-box;
+  padding-inline:16px;
+  border-radius:var(--r-s);        
+  background:var(--blue);
+  color:#fff;               
+  text-decoration:none;
+  
+  font-size:var(--lead);
+  font-weight:400;
+  letter-spacing:.03em;     
+  line-height:1;
+  transition:background-color .2s;
+}
+.scontact__cta:hover{ background:var(--blue-dark); }
+.scontact__cta:focus-visible{ outline:2px solid var(--blue); outline-offset:3px; }
+
+
+.scontact__rule--2{
+  margin-top:73px;          
+}
+.scontact__note{
+  margin:11px 0 0;          
+  
+  font-size:var(--lead);
+  line-height:1.72;         
+  color:var(--text);
+}
+
+
+.scontact__form{
+  display:grid;
+  row-gap:25px;             
+}
+.scontact__field{ min-width:0; }
+
+.scontact__label{
+  display:block;
+  margin:0 0 10px;          
+  
+  font-size:var(--body);
+  line-height:1.4;
+  color:var(--ink);         
+}
+
+.scontact__input,
+.scontact__textarea{
+  display:block;
+  width:100%;
+  box-sizing:border-box;
+  border:1px solid var(--line);   
+  border-radius:var(--r-s);              
+  background:var(--card);
+  color:var(--ink);
+  font-family:inherit;
+  
+  font-size:16px;
+  line-height:1.6;
+}
+.scontact__input{
+  height:50px;              
+  padding:0 14px;
+}
+.scontact__textarea{
+  height:139px;             
+  padding:12px 14px;
+  resize:vertical;
+}
+.scontact__input:focus-visible,
+.scontact__textarea:focus-visible{
+  outline:2px solid var(--blue);
+  outline-offset:-1px;
+}
+
+
+.scontact__fixed{
+  position:fixed;
+  right:22px;               
+  bottom:22px;              
+  z-index:60;
+  display:flex;
+  align-items:center;
+  gap:21px;                 
+  
+  min-width:415px;
+  width:max-content;
+  max-width:calc(100% - 44px);   
+  min-height:82px;          
+  box-sizing:border-box;
+  padding:12px 30px;        
+  border:1px solid var(--bg);   
+  border-radius:var(--r-s);        
+  background:var(--blue);   
+  color:#fff;               
+  text-decoration:none;
+  transition:background-color .2s;
+}
+.scontact__fixed:hover{ background:var(--blue-dark); }
+.scontact__fixed:focus-visible{ outline:2px solid #fff; outline-offset:3px; }
+
+.scontact__fixedicon{
+  flex:0 0 auto;
+  width:38px;               
+  height:28px;
+}
+.scontact__fixedtext{ min-width:0; }
+.scontact__fixedmain{
+  display:block;
+  
+  font-size:var(--lead);
+  font-weight:400;          
+  letter-spacing:0;         
+  line-height:1.3;
+  white-space:nowrap;       
+}
+.scontact__fixedsub{
+  display:block;
+  margin-top:6px;           
+  
+  font-size:var(--body);
+  letter-spacing:.02em;
+  line-height:1.3;
+}
+
+
+.scontact__nb{ display:inline-block; }
+
+@media (max-width:899px){
+  
+  .scontact__cols{
+    grid-template-columns:1fr;
+    row-gap:clamp(32px,5vw,48px);
+  }
+}
+
+@media (max-width:767px){
+  .scontact__lead{ margin-top:clamp(28px,7vw,48px); }
+  .scontact__ctawrap{ margin-top:clamp(24px,6vw,40px); }
+  .scontact__rule--2{ margin-top:clamp(32px,8vw,52px); }
+  .scontact__cta{ width:100%; }
+  
+  .scontact__fixed{
+    right:0; left:0; bottom:0;
+    width:auto;
+    min-width:0;            
+    max-width:none;
+    min-height:66px;
+    gap:12px;
+    padding:10px 16px;
+    border-width:1px 0 0;
+    border-radius:0;
+    justify-content:center;
+  }
+  .scontact__fixedicon{ width:30px; height:22px; }
+  
+  .scontact{ padding-bottom:calc(var(--sec-y) + 66px); }
+}
+
+
+.scontact__submit{
+  -webkit-appearance:none; appearance:none; border:0; cursor:pointer;
+  display:block; width:100%; margin:clamp(18px,1.6vw,23px) 0 0;
+  min-height:60px; padding:0 24px;
+  background:var(--blue); color:#fff;
+  font-family:inherit; font-size:var(--body); font-weight:700; letter-spacing:.04em;
+  border-radius:var(--r-s); transition:background-color .2s;
+}
+.scontact__submit:hover{background:var(--blue-dark)}
+
+
+
+.scompare,.scontact{padding-inline:var(--pad)}
+.spain__box,.strans__panel,.scompare__box,.scontact__card{
+  width:auto; max-width:none; margin-inline:0;
+  padding-inline:max(clamp(16px,3.5vw,24px), calc((100% - var(--wrap)) / 2));
+}
+</style>
+</head>
+<body><div style="position:sticky;top:0;z-index:99999;background:#12305c;color:#fff;font:600 12px/1.6 system-ui,sans-serif;padding:7px 14px;letter-spacing:.04em">テンプレート（見本）／ 社名・ロゴ・写真は差し替え用のプレースホルダ。判断するのは 書体・級数・余白・角丸・桁 の5つ</div>
+<header class="lph">
+  <div class="lph__left">
+    <a class="lph__logo" href="#fv"><img src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 250 86'%3E%3Crect x='2' y='18' width='246' height='50' rx='5' fill='none' stroke='%23c8cdd8' stroke-width='2'/%3E%3Ctext x='125' y='45' fill='%2398a1b3' text-anchor='middle' font-family='sans-serif' font-size='22' letter-spacing='2'%3ELOGO%3C/text%3E%3C/svg%3E" alt="見本の画像"></a>
+    <p class="lph__tag">会社案内・パンフレットのデザイン制作</p>
+  </div>
+  <nav class="lph__nav">
+    <a href="#feature">特徴</a>
+    <a href="#people">講師</a>
+    <a href="#voice">受講者の声</a>
+    <a href="#price">料金</a>
+    <a href="#faq">よくあるご質問</a>
+  </nav>
+  <a class="lph__cta" href="#contact">デザイン相談（無料）<span class="lph__arw"></span></a>
+</header>
+<section class="scamp">
+  <div class="scamp__inner">
+    <span class="scamp__tag">お知らせ</span>
+    <p class="scamp__txt"><b>◯月◯日まで</b>のお申し込みで、入会金が無料になります。</p>
+    <a class="scamp__btn" href="#contact">詳しく見る</a>
+  </div>
+</section>
+
+<section class="sfv" id="fv">
+  <div class="sfv__top">
+
+    
+    <div class="sfv__side">
+
+      <figure class="sfv__art">
+        
+        <img src="img/ph01.svg" width="1536" height="1024"
+             alt="見本の画像" fetchpriority="high" decoding="async">
+      </figure>
+
+      <ul class="sfv__badges">
+        <li class="sfv__badge">
+          
+          <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <rect x="16"  y="1"   width="27" height="36" fill="var(--bg)"/>
+            <rect x="8.5" y="4.5" width="27" height="36" fill="var(--bg)"/>
+            <rect x="1"   y="8"   width="27" height="36" fill="var(--bg)"/>
+          </svg>
+          <span>デザイン3案以上</span>
+        </li>
+        <li class="sfv__badge">
+          
+          <svg viewBox="0 0 45 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M2.75 12.83 A19 19 0 0 1 38.6 21.6"/>
+            <path d="M35.07 32.63 A19 19 0 0 1 1.05 17.49"/>
+            <path d="M34.9 19.4 L38.9 26.6 L43.4 19.0"/>
+          </svg>
+          <span>修正回数無制限</span>
+        </li>
+        <li class="sfv__badge">
+          
+          <svg viewBox="0 0 40 44" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <rect x="1" y="1" width="38" height="42" rx="2"/>
+            <g stroke-width="1.6">
+              <line x1="7" y1="13" x2="21" y2="13"/><line x1="27" y1="13" x2="33" y2="13"/>
+              <line x1="7" y1="22" x2="21" y2="22"/><line x1="27" y1="22" x2="33" y2="22"/>
+              <line x1="7" y1="31" x2="21" y2="31"/><line x1="27" y1="31" x2="33" y2="31"/>
+            </g>
+          </svg>
+          <span>ページ数別の明朗料金</span>
+        </li>
+      </ul>
+
+    </div>
+
+    <div class="sfv__left">
+
+    <div class="sfv__copy">
+
+      
+      
+      <h1 class="sfv__h1">御社の<span class="sfv__hl">“らしさ”</span>を<br>読み解いて、<br class="sfv__spbr">伝わる一冊に<br>翻訳<span class="sfv__gloss">（デザイン）</span>します</h1>
+
+      <p class="sfv__lead">何を載せるかが決まっていない状態からでも構いません。<br class="sfv__pcbr">企画・取材・撮影・コピー・デザイン・印刷まで一貫対応。<br class="sfv__pcbr">デザインは3案以上、修正回数は無制限。<br class="sfv__pcbr">納得いただけるまでお付き合いします。</p>
+
+    </div>
+
+    <div class="sfv__act">
+      <div class="sfv__cta">
+        <a class="sfv__btn sfv__btn--main" href="#contact">無料で相談する</a>
+        <a class="sfv__btn sfv__btn--sub" href="#price">料金を見る</a>
+      </div>
+
+      <p class="nbwrap sfv__note"><span class="nb">ご相談・お見積もりは無料です。</span><wbr><span class="nb">1営業日以内にご返信します。</span></p>
+    </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+<section class="sfvbar" aria-label="主なご依頼企業">
+  <div class="sfv__bar">
+    <ul class="sfv__logos">
+      <li><img src="img/logo05.svg"  width="386" height="209" alt="Logo 05" loading="lazy"></li>
+      <li><img src="img/logo06.svg" width="342" height="183" alt="Logo 06" loading="lazy"></li>
+      <li><img src="img/logo03.svg"     width="308" height="186" alt="Logo 03" loading="lazy"></li>
+      <li><img src="img/logo08.svg"   width="386" height="184" alt="Logo 08" loading="lazy"></li>
+      <li><img src="img/logo12.svg" width="444" height="205" alt="Logo 12" loading="lazy"></li>
+      <li class="sfv__etc">ほか</li>
+    </ul>
+  </div>
+</section>
+
+<section class="spain" id="pain">
+  <div class="spain__box">
+    <h2 class="spain__h">こんな状態から、ご相談をいただいています</h2>
+
+    <p class="spain__lead">会社案内の制作は数年に一度、あるいは初めての仕事です。<br class="spain__brp">このような課題はありませんか。</p>
+
+    <ul class="spain__list">
+      <li class="spain__item">社長から、うちの会社案内は古いと言われたが、何から手をつければいいか分からない</li>
+      <li class="spain__item">相見積もりを取れと言われたが、そもそも相場が分からない</li>
+      <li class="spain__item">前回作ったのは10年以上前で、当時の担当者はもう社内にいない</li>
+      <li class="spain__item">ページ数も印刷部数も、何を基準に決めればいいのか判断できない</li>
+      <li class="spain__item">自社の強みを説明しようとすると、どこにでもある言葉になってしまう</li>
+    </ul>
+
+    <p class="spain__close">決まっているのは、作らなければならないという事実だけ。<br class="spain__brp">その状態からご相談いただいて構いません。最後の一つについては、私たちの仕事そのものです。</p>
+  </div>
+</section>
+
+<section class="sassure" id="assure">
+  <div class="sassure__inner">
+    <h2 class="sassure__h2">3つの安心</h2>
+    
+
+    <span class="sassure__rule" aria-hidden="true"></span>
+
+    <div class="sassure__grid">
+      <article class="sassure__card">
+        <p class="sassure__num">1</p>
+        <h3 class="sassure__title">御社の中にある答えを<br class="sassure__br">一緒に探します</h3>
+        <p class="sassure__text">会社案内に何を載せるべきかは、業種と渡す相手によって変わります。まず御社の理念・現場・強みをお聞きし、そこから構成をご提案します。</p>
+      </article>
+
+      <article class="sassure__card">
+        <p class="sassure__num">2</p>
+        <h3 class="sassure__title">費用の見通しが<br class="sassure__br">最初に立ちます</h3>
+        <p class="sassure__text">ページ数ごとの定価を公開しています。デザイン会社、ライター、カメラマン、印刷会社をそれぞれ手配する必要はなく、印刷費まで含めた総額を着手前にご提示するため、社内でのご説明にも困りません。</p>
+      </article>
+
+      <article class="sassure__card">
+        <p class="sassure__num">3</p>
+        <h3 class="sassure__title">納得いくまで<br class="sassure__br">何度でも作り直します</h3>
+        <p class="sassure__text">デザインは3案以上をご提示し、修正回数に制限は設けていません。正確で適切な掲載情報になるまで徹底的に対応します。初めてのご依頼で、途中で方向性が変わっても問題ありません。</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="strans" id="trans">
+  <div class="strans__panel">
+
+    <h2 class="strans__h2">御社“らしさ”をお伺いした上でデザインします。</h2>
+
+    <p class="strans__lead"><span class="strans__nb">会社の強みや理念は、そのまま並べても伝わりません。</span><wbr><span class="strans__nb">色、写真、構成、折り方、スローガン。</span><wbr><span class="strans__nb">私たちは、御社にしかない特色を、読み手に届く形へ翻訳します。実際の制作物で、</span><wbr><span class="strans__nb">何をどう変換したのかをご覧ください。</span></p>
+
+    <div class="strans__grid">
+
+      <a class="strans__card" href="https://example.com/production-record/sample09/">
+        <div class="strans__head">
+          <span class="strans__num" aria-hidden="true">1</span>
+          <div>
+            <h3 class="strans__name">サンプル企業15</h3>
+            <p class="strans__spec">（工業・製造／会社案内16P中とじ）</p>
+          </div>
+        </div>
+        <div class="strans__note-block">
+          <p class="strans__label">特色（何を）</p>
+          <p class="strans__txt"><span class="strans__nb">都内</span><wbr><span class="strans__nb">最大級の</span><wbr><span class="strans__nb">生産設備。</span><wbr><span class="strans__nb">社員</span><wbr><span class="strans__nb">一人一人が</span><wbr><span class="strans__nb">日本の</span><wbr><span class="strans__nb">モノづくりへの</span><wbr><span class="strans__nb">ポリシーを</span><wbr><span class="strans__nb">持つ</span></p>
+          <svg class="strans__arrow" width="13" height="20" viewBox="0 0 13 20" fill="none" aria-hidden="true"><path d="M6.5 0v18.4M1 13.4l5.5 5.6 5.5-5.6" stroke="currentColor" stroke-width="1.4"/></svg>
+          <p class="strans__label">デザイン判断（どのように）</p>
+          <p class="strans__txt"><span class="strans__nb">その想いから </span><wbr><span class="strans__nb">Protect Japan Brand を</span><wbr><span class="strans__nb">スローガンとして</span><wbr><span class="strans__nb">提案。</span><wbr><span class="strans__nb">専門用語を</span><wbr><span class="strans__nb">避け、</span><wbr><span class="strans__nb">製造工程を</span><wbr><span class="strans__nb">フロア毎に</span><wbr><span class="strans__nb">図示</span></p>
+        </div>
+        <figure class="strans__shot">
+          <img src="img/ph31.svg" alt="見本の画像" loading="lazy" decoding="async">
+        </figure>
+      </a>
+
+      <a class="strans__card" href="https://example.com/production-record/sample04/">
+        <div class="strans__head">
+          <span class="strans__num" aria-hidden="true">2</span>
+          <div>
+            <h3 class="strans__name">サンプル企業14</h3>
+            <p class="nbwrap strans__spec"><span class="nb">（不動産・空き家再生／</span><wbr><span class="nb">A4・4P＋ポケットフォルダ）</span></p>
+          </div>
+        </div>
+        <div class="strans__note-block">
+          <p class="strans__label">特色（何を）</p>
+          <p class="strans__txt"><span class="strans__nb">ニッポン再起動を</span><wbr><span class="strans__nb">掲げ、</span><wbr><span class="strans__nb">空き家再生で</span><wbr><span class="strans__nb">国内の</span><wbr><span class="strans__nb">住宅整備に</span><wbr><span class="strans__nb">貢献</span></p>
+          <svg class="strans__arrow" width="13" height="20" viewBox="0 0 13 20" fill="none" aria-hidden="true"><path d="M6.5 0v18.4M1 13.4l5.5 5.6 5.5-5.6" stroke="currentColor" stroke-width="1.4"/></svg>
+          <p class="strans__label">デザイン判断（どのように）</p>
+          <p class="strans__txt"><span class="strans__nb">古来より</span><wbr><span class="strans__nb">日本人に</span><wbr><span class="strans__nb">愛されてきた</span><wbr><span class="strans__nb">桜を</span><wbr><span class="strans__nb">モチーフに、</span><wbr><span class="strans__nb">社会課題を</span><wbr><span class="strans__nb">親しみやすさへ</span><wbr><span class="strans__nb">変換。</span><wbr><span class="strans__nb">ポケットフォルダには</span><wbr><span class="strans__nb">更新頻度を</span><wbr><span class="strans__nb">考えて</span><wbr><span class="strans__nb">普遍情報のみ</span><wbr><span class="strans__nb">掲載</span></p>
+        </div>
+        
+        <figure class="strans__shot">
+          <img src="img/ph29.svg" alt="見本の画像" loading="lazy" decoding="async">
+        </figure>
+      </a>
+
+      <a class="strans__card" href="https://example.com/production-record/sample06/">
+        <div class="strans__head">
+          <span class="strans__num" aria-hidden="true">3</span>
+          <div>
+            <h3 class="strans__name">サンプル企業13</h3>
+            <p class="strans__spec">（リサイクル／会社案内8P両観音折）</p>
+          </div>
+        </div>
+        <div class="strans__note-block">
+          <p class="strans__label">特色（何を）</p>
+          <p class="strans__txt"><span class="strans__nb">未来の</span><wbr><span class="strans__nb">子供たちにも</span><wbr><span class="strans__nb">青い地球を</span><wbr><span class="strans__nb">残したい、</span><wbr><span class="strans__nb">が合言葉。</span><wbr><span class="strans__nb">買取から</span><wbr><span class="strans__nb">再生までの</span><wbr><span class="strans__nb">一貫体制</span></p>
+          <svg class="strans__arrow" width="13" height="20" viewBox="0 0 13 20" fill="none" aria-hidden="true"><path d="M6.5 0v18.4M1 13.4l5.5 5.6 5.5-5.6" stroke="currentColor" stroke-width="1.4"/></svg>
+          <p class="strans__label">デザイン判断（どのように）</p>
+          <p class="strans__txt"><span class="strans__nb">訴求点を</span><wbr><span class="strans__nb">自然環境の</span><wbr><span class="strans__nb">保護と</span><wbr><span class="strans__nb">一貫体制の</span><wbr><span class="strans__nb">2点に</span><wbr><span class="strans__nb">絞り込み。</span><wbr><span class="strans__nb">両観音折の</span><wbr><span class="strans__nb">面積を</span><wbr><span class="strans__nb">活かして</span><wbr><span class="strans__nb">工程を</span><wbr><span class="strans__nb">図示し、</span><wbr><span class="strans__nb">日英併記</span></p>
+        </div>
+        
+        <figure class="strans__shot">
+          <img src="img/ph30.svg" alt="見本の画像" loading="lazy" decoding="async">
+        </figure>
+      </a>
+
+    </div>
+
+    <p class="strans__close"><span class="strans__nb">同じ業種でも企業様ごとに特色は異なり、その解釈が合っているかどうかは、デザインに起こしてみないと分かりません。</span><wbr><span class="strans__nb">だから私たちは3案以上をご提示し、納得いただけるまで何度でも作り直します。</span></p>
+
+    <a class="strans__btn" href="https://example.com/production-record/">他の制作実績を見る<svg width="7" height="12" viewBox="0 0 7 12" fill="none" aria-hidden="true"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.4"/></svg></a>
+
+  </div>
+</section>
+
+<section class="scamp">
+  <div class="scamp__inner">
+    <span class="scamp__tag">お知らせ</span>
+    <p class="scamp__txt"><b>◯月◯日まで</b>のお申し込みで、入会金が無料になります。</p>
+    <a class="scamp__btn" href="#contact">詳しく見る</a>
+  </div>
+</section>
+
+<section class="speople" id="people">
+  <div class="speople__inner">
+    <h2 class="speople__h2">講師紹介</h2>
+    <hr class="speople__rule">
+    <div class="speople__grid">
+      <div class="speople__card">
+        <div class="speople__ph"></div>
+        <p class="speople__name">講師名 01</p>
+        <p class="speople__role">担当・肩書をここに</p>
+        <p class="speople__txt">経歴と担当範囲を2行で書きます。ここは差し替え用の見本です</p>
+      </div>
+      <div class="speople__card">
+        <div class="speople__ph"></div>
+        <p class="speople__name">講師名 02</p>
+        <p class="speople__role">担当・肩書をここに</p>
+        <p class="speople__txt">経歴と担当範囲を2行で書きます。ここは差し替え用の見本です</p>
+      </div>
+      <div class="speople__card">
+        <div class="speople__ph"></div>
+        <p class="speople__name">講師名 03</p>
+        <p class="speople__role">担当・肩書をここに</p>
+        <p class="speople__txt">経歴と担当範囲を2行で書きます。ここは差し替え用の見本です</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="svoice" id="voice">
+  <div class="svoice__inner">
+    <h2 class="svoice__h2">受講者の声</h2>
+    <hr class="svoice__rule">
+    <div class="svoice__grid">
+      <div class="svoice__card">
+        <p class="svoice__q" aria-hidden="true">“</p>
+        <p class="svoice__txt">実際に受けてどうだったかを、本人の言葉で3行ほど。ここは差し替え用の見本です</p>
+        <hr class="svoice__sep">
+        <div class="svoice__who">
+          <div class="svoice__ph"></div>
+          <div><p class="svoice__name">お名前 01</p><p class="svoice__attr">属性をここに</p></div>
+        </div>
+      </div>
+      <div class="svoice__card">
+        <p class="svoice__q" aria-hidden="true">“</p>
+        <p class="svoice__txt">実際に受けてどうだったかを、本人の言葉で3行ほど。ここは差し替え用の見本です</p>
+        <hr class="svoice__sep">
+        <div class="svoice__who">
+          <div class="svoice__ph"></div>
+          <div><p class="svoice__name">お名前 02</p><p class="svoice__attr">属性をここに</p></div>
+        </div>
+      </div>
+      <div class="svoice__card">
+        <p class="svoice__q" aria-hidden="true">“</p>
+        <p class="svoice__txt">実際に受けてどうだったかを、本人の言葉で3行ほど。ここは差し替え用の見本です</p>
+        <hr class="svoice__sep">
+        <div class="svoice__who">
+          <div class="svoice__ph"></div>
+          <div><p class="svoice__name">お名前 03</p><p class="svoice__attr">属性をここに</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="srecord" id="record">
+  <div class="srecord__wrap">
+
+    <h2 class="srecord__h">実績と規模</h2>
+    <p class="srecord__lead"><span class="srecord__nb">官公庁から大手企業まで。</span><wbr><span class="srecord__nb">20分野以上の制作実績があります</span></p>
+
+    
+
+    <div class="srecord__marquee">
+      
+      <div class="srecord__track">
+        <div class="srecord__set">
+          <span class="srecord__logo"><img src="img/logo05.svg" alt="Logo 05" loading="lazy" decoding="async"></span>
+          <span class="srecord__logo"><img src="img/logo06.svg" alt="Logo 06" loading="lazy" decoding="async"></span>
+          <span class="srecord__logo"><img src="img/logo03.svg" alt="Logo 03" loading="lazy" decoding="async"></span>
+          <span class="srecord__logo"><img src="img/logo08.svg" alt="Logo 08" loading="lazy" decoding="async"></span>
+          <span class="srecord__logo"><img src="img/logo04.svg" alt="Logo 04" loading="lazy" decoding="async"></span>
+          <span class="srecord__logo"><img src="img/logo02.svg" alt="Logo 02" loading="lazy" decoding="async"></span>
+          <span class="srecord__logo"><img src="img/logo10.svg" alt="Logo 10" loading="lazy" decoding="async"></span>
+          <span class="srecord__logo"><img src="img/logo12.svg" alt="Logo 12" loading="lazy" decoding="async"></span>
+          <span class="srecord__logo"><img src="img/logo01.svg" alt="Logo 01" loading="lazy" decoding="async"></span>
+          <span class="srecord__logo"><img src="img/logo09.svg" alt="Logo 09" loading="lazy" decoding="async"></span>
+          <span class="srecord__logo"><img src="img/logo07.svg" alt="Logo 07" loading="lazy" decoding="async"></span>
+          <span class="srecord__logo"><img src="img/logo11.svg" alt="Logo 11" loading="lazy" decoding="async"></span>
+        </div>
+        <div class="srecord__set" aria-hidden="true">
+          <span class="srecord__logo"><img src="img/logo05.svg" alt="Logo 05" loading="lazy" decoding="async"></span>
+          <span class="srecord__logo"><img src="img/logo06.svg" alt="Logo 06" loading="lazy" decoding="async"></span>
+          <span class="srecord__logo"><img src="img/logo03.svg" alt="Logo 03" loading="lazy" decoding="async"></span>
+          <span class="srecord__logo"><img src="img/logo08.svg" alt="Logo 08" loading="lazy" decoding="async"></span>
+          <span class="srecord__logo"><img src="img/logo04.svg" alt="Logo 04" loading="lazy" decoding="async"></span>
+          <span class="srecord__logo"><img src="img/logo02.svg" alt="Logo 02" loading="lazy" decoding="async"></span>
+          <span class="srecord__logo"><img src="img/logo10.svg" alt="Logo 10" loading="lazy" decoding="async"></span>
+          <span class="srecord__logo"><img src="img/logo12.svg" alt="Logo 12" loading="lazy" decoding="async"></span>
+          <span class="srecord__logo"><img src="img/logo01.svg" alt="Logo 01" loading="lazy" decoding="async"></span>
+          <span class="srecord__logo"><img src="img/logo09.svg" alt="Logo 09" loading="lazy" decoding="async"></span>
+          <span class="srecord__logo"><img src="img/logo07.svg" alt="Logo 07" loading="lazy" decoding="async"></span>
+          <span class="srecord__logo"><img src="img/logo11.svg" alt="Logo 11" loading="lazy" decoding="async"></span>
+        </div>
+      </div>
+    </div>
+
+    <dl class="srecord__stats">
+      <div class="srecord__stat">
+        <dt>制作実績</dt>
+        
+        <dd class="srecord__fig">累計◯◯件<span class="srecord__tbc">※要確認</span></dd>
+      </div>
+      <div class="srecord__stat">
+        <dt>対応業種</dt>
+        <dd class="srecord__fig"><span class="srecord__num">20</span>分野以上</dd>
+      </div>
+      <div class="srecord__stat">
+        <dt>対応地域</dt>
+        <dd class="srecord__note"><span class="srecord__nb">東京全域および関東近県は訪問、</span><wbr><span class="srecord__nb">全国オンライン対応</span></dd>
+      </div>
+    </dl>
+
+    <div class="srecord__box">
+      <p class="srecord__boxlabel">業種一覧</p>
+      <p class="srecord__boxbody"><span class="srecord__nb">エンターテインメント、</span><wbr><span class="srecord__nb">医療・福祉、</span><wbr><span class="srecord__nb">不動産、</span><wbr><span class="srecord__nb">建築・設備・土木、</span><wbr><span class="srecord__nb">内装、</span><wbr><span class="srecord__nb">人材派遣、</span><wbr><span class="srecord__nb">士業、</span><wbr><span class="srecord__nb">工業・製造、</span><wbr><span class="srecord__nb">物販、</span><wbr><span class="srecord__nb">スポーツ、</span><wbr><span class="srecord__nb">物流、</span><wbr><span class="srecord__nb">労働機関、</span><wbr><span class="srecord__nb">IT、</span><wbr><span class="srecord__nb">飲食、</span><wbr><span class="srecord__nb">旅行、</span><wbr><span class="srecord__nb">映像、</span><wbr><span class="srecord__nb">リサイクル、</span><wbr><span class="srecord__nb">製薬、</span><wbr><span class="srecord__nb">サービス、</span><wbr><span class="srecord__nb">金融</span></p>
+    </div>
+
+  </div>
+</section>
+
+<section class="scompare" id="compare">
+  <div class="scompare__box">
+
+    <h2 class="scompare__h">他の選択肢との違い</h2>
+    <hr class="scompare__rule">
+
+    <p class="scompare__lead"><span class="scompare__nb">印刷通販や</span><wbr><span class="scompare__nb">クラウドソーシングとの違い</span></p>
+
+    <p class="scompare__note"><span class="scompare__nb">会社案内を作る手段は</span><wbr><span class="scompare__nb">いくつかあります。</span><wbr><span class="scompare__nb">それぞれに向き不向きがあるため、</span><wbr><span class="scompare__nb">比較のうえで</span><wbr><span class="scompare__nb">ご判断ください。</span></p>
+
+    <div class="scompare__scroll">
+      <table class="scompare__table">
+        <colgroup><col><col><col><col><col></colgroup>
+        <thead>
+          <tr>
+            <th scope="col"></th>
+            <th scope="col" class="scompare__ads">
+              <img src="img/ph02.svg" alt="見本の画像" width="242" height="39" loading="lazy" decoding="async">
+            </th>
+            <th scope="col">大手制作会社</th>
+            <th scope="col">印刷通販</th>
+            <th scope="col">クラウドソーシング</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row" class="scompare__row">構成から相談できる</th>
+            <td>○</td>
+            <td>○</td>
+            <td>×</td>
+            <td>△</td>
+          </tr>
+          <tr>
+            <th scope="row" class="scompare__row">特色の読み解きと提案</th>
+            <td>○</td>
+            <td>○</td>
+            <td>×</td>
+            <td>△</td>
+          </tr>
+          <tr>
+            <th scope="row" class="scompare__row">取材・撮影</th>
+            <td>○</td>
+            <td>○</td>
+            <td>×</td>
+            <td>△</td>
+          </tr>
+          <tr>
+            <th scope="row" class="scompare__row">印刷まで一貫</th>
+            <td>○</td>
+            <td>○</td>
+            <td>○</td>
+            <td>×</td>
+          </tr>
+          <tr>
+            <th scope="row" class="scompare__row">修正回数</th>
+            <td>無制限</td>
+            <td>契約による</td>
+            <td>不可</td>
+            <td>回数制限あり</td>
+          </tr>
+          <tr>
+            <th scope="row" class="scompare__row">法人としての責任</th>
+            <td>○</td>
+            <td>○</td>
+            <td>○</td>
+            <td>△</td>
+          </tr>
+          <tr>
+            <th scope="row" class="scompare__row">費用</th>
+            <td>中</td>
+            <td>高</td>
+            <td>低</td>
+            <td>低</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="scompare__close"><span class="scompare__nb">すでに構成も原稿もお決まりで、</span><wbr><span class="scompare__nb">費用を最優先されるなら</span><wbr><span class="scompare__nb">印刷通販が適しています。</span><br><span class="scompare__nb">何を載せるかから</span><wbr><span class="scompare__nb">決めていきたい場合に、</span><wbr><span class="scompare__nb">私たちをお選びください。</span></p>
+
+  </div>
+</section>
+
+<section class="scamp">
+  <div class="scamp__inner">
+    <span class="scamp__tag">お知らせ</span>
+    <p class="scamp__txt"><b>◯月◯日まで</b>のお申し込みで、入会金が無料になります。</p>
+    <a class="scamp__btn" href="#contact">詳しく見る</a>
+  </div>
+</section>
+
+<section class="sprice" id="price">
+  <div class="sprice__wrap">
+
+    <h2 class="sprice__h">料金</h2>
+    <p class="sprice__sub">ページ数ごとの明朗料金。印刷費まで含めた総額でご提示します</p>
+    <p class="sprice__lead">お問い合わせをいただく前に、おおよその費用がお分かりいただけます。<br>社内で予算をご申請いただく際の資料としても、そのままお使いください。</p>
+
+    <div class="sprice__tabs">
+      <input class="sprice__radio" type="radio" name="prtab" id="prtab-1" checked>
+      <input class="sprice__radio" type="radio" name="prtab" id="prtab-2">
+      <input class="sprice__radio" type="radio" name="prtab" id="prtab-3">
+      <input class="sprice__radio" type="radio" name="prtab" id="prtab-4">
+      <div class="sprice__tablist" role="tablist">
+        <label class="sprice__tab" for="prtab-1"><img class="sprice__tabico" src="img/ph25.svg" alt="見本の画像" width="169" height="108" loading="lazy" decoding="async">パンフレット</label>
+        <label class="sprice__tab" for="prtab-2"><img class="sprice__tabico" src="img/ph28.svg" alt="見本の画像" width="143" height="108" loading="lazy" decoding="async">ホームページ</label>
+        <label class="sprice__tab" for="prtab-3"><img class="sprice__tabico" src="img/ph27.svg" alt="見本の画像" width="256" height="108" loading="lazy" decoding="async">制作オプション</label>
+        <label class="sprice__tab" for="prtab-4"><img class="sprice__tabico" src="img/ph26.svg" alt="見本の画像" width="186" height="108" loading="lazy" decoding="async">印刷オプション</label>
+      </div>
+      <div class="sprice__panels">
+      <div class="sprice__panel">
+      <p class="sprice__cardh">パンフレットのデザイン・印刷費</p>
+      <table class="sprice__table">
+        <thead>
+          <tr><th scope="col">サイズ／ページ数</th><th scope="col">仕様／部数／色数</th><th scope="col">料金</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="sprice__spec"><img class="sprice__ico" src="img/ph15.svg" alt="見本の画像" width="168" height="108" loading="lazy" decoding="async"><span class="sprice__specname">A4／4ページ</span></span></td>
+            <td>二つ折り／500部／4c</td>
+            <td><span class="sprice__price">￥180,000</span></td>
+          </tr>
+          <tr>
+            <td><span class="sprice__spec"><img class="sprice__ico" src="img/ph16.svg" alt="見本の画像" width="130" height="108" loading="lazy" decoding="async"><span class="sprice__specname">A4／6ページ</span></span></td>
+            <td>三つ折り／500部／4c</td>
+            <td><span class="sprice__price">￥220,000</span></td>
+          </tr>
+          <tr>
+            <td><span class="sprice__spec"><img class="sprice__ico" src="img/ph17.svg" alt="見本の画像" width="178" height="108" loading="lazy" decoding="async"><span class="sprice__specname">A4／8ページ</span></span></td>
+            <td>中綴じ／500部／4c</td>
+            <td><span class="sprice__price">￥280,000</span></td>
+          </tr>
+          <tr>
+            <td><span class="sprice__spec"><img class="sprice__ico" src="img/ph11.svg" alt="見本の画像" width="206" height="108" loading="lazy" decoding="async"><span class="sprice__specname">A4／12ページ</span></span></td>
+            <td>中綴じ／500部／4c</td>
+            <td><span class="sprice__price">￥360,000</span></td>
+          </tr>
+          <tr>
+            <td><span class="sprice__spec"><img class="sprice__ico" src="img/ph12.svg" alt="見本の画像" width="202" height="108" loading="lazy" decoding="async"><span class="sprice__specname">A4／16ページ</span></span></td>
+            <td>中綴じ／500部／4c</td>
+            <td><span class="sprice__price">￥430,000</span></td>
+          </tr>
+          <tr>
+            <td><span class="sprice__spec"><img class="sprice__ico" src="img/ph13.svg" alt="見本の画像" width="200" height="108" loading="lazy" decoding="async"><span class="sprice__specname">A4／20ページ</span></span></td>
+            <td>中綴じ／500部／4c</td>
+            <td><span class="sprice__price">￥510,000</span></td>
+          </tr>
+          <tr>
+            <td><span class="sprice__spec"><img class="sprice__ico" src="img/ph14.svg" alt="見本の画像" width="184" height="108" loading="lazy" decoding="async"><span class="sprice__specname">A4／24ページ</span></span></td>
+            <td>中綴じ／500部／4c</td>
+            <td><span class="sprice__price">￥590,000</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <ul class="sprice__notes">
+        <li>※ 高級用紙・特殊加工は別途お見積いたします</li>
+        <li>※ 原稿作成・写真撮影費等は「制作オプション」のタブをご参考ください</li>
+      </ul>
+    </div>
+      <div class="sprice__panel">
+      <p class="sprice__cardh">ホームページのデザイン（原稿ご支給時）・コーディング費</p>
+      <table class="sprice__table">
+        <thead>
+          <tr><th scope="col">ページ数</th><th scope="col">仕様</th><th scope="col">料金</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="sprice__spec"><img class="sprice__ico" src="img/ph24.svg" alt="見本の画像" width="174" height="108" loading="lazy" decoding="async"><span class="sprice__specname">5ページ<span class="sprice__note">コーポレートサイト／採用サイト／販売サイト 等</span></span></span></td>
+            <td>PC／SP</td>
+            <td><span class="sprice__price">￥300,000〜</span></td>
+          </tr>
+          <tr>
+            <td><span class="sprice__spec"><img class="sprice__ico" src="img/ph22.svg" alt="見本の画像" width="151" height="108" loading="lazy" decoding="async"><span class="sprice__specname">10ページ</span></span></td>
+            <td>PC／SP</td>
+            <td><span class="sprice__price">￥400,000〜</span></td>
+          </tr>
+          <tr>
+            <td><span class="sprice__spec"><img class="sprice__ico" src="img/ph23.svg" alt="見本の画像" width="170" height="108" loading="lazy" decoding="async"><span class="sprice__specname">15ページ</span></span></td>
+            <td>PC／SP</td>
+            <td><span class="sprice__price">￥600,000〜</span></td>
+          </tr>
+          <tr>
+            <td><span class="sprice__spec"><img class="sprice__ico" src="img/ph10.svg" alt="見本の画像" width="141" height="108" loading="lazy" decoding="async"><span class="sprice__specname">LP（ランディングページ）</span></span></td>
+            <td>PC／SP</td>
+            <td><span class="sprice__price">￥200,000〜</span></td>
+          </tr>
+          <tr>
+            <td><span class="sprice__spec"><img class="sprice__ico" src="img/ph03.svg" alt="見本の画像" width="151" height="108" loading="lazy" decoding="async"><span class="sprice__specname">CMS導入</span></span></td>
+            <td></td>
+            <td><span class="sprice__price">￥100,000〜</span></td>
+          </tr>
+          <tr>
+            <td><span class="sprice__spec"><img class="sprice__ico" src="img/ph08.svg" alt="見本の画像" width="172" height="108" loading="lazy" decoding="async"><span class="sprice__specname">フォーム設置</span></span></td>
+            <td></td>
+            <td><span class="sprice__price">￥30,000〜</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <ul class="sprice__notes">
+        <li>※ 原稿作成・写真撮影費等は「制作オプション」のタブをご参考ください</li>
+        <li>※ 地域、制作内容により交通費や別途進行管理費がかかります</li>
+      </ul>
+    </div>
+      <div class="sprice__panel">
+      <p class="sprice__cardh">制作オプション</p>
+      <table class="sprice__table">
+        <thead>
+          <tr><th scope="col">項目</th><th scope="col">内容</th><th scope="col">料金／数量</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="sprice__spec"><img class="sprice__ico" src="img/ph19.svg" alt="見本の画像" width="188" height="108" loading="lazy" decoding="async"><span class="sprice__specname">企画・構成費</span></span></td>
+            <td>コンテンツ・構成・仕様案等の制作</td>
+            <td><span class="sprice__price">￥30,000〜<small>／一式</small></span></td>
+          </tr>
+          <tr>
+            <td><span class="sprice__spec"><img class="sprice__ico" src="img/ph05.svg" alt="見本の画像" width="167" height="108" loading="lazy" decoding="async"><span class="sprice__specname">コピーライティング費</span></span></td>
+            <td>キャッチコピー、リード、図版案などの原稿作成費</td>
+            <td><span class="sprice__price">￥8,000〜<small>／1P</small></span></td>
+          </tr>
+          <tr>
+            <td><span class="sprice__spec"><img class="sprice__ico" src="img/ph18.svg" alt="見本の画像" width="126" height="108" loading="lazy" decoding="async"><span class="sprice__specname">カメラマン撮影費</span></span></td>
+            <td>商品撮影・人物・社内風景・設備・作業風景など</td>
+            <td><span class="sprice__price">￥3,000〜<small>／1カット（物撮）</small>￥35,000<small>／2H（ロケ）</small>￥80,000<small>／6H（ロケ）</small></span></td>
+          </tr>
+          <tr>
+            <td><span class="sprice__spec"><img class="sprice__ico" src="img/ph09.svg" alt="見本の画像" width="165" height="108" loading="lazy" decoding="async"><span class="sprice__specname">イラスト制作費</span></span></td>
+            <td>各種イラスト・アイコン・キャラクター作成</td>
+            <td><span class="sprice__price">￥3,000〜<small>／1カット</small>￥50,000〜<small>／1式</small></span></td>
+          </tr>
+          <tr>
+            <td><span class="sprice__spec"><img class="sprice__ico" src="img/ph20.svg" alt="見本の画像" width="154" height="108" loading="lazy" decoding="async"><span class="sprice__specname">校正・校閲料金</span></span></td>
+            <td>誤字脱字、表現、表記統一、整合性確認など</td>
+            <td><span class="sprice__price">￥2,000〜<small>／1頁</small></span></td>
+          </tr>
+          <tr>
+            <td><span class="sprice__spec"><img class="sprice__ico" src="img/ph21.svg" alt="見本の画像" width="167" height="108" loading="lazy" decoding="async"><span class="sprice__specname">翻訳</span></span></td>
+            <td>日本語から英語に</td>
+            <td><span class="sprice__price">￥20,000〜<small>／500文字</small></span></td>
+          </tr>
+        </tbody>
+      </table>
+      <ul class="sprice__notes">
+        <li>※ 部数・頁数・用紙にてお見積いたします</li>
+        <li>※ 筆文字、CD、マンガ、マップ制作等も制作しています。お気軽にお問い合わせください</li>
+      </ul>
+    </div>
+      <div class="sprice__panel">
+      <p class="sprice__cardh">印刷オプション</p>
+      <table class="sprice__table">
+        <thead>
+          <tr><th scope="col">項目</th><th scope="col">内容</th><th scope="col">料金／数量</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="sprice__spec"><img class="sprice__ico" src="img/ph04.svg" alt="見本の画像" width="154" height="108" loading="lazy" decoding="async"><span class="sprice__specname">印刷部数追加</span></span></td>
+            <td>A4／4P</td>
+            <td><span class="sprice__price">￥30,000〜<small>／500部</small></span></td>
+          </tr>
+          <tr>
+            <td><span class="sprice__spec"><img class="sprice__ico" src="img/ph06.svg" alt="見本の画像" width="216" height="108" loading="lazy" decoding="async"><span class="sprice__specname">色校正（簡易・本機）</span></span></td>
+            <td>A4／4P</td>
+            <td><span class="sprice__price">￥5,000〜<small>／1部</small></span></td>
+          </tr>
+          <tr>
+            <td><span class="sprice__spec"><img class="sprice__ico" src="img/ph07.svg" alt="見本の画像" width="174" height="108" loading="lazy" decoding="async"><span class="sprice__specname">印刷特殊加工</span></span></td>
+            <td>PP貼り／カットアウト／箔押し／浮き出し／UV／ホログラム加工 他</td>
+            <td><span class="sprice__price">￥30,000〜<small>／100部〜</small></span></td>
+          </tr>
+        </tbody>
+      </table>
+      <ul class="sprice__notes">
+        <li>※ 部数・頁数・用紙にてお見積いたします</li>
+        <li>※ 用紙銘柄や印刷仕様により組み合わせができない加工がございます。詳しくはお問い合わせください</li>
+      </ul>
+    </div>
+      </div>
+    </div>
+
+    <p class="sprice__close">追加費用が後から発生しないよう、着手前に総額をご提示します。修正回数は無制限ですが、それによる追加費用はいただきません。</p>
+    <p class="sprice__tax">表示価格は税抜価格です。</p>
+
+  </div>
+</section>
+
+<section class="sfaq" id="faq">
+  <div class="sfaq__wrap">
+
+    <h2 class="sfaq__h">よくあるご質問</h2>
+
+    <div class="sfaq__list">
+
+      
+      <details class="sfaq__item">
+        <summary class="sfaq__q">
+          <span class="sfaq__qmark" aria-hidden="true">Q.</span>
+          <span class="sfaq__qtext"><span class="sfaq__nb">予算がまだ決まっていない</span><wbr><span class="sfaq__nb">段階でも相談できますか</span></span>
+          <span class="sfaq__mark" aria-hidden="true"></span>
+        </summary>
+        <p class="sfaq__a">はい、その状態でのご相談が多くいただく形です。ページ数ごとの参考価格を公開しておりますので、まずは規模感をご確認ください。伝えたい内容と渡す相手をお聞きしたうえで、印刷費を含めた総額をお出しします。</p>
+      </details>
+
+      <details class="sfaq__item">
+        <summary class="sfaq__q">
+          <span class="sfaq__qmark" aria-hidden="true">Q.</span>
+          <span class="sfaq__qtext"><span class="sfaq__nb">原稿や写真が</span><wbr><span class="sfaq__nb">まったくない状態からでも</span><wbr><span class="sfaq__nb">お願いできますか</span></span>
+          <span class="sfaq__mark" aria-hidden="true"></span>
+        </summary>
+        <p class="sfaq__a">はい、その状態から始まる案件がほとんどです。原稿はこちらで執筆し、撮影はカメラマンの手配から対応します。お願いするのは、取材へのご対応とご確認だけです。</p>
+      </details>
+
+      <details class="sfaq__item">
+        <summary class="sfaq__q">
+          <span class="sfaq__qmark" aria-hidden="true">Q.</span>
+          <span class="sfaq__qtext"><span class="sfaq__nb">修正回数が無制限とありますが、</span><wbr><span class="sfaq__nb">追加費用はかかりませんか</span></span>
+          <span class="sfaq__mark" aria-hidden="true"></span>
+        </summary>
+        <p class="sfaq__a">修正による追加費用はいただきません。無制限としているのは、御社の特色を正しく読み取れているかは、形にしてご覧いただかないと分からないためです。</p>
+      </details>
+
+      <details class="sfaq__item">
+        <summary class="sfaq__q">
+          <span class="sfaq__qmark" aria-hidden="true">Q.</span>
+          <span class="sfaq__qtext"><span class="sfaq__nb">途中で方向性を変えたくなった場合も</span><wbr><span class="sfaq__nb">対応いただけますか</span></span>
+          <span class="sfaq__mark" aria-hidden="true"></span>
+        </summary>
+        <p class="sfaq__a">対応します。作りながら伝えたいことが固まっていくケースは珍しくありません。変わった時点でお知らせいただければ、そこから組み直します。</p>
+      </details>
+
+      <details class="sfaq__item">
+        <summary class="sfaq__q">
+          <span class="sfaq__qmark" aria-hidden="true">Q.</span>
+          <span class="sfaq__qtext"><span class="sfaq__nb">制作期間は</span><wbr><span class="sfaq__nb">どのくらいかかりますか</span></span>
+          <span class="sfaq__mark" aria-hidden="true"></span>
+        </summary>
+        <p class="sfaq__a">A4二つ折り4ページで約1か月、中綴じ16ページで約2か月が目安です。展示会や採用イベントなど動かせない期限がある場合は、そこから逆算して組みますのでお申し付けください。</p>
+      </details>
+
+      <details class="sfaq__item">
+        <summary class="sfaq__q">
+          <span class="sfaq__qmark" aria-hidden="true">Q.</span>
+          <span class="sfaq__qtext"><span class="sfaq__nb">遠方ですが</span><wbr><span class="sfaq__nb">対応いただけますか</span></span>
+          <span class="sfaq__mark" aria-hidden="true"></span>
+        </summary>
+        <p class="sfaq__a">全国からご依頼いただけます。関東近県は直接お伺いし、それ以外はオンラインで進めます。取材や撮影が必要な場合は出張して対応します。</p>
+      </details>
+
+      <details class="sfaq__item">
+        <summary class="sfaq__q">
+          <span class="sfaq__qmark" aria-hidden="true">Q.</span>
+          <span class="sfaq__qtext"><span class="sfaq__nb">制作したデータは</span><wbr><span class="sfaq__nb">納品してもらえますか</span></span>
+          <span class="sfaq__mark" aria-hidden="true"></span>
+        </summary>
+        <p class="sfaq__a">はい、ご希望に応じて納品します。増刷をご自身で手配いただくことも可能です。形式については、その後の運用方法をお聞きしたうえでご相談させてください。</p>
+      </details>
+
+    </div>
+  </div>
+</section>
+
+<section class="scompany" id="company">
+  <div class="scompany__in">
+
+    <h2 class="scompany__h">会社情報</h2>
+    <p class="scompany__lead">SAMPLEの基本情報です。</p>
+
+    
+    <dl class="scompany__dl">
+      <dt>社名</dt>
+      <dd>サンプル株式会社</dd>
+
+      <dt>制作ルーム</dt>
+      <dd>東京都◯◯区◯◯1-2-3</dd>
+
+      <dt>連絡先</dt>
+      <dd>Tel：03-0000-0000　／　e-mail：<a class="scompany__link" href="mailto:info@example.com">info@example.com</a></dd>
+
+      <dt>資本金</dt>
+      <dd>0,000,000円</dd>
+
+      <dt>業務内容</dt>
+      <dd>（サンプル）制作業務および関連業務</dd>
+
+      <dt>創業</dt>
+      <dd>20XX年4月</dd>
+
+      
+      <dt>取引銀行</dt>
+      <dd class="scompany__list">◯◯信用金庫／◯◯支店<wbr>　　◯◯銀行／◯◯支店</dd>
+
+      
+      <dt>取引実績</dt>
+      <dd class="scompany__list">サンプル官庁01／<wbr>サンプル企業02／<wbr>サンプル企業03／<wbr>サンプル企業04／<wbr>サンプル団体05／<wbr>サンプル機関06／<wbr>サンプル企業08／<wbr>サンプル病院07／<wbr>サンプル病院16／<wbr>サンプル企業10／<wbr>サンプル企業15／<wbr>サンプル企業09　他</dd>
+    </dl>
+
+  </div>
+</section>
+
+<section class="scontact" id="contact">
+  <div class="scontact__card">
+    <div class="scontact__cols">
+
+      <div class="scontact__left">
+        
+        
+
+        <h2 class="scontact__h"><span class="scontact__nb">まだ何も</span><wbr><span class="scontact__nb">決まっていない</span><br><span class="scontact__nb">段階でも</span><wbr><span class="scontact__nb">ぜひご相談ください</span></h2>
+
+        <p class="scontact__lead"><span class="scontact__nb">ページ数、</span><wbr><span class="scontact__nb">部数、</span><wbr><span class="scontact__nb">載せる内容も</span><wbr><span class="scontact__nb">一緒に決めていきます。</span><br><span class="scontact__nb">まずは御社の現状と、</span><wbr><span class="scontact__nb">お困りごとから</span><wbr><span class="scontact__nb">お聞かせください。</span></p>
+
+        
+
+        <hr class="scontact__rule scontact__rule--2">
+
+        <p class="scontact__note"><span class="scontact__nb">ご相談・お見積もりは</span><wbr><span class="scontact__nb">無料です。</span><br><span class="scontact__nb">1営業日以内に</span><wbr><span class="scontact__nb">ご返信します。</span></p>
+      </div>
+
+      
+      <form class="scontact__form" id="scontact-form" action="" method="post">
+        <div class="scontact__field">
+          <label class="scontact__label" for="scontact-company">会社名</label>
+          <input class="scontact__input" id="scontact-company" name="company" type="text" autocomplete="organization">
+        </div>
+        <div class="scontact__field">
+          <label class="scontact__label" for="scontact-name">お名前</label>
+          <input class="scontact__input" id="scontact-name" name="name" type="text" autocomplete="name">
+        </div>
+        <div class="scontact__field">
+          <label class="scontact__label" for="scontact-email">メールアドレス</label>
+          <input class="scontact__input" id="scontact-email" name="email" type="email" autocomplete="email">
+        </div>
+        <div class="scontact__field">
+          <label class="scontact__label" for="scontact-tel">電話番号（任意）</label>
+          <input class="scontact__input" id="scontact-tel" name="tel" type="tel" autocomplete="tel">
+        </div>
+        <div class="scontact__field">
+          <label class="scontact__label" for="scontact-message">ご相談内容（自由記述）</label>
+          <textarea class="scontact__textarea" id="scontact-message" name="message" rows="3"></textarea>
+        </div>
+        
+        <button class="scontact__submit" type="submit">この内容で相談する</button>
+      </form>
+
+    </div>
+  </div>
+
+  
+</section>
+<footer class="lpf">
+  <nav class="lpf__nav">
+    <a href="#trans">制作実例</a><a href="#record">実績</a><a href="#flow">進め方</a>
+    <a href="#price">料金</a><a href="#faq">よくあるご質問</a><a href="#company">会社情報</a>
+  </nav>
+  <p class="lpf__cr">Copyright © ads co.,ltd. All Rights Reserved.</p>
+</footer>
+<a class="scontact__fixed" href="#scontact-form">
+    <svg class="scontact__fixedicon" viewBox="0 0 38 28" fill="none" aria-hidden="true">
+      <rect x="1" y="1" width="36" height="26" rx="2" fill="#fff"/>
+      <path d="M2.5 2.5L19 16 35.5 2.5M2.5 25.5L14.5 15M35.5 25.5L23.5 15" stroke="var(--blue)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span class="scontact__fixedtext">
+      <span class="scontact__fixedmain">お問い合わせ｜デザイン相談（無料）</span>
+      <span class="scontact__fixedsub">1営業日以内にご返信</span>
+    </span>
+  </a>
+<script>
+
+(function(){
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var groups = [
+    '#pain .spain__h, #pain .spain__lead, #pain li, #pain .spain__close',
+    '#trans .strans__h2, #trans .strans__lead, #trans .strans__col, #trans .strans__close, #trans .strans__btn',
+    '#assure .sassure__h2, #assure .sassure__card',
+    '#record .srecord__h, #record .srecord__lead, #record .srecord__marquee, #record .srecord__stat, #record .srecord__box',
+    '#flow .sflow__eyebrow, #flow .sflow__h2, #flow .sflow__row, #flow .sflow__note',
+    '#price .sprice__h, #price .sprice__sub, #price .sprice__lead, #price .sprice__card, #price .sprice__close',
+    '#compare .scompare__h, #compare .scompare__lead, #compare .scompare__note, #compare .scompare__box, #compare .scompare__close',
+    '#faq h2, #faq .sfaq__item',
+    '#company .scompany__h, #company .scompany__lead, #company .scompany__dl',
+    '#contact .scontact__h, #contact .scontact__lead, #contact .scontact__form, #contact .scontact__note'
+  ];
+  var els = [];
+  groups.forEach(function(sel){
+    [].slice.call(document.querySelectorAll(sel)).forEach(function(el, i){
+      el.setAttribute('data-rv','');
+      el.style.setProperty('--rv-d', Math.min(i,4)*80 + 'ms');
+      els.push(el);
+    });
+  });
+  if (!els.length) return;
+  var showAll = function(){ els.forEach(function(el){ el.classList.add('is-in'); }); };
+  if (!('IntersectionObserver' in window)) { showAll(); return; }
+  
+  var alive = false;
+  var io = new IntersectionObserver(function(ents){
+    alive = true;
+    ents.forEach(function(e){
+      if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+    });
+  }, {rootMargin:'0px 0px -12% 0px', threshold:0.08});
+  els.forEach(function(el){ io.observe(el); });
+  
+  setTimeout(function(){ if (!alive) showAll(); }, 1200);
+  
+  addEventListener('scroll', function once(){
+    removeEventListener('scroll', once);
+    setTimeout(function(){
+      if (!document.querySelector('[data-rv].is-in')) showAll();
+    }, 500);
+  }, {passive:true});
+  
+  setTimeout(function(){
+    if (!document.querySelector('[data-rv].is-in')) showAll();
+  }, 8000);
+})();
+</script>
+<script>
+
+(function(){
+  var fv = document.getElementById('fv');
+  if (!fv) return;
+  var edge = 0;
+  var calc = function(){ edge = fv.offsetTop + fv.offsetHeight - 80; };
+  var sync = function(){ document.body.classList.toggle('cta-hide', window.scrollY < edge); };
+  var both = function(){ calc(); sync(); };
+  both();
+  addEventListener('scroll', sync, {passive:true});
+  addEventListener('resize', both, {passive:true});
+  addEventListener('load', both);
+})();
+</script>
+<script>
+
+(function(){
+  var items = [].slice.call(document.querySelectorAll('#faq details'));
+  if (!items.length) return;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (!document.body.animate) return;                  
+  var EASE = 'cubic-bezier(.4,0,.2,1)';
+  
+  var root = document.getElementById('faq');
+  if (root) root.classList.add('sfaq--js');
+  items.forEach(function(d){
+    var sum = d.querySelector('summary');
+    if (!sum) return;
+    d.classList.toggle('is-open', d.open);             
+    var anim = null;
+    sum.addEventListener('click', function(ev){
+      ev.preventDefault();
+      
+      var from = d.getBoundingClientRect().height;
+      if (anim) { anim.cancel(); anim = null; }
+      var opening = !d.open;
+      d.classList.toggle('is-open', opening);          
+      
+      d.open = opening;
+      var to = d.getBoundingClientRect().height;
+      d.open = true;                                   
+      d.style.overflow = 'hidden';
+      anim = d.animate({height:[from + 'px', to + 'px']},
+                       {duration: opening ? 280 : 220, easing: EASE});
+      anim.onfinish = function(){
+        d.open = opening;
+        d.style.overflow = '';
+        anim = null;
+      };
+    });
+  });
+})();
+</script>
+</body>
+</html>
