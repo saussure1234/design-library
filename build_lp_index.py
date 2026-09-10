@@ -405,7 +405,17 @@ a.dl:hover{transform:translateY(-1px)}
 .fm{font-size:12px;color:var(--mute);margin-bottom:3px}
 .fm i{font-style:normal;font-weight:700;margin-right:7px;color:#9ca3af}
 
-.frisk,.fgap{font-size:12.5px;margin-top:8px;padding:8px 11px;border-radius:0 7px 7px 0;line-height:1.6}
+.frisk,.fgap,.floop{font-size:12.5px;margin-top:8px;padding:8px 11px;border-radius:0 7px 7px 0;line-height:1.6}
+/* ループの節（工程12〜15）。戻り線と同じ色にして、絵と説明を結びつける */
+.floop{background:#fff4ec;border-left:3px solid #e07a2f;color:#7c3d10}
+.floop b{display:block;margin-bottom:3px}
+.fnode.isloop{box-shadow:inset 0 0 0 2px #f3c7a4}
+/* 型の構成表 */
+.stt{width:100%;border-collapse:collapse;margin:10px 0 4px;font-size:13px}
+.stt th,.stt td{border:1px solid var(--line);padding:6px 9px;text-align:left;vertical-align:top}
+.stt th{background:var(--paper);font-weight:700;white-space:nowrap}
+.stt td.n{width:34px;text-align:center;color:var(--mute);font-variant-numeric:tabular-nums}
+.stt td.pt{white-space:nowrap;font-family:ui-monospace,monospace;font-size:11.5px;color:var(--mute)}
 .frisk{background:#fef2f2;border-left:3px solid var(--bad);color:#7f1d1d}
 .fgap{background:#fffbeb;border-left:3px solid var(--review);color:#78350f}
 .frisk b,.fgap b{display:block;font-size:11px;letter-spacing:.06em;margin-bottom:2px}
@@ -541,6 +551,9 @@ const vsec=p=>p.versions.reduce((x,v)=>x+((v.media&&v.media.duration)||0),0);
 
 const SK={}; (DATA.skills||[]).forEach(s=>SK[s.id]=s);
 const STEPS=(DATA.flow&&DATA.flow.steps)||[];
+// 🚨 16工程は一方通行ではない。初稿ができたあとは「直す→検証→リンク→FB」を回り続ける。
+//    2026-09-11 まで戻り線が無く、15で終わる絵になっていた。
+const LOOPS=(DATA.flow&&DATA.flow.loops)||[];
 // フローが呼んでいるのに実物が無いスキル＝次に作るもの
 const MISSING=[...new Set(STEPS.filter(s=>s.skill&&!SK[s.skill]).map(s=>s.skill))];
 
@@ -578,6 +591,17 @@ function moodsPane(sel){
     <p class="note">案件で使うとき：<code>python3 ~/lp-moods/build.py ${esc(mood.id)}${ty.key==='a'?'':' --type='+esc(ty.key)}</code>
       　→ <code>cp ~/lp-moods/tokens/${esc(mood.id)}.css &lt;案件&gt;/tokens.css</code></p>` : '';
 
+  // ── その型がどういう構成なのか（節の並び）。ここが無いと型を選べない
+  const st = (ty.structure||[]);
+  const struct = st.length ? `<table class="stt">
+      <tr><th>順</th><th>節</th><th>中身</th><th>部品</th></tr>
+      ${st.map(x=>`<tr><td class="n">${x.n}</td><td><b>${esc(x.role)}</b></td>
+        <td>${esc(x.note||'')}</td><td class="pt">${esc(x.part||'')}</td></tr>`).join('')}
+    </table>
+    <p class="note">同じ部品名が複数回出るのは、同じ節を複数箇所に置いているという意味
+      （C型は帯を3回、D型は1回）。★上半分（FV→課題→特徴→違い）は型をまたいで共通で、
+      下半分（証明の種類・人・FAQ・CTAの回数）が入れ替わる。</p>` : '';
+
   const copy=`<table class="tb"><tr><th>場所</th><th>級数</th><th>字数</th><th>個数</th></tr>
     ${ty.copy.map(c=>`<tr><td>${esc(c.place)}</td><td>${esc(c.size)}</td>
       <td>${esc(c.chars)}</td><td>${c.count}</td></tr>`).join('')}</table>`;
@@ -594,6 +618,7 @@ function moodsPane(sel){
     ${tyTabs}${moodTabs}
     <h3 class="mh">${esc(ty.name)}　${esc(mood?mood.name:'')}</h3>
     ${spec}${frame}
+    <h3 class="mh">この型の構成（${st.length}節）</h3>${struct}
     <h3 class="mh">受け入れ仕様 ── 文字（工程6でコピーを書くときの上限）</h3>${copy}
     <h3 class="mh">受け入れ仕様 ── 画像</h3>${asset}
     <h3 class="mh">型の使い分け</h3>${cmp}
@@ -664,7 +689,7 @@ function flowPane(){
     st.forEach((s,r)=>{
       pos[s.n]=[c,r]; maxR=Math.max(maxR,r);
       const st8=s.skill?(SK[s.skill]?'ok':'miss'):'none';
-      nodes+=`<div class="fnode ${st8}" id="f-${s.n}" data-step="${s.n}"
+      nodes+=`<div class="fnode ${st8}${s.loop?' isloop':''}" id="f-${s.n}" data-step="${s.n}"
         style="left:${c*(FW+FGX)}px;top:${FTOP+r*FRH}px">
         <span class="fno">${s.n}</span><span class="fnm">${esc(s.name)}</span></div>`;
     });
@@ -711,6 +736,23 @@ function drawFlow(){
     }
     d+=`<path d="${p}" fill="none" stroke="#cbd5e1" stroke-width="2" marker-end="url(#ah)"/>`;
   }
+  // ── 戻り線（ループ）。左側へ大きく回して、行きの線と重ならないようにする
+  d+='<defs><marker id="ah2" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">'
+    +'<path d="M0 0 L7 3.5 L0 7 z" fill="#e07a2f"/></marker></defs>';
+  LOOPS.forEach(function(lp){
+    const a=document.getElementById('f-'+lp.from), b=document.getElementById('f-'+lp.to);
+    if(!a||!b) return;
+    const ra=a.getBoundingClientRect(), rb=b.getBoundingClientRect();
+    const L=x=>x-R.left+wrap.scrollLeft, T=y=>y-R.top+wrap.scrollTop;
+    const x1=L(ra.left), y1=T(ra.top+ra.height/2);
+    const x2=L(rb.left)-3, y2=T(rb.top+rb.height/2);
+    const bend=Math.min(x1,x2)-34;          // 左の外側に回す
+    const p=`M${x1} ${y1} C${bend} ${y1} ${bend} ${y2} ${x2} ${y2}`;
+    d+=`<path d="${p}" fill="none" stroke="#e07a2f" stroke-width="2" stroke-dasharray="5 4"
+         marker-end="url(#ah2)"/>`;
+    d+=`<text x="${bend-4}" y="${(y1+y2)/2}" fill="#e07a2f" font-size="11" font-weight="700"
+         text-anchor="end">${esc(lp.label||'')}</text>`;
+  });
   svg.innerHTML=d;
 }
 
@@ -724,7 +766,8 @@ function showStep(n){
     ${s.tool?`<div class="fm"><i>道具</i>${esc(s.tool)}</div>`:''}
     ${s.out?`<div class="fm"><i>出るもの</i>${esc(s.out)}</div>`:''}
     ${s.risk?`<div class="frisk"><b>過去の事故</b>${esc(s.risk)}</div>`:''}
-    ${s.gap?`<div class="fgap"><b>足りない</b>${esc(s.gap)}</div>`:''}`;
+    ${s.gap?`<div class="fgap"><b>足りない</b>${esc(s.gap)}</div>`:''}
+    ${s.loop?`<div class="floop"><b>ここはループ</b>${esc((LOOPS[0]||{}).note||'')}</div>`:''}`;
 }
 
 function skillTable(){
