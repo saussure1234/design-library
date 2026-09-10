@@ -1261,7 +1261,8 @@ body{margin:0;font:14px/1.75 -apple-system,"Hiragino Kaku Gothic ProN","Noto San
 .col>h2{margin:0;padding:12px 16px;font-size:12px;letter-spacing:.06em;color:#78818e;
   border-bottom:1px solid #eef0f3;font-weight:700}
 .col>div{overflow:auto;padding:14px 16px}
-pre.md{white-space:pre-wrap;font:12.5px/1.95 inherit;margin:0;color:#3c434c}
+pre.md{white-space:pre-wrap;margin:0;color:#3c434c;font-size:12.5px;line-height:1.95;
+  font-family:-apple-system,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif}
 code{font:11.5px/1.9 ui-monospace,SFMono-Regular,Menlo,monospace;background:#f1f3f6;
   border-radius:4px;padding:1px 5px}
 .sum{display:flex;gap:8px;padding:0 0 12px;flex-wrap:wrap}
