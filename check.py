@@ -539,6 +539,57 @@ def check_motion(html):
                   f"最初から見えていないかは5幅の撮影で判定")
 
 
+def check_sibling(vid):
+    """同じクライアントの別LPと、共通部分の文言が食い違っていないか。
+
+    ★実際に起きた事故：「フッターの（明光ネットワークジャパン）はいらない」を
+      小学生向け(esl17)だけに反映し、オンライン校(esl16)に入れ忘れた。
+      同じ施主の別LPは共通部品を使い回すので、片方だけ直すと必ずずれる。
+    ★見るのはフッターの法的リンク（会社概要・プライバシーポリシー等）だけ。
+      本文まで比べると、そもそも別のLPなので差だらけになって使えない。
+    """
+    reg = _reg()
+    if not reg:
+        return ("skip", "台帳が読めない")
+    me = next(((pr, v) for pr in reg["projects"] for v in pr["versions"]
+               if v["id"] == vid), None)
+    if not me:
+        return ("skip", "この版が台帳に無い")
+    mypro, _ = me
+    client = mypro.get("client")
+    if not client:
+        return ("skip", "クライアント名が台帳に無い")
+
+    def legal(vid_):
+        f = os.path.join(ROOT, "docs", vid_, "index.html")
+        if not os.path.isfile(f):
+            return None
+        h = open(f, encoding="utf-8").read()
+        return re.findall(r'class="ftc__legal-a"[^>]*>([^<]+)<', h)
+
+    mine = legal(vid)
+    if not mine:
+        return ("skip", "フッターの法的リンクが見つからない（この作りではない）")
+
+    diff = []
+    for pr in reg["projects"]:
+        if pr.get("client") != client or pr["id"] == mypro["id"]:
+            continue
+        live = [v for v in pr["versions"] if v.get("status") in ("shown", "internal")]
+        if not live:
+            continue
+        other = live[-1]
+        got = legal(other["id"])
+        if got and got != mine:
+            frozen = "（クライアントに提示中なので直せない）" if other["status"] == "shown" else ""
+            diff.append(f"{pr['name']} の {other['id']}: "
+                        f"{' / '.join(got)}{frozen}")
+    if diff:
+        return ("ng", f"フッターの表記が別LPと違う（こちらは {' / '.join(mine)}）: "
+                      + " ／ ".join(diff))
+    return ("ok", f"同じ施主の別LPとフッターの表記が揃っている（{' / '.join(mine)}）")
+
+
 def run_checklist(src, vid, out_json):
     """checklist.json に沿って判定し、結果を JSON で残す。"""
     try:
@@ -566,6 +617,7 @@ def run_checklist(src, vid, out_json):
            "self-consistency": lambda: check_self(html),
            "links": lambda: check_links(html, base),
            "lineage": lambda: check_lineage(vid),
+           "sibling": lambda: check_sibling(vid),
            "motion": lambda: check_motion(html),
            "publish": lambda: check_publish(html),
            "secrets": lambda: check_secrets(src)}
