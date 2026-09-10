@@ -161,12 +161,12 @@
       "n": 12,
       "group": "build",
       "name": "検証する",
-      "what": "同じ物差しで再測 / headlessで撮る / 375pxのモバイルで見る",
-      "skill": null,
-      "tool": "shot.py / Claude_Browser の mobile preset",
-      "out": "撮った画像と差分の数値",
-      "risk": "headlessの375pxは実機と違う見え方をする。切れて見えても実機では切れていない。誤検知に注意",
-      "gap": "検証だけのスキルは不要。lp-repro と lp-polish に含まれている"
+      "what": "check.py を通す（5幅で撮って21項目を測る）／落ちたらリンクを渡さない／_shot.jpg を見て claude 項目に where・what・how を書く",
+      "skill": "lp-polish",
+      "tool": "check.py（lpv.py new / show の中で自動的に走る）／shot.py",
+      "out": "_check.json（21項目の判定）＋ ~/Desktop/lp_check.png（5幅を1枚に）",
+      "risk": "headlessの375pxは実機と違う。切れて見えても実機では切れていないことがある。★『実機スマホ』だけは機械で出ない（human項目）。★2026-09-11まで、この工程に check.py が書かれておらず、『私が覚えていれば通る』状態だった。いまは lpv.py new / show の中で関門として走る（飛ばすには --skip-check が必要で、飛ばした事実は台帳に残る）",
+      "gap": null
     },
     {
       "n": 13,
@@ -176,7 +176,7 @@
       "skill": "lp-version",
       "tool": "lpv.py new → lpv.py show",
       "out": "クライアントに渡すリンク＋台帳の1行",
-      "risk": "派生元を書かずに cp -r で作ると、そのリンクがどこから来たか永久に分からなくなる",
+      "risk": "派生元を書かずに cp -r で作ると、そのリンクがどこから来たか永久に分からなくなる／★lpv.py show は check.py を通ってからでないと記録できない（落ちているページを渡した記録は作らせない）",
       "gap": null
     },
     {

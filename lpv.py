@@ -331,6 +331,56 @@ def cmd_rename_project(a):
     save(reg)
 
 
+# ── 関門：リンクを出す前に check.py を通す ──────────────────────
+# 🚨 CLAUDE.md には「リンクを渡す前に必ず check.py を通す。落ちたら渡さない」と
+#    書いてあったが、16工程（lp-flow.json）にも lpv.py にも一度も出てこなかった。
+#    つまり「私が覚えていれば通る」状態で、仕組みになっていなかった（2026-09-11 に判明）。
+#    lpv.py は台帳を触る唯一の入口なので、ここに関門を置けば忘れられない。
+# 🚨 止めるのは「機械の実測で崩れている」ものだけ。私が画像を見て思ったことでは止めない
+#    （checklist の決めごと）。check.py の終了コードがそれを表す。
+LOCALS_HTML = {
+    # 台帳の版id → 手元の実物（docs/ に無い＝外部公開のもの）
+    "ss-lp-preview":   "~/sharesec-lp/index.html",
+    "ss-lp-preview3":  "~/sharesec-lp-v3/index.html",
+    "ss-lp-preview4":  "~/sharesec-lp-v4/index.html",
+    "ads-lp":          "~/ads-redesign/lp/index.html",
+    "ads-site":        "~/ads-redesign/fv/index.html",
+}
+
+
+def find_html(vid):
+    """その版のHTMLの実物を探す。無ければ None。"""
+    d = os.path.join(DOCS, vid, "index.html")
+    if os.path.exists(d):
+        return d
+    q = LOCALS_HTML.get(vid)
+    if q:
+        q = os.path.expanduser(q)
+        if os.path.exists(q):
+            return q
+    return None
+
+
+def gate_check(vid, skip=False, why=""):
+    """check.py を通す。落ちたら止める。"""
+    if skip:
+        say(f"  ▲ check.py を飛ばした（--skip-check）。{why}", "y")
+        return
+    html = find_html(vid)
+    if not html:
+        say(f"  ▲ {vid} のHTMLが手元に無いので check.py を通せない。"
+            f"（外部公開なら LOCALS_HTML に足す）", "y")
+        return
+    say(f"── 関門：check.py を通す（{os.path.relpath(html, os.path.expanduser('~'))}）──")
+    r = subprocess.run([sys.executable, os.path.join(ROOT, "check.py"), html],
+                       cwd=ROOT)
+    if r.returncode:
+        sys.exit(f"\n  ★check.py が通らなかった。直してから叩き直す。\n"
+                 f"    どうしても先に進めるなら --skip-check を付ける"
+                 f"（飛ばした事実は台帳に残る）")
+    say("  ○ 関門を通った", "g")
+
+
 def cmd_new(a):
     reg = load()
     p = proj(reg, a.project)
@@ -382,6 +432,8 @@ def cmd_new(a):
     p["versions"].append(v)
     save(reg)
 
+    gate_check(a.id, getattr(a, "skip_check", False),
+               f"{a.id} は検査を通していない")
     say(f"\n  ○ リンクを登録した: {a.id}  （派生元 {parent or '初版'} / "
         f"{'公開' if a.status == 'live' else '未公開'}）", "g")
     say(f"    {vurl(reg, v)}")
@@ -424,8 +476,15 @@ def cmd_show(a):
     p, v = av[a.id]
     if v.get("status") == "draft":
         sys.exit(f"  ★{a.id} は未公開。まだリンクが無い")
+    # 🚨 ここが一番効く関門。「渡した」と記録する前に必ず通す。
+    #    落ちているページを渡した記録は作らせない。
+    gate_check(a.id, getattr(a, "skip_check", False),
+               f"{a.id} を検査せずに『見せた』にした")
     v["status"] = "shown"
     v.setdefault("shown_on", a.date or TODAY)
+    if getattr(a, "skip_check", False):
+        v.setdefault("notes", []).append(
+            {"date": TODAY, "what": "★check.py を飛ばして shown にした"})
     save(reg)
     say(f"  ○ {a.id} を「クライアントに見せた」にした（{v['shown_on']}）", "g")
     say(f"    {vurl(reg, v)}")
@@ -694,6 +753,8 @@ def main():
     s.add_argument("--status", default="internal", choices=STATUS)  # まず自分用。渡したら show
     s.add_argument("--alert", help="管理画面の上に赤く出す注意書き（※要確認など）")
     s.add_argument("--date")
+    s.add_argument("--skip-check", action="store_true",
+                   help="check.py の関門を飛ばす（飛ばした事実は残る）")
     s.set_defaults(f=cmd_new)
 
     s = sp.add_parser("fb", help="FBを記録する（直す前に打つ）")
@@ -702,7 +763,10 @@ def main():
     s.set_defaults(f=cmd_fb)
 
     s = sp.add_parser("show", help="クライアントに見せた（ここからそのリンクは凍る）")
-    s.add_argument("id"); s.add_argument("--date"); s.set_defaults(f=cmd_show)
+    s.add_argument("id"); s.add_argument("--date")
+    s.add_argument("--skip-check", action="store_true",
+                   help="check.py の関門を飛ばす（台帳に「飛ばした」と残る）")
+    s.set_defaults(f=cmd_show)
 
     s = sp.add_parser("update", help="中身を直した。見せたリンクなら自動で新しいリンクを作る")
     s.add_argument("--script", help="この版のもとになった原稿（v1 / v2 …）")

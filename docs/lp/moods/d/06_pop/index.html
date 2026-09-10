@@ -1,0 +1,1280 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>会社案内・パンフレットのデザイン制作｜サンプル株式会社</title>
+<meta name="description" content="御社の“らしさ”を読み解いて、伝わる一冊に翻訳します。企画・取材・撮影・コピー・デザイン・印刷まで一貫対応。デザインは3案以上、修正回数は無制限。">
+<style>
+
+:root{
+  
+  --bg:#eff4fa;              
+  --navy:#0f2b4a;          
+  --blue:#1765ab;          
+  --blue-dark:#0b56a2;    
+  --ink:#111;             
+  --text:#2b3440;         
+  --mute:#5a6b7d;         
+  --line:#d5e0ec;         
+  --card:#fff;            
+
+  
+  --wrap:1200px;
+  --head-h:clamp(62px,5.55vw,80px);   
+  --pad:clamp(20px,4.93vw,71px);
+
+  
+  
+  --h1:clamp(30px,3.47vw,50px);        
+  --h2:clamp(24px,2.5vw,36px);        
+
+  
+  --h2-w:700;                          
+  --h2-lh:1.4;
+  --h2-ls:.02em;
+  --lead:clamp(15px,1.25vw,18px);      
+  --body:clamp(14px,1.11vw,16px);      
+  --small:clamp(12px,.9vw,13px);       
+
+  
+  --g-eyebrow:clamp(18px,2.0vw,29px);
+  --g-lead:clamp(24px,2.7vw,39px);
+  --g-body:clamp(34px,4.2vw,60px);
+  --sec-y:clamp(48px,6.64vw,96px);
+
+  
+  --font-head:"Klee","Tsukushi A Round Gothic","Hiragino Maru Gothic ProN",sans-serif;
+  --font-body:"Tsukushi A Round Gothic","Hiragino Maru Gothic ProN","Hiragino Sans",sans-serif;
+  --r-s:3px;   
+  --r-l:6px;   
+
+  
+  --font-head:"Klee","Tsukushi A Round Gothic","Hiragino Maru Gothic ProN",sans-serif;
+  --font-body:"Tsukushi A Round Gothic","Hiragino Maru Gothic ProN","Hiragino Sans",sans-serif;
+  --r-s:999px;   
+  --r-l:24px;   
+  
+  --fv-cols:minmax(0,10fr) minmax(0,10fr);
+}
+
+*{box-sizing:border-box}
+html{
+  scroll-behavior:smooth;
+  scroll-padding-top:calc(var(--head-h) + 8px);   
+}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",system-ui,sans-serif;
+  font-size:var(--body); line-height:1.9; letter-spacing:.02em;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%; height:auto}
+a{color:inherit}
+
+
+.lph{
+  position:sticky; top:0; z-index:50;
+  height:var(--head-h); display:flex; align-items:stretch;
+  background:var(--bg); border-bottom:1px solid var(--line);
+  
+  padding-inline:max(var(--pad), calc((100% - var(--wrap)) / 2));
+}
+.lph__left{
+  display:flex; align-items:center; gap:clamp(14px,2.5vw,36px);
+  flex:0 0 auto;
+}
+.lph__logo{display:flex; align-items:center; min-height:44px}
+.lph__logo img{height:clamp(30px,3.19vw,46px); width:auto; display:block}
+.lph__tag{
+  margin:0; font-size:clamp(12px,.861vw,12.4px);
+  color:var(--mute); letter-spacing:.02em; white-space:nowrap;
+}
+.lph__nav{
+  margin-left:auto; display:flex; align-items:center;
+  gap:clamp(13px,2.4vw,34.5px);
+  font-size:clamp(12px,.97vw,14px); color:var(--text); white-space:nowrap;
+  padding-right:clamp(16px,2.57vw,37px);
+}
+.lph__nav a{display:flex; align-items:center; align-self:stretch; text-decoration:none}
+.lph__nav a:hover{color:var(--blue)}
+.lph__cta{
+  flex:0 0 clamp(170px,19.58vw,282px);
+  background:var(--blue); color:#fff; text-decoration:none;
+  display:flex; align-items:center; justify-content:flex-start;
+  padding-left:clamp(14px,2.29vw,33px);
+  gap:clamp(14px,2.78vw,40px);
+  font-size:clamp(12px,1.02vw,14.5px); font-weight:700; letter-spacing:.04em;
+  transition:background .2s;
+}
+.lph__cta:hover{background:var(--blue-dark)}
+.lph__arw{width:clamp(24px,3.47vw,50px); height:1px; background:#fff; position:relative}
+.lph__arw::after{
+  content:""; position:absolute; right:-1px; top:50%;
+  width:11px; height:1px; background:#fff;
+  transform-origin:right center; transform:translateY(-50%) rotate(-38deg);
+}
+@media (max-width:1180px){
+  .lph__tag{display:none}
+  .lph__nav{gap:clamp(12px,2.4vw,30px); padding-right:clamp(12px,1.8vw,24px)}
+  .lph__cta{flex:0 0 clamp(150px,19vw,240px)}
+}
+@media (max-width:900px){
+  .lph__nav{display:none}
+  .lph{padding-inline:var(--pad)}
+  .lph__cta{flex:0 0 auto; margin-left:auto; padding-inline:16px; font-size:12px}
+  .lph__arw{display:none}
+}
+
+
+.lpf{
+  background:var(--navy); color:rgba(255,255,255,.86);
+  
+  padding:clamp(40px,5.56vw,80px) var(--pad) clamp(90px,7.64vw,110px);
+}
+.lpf__nav,.lpf__cr{max-width:var(--wrap); margin-inline:auto}
+.lpf__nav{
+  display:flex; flex-wrap:wrap; justify-content:center;
+  gap:clamp(6px,1.6vw,23px); font-size:clamp(12px,.97vw,14px);
+}
+.lpf__nav a{display:flex; align-items:center; min-height:44px; padding:0 10px; text-decoration:none}
+.lpf__nav a:hover{color:#fff}
+.lpf__cr{
+  
+  margin:clamp(24px,2.78vw,40px) auto 0; text-align:center;
+  font-size:12px; color:rgba(255,255,255,.55);
+}
+@media (max-width:900px){
+  body{padding-bottom:70px}          
+}
+
+
+body.cta-hide .scontact__fixed{
+  opacity:0; visibility:hidden; pointer-events:none;
+}
+.scontact__fixed{transition:background-color .2s, opacity .3s, visibility .3s}
+
+
+[data-rv]{
+  opacity:0; transform:translateY(18px);
+  transition:opacity .72s cubic-bezier(.22,.61,.36,1),
+             transform .72s cubic-bezier(.22,.61,.36,1);
+  transition-delay:var(--rv-d,0ms);
+}
+[data-rv].is-in{opacity:1; transform:none}
+@media (prefers-reduced-motion:reduce){
+  [data-rv],[data-rv].is-in{opacity:1 !important; transform:none !important; transition:none !important}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *{animation:none !important; transition:none !important}
+}
+
+
+
+
+.scamp{
+  background:var(--blue);
+  color:#fff;
+  padding:clamp(11px,1.1vw,16px) var(--pad);
+}
+.scamp__inner{
+  max-width:var(--wrap);
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  gap:clamp(10px,1.4vw,20px);
+}
+
+.scamp__tag{
+  flex:0 0 auto;
+  background:var(--navy);
+  border-radius:var(--r-s);
+  padding:.42em 1em;
+  font-family:var(--font-head);
+  font-size:var(--small);
+  font-weight:700;
+  letter-spacing:.06em;
+  white-space:nowrap;
+}
+.scamp__txt{
+  margin:0;
+  font-size:var(--small);
+  line-height:1.6;
+  
+  word-break:keep-all;
+  overflow-wrap:anywhere;
+}
+.scamp__txt b{ font-weight:700 }
+
+.scamp__btn{
+  flex:0 0 auto;
+  margin-left:auto;
+  background:#fff;
+  color:var(--blue);
+  border-radius:999px;
+  padding:.5em 1.15em;
+  font-size:var(--small);
+  font-weight:700;
+  text-decoration:none;
+  white-space:nowrap;
+  
+  min-height:36px;
+  display:inline-flex;
+  align-items:center;
+}
+.scamp__btn:hover{ background:rgba(255,255,255,.88) }
+
+@media (max-width:900px){
+  
+  .scamp__inner{ flex-wrap:wrap; gap:8px }
+  .scamp__txt{ flex:1 1 100%; order:3; font-size:12.5px }
+  .scamp__btn{ order:4; margin-left:0 }
+}
+
+
+
+.sfv{
+  background:var(--bg);
+  color:var(--text);
+  overflow-x:clip;                                  
+  
+  position:relative;
+  
+  --fv-padt:clamp(34px,4.44vw,64px);                
+  --fv-padb:clamp(36px,4.03vw,58px);
+  padding-block:var(--fv-padt) var(--fv-padb);
+  
+  --fv-pad:max(var(--pad), calc((100% - var(--wrap)) / 2));
+  padding-inline:var(--fv-pad);
+  font-family:var(--font-body);
+}
+
+.sfv__top{
+  
+  width:100%;                                       
+  margin-inline:auto;
+  
+  display:grid;
+  
+  --fv-colgap:clamp(24px,2.78vw,40px);
+  
+  
+  grid-template-columns:var(--fv-cols);
+  column-gap:var(--fv-colgap);
+  align-items:stretch;
+}
+
+
+.sfv__left{
+  grid-area:1 / 1;
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+}
+
+
+.sfv__copy,
+.sfv__act{ position:relative; z-index:1; }
+
+.sfv__copy{ width:min(660px, 110%); }               
+
+.sfv__h1{
+  margin:0;
+  font-family:var(--font-head);
+  font-weight:400;
+  font-size:var(--h1);                              
+  line-height:1.5;                                  
+  letter-spacing:0;                                 
+  color:var(--ink);
+}
+.sfv__h1 .sfv__gloss{ font-size:.58em; }            
+
+
+.sfv__spbr{ display:none; }
+
+
+.sfv__h1 .sfv__hl{ color:var(--blue); }
+
+.sfv__lead{
+  
+  margin:clamp(16px,1.88vw,27px) 0 var(--g-lead);   
+  max-width:590px;
+  font-size:var(--lead);                            
+  line-height:1.83;                                 
+  letter-spacing:0;
+  color:var(--text);
+}
+
+
+.sfv__act{
+  
+  width:min(532px, 100%);
+  
+  margin:0 0 0;
+  margin-top:auto;
+}
+
+
+.sfv__badges{
+  flex:0 0 auto;
+  display:flex;
+  gap:12px;
+  margin:auto 0 0;                                  
+  padding:0;
+  list-style:none;
+  
+  height:calc(62px + 22px + var(--small) * 1.7);
+}
+.sfv__badge{
+  flex:1 1 0;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  
+  gap:clamp(8px,1.1vw,12px);                        
+  padding:14px clamp(8px,1vw,12px);
+  border-radius:var(--r-s);                                
+  background:var(--card);                           
+}
+.sfv__badge svg{
+  display:block;
+  width:auto;
+  height:clamp(29px,2.78vw,40px);                   
+  color:var(--navy);                                
+}
+.sfv__badge span{
+  font-size:var(--body);                            
+  
+  line-height:1.4;
+  letter-spacing:0;
+  text-align:center;                                
+  color:var(--ink);
+}
+
+
+.sfv__cta{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0,1fr));    
+  gap:28px;                                          
+  max-width:532px;                                   
+  
+  margin:0;
+}
+.sfv__btn{
+  display:grid;
+  place-items:center;
+  min-height:62px;                                   
+  border-radius:var(--r-s);                                 
+  font-size:var(--lead);                             
+  line-height:1;
+  letter-spacing:.02em;
+  text-decoration:none;
+  transition:background-color .2s, color .2s;
+}
+.sfv__btn--main{
+  background:var(--blue);                            
+  color:#fff;                                        
+}
+.sfv__btn--main:hover,
+.sfv__btn--main:focus-visible{ background:var(--blue-dark); }   
+
+
+.sfv__btn--sub{
+  background:var(--card);
+  color:var(--blue);                                 
+}
+.sfv__btn--sub:hover,
+.sfv__btn--sub:focus-visible{ background:#fff; color:var(--blue-dark); }
+
+.sfv__note{
+  margin:22px 0 0;                                   
+  font-size:var(--small);                            
+  line-height:1.7;
+  color:var(--mute);                                 
+}
+
+
+.sfv__side{
+  grid-area:1 / 2;                                   
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+}
+
+
+.sfv__art{
+  flex:0 0 auto;
+  
+  width:calc(100% + var(--fv-colgap));
+  margin-left:calc(var(--fv-colgap) * -1);
+  aspect-ratio:1536 / 1024;                          
+  
+  margin-bottom:clamp(18px,2.2vw,32px);
+}
+.sfv__art img{
+  
+  display:block;
+  width:100%; height:100%;
+  object-fit:contain;                                
+  object-position:center;
+  
+  filter:brightness(1.06);
+  mix-blend-mode:darken;                             
+}
+
+
+.sfvbar{
+  background:var(--bg);
+  padding:clamp(28px,3.4vw,49px) var(--pad) clamp(28px,3.4vw,49px);
+  border-top:1px solid var(--line);                  
+}
+.sfv__bar{
+  
+  width:100%;
+  max-width:var(--wrap);
+  margin-inline:auto;
+}
+.sfv__logos{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:space-between;
+  gap:clamp(20px,2.6vw,38px) clamp(24px,4.9vw,70px); 
+  margin:0; padding:0;
+  list-style:none;
+}
+.sfv__logos img{
+  display:block;
+  width:auto; height:clamp(40px,4.03vw,58px);        
+  object-fit:contain;
+  mix-blend-mode:multiply;                           
+}
+.sfv__logos .sfv__etc{
+  font-size:var(--small);                            
+  line-height:1;
+  color:var(--text);
+}
+
+
+@media (max-width:1024px){
+  
+  .sfv{ --fv-pad:var(--pad); }
+  
+  .sfv__top{ display:flex; flex-direction:column; }
+  .sfv__left{ display:contents; }        
+  .sfv__copy{ order:1; width:auto; max-width:none; }
+  .sfv__side{ order:2; grid-area:auto; }
+  .sfv__act{  order:3; width:auto; max-width:none; margin-top:clamp(24px,3.4vw,36px); }
+  .sfv__lead{ margin-bottom:0; }         
+  .sfv__art{
+    width:auto;                          
+    margin:clamp(28px,4vw,48px) 0 clamp(18px,2.2vw,32px);
+  }
+  
+  .sfv__badges{ margin-top:0; height:auto; }
+  .sfv__badges{ flex-wrap:wrap; }
+  .sfv__badge{ flex:1 1 200px; }
+}
+
+
+@media (max-width:700px){
+  .sfv__pcbr{ display:none; }                        
+  .sfv__spbr{ display:inline; }                      
+  .sfv__lead{ max-width:none; }
+  .sfv__badges{ flex-direction:column; gap:8px; }
+  .sfv__badge{ flex:0 0 auto; flex-direction:row; justify-content:flex-start; gap:14px; padding:14px 18px; }
+  .sfv__badge span{ text-align:left; }
+  .sfv__badge svg{ height:30px; flex:0 0 auto; }
+  .sfv__cta{ grid-template-columns:minmax(0,1fr); gap:12px; }
+  
+  .sfv__logos{ justify-content:center; gap:18px 26px; }
+}
+
+
+.nbwrap{ word-break:keep-all; overflow-wrap:anywhere }
+.nbwrap .nb{ white-space:nowrap }
+
+
+
+.spain{
+  background:var(--bg);                     
+  padding:var(--sec-y) var(--pad);
+}
+
+
+.spain__box{
+  
+  max-width:1322px;
+  margin:0 auto;
+  background:var(--navy);                   
+  color:#fff;                               
+  border-radius:var(--r-s);                        
+  
+  padding:clamp(46px,7.15vw,103px) clamp(24px,8.75vw,126px) clamp(36px,5.42vw,78px);
+  
+  font-feature-settings:"palt" 1;
+}
+
+
+.spain__h{  margin:0;
+  font-family:var(--font-head);
+  font-size:var(--h2);
+  
+  font-weight:var(--h2-w);
+  line-height:var(--h2-lh);
+  letter-spacing:var(--h2-ls);
+}
+
+.spain__h::after{
+  content:"";
+  display:block;
+  width:clamp(96px,41.5%,433px);
+  height:1px;
+  margin-top:.33em;                         
+  background:rgba(255,255,255,.88);
+}
+
+
+.spain__lead{
+  margin:1.3em 0 0;                         
+  font-family:var(--font-body);
+  font-size:var(--lead);
+  line-height:1.7;                          
+}
+
+
+.spain__list{
+  --spain-pad-y:14px;
+  margin:1.45em 0 0;                        
+  padding:0;
+  list-style:none;
+  font-family:var(--font-body);
+  font-size:var(--body);                    
+  line-height:1.8;
+}
+.spain__item{
+  position:relative;
+  padding:var(--spain-pad-y) 0 var(--spain-pad-y) 1.05em;  
+  
+  border-bottom:1px solid rgba(255,255,255,.55);
+}
+
+.spain__item::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:calc(var(--spain-pad-y) + .9em);      
+  width:.33em;
+  height:.33em;
+  margin-top:-.165em;
+  border-radius:50%;
+  background:#fff;
+}
+
+
+.spain__close{
+  margin:1.4em 0 0;                         
+  font-family:var(--font-body);
+  font-size:var(--body);
+  line-height:1.75;
+}
+
+
+@media (max-width:767px){
+  .spain__brp{display:none}
+  .spain__box{padding-inline:clamp(18px,5.9vw,24px)}
+}
+
+
+.scompany{
+  background:var(--bg);
+  color:var(--text);
+  padding:var(--sec-y) var(--pad);
+  font-family:var(--font-body);
+}
+.scompany__in{
+  max-width:var(--wrap);
+  margin-inline:auto;
+}
+
+
+.scompany__h{  margin:0;
+  text-align:center;
+  font-family:var(--font-head);
+  font-size:var(--h2);
+  color:var(--navy);           
+  
+  font-weight:var(--h2-w);
+  line-height:var(--h2-lh);
+  letter-spacing:var(--h2-ls);
+}
+.scompany__h::after{
+  content:"";
+  display:block;
+  width:62px; height:2px;
+  margin:clamp(16px,2.29vw,33px) auto 0;   
+  background:var(--blue);
+}
+.scompany__lead{
+  margin:clamp(24px,3.26vw,47px) 0 0;      
+  text-align:center;
+  font-size:var(--lead);
+  line-height:1.75;
+  color:var(--ink);
+}
+
+
+.scompany__dl{
+  --co-c1:298px;
+  --co-pad:clamp(18px,1.94vw,28px);  
+  margin:clamp(28px,3.75vw,54px) 0 0; 
+  display:grid;
+  grid-template-columns:var(--co-c1) 1fr;
+  border-top:1px solid var(--line);
+}
+.scompany__dl dt,
+.scompany__dl dd{
+  margin:0;
+  padding:var(--co-pad) 0;
+  border-bottom:1px solid var(--line);
+  font-size:var(--body);
+  line-height:1.9;
+}
+.scompany__dl dt{
+  font-weight:700;
+  letter-spacing:.06em;
+  color:var(--blue);           
+}
+.scompany__dl dd{
+  color:var(--text);           
+}
+
+
+
+.scompany__list{
+  word-break:keep-all;
+  overflow-wrap:anywhere;
+}
+
+
+.scompany__link{
+  color:var(--blue);
+  text-decoration:underline;
+  text-underline-offset:2px;
+}
+.scompany__link:hover,
+.scompany__link:focus-visible{ color:var(--blue-dark); }
+
+
+@media (max-width:820px){
+  .scompany__dl{
+    grid-template-columns:1fr;
+  }
+  .scompany__dl dt{
+    padding:var(--co-pad) 0 4px;
+    border-bottom:0;
+  }
+  .scompany__dl dd{
+    padding:0 0 var(--co-pad);
+  }
+}
+
+
+
+.scontact{
+  background:var(--navy);
+  padding-block:var(--sec-y);
+  font-family:var(--font-body);
+  -webkit-font-smoothing:antialiased;
+}
+
+
+.scontact__card{
+  
+  width:min(1305px, calc(100% - 2 * clamp(16px,4.69vw,67px)));
+  margin-inline:auto;
+  box-sizing:border-box;
+  
+  padding:clamp(32px,7.01vw,101px) clamp(20px,7.29vw,105px) clamp(28px,5.49vw,79px);
+  border-radius:var(--r-l);
+  background:var(--card);
+}
+
+.scontact__cols{
+  display:grid;
+  
+  grid-template-columns:minmax(0,548fr) minmax(0,484fr);
+  column-gap:clamp(28px,4.24vw,61px);
+  align-items:start;
+}
+
+
+.scontact__eyebrow{
+  margin:0;
+  
+  font-size:var(--body);
+  letter-spacing:.07em;
+  line-height:1.4;
+  color:var(--blue);
+}
+
+.scontact__rule{
+  
+  width:53px;
+  height:2px;
+  margin:11px 0 0;          
+  border:0;
+  background:var(--blue);
+}
+
+
+.scontact__h{  margin:35px 0 0;          
+  font-family:var(--font-head);
+  
+  font-size:var(--h2);
+  color:var(--ink);
+  
+  font-weight:var(--h2-w);
+  line-height:var(--h2-lh);
+  letter-spacing:var(--h2-ls);
+}
+
+
+.scontact__lead{
+  margin:64px 0 0;          
+  
+  font-size:var(--lead);
+  line-height:1.85;         
+  color:var(--text);
+}
+
+
+.scontact__ctawrap{
+  margin:51px 0 0;          
+}
+.scontact__cta{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  
+  width:min(288px,100%);
+  height:60px;
+  box-sizing:border-box;
+  padding-inline:16px;
+  border-radius:var(--r-s);        
+  background:var(--blue);
+  color:#fff;               
+  text-decoration:none;
+  
+  font-size:var(--lead);
+  font-weight:400;
+  letter-spacing:.03em;     
+  line-height:1;
+  transition:background-color .2s;
+}
+.scontact__cta:hover{ background:var(--blue-dark); }
+.scontact__cta:focus-visible{ outline:2px solid var(--blue); outline-offset:3px; }
+
+
+.scontact__rule--2{
+  margin-top:73px;          
+}
+.scontact__note{
+  margin:11px 0 0;          
+  
+  font-size:var(--lead);
+  line-height:1.72;         
+  color:var(--text);
+}
+
+
+.scontact__form{
+  display:grid;
+  row-gap:25px;             
+}
+.scontact__field{ min-width:0; }
+
+.scontact__label{
+  display:block;
+  margin:0 0 10px;          
+  
+  font-size:var(--body);
+  line-height:1.4;
+  color:var(--ink);         
+}
+
+.scontact__input,
+.scontact__textarea{
+  display:block;
+  width:100%;
+  box-sizing:border-box;
+  border:1px solid var(--line);   
+  border-radius:var(--r-s);              
+  background:var(--card);
+  color:var(--ink);
+  font-family:inherit;
+  
+  font-size:16px;
+  line-height:1.6;
+}
+.scontact__input{
+  height:50px;              
+  padding:0 14px;
+}
+.scontact__textarea{
+  height:139px;             
+  padding:12px 14px;
+  resize:vertical;
+}
+.scontact__input:focus-visible,
+.scontact__textarea:focus-visible{
+  outline:2px solid var(--blue);
+  outline-offset:-1px;
+}
+
+
+.scontact__fixed{
+  position:fixed;
+  right:22px;               
+  bottom:22px;              
+  z-index:60;
+  display:flex;
+  align-items:center;
+  gap:21px;                 
+  
+  min-width:415px;
+  width:max-content;
+  max-width:calc(100% - 44px);   
+  min-height:82px;          
+  box-sizing:border-box;
+  padding:12px 30px;        
+  border:1px solid var(--bg);   
+  border-radius:var(--r-s);        
+  background:var(--blue);   
+  color:#fff;               
+  text-decoration:none;
+  transition:background-color .2s;
+}
+.scontact__fixed:hover{ background:var(--blue-dark); }
+.scontact__fixed:focus-visible{ outline:2px solid #fff; outline-offset:3px; }
+
+.scontact__fixedicon{
+  flex:0 0 auto;
+  width:38px;               
+  height:28px;
+}
+.scontact__fixedtext{ min-width:0; }
+.scontact__fixedmain{
+  display:block;
+  
+  font-size:var(--lead);
+  font-weight:400;          
+  letter-spacing:0;         
+  line-height:1.3;
+  white-space:nowrap;       
+}
+.scontact__fixedsub{
+  display:block;
+  margin-top:6px;           
+  
+  font-size:var(--body);
+  letter-spacing:.02em;
+  line-height:1.3;
+}
+
+
+.scontact__nb{ display:inline-block; }
+
+@media (max-width:899px){
+  
+  .scontact__cols{
+    grid-template-columns:1fr;
+    row-gap:clamp(32px,5vw,48px);
+  }
+}
+
+@media (max-width:767px){
+  .scontact__lead{ margin-top:clamp(28px,7vw,48px); }
+  .scontact__ctawrap{ margin-top:clamp(24px,6vw,40px); }
+  .scontact__rule--2{ margin-top:clamp(32px,8vw,52px); }
+  .scontact__cta{ width:100%; }
+  
+  .scontact__fixed{
+    right:0; left:0; bottom:0;
+    width:auto;
+    min-width:0;            
+    max-width:none;
+    min-height:66px;
+    gap:12px;
+    padding:10px 16px;
+    border-width:1px 0 0;
+    border-radius:0;
+    justify-content:center;
+  }
+  .scontact__fixedicon{ width:30px; height:22px; }
+  
+  .scontact{ padding-bottom:calc(var(--sec-y) + 66px); }
+}
+
+
+.scontact__submit{
+  -webkit-appearance:none; appearance:none; border:0; cursor:pointer;
+  display:block; width:100%; margin:clamp(18px,1.6vw,23px) 0 0;
+  min-height:60px; padding:0 24px;
+  background:var(--blue); color:#fff;
+  font-family:inherit; font-size:var(--body); font-weight:700; letter-spacing:.04em;
+  border-radius:var(--r-s); transition:background-color .2s;
+}
+.scontact__submit:hover{background:var(--blue-dark)}
+
+
+
+.scompare,.scontact{padding-inline:var(--pad)}
+.spain__box,.strans__panel,.scompare__box,.scontact__card{
+  width:auto; max-width:none; margin-inline:0;
+  padding-inline:max(clamp(16px,3.5vw,24px), calc((100% - var(--wrap)) / 2));
+}
+</style>
+</head>
+<body><div style="position:sticky;top:0;z-index:99999;background:#12305c;color:#fff;font:600 12px/1.6 system-ui,sans-serif;padding:7px 14px;letter-spacing:.04em">テンプレート（見本）／ 社名・ロゴ・写真は差し替え用のプレースホルダ。判断するのは 書体・級数・余白・角丸・桁 の5つ</div>
+<header class="lph">
+  <div class="lph__left">
+    <a class="lph__logo" href="#fv"><img src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 250 86'%3E%3Crect x='2' y='18' width='246' height='50' rx='5' fill='none' stroke='%23c8cdd8' stroke-width='2'/%3E%3Ctext x='125' y='45' fill='%2398a1b3' text-anchor='middle' font-family='sans-serif' font-size='22' letter-spacing='2'%3ELOGO%3C/text%3E%3C/svg%3E" alt="見本の画像"></a>
+    <p class="lph__tag">会社案内・パンフレットのデザイン制作</p>
+  </div>
+  <nav class="lph__nav">
+    <a href="#pain">対象</a>
+    <a href="#company">実施概要</a>
+    <a href="#contact">申し込み</a>
+  </nav>
+  <a class="lph__cta" href="#contact">デザイン相談（無料）<span class="lph__arw"></span></a>
+</header>
+<section class="scamp">
+  <div class="scamp__inner">
+    <span class="scamp__tag">お知らせ</span>
+    <p class="scamp__txt"><b>◯月◯日まで</b>のお申し込みで、入会金が無料になります。</p>
+    <a class="scamp__btn" href="#contact">詳しく見る</a>
+  </div>
+</section>
+
+<section class="sfv" id="fv">
+  <div class="sfv__top">
+
+    
+    <div class="sfv__side">
+
+      <figure class="sfv__art">
+        
+        <img src="img/ph01.svg" width="1536" height="1024"
+             alt="見本の画像" fetchpriority="high" decoding="async">
+      </figure>
+
+      <ul class="sfv__badges">
+        <li class="sfv__badge">
+          
+          <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <rect x="16"  y="1"   width="27" height="36" fill="var(--bg)"/>
+            <rect x="8.5" y="4.5" width="27" height="36" fill="var(--bg)"/>
+            <rect x="1"   y="8"   width="27" height="36" fill="var(--bg)"/>
+          </svg>
+          <span>デザイン3案以上</span>
+        </li>
+        <li class="sfv__badge">
+          
+          <svg viewBox="0 0 45 44" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M2.75 12.83 A19 19 0 0 1 38.6 21.6"/>
+            <path d="M35.07 32.63 A19 19 0 0 1 1.05 17.49"/>
+            <path d="M34.9 19.4 L38.9 26.6 L43.4 19.0"/>
+          </svg>
+          <span>修正回数無制限</span>
+        </li>
+        <li class="sfv__badge">
+          
+          <svg viewBox="0 0 40 44" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <rect x="1" y="1" width="38" height="42" rx="2"/>
+            <g stroke-width="1.6">
+              <line x1="7" y1="13" x2="21" y2="13"/><line x1="27" y1="13" x2="33" y2="13"/>
+              <line x1="7" y1="22" x2="21" y2="22"/><line x1="27" y1="22" x2="33" y2="22"/>
+              <line x1="7" y1="31" x2="21" y2="31"/><line x1="27" y1="31" x2="33" y2="31"/>
+            </g>
+          </svg>
+          <span>ページ数別の明朗料金</span>
+        </li>
+      </ul>
+
+    </div>
+
+    <div class="sfv__left">
+
+    <div class="sfv__copy">
+
+      
+      
+      <h1 class="sfv__h1">御社の<span class="sfv__hl">“らしさ”</span>を<br>読み解いて、<br class="sfv__spbr">伝わる一冊に<br>翻訳<span class="sfv__gloss">（デザイン）</span>します</h1>
+
+      <p class="sfv__lead">何を載せるかが決まっていない状態からでも構いません。<br class="sfv__pcbr">企画・取材・撮影・コピー・デザイン・印刷まで一貫対応。<br class="sfv__pcbr">デザインは3案以上、修正回数は無制限。<br class="sfv__pcbr">納得いただけるまでお付き合いします。</p>
+
+    </div>
+
+    <div class="sfv__act">
+      <div class="sfv__cta">
+        <a class="sfv__btn sfv__btn--main" href="#contact">無料で相談する</a>
+        <a class="sfv__btn sfv__btn--sub" href="#price">料金を見る</a>
+      </div>
+
+      <p class="nbwrap sfv__note"><span class="nb">ご相談・お見積もりは無料です。</span><wbr><span class="nb">1営業日以内にご返信します。</span></p>
+    </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+<section class="sfvbar" aria-label="主なご依頼企業">
+  <div class="sfv__bar">
+    <ul class="sfv__logos">
+      <li><img src="img/logo02.svg"  width="386" height="209" alt="Logo 02" loading="lazy"></li>
+      <li><img src="img/logo03.svg" width="342" height="183" alt="Logo 03" loading="lazy"></li>
+      <li><img src="img/logo01.svg"     width="308" height="186" alt="Logo 01" loading="lazy"></li>
+      <li><img src="img/logo04.svg"   width="386" height="184" alt="Logo 04" loading="lazy"></li>
+      <li><img src="img/logo05.svg" width="444" height="205" alt="Logo 05" loading="lazy"></li>
+      <li class="sfv__etc">ほか</li>
+    </ul>
+  </div>
+</section>
+
+<section class="spain" id="pain">
+  <div class="spain__box">
+    <h2 class="spain__h">こんな状態から、ご相談をいただいています</h2>
+
+    <p class="spain__lead">会社案内の制作は数年に一度、あるいは初めての仕事です。<br class="spain__brp">このような課題はありませんか。</p>
+
+    <ul class="spain__list">
+      <li class="spain__item">社長から、うちの会社案内は古いと言われたが、何から手をつければいいか分からない</li>
+      <li class="spain__item">相見積もりを取れと言われたが、そもそも相場が分からない</li>
+      <li class="spain__item">前回作ったのは10年以上前で、当時の担当者はもう社内にいない</li>
+      <li class="spain__item">ページ数も印刷部数も、何を基準に決めればいいのか判断できない</li>
+      <li class="spain__item">自社の強みを説明しようとすると、どこにでもある言葉になってしまう</li>
+    </ul>
+
+    <p class="spain__close">決まっているのは、作らなければならないという事実だけ。<br class="spain__brp">その状態からご相談いただいて構いません。最後の一つについては、私たちの仕事そのものです。</p>
+  </div>
+</section>
+
+<section class="scompany" id="company">
+  <div class="scompany__in">
+
+    <h2 class="scompany__h">会社情報</h2>
+    <p class="scompany__lead">SAMPLEの基本情報です。</p>
+
+    
+    <dl class="scompany__dl">
+      <dt>社名</dt>
+      <dd>サンプル株式会社</dd>
+
+      <dt>制作ルーム</dt>
+      <dd>東京都◯◯区◯◯1-2-3</dd>
+
+      <dt>連絡先</dt>
+      <dd>Tel：03-0000-0000　／　e-mail：<a class="scompany__link" href="mailto:info@example.com">info@example.com</a></dd>
+
+      <dt>資本金</dt>
+      <dd>0,000,000円</dd>
+
+      <dt>業務内容</dt>
+      <dd>（サンプル）制作業務および関連業務</dd>
+
+      <dt>創業</dt>
+      <dd>20XX年4月</dd>
+
+      
+      <dt>取引銀行</dt>
+      <dd class="scompany__list">◯◯信用金庫／◯◯支店<wbr>　　◯◯銀行／◯◯支店</dd>
+
+      
+      <dt>取引実績</dt>
+      <dd class="scompany__list">サンプル官庁01／<wbr>サンプル企業02／<wbr>サンプル企業03／<wbr>サンプル企業04／<wbr>サンプル団体05／<wbr>サンプル機関06／<wbr>サンプル企業08／<wbr>サンプル病院07／<wbr>サンプル病院16／<wbr>サンプル企業10／<wbr>サンプル企業15／<wbr>サンプル企業09　他</dd>
+    </dl>
+
+  </div>
+</section>
+
+<section class="scontact" id="contact">
+  <div class="scontact__card">
+    <div class="scontact__cols">
+
+      <div class="scontact__left">
+        
+        
+
+        <h2 class="scontact__h"><span class="scontact__nb">まだ何も</span><wbr><span class="scontact__nb">決まっていない</span><br><span class="scontact__nb">段階でも</span><wbr><span class="scontact__nb">ぜひご相談ください</span></h2>
+
+        <p class="scontact__lead"><span class="scontact__nb">ページ数、</span><wbr><span class="scontact__nb">部数、</span><wbr><span class="scontact__nb">載せる内容も</span><wbr><span class="scontact__nb">一緒に決めていきます。</span><br><span class="scontact__nb">まずは御社の現状と、</span><wbr><span class="scontact__nb">お困りごとから</span><wbr><span class="scontact__nb">お聞かせください。</span></p>
+
+        
+
+        <hr class="scontact__rule scontact__rule--2">
+
+        <p class="scontact__note"><span class="scontact__nb">ご相談・お見積もりは</span><wbr><span class="scontact__nb">無料です。</span><br><span class="scontact__nb">1営業日以内に</span><wbr><span class="scontact__nb">ご返信します。</span></p>
+      </div>
+
+      
+      <form class="scontact__form" id="scontact-form" action="" method="post">
+        <div class="scontact__field">
+          <label class="scontact__label" for="scontact-company">会社名</label>
+          <input class="scontact__input" id="scontact-company" name="company" type="text" autocomplete="organization">
+        </div>
+        <div class="scontact__field">
+          <label class="scontact__label" for="scontact-name">お名前</label>
+          <input class="scontact__input" id="scontact-name" name="name" type="text" autocomplete="name">
+        </div>
+        <div class="scontact__field">
+          <label class="scontact__label" for="scontact-email">メールアドレス</label>
+          <input class="scontact__input" id="scontact-email" name="email" type="email" autocomplete="email">
+        </div>
+        <div class="scontact__field">
+          <label class="scontact__label" for="scontact-tel">電話番号（任意）</label>
+          <input class="scontact__input" id="scontact-tel" name="tel" type="tel" autocomplete="tel">
+        </div>
+        <div class="scontact__field">
+          <label class="scontact__label" for="scontact-message">ご相談内容（自由記述）</label>
+          <textarea class="scontact__textarea" id="scontact-message" name="message" rows="3"></textarea>
+        </div>
+        
+        <button class="scontact__submit" type="submit">この内容で相談する</button>
+      </form>
+
+    </div>
+  </div>
+
+  
+</section>
+<footer class="lpf">
+  <nav class="lpf__nav">
+    <a href="#trans">制作実例</a><a href="#record">実績</a><a href="#flow">進め方</a>
+    <a href="#price">料金</a><a href="#faq">よくあるご質問</a><a href="#company">会社情報</a>
+  </nav>
+  <p class="lpf__cr">Copyright © ads co.,ltd. All Rights Reserved.</p>
+</footer>
+<a class="scontact__fixed" href="#scontact-form">
+    <svg class="scontact__fixedicon" viewBox="0 0 38 28" fill="none" aria-hidden="true">
+      <rect x="1" y="1" width="36" height="26" rx="2" fill="#fff"/>
+      <path d="M2.5 2.5L19 16 35.5 2.5M2.5 25.5L14.5 15M35.5 25.5L23.5 15" stroke="var(--blue)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span class="scontact__fixedtext">
+      <span class="scontact__fixedmain">お問い合わせ｜デザイン相談（無料）</span>
+      <span class="scontact__fixedsub">1営業日以内にご返信</span>
+    </span>
+  </a>
+<script>
+
+(function(){
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var groups = [
+    '#pain .spain__h, #pain .spain__lead, #pain li, #pain .spain__close',
+    '#trans .strans__h2, #trans .strans__lead, #trans .strans__col, #trans .strans__close, #trans .strans__btn',
+    '#assure .sassure__h2, #assure .sassure__card',
+    '#record .srecord__h, #record .srecord__lead, #record .srecord__marquee, #record .srecord__stat, #record .srecord__box',
+    '#flow .sflow__eyebrow, #flow .sflow__h2, #flow .sflow__row, #flow .sflow__note',
+    '#price .sprice__h, #price .sprice__sub, #price .sprice__lead, #price .sprice__card, #price .sprice__close',
+    '#compare .scompare__h, #compare .scompare__lead, #compare .scompare__note, #compare .scompare__box, #compare .scompare__close',
+    '#faq h2, #faq .sfaq__item',
+    '#company .scompany__h, #company .scompany__lead, #company .scompany__dl',
+    '#contact .scontact__h, #contact .scontact__lead, #contact .scontact__form, #contact .scontact__note'
+  ];
+  var els = [];
+  groups.forEach(function(sel){
+    [].slice.call(document.querySelectorAll(sel)).forEach(function(el, i){
+      el.setAttribute('data-rv','');
+      el.style.setProperty('--rv-d', Math.min(i,4)*80 + 'ms');
+      els.push(el);
+    });
+  });
+  if (!els.length) return;
+  var showAll = function(){ els.forEach(function(el){ el.classList.add('is-in'); }); };
+  if (!('IntersectionObserver' in window)) { showAll(); return; }
+  
+  var alive = false;
+  var io = new IntersectionObserver(function(ents){
+    alive = true;
+    ents.forEach(function(e){
+      if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+    });
+  }, {rootMargin:'0px 0px -12% 0px', threshold:0.08});
+  els.forEach(function(el){ io.observe(el); });
+  
+  setTimeout(function(){ if (!alive) showAll(); }, 1200);
+  
+  addEventListener('scroll', function once(){
+    removeEventListener('scroll', once);
+    setTimeout(function(){
+      if (!document.querySelector('[data-rv].is-in')) showAll();
+    }, 500);
+  }, {passive:true});
+  
+  setTimeout(function(){
+    if (!document.querySelector('[data-rv].is-in')) showAll();
+  }, 8000);
+})();
+</script>
+<script>
+
+(function(){
+  var fv = document.getElementById('fv');
+  if (!fv) return;
+  var edge = 0;
+  var calc = function(){ edge = fv.offsetTop + fv.offsetHeight - 80; };
+  var sync = function(){ document.body.classList.toggle('cta-hide', window.scrollY < edge); };
+  var both = function(){ calc(); sync(); };
+  both();
+  addEventListener('scroll', sync, {passive:true});
+  addEventListener('resize', both, {passive:true});
+  addEventListener('load', both);
+})();
+</script>
+<script>
+
+(function(){
+  var items = [].slice.call(document.querySelectorAll('#faq details'));
+  if (!items.length) return;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (!document.body.animate) return;                  
+  var EASE = 'cubic-bezier(.4,0,.2,1)';
+  
+  var root = document.getElementById('faq');
+  if (root) root.classList.add('sfaq--js');
+  items.forEach(function(d){
+    var sum = d.querySelector('summary');
+    if (!sum) return;
+    d.classList.toggle('is-open', d.open);             
+    var anim = null;
+    sum.addEventListener('click', function(ev){
+      ev.preventDefault();
+      
+      var from = d.getBoundingClientRect().height;
+      if (anim) { anim.cancel(); anim = null; }
+      var opening = !d.open;
+      d.classList.toggle('is-open', opening);          
+      
+      d.open = opening;
+      var to = d.getBoundingClientRect().height;
+      d.open = true;                                   
+      d.style.overflow = 'hidden';
+      anim = d.animate({height:[from + 'px', to + 'px']},
+                       {duration: opening ? 280 : 220, easing: EASE});
+      anim.onfinish = function(){
+        d.open = opening;
+        d.style.overflow = '';
+        anim = null;
+      };
+    });
+  });
+})();
+</script>
+</body>
+</html>

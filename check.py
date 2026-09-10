@@ -350,12 +350,31 @@ addEventListener("load",function(){
 
 
 def flat(png, w):
-    """撮影が失敗して1色で塗り潰された画像になっていないか。"""
+    """撮影が失敗して1色で塗り潰された画像になっていないか。
+
+    🚨 元は y=600〜9000 を一律に見ていた。iframe は高さ20000pxで撮るので、
+       短いページ（D型＝5節・約4000px）は下の1万px以上が地の色1色になり、
+       「撮影に失敗した」と誤判定して3回リトライして諦めていた。
+       2026-09-11 に D型を作って初めて踏んだ。小さいLPが1本も検査できない状態だった。
+       → まず中身の下端を探して、その範囲だけを見る。
+    """
     im = Image.open(png).convert("RGB")
     px = im.load()
-    n = sum(1 for y in range(600, min(im.height, 9000), 300)
-            if len({px[x, y] for x in range(5, min(w, im.width) - 5, 60)}) <= 2)
-    return n > 20
+    xs = range(5, min(w, im.width) - 5, 60)
+    # 中身の下端。下から粗く上がって、地と違う画素が出たところ
+    bottom = 0
+    for y in range(im.height - 1, 0, -40):
+        if len({px[x, y] for x in xs}) > 2:
+            bottom = y
+            break
+    if bottom < 400:
+        return True                      # 本当に何も写っていない
+    top = 200 if bottom < 1200 else 600  # 短いページは上から見る
+    ys = list(range(top, bottom, max(120, (bottom - top) // 28)))
+    if not ys:
+        return False
+    n = sum(1 for y in ys if len({px[x, y] for x in xs}) <= 2)
+    return n > len(ys) * 0.7             # 7割以上が1〜2色なら失敗
 
 
 def shoot(page, out, w, h=20000):
