@@ -21,6 +21,9 @@ from PIL import Image
 
 WIDTHS = [1440, 1024, 900, 600, 375]
 SHOT = os.path.expanduser("~/Desktop/ESL_shogaku_LP/tools/shot.py")
+# 🚨 撮影とは別に --dump-dom で検出の中身を読むために直接叩く。
+#    画素のマーカーは「赤か緑か」しか運べない。どこの何が何pxずれているかはDOMにしか無い。
+CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 C = {"g": "\033[32m", "y": "\033[33m", "r": "\033[31m", "b": "\033[1m", "": ""}
 
 
@@ -283,6 +286,30 @@ addEventListener("load",function(){
     //      ここは見立てとして出し、直すかどうかは人が決める。
     if(align.length) soft.push("横に並ぶ要素の高さ・位置がそろっていない（差の大きい順）: "+align.join(" / "));
 
+    // ── 節をまたいだ見出しの不統一（2026-09-11 追加）
+    //   きっかけ：「FVのバランスが悪い／キーメッセージが大きすぎる」（ADS 2026-09-09）。
+    //   原因を実測で追ったら、節見出しが節ごとに別の級数・太さになっていた。
+    //   直したときトークン（--h2-w / --h2-lh / --h2-ls）を足したので、いまは統一されている。
+    //   🚨 ジャンプ率（隣接する級数の比）は試したが物差しにならなかった。
+    //      ページ全体の級数を並べると 20/15/13.5/13/12.5/11 のように細かく、
+    //      1.4を超える組が「本文と見出し」なのか「不統一」なのか区別できない。
+    //      役割が同じもの（section 直下の h2）だけを見るほうが確実。
+    var h2m = {};
+    document.querySelectorAll("section h2").forEach(function(e){
+      var st=getComputedStyle(e);
+      if(st.display==="none"||st.visibility==="hidden") return;
+      var t=e.textContent.trim(); if(t.length<2) return;
+      var k=Math.round(parseFloat(st.fontSize))+"px/"+st.fontWeight
+            +"/行送り"+Math.round(parseFloat(st.lineHeight));
+      (h2m[k]=h2m[k]||[]).push(t.slice(0,12));
+    });
+    var h2k=Object.keys(h2m);
+    if(h2k.length>1){
+      h2k.sort(function(a,b){return h2m[b].length-h2m[a].length});
+      soft.push("節見出しが節ごとに違う（"+h2k.length+"種類）: "
+        + h2k.map(function(k){return k+" ×"+h2m[k].length+"「"+h2m[k][0]+"」"}).join(" / "));
+    }
+
     // ── 地との差（罫・枠だけ。2026-09-11 追加）
     //   きっかけ：見出し下の .s-notch が白地に対して比1.26で、実質見えていなかった。
     //   🚨 文字のコントラストは上の unread（閾値1.35）で既に見ている。ここを4.5に
@@ -297,24 +324,35 @@ addEventListener("load",function(){
     //      3.0 は「部品や状態を見分けるための線」の基準で、装飾の区切り罫には厳しすぎる。
     //      既存の文字判定（unread）が使っている 1.35 に合わせる。ここは
     //      「意味を持っているのに見えていない」ものだけを拾いたい（.s-notch は1.26）。
+    //   🚨 罫だけでは足りなかった。過去FBに「CTAが地の緑と同色で埋もれている」
+    //      （ESL 2026-09-07）があり、これは「面」＝ボタン・バッジの塗りが地と同色の話。
+    //      罫（高さ4px以下）だけ見ていると拾えない。面も同じ物差しで見る。
     var lowc=[];
-    document.querySelectorAll("hr, i, span, div, li").forEach(function(e){
+    document.querySelectorAll("hr, i, span, div, li, a, button").forEach(function(e){
       if(lowc.length>=6) return;
       if(e instanceof SVGElement) return;
       var s=getComputedStyle(e);
       if(s.display==="none"||s.visibility==="hidden"||parseFloat(s.opacity)<0.5) return;
       var r=e.getBoundingClientRect();
-      if(r.height>4 || r.height<1 || r.width<24) return;      // 罫だけ
-      if(e.textContent.trim()) return;                        // 文字があるものは罫ではない
+      if(r.width<24) return;
       var c=s.backgroundColor;
       if(!c || c==="rgba(0, 0, 0, 0)" || /, 0\)$/.test(c)) return;
       var bgc=bg(e.parentElement||e); if(bgc===null) return;  // グラデーションは見送る
       var f=lum(c), b=lum(bgc);
       if(f===null||b===null) return;
       var cr=(Math.max(f,b)+0.05)/(Math.min(f,b)+0.05);
-      if(cr<1.35) lowc.push("罫 "+nm(e)+"（幅"+Math.round(r.width)+"px）比"+cr.toFixed(2)+"（地とほぼ同じ＝見えていない）");
+      if(cr>=1.35) return;
+      var thin = r.height<=4 && r.height>=1;
+      if(thin && !e.textContent.trim()){
+        lowc.push("罫 "+nm(e)+"（幅"+Math.round(r.width)+"px）比"+cr.toFixed(2)+"（地とほぼ同じ＝見えていない）");
+      } else if(!thin && r.height>=24 && r.height<=140 && e.textContent.trim().length>=2
+                && /^(A|BUTTON)$/.test(e.tagName)){
+        // 面はボタン・リンクの塊だけ。div を全部見ると入れ子で同じ地を何度も数える
+        lowc.push("面 "+e.tagName.toLowerCase()+"."+nm(e)+"「"
+          +e.textContent.trim().slice(0,12)+"」比"+cr.toFixed(2)+"（塗りが地と同色＝埋もれている）");
+      }
     });
-    if(lowc.length) soft.push("地との差が小さくて沈んでいる罫: "+lowc.join(" / "));
+    if(lowc.length) soft.push("地との差が小さくて沈んでいる罫・面: "+lowc.join(" / "));
 
     // ★判定は画像からしか読めないので、項目ごとに16pxの色マーカーを左上に並べる。
     //   緑=通過 / 赤=要対応。順は resp / orphan / br / embed / align / contrast。
@@ -325,6 +363,7 @@ addEventListener("load",function(){
       soft.some(function(x){return /全画面ボタン/.test(x)}),
       soft.some(function(x){return /高さ・位置がそろっていない/.test(x)}),
       soft.some(function(x){return /地との差が小さくて/.test(x)}),
+      soft.some(function(x){return /節見出しが節ごとに違う/.test(x)}),
     ];
     var fl=document.createElement("div");
     fl.style.cssText="position:absolute;left:0;top:0;z-index:2147483647;display:flex";
@@ -337,7 +376,10 @@ addEventListener("load",function(){
 
     var d=document.createElement("div");
     d.id="__chk";
-    d.setAttribute("data-result", JSON.stringify(out));
+    // 🚨 out だけを載せていたので、soft（見立て）に入れた検出が画像の外に出せず、
+    //    _check.json は「5幅のいずれかで検出」しか持てなかった。
+    //    チェックリスト自身の決めごと（どこ・何が・どう直すかを書く）に反していた。
+    d.setAttribute("data-result", JSON.stringify({out:out, soft:soft}));
     d.style.cssText="position:absolute;left:0;top:16px;z-index:2147483646;background:"+
       (out.length?"#c00":"#063")+";color:#fff;font:12px/1.5 monospace;padding:6px;max-width:100%;white-space:pre-wrap";
     d.textContent=(out.length? "NG " : "OK ")+W+"px\\n"+out.concat(
@@ -392,12 +434,53 @@ def shoot(page, out, w, h=20000):
     return False
 
 
+# ── どう直すか。項目名だけ出されても何をすればいいか分からない（Soの指摘）ので、
+#    機械の項目にも手当てを1行ずつ持たせる。
+HOW = {
+    "responsive": "その要素の width/min-width を外すか、親に overflow-x:auto の器を付ける。"
+                  "表なら器に入れて中でスクロールさせる",
+    "orphan-line": "word-break:keep-all を当て、意味の切れ目に <wbr> を入れる。"
+                   "keep-all だけだと溢れるので <wbr> は必須",
+    "br-margin": "<br> の位置を1つ手前の意味の切れ目へ動かす。"
+                 "器に対して1割の余りが出るまで動かす（実機Safariは字が数%広い）",
+    "embed-controls": "iframe の幅を280px以上にし、allow に fullscreen を入れる",
+    "alignment": "その親を flex/grid にして align-items:stretch にするか、"
+                 "揃えたい子に min-height を入れて行数の差を吸収する。"
+                 "★棒グラフのように高さの差が意味を持つ並びは直さない",
+    "contrast": "罫なら色を1段濃くする（例 #e1e5ec → #c2d0e0）。見せる必要が無ければ消す。"
+                "面（ボタン）なら塗りを地から離す色にする。地が緑ならボタンは緑を避ける",
+    "h2-uniform": "節ごとに書いている見出しの級数をトークンに寄せる"
+                  "（--h2 / --h2-w / --h2-lh / --h2-ls）。節の部品側では指定しない",
+}
+
+
+def dump_detail(page, w=1440):
+    """headless Chrome の --dump-dom で、probe が書いた検出の中身を取り出す。
+
+    🚨 画素のマーカーは「赤か緑か」しか運べない。どこの何が何pxずれているかは
+       DOM の data-result にしか無い。撮影とは別に1回だけ読む。
+    """
+    import html as _h
+    r = subprocess.run([CHROME, "--headless", "--disable-gpu",
+                        f"--window-size={w},9000", "--virtual-time-budget=17000",
+                        "--dump-dom", "file://" + os.path.abspath(page)],
+                       capture_output=True, text=True, errors="ignore")
+    m = re.search(r'data-result="([^"]*)"', r.stdout or "")
+    if not m:
+        return {"out": [], "soft": []}
+    try:
+        d = json.loads(_h.unescape(m.group(1)))
+        return d if isinstance(d, dict) else {"out": d, "soft": []}
+    except Exception:
+        return {"out": [], "soft": []}
+
+
 def read_flags(png):
     """左上に並べた16pxの色マーカーを読む。
     順は resp / orphan / br-margin / embed / alignment / contrast（probe の FLAGS と同じ）。"""
     px = Image.open(png).convert("RGB").load()
     out = []
-    for i in range(6):
+    for i in range(7):
         c = px[i * 16 + 8, 8]
         out.append("ng" if (c[0] > 150 and c[1] < 90) else ("ok" if (c[1] > 110 and c[0] < 90) else "?"))
     return out
@@ -775,6 +858,12 @@ def main():
             if v != "OK":
                 ng.append(f"{w}px {v}")
             shots.append((w, png))
+        # 🚨 検出の中身は画素に載らない。1440pxで1回だけDOMを読む。
+        #    これが無いと _check.json は「5幅のいずれかで検出」しか持てず、
+        #    「どこ・何が・どう直すか」を書くという決めごとを機械の項目が破ることになる。
+        #    🚨 side（元の隣に置いた撮影用コピー）は finally で消えるので、
+        #       必ず try の中で読む。外に出すと毎回空になる。
+        detail = dump_detail(side, 1440) if shots else {"out": [], "soft": []}
     finally:
         if os.path.exists(side):
             os.remove(side)
@@ -843,7 +932,7 @@ def main():
     if items:
         # 撮影で得たフラグ（5幅ぶん）を項目へ振り分ける。1幅でも ng なら ng
         order = ["responsive", "orphan-line", "br-margin", "embed-controls",
-                 "alignment", "contrast"]
+                 "alignment", "contrast", "h2-uniform"]
         # 🚨 マーカーが読めない（"?"）のを「ok」にしてはいけない。
         #    probe が途中で例外を投げるとマーカーが描かれず、全項目が緑に見える。
         #    2026-09-11 に実際に踏んだ（alignment を足した直後、6件の上限で
@@ -852,7 +941,25 @@ def main():
                  "br-margin": "明示改行はどの区間も1割以上の余りがある（実機で溢れにくい）",
                  "embed-controls": "動画は280px以上あり、allow に fullscreen も入っている",
                  "alignment": "横に並ぶ要素の上端・下端は5px以内でそろっている",
-                 "contrast": "文字は4.5以上、罫・枠は3.0以上の差がある"}
+                 "contrast": "罫・枠は地との差が1.35以上ある",
+                 "h2-uniform": "節見出しは全節で同じ級数・太さ・行送り"}
+        # 検出文の頭の言葉で項目に振り分ける。probe が push する文言と対応させる
+        MARK = {
+            "responsive":     ("横スクロール", "画面外", "切れている"),
+            "orphan-line":    ("最終行が1〜2文字",),
+            "br-margin":      ("明示改行の余り",),
+            "embed-controls": ("全画面ボタン",),
+            "alignment":      ("高さ・位置がそろっていない",),
+            "contrast":       ("地との差が小さくて",),
+            "h2-uniform":     ("節見出しが節ごとに違う",),
+        }
+        allmsg = (detail.get("out") or []) + (detail.get("soft") or [])
+        found = {}
+        for k2, keys in MARK.items():
+            hits = [m for m in allmsg if any(x in m for x in keys)]
+            if hits:
+                found[k2] = " ／ ".join(hits)[:900]
+
         for k, name in enumerate(order):
             st = "ok"
             unknown = False
@@ -866,10 +973,19 @@ def main():
             for it in items:
                 if it["id"] == name:
                     it["state"] = st if shot_flags else "skip"
-                    it["msg"] = (okmsg[name] if st == "ok" else
-                                 "★判定できていない（画面の左上にマーカーが出ていない＝"
-                                 "計測が途中で落ちた可能性）" if st == "pending" else
-                                 "5幅のいずれかで検出（まとめ画像の左上を見る）")
+                    if st == "ok":
+                        it["msg"] = okmsg[name]
+                    elif st == "pending":
+                        it["msg"] = ("★判定できていない（画面の左上にマーカーが出ていない＝"
+                                     "計測が途中で落ちた可能性）")
+                    else:
+                        # ★どこの何が、を出す。無ければ従来の文に落とす
+                        it["msg"] = found.get(
+                            name, "5幅のいずれかで検出（まとめ画像の左上を見る）")
+                        if name in found:
+                            it["where"] = found[name][:300]
+                            it["what"] = found[name][:300]
+                            it["how"] = HOW.get(name, "")
         # ★私が画像を見て書いた「どこ・何が・どう直すか」を、再実行で消さない。
         #   ただしページが変わっていたら見直しが必要なので、その時だけ捨てて claude に戻す。
         import hashlib
