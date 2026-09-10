@@ -217,6 +217,9 @@ tr:hover td{background:#fafbfc}
 .dt__sec{margin:12px 0 18px}
 .dt__cap{font-size:11.5px;letter-spacing:.05em;color:#8b94a3;margin:0 0 6px}
 .dt__cap.ng{color:#b3261e;font-weight:700}
+.head__rv{margin-left:auto;font-size:12px;color:#2563eb;text-decoration:none;white-space:nowrap;
+  border:1px solid currentColor;border-radius:999px;padding:4px 12px}
+.head__rv:hover{background:#2563eb;color:#fff}
 .dt__l{list-style:none;margin:0;padding:0}
 .dt__l li{display:grid;grid-template-columns:18px 150px 1fr;gap:8px;align-items:baseline;
   padding:5px 0;border-top:1px solid #f4f6f8;font-size:12.5px}
@@ -1129,6 +1132,13 @@ function render(){
     <div class="head"><h2>${esc(p.name)}</h2>
       <span class="cl">${esc(p.client||'')}</span>
       <span class="mainlink">${count}</span>
+      ${R.kind==='vid'?'':(()=>{
+        // この案件のうち、最後にチェックした版を開く
+        const cs=p.versions.filter(v=>CHECKS[v.id]);
+        if(!cs.length) return '';
+        cs.sort((a,b)=>String(CHECKS[b.id].at).localeCompare(String(CHECKS[a.id].at)));
+        return `<a class="head__rv" href="./review.html?v=${cs[0].id}" target="_blank"
+          >原稿とレビュー（${cs[0].id}）↗</a>`;})()}
     </div>
     <p class="note">${esc(p.note||'')}</p>
     ${todo}
@@ -1289,8 +1299,13 @@ pre.md{white-space:pre-wrap;font:12.5px/1.95 inherit;margin:0;color:#3c434c}
 const ORDER=Object.keys(D).sort(function(a,b){return (D[b].at||'')<(D[a].at||'')?-1:1});
 const q=new URLSearchParams(location.search);
 const sel=document.getElementById('sel');
-ORDER.forEach(function(v){const o=document.createElement('option');o.value=v;
-  o.textContent=D[v].project+'  '+v+(D[v].at?'   '+D[v].at:'');sel.appendChild(o);});
+const GRP={};
+ORDER.forEach(function(v){ (GRP[D[v].project]=GRP[D[v].project]||[]).push(v) });
+Object.keys(GRP).forEach(function(pn){
+  const og=document.createElement('optgroup'); og.label=pn;
+  GRP[pn].forEach(function(v){const o=document.createElement('option');o.value=v;
+    o.textContent=v+(D[v].at?'   '+D[v].at:'   （チェックまだ）');og.appendChild(o);});
+  sel.appendChild(og);});
 let cur=(q.get('v')&&D[q.get('v')])?q.get('v'):ORDER[0];      // 既定は一番新しい版
 sel.value=cur;
 sel.addEventListener('change',function(){location.search='?v='+sel.value});

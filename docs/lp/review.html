@@ -53,8 +53,13 @@ pre.md{white-space:pre-wrap;font:12.5px/1.95 inherit;margin:0;color:#3c434c}
 const ORDER=Object.keys(D).sort(function(a,b){return (D[b].at||'')<(D[a].at||'')?-1:1});
 const q=new URLSearchParams(location.search);
 const sel=document.getElementById('sel');
-ORDER.forEach(function(v){const o=document.createElement('option');o.value=v;
-  o.textContent=D[v].project+'  '+v+(D[v].at?'   '+D[v].at:'');sel.appendChild(o);});
+const GRP={};
+ORDER.forEach(function(v){ (GRP[D[v].project]=GRP[D[v].project]||[]).push(v) });
+Object.keys(GRP).forEach(function(pn){
+  const og=document.createElement('optgroup'); og.label=pn;
+  GRP[pn].forEach(function(v){const o=document.createElement('option');o.value=v;
+    o.textContent=v+(D[v].at?'   '+D[v].at:'   （チェックまだ）');og.appendChild(o);});
+  sel.appendChild(og);});
 let cur=(q.get('v')&&D[q.get('v')])?q.get('v'):ORDER[0];      // 既定は一番新しい版
 sel.value=cur;
 sel.addEventListener('change',function(){location.search='?v='+sel.value});
