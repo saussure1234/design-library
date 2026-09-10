@@ -1255,13 +1255,15 @@ body{margin:0;font:14px/1.75 -apple-system,"Hiragino Kaku Gothic ProN","Noto San
 .bar b{font-size:14px}
 .bar a{color:#9fb6d4;font-size:12.5px;text-decoration:none}
 .bar select{margin-left:auto;background:#232b38;color:#fff;border:0;border-radius:8px;padding:7px 11px;font-size:13px}
-.wrap{display:grid;grid-template-columns:minmax(320px,.9fr) minmax(420px,1.1fr);
+.wrap{display:grid;grid-template-columns:minmax(260px,.85fr) minmax(340px,1.15fr);
   gap:14px;padding:14px;height:calc(100vh - 46px)}
 .col{background:#fff;border:1px solid #e3e7ee;border-radius:12px;display:flex;flex-direction:column;min-height:0}
 .col>h2{margin:0;padding:12px 16px;font-size:12px;letter-spacing:.06em;color:#78818e;
   border-bottom:1px solid #eef0f3;font-weight:700}
 .col>div{overflow:auto;padding:14px 16px}
 pre.md{white-space:pre-wrap;font:12.5px/1.95 inherit;margin:0;color:#3c434c}
+code{font:11.5px/1.9 ui-monospace,SFMono-Regular,Menlo,monospace;background:#f1f3f6;
+  border-radius:4px;padding:1px 5px}
 .sum{display:flex;gap:8px;padding:0 0 12px;flex-wrap:wrap}
 .sum span{font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:999px}
 .sum .a{background:#fdeaea;color:#b3261e}
@@ -1287,7 +1289,7 @@ pre.md{white-space:pre-wrap;font:12.5px/1.95 inherit;margin:0;color:#3c434c}
 .f.warn>.t{background:#fffdf4;color:#8a6210}
 .f.ok>.t{background:#f7fbf8;color:#1a7f45}
 .none{color:#98a1ad;font-size:12.5px;line-height:1.9}
-@media(max-width:900px){.wrap{grid-template-columns:1fr;height:auto}}
+@media(max-width:700px){.wrap{grid-template-columns:1fr;height:auto}}
 </style></head><body>
 <div class="bar"><b>レビュー</b><a href="./">← 版管理へ</a>
   <select id="sel"></select></div>
@@ -1324,7 +1326,9 @@ function draw(){
   document.getElementById('h-s').innerHTML='原稿 '+(d.script_v||'（未登録）')+
     (d.inherit?' <span style="font-weight:400;color:#a7b0bd">（'+esc(cur)+' 自身には記録が無いので派生元から）</span>':'');
   document.getElementById('md').innerHTML=d.script?esc(d.script)
-    :'<span class="none">原稿がまだ無い。<br>lpv.py script &lt;案件id&gt; --new で登録する。</span>';
+    :'<span class="none">原稿がまだ無い。<br><code>lpv.py script '+esc(d.project_id||'&lt;案件id&gt;')
+      +' --new --file &lt;原稿&gt;</code> で登録し、<br><code>lpv.py script '
+      +esc(d.project_id||'&lt;案件id&gt;')+' --set '+esc(cur)+' v1</code> でこのリンクに紐づける。</span>';
   // ★どの項目も必ずどこかに出す。落ちた項目があると「見たつもり」になるのが一番危ない。
   const g={ng:[],claude:[],human:[],warn:[],ok:[],todo:[]};
   (d.items||[]).forEach(function(i){
@@ -1375,7 +1379,7 @@ def build_review(reg, checks, scripts):
                 os.path.join(R, "docs", v["id"], "_shot.jpg")) else None
             if not (ck or sv):
                 continue
-            data[v["id"]] = {"project": p["name"], "script_v": sv,
+            data[v["id"]] = {"project": p["name"], "project_id": p["id"], "script_v": sv,
                              "inherit": inherit,
                              "at": (ck or {}).get("at", ""),
                              "script": sc.get(sv, ""), "shot": shot,
