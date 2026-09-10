@@ -665,7 +665,7 @@ def main():
                 "todo": ("…", "y"), "human": ("□", "y"), "claude": ("◇", "y")}
         for it in items:
             m, c = mark.get(it["state"], ("?", ""))
-            txt = it.get("what") or it["msg"]
+            txt = it.get("what") or it.get("how") or it["msg"]
             say(f"  {m} {it['name']:<16} {txt[:62]}", c)
         if n_keep:
             say(f"\n  ・前回私が見た判定 {n_keep}件はそのまま残した（ページが変わっていないため）")
@@ -675,16 +675,28 @@ def main():
                 say(f"\n  ▲ 私が画像を見て埋める項目が {len(need)}件（{'・'.join(need)}）。"
                     f"\n    _shot.jpg を見て _check.json に where/what/how を書く。"
                     f"\n    それをしないと画面に「私が意味を見る」としか出ず、So には何も伝わらない", "y")
-        bad = [i for i in items if i["state"] == "ng"]
+        # ★止めるのは【機械が測ったもの】だけ。
+        #   私が画像を見て「こうした方がよい」と思ったものは提案であって、
+        #   直す必要が無い可能性がある。判断は So。勝手に止めない・勝手に直さない。
+        bad  = [i for i in items if i["state"] == "ng" and i["by"] == "machine"]
+        mine = [i for i in items if i["state"] == "ng" and i["by"] != "machine"]
         ng = [x for x in ng if "px NG" not in x]      # 内訳は下のリストで出す
         if bad:
             ng.append("チェックリスト " + "・".join(i["name"] for i in bad))
+        if mine:
+            say("\n  ◇ 直した方がよさそう（止めない。直すかはあなたが決める）", "y")
+            for i in mine:
+                say(f"     ・{i['name']}：{(i.get('what') or i['msg'])[:70]}")
+                if i.get("how"):
+                    say(f"       → {i['how'][:110]}")
 
     if ng:
         say("\n  ★通っていない: " + " / ".join(ng), "r")
         say("  直してから出す。この状態でリンクを渡さない。", "r")
         sys.exit(1)
-    say("\n  ○ 5幅とも通った。リンクを渡してよい。", "g")
+    say("\n  ○ 機械の判定は全部通った。リンクを渡してよい。", "g")
+    say("    レビュー: https://saussure1234.github.io/design-library/lp/review.html"
+        f"?v={os.path.basename(os.path.dirname(src))}")
 
 
 if __name__ == "__main__":
