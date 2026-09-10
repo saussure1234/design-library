@@ -20,6 +20,10 @@ import re
 # 金額。3桁以上の数字＋円（1,000円 / 200000円）。
 # ★ここだけは .publish-blocklist が空でも効く。金額は例外なく出さない。
 MONEY = re.compile(r"[0-9][0-9,]{2,}\s*円")
+# ★数字が全部ゼロのものは金額ではなく伏せ字（サンプル会社概要の「0,000,000円」など）。
+#   本物の金額が全部ゼロになることはないので、これだけは通す。
+#   ★ここを緩めるときは「本物が誤って通らないか」を必ず考える。
+MONEY_DUMMY = re.compile(r"^[0,]+\s*円$")
 # 手元の絶対パス。ユーザー名がURLごと公開ページに載る
 LOCALPATH = re.compile(r"/Users/[A-Za-z0-9._-]+/")
 
@@ -59,9 +63,11 @@ def scan(root):
         except OSError:
             continue
         hit = sorted({w for w in (ws or []) if w in t})
-        m = MONEY.search(t)
-        if m:
+        for m in MONEY.finditer(t):
+            if MONEY_DUMMY.match(m.group(0)):
+                continue                      # 伏せ字（0,000,000円）は金額ではない
             hit.append(f"金額らしき記述「{m.group(0)}」")
+            break
         m = LOCALPATH.search(t)
         if m:
             hit.append(f"手元の絶対パス「{m.group(0)}…」")
