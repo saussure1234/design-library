@@ -52,6 +52,16 @@ body{font-family:"Hiragino Sans","Yu Gothic",Meiryo,sans-serif;background:var(--
 .tabs button{border:0;background:none;font:inherit;font-size:13.5px;padding:9px 16px;
   cursor:pointer;color:var(--mute);border-bottom:2px solid transparent;margin-bottom:-2px}
 .tabs button.on{color:var(--ink);font-weight:800;border-bottom-color:var(--live)}
+/* 雰囲気テンプレ：タブが7つ並ぶので折り返しを許す */
+.mtabs{flex-wrap:wrap;border-bottom-width:2px}
+.mtabs button{padding:9px 13px;font-size:13px}
+/* 埋め込み枠。テンプレは1440px設計なので、縮小して全幅に収める。
+   🚨 iframe に直接 transform をかけると親の高さが縮まないので、外箱で高さを作る */
+.mframe{position:relative;width:100%;padding-top:56%;margin:14px 0 6px;
+  border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
+.mframe iframe{position:absolute;top:0;left:0;width:1440px;height:2400px;border:0;
+  transform:scale(.55);transform-origin:0 0}
+@media (max-width:900px){ .mframe{padding-top:82%} .mframe iframe{transform:scale(.34)} }
 .pane{background:var(--panel);border:1px solid var(--line);border-top:0;
   border-radius:0 0 10px 10px;padding:18px}
 
@@ -383,6 +393,8 @@ function exists(id){
   const kind=id.slice(0,4)==='vid:'?VID:LP, pid=id.slice(id.indexOf(':')+1);
   return !!(kind && kind.reg.projects.some(p=>p.id===pid));
 }
+// 雰囲気テンプレのタブid。A型の6雰囲気＋B型
+const MOOD_IDS = (MOODS ? MOODS.types[0].moods.map(m=>m.id) : []).concat(MOODS?['b']:[]);
 function readHash(){
   const h=decodeURIComponent((location.hash||'').replace(/^#/,''));
   if(!h) return false;
@@ -391,12 +403,14 @@ function readHash(){
   if(!exists(id)) return false;
   cur=id;
   // タブは「その画面に在るもの」だけ。無ければ既定に落とす
-  const okTabs = (id==='__flow__'||id==='__moods__') ? [] : (id.slice(0,4)==='vid:'?TABS.filter(x=>x!=='check'):TABS.filter(x=>x!=='sheet'));
+  // 🚨 雰囲気テンプレは「雰囲気id」をタブとして持つ。案件のタブ集合とは別なので先に分ける
+  if(id==='__moods__'){ tab = MOOD_IDS.includes(tb) ? tb : MOOD_IDS[0]; return true; }
+  const okTabs = (id==='__flow__') ? [] : (id.slice(0,4)==='vid:'?TABS.filter(x=>x!=='check'):TABS.filter(x=>x!=='sheet'));
   tab = okTabs.includes(tb) ? tb : (id.slice(0,4)==='vid:'?'sheet':'graph');
   return true;
 }
 function writeHash(){
-  const h = (cur==='__flow__'||cur==='__moods__') ? cur : cur+'/'+tab;
+  const h = (cur==='__flow__') ? cur : cur+'/'+tab;
   if(decodeURIComponent((location.hash||'').replace(/^#/,''))!==h)
     history.replaceState(null,'','#'+encodeURIComponent(h));
 }
@@ -418,41 +432,57 @@ const MISSING=[...new Set(STEPS.filter(s=>s.skill&&!SK[s.skill]).map(s=>s.skill)
 // ── 雰囲気テンプレ ─────────────────────────────────────
 // ★実物（HTML・スクショ）はここに置かない。このページは公開なので、
 //   載せるのは仕様の数字だけ。実物は手元の localhost からだけ開ける。
-function moodsPane(){
-  const M=MOODS, T=M.types;
-  const cmp=`<table class="tb"><tr><th></th>${T.map(t=>`<th>${esc(t.name)}</th>`).join('')}</tr>
-    <tr><td class="k">向く案件</td>${T.map(t=>`<td>${esc(t.note)}</td>`).join('')}</tr>
-    <tr><td class="k">節数</td>${T.map(t=>`<td>${t.sections}</td>`).join('')}</tr>
-    <tr><td class="k">必要な画像</td>${T.map(t=>`<td><b>${t.images}枚</b></td>`).join('')}</tr>
-    <tr><td class="k">見出し</td>${T.map(t=>`<td>${esc(t.h1)}</td>`).join('')}</tr>
-    <tr><td class="k">写真の扱い</td>${T.map(t=>`<td>${esc(t.photo)}</td>`).join('')}</tr>
-    <tr><td class="k">手元の場所</td>${T.map(t=>`<td><code>${esc(t.path)}</code></td>`).join('')}</tr></table>`;
+function moodsPane(sel){
+  const M=MOODS, T=M.types, A=T[0], B=T[1];
+  const mood = A.moods.find(m=>m.id===sel) || A.moods[0];
+  const isB  = sel==='b';
 
-  const blocks = T.map(t=>{
-    const moods=`<table class="tb"><tr><th>雰囲気</th><th>言葉</th><th>見出しの書体</th>
-      <th>h1</th><th>h2/太さ</th><th>余白</th><th>角丸</th><th>桁</th></tr>
-      ${t.moods.map(m=>`<tr><td><b>${esc(m.name)}</b></td><td>${esc(m.words)}</td>
-        <td>${esc(m.head)}</td><td>${m.h1}</td><td>${esc(String(m.h2))}</td>
-        <td>${esc(String(m.pad))}</td><td>${esc(m.radius)}</td><td>${esc(m.cols)}</td></tr>`).join('')}</table>`;
-    const copy=`<table class="tb"><tr><th>場所</th><th>級数</th><th>字数</th><th>個数</th></tr>
-      ${t.copy.map(c=>`<tr><td>${esc(c.place)}</td><td>${esc(c.size)}</td>
-        <td>${esc(c.chars)}</td><td>${c.count}</td></tr>`).join('')}</table>`;
-    const asset=`<table class="tb"><tr><th>場所</th><th>枚数</th><th>条件</th></tr>
-      ${t.assets.map(a=>`<tr><td>${esc(a.place)}</td><td>${a.n}</td><td>${esc(a.cond)}</td></tr>`).join('')}</table>`;
-    return `<h3 class="mh">${esc(t.name)}　<span class="cl">${esc(t.note)}</span></h3>
-      <p class="note">雰囲気の振り分け</p>${moods}
-      <p class="note">受け入れ仕様 ── 文字（工程6でコピーを書くときの上限）</p>${copy}
-      <p class="note">受け入れ仕様 ── 画像</p>${asset}
-      <p class="note"><a href="${esc(t.url)}" target="_blank">手元で開く → ${esc(t.url)}</a></p>`;
-  }).join('');
+  // ── タブ。A型の6雰囲気＋B型
+  const tabs = `<div class="tabs mtabs">
+    ${A.moods.map(m=>`<button data-t="${esc(m.id)}" class="${m.id===sel?'on':''}">${esc(m.name)}</button>`).join('')}
+    <button data-t="b" class="${isB?'on':''}">B型（フォーム常駐）</button></div>`;
+
+  // ── 埋め込み。無名化した複製を同じリポジトリに置いてあるので相対で開ける
+  const src  = isB ? '' : `moods/${esc(sel)}/index.html`;
+  const frame = isB
+    ? `<p class="note bad">B型はまだ無名化した複製を置いていない。
+         手元では <code>${esc(B.url)}</code> で見られる。</p>`
+    : `<div class="mframe"><iframe src="${src}" loading="lazy" title="${esc(mood.name)}"></iframe></div>
+       <p class="note"><a href="${src}" target="_blank">別タブで原寸で開く →</a>
+         　このテンプレは社名・ロゴ・写真をプレースホルダに差し替えた公開用の複製。
+         中身入りの実物は手元の <code>${esc(M.local.root)}</code>。</p>`;
+
+  // ── いま選んでいる雰囲気の数字
+  const spec = isB ? '' : `<table class="tb"><tr>
+      <th>見出しの書体</th><th>h1</th><th>h2/太さ</th><th>余白</th><th>角丸</th><th>桁 文字:写真</th><th>言葉</th></tr>
+    <tr><td><b>${esc(mood.head)}</b></td><td>${mood.h1}</td><td>${esc(String(mood.h2))}</td>
+      <td>${esc(String(mood.pad))}</td><td>${esc(mood.radius)}</td><td>${esc(mood.cols)}</td>
+      <td>${esc(mood.words)}</td></tr></table>
+    <p class="note">案件で使うときは <code>cp ~/lp-moods/tokens/${esc(sel)}.css &lt;案件&gt;/tokens.css</code>
+      　これ1枚で書体・級数・余白・角丸・桁が入れ替わる。</p>`;
+
+  const t = isB ? B : A;
+  const copy=`<table class="tb"><tr><th>場所</th><th>級数</th><th>字数</th><th>個数</th></tr>
+    ${t.copy.map(c=>`<tr><td>${esc(c.place)}</td><td>${esc(c.size)}</td>
+      <td>${esc(c.chars)}</td><td>${c.count}</td></tr>`).join('')}</table>`;
+  const asset=`<table class="tb"><tr><th>場所</th><th>枚数</th><th>条件</th></tr>
+    ${t.assets.map(a=>`<tr><td>${esc(a.place)}</td><td>${a.n}</td><td>${esc(a.cond)}</td></tr>`).join('')}</table>`;
+
+  const cmp=`<table class="tb"><tr><th></th>${T.map(x=>`<th>${esc(x.name)}</th>`).join('')}</tr>
+    <tr><td class="k">向く案件</td>${T.map(x=>`<td>${esc(x.note)}</td>`).join('')}</tr>
+    <tr><td class="k">節数</td>${T.map(x=>`<td>${x.sections}</td>`).join('')}</tr>
+    <tr><td class="k">必要な画像</td>${T.map(x=>`<td><b>${x.images}枚</b></td>`).join('')}</tr>
+    <tr><td class="k">FV</td>${T.map(x=>`<td>${esc(x.photo)}</td>`).join('')}</tr></table>`;
 
   return `<div class="head"><h2>雰囲気テンプレ</h2>
       <span class="cl">選ぶ基準は「FVで何をさせたいか」</span></div>
-    <p class="note">実物は手元の <code>${esc(M.local.root)}</code> にある。
-      このページは公開なので、載せているのは仕様の数字だけ。<br>
-      見るには <code>${esc(M.local.serve)}</code> を叩いてから、下のリンクを開く。</p>
-    ${cmp}
-    ${blocks}
+    ${tabs}
+    <h3 class="mh">${esc(isB ? B.name : mood.name)}</h3>
+    ${spec}
+    ${frame}
+    <h3 class="mh">受け入れ仕様 ── 文字（工程6でコピーを書くときの上限）</h3>${copy}
+    <h3 class="mh">受け入れ仕様 ── 画像</h3>${asset}
+    <h3 class="mh">A型とB型</h3>${cmp}
     <h3 class="mh">守ること</h3>
     <ul class="ul">${M.rules.map(r=>`<li>${esc(r)}</li>`).join('')}</ul>
     <h3 class="mh">まだやっていないこと</h3>
@@ -999,7 +1029,7 @@ function render(){
   document.querySelector('.side').innerHTML=sidebar();
   // 「しくみ」の画面は案件に属さないので、先に分岐して描き切る
   if(cur==='__moods__'){
-    document.querySelector('.main').innerHTML = moodsPane();
+    document.querySelector('.main').innerHTML = moodsPane(tab);
     return;
   }
   if(cur==='__flow__'){
@@ -1065,7 +1095,9 @@ function render(){
 document.addEventListener('click',e=>{
   const a=e.target.closest('.side a[data-p]');
   // 動画は構成シートが先（ここで文面と画像を管理する）。LPは系統が先
-  if(a){cur=a.dataset.p;tab=cur.slice(0,4)==='vid:'?'sheet':'graph';render();return;}
+  if(a){cur=a.dataset.p;
+    tab = cur==='__moods__' ? MOOD_IDS[0] : (cur.slice(0,4)==='vid:'?'sheet':'graph');
+    render();return;}
   const b=e.target.closest('.tabs button'); if(b){tab=b.dataset.t;render();return;}
   // 派生図の節 → その版の原稿と指摘を右に出す
   const gn=e.target.closest('.gnode[data-v]');
