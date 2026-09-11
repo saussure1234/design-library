@@ -10,15 +10,19 @@
 
 :root{
   
-  --bg:#eff4fa;              
-  --navy:#0f2b4a;          
-  --blue:#1765ab;          
+
+
+
+  
+  --bg:#f6f5f1;              
+  --navy:#2a2722;          
+  --blue:#6b6152;          
   --blue-dark:#0b56a2;    
-  --ink:#111;             
-  --text:#2b3440;         
+  --ink:#1a1815;             
+  --text:#3d3a34;         
   --mute:#5a6b7d;         
-  --line:#c9d7e6;         
-  --card:#fff;            
+  --line:#ddd8cd;         
+  --card:#ffffff;            
 
   
   --wrap:1200px;
@@ -47,8 +51,8 @@
   
   --font-head:"YuMincho","Yu Mincho","Hiragino Mincho ProN",serif;
   --font-body:"YuGothic","Yu Gothic","Hiragino Sans",sans-serif;
-  --r-s:3px;   
-  --r-l:6px;   
+  --r-s:2px;   
+  --r-l:3px;   
 
   
   --font-head:"YuMincho","Yu Mincho","Hiragino Mincho ProN",serif;
@@ -720,7 +724,9 @@ small, .note-s{ font-size:max(12px, .82em); line-height:1.55 }
 
 
 
-.scompare__table tbody th.scompare__row{
+.scompare__table tbody th
+.scompare__table--selfonly td:empty::after{ content:"—"; opacity:.28 }
+.scompare__row{
   
   padding-left:10px;
   font-weight:700;
@@ -1306,6 +1312,9 @@ small, .note-s{ font-size:max(12px, .82em); line-height:1.55 }
 
 .speople__name small{ display:block; margin-top:.3em; font-weight:400;
   font-size:.82em; color:color-mix(in srgb, var(--navy) 62%, transparent) }
+
+.speople__grid--nophoto .speople__card{ padding-top:clamp(20px,2vw,28px) }
+.speople__grid--nophoto .speople__name{ margin-top:0 }
 .speople__name{
   margin:clamp(14px,1.3vw,20px) 0 0;
   font-family:var(--font-head);
@@ -1463,6 +1472,11 @@ small, .note-s{ font-size:max(12px, .82em); line-height:1.55 }
   margin:clamp(20px,2.6vw,38px) 0 0;
   padding:0; list-style:none;
 }
+
+.sflow__list--nophoto{ display:grid; gap:clamp(14px,1.6vw,24px) }
+.sflow__list--nophoto .sflow__row{ display:flex; align-items:baseline;
+  gap:clamp(12px,1.4vw,20px); margin:0; padding-left:0 }
+.sflow__list--nophoto .sflow__shot{ display:none }
 .sflow__row{
   display:grid;
   grid-template-columns:var(--sflow-photo) auto minmax(0,1fr);
@@ -2337,7 +2351,9 @@ small, .note-s{ font-size:max(12px, .82em); line-height:1.55 }
 
 <section class="sfvbar" aria-label="主なご依頼企業">
   <div class="sfv__bar">
-    <ul class="sfv__logos">
+    
+
+<ul class="sfv__logos">
       <li><img src="img/logo05.svg"  width="386" height="209" alt="Logo 05" loading="lazy"></li>
       <li><img src="img/logo06.svg" width="342" height="183" alt="Logo 06" loading="lazy"></li>
       <li><img src="img/logo03.svg"     width="308" height="186" alt="Logo 03" loading="lazy"></li>
@@ -2345,6 +2361,9 @@ small, .note-s{ font-size:max(12px, .82em); line-height:1.55 }
       <li><img src="img/logo12.svg" width="444" height="205" alt="Logo 12" loading="lazy"></li>
       <li class="sfv__etc">ほか</li>
     </ul>
+
+
+
   </div>
 </section>
 
@@ -2377,7 +2396,9 @@ small, .note-s{ font-size:max(12px, .82em); line-height:1.55 }
     <p class="scompare__note"><span class="scompare__nb">会社案内を作る手段は</span><wbr><span class="scompare__nb">いくつかあります。</span><wbr><span class="scompare__nb">それぞれに向き不向きがあるため、</span><wbr><span class="scompare__nb">比較のうえで</span><wbr><span class="scompare__nb">ご判断ください。</span></p>
 
     <div class="scompare__scroll">
-      <table class="scompare__table">
+      
+
+<table class="scompare__table">
         <colgroup><col><col><col><col><col></colgroup>
         <thead>
           <tr>
@@ -2442,6 +2463,9 @@ small, .note-s{ font-size:max(12px, .82em); line-height:1.55 }
           </tr>
         </tbody>
       </table>
+
+
+
     </div>
 
     <p class="scompare__close"><span class="scompare__nb">すでに構成も原稿もお決まりで、</span><wbr><span class="scompare__nb">費用を最優先されるなら</span><wbr><span class="scompare__nb">印刷通販が適しています。</span><br><span class="scompare__nb">何を載せるかから</span><wbr><span class="scompare__nb">決めていきたい場合に、</span><wbr><span class="scompare__nb">私たちをお選びください。</span></p>
@@ -2537,7 +2561,9 @@ small, .note-s{ font-size:max(12px, .82em); line-height:1.55 }
 
     
 
-    <div class="srecord__marquee">
+    
+
+<div class="srecord__marquee">
       
       <div class="srecord__track">
         <div class="srecord__set">
@@ -2569,6 +2595,9 @@ small, .note-s{ font-size:max(12px, .82em); line-height:1.55 }
           <span class="srecord__logo"><img src="img/logo11.svg" alt="Logo 11" loading="lazy" decoding="async"></span>
         </div>
       </div>
+
+
+
     </div>
 
     <dl class="srecord__stats">
@@ -2599,7 +2628,9 @@ small, .note-s{ font-size:max(12px, .82em); line-height:1.55 }
   <div class="speople__inner">
     <h2 class="speople__h2">講師紹介</h2>
     <hr class="speople__rule">
-    <div class="speople__grid">
+    
+
+<div class="speople__grid">
       <div class="speople__card">
         <div class="speople__ph"></div>
         <p class="speople__name">講師名 01</p>
@@ -2619,6 +2650,9 @@ small, .note-s{ font-size:max(12px, .82em); line-height:1.55 }
         <p class="speople__txt">経歴と担当範囲を2行で書きます。ここは差し替え用の見本です</p>
       </div>
     </div>
+
+
+
   </div>
 </section>
 
@@ -2663,7 +2697,9 @@ small, .note-s{ font-size:max(12px, .82em); line-height:1.55 }
     <p class="sflow__eyebrow"><span>進め方</span></p>
     <h2 class="sflow__h2">プロジェクトの進め方</h2>
 
-    <ol class="sflow__list">
+    
+
+<ol class="sflow__list">
       <li class="sflow__row">
         <figure class="sflow__shot">
           <img src="img/ph29.svg" alt="見本の画像" loading="lazy" decoding="async">
@@ -2732,6 +2768,9 @@ small, .note-s{ font-size:max(12px, .82em); line-height:1.55 }
       </li>
     </ol>
 
+
+
+
     <div class="sflow__notes">
       <p class="sflow__note">御社の特色を正しく読み取れているかは、形にしてご覧いただかないと分からないため、<br class="sflow__brp">修正回数を無制限にしています。</p>
       <p class="sflow__note">原稿もお写真もお持ちでない状態から始まる案件がほとんどです。<br class="sflow__brp">取材とカメラマンの手配も含めてご対応します。</p>
@@ -2745,6 +2784,7 @@ small, .note-s{ font-size:max(12px, .82em); line-height:1.55 }
     <h2 class="sprice__h">料金</h2>
     <p class="sprice__sub">ページ数ごとの明朗料金。印刷費まで含めた総額でご提示します</p>
     <p class="sprice__lead">お問い合わせをいただく前に、おおよその費用がお分かりいただけます。<br>社内で予算をご申請いただく際の資料としても、そのままお使いください。</p>
+
 
     <div class="sprice__tabs">
       <input class="sprice__radio" type="radio" name="prtab" id="prtab-1" checked>
@@ -2926,6 +2966,10 @@ small, .note-s{ font-size:max(12px, .82em); line-height:1.55 }
     </div>
       </div>
     </div>
+
+
+
+
 
     <p class="sprice__close nbwrap"><span class="nb">追加費用が後から</span><wbr><span class="nb">発生しないよう、</span><wbr><span class="nb">着手前に総額を</span><wbr><span class="nb">ご提示します。</span><wbr><span class="nb">修正回数は無制限ですが、</span><wbr><span class="nb">それによる追加費用は</span><wbr><span class="nb">いただきません。</span></p>
     <p class="sprice__tax">表示価格は税抜価格です。</p>

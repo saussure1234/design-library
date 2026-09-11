@@ -10,15 +10,19 @@
 
 :root{
   
-  --bg:#eff4fa;              
-  --navy:#0f2b4a;          
-  --blue:#1765ab;          
+
+
+
+  
+  --bg:#fff6ef;              
+  --navy:#22303f;          
+  --blue:#c2520c;          
   --blue-dark:#0b56a2;    
-  --ink:#111;             
-  --text:#2b3440;         
+  --ink:#161b22;             
+  --text:#3a4450;         
   --mute:#5a6b7d;         
-  --line:#c9d7e6;         
-  --card:#fff;            
+  --line:#e8cdb5;         
+  --card:#ffffff;            
 
   
   --wrap:1200px;
@@ -47,8 +51,8 @@
   
   --font-head:"Toppan Bunkyu Midashi Gothic","Hiragino Sans",sans-serif;
   --font-body:"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",system-ui,sans-serif;
-  --r-s:3px;   
-  --r-l:6px;   
+  --r-s:6px;   
+  --r-l:14px;   
 
   
   --font-head:"Toppan Bunkyu Midashi Gothic","Hiragino Sans",sans-serif;
@@ -1177,6 +1181,11 @@ body.cta-hide .scontact__fixed{
   margin:clamp(20px,2.6vw,38px) 0 0;
   padding:0; list-style:none;
 }
+
+.sflow__list--nophoto{ display:grid; gap:clamp(14px,1.6vw,24px) }
+.sflow__list--nophoto .sflow__row{ display:flex; align-items:baseline;
+  gap:clamp(12px,1.4vw,20px); margin:0; padding-left:0 }
+.sflow__list--nophoto .sflow__shot{ display:none }
 .sflow__row{
   display:grid;
   grid-template-columns:var(--sflow-photo) auto minmax(0,1fr);
@@ -1590,7 +1599,9 @@ body.cta-hide .scontact__fixed{
 
 
 
-.scompare__table tbody th.scompare__row{
+.scompare__table tbody th
+.scompare__table--selfonly td:empty::after{ content:"—"; opacity:.28 }
+.scompare__row{
   
   padding-left:10px;
   font-weight:700;
@@ -2372,7 +2383,9 @@ body.cta-hide .scontact__fixed{
 
     
 
-    <div class="srecord__marquee">
+    
+
+<div class="srecord__marquee">
       
       <div class="srecord__track">
         <div class="srecord__set">
@@ -2404,6 +2417,9 @@ body.cta-hide .scontact__fixed{
           <span class="srecord__logo"><img src="img/logo11.svg" alt="Logo 11" loading="lazy" decoding="async"></span>
         </div>
       </div>
+
+
+
     </div>
 
     <dl class="srecord__stats">
@@ -2435,7 +2451,9 @@ body.cta-hide .scontact__fixed{
     <p class="sflow__eyebrow"><span>進め方</span></p>
     <h2 class="sflow__h2">プロジェクトの進め方</h2>
 
-    <ol class="sflow__list">
+    
+
+<ol class="sflow__list">
       <li class="sflow__row">
         <figure class="sflow__shot">
           <img src="img/ph29.svg" alt="見本の画像" loading="lazy" decoding="async">
@@ -2504,6 +2522,9 @@ body.cta-hide .scontact__fixed{
       </li>
     </ol>
 
+
+
+
     <div class="sflow__notes">
       <p class="sflow__note">御社の特色を正しく読み取れているかは、形にしてご覧いただかないと分からないため、<br class="sflow__brp">修正回数を無制限にしています。</p>
       <p class="sflow__note">原稿もお写真もお持ちでない状態から始まる案件がほとんどです。<br class="sflow__brp">取材とカメラマンの手配も含めてご対応します。</p>
@@ -2517,6 +2538,7 @@ body.cta-hide .scontact__fixed{
     <h2 class="sprice__h">料金</h2>
     <p class="sprice__sub">ページ数ごとの明朗料金。印刷費まで含めた総額でご提示します</p>
     <p class="sprice__lead">お問い合わせをいただく前に、おおよその費用がお分かりいただけます。<br>社内で予算をご申請いただく際の資料としても、そのままお使いください。</p>
+
 
     <div class="sprice__tabs">
       <input class="sprice__radio" type="radio" name="prtab" id="prtab-1" checked>
@@ -2699,6 +2721,10 @@ body.cta-hide .scontact__fixed{
       </div>
     </div>
 
+
+
+
+
     <p class="sprice__close nbwrap"><span class="nb">追加費用が後から</span><wbr><span class="nb">発生しないよう、</span><wbr><span class="nb">着手前に総額を</span><wbr><span class="nb">ご提示します。</span><wbr><span class="nb">修正回数は無制限ですが、</span><wbr><span class="nb">それによる追加費用は</span><wbr><span class="nb">いただきません。</span></p>
     <p class="sprice__tax">表示価格は税抜価格です。</p>
 
@@ -2716,7 +2742,9 @@ body.cta-hide .scontact__fixed{
     <p class="scompare__note"><span class="scompare__nb">会社案内を作る手段は</span><wbr><span class="scompare__nb">いくつかあります。</span><wbr><span class="scompare__nb">それぞれに向き不向きがあるため、</span><wbr><span class="scompare__nb">比較のうえで</span><wbr><span class="scompare__nb">ご判断ください。</span></p>
 
     <div class="scompare__scroll">
-      <table class="scompare__table">
+      
+
+<table class="scompare__table">
         <colgroup><col><col><col><col><col></colgroup>
         <thead>
           <tr>
@@ -2781,6 +2809,9 @@ body.cta-hide .scontact__fixed{
           </tr>
         </tbody>
       </table>
+
+
+
     </div>
 
     <p class="scompare__close"><span class="scompare__nb">すでに構成も原稿もお決まりで、</span><wbr><span class="scompare__nb">費用を最優先されるなら</span><wbr><span class="scompare__nb">印刷通販が適しています。</span><br><span class="scompare__nb">何を載せるかから</span><wbr><span class="scompare__nb">決めていきたい場合に、</span><wbr><span class="scompare__nb">私たちをお選びください。</span></p>
