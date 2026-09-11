@@ -17,7 +17,7 @@
   --ink:#111;             
   --text:#2b3440;         
   --mute:#5a6b7d;         
-  --line:#d5e0ec;         
+  --line:#c9d7e6;         
   --card:#fff;            
 
   
@@ -33,7 +33,7 @@
   
   --h2-w:700;                          
   --h2-lh:1.4;
-  --h2-ls:.02em;
+  --h2-ls:.00em;   
   --lead:clamp(15px,1.25vw,18px);      
   --body:clamp(14px,1.11vw,16px);      
   --small:clamp(12px,.9vw,13px);       
@@ -296,6 +296,8 @@ body.cta-hide .scontact__fixed{
 
 
 .sfv__h1 .sfv__hl{ color:var(--blue); }
+
+@media (max-width:400px){ .sfv__h1{ font-size:27px } }
 
 .sfv__lead{
   
@@ -1254,6 +1256,17 @@ body.cta-hide .scontact__fixed{
   width:auto; height:auto; object-fit:contain; display:block;
   
 }
+
+.srecord__track--static{ animation:none; flex-wrap:wrap; justify-content:center;
+  width:auto; gap:clamp(8px,.9vw,12px) }
+.srecord__marquee:has(.srecord__track--static){
+  overflow:visible; -webkit-mask-image:none; mask-image:none }
+.srecord__track--static .srecord__set{ flex-wrap:wrap; justify-content:center;
+  gap:clamp(8px,.9vw,12px); padding-right:0 }
+.srecord__track--static .srecord__logo{
+  padding:.44em 1.05em; border:1px solid var(--line); border-radius:2px;
+  font-size:clamp(12.5px,.95vw,14.5px); font-weight:600; color:var(--navy);
+  white-space:nowrap; background:var(--card) }
 @keyframes srecordScroll{ from{transform:translateX(0)} to{transform:translateX(-50%)} }
 @media (prefers-reduced-motion:reduce){
   .srecord__track{animation:none; flex-wrap:wrap; justify-content:center}
@@ -1307,6 +1320,9 @@ body.cta-hide .scontact__fixed{
 }
 .speople__ph img{ width:100%; height:100%; object-fit:cover; display:block }
 
+
+.speople__name small{ display:block; margin-top:.3em; font-weight:400;
+  font-size:.82em; color:color-mix(in srgb, var(--navy) 62%, transparent) }
 .speople__name{
   margin:clamp(14px,1.3vw,20px) 0 0;
   font-family:var(--font-head);
@@ -1616,6 +1632,10 @@ body.cta-hide .scontact__fixed{
 }
 .sprice__tab:hover{ color:var(--blue) }
 .sprice__panel{ display:none }
+
+.sprice__panels--static{ display:grid; gap:clamp(12px,1.4vw,20px);
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr)) }
+.sprice__panels--static .sprice__panel{ display:block }
 .sprice__panels{ margin:0 }
 
 
@@ -2311,9 +2331,9 @@ body.cta-hide .scontact__fixed{
 
       
       
-      <h1 class="sfv__h1">御社の<span class="sfv__hl">“らしさ”</span>を<br>読み解いて、<br class="sfv__spbr">伝わる一冊に<br>翻訳<span class="sfv__gloss">（デザイン）</span>します</h1>
+      <h1 class="sfv__h1">御社の<span class="sfv__hl">“らしさ”</span>を<br>読み解いて、<wbr><br class="sfv__spbr">伝わる一冊に<br>翻訳<span class="sfv__gloss">（デザイン）</span>します</h1>
 
-      <p class="sfv__lead">何を載せるかが決まっていない状態からでも構いません。<br class="sfv__pcbr">企画・取材・撮影・コピー・デザイン・印刷まで一貫対応。<br class="sfv__pcbr">デザインは3案以上、修正回数は無制限。<br class="sfv__pcbr">納得いただけるまでお付き合いします。</p>
+      <p class="sfv__lead nbwrap"><span class="nb">何を載せるかが</span><wbr><span class="nb">決まっていない</span><wbr><span class="nb">状態からでも構いません。</span><br class="sfv__pcbr">企画・取材・撮影・コピー・デザイン・印刷まで一貫対応。<br class="sfv__pcbr">デザインは3案以上、修正回数は無制限。<br class="sfv__pcbr">納得いただけるまでお付き合いします。</p>
 
     </div>
 
@@ -2359,7 +2379,7 @@ body.cta-hide .scontact__fixed{
       <li class="spain__item">自社の強みを説明しようとすると、どこにでもある言葉になってしまう</li>
     </ul>
 
-    <p class="spain__close">決まっているのは、作らなければならないという事実だけ。<br class="spain__brp">その状態からご相談いただいて構いません。最後の一つについては、私たちの仕事そのものです。</p>
+    <p class="spain__close nbwrap"><span class="nb">決まっているのは、</span><wbr><span class="nb">作らなければならないという</span><wbr><span class="nb">事実だけ。</span><br class="spain__brp"><span class="nb">その状態から</span><wbr><span class="nb">ご相談いただいて構いません。</span><wbr><span class="nb">最後の一つについては、</span><wbr><span class="nb">私たちの仕事そのものです。</span></p>
   </div>
 </section>
 
@@ -2924,7 +2944,7 @@ body.cta-hide .scontact__fixed{
       </div>
     </div>
 
-    <p class="sprice__close">追加費用が後から発生しないよう、着手前に総額をご提示します。修正回数は無制限ですが、それによる追加費用はいただきません。</p>
+    <p class="sprice__close nbwrap"><span class="nb">追加費用が後から</span><wbr><span class="nb">発生しないよう、</span><wbr><span class="nb">着手前に総額を</span><wbr><span class="nb">ご提示します。</span><wbr><span class="nb">修正回数は無制限ですが、</span><wbr><span class="nb">それによる追加費用は</span><wbr><span class="nb">いただきません。</span></p>
     <p class="sprice__tax">表示価格は税抜価格です。</p>
 
   </div>
@@ -2962,7 +2982,7 @@ body.cta-hide .scontact__fixed{
           <span class="sfaq__qtext"><span class="sfaq__nb">修正回数が無制限とありますが、</span><wbr><span class="sfaq__nb">追加費用はかかりませんか</span></span>
           <span class="sfaq__mark" aria-hidden="true"></span>
         </summary>
-        <p class="sfaq__a">修正による追加費用はいただきません。無制限としているのは、御社の特色を正しく読み取れているかは、形にしてご覧いただかないと分からないためです。</p>
+        <p class="sfaq__a nbwrap"><span class="nb">修正による追加費用は</span><wbr><span class="nb">いただきません。</span><wbr><span class="nb">無制限としているのは、</span><wbr><span class="nb">御社の特色を</span><wbr><span class="nb">正しく読み取れているかは、</span><wbr><span class="nb">形にしてご覧いただかないと</span><wbr><span class="nb">分からないためです。</span></p>
       </details>
 
       <details class="sfaq__item">
@@ -2989,7 +3009,7 @@ body.cta-hide .scontact__fixed{
           <span class="sfaq__qtext"><span class="sfaq__nb">遠方ですが</span><wbr><span class="sfaq__nb">対応いただけますか</span></span>
           <span class="sfaq__mark" aria-hidden="true"></span>
         </summary>
-        <p class="sfaq__a">全国からご依頼いただけます。関東近県は直接お伺いし、それ以外はオンラインで進めます。取材や撮影が必要な場合は出張して対応します。</p>
+        <p class="sfaq__a nbwrap"><span class="nb">全国から</span><wbr><span class="nb">ご依頼いただけます。</span><wbr><span class="nb">関東近県は直接お伺いし、</span><wbr><span class="nb">それ以外は</span><wbr><span class="nb">オンラインで進めます。</span><wbr><span class="nb">取材や撮影が必要な場合は</span><wbr><span class="nb">出張して対応します。</span></p>
       </details>
 
       <details class="sfaq__item">
@@ -2998,7 +3018,7 @@ body.cta-hide .scontact__fixed{
           <span class="sfaq__qtext"><span class="sfaq__nb">制作したデータは</span><wbr><span class="sfaq__nb">納品してもらえますか</span></span>
           <span class="sfaq__mark" aria-hidden="true"></span>
         </summary>
-        <p class="sfaq__a">はい、ご希望に応じて納品します。増刷をご自身で手配いただくことも可能です。形式については、その後の運用方法をお聞きしたうえでご相談させてください。</p>
+        <p class="sfaq__a nbwrap"><span class="nb">はい、</span><wbr><span class="nb">ご希望に応じて納品します。</span><wbr><span class="nb">増刷をご自身で</span><wbr><span class="nb">手配いただくことも可能です。</span><wbr><span class="nb">形式については、</span><wbr><span class="nb">その後の運用方法を</span><wbr><span class="nb">お聞きしたうえで</span><wbr><span class="nb">ご相談させてください。</span></p>
       </details>
 
     </div>

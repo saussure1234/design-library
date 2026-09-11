@@ -52,7 +52,10 @@ addEventListener("load",function(){
   // 画面に入ったとき出る演出を全部出し切る（headless では発火しないことがある）
   setInterval(function(){document.querySelectorAll(".fx").forEach(function(e){e.classList.add("hh-in")})},60);
   setTimeout(function(){
-    var W=innerWidth, out=[];
+    // 🚨 soft はここで宣言する。宣言が後ろにあると、前方で soft.push した瞬間に
+    //    「soft は undefined」で probe 全体が死ぬ。マーカーは1つも描かれず、
+    //    詳細も空になり、それでも項目は緑に見えた（2026-09-11に踏んだ）。
+    var W=innerWidth, out=[], soft=[];
     if(document.documentElement.scrollWidth > W+1)
       out.push("横スクロール scrollWidth="+document.documentElement.scrollWidth+" > "+W);
     var over=[], clip=[];
@@ -96,9 +99,21 @@ addEventListener("load",function(){
       if(!/^(P|H1|H2|H3|H4)$/.test(e.tagName)) return;
       var t=""; e.childNodes.forEach(function(n){ if(n.nodeType===3) t+=n.nodeValue });
       t=t.trim();
-      if(t.length<8 || t.length>40) return;          // 本文の長文は対象外
+      // 🚨 40字で切っていたので、長文の最後に「ん。」だけ落ちるのを一切拾えなかった
+      //    （2026-09-11、実測で scompare__close 55/1186px＝4.6%、sflow__note 33/942px＝3.5%）。
+      //    長文は行が埋まるので誤検出しやすい。→ 長文だけ基準を厳しくして拾う。
+      var lim = t.length>40 ? 0.12 : 0.22;
+      // 🚨 読点で区切った【列挙】は散文ではない。どの幅でも最後の行に1語だけ残るのが
+      //    普通で、直しようがない（2026-09-11、「よく出るご要望」の11語で幅ごとに
+      //    順番に赤が出て、追いかけるほど語を削るしかなくなった）。
+      //    見分け方：読点が4つ以上あって句点が無い＝列挙。
+      if((t.match(/、/g)||[]).length>=4 && t.indexOf("。")<0) return;
+      if(t.length<8) return;
+      // 器（flex/grid）を selectNodeContents すると行でない矩形が並ぶ。中に箱があるものは見ない
+      if(e.querySelector("div,figure,ul,ol,table")) return;
       // 長文が <span>/<br> で区切られていると、断片だけ短く見える。親で判定して除く
-      if(e.parentElement && e.parentElement.textContent.trim().length > 80) return;
+      if(t.length<=40 && e.parentElement
+         && e.parentElement.textContent.trim().length > 80) return;
       var rg=document.createRange(); rg.selectNodeContents(e);
       var rs=[].slice.call(rg.getClientRects()).filter(function(r){return r.width>1&&r.height>1});
       if(rs.length<2) return;
@@ -107,7 +122,7 @@ addEventListener("load",function(){
       // 狭い器（カード・表のセル）の中で折れるのは自然。広い場所のものだけ見る
       if(mx < W*0.55) return;
       if(e.closest("table")) return;                 // 表の中は器の都合で折れる
-      if(last < mx*0.22 && orphan.length<6)
+      if(last < mx*lim && orphan.length<6)
         orphan.push("「"+t.slice(0,18)+"」最終行"+Math.round(last)+"/"+Math.round(mx)+"px");
     });
     if(orphan.length) out.push("最終行が1〜2文字だけ落ちている: "+orphan.join(" / "));
@@ -140,7 +155,7 @@ addEventListener("load",function(){
           +"「"+(sm.textContent.trim().slice(0,10)||"画像")+"」"+Math.round(mn)+"px ／ 隣は"+Math.round(mx)+"px");
       }
     });
-    if(scale.length) out.push("［参考］横に並ぶ要素で大きさに差: "+scale.join(" / "));
+    if(scale.length) soft.push("［参考］横に並ぶ要素で大きさに差: "+scale.join(" / "));
 
     // ★文字が読めない：何かに覆われている／地と同系色で沈んでいる
     function lum(c){
@@ -175,13 +190,12 @@ addEventListener("load",function(){
         if(cr<1.35&&unread.length<5) unread.push("「"+t.slice(0,12)+"」地と同系色（比 "+cr.toFixed(1)+"）");
       }
     });
-    if(unread.length) out.push("［参考］地と近い色の文字: "+unread.join(" / "));
+    if(unread.length) soft.push("［参考］地と近い色の文字: "+unread.join(" / "));
     if(pre.length) out.push("最初から見えている（スクロール演出が効いていない）: "+pre.join(" / "));
     if(over.length) out.push("文字が画面外へ: "+over.join(" / "));
     if(clip.length) out.push("文字が切れている: "+clip.join(" / "));
 
     /* ★ここから下は soft（幅の合否は変えない。見立てとして出すだけ） */
-    var soft=[];
 
     // ★明示的な <br> で切ったコピーの「余り」。
     //   Chrome でぴったり収まっていても、実機Safariは字が数%広いので溢れて1行増える。
@@ -202,25 +216,47 @@ addEventListener("load",function(){
       if(e.textContent.trim().length > 60) return;   // 本文の長文は対象外
       // ★display:none の <br>（幅ごとに出し分けている改行）は改行しない。
       //   これを数えると「実際は1行なのに2つに割れている」と誤って測る。
-      var segs=[], cur="";
+      // 🚨 区間の中に折り位置（<wbr> か .nb が2つ以上）があるなら、実機で数%広くても
+      //    意味の切れ目で1行下がるだけ＝崩れない。折り位置が無い区間だけが危ない
+      //    （2026-09-11、h1の「翻訳（デザイン）します」で余り2%が出たが、wbr を
+      //     入れれば実害は無いのに赤が消えなかった）。
+      var segs=[], cur="", curOK=false, oks=[];
       e.childNodes.forEach(function(n){
-        if(n.nodeName==="BR" && getComputedStyle(n).display!=="none"){ segs.push(cur); cur=""; }
-        else cur+=n.textContent;
+        if(n.nodeName==="BR" && getComputedStyle(n).display!=="none"){
+          segs.push(cur); oks.push(curOK); cur=""; curOK=false;
+        } else {
+          cur+=n.textContent;
+          if(n.nodeName==="WBR") curOK=true;
+          if(n.nodeType===1 && n.querySelector && n.querySelector("wbr")) curOK=true;
+        }
       });
-      segs.push(cur);
-      segs=segs.map(function(x){return x.trim()}).filter(Boolean);
-      if(segs.length<2) return;
+      segs.push(cur); oks.push(curOK);
+      var keep=[];
+      segs.forEach(function(x,i){ if(x.trim()) keep.push({t:x.trim(), ok:oks[i]}) });
+      if(keep.length<2) return;
+      segs=keep.map(function(x){return x.t});
       var m=document.createElement("span");
       m.style.cssText="position:absolute;visibility:hidden;white-space:nowrap;left:-9999px";
       m.style.fontFamily=s.fontFamily; m.style.fontSize=s.fontSize;
       m.style.fontWeight=s.fontWeight; m.style.letterSpacing=s.letterSpacing;
       document.body.appendChild(m);
-      segs.forEach(function(tx){
+      keep.forEach(function(kk){
+        if(kk.ok) return;                  // 区間の中で折れるので実機でも崩れない
+        var tx=kk.t;
         m.textContent=tx;
         var w=m.getBoundingClientRect().width, sl=(avail-w)/avail;
-        if(sl<0.10 && tight.length<6)
+        // 🚨 余りがマイナス＝その区間は今の幅ですでに折れている。<wbr> が入っていれば
+        //    意味の切れ目で折れているので、これは「明示改行のせいで1行増える」話では
+        //    ない。ここを一緒に報せると、スマホ幅で必ず赤が出て見なくなる
+        //    （2026-09-11、375pxで「余り-19%」と出したのが誤検出だった）。
+        //    白紙に戻して: 1行に収まっているのに余りが薄い区間だけを警告する。
+        if(sl>=0 && sl<0.10 && tight.length<6)
           tight.push("「"+tx.slice(0,14)+"」"+Math.round(w)+"/"+Math.round(avail)
                      +"px（余り"+Math.round(sl*100)+"%）");
+        // ただし折り返せない指定（nowrap）で溢れているなら、それは欠陥。
+        if(sl<0 && /nowrap|pre$/.test(s.whiteSpace) && tight.length<6)
+          tight.push("「"+tx.slice(0,14)+"」"+Math.round(w)+"/"+Math.round(avail)
+                     +"px（nowrapで溢れている）");
       });
       m.remove();
     });
@@ -258,6 +294,10 @@ addEventListener("load",function(){
         if(e instanceof SVGElement) return false;
         var s=getComputedStyle(e);
         if(s.display==="none"||s.visibility==="hidden"||s.position==="absolute") return false;
+        // 🚨 inline の span は「横に並ぶ要素」ではない。段落の中で折り返すと
+        //    2行にまたがった箱になり、隣の span と上端が1行分ずれる。それを
+        //    「揃っていない」と報せるのは誤検出（2026-09-11、strans__nb で48px差）。
+        if(s.display==="inline") return false;
         var r=e.getBoundingClientRect();
         return r.width>60 && r.height>40;
       });
@@ -346,7 +386,11 @@ addEventListener("load",function(){
       if(thin && !e.textContent.trim()){
         lowc.push("罫 "+nm(e)+"（幅"+Math.round(r.width)+"px）比"+cr.toFixed(2)+"（地とほぼ同じ＝見えていない）");
       } else if(!thin && r.height>=24 && r.height<=140 && e.textContent.trim().length>=2
-                && /^(A|BUTTON)$/.test(e.tagName)){
+                && /^(A|BUTTON)$/.test(e.tagName)
+                // 🚨 塗りが地と同色でも、影や枠があれば人には分かる。色の比だけで
+                //    落とすと偽陽性になる（2026-09-11、罫を使わない約束のボタンで踏んだ）。
+                && s.boxShadow==="none" && parseFloat(s.borderTopWidth)<0.5
+                && s.outlineStyle==="none"){
         // 面はボタン・リンクの塊だけ。div を全部見ると入れ子で同じ地を何度も数える
         lowc.push("面 "+e.tagName.toLowerCase()+"."+nm(e)+"「"
           +e.textContent.trim().slice(0,12)+"」比"+cr.toFixed(2)+"（塗りが地と同色＝埋もれている）");
@@ -355,7 +399,84 @@ addEventListener("load",function(){
     if(lowc.length) soft.push("地との差が小さくて沈んでいる罫・面: "+lowc.join(" / "));
 
     // ★判定は画像からしか読めないので、項目ごとに16pxの色マーカーを左上に並べる。
-    //   緑=通過 / 赤=要対応。順は resp / orphan / br / embed / align / contrast。
+    // ── 行頭の禁則（長音・小書き仮名・句読点・中黒が行の先頭に落ちていないか）
+    //   ★ここは長く「私が画像を見る」項目だった。文字ごとの矩形を測れば機械で出せる
+    //     （2026-09-11、実測で 375px に「っ」「・」の2件。目では見落としていた）。
+    //   🚨 ブラウザは 。、」 の禁則は自前でやるが、中黒・小書き仮名・長音は落とす。
+    //   🚨 全要素×全文字で測ると重い。自分の文字を4字以上持つ要素だけ・10件で打ち切る。
+    var kin=[], KINSET="、。，．・）」』】〉ーぁぃぅぇぉっゃゅょゎヵヶァィゥェォッャュョ！？：；";
+    document.querySelectorAll("p,li,h1,h2,h3,h4,dd,summary,td,th").forEach(function(e){
+      if(kin.length>=10) return;
+      var st=getComputedStyle(e);
+      if(st.display==="none"||st.visibility==="hidden") return;
+      var tn=null;
+      [].forEach.call(e.childNodes,function(n){
+        if(n.nodeType===3 && !tn && n.nodeValue.trim().length>3) tn=n; });
+      if(!tn) return;
+      var txt=tn.nodeValue, prevTop=null, rg=document.createRange();
+      for(var i=0;i<txt.length;i++){
+        if(!txt[i].trim()) continue;
+        rg.setStart(tn,i); rg.setEnd(tn,i+1);
+        var r=rg.getBoundingClientRect();
+        if(r.height<1) continue;
+        if(prevTop!==null && r.top>prevTop+2 && KINSET.indexOf(txt[i])>=0){
+          kin.push("「"+txt[i]+"」が行頭 "+nm(e)+"（…"
+            +txt.slice(Math.max(0,i-8),i+6).replace(/\s+/g," ")+"…）");
+          if(kin.length>=10) break;
+        }
+        prevTop=r.top;
+      }
+    });
+    if(kin.length) soft.push("行頭に落ちてはいけない字がある: "+kin.join(" / "));
+
+    // ── 出るはずの中身が丸ごと消えていないか
+    //   🚨 これが無くて実害を出した（2026-09-11）。タブの中身を差し替えるときに
+    //      タブのラジオ（:checked で出す仕掛け）を外したので、資金計画の3ブロックが
+    //      全部 display:none になり、節が見出しだけになった。壊れてはいないので
+    //      レスポンシブも色比も改行も全部通り、リンクを渡す判断まで来てしまった。
+    //   ★判定：同じ親の同じ種類の要素が【1つも見えていない】。
+    //      働いているタブ・アコーディオンは必ず1つ見えているので誤検出しない。
+    //      閉じたFAQ（details）は決めごとなので対象外。
+    var gone=[], goneK=[], seenG={};
+    document.querySelectorAll("body *").forEach(function(e){
+      if(e instanceof SVGElement) return;
+      if(/^(SCRIPT|STYLE|TEMPLATE|NOSCRIPT|LINK|META|TITLE|OPTION|HEAD)$/.test(e.tagName)) return;
+      if(e.closest("details")||e.closest("dialog")||e.closest("[hidden]")) return;
+      var s3=getComputedStyle(e);
+      if(!(s3.display==="none"||s3.visibility==="hidden")) return;
+      if((e.textContent||"").trim().length<20) return;
+      // 🚨 追従CTAは「FVを見ている間は隠す」のが正しい作り。スクロールで出るものを
+      //    「消えている」と報せると毎回赤が出る（2026-09-11、.scontact__fixed で踏んだ）。
+      if(s3.position==="fixed"||s3.position==="sticky") return;
+      var anc=e.parentElement, fx=false;
+      for(var q=anc; q && q!==document.body; q=q.parentElement){
+        var sq=getComputedStyle(q);
+        if(sq.position==="fixed"||sq.position==="sticky"){ fx=true; break; }
+      }
+      if(fx) return;
+      var par=e.parentElement; if(!par) return;
+      var k=e.tagName+"."+nm(e);
+      var kin=[].slice.call(par.children).filter(function(x){return x.tagName+"."+nm(x)===k});
+      var anyOn=kin.some(function(x){var s4=getComputedStyle(x);
+        return s4.display!=="none" && s4.visibility!=="hidden"});
+      if(anyOn) return;                          // 1つでも見えていればタブ＝正常
+      var gk=nm(par)+">"+k;
+      if(seenG[gk]) return; seenG[gk]=1;
+      if(gone.length<6){
+        goneK.push(gk);
+        gone.push(nm(par)+" の中の "+k+" が"+kin.length+"つとも見えていない"
+          +"（「"+e.textContent.replace(/\s+/g," ").trim().slice(0,18)+"…」）");
+      }
+    });
+    // 🚨 out に入れてはいけない。レスポンシブの出し分け（ある幅だけ隠す）は正しい作りで、
+    //    375pxだけ隠れているものを事故と報せると毎回赤が出る（2026-09-11、SHARE /4 の
+    //    .fcaps で踏んだ）。事故かどうかは「どの幅でも1つも見えない」で決まるので、
+    //    幅をまたいで突き合わせる Python 側に判断を渡す。
+    if(gone.length) soft.push("出るはずの中身が消えている: "+gone.join(" / "));
+
+    //   緑=通過 / 赤=要対応。順は resp / orphan / br / embed / align / contrast / h2 / 消えた中身。
+    //   🚨 判定は必ずこの配列より【前】に置く。後ろに書くと out に積む前に色が
+    //      決まるので、赤にならない（2026-09-11、消えた中身の判定で踏んだ）。
     var FLAGS=[
       out.some(function(x){return /横スクロール|画面外|切れている/.test(x)}),
       out.some(function(x){return /最終行が1〜2文字/.test(x)}),
@@ -364,6 +485,8 @@ addEventListener("load",function(){
       soft.some(function(x){return /高さ・位置がそろっていない/.test(x)}),
       soft.some(function(x){return /地との差が小さくて/.test(x)}),
       soft.some(function(x){return /節見出しが節ごとに違う/.test(x)}),
+      soft.some(function(x){return /出るはずの中身が消えている/.test(x)}),
+      soft.some(function(x){return /行頭に落ちてはいけない字/.test(x)}),
     ];
     var fl=document.createElement("div");
     fl.style.cssText="position:absolute;left:0;top:0;z-index:2147483647;display:flex";
@@ -374,12 +497,79 @@ addEventListener("load",function(){
     });
     document.body.appendChild(fl);
 
+
+    // ── 我々の決めごと（rules.json）。壊れているかではなく「決めたとおりか」。
+    //   🚨 品質チェックとは別の層にする。混ぜると「欠陥ではないのに赤」になり、
+    //      赤を見なくなる。FB52件の半分（24件）が仕様の指示だったので必要になった。
+    //   🚨 実測で書く。「FAQにアニメを入れる」のような挙動はソース側（Python）で見る。
+    var rules=[];
+    function rule(id, ok, note){ rules.push({id:id, ok:!!ok, note:note||"", w:W}); }
+
+    var det=document.querySelectorAll("details");
+    if(det.length){
+      var opened=[].slice.call(det).filter(function(e){return e.open});
+      rule("faq-closed", opened.length===0,
+           opened.length ? opened.length+"問が開いた状態で始まる（"
+             +(opened[0].textContent.replace(/\s+/g," ").trim().slice(0,16))+"…）" : "");
+    }
+
+    // FV＝h1 を含む器。🚨 最初の <section> 決め打ちは当たらない。E型の1節目は
+    //    「設計相談会」の帯で、FVはその次だった（2026-09-11）。#fv → h1の親 → 先頭 の順。
+    var h1e=document.querySelector("h1");
+    var fv=document.getElementById("fv") || (h1e && h1e.closest("section,header"))
+           || document.querySelector("section") || document.body;
+    var fvImgs=[].slice.call(fv.querySelectorAll("img,picture,video")).filter(function(e){
+      var s2=getComputedStyle(e); if(s2.display==="none"||s2.visibility==="hidden") return false;
+      var r2=e.getBoundingClientRect(); return r2.width>=120 && r2.height>=80;
+    });
+    if(fvImgs.length){
+      rule("fv-one-photo", fvImgs.length<=1,
+           fvImgs.length>1 ? "FVに幅120px以上の写真が"+fvImgs.length+"枚ある" : "");
+      // スマホ（375〜900px）は写真がCTAより上
+      if(W<=900){
+        var cta=[].slice.call(fv.querySelectorAll("a,button")).filter(function(e){
+          var r2=e.getBoundingClientRect(); return r2.width>=90 && r2.height>=34;
+        });
+        if(cta.length){
+          var pt=Math.min.apply(null,fvImgs.map(function(e){return e.getBoundingClientRect().top}));
+          var ct=Math.min.apply(null,cta.map(function(e){return e.getBoundingClientRect().top}));
+          rule("mobile-fv-photo-above-cta", pt<ct,
+               pt<ct ? "" : "写真の上端"+Math.round(pt)+"px がCTAの上端"+Math.round(ct)+"px より下");
+        }
+      }
+    }
+
+    var h1=h1e || fv.querySelector("h1");
+    if(h1){
+      // 🚨 「色が違うか」だけで見てはいけない。地が濃い雰囲気（元気）では見出しが白で、
+      //    強調は下線（box-shadow の inset）で付けてある。色比較だけだと
+      //    「強調が無い」と誤判定する（2026-09-11、fv/01_genki で踏んだ）。
+      //    元のFBは「どこかを目立たせる」なので、下線・地色・枠も強調として数える。
+      var base=getComputedStyle(h1).color, acc=0, how=[];
+      h1.querySelectorAll("span,em,strong,b,mark").forEach(function(e){
+        if(!e.textContent.trim()) return;
+        var s5=getComputedStyle(e);
+        if(s5.color!==base){ acc++; how.push("色"); return; }
+        if(s5.boxShadow!=="none"){ acc++; how.push("下線"); return; }
+        var bgc=s5.backgroundColor;
+        if(bgc && bgc!=="rgba(0, 0, 0, 0)" && !/, 0\)$/.test(bgc)){ acc++; how.push("地色"); return; }
+        if(parseFloat(s5.borderBottomWidth)>=1){ acc++; how.push("枠"); return; }
+        if(s5.textDecorationLine!=="none"){ acc++; how.push("下線"); }
+      });
+      rule("h1-accent", acc>0, acc ? "" : "FV見出しに強調が1つも無い（色・下線・地色・枠のいずれも）");
+    }
     var d=document.createElement("div");
     d.id="__chk";
     // 🚨 out だけを載せていたので、soft（見立て）に入れた検出が画像の外に出せず、
     //    _check.json は「5幅のいずれかで検出」しか持てなかった。
     //    チェックリスト自身の決めごと（どこ・何が・どう直すかを書く）に反していた。
-    d.setAttribute("data-result", JSON.stringify({out:out, soft:soft}));
+    d.setAttribute("data-result", JSON.stringify({out:out, soft:soft, rules:rules, gone:goneK}));
+    // 🚨 狭い幅（375/600px）は iframe に入れないと実幅で組まれない（Chromeの窓は
+    //    500px未満にできない）。だが --dump-dom は iframe の load を待たないので、
+    //    親から子を読むと必ず空になる。→ 子から親へ書き上げる。
+    try{ if(window.parent!==window)
+      window.parent.document.body.setAttribute("data-result",
+        JSON.stringify({out:out, soft:soft, rules:rules, gone:goneK})); }catch(e){}
     d.style.cssText="position:absolute;left:0;top:16px;z-index:2147483646;background:"+
       (out.length?"#c00":"#063")+";color:#fff;font:12px/1.5 monospace;padding:6px;max-width:100%;white-space:pre-wrap";
     d.textContent=(out.length? "NG " : "OK ")+W+"px\\n"+out.concat(
@@ -391,33 +581,104 @@ addEventListener("load",function(){
     open(tmp, "w", encoding="utf-8").write(h.replace("</body>", probe + "\n</body>"))
 
 
-def flat(png, w):
-    """撮影が失敗して1色で塗り潰された画像になっていないか。
+def detail_gone_msg(detail, keys):
+    """どの幅でも消えていたグループについて、probe が書いた説明文を拾う。"""
+    parts = []
+    for m in (detail.get("soft") or []):
+        if "出るはずの中身が消えている" not in m:
+            continue
+        for seg in m.split("出るはずの中身が消えている: ")[-1].split(" / "):
+            for k in keys:
+                par, _, kind = k.partition(">")
+                if par in seg and kind.split(".")[-1] in seg and seg not in parts:
+                    parts.append(seg)
+    return ("出るはずの中身が消えている（どの幅でも1つも見えない）: "
+            + (" / ".join(parts) if parts else " / ".join(sorted(keys))))[:900]
 
-    🚨 元は y=600〜9000 を一律に見ていた。iframe は高さ20000pxで撮るので、
-       短いページ（D型＝5節・約4000px）は下の1万px以上が地の色1色になり、
-       「撮影に失敗した」と誤判定して3回リトライして諦めていた。
-       2026-09-11 に D型を作って初めて踏んだ。小さいLPが1本も検査できない状態だった。
-       → まず中身の下端を探して、その範囲だけを見る。
+def house_rules(src_html, probe_rules):
+    """我々の決めごと（rules.json）の判定をまとめる。
+
+    ★品質チェックと分ける理由（2026-09-11）
+      台帳のFB52件を種別に分けたら半分（24件）が「こうしてほしい」という仕様の指示で、
+      品質チェックでは1件も防げなかった。しかも同じ指摘が案件をまたいで繰り返し来る。
+      → 一度言われたら決めごとにして、次からは機械が見る。これが学習の実体。
+    ★欠陥ではないのでリンクは止めない。外すときは理由を書いて外す。
+    """
+    rf = os.path.join(os.path.dirname(os.path.abspath(__file__)), "rules.json")
+    if not os.path.exists(rf):
+        return []
+    defs = json.load(open(rf, encoding="utf-8")).get("rules", [])
+    s = open(src_html, encoding="utf-8").read()
+    # 🚨 HTMLコメントだけ落としても足りない。CSSの /* … */ に「外した」経緯を
+    #    書いてあると、その文言を本文だと誤って拾う（2026-09-11に踏んだ）。
+    body = re.sub(r"<!--.*?-->", "", s, flags=re.S)
+    body = re.sub(r"/\*.*?\*/", "", body, flags=re.S)
+
+    src_judge = {}
+    # FAQの開閉アニメ。挙動なので座標では出ない。details を animate している箇所を見る
+    if "<details" in body:
+        js = " ".join(re.findall(r"<script[^>]*>(.*?)</script>", body, re.S))
+        src_judge["faq-anim"] = (
+            bool(re.search(r"\.animate\(", js)) and "details" in js,
+            "" if re.search(r"\.animate\(", js) else "details の開閉が既定のまま（瞬間的に開く）",
+        )
+    # フォームの定型注記
+    if "<form" in body or "ご記入" in body:
+        hit = re.search(r"ご記入いただいた内容は[^<]{0,40}", body)
+        src_judge["no-boilerplate-note"] = (
+            not hit, ("「" + hit.group(0)[:26] + "…」が残っている") if hit else "")
+
+    # probe の結果は幅ごとに来る。1つでも破っていれば破り
+    by_id = {}
+    for r in probe_rules or []:
+        k = r.get("id")
+        if not k:
+            continue
+        cur = by_id.get(k)
+        note = (f"［{r.get('w')}px］" + r["note"]) if r.get("note") else ""
+        if cur is None or (cur[0] and not r.get("ok")):
+            by_id[k] = (bool(r.get("ok")), note)
+        elif not cur[0] and note and note not in cur[1]:
+            by_id[k] = (cur[0], (cur[1] + " / " + note)[:300])
+
+    out = []
+    for d in defs:
+        k = d["id"]
+        j = by_id.get(k, src_judge.get(k))
+        if j is None:
+            out.append({**d, "state": "skip", "note": "この型では判定の対象が無い"})
+        else:
+            out.append({**d, "state": "ok" if j[0] else "ng", "note": j[1]})
+    return out
+
+
+def flat(png, w):
+    """撮影が失敗して単色で塗り潰された画像になっていないか。
+
+    🚨 3回作り直している。判定を「行の単色率」で書くと、余白の多いページを
+       失敗と誤判定する：
+       ① 元は y=600〜9000 を一律に見ていた → 短いページ（5節）が全滅
+       ② 中身の下端までに直したが「7割以上の行が1〜2色なら失敗」にした
+          → 1440px の余白の広いページで20/28行が白く、また誤判定（2026-09-11）
+       この関数の役目は「撮影が失敗したか」だけ。失敗した画像は"全体で"色が
+       ほぼ無い。だから行ごとに数えず、画像全体の色数で見る。
     """
     im = Image.open(png).convert("RGB")
     px = im.load()
-    xs = range(5, min(w, im.width) - 5, 60)
+    W, H = im.size
+    xs = range(3, min(w, W) - 3, max(1, min(w, W) // 40))
     # 中身の下端。下から粗く上がって、地と違う画素が出たところ
     bottom = 0
-    for y in range(im.height - 1, 0, -40):
+    for y in range(H - 1, 0, -40):
         if len({px[x, y] for x in xs}) > 2:
             bottom = y
             break
-    if bottom < 400:
+    if bottom < 200:
         return True                      # 本当に何も写っていない
-    top = 200 if bottom < 1200 else 600  # 短いページは上から見る
-    ys = list(range(top, bottom, max(120, (bottom - top) // 28)))
-    if not ys:
-        return False
-    n = sum(1 for y in ys if len({px[x, y] for x in xs}) <= 2)
-    return n > len(ys) * 0.7             # 7割以上が1〜2色なら失敗
-
+    ys = range(20, bottom, max(1, bottom // 60))
+    colors = {px[x, y] for y in ys for x in xs}
+    # 失敗した画像は全体で1〜3色。文字が1行でも写っていれば数十色になる
+    return len(colors) <= 3
 
 def shoot(page, out, w, h=20000):
     """iframe に入れて実幅で撮る（Chrome のウィンドウは500px未満にできないため）。"""
@@ -449,38 +710,63 @@ HOW = {
                  "★棒グラフのように高さの差が意味を持つ並びは直さない",
     "contrast": "罫なら色を1段濃くする（例 #e1e5ec → #c2d0e0）。見せる必要が無ければ消す。"
                 "面（ボタン）なら塗りを地から離す色にする。地が緑ならボタンは緑を避ける",
+    "kinsoku": "その語の前で折れないように <span class=\"nb\"> で囲む。"
+               "中黒で始まる語（・見積 など）は語のまとまりごと nowrap にする。"
+               "長音・小書き仮名は前の字とセットで囲む",
+    "content-gone": "その要素を出す仕掛け（タブのラジオ、:checked、JSのクラス付与）が"
+                    "外れていないか見る。タブを使わないなら display:block の変種クラスを当てる",
     "h2-uniform": "節ごとに書いている見出しの級数をトークンに寄せる"
                   "（--h2 / --h2-w / --h2-lh / --h2-ls）。節の部品側では指定しない",
 }
 
 
 def dump_detail(page, w=1440):
-    """headless Chrome の --dump-dom で、probe が書いた検出の中身を取り出す。
+    """probe が書いた検出の中身（data-result）を取り出す。
 
     🚨 画素のマーカーは「赤か緑か」しか運べない。どこの何が何pxずれているかは
-       DOM の data-result にしか無い。撮影とは別に1回だけ読む。
+       DOM の data-result にしか無い。撮影とは別に読む。
+    🚨 Chrome のウィンドウは500px未満にできない。--window-size=375 で開くと
+       黙って500pxで組まれ、狭い幅の計測が全部嘘になる（2026-09-11に踏んだ：
+       375pxで出るはずの「揃い」が出ず、出た「改行の余裕」は実は500pxの値）。
+       → 撮影と同じく iframe に実幅で入れ、中の data-result を親へ写して読む。
     """
     import html as _h
-    r = subprocess.run([CHROME, "--headless", "--disable-gpu",
-                        f"--window-size={w},9000", "--virtual-time-budget=17000",
-                        "--dump-dom", "file://" + os.path.abspath(page)],
-                       capture_output=True, text=True, errors="ignore")
+    d = os.path.dirname(os.path.abspath(page))
+    wrap = os.path.join(d, f"_dom{w}.html")
+    open(wrap, "w", encoding="utf-8").write(
+        '<body style="margin:0">'
+        f'<iframe id="f" src="file://{os.path.abspath(page)}" '
+        f'style="width:{w}px;height:20000px;border:0;display:block"></iframe>'
+        '<script>setTimeout(function(){try{'
+        'var b=document.getElementById("f").contentDocument.querySelector("[data-result]");'
+        'if(b)document.body.setAttribute("data-result",b.getAttribute("data-result"));'
+        '}catch(e){document.body.setAttribute("data-err",String(e))}},12000)<\/script></body>')
+    try:
+        r = subprocess.run([CHROME, "--headless", "--disable-gpu",
+                            "--allow-file-access-from-files",
+                            f"--window-size={max(w,520)+30},9000",
+                            "--virtual-time-budget=17000",
+                            "--dump-dom", "file://" + wrap],
+                           capture_output=True, text=True, errors="ignore")
+    finally:
+        if os.path.exists(wrap):
+            os.remove(wrap)
     m = re.search(r'data-result="([^"]*)"', r.stdout or "")
     if not m:
-        return {"out": [], "soft": []}
+        return {"out": [], "soft": [], "rules": [], "gone": []}
     try:
-        d = json.loads(_h.unescape(m.group(1)))
-        return d if isinstance(d, dict) else {"out": d, "soft": []}
+        dd = json.loads(_h.unescape(m.group(1)))
+        return dd if isinstance(dd, dict) else {"out": dd, "soft": [], "rules": [], "gone": []}
     except Exception:
-        return {"out": [], "soft": []}
-
+        return {"out": [], "soft": [], "rules": [], "gone": []}
 
 def read_flags(png):
     """左上に並べた16pxの色マーカーを読む。
-    順は resp / orphan / br-margin / embed / alignment / contrast（probe の FLAGS と同じ）。"""
+    順は resp / orphan / br-margin / embed / alignment / contrast / h2-uniform /
+    content-gone（probe の FLAGS と同じ8本）。"""
     px = Image.open(png).convert("RGB").load()
     out = []
-    for i in range(7):
+    for i in range(9):
         c = px[i * 16 + 8, 8]
         out.append("ng" if (c[0] > 150 and c[1] < 90) else ("ok" if (c[1] > 110 and c[0] < 90) else "?"))
     return out
@@ -845,6 +1131,7 @@ def main():
     say(f"\n■ {os.path.basename(os.path.dirname(src))} を {len(WIDTHS)}幅で検査", "b")
     shots, ng = [], []
     shot_flags = []
+    flag_by_w = []
     try:
         for w in WIDTHS:
             png = os.path.join(tmp, f"{w}.png")
@@ -853,7 +1140,9 @@ def main():
                 ng.append(f"{w}px 撮影失敗")
                 continue
             v = read_badge(png, w)
-            shot_flags.append(read_flags(png))
+            fl = read_flags(png)
+            shot_flags.append(fl)
+            flag_by_w.append((w, fl))
             say(f"  {w:>5}px  {v}", "g" if v == "OK" else ("r" if v == "NG" else "y"))
             if v != "OK":
                 ng.append(f"{w}px {v}")
@@ -863,7 +1152,29 @@ def main():
         #    「どこ・何が・どう直すか」を書くという決めごとを機械の項目が破ることになる。
         #    🚨 side（元の隣に置いた撮影用コピー）は finally で消えるので、
         #       必ず try の中で読む。外に出すと毎回空になる。
-        detail = dump_detail(side, 1440) if shots else {"out": [], "soft": []}
+        # 🚨 1440pxだけ読むと、狭い幅でしか出ない指摘（改行の余裕・揃い）の詳細が
+        #    永遠に拾えず「5幅のいずれかで検出」のままになる（2026-09-11に実際そうなった）。
+        #    → ngマーカーが立った幅も読む。上限3幅（1幅17秒かかるので）。
+        detail = {"out": [], "soft": [], "rules": [], "gone": []}
+        gone_by_w = {}
+        if shots:
+            # 🚨 375px は必ず読む。「スマホのFVは写真をCTAより上に」は狭い幅でしか
+            #    判定できない決めごとで、赤が出ていない幅だけ読むと永久に見ない。
+            want = [1440, 375]
+            hot = sorted(((sum(1 for x in f if x == "ng"), w) for w, f in flag_by_w),
+                         reverse=True)
+            for n, w in hot:
+                if n and w not in want and len(want) < 3:
+                    want.append(w)
+            for w in want:
+                d = dump_detail(side, w)
+                tag = "" if w == 1440 else f"［{w}px］"
+                detail["rules"] += d.get("rules") or []
+                gone_by_w[w] = set(d.get("gone") or [])
+                for k2 in ("out", "soft"):
+                    for m in d.get(k2) or []:
+                        if (tag + m) not in detail[k2] and m not in detail[k2]:
+                            detail[k2].append(tag + m)
     finally:
         if os.path.exists(side):
             os.remove(side)
@@ -932,7 +1243,7 @@ def main():
     if items:
         # 撮影で得たフラグ（5幅ぶん）を項目へ振り分ける。1幅でも ng なら ng
         order = ["responsive", "orphan-line", "br-margin", "embed-controls",
-                 "alignment", "contrast", "h2-uniform"]
+                 "alignment", "contrast", "h2-uniform", "content-gone", "kinsoku"]
         # 🚨 マーカーが読めない（"?"）のを「ok」にしてはいけない。
         #    probe が途中で例外を投げるとマーカーが描かれず、全項目が緑に見える。
         #    2026-09-11 に実際に踏んだ（alignment を足した直後、6件の上限で
@@ -942,7 +1253,9 @@ def main():
                  "embed-controls": "動画は280px以上あり、allow に fullscreen も入っている",
                  "alignment": "横に並ぶ要素の上端・下端は5px以内でそろっている",
                  "contrast": "罫・枠は地との差が1.35以上ある",
-                 "h2-uniform": "節見出しは全節で同じ級数・太さ・行送り"}
+                 "h2-uniform": "節見出しは全節で同じ級数・太さ・行送り",
+                 "content-gone": "隠れて消えている中身は無い（タブ・FAQは正常）",
+                 "kinsoku": "行頭に落ちてはいけない字は無い（全幅で実測）"}
         # 検出文の頭の言葉で項目に振り分ける。probe が push する文言と対応させる
         MARK = {
             "responsive":     ("横スクロール", "画面外", "切れている"),
@@ -952,6 +1265,8 @@ def main():
             "alignment":      ("高さ・位置がそろっていない",),
             "contrast":       ("地との差が小さくて",),
             "h2-uniform":     ("節見出しが節ごとに違う",),
+            "content-gone":   ("出るはずの中身が消えている",),
+            "kinsoku":        ("行頭に落ちてはいけない字",),
         }
         allmsg = (detail.get("out") or []) + (detail.get("soft") or [])
         found = {}
@@ -986,6 +1301,26 @@ def main():
                             it["where"] = found[name][:300]
                             it["what"] = found[name][:300]
                             it["how"] = HOW.get(name, "")
+        # ── 消えている中身は「どの幅でも1つも見えない」ものだけ事故とみなす。
+        #   🚨 ある幅だけ隠すのはレスポンシブの出し分け＝正しい作り。幅をまたいで
+        #      共通して消えているものだけが事故（タブの仕掛けを外した、JSのクラス
+        #      付与が外れた など）。2026-09-11、SHARE /4 の .fcaps で誤検出した。
+        if len(gone_by_w) >= 2:
+            common = set.intersection(*gone_by_w.values())
+            for it in items:
+                if it["id"] != "content-gone":
+                    continue
+                if common:
+                    msg = detail_gone_msg(detail, common)
+                    it["state"] = "ng"
+                    it["msg"] = it["where"] = it["what"] = msg
+                    it["how"] = HOW.get("content-gone", "")
+                else:
+                    it["state"] = "ok"
+                    it["msg"] = "隠れて消えている中身は無い（幅ごとの出し分けは正常）"
+                    # 🚨 where/what を消さないと、通ったのに前の検出文が画面に残る
+                    for f in ("where", "what", "how"):
+                        it.pop(f, None)
         # ★私が画像を見て書いた「どこ・何が・どう直すか」を、再実行で消さない。
         #   ただしページが変わっていたら見直しが必要なので、その時だけ捨てて claude に戻す。
         import hashlib
@@ -1021,6 +1356,23 @@ def main():
             m, c = mark.get(it["state"], ("?", ""))
             txt = it.get("what") or it.get("how") or it["msg"]
             say(f"  {m} {it['name']:<16} {txt[:62]}", c)
+        # ── 我々の決めごと（別の層。欠陥ではないので止めない）
+        hr = house_rules(src, detail.get("rules"))
+        if hr:
+            say("\n── 我々の決めごと ──", "b")
+            hmark = {"ok": ("○", "g"), "ng": ("✗", "r"), "skip": ("−", "y")}
+            for r in hr:
+                m, c = hmark[r["state"]]
+                tail = r["note"] if r["state"] != "ok" else r["what"]
+                say(f"  {m} {r['name']:<26} {tail[:52]}", c)
+            broke = [r for r in hr if r["state"] == "ng"]
+            if broke:
+                say("\n  ◇ 決めごとから外れている（止めない。外すなら理由を書く）", "y")
+                for r in broke:
+                    say(f"     ・{r['name']}：{r['note'][:80]}")
+                    say(f"       なぜ: {r['why'][:100]}")
+            out["rules"] = hr
+            json.dump(out, open(dst, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
         if n_keep:
             say(f"\n  ・前回私が見た判定 {n_keep}件はそのまま残した（ページが変わっていないため）")
         else:

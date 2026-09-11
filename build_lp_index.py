@@ -1440,6 +1440,25 @@ function draw(){
                        +g.todo.map(card).join('');
   const fine=g.ok.concat(g.claude);
   if(fine.length)    h+='<div class="cap">見たが問題なかった</div>'+fine.map(card).join('');
+  // ★我々の決めごと。壊れているかではなく「決めたとおりか」の層。
+  //   FBの半分は仕様の指示で、品質チェックでは1件も防げない。別の見出しで出す。
+  const R=(d.rules||[]);
+  if(R.length){
+    const brk=R.filter(function(r){return r.state==='ng'});
+    const kept=R.filter(function(r){return r.state==='ok'});
+    const na=R.filter(function(r){return r.state==='skip'});
+    h+='<div class="cap">我々の決めごと（'+kept.length+'/'+(R.length-na.length)+' 守れている）</div>';
+    h+=R.map(function(r){
+      const st=r.state==='ng'?'ng':(r.state==='skip'?'todo':'ok');
+      const rows=['<dt>決めごと</dt><dd>'+esc(r.what)+'</dd>'];
+      if(r.state==='ng') rows.push('<dt>いま</dt><dd>'+esc(r.note)+'</dd>');
+      if(r.state==='skip') rows.push('<dt>いま</dt><dd>'+esc(r.note)+'</dd>');
+      rows.push('<dt>なぜ</dt><dd class="how">'+esc(r.why)+'</dd>');
+      return '<div class="f '+st+'"><div class="t">'+esc(r.name)+
+        '<span class="w" style="margin-left:auto">決めごと</span></div><dl>'+
+        rows.join('')+'</dl></div>';
+    }).join('');
+  }
   document.getElementById('notes').innerHTML=h||'<p class="none">まだチェックしていない。</p>';
 }
 draw();
@@ -1477,7 +1496,8 @@ def build_review(reg, checks, scripts):
                              "inherit": inherit,
                              "at": (ck or {}).get("at", ""),
                              "script": sc.get(sv, ""), "shot": shot,
-                             "items": (ck or {}).get("items", [])}
+                             "items": (ck or {}).get("items", []),
+                             "rules": (ck or {}).get("rules", [])}
     out = os.path.join(OUT_DIR, "review.html")
     open(out, "w", encoding="utf-8").write(
         REVIEW.replace("__DATA__", json.dumps(data, ensure_ascii=False)))
