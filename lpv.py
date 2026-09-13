@@ -704,7 +704,9 @@ def cmd_build(a):
     publish_guard.enforce(ROOT, say, sys.exit)
     # 🚨 別チャット／別マシンが先に push していると、ここで弾かれるか、
     #    force すると相手の記録を消す。先に取り込む（rebase なので履歴は素直に伸びる）。
-    pl = subprocess.run(["git", "pull", "--rebase", "-q", "origin", "main"],
+    # 🚨 --autostash が無いと、直前の生成で必ず出る未commitの変更に弾かれて、--push は一度も通らない
+    #    （「cannot pull with rebase: You have unstaged changes」2026-09-14）
+    pl = subprocess.run(["git", "pull", "--rebase", "--autostash", "-q", "origin", "main"],
                         cwd=ROOT, capture_output=True, text=True)
     if pl.returncode:
         sys.exit("  ★remote を取り込めませんでした（衝突の可能性）。\n"

@@ -399,6 +399,96 @@ addEventListener("load",function(){
     if(lowc.length) soft.push("地との差が小さくて沈んでいる罫・面: "+lowc.join(" / "));
 
     // ★判定は画像からしか読めないので、項目ごとに16pxの色マーカーを左上に並べる。
+    // ── 文字の色と地の色の比（単色の地のときだけ測る）
+    //   🚨 2026-09-13、ブランドの主役色を明るいピースグリーン(#5AB651)に変えたら、
+    //      その色を文字色に使っていた21箇所が白地で2.55になり、読めなくなった。
+    //      罫と面しか見ていなかったので検査は全部通った。
+    //   🚨 以前、文字の比を4.5で全部見たら偽陽性25件（地がグラデーションや写真で、
+    //      backgroundColor が透明＝白と誤認）。→ 地に画像・グラデーションが1つでも
+    //      あれば測らない。単色の地が確定したときだけ測る。
+    //   ★基準：大きい文字（24px以上／18.66px以上の太字）は3.0、それ以外は4.5
+    // 🚨 色の関数はこの判定の中で持つ。ほかの判定の関数名（lum/bg）を当てにしない。
+    //    存在しない cRatio を呼んで ReferenceError でプローブ全体が落ち、全項目の
+    //    結果が書かれなかった（2026-09-13、足した直後に踏んだ）。
+    function tcLum(c){var v=c.map(function(x){x/=255;return x<=0.03928?x/12.92:Math.pow((x+0.055)/1.055,2.4)});
+      return 0.2126*v[0]+0.7152*v[1]+0.0722*v[2];}
+    function tcRatio(a,b){var x=tcLum(a),y=tcLum(b);return (Math.max(x,y)+0.05)/(Math.min(x,y)+0.05);}
+    var lowtxt=[], seenLow={};
+    function solidBg(e){
+      for(var p=e;p;p=p.parentElement){
+        var sp=getComputedStyle(p);
+        if(sp.backgroundImage&&sp.backgroundImage!=="none") return null;   // 画像・グラデの地は測らない
+        var c=cRgbA(sp.backgroundColor);
+        if(c&&c[3]>=0.99) return c.slice(0,3);
+        if(c&&c[3]>0.02) return null;                                         // 半透明の重なりは測らない
+      }
+      return [255,255,255];
+    }
+    function cRgbA(str){var m=String(str).match(/rgba?\(([^)]+)\)/); if(!m) return null;
+      var a=m[1].split(",").map(parseFloat); return [a[0],a[1],a[2],a.length>3?a[3]:1];}
+    document.querySelectorAll("body *").forEach(function(e){
+      if(lowtxt.length>=8) return;
+      if(e instanceof SVGElement) return;
+      var st=getComputedStyle(e);
+      if(st.display==="none"||st.visibility==="hidden"||parseFloat(st.opacity)<0.95) return;
+      var own=""; [].forEach.call(e.childNodes,function(n){if(n.nodeType===3) own+=n.nodeValue});
+      own=own.trim(); if(own.length<2) return;
+      var fg=cRgbA(st.color); if(!fg||fg[3]<0.95) return;
+      var bgc=solidBg(e); if(!bgc) return;
+      var fs=parseFloat(st.fontSize), fw=parseInt(st.fontWeight,10)||400;
+      var big=(fs>=24)||(fs>=18.66&&fw>=700);
+      var need=big?3.0:4.5;
+      var rt=tcRatio(fg.slice(0,3),bgc);
+      if(rt<need){
+        var key=nm(e)+st.color;
+        if(seenLow[key]) return; seenLow[key]=1;
+        lowtxt.push(nm(e)+"「"+own.slice(0,12)+"」比"+rt.toFixed(2)+"（基準"+need+"）");
+      }
+    });
+    if(lowtxt.length) out.push("文字が地に沈んで読めない: "+lowtxt.join(" / "));
+
+    // ── 文字が写真に被っていないか
+    //   🚨 これが無くて見落とした（2026-09-13）。FVの本文が写真に41px被っていたのに、
+    //      画面外ではないのでレスポンシブ、欠落ではないので消えた中身、どちらも通った。
+    //      「実機スマホ」の説明に"被り"と書いてあるのに、機械は見ていなかった。
+    //   ★判定：文字の行の矩形と、写真（img/video/picture）の矩形が縦横とも重なる。
+    //      背景として敷いた写真（absolute で後ろ・文字が前）は意図した重ねなので除く。
+    var ovl=[];
+    var medias=[].slice.call(document.querySelectorAll("img,video,picture")).filter(function(m){
+      var st=getComputedStyle(m), r=m.getBoundingClientRect();
+      if(st.display==="none"||st.visibility==="hidden"||r.width<80||r.height<60) return false;
+      // 背景として後ろに敷いたもの（position:absolute で z が低い）は対象外
+      for(var q=m; q&&q!==document.body; q=q.parentElement){
+        var sq=getComputedStyle(q);
+        if(sq.position==="absolute"&&(sq.zIndex==="auto"||parseInt(sq.zIndex,10)<=0)) return false;
+      }
+      return true;
+    });
+    if(medias.length){
+      document.querySelectorAll("p,h1,h2,h3,li,dd,td,span").forEach(function(e){
+        if(ovl.length>=6) return;
+        var st=getComputedStyle(e);
+        if(st.display==="none"||st.visibility==="hidden") return;
+        var own=""; [].forEach.call(e.childNodes,function(n){if(n.nodeType===3) own+=n.nodeValue});
+        if(own.trim().length<2) return;
+        if(e.closest("figure")||e.closest("figcaption")) return;   // 写真の中の字は意図
+        var rg=document.createRange(); rg.selectNodeContents(e);
+        [].slice.call(rg.getClientRects()).forEach(function(tr){
+          if(ovl.length>=6||tr.width<4) return;
+          medias.forEach(function(m){
+            if(m.contains(e)||e.contains(m)) return;
+            var mr=m.getBoundingClientRect();
+            var ox=Math.min(tr.right,mr.right)-Math.max(tr.left,mr.left);
+            var oy=Math.min(tr.bottom,mr.bottom)-Math.max(tr.top,mr.top);
+            if(ox>6&&oy>6&&ovl.length<6){
+              ovl.push(nm(e)+"「"+own.trim().slice(0,14)+"」が写真に"+Math.round(ox)+"px被っている");
+            }
+          });
+        });
+      });
+    }
+    if(ovl.length) out.push("文字が写真に被っている: "+ovl.join(" / "));
+
     // ── 行頭の禁則（長音・小書き仮名・句読点・中黒が行の先頭に落ちていないか）
     //   ★ここは長く「私が画像を見る」項目だった。文字ごとの矩形を測れば機械で出せる
     //     （2026-09-11、実測で 375px に「っ」「・」の2件。目では見落としていた）。
@@ -474,7 +564,7 @@ addEventListener("load",function(){
     //    幅をまたいで突き合わせる Python 側に判断を渡す。
     if(gone.length) soft.push("出るはずの中身が消えている: "+gone.join(" / "));
 
-    //   緑=通過 / 赤=要対応。順は resp / orphan / br / embed / align / contrast / h2 / 消えた中身。
+    //   緑=通過 / 赤=要対応。順は resp / orphan / br / embed / align / contrast / h2 / 消えた中身 / 禁則 / 被り / 文字の比。
     //   🚨 判定は必ずこの配列より【前】に置く。後ろに書くと out に積む前に色が
     //      決まるので、赤にならない（2026-09-11、消えた中身の判定で踏んだ）。
     var FLAGS=[
@@ -487,6 +577,8 @@ addEventListener("load",function(){
       soft.some(function(x){return /節見出しが節ごとに違う/.test(x)}),
       soft.some(function(x){return /出るはずの中身が消えている/.test(x)}),
       soft.some(function(x){return /行頭に落ちてはいけない字/.test(x)}),
+      out.some(function(x){return /文字が写真に被っている/.test(x)}),
+      out.some(function(x){return /文字が地に沈んで読めない/.test(x)}),
     ];
     var fl=document.createElement("div");
     fl.style.cssText="position:absolute;left:0;top:0;z-index:2147483647;display:flex";
@@ -551,6 +643,10 @@ addEventListener("load",function(){
         var s5=getComputedStyle(e);
         if(s5.color!==base){ acc++; how.push("色"); return; }
         if(s5.boxShadow!=="none"){ acc++; how.push("下線"); return; }
+        // 🚨 蛍光ペン風のマーカーは background-image（linear-gradient）で引く。
+        //    backgroundColor だけ見ると透明なので「強調が無い」と誤判定する
+        //    （2026-09-13、ピースグリーンの文字が2.55で読めずマーカーに変えたときに踏んだ）。
+        if(s5.backgroundImage && s5.backgroundImage!=="none"){ acc++; how.push("マーカー"); return; }
         var bgc=s5.backgroundColor;
         if(bgc && bgc!=="rgba(0, 0, 0, 0)" && !/, 0\)$/.test(bgc)){ acc++; how.push("地色"); return; }
         if(parseFloat(s5.borderBottomWidth)>=1){ acc++; how.push("枠"); return; }
@@ -710,6 +806,11 @@ HOW = {
                  "★棒グラフのように高さの差が意味を持つ並びは直さない",
     "contrast": "罫なら色を1段濃くする（例 #e1e5ec → #c2d0e0）。見せる必要が無ければ消す。"
                 "面（ボタン）なら塗りを地から離す色にする。地が緑ならボタンは緑を避ける",
+    "text-contrast": "文字色をブランドの明るい色から外す。明るい主役色は面（ボタン・帯・マーカー）に使い、"
+                     "文字の強調は白地で4.5を超える色（補色など）か墨にする",
+    "overlap": "文字の器の幅を写真の手前で止める（width を 100% 以下に・min-width:0）。"
+               "意図して写真の上に字を置くなら、写真を position:absolute の背景にして"
+               "文字との比を測る",
     "kinsoku": "その語の前で折れないように <span class=\"nb\"> で囲む。"
                "中黒で始まる語（・見積 など）は語のまとまりごと nowrap にする。"
                "長音・小書き仮名は前の字とセットで囲む",
@@ -766,7 +867,7 @@ def read_flags(png):
     content-gone（probe の FLAGS と同じ8本）。"""
     px = Image.open(png).convert("RGB").load()
     out = []
-    for i in range(9):
+    for i in range(11):
         c = px[i * 16 + 8, 8]
         out.append("ng" if (c[0] > 150 and c[1] < 90) else ("ok" if (c[1] > 110 and c[0] < 90) else "?"))
     return out
@@ -829,25 +930,51 @@ def check_script(lines, sp):
         return ("skip", "原稿が未登録（lpv.py script <案件> --new）")
     raw = open(sp, encoding="utf-8").read()
     raw = raw.split("## v1 からの変更")[0].split("## v2 からの変更")[0]
+    # ★原稿の後ろの「制作メモ」「【要確認】一覧」は作り手への申し送りで、LPに出る文ではない
+    #   （suzuki-ark v1 で8件がそのまま「LPに無い」と出た）
+    raw = re.split(r"\n#+\s*(?:制作メモ|【要確認】)", raw)[0]
     src = [x.strip() for x in raw.split("\n")]
     body = "".join(lines)
+    nb = re.sub(r"[\s　]", "", body)
+    SEP = r"[｜|／/　→]"          # →＝「流れ：A → B → C」の手順の区切り
     miss = []
     for s in src:
+        if s.startswith("# "):         # 文書の題（「── LP原稿 v1」）
+            continue
         s = re.sub(r"^[-#\s*]+", "", s).strip()
         # ★見出し・ラベル・注記は「LPにそのまま出る文」ではないので対象外
         if len(s) < 20 or s.startswith(("（", "注記", "見出し", "受領", "反映先", "現状のLP")):
             continue
+        label = ""
         if "：" in s[:12]:              # 「補助コピー：」「ボタン：」など
-            s = s.split("：", 1)[1].strip()
+            label, s = s.split("：", 1)
+            s = s.strip()
         if s.startswith("ESL club オンライン校") and "原稿" in s:
             continue
+        # ★【】は原稿の書き手への指示・要確認（【要確認】【確認先】【公式サイトから転記】）。LPには出ない
+        s = re.sub(r"【[^】]*】", "", s)
+        # ★（主CTA）（ページ内リンク）（外部リンク・参考導線）（アイコン付きで横並び…）も指示。
+        #   「〜ページへリンク」の「リンク」も同じ。LPの（土）（8曲）のような括弧は残す
+        s = re.sub(r"（[^）]*(?:CTA|リンク|導線|ページ内|位置|並び|アイコン|転記)[^）]*）", "", s)
+        if re.search(r"CTA|ボタン", label):
+            s = re.sub(r"へリンク$", "へ", s)
+        # ★「1. 」「Q．」の番号・記号はLPでは付かない（番号は CSS の counter で出すことが多い）
+        s = re.sub(r"^\d+[.．]\s*", "", s)
+        faq = bool(re.match(r"^Q[．.]", s))
+        s = re.sub(r"^[QA][．.]\s*", "", s)
         if len(s) < 20:
             continue
         # ★原稿の「POINT1　見出し｜リード」は、LPでは別々の要素に分かれる。
         #   区切って、それぞれがLPにあるかを見る。
-        parts = [x for x in re.split(r"[｜|／/　]", s) if len(re.sub(r"[\s　]", "", x)) >= 12]
+        segs = re.split(SEP, s)
+        parts = [x for x in segs if len(re.sub(r"[\s　]", "", x)) >= 12]
+        # ★Q&A の問いは短い（「参加費はかかりますか」10字）。問いだけは6字から見る
+        if faq and segs and 6 <= len(re.sub(r"[\s　]", "", segs[0])) < 12:
+            parts.insert(0, segs[0])
+        # ★区切って全部が短い行（表の見出し行「| 日時 | 内容 |」、ボタン名の並び）は文ではない
+        if not parts and re.search(SEP, s):
+            continue
         parts = parts or [s]
-        nb = re.sub(r"[\s　]", "", body)
         for q in parts:
             core = re.sub(r"[\s　]", "", re.sub(r"^POINT\d+", "", q))
             if core[:22] and core[:22] not in nb:
@@ -1083,7 +1210,8 @@ def run_checklist(src, vid, out_json):
             cur = by.get(cur.get("parent"))
 
     fns = {"wording": lambda: check_wording(lines),
-           "script-diff": lambda: check_script(lines, sp),
+           # ★<title>/<meta> の文字で本文の抜けが隠れる（タグ行を消しても題名が一致して通った）。本文だけで見る
+           "script-diff": lambda: check_script(plain(re.sub(r"(?is)<head\b.*?</head>", " ", html)), sp),
            "self-consistency": lambda: check_self(html),
            "links": lambda: check_links(html, base),
            "lineage": lambda: check_lineage(vid),
@@ -1243,7 +1371,8 @@ def main():
     if items:
         # 撮影で得たフラグ（5幅ぶん）を項目へ振り分ける。1幅でも ng なら ng
         order = ["responsive", "orphan-line", "br-margin", "embed-controls",
-                 "alignment", "contrast", "h2-uniform", "content-gone", "kinsoku"]
+                 "alignment", "contrast", "h2-uniform", "content-gone", "kinsoku",
+                 "overlap", "text-contrast"]
         # 🚨 マーカーが読めない（"?"）のを「ok」にしてはいけない。
         #    probe が途中で例外を投げるとマーカーが描かれず、全項目が緑に見える。
         #    2026-09-11 に実際に踏んだ（alignment を足した直後、6件の上限で
@@ -1255,7 +1384,9 @@ def main():
                  "contrast": "罫・枠は地との差が1.35以上ある",
                  "h2-uniform": "節見出しは全節で同じ級数・太さ・行送り",
                  "content-gone": "隠れて消えている中身は無い（タブ・FAQは正常）",
-                 "kinsoku": "行頭に落ちてはいけない字は無い（全幅で実測）"}
+                 "kinsoku": "行頭に落ちてはいけない字は無い（全幅で実測）",
+                 "overlap": "文字と写真の矩形は重なっていない（5幅で実測）",
+                 "text-contrast": "単色の地の上の文字はすべて基準以上（大きい字3.0・本文4.5）"}
         # 検出文の頭の言葉で項目に振り分ける。probe が push する文言と対応させる
         MARK = {
             "responsive":     ("横スクロール", "画面外", "切れている"),
@@ -1267,6 +1398,8 @@ def main():
             "h2-uniform":     ("節見出しが節ごとに違う",),
             "content-gone":   ("出るはずの中身が消えている",),
             "kinsoku":        ("行頭に落ちてはいけない字",),
+            "overlap":        ("文字が写真に被っている",),
+            "text-contrast":  ("文字が地に沈んで読めない",),
         }
         allmsg = (detail.get("out") or []) + (detail.get("soft") or [])
         found = {}
