@@ -802,8 +802,12 @@ addEventListener("load",function(){
       var r2=e.getBoundingClientRect(); return r2.width>=120 && r2.height>=80;
     });
     if(fvImgs.length){
-      rule("fv-one-photo", fvImgs.length<=1,
-           fvImgs.length>1 ? "FVに幅120px以上の写真が"+fvImgs.length+"枚ある" : "");
+      // B2Cは2枚まで（So 2026-09-14。ESL club は小学生と中高生の2枚でクライアントに通っている）。
+      // ページが B2C かは <meta name="lp-audience" content="b2c"> で申告する（テンプレのB2C版は build.py が入れる）
+      var aud=((document.querySelector('meta[name="lp-audience"]')||{}).content||"").toLowerCase();
+      var fvMax = aud==="b2c" ? 2 : 1;
+      rule("fv-one-photo", fvImgs.length<=fvMax,
+           fvImgs.length>fvMax ? "FVに幅120px以上の写真が"+fvImgs.length+"枚ある"+(fvMax>1?"（B2Cは"+fvMax+"枚まで）":"") : "");
       // スマホ（375〜900px）は写真がCTAより上
       if(W<=900){
         var cta=[].slice.call(fv.querySelectorAll("a,button")).filter(function(e){
@@ -943,6 +947,14 @@ def house_rules(src_html, probe_rules):
         ok_motion,
         "" if ok_motion else ("スクロールで出る演出が無い（IntersectionObserver が無い）" if not has_io
                               else f"出す対象（.fx / data-rv）が{n_fx}個しか無い"),
+    )
+    # 開いたらいちばん上から（So FB 2026-09-14「ARK Hills Music Week 2026｜音の遊び場 開いたときにこれが見えない」）。
+    # 少し下げて再読み込みすると、ブラウザが前のスクロール位置（44px）を戻し、FVの一行目が固定ヘッダーの裏に隠れた。
+    # 撮影は必ず最上部から始まるので座標では出ない。挙動なのでソースで見る
+    has_manual = bool(re.search(r"scrollRestoration\s*=\s*['\"]manual['\"]", js_all))
+    src_judge["open-at-top"] = (
+        has_manual,
+        "" if has_manual else "history.scrollRestoration='manual' が無い（再読み込みで途中から始まり、FVの上端が固定ヘッダーの裏に隠れる）",
     )
     # フォームの定型注記
     if "<form" in body or "ご記入" in body:

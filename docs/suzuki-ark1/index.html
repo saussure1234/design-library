@@ -466,7 +466,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
 }
 </style>
 <!-- JSが動く時だけ演出とメニューを有効にする（動かない環境では最初から全部見える） -->
-<script>document.documentElement.classList.add("js","fx-on")</script>
+<script>document.documentElement.classList.add("js","fx-on");if("scrollRestoration" in history)history.scrollRestoration="manual"</script>
 </head>
 <body>
 
@@ -872,6 +872,13 @@ document.querySelectorAll('.faq details').forEach(function(d){
       var el = document.getElementById(id); if (el) spy.observe(el);
     });
   }
+
+  /* ⑥ 開いたらいちばん上から（So FB 9/14「開いたときに ARK Hills Music Week 2026｜音の遊び場 が見えない」）
+     少し下げて再読み込みすると、ブラウザが前の位置（実測44px）を戻し、FVの一行目が固定ヘッダー（下端68px）の裏に隠れていた。
+     scrollRestoration を manual にしたうえで最上部へ。ページ内リンク（#access など）付きで開いたときはそこへ行かせる */
+  var toTop = function(){ if (!location.hash) window.scrollTo({top: 0, left: 0, behavior: 'instant'}); };
+  toTop();
+  addEventListener('pageshow', function(e){ if (e.persisted) toTop(); });
 
   /* ⑤ スマホの追従CTA：FV・会場・締めの節が画面にある間は隠す
      🚨 判定が出る前に隠さない。最初の1回だけは同期で計算し（ちらつき防止）、以降は監視に任せる */
