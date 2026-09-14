@@ -188,35 +188,39 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 
 .rest__concept{max-width:46em;margin:26px auto 0;font-size:15.5px;line-height:2;color:var(--ink2)}
 .rest__grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,540px);gap:clamp(32px,5vw,72px);align-items:stretch;margin-top:52px}
-/* 左右の列の下端を揃える（実測：左が60px短かった）。演奏編成を左の列の下端へ寄せる */
+/* 9/14 は左右の列の下端を揃えていた（左が60px短かった）。9/15 伝票で右が伸びたのでやめた（.rest__pairs の注記） */
 .rest__col{display:flex;flex-direction:column}
-.flow__title,.board__title{font-size:15px;font-weight:700;letter-spacing:.12em;color:var(--ink2);margin:0 0 18px}
+.flow__title{font-size:15px;font-weight:700;letter-spacing:.12em;color:var(--ink2);margin:0 0 18px}
 .flow{list-style:none;margin:0;padding:0;counter-reset:f}
 .flow li{position:relative;counter-increment:f;display:grid;grid-template-columns:52px minmax(0,1fr);gap:18px;align-items:center;padding:14px 0}
 .flow li::before{content:counter(f);display:grid;place-items:center;width:52px;height:52px;border-radius:50%;background:var(--c);
   font-family:var(--en);font-weight:700;font-size:23px;color:var(--on-green)}
 .flow li:not(:last-child)::after{content:"";position:absolute;left:25px;top:66px;height:calc(100% - 52px);width:2px;background:repeating-linear-gradient(to bottom,var(--line2) 0 4px,transparent 4px 8px)}
 .flow p{font-size:16.5px;font-weight:700;line-height:1.7;word-break:keep-all;overflow-wrap:anywhere}
-/* ★So FB 9/14「メニューはもっとメニューっぽく」→ 3案（メニュー表／黒板／券売機）から M3 券売機。流れの「食券をもらう→1曲えらぶ→食券を渡す」とつながる。
-   🚨 ボタンに見えるが押せない。指したときの反応（カーソル・色の変化・沈み込み）は付けない */
-.board{background:#F3EEE6;border-radius:22px;padding:22px 24px;position:relative;box-shadow:inset 0 0 0 2px #D9CFC3}
-.board__title{text-align:center;background:#3B3A36;color:#fff;border-radius:12px;padding:10px 0;font-size:20px;letter-spacing:.2em;line-height:1.5;margin-bottom:16px}
-/* 原稿どおり番号なしの2列（左＝教本1〜4曲目・右＝5〜8曲目）。01〜08の番号は原稿に無く、並びも教本の順とずれていた */
-.menu{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(4,auto);grid-auto-flow:column;gap:10px 12px}
-.menu li{position:relative;display:grid;place-items:center;min-height:58px;padding:13px 12px 11px;background:#fff;border-radius:12px;box-shadow:0 3px 0 #CFC4B8;font-weight:700;font-size:15.5px;line-height:1.45;text-align:center;word-break:keep-all;overflow-wrap:anywhere;cursor:default}
-/* 上の色の線＝缶バッジの楽器の色（桃・黄・青・紫）。DOMは教本の順で列方向に流すので、同じ段の左右が同じ色になる */
-.menu li::before{content:"";position:absolute;left:10px;right:10px;top:6px;height:3px;border-radius:3px;background:var(--c);opacity:.8}
-.menu li:nth-child(4n+1){--c:#B94F7F}.menu li:nth-child(4n+2){--c:#FCC800}.menu li:nth-child(4n+3){--c:#4B6CB3}.menu li:nth-child(4n+4){--c:#9C529C}
-.board .note{margin-top:14px;text-align:center}
-.rest__pairs{margin-top:auto;padding-top:44px}
+/* ★So FB 9/15「メニューと演奏編成をデザイン的にもう一度やり直したい」→ 生成4案（お子さまメニュー・絵本など）は「全然トーンに合ってない」
+   → 実物の節を下敷きに、トーンはそのまま並べ方だけ変えた4案から T6 伝票。
+   8曲を教本の順に1列、点線で区切った縦長の伝票（色は使わず、細い枠と点線だけ）。演奏編成も同じ点線の行にそろえる。
+   前の券売機（黒い帯＋灰色の台＋色の線）はページの中でそこだけ重かった。🚨 押せる物に見せない（カーソル・反応は付けない） */
+.slip{background:#fff;border:1px solid var(--line2);border-radius:10px;padding:20px 30px 22px}
+.slip__title{display:flex;align-items:center;gap:16px;margin:0;font-size:17px;font-weight:700;letter-spacing:.16em;line-height:1.5;white-space:nowrap}
+/* 点線は border の dotted だと太さと間隔がブラウザで変わるので、丸い点を並べて描く */
+.slip__title::before,.slip__title::after,.menu li,.pairs li{background-image:radial-gradient(circle,#C2B8AC 1.1px,transparent 1.5px);background-size:7px 4px;background-repeat:repeat-x}
+.slip__title::before,.slip__title::after{content:"";flex:1;height:4px;background-position:left center}
+.menu{list-style:none;margin:8px 0 0;padding:0}
+.menu li{padding:13px 2px 14px;background-position:left bottom;font-weight:700;font-size:16px;line-height:1.6;letter-spacing:.06em;word-break:keep-all;overflow-wrap:anywhere}
+.menu li:last-child{background:none;border-bottom:1px solid var(--line2)}
+.slip .note{margin-top:14px}
+/* 伝票で右の列が127px伸びた。前のように演奏編成を左の列の下端へ寄せると、流れとの間に約200pxの穴があく（実測）→ 流れのすぐ下に置き、余りは左下（シェフの箱の横）に回す */
+.rest__pairs{padding-top:56px}
 .rest__pairs h4,.chef h4{margin:0 0 14px;font-size:15px;letter-spacing:.1em}
-.pairs{list-style:none;margin:0;padding:0;display:grid;gap:10px}
-.pairs li{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px}
-.ins{display:inline-flex;align-items:center;gap:8px;padding:7px 16px 7px 12px;border-radius:999px;background:var(--t);font-size:15px;font-weight:700;line-height:1.4;white-space:nowrap}
-.ins::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--c);flex:none}
-.ins--vn{--c:#B94F7F;--t:#F8E6EE}.ins--pf{--c:#FCC800;--t:#FFF4CC}.ins--fl{--c:#4B6CB3;--t:#E6ECF7}.ins--vc{--c:#9C529C;--t:#F2E6F2}
+.pairs{list-style:none;margin:0;padding:0;border-top:1px solid var(--line2)}
+.pairs li{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;padding:11px 2px 12px;background-position:left bottom}
+/* 楽器の色（ヴァイオリン＝桃・ピアノ＝黄・フルート＝青・チェロ＝紫）は名前の前の小さな点だけに残す */
+.ins{display:inline-flex;align-items:center;gap:8px;font-size:15.5px;font-weight:700;line-height:1.6;letter-spacing:.04em;white-space:nowrap}
+.ins::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--c);flex:none}
+.ins--vn{--c:#B94F7F}.ins--pf{--c:#FCC800}.ins--fl{--c:#4B6CB3}.ins--vc{--c:#9C529C}
 .pairs__plus{font-weight:700;font-size:15px;color:var(--ink2)}
-.pairs__note{margin-top:16px;font-size:14.5px;line-height:1.9;color:var(--ink2)}
+.pairs__note{margin-top:14px;font-size:14.5px;line-height:1.9;color:var(--ink2)}
 .chef{margin-top:22px;background:#EAF5FA;border-radius:24px;padding:26px 30px 28px}
 .chef > p{font-size:15px;line-height:1.9;color:var(--ink2)}
 .lines__label{margin-top:16px;font-size:14px;font-weight:700;letter-spacing:.06em;color:var(--ink2)}
@@ -287,15 +291,9 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
   .rest__grid{grid-template-columns:minmax(0,1fr) minmax(0,400px)}
 }
 /* ★So FB 9/14「レスポンシブ対応」：実測（375/414/600/768/900/1024/1280/1440）で横溢れ・文字切れは0。直したのは次の3つ
-   ①601〜900px：券のボタンが1列で約700pxに伸びていた → 板が広いので2列。1列は板が400pxになる901〜1023pxと600px以下だけ
+   ①（券売機のボタンの列数の出し分け。9/15 伝票の1列にしたので不要になり外した）
    ②601〜900px：FVのコラージュが横幅いっぱい（約700px四方）でFVが1,427px → 幅を抑えて中央に
    ③900px以下：追従CTAの小さい字 11.5px → 12px、ロゴのリンクの高さ 36px → 44px */
-@media (min-width:901px) and (max-width:1023px){
-  .menu{grid-template-columns:minmax(0,1fr);grid-template-rows:none;grid-auto-flow:row}   /* 板が400pxに狭まり、2列だと曲名が割れる。1列＝教本の順 */
-}
-@media (max-width:600px){
-  .menu{grid-template-columns:minmax(0,1fr);grid-template-rows:none;grid-auto-flow:row}
-}
 @media (min-width:601px) and (max-width:900px){
   .fv__photo{width:min(100%,560px);justify-self:center}
 }
@@ -342,7 +340,7 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
   .inst img{max-width:150px;box-shadow:0 0 0 6px var(--ring,#FFF6CC)}
   .inst span{margin-top:14px;font-size:15.5px}
   .rest__grid{grid-template-columns:minmax(0,1fr);gap:40px;margin-top:40px}
-  .board{padding:18px 16px}
+  .slip{padding:18px 20px 20px}
   .rest__pairs{padding-top:36px}
   .chef{padding:22px}
   .gift__grid{grid-template-columns:minmax(0,1fr);gap:18px;margin-top:36px}
@@ -617,10 +615,10 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
           </div>
         </div>
         <div class="rest__col">
-          <div class="board fx" data-fx="rise">
-            <p class="board__title">メニュー（8曲）</p>
+          <div class="slip fx" data-fx="rise">
+            <p class="slip__title">メニュー（8曲）</p>
             <!-- ★原稿は2列×4行の表で番号なし。左列＝教本の1〜4曲目、右列＝5〜8曲目（全音『鈴木鎮一ヴァイオリン指導曲集1』の収録順）。
-                 DOMは教本の順に並べ、PCだけ列方向に流して原稿の表と同じ見え方にする -->
+                 9/15 So が T6 伝票を選んだので、教本の順のまま1列にした（番号は付けない） -->
             <ul class="menu">
               <li>タカタカタッタの<wbr>キラキラ星</li><li>ちょうちょう</li><li>こぎつね</li><li>むすんでひらいて</li>
               <li>クリスマスの歌</li><li>かすみか雲か</li><li>ロング・ロング・<wbr>アゴー</li><li>アレグロ</li>
