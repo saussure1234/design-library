@@ -384,9 +384,20 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 }
 .hd__cta{min-height:46px;padding:0 20px 0 24px;font-size:15px;flex:none}
 .hd__cta svg{width:16px;height:16px}
-/* スマホはヘッダーのCTAを隠し、画面下の追従CTA（.mcta）に任せる */
+/* ★So FB 9/15「スマホのヘッダーもロゴ＋CTA。画面下の追従CTAも残す」→ 900px以下も出して小さくする。
+   375pxでロゴ161px＋ボタンが入るよう、420px以下は下向きの矢印を外す（飾り。行き先は文字で分かる） */
 @media (max-width:900px){
-  .hd__cta{display:none}
+  .hd__in{gap:12px}
+  .hd__cta{min-height:44px;padding:0 16px;gap:6px;font-size:14px;letter-spacing:.04em;box-shadow:0 8px 16px -12px rgba(60,140,55,.9)}
+  .hd__cta svg{width:14px;height:14px}
+}
+@media (max-width:420px){
+  .hd__cta{padding:0 14px;font-size:13px}
+  .hd__cta svg{display:none}
+}
+@media (max-width:359px){   /* 320pxで9px溢れた → ロゴだけ30pxに（押せる高さは44pxのまま） */
+  .hd__logo img{height:30px}
+  .hd__logo{padding:7px 0}
 }
 
 /* ── スクロールで順に出す（.fx は check.py の撮影で hh-in が付いて出し切られる） ── */
