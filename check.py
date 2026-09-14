@@ -610,6 +610,11 @@ addEventListener("load",function(){
     //   🚨 飾り＝aria-hidden の中で、地か背景画像を持つ40px以上の要素。overflow で切れている分は面積に入れない
     //   🚨 左右の比は飾りが6個以上ある時だけ見る（片側に1つ置いただけの作りを偏りと報せない）
     if(W>=1024){
+      // 🚨 飾りに常時アニメ（回転・上下）があると、測る瞬間で数と面積が揺れる。止めた形で測ってから戻す
+      //    （suzuki-ark1：9個なのに、上がった瞬間に下端の図形が24px以上覗いて10個と数えた）
+      var fdStop=document.createElement("style");
+      fdStop.textContent="[aria-hidden='true'],[aria-hidden='true'] *{animation:none!important}";
+      document.head.appendChild(fdStop);
       var fdN=0, fdL=0, fdR=0;
       [].slice.call(document.querySelectorAll("[aria-hidden='true'] *")).forEach(function(e){
         if(e.closest("svg")) return;
@@ -632,6 +637,7 @@ addEventListener("load",function(){
         fdN++;
         if((L+R)/2 < W/2) fdL+=(R-L)*(B-T); else fdR+=(R-L)*(B-T);
       });
+      fdStop.remove();
       var fdRatio=(fdL&&fdR)?Math.max(fdL,fdR)/Math.min(fdL,fdR):null;
       // 閾値の出どころ：15個で「少し減らして」、12個で「もう少し減らして良さそう」、9個で決定（So 2026-09-14）
       if(fdN>=10 || (fdN>=6 && fdRatio!==null && fdRatio>=1.4))
@@ -662,7 +668,34 @@ addEventListener("load",function(){
       if(fw.length) soft.push("横並びが途中で折り返して段の個数がそろっていない（"+W+"px）: "+fw.join(" / "));
     }
 
-    //   緑=通過 / 赤=要対応。順は resp / orphan / br / embed / align / contrast / h2 / 消えた中身 / 禁則 / 被り / 文字の比 / 1画面目の部品 / 飾り / 折り返し。
+    // ── 箱の中の大きな空き（So FB 2026-09-14 音楽レストラン「見出しと本文はいいが、その下が微妙」）
+    //   隣の箱に高さを揃えて伸びた箱で、中身が上に寄って下が空く。suzuki-ark1 は「演奏編成」の箱の中身の下に209pxあった。
+    //   🚨 中身の下端＝文字か画像を持つ子孫の下端の最大。padding-bottom は差し引く。角丸の無い節の地は箱に数えない
+    if(W>=1024){
+      var bh=[];
+      [].slice.call(document.querySelectorAll("div,li,article,aside")).forEach(function(e){
+        if(e.closest("[aria-hidden='true']")) return;
+        var s=getComputedStyle(e), r=e.getBoundingClientRect();
+        if(r.height<160 || r.width<200 || (parseFloat(s.borderTopLeftRadius)||0)<=0) return;
+        var fill=s.backgroundColor!=="rgba(0, 0, 0, 0)", line=parseFloat(s.borderTopWidth)>0 && s.borderTopStyle!=="none", sh=s.boxShadow!=="none";
+        if(!(fill||line||sh)) return;
+        var pb=parseFloat(s.paddingBottom)||0, cb=null;
+        [].slice.call(e.querySelectorAll("*")).forEach(function(c){
+          var cs=getComputedStyle(c); if(cs.display==="none"||cs.visibility==="hidden") return;
+          var own=[].slice.call(c.childNodes).some(function(n){return n.nodeType===3 && n.textContent.trim()});
+          if(!own && ["IMG","VIDEO","IFRAME","PICTURE","CANVAS","svg","SVG"].indexOf(c.tagName)<0) return;
+          var cr=c.getBoundingClientRect(); if(cr.height<1) return;
+          if(cb===null || cr.bottom>cb) cb=cr.bottom;
+        });
+        if(cb===null) return;
+        var gap=Math.round(r.bottom-pb-cb);
+        // 閾値：直す対象は181px（1440）・150px（1024）。3つ並びのカードの121pxは普通の揃え方なので拾わない
+        if(gap>=150 && gap>=r.height*0.35 && bh.length<4) bh.push(nm(e)+"（中身の下に"+gap+"px）");
+      });
+      if(bh.length) soft.push("箱の中に大きな空きがある（"+W+"px）: "+bh.join(" / "));
+    }
+
+    //   緑=通過 / 赤=要対応。順は resp / orphan / br / embed / align / contrast / h2 / 消えた中身 / 禁則 / 被り / 文字の比 / 1画面目の部品 / 飾り / 折り返し / 箱の空き。
     //   🚨 判定は必ずこの配列より【前】に置く。後ろに書くと out に積む前に色が
     //      決まるので、赤にならない（2026-09-11、消えた中身の判定で踏んだ）。
     var FLAGS=[
@@ -680,6 +713,7 @@ addEventListener("load",function(){
       soft.some(function(x){return /1画面目の部品が多い/.test(x)}),
       soft.some(function(x){return /1画面目の飾りが多いか片寄っている/.test(x)}),
       soft.some(function(x){return /横並びが途中で折り返して/.test(x)}),
+      soft.some(function(x){return /箱の中に大きな空きがある/.test(x)}),
     ];
     var fl=document.createElement("div");
     fl.style.cssText="position:absolute;left:0;top:0;z-index:2147483647;display:flex";
@@ -965,6 +999,8 @@ HOW = {
                "並びの規則（1つおき・等間隔）が残る外し方にし、位置は動かさない",
     "fv-wrap": "並べる器を広げて1段に収める（見出しの列から出して上の段に通すなど）。"
                "収まらない幅では縦に1個ずつ積む（1個／2個のような半端な段を作らない）",
+    "box-hole": "隣の箱に高さを揃えるのをやめて（align-items:start）箱を中身の高さに戻すか、"
+                "中身の少ない箱を別の列へ移して列ごとの下端で揃える。空きを文字で埋めない",
 }
 
 
@@ -1014,7 +1050,7 @@ def read_flags(png):
     content-gone（probe の FLAGS と同じ8本）。"""
     px = Image.open(png).convert("RGB").load()
     out = []
-    for i in range(14):
+    for i in range(15):
         c = px[i * 16 + 8, 8]
         out.append("ng" if (c[0] > 150 and c[1] < 90) else ("ok" if (c[1] > 110 and c[0] < 90) else "?"))
     return out
@@ -1520,7 +1556,7 @@ def main():
         # 撮影で得たフラグ（5幅ぶん）を項目へ振り分ける。1幅でも ng なら ng
         order = ["responsive", "orphan-line", "br-margin", "embed-controls",
                  "alignment", "contrast", "h2-uniform", "content-gone", "kinsoku",
-                 "overlap", "text-contrast", "fv-busy", "fv-deco", "fv-wrap"]
+                 "overlap", "text-contrast", "fv-busy", "fv-deco", "fv-wrap", "box-hole"]
         # 🚨 マーカーが読めない（"?"）のを「ok」にしてはいけない。
         #    probe が途中で例外を投げるとマーカーが描かれず、全項目が緑に見える。
         #    2026-09-11 に実際に踏んだ（alignment を足した直後、6件の上限で
@@ -1537,7 +1573,8 @@ def main():
                  "text-contrast": "単色の地の上の文字はすべて基準以上（大きい字3.0・本文4.5）",
                  "fv-busy": "1画面目（1024px以上）の地・枠・影のある部品は9個以下・作りは5種類以下",
                  "fv-deco": "1画面目（1024px以上）の飾りは9個以下で、左右の面積の差は1.4倍未満",
-                 "fv-wrap": "1画面目の横並び（2〜5個）は、折り返しても段ごとの個数がそろっている"}
+                 "fv-wrap": "1画面目の横並び（2〜5個）は、折り返しても段ごとの個数がそろっている",
+                 "box-hole": "角丸の箱の中で、中身の下に150px以上（箱の高さの35%以上）の空きは無い"}
         # 検出文の頭の言葉で項目に振り分ける。probe が push する文言と対応させる
         MARK = {
             "responsive":     ("横スクロール", "画面外", "切れている"),
@@ -1554,6 +1591,7 @@ def main():
             "fv-busy":        ("1画面目の部品が多い",),
             "fv-deco":        ("1画面目の飾りが多いか片寄っている",),
             "fv-wrap":        ("横並びが途中で折り返して",),
+            "box-hole":       ("箱の中に大きな空きがある",),
         }
         allmsg = (detail.get("out") or []) + (detail.get("soft") or [])
         found = {}

@@ -124,12 +124,18 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 @media (min-width:1101px){
   .fv__grid{padding-inline:24px}
   /* 下端の図形の見え方を最初の版（FVの高さ859px＠1440）に合わせる。条件の段を足して33px伸びた分を余白から引く */
-  .fv{padding-bottom:calc(clamp(80px,8vw,110px) - 33px)}
+  .fv{padding-bottom:calc(clamp(80px,8vw,110px) - 38px)}
 }
-/* 実測：写真 776,318-1336,744／白い台紙 755-1365×300-820（＠1536）＝上左右18px・下64px */
-.fv__photo{grid-area:photo;margin:40px 0 0;background:#fff;padding:18px 18px 64px;border-radius:6px;
-  box-shadow:0 26px 54px -26px rgba(70,50,30,.38),0 2px 8px rgba(70,50,30,.06)}
-.fv__photo img{width:100%;aspect-ratio:1120/852;object-fit:cover;border-radius:2px}
+/* ★So FB 9/14「ぴったり決まる1枚が無い。素材の『名称未設定のデザイン.png』のように複数、ときに背景を透過」
+   → F1：斜めの写真パネル2枚（チェロ＝大・ピアノ＝小）＋ヴァイオリンの2人を切り抜きで手前に。
+   白い額はやめた（額の分だけ部品が増える＝「ごちゃごちゃ」の元）。切り抜きは macOS の Vision でローカルに作った */
+.fv__photo{grid-area:photo;position:relative;margin:6px 0 0;aspect-ratio:560/520}
+.fvc__main,.fvc__sub{position:absolute;margin:0;overflow:hidden}
+.fvc__main img,.fvc__sub img{display:block;width:100%;height:100%;object-fit:cover}
+.fvc__main{left:8%;top:18%;width:80%;height:64%;clip-path:polygon(5% 4%,100% 0,95% 100%,0 94%);z-index:2}
+.fvc__sub{right:-6%;top:0;width:48%;height:38%;clip-path:polygon(0 10%,100% 0,94% 100%,6% 90%);z-index:1}
+/* 🚨 切り抜きの箱（透明な所も含む矩形）を本文の箱に重ねない。重ねると「文字が写真に被っている」になる */
+.fvc__cut{position:absolute;left:-8%;bottom:2%;height:48%;width:auto;z-index:3;filter:drop-shadow(0 10px 14px rgba(60,40,20,.16))}
 
 /* ボタン */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:62px;padding:0 30px 0 34px;border-radius:999px;
@@ -179,8 +185,8 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 
 .rest__concept{max-width:46em;margin:26px auto 0;font-size:15.5px;line-height:2;color:var(--ink2)}
 .rest__grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,540px);gap:clamp(32px,5vw,72px);align-items:stretch;margin-top:52px}
-.rest__flow{display:flex;flex-direction:column}
-.rest__flow .flow{flex:1;display:flex;flex-direction:column;justify-content:space-between}
+/* 左右の列の下端を揃える（実測：左が60px短かった）。演奏編成を左の列の下端へ寄せる */
+.rest__col{display:flex;flex-direction:column}
 .flow__title,.board__title{font-size:15px;font-weight:700;letter-spacing:.12em;color:var(--ink2);margin:0 0 18px}
 .flow{list-style:none;margin:0;padding:0;counter-reset:f}
 .flow li{position:relative;counter-increment:f;display:grid;grid-template-columns:52px minmax(0,1fr);gap:18px;align-items:center;padding:14px 0}
@@ -188,19 +194,28 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
   font-family:var(--en);font-weight:700;font-size:23px;color:var(--on-green)}
 .flow li:not(:last-child)::after{content:"";position:absolute;left:25px;top:66px;height:calc(100% - 52px);width:2px;background:repeating-linear-gradient(to bottom,var(--line2) 0 4px,transparent 4px 8px)}
 .flow p{font-size:16.5px;font-weight:700;line-height:1.7;word-break:keep-all;overflow-wrap:anywhere}
-.board{background:var(--cream);border:2.5px solid var(--ink);border-radius:26px;padding:30px 34px 28px;position:relative}
-.board__title{text-align:center;color:var(--ink);font-size:25px;letter-spacing:.14em;line-height:1.5;margin-bottom:14px}
+.board{background:#fff;border:2px solid #C39BC3;border-radius:24px;padding:28px 32px 24px;position:relative}
+.board__title{text-align:center;color:var(--ink);font-size:22px;letter-spacing:.14em;line-height:1.5;margin-bottom:12px}
 /* 原稿どおり番号なしの2列（左＝教本1〜4曲目・右＝5〜8曲目）。01〜08の番号は原稿に無く、並びも教本の順とずれていた */
 .menu{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(4,auto);grid-auto-flow:column;column-gap:20px}
-.menu li{padding:12px 0;border-top:1.5px solid var(--ink);font-weight:700;font-size:16px;line-height:1.6;word-break:keep-all;overflow-wrap:anywhere}
-.board .note{margin-top:14px;padding-top:14px;border-top:1.5px solid var(--ink)}
-.rest__more{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;margin-top:40px}
-.rest__box{background:var(--bg);border-radius:20px;padding:28px 32px}
-.rest__box h4{margin:0 0 10px;font-size:15px;letter-spacing:.1em}
-.rest__box p{font-size:15.5px;line-height:1.95;color:var(--ink2)}
+.menu li{padding:12px 0;border-top:1px solid #E3D9CD;font-weight:700;font-size:16px;line-height:1.6;word-break:keep-all;overflow-wrap:anywhere}
+.board .note{margin-top:12px;padding-top:14px;border-top:1px solid #E3D9CD}
+.rest__pairs{margin-top:auto;padding-top:44px}
+.rest__pairs h4,.chef h4{margin:0 0 14px;font-size:15px;letter-spacing:.1em}
+.pairs{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px 10px}
+.pairs li{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+.pair{display:flex;align-items:center;gap:2px}
+.pair__i{display:grid;place-items:center;width:52px;height:52px;border-radius:50%;background:#EAF6E6;color:#2F7F28}
+.pair__i--b{background:#F3EAF4;color:#8A4A8A}
+.pair__i svg{width:34px;height:34px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.pair__plus::before{content:"+";display:block;width:14px;text-align:center;font-family:var(--en);font-weight:700;font-size:17px;color:var(--ink2)}
+.pairs__t{font-size:13px;font-weight:700;line-height:1.5;letter-spacing:.02em;word-break:keep-all;overflow-wrap:anywhere}
+.pairs__note{margin-top:16px;font-size:14.5px;line-height:1.9;color:var(--ink2)}
+.chef{margin-top:22px;background:#EAF5FA;border-radius:24px;padding:26px 30px 28px}
+.chef > p{font-size:15px;line-height:1.9;color:var(--ink2)}
 .lines__label{margin-top:16px;font-size:14px;font-weight:700;letter-spacing:.06em;color:var(--ink2)}
 .lines{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:10px}
-.lines li{word-break:keep-all;overflow-wrap:anywhere;position:relative;background:#fff;border-radius:16px 16px 16px 4px;padding:10px 18px;font-size:15px;font-weight:700;line-height:1.7;box-shadow:0 6px 16px -12px rgba(70,50,30,.4)}
+.lines li{word-break:keep-all;overflow-wrap:anywhere;position:relative;background:#fff;border-radius:14px;padding:10px 18px;font-size:15px;font-weight:700;line-height:1.7}
 
 .gift__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px;margin-top:48px}
 .gift{background:var(--bg);border-radius:24px;padding:40px 40px 36px;display:grid;grid-template-rows:auto auto 1fr auto;justify-items:center;text-align:center}
@@ -274,7 +289,9 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
   .fv__deco{display:none}
   .fv__grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"band" "photo" "conds" "h1" "lead" "cta";grid-template-rows:none}
   .fv__band{padding-top:10px;gap:0}
-  .fv__photo{margin-top:18px;padding:10px 10px 34px}
+  .fv__photo{margin-top:14px}
+  .fvc__sub{right:0}
+  .fvc__cut{left:0;height:46%}
   /* スマホは3段に積む。大きい言葉と小さい言葉は横に並べて1段に収める */
   .conds{flex-direction:column;margin-top:20px}
   .conds li,.conds li:first-child{padding:9px 0}
@@ -307,8 +324,9 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
   .inst span{margin-top:14px;font-size:15.5px}
   .rest__grid{grid-template-columns:minmax(0,1fr);gap:40px;margin-top:40px}
   .board{padding:24px 22px 22px}
-  .rest__more{grid-template-columns:minmax(0,1fr);gap:16px}
-  .rest__box{padding:22px 22px}
+  .pairs{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .rest__pairs{padding-top:36px}
+  .chef{padding:22px}
   .gift__grid{grid-template-columns:minmax(0,1fr);gap:18px;margin-top:36px}
   .gift{padding:32px 22px 28px}
   .access__grid{grid-template-columns:minmax(0,1fr);margin-top:36px}
@@ -395,19 +413,25 @@ html.fx-on .fx[data-fx="scale"]{transform:scale(.88)}
 html.fx-on .fx[data-fx="pop"]{transform:none;scale:.15}
 html.fx-on .fx.hh-in{opacity:1;transform:none;scale:1}
 
-/* ── 図形がゆっくり揺れる（音の遊び場）。PCだけ・動きを減らす設定では止める ── */
-@keyframes kv-bob{0%,100%{translate:0 0;rotate:0deg}50%{translate:0 -8px;rotate:4deg}}
-@media (prefers-reduced-motion:no-preference) and (min-width:901px){
-  .fv__deco i,.closing__deco i[class],.sec > .kv i,.live__photo .kv i{animation:kv-bob var(--bob,11s) ease-in-out var(--bob-d,0s) infinite}
-  .fv__deco i:nth-child(2n),.closing__deco i:nth-child(2n){--bob:13s;--bob-d:-3s}
-  .fv__deco i:nth-child(3n),.closing__deco i:nth-child(3n){--bob:9s;--bob-d:-6s}
-  .fv__deco i:nth-child(5n),.closing__deco i:nth-child(5n){--bob:15s;--bob-d:-9s}
+/* ── 図形が常に動く（So FB 9/14「背景のシェープは常時動く感じのアニメーションが欲しい」→「90度ずつ回る＋漂う」）
+   四分円・半円がマスの中で数秒おきにくるっと向きを変え（タイルが回る）、ゆっくり上下する。
+   周期は素数っぽくずらし、遅れは負の値で初期位相もずらす（同じ周期だと機械的に見える／lp-polish）。
+   rotate と translate は別のプロパティなので、登場の scale（.fx pop）とぶつからない。動きを減らす設定では止める */
+@keyframes kv-turn{0%,17%{rotate:0deg}25%,42%{rotate:90deg}50%,67%{rotate:180deg}75%,92%{rotate:270deg}100%{rotate:360deg}}
+@keyframes kv-drift{0%,100%{translate:0 0}50%{translate:0 -12px}}
+@media (prefers-reduced-motion:no-preference){
+  .fv__deco i,.closing__deco i[class],.sec > .kv i,.live__photo .kv i{
+    animation:kv-turn var(--turn,19s) cubic-bezier(.7,0,.25,1) var(--turn-d,-2s) infinite,kv-drift var(--drift,11s) ease-in-out var(--drift-d,0s) infinite}
+  .fv__deco i:nth-child(2n),.closing__deco i:nth-child(2n),.sec > .kv i:nth-child(2n){--turn:23s;--turn-d:-7s;--drift:13s;--drift-d:-4s}
+  .fv__deco i:nth-child(3n),.closing__deco i:nth-child(3n),.sec > .kv i:nth-child(3n){--turn:17s;--turn-d:-11s;--drift:9s;--drift-d:-6s}
+  .fv__deco i:nth-child(5n),.closing__deco i:nth-child(5n){--turn:29s;--turn-d:-13s;--drift:15s;--drift-d:-9s}
+  .fv__deco i:nth-child(7n),.closing__deco i:nth-child(7n){--turn:31s;--turn-d:-19s}
 }
 
 /* ── 触れたときの反応（タップ後に残らないよう hover のある端末だけ） ── */
 .inst img{transition:scale .45s var(--pop)}
 @media (hover:hover){
-  .assure__card:hover,.gift:hover,.rest__box:hover{translate:0 -6px;box-shadow:0 26px 50px -30px rgba(70,50,30,.45)}
+  .assure__card:hover,.gift:hover{translate:0 -6px;box-shadow:0 26px 50px -30px rgba(70,50,30,.45)}
   .inst li:hover img{scale:1.05}
   .drawer__nav a:hover{color:var(--purple)}
 }
@@ -493,7 +517,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
       <a class="btn btn--main" href="#access">会場へのアクセス<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8l5 5 5-5"/></svg></a>
       <a class="btn btn--sub" href="#concert">演奏スケジュールを見る<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8l5 5 5-5"/></svg></a>
     </div>
-    <figure class="fv__photo fx" data-fx="rise" style="--fx-d:260ms"><img src="img/fv.jpg" width="1120" height="852" fetchpriority="high" alt="笑顔の先生のそばで、小さな子がはじめてチェロを構えている"></figure>
+    <div class="fv__photo fx" data-fx="rise" style="--fx-d:260ms"><figure class="fvc__main"><img src="img/fv.jpg" width="1120" height="852" fetchpriority="high" alt="笑顔の先生のそばで、小さな子がはじめてチェロを構えている"></figure><figure class="fvc__sub"><img src="img/fv-piano.jpg" width="960" height="720" alt="お母さんと一緒にピアノの鍵盤に触れる男の子"></figure><img class="fvc__cut" src="img/fv-cut.webp" width="685" height="900" alt="先生に支えられて、はじめてヴァイオリンを構える女の子"></div>
   </div>
 </section>
 
@@ -576,42 +600,53 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
         <h3 class="h3">メニューから1曲えらんで注文すると<wbr>目の前で演奏します</h3>
       </div>
       <p class="rest__concept fx">音楽を鑑賞するものから、子どもが自分で選び注文し受け取るものへ。ブースの一角を小さなレストランに見立ててメニューボードと食券受付を設置します。演奏者はシェフとして白いエプロンで来場者を迎えます。メニューの8曲から子どもが自分で選び、音楽家とやり取りし、生の音を<span class="nb">受け取る体験です。</span></p>
+      <!-- ★So FB 9/14「見出しと本文はいいが、その下が微妙。デザインから画像生成でやり直したい」→ 生成4案から R4。
+           黒い太枠の板／地と同じ色の箱／影つき吹き出しの3系統がばらばらだった。演奏編成の箱には中身の下に209pxの空きがあった -->
       <div class="rest__grid">
-        <div class="rest__flow">
-          <p class="flow__title">流れ</p>
-          <ol class="flow">
-            <li class="fx" data-fx="left" style="--c:var(--yellow)"><p>缶バッジをつくる</p></li>
-            <li class="fx" data-fx="left" style="--c:var(--lime)"><p>できあがったら食券をもらう</p></li>
-            <li class="fx" data-fx="left" style="--c:var(--sky)"><p>メニューの8曲から<wbr>聴きたい曲を<wbr>1曲えらぶ</p></li>
-            <li class="fx" data-fx="left" style="--c:var(--green)"><p>シェフ役の先生に<wbr>食券を渡して<wbr>注文する</p></li>
-            <li class="fx" data-fx="left" style="--c:var(--yellow)"><p>目の前で2人の先生が生演奏</p></li>
-          </ol>
+        <div class="rest__col">
+          <div class="rest__flow">
+            <p class="flow__title">流れ</p>
+            <ol class="flow">
+              <li class="fx" data-fx="left" style="--c:var(--yellow)"><p>缶バッジをつくる</p></li>
+              <li class="fx" data-fx="left" style="--c:var(--lime)"><p>できあがったら食券をもらう</p></li>
+              <li class="fx" data-fx="left" style="--c:var(--sky)"><p>メニューの8曲から<wbr>聴きたい曲を<wbr>1曲えらぶ</p></li>
+              <li class="fx" data-fx="left" style="--c:var(--green)"><p>シェフ役の先生に<wbr>食券を渡して<wbr>注文する</p></li>
+              <li class="fx" data-fx="left" style="--c:var(--yellow)"><p>目の前で2人の先生が生演奏</p></li>
+            </ol>
+          </div>
+          <div class="rest__pairs fx">
+            <h4>演奏編成</h4>
+            <!-- 原稿は「A＋B／A＋B／…。同じ曲でも…」の1文。区切りの「／」と「。」は文字として残して見た目だけ消す（.vh） -->
+            <ul class="pairs">
+              <li><span class="pair"><i class="pair__i"><svg viewBox="0 0 40 40" aria-hidden="true"><g transform="rotate(38 20 20)"><path d="M20 3.5v13"/><path d="M17.6 3.5h4.8"/><path d="M15.4 16.6c-3.2 1.3-4.3 3.9-3.2 6.5.9 2.1-1.2 3.6-.6 6.1.7 3.3 4.1 5.3 8.4 5.3s7.7-2 8.4-5.3c.6-2.5-1.5-4-.6-6.1 1.1-2.6 0-5.2-3.2-6.5-1.8-.8-3-.3-4.6-.3s-2.8-.5-4.6.3z"/><path d="M18 26.5h4"/></g></svg></i><span class="pair__plus" aria-hidden="true"></span><i class="pair__i pair__i--b"><svg viewBox="0 0 40 40" aria-hidden="true"><g transform="rotate(38 20 20)"><path d="M20 3.5v13"/><path d="M17.6 3.5h4.8"/><path d="M15.4 16.6c-3.2 1.3-4.3 3.9-3.2 6.5.9 2.1-1.2 3.6-.6 6.1.7 3.3 4.1 5.3 8.4 5.3s7.7-2 8.4-5.3c.6-2.5-1.5-4-.6-6.1 1.1-2.6 0-5.2-3.2-6.5-1.8-.8-3-.3-4.6-.3s-2.8-.5-4.6.3z"/><path d="M18 26.5h4"/></g></svg></i></span><span class="pairs__t">ヴァイオリン＋<wbr>ヴァイオリン</span><span class="vh">／</span></li>
+              <li><span class="pair"><i class="pair__i"><svg viewBox="0 0 40 40" aria-hidden="true"><g transform="rotate(38 20 20)"><path d="M20 3.5v13"/><path d="M17.6 3.5h4.8"/><path d="M15.4 16.6c-3.2 1.3-4.3 3.9-3.2 6.5.9 2.1-1.2 3.6-.6 6.1.7 3.3 4.1 5.3 8.4 5.3s7.7-2 8.4-5.3c.6-2.5-1.5-4-.6-6.1 1.1-2.6 0-5.2-3.2-6.5-1.8-.8-3-.3-4.6-.3s-2.8-.5-4.6.3z"/><path d="M18 26.5h4"/></g></svg></i><span class="pair__plus" aria-hidden="true"></span><i class="pair__i pair__i--b"><svg viewBox="0 0 40 40" aria-hidden="true"><rect x="4" y="11" width="32" height="19" rx="2.5"/><path d="M4 19.5h32"/><path d="M10.4 19.5V30M16.8 19.5V30M23.2 19.5V30M29.6 19.5V30"/></svg></i></span><span class="pairs__t">ヴァイオリン＋<wbr>ピアノ</span><span class="vh">／</span></li>
+              <li><span class="pair"><i class="pair__i"><svg viewBox="0 0 40 40" aria-hidden="true"><g transform="rotate(38 20 20)"><path d="M20 3.5v13"/><path d="M17.6 3.5h4.8"/><path d="M15.4 16.6c-3.2 1.3-4.3 3.9-3.2 6.5.9 2.1-1.2 3.6-.6 6.1.7 3.3 4.1 5.3 8.4 5.3s7.7-2 8.4-5.3c.6-2.5-1.5-4-.6-6.1 1.1-2.6 0-5.2-3.2-6.5-1.8-.8-3-.3-4.6-.3s-2.8-.5-4.6.3z"/><path d="M18 26.5h4"/></g></svg></i><span class="pair__plus" aria-hidden="true"></span><i class="pair__i pair__i--b"><svg viewBox="0 0 40 40" aria-hidden="true"><g transform="rotate(-32 20 20)"><rect x="2.5" y="17.3" width="35" height="5.4" rx="2.7"/><path d="M12 20h.01M18 20h.01M24 20h.01M30 20h.01"/></g></svg></i></span><span class="pairs__t">ヴァイオリン＋<wbr>フルート</span><span class="vh">／</span></li>
+              <li><span class="pair"><i class="pair__i"><svg viewBox="0 0 40 40" aria-hidden="true"><g transform="rotate(38 20 20)"><path d="M20 3.5v13"/><path d="M17.6 3.5h4.8"/><path d="M15.4 16.6c-3.2 1.3-4.3 3.9-3.2 6.5.9 2.1-1.2 3.6-.6 6.1.7 3.3 4.1 5.3 8.4 5.3s7.7-2 8.4-5.3c.6-2.5-1.5-4-.6-6.1 1.1-2.6 0-5.2-3.2-6.5-1.8-.8-3-.3-4.6-.3s-2.8-.5-4.6.3z"/><path d="M18 26.5h4"/></g></svg></i><span class="pair__plus" aria-hidden="true"></span><i class="pair__i pair__i--b"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 2v10"/><path d="M17.5 2h5"/><path d="M14.4 12.6c-3.8 1.5-5.1 4.6-3.8 7.7 1 2.5-1.4 4.3-.7 7.2.8 3.9 4.9 6.3 10.1 6.3s9.3-2.4 10.1-6.3c.7-2.9-1.7-4.7-.7-7.2 1.3-3.1 0-6.2-3.8-7.7-2.1-.9-3.6-.4-5.6-.4s-3.5-.5-5.6.4z"/><path d="M17.6 24h4.8"/><path d="M20 33.8V38"/></svg></i></span><span class="pairs__t">ヴァイオリン＋<wbr>チェロ</span><span class="vh">。</span></li>
+            </ul>
+            <p class="pairs__note">同じ曲でも組み合わせで響きが変わりますので2回目のご注文も可能です。</p>
+          </div>
         </div>
-        <div class="board fx" data-fx="rise">
-          <p class="board__title">メニュー（8曲）</p>
-          <!-- ★原稿は2列×4行の表で番号なし。左列＝教本の1〜4曲目、右列＝5〜8曲目（全音『鈴木鎮一ヴァイオリン指導曲集1』の収録順）。
-               DOMは教本の順に並べ、PCだけ列方向に流して原稿の表と同じ見え方にする -->
-          <ul class="menu">
-            <li>タカタカタッタの<wbr>キラキラ星</li><li>ちょうちょう</li><li>こぎつね</li><li>むすんでひらいて</li>
-            <li>クリスマスの歌</li><li>かすみか雲か</li><li>ロング・ロング・<wbr>アゴー</li><li>アレグロ</li>
-          </ul>
-          <p class="note">いずれもスズキ・メソードの子どもたちが実際に最初に学んでいる曲です。</p>
-        </div>
-      </div>
-      <div class="rest__more">
-        <div class="rest__box fx">
-          <h4>演奏編成</h4>
-          <p>ヴァイオリン＋ヴァイオリン／ヴァイオリン＋ピアノ／ヴァイオリン＋フルート／ヴァイオリン＋チェロ。同じ曲でも組み合わせで響きが変わりますので2回目のご注文も可能です。</p>
-        </div>
-        <div class="rest__box fx">
-          <h4>シェフのひとこと</h4>
-          <p>演奏者がスズキのロゴの缶バッジをつけた白いエプロンを着用し、シェフとしてお迎えします</p>
-          <p class="lines__label">＜シェフのセリフ例＞</p>
-          <ul class="lines">
-            <li>いらっしゃいませ。<wbr>食券お預かりいたします</li>
-            <li>アレグロのオーダー入りました</li>
-            <li>毎度ありがとうございました</li>
-          </ul>
+        <div class="rest__col">
+          <div class="board fx" data-fx="rise">
+            <p class="board__title">メニュー（8曲）</p>
+            <!-- ★原稿は2列×4行の表で番号なし。左列＝教本の1〜4曲目、右列＝5〜8曲目（全音『鈴木鎮一ヴァイオリン指導曲集1』の収録順）。
+                 DOMは教本の順に並べ、PCだけ列方向に流して原稿の表と同じ見え方にする -->
+            <ul class="menu">
+              <li>タカタカタッタの<wbr>キラキラ星</li><li>ちょうちょう</li><li>こぎつね</li><li>むすんでひらいて</li>
+              <li>クリスマスの歌</li><li>かすみか雲か</li><li>ロング・ロング・<wbr>アゴー</li><li>アレグロ</li>
+            </ul>
+            <p class="note">いずれもスズキ・メソードの子どもたちが実際に最初に学んでいる曲です。</p>
+          </div>
+          <div class="chef fx">
+            <h4>シェフのひとこと</h4>
+            <p>演奏者がスズキのロゴの缶バッジをつけた白いエプロンを着用し、シェフとしてお迎えします</p>
+            <p class="lines__label">＜シェフのセリフ例＞</p>
+            <ul class="lines">
+              <li>いらっしゃいませ。<wbr>食券お預かりいたします</li>
+              <li>アレグロのオーダー入りました</li>
+              <li>毎度ありがとうございました</li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
