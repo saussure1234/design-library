@@ -654,6 +654,34 @@ addEventListener("load",function(){
       });
       rule("h1-accent", acc>0, acc ? "" : "FV見出しに強調が1つも無い（色・下線・地色・枠のいずれも）");
     }
+
+    // ── LPの基本の作り（So FB 2026-09-14「初歩的なヘッダー固定、アニメーションとかはやってよ 他にもあると思うけど」）
+    //   🚨 言われるまで入っていなかった。品質チェックは「壊れていないか」しか見ないので、
+    //      作りが素朴なまま全項目を通ってリンクを渡していた。
+    function fixedAnc(e){
+      for(var q=e; q && q!==document.body && q!==document.documentElement; q=q.parentElement){
+        var ps=getComputedStyle(q).position;
+        if(ps==="fixed"||ps==="sticky") return q;
+      }
+      return null;
+    }
+    var hdEl=document.querySelector("body > header") || document.querySelector("header");
+    if(hdEl){
+      var hfx=fixedAnc(hdEl);
+      rule("header-fixed", !!hfx,
+           hfx ? "" : "ヘッダーがスクロールで流れて消える（header にも親にも position:fixed / sticky が無い）");
+    }
+    if(W<=900){
+      // 画面に残るCTA。ヘッダー・ナビの中のボタンと、全画面のメニュー（高さが画面の半分超）は数えない。
+      // 🚨 FVの間は隠すのが正しい作り（visibility:hidden）なので、見えているかでは判定しない
+      var stick=[].slice.call(document.querySelectorAll("a[href],button")).filter(function(a){
+        if(a.closest("header")||a.closest("nav")) return false;
+        var q=fixedAnc(a); if(!q) return false;
+        return q.getBoundingClientRect().height < innerHeight*0.5 && q.getBoundingClientRect().height < 200;
+      });
+      rule("mobile-sticky-cta", stick.length>0,
+           stick.length ? "" : "スマホで画面に残るCTAが無い（ヘッダーの外に position:fixed / sticky のボタンが無い）");
+    }
     var d=document.createElement("div");
     d.id="__chk";
     // 🚨 out だけを載せていたので、soft（見立て）に入れた検出が画像の外に出せず、
@@ -718,6 +746,17 @@ def house_rules(src_html, probe_rules):
             bool(re.search(r"\.animate\(", js)) and "details" in js,
             "" if re.search(r"\.animate\(", js) else "details の開閉が既定のまま（瞬間的に開く）",
         )
+    # スクロールで順に出す（So FB 2026-09-14「初歩的な…アニメーションとかはやってよ」）。
+    # 挙動なので座標では見えない。監視（IntersectionObserver）と、出す対象の印（.fx / data-rv）を見る
+    js_all = " ".join(re.findall(r"<script[^>]*>(.*?)</script>", body, re.S))
+    n_fx = len(re.findall(r'class="[^"]*\bfx\b', body)) + len(re.findall(r"\bdata-rv\b", body))
+    has_io = "IntersectionObserver" in js_all
+    ok_motion = has_io and (n_fx >= 6 or "data-rv" in js_all)
+    src_judge["scroll-motion"] = (
+        ok_motion,
+        "" if ok_motion else ("スクロールで出る演出が無い（IntersectionObserver が無い）" if not has_io
+                              else f"出す対象（.fx / data-rv）が{n_fx}個しか無い"),
+    )
     # フォームの定型注記
     if "<form" in body or "ご記入" in body:
         hit = re.search(r"ご記入いただいた内容は[^<]{0,40}", body)
