@@ -633,7 +633,8 @@ addEventListener("load",function(){
         if((L+R)/2 < W/2) fdL+=(R-L)*(B-T); else fdR+=(R-L)*(B-T);
       });
       var fdRatio=(fdL&&fdR)?Math.max(fdL,fdR)/Math.min(fdL,fdR):null;
-      if(fdN>=13 || (fdN>=6 && fdRatio!==null && fdRatio>=1.4))
+      // 閾値の出どころ：15個で「少し減らして」、12個で「もう少し減らして良さそう」、9個で決定（So 2026-09-14）
+      if(fdN>=10 || (fdN>=6 && fdRatio!==null && fdRatio>=1.4))
         soft.push("1画面目の飾りが多いか片寄っている（"+W+"px）: 見えている飾り"+fdN+"個"
           +(fdRatio!==null?"／面積は"+(fdL>fdR?"左":"右")+"が"+(fdL>fdR?"右":"左")+"の"+fdRatio.toFixed(2)+"倍":""));
     }
@@ -1535,7 +1536,7 @@ def main():
                  "overlap": "文字と写真の矩形は重なっていない（5幅で実測）",
                  "text-contrast": "単色の地の上の文字はすべて基準以上（大きい字3.0・本文4.5）",
                  "fv-busy": "1画面目（1024px以上）の地・枠・影のある部品は9個以下・作りは5種類以下",
-                 "fv-deco": "1画面目（1024px以上）の飾りは12個以下で、左右の面積の差は1.4倍未満",
+                 "fv-deco": "1画面目（1024px以上）の飾りは9個以下で、左右の面積の差は1.4倍未満",
                  "fv-wrap": "1画面目の横並び（2〜5個）は、折り返しても段ごとの個数がそろっている"}
         # 検出文の頭の言葉で項目に振り分ける。probe が push する文言と対応させる
         MARK = {
