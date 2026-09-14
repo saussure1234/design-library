@@ -718,7 +718,34 @@ addEventListener("load",function(){
       if(ci.length) soft.push("カードの中の見出しと本文の位置がそろっていない（"+W+"px）: "+ci.join(" / "));
     }
 
-    //   緑=通過 / 赤=要対応。順は resp / orphan / br / embed / align / contrast / h2 / 消えた中身 / 禁則 / 被り / 文字の比 / 1画面目の部品 / 飾り / 折り返し / 箱の空き / カードの中の揃い。
+    // ── 飾りの動きの同時数（So FB 2026-09-14「一気に動きすぎ。1個か2個ずつ。頻度も高すぎる」）
+    //   1画面目の aria-hidden の飾りに付いた無限アニメを、1周を96点で止めて見て、見た目の値が変わった割合を足す。
+    //   足した値＝「平均して同時に動いている数」。suzuki-ark1 の前の版は11個が常に回り＋上下に漂っていた
+    //   🚨 currentTime は「遅れ込み」の時間。1周のどこかを見るには 遅れ＋経過 を入れる（遅れが負でも動く）
+    if(W>=1024){
+      var mvSum=0, mvN=0, mvT=[];
+      document.getAnimations().forEach(function(a){
+        var t=a.effect && a.effect.target; if(!t || !t.closest || !t.closest("[aria-hidden='true']")) return;
+        var tm=a.effect.getTiming(); if(tm.iterations!==Infinity) return;
+        var r=t.getBoundingClientRect(); if(r.top+scrollY>=900 || r.bottom+scrollY<=0 || r.width<24) return;
+        var dur=typeof tm.duration==="number"?tm.duration:0; if(!dur) return;
+        var cur=a.currentTime, st=a.playState, prev=null, moving=0, N=96;
+        a.pause();
+        for(var i=0;i<=N;i++){
+          a.currentTime=(tm.delay||0)+dur*i/N;
+          var cs=getComputedStyle(t), v=cs.transform+"|"+cs.rotate+"|"+cs.translate+"|"+cs.scale+"|"+cs.opacity;
+          if(prev!==null && v!==prev) moving++;
+          prev=v;
+        }
+        a.currentTime=cur; if(st==="running") a.play();
+        mvSum+=moving/N; mvN++; if(mvT.indexOf(t)<0) mvT.push(t);
+      });
+      // 🚨 動く飾りが6個未満の作り（線や地がゆっくり流れ続ける演出。ESL・SHARE v4 は4〜5本）は数えない。
+      //    指摘は「たくさんの図形が一度に動く」ことで、少数の常時の流れは意図した演出
+      if(mvT.length>=6 && mvSum>2.5) soft.push("飾りが一度にたくさん動いている（"+W+"px）: 1画面目の動く飾り"+mvT.length+"個（無限アニメ"+mvN+"本）、平均して同時に"+mvSum.toFixed(1)+"個が動く");
+    }
+
+    //   緑=通過 / 赤=要対応。順は resp / orphan / br / embed / align / contrast / h2 / 消えた中身 / 禁則 / 被り / 文字の比 / 1画面目の部品 / 飾り / 折り返し / 箱の空き / カードの中の揃い / 動きの同時数。
     //   🚨 判定は必ずこの配列より【前】に置く。後ろに書くと out に積む前に色が
     //      決まるので、赤にならない（2026-09-11、消えた中身の判定で踏んだ）。
     var FLAGS=[
@@ -738,6 +765,7 @@ addEventListener("load",function(){
       soft.some(function(x){return /横並びが途中で折り返して/.test(x)}),
       soft.some(function(x){return /箱の中に大きな空きがある/.test(x)}),
       soft.some(function(x){return /カードの中の見出しと本文の位置がそろっていない/.test(x)}),
+      soft.some(function(x){return /飾りが一度にたくさん動いている/.test(x)}),
     ];
     var fl=document.createElement("div");
     fl.style.cssText="position:absolute;left:0;top:0;z-index:2147483647;display:flex";
@@ -1027,6 +1055,8 @@ HOW = {
                 "中身の少ない箱を別の列へ移して列ごとの下端で揃える。空きを文字で埋めない",
     "card-inner": "見出しの欄を一番行数の多いカードに合わせた高さにそろえる（min-height: 行数×行送り、1行の見出しは欄の中で上下中央）。"
                   "見出しの字数を減らして行数をそろえるのは原稿を変えるので最後の手段",
+    "motion-calm": "飾りを全部同時に動かさない。まとまりの中で順番を振り（--i）、1つずつ間を空けて動かす（例：8秒おきに1個・動くのは1.4秒）。"
+                   "常に揺らす・漂わせる動きは全部に付けない",
 }
 
 
@@ -1076,7 +1106,7 @@ def read_flags(png):
     content-gone（probe の FLAGS と同じ8本）。"""
     px = Image.open(png).convert("RGB").load()
     out = []
-    for i in range(16):
+    for i in range(17):
         c = px[i * 16 + 8, 8]
         out.append("ng" if (c[0] > 150 and c[1] < 90) else ("ok" if (c[1] > 110 and c[0] < 90) else "?"))
     return out
@@ -1586,7 +1616,7 @@ def main():
         # 撮影で得たフラグ（5幅ぶん）を項目へ振り分ける。1幅でも ng なら ng
         order = ["responsive", "orphan-line", "br-margin", "embed-controls",
                  "alignment", "contrast", "h2-uniform", "content-gone", "kinsoku",
-                 "overlap", "text-contrast", "fv-busy", "fv-deco", "fv-wrap", "box-hole", "card-inner"]
+                 "overlap", "text-contrast", "fv-busy", "fv-deco", "fv-wrap", "box-hole", "card-inner", "motion-calm"]
         # 🚨 マーカーが読めない（"?"）のを「ok」にしてはいけない。
         #    probe が途中で例外を投げるとマーカーが描かれず、全項目が緑に見える。
         #    2026-09-11 に実際に踏んだ（alignment を足した直後、6件の上限で
@@ -1605,7 +1635,8 @@ def main():
                  "fv-deco": "1画面目（1024px以上）の飾りは9個以下で、左右の面積の差は1.4倍未満",
                  "fv-wrap": "1画面目の横並び（2〜5個）は、折り返しても段ごとの個数がそろっている",
                  "box-hole": "角丸の箱の中で、中身の下に150px以上（箱の高さの35%以上）の空きは無い",
-                 "card-inner": "横に並ぶ同じ作りのカードは、本文の書き出しの位置が8px以内でそろっている"}
+                 "card-inner": "横に並ぶ同じ作りのカードは、本文の書き出しの位置が8px以内でそろっている",
+                 "motion-calm": "1画面目で動く飾りは6個未満か、平均して同時に動くのが2.5個以下"}
         # 検出文の頭の言葉で項目に振り分ける。probe が push する文言と対応させる
         MARK = {
             "responsive":     ("横スクロール", "画面外", "切れている"),
@@ -1624,6 +1655,7 @@ def main():
             "fv-wrap":        ("横並びが途中で折り返して",),
             "box-hole":       ("箱の中に大きな空きがある",),
             "card-inner":     ("カードの中の見出しと本文の位置がそろっていない",),
+            "motion-calm":    ("飾りが一度にたくさん動いている",),
         }
         allmsg = (detail.get("out") or []) + (detail.get("soft") or [])
         found = {}
