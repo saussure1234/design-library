@@ -77,14 +77,12 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 .gy{background:var(--g-gy)}.yl{background:var(--g-yl)}.pk{background:var(--g-pk)}
 
 /* ── ヘッダー（FVの section の外に置く＝FVの写真は1枚、の判定に入れない） ── */
+/* ★So FB 2026-09-15「ヘッダーはロゴとCTAのみで良い」→ ページ内ナビ6つ・メニューボタン・全画面メニューを外した。
+   ナビとメニューの実装の見本は suzuki-ark1（docs/suzuki-ark1/index.html）に残っている */
 .hd{position:sticky;top:0;z-index:50;transition:background-color .3s,box-shadow .3s}
 .hd__in{display:flex;align-items:center;gap:24px;height:var(--head-h);transition:height .3s}
 .hd__logo{flex:none;margin-right:auto}
 .hd__logo img{height:46px;width:auto;transition:height .3s}
-.hd__nav{display:flex;gap:clamp(18px,2vw,30px);font-size:14.5px;font-weight:500;letter-spacing:.06em}   /* So FB 9/14「ごちゃごちゃ」：1画面目の文字の95%が太字だった */
-.hd__nav a{text-decoration:none;padding:8px 0;position:relative;white-space:nowrap}
-.hd__nav a::after{content:"";position:absolute;left:0;right:0;bottom:2px;height:3px;border-radius:2px;background:var(--green);transform:scaleX(0);transform-origin:left;transition:transform .25s}
-.hd__nav a:hover::after{transform:scaleX(1)}
 
 /* ── FV ── */
 .fv{position:relative;overflow:hidden;padding:12px 0 clamp(80px,8vw,110px)}
@@ -384,44 +382,12 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
   .hd.is-scrolled .hd__in{height:68px}
   .hd.is-scrolled .hd__logo img{height:38px}
 }
-.hd__nav a[aria-current]::after{transform:scaleX(1)}
 .hd__cta{min-height:46px;padding:0 20px 0 24px;font-size:15px;flex:none}
 .hd__cta svg{width:16px;height:16px}
-.hd__menu{display:none}
-.hd__bars{position:relative;display:block;width:20px;height:14px}
-.hd__bars i{position:absolute;left:0;right:0;height:2px;border-radius:2px;background:currentColor;transition:transform .3s var(--ease),opacity .2s}
-.hd__bars i:nth-child(1){top:0}.hd__bars i:nth-child(2){top:6px}.hd__bars i:nth-child(3){top:12px}
-html.menu-open .hd__bars i:nth-child(1){transform:translateY(6px) rotate(45deg)}
-html.menu-open .hd__bars i:nth-child(2){opacity:0}
-html.menu-open .hd__bars i:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
-.hd__menu-t{font-size:10px;font-weight:700;letter-spacing:.06em;line-height:1}
-@media (max-width:1180px){
-  .hd__nav{display:none}
-  html.js .hd__menu{display:grid;grid-template-rows:auto auto;place-items:center;gap:5px;width:52px;height:52px;padding:8px 0 6px;border:0;border-radius:14px;
-    background:#fff;box-shadow:inset 0 0 0 1.5px var(--line);color:var(--ink);font-family:inherit;cursor:pointer;flex:none}
-}
+/* スマホはヘッダーのCTAを隠し、画面下の追従CTA（.mcta）に任せる */
 @media (max-width:900px){
   .hd__cta{display:none}
-  html.js .hd__menu{width:48px;height:48px}
 }
-
-/* ── スマホ・タブレットのメニュー ── */
-.drawer{display:none}
-@media (max-width:1180px){
-  html.js .drawer{display:flex;flex-direction:column;position:fixed;inset:0;z-index:45;background:var(--bg);overflow-y:auto;
-    padding:calc(var(--head-h) + 16px) var(--pad) calc(28px + env(safe-area-inset-bottom));
-    opacity:0;visibility:hidden;transform:translateY(-10px);transition:opacity .3s var(--ease),transform .3s var(--ease),visibility .3s}
-  html.menu-open{overflow:hidden}
-  html.menu-open .drawer{opacity:1;visibility:visible;transform:none}
-  html.menu-open .hd{background:var(--bg);box-shadow:none}
-}
-.drawer__nav{display:flex;flex-direction:column;width:100%;max-width:560px;margin:0 auto}
-.drawer__nav a{display:flex;align-items:center;justify-content:space-between;min-height:60px;border-bottom:1px solid var(--line2);
-  font-size:18px;font-weight:700;letter-spacing:.06em;text-decoration:none}
-.drawer__nav a::after{content:"";width:9px;height:9px;margin-right:6px;border-top:2.5px solid var(--green);border-right:2.5px solid var(--green);transform:rotate(45deg)}
-.drawer__cta{width:100%;max-width:560px;margin:30px auto 0}
-.drawer__kv{position:relative;width:100%;max-width:560px;height:84px;margin:auto auto 0;padding-top:28px}
-.drawer__kv i{position:absolute;bottom:0;width:56px;height:56px;overflow:hidden}
 
 /* ── スクロールで順に出す（.fx は check.py の撮影で hh-in が付いて出し切られる） ── */
 html.fx-on .fx{opacity:0;transform:translateY(26px);
@@ -456,7 +422,6 @@ html.fx-on .fx.hh-in{opacity:1;transform:none;scale:1}
 @media (hover:hover){
   .assure__card:hover,.gift:hover{translate:0 -6px;box-shadow:0 26px 50px -30px rgba(70,50,30,.45)}
   .inst li:hover img{scale:1.05}
-  .drawer__nav a:hover{color:var(--purple)}
 }
 a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--purple);outline-offset:3px;border-radius:8px}
 
@@ -470,13 +435,13 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
   .mcta__main{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700;letter-spacing:.08em;line-height:1.35}
   .mcta__main svg{width:16px;height:16px}
   .mcta__sub{font-size:12px;font-weight:500;letter-spacing:.04em;line-height:1.35}
-  body.cta-hide .mcta,html.menu-open .mcta{opacity:0;visibility:hidden;transform:translateY(18px);pointer-events:none}
+  body.cta-hide .mcta{opacity:0;visibility:hidden;transform:translateY(18px);pointer-events:none}
 }
 
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   html.fx-on .fx{opacity:1!important;transform:none!important;scale:1!important;transition:none!important}
-  .hd,.hd__in,.hd__logo img,.drawer,.mcta,.hd__bars i{transition:none!important}
+  .hd,.hd__in,.hd__logo img,.mcta{transition:none!important}
 }
 </style>
 <!-- JSが動く時だけ演出とメニューを有効にする（動かない環境では最初から全部見える） -->
@@ -487,20 +452,9 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
 <header class="hd" id="hd">
   <div class="wrap hd__in">
     <a class="hd__logo" href="#top" aria-label="ページの先頭へ"><img src="img/logo.png" width="800" height="179" alt="Suzuki Method 80th Anniversary／音楽を通して心と能力を育む Suzuki Method スズキ・メソード"></a>
-    <nav class="hd__nav" aria-label="ページ内">
-      <a href="#concert">演奏会</a><a href="#taiken">楽器体験</a><a href="#restaurant">音楽レストラン</a><a href="#gift">来場者特典</a><a href="#access">会場・アクセス</a><a href="#faq">よくある質問</a>
-    </nav>
     <a class="btn btn--main hd__cta" href="#access">会場へのアクセス<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8l5 5 5-5"/></svg></a>
-    <button class="hd__menu" type="button" aria-controls="drawer" aria-expanded="false" aria-label="メニューを開く"><span class="hd__bars" aria-hidden="true"><i></i><i></i><i></i></span><span class="hd__menu-t" aria-hidden="true">メニュー</span></button>
   </div>
 </header>
-<div class="drawer" id="drawer" aria-hidden="true" inert>
-  <nav class="drawer__nav" aria-label="メニュー">
-    <a href="#concert">演奏会</a><a href="#taiken">楽器体験</a><a href="#restaurant">音楽レストラン</a><a href="#gift">来場者特典</a><a href="#access">会場・アクセス</a><a href="#faq">よくある質問</a>
-  </nav>
-  <a class="btn btn--main drawer__cta" href="#access">会場へのアクセス<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8l5 5 5-5"/></svg></a>
-  <div class="drawer__kv" aria-hidden="true"><i class="yl q3" style="left:0"></i><i class="sp q4" style="left:56px"></i><i class="ls ht" style="left:112px"></i><i class="pk q1" style="right:56px"></i><i class="yp q2" style="right:0"></i></div>
-</div>
 
 <main>
 <!-- ① ファーストビュー -->
@@ -806,25 +760,7 @@ document.querySelectorAll('.faq details').forEach(function(d){
   onScroll();
   addEventListener('scroll', onScroll, {passive:true});
 
-  /* ② メニュー（1180px以下） */
-  var btn = document.querySelector('.hd__menu'), drawer = document.getElementById('drawer');
-  if (btn && drawer) {
-    var setOpen = function(open){
-      root.classList.toggle('menu-open', open);
-      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
-      btn.setAttribute('aria-label', open ? 'メニューを閉じる' : 'メニューを開く');
-      drawer.setAttribute('aria-hidden', open ? 'false' : 'true');
-      drawer.inert = !open;
-      if (open) { var f = drawer.querySelector('a'); if (f) f.focus({preventScroll:true}); }
-    };
-    btn.addEventListener('click', function(){ setOpen(!root.classList.contains('menu-open')); });
-    /* 🚨 リンクを押したら先に閉じる。overflow:hidden のままだとページ内リンクで動かない */
-    drawer.addEventListener('click', function(e){ if (e.target.closest('a')) setOpen(false); });
-    addEventListener('keydown', function(e){
-      if (e.key === 'Escape' && root.classList.contains('menu-open')) { setOpen(false); btn.focus(); }
-    });
-    addEventListener('resize', function(){ if (innerWidth > 1180 && root.classList.contains('menu-open')) setOpen(false); });
-  }
+  /* ② メニューと ④ 今いる節の表示は外した（So FB 9/15「ヘッダーはロゴとCTAのみで良い」。見本は suzuki-ark1） */
 
   /* ③ スクロールで順に出す。同じ時に画面に入った物どうしを、DOMの順に 90ms ずつ遅らせる */
   var fx = [].slice.call(document.querySelectorAll('.fx'));
@@ -868,23 +804,6 @@ document.querySelectorAll('.faq details').forEach(function(d){
       }, {passive:true});
       setTimeout(function(){ if (!fx.some(function(el){ return el.classList.contains('hh-in'); })) showAll(); }, 8000);   /* 保険③ */
     }
-  }
-
-  /* ④ いま見ている節をナビに出す */
-  var links = [].slice.call(document.querySelectorAll('.hd__nav a[href^="#"]'));
-  if (links.length && hasIO) {
-    var map = {};
-    links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
-    var spy = new IntersectionObserver(function(ents){
-      ents.forEach(function(e){
-        if (!e.isIntersecting) return;
-        links.forEach(function(x){ x.removeAttribute('aria-current'); });
-        if (map[e.target.id]) map[e.target.id].setAttribute('aria-current', 'location');
-      });
-    }, {rootMargin:'-45% 0px -50% 0px'});
-    ['top','assure','concert','taiken','restaurant','gift','access','faq','about','closing'].forEach(function(id){
-      var el = document.getElementById(id); if (el) spy.observe(el);
-    });
   }
 
   /* ⑥ 開いたらいちばん上から（So FB 9/14「開いたときに ARK Hills Music Week 2026｜音の遊び場 が見えない」）
