@@ -7,7 +7,14 @@
   F型（採用）を足しても画面に出なかった。
   型と雰囲気の実体は build.py（並び）と tokens/（見た目）と docs/lp/moods/（公開物）。
   この3つから作る。
+
+🚨 手で書いた欄は作り直しで消さない（2026-09-14）
+  9/11 に生成へ切り替えたとき、受け入れ仕様（copy / assets / images / photo）を
+  引き継がずに捨てた。画面はそれがある前提で .map していたので例外で止まり、
+  雰囲気テンプレの画面が【3日間まっ白】だった。誰も気づかなかった。
+  → 生成しない欄は KEEP で前の値を持ち越す。構成（structure）が無い型は ROLE から作る。
 """
+import datetime
 import glob
 import importlib.util
 import io
@@ -40,6 +47,16 @@ def px(v):
     return int(m.group(1)) if m else None
 
 
+def cols(v):
+    """--fv-cols の「minmax(0,12fr) minmax(0,8fr)」→「12:8」"""
+    fr = re.findall(r"(\d+)fr", v or "")
+    return ":".join(fr) if fr else None
+
+
+# 生成しない欄。作り直しても前の値を持ち越す（structure は並びと照合してから）
+KEEP = ("note", "url", "copy", "assets", "images", "photo", "measured")
+
+
 def main():
     sys.argv = ["build.py"]
     spec = importlib.util.spec_from_file_location("b", os.path.join(LP, "build.py"))
@@ -65,30 +82,53 @@ def main():
             nm, words = MOODNAME[m]
             moods.append({"id": m, "name": nm, "words": words,
                           "head": (tok(m, "--font-head") or "").split(",")[0].strip('"'),
-                          "h1": px(tok(m, "--h1")), "pad": px(tok(m, "--sec-y")),
+                          "h1": px(tok(m, "--h1")),
+                          "h2": f'{px(tok(m, "--h2"))}/{tok(m, "--h2-w")}',
+                          "pad": px(tok(m, "--sec-y")),
                           "radius": f'{tok(m, "--r-s")} / {tok(m, "--r-l")}',
+                          "cols": cols(tok(m, "--fv-cols")),
                           "color": tok(m, "--blue"), "bg": tok(m, "--bg"),
                           "ls": tok(m, "--h2-ls")})
+        if not moods:
+            # 公開用の複製（docs/lp/moods/<型>/）が無い型は載せない。載せると中身の無いタブになる
+            print(f"  ・{key} {spec_t['name']} は公開用の複製が無いので載せない")
+            continue
         prev = old.get(key, {})
-        types.append({
+        t = {k: prev[k] for k in KEEP if prev.get(k) not in (None, "", [])}
+        # 🚨 構成は「並び（order）と部品が1つずつ一致する」ときだけ持ち越す。
+        #    B型は実物15節→部品11節に作り替えたのに、実物の15節の表が残っていた（2026-09-11〜14）
+        st = prev.get("structure") or []
+        if [s.get("part") for s in st] == list(spec_t["order"]):
+            t["structure"] = st
+        else:
+            role = getattr(b, "ROLE", {})
+            t["structure"] = [{"n": i + 1, "role": role.get(p, (p, ""))[0],
+                               "note": role.get(p, ("", ""))[1], "part": p}
+                              for i, p in enumerate(spec_t["order"])]
+        t.update({
             "id": key, "key": key,
             "name": spec_t["name"],
-            "note": prev.get("note", ""),
             "sections": len(spec_t["order"]),
             "order": spec_t["order"],
-            "structure": prev.get("structure"),
-            "path": "~/lp-moods/", "url": prev.get("url", ""),
+            "path": "~/lp-moods/",
             "moods": moods,
         })
+        t.setdefault("note", "")
+        t.setdefault("url", "")
+        types.append(t)
     # 実物版（部品ではないもの）
     for extra in sorted(glob.glob(os.path.join(DOCS, "*_ref", "*", "index.html"))):
         k = extra.split(os.sep)[-3]
         m = extra.split(os.sep)[-2]
-        types.append({"id": k, "key": k, "name": f"{k[0].upper()}型（実物・部品化していない版）",
-                      "note": "部品から組んだものではなく、実案件のコピーを無名化したもの",
-                      "sections": None, "path": "~/lp-moods/b_sharesec/", "url": "",
-                      "moods": [{"id": m, "name": m, "words": ""}]})
-    head["updated"] = "2026-09-11"
+        prev = old.get(k, {})
+        t = {x: prev[x] for x in KEEP + ("structure",) if prev.get(x) not in (None, "", [])}
+        t.update({"id": k, "key": k, "name": f"{k[0].upper()}型（実物・部品化していない版）",
+                  "note": "部品から組んだものではなく、実案件のコピーを無名化したもの",
+                  "sections": len(t["structure"]) if t.get("structure") else None,
+                  "path": "~/lp-moods/b_sharesec/", "url": "",
+                  "moods": [{"id": m, "name": m, "words": ""}]})
+        types.append(t)
+    head["updated"] = datetime.date.today().isoformat()
     head["types"] = types
     io.open(op, "w", encoding="utf-8").write(json.dumps(head, ensure_ascii=False, indent=1) + "\n")
     n = sum(len(t["moods"]) for t in types)

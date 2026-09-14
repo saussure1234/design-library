@@ -562,6 +562,8 @@ const MISSING=[...new Set(STEPS.filter(s=>s.skill&&!SK[s.skill]).map(s=>s.skill)
 //   載せるのは仕様の数字だけ。実物は手元の localhost からだけ開ける。
 function moodsPane(sel){
   const M=MOODS, T=M.types;
+  // 🚨 欄が欠けても表を落とすだけにする。前は ty.copy.map で例外になり、画面ごとまっ白だった（2026-09-11〜14）
+  const dv=x=>(x==null||x==='')?'—':x;
   // sel は「型/雰囲気」。壊れていたら先頭に落とす
   let [tk, mk] = String(sel||'').split('/');
   let ty = T.find(x=>x.key===tk) || T[0];
@@ -569,7 +571,7 @@ function moodsPane(sel){
 
   const tyTabs = `<div class="tabs mtabs">${T.map(t=>
     `<button data-t="${esc(t.key)}/${esc((t.moods||[])[0]?.id||'')}" class="${t.key===ty.key?'on':''}">
-       ${esc(t.name)}<span class="mt__n">${t.sections}節</span></button>`).join('')}</div>
+       ${esc(t.name)}<span class="mt__n">${t.sections!=null?t.sections+'節':'実物'}</span></button>`).join('')}</div>
     <p class="note">${esc(ty.note)}</p>`;
 
   const moodTabs = (ty.moods||[]).length>1 ? `<div class="tabs mtabs mtabs--m">${ty.moods.map(m=>
@@ -581,13 +583,13 @@ function moodsPane(sel){
       title="${esc(ty.name)} ${esc(mood?mood.name:'')}"></iframe></div>
     <p class="note"><a href="${src}" target="_blank">別タブで原寸で開く →</a>
       　社名・ロゴ・写真はプレースホルダに差し替えた公開用の複製。
-      中身入りの実物は手元の <code>${esc(M.local.root)}</code>。</p>`;
+      中身入りの実物は手元の <code>${esc(M.local&&M.local.root)}</code>。</p>`;
 
   const spec = mood ? `<table class="tb"><tr>
       <th>見出しの書体</th><th>h1</th><th>h2/太さ</th><th>余白</th><th>角丸</th><th>桁</th><th>言葉</th></tr>
-    <tr><td><b>${esc(mood.head)}</b></td><td>${mood.h1}</td><td>${esc(String(mood.h2))}</td>
-      <td>${esc(String(mood.pad))}</td><td>${esc(mood.radius)}</td><td>${esc(mood.cols)}</td>
-      <td>${esc(mood.words)}</td></tr></table>
+    <tr><td><b>${esc(dv(mood.head))}</b></td><td>${esc(dv(mood.h1))}</td><td>${esc(dv(mood.h2))}</td>
+      <td>${esc(dv(mood.pad))}</td><td>${esc(dv(mood.radius))}</td><td>${esc(dv(mood.cols))}</td>
+      <td>${esc(dv(mood.words))}</td></tr></table>
     <p class="note">案件で使うとき：<code>python3 ~/lp-moods/build.py ${esc(mood.id)}${ty.key==='a'?'':' --type='+esc(ty.key)}</code>
       　→ <code>cp ~/lp-moods/tokens/${esc(mood.id)}.css &lt;案件&gt;/tokens.css</code></p>` : '';
 
@@ -602,16 +604,20 @@ function moodsPane(sel){
       （C型は帯を3回、D型は1回）。★上半分（FV→課題→特徴→違い）は型をまたいで共通で、
       下半分（証明の種類・人・FAQ・CTAの回数）が入れ替わる。</p>` : '';
 
-  const copy=`<table class="tb"><tr><th>場所</th><th>級数</th><th>字数</th><th>個数</th></tr>
-    ${ty.copy.map(c=>`<tr><td>${esc(c.place)}</td><td>${esc(c.size)}</td>
-      <td>${esc(c.chars)}</td><td>${c.count}</td></tr>`).join('')}</table>`;
-  const asset=`<table class="tb"><tr><th>場所</th><th>枚数</th><th>条件</th></tr>
-    ${ty.assets.map(a=>`<tr><td>${esc(a.place)}</td><td>${a.n}</td><td>${esc(a.cond)}</td></tr>`).join('')}</table>`;
+  // 受け入れ仕様は実測した型にしかない。無い型は「未計測」と出す（他の型の表を流用しない）
+  const cp=ty.copy||[], as=ty.assets||[];
+  const unmeasured=`<p class="note">未計測（この型ではまだ測っていない）</p>`;
+  const when=ty.measured?`<p class="note">${esc(ty.measured)} 時点の実測</p>`:'';
+  const copy=cp.length?`<table class="tb"><tr><th>場所</th><th>級数</th><th>字数</th><th>個数</th></tr>
+    ${cp.map(c=>`<tr><td>${esc(c.place)}</td><td>${esc(c.size)}</td>
+      <td>${esc(c.chars)}</td><td>${esc(c.count)}</td></tr>`).join('')}</table>${when}`:unmeasured;
+  const asset=as.length?`<table class="tb"><tr><th>場所</th><th>枚数</th><th>条件</th></tr>
+    ${as.map(a=>`<tr><td>${esc(a.place)}</td><td>${esc(a.n)}</td><td>${esc(a.cond)}</td></tr>`).join('')}</table>${when}`:unmeasured;
   const cmp=`<table class="tb"><tr><th></th>${T.map(x=>`<th>${esc(x.name)}</th>`).join('')}</tr>
-    <tr><td class="k">決め方</td>${T.map(x=>`<td>${esc(x.note)}</td>`).join('')}</tr>
-    <tr><td class="k">節数</td>${T.map(x=>`<td><b>${x.sections}</b></td>`).join('')}</tr>
-    <tr><td class="k">必要な画像</td>${T.map(x=>`<td>${x.images}枚</td>`).join('')}</tr>
-    <tr><td class="k">FV</td>${T.map(x=>`<td>${esc(x.photo)}</td>`).join('')}</tr></table>`;
+    <tr><td class="k">決め方</td>${T.map(x=>`<td>${esc(dv(x.note))}</td>`).join('')}</tr>
+    <tr><td class="k">節数</td>${T.map(x=>`<td><b>${esc(dv(x.sections))}</b></td>`).join('')}</tr>
+    <tr><td class="k">必要な画像</td>${T.map(x=>`<td>${x.images!=null?esc(x.images)+'枚':'—'}</td>`).join('')}</tr>
+    <tr><td class="k">FV</td>${T.map(x=>`<td>${esc(dv(x.photo))}</td>`).join('')}</tr></table>`;
 
   return `<div class="head"><h2>雰囲気テンプレ</h2>
       <span class="cl">型（骨格）＝決め方で選ぶ ／ 雰囲気（見た目）＝書体と余白で選ぶ</span></div>
@@ -623,9 +629,9 @@ function moodsPane(sel){
     <h3 class="mh">受け入れ仕様 ── 画像</h3>${asset}
     <h3 class="mh">型の使い分け</h3>${cmp}
     <h3 class="mh">守ること</h3>
-    <ul class="ul">${M.rules.map(r=>`<li>${esc(r)}</li>`).join('')}</ul>
+    <ul class="ul">${(M.rules||[]).map(r=>`<li>${esc(r)}</li>`).join('')}</ul>
     <h3 class="mh">まだやっていないこと</h3>
-    <ul class="ul bad">${M.gaps.map(r=>`<li>${esc(r)}</li>`).join('')}</ul>`;
+    <ul class="ul bad">${(M.gaps||[]).map(r=>`<li>${esc(r)}</li>`).join('')}</ul>`;
 }
 
 function sidebar(){
@@ -1186,7 +1192,11 @@ function render(){
   document.querySelector('.side').innerHTML=sidebar();
   // 「しくみ」の画面は案件に属さないので、先に分岐して描き切る
   if(cur==='__moods__'){
-    document.querySelector('.main').innerHTML = moodsPane(tab);
+    // 🚨 例外で止めると main が空のまま＝「何も表示されない」。止まった理由を画面に出す
+    try{ document.querySelector('.main').innerHTML = moodsPane(tab); }
+    catch(e){ console.error(e);
+      document.querySelector('.main').innerHTML =
+        `<p class="note">雰囲気テンプレの画面を作れませんでした：${esc(e.message)}（lp-moods.json を確認）</p>`; }
     return;
   }
   if(cur==='__flow__'){
