@@ -90,7 +90,7 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 .fv{position:relative;overflow:hidden;padding:12px 0 clamp(80px,8vw,110px)}
 .fv__deco{position:absolute;top:0;bottom:0;left:50%;width:1440px;transform:translateX(-50%);z-index:0;pointer-events:none}
 .fv__grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,560px);column-gap:clamp(32px,4.4vw,64px);
-  grid-template-areas:"band band" "conds photo" "h1 photo" "lead photo" "cta cta";grid-template-rows:auto auto auto 1fr auto;align-items:start}
+  grid-template-areas:"band band" "conds conds" "h1 photo" "lead photo" "cta cta";grid-template-rows:auto auto auto 1fr auto;align-items:start}
 /* ★So FB 2026-09-14「背景の形は満足／FVがごちゃごちゃしている」→ A案（引き算）。
    実測：1画面目に地・枠・影のある部品が12個・7種類（緑の帯・白いタグ・条件の丸枠3つ＋色丸3つ・ボタン・写真の額）、
    ほかの節は1画面0〜6個。締めの節は図形がFVより密でも散らからない＝犯人は背景でなく手前の部品。
@@ -101,10 +101,20 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 .fv__date{font-size:clamp(19px,1.8vw,26px);letter-spacing:.04em;white-space:nowrap}
 .fv__date b{font-family:var(--en);font-weight:700;font-size:1.12em}
 .fv__place{font-size:15px;font-weight:500;letter-spacing:.06em;color:var(--ink2);white-space:nowrap}
-.conds{grid-area:conds;display:flex;flex-wrap:wrap;gap:10px 26px;margin:30px 0 0;padding:0;list-style:none}
-.conds li{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;line-height:1.5}
-.conds .ic{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;flex:none;background:var(--green)}
-.conds .ic svg{width:15px;height:15px}   /* 13pxだと「出入り自由」の矢印がつぶれた */
+/* ★So FB 9/14（公開後）「条件3つが微妙」→ 3方向（入場券／ポスターの情報欄／シール）から B。
+   箇条書き（アイコン＋同じ大きさの文字）だと、1個／2個に割れて右端が499/313/549pxとばらばらだった。
+   言葉を大小に分け、縦の罫で3つに区切る。枠は足さない。日付の下の段に通して1段に収める */
+.conds{grid-area:conds;display:flex;flex-wrap:nowrap;align-items:stretch;margin:20px 0 0;padding:0;list-style:none}
+.conds li{display:flex;align-items:center;gap:12px;padding:2px 30px;font-weight:700;line-height:1.3}
+.conds li:first-child{padding-left:0}
+.conds li+li{border-left:1.5px solid #D9CFC3}
+.conds .ic{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;flex:none;background:#EAF6E6}
+.conds .ic svg{width:19px;height:19px;stroke:#2F7F28}
+.conds__t{display:flex;flex-direction:column}
+.conds__t b{font-size:22px;letter-spacing:.04em;line-height:1.35}
+.conds__t small{font-size:13px;font-weight:500;color:var(--ink2);letter-spacing:.04em;line-height:1.5}
+/* 「入場無料・事前予約不要…」を2段に分けた所の「・」。文字としては残し（原稿どおり・読み上げ用）、見た目だけ消す */
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .fv__h1{grid-area:h1;margin:40px 0 0;font-size:var(--h1);line-height:var(--h1-lh);font-weight:700;letter-spacing:.05em;word-break:keep-all;overflow-wrap:anywhere}
 /* 強調は決めごと（rules.json「FV見出しにブランドカラーの強調を1箇所」）なので残す。面を細くして主張を下げた */
 .mk{background:linear-gradient(transparent 70%,rgba(252,200,0,.58) 70%,rgba(252,200,0,.58) 93%,transparent 93%);padding:0 .04em}
@@ -113,11 +123,11 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 /* 左右の図形の列と文字の隙間が16pxしかなかった。図形は動かさず（So：背景は今のまま）、中身を内側へ寄せる */
 @media (min-width:1101px){
   .fv__grid{padding-inline:24px}
-  /* 帯をやめてFVが44px縮み（859→815＠1440）、下端の図形が44px余計に切れた。図形の見え方を元に戻すため下の余白で返す */
-  .fv{padding-bottom:calc(clamp(80px,8vw,110px) + 44px)}
+  /* 下端の図形の見え方を最初の版（FVの高さ859px＠1440）に合わせる。条件の段を足して33px伸びた分を余白から引く */
+  .fv{padding-bottom:calc(clamp(80px,8vw,110px) - 33px)}
 }
 /* 実測：写真 776,318-1336,744／白い台紙 755-1365×300-820（＠1536）＝上左右18px・下64px */
-.fv__photo{grid-area:photo;margin:36px 0 0;background:#fff;padding:18px 18px 64px;border-radius:6px;
+.fv__photo{grid-area:photo;margin:40px 0 0;background:#fff;padding:18px 18px 64px;border-radius:6px;
   box-shadow:0 26px 54px -26px rgba(70,50,30,.38),0 2px 8px rgba(70,50,30,.06)}
 .fv__photo img{width:100%;aspect-ratio:1120/852;object-fit:cover;border-radius:2px}
 
@@ -265,10 +275,15 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
   .fv__grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"band" "photo" "conds" "h1" "lead" "cta";grid-template-rows:none}
   .fv__band{padding-top:10px;gap:0}
   .fv__photo{margin-top:18px;padding:10px 10px 34px}
-  .conds{margin-top:22px;gap:8px 20px}
-  .conds li{font-size:14px}
-  .conds .ic{width:22px;height:22px}
-  .conds .ic svg{width:14px;height:14px}
+  /* スマホは3段に積む。大きい言葉と小さい言葉は横に並べて1段に収める */
+  .conds{flex-direction:column;margin-top:20px}
+  .conds li,.conds li:first-child{padding:9px 0}
+  .conds li+li{border-left:0;border-top:1px solid #E6DED4}
+  .conds .ic{width:30px;height:30px}
+  .conds .ic svg{width:16px;height:16px}
+  .conds__t{flex-direction:row;flex-wrap:wrap;align-items:baseline;gap:0 10px}
+  .conds__t b{font-size:18px}
+  .conds__t small{font-size:12.5px}
   .fv__h1{margin-top:22px}
   .fv__cta{flex-direction:column;align-items:stretch;margin-top:28px}
   .fv__cta .btn{width:100%}
@@ -453,15 +468,12 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
       <i class="ls q1 fx" data-fx="pop" style="--fx-d:1080ms;--x:53px;--y:636px;--s:111px"></i>
       <i class="pk hl fx" data-fx="pop" style="--fx-d:475ms;--x:53px;--y:858px;--s:111px"></i>
       <i class="yl q4 fx" data-fx="pop" style="--fx-d:1300ms;--x:1276px;--y:-20px;--s:111px"></i>
-      <i class="pk hb fx" data-fx="pop" style="--fx-d:640ms;--x:1276px;--y:202px;--s:111px"></i>
       <i class="yp q1 fx" data-fx="pop" style="--fx-d:970ms;--x:1276px;--y:313px;--s:111px"></i>
-      <i class="ls hr fx" data-fx="pop" style="--fx-d:805ms;--x:1276px;--y:535px;--s:111px"></i>
       <i class="sp q3 fx" data-fx="pop" style="--fx-d:1245ms;--x:1276px;--y:646px;--s:111px"></i>
       <i class="yl ht fx" data-fx="pop" style="--fx-d:530ms;--x:1276px;--y:868px;--s:111px"></i>
     </div>
     <div class="kv" style="inset:0">
-      <i class="yl q4 fx" data-fx="pop" style="--fx-d:1135ms;--x:1002px;--y:98px;--s:112px"></i>
-      <i class="sp q1 fx" data-fx="pop" style="--fx-d:695ms;--x:1114px;--y:98px;--s:150px"></i>
+      <i class="sp q1 fx" data-fx="pop" style="--fx-d:695ms;--x:1114px;--y:175px;--s:150px"></i>
       <i class="yp ht fx" data-fx="pop" style="--fx-d:1025ms;--x:846px;--y:820px;--s:150px"></i>
       <i class="ls q2 fx" data-fx="pop" style="--fx-d:860ms;--x:996px;--y:760px;--s:130px"></i>
       <i class="pk q1 fx" data-fx="pop" style="--fx-d:1355ms;--x:1126px;--y:790px;--s:150px"></i>
@@ -473,9 +485,9 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
       <p class="fv__when"><span class="fv__date"><b>10</b>月<b>10</b>日（土）・<b>11</b>日（日）</span><span class="fv__place">アークヒルズ　アーク・カラヤン広場</span></p>
     </div>
     <ul class="conds" aria-label="参加の条件">
-      <li class="fx" style="--fx-d:210ms"><span class="ic"><svg viewBox="0 0 16 16" fill="none" stroke="#15240F" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7"/></svg></span>入場無料・事前予約不要・参加費不要</li>
-      <li class="fx" style="--fx-d:280ms"><span class="ic"><svg viewBox="0 0 16 16" fill="none" stroke="#15240F" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 5.5h9M9 3l2.5 2.5L9 8M13.5 10.5h-9M7 8l-2.5 2.5L7 13"/></svg></span>出入り自由</li>
-      <li class="fx" style="--fx-d:350ms"><span class="ic"><svg viewBox="0 0 16 16" fill="#15240F" aria-hidden="true"><path d="M6.5 2.2l6.5-1.4v9.6a2.3 2 0 1 1-1.4-1.8V4.1L7.9 4.9v7.3a2.3 2 0 1 1-1.4-1.8z"/></svg></span>3歳から体験いただけます</li>
+      <li class="fx" style="--fx-d:210ms"><span class="ic"><svg viewBox="0 0 16 16" fill="none" stroke="#15240F" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" stroke-width="2.4"><path d="M3.5 8.5l3 3 6-7"/></svg></span><span class="conds__t"><b>入場無料</b><span class="vh">・</span><small>事前予約不要・参加費不要</small></span></li>
+      <li class="fx" style="--fx-d:280ms"><span class="ic"><svg viewBox="0 0 16 16" fill="none" stroke="#15240F" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" stroke-width="1.9"><path d="M2.5 5.5h9M9 3l2.5 2.5L9 8M13.5 10.5h-9M7 8l-2.5 2.5L7 13"/></svg></span><span class="conds__t"><b>出入り自由</b></span></li>
+      <li class="fx" style="--fx-d:350ms"><span class="ic"><svg viewBox="0 0 16 16" fill="none" stroke="#15240F" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" stroke-width="1.9"><circle cx="8" cy="4.4" r="2.4"/><path d="M3.6 14.2c.5-3.3 2.1-5.1 4.4-5.1s3.9 1.8 4.4 5.1"/></svg></span><span class="conds__t"><b>3歳から</b><small>体験いただけます</small></span></li>
     </ul>
     <h1 class="fv__h1 fx" style="--fx-d:380ms">カラヤン広場で<br><span class="mk">はじめての楽器</span>に<br>出会う2日間</h1>
     <p class="fv__lead fx" style="--fx-d:500ms">スズキ・メソードの<wbr>指導者・<wbr>卒業生・<wbr>子どもたちが<wbr>カラヤン広場に<wbr>敷かれた<wbr>芝生の上で<wbr>演奏します。<wbr>演奏の後は<wbr>ヴァイオリン・<wbr>チェロ・<wbr>フルート・<wbr>ピアノに<wbr>触れられます。</p>

@@ -605,7 +605,63 @@ addEventListener("load",function(){
           +"／太字"+(fbTxt?Math.round(fbBold/fbTxt*100):0)+"%"+(fbGap!==null?"／飾りの図形と文字の隙間 最小"+fbGap+"px":""));
     }
 
-    //   緑=通過 / 赤=要対応。順は resp / orphan / br / embed / align / contrast / h2 / 消えた中身 / 禁則 / 被り / 文字の比 / 1画面目の部品。
+    // ── 1画面目の飾りの数と左右の偏り（So FB 2026-09-14「背景の形は少し減らしてもいいかも、バランスよく」）
+    //   suzuki-ark1：見えている飾り15個、右の面積が左の1.5倍、写真の右上に4個固まっていた。
+    //   🚨 飾り＝aria-hidden の中で、地か背景画像を持つ40px以上の要素。overflow で切れている分は面積に入れない
+    //   🚨 左右の比は飾りが6個以上ある時だけ見る（片側に1つ置いただけの作りを偏りと報せない）
+    if(W>=1024){
+      var fdN=0, fdL=0, fdR=0;
+      [].slice.call(document.querySelectorAll("[aria-hidden='true'] *")).forEach(function(e){
+        if(e.closest("svg")) return;
+        var s=getComputedStyle(e);
+        if(s.display==="none" || s.visibility==="hidden" || parseFloat(s.opacity)===0) return;
+        if(s.backgroundImage==="none" && s.backgroundColor==="rgba(0, 0, 0, 0)") return;
+        var r=e.getBoundingClientRect();
+        if(r.width<40 || r.height<40) return;
+        var L=Math.max(r.left,0), R=Math.min(r.right,W), T=r.top+scrollY, B=Math.min(r.bottom+scrollY,900);
+        for(var p=e.parentElement; p && p!==document.body; p=p.parentElement){
+          var ps=getComputedStyle(p);
+          if(ps.overflow!=="visible" || ps.overflowY!=="visible" || ps.overflowX!=="visible"){
+            var pr=p.getBoundingClientRect();
+            L=Math.max(L,pr.left); R=Math.min(R,pr.right); T=Math.max(T,pr.top+scrollY); B=Math.min(B,pr.bottom+scrollY);
+          }
+        }
+        // 🚨 見えている幅・高さが24px未満の欠片は数えない。常時揺れる図形（kv-bob の回転）が下端から14pxだけ覗き、
+        //    人には図形に見えない欠片を1個と数えて赤にした（suzuki-ark1、2026-09-14）
+        if(R-L<24 || B-T<24) return;
+        fdN++;
+        if((L+R)/2 < W/2) fdL+=(R-L)*(B-T); else fdR+=(R-L)*(B-T);
+      });
+      var fdRatio=(fdL&&fdR)?Math.max(fdL,fdR)/Math.min(fdL,fdR):null;
+      if(fdN>=13 || (fdN>=6 && fdRatio!==null && fdRatio>=1.4))
+        soft.push("1画面目の飾りが多いか片寄っている（"+W+"px）: 見えている飾り"+fdN+"個"
+          +(fdRatio!==null?"／面積は"+(fdL>fdR?"左":"右")+"が"+(fdL>fdR?"右":"左")+"の"+fdRatio.toFixed(2)+"倍":""));
+    }
+
+    // ── 横並びの折り返しが不揃い（So FB 2026-09-14「条件3つが微妙」：1段目1個・2段目2個、右端が499/313/549とばらばら）
+    //   🚨 1画面目の ul/ol で、flex の横並び・子が2〜5個のものだけ見る（タグの雲や多段のメニューを拾わないため）
+    if(W>=1024){
+      var fw=[];
+      [].slice.call(document.querySelectorAll("ul,ol")).forEach(function(u){
+        if(u.closest("[aria-hidden='true'],nav,header")) return;
+        var s=getComputedStyle(u);
+        if(s.display.indexOf("flex")<0 || s.flexWrap!=="wrap" || s.flexDirection.indexOf("column")===0) return;
+        var r=u.getBoundingClientRect(); if(r.width<1 || r.top+scrollY>=900) return;
+        var kids=[].slice.call(u.children).filter(function(c){return getComputedStyle(c).display!=="none" && c.getBoundingClientRect().width>0});
+        if(kids.length<2 || kids.length>5) return;
+        var tops=[], cnt=[];
+        kids.forEach(function(c){
+          var t=c.getBoundingClientRect().top, k=-1;
+          for(var i=0;i<tops.length;i++){ if(Math.abs(tops[i]-t)<=6){ k=i; break; } }
+          if(k<0){ tops.push(t); cnt.push(1); } else cnt[k]++;
+        });
+        if(cnt.length>1 && cnt.some(function(n){return n!==cnt[0]}))
+          fw.push(nm(u)+"（"+cnt.join("個／")+"個）");
+      });
+      if(fw.length) soft.push("横並びが途中で折り返して段の個数がそろっていない（"+W+"px）: "+fw.join(" / "));
+    }
+
+    //   緑=通過 / 赤=要対応。順は resp / orphan / br / embed / align / contrast / h2 / 消えた中身 / 禁則 / 被り / 文字の比 / 1画面目の部品 / 飾り / 折り返し。
     //   🚨 判定は必ずこの配列より【前】に置く。後ろに書くと out に積む前に色が
     //      決まるので、赤にならない（2026-09-11、消えた中身の判定で踏んだ）。
     var FLAGS=[
@@ -621,6 +677,8 @@ addEventListener("load",function(){
       out.some(function(x){return /文字が写真に被っている/.test(x)}),
       out.some(function(x){return /文字が地に沈んで読めない/.test(x)}),
       soft.some(function(x){return /1画面目の部品が多い/.test(x)}),
+      soft.some(function(x){return /1画面目の飾りが多いか片寄っている/.test(x)}),
+      soft.some(function(x){return /横並びが途中で折り返して/.test(x)}),
     ];
     var fl=document.createElement("div");
     fl.style.cssText="position:absolute;left:0;top:0;z-index:2147483647;display:flex";
@@ -902,6 +960,10 @@ HOW = {
     "fv-busy": "帯・丸枠・タグの中の文字は、枠と地を外して地の上にじかに置く。"
                "まとまりは余白の差で作る（まとまりの中は狭く、まとまりの間は広く）。"
                "枠を残すのはボタンと写真だけにし、手前の色はボタンの1色に絞る（飾りの図形と同じ色を手前で使わない）",
+    "fv-deco": "重い側から、固まっている所（写真の角・見出しの横など3個以上寄っている所）の飾りを外す。"
+               "並びの規則（1つおき・等間隔）が残る外し方にし、位置は動かさない",
+    "fv-wrap": "並べる器を広げて1段に収める（見出しの列から出して上の段に通すなど）。"
+               "収まらない幅では縦に1個ずつ積む（1個／2個のような半端な段を作らない）",
 }
 
 
@@ -951,7 +1013,7 @@ def read_flags(png):
     content-gone（probe の FLAGS と同じ8本）。"""
     px = Image.open(png).convert("RGB").load()
     out = []
-    for i in range(12):
+    for i in range(14):
         c = px[i * 16 + 8, 8]
         out.append("ng" if (c[0] > 150 and c[1] < 90) else ("ok" if (c[1] > 110 and c[0] < 90) else "?"))
     return out
@@ -1457,7 +1519,7 @@ def main():
         # 撮影で得たフラグ（5幅ぶん）を項目へ振り分ける。1幅でも ng なら ng
         order = ["responsive", "orphan-line", "br-margin", "embed-controls",
                  "alignment", "contrast", "h2-uniform", "content-gone", "kinsoku",
-                 "overlap", "text-contrast", "fv-busy"]
+                 "overlap", "text-contrast", "fv-busy", "fv-deco", "fv-wrap"]
         # 🚨 マーカーが読めない（"?"）のを「ok」にしてはいけない。
         #    probe が途中で例外を投げるとマーカーが描かれず、全項目が緑に見える。
         #    2026-09-11 に実際に踏んだ（alignment を足した直後、6件の上限で
@@ -1472,7 +1534,9 @@ def main():
                  "kinsoku": "行頭に落ちてはいけない字は無い（全幅で実測）",
                  "overlap": "文字と写真の矩形は重なっていない（5幅で実測）",
                  "text-contrast": "単色の地の上の文字はすべて基準以上（大きい字3.0・本文4.5）",
-                 "fv-busy": "1画面目（1024px以上）の地・枠・影のある部品は9個以下・作りは5種類以下"}
+                 "fv-busy": "1画面目（1024px以上）の地・枠・影のある部品は9個以下・作りは5種類以下",
+                 "fv-deco": "1画面目（1024px以上）の飾りは12個以下で、左右の面積の差は1.4倍未満",
+                 "fv-wrap": "1画面目の横並び（2〜5個）は、折り返しても段ごとの個数がそろっている"}
         # 検出文の頭の言葉で項目に振り分ける。probe が push する文言と対応させる
         MARK = {
             "responsive":     ("横スクロール", "画面外", "切れている"),
@@ -1487,6 +1551,8 @@ def main():
             "overlap":        ("文字が写真に被っている",),
             "text-contrast":  ("文字が地に沈んで読めない",),
             "fv-busy":        ("1画面目の部品が多い",),
+            "fv-deco":        ("1画面目の飾りが多いか片寄っている",),
+            "fv-wrap":        ("横並びが途中で折り返して",),
         }
         allmsg = (detail.get("out") or []) + (detail.get("soft") or [])
         found = {}
