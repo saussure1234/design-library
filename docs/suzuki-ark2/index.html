@@ -83,6 +83,13 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 .hd__in{display:flex;align-items:center;gap:24px;height:var(--head-h);transition:height .3s}
 .hd__logo{flex:none;margin-right:auto}
 .hd__logo img{height:46px;width:auto;transition:height .3s}
+/* ★So FB 9/15（2回目）「ロゴとCTAだけだと変か。最初の6つは分かりにくいし、こんなに要るか」→ ナビ3つ＋CTA。
+   初めての人が知りたい「いつ（演奏スケジュール）・何ができる（楽器体験）・不安（よくある質問）」だけ。会場はボタンが兼ねる。
+   言葉は FV の「演奏スケジュールを見る」とそろえた。スマホはロゴ＋CTAのまま（メニューボタンは作らない） */
+.hd__nav{display:flex;gap:clamp(20px,2.2vw,34px);margin-right:clamp(6px,1.2vw,18px);font-size:14.5px;font-weight:500;letter-spacing:.06em}
+.hd__nav a{position:relative;padding:10px 0;text-decoration:none;white-space:nowrap}
+.hd__nav a::after{content:"";position:absolute;left:0;right:0;bottom:4px;height:3px;border-radius:2px;background:var(--green);transform:scaleX(0);transform-origin:left;transition:transform .25s}
+.hd__nav a:hover::after,.hd__nav a[aria-current]::after{transform:scaleX(1)}
 
 /* ── FV ── */
 .fv{position:relative;overflow:hidden;padding:12px 0 clamp(80px,8vw,110px)}
@@ -187,16 +194,28 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 .taiken__note{max-width:44em;margin:14px auto 0}
 
 .rest__concept{max-width:46em;margin:26px auto 0;font-size:15.5px;line-height:2;color:var(--ink2)}
-.rest__grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,540px);gap:clamp(32px,5vw,72px);align-items:stretch;margin-top:52px}
-/* 9/14 は左右の列の下端を揃えていた（左が60px短かった）。9/15 伝票で右が伸びたのでやめた（.rest__pairs の注記） */
-.rest__col{display:flex;flex-direction:column}
+/* ★So FB 9/15「2x2だと初めて読んだときによく分からない。画像を入れたい」→ 流れ（絵つき・横一列）→ その下に ③メニュー｜④シェフ・⑤演奏編成。
+   前の2x2は、4つの箱が同じ重さで並び、どこから読むか・箱どうしがどうつながるかが書かれていなかった */
+.rest__flow{margin-top:52px}
 .flow__title{font-size:15px;font-weight:700;letter-spacing:.12em;color:var(--ink2);margin:0 0 18px}
-.flow{list-style:none;margin:0;padding:0;counter-reset:f}
-.flow li{position:relative;counter-increment:f;display:grid;grid-template-columns:52px minmax(0,1fr);gap:18px;align-items:center;padding:14px 0}
-.flow li::before{content:counter(f);display:grid;place-items:center;width:52px;height:52px;border-radius:50%;background:var(--c);
-  font-family:var(--en);font-weight:700;font-size:23px;color:var(--on-green)}
-.flow li:not(:last-child)::after{content:"";position:absolute;left:25px;top:66px;height:calc(100% - 52px);width:2px;background:repeating-linear-gradient(to bottom,var(--line2) 0 4px,transparent 4px 8px)}
-.flow p{font-size:16.5px;font-weight:700;line-height:1.7;word-break:keep-all;overflow-wrap:anywhere}
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:24px;counter-reset:s}
+.steps li{position:relative;counter-increment:s}
+.steps__fig{position:relative;display:block}
+.steps__fig img{display:block;width:100%;height:auto;aspect-ratio:1;border-radius:20px;background:#FEFBF0}
+.steps__fig::before{content:counter(s);position:absolute;left:-8px;top:-8px;z-index:1;display:grid;place-items:center;width:40px;height:40px;border-radius:50%;
+  background:var(--c);box-shadow:0 0 0 3px #fff;font-family:var(--en);font-weight:700;font-size:19px;line-height:1;color:var(--on-green)}
+/* 次の手順への矢印は、絵と絵の間（24px）の真ん中に */
+.steps li:not(:last-child) .steps__fig::after{content:"";position:absolute;right:-16px;top:50%;width:8px;height:8px;border-top:2.5px solid var(--line2);border-right:2.5px solid var(--line2);transform:translateY(-50%) rotate(45deg)}
+.steps p{margin-top:14px;font-size:15.5px;font-weight:700;line-height:1.65;text-align:center;word-break:keep-all;overflow-wrap:anywhere}
+.rest__grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:"menu chef" "menu pairs";grid-template-rows:auto 1fr;
+  gap:24px clamp(32px,4vw,56px);align-items:start;margin-top:56px}   /* 左（伝票）と右（シェフ＋演奏編成）の下端の差 131px → 行の高さで約80pxに */
+.slip{grid-area:menu}
+.chef{grid-area:chef}
+.rest__pairs{grid-area:pairs}
+/* 見出しの前の番号＝流れの手順の番号。数字は content で描く（コピーに混ざらない） */
+.stepno{display:inline-grid;place-items:center;flex:none;width:26px;height:26px;margin-right:10px;border-radius:50%;background:var(--c)}
+.stepno::before{content:attr(data-step);font-family:var(--en);font-weight:700;font-size:14px;line-height:1;letter-spacing:0;color:var(--on-green)}
+.slip__title .stepno{margin-right:-6px}
 /* ★So FB 9/15「メニューと演奏編成をデザイン的にもう一度やり直したい」→ 生成4案（お子さまメニュー・絵本など）は「全然トーンに合ってない」
    → 実物の節を下敷きに、トーンはそのまま並べ方だけ変えた4案から T6 伝票。
    8曲を教本の順に1列、点線で区切った縦長の伝票（色は使わず、細い枠と点線だけ）。演奏編成も同じ点線の行にそろえる。
@@ -207,22 +226,24 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 .slip__title::before,.slip__title::after,.menu li,.pairs li{background-image:radial-gradient(circle,#C2B8AC 1.1px,transparent 1.5px);background-size:7px 4px;background-repeat:repeat-x}
 .slip__title::before,.slip__title::after{content:"";flex:1;height:4px;background-position:left center}
 .menu{list-style:none;margin:8px 0 0;padding:0}
-.menu li{padding:13px 2px 14px;background-position:left bottom;font-weight:700;font-size:16px;line-height:1.6;letter-spacing:.06em;word-break:keep-all;overflow-wrap:anywhere}
+.menu li{padding:15px 2px 16px;background-position:left bottom;font-weight:700;font-size:16px;line-height:1.6;letter-spacing:.06em;word-break:keep-all;overflow-wrap:anywhere}
 .menu li:last-child{background:none;border-bottom:1px solid var(--line2)}
 .slip .note{margin-top:14px}
-/* 伝票で右の列が127px伸びた。前のように演奏編成を左の列の下端へ寄せると、流れとの間に約200pxの穴があく（実測）→ 流れのすぐ下に置き、余りは左下（シェフの箱の横）に回す */
-.rest__pairs{padding-top:56px}
-.rest__pairs h4,.chef h4{margin:0 0 14px;font-size:15px;letter-spacing:.1em}
+.rest__pairs h4,.chef h4{display:flex;align-items:center;margin:0 0 14px;font-size:15px;letter-spacing:.1em}   /* 番号の丸と文字の中心をそろえる（inline だと丸が8px下がった） */
 .pairs{list-style:none;margin:0;padding:0;border-top:1px solid var(--line2)}
-.pairs li{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;padding:11px 2px 12px;background-position:left bottom}
+.pairs li{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;padding:9px 2px 10px;background-position:left bottom}
 /* 楽器の色（ヴァイオリン＝桃・ピアノ＝黄・フルート＝青・チェロ＝紫）は名前の前の小さな点だけに残す */
 .ins{display:inline-flex;align-items:center;gap:8px;font-size:15.5px;font-weight:700;line-height:1.6;letter-spacing:.04em;white-space:nowrap}
 .ins::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--c);flex:none}
 .ins--vn{--c:#B94F7F}.ins--pf{--c:#FCC800}.ins--fl{--c:#4B6CB3}.ins--vc{--c:#9C529C}
 .pairs__plus{font-weight:700;font-size:15px;color:var(--ink2)}
 .pairs__note{margin-top:14px;font-size:14.5px;line-height:1.9;color:var(--ink2)}
-.chef{margin-top:22px;background:#EAF5FA;border-radius:24px;padding:26px 30px 28px}
-.chef > p{font-size:15px;line-height:1.9;color:var(--ink2)}
+.chef{background:#EAF5FA;border-radius:24px;padding:26px 30px 28px}
+/* シェフ役の先生の絵（手順4・5と同じ人物）。右上に丸く置き、見出しと説明文を回り込ませる */
+.chef__head{display:contents}   /* PCは絵を右に回り込ませる。600px以下だけ見出しと横並びの行にする */
+.chef__img{float:right;width:112px;height:112px;margin:-6px -4px 8px 16px;border-radius:50%;object-fit:cover;background:#FEFBF0;box-shadow:0 0 0 4px #fff}
+.chef .lines__label{clear:right}
+.chef > p{font-size:15px;line-height:1.9;color:var(--ink2);word-break:keep-all;overflow-wrap:anywhere}   /* 絵の横の狭い幅で「エプロ／ン」と語の途中で折れた → 文節の切れ目（wbr）でだけ折る */
 .lines__label{margin-top:16px;font-size:14px;font-weight:700;letter-spacing:.06em;color:var(--ink2)}
 .lines{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:10px}
 .lines li{word-break:keep-all;overflow-wrap:anywhere;position:relative;background:#fff;border-radius:14px;padding:10px 18px;font-size:15px;font-weight:700;line-height:1.7}
@@ -256,8 +277,10 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 .faq summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:16px minmax(0,1fr) 22px;gap:18px;align-items:center;padding:22px 6px;font-weight:700;font-size:16.5px;line-height:1.7}
 .faq summary::-webkit-details-marker{display:none}
 .faq summary::before{content:"";width:14px;height:14px;border-radius:50%;background:var(--c)}
-.faq summary svg{width:20px;height:20px;transition:transform .28s;color:var(--green)}
-.faq details[open] summary svg{transform:rotate(90deg)}
+/* ★So FB 9/15「最初から右向きの矢印だと、他のページに飛びそうに見える」→ 閉じている時は下向き、開いたら上向き。
+   閉じる時は動き（220ms）の終わりを待たず、押した瞬間に向きを戻す（.is-closing） */
+.faq summary svg{width:20px;height:20px;transition:transform .28s;color:var(--green);transform:rotate(90deg)}
+.faq details[open]:not(.is-closing) summary svg{transform:rotate(-90deg)}
 .faq__a{overflow:hidden}
 .faq__a p{text-wrap:balance}   /* 2〜3行の短い答えは行をそろえる（最後に数字だけ落ちない） */
 .faq__a p{padding:0 44px 24px 40px;font-size:15.5px;line-height:1.95;color:var(--ink2)}
@@ -288,7 +311,9 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
   .fv__grid{grid-template-columns:minmax(0,1fr) minmax(0,420px)}
   .assure__list{gap:16px}
   .assure__card{padding:36px 22px 32px}
-  .rest__grid{grid-template-columns:minmax(0,1fr) minmax(0,400px)}
+  .steps{gap:18px}
+  .steps li:not(:last-child) .steps__fig::after{right:-13px}
+  .steps p{font-size:14.5px}
 }
 /* ★So FB 9/14「レスポンシブ対応」：実測（375/414/600/768/900/1024/1280/1440）で横溢れ・文字切れは0。直したのは次の3つ
    ①（券売機のボタンの列数の出し分け。9/15 伝票の1列にしたので不要になり外した）
@@ -339,10 +364,18 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
   .inst{grid-template-columns:repeat(2,minmax(0,1fr));gap:30px 20px;margin-top:34px}
   .inst img{max-width:150px;box-shadow:0 0 0 6px var(--ring,#FFF6CC)}
   .inst span{margin-top:14px;font-size:15.5px}
-  .rest__grid{grid-template-columns:minmax(0,1fr);gap:40px;margin-top:40px}
+  /* 流れは縦に積み、絵を左・文を右に。矢印の代わりに番号で順を追う */
+  .rest__flow{margin-top:40px}
+  .steps{grid-template-columns:minmax(0,1fr);gap:14px}
+  .steps li{display:grid;grid-template-columns:112px minmax(0,1fr);gap:18px;align-items:center}
+  .steps__fig::before{left:-6px;top:-6px;width:32px;height:32px;font-size:16px}
+  .steps li:not(:last-child) .steps__fig::after{display:none}
+  .steps__fig img{border-radius:16px}
+  .steps p{margin-top:0;text-align:left;font-size:16px}
+  .rest__grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"menu" "chef" "pairs";gap:32px;margin-top:40px}
   .slip{padding:18px 20px 20px}
-  .rest__pairs{padding-top:36px}
   .chef{padding:22px}
+  .chef__img{width:92px;height:92px;margin:-4px -2px 6px 12px}
   .gift__grid{grid-template-columns:minmax(0,1fr);gap:18px;margin-top:36px}
   .gift{padding:32px 22px 28px}
   .access__grid{grid-template-columns:minmax(0,1fr);margin-top:36px}
@@ -362,6 +395,12 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
   .kv--tl{transform:scale(.5);transform-origin:0 0;top:0!important}
   .kv--tr{transform:scale(.5);transform-origin:100% 0;top:0!important}
   .kv--br{transform:scale(.5);transform-origin:100% 100%;bottom:0!important}
+}
+/* 600px以下：シェフの説明文が絵の横で細くなり「エプロ／ン」と語の途中で折れた（375pxで実測）→ 絵は見出しの行の右に小さく置き、説明文は全幅 */
+@media (max-width:600px){
+  .chef__head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px}
+  .chef__head h4{margin:0}
+  .chef__img{float:none;order:2;width:68px;height:68px;margin:-8px -6px -8px 0}
 }
 @media (max-width:480px){
   .btn{font-size:15.5px;min-height:58px;padding:0 18px 0 22px;letter-spacing:.03em;gap:8px}
@@ -385,6 +424,7 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 /* ★So FB 9/15「スマホのヘッダーもロゴ＋CTA。画面下の追従CTAも残す」→ 900px以下も出して小さくする。
    375pxでロゴ161px＋ボタンが入るよう、420px以下は下向きの矢印を外す（飾り。行き先は文字で分かる） */
 @media (max-width:900px){
+  .hd__nav{display:none}
   .hd__in{gap:12px}
   .hd__cta{min-height:44px;padding:0 16px;gap:6px;font-size:14px;letter-spacing:.04em;box-shadow:0 8px 16px -12px rgba(60,140,55,.9)}
   .hd__cta svg{width:14px;height:14px}
@@ -461,6 +501,9 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
 <header class="hd" id="hd">
   <div class="wrap hd__in">
     <a class="hd__logo" href="#top" aria-label="ページの先頭へ"><img src="img/logo.png" width="800" height="179" alt="Suzuki Method 80th Anniversary／音楽を通して心と能力を育む Suzuki Method スズキ・メソード"></a>
+    <nav class="hd__nav" aria-label="ページ内">
+      <a href="#concert">演奏スケジュール</a><a href="#booth">楽器体験</a><a href="#faq">よくある質問</a>
+    </nav>
     <a class="btn btn--main hd__cta" href="#access">会場へのアクセス<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8l5 5 5-5"/></svg></a>
   </div>
 </header>
@@ -586,55 +629,55 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
         <h3 class="h3">メニューから1曲えらんで注文すると<wbr>目の前で演奏します</h3>
       </div>
       <p class="rest__concept fx">音楽を鑑賞するものから、子どもが自分で選び注文し受け取るものへ。ブースの一角を小さなレストランに見立ててメニューボードと食券受付を設置します。演奏者はシェフとして白いエプロンで来場者を迎えます。メニューの8曲から子どもが自分で選び、音楽家とやり取りし、生の音を<span class="nb">受け取る体験です。</span></p>
-      <!-- ★So FB 9/14「見出しと本文はいいが、その下が微妙。デザインから画像生成でやり直したい」→ 生成4案から R4。
-           黒い太枠の板／地と同じ色の箱／影つき吹き出しの3系統がばらばらだった。演奏編成の箱には中身の下に209pxの空きがあった -->
+      <!-- ★So FB 9/15「流れ・演奏編成・メニュー・シェフのひとことが2x2だと、初めて読んだときによく分からない。画像を入れたい（画像生成してよい）」
+           → 流れを絵つきの横一列にして先に読ませ、その下に③で選ぶメニュー・④のシェフ・⑤の演奏編成を手順の順に置く。
+           見出しの前の番号は「流れのどの手順の話か」。数字は CSS の content で描くので、コピーしても文字に混ざらない（隠し文字の失敗 9/14）。
+           絵は画像生成の線画（~/lp-moods/_gen/suzuki/job13・job14。3枚目だけ子どもが指さす形に作り直し）。実際の会場の写真ではない -->
+      <div class="rest__flow">
+        <p class="flow__title">流れ</p>
+        <ol class="steps">
+          <li class="fx" style="--c:var(--yellow)"><span class="steps__fig"><img src="img/rest-step1.webp" width="480" height="480" alt="" loading="lazy" decoding="async"></span><p>缶バッジをつくる</p></li>
+          <li class="fx" style="--c:var(--lime)"><span class="steps__fig"><img src="img/rest-step2.webp" width="480" height="480" alt="" loading="lazy" decoding="async"></span><p>できあがったら<wbr>食券をもらう</p></li>
+          <li class="fx" style="--c:var(--sky)"><span class="steps__fig"><img src="img/rest-step3.webp" width="480" height="480" alt="" loading="lazy" decoding="async"></span><p>メニューの8曲から<wbr>聴きたい曲を<wbr>1曲えらぶ</p></li>
+          <li class="fx" style="--c:var(--green)"><span class="steps__fig"><img src="img/rest-step4.webp" width="480" height="480" alt="" loading="lazy" decoding="async"></span><p>シェフ役の先生に<wbr>食券を渡して<wbr>注文する</p></li>
+          <li class="fx" style="--c:var(--yellow)"><span class="steps__fig"><img src="img/rest-step5.webp" width="480" height="480" alt="" loading="lazy" decoding="async"></span><p>目の前で<wbr>2人の先生が生演奏</p></li>
+        </ol>
+      </div>
       <div class="rest__grid">
-        <div class="rest__col">
-          <div class="rest__flow">
-            <p class="flow__title">流れ</p>
-            <ol class="flow">
-              <li class="fx" data-fx="left" style="--c:var(--yellow)"><p>缶バッジをつくる</p></li>
-              <li class="fx" data-fx="left" style="--c:var(--lime)"><p>できあがったら食券をもらう</p></li>
-              <li class="fx" data-fx="left" style="--c:var(--sky)"><p>メニューの8曲から<wbr>聴きたい曲を<wbr>1曲えらぶ</p></li>
-              <li class="fx" data-fx="left" style="--c:var(--green)"><p>シェフ役の先生に<wbr>食券を渡して<wbr>注文する</p></li>
-              <li class="fx" data-fx="left" style="--c:var(--yellow)"><p>目の前で2人の先生が生演奏</p></li>
-            </ol>
-          </div>
-          <div class="rest__pairs fx">
-            <h4>演奏編成</h4>
-            <!-- ★So FB 9/14「演奏編成がおかしい」：線画のアイコンがヴァイオリン＝ギター、チェロ＝楕円に見えていた。
-                 区切りの「／」「。」を見た目だけ消していたので、コピーすると記号が混ざっていた → 楽器名の色札にして隠し文字をやめた。
-                 色は缶バッジの楽器の色（ヴァイオリン＝桃・ピアノ＝黄・フルート＝青・チェロ＝紫）を指定パレットで -->
-            <ul class="pairs">
-              <li><span class="ins ins--vn">ヴァイオリン</span><span class="pairs__plus">＋</span><span class="ins ins--vn">ヴァイオリン</span></li>
-              <li><span class="ins ins--vn">ヴァイオリン</span><span class="pairs__plus">＋</span><span class="ins ins--pf">ピアノ</span></li>
-              <li><span class="ins ins--vn">ヴァイオリン</span><span class="pairs__plus">＋</span><span class="ins ins--fl">フルート</span></li>
-              <li><span class="ins ins--vn">ヴァイオリン</span><span class="pairs__plus">＋</span><span class="ins ins--vc">チェロ</span></li>
-            </ul>
-            <p class="pairs__note">同じ曲でも組み合わせで響きが変わりますので<wbr><span class="nb">2回目のご注文も可能です。</span></p>
-          </div>
+        <div class="slip fx" data-fx="rise">
+          <p class="slip__title"><span class="stepno" data-step="3" style="--c:var(--sky)" aria-hidden="true"></span>メニュー（8曲）</p>
+          <!-- ★原稿は2列×4行の表で番号なし。左列＝教本の1〜4曲目、右列＝5〜8曲目（全音『鈴木鎮一ヴァイオリン指導曲集1』の収録順）。
+               9/15 So が T6 伝票を選んだので、教本の順のまま1列にした（番号は付けない） -->
+          <ul class="menu">
+            <li>タカタカタッタの<wbr>キラキラ星</li><li>ちょうちょう</li><li>こぎつね</li><li>むすんでひらいて</li>
+            <li>クリスマスの歌</li><li>かすみか雲か</li><li>ロング・ロング・<wbr>アゴー</li><li>アレグロ</li>
+          </ul>
+          <p class="note">いずれもスズキ・メソードの子どもたちが<wbr><span class="nb">実際に最初に学んでいる曲です。</span></p>
         </div>
-        <div class="rest__col">
-          <div class="slip fx" data-fx="rise">
-            <p class="slip__title">メニュー（8曲）</p>
-            <!-- ★原稿は2列×4行の表で番号なし。左列＝教本の1〜4曲目、右列＝5〜8曲目（全音『鈴木鎮一ヴァイオリン指導曲集1』の収録順）。
-                 9/15 So が T6 伝票を選んだので、教本の順のまま1列にした（番号は付けない） -->
-            <ul class="menu">
-              <li>タカタカタッタの<wbr>キラキラ星</li><li>ちょうちょう</li><li>こぎつね</li><li>むすんでひらいて</li>
-              <li>クリスマスの歌</li><li>かすみか雲か</li><li>ロング・ロング・<wbr>アゴー</li><li>アレグロ</li>
-            </ul>
-            <p class="note">いずれもスズキ・メソードの子どもたちが<wbr><span class="nb">実際に最初に学んでいる曲です。</span></p>
+        <div class="chef fx">
+          <div class="chef__head">
+            <img class="chef__img" src="img/rest-chef.webp" width="480" height="480" alt="" loading="lazy" decoding="async">
+            <h4><span class="stepno" data-step="4" style="--c:var(--green)" aria-hidden="true"></span>シェフのひとこと</h4>
           </div>
-          <div class="chef fx">
-            <h4>シェフのひとこと</h4>
-            <p>演奏者がスズキのロゴの缶バッジをつけた白いエプロンを着用し、シェフとしてお迎えします</p>
-            <p class="lines__label">＜シェフのセリフ例＞</p>
-            <ul class="lines">
-              <li>いらっしゃいませ。<wbr>食券お預かりいたします</li>
-              <li>アレグロのオーダー入りました</li>
-              <li>毎度ありがとうございました</li>
-            </ul>
-          </div>
+          <p>演奏者が<wbr>スズキのロゴの<wbr>缶バッジを<wbr>つけた<wbr>白いエプロンを<wbr>着用し、<wbr>シェフとして<wbr>お迎えします</p>
+          <p class="lines__label">＜シェフのセリフ例＞</p>
+          <ul class="lines">
+            <li>いらっしゃいませ。<wbr>食券お預かりいたします</li>
+            <li>アレグロのオーダー入りました</li>
+            <li>毎度ありがとうございました</li>
+          </ul>
+        </div>
+        <div class="rest__pairs fx">
+          <h4><span class="stepno" data-step="5" style="--c:var(--yellow)" aria-hidden="true"></span>演奏編成</h4>
+          <!-- ★So FB 9/14「演奏編成がおかしい」：線画のアイコンがヴァイオリン＝ギター、チェロ＝楕円に見えていた → 楽器名を文字で。
+               色は缶バッジの楽器の色（ヴァイオリン＝桃・ピアノ＝黄・フルート＝青・チェロ＝紫）を名前の前の点だけに -->
+          <ul class="pairs">
+            <li><span class="ins ins--vn">ヴァイオリン</span><span class="pairs__plus">＋</span><span class="ins ins--vn">ヴァイオリン</span></li>
+            <li><span class="ins ins--vn">ヴァイオリン</span><span class="pairs__plus">＋</span><span class="ins ins--pf">ピアノ</span></li>
+            <li><span class="ins ins--vn">ヴァイオリン</span><span class="pairs__plus">＋</span><span class="ins ins--fl">フルート</span></li>
+            <li><span class="ins ins--vn">ヴァイオリン</span><span class="pairs__plus">＋</span><span class="ins ins--vc">チェロ</span></li>
+          </ul>
+          <p class="pairs__note">同じ曲でも組み合わせで響きが変わりますので<wbr><span class="nb">2回目のご注文も可能です。</span></p>
         </div>
       </div>
     </div>
@@ -749,7 +792,8 @@ document.querySelectorAll('.faq details').forEach(function(d){
       a.animate([{height:'0px',opacity:0},{height:h+'px',opacity:1}],{duration:300,easing:'cubic-bezier(.2,.7,.2,1)'}).onfinish=function(){delete d.dataset.busy};
     }else{
       var h2=a.scrollHeight;
-      a.animate([{height:h2+'px',opacity:1},{height:'0px',opacity:0}],{duration:220,easing:'ease-in'}).onfinish=function(){d.open=false;delete d.dataset.busy};
+      d.classList.add('is-closing');
+      a.animate([{height:h2+'px',opacity:1},{height:'0px',opacity:0}],{duration:220,easing:'ease-in'}).onfinish=function(){d.open=false;d.classList.remove('is-closing');delete d.dataset.busy};
     }
   });
 });
@@ -769,7 +813,24 @@ document.querySelectorAll('.faq details').forEach(function(d){
   onScroll();
   addEventListener('scroll', onScroll, {passive:true});
 
-  /* ② メニューと ④ 今いる節の表示は外した（So FB 9/15「ヘッダーはロゴとCTAのみで良い」。見本は suzuki-ark1） */
+  /* ② メニュー（全画面）は作らない。9/15 にナビを外し、同日「3つだけ戻す」になった。スマホはロゴ＋CTAだけ */
+
+  /* ④ いま見ている節をナビに出す（3つ以外の節にいる時は何も付けない） */
+  var links = [].slice.call(document.querySelectorAll('.hd__nav a[href^="#"]'));
+  if (links.length && hasIO) {
+    var map = {};
+    links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
+    var spy = new IntersectionObserver(function(ents){
+      ents.forEach(function(e){
+        if (!e.isIntersecting) return;
+        links.forEach(function(x){ x.removeAttribute('aria-current'); });
+        if (map[e.target.id]) map[e.target.id].setAttribute('aria-current', 'location');
+      });
+    }, {rootMargin:'-45% 0px -50% 0px'});
+    ['top','assure','concert','booth','access','faq','about','closing'].forEach(function(id){
+      var el = document.getElementById(id); if (el) spy.observe(el);
+    });
+  }
 
   /* ③ スクロールで順に出す。同じ時に画面に入った物どうしを、DOMの順に 90ms ずつ遅らせる */
   var fx = [].slice.call(document.querySelectorAll('.fx'));
