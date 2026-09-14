@@ -205,14 +205,12 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 .board .note{margin-top:12px;padding-top:14px;border-top:1px solid #E3D9CD}
 .rest__pairs{margin-top:auto;padding-top:44px}
 .rest__pairs h4,.chef h4{margin:0 0 14px;font-size:15px;letter-spacing:.1em}
-.pairs{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px 10px}
-.pairs li{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
-.pair{display:flex;align-items:center;gap:2px}
-.pair__i{display:grid;place-items:center;width:52px;height:52px;border-radius:50%;background:#EAF6E6;color:#2F7F28}
-.pair__i--b{background:#F3EAF4;color:#8A4A8A}
-.pair__i svg{width:34px;height:34px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.pair__plus::before{content:"+";display:block;width:14px;text-align:center;font-family:var(--en);font-weight:700;font-size:17px;color:var(--ink2)}
-.pairs__t{font-size:13px;font-weight:700;line-height:1.5;letter-spacing:.02em;word-break:keep-all;overflow-wrap:anywhere}
+.pairs{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.pairs li{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px}
+.ins{display:inline-flex;align-items:center;gap:8px;padding:7px 16px 7px 12px;border-radius:999px;background:var(--t);font-size:15px;font-weight:700;line-height:1.4;white-space:nowrap}
+.ins::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--c);flex:none}
+.ins--vn{--c:#B94F7F;--t:#F8E6EE}.ins--pf{--c:#FCC800;--t:#FFF4CC}.ins--fl{--c:#4B6CB3;--t:#E6ECF7}.ins--vc{--c:#9C529C;--t:#F2E6F2}
+.pairs__plus{font-weight:700;font-size:15px;color:var(--ink2)}
 .pairs__note{margin-top:16px;font-size:14.5px;line-height:1.9;color:var(--ink2)}
 .chef{margin-top:22px;background:#EAF5FA;border-radius:24px;padding:26px 30px 28px}
 .chef > p{font-size:15px;line-height:1.9;color:var(--ink2)}
@@ -327,7 +325,6 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
   .inst span{margin-top:14px;font-size:15.5px}
   .rest__grid{grid-template-columns:minmax(0,1fr);gap:40px;margin-top:40px}
   .board{padding:24px 22px 22px}
-  .pairs{grid-template-columns:repeat(2,minmax(0,1fr))}
   .rest__pairs{padding-top:36px}
   .chef{padding:22px}
   .gift__grid{grid-template-columns:minmax(0,1fr);gap:18px;margin-top:36px}
@@ -420,15 +417,18 @@ html.fx-on .fx.hh-in{opacity:1;transform:none;scale:1}
    四分円・半円がマスの中で数秒おきにくるっと向きを変え（タイルが回る）、ゆっくり上下する。
    周期は素数っぽくずらし、遅れは負の値で初期位相もずらす（同じ周期だと機械的に見える／lp-polish）。
    rotate と translate は別のプロパティなので、登場の scale（.fx pop）とぶつからない。動きを減らす設定では止める */
-@keyframes kv-turn{0%,17%{rotate:0deg}25%,42%{rotate:90deg}50%,67%{rotate:180deg}75%,92%{rotate:270deg}100%{rotate:360deg}}
-@keyframes kv-drift{0%,100%{translate:0 0}50%{translate:0 -12px}}
+/* ★So FB 9/14（2回目）「一気に動きすぎ。1個か2個ずつ。頻度も高すぎる」
+   前：37個が17〜31秒周期で常に回り、全部が上下にも漂っていた（FVの中で0.6秒に1回どこかが動く）。
+   今：まとまり（FV・締め・各節）の中で1つずつ順番に回す。1つの図形は80秒に1回だけ、1.4秒かけて90度回る。
+   並び（--i）ごとに8秒ずつずらすので、画面の中で動くのは8秒に1個（まとまりの境目で2個）。漂いはやめた。
+   --i は HTML に書く（nth-child だと左右の列で同じ番号が同時に回る） */
+@keyframes kv-turn{
+  0%{rotate:0deg} .4375%{rotate:90deg} 25%{rotate:90deg} 25.4375%{rotate:180deg}
+  50%{rotate:180deg} 50.4375%{rotate:270deg} 75%{rotate:270deg} 75.4375%{rotate:360deg} 100%{rotate:360deg}
+}
 @media (prefers-reduced-motion:no-preference){
   .fv__deco i,.closing__deco i[class],.sec > .kv i,.live__photo .kv i{
-    animation:kv-turn var(--turn,19s) cubic-bezier(.7,0,.25,1) var(--turn-d,-2s) infinite,kv-drift var(--drift,11s) ease-in-out var(--drift-d,0s) infinite}
-  .fv__deco i:nth-child(2n),.closing__deco i:nth-child(2n),.sec > .kv i:nth-child(2n){--turn:23s;--turn-d:-7s;--drift:13s;--drift-d:-4s}
-  .fv__deco i:nth-child(3n),.closing__deco i:nth-child(3n),.sec > .kv i:nth-child(3n){--turn:17s;--turn-d:-11s;--drift:9s;--drift-d:-6s}
-  .fv__deco i:nth-child(5n),.closing__deco i:nth-child(5n){--turn:29s;--turn-d:-13s;--drift:15s;--drift-d:-9s}
-  .fv__deco i:nth-child(7n),.closing__deco i:nth-child(7n){--turn:31s;--turn-d:-19s}
+    animation:kv-turn 320s cubic-bezier(.55,0,.25,1.15) calc(var(--i,0) * 8s - 72s) infinite}
 }
 
 /* ── 触れたときの反応（タップ後に残らないよう hover のある端末だけ） ── */
@@ -488,20 +488,20 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
 <section class="fv" id="top">
   <div class="fv__deco" aria-hidden="true">
     <div class="kv col" style="inset:0">
-      <i class="pk q3 fx" data-fx="pop" style="--fx-d:585ms;--x:53px;--y:-30px;--s:111px"></i>
-      <i class="sp hr fx" data-fx="pop" style="--fx-d:420ms;--x:53px;--y:192px;--s:111px"></i>
-      <i class="gy q4 fx" data-fx="pop" style="--fx-d:1190ms;--x:53px;--y:414px;--s:111px"></i>
-      <i class="ls q1 fx" data-fx="pop" style="--fx-d:1080ms;--x:53px;--y:636px;--s:111px"></i>
-      <i class="pk hl fx" data-fx="pop" style="--fx-d:475ms;--x:53px;--y:858px;--s:111px"></i>
-      <i class="yl q4 fx" data-fx="pop" style="--fx-d:1300ms;--x:1276px;--y:-20px;--s:111px"></i>
-      <i class="sp q3 fx" data-fx="pop" style="--fx-d:1245ms;--x:1276px;--y:646px;--s:111px"></i>
-      <i class="yl ht fx" data-fx="pop" style="--fx-d:530ms;--x:1276px;--y:868px;--s:111px"></i>
+      <i class="pk q3 fx" data-fx="pop" style="--i:0;--fx-d:585ms;--x:53px;--y:-30px;--s:111px"></i>
+      <i class="sp hr fx" data-fx="pop" style="--i:2;--fx-d:420ms;--x:53px;--y:192px;--s:111px"></i>
+      <i class="gy q4 fx" data-fx="pop" style="--i:4;--fx-d:1190ms;--x:53px;--y:414px;--s:111px"></i>
+      <i class="ls q1 fx" data-fx="pop" style="--i:6;--fx-d:1080ms;--x:53px;--y:636px;--s:111px"></i>
+      <i class="pk hl fx" data-fx="pop" style="--i:8;--fx-d:475ms;--x:53px;--y:858px;--s:111px"></i>
+      <i class="yl q4 fx" data-fx="pop" style="--i:9;--fx-d:1300ms;--x:1276px;--y:-20px;--s:111px"></i>
+      <i class="sp q3 fx" data-fx="pop" style="--i:10;--fx-d:1245ms;--x:1276px;--y:646px;--s:111px"></i>
+      <i class="yl ht fx" data-fx="pop" style="--i:11;--fx-d:530ms;--x:1276px;--y:868px;--s:111px"></i>
     </div>
     <div class="kv" style="inset:0">
-      <i class="sp q1 fx" data-fx="pop" style="--fx-d:695ms;--x:1114px;--y:175px;--s:150px"></i>
-      <i class="yp ht fx" data-fx="pop" style="--fx-d:1025ms;--x:846px;--y:820px;--s:150px"></i>
-      <i class="ls q2 fx" data-fx="pop" style="--fx-d:860ms;--x:996px;--y:760px;--s:130px"></i>
-      <i class="pk q1 fx" data-fx="pop" style="--fx-d:1355ms;--x:1126px;--y:790px;--s:150px"></i>
+      <i class="sp q1 fx" data-fx="pop" style="--i:1;--fx-d:695ms;--x:1114px;--y:175px;--s:150px"></i>
+      <i class="yp ht fx" data-fx="pop" style="--i:3;--fx-d:1025ms;--x:846px;--y:820px;--s:150px"></i>
+      <i class="ls q2 fx" data-fx="pop" style="--i:5;--fx-d:860ms;--x:996px;--y:760px;--s:130px"></i>
+      <i class="pk q1 fx" data-fx="pop" style="--i:7;--fx-d:1355ms;--x:1126px;--y:790px;--s:150px"></i>
     </div>
   </div>
   <div class="wrap fv__grid">
@@ -527,7 +527,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
 <!-- ② 3つの安心 -->
 <section class="sec assure" id="assure">
   <div class="kv kv--tl" aria-hidden="true" style="left:max(0px,calc(50% - 640px));top:40px;width:180px;height:180px">
-    <i class="yp q3 fx" data-fx="pop" style="--x:0;--y:0;--s:66px"></i><i class="sp q2 fx" data-fx="pop" style="--x:66px;--y:0;--s:66px"></i><i class="yl hb fx" data-fx="pop" style="--x:0;--y:66px;--s:66px"></i>
+    <i class="yp q3 fx" data-fx="pop" style="--i:0;--x:0;--y:0;--s:66px"></i><i class="sp q2 fx" data-fx="pop" style="--i:1;--x:66px;--y:0;--s:66px"></i><i class="yl hb fx" data-fx="pop" style="--i:2;--x:0;--y:66px;--s:66px"></i>
   </div>
   <div class="wrap">
     <h2 class="h2 fx">思い立ったら<wbr>お立ち寄り<wbr>いただけます</h2>
@@ -547,9 +547,9 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
     <div class="live__photo fx" data-fx="rise">
       <img src="img/concert.jpg" width="1800" height="760" loading="lazy" alt="半円の屋根の下で子どもたちが並んで演奏し、広場で大勢が聴いている">
       <div class="kv" aria-hidden="true">
-        <i class="yl q1 fx" data-fx="pop" style="--x:-34px;--y:calc(100% - 64px);--s:98px"></i>
-        <i class="ls q2 fx" data-fx="pop" style="--x:64px;--y:calc(100% - 30px);--s:64px"></i>
-        <i class="yp q3 fx" data-fx="pop" style="--x:calc(100% - 64px);--y:-34px;--s:98px"></i>
+        <i class="yl q1 fx" data-fx="pop" style="--i:0;--x:-34px;--y:calc(100% - 64px);--s:98px"></i>
+        <i class="ls q2 fx" data-fx="pop" style="--i:2;--x:64px;--y:calc(100% - 30px);--s:64px"></i>
+        <i class="yp q3 fx" data-fx="pop" style="--i:4;--x:calc(100% - 64px);--y:-34px;--s:98px"></i>
       </div>
     </div>
     <table class="live__table fx">
@@ -566,17 +566,17 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
     </dl>
   </div>
   <div class="kv kv--br" aria-hidden="true" style="right:max(0px,calc(50% - 700px));bottom:26px;width:140px;height:140px">
-    <i class="yl q1 fx" data-fx="pop" style="--x:70px;--y:0;--s:70px"></i><i class="yp q4 fx" data-fx="pop" style="--x:0;--y:70px;--s:70px"></i><i class="sp q1 fx" data-fx="pop" style="--x:70px;--y:70px;--s:70px"></i>
+    <i class="yl q1 fx" data-fx="pop" style="--i:1;--x:70px;--y:0;--s:70px"></i><i class="yp q4 fx" data-fx="pop" style="--i:3;--x:0;--y:70px;--s:70px"></i><i class="sp q1 fx" data-fx="pop" style="--i:5;--x:70px;--y:70px;--s:70px"></i>
   </div>
 </section>
 
 <!-- ④ ブース -->
 <section class="sec booth" id="booth">
   <div class="kv kv--tl" aria-hidden="true" style="left:0;top:0;width:200px;height:250px">
-    <i class="yl q3 fx" data-fx="pop" style="--x:0;--y:0;--s:100px"></i><i class="sp q4 fx" data-fx="pop" style="--x:0;--y:100px;--s:100px"></i>
+    <i class="yl q3 fx" data-fx="pop" style="--i:0;--x:0;--y:0;--s:100px"></i><i class="sp q4 fx" data-fx="pop" style="--i:2;--x:0;--y:100px;--s:100px"></i>
   </div>
   <div class="kv kv--tr" aria-hidden="true" style="right:0;top:0;width:260px;height:140px">
-    <i class="ls ht fx" data-fx="pop" style="--x:0;--y:-60px;--s:130px"></i><i class="sp q4 fx" data-fx="pop" style="--x:130px;--y:-60px;--s:130px"></i>
+    <i class="ls ht fx" data-fx="pop" style="--i:1;--x:0;--y:-60px;--s:130px"></i><i class="sp q4 fx" data-fx="pop" style="--i:3;--x:130px;--y:-60px;--s:130px"></i>
   </div>
   <div class="wrap">
     <h2 class="h2 fx">演奏のあとは<wbr>そのまま楽器体験へ</h2>
@@ -620,14 +620,16 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
           </div>
           <div class="rest__pairs fx">
             <h4>演奏編成</h4>
-            <!-- 原稿は「A＋B／A＋B／…。同じ曲でも…」の1文。区切りの「／」と「。」は文字として残して見た目だけ消す（.vh） -->
+            <!-- ★So FB 9/14「演奏編成がおかしい」：線画のアイコンがヴァイオリン＝ギター、チェロ＝楕円に見えていた。
+                 区切りの「／」「。」を見た目だけ消していたので、コピーすると記号が混ざっていた → 楽器名の色札にして隠し文字をやめた。
+                 色は缶バッジの楽器の色（ヴァイオリン＝桃・ピアノ＝黄・フルート＝青・チェロ＝紫）を指定パレットで -->
             <ul class="pairs">
-              <li><span class="pair"><i class="pair__i"><svg viewBox="0 0 40 40" aria-hidden="true"><g transform="rotate(38 20 20)"><path d="M20 3.5v13"/><path d="M17.6 3.5h4.8"/><path d="M15.4 16.6c-3.2 1.3-4.3 3.9-3.2 6.5.9 2.1-1.2 3.6-.6 6.1.7 3.3 4.1 5.3 8.4 5.3s7.7-2 8.4-5.3c.6-2.5-1.5-4-.6-6.1 1.1-2.6 0-5.2-3.2-6.5-1.8-.8-3-.3-4.6-.3s-2.8-.5-4.6.3z"/><path d="M18 26.5h4"/></g></svg></i><span class="pair__plus" aria-hidden="true"></span><i class="pair__i pair__i--b"><svg viewBox="0 0 40 40" aria-hidden="true"><g transform="rotate(38 20 20)"><path d="M20 3.5v13"/><path d="M17.6 3.5h4.8"/><path d="M15.4 16.6c-3.2 1.3-4.3 3.9-3.2 6.5.9 2.1-1.2 3.6-.6 6.1.7 3.3 4.1 5.3 8.4 5.3s7.7-2 8.4-5.3c.6-2.5-1.5-4-.6-6.1 1.1-2.6 0-5.2-3.2-6.5-1.8-.8-3-.3-4.6-.3s-2.8-.5-4.6.3z"/><path d="M18 26.5h4"/></g></svg></i></span><span class="pairs__t">ヴァイオリン＋<wbr>ヴァイオリン</span><span class="vh">／</span></li>
-              <li><span class="pair"><i class="pair__i"><svg viewBox="0 0 40 40" aria-hidden="true"><g transform="rotate(38 20 20)"><path d="M20 3.5v13"/><path d="M17.6 3.5h4.8"/><path d="M15.4 16.6c-3.2 1.3-4.3 3.9-3.2 6.5.9 2.1-1.2 3.6-.6 6.1.7 3.3 4.1 5.3 8.4 5.3s7.7-2 8.4-5.3c.6-2.5-1.5-4-.6-6.1 1.1-2.6 0-5.2-3.2-6.5-1.8-.8-3-.3-4.6-.3s-2.8-.5-4.6.3z"/><path d="M18 26.5h4"/></g></svg></i><span class="pair__plus" aria-hidden="true"></span><i class="pair__i pair__i--b"><svg viewBox="0 0 40 40" aria-hidden="true"><rect x="4" y="11" width="32" height="19" rx="2.5"/><path d="M4 19.5h32"/><path d="M10.4 19.5V30M16.8 19.5V30M23.2 19.5V30M29.6 19.5V30"/></svg></i></span><span class="pairs__t">ヴァイオリン＋<wbr>ピアノ</span><span class="vh">／</span></li>
-              <li><span class="pair"><i class="pair__i"><svg viewBox="0 0 40 40" aria-hidden="true"><g transform="rotate(38 20 20)"><path d="M20 3.5v13"/><path d="M17.6 3.5h4.8"/><path d="M15.4 16.6c-3.2 1.3-4.3 3.9-3.2 6.5.9 2.1-1.2 3.6-.6 6.1.7 3.3 4.1 5.3 8.4 5.3s7.7-2 8.4-5.3c.6-2.5-1.5-4-.6-6.1 1.1-2.6 0-5.2-3.2-6.5-1.8-.8-3-.3-4.6-.3s-2.8-.5-4.6.3z"/><path d="M18 26.5h4"/></g></svg></i><span class="pair__plus" aria-hidden="true"></span><i class="pair__i pair__i--b"><svg viewBox="0 0 40 40" aria-hidden="true"><g transform="rotate(-32 20 20)"><rect x="2.5" y="17.3" width="35" height="5.4" rx="2.7"/><path d="M12 20h.01M18 20h.01M24 20h.01M30 20h.01"/></g></svg></i></span><span class="pairs__t">ヴァイオリン＋<wbr>フルート</span><span class="vh">／</span></li>
-              <li><span class="pair"><i class="pair__i"><svg viewBox="0 0 40 40" aria-hidden="true"><g transform="rotate(38 20 20)"><path d="M20 3.5v13"/><path d="M17.6 3.5h4.8"/><path d="M15.4 16.6c-3.2 1.3-4.3 3.9-3.2 6.5.9 2.1-1.2 3.6-.6 6.1.7 3.3 4.1 5.3 8.4 5.3s7.7-2 8.4-5.3c.6-2.5-1.5-4-.6-6.1 1.1-2.6 0-5.2-3.2-6.5-1.8-.8-3-.3-4.6-.3s-2.8-.5-4.6.3z"/><path d="M18 26.5h4"/></g></svg></i><span class="pair__plus" aria-hidden="true"></span><i class="pair__i pair__i--b"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 2v10"/><path d="M17.5 2h5"/><path d="M14.4 12.6c-3.8 1.5-5.1 4.6-3.8 7.7 1 2.5-1.4 4.3-.7 7.2.8 3.9 4.9 6.3 10.1 6.3s9.3-2.4 10.1-6.3c.7-2.9-1.7-4.7-.7-7.2 1.3-3.1 0-6.2-3.8-7.7-2.1-.9-3.6-.4-5.6-.4s-3.5-.5-5.6.4z"/><path d="M17.6 24h4.8"/><path d="M20 33.8V38"/></svg></i></span><span class="pairs__t">ヴァイオリン＋<wbr>チェロ</span><span class="vh">。</span></li>
+              <li><span class="ins ins--vn">ヴァイオリン</span><span class="pairs__plus">＋</span><span class="ins ins--vn">ヴァイオリン</span></li>
+              <li><span class="ins ins--vn">ヴァイオリン</span><span class="pairs__plus">＋</span><span class="ins ins--pf">ピアノ</span></li>
+              <li><span class="ins ins--vn">ヴァイオリン</span><span class="pairs__plus">＋</span><span class="ins ins--fl">フルート</span></li>
+              <li><span class="ins ins--vn">ヴァイオリン</span><span class="pairs__plus">＋</span><span class="ins ins--vc">チェロ</span></li>
             </ul>
-            <p class="pairs__note">同じ曲でも組み合わせで響きが変わりますので2回目のご注文も可能です。</p>
+            <p class="pairs__note">同じ曲でも組み合わせで響きが変わりますので<wbr><span class="nb">2回目のご注文も可能です。</span></p>
           </div>
         </div>
         <div class="rest__col">
@@ -731,8 +733,8 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
 <!-- ⑧ フッターCTA -->
 <section class="sec closing" id="closing">
   <div class="closing__deco" aria-hidden="true">
-    <div class="row"><i class="yl fx" data-fx="pop"></i><i class="sp q3 fx" data-fx="pop"></i><i></i><i class="ls hb fx" data-fx="pop"></i><i class="yp q2 fx" data-fx="pop"></i><i></i><i class="pk q4 fx" data-fx="pop"></i><i class="gy ht fx" data-fx="pop"></i></div>
-    <div class="row"><i class="sp q1 fx" data-fx="pop"></i><i></i><i class="yl hb fx" data-fx="pop"></i><i class="pk fx" data-fx="pop"></i><i class="ls q2 fx" data-fx="pop"></i><i class="yp q1 fx" data-fx="pop"></i><i></i><i class="gy q4 fx" data-fx="pop"></i></div>
+    <div class="row"><i class="yl fx" data-fx="pop" style="--i:0"></i><i class="sp q3 fx" data-fx="pop" style="--i:2"></i><i></i><i class="ls hb fx" data-fx="pop" style="--i:4"></i><i class="yp q2 fx" data-fx="pop" style="--i:6"></i><i></i><i class="pk q4 fx" data-fx="pop" style="--i:8"></i><i class="gy ht fx" data-fx="pop" style="--i:10"></i></div>
+    <div class="row"><i class="sp q1 fx" data-fx="pop" style="--i:1"></i><i></i><i class="yl hb fx" data-fx="pop" style="--i:3"></i><i class="pk fx" data-fx="pop" style="--i:5"></i><i class="ls q2 fx" data-fx="pop" style="--i:7"></i><i class="yp q1 fx" data-fx="pop" style="--i:9"></i><i></i><i class="gy q4 fx" data-fx="pop" style="--i:11"></i></div>
   </div>
   <div class="wrap">
     <div class="closing__panel fx" data-fx="rise">
