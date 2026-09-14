@@ -564,7 +564,48 @@ addEventListener("load",function(){
     //    幅をまたいで突き合わせる Python 側に判断を渡す。
     if(gone.length) soft.push("出るはずの中身が消えている: "+gone.join(" / "));
 
-    //   緑=通過 / 赤=要対応。順は resp / orphan / br / embed / align / contrast / h2 / 消えた中身 / 禁則 / 被り / 文字の比。
+    // ── 1画面目の部品の多さ（So FB 2026-09-14「FVがごちゃごちゃしている」）
+    //   地・枠・影のどれかを持つ部品を数える。suzuki-ark1 は12個・7種類で、ほかの節は1画面0〜6個だった。
+    //   🚨 背景の飾り（aria-hidden）は数えない。締めの節は図形がFVより密でも散らかって見えなかった＝犯人は手前の部品。
+    //   🚨 innerHeight は使えない（撮影は高さ20000pxの iframe の中）。1画面目は上から900pxとする。
+    //   🚨 写真・動画・全幅の地（ヘッダーの帯・節の地）は部品に数えない。
+    if(W>=1024){
+      var fbBg=getComputedStyle(document.body).backgroundColor, fbN=0, fbKind={}, fbNames=[], fbTxt=0, fbBold=0, fbDeco=[], fbText=[];
+      [].slice.call(document.body.querySelectorAll("*")).forEach(function(e){
+        if(e.closest("svg") || /^(SCRIPT|STYLE|TEMPLATE|IMG|VIDEO|IFRAME|PICTURE|CANVAS)$/.test(e.tagName)) return;
+        var r=e.getBoundingClientRect(), top=r.top+scrollY;
+        if(top>=900 || r.bottom+scrollY<=0 || r.width<20 || r.height<16) return;
+        var s=getComputedStyle(e);
+        if(s.display==="none" || s.visibility==="hidden" || parseFloat(s.opacity)===0) return;
+        if(e.closest("[aria-hidden='true']")){
+          if(r.width>=40 && (s.backgroundImage!=="none" || s.backgroundColor!=="rgba(0, 0, 0, 0)")) fbDeco.push(r);
+          return;
+        }
+        var own=[].slice.call(e.childNodes).some(function(n){return n.nodeType===3 && n.textContent.trim()});
+        if(own){ fbTxt++; if(parseInt(s.fontWeight,10)>=600) fbBold++; fbText.push(r); }
+        if(r.width>=W*0.9) return;
+        var fill=s.backgroundColor!=="rgba(0, 0, 0, 0)" && s.backgroundColor!==fbBg;
+        var line=parseFloat(s.borderTopWidth)>0 && s.borderTopStyle!=="none" && s.borderTopColor.indexOf(", 0)")<0;
+        var shadow=s.boxShadow!=="none";
+        if(!(fill||line||shadow)) return;
+        var rad=parseFloat(s.borderTopLeftRadius)||0;
+        var shape=rad>=r.height/2-1 ? (Math.abs(r.width-r.height)<2 ? "丸" : "カプセル") : (rad>0 ? "角丸" : "角");
+        fbKind[[fill?"塗り":"",line?"枠":"",shadow?"影":"",shape].filter(Boolean).join("+")]=1;
+        fbN++;
+        if(fbNames.length<10) fbNames.push(nm(e));
+      });
+      var fbGap=null;
+      fbText.forEach(function(a){ fbDeco.forEach(function(b){
+        var dx=Math.max(0,b.left-a.right,a.left-b.right), dy=Math.max(0,b.top-a.bottom,a.top-b.bottom), g=Math.round(Math.sqrt(dx*dx+dy*dy));
+        if(fbGap===null || g<fbGap) fbGap=g;
+      }); });
+      var fbK=Object.keys(fbKind).length;
+      if(fbN>=10 || fbK>=6)
+        soft.push("1画面目の部品が多い（"+W+"px）: 地・枠・影のある部品"+fbN+"個・作り"+fbK+"種類（"+fbNames.join("・")+"）"
+          +"／太字"+(fbTxt?Math.round(fbBold/fbTxt*100):0)+"%"+(fbGap!==null?"／飾りの図形と文字の隙間 最小"+fbGap+"px":""));
+    }
+
+    //   緑=通過 / 赤=要対応。順は resp / orphan / br / embed / align / contrast / h2 / 消えた中身 / 禁則 / 被り / 文字の比 / 1画面目の部品。
     //   🚨 判定は必ずこの配列より【前】に置く。後ろに書くと out に積む前に色が
     //      決まるので、赤にならない（2026-09-11、消えた中身の判定で踏んだ）。
     var FLAGS=[
@@ -579,6 +620,7 @@ addEventListener("load",function(){
       soft.some(function(x){return /行頭に落ちてはいけない字/.test(x)}),
       out.some(function(x){return /文字が写真に被っている/.test(x)}),
       out.some(function(x){return /文字が地に沈んで読めない/.test(x)}),
+      soft.some(function(x){return /1画面目の部品が多い/.test(x)}),
     ];
     var fl=document.createElement("div");
     fl.style.cssText="position:absolute;left:0;top:0;z-index:2147483647;display:flex";
@@ -857,6 +899,9 @@ HOW = {
                     "外れていないか見る。タブを使わないなら display:block の変種クラスを当てる",
     "h2-uniform": "節ごとに書いている見出しの級数をトークンに寄せる"
                   "（--h2 / --h2-w / --h2-lh / --h2-ls）。節の部品側では指定しない",
+    "fv-busy": "帯・丸枠・タグの中の文字は、枠と地を外して地の上にじかに置く。"
+               "まとまりは余白の差で作る（まとまりの中は狭く、まとまりの間は広く）。"
+               "枠を残すのはボタンと写真だけにし、手前の色はボタンの1色に絞る（飾りの図形と同じ色を手前で使わない）",
 }
 
 
@@ -906,7 +951,7 @@ def read_flags(png):
     content-gone（probe の FLAGS と同じ8本）。"""
     px = Image.open(png).convert("RGB").load()
     out = []
-    for i in range(11):
+    for i in range(12):
         c = px[i * 16 + 8, 8]
         out.append("ng" if (c[0] > 150 and c[1] < 90) else ("ok" if (c[1] > 110 and c[0] < 90) else "?"))
     return out
@@ -998,7 +1043,8 @@ def check_script(lines, sp):
         if re.search(r"CTA|ボタン", label):
             s = re.sub(r"へリンク$", "へ", s)
         # ★「1. 」「Q．」の番号・記号はLPでは付かない（番号は CSS の counter で出すことが多い）
-        s = re.sub(r"^\d+[.．]\s*", "", s)
+        # ★行頭の丸数字（①予約・申込不要）も同じ。LPでは CSS の連番になる（suzuki-ark v2 で ②③ を誤検出）
+        s = re.sub(r"^(?:\d+[.．]|[①-⑳])\s*", "", s)
         faq = bool(re.match(r"^Q[．.]", s))
         s = re.sub(r"^[QA][．.]\s*", "", s)
         if len(s) < 20:
@@ -1411,7 +1457,7 @@ def main():
         # 撮影で得たフラグ（5幅ぶん）を項目へ振り分ける。1幅でも ng なら ng
         order = ["responsive", "orphan-line", "br-margin", "embed-controls",
                  "alignment", "contrast", "h2-uniform", "content-gone", "kinsoku",
-                 "overlap", "text-contrast"]
+                 "overlap", "text-contrast", "fv-busy"]
         # 🚨 マーカーが読めない（"?"）のを「ok」にしてはいけない。
         #    probe が途中で例外を投げるとマーカーが描かれず、全項目が緑に見える。
         #    2026-09-11 に実際に踏んだ（alignment を足した直後、6件の上限で
@@ -1425,7 +1471,8 @@ def main():
                  "content-gone": "隠れて消えている中身は無い（タブ・FAQは正常）",
                  "kinsoku": "行頭に落ちてはいけない字は無い（全幅で実測）",
                  "overlap": "文字と写真の矩形は重なっていない（5幅で実測）",
-                 "text-contrast": "単色の地の上の文字はすべて基準以上（大きい字3.0・本文4.5）"}
+                 "text-contrast": "単色の地の上の文字はすべて基準以上（大きい字3.0・本文4.5）",
+                 "fv-busy": "1画面目（1024px以上）の地・枠・影のある部品は9個以下・作りは5種類以下"}
         # 検出文の頭の言葉で項目に振り分ける。probe が push する文言と対応させる
         MARK = {
             "responsive":     ("横スクロール", "画面外", "切れている"),
@@ -1439,6 +1486,7 @@ def main():
             "kinsoku":        ("行頭に落ちてはいけない字",),
             "overlap":        ("文字が写真に被っている",),
             "text-contrast":  ("文字が地に沈んで読めない",),
+            "fv-busy":        ("1画面目の部品が多い",),
         }
         allmsg = (detail.get("out") or []) + (detail.get("soft") or [])
         found = {}

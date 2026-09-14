@@ -81,7 +81,7 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 .hd__in{display:flex;align-items:center;gap:24px;height:var(--head-h);transition:height .3s}
 .hd__logo{flex:none;margin-right:auto}
 .hd__logo img{height:46px;width:auto;transition:height .3s}
-.hd__nav{display:flex;gap:clamp(18px,2vw,30px);font-size:14.5px;font-weight:700;letter-spacing:.06em}
+.hd__nav{display:flex;gap:clamp(18px,2vw,30px);font-size:14.5px;font-weight:500;letter-spacing:.06em}   /* So FB 9/14「ごちゃごちゃ」：1画面目の文字の95%が太字だった */
 .hd__nav a{text-decoration:none;padding:8px 0;position:relative;white-space:nowrap}
 .hd__nav a::after{content:"";position:absolute;left:0;right:0;bottom:2px;height:3px;border-radius:2px;background:var(--green);transform:scaleX(0);transform-origin:left;transition:transform .25s}
 .hd__nav a:hover::after{transform:scaleX(1)}
@@ -91,22 +91,31 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 .fv__deco{position:absolute;top:0;bottom:0;left:50%;width:1440px;transform:translateX(-50%);z-index:0;pointer-events:none}
 .fv__grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,560px);column-gap:clamp(32px,4.4vw,64px);
   grid-template-areas:"band band" "conds photo" "h1 photo" "lead photo" "cta cta";grid-template-rows:auto auto auto 1fr auto;align-items:start}
-/* 実測：帯 x170-1079・高さ96（＠1536）。左端は本文より外へ出し、右端だけ丸める */
-.fv__band{grid-area:band;display:flex;align-items:center;flex-wrap:wrap;gap:6px 18px;background:var(--green);color:var(--on-green);
-  margin-left:-34px;padding:14px 44px 14px 34px;width:min(100%,900px);min-height:70px;border-radius:0 999px 999px 0}
-.fv__tag{background:#fff;color:var(--purple);border-radius:999px;padding:5px 14px;font-family:var(--en);font-weight:700;font-size:13.5px;letter-spacing:.04em;line-height:1.4;white-space:nowrap}
-.fv__when{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 14px;font-weight:700;line-height:1.5}
-.fv__date{font-size:clamp(17px,1.6vw,22px);letter-spacing:.04em;white-space:nowrap}
+/* ★So FB 2026-09-14「背景の形は満足／FVがごちゃごちゃしている」→ A案（引き算）。
+   実測：1画面目に地・枠・影のある部品が12個・7種類（緑の帯・白いタグ・条件の丸枠3つ＋色丸3つ・ボタン・写真の額）、
+   ほかの節は1画面0〜6個。締めの節は図形がFVより密でも散らからない＝犯人は背景でなく手前の部品。
+   帯・タグ・丸枠の地と枠を外し、地の上にじかに置く。まとまりは余白の差で作る（中は狭く・間は広く）。 */
+.fv__band{grid-area:band;display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding-top:6px}
+.fv__tag{color:var(--purple);font-family:var(--en);font-weight:700;font-size:15px;letter-spacing:.04em;line-height:1.5;white-space:nowrap}
+.fv__when{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 18px;font-weight:700;line-height:1.5}
+.fv__date{font-size:clamp(19px,1.8vw,26px);letter-spacing:.04em;white-space:nowrap}
 .fv__date b{font-family:var(--en);font-weight:700;font-size:1.12em}
-.fv__place{font-size:15px;letter-spacing:.06em;white-space:nowrap}
-.conds{grid-area:conds;display:flex;flex-wrap:wrap;gap:10px 10px;margin:36px 0 0;padding:0;list-style:none}
-.conds li{display:flex;align-items:center;gap:9px;background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:8px 18px 8px 9px;font-weight:700;font-size:15px;line-height:1.4;box-shadow:0 2px 10px rgba(80,60,40,.06)}
-.conds .ic{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;flex:none}
-.conds .ic svg{width:15px;height:15px}
-.fv__h1{grid-area:h1;margin:30px 0 0;font-size:var(--h1);line-height:var(--h1-lh);font-weight:700;letter-spacing:.05em;word-break:keep-all;overflow-wrap:anywhere}
-.mk{background:linear-gradient(transparent 58%,rgba(252,200,0,.62) 58%,rgba(252,200,0,.62) 92%,transparent 92%);padding:0 .04em}
+.fv__place{font-size:15px;font-weight:500;letter-spacing:.06em;color:var(--ink2);white-space:nowrap}
+.conds{grid-area:conds;display:flex;flex-wrap:wrap;gap:10px 26px;margin:30px 0 0;padding:0;list-style:none}
+.conds li{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;line-height:1.5}
+.conds .ic{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;flex:none;background:var(--green)}
+.conds .ic svg{width:15px;height:15px}   /* 13pxだと「出入り自由」の矢印がつぶれた */
+.fv__h1{grid-area:h1;margin:40px 0 0;font-size:var(--h1);line-height:var(--h1-lh);font-weight:700;letter-spacing:.05em;word-break:keep-all;overflow-wrap:anywhere}
+/* 強調は決めごと（rules.json「FV見出しにブランドカラーの強調を1箇所」）なので残す。面を細くして主張を下げた */
+.mk{background:linear-gradient(transparent 70%,rgba(252,200,0,.58) 70%,rgba(252,200,0,.58) 93%,transparent 93%);padding:0 .04em}
 .fv__lead{grid-area:lead;margin-top:22px;font-size:var(--lead);line-height:2.05;color:var(--ink2);max-width:33em;word-break:keep-all;overflow-wrap:anywhere}
-.fv__cta{grid-area:cta;display:flex;flex-wrap:wrap;gap:14px;margin-top:34px}
+.fv__cta{grid-area:cta;display:flex;flex-wrap:wrap;gap:14px;margin-top:40px}
+/* 左右の図形の列と文字の隙間が16pxしかなかった。図形は動かさず（So：背景は今のまま）、中身を内側へ寄せる */
+@media (min-width:1101px){
+  .fv__grid{padding-inline:24px}
+  /* 帯をやめてFVが44px縮み（859→815＠1440）、下端の図形が44px余計に切れた。図形の見え方を元に戻すため下の余白で返す */
+  .fv{padding-bottom:calc(clamp(80px,8vw,110px) + 44px)}
+}
 /* 実測：写真 776,318-1336,744／白い台紙 755-1365×300-820（＠1536）＝上左右18px・下64px */
 .fv__photo{grid-area:photo;margin:36px 0 0;background:#fff;padding:18px 18px 64px;border-radius:6px;
   box-shadow:0 26px 54px -26px rgba(70,50,30,.38),0 2px 8px rgba(70,50,30,.06)}
@@ -159,7 +168,7 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 .taiken__note{max-width:44em;margin:14px auto 0}
 
 .rest__concept{max-width:46em;margin:26px auto 0;font-size:15.5px;line-height:2;color:var(--ink2)}
-.rest__grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,470px);gap:clamp(32px,5vw,72px);align-items:stretch;margin-top:52px}
+.rest__grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,540px);gap:clamp(32px,5vw,72px);align-items:stretch;margin-top:52px}
 .rest__flow{display:flex;flex-direction:column}
 .rest__flow .flow{flex:1;display:flex;flex-direction:column;justify-content:space-between}
 .flow__title,.board__title{font-size:15px;font-weight:700;letter-spacing:.12em;color:var(--ink2);margin:0 0 18px}
@@ -171,15 +180,16 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 .flow p{font-size:16.5px;font-weight:700;line-height:1.7;word-break:keep-all;overflow-wrap:anywhere}
 .board{background:var(--cream);border:2.5px solid var(--ink);border-radius:26px;padding:30px 34px 28px;position:relative}
 .board__title{text-align:center;color:var(--ink);font-size:25px;letter-spacing:.14em;line-height:1.5;margin-bottom:14px}
-.menu{list-style:none;margin:0;padding:0;counter-reset:m}
-.menu li{counter-increment:m;display:grid;grid-template-columns:40px minmax(0,1fr);align-items:baseline;padding:12px 0;border-top:1.5px solid var(--ink);font-weight:700;font-size:16.5px;line-height:1.6}
-.menu li::before{content:counter(m,decimal-leading-zero);font-family:var(--en);font-weight:700;font-size:14px;color:var(--purple)}
+/* 原稿どおり番号なしの2列（左＝教本1〜4曲目・右＝5〜8曲目）。01〜08の番号は原稿に無く、並びも教本の順とずれていた */
+.menu{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(4,auto);grid-auto-flow:column;column-gap:20px}
+.menu li{padding:12px 0;border-top:1.5px solid var(--ink);font-weight:700;font-size:16px;line-height:1.6;word-break:keep-all;overflow-wrap:anywhere}
 .board .note{margin-top:14px;padding-top:14px;border-top:1.5px solid var(--ink)}
 .rest__more{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;margin-top:40px}
 .rest__box{background:var(--bg);border-radius:20px;padding:28px 32px}
 .rest__box h4{margin:0 0 10px;font-size:15px;letter-spacing:.1em}
 .rest__box p{font-size:15.5px;line-height:1.95;color:var(--ink2)}
-.lines{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:10px}
+.lines__label{margin-top:16px;font-size:14px;font-weight:700;letter-spacing:.06em;color:var(--ink2)}
+.lines{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:10px}
 .lines li{word-break:keep-all;overflow-wrap:anywhere;position:relative;background:#fff;border-radius:16px 16px 16px 4px;padding:10px 18px;font-size:15px;font-weight:700;line-height:1.7;box-shadow:0 6px 16px -12px rgba(70,50,30,.4)}
 
 .gift__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px;margin-top:48px}
@@ -244,6 +254,7 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
   .assure__list{gap:16px}
   .assure__card{padding:36px 22px 32px}
   .rest__grid{grid-template-columns:minmax(0,1fr) minmax(0,400px)}
+  .menu{grid-template-columns:minmax(0,1fr);grid-template-rows:none;grid-auto-flow:row}   /* 狭い板で2列にすると曲名が3行に割れる。1列＝教本の順 */
 }
 /* ── スマホ：写真→文字→CTA の順（全LP共通の必須条件） ── */
 @media (max-width:900px){
@@ -252,11 +263,12 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
   .fv{padding-top:4px}
   .fv__deco{display:none}
   .fv__grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"band" "photo" "conds" "h1" "lead" "cta";grid-template-rows:none}
-  .fv__band{margin-left:calc(var(--pad)*-1);padding:12px 26px 12px var(--pad);width:calc(100% + var(--pad) - 8px);min-height:0;gap:6px 12px}
-  .fv__photo{margin-top:22px;padding:10px 10px 34px}
-  .conds{margin-top:24px}
-  .conds li{font-size:14px;padding:6px 14px 6px 7px}
-  .conds .ic{width:23px;height:23px}
+  .fv__band{padding-top:10px;gap:0}
+  .fv__photo{margin-top:18px;padding:10px 10px 34px}
+  .conds{margin-top:22px;gap:8px 20px}
+  .conds li{font-size:14px}
+  .conds .ic{width:22px;height:22px}
+  .conds .ic svg{width:14px;height:14px}
   .fv__h1{margin-top:22px}
   .fv__cta{flex-direction:column;align-items:stretch;margin-top:28px}
   .fv__cta .btn{width:100%}
@@ -461,9 +473,9 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
       <p class="fv__when"><span class="fv__date"><b>10</b>月<b>10</b>日（土）・<b>11</b>日（日）</span><span class="fv__place">アークヒルズ　アーク・カラヤン広場</span></p>
     </div>
     <ul class="conds" aria-label="参加の条件">
-      <li class="fx" style="--fx-d:210ms"><span class="ic" style="background:var(--green)"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7"/></svg></span>入場無料・事前予約不要・参加費不要</li>
-      <li class="fx" style="--fx-d:280ms"><span class="ic" style="background:var(--sky)"><svg viewBox="0 0 16 16" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 5.5h9M9 3l2.5 2.5L9 8M13.5 10.5h-9M7 8l-2.5 2.5L7 13"/></svg></span>出入り自由</li>
-      <li class="fx" style="--fx-d:350ms"><span class="ic" style="background:var(--yellow)"><svg viewBox="0 0 16 16" fill="#15240F" aria-hidden="true"><path d="M6.5 2.2l6.5-1.4v9.6a2.3 2 0 1 1-1.4-1.8V4.1L7.9 4.9v7.3a2.3 2 0 1 1-1.4-1.8z"/></svg></span>3歳から体験いただけます</li>
+      <li class="fx" style="--fx-d:210ms"><span class="ic"><svg viewBox="0 0 16 16" fill="none" stroke="#15240F" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7"/></svg></span>入場無料・事前予約不要・参加費不要</li>
+      <li class="fx" style="--fx-d:280ms"><span class="ic"><svg viewBox="0 0 16 16" fill="none" stroke="#15240F" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 5.5h9M9 3l2.5 2.5L9 8M13.5 10.5h-9M7 8l-2.5 2.5L7 13"/></svg></span>出入り自由</li>
+      <li class="fx" style="--fx-d:350ms"><span class="ic"><svg viewBox="0 0 16 16" fill="#15240F" aria-hidden="true"><path d="M6.5 2.2l6.5-1.4v9.6a2.3 2 0 1 1-1.4-1.8V4.1L7.9 4.9v7.3a2.3 2 0 1 1-1.4-1.8z"/></svg></span>3歳から体験いただけます</li>
     </ul>
     <h1 class="fv__h1 fx" style="--fx-d:380ms">カラヤン広場で<br><span class="mk">はじめての楽器</span>に<br>出会う2日間</h1>
     <p class="fv__lead fx" style="--fx-d:500ms">スズキ・メソードの<wbr>指導者・<wbr>卒業生・<wbr>子どもたちが<wbr>カラヤン広場に<wbr>敷かれた<wbr>芝生の上で<wbr>演奏します。<wbr>演奏の後は<wbr>ヴァイオリン・<wbr>チェロ・<wbr>フルート・<wbr>ピアノに<wbr>触れられます。</p>
@@ -567,10 +579,12 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
         </div>
         <div class="board fx" data-fx="rise">
           <p class="board__title">メニュー（8曲）</p>
-          <ol class="menu">
-            <li>タカタカタッタのキラキラ星</li><li>クリスマスの歌</li><li>ちょうちょう</li><li>かすみか雲か</li>
-            <li>こぎつね</li><li>ロング・ロング・アゴー</li><li>むすんでひらいて</li><li>アレグロ</li>
-          </ol>
+          <!-- ★原稿は2列×4行の表で番号なし。左列＝教本の1〜4曲目、右列＝5〜8曲目（全音『鈴木鎮一ヴァイオリン指導曲集1』の収録順）。
+               DOMは教本の順に並べ、PCだけ列方向に流して原稿の表と同じ見え方にする -->
+          <ul class="menu">
+            <li>タカタカタッタの<wbr>キラキラ星</li><li>ちょうちょう</li><li>こぎつね</li><li>むすんでひらいて</li>
+            <li>クリスマスの歌</li><li>かすみか雲か</li><li>ロング・ロング・<wbr>アゴー</li><li>アレグロ</li>
+          </ul>
           <p class="note">いずれもスズキ・メソードの子どもたちが実際に最初に学んでいる曲です。</p>
         </div>
       </div>
@@ -582,6 +596,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
         <div class="rest__box fx">
           <h4>シェフのひとこと</h4>
           <p>演奏者がスズキのロゴの缶バッジをつけた白いエプロンを着用し、シェフとしてお迎えします</p>
+          <p class="lines__label">＜シェフのセリフ例＞</p>
           <ul class="lines">
             <li>いらっしゃいませ。<wbr>食券お預かりいたします</li>
             <li>アレグロのオーダー入りました</li>
@@ -594,7 +609,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
     <div class="sub" id="gift">
       <div class="sub__head fx">
         <span class="sub__mark" aria-hidden="true"><i class="kvm sp q3" style="left:0;top:0"></i><i class="kvm yp q2" style="left:17px;top:0"></i><i class="kvm yl q4" style="left:0;top:17px"></i></span>
-        <h3 class="h3">来場者特典</h3>
+        <h3 class="h3">ご来場特典あります</h3>
       </div>
       <div class="gift__grid">
         <div class="gift fx">
@@ -621,7 +636,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
     <h2 class="h2 fx">会場・アクセス</h2>
     <div class="access__grid">
       <dl class="spec fx">
-        <div><dt>会場</dt><dd>アーク・カラヤン広場（サントリーホール前）</dd></div>
+        <div><dt>会場</dt><dd>アーク・カラヤン広場（サントリーホール前）。</dd></div>
         <div><dt>開催時間</dt><dd>10月10日（土）・11日（日）11:00－17:00</dd></div>
         <div><dt>アクセス</dt><dd><ul><li>東京メトロ南北線<wbr>「六本木一丁目駅」<wbr>3番出口より<wbr>徒歩1分</li><li>東京メトロ銀座線<wbr>「溜池山王駅」<wbr>13番出口より<wbr>徒歩1分</li></ul></dd></div>
         <div><dt>ベビーカー</dt><dd><span class="tbd">※要確認</span></dd></div>
