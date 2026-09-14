@@ -152,6 +152,9 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 .assure__card::before{content:counter(n);display:grid;place-items:center;width:58px;height:58px;margin:0 auto 20px;border-radius:50%;
   font-family:var(--en);font-weight:700;font-size:27px;line-height:1;color:var(--on-green);background:var(--c)}
 .assure__card p{margin-top:14px;font-size:15.5px;line-height:1.95;color:var(--ink2);text-align:left}
+/* ★So FB 9/14「3つの安心の高さを統一したい」：箱の高さは3枚とも367pxで同じだったが、3枚目だけ見出しが2行で本文の書き出しが35px下がっていた。
+   見出しの欄を2行分の高さにそろえ、1行の見出しは欄の中で上下中央に置く（PCのみ。スマホは1枚ずつ縦に並ぶので揃える相手がいない） */
+@media (min-width:901px){ .assure__card .h3{min-height:calc(2em * 1.6);display:grid;align-content:center} }
 
 /* ── 3 演奏会 ── */
 .live__photo{position:relative;margin:52px auto 0;max-width:1080px}
@@ -584,11 +587,12 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
         <span class="sub__mark" aria-hidden="true"><i class="kvm yp q3" style="left:0;top:0"></i><i class="kvm sp q2" style="left:17px;top:0"></i><i class="kvm ls q4" style="left:0;top:17px"></i></span>
         <h3 class="h3">楽器に触ったことがないお子さまでも<wbr>楽器を体験できます</h3>
       </div>
+      <!-- ★So FB 9/14「この丸写真は体験会の時の写真を使いたい」→ 公式サイトの写真から支給の体験会写真へ（IMG_3413・3501・3361・3451 を人物の位置で正方形に切り出し） -->
       <ul class="inst">
-        <li class="fx" data-fx="scale" style="--ring:#FFF3C4"><img src="img/inst-violin.jpg" width="400" height="400" loading="lazy" alt="ヴァイオリンを構える男の子"><span>ヴァイオリン</span></li>
-        <li class="fx" data-fx="scale" style="--ring:#DDF3FB"><img src="img/inst-cello.jpg" width="400" height="400" loading="lazy" alt="チェロを弾く男の子"><span>チェロ</span></li>
-        <li class="fx" data-fx="scale" style="--ring:#EEF4C6"><img src="img/inst-flute.jpg" width="400" height="400" loading="lazy" alt="フルートを吹く女の子"><span>フルート</span></li>
-        <li class="fx" data-fx="scale" style="--ring:#FBE3EC"><img src="img/inst-piano.jpg" width="400" height="400" loading="lazy" alt="ピアノを弾く男の子と先生"><span>ピアノ</span></li>
+        <li class="fx" data-fx="scale" style="--ring:#FFF3C4"><img src="img/inst-violin-event.jpg" width="520" height="520" loading="lazy" alt="しゃがんだ先生にヴァイオリンの構え方を教わる女の子"><span>ヴァイオリン</span></li>
+        <li class="fx" data-fx="scale" style="--ring:#DDF3FB"><img src="img/inst-cello-event.jpg" width="520" height="520" loading="lazy" alt="先生のひざの前でチェロを弾く子ども"><span>チェロ</span></li>
+        <li class="fx" data-fx="scale" style="--ring:#EEF4C6"><img src="img/inst-flute-event.jpg" width="520" height="520" loading="lazy" alt="先生に教わりながら笑顔でフルートを構える女の子"><span>フルート</span></li>
+        <li class="fx" data-fx="scale" style="--ring:#FBE3EC"><img src="img/inst-piano-event.jpg" width="520" height="520" loading="lazy" alt="先生と一緒に電子ピアノを弾く男の子"><span>ピアノ</span></li>
       </ul>
       <p class="taiken__body fx">ヴァイオリン・チェロ・フルート・ピアノ。興味のある楽器を実際に構えて鳴らしてみてください。複数の楽器を試すこともできます。指導者が横につきますので楽器を触ったことがなくても大丈夫です。</p>
       <p class="note taiken__note fx">※ヴァイオリン・チェロ・フルートは芝生の上のテーブルで、ピアノはブース内で体験できます。ピアノは電子ピアノでの体験となります。</p>

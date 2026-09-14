@@ -695,7 +695,30 @@ addEventListener("load",function(){
       if(bh.length) soft.push("箱の中に大きな空きがある（"+W+"px）: "+bh.join(" / "));
     }
 
-    //   緑=通過 / 赤=要対応。順は resp / orphan / br / embed / align / contrast / h2 / 消えた中身 / 禁則 / 被り / 文字の比 / 1画面目の部品 / 飾り / 折り返し / 箱の空き。
+    // ── カードの中の揃い（So FB 2026-09-14「3つの安心の高さを統一したい」）
+    //   箱の高さは3枚とも367pxで同じだったが、3枚目だけ見出しが2行で、本文の書き出しが35px下がっていた。
+    //   横に並ぶ同じ作りのカード（同じクラス・上端が5px以内・見出しと段落を持つ）の、最初の段落の上端を比べる
+    if(W>=900){
+      var ci=[], seenCi={};
+      [].slice.call(document.querySelectorAll("ul,ol,div")).forEach(function(par){
+        if(par.closest("[aria-hidden='true']")) return;
+        var kids=[].slice.call(par.children).filter(function(k){return getComputedStyle(k).display!=="none" && k.getBoundingClientRect().width>120});
+        if(kids.length<2 || kids.length>6) return;
+        var cls=nm(kids[0]); if(!kids.every(function(k){return nm(k)===cls})) return;
+        // 🚨 カード＝地・枠・影のある箱だけ。地の無い段組みの列（音楽レストランの左右2列）を拾って30pxと出した
+        if(!kids.every(function(k){var ks=getComputedStyle(k); return ks.backgroundColor!=="rgba(0, 0, 0, 0)" || (parseFloat(ks.borderTopWidth)>0 && ks.borderTopStyle!=="none") || ks.boxShadow!=="none"})) return;
+        var tops=kids.map(function(k){return k.getBoundingClientRect().top});
+        if(Math.max.apply(null,tops)-Math.min.apply(null,tops)>5) return;
+        var ps=kids.map(function(k){return k.querySelector("p")}), hs=kids.map(function(k){return k.querySelector("h2,h3,h4")});
+        if(ps.some(function(x){return !x}) || hs.some(function(x){return !x})) return;
+        var pt=ps.map(function(x){return x.getBoundingClientRect().top});
+        var d=Math.round(Math.max.apply(null,pt)-Math.min.apply(null,pt));
+        if(d>=8 && !seenCi[cls] && ci.length<4){ seenCi[cls]=1; ci.push(cls+"×"+kids.length+"（本文の書き出しが"+d+"pxずれる）"); }
+      });
+      if(ci.length) soft.push("カードの中の見出しと本文の位置がそろっていない（"+W+"px）: "+ci.join(" / "));
+    }
+
+    //   緑=通過 / 赤=要対応。順は resp / orphan / br / embed / align / contrast / h2 / 消えた中身 / 禁則 / 被り / 文字の比 / 1画面目の部品 / 飾り / 折り返し / 箱の空き / カードの中の揃い。
     //   🚨 判定は必ずこの配列より【前】に置く。後ろに書くと out に積む前に色が
     //      決まるので、赤にならない（2026-09-11、消えた中身の判定で踏んだ）。
     var FLAGS=[
@@ -714,6 +737,7 @@ addEventListener("load",function(){
       soft.some(function(x){return /1画面目の飾りが多いか片寄っている/.test(x)}),
       soft.some(function(x){return /横並びが途中で折り返して/.test(x)}),
       soft.some(function(x){return /箱の中に大きな空きがある/.test(x)}),
+      soft.some(function(x){return /カードの中の見出しと本文の位置がそろっていない/.test(x)}),
     ];
     var fl=document.createElement("div");
     fl.style.cssText="position:absolute;left:0;top:0;z-index:2147483647;display:flex";
@@ -1001,6 +1025,8 @@ HOW = {
                "収まらない幅では縦に1個ずつ積む（1個／2個のような半端な段を作らない）",
     "box-hole": "隣の箱に高さを揃えるのをやめて（align-items:start）箱を中身の高さに戻すか、"
                 "中身の少ない箱を別の列へ移して列ごとの下端で揃える。空きを文字で埋めない",
+    "card-inner": "見出しの欄を一番行数の多いカードに合わせた高さにそろえる（min-height: 行数×行送り、1行の見出しは欄の中で上下中央）。"
+                  "見出しの字数を減らして行数をそろえるのは原稿を変えるので最後の手段",
 }
 
 
@@ -1050,7 +1076,7 @@ def read_flags(png):
     content-gone（probe の FLAGS と同じ8本）。"""
     px = Image.open(png).convert("RGB").load()
     out = []
-    for i in range(15):
+    for i in range(16):
         c = px[i * 16 + 8, 8]
         out.append("ng" if (c[0] > 150 and c[1] < 90) else ("ok" if (c[1] > 110 and c[0] < 90) else "?"))
     return out
@@ -1556,7 +1582,7 @@ def main():
         # 撮影で得たフラグ（5幅ぶん）を項目へ振り分ける。1幅でも ng なら ng
         order = ["responsive", "orphan-line", "br-margin", "embed-controls",
                  "alignment", "contrast", "h2-uniform", "content-gone", "kinsoku",
-                 "overlap", "text-contrast", "fv-busy", "fv-deco", "fv-wrap", "box-hole"]
+                 "overlap", "text-contrast", "fv-busy", "fv-deco", "fv-wrap", "box-hole", "card-inner"]
         # 🚨 マーカーが読めない（"?"）のを「ok」にしてはいけない。
         #    probe が途中で例外を投げるとマーカーが描かれず、全項目が緑に見える。
         #    2026-09-11 に実際に踏んだ（alignment を足した直後、6件の上限で
@@ -1574,7 +1600,8 @@ def main():
                  "fv-busy": "1画面目（1024px以上）の地・枠・影のある部品は9個以下・作りは5種類以下",
                  "fv-deco": "1画面目（1024px以上）の飾りは9個以下で、左右の面積の差は1.4倍未満",
                  "fv-wrap": "1画面目の横並び（2〜5個）は、折り返しても段ごとの個数がそろっている",
-                 "box-hole": "角丸の箱の中で、中身の下に150px以上（箱の高さの35%以上）の空きは無い"}
+                 "box-hole": "角丸の箱の中で、中身の下に150px以上（箱の高さの35%以上）の空きは無い",
+                 "card-inner": "横に並ぶ同じ作りのカードは、本文の書き出しの位置が8px以内でそろっている"}
         # 検出文の頭の言葉で項目に振り分ける。probe が push する文言と対応させる
         MARK = {
             "responsive":     ("横スクロール", "画面外", "切れている"),
@@ -1592,6 +1619,7 @@ def main():
             "fv-deco":        ("1画面目の飾りが多いか片寄っている",),
             "fv-wrap":        ("横並びが途中で折り返して",),
             "box-hole":       ("箱の中に大きな空きがある",),
+            "card-inner":     ("カードの中の見出しと本文の位置がそろっていない",),
         }
         allmsg = (detail.get("out") or []) + (detail.get("soft") or [])
         found = {}
