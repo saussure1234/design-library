@@ -65,7 +65,7 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 .lead{font-size:var(--lead);line-height:2;color:var(--ink2);text-align:center;max-width:40em;margin:22px auto 0}
 /* ★9/15 本文を18pxにそろえたら、600/768/900pxで段落の最後の行に「せん。」「ます。」だけが落ちた（check.py 改行の孤立）。
    文節でしか折らない指定（keep-all＋wbr）→ スマホで行が右端まで届かず「左に寄って右が空く」（So）。最後の文節を改行させない指定 → その1つ前の行が空く。
-   → 本文はふつうに折って両端揃え（下の「タブレット」の手前）。最後の行が数文字だけの段落だけ、スクリプトで字間を1文字あたり最大1px詰めるか広げる（末尾の script ⑦） */
+   → 本文はふつうに折り、字間を整えて列の幅にちょうど収める。最後の行が数文字だけの段落は1行の字数を1つ増減するか、最後の数文字を前の行から送る（末尾の script ⑦） */
 .note{font-size:var(--fs-sm);line-height:1.8;color:var(--ink2)}
 .nb{display:inline-block}
 .tidy-tail{white-space:nowrap}   /* 末尾 script ⑦ が段落の最後の数文字に付ける */
@@ -103,9 +103,9 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 .fv__grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,560px);column-gap:clamp(32px,4.4vw,64px);
   grid-template-areas:"info info" "tag photo" "h1 photo" "lead photo" "cta photo";grid-template-rows:auto auto auto auto 1fr;align-items:start}
 /* ★So FB 9/15「日付・会場と条件3つがまだ微妙。ボックスに入れる感じ」→ 3案（白いカード／開催概要の枠／チケット風）から白いカード。
-   「何か物足りない、周りに二重の線？」→ カードの縁に細い線、5px空けてもう1本（地の色の輪で空ける）。中は 日付・会場 → 細い罫 → 条件3つ */
+   「何か物足りない、周りに二重の線？」→ 縁の線＋5px空けてもう1本 → 同日「やっぱ線（1本）でいいや。白背景の」→ 外側の線を外し、白地＋縁の細い線1本に。中は 日付・会場 → 細い罫 → 条件3つ */
 .fv__info{grid-area:info;position:relative;margin:6px 0 0;padding:15px 30px 11px;background:#fff;border-radius:20px;border:1.5px solid #E3D6C6;
-  box-shadow:0 0 0 5px var(--bg),0 0 0 6.5px #E3D6C6,0 24px 40px -30px rgba(70,50,30,.45)}
+  box-shadow:0 24px 40px -30px rgba(70,50,30,.45)}
 .fv__info .fv__band{padding-top:0}
 .fv__info .conds{margin:10px 0 0;padding-top:10px;border-top:1px solid #EFE8DF}
 /* ★So FB 9/14「FVのCTAはもっと上に。『…ピアノに触れられます。』の下あたり」→ 写真の下の段から、リードのすぐ下（左の列）へ */
@@ -282,7 +282,7 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
   margin-top:28px;background:var(--bg);border-radius:24px;padding:40px clamp(28px,4vw,56px)}
 .photocard__photo{grid-area:photo;display:grid;place-items:center;padding:10px 0}
 .photocard__catch{grid-area:catch;align-self:end;font-size:var(--h3);font-weight:700;line-height:1.6;letter-spacing:.06em;word-break:keep-all;overflow-wrap:anywhere}
-.photocard__body{grid-area:body;align-self:start;margin-top:12px;font-size:var(--fs);line-height:1.95;color:var(--ink2);text-align:justify;text-justify:inter-character}
+.photocard__body{grid-area:body;align-self:start;margin-top:12px;font-size:var(--fs);line-height:1.95;color:var(--ink2)}
 .gift__cheki{background:#fff;padding:12px 12px 40px;width:180px;transform:rotate(-4deg);box-shadow:0 18px 30px -18px rgba(70,50,30,.5)}
 .gift__cheki img{width:100%;aspect-ratio:540/560;object-fit:cover}
 .gift h4{margin:18px 0 0;font-size:var(--h3);letter-spacing:.08em;line-height:1.5}
@@ -333,11 +333,9 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 .ft{padding:36px 0 44px;text-align:center}
 .ft img{height:44px;width:auto;margin:0 auto}
 
-/* ★9/15 So（再）「スマホで4つの楽器の下のテキストや缶バッジなど、ところどころ左に寄って右に空きがある」
-   実測：18pxの本文は、列の幅が1文字の倍数でないと、どの行も最大1文字ぶん手前で止まる（390pxで全行0.9字、375pxは禁則で押し出された行だけ1.1字）。
-   → 自然に折る本文だけ両端揃え。文節で折る見出し・ラベル・ボタン（keep-all や .nb）は揃えない（途中の行が字間ごと引き伸ばされる） */
-.fv__lead,.assure__card p,.live__table td:last-child,.live__info dd,.taiken__body,.note,.rest__concept,.chef > p,.pairs__note,.gift p,.faq__a p,.about__body{text-align:justify;text-justify:inter-character}
-.spec dd:not(:has(.nb,ul)){text-align:justify;text-justify:inter-character}   /* :has の効かないブラウザで上の行ごと捨てられないよう別に書く */
+/* ★9/15 So「スマホで…左に寄って右に空き」→ 両端揃え → 同日「スマホの時、文字と文字の間隔が大きい。同じ間隔にして」
+   両端揃えは、1行15〜18字のスマホで禁則に押し出された行の字間が大きく広がった。→ 揃えは左のまま、本文の段落ごとに字間を±0.5px以内で整え、
+   列の幅に全角の文字がちょうど収まるようにする（どの行も同じ字間で、行末は右端まで届く）。末尾の script ⑦ */
 
 /* ── タブレット ── */
 @media (max-width:1100px){
@@ -786,7 +784,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
       </div>
       <div class="photocard fx">
         <p class="photocard__catch">はじめて楽器にふれた日を<wbr>一枚の写真に。</p>
-        <div class="photocard__photo"><figure class="gift__cheki" style="margin:0"><img src="img/cheki.jpg" width="540" height="560" loading="lazy" alt="楽器を持つ子どもの記念写真のイメージ"></figure></div>
+        <div class="photocard__photo"><figure class="gift__cheki" style="margin:0"><img src="img/photocard-face.jpg" width="540" height="560" loading="lazy" alt="チェロを構える男の子"></figure></div>
         <p class="photocard__body">撮影した写真はその場で二つ折りの台紙に貼ってお渡しします。表紙にはイベント名、内側に写真と「きょう、わたしが出会った楽器」のメッセージ、裏面にスズキ・メソードの紹介を掲載しています。帰ってからもご家庭で開けるカードです。</p>
       </div>
     </div>
@@ -963,10 +961,15 @@ document.querySelectorAll('.faq details').forEach(function(d){
     }
   }
 
-  /* ⑦ 段落の最後の行に数文字だけ落ちたら直す。段落の幅は変えない（9/15 幅を1文字ずつ狭める方式は、狭めた段落だけ全部の行の右が空いた＝So「左に寄って右に空き」）。
-     変化の小さい順に試す：字間を0.25px刻みで詰める／広げる（最大1px）→ 最後の数文字を折らないまとまりにして前の行から送る（本文は両端揃えなので、送った分は前の1行の字間に散る）。
+  /* ⑦ 本文の字間と行末（So 9/15）
+     「左に寄って右に空き」＝18pxの本文は、列の幅が1文字の倍数でないと、どの行も最大1文字手前で止まる。
+     両端揃えで埋めたら「文字と文字の間隔が大きい。同じ間隔に」（禁則で押し出された行だけ字間が広がる）。
+     → 揃えは左のまま、本文の段落ごとに字間を整えて、列の幅に全角の文字がちょうど入るようにする（段落の中はどの行も同じ字間。変化は±0.5px以内）。
+     最後の行に数文字だけ落ちたら、字間は変えずに最後の1〜2文字を前の行から送る → だめなら1行の字数を1つ増減（字間の変化が1px以内の時だけ）。
      判定は check.py の「改行の孤立」と同じ物差し（最後の矩形÷最大の矩形。直下の文字が40字超は12%・以下は22%）より少し厳しめ */
-  var paras = [].slice.call(document.querySelectorAll('main p'));
+  var PROSE = '.fv__lead,.assure__card p,.live__table td:last-child,.live__info dd,.taiken__body,.note,.rest__concept,.chef > p,.pairs__note,.gift p,.faq__a p,.about__body,.photocard__body,.spec dd';
+  var paras = [].slice.call(document.querySelectorAll('main p, ' + PROSE));
+  var isProse = function(el){ return el.matches(PROSE) && !el.querySelector('.nb, ul'); };
   var directLen = function(el){ var t = ''; el.childNodes.forEach(function(n){ if (n.nodeType === 3) t += n.nodeValue; }); return t.trim().length; };
   var good = function(el){
     var rg = document.createRange(); rg.selectNodeContents(el);
@@ -1000,9 +1003,21 @@ document.querySelectorAll('.faq details').forEach(function(d){
   };
   var tidy = function(el){
     el.style.letterSpacing = ''; untail(el);
+    var cs = getComputedStyle(el), fs = parseFloat(cs.fontSize) || 16, base = parseFloat(cs.letterSpacing) || 0;
+    var W = el.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    if (isProse(el) && W > fs * 8) {
+      var n = Math.round(W / (fs + base));
+      var set = function(k){ el.style.letterSpacing = ((W - 0.5) / k - fs) + 'px'; };   // 0.5px 残して、k 文字目が次の行へこぼれないように
+      set(n); if (good(el)) return;
+      // 字間は変えずに最後の1〜2文字を送る（前の行の行末が1〜2文字空く＝禁則で押し出された行と同じ見え方）→ だめなら1行の字数を1つ増減（字間が1px以内で変わる時だけ）
+      for (var k = 1; k <= 2; k++) { if (push(el, k)) { if (good(el)) return; untail(el); } }
+      var tryN = function(m){ if (Math.abs((W - 0.5) / m - fs - base) > 1.05) return false; set(m); if (good(el)) return true; set(n); return false; };
+      if (tryN(n + 1) || tryN(n - 1)) return;
+      for (var k2 = 3; k2 <= 4; k2++) { if (push(el, k2)) { if (good(el)) return; untail(el); } }
+      return;
+    }
     if (good(el)) return;
-    var base = parseFloat(getComputedStyle(el).letterSpacing) || 0;
-    var plan = [-.25, .25, -.5, .5, 'p1', -.75, .75, 'p2', -1, 1, 'p3', 'p4'];
+    var plan = [-.25, .25, -.5, .5, 'p1', 'p2', 'p3'];   // 中央ぞろえのリードなど：字間を少しだけ → 最後の数文字を送る
     for (var i = 0; i < plan.length; i++) {
       var st = plan[i];
       if (typeof st === 'number') el.style.letterSpacing = (base + st) + 'px';
