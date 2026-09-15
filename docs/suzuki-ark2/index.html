@@ -95,18 +95,21 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 .fv{position:relative;overflow:hidden;padding:12px 0 clamp(80px,8vw,110px)}
 .fv__deco{position:absolute;top:0;bottom:0;left:50%;width:1440px;transform:translateX(-50%);z-index:0;pointer-events:none}
 .fv__grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,560px);column-gap:clamp(32px,4.4vw,64px);
-  grid-template-areas:"band band" "conds conds" "h1 photo" "lead photo" "cta photo";grid-template-rows:auto auto auto auto 1fr;align-items:start}
+  grid-template-areas:"band band" "conds conds" "tag photo" "h1 photo" "lead photo" "cta photo";grid-template-rows:auto auto auto auto auto 1fr;align-items:start}
 /* ★So FB 9/14「FVのCTAはもっと上に。『…ピアノに触れられます。』の下あたり」→ 写真の下の段から、リードのすぐ下（左の列）へ */
 /* ★So FB 2026-09-14「背景の形は満足／FVがごちゃごちゃしている」→ A案（引き算）。
    実測：1画面目に地・枠・影のある部品が12個・7種類（緑の帯・白いタグ・条件の丸枠3つ＋色丸3つ・ボタン・写真の額）、
    ほかの節は1画面0〜6個。締めの節は図形がFVより密でも散らからない＝犯人は背景でなく手前の部品。
    帯・タグ・丸枠の地と枠を外し、地の上にじかに置く。まとまりは余白の差で作る（中は狭く・間は広く）。 */
 .fv__band{grid-area:band;display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding-top:6px}
-.fv__tag{color:var(--purple);font-family:var(--en);font-weight:700;font-size:15px;letter-spacing:.04em;line-height:1.5;white-space:nowrap}
+/* ★So FB 9/15「ARK Hills Music Week 2026｜音の遊び場 は『カラヤン広場で』の上でいい」→ 帯から出して見出しの直上へ（見出しの前置き） */
+.fv__tag{grid-area:tag;margin:36px 0 0;color:var(--purple);font-family:var(--en);font-weight:700;font-size:15px;letter-spacing:.04em;line-height:1.5;white-space:nowrap}
 .fv__when{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 18px;font-weight:700;line-height:1.5}
 .fv__date{font-size:clamp(19px,1.8vw,26px);letter-spacing:.04em;white-space:nowrap}
 .fv__date b{font-family:var(--en);font-weight:700;font-size:1.12em}
-.fv__place{font-size:15px;font-weight:500;letter-spacing:.06em;color:var(--ink2);white-space:nowrap}
+/* ★So FB 9/15「アークヒルズ　アーク・カラヤン広場 の文字が小さい。日付と同じサイズ」→ 15px・500 → 日付と同じ大きさ・太さ。
+   狭い幅は「アークヒルズ　」の後ろでだけ折る（keep-all でも「・」の後ろで折れた＝375pxで「アーク・／カラヤン広場」→ 2つを nb で包む） */
+.fv__place{font-size:clamp(19px,1.8vw,26px);font-weight:700;letter-spacing:.04em;word-break:keep-all;overflow-wrap:anywhere}
 /* ★So FB 9/14（公開後）「条件3つが微妙」→ 3方向（入場券／ポスターの情報欄／シール）から B。
    箇条書き（アイコン＋同じ大きさの文字）だと、1個／2個に割れて右端が499/313/549pxとばらばらだった。
    言葉を大小に分け、縦の罫で3つに区切る。枠は足さない。日付の下の段に通して1段に収める */
@@ -121,7 +124,7 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 .conds__t small{font-size:13px;font-weight:500;color:var(--ink2);letter-spacing:.04em;line-height:1.5}
 /* 「入場無料・事前予約不要…」を2段に分けた所の「・」。文字としては残し（原稿どおり・読み上げ用）、見た目だけ消す */
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.fv__h1{grid-area:h1;margin:40px 0 0;font-size:var(--h1);line-height:var(--h1-lh);font-weight:700;letter-spacing:.05em;word-break:keep-all;overflow-wrap:anywhere}
+.fv__h1{grid-area:h1;margin:6px 0 0;font-size:var(--h1);line-height:var(--h1-lh);font-weight:700;letter-spacing:.05em;word-break:keep-all;overflow-wrap:anywhere}
 /* 強調は決めごと（rules.json「FV見出しにブランドカラーの強調を1箇所」）なので残す。面を細くして主張を下げた */
 .mk{background:linear-gradient(transparent 70%,rgba(252,200,0,.58) 70%,rgba(252,200,0,.58) 93%,transparent 93%);padding:0 .04em}
 .fv__lead{grid-area:lead;margin-top:22px;font-size:var(--lead);line-height:2.05;color:var(--ink2);max-width:33em;word-break:keep-all;overflow-wrap:anywhere}
@@ -135,7 +138,7 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 /* ★So FB 9/14「ぴったり決まる1枚が無い。素材の『名称未設定のデザイン.png』のように複数、ときに背景を透過」
    → F1：斜めの写真パネル2枚（チェロ＝大・ピアノ＝小）＋ヴァイオリンの2人を切り抜きで手前に。
    白い額はやめた（額の分だけ部品が増える＝「ごちゃごちゃ」の元）。切り抜きは macOS の Vision でローカルに作った */
-.fv__photo{grid-area:photo;position:relative;margin:6px 0 0;aspect-ratio:560/520}
+.fv__photo{grid-area:photo;position:relative;margin:30px 0 0;aspect-ratio:560/520}   /* 9/15 イベント名を見出しの上の段に移し、写真の段が24px上から始まるようになった → 背景の図形との位置を前のまま保つため 6→30px（実測 1440pxで写真の上端165px） */
 .fvc__main,.fvc__sub{position:absolute;margin:0;overflow:hidden}
 .fvc__main img,.fvc__sub img{display:block;width:100%;height:100%;object-fit:cover}
 .fvc__main{left:8%;top:18%;width:80%;height:64%;clip-path:polygon(5% 4%,100% 0,95% 100%,0 94%);z-index:1}
@@ -143,6 +146,8 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 .fvc__sub{right:-6%;top:0;width:48%;height:38%;clip-path:polygon(0 10%,100% 0,94% 100%,6% 90%);z-index:2}
 /* 🚨 切り抜きの箱（透明な所も含む矩形）を本文の箱に重ねない。重ねると「文字が写真に被っている」になる */
 .fvc__cut{position:absolute;left:-8%;bottom:2%;height:48%;width:auto;z-index:4;filter:drop-shadow(0 10px 14px rgba(60,40,20,.16))}
+/* スマホ用の図形（HTMLの注記）。PCは .fv__deco の図形だけ */
+.fv__mdeco,.fvc__kv,.fv__mk{display:none}
 
 /* ボタン */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:62px;padding:0 30px 0 34px;border-radius:999px;
@@ -251,7 +256,9 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 .gift__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px;margin-top:48px}
 .gift{background:var(--bg);border-radius:24px;padding:40px 40px 36px;display:grid;grid-template-rows:auto auto 1fr auto;justify-items:center;text-align:center}
 .gift__vis{height:230px;display:grid;place-items:center}
-.gift__badge{width:210px;height:210px;border-radius:50%;box-shadow:0 18px 30px -18px rgba(70,50,30,.5),inset 0 0 0 1px rgba(0,0,0,.04)}
+/* ★So FB 9/15「缶バッジを立体的に」→ 支給の絵（社名入り）を外部に出さず、手元の画像処理で立体に（縁の巻き込み・左上の光の艶・下に落ちる影。
+   scratchpad の badge3d.py）。画像は丸516px＋下に影76px。丸は前と同じ210pxで、丸の中心を枠の中心（115px）にそろえ、影ははみ出させる */
+.gift__badge{width:210px;height:auto;align-self:start;margin-top:10px}
 .gift__cheki{background:#fff;padding:12px 12px 40px;width:180px;transform:rotate(-4deg);box-shadow:0 18px 30px -18px rgba(70,50,30,.5)}
 .gift__cheki img{width:100%;aspect-ratio:540/560;object-fit:cover}
 .gift h4{margin:18px 0 0;font-size:21px;letter-spacing:.08em;line-height:1.5}
@@ -329,11 +336,18 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
   .hd__logo{padding:4px 0}
   .fv{padding-top:4px}
   .fv__deco{display:none}
-  .fv__grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"band" "photo" "conds" "h1" "lead" "cta";grid-template-rows:none}
+  .fv__grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"band" "photo" "conds" "tag" "h1" "lead" "cta";grid-template-rows:none}
   .fv__band{padding-top:10px;gap:0}
   .fv__photo{margin-top:14px}
   .fvc__sub{right:0}
   .fvc__cut{left:0;height:46%}
+  .fv__mdeco{display:block;inset:0}
+  .fv__grid{position:relative;z-index:1}
+  .fvc__kv{display:block;inset:0}
+  .fvc__kv i{height:auto;aspect-ratio:1}
+  /* 見出しの右端：72pxの半円を画面の端から36pxだけ見せる（見出しの文字は右端274px＠375・320pxでも10px空く） */
+  .fv__mk{display:block;grid-area:h1;justify-self:end;align-self:center;position:relative;width:72px;height:72px;margin-right:calc(-1 * var(--pad) - 36px)}
+  .fv__h1{position:relative;z-index:1}
   /* スマホは3段に積む。大きい言葉と小さい言葉は横に並べて1段に収める */
   .conds{flex-direction:column;margin-top:20px}
   .conds li,.conds li:first-child{padding:9px 0}
@@ -343,7 +357,8 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
   .conds__t{flex-direction:row;flex-wrap:wrap;align-items:baseline;gap:0 10px}
   .conds__t b{font-size:18px}
   .conds__t small{font-size:12.5px}
-  .fv__h1{margin-top:22px}
+  .fv__tag{margin-top:22px}
+  .fv__h1{margin-top:4px}
   .fv__cta{flex-direction:column;align-items:stretch;margin-top:28px}
   .fv__cta .btn{width:100%}
   .fv__m{display:block}
@@ -436,6 +451,7 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 @media (max-width:359px){   /* 320pxで9px溢れた → ロゴだけ30pxに（押せる高さは44pxのまま） */
   .hd__logo img{height:30px}
   .hd__logo{padding:7px 0}
+  .fv__m-tr{display:none!important}   /* FV右上の角の図形が日付の右端（281px）に掛かる */
 }
 
 /* ── スクロールで順に出す（.fx は check.py の撮影で hh-in が付いて出し切られる） ── */
@@ -462,7 +478,7 @@ html.fx-on .fx.hh-in{opacity:1;transform:none;scale:1}
   50%{rotate:180deg} 50.4375%{rotate:270deg} 75%{rotate:270deg} 75.4375%{rotate:360deg} 100%{rotate:360deg}
 }
 @media (prefers-reduced-motion:no-preference){
-  .fv__deco i,.closing__deco i[class],.sec > .kv i,.live__photo .kv i{
+  .fv__deco i,.fv__mdeco i,.fvc__kv i,.fv__mk i,.closing__deco i[class],.sec > .kv i,.live__photo .kv i{
     animation:kv-turn 320s cubic-bezier(.55,0,.25,1.15) calc(var(--i,0) * 8s - 72s) infinite}
 }
 
@@ -529,23 +545,32 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
       <i class="pk q1 fx" data-fx="pop" style="--i:7;--fx-d:1355ms;--x:1126px;--y:790px;--s:150px"></i>
     </div>
   </div>
+  <!-- ★So FB 9/15「スマホのときFVの背景に形がない」→ PCの図形（1440px幅の列）はスマホで隠れるので、スマホ用に6つだけ置く。
+       文字に掛からない所だけ（実測375px：日付の右端281px・見出しの右端274px・CTAの下に80pxの余白）。
+       下端の半円は左端に置くと、次の節の左上の図形と縦に固まったので 34% の位置 -->
+  <div class="kv fv__mdeco" aria-hidden="true">
+    <i class="yl q4 fx fv__m-tr" data-fx="pop" style="--i:1;--fx-d:300ms;--s:56px;left:auto;right:0;top:0"></i>
+    <i class="ls ht fx" data-fx="pop" style="--i:4;--fx-d:700ms;--s:72px;left:34%;top:auto;bottom:-36px"></i>
+    <i class="pk q1 fx" data-fx="pop" style="--i:6;--fx-d:820ms;--s:64px;left:auto;right:0;top:auto;bottom:0"></i>
+  </div>
   <div class="wrap fv__grid">
+    <div class="kv fv__mk" aria-hidden="true"><i class="sp hl fx" data-fx="pop" style="--i:3;--fx-d:560ms;--x:0;--y:0;--s:72px"></i></div>
     <div class="fv__band fx" data-fx="left" style="--fx-d:40ms">
-      <p class="fv__tag">ARK Hills Music Week 2026｜音の遊び場</p>
-      <p class="fv__when"><span class="fv__date"><b>10</b>月<b>10</b>日（土）・<b>11</b>日（日）</span><span class="fv__place">アークヒルズ　アーク・カラヤン広場</span></p>
+      <p class="fv__when"><span class="fv__date"><b>10</b>月<b>10</b>日（土）・<b>11</b>日（日）</span><span class="fv__place"><span class="nb">アークヒルズ</span>　<wbr><span class="nb">アーク・カラヤン広場</span></span></p>
     </div>
     <ul class="conds" aria-label="参加の条件">
       <li class="fx" style="--fx-d:210ms"><span class="ic"><svg viewBox="0 0 16 16" fill="none" stroke="#15240F" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" stroke-width="2.4"><path d="M3.5 8.5l3 3 6-7"/></svg></span><span class="conds__t"><b>入場無料</b><span class="vh">・</span><small>事前予約不要・参加費不要</small></span></li>
       <li class="fx" style="--fx-d:280ms"><span class="ic"><svg viewBox="0 0 16 16" fill="none" stroke="#15240F" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" stroke-width="1.9"><path d="M2.5 5.5h9M9 3l2.5 2.5L9 8M13.5 10.5h-9M7 8l-2.5 2.5L7 13"/></svg></span><span class="conds__t"><b>出入り自由</b></span></li>
       <li class="fx" style="--fx-d:350ms"><span class="ic"><svg viewBox="0 0 16 16" fill="none" stroke="#15240F" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" stroke-width="1.9"><circle cx="8" cy="4.4" r="2.4"/><path d="M3.6 14.2c.5-3.3 2.1-5.1 4.4-5.1s3.9 1.8 4.4 5.1"/></svg></span><span class="conds__t"><b>3歳から</b><small>体験いただけます</small></span></li>
     </ul>
+    <p class="fv__tag fx" style="--fx-d:360ms">ARK Hills Music Week 2026｜音の遊び場</p>
     <h1 class="fv__h1 fx" style="--fx-d:380ms">カラヤン広場で<br><span class="mk">はじめての楽器</span>に<br>出会う2日間</h1>
     <p class="fv__lead fx" style="--fx-d:500ms">スズキ・メソードの<wbr>指導者・<wbr>卒業生・<wbr>子どもたちが<wbr>カラヤン広場に<wbr>敷かれた<wbr>芝生の上で<wbr>演奏します。<wbr>演奏の後は<wbr>ヴァイオリン・<wbr>チェロ・<wbr>フルート・<wbr>ピアノに<wbr>触れられます。</p>
     <div class="fv__cta fx" style="--fx-d:620ms">
       <a class="btn btn--main" href="#access">会場へのアクセス<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8l5 5 5-5"/></svg></a>
       <a class="btn btn--sub" href="#concert">演奏スケジュールを見る<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8l5 5 5-5"/></svg></a>
     </div>
-    <div class="fv__photo fx" data-fx="rise" style="--fx-d:260ms"><figure class="fvc__main"><img src="img/fv.jpg" width="1120" height="852" fetchpriority="high" alt="笑顔の先生のそばで、小さな子がはじめてチェロを構えている"></figure><figure class="fvc__sub"><img src="img/fv-piano.jpg" width="960" height="720" alt="お母さんと一緒にピアノの鍵盤に触れる男の子"></figure><img class="fvc__cut" src="img/fv-cut.webp" width="685" height="900" alt="先生に支えられて、はじめてヴァイオリンを構える女の子"></div>
+    <div class="fv__photo fx" data-fx="rise" style="--fx-d:260ms"><div class="kv fvc__kv" aria-hidden="true"><i class="yp q2" style="--i:2;--x:-3%;--y:3%;--s:34%"></i><i class="gy q4" style="--i:5;--x:76%;--y:66%;--s:26%"></i></div><figure class="fvc__main"><img src="img/fv.jpg" width="1120" height="852" fetchpriority="high" alt="笑顔の先生のそばで、小さな子がはじめてチェロを構えている"></figure><figure class="fvc__sub"><img src="img/fv-piano.jpg" width="960" height="720" alt="お母さんと一緒にピアノの鍵盤に触れる男の子"></figure><img class="fvc__cut" src="img/fv-cut.webp" width="685" height="900" alt="先生に支えられて、はじめてヴァイオリンを構える女の子"></div>
   </div>
 </section>
 
@@ -689,7 +714,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
       </div>
       <div class="gift__grid">
         <div class="gift fx">
-          <div class="gift__vis"><img class="gift__badge" src="img/badge.jpg" width="520" height="520" loading="lazy" alt="参加者缶バッジのデザイン"></div>
+          <div class="gift__vis"><img class="gift__badge" src="img/badge-3d.webp" width="516" height="592" loading="lazy" alt="参加者缶バッジのデザイン"></div>
           <h4>缶バッジ</h4>
           <p>ブースで自分でつくった缶バッジをそのまま持ち帰れます。完成すると音楽レストランの食券がもらえます。</p>
           <span class="gift__qty">材料がなくなり次第終了<span class="tbd">（※要確認：数量）</span></span>
