@@ -100,7 +100,13 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 .fv{position:relative;overflow:hidden;padding:12px 0 clamp(80px,8vw,110px)}
 .fv__deco{position:absolute;top:0;bottom:0;left:50%;width:1440px;transform:translateX(-50%);z-index:0;pointer-events:none}
 .fv__grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,560px);column-gap:clamp(32px,4.4vw,64px);
-  grid-template-areas:"band band" "conds conds" "tag photo" "h1 photo" "lead photo" "cta photo";grid-template-rows:auto auto auto auto auto 1fr;align-items:start}
+  grid-template-areas:"info info" "tag photo" "h1 photo" "lead photo" "cta photo";grid-template-rows:auto auto auto auto 1fr;align-items:start}
+/* ★So FB 9/15「日付・会場と条件3つがまだ微妙。ボックスに入れる感じ」→ 3案（白いカード／開催概要の枠／チケット風）から白いカード。
+   「何か物足りない、周りに二重の線？」→ カードの縁に細い線、5px空けてもう1本（地の色の輪で空ける）。中は 日付・会場 → 細い罫 → 条件3つ */
+.fv__info{grid-area:info;position:relative;margin:6px 0 0;padding:15px 30px 11px;background:#fff;border-radius:20px;border:1.5px solid #E3D6C6;
+  box-shadow:0 0 0 5px var(--bg),0 0 0 6.5px #E3D6C6,0 24px 40px -30px rgba(70,50,30,.45)}
+.fv__info .fv__band{padding-top:0}
+.fv__info .conds{margin:10px 0 0;padding-top:10px;border-top:1px solid #EFE8DF}
 /* ★So FB 9/14「FVのCTAはもっと上に。『…ピアノに触れられます。』の下あたり」→ 写真の下の段から、リードのすぐ下（左の列）へ */
 /* ★So FB 2026-09-14「背景の形は満足／FVがごちゃごちゃしている」→ A案（引き算）。
    実測：1画面目に地・枠・影のある部品が12個・7種類（緑の帯・白いタグ・条件の丸枠3つ＋色丸3つ・ボタン・写真の額）、
@@ -108,7 +114,7 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
    帯・タグ・丸枠の地と枠を外し、地の上にじかに置く。まとまりは余白の差で作る（中は狭く・間は広く）。 */
 .fv__band{grid-area:band;display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding-top:6px}
 /* ★So FB 9/15「ARK Hills Music Week 2026｜音の遊び場 は『カラヤン広場で』の上でいい」→ 帯から出して見出しの直上へ（見出しの前置き） */
-.fv__tag{grid-area:tag;margin:36px 0 0;color:var(--purple);font-family:var(--en);font-weight:700;font-size:var(--fs-sm);letter-spacing:.04em;line-height:1.5;white-space:nowrap}
+.fv__tag{grid-area:tag;margin:28px 0 0;color:var(--purple);font-family:var(--en);font-weight:700;font-size:var(--fs-sm);letter-spacing:.04em;line-height:1.5;white-space:nowrap}
 .fv__when{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 18px;font-weight:700;line-height:1.5}
 .fv__date{font-size:clamp(19px,1.8vw,26px);letter-spacing:.04em;white-space:nowrap}
 .fv__date b{font-family:var(--en);font-weight:700;font-size:1.12em}
@@ -346,8 +352,10 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
   /* ★So FB 9/15「スマホのとき、3つの条件は画像の上にこないと」→ 日付・会場 → 条件 → 写真 → 見出し。
      同日「画像はもっと下か。条件はコピーより前・日付が最初を満たす配置は」→ 3案（375×812の1画面目）から B：
      日付・会場 → 条件 → イベント名・見出し → 写真 → リード → CTA（見出しが1画面目に全部入り、写真も半分見える。写真はCTAより上のまま） */
-  .fv__grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"band" "conds" "tag" "h1" "photo" "lead" "cta";grid-template-rows:none}
+  .fv__grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"info" "tag" "h1" "photo" "lead" "cta";grid-template-rows:none}
+  .fv__info{margin-top:12px;padding:14px 18px 6px;border-radius:18px}
   .fv__band{padding-top:10px;gap:0}
+  .fv__info .fv__band{padding-top:0}
   .fv__photo{margin-top:22px}
   .fv__lead{margin-top:20px}
   .fvc__sub{right:0}
@@ -361,6 +369,7 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
   .fv__h1{position:relative;z-index:1}
   /* スマホは3段に積む。大きい言葉と小さい言葉は横に並べて1段に収める */
   .conds{flex-direction:column;margin-top:14px}
+  .fv__info .conds{margin-top:10px;padding-top:2px}
   .conds li,.conds li:first-child{padding:9px 0}
   .conds li+li{border-left:0;border-top:1px solid #E6DED4}
   .conds .ic{width:38px;height:38px}
@@ -573,6 +582,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
   </div>
   <div class="wrap fv__grid">
     <div class="kv fv__mk" aria-hidden="true"><i class="sp hl fx" data-fx="pop" style="--i:3;--fx-d:560ms;--x:0;--y:0;--s:72px"></i></div>
+    <div class="fv__info">
     <div class="fv__band fx" data-fx="left" style="--fx-d:40ms">
       <p class="fv__when"><span class="fv__date"><b>10</b>月<b>10</b>日（土）・<b>11</b>日（日）</span><span class="fv__place"><span class="nb">アークヒルズ</span>　<wbr><span class="nb">アーク・カラヤン広場</span></span></p>
     </div>
@@ -581,6 +591,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
       <li class="fx" style="--fx-d:280ms"><span class="ic ic--inout" aria-hidden="true"></span><span class="conds__t"><b>出入り自由</b></span></li>
       <li class="fx" style="--fx-d:350ms"><span class="ic ic--age3" aria-hidden="true"></span><span class="conds__t"><b>3歳から</b><small>体験いただけます</small></span></li>
     </ul>
+    </div>
     <p class="fv__tag fx" style="--fx-d:360ms">ARK Hills Music Week 2026｜音の遊び場</p>
     <h1 class="fv__h1 fx" style="--fx-d:380ms">カラヤン広場で<br><span class="mk">はじめての楽器</span>に<br>出会う2日間</h1>
     <p class="fv__lead fx" style="--fx-d:500ms">スズキ・メソードの指導者・卒業生・子どもたちがカラヤン広場に敷かれた芝生の上で演奏します。演奏の後はヴァイオリン・チェロ・フルート・ピアノに触れられます。</p>
