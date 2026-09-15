@@ -206,7 +206,7 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 .steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:24px;counter-reset:s}
 .steps li{position:relative;counter-increment:s}
 .steps__fig{position:relative;display:block}
-.steps__fig img{display:block;width:100%;height:auto;aspect-ratio:1;border-radius:20px;background:#FEFBF0}
+.steps__fig img{display:block;width:100%;height:auto;aspect-ratio:1;border-radius:20px;background:#FDF9F6}
 .steps__fig::before{content:counter(s);position:absolute;left:-8px;top:-8px;z-index:1;display:grid;place-items:center;width:40px;height:40px;border-radius:50%;
   background:var(--c);box-shadow:0 0 0 3px #fff;font-family:var(--en);font-weight:700;font-size:19px;line-height:1;color:var(--on-green)}
 /* 次の手順への矢印は、絵と絵の間（24px）の真ん中に */
@@ -237,16 +237,19 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 .rest__pairs h4,.chef h4{display:flex;align-items:center;margin:0 0 14px;font-size:15px;letter-spacing:.1em}   /* 番号の丸と文字の中心をそろえる（inline だと丸が8px下がった） */
 .pairs{list-style:none;margin:0;padding:0;border-top:1px solid var(--line2)}
 .pairs li{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;padding:9px 2px 10px;background-position:left bottom}
-/* 楽器の色（ヴァイオリン＝桃・ピアノ＝黄・フルート＝青・チェロ＝紫）は名前の前の小さな点だけに残す */
+/* ★So FB 9/15「演奏編成はアイコンも入れたい。色のついた丸よりかは」→ 楽器の絵。ページの図形と同じ、粒子のあるグラデーション・輪郭線なしで画像生成（_gen/suzuki/job15 icons_a）。
+   9/14 の線画アイコンは「ヴァイオリンがギター、チェロが楕円」に見えたので、弓・脚・エンドピンまで楽器を丸ごと描いた形にした。色は前と同じ（桃・黄・青・紫） */
 .ins{display:inline-flex;align-items:center;gap:8px;font-size:15.5px;font-weight:700;line-height:1.6;letter-spacing:.04em;white-space:nowrap}
-.ins::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--c);flex:none}
-.ins--vn{--c:#B94F7F}.ins--pf{--c:#FCC800}.ins--fl{--c:#4B6CB3}.ins--vc{--c:#9C529C}
+.ins::before{content:"";width:36px;height:36px;flex:none;background:var(--ic) center/contain no-repeat}
+.ins--vn{--ic:url(img/ic-violin.webp)}.ins--pf{--ic:url(img/ic-piano.webp)}.ins--fl{--ic:url(img/ic-flute.webp)}.ins--vc{--ic:url(img/ic-cello.webp)}
+/* チェロは縦長で、36pxの枠だと幅19pxになりヴァイオリンと同じ大きさに見えた → 背を高く（行の高さは変えない） */
+.ins--vc::before{height:48px;margin-block:-6px}
 .pairs__plus{font-weight:700;font-size:15px;color:var(--ink2)}
 .pairs__note{margin-top:14px;font-size:14.5px;line-height:1.9;color:var(--ink2)}
 .chef{background:#EAF5FA;border-radius:24px;padding:26px 30px 28px}
 /* シェフ役の先生の絵（手順4・5と同じ人物）。右上に丸く置き、見出しと説明文を回り込ませる */
 .chef__head{display:contents}   /* PCは絵を右に回り込ませる。600px以下だけ見出しと横並びの行にする */
-.chef__img{float:right;width:112px;height:112px;margin:-6px -4px 8px 16px;border-radius:50%;object-fit:cover;background:#FEFBF0;box-shadow:0 0 0 4px #fff}
+.chef__img{float:right;width:112px;height:112px;margin:-6px -4px 8px 16px;border-radius:50%;object-fit:cover;background:#FDF9F6;box-shadow:0 0 0 4px #fff}   /* 画像は頭と胸が中心に来るよう切り出し済み（job16 nt_chef） */
 .chef .lines__label{clear:right}
 .chef > p{font-size:15px;line-height:1.9;color:var(--ink2);word-break:keep-all;overflow-wrap:anywhere}   /* 絵の横の狭い幅で「エプロ／ン」と語の途中で折れた → 文節の切れ目（wbr）でだけ折る */
 .lines__label{margin-top:16px;font-size:14px;font-weight:700;letter-spacing:.06em;color:var(--ink2)}
@@ -416,6 +419,14 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
   .chef__head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px}
   .chef__head h4{margin:0}
   .chef__img{float:none;order:2;width:68px;height:68px;margin:-8px -6px -8px 0}
+}
+@media (max-width:420px){
+  .ins::before{width:30px;height:30px}   /* 演奏編成の楽器の絵。基本の指定より後ろに置く（前に置くと上書きされて効かない） */
+  .ins--vc::before{height:40px;margin-block:-5px}
+}
+@media (max-width:359px){
+  .pairs li{gap:4px 6px}
+  .ins{gap:6px;font-size:14.5px;letter-spacing:0}   /* 320pxで「ヴァイオリン＋ヴァイオリン」が2行に割れた */
 }
 @media (max-width:480px){
   .btn{font-size:15.5px;min-height:58px;padding:0 18px 0 22px;letter-spacing:.03em;gap:8px}
@@ -657,7 +668,9 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
       <!-- ★So FB 9/15「流れ・演奏編成・メニュー・シェフのひとことが2x2だと、初めて読んだときによく分からない。画像を入れたい（画像生成してよい）」
            → 流れを絵つきの横一列にして先に読ませ、その下に③で選ぶメニュー・④のシェフ・⑤の演奏編成を手順の順に置く。
            見出しの前の番号は「流れのどの手順の話か」。数字は CSS の content で描くので、コピーしても文字に混ざらない（隠し文字の失敗 9/14）。
-           絵は画像生成の線画（~/lp-moods/_gen/suzuki/job13・job14。3枚目だけ子どもが指さす形に作り直し）。実際の会場の写真ではない -->
+           絵は画像生成。★So FB 9/15「イラストのトーンが絶対におかしい（線画・漫画の顔）」→ ページの図形（色と粒子）を下敷きにした画風で作り直し、
+           人も丸い図形・輪郭線なし・顔の描き込みなし、シェフ帽なし（原稿は白いエプロン＋缶バッジ）。~/lp-moods/_gen/suzuki/job16・job17。
+           ②は食券に英語の文字、④は先生がギターを持っていたので作り直した。実際の会場の写真ではない -->
       <div class="rest__flow">
         <p class="flow__title">流れ</p>
         <ol class="steps">
@@ -695,7 +708,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
         <div class="rest__pairs fx">
           <h4><span class="stepno" data-step="5" style="--c:var(--yellow)" aria-hidden="true"></span>演奏編成</h4>
           <!-- ★So FB 9/14「演奏編成がおかしい」：線画のアイコンがヴァイオリン＝ギター、チェロ＝楕円に見えていた → 楽器名を文字で。
-               色は缶バッジの楽器の色（ヴァイオリン＝桃・ピアノ＝黄・フルート＝青・チェロ＝紫）を名前の前の点だけに -->
+               9/15「アイコンも入れたい。色のついた丸よりかは」→ 名前の前に楽器を丸ごと描いた絵（CSS の背景。文字としては入らない） -->
           <ul class="pairs">
             <li><span class="ins ins--vn">ヴァイオリン</span><span class="pairs__plus">＋</span><span class="ins ins--vn">ヴァイオリン</span></li>
             <li><span class="ins ins--vn">ヴァイオリン</span><span class="pairs__plus">＋</span><span class="ins ins--pf">ピアノ</span></li>
