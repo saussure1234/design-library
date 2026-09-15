@@ -217,10 +217,7 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 .slip{grid-area:menu}
 .chef{grid-area:chef}
 .rest__pairs{grid-area:pairs}
-/* 見出しの前の番号＝流れの手順の番号。数字は content で描く（コピーに混ざらない） */
-.stepno{display:inline-grid;place-items:center;flex:none;width:26px;height:26px;margin-right:10px;border-radius:50%;background:var(--c)}
-.stepno::before{content:attr(data-step);font-family:var(--en);font-weight:700;font-size:14px;line-height:1;letter-spacing:0;color:var(--on-green)}
-.slip__title .stepno{margin-right:-6px}
+/* ★So FB 9/15「メニュー・シェフのひとこと・演奏編成の③④⑤は無くて良い。番号そのもの」→ 見出しの前の番号を外した（流れの1〜5は残す） */
 /* ★So FB 9/15「メニューと演奏編成をデザイン的にもう一度やり直したい」→ 生成4案（お子さまメニュー・絵本など）は「全然トーンに合ってない」
    → 実物の節を下敷きに、トーンはそのまま並べ方だけ変えた4案から T6 伝票。
    8曲を教本の順に1列、点線で区切った縦長の伝票（色は使わず、細い枠と点線だけ）。演奏編成も同じ点線の行にそろえる。
@@ -667,7 +664,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
       <p class="rest__concept fx">音楽を鑑賞するものから、子どもが自分で選び注文し受け取るものへ。ブースの一角を小さなレストランに見立ててメニューボードと食券受付を設置します。演奏者はシェフとして白いエプロンで来場者を迎えます。メニューの8曲から子どもが自分で選び、音楽家とやり取りし、生の音を<span class="nb">受け取る体験です。</span></p>
       <!-- ★So FB 9/15「流れ・演奏編成・メニュー・シェフのひとことが2x2だと、初めて読んだときによく分からない。画像を入れたい（画像生成してよい）」
            → 流れを絵つきの横一列にして先に読ませ、その下に③で選ぶメニュー・④のシェフ・⑤の演奏編成を手順の順に置く。
-           見出しの前の番号は「流れのどの手順の話か」。数字は CSS の content で描くので、コピーしても文字に混ざらない（隠し文字の失敗 9/14）。
+           見出しの前に手順の番号（3・4・5）を付けていたが、So「無くて良い」で外した（9/15）。
            絵は画像生成。★So FB 9/15「イラストのトーンが絶対におかしい（線画・漫画の顔）」→ ページの図形（色と粒子）を下敷きにした画風で作り直し、
            人も丸い図形・輪郭線なし・顔の描き込みなし、シェフ帽なし（原稿は白いエプロン＋缶バッジ）。~/lp-moods/_gen/suzuki/job16・job17。
            ②は食券に英語の文字、④は先生がギターを持っていたので作り直した。実際の会場の写真ではない -->
@@ -683,7 +680,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
       </div>
       <div class="rest__grid">
         <div class="slip fx" data-fx="rise">
-          <p class="slip__title"><span class="stepno" data-step="3" style="--c:var(--sky)" aria-hidden="true"></span>メニュー（8曲）</p>
+          <p class="slip__title">メニュー（8曲）</p>
           <!-- ★原稿は2列×4行の表で番号なし。左列＝教本の1〜4曲目、右列＝5〜8曲目（全音『鈴木鎮一ヴァイオリン指導曲集1』の収録順）。
                9/15 So が T6 伝票を選んだので、教本の順のまま1列にした（番号は付けない） -->
           <ul class="menu">
@@ -695,7 +692,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
         <div class="chef fx">
           <div class="chef__head">
             <img class="chef__img" src="img/rest-chef.webp" width="480" height="480" alt="" loading="lazy" decoding="async">
-            <h4><span class="stepno" data-step="4" style="--c:var(--green)" aria-hidden="true"></span>シェフのひとこと</h4>
+            <h4>シェフのひとこと</h4>
           </div>
           <p>演奏者が<wbr>スズキのロゴの<wbr>缶バッジを<wbr>つけた<wbr>白いエプロンを<wbr>着用し、<wbr>シェフとして<wbr>お迎えします</p>
           <p class="lines__label">＜シェフのセリフ例＞</p>
@@ -706,7 +703,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
           </ul>
         </div>
         <div class="rest__pairs fx">
-          <h4><span class="stepno" data-step="5" style="--c:var(--yellow)" aria-hidden="true"></span>演奏編成</h4>
+          <h4>演奏編成</h4>
           <!-- ★So FB 9/14「演奏編成がおかしい」：線画のアイコンがヴァイオリン＝ギター、チェロ＝楕円に見えていた → 楽器名を文字で。
                9/15「アイコンも入れたい。色のついた丸よりかは」→ 名前の前に楽器を丸ごと描いた絵（CSS の背景。文字としては入らない） -->
           <ul class="pairs">
