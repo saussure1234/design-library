@@ -57,7 +57,7 @@ html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:var(--fs);line-height:1.9;letter-spacing:.03em;overflow-x:clip;line-break:strict}   /* 🚨 hidden だと sticky のヘッダーが効かない環境がある */
 img{display:block;max-width:100%;height:auto}
 a{color:inherit}
-p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避ける */
+p{margin:0}   /* 🚨 text-wrap:pretty は使わない：日本語の孤立は減らず、途中の行を早めに折って右に余白・両端揃えで字間が大きく広がる行を作った（So 9/15「すごく不自然」）。孤立は末尾 script ⑦ */
 .wrap{width:min(var(--wrap),100% - var(--pad)*2);margin-inline:auto;position:relative;z-index:1}
 .sec{position:relative;padding:clamp(76px,9vw,124px) 0;overflow:hidden}
 .h2{font-size:var(--h2);font-weight:var(--h2-w);line-height:var(--h2-lh);letter-spacing:var(--h2-ls);margin:0;text-align:center;word-break:keep-all;overflow-wrap:anywhere}
@@ -333,9 +333,13 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 .ft{padding:36px 0 44px;text-align:center}
 .ft img{height:44px;width:auto;margin:0 auto}
 
-/* ★9/15 So「スマホで…左に寄って右に空き」→ 両端揃え → 同日「スマホの時、文字と文字の間隔が大きい。同じ間隔にして」
-   両端揃えは、1行15〜18字のスマホで禁則に押し出された行の字間が大きく広がった。→ 揃えは左のまま、本文の段落ごとに字間を±0.5px以内で整え、
-   列の幅に全角の文字がちょうど収まるようにする（どの行も同じ字間で、行末は右端まで届く）。末尾の script ⑦ */
+/* ★9/15 So「スマホで…左に寄って右に空き」→ 両端揃え →「文字と文字の間隔が大きい。同じ間隔に」→ 左ぞろえ＋字間で幅に収める →「また右に余白」
+   原因：18pxの本文は列の幅が1文字の倍数でないと全行に最大1文字の余りが出る（390pxで0.9字）。両端揃えだけだと、その余りを全行の字間に散らして全体が広がって見えた。
+   禁則で1文字押し出された行は、字間を変えない限り右が空く（日本語では避けられない）。
+   → 段落ごとに字間を整えて全角の文字を列の幅にちょうど収め（末尾 script ⑦、±0.5px以内）、そのうえで両端揃え。
+     広がるのは押し出された行だけで、量も1文字分を1行に散らす程度 */
+.fv__lead,.assure__card p,.live__table td:last-child,.live__info dd,.taiken__body,.note,.rest__concept,.chef > p,.pairs__note,.gift p,.faq__a p,.about__body,.photocard__body{text-align:justify;text-justify:inter-character}
+.spec dd:not(:has(.nb,ul)){text-align:justify;text-justify:inter-character}   /* :has の効かないブラウザで上の行ごと捨てられないよう別に書く */
 
 /* ── タブレット ── */
 @media (max-width:1100px){
@@ -964,9 +968,9 @@ document.querySelectorAll('.faq details').forEach(function(d){
   /* ⑦ 本文の字間と行末（So 9/15）
      「左に寄って右に空き」＝18pxの本文は、列の幅が1文字の倍数でないと、どの行も最大1文字手前で止まる。
      両端揃えで埋めたら「文字と文字の間隔が大きい。同じ間隔に」（禁則で押し出された行だけ字間が広がる）。
-     → 揃えは左のまま、本文の段落ごとに字間を整えて、列の幅に全角の文字がちょうど入るようにする（段落の中はどの行も同じ字間。変化は±0.5px以内）。
-     最後の行に数文字だけ落ちたら、字間は変えずに最後の1〜2文字を前の行から送る → だめなら1行の字数を1つ増減（字間の変化が1px以内の時だけ）。
-     判定は check.py の「改行の孤立」と同じ物差し（最後の矩形÷最大の矩形。直下の文字が40字超は12%・以下は22%）より少し厳しめ */
+     → 本文の段落ごとに字間を整えて、列の幅に全角の文字がちょうど入るようにする（変化は±0.5px以内）。
+     そのうえで両端揃え（CSS）。押し出された行だけが1文字分を字間に散らす。最後の行に数文字だけ落ちたら、1行の字数を1つ増減（1px以内）→ だめなら最後の数文字を前の行から送る。
+     判定は check.py の「改行の孤立」と同じ物差しと値（最後の矩形÷最大の矩形。直下の文字が40字超は12%・以下は22%） */
   var PROSE = '.fv__lead,.assure__card p,.live__table td:last-child,.live__info dd,.taiken__body,.note,.rest__concept,.chef > p,.pairs__note,.gift p,.faq__a p,.about__body,.photocard__body,.spec dd';
   var paras = [].slice.call(document.querySelectorAll('main p, ' + PROSE));
   var isProse = function(el){ return el.matches(PROSE) && !el.querySelector('.nb, ul'); };
@@ -975,7 +979,7 @@ document.querySelectorAll('.faq details').forEach(function(d){
     var rg = document.createRange(); rg.selectNodeContents(el);
     var ws = [].filter.call(rg.getClientRects(), function(r){ return r.width > 1 && r.height > 1; }).map(function(r){ return r.width; });
     if (ws.length < 2) return true;
-    return ws[ws.length - 1] >= Math.max.apply(null, ws) * (directLen(el) > 40 ? 0.13 : 0.23);
+    return ws[ws.length - 1] >= Math.max.apply(null, ws) * (directLen(el) > 40 ? 0.12 : 0.22);   // check.py と同じ値（1字だけ厳しくすると、直せる字数を捨てて孤立が残った）
   };
   var lastText = function(el){
     var tw = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), t, last = null;
@@ -1001,6 +1005,30 @@ document.querySelectorAll('.faq details').forEach(function(d){
     sp.className = 'tidy-tail'; tn.parentNode.insertBefore(sp, rest); sp.appendChild(rest);
     return true;
   };
+  // 左ぞろえにして測り、最後の行以外で「行末の空き÷字の間の数」が lim(px) を超える行があれば false（両端揃えでその分だけ字間が広がる）
+  var stretchOK = function(el, lim){
+    el.style.textAlign = 'left';
+    var rows = [], rg = document.createRange(), tw = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), t, i, k;
+    while ((t = tw.nextNode())) for (k = 0; k < t.nodeValue.length; k++) {
+      if (/\s/.test(t.nodeValue[k])) continue;
+      rg.setStart(t, k); rg.setEnd(t, k + 1);
+      var r = rg.getBoundingClientRect(); if (r.width < 0.5) continue;
+      var y = r.top + r.height / 2, row = null;
+      for (i = 0; i < rows.length; i++) if (Math.abs(rows[i].y - y) < r.height / 2) { row = rows[i]; break; }
+      if (!row) { row = { y: y, l: r.left, r: r.right, n: 0 }; rows.push(row); }
+      row.l = Math.min(row.l, r.left); row.r = Math.max(row.r, r.right); row.n++;
+    }
+    el.style.textAlign = '';
+    if (rows.length < 2) return true;
+    rows.sort(function(a, b){ return a.y - b.y; });
+    var R = Math.max.apply(null, rows.map(function(o){ return o.r; }));
+    var adv = parseFloat(getComputedStyle(el).fontSize) + (parseFloat(el.style.letterSpacing) || 0);
+    for (i = 0; i < rows.length - 1; i++) {
+      var cw = (rows[i].r - rows[i].l) / rows[i].n;                       // 見かけの1文字（登場の動きで縮んでいても比で測る）
+      if ((R - rows[i].r) / cw * adv / Math.max(1, rows[i].n - 1) > lim) return false;
+    }
+    return true;
+  };
   var tidy = function(el){
     el.style.letterSpacing = ''; untail(el);
     var cs = getComputedStyle(el), fs = parseFloat(cs.fontSize) || 16, base = parseFloat(cs.letterSpacing) || 0;
@@ -1009,11 +1037,14 @@ document.querySelectorAll('.faq details').forEach(function(d){
       var n = Math.round(W / (fs + base));
       var set = function(k){ el.style.letterSpacing = ((W - 0.5) / k - fs) + 'px'; };   // 0.5px 残して、k 文字目が次の行へこぼれないように
       set(n); if (good(el)) return;
-      // 字間は変えずに最後の1〜2文字を送る（前の行の行末が1〜2文字空く＝禁則で押し出された行と同じ見え方）→ だめなら1行の字数を1つ増減（字間が1px以内で変わる時だけ）
-      for (var k = 1; k <= 2; k++) { if (push(el, k)) { if (good(el)) return; untail(el); } }
-      var tryN = function(m){ if (Math.abs((W - 0.5) / m - fs - base) > 1.05) return false; set(m); if (good(el)) return true; set(n); return false; };
-      if (tryN(n + 1) || tryN(n - 1)) return;
-      for (var k2 = 3; k2 <= 4; k2++) { if (push(el, k2)) { if (good(el)) return; untail(el); } }
+      // 1行の字数を1つ増減（段落の中は同じ字間のまま、変化は1px以内の時だけ）→ だめなら最後の数文字を前の行から送る（両端揃えで、送った分はその1行に散る）
+      // 本文は最後の数文字を送らない（送った行だけ字間が大きく広がり So「すごく不自然」）。段落全体の字間をそろえたまま1行の字数を1つ増減する
+      var tryN = function(m, cap){ if (Math.abs((W - 0.5) / m - fs - base) > cap) return false; set(m); if (good(el)) return true; set(n); return false; };
+      if (tryN(n + 1, 1.05) || tryN(n - 1, 1.05) || tryN(n + 1, 1.6) || tryN(n - 1, 1.6)) return;
+      // 2〜3行の短い段落は、2文字増減まで（字間は段落全体で2px以内。1行だけ広がるより目立たない）
+      var rg2 = document.createRange(); rg2.selectNodeContents(el);
+      var tops = {}; [].forEach.call(rg2.getClientRects(), function(r){ if (r.width > 1) tops[Math.round(r.top / 6)] = 1; });
+      if (Object.keys(tops).length <= 3 && (tryN(n + 2, 2.0) || tryN(n - 2, 2.0))) return;
       return;
     }
     if (good(el)) return;
