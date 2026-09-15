@@ -64,8 +64,8 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 .h3{font-size:var(--h3);font-weight:700;line-height:1.6;letter-spacing:.04em;margin:0;word-break:keep-all;overflow-wrap:anywhere}
 .lead{font-size:var(--lead);line-height:2;color:var(--ink2);text-align:center;max-width:40em;margin:22px auto 0}
 /* ★9/15 本文を18pxにそろえたら、600/768/900pxで段落の最後の行に「せん。」「ます。」だけが落ちた（check.py 改行の孤立）。
-   text-wrap:pretty は日本語では効かなかった（Chrome 152 で実測）→ 文節の切れ目に <wbr> を入れ、そこでだけ折る（.ph） */
-.ph{word-break:keep-all;overflow-wrap:anywhere}
+   文節でしか折らない指定（keep-all＋wbr）→ スマホで行が右端まで届かず「左に寄って右が空く」（So）。最後の文節を改行させない指定 → その1つ前の行が空く。
+   → 本文はふつうに折り、最後の行が数文字だけの段落だけ、スクリプトで幅を最大3文字ぶん狭めて前の行から文字を送る（末尾の script ⑦） */
 .note{font-size:var(--fs-sm);line-height:1.8;color:var(--ink2)}
 .nb{display:inline-block}
 .tbd{color:var(--red);font-weight:700}
@@ -134,7 +134,7 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 .fv__h1{grid-area:h1;margin:6px 0 0;font-size:var(--h1);line-height:var(--h1-lh);font-weight:700;letter-spacing:.05em;word-break:keep-all;overflow-wrap:anywhere}
 /* 強調は決めごと（rules.json「FV見出しにブランドカラーの強調を1箇所」）なので残す。面を細くして主張を下げた */
 .mk{background:linear-gradient(transparent 70%,rgba(252,200,0,.58) 70%,rgba(252,200,0,.58) 93%,transparent 93%);padding:0 .04em}
-.fv__lead{grid-area:lead;margin-top:22px;font-size:var(--lead);line-height:2.05;color:var(--ink2);max-width:33em;word-break:keep-all;overflow-wrap:anywhere}
+.fv__lead{grid-area:lead;margin-top:22px;font-size:var(--lead);line-height:2.05;color:var(--ink2);max-width:33em}
 .fv__cta{grid-area:cta;display:flex;flex-wrap:wrap;gap:12px 14px;margin-top:32px}
 /* 左右の図形の列と文字の隙間が16pxしかなかった。図形は動かさず（So：背景は今のまま）、中身を内側へ寄せる */
 @media (min-width:1101px){
@@ -256,7 +256,7 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 /* ★So FB 9/15「シェフのひとことの画像が途中で切れている」→ 丸い枠で音符が半分・体が腰で切れていた。全身が入る絵（job19 nt_chef_full_b：先生が親子を迎える）を角丸の四角で */
 .chef__img{float:right;width:150px;height:150px;margin:-6px -6px 10px 18px;border-radius:18px;object-fit:cover;background:#FDF9F6}
 .chef .lines__label{clear:right}
-.chef > p{font-size:var(--fs);line-height:1.9;color:var(--ink2);word-break:keep-all;overflow-wrap:anywhere}   /* 絵の横の狭い幅で「エプロ／ン」と語の途中で折れた → 文節の切れ目（wbr）でだけ折る */
+.chef > p{font-size:var(--fs);line-height:1.9;color:var(--ink2)}   /* 9/15 文節でしか折らない指定はやめた（スマホで右が空いた）。最後の文節だけ .nw */
 .lines__label{margin-top:16px;font-size:var(--fs-sm);font-weight:700;letter-spacing:.06em;color:var(--ink2)}
 .lines{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:10px}
 .lines li{word-break:keep-all;overflow-wrap:anywhere;position:relative;background:#fff;border-radius:14px;padding:10px 18px;font-size:var(--fs);font-weight:700;line-height:1.7}
@@ -297,7 +297,6 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 .faq summary svg{width:20px;height:20px;transition:transform .28s;color:var(--green);transform:rotate(90deg)}
 .faq details[open]:not(.is-closing) summary svg{transform:rotate(-90deg)}
 .faq__a{overflow:hidden}
-.faq__a p{text-wrap:balance}   /* 2〜3行の短い答えは行をそろえる（最後に数字だけ落ちない） */
 .faq__a p{padding:0 44px 24px 40px;font-size:var(--fs);line-height:1.95;color:var(--ink2)}
 
 /* ── 7 スズキ・メソードについて ── */
@@ -584,7 +583,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
     </ul>
     <p class="fv__tag fx" style="--fx-d:360ms">ARK Hills Music Week 2026｜音の遊び場</p>
     <h1 class="fv__h1 fx" style="--fx-d:380ms">カラヤン広場で<br><span class="mk">はじめての楽器</span>に<br>出会う2日間</h1>
-    <p class="fv__lead fx" style="--fx-d:500ms">スズキ・メソードの<wbr>指導者・<wbr>卒業生・<wbr>子どもたちが<wbr>カラヤン広場に<wbr>敷かれた<wbr>芝生の上で<wbr>演奏します。<wbr>演奏の後は<wbr>ヴァイオリン・<wbr>チェロ・<wbr>フルート・<wbr>ピアノに<wbr>触れられます。</p>
+    <p class="fv__lead fx" style="--fx-d:500ms">スズキ・メソードの指導者・卒業生・子どもたちがカラヤン広場に敷かれた芝生の上で演奏します。演奏の後はヴァイオリン・チェロ・フルート・ピアノに触れられます。</p>
     <div class="fv__cta fx" style="--fx-d:620ms">
       <a class="btn btn--main" href="#access">会場へのアクセス<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8l5 5 5-5"/></svg></a>
       <a class="btn btn--sub" href="#concert">演奏スケジュールを見る<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8l5 5 5-5"/></svg></a>
@@ -601,9 +600,9 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
   <div class="wrap">
     <h2 class="h2 fx">思い立ったら<wbr>お立ち寄り<wbr>いただけます</h2>
     <ol class="assure__list">
-      <li class="assure__card fx" style="--c:var(--green)"><h3 class="h3">予約・申込不要</h3><p class="ph">当日広場に<wbr>来ていただく<wbr>だけです。<wbr>参加費も<wbr>かかりません。</p></li>
-      <li class="assure__card fx" style="--c:var(--sky)"><h3 class="h3">途中入場も<wbr>途中退出も自由</h3><p class="ph">演奏の途中でも<wbr>体験の途中でも<wbr>ご自由に<wbr>出入りいただけます。<wbr>お子さまの<wbr>機嫌に<wbr>合わせて<wbr>15分だけでも<wbr>大丈夫です。</p></li>
-      <li class="assure__card fx" style="--c:var(--yellow)"><h3 class="h3">走っても大丈夫な<wbr>芝生の広場</h3><p class="ph">静かに<wbr>座って<wbr>聴く場所では<wbr>ありません。<wbr>屋根のある<wbr>広場に<wbr>芝生が<wbr>敷かれますので、<wbr>赤ちゃん連れでも<wbr>動き回る<wbr>年齢でも<wbr>お楽しみいただけます。</p></li>
+      <li class="assure__card fx" style="--c:var(--green)"><h3 class="h3">予約・申込不要</h3><p>当日広場に来ていただくだけです。参加費もかかりません。</p></li>
+      <li class="assure__card fx" style="--c:var(--sky)"><h3 class="h3">途中入場も<wbr>途中退出も自由</h3><p>演奏の途中でも体験の途中でもご自由に出入りいただけます。お子さまの機嫌に合わせて15分だけでも大丈夫です。</p></li>
+      <li class="assure__card fx" style="--c:var(--yellow)"><h3 class="h3">走っても大丈夫な<wbr>芝生の広場</h3><p>静かに座って聴く場所ではありません。屋根のある広場に芝生が敷かれますので、赤ちゃん連れでも動き回る年齢でもお楽しみいただけます。</p></li>
     </ol>
   </div>
 </section>
@@ -672,7 +671,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
         <span class="sub__mark" aria-hidden="true"><i class="kvm yl q3" style="left:0;top:0"></i><i class="kvm pk q2" style="left:17px;top:0"></i><i class="kvm sp q4" style="left:0;top:17px"></i></span>
         <h3 class="h3">メニューから1曲えらんで注文すると<wbr>目の前で演奏します</h3>
       </div>
-      <p class="rest__concept fx">音楽を鑑賞するものから、子どもが自分で選び注文し受け取るものへ。ブースの一角を小さなレストランに見立ててメニューボードと食券受付を設置します。演奏者はシェフとして白いエプロンで来場者を迎えます。メニューの8曲から子どもが自分で選び、音楽家とやり取りし、生の音を<span class="nb">受け取る体験です。</span></p>
+      <p class="rest__concept fx">音楽を鑑賞するものから、子どもが自分で選び注文し受け取るものへ。ブースの一角を小さなレストランに見立ててメニューボードと食券受付を設置します。演奏者はシェフとして白いエプロンで来場者を迎えます。メニューの8曲から子どもが自分で選び、音楽家とやり取りし、生の音を受け取る体験です。</p>
       <!-- ★So FB 9/15「流れ・演奏編成・メニュー・シェフのひとことが2x2だと、初めて読んだときによく分からない。画像を入れたい（画像生成してよい）」
            → 流れを絵つきの横一列にして先に読ませ、その下に③で選ぶメニュー・④のシェフ・⑤の演奏編成を手順の順に置く。
            見出しの前に手順の番号（3・4・5）を付けていたが、So「無くて良い」で外した（9/15）。
@@ -698,14 +697,14 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
             <li>タカタカタッタの<wbr>キラキラ星</li><li>ちょうちょう</li><li>こぎつね</li><li>むすんでひらいて</li>
             <li>クリスマスの歌</li><li>かすみか雲か</li><li>ロング・ロング・<wbr>アゴー</li><li>アレグロ</li>
           </ul>
-          <p class="note">いずれもスズキ・メソードの子どもたちが<wbr><span class="nb">実際に最初に学んでいる曲です。</span></p>
+          <p class="note">いずれもスズキ・メソードの子どもたちが実際に最初に学んでいる曲です。</p>
         </div>
         <div class="chef fx">
           <div class="chef__head">
             <img class="chef__img" src="img/rest-chef.webp" width="480" height="480" alt="" loading="lazy" decoding="async">
             <h4>シェフのひとこと</h4>
           </div>
-          <p>演奏者が<wbr>スズキのロゴの<wbr>缶バッジを<wbr>つけた<wbr>白いエプロンを<wbr>着用し、<wbr>シェフとして<wbr>お迎えします</p>
+          <p>演奏者がスズキのロゴの缶バッジをつけた白いエプロンを着用し、シェフとしてお迎えします</p>
           <p class="lines__label">＜シェフのセリフ例＞</p>
           <ul class="lines">
             <li>いらっしゃいませ。<wbr>食券お預かりいたします</li>
@@ -723,7 +722,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
             <li><span class="ins ins--vn">ヴァイオリン</span><span class="pairs__plus">＋</span><span class="ins ins--fl">フルート</span></li>
             <li><span class="ins ins--vn">ヴァイオリン</span><span class="pairs__plus">＋</span><span class="ins ins--vc">チェロ</span></li>
           </ul>
-          <p class="pairs__note">同じ曲でも組み合わせで響きが変わりますので<wbr><span class="nb">2回目のご注文も可能です。</span></p>
+          <p class="pairs__note">同じ曲でも組み合わせで響きが変わりますので2回目のご注文も可能です。</p>
         </div>
       </div>
     </div>
@@ -744,7 +743,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
           <div class="gift__vis"><figure class="gift__cheki" style="margin:0"><img src="img/cheki.jpg" width="540" height="560" loading="lazy" alt="楽器を持つ子どもの記念写真のイメージ"></figure></div>
           <h4>記念フォトカード</h4>
           <p>楽器体験のあと簡単なアンケートにご協力いただいた方に、お子さまが好きな楽器と一緒にチェキで記念撮影。その場でオリジナル台紙に貼ってお渡し。</p>
-          <p class="ph">はじめて<wbr>楽器に<wbr>ふれた日を<wbr>一枚の<wbr>写真に。<wbr>撮影した<wbr>写真は<wbr>その場で<wbr>二つ折りの<wbr>台紙に<wbr>貼って<wbr>お渡しします。<wbr>表紙には<wbr>イベント名、<wbr>内側に<wbr>写真と<wbr>「きょう、<wbr>わたしが<wbr>出会った楽器」の<wbr>メッセージ、<wbr>裏面に<wbr>スズキ・メソードの<wbr>紹介を<wbr>掲載しています。<wbr>帰ってからも<wbr>ご家庭で<wbr>開けるカードです。</p>
+          <p>はじめて楽器にふれた日を一枚の写真に。撮影した写真はその場で二つ折りの台紙に貼ってお渡しします。表紙にはイベント名、内側に写真と「きょう、わたしが出会った楽器」のメッセージ、裏面にスズキ・メソードの紹介を掲載しています。帰ってからもご家庭で開けるカードです。</p>
           <span class="gift__qty">各日150名分。なくなり次第終了</span>
         </div>
       </div>
@@ -767,7 +766,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
       <iframe class="access__map fx" title="アーク・カラヤン広場の地図" src="https://www.google.com/maps?q=%E3%82%A2%E3%83%BC%E3%82%AF%E3%83%BB%E3%82%AB%E3%83%A9%E3%83%A4%E3%83%B3%E5%BA%83%E5%A0%B4&amp;output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
     </div>
     <div class="access__more fx">
-      <p class="ph">会場では、<wbr>ほかにも<wbr>さまざまな<wbr>音楽体験を<wbr>お楽しみいただけます</p>
+      <p>会場では、ほかにもさまざまな音楽体験をお楽しみいただけます</p>
       <a class="btn btn--sub" href="https://www.arkhills.com/events/2026/10/0214.html" target="_blank" rel="noopener">アークヒルズの公式イベントページへ<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8v8M16 4L6.5 13.5M13 16H4V7"/></svg></a>
     </div>
   </div>
@@ -796,7 +795,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
     <div class="about__photo fx" data-fx="left"><img src="img/about.jpg" width="1200" height="800" loading="lazy" alt="ヴァイオリンを構える小さな子どもたち"></div>
     <div>
       <h2 class="h2 fx">どの子も育つ　<wbr>育て方ひとつ</h2>
-      <p class="about__body ph fx">スズキ・メソードは<wbr>世界74の<wbr>国と地域に<wbr>広がる<wbr>音楽教育です。<wbr>母語を<wbr>覚えるように<wbr>聴くことから<wbr>音楽を<wbr>学びます。<wbr>今回<wbr>演奏する<wbr>子どもたちも<wbr>最初は<wbr>キラキラ星から<wbr>始めました。</p>
+      <p class="about__body fx">スズキ・メソードは世界74の国と地域に広がる音楽教育です。母語を覚えるように聴くことから音楽を学びます。今回演奏する子どもたちも最初はキラキラ星から始めました。</p>
     </div>
   </div>
 </section>
@@ -921,6 +920,46 @@ document.querySelectorAll('.faq details').forEach(function(d){
       setTimeout(function(){ if (!fx.some(function(el){ return el.classList.contains('hh-in'); })) showAll(); }, 8000);   /* 保険③ */
     }
   }
+
+  /* ⑦ 段落の最後の行に数文字だけ落ちたら、段落の幅をほんの少し（1文字ずつ・3文字か幅の17%まで）狭めて、前の行から文字を送る。
+     行は右端まで埋めたまま、最後の行だけ直す（文節でしか折らない指定・行の長さをそろえる指定は、スマホで右が大きく空いた So 9/15）。
+     判定は check.py の「改行の孤立」と同じ（40字以下は最大行の22%、長文は12%）より少し厳しめ */
+  var paras = [].slice.call(document.querySelectorAll('main p'));
+  var lineWidths = function(el){
+    var rg = document.createRange(); rg.selectNodeContents(el);
+    var rows = {}, order = [];
+    [].forEach.call(rg.getClientRects(), function(r){
+      if (r.width < 2 || r.height < 6) return;
+      var k = Math.round((r.top + r.height / 2) / 8);
+      if (!(k in rows)) { rows[k] = 0; order.push(k); }
+      rows[k] += r.width;
+    });
+    order.sort(function(a, b){ return a - b; });
+    return order.map(function(k){ return rows[k]; });
+  };
+  var tidy = function(el){
+    el.style.maxWidth = '';
+    // 閉じたFAQの答えも測る（check.py も閉じたまま測る。開いた時は toggle でもう一度）
+    var ls = lineWidths(el); if (ls.length < 2) return;
+    var lim = el.textContent.trim().length > 40 ? 0.13 : 0.23;
+    var mx = Math.max.apply(null, ls), last = ls[ls.length - 1];
+    if (last >= mx * lim) return;
+    var w0 = el.getBoundingClientRect().width, fs = parseFloat(getComputedStyle(el).fontSize) || 16;
+    var kmax = Math.max(3, Math.floor(w0 * 0.17 / fs));        // スマホは3文字まで、広い段落は幅の17%まで（2行しかない答えは3文字では足りなかった）
+    for (var k = 1; k <= kmax; k++) {
+      el.style.maxWidth = (w0 - fs * k) + 'px';
+      var l2 = lineWidths(el), m2 = Math.max.apply(null, l2), la = l2[l2.length - 1];
+      if (l2.length >= 2 && la >= m2 * lim) return;
+    }
+    el.style.maxWidth = '';
+  };
+  var tidyAll = function(){ paras.forEach(tidy); };
+  tidyAll();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(tidyAll);
+  addEventListener('load', tidyAll);
+  var tidyT; addEventListener('resize', function(){ clearTimeout(tidyT); tidyT = setTimeout(tidyAll, 150); });
+  /* 閉じたFAQの中は幅を変えても組み直されない（Chrome の details は閉じている間レイアウトしない）→ 開いて組まれた次のフレームで直す */
+  document.querySelectorAll('.faq details').forEach(function(dt){ dt.addEventListener('toggle', function(){ if (dt.open) requestAnimationFrame(function(){ dt.querySelectorAll('p').forEach(tidy); }); }); });
 
   /* ⑥ 開いたらいちばん上から（So FB 9/14「開いたときに ARK Hills Music Week 2026｜音の遊び場 が見えない」）
      少し下げて再読み込みすると、ブラウザが前の位置（実測44px）を戻し、FVの一行目が固定ヘッダー（下端68px）の裏に隠れていた。
