@@ -7,7 +7,7 @@
   "★数字はすべて 1440px での実測（A型 2026-09-08 ／ B型 2026-09-10）。",
   "★型（骨格）と雰囲気（見た目）は別の軸。型は「決め方」で分かれる（業界では分かれない）。実測 2026-09-11：ADS 12節（検討が長いBtoB）／SHARE 15節（即問い合わせBtoB）／ESL 21節（BtoC継続課金）／単発イベント 4節。上半分（FV→課題→特徴→違い）は共通で、下半分（証明の種類・人・FAQ・CTAの回数）が入れ替わる。"
  ],
- "updated": "2026-09-14",
+ "updated": "2026-09-15",
  "local": {
   "root": "~/lp-moods/",
   "serve": "cd ~/lp-moods && python3 -m http.server 8796",
@@ -1192,6 +1192,471 @@
      "ls": ".00em"
     }
    ],
+   "url": ""
+  },
+  {
+   "structure": [
+    {
+     "n": 1,
+     "role": "FV（B2C）",
+     "note": "人物の写真2枚か大きい写真1枚＋吹き出し・見出し・期間つきの申込（定価→特別価格・バッジ）",
+     "part": "k_fv"
+    },
+    {
+     "n": 2,
+     "role": "特徴（B2C）",
+     "note": "一覧4つ＋POINTの詳細4つを1枚の色面に。右側は数字／写真／図",
+     "part": "k_points"
+    },
+    {
+     "n": 3,
+     "role": "申込ブロック（B2C）",
+     "note": "期間・定価→特別価格・期間限定バッジ・大きいボタン＋補助コピー",
+     "part": "k_offer"
+    },
+    {
+     "n": 4,
+     "role": "講師紹介（B2C）",
+     "note": "カード3枚。写真・肩書・資格と経験・本人の言葉",
+     "part": "k_people"
+    },
+    {
+     "n": 5,
+     "role": "保護者さまの声（B2C）",
+     "note": "結果の見出し・長文・先生からのコメント（長ければ畳む）",
+     "part": "k_voice"
+    },
+    {
+     "n": 6,
+     "role": "ほかとの違い（B2C）",
+     "note": "自分の列だけ色・◎△×の印・スマホは横スクロール",
+     "part": "k_compare"
+    },
+    {
+     "n": 7,
+     "role": "申込ブロック（B2C）",
+     "note": "期間・定価→特別価格・期間限定バッジ・大きいボタン＋補助コピー",
+     "part": "k_offer"
+    },
+    {
+     "n": 8,
+     "role": "よくあるご質問（B2C）",
+     "note": "白カードにQ/Aの丸印。開閉はなめらかに・最初は全部閉じる",
+     "part": "k_faq"
+    }
+   ],
+   "id": "k",
+   "key": "k",
+   "name": "C型 B2C版（塾・教室・習い事）",
+   "sections": 8,
+   "order": [
+    "k_fv",
+    "k_points",
+    "k_offer",
+    "k_people",
+    "k_voice",
+    "k_compare",
+    "k_offer",
+    "k_faq"
+   ],
+   "path": "~/lp-moods/",
+   "moods": [
+    {
+     "id": "01_genki",
+     "name": "01 元気",
+     "words": "熱い・力強い・躍動感",
+     "head": "Toppan Bunkyu Midashi Gothic",
+     "h1": 52,
+     "h2": "36/700",
+     "pad": 88,
+     "radius": "6px / 14px",
+     "cols": "12:8",
+     "color": "#c2520c",
+     "bg": "#fff6ef",
+     "ls": ".00em"
+    },
+    {
+     "id": "02_yawaraka",
+     "name": "02 やわらか",
+     "words": "温かい・やさしい・和モダン",
+     "head": "Tsukushi A Round Gothic",
+     "h1": 44,
+     "h2": "32/600",
+     "pad": 128,
+     "radius": "14px / 28px",
+     "cols": "9:11",
+     "color": "#a8624f",
+     "bg": "#fdf6f2",
+     "ls": ".04em"
+    },
+    {
+     "id": "03_seijitsu",
+     "name": "03 誠実",
+     "words": "実直・信頼感・整然・職人",
+     "head": "Hiragino Mincho ProN",
+     "h1": 46,
+     "h2": "34/600",
+     "pad": 120,
+     "radius": "3px / 6px",
+     "cols": "9:11",
+     "color": "#2d5c8a",
+     "bg": "#f4f6f8",
+     "ls": ".02em"
+    },
+    {
+     "id": "04_cool",
+     "name": "04 クール",
+     "words": "静か・上品・都会的",
+     "head": "YuGothic",
+     "h1": 42,
+     "h2": "30/500",
+     "pad": 136,
+     "radius": "0px / 0px",
+     "cols": "9:11",
+     "color": "#1765ab",
+     "bg": "#eff4fa",
+     "ls": ".16em"
+    },
+    {
+     "id": "05_ochitsuki",
+     "name": "05 落ち着き",
+     "words": "重心が低い・格式・老舗",
+     "head": "YuMincho",
+     "h1": 40,
+     "h2": "28/400",
+     "pad": 160,
+     "radius": "2px / 3px",
+     "cols": "9:11",
+     "color": "#6b6152",
+     "bg": "#f6f5f1",
+     "ls": ".10em"
+    },
+    {
+     "id": "06_pop",
+     "name": "06 ポップ",
+     "words": "楽しい・かわいい・軽やか",
+     "head": "Klee",
+     "h1": 50,
+     "h2": "36/700",
+     "pad": 96,
+     "radius": "18px / 32px",
+     "cols": "10:10",
+     "color": "#d03d6d",
+     "bg": "#fffaf0",
+     "ls": ".00em"
+    }
+   ],
+   "note": "",
+   "url": ""
+  },
+  {
+   "structure": [
+    {
+     "n": 1,
+     "role": "FV（B2C）",
+     "note": "人物の写真2枚か大きい写真1枚＋吹き出し・見出し・期間つきの申込（定価→特別価格・バッジ）",
+     "part": "k_fv"
+    },
+    {
+     "n": 2,
+     "role": "開催概要（B2C）",
+     "note": "開催日の札と時間帯（予約制なら受付時間）・会場などの行・予約ボタンと電話",
+     "part": "k_event"
+    },
+    {
+     "n": 3,
+     "role": "プランと料金（B2C）",
+     "note": "カードで並べる。写真・こんな方に・中身・通常→初回の価格",
+     "part": "k_plans"
+    },
+    {
+     "n": 4,
+     "role": "流れ（B2C）",
+     "note": "予約から当日まで。広い画面は横一列、狭い画面は縦。写真は在庫しだい",
+     "part": "k_flow"
+    },
+    {
+     "n": 5,
+     "role": "よくあるご質問（B2C）",
+     "note": "白カードにQ/Aの丸印。開閉はなめらかに・最初は全部閉じる",
+     "part": "k_faq"
+    },
+    {
+     "n": 6,
+     "role": "予約フォーム（B2C）",
+     "note": "希望の日程・人数・名前・電話・メール・同意。開催日の有無で日程の聞き方が変わる",
+     "part": "k_form"
+    }
+   ],
+   "id": "m",
+   "key": "m",
+   "name": "D型 B2C版（見学会・相談会など来場の予約）",
+   "sections": 6,
+   "order": [
+    "k_fv",
+    "k_event",
+    "k_plans",
+    "k_flow",
+    "k_faq",
+    "k_form"
+   ],
+   "path": "~/lp-moods/",
+   "moods": [
+    {
+     "id": "01_genki",
+     "name": "01 元気",
+     "words": "熱い・力強い・躍動感",
+     "head": "Toppan Bunkyu Midashi Gothic",
+     "h1": 52,
+     "h2": "36/700",
+     "pad": 88,
+     "radius": "6px / 14px",
+     "cols": "12:8",
+     "color": "#c2520c",
+     "bg": "#fff6ef",
+     "ls": ".00em"
+    },
+    {
+     "id": "02_yawaraka",
+     "name": "02 やわらか",
+     "words": "温かい・やさしい・和モダン",
+     "head": "Tsukushi A Round Gothic",
+     "h1": 44,
+     "h2": "32/600",
+     "pad": 128,
+     "radius": "14px / 28px",
+     "cols": "9:11",
+     "color": "#a8624f",
+     "bg": "#fdf6f2",
+     "ls": ".04em"
+    },
+    {
+     "id": "03_seijitsu",
+     "name": "03 誠実",
+     "words": "実直・信頼感・整然・職人",
+     "head": "Hiragino Mincho ProN",
+     "h1": 46,
+     "h2": "34/600",
+     "pad": 120,
+     "radius": "3px / 6px",
+     "cols": "9:11",
+     "color": "#2d5c8a",
+     "bg": "#f4f6f8",
+     "ls": ".02em"
+    },
+    {
+     "id": "04_cool",
+     "name": "04 クール",
+     "words": "静か・上品・都会的",
+     "head": "YuGothic",
+     "h1": 42,
+     "h2": "30/500",
+     "pad": 136,
+     "radius": "0px / 0px",
+     "cols": "9:11",
+     "color": "#1765ab",
+     "bg": "#eff4fa",
+     "ls": ".16em"
+    },
+    {
+     "id": "05_ochitsuki",
+     "name": "05 落ち着き",
+     "words": "重心が低い・格式・老舗",
+     "head": "YuMincho",
+     "h1": 40,
+     "h2": "28/400",
+     "pad": 160,
+     "radius": "2px / 3px",
+     "cols": "9:11",
+     "color": "#6b6152",
+     "bg": "#f6f5f1",
+     "ls": ".10em"
+    },
+    {
+     "id": "06_pop",
+     "name": "06 ポップ",
+     "words": "楽しい・かわいい・軽やか",
+     "head": "Klee",
+     "h1": 50,
+     "h2": "36/700",
+     "pad": 96,
+     "radius": "18px / 32px",
+     "cols": "10:10",
+     "color": "#d03d6d",
+     "bg": "#fffaf0",
+     "ls": ".00em"
+    }
+   ],
+   "note": "",
+   "url": ""
+  },
+  {
+   "structure": [
+    {
+     "n": 1,
+     "role": "FV（B2C）",
+     "note": "人物の写真2枚か大きい写真1枚＋吹き出し・見出し・期間つきの申込（定価→特別価格・バッジ）",
+     "part": "k_fv"
+    },
+    {
+     "n": 2,
+     "role": "特徴（B2C）",
+     "note": "一覧4つ＋POINTの詳細4つを1枚の色面に。右側は数字／写真／図",
+     "part": "k_points"
+    },
+    {
+     "n": 3,
+     "role": "プランと料金（B2C）",
+     "note": "カードで並べる。写真・こんな方に・中身・通常→初回の価格",
+     "part": "k_plans"
+    },
+    {
+     "n": 4,
+     "role": "申込ブロック（B2C）",
+     "note": "期間・定価→特別価格・期間限定バッジ・大きいボタン＋補助コピー",
+     "part": "k_offer"
+    },
+    {
+     "n": 5,
+     "role": "流れ（B2C）",
+     "note": "予約から当日まで。広い画面は横一列、狭い画面は縦。写真は在庫しだい",
+     "part": "k_flow"
+    },
+    {
+     "n": 6,
+     "role": "保護者さまの声（B2C）",
+     "note": "結果の見出し・長文・先生からのコメント（長ければ畳む）",
+     "part": "k_voice"
+    },
+    {
+     "n": 7,
+     "role": "講師紹介（B2C）",
+     "note": "カード3枚。写真・肩書・資格と経験・本人の言葉",
+     "part": "k_people"
+    },
+    {
+     "n": 8,
+     "role": "よくあるご質問（B2C）",
+     "note": "白カードにQ/Aの丸印。開閉はなめらかに・最初は全部閉じる",
+     "part": "k_faq"
+    },
+    {
+     "n": 9,
+     "role": "店舗（B2C）",
+     "note": "1〜4店舗は写真つきカード、5店舗以上は地域ごとの一覧（電話・営業時間・定休日）",
+     "part": "k_shop"
+    },
+    {
+     "n": 10,
+     "role": "申込ブロック（B2C）",
+     "note": "期間・定価→特別価格・期間限定バッジ・大きいボタン＋補助コピー",
+     "part": "k_offer"
+    }
+   ],
+   "id": "s",
+   "key": "s",
+   "name": "C型 B2C版（美容・整体・ジムなど来店型）",
+   "sections": 10,
+   "order": [
+    "k_fv",
+    "k_points",
+    "k_plans",
+    "k_offer",
+    "k_flow",
+    "k_voice",
+    "k_people",
+    "k_faq",
+    "k_shop",
+    "k_offer"
+   ],
+   "path": "~/lp-moods/",
+   "moods": [
+    {
+     "id": "01_genki",
+     "name": "01 元気",
+     "words": "熱い・力強い・躍動感",
+     "head": "Toppan Bunkyu Midashi Gothic",
+     "h1": 52,
+     "h2": "36/700",
+     "pad": 88,
+     "radius": "6px / 14px",
+     "cols": "12:8",
+     "color": "#c2520c",
+     "bg": "#fff6ef",
+     "ls": ".00em"
+    },
+    {
+     "id": "02_yawaraka",
+     "name": "02 やわらか",
+     "words": "温かい・やさしい・和モダン",
+     "head": "Tsukushi A Round Gothic",
+     "h1": 44,
+     "h2": "32/600",
+     "pad": 128,
+     "radius": "14px / 28px",
+     "cols": "9:11",
+     "color": "#a8624f",
+     "bg": "#fdf6f2",
+     "ls": ".04em"
+    },
+    {
+     "id": "03_seijitsu",
+     "name": "03 誠実",
+     "words": "実直・信頼感・整然・職人",
+     "head": "Hiragino Mincho ProN",
+     "h1": 46,
+     "h2": "34/600",
+     "pad": 120,
+     "radius": "3px / 6px",
+     "cols": "9:11",
+     "color": "#2d5c8a",
+     "bg": "#f4f6f8",
+     "ls": ".02em"
+    },
+    {
+     "id": "04_cool",
+     "name": "04 クール",
+     "words": "静か・上品・都会的",
+     "head": "YuGothic",
+     "h1": 42,
+     "h2": "30/500",
+     "pad": 136,
+     "radius": "0px / 0px",
+     "cols": "9:11",
+     "color": "#1765ab",
+     "bg": "#eff4fa",
+     "ls": ".16em"
+    },
+    {
+     "id": "05_ochitsuki",
+     "name": "05 落ち着き",
+     "words": "重心が低い・格式・老舗",
+     "head": "YuMincho",
+     "h1": 40,
+     "h2": "28/400",
+     "pad": 160,
+     "radius": "2px / 3px",
+     "cols": "9:11",
+     "color": "#6b6152",
+     "bg": "#f6f5f1",
+     "ls": ".10em"
+    },
+    {
+     "id": "06_pop",
+     "name": "06 ポップ",
+     "words": "楽しい・かわいい・軽やか",
+     "head": "Klee",
+     "h1": 50,
+     "h2": "36/700",
+     "pad": 96,
+     "radius": "18px / 32px",
+     "cols": "10:10",
+     "color": "#d03d6d",
+     "bg": "#fffaf0",
+     "ls": ".00em"
+    }
+   ],
+   "note": "",
    "url": ""
   },
   {
