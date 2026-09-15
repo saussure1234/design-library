@@ -34,9 +34,11 @@
   --on-green:#15240F;
   /* 級数（実測 H1 字送り50px・行送り77.5px＠1536 → 実務値に組み直し） */
   --h1:clamp(30px,3.25vw,47px); --h1-lh:1.55;
-  --h2:clamp(24px,2.3vw,33px); --h2-w:700; --h2-lh:1.55; --h2-ls:.05em;
-  --h3:clamp(19px,1.55vw,22px);
-  --fs:16px; --lead:clamp(15.5px,1.15vw,17px);
+  /* ★So FB 9/15「文字のサイズ大丈夫？バラバラなのか小さいのか。ESLを参考に」→ 本文15.5px＋14/15/16/16.5pxの5段が混在していた（ESLは本文18pxの1段）。
+     本文・リード・表・FAQ＝18px、注記・ラベル・補足＝16px の2段にそろえ、見出しは本文の約1.5倍（h2 28px・h3 23px）。FVの見出しと日付は据え置き */
+  --h2:clamp(22px,2vw,28px); --h2-w:700; --h2-lh:1.55; --h2-ls:.05em;
+  --h3:clamp(20px,1.6vw,23px);
+  --fs:18px; --lead:18px; --fs-sm:16px;
   --wrap:1080px; --pad:clamp(20px,4vw,40px);
   --font:"Zen Kaku Gothic New","Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
   --en:"Quicksand","Zen Kaku Gothic New","Hiragino Sans",sans-serif;
@@ -61,7 +63,10 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 .h2{font-size:var(--h2);font-weight:var(--h2-w);line-height:var(--h2-lh);letter-spacing:var(--h2-ls);margin:0;text-align:center;word-break:keep-all;overflow-wrap:anywhere}
 .h3{font-size:var(--h3);font-weight:700;line-height:1.6;letter-spacing:.04em;margin:0;word-break:keep-all;overflow-wrap:anywhere}
 .lead{font-size:var(--lead);line-height:2;color:var(--ink2);text-align:center;max-width:40em;margin:22px auto 0}
-.note{font-size:14px;line-height:1.8;color:var(--ink2)}
+/* ★9/15 本文を18pxにそろえたら、600/768/900pxで段落の最後の行に「せん。」「ます。」だけが落ちた（check.py 改行の孤立）。
+   text-wrap:pretty は日本語では効かなかった（Chrome 152 で実測）→ 文節の切れ目に <wbr> を入れ、そこでだけ折る（.ph） */
+.ph{word-break:keep-all;overflow-wrap:anywhere}
+.note{font-size:var(--fs-sm);line-height:1.8;color:var(--ink2)}
 .nb{display:inline-block}
 .tbd{color:var(--red);font-weight:700}
 
@@ -86,7 +91,7 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 /* ★So FB 9/15（2回目）「ロゴとCTAだけだと変か。最初の6つは分かりにくいし、こんなに要るか」→ ナビ3つ＋CTA。
    初めての人が知りたい「いつ（演奏スケジュール）・何ができる（楽器体験）・不安（よくある質問）」だけ。会場はボタンが兼ねる。
    言葉は FV の「演奏スケジュールを見る」とそろえた。スマホはロゴ＋CTAのまま（メニューボタンは作らない） */
-.hd__nav{display:flex;gap:clamp(20px,2.2vw,34px);margin-right:clamp(6px,1.2vw,18px);font-size:14.5px;font-weight:500;letter-spacing:.06em}
+.hd__nav{display:flex;gap:clamp(20px,2.2vw,34px);margin-right:clamp(6px,1.2vw,18px);font-size:var(--fs-sm);font-weight:500;letter-spacing:.06em}
 .hd__nav a{position:relative;padding:10px 0;text-decoration:none;white-space:nowrap}
 .hd__nav a::after{content:"";position:absolute;left:0;right:0;bottom:4px;height:3px;border-radius:2px;background:var(--green);transform:scaleX(0);transform-origin:left;transition:transform .25s}
 .hd__nav a:hover::after,.hd__nav a[aria-current]::after{transform:scaleX(1)}
@@ -103,7 +108,7 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
    帯・タグ・丸枠の地と枠を外し、地の上にじかに置く。まとまりは余白の差で作る（中は狭く・間は広く）。 */
 .fv__band{grid-area:band;display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding-top:6px}
 /* ★So FB 9/15「ARK Hills Music Week 2026｜音の遊び場 は『カラヤン広場で』の上でいい」→ 帯から出して見出しの直上へ（見出しの前置き） */
-.fv__tag{grid-area:tag;margin:36px 0 0;color:var(--purple);font-family:var(--en);font-weight:700;font-size:15px;letter-spacing:.04em;line-height:1.5;white-space:nowrap}
+.fv__tag{grid-area:tag;margin:36px 0 0;color:var(--purple);font-family:var(--en);font-weight:700;font-size:var(--fs-sm);letter-spacing:.04em;line-height:1.5;white-space:nowrap}
 .fv__when{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 18px;font-weight:700;line-height:1.5}
 .fv__date{font-size:clamp(19px,1.8vw,26px);letter-spacing:.04em;white-space:nowrap}
 .fv__date b{font-family:var(--en);font-weight:700;font-size:1.12em}
@@ -123,7 +128,7 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 .ic--free{--ic:url(img/ic-free.webp)}.ic--inout{--ic:url(img/ic-inout.webp)}.ic--age3{--ic:url(img/ic-age3.webp)}
 .conds__t{display:flex;flex-direction:column}
 .conds__t b{font-size:22px;letter-spacing:.04em;line-height:1.35}
-.conds__t small{font-size:13px;font-weight:500;color:var(--ink2);letter-spacing:.04em;line-height:1.5}
+.conds__t small{font-size:var(--fs-sm);font-weight:500;color:var(--ink2);letter-spacing:.04em;line-height:1.5}
 /* 「入場無料・事前予約不要…」を2段に分けた所の「・」。文字としては残し（原稿どおり・読み上げ用）、見た目だけ消す */
 .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .fv__h1{grid-area:h1;margin:6px 0 0;font-size:var(--h1);line-height:var(--h1-lh);font-weight:700;letter-spacing:.05em;word-break:keep-all;overflow-wrap:anywhere}
@@ -135,7 +140,7 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 @media (min-width:1101px){
   .fv__grid{padding-inline:24px}
   /* 下端の図形の見え方を最初の版（FVの高さ859px＠1440）に合わせる。条件の段を足して33px伸びた分を余白から引く */
-  .fv{padding-bottom:calc(clamp(80px,8vw,110px) - 38px)}
+  .fv{padding-bottom:calc(clamp(80px,8vw,110px) - 55px)}   /* 9/15 文字サイズを18pxにそろえてFVが17px伸びた分も引く（1440pxでFV 815pxのまま） */
 }
 /* ★So FB 9/14「ぴったり決まる1枚が無い。素材の『名称未設定のデザイン.png』のように複数、ときに背景を透過」
    → F1：斜めの写真パネル2枚（チェロ＝大・ピアノ＝小）＋ヴァイオリンの2人を切り抜きで手前に。
@@ -153,7 +158,7 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 
 /* ボタン */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:62px;padding:0 30px 0 34px;border-radius:999px;
-  font-weight:700;font-size:17px;letter-spacing:.06em;line-height:1.4;text-decoration:none;transition:transform .2s,box-shadow .2s,background .2s}
+  font-weight:700;font-size:var(--fs);letter-spacing:.06em;line-height:1.4;text-decoration:none;transition:transform .2s,box-shadow .2s,background .2s}
 .btn svg{width:18px;height:18px;flex:none}
 .btn--main{background:var(--green);color:var(--on-green);box-shadow:0 12px 24px -14px rgba(60,140,55,.9)}
 .btn--main:hover{transform:translateY(-2px);box-shadow:0 16px 28px -14px rgba(60,140,55,.95)}
@@ -165,7 +170,7 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 .assure__card{background:#fff;border-radius:20px;padding:44px 32px 40px;text-align:center;box-shadow:0 18px 40px -30px rgba(70,50,30,.35);counter-increment:n}
 .assure__card::before{content:counter(n);display:grid;place-items:center;width:58px;height:58px;margin:0 auto 20px;border-radius:50%;
   font-family:var(--en);font-weight:700;font-size:27px;line-height:1;color:var(--on-green);background:var(--c)}
-.assure__card p{margin-top:14px;font-size:15.5px;line-height:1.95;color:var(--ink2);text-align:left}
+.assure__card p{margin-top:14px;font-size:var(--fs);line-height:1.95;color:var(--ink2);text-align:left}
 /* ★So FB 9/14「3つの安心の高さを統一したい」：箱の高さは3枚とも367pxで同じだったが、3枚目だけ見出しが2行で本文の書き出しが35px下がっていた。
    見出しの欄を2行分の高さにそろえ、1行の見出しは欄の中で上下中央に置く（PCのみ。スマホは1枚ずつ縦に並ぶので揃える相手がいない） */
 @media (min-width:901px){ .assure__card .h3{min-height:calc(2em * 1.6);display:grid;align-content:center} }
@@ -176,16 +181,16 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 .live__photo .kv{inset:0}
 .live__table{width:100%;max-width:1080px;margin:44px auto 0;border-collapse:separate;border-spacing:0;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 18px 40px -32px rgba(70,50,30,.35)}
 .live__table th,.live__table td{text-align:left;vertical-align:top;padding:20px 26px;line-height:1.8}
-.live__table thead th{background:#F4EFE8;font-size:14px;font-weight:700;letter-spacing:.08em;color:var(--ink2)}
-.live__table tbody td{border-top:1px solid var(--line);font-size:15.5px}
+.live__table thead th{background:#F4EFE8;font-size:var(--fs-sm);font-weight:700;letter-spacing:.08em;color:var(--ink2)}
+.live__table tbody td{border-top:1px solid var(--line);font-size:var(--fs)}
 .live__table tbody tr:first-child td{border-top:0}
 .live__when{white-space:nowrap;font-weight:700}
 .live__when b{font-family:var(--en);font-weight:700}
 .live__name{font-weight:700;white-space:nowrap}
 .live__info{max-width:1080px;margin:36px auto 0;display:grid;gap:14px}
 .live__info div{display:grid;grid-template-columns:140px minmax(0,1fr);gap:20px;align-items:start}
-.live__info dt{justify-self:start;background:var(--cream);border:1.5px solid var(--line2);border-radius:999px;padding:3px 16px;font-size:14px;font-weight:700;line-height:1.7;white-space:nowrap}
-.live__info dd{margin:0;font-size:15.5px;line-height:1.95;color:var(--ink2)}
+.live__info dt{justify-self:start;background:var(--cream);border:1.5px solid var(--line2);border-radius:999px;padding:3px 16px;font-size:var(--fs-sm);font-weight:700;line-height:1.7;white-space:nowrap}
+.live__info dd{margin:0;font-size:var(--fs);line-height:1.95;color:var(--ink2)}
 
 /* ── 4 ブース ── */
 .booth{background:#fff}
@@ -196,15 +201,15 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 .inst{list-style:none;margin:44px auto 0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px;max-width:1040px}
 .inst li{text-align:center}
 .inst img{width:100%;max-width:230px;margin:0 auto;aspect-ratio:1;border-radius:50%;object-fit:cover;box-shadow:0 0 0 8px var(--ring,#FFF6CC)}
-.inst span{display:block;margin-top:22px;font-weight:700;font-size:17px;letter-spacing:.08em}
-.taiken__body{max-width:44em;margin:40px auto 0;font-size:15.5px;line-height:2}
+.inst span{display:block;margin-top:22px;font-weight:700;font-size:var(--fs);letter-spacing:.08em}
+.taiken__body{max-width:44em;margin:40px auto 0;font-size:var(--fs);line-height:2}
 .taiken__note{max-width:44em;margin:14px auto 0}
 
-.rest__concept{max-width:46em;margin:26px auto 0;font-size:15.5px;line-height:2;color:var(--ink2)}
+.rest__concept{max-width:46em;margin:26px auto 0;font-size:var(--fs);line-height:2;color:var(--ink2)}
 /* ★So FB 9/15「2x2だと初めて読んだときによく分からない。画像を入れたい」→ 流れ（絵つき・横一列）→ その下に ③メニュー｜④シェフ・⑤演奏編成。
    前の2x2は、4つの箱が同じ重さで並び、どこから読むか・箱どうしがどうつながるかが書かれていなかった */
 .rest__flow{margin-top:52px}
-.flow__title{font-size:15px;font-weight:700;letter-spacing:.12em;color:var(--ink2);margin:0 0 18px}
+.flow__title{font-size:var(--fs-sm);font-weight:700;letter-spacing:.12em;color:var(--ink2);margin:0 0 18px}
 .steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:24px;counter-reset:s}
 .steps li{position:relative;counter-increment:s}
 .steps__fig{position:relative;display:block}
@@ -213,7 +218,7 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
   background:var(--c);box-shadow:0 0 0 3px #fff;font-family:var(--en);font-weight:700;font-size:19px;line-height:1;color:var(--on-green)}
 /* 次の手順への矢印は、絵と絵の間（24px）の真ん中に */
 .steps li:not(:last-child) .steps__fig::after{content:"";position:absolute;right:-16px;top:50%;width:8px;height:8px;border-top:2.5px solid var(--line2);border-right:2.5px solid var(--line2);transform:translateY(-50%) rotate(45deg)}
-.steps p{margin-top:14px;font-size:15.5px;font-weight:700;line-height:1.65;text-align:center;word-break:keep-all;overflow-wrap:anywhere}
+.steps p{margin-top:14px;font-size:var(--fs);font-weight:700;line-height:1.65;text-align:center;word-break:keep-all;overflow-wrap:anywhere}
 .rest__grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:"menu chef" "menu pairs";grid-template-rows:auto 1fr;
   gap:24px clamp(32px,4vw,56px);align-items:start;margin-top:56px}   /* 左（伝票）と右（シェフ＋演奏編成）の下端の差 131px → 行の高さで約80pxに */
 .slip{grid-area:menu}
@@ -225,35 +230,36 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
    8曲を教本の順に1列、点線で区切った縦長の伝票（色は使わず、細い枠と点線だけ）。演奏編成も同じ点線の行にそろえる。
    前の券売機（黒い帯＋灰色の台＋色の線）はページの中でそこだけ重かった。🚨 押せる物に見せない（カーソル・反応は付けない） */
 .slip{background:#fff;border:1px solid var(--line2);border-radius:10px;padding:20px 30px 22px}
-.slip__title{display:flex;align-items:center;gap:16px;margin:0;font-size:17px;font-weight:700;letter-spacing:.16em;line-height:1.5;white-space:nowrap}
+.slip__title{display:flex;align-items:center;gap:16px;margin:0;font-size:20px;font-weight:700;letter-spacing:.16em;line-height:1.5;white-space:nowrap}
 /* 点線は border の dotted だと太さと間隔がブラウザで変わるので、丸い点を並べて描く */
 .slip__title::before,.slip__title::after,.menu li,.pairs li{background-image:radial-gradient(circle,#C2B8AC 1.1px,transparent 1.5px);background-size:7px 4px;background-repeat:repeat-x}
 .slip__title::before,.slip__title::after{content:"";flex:1;height:4px;background-position:left center}
 .menu{list-style:none;margin:8px 0 0;padding:0}
-.menu li{padding:15px 2px 16px;background-position:left bottom;font-weight:700;font-size:16px;line-height:1.6;letter-spacing:.06em;word-break:keep-all;overflow-wrap:anywhere}
+.menu li{padding:15px 2px 16px;background-position:left bottom;font-weight:700;font-size:var(--fs);line-height:1.6;letter-spacing:.06em;word-break:keep-all;overflow-wrap:anywhere}
 .menu li:last-child{background:none;border-bottom:1px solid var(--line2)}
 .slip .note{margin-top:14px}
-.rest__pairs h4,.chef h4{display:flex;align-items:center;margin:0 0 14px;font-size:15px;letter-spacing:.1em}   /* 番号の丸と文字の中心をそろえる（inline だと丸が8px下がった） */
+.rest__pairs h4,.chef h4{display:flex;align-items:center;margin:0 0 14px;font-size:var(--fs);letter-spacing:.1em}   /* 番号の丸と文字の中心をそろえる（inline だと丸が8px下がった） */
 .pairs{list-style:none;margin:0;padding:0;border-top:1px solid var(--line2)}
 .pairs li{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;padding:9px 2px 10px;background-position:left bottom}
 /* ★So FB 9/15「演奏編成はアイコンも入れたい。色のついた丸よりかは」→ 楽器の絵。ページの図形と同じ、粒子のあるグラデーション・輪郭線なしで画像生成（_gen/suzuki/job15 icons_a）。
    9/14 の線画アイコンは「ヴァイオリンがギター、チェロが楕円」に見えたので、弓・脚・エンドピンまで楽器を丸ごと描いた形にした。色は前と同じ（桃・黄・青・紫） */
-.ins{display:inline-flex;align-items:center;gap:8px;font-size:15.5px;font-weight:700;line-height:1.6;letter-spacing:.04em;white-space:nowrap}
+.ins{display:inline-flex;align-items:center;gap:8px;font-size:var(--fs);font-weight:700;line-height:1.6;letter-spacing:.04em;white-space:nowrap}
 .ins::before{content:"";width:36px;height:36px;flex:none;background:var(--ic) center/contain no-repeat}
 .ins--vn{--ic:url(img/ic-violin.webp)}.ins--pf{--ic:url(img/ic-piano.webp)}.ins--fl{--ic:url(img/ic-flute.webp)}.ins--vc{--ic:url(img/ic-cello.webp)}
 /* チェロは縦長で、36pxの枠だと幅19pxになりヴァイオリンと同じ大きさに見えた → 背を高く（行の高さは変えない） */
 .ins--vc::before{height:48px;margin-block:-6px}
-.pairs__plus{font-weight:700;font-size:15px;color:var(--ink2)}
-.pairs__note{margin-top:14px;font-size:14.5px;line-height:1.9;color:var(--ink2)}
+.pairs__plus{font-weight:700;font-size:var(--fs);color:var(--ink2)}
+.pairs__note{margin-top:14px;font-size:var(--fs-sm);line-height:1.9;color:var(--ink2)}
 .chef{background:#EAF5FA;border-radius:24px;padding:26px 30px 28px}
 /* シェフ役の先生の絵（手順4・5と同じ人物）。右上に丸く置き、見出しと説明文を回り込ませる */
 .chef__head{display:contents}   /* PCは絵を右に回り込ませる。600px以下だけ見出しと横並びの行にする */
-.chef__img{float:right;width:112px;height:112px;margin:-6px -4px 8px 16px;border-radius:50%;object-fit:cover;background:#FDF9F6;box-shadow:0 0 0 4px #fff}   /* 画像は頭と胸が中心に来るよう切り出し済み（job16 nt_chef） */
+/* ★So FB 9/15「シェフのひとことの画像が途中で切れている」→ 丸い枠で音符が半分・体が腰で切れていた。全身が入る絵（job19 nt_chef_full_b：先生が親子を迎える）を角丸の四角で */
+.chef__img{float:right;width:150px;height:150px;margin:-6px -6px 10px 18px;border-radius:18px;object-fit:cover;background:#FDF9F6}
 .chef .lines__label{clear:right}
-.chef > p{font-size:15px;line-height:1.9;color:var(--ink2);word-break:keep-all;overflow-wrap:anywhere}   /* 絵の横の狭い幅で「エプロ／ン」と語の途中で折れた → 文節の切れ目（wbr）でだけ折る */
-.lines__label{margin-top:16px;font-size:14px;font-weight:700;letter-spacing:.06em;color:var(--ink2)}
+.chef > p{font-size:var(--fs);line-height:1.9;color:var(--ink2);word-break:keep-all;overflow-wrap:anywhere}   /* 絵の横の狭い幅で「エプロ／ン」と語の途中で折れた → 文節の切れ目（wbr）でだけ折る */
+.lines__label{margin-top:16px;font-size:var(--fs-sm);font-weight:700;letter-spacing:.06em;color:var(--ink2)}
 .lines{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:10px}
-.lines li{word-break:keep-all;overflow-wrap:anywhere;position:relative;background:#fff;border-radius:14px;padding:10px 18px;font-size:15px;font-weight:700;line-height:1.7}
+.lines li{word-break:keep-all;overflow-wrap:anywhere;position:relative;background:#fff;border-radius:14px;padding:10px 18px;font-size:var(--fs);font-weight:700;line-height:1.7}
 
 .gift__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px;margin-top:48px}
 .gift{background:var(--bg);border-radius:24px;padding:40px 40px 36px;display:grid;grid-template-rows:auto auto 1fr auto;justify-items:center;text-align:center}
@@ -263,27 +269,27 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 .gift__badge{width:210px;height:auto;align-self:start;margin-top:10px}
 .gift__cheki{background:#fff;padding:12px 12px 40px;width:180px;transform:rotate(-4deg);box-shadow:0 18px 30px -18px rgba(70,50,30,.5)}
 .gift__cheki img{width:100%;aspect-ratio:540/560;object-fit:cover}
-.gift h4{margin:18px 0 0;font-size:21px;letter-spacing:.08em;line-height:1.5}
-.gift p{margin-top:12px;font-size:15.5px;line-height:1.95;color:var(--ink2);text-align:left}
-.gift__qty{margin-top:18px;display:inline-block;background:#fff;border:1.5px solid var(--line2);border-radius:999px;padding:5px 18px;font-size:14px;font-weight:700;line-height:1.7}
+.gift h4{margin:18px 0 0;font-size:var(--h3);letter-spacing:.08em;line-height:1.5}
+.gift p{margin-top:12px;font-size:var(--fs);line-height:1.95;color:var(--ink2);text-align:left}
+.gift__qty{margin-top:18px;display:inline-block;background:#fff;border:1.5px solid var(--line2);border-radius:999px;padding:5px 18px;font-size:var(--fs-sm);font-weight:700;line-height:1.7}
 
 /* ── 5 会場・アクセス ── */
 .access__grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,440px);gap:32px;margin-top:52px;align-items:stretch}
 .spec{margin:0;background:#fff;border-radius:20px;padding:10px 32px;box-shadow:0 18px 40px -32px rgba(70,50,30,.35)}
 .spec div{display:grid;grid-template-columns:120px minmax(0,1fr);gap:20px;padding:18px 0;border-top:1px solid var(--line)}
 .spec div:first-child{border-top:0}
-.spec dt{font-weight:700;font-size:15px;line-height:1.9}
-.spec dd{margin:0;font-size:15.5px;line-height:1.9}
+.spec dt{font-weight:700;font-size:var(--fs-sm);line-height:1.9}
+.spec dd{margin:0;font-size:var(--fs);line-height:1.9}
 .spec dd ul{margin:0;padding:0;list-style:none}
 .spec dd li{word-break:keep-all;overflow-wrap:anywhere}
 .access__map{width:100%;height:100%;min-height:360px;border:0;border-radius:20px;background:#EDE7DF}
 .access__more{margin-top:36px;text-align:center}
-.access__more p{font-size:15.5px;margin-bottom:18px}
+.access__more p{font-size:var(--fs);margin-bottom:18px}
 
 /* ── 6 FAQ ── */
 .faq__list{max-width:920px;margin:48px auto 0}
 .faq details{border-bottom:1px solid var(--line2)}
-.faq summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:16px minmax(0,1fr) 22px;gap:18px;align-items:center;padding:22px 6px;font-weight:700;font-size:16.5px;line-height:1.7}
+.faq summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:16px minmax(0,1fr) 22px;gap:18px;align-items:center;padding:22px 6px;font-weight:700;font-size:var(--fs);line-height:1.7}
 .faq summary::-webkit-details-marker{display:none}
 .faq summary::before{content:"";width:14px;height:14px;border-radius:50%;background:var(--c)}
 /* ★So FB 9/15「最初から右向きの矢印だと、他のページに飛びそうに見える」→ 閉じている時は下向き、開いたら上向き。
@@ -292,13 +298,13 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 .faq details[open]:not(.is-closing) summary svg{transform:rotate(-90deg)}
 .faq__a{overflow:hidden}
 .faq__a p{text-wrap:balance}   /* 2〜3行の短い答えは行をそろえる（最後に数字だけ落ちない） */
-.faq__a p{padding:0 44px 24px 40px;font-size:15.5px;line-height:1.95;color:var(--ink2)}
+.faq__a p{padding:0 44px 24px 40px;font-size:var(--fs);line-height:1.95;color:var(--ink2)}
 
 /* ── 7 スズキ・メソードについて ── */
 .about__grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(32px,5vw,72px);align-items:center}
 .about__photo img{width:100%;aspect-ratio:3/2;object-fit:cover;border-radius:22px}
 .about .h2{text-align:left}
-.about__body{margin-top:22px;font-size:16px;line-height:2.05;color:var(--ink2)}
+.about__body{margin-top:22px;font-size:var(--fs);line-height:2.05;color:var(--ink2)}
 
 /* ── 8 フッターCTA ── */
 .closing{padding:clamp(88px,10vw,130px) 0}
@@ -322,7 +328,7 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
   .assure__card{padding:36px 22px 32px}
   .steps{gap:18px}
   .steps li:not(:last-child) .steps__fig::after{right:-13px}
-  .steps p{font-size:14.5px}
+  .steps p{font-size:16px}
 }
 /* ★So FB 9/14「レスポンシブ対応」：実測（375/414/600/768/900/1024/1280/1440）で横溢れ・文字切れは0。直したのは次の3つ
    ①（券売機のボタンの列数の出し分け。9/15 伝票の1列にしたので不要になり外した）
@@ -338,10 +344,13 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
   .hd__logo{padding:4px 0}
   .fv{padding-top:4px}
   .fv__deco{display:none}
-  /* ★So FB 9/15「スマホのとき、3つの条件は画像の上にこないと」→ 日付・会場 → 条件 → 写真 → イベント名・見出し → リード → CTA（写真はCTAより上のまま） */
-  .fv__grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"band" "conds" "photo" "tag" "h1" "lead" "cta";grid-template-rows:none}
+  /* ★So FB 9/15「スマホのとき、3つの条件は画像の上にこないと」→ 日付・会場 → 条件 → 写真 → 見出し。
+     同日「画像はもっと下か。条件はコピーより前・日付が最初を満たす配置は」→ 3案（375×812の1画面目）から B：
+     日付・会場 → 条件 → イベント名・見出し → 写真 → リード → CTA（見出しが1画面目に全部入り、写真も半分見える。写真はCTAより上のまま） */
+  .fv__grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"band" "conds" "tag" "h1" "photo" "lead" "cta";grid-template-rows:none}
   .fv__band{padding-top:10px;gap:0}
   .fv__photo{margin-top:22px}
+  .fv__lead{margin-top:20px}
   .fvc__sub{right:0}
   .fvc__cut{left:0;height:46%}
   .fv__mdeco{display:block;inset:0}
@@ -358,8 +367,8 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
   .conds .ic{width:38px;height:38px}
   .conds__t{flex-direction:row;flex-wrap:wrap;align-items:baseline;gap:0 10px}
   .conds__t b{font-size:18px}
-  .conds__t small{font-size:12.5px}
-  .fv__tag{margin-top:22px}
+  .conds__t small{font-size:15px}
+  .fv__tag{margin-top:26px}
   .fv__h1{margin-top:4px}
   .fv__cta{flex-direction:column;align-items:stretch;margin-top:28px}
   .fv__cta .btn{width:100%}
@@ -380,7 +389,7 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
   .live__info div{grid-template-columns:minmax(0,1fr);gap:8px}
   .inst{grid-template-columns:repeat(2,minmax(0,1fr));gap:30px 20px;margin-top:34px}
   .inst img{max-width:150px;box-shadow:0 0 0 6px var(--ring,#FFF6CC)}
-  .inst span{margin-top:14px;font-size:15.5px}
+  .inst span{margin-top:14px;font-size:var(--fs)}
   /* 流れは縦に積み、絵を左・文を右に。矢印の代わりに番号で順を追う */
   .rest__flow{margin-top:40px}
   .steps{grid-template-columns:minmax(0,1fr);gap:14px}
@@ -388,11 +397,11 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
   .steps__fig::before{left:-6px;top:-6px;width:32px;height:32px;font-size:16px}
   .steps li:not(:last-child) .steps__fig::after{display:none}
   .steps__fig img{border-radius:16px}
-  .steps p{margin-top:0;text-align:left;font-size:16px}
+  .steps p{margin-top:0;text-align:left;font-size:var(--fs)}
   .rest__grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"menu" "chef" "pairs";gap:32px;margin-top:40px}
   .slip{padding:18px 20px 20px}
   .chef{padding:22px}
-  .chef__img{width:92px;height:92px;margin:-4px -2px 6px 12px}
+  .chef__img{width:124px;height:124px;margin:-4px -2px 8px 14px}
   .gift__grid{grid-template-columns:minmax(0,1fr);gap:18px;margin-top:36px}
   .gift{padding:32px 22px 28px}
   .access__grid{grid-template-columns:minmax(0,1fr);margin-top:36px}
@@ -400,9 +409,9 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
   .spec div{grid-template-columns:minmax(0,1fr);gap:2px;padding:16px 0}
   .access__map{min-height:260px}
   .faq__list{margin-top:32px}
-  .faq summary{grid-template-columns:12px minmax(0,1fr) 20px;gap:14px;padding:18px 2px;font-size:15.5px}
+  .faq summary{grid-template-columns:12px minmax(0,1fr) 20px;gap:14px;padding:18px 2px;font-size:var(--fs)}
   .faq summary::before{width:12px;height:12px}
-  .faq__a p{padding:0 8px 20px 28px;font-size:15px}
+  .faq__a p{padding:0 8px 20px 28px;font-size:var(--fs)}
   .about__grid{grid-template-columns:minmax(0,1fr);gap:28px}
   .closing__panel{padding:40px 22px}
   .closing__btns{flex-direction:column;align-items:stretch}
@@ -417,7 +426,7 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 @media (max-width:600px){
   .chef__head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px}
   .chef__head h4{margin:0}
-  .chef__img{float:none;order:2;width:68px;height:68px;margin:-8px -6px -8px 0}
+  .chef__img{float:none;order:2;width:104px;height:104px;margin:-6px -4px -6px 0;border-radius:14px}
 }
 @media (max-width:420px){
   .ins::before{width:30px;height:30px}   /* 演奏編成の楽器の絵。基本の指定より後ろに置く（前に置くと上書きされて効かない） */
@@ -425,10 +434,10 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 }
 @media (max-width:359px){
   .pairs li{gap:4px 6px}
-  .ins{gap:6px;font-size:14.5px;letter-spacing:0}   /* 320pxで「ヴァイオリン＋ヴァイオリン」が2行に割れた */
+  .ins{gap:6px;font-size:16px;letter-spacing:0}   /* 320pxで「ヴァイオリン＋ヴァイオリン」が2行に割れた */
 }
 @media (max-width:480px){
-  .btn{font-size:15.5px;min-height:58px;padding:0 18px 0 22px;letter-spacing:.03em;gap:8px}
+  .btn{font-size:16px;min-height:58px;padding:0 18px 0 22px;letter-spacing:.03em;gap:8px}
   .btn svg{width:15px;height:15px}
 }
 
@@ -509,7 +518,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
     box-shadow:0 16px 30px -14px rgba(40,90,35,.75);transition:opacity .3s var(--ease),transform .3s var(--ease),visibility .3s}
   .mcta__main{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700;letter-spacing:.08em;line-height:1.35}
   .mcta__main svg{width:16px;height:16px}
-  .mcta__sub{font-size:12px;font-weight:500;letter-spacing:.04em;line-height:1.35}
+  .mcta__sub{font-size:14px;font-weight:500;letter-spacing:.04em;line-height:1.35}
   body.cta-hide .mcta{opacity:0;visibility:hidden;transform:translateY(18px);pointer-events:none}
 }
 
@@ -592,9 +601,9 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
   <div class="wrap">
     <h2 class="h2 fx">思い立ったら<wbr>お立ち寄り<wbr>いただけます</h2>
     <ol class="assure__list">
-      <li class="assure__card fx" style="--c:var(--green)"><h3 class="h3">予約・申込不要</h3><p>当日広場に来ていただくだけです。参加費もかかりません。</p></li>
-      <li class="assure__card fx" style="--c:var(--sky)"><h3 class="h3">途中入場も<wbr>途中退出も自由</h3><p>演奏の途中でも体験の途中でもご自由に出入りいただけます。お子さまの機嫌に合わせて15分だけでも大丈夫です。</p></li>
-      <li class="assure__card fx" style="--c:var(--yellow)"><h3 class="h3">走っても大丈夫な<wbr>芝生の広場</h3><p>静かに座って聴く場所ではありません。屋根のある広場に芝生が敷かれますので、赤ちゃん連れでも動き回る年齢でもお楽しみいただけます。</p></li>
+      <li class="assure__card fx" style="--c:var(--green)"><h3 class="h3">予約・申込不要</h3><p class="ph">当日広場に<wbr>来ていただく<wbr>だけです。<wbr>参加費も<wbr>かかりません。</p></li>
+      <li class="assure__card fx" style="--c:var(--sky)"><h3 class="h3">途中入場も<wbr>途中退出も自由</h3><p class="ph">演奏の途中でも<wbr>体験の途中でも<wbr>ご自由に<wbr>出入りいただけます。<wbr>お子さまの<wbr>機嫌に<wbr>合わせて<wbr>15分だけでも<wbr>大丈夫です。</p></li>
+      <li class="assure__card fx" style="--c:var(--yellow)"><h3 class="h3">走っても大丈夫な<wbr>芝生の広場</h3><p class="ph">静かに<wbr>座って<wbr>聴く場所では<wbr>ありません。<wbr>屋根のある<wbr>広場に<wbr>芝生が<wbr>敷かれますので、<wbr>赤ちゃん連れでも<wbr>動き回る<wbr>年齢でも<wbr>お楽しみいただけます。</p></li>
     </ol>
   </div>
 </section>
@@ -735,7 +744,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
           <div class="gift__vis"><figure class="gift__cheki" style="margin:0"><img src="img/cheki.jpg" width="540" height="560" loading="lazy" alt="楽器を持つ子どもの記念写真のイメージ"></figure></div>
           <h4>記念フォトカード</h4>
           <p>楽器体験のあと簡単なアンケートにご協力いただいた方に、お子さまが好きな楽器と一緒にチェキで記念撮影。その場でオリジナル台紙に貼ってお渡し。</p>
-          <p>はじめて楽器にふれた日を一枚の写真に。撮影した写真はその場で二つ折りの台紙に貼ってお渡しします。表紙にはイベント名、内側に写真と「きょう、わたしが出会った楽器」のメッセージ、裏面にスズキ・メソードの紹介を掲載しています。帰ってからもご家庭で開けるカードです。</p>
+          <p class="ph">はじめて<wbr>楽器に<wbr>ふれた日を<wbr>一枚の<wbr>写真に。<wbr>撮影した<wbr>写真は<wbr>その場で<wbr>二つ折りの<wbr>台紙に<wbr>貼って<wbr>お渡しします。<wbr>表紙には<wbr>イベント名、<wbr>内側に<wbr>写真と<wbr>「きょう、<wbr>わたしが<wbr>出会った楽器」の<wbr>メッセージ、<wbr>裏面に<wbr>スズキ・メソードの<wbr>紹介を<wbr>掲載しています。<wbr>帰ってからも<wbr>ご家庭で<wbr>開けるカードです。</p>
           <span class="gift__qty">各日150名分。なくなり次第終了</span>
         </div>
       </div>
@@ -758,7 +767,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
       <iframe class="access__map fx" title="アーク・カラヤン広場の地図" src="https://www.google.com/maps?q=%E3%82%A2%E3%83%BC%E3%82%AF%E3%83%BB%E3%82%AB%E3%83%A9%E3%83%A4%E3%83%B3%E5%BA%83%E5%A0%B4&amp;output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
     </div>
     <div class="access__more fx">
-      <p>会場では、ほかにもさまざまな音楽体験をお楽しみいただけます</p>
+      <p class="ph">会場では、<wbr>ほかにも<wbr>さまざまな<wbr>音楽体験を<wbr>お楽しみいただけます</p>
       <a class="btn btn--sub" href="https://www.arkhills.com/events/2026/10/0214.html" target="_blank" rel="noopener">アークヒルズの公式イベントページへ<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8v8M16 4L6.5 13.5M13 16H4V7"/></svg></a>
     </div>
   </div>
@@ -787,7 +796,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
     <div class="about__photo fx" data-fx="left"><img src="img/about.jpg" width="1200" height="800" loading="lazy" alt="ヴァイオリンを構える小さな子どもたち"></div>
     <div>
       <h2 class="h2 fx">どの子も育つ　<wbr>育て方ひとつ</h2>
-      <p class="about__body fx">スズキ・メソードは世界74の国と地域に広がる音楽教育です。母語を覚えるように聴くことから音楽を学びます。今回演奏する子どもたちも最初はキラキラ星から始めました。</p>
+      <p class="about__body ph fx">スズキ・メソードは<wbr>世界74の<wbr>国と地域に<wbr>広がる<wbr>音楽教育です。<wbr>母語を<wbr>覚えるように<wbr>聴くことから<wbr>音楽を<wbr>学びます。<wbr>今回<wbr>演奏する<wbr>子どもたちも<wbr>最初は<wbr>キラキラ星から<wbr>始めました。</p>
     </div>
   </div>
 </section>
