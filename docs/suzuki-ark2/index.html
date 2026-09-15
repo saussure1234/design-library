@@ -275,6 +275,14 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 /* ★So FB 9/15「缶バッジを立体的に」→ 支給の絵（社名入り）を外部に出さず、手元の画像処理で立体に（縁の巻き込み・左上の光の艶・下に落ちる影。
    scratchpad の badge3d.py）。画像は丸516px＋下に影76px。丸は前と同じ210pxで、丸の中心を枠の中心（115px）にそろえ、影ははみ出させる */
 .gift__badge{width:210px;height:auto;align-self:start;margin-top:10px}
+/* ★So FB 9/15「記念フォトカード本文がまるまる抜けてない？」→ 原稿では特典の表の下に独立したまとまり（1行目「はじめて楽器にふれた日を一枚の写真に。」は別の行）。
+   特典の枠の中に2段落目として埋めていた。表の下に出して、今の写真（チェキ）はこちらへ。特典の枠の絵はイラストに（生成：_gen/suzuki/job20） */
+.gift__illust{width:200px;height:auto}   /* 缶バッジ（丸210px）と同じ重さ。高さ230pxの枠に収まる */
+.photocard{display:grid;grid-template-columns:minmax(0,260px) minmax(0,1fr);grid-template-areas:"photo catch" "photo body";column-gap:clamp(32px,4vw,56px);align-items:center;
+  margin-top:28px;background:var(--bg);border-radius:24px;padding:40px clamp(28px,4vw,56px)}
+.photocard__photo{grid-area:photo;display:grid;place-items:center;padding:10px 0}
+.photocard__catch{grid-area:catch;align-self:end;font-size:var(--h3);font-weight:700;line-height:1.6;letter-spacing:.06em;word-break:keep-all;overflow-wrap:anywhere}
+.photocard__body{grid-area:body;align-self:start;margin-top:12px;font-size:var(--fs);line-height:1.95;color:var(--ink2);text-align:justify;text-justify:inter-character}
 .gift__cheki{background:#fff;padding:12px 12px 40px;width:180px;transform:rotate(-4deg);box-shadow:0 18px 30px -18px rgba(70,50,30,.5)}
 .gift__cheki img{width:100%;aspect-ratio:540/560;object-fit:cover}
 .gift h4{margin:18px 0 0;font-size:var(--h3);letter-spacing:.08em;line-height:1.5}
@@ -414,7 +422,7 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
   .steps li:not(:last-child) .steps__fig::after{display:none}
   .steps__fig img{border-radius:16px}
   .steps p{margin-top:0;text-align:left;font-size:var(--fs)}
-  .rest__grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"menu" "chef" "pairs";gap:32px;margin-top:40px}
+  .rest__grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"menu" "pairs" "chef";gap:32px;margin-top:40px}   /* So 9/15「スマホは演奏編成が先。シェフのひとことの前に」 */
   .slip{padding:18px 20px 20px}
   .chef{padding:22px}
   .chef__img{width:124px;height:124px;margin:-4px -2px 8px 14px}
@@ -428,7 +436,16 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
   .faq summary{grid-template-columns:12px minmax(0,1fr) 20px;gap:14px;padding:18px 2px;font-size:var(--fs)}
   .faq summary::before{width:12px;height:12px}
   .faq__a p{padding:0 8px 20px 28px;font-size:var(--fs)}
-  .about__grid{grid-template-columns:minmax(0,1fr);gap:28px}
+  .about__grid{grid-template-columns:minmax(0,1fr);gap:0}
+  /* So 9/15「スマホは見出し → 写真 → 本文の順」 */
+  .about__text{display:contents}
+  .about .h2{order:-1}
+  .about__photo{margin-top:28px}
+  .about__body{margin-top:26px}
+  .photocard{grid-template-columns:minmax(0,1fr);grid-template-areas:"catch" "photo" "body";margin-top:18px;padding:32px 22px 28px}
+  .photocard__catch{text-align:center}
+  .photocard__photo{margin-top:18px}
+  .photocard__body{margin-top:22px}
   .closing__panel{padding:40px 22px}
   .closing__btns{flex-direction:column;align-items:stretch}
   .closing__btns .btn{width:100%}
@@ -761,12 +778,16 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
           <span class="gift__qty">材料が<wbr>なくなり<wbr>次第終了<wbr><span class="tbd nb">（※要確認：数量）</span></span>
         </div>
         <div class="gift fx">
-          <div class="gift__vis"><figure class="gift__cheki" style="margin:0"><img src="img/cheki.jpg" width="540" height="560" loading="lazy" alt="楽器を持つ子どもの記念写真のイメージ"></figure></div>
+          <div class="gift__vis"><img class="gift__illust" src="img/gift-photocard.webp" width="440" height="505" loading="lazy" alt="記念フォトカードのイラスト"></div>
           <h4>記念フォトカード</h4>
           <p>楽器体験のあと簡単なアンケートにご協力いただいた方に、お子さまが好きな楽器と一緒にチェキで記念撮影。その場でオリジナル台紙に貼ってお渡し。</p>
-          <p>はじめて楽器にふれた日を一枚の写真に。撮影した写真はその場で二つ折りの台紙に貼ってお渡しします。表紙にはイベント名、内側に写真と「きょう、わたしが出会った楽器」のメッセージ、裏面にスズキ・メソードの紹介を掲載しています。帰ってからもご家庭で開けるカードです。</p>
           <span class="gift__qty">各日150名分。<wbr>なくなり<wbr>次第終了</span>
         </div>
+      </div>
+      <div class="photocard fx">
+        <p class="photocard__catch">はじめて楽器にふれた日を<wbr>一枚の写真に。</p>
+        <div class="photocard__photo"><figure class="gift__cheki" style="margin:0"><img src="img/cheki.jpg" width="540" height="560" loading="lazy" alt="楽器を持つ子どもの記念写真のイメージ"></figure></div>
+        <p class="photocard__body">撮影した写真はその場で二つ折りの台紙に貼ってお渡しします。表紙にはイベント名、内側に写真と「きょう、わたしが出会った楽器」のメッセージ、裏面にスズキ・メソードの紹介を掲載しています。帰ってからもご家庭で開けるカードです。</p>
       </div>
     </div>
   </div>
@@ -814,7 +835,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
 <section class="sec about" id="about">
   <div class="wrap about__grid">
     <div class="about__photo fx" data-fx="left"><img src="img/about.jpg" width="1200" height="800" loading="lazy" alt="ヴァイオリンを構える小さな子どもたち"></div>
-    <div>
+    <div class="about__text">
       <h2 class="h2 fx">どの子も育つ　<wbr>育て方ひとつ</h2>
       <p class="about__body fx">スズキ・メソードは世界74の国と地域に広がる音楽教育です。母語を覚えるように聴くことから音楽を学びます。今回演奏する子どもたちも最初はキラキラ星から始めました。</p>
     </div>
@@ -832,7 +853,7 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
       <p class="closing__copy">10月10日（土）・11日（日）<wbr>アーク・カラヤン広場。<br>聴いてさわって<wbr>持ち帰る2日間。</p>
       <div class="closing__btns">
         <a class="btn btn--main" href="#access">会場への<wbr>アクセスを見る<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8l5 5 5-5"/></svg></a>
-        <a class="btn btn--sub" href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=ARK%20Hills%20Music%20Week%202026%EF%BD%9C%E9%9F%B3%E3%81%AE%E9%81%8A%E3%81%B3%E5%A0%B4&amp;dates=20261010T110000/20261010T170000&amp;ctz=Asia/Tokyo&amp;recur=RRULE%3AFREQ%3DDAILY%3BCOUNT%3D2&amp;location=%E3%82%A2%E3%83%BC%E3%82%AF%E3%83%BB%E3%82%AB%E3%83%A9%E3%83%A4%E3%83%B3%E5%BA%83%E5%A0%B4" target="_blank" rel="noopener">Googleカレンダーに追加</a>
+        <a class="btn btn--sub" href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=ARK%20Hills%20Music%20Week%202026%EF%BD%9C%E9%9F%B3%E3%81%AE%E9%81%8A%E3%81%B3%E5%A0%B4&amp;dates=20261010/20261012&amp;details=10%E6%9C%8810%E6%97%A5%EF%BC%88%E5%9C%9F%EF%BC%89%E3%83%BB11%E6%97%A5%EF%BC%88%E6%97%A5%EF%BC%8911%3A00%EF%BC%8D17%3A00&amp;location=%E3%82%A2%E3%83%BC%E3%82%AF%E3%83%BB%E3%82%AB%E3%83%A9%E3%83%A4%E3%83%B3%E5%BA%83%E5%A0%B4" target="_blank" rel="noopener">Googleカレンダーに追加</a>
         <a class="btn btn--sub" href="https://www.arkhills.com/events/2026/10/0214.html" target="_blank" rel="noopener">アークヒルズ公式<wbr>イベントページ<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8v8M16 4L6.5 13.5M13 16H4V7"/></svg></a>
       </div>
     </div>
