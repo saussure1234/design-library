@@ -117,8 +117,10 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
 .conds li{display:flex;align-items:center;gap:12px;padding:2px 30px;font-weight:700;line-height:1.3}
 .conds li:first-child{padding-left:0}
 .conds li+li{border-left:1.5px solid #D9CFC3}
-.conds .ic{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;flex:none;background:#EAF6E6}
-.conds .ic svg{width:19px;height:19px;stroke:#2F7F28}
+/* ★So FB 9/15「条件のアイコンが微妙」→ 緑の丸に線画（チェック・矢印・人）をやめ、流れの絵・楽器の絵と同じ画風の絵に（_gen/suzuki/job18 conds_ic_a）。
+   入場無料＝ハートの入場券／出入り自由＝人が通る開いた扉／3歳から＝小さなヴァイオリンを持つ子 */
+.conds .ic{width:46px;height:46px;flex:none;background:var(--ic) center/contain no-repeat}
+.ic--free{--ic:url(img/ic-free.webp)}.ic--inout{--ic:url(img/ic-inout.webp)}.ic--age3{--ic:url(img/ic-age3.webp)}
 .conds__t{display:flex;flex-direction:column}
 .conds__t b{font-size:22px;letter-spacing:.04em;line-height:1.35}
 .conds__t small{font-size:13px;font-weight:500;color:var(--ink2);letter-spacing:.04em;line-height:1.5}
@@ -336,9 +338,10 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
   .hd__logo{padding:4px 0}
   .fv{padding-top:4px}
   .fv__deco{display:none}
-  .fv__grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"band" "photo" "conds" "tag" "h1" "lead" "cta";grid-template-rows:none}
+  /* ★So FB 9/15「スマホのとき、3つの条件は画像の上にこないと」→ 日付・会場 → 条件 → 写真 → イベント名・見出し → リード → CTA（写真はCTAより上のまま） */
+  .fv__grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"band" "conds" "photo" "tag" "h1" "lead" "cta";grid-template-rows:none}
   .fv__band{padding-top:10px;gap:0}
-  .fv__photo{margin-top:14px}
+  .fv__photo{margin-top:22px}
   .fvc__sub{right:0}
   .fvc__cut{left:0;height:46%}
   .fv__mdeco{display:block;inset:0}
@@ -349,11 +352,10 @@ p{margin:0;text-wrap:pretty}   /* 最終行に1〜2字だけ落ちるのを避�
   .fv__mk{display:block;grid-area:h1;justify-self:end;align-self:center;position:relative;width:72px;height:72px;margin-right:calc(-1 * var(--pad) - 36px)}
   .fv__h1{position:relative;z-index:1}
   /* スマホは3段に積む。大きい言葉と小さい言葉は横に並べて1段に収める */
-  .conds{flex-direction:column;margin-top:20px}
+  .conds{flex-direction:column;margin-top:14px}
   .conds li,.conds li:first-child{padding:9px 0}
   .conds li+li{border-left:0;border-top:1px solid #E6DED4}
-  .conds .ic{width:30px;height:30px}
-  .conds .ic svg{width:16px;height:16px}
+  .conds .ic{width:38px;height:38px}
   .conds__t{flex-direction:row;flex-wrap:wrap;align-items:baseline;gap:0 10px}
   .conds__t b{font-size:18px}
   .conds__t small{font-size:12.5px}
@@ -567,9 +569,9 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
       <p class="fv__when"><span class="fv__date"><b>10</b>月<b>10</b>日（土）・<b>11</b>日（日）</span><span class="fv__place"><span class="nb">アークヒルズ</span>　<wbr><span class="nb">アーク・カラヤン広場</span></span></p>
     </div>
     <ul class="conds" aria-label="参加の条件">
-      <li class="fx" style="--fx-d:210ms"><span class="ic"><svg viewBox="0 0 16 16" fill="none" stroke="#15240F" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" stroke-width="2.4"><path d="M3.5 8.5l3 3 6-7"/></svg></span><span class="conds__t"><b>入場無料</b><span class="vh">・</span><small>事前予約不要・参加費不要</small></span></li>
-      <li class="fx" style="--fx-d:280ms"><span class="ic"><svg viewBox="0 0 16 16" fill="none" stroke="#15240F" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" stroke-width="1.9"><path d="M2.5 5.5h9M9 3l2.5 2.5L9 8M13.5 10.5h-9M7 8l-2.5 2.5L7 13"/></svg></span><span class="conds__t"><b>出入り自由</b></span></li>
-      <li class="fx" style="--fx-d:350ms"><span class="ic"><svg viewBox="0 0 16 16" fill="none" stroke="#15240F" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" stroke-width="1.9"><circle cx="8" cy="4.4" r="2.4"/><path d="M3.6 14.2c.5-3.3 2.1-5.1 4.4-5.1s3.9 1.8 4.4 5.1"/></svg></span><span class="conds__t"><b>3歳から</b><small>体験いただけます</small></span></li>
+      <li class="fx" style="--fx-d:210ms"><span class="ic ic--free" aria-hidden="true"></span><span class="conds__t"><b>入場無料</b><span class="vh">・</span><small>事前予約不要・参加費不要</small></span></li>
+      <li class="fx" style="--fx-d:280ms"><span class="ic ic--inout" aria-hidden="true"></span><span class="conds__t"><b>出入り自由</b></span></li>
+      <li class="fx" style="--fx-d:350ms"><span class="ic ic--age3" aria-hidden="true"></span><span class="conds__t"><b>3歳から</b><small>体験いただけます</small></span></li>
     </ul>
     <p class="fv__tag fx" style="--fx-d:360ms">ARK Hills Music Week 2026｜音の遊び場</p>
     <h1 class="fv__h1 fx" style="--fx-d:380ms">カラヤン広場で<br><span class="mk">はじめての楽器</span>に<br>出会う2日間</h1>
