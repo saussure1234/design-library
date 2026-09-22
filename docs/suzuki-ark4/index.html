@@ -224,7 +224,7 @@ p{margin:0}   /* 🚨 text-wrap:pretty は使わない：日本語の孤立は�
 .inst li{text-align:center}
 .inst img{width:100%;max-width:230px;margin:0 auto;aspect-ratio:1;border-radius:50%;object-fit:cover;box-shadow:0 0 0 8px var(--ring,#FFF6CC)}
 .inst span{display:block;margin-top:22px;font-weight:700;font-size:var(--fs);letter-spacing:.08em}
-.taiken__body{max-width:44em;margin:40px auto 0;font-size:var(--fs);line-height:2}
+.taiken__body{max-width:44em;margin:40px auto 0;font-size:var(--fs);line-height:2;text-align:center;word-break:keep-all;overflow-wrap:anywhere}   /* ★So 9/22「これは中央揃え」 */
 .taiken__note{max-width:44em;margin:14px auto 0}
 
 /* ★クライアントFB 9/19：本文はトピックス掲載分（6行）＋イメージ画像（流れ・メニュー・シェフ・演奏編成はカット） */
@@ -314,7 +314,7 @@ p{margin:0}   /* 🚨 text-wrap:pretty は使わない：日本語の孤立は�
    禁則で1文字押し出された行は、字間を変えない限り右が空く（日本語では避けられない）。
    → 段落ごとに字間を整えて全角の文字を列の幅にちょうど収め（末尾 script ⑦、±0.5px以内）、そのうえで両端揃え。
      広がるのは押し出された行だけで、量も1文字分を1行に散らす程度 */
-.fv__lead,.assure__card p,.live__table td:last-child,.live__info dd,.taiken__body,.note,.gift p,.faq__a p,.about__body{text-align:justify;text-justify:inter-character}
+.fv__lead,.assure__card p,.live__table td:last-child,.live__info dd,.note,.gift p,.faq__a p,.about__body{text-align:justify;text-justify:inter-character}
 .spec dd:not(:has(.nb,ul)){text-align:justify;text-justify:inter-character}   /* :has の効かないブラウザで上の行ごと捨てられないよう別に書く */
 
 /* ── タブレット ── */
@@ -892,7 +892,7 @@ document.querySelectorAll('.faq details').forEach(function(d){
      → 本文の段落ごとに字間を整えて、列の幅に全角の文字がちょうど入るようにする（変化は±0.5px以内）。
      そのうえで両端揃え（CSS）。押し出された行だけが1文字分を字間に散らす。最後の行に数文字だけ落ちたら、1行の字数を1つ増減（1px以内）→ だめなら最後の数文字を前の行から送る。
      判定は check.py の「改行の孤立」と同じ物差しと値（最後の矩形÷最大の矩形。直下の文字が40字超は12%・以下は22%） */
-  var PROSE = '.fv__lead,.assure__card p,.live__table td:last-child,.live__info dd,.taiken__body,.note,.gift p,.faq__a p,.about__body,.spec dd';
+  var PROSE = '.fv__lead,.assure__card p,.live__table td:last-child,.live__info dd,.note,.gift p,.faq__a p,.about__body,.spec dd';
   var paras = [].slice.call(document.querySelectorAll('main p, ' + PROSE));
   var isProse = function(el){ return el.matches(PROSE) && !el.querySelector('.nb, ul'); };
   var directLen = function(el){ var t = ''; el.childNodes.forEach(function(n){ if (n.nodeType === 3) t += n.nodeValue; }); return t.trim().length; };
