@@ -1189,6 +1189,10 @@
             {
               "date": "2026-09-22",
               "what": "So の判断『Googleのボタンに戻す』→ 締めのボタンを元の『Googleカレンダーに追加』（calendar.google.com/render）に戻した。event.ics はページに残してあるので、戻す時は href を差し替えるだけ"
+            },
+            {
+              "date": "2026-09-22",
+              "what": "So『safariでやって アプリは開いたけど追加されない』→ 原因はiOSのUniversal Links。calendar.google.com のリンクをタップするとGoogleカレンダーのアプリが横取りし、アプリは render?action=TEMPLATE の中身を読まないのでカレンダーが開くだけで予定が入らない。タップでなくスクリプトの遷移ならUniversal Linksは働かないので、中継ページ gcal.html（meta refresh＋location.replace＋手動ボタン＋端末のカレンダー用.ics）を置き、ボタンの行き先をそれに変えた"
             }
           ],
           "fb": [
