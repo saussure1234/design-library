@@ -228,18 +228,18 @@ p{margin:0}   /* 🚨 text-wrap:pretty は使わない：日本語の孤立は�
 .taiken__note{max-width:44em;margin:14px auto 0}
 
 /* ★クライアントFB 9/19：本文はトピックス掲載分（6行）＋イメージ画像（流れ・メニュー・シェフ・演奏編成はカット） */
-.rest__title{margin:24px 0 0;text-align:center;font-size:20px;font-weight:700;letter-spacing:.06em;line-height:1.5}
-.rest__catch{margin:8px 0 0;text-align:center;font-size:var(--fs);font-weight:700;letter-spacing:.04em;line-height:1.6;word-break:keep-all;overflow-wrap:anywhere}
+.rest__catch{margin:20px 0 0;text-align:center;font-size:var(--fs);font-weight:700;letter-spacing:.04em;line-height:1.6;word-break:keep-all;overflow-wrap:anywhere}
 .rest__lead{max-width:40em;margin:18px auto 0;text-align:center;font-size:var(--fs);line-height:2;color:var(--ink2);word-break:keep-all;overflow-wrap:anywhere}
 .rest__punch{display:inline-block;margin-top:4px;font-size:var(--h3);font-weight:700;line-height:1.5;color:var(--purple)}   /* 緑（#5AB651）は白地に沈む（比2.55）→ ページの文字の強調色（紫）に */
 .rest__after{max-width:40em;margin:24px auto 0;text-align:center;font-size:var(--fs);line-height:1.95;color:var(--ink2);word-break:keep-all;overflow-wrap:anywhere}
 .restimg{margin:30px auto 0;max-width:1000px;background:var(--bg);border-radius:28px;padding:clamp(22px,3vw,34px) clamp(18px,3vw,44px) clamp(26px,3vw,38px)}
-.restimg__ics{display:flex;justify-content:center;align-items:flex-end;gap:clamp(10px,3vw,36px);margin-bottom:clamp(12px,2vw,20px)}
-.restimg__ic{width:var(--w);height:var(--w);flex:none;background:var(--ic) center/contain no-repeat}
-.restimg__ic--vn{--ic:url(img/ic-violin.webp);--w:clamp(46px,5.4vw,74px);rotate:-9deg}
-.restimg__ic--fl{--ic:url(img/ic-flute.webp);--w:clamp(42px,4.8vw,66px);rotate:7deg;translate:0 -8px}
-.restimg__ic--vc{--ic:url(img/ic-cello.webp);--w:clamp(44px,5.2vw,72px);rotate:6deg}
-.restimg__ic--pf{--ic:url(img/ic-piano.webp);--w:clamp(48px,5.6vw,78px);rotate:-6deg;translate:0 -6px}
+/* ★先方の指示「4つの楽器イラストを適宜散らし」→ 等間隔の横一列をやめ、位置・高さ・大きさ・傾きを変える（文字と絵には重ねない） */
+.restimg__ics{position:relative;height:clamp(76px,9vw,116px);margin-bottom:clamp(4px,1vw,12px)}
+.restimg__ic{position:absolute;width:var(--w);height:var(--w);background:var(--ic) center/contain no-repeat}
+.restimg__ic--vn{--ic:url(img/ic-violin.webp);--w:clamp(50px,6.1vw,84px);left:3%;bottom:0;rotate:-14deg}
+.restimg__ic--fl{--ic:url(img/ic-flute.webp);--w:clamp(42px,5vw,70px);left:31%;top:0;rotate:24deg}
+.restimg__ic--vc{--ic:url(img/ic-cello.webp);--w:clamp(44px,5.4vw,76px);left:58%;bottom:8px;rotate:9deg}
+.restimg__ic--pf{--ic:url(img/ic-piano.webp);--w:clamp(52px,6.3vw,88px);right:2%;top:0;rotate:-9deg}
 .restimg__list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(16px,3vw,36px)}
 .restimg__fig{display:block}
 .restimg__fig img{display:block;width:100%;height:auto;aspect-ratio:1;border-radius:22px;background:#fff}
@@ -665,14 +665,13 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
     <div class="sub" id="restaurant">
       <div class="sub__head fx">
         <span class="sub__mark" aria-hidden="true"><i class="kvm yl q3" style="left:0;top:0"></i><i class="kvm pk q2" style="left:17px;top:0"></i><i class="kvm sp q4" style="left:0;top:17px"></i></span>
-        <h3 class="h3">メニューから<wbr>1曲えらんで<wbr>注文すると<wbr>目の前で演奏します</h3>
+        <h3 class="h3">♪ 音楽レストラン</h3>
       </div>
       <!-- ★クライアントFB 9/19：本文はトピックス掲載分に差し替え。「初めての企画でやりながら変わるかもしれないのと、
            想像の余地を残したいので、あまり詳しく書かないでください」→ メニュー（8曲）・シェフのひとこと・シェフのセリフ例・
            演奏編成・「2回目のご注文も可能です」「同じ曲でも組み合わせで響きが変わります」はカット。
            流れ（5段の手順）は「流れ」として見せず、缶バッジをつくる／メニューから1曲えらぶ／生演奏がとどく の3枚と
            4つの楽器の絵を散らしたイメージ画像として置く -->
-      <p class="rest__title fx">♪ 音楽レストラン</p>
       <p class="rest__catch fx">メニューから曲を選んで、オーダー！</p>
       <p class="rest__lead fx">缶バッジをつくったら、<wbr>音楽レストランの食券をもらって、<wbr>メニューから好きな曲をオーダー。<br>すると……<br><b class="rest__punch">生演奏がやってきます♪</b><br>音楽家とやり取りし、<wbr>生の音を受け取る体験です。</p>
       <div class="restimg fx" data-fx="rise">
