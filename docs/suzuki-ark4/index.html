@@ -234,12 +234,14 @@ p{margin:0}   /* 🚨 text-wrap:pretty は使わない：日本語の孤立は�
 .rest__after{max-width:40em;margin:24px auto 0;text-align:center;font-size:var(--fs);line-height:1.95;color:var(--ink2);word-break:keep-all;overflow-wrap:anywhere}
 .restimg{margin:30px auto 0;max-width:1000px;background:var(--bg);border-radius:28px;padding:clamp(22px,3vw,34px) clamp(18px,3vw,44px) clamp(26px,3vw,38px)}
 /* ★先方の指示「4つの楽器イラストを適宜散らし」→ 等間隔の横一列をやめ、位置・高さ・大きさ・傾きを変える（文字と絵には重ねない） */
-.restimg__ics{position:relative;height:clamp(76px,9vw,116px);margin-bottom:clamp(4px,1vw,12px)}
+.restimg__ics{position:relative;height:clamp(66px,8vw,104px)}
+.restimg__ics--t{margin-bottom:clamp(2px,0.8vw,10px)}
+.restimg__ics--b{margin-top:clamp(6px,1.4vw,18px)}
 .restimg__ic{position:absolute;width:var(--w);height:var(--w);background:var(--ic) center/contain no-repeat}
 .restimg__ic--vn{--ic:url(img/ic-violin.webp);--w:clamp(50px,6.1vw,84px);left:3%;bottom:0;rotate:-14deg}
-.restimg__ic--fl{--ic:url(img/ic-flute.webp);--w:clamp(42px,5vw,70px);left:31%;top:0;rotate:24deg}
-.restimg__ic--vc{--ic:url(img/ic-cello.webp);--w:clamp(44px,5.4vw,76px);left:58%;bottom:8px;rotate:9deg}
-.restimg__ic--pf{--ic:url(img/ic-piano.webp);--w:clamp(52px,6.3vw,88px);right:2%;top:0;rotate:-9deg}
+.restimg__ic--fl{--ic:url(img/ic-flute.webp);--w:clamp(42px,5vw,70px);right:9%;top:2px;rotate:24deg}
+.restimg__ic--vc{--ic:url(img/ic-cello.webp);--w:clamp(44px,5.4vw,76px);left:14%;top:0;rotate:9deg}
+.restimg__ic--pf{--ic:url(img/ic-piano.webp);--w:clamp(52px,6.3vw,88px);right:3%;bottom:0;rotate:-9deg}
 .restimg__list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(16px,3vw,36px)}
 .restimg__fig{display:block}
 .restimg__fig img{display:block;width:100%;height:auto;aspect-ratio:1;border-radius:22px;background:#fff}
@@ -675,17 +677,19 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
       <p class="rest__catch fx">メニューから曲を選んで、オーダー！</p>
       <p class="rest__lead fx">缶バッジをつくったら、<wbr>音楽レストランの食券をもらって、<wbr>メニューから好きな曲をオーダー。<br>すると……<br><b class="rest__punch">生演奏がやってきます♪</b><br>音楽家とやり取りし、<wbr>生の音を受け取る体験です。</p>
       <div class="restimg fx" data-fx="rise">
-        <div class="restimg__ics" aria-hidden="true">
+        <div class="restimg__ics restimg__ics--t" aria-hidden="true">
           <span class="restimg__ic restimg__ic--vn"></span>
           <span class="restimg__ic restimg__ic--fl"></span>
-          <span class="restimg__ic restimg__ic--vc"></span>
-          <span class="restimg__ic restimg__ic--pf"></span>
         </div>
         <ul class="restimg__list">
           <li><span class="restimg__fig"><img src="img/rest-step1.webp" width="480" height="480" alt="" loading="lazy" decoding="async"></span><p>缶バッジをつくる</p></li>
           <li><span class="restimg__fig"><img src="img/rest-step3.webp" width="480" height="480" alt="" loading="lazy" decoding="async"></span><p>メニューから<wbr>1曲えらぶ</p></li>
           <li><span class="restimg__fig"><img src="img/rest-step5.webp" width="480" height="480" alt="" loading="lazy" decoding="async"></span><p>生演奏がとどく</p></li>
         </ul>
+        <div class="restimg__ics restimg__ics--b" aria-hidden="true">
+          <span class="restimg__ic restimg__ic--vc"></span>
+          <span class="restimg__ic restimg__ic--pf"></span>
+        </div>
       </div>
     </div>
 
