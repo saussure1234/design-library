@@ -199,12 +199,11 @@ p{margin:0}   /* 🚨 text-wrap:pretty は使わない：日本語の孤立は�
 .live__table tbody tr:first-child td{border-top:0}
 .live__when{white-space:nowrap;font-weight:700}
 .live__when b{font-family:var(--en);font-weight:700}
-.live__name{font-weight:700;white-space:nowrap}
+.live__name{font-weight:700;word-break:keep-all;overflow-wrap:anywhere}   /* 🚨 nowrap にすると名称＋通称＋配信の札が列の外へ出て、隣の「内容」の文字に重なる（2026-09-22） */
 /* ★クライアントFB 9/19：配信予定は名称の下に小さく置く（通称は指示どおり名称と同じ行・同じ大きさ） */
-.live__cast{display:inline-flex;align-items:center;gap:6px;margin-top:10px;background:#FDF3F3;border-radius:999px;padding:3px 12px;
+.live__cast{display:flex;width:fit-content;align-items:center;gap:6px;margin-top:10px;background:#FDF3F3;border-radius:999px;padding:3px 12px;
   font-size:13px;font-weight:700;line-height:1.7;color:var(--red);white-space:normal;word-break:keep-all;overflow-wrap:anywhere}
 .live__yt{width:20px;height:14px;flex:none}   /* YouTubeの再生ボタンの形（赤い角丸＋白い三角）。絵文字より小さくても何か分かる */
-@media (min-width:901px){ .live__name wbr{display:none} }   /* 🚨 Chrome の <wbr> は nowrap の中でも折る（PCで出演者名が2行に割れた）。文節の印はスマホだけ効かせる */
 .live__info{max-width:1080px;margin:36px auto 0;display:grid;gap:14px}
 .live__info div{display:grid;grid-template-columns:140px minmax(0,1fr);gap:20px;align-items:start}
 .live__info dt{justify-self:start;background:var(--cream);border:1.5px solid var(--line2);border-radius:999px;padding:3px 16px;font-size:var(--fs-sm);font-weight:700;line-height:1.7;white-space:nowrap}
@@ -600,8 +599,8 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
     <table class="live__table fx">
       <thead><tr><th scope="col">日時</th><th scope="col">コンサート</th><th scope="col">内容</th></tr></thead>
       <tbody>
-        <tr><td class="live__when">10/10（土）<wbr><b>11:15–11:45</b></td><td class="live__name">スズキチルドレン <wbr>アンサンブル <wbr>～芝生コンサート～<span class="live__cast"><svg class="live__yt" viewBox="0 0 24 17" aria-hidden="true"><rect width="24" height="17" rx="5" fill="currentColor"/><path d="M9.7 4.7v7.6l6.6-3.8z" fill="#fff"/></svg>YouTube <wbr>LIVE配信予定</span></td><td>子どもたち・OB・OG・指導者 <wbr>約100名による<wbr>アンサンブル</td></tr>
-        <tr><td class="live__when">10/11（日）<wbr><b>11:00–11:30</b></td><td class="live__name">スズキ・メソード <wbr>コンサート <wbr>～滝前コンサート～<span class="live__cast"><svg class="live__yt" viewBox="0 0 24 17" aria-hidden="true"><rect width="24" height="17" rx="5" fill="currentColor"/><path d="M9.7 4.7v7.6l6.6-3.8z" fill="#fff"/></svg>YouTube <wbr>LIVE配信予定</span></td><td>子どもたちによる、毎年恒例のコンサート　<wbr>ヴァイオリン、チェロ、フルート、<wbr>それぞれの魅力もお楽しみください</td></tr>
+        <tr><td class="live__when">10/10（土）<wbr><b>11:15–11:45</b></td><td class="live__name">スズキチルドレン <wbr>アンサンブル <wbr><span class="nb">～芝生コンサート～</span><span class="live__cast"><svg class="live__yt" viewBox="0 0 24 17" aria-hidden="true"><rect width="24" height="17" rx="5" fill="currentColor"/><path d="M9.7 4.7v7.6l6.6-3.8z" fill="#fff"/></svg>YouTube <wbr>LIVE配信予定</span></td><td>子どもたち・OB・OG・指導者 <wbr>約100名による<wbr>アンサンブル</td></tr>
+        <tr><td class="live__when">10/11（日）<wbr><b>11:00–11:30</b></td><td class="live__name">スズキ・メソード <wbr>コンサート <wbr><span class="nb">～滝前コンサート～</span><span class="live__cast"><svg class="live__yt" viewBox="0 0 24 17" aria-hidden="true"><rect width="24" height="17" rx="5" fill="currentColor"/><path d="M9.7 4.7v7.6l6.6-3.8z" fill="#fff"/></svg>YouTube <wbr>LIVE配信予定</span></td><td>子どもたちによる、毎年恒例のコンサート　<wbr>ヴァイオリン、チェロ、フルート、<wbr>それぞれの魅力もお楽しみください</td></tr>
       </tbody>
     </table>
     <dl class="live__info">
