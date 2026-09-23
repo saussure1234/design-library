@@ -1,0 +1,1030 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#FDF9F6">
+<title>ARK Hills Music Week 2026｜音の遊び場｜スズキ・メソード</title>
+<meta name="description" content="10月10日（土）・11日（日）アーク・カラヤン広場。スズキ・メソードの演奏会と楽器体験。入場無料・事前予約不要・参加費不要。">
+<meta property="og:title" content="ARK Hills Music Week 2026｜音の遊び場｜スズキ・メソード">
+<meta property="og:description" content="10月10日（土）・11日（日）アーク・カラヤン広場。スズキ・メソードの演奏会と楽器体験。入場無料・事前予約不要・参加費不要。">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://saussure1234.github.io/design-library/suzuki-ark4/img/fv.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="apple-touch-icon" href="img/icon-180.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Cpath d=%22M0 16A16 16 0 0 1 16 0V16Z%22 fill=%22%23FCC800%22/%3E%3Cpath d=%22M16 0A16 16 0 0 1 32 16H16Z%22 fill=%22%2300A9E4%22/%3E%3Cpath d=%22M0 16H16V32A16 16 0 0 1 0 16Z%22 fill=%22%23C8D921%22/%3E%3Cpath d=%22M16 16H32A16 16 0 0 1 16 32Z%22 fill=%22%235AB651%22/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ─────────────────────────────────────────────
+   デザイン案：FV＝A案（写真1枚＋図形で縁取り）、以降の節＝キービジュアル方向の4節案
+   図形の文法：公式キービジュアル（マス目・四分円・半円・粒子のある階調）を指定パレットで組み直し
+   ★モックはポスター寸法。級数は実務のLPに組み直している（lp-repro「モックの寸法をそのまま使わない」）
+   ───────────────────────────────────────────── */
+:root{
+  /* 指定パレット（カラーパレット.pdf） */
+  --green:#5AB651; --purple:#9C529C; --sky:#00A9E4; --yellow:#FCC800; --lime:#C8D921;
+  --pink:#B94F7F; --blue:#4B6CB3; --orange:#F08300; --red:#DF0428;
+  /* 地と文字（実測 fvA_real：地の最頻 #fdf9f6） */
+  --bg:#FDF9F6; --paper:#FFFFFF; --cream:#FFFBEF;
+  --ink:#1F1C19; --ink2:#48433D; --line:#E6DED4; --line2:#D5CBBF;
+  /* ★白文字は緑・空・黄の上で読めない（#5AB651 と白で 2.55）。この3色の上の文字は墨にする */
+  --on-green:#15240F;
+  /* 級数（実測 H1 字送り50px・行送り77.5px＠1536 → 実務値に組み直し） */
+  --h1:clamp(30px,3.25vw,47px); --h1-lh:1.55;
+  /* ★So FB 9/15「文字のサイズ大丈夫？バラバラなのか小さいのか。ESLを参考に」→ 本文15.5px＋14/15/16/16.5pxの5段が混在していた（ESLは本文18pxの1段）。
+     本文・リード・表・FAQ＝18px、注記・ラベル・補足＝16px の2段にそろえ、見出しは本文の約1.5倍（h2 28px・h3 23px）。FVの見出しと日付は据え置き */
+  --h2:clamp(22px,2vw,28px); --h2-w:700; --h2-lh:1.55; --h2-ls:.05em;
+  --h3:clamp(20px,1.6vw,23px);
+  --fs:18px; --lead:18px; --fs-sm:16px;
+  --wrap:1080px; --pad:clamp(20px,4vw,40px);
+  --font:"Zen Kaku Gothic New","Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+  --en:"Quicksand","Zen Kaku Gothic New","Hiragino Sans",sans-serif;
+  /* キービジュアルの階調：パレットの色どうしを、間に白寄りの中間色をはさんでつなぐ */
+  --g-yp:linear-gradient(145deg,#FCC800 0%,#FDD964 50%,#F5C4D7 100%);
+  --g-sp:linear-gradient(145deg,#00A9E4 0%,#72CCF0 52%,#F1C2D6 100%);
+  --g-ls:linear-gradient(145deg,#C8D921 0%,#9AD37B 52%,#4FC0EA 100%);
+  --g-gy:linear-gradient(145deg,#5AB651 0%,#B3D43B 54%,#FCC800 100%);
+  --g-yl:linear-gradient(145deg,#FCC800 0%,#E7D51F 56%,#C8D921 100%);
+  --g-pk:linear-gradient(145deg,#F1BCD2 0%,#FADCE8 100%);
+  --grain:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .5  0 0 0 0 .5  0 0 0 0 .5  0 0 0 .9 0'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>");
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+/* ★行頭の禁則：小書き仮名・長音を行頭に落とさない（Chromeの既定は許してしまう） */
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:var(--fs);line-height:1.9;letter-spacing:.03em;overflow-x:clip;line-break:strict}   /* 🚨 hidden だと sticky のヘッダーが効かない環境がある */
+img{display:block;max-width:100%;height:auto}
+a{color:inherit}
+p{margin:0}   /* 🚨 text-wrap:pretty は使わない：日本語の孤立は減らず、途中の行を早めに折って右に余白・両端揃えで字間が大きく広がる行を作った（So 9/15「すごく不自然」）。孤立は末尾 script ⑦ */
+.wrap{width:min(var(--wrap),100% - var(--pad)*2);margin-inline:auto;position:relative;z-index:1}
+.sec{position:relative;padding:clamp(76px,9vw,124px) 0;overflow:hidden}
+.h2{font-size:var(--h2);font-weight:var(--h2-w);line-height:var(--h2-lh);letter-spacing:var(--h2-ls);margin:0;text-align:center;word-break:keep-all;overflow-wrap:anywhere}
+.h3{font-size:var(--h3);font-weight:700;line-height:1.6;letter-spacing:.04em;margin:0;word-break:keep-all;overflow-wrap:anywhere}
+.lead{font-size:var(--lead);line-height:2;color:var(--ink2);text-align:center;max-width:40em;margin:22px auto 0}
+/* ★9/15 本文を18pxにそろえたら、600/768/900pxで段落の最後の行に「せん。」「ます。」だけが落ちた（check.py 改行の孤立）。
+   文節でしか折らない指定（keep-all＋wbr）→ スマホで行が右端まで届かず「左に寄って右が空く」（So）。最後の文節を改行させない指定 → その1つ前の行が空く。
+   → 本文はふつうに折り、字間を整えて列の幅にちょうど収める。最後の行が数文字だけの段落は1行の字数を1つ増減するか、最後の数文字を前の行から送る（末尾の script ⑦） */
+.note{font-size:var(--fs-sm);line-height:1.8;color:var(--ink2)}
+.nb{display:inline-block}
+.tidy-tail{white-space:nowrap}   /* 末尾 script ⑦ が段落の最後の数文字に付ける */
+.tbd{color:var(--red);font-weight:700}
+
+/* ── 図形（公式キービジュアルの文法） ── */
+.kv{position:absolute;pointer-events:none;z-index:0}
+.kv i{position:absolute;display:block;width:var(--s);height:var(--s);left:var(--x);top:var(--y);overflow:hidden}
+.kv i::after{content:"";position:absolute;inset:0;background:var(--grain);mix-blend-mode:soft-light;opacity:.55;border-radius:inherit}
+.q1{border-radius:100% 0 0 0}.q2{border-radius:0 100% 0 0}.q3{border-radius:0 0 100% 0}.q4{border-radius:0 0 0 100%}
+.hb{border-radius:0 0 50% 50%/0 0 100% 100%}.ht{border-radius:50% 50% 0 0/100% 100% 0 0}
+.hl{border-radius:100% 0 0 100%/50% 0 0 50%}.hr{border-radius:0 100% 100% 0/0 50% 50% 0}
+.ci{border-radius:50%}
+.yp{background:var(--g-yp)}.sp{background:var(--g-sp)}.ls{background:var(--g-ls)}
+.gy{background:var(--g-gy)}.yl{background:var(--g-yl)}.pk{background:var(--g-pk)}
+
+/* ── ヘッダー（FVの section の外に置く＝FVの写真は1枚、の判定に入れない） ── */
+/* ★So FB 2026-09-15「ヘッダーはロゴとCTAのみで良い」→ ページ内ナビ6つ・メニューボタン・全画面メニューを外した。
+   ナビとメニューの実装の見本は suzuki-ark1（docs/suzuki-ark1/index.html）に残っている */
+.hd{position:sticky;top:0;z-index:50;transition:background-color .3s,box-shadow .3s}
+.hd__in{display:flex;align-items:center;gap:24px;height:var(--head-h);transition:height .3s}
+.hd__logo{flex:none;margin-right:auto}
+.hd__logo img{height:46px;width:auto;transition:height .3s}
+/* ★So FB 9/15（2回目）「ロゴとCTAだけだと変か。最初の6つは分かりにくいし、こんなに要るか」→ ナビ3つ＋CTA。
+   初めての人が知りたい「いつ（演奏スケジュール）・何ができる（楽器体験）・不安（よくある質問）」だけ。会場はボタンが兼ねる。
+   言葉は FV の「演奏スケジュールを見る」とそろえた。スマホはロゴ＋CTAのまま（メニューボタンは作らない） */
+.hd__nav{display:flex;gap:clamp(20px,2.2vw,34px);margin-right:clamp(6px,1.2vw,18px);font-size:var(--fs-sm);font-weight:500;letter-spacing:.06em}
+.hd__nav a{position:relative;padding:10px 0;text-decoration:none;white-space:nowrap}
+.hd__nav a::after{content:"";position:absolute;left:0;right:0;bottom:4px;height:3px;border-radius:2px;background:var(--green);transform:scaleX(0);transform-origin:left;transition:transform .25s}
+.hd__nav a:hover::after,.hd__nav a[aria-current]::after{transform:scaleX(1)}
+
+/* ── FV ── */
+.fv{position:relative;overflow:hidden;padding:12px 0 clamp(80px,8vw,110px)}
+.fv__deco{position:absolute;top:0;bottom:0;left:50%;width:1440px;transform:translateX(-50%);z-index:0;pointer-events:none}
+.fv__grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,560px);column-gap:clamp(32px,4.4vw,64px);
+  grid-template-areas:"info info" "tag photo" "h1 photo" "lead photo" "cta photo";grid-template-rows:auto auto auto auto 1fr;align-items:start}
+/* ★So FB 9/15「日付・会場と条件3つがまだ微妙。ボックスに入れる感じ」→ 3案（白いカード／開催概要の枠／チケット風）から白いカード。
+   「何か物足りない、周りに二重の線？」→ 縁の線＋5px空けてもう1本 → 同日「やっぱ線（1本）でいいや。白背景の」→ 外側の線を外し、白地＋縁の細い線1本に。中は 日付・会場 → 細い罫 → 条件3つ */
+.fv__info{grid-area:info;position:relative;margin:6px 0 0;padding:15px 30px 11px;background:#fff;border-radius:20px;border:1.5px solid #E3D6C6;
+  box-shadow:0 24px 40px -30px rgba(70,50,30,.45)}
+.fv__info .fv__band{padding-top:0}
+.fv__info .conds{margin:10px 0 0;padding-top:10px;border-top:1px solid #EFE8DF}
+/* ★So FB 9/14「FVのCTAはもっと上に。『…ピアノに触れられます。』の下あたり」→ 写真の下の段から、リードのすぐ下（左の列）へ */
+/* ★So FB 2026-09-14「背景の形は満足／FVがごちゃごちゃしている」→ A案（引き算）。
+   実測：1画面目に地・枠・影のある部品が12個・7種類（緑の帯・白いタグ・条件の丸枠3つ＋色丸3つ・ボタン・写真の額）、
+   ほかの節は1画面0〜6個。締めの節は図形がFVより密でも散らからない＝犯人は背景でなく手前の部品。
+   帯・タグ・丸枠の地と枠を外し、地の上にじかに置く。まとまりは余白の差で作る（中は狭く・間は広く）。 */
+.fv__band{grid-area:band;display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding-top:6px}
+/* ★So FB 9/15「ARK Hills Music Week 2026｜音の遊び場 は『カラヤン広場で』の上でいい」→ 帯から出して見出しの直上へ（見出しの前置き） */
+.fv__tag{grid-area:tag;margin:28px 0 0;color:var(--purple);font-family:var(--en);font-weight:700;font-size:var(--fs-sm);letter-spacing:.04em;line-height:1.5;white-space:nowrap}
+.fv__when{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 18px;font-weight:700;line-height:1.5}
+.fv__date{font-size:clamp(19px,1.8vw,26px);letter-spacing:.04em;white-space:nowrap}
+.fv__date b{font-family:var(--en);font-weight:700;font-size:1.12em}
+/* ★クライアントFB 9/19「日にちの後に 11:00－17:00 を追加」（コンサートを逃しても一日楽しめると最初に伝える） */
+.fv__time{font-size:clamp(17px,1.4vw,21px);letter-spacing:.04em;white-space:nowrap;color:var(--ink2)}
+.fv__time b{font-family:var(--en);font-weight:700;font-size:1.1em;color:var(--ink)}
+/* ★So FB 9/15「アークヒルズ　アーク・カラヤン広場 の文字が小さい。日付と同じサイズ」→ 15px・500 → 日付と同じ大きさ・太さ。
+   狭い幅は「アークヒルズ　」の後ろでだけ折る（keep-all でも「・」の後ろで折れた＝375pxで「アーク・／カラヤン広場」→ 2つを nb で包む） */
+.fv__place{font-size:clamp(19px,1.8vw,26px);font-weight:700;letter-spacing:.04em;word-break:keep-all;overflow-wrap:anywhere}
+/* ★So FB 9/14（公開後）「条件3つが微妙」→ 3方向（入場券／ポスターの情報欄／シール）から B。
+   箇条書き（アイコン＋同じ大きさの文字）だと、1個／2個に割れて右端が499/313/549pxとばらばらだった。
+   言葉を大小に分け、縦の罫で3つに区切る。枠は足さない。日付の下の段に通して1段に収める */
+.conds{grid-area:conds;display:flex;flex-wrap:nowrap;align-items:stretch;margin:20px 0 0;padding:0;list-style:none}
+.conds li{display:flex;align-items:center;gap:12px;padding:2px 30px;font-weight:700;line-height:1.3}
+.conds li:first-child{padding-left:0}
+.conds li+li{border-left:1.5px solid #D9CFC3}
+/* ★So FB 9/15「条件のアイコンが微妙」→ 緑の丸に線画（チェック・矢印・人）をやめ、流れの絵・楽器の絵と同じ画風の絵に（_gen/suzuki/job18 conds_ic_a）。
+   入場無料＝ハートの入場券／出入り自由＝人が通る開いた扉／3歳から＝小さなヴァイオリンを持つ子 */
+.conds .ic{width:46px;height:46px;flex:none;background:var(--ic) center/contain no-repeat}
+.ic--free{--ic:url(img/ic-free.webp)}.ic--inout{--ic:url(img/ic-inout.webp)}.ic--age3{--ic:url(img/ic-age3.webp)}
+.conds__t{display:flex;flex-direction:column}
+.conds__t b{font-size:22px;letter-spacing:.04em;line-height:1.35}
+.conds__t small{font-size:var(--fs-sm);font-weight:500;color:var(--ink2);letter-spacing:.04em;line-height:1.5}
+/* 「入場無料・事前予約不要…」を2段に分けた所の「・」。文字としては残し（原稿どおり・読み上げ用）、見た目だけ消す */
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.fv__h1{grid-area:h1;margin:6px 0 0;font-size:var(--h1);line-height:var(--h1-lh);font-weight:700;letter-spacing:.05em;word-break:keep-all;overflow-wrap:anywhere}
+/* 強調は決めごと（rules.json「FV見出しにブランドカラーの強調を1箇所」）なので残す。面を細くして主張を下げた */
+.mk{background:linear-gradient(transparent 70%,rgba(252,200,0,.58) 70%,rgba(252,200,0,.58) 93%,transparent 93%);padding:0 .04em}
+.fv__lead{grid-area:lead;margin-top:22px;font-size:var(--lead);line-height:2.05;color:var(--ink2);max-width:33em}
+.fv__cta{grid-area:cta;display:flex;flex-wrap:wrap;gap:12px 14px;margin-top:32px}
+/* 左右の図形の列と文字の隙間が16pxしかなかった。図形は動かさず（So：背景は今のまま）、中身を内側へ寄せる */
+@media (min-width:1101px){
+  .fv__grid{padding-inline:24px}
+  /* 下端の図形の見え方を最初の版（FVの高さ859px＠1440）に合わせる。条件の段を足して33px伸びた分を余白から引く */
+  .fv{padding-bottom:calc(clamp(80px,8vw,110px) - 55px)}   /* 9/15 文字サイズを18pxにそろえてFVが17px伸びた分も引く（1440pxでFV 815pxのまま） */
+}
+/* ★So FB 9/14「ぴったり決まる1枚が無い。素材の『名称未設定のデザイン.png』のように複数、ときに背景を透過」
+   → F1：斜めの写真パネル2枚（チェロ＝大・ピアノ＝小）＋ヴァイオリンの2人を切り抜きで手前に。
+   白い額はやめた（額の分だけ部品が増える＝「ごちゃごちゃ」の元）。切り抜きは macOS の Vision でローカルに作った */
+.fv__photo{grid-area:photo;position:relative;margin:30px 0 0;aspect-ratio:560/520}   /* 9/15 イベント名を見出しの上の段に移し、写真の段が24px上から始まるようになった → 背景の図形との位置を前のまま保つため 6→30px（実測 1440pxで写真の上端165px） */
+.fvc__main,.fvc__sub{position:absolute;margin:0;overflow:hidden}
+.fvc__main img,.fvc__sub img{display:block;width:100%;height:100%;object-fit:cover}
+.fvc__main{left:8%;top:18%;width:80%;height:64%;clip-path:polygon(5% 4%,100% 0,95% 100%,0 94%);z-index:1}
+/* So FB 9/14「3枚目の男の子が何を演奏しているか見えにくい」：鍵盤のある左下がチェロの写真に隠れていた → ピアノを手前へ。隠れるのはチェロの写真の右上（後ろの人）だけ */
+.fvc__sub{right:-6%;top:0;width:48%;height:38%;clip-path:polygon(0 10%,100% 0,94% 100%,6% 90%);z-index:2}
+/* 🚨 切り抜きの箱（透明な所も含む矩形）を本文の箱に重ねない。重ねると「文字が写真に被っている」になる */
+.fvc__cut{position:absolute;left:-8%;bottom:2%;height:48%;width:auto;z-index:4;filter:drop-shadow(0 10px 14px rgba(60,40,20,.16))}
+/* スマホ用の図形（HTMLの注記）。PCは .fv__deco の図形だけ */
+.fv__mdeco,.fvc__kv,.fv__mk{display:none}
+
+/* ボタン */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:62px;padding:0 30px 0 34px;border-radius:999px;
+  font-weight:700;font-size:var(--fs);letter-spacing:.06em;line-height:1.4;text-decoration:none;text-align:center;word-break:keep-all;overflow-wrap:anywhere;transition:transform .2s,box-shadow .2s,background .2s}
+.btn svg{width:18px;height:18px;flex:none}
+.btn--main{background:var(--green);color:var(--on-green);box-shadow:0 12px 24px -14px rgba(60,140,55,.9)}
+.btn--main:hover{transform:translateY(-2px);box-shadow:0 16px 28px -14px rgba(60,140,55,.95)}
+.btn--sub{background:#fff;color:var(--purple);border:2px solid var(--purple)}
+.btn--sub:hover{background:#FBF3FB}
+
+/* ── 2 3つの安心 ── */
+.assure__list{list-style:none;margin:56px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;counter-reset:n}
+.assure__card{background:#fff;border-radius:20px;padding:44px 32px 40px;text-align:center;box-shadow:0 18px 40px -30px rgba(70,50,30,.35);counter-increment:n}
+.assure__card::before{content:counter(n);display:grid;place-items:center;width:58px;height:58px;margin:0 auto 20px;border-radius:50%;
+  font-family:var(--en);font-weight:700;font-size:27px;line-height:1;color:var(--on-green);background:var(--c)}
+.assure__card p{margin-top:14px;font-size:var(--fs);line-height:1.95;color:var(--ink2);text-align:left}
+/* ★So FB 9/14「3つの安心の高さを統一したい」：箱の高さは3枚とも367pxで同じだったが、3枚目だけ見出しが2行で本文の書き出しが35px下がっていた。
+   見出しの欄を2行分の高さにそろえ、1行の見出しは欄の中で上下中央に置く（PCのみ。スマホは1枚ずつ縦に並ぶので揃える相手がいない） */
+@media (min-width:901px){ .assure__card .h3{min-height:calc(2em * 1.6);display:grid;align-content:center} }
+
+/* ── 3 演奏会 ── */
+.live__fig{margin:44px auto 0;max-width:1080px}
+.live__photo{position:relative;margin:0 auto;max-width:1080px}
+.live__photo img{width:100%;aspect-ratio:1800/760;object-fit:cover;border-radius:22px}
+.live__photo .kv{inset:0}
+/* ★クライアントFB 9/19：写真は表・曲目の下＋キャプション */
+.live__cap{margin-top:14px;font-size:var(--fs-sm);line-height:1.8;color:var(--ink2);text-align:right}
+.live__table{width:100%;max-width:1080px;margin:44px auto 0;border-collapse:separate;border-spacing:0;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 18px 40px -32px rgba(70,50,30,.35)}
+.live__table th,.live__table td{text-align:left;vertical-align:top;padding:20px 26px;line-height:1.8}
+.live__table thead th{background:#F4EFE8;font-size:var(--fs-sm);font-weight:700;letter-spacing:.08em;color:var(--ink2)}
+.live__table tbody td{border-top:1px solid var(--line);font-size:var(--fs)}
+.live__table tbody tr:first-child td{border-top:0}
+.live__when{white-space:nowrap;font-weight:700}
+.live__when b{font-family:var(--en);font-weight:700}
+.live__name{font-weight:700;word-break:keep-all;overflow-wrap:anywhere}   /* 🚨 nowrap にすると名称＋通称＋配信の札が列の外へ出て、隣の「内容」の文字に重なる（2026-09-22） */
+/* ★クライアントFB 9/19：配信予定は名称の下に小さく置く（通称は指示どおり名称と同じ行・同じ大きさ） */
+.live__cast{display:flex;width:fit-content;align-items:center;gap:6px;margin-top:10px;background:#FDF3F3;border-radius:999px;padding:3px 12px;
+  font-size:13px;font-weight:700;line-height:1.7;color:var(--red);white-space:normal;word-break:keep-all;overflow-wrap:anywhere}
+.live__yt{width:20px;height:14px;flex:none}   /* YouTubeの再生ボタンの形（赤い角丸＋白い三角）。絵文字より小さくても何か分かる */
+.live__info{max-width:1080px;margin:36px auto 0;display:grid;gap:14px}
+.live__info div{display:grid;grid-template-columns:140px minmax(0,1fr);gap:20px;align-items:start}
+.live__info dt{justify-self:start;background:var(--cream);border:1.5px solid var(--line2);border-radius:999px;padding:3px 16px;font-size:var(--fs-sm);font-weight:700;line-height:1.7;white-space:nowrap}
+.live__info dd{margin:0;font-size:var(--fs);line-height:1.95;color:var(--ink2)}
+/* ★クライアントFB 9/19「追加情報」：ライブ配信。会場に来られない人向けの案内なので、節の最後に小さく置く */
+.livest{max-width:1080px;margin:34px auto 0;background:#fff;border:1.5px solid var(--line2);border-left:6px solid var(--sky);
+  border-radius:16px;padding:22px clamp(20px,3vw,32px)}
+.livest__title{margin:0;font-size:var(--h3);font-weight:700;line-height:1.5;letter-spacing:.04em;word-break:keep-all;overflow-wrap:anywhere}
+.livest__body{margin:10px 0 0;font-size:var(--fs);line-height:1.95;color:var(--ink2)}
+
+/* ── 4 ブース ── */
+.booth{background:#fff}
+.sub{margin-top:clamp(64px,8vw,104px)}
+.sub__head{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px}
+.sub__mark{width:34px;height:34px;position:relative}
+.sub__mark i{position:absolute;width:17px;height:17px}
+.inst{list-style:none;margin:44px auto 0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px;max-width:1040px}
+.inst li{text-align:center}
+.inst img{width:100%;max-width:230px;margin:0 auto;aspect-ratio:1;border-radius:50%;object-fit:cover;box-shadow:0 0 0 8px var(--ring,#FFF6CC)}
+.inst span{display:block;margin-top:22px;font-weight:700;font-size:var(--fs);letter-spacing:.08em}
+.taiken__body{max-width:44em;margin:40px auto 0;font-size:var(--fs);line-height:2;text-align:center;word-break:keep-all;overflow-wrap:anywhere}   /* ★So 9/22「これは中央揃え」 */
+.taiken__note{max-width:44em;margin:14px auto 0}
+
+/* ★クライアントFB 9/19：本文はトピックス掲載分（6行）＋イメージ画像（流れ・メニュー・シェフ・演奏編成はカット） */
+.rest__catch{margin:20px 0 0;text-align:center;font-size:var(--fs);font-weight:700;letter-spacing:.04em;line-height:1.6;word-break:keep-all;overflow-wrap:anywhere}
+.rest__lead{max-width:40em;margin:18px auto 0;text-align:center;font-size:var(--fs);line-height:2;color:var(--ink2);word-break:keep-all;overflow-wrap:anywhere}
+.rest__punch{display:inline-block;margin-top:4px;font-size:var(--h3);font-weight:700;line-height:1.5;color:var(--purple)}   /* 緑（#5AB651）は白地に沈む（比2.55）→ ページの文字の強調色（紫）に */
+.rest__after{max-width:40em;margin:24px auto 0;text-align:center;font-size:var(--fs);line-height:1.95;color:var(--ink2);word-break:keep-all;overflow-wrap:anywhere}
+.restimg{margin:30px auto 0;max-width:1000px;background:var(--bg);border-radius:28px;padding:clamp(22px,3vw,34px) clamp(18px,3vw,44px) clamp(26px,3vw,38px)}
+/* ★先方の指示「4つの楽器イラストを適宜散らし」→ 等間隔の横一列をやめ、位置・高さ・大きさ・傾きを変える（文字と絵には重ねない） */
+.restimg__ics{position:relative;height:clamp(66px,8vw,104px)}
+.restimg__ics--t{margin-bottom:clamp(2px,0.8vw,10px)}
+.restimg__ics--b{margin-top:clamp(6px,1.4vw,18px)}
+.restimg__ic{position:absolute;width:var(--w);height:var(--w);background:var(--ic) center/contain no-repeat}
+.restimg__ic--vn{--ic:url(img/ic-violin.webp);--w:clamp(50px,6.1vw,84px);left:3%;bottom:0;rotate:-14deg}
+.restimg__ic--fl{--ic:url(img/ic-flute.webp);--w:clamp(42px,5vw,70px);right:9%;top:2px;rotate:24deg}
+.restimg__ic--vc{--ic:url(img/ic-cello.webp);--w:clamp(44px,5.4vw,76px);left:14%;top:0;rotate:9deg}
+.restimg__ic--pf{--ic:url(img/ic-piano.webp);--w:clamp(52px,6.3vw,88px);right:3%;bottom:0;rotate:-9deg}
+.restimg__list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(16px,3vw,36px)}
+.restimg__fig{display:block}
+.restimg__fig img{display:block;width:100%;height:auto;aspect-ratio:1;border-radius:22px;background:#fff}
+.restimg__list p{margin:14px 0 0;text-align:center;font-weight:700;font-size:var(--fs);line-height:1.65;word-break:keep-all;overflow-wrap:anywhere}
+.gift__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px;margin-top:48px}
+.gift{background:var(--bg);border-radius:24px;padding:40px 40px 36px;display:grid;grid-template-rows:auto auto 1fr auto;justify-items:center;text-align:center}
+.gift__vis{height:230px;display:grid;place-items:center}
+/* ★So FB 9/15（編集依頼）「来場者バッジをこの写真に。背景透過で」→ 支給の写真（缶バッジ3個・_materials/缶バッジ3個_写真_image (67).png）を
+   macOS の Vision で切り抜き（ローカル。外部に出していない）、縁に混ざった紙の色を抜いてから縮小（~/suzuki-ark/tools/badge_photo/）。
+   高さ230pxの枠に収まる幅260px（高さ229px）。影は前の立体の缶バッジ（img/badge-3d.webp・9/15「立体的に」）と同じく下に弱く落とす */
+.gift__badge{width:260px;height:auto;filter:drop-shadow(0 8px 10px rgba(70,50,30,.18))}
+/* ★So FB 9/15「記念フォトカード本文がまるまる抜けてない？」→ 原稿では特典の表の下に独立したまとまり（1行目「はじめて楽器にふれた日を一枚の写真に。」は別の行）。
+   特典の枠の中に2段落目として埋めていた。表の下に出して、今の写真（チェキ）はこちらへ。特典の枠の絵はイラストに（生成：_gen/suzuki/job20） */
+.gift__illust{width:200px;height:auto}   /* 高さ230pxの枠に収まる（隣の缶バッジの写真は高さ229px） */
+/* ★So 9/22：残すのは「楽器との出会いを、思い出の一枚に。」の1行だけ。写真と並べて中央に置き、大きく出す */
+.photocard{display:grid;grid-template-columns:auto auto;grid-template-areas:"photo catch";justify-content:center;column-gap:clamp(28px,4vw,52px);align-items:center;
+  margin-top:28px;background:var(--bg);border-radius:24px;padding:36px clamp(24px,4vw,56px)}
+.photocard__photo{grid-area:photo;display:grid;place-items:center;padding:10px 0}
+.photocard__catch{grid-area:catch;align-self:center;font-size:clamp(21px,2.1vw,27px);font-weight:700;line-height:1.6;letter-spacing:.06em;word-break:keep-all;overflow-wrap:anywhere}
+.gift__cheki{background:#fff;padding:12px 12px 40px;width:180px;transform:rotate(-4deg);box-shadow:0 18px 30px -18px rgba(70,50,30,.5)}
+.gift__cheki img{width:100%;aspect-ratio:540/560;object-fit:cover}
+.gift h4{margin:18px 0 0;font-size:var(--h3);letter-spacing:.08em;line-height:1.5}
+.gift p{margin-top:12px;font-size:var(--fs);line-height:1.95;color:var(--ink2);text-align:left}
+.gift__qty{margin-top:18px;display:inline-block;background:#fff;border:1.5px solid var(--line2);border-radius:999px;padding:5px 18px;font-size:var(--fs-sm);font-weight:700;line-height:1.7;word-break:keep-all;overflow-wrap:anywhere}
+
+/* ── 5 会場・アクセス ── */
+.access__grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,440px);gap:32px;margin-top:52px;align-items:stretch}
+.spec{margin:0;background:#fff;border-radius:20px;padding:10px 32px;box-shadow:0 18px 40px -32px rgba(70,50,30,.35)}
+.spec div{display:grid;grid-template-columns:120px minmax(0,1fr);gap:20px;padding:18px 0;border-top:1px solid var(--line)}
+.spec div:first-child{border-top:0}
+.spec dt{font-weight:700;font-size:var(--fs-sm);line-height:1.9}
+.spec dd{margin:0;font-size:var(--fs);line-height:1.9}
+.spec dd ul{margin:0;padding:0;list-style:none}
+.spec dd li{word-break:keep-all;overflow-wrap:anywhere}
+.access__map{width:100%;height:100%;min-height:360px;border:0;border-radius:20px;background:#EDE7DF}
+.access__more{margin-top:36px;text-align:center}
+.access__more p{font-size:var(--fs);margin-bottom:18px;word-break:keep-all;overflow-wrap:anywhere}
+
+/* ── 6 FAQ ── */
+.faq__list{max-width:920px;margin:48px auto 0}
+.faq details{border-bottom:1px solid var(--line2)}
+.faq summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:16px minmax(0,1fr) 22px;gap:18px;align-items:center;padding:22px 6px;font-weight:700;font-size:var(--fs);line-height:1.7;word-break:keep-all;overflow-wrap:anywhere}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::before{content:"";width:14px;height:14px;border-radius:50%;background:var(--c)}
+/* ★So FB 9/15「最初から右向きの矢印だと、他のページに飛びそうに見える」→ 閉じている時は下向き、開いたら上向き。
+   閉じる時は動き（220ms）の終わりを待たず、押した瞬間に向きを戻す（.is-closing） */
+.faq summary svg{width:20px;height:20px;transition:transform .28s;color:var(--green);transform:rotate(90deg)}
+.faq details[open]:not(.is-closing) summary svg{transform:rotate(-90deg)}
+.faq__a{overflow:hidden}
+.faq__a p{padding:0 24px 24px 40px;font-size:var(--fs);line-height:1.95;color:var(--ink2)}
+
+/* ── 7 スズキ・メソードについて ── */
+.about__grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:clamp(32px,5vw,72px);align-items:center}
+.about__photo img{width:100%;aspect-ratio:3/2;object-fit:cover;border-radius:22px}
+.about .h2{text-align:left}
+.about__body{margin-top:22px;font-size:var(--fs);line-height:2.05;color:var(--ink2)}
+
+/* ── 8 フッターCTA ── */
+.closing{padding:clamp(88px,10vw,130px) 0}
+.closing__deco{position:absolute;inset:0;z-index:0;display:flex;flex-direction:column;justify-content:space-between;pointer-events:none}
+.closing__deco .row{display:grid;grid-template-columns:repeat(8,minmax(0,1fr))}
+.closing__deco i{display:block;aspect-ratio:1;position:relative;overflow:hidden}
+.closing__deco i[class]::after{content:"";position:absolute;inset:0;background:var(--grain);mix-blend-mode:soft-light;opacity:.55;border-radius:inherit}
+.closing__panel{position:relative;z-index:1;background:#fff;border-radius:28px;max-width:880px;margin:0 auto;padding:56px clamp(24px,5vw,64px);text-align:center;box-shadow:0 30px 60px -36px rgba(70,50,30,.45)}
+.closing__copy{font-size:clamp(20px,2vw,27px);font-weight:700;line-height:1.75;letter-spacing:.05em;word-break:keep-all;overflow-wrap:anywhere}
+.closing__btns{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;margin-top:34px}
+.ft{padding:36px 0 44px;text-align:center}
+.ft img{height:44px;width:auto;margin:0 auto}
+
+/* ★9/15 So「スマホで…左に寄って右に空き」→ 両端揃え →「文字と文字の間隔が大きい。同じ間隔に」→ 左ぞろえ＋字間で幅に収める →「また右に余白」
+   原因：18pxの本文は列の幅が1文字の倍数でないと全行に最大1文字の余りが出る（390pxで0.9字）。両端揃えだけだと、その余りを全行の字間に散らして全体が広がって見えた。
+   禁則で1文字押し出された行は、字間を変えない限り右が空く（日本語では避けられない）。
+   → 段落ごとに字間を整えて全角の文字を列の幅にちょうど収め（末尾 script ⑦、±0.5px以内）、そのうえで両端揃え。
+     広がるのは押し出された行だけで、量も1文字分を1行に散らす程度 */
+.fv__lead,.assure__card p,.live__table td:last-child,.live__info dd,.note,.gift p,.faq__a p,.about__body{text-align:justify;text-justify:inter-character}
+.spec dd:not(:has(.nb,ul)){text-align:justify;text-justify:inter-character}   /* :has の効かないブラウザで上の行ごと捨てられないよう別に書く */
+
+/* ── タブレット ── */
+@media (max-width:1100px){
+  .fv__deco .col{display:none}
+}
+@media (max-width:1023px){
+  .fv__grid{grid-template-columns:minmax(0,1fr) minmax(0,420px)}
+  .assure__list{gap:16px}
+  .assure__card{padding:36px 22px 32px}
+}
+/* ★So FB 9/14「レスポンシブ対応」：実測（375/414/600/768/900/1024/1280/1440）で横溢れ・文字切れは0。直したのは次の3つ
+   ①（券売機のボタンの列数の出し分け。9/15 伝票の1列にしたので不要になり外した）
+   ②601〜900px：FVのコラージュが横幅いっぱい（約700px四方）でFVが1,427px → 幅を抑えて中央に
+   ③900px以下：追従CTAの小さい字 11.5px → 12px、ロゴのリンクの高さ 36px → 44px */
+@media (min-width:601px) and (max-width:900px){
+  .fv__photo{width:min(100%,560px);justify-self:center}
+}
+/* ── スマホ：写真→文字→CTA の順（全LP共通の必須条件） ── */
+@media (max-width:900px){
+  :root{--head-h:66px}
+  .hd__logo img{height:36px}
+  .hd__logo{padding:4px 0}
+  .fv{padding-top:4px}
+  .fv__deco{display:none}
+  /* ★So FB 9/15「スマホのとき、3つの条件は画像の上にこないと」→ 日付・会場 → 条件 → 写真 → 見出し。
+     同日「画像はもっと下か。条件はコピーより前・日付が最初を満たす配置は」→ 3案（375×812の1画面目）から B：
+     日付・会場 → 条件 → イベント名・見出し → 写真 → リード → CTA（見出しが1画面目に全部入り、写真も半分見える。写真はCTAより上のまま） */
+  .fv__grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"info" "tag" "h1" "photo" "lead" "cta";grid-template-rows:none}
+  .fv__info{margin-top:12px;padding:14px 18px 6px;border-radius:18px}
+  .fv__band{padding-top:10px;gap:0}
+  .fv__info .fv__band{padding-top:0}
+  .fv__photo{margin-top:22px}
+  .fv__lead{margin-top:20px}
+  .fvc__sub{right:0}
+  .fvc__cut{left:0;height:46%}
+  .fv__mdeco{display:block;inset:0}
+  .fv__grid{position:relative;z-index:1}
+  .fvc__kv{display:block;inset:0}
+  .fvc__kv i{height:auto;aspect-ratio:1}
+  /* 見出しの右端：72pxの半円を画面の端から36pxだけ見せる（見出しの文字は右端274px＠375・320pxでも10px空く） */
+  .fv__mk{display:block;grid-area:h1;justify-self:end;align-self:center;position:relative;width:72px;height:72px;margin-right:calc(-1 * var(--pad) - 36px)}
+  .fv__h1{position:relative;z-index:1}
+  /* スマホは3段に積む。大きい言葉と小さい言葉は横に並べて1段に収める */
+  .conds{flex-direction:column;margin-top:14px}
+  .fv__info .conds{margin-top:10px;padding-top:2px}
+  .conds li,.conds li:first-child{padding:9px 0}
+  .conds li+li{border-left:0;border-top:1px solid #E6DED4}
+  .conds .ic{width:38px;height:38px}
+  .conds__t{flex-direction:row;flex-wrap:wrap;align-items:baseline;gap:0 10px}
+  .conds__t b{font-size:18px}
+  .conds__t small{font-size:15px}
+  .fv__tag{margin-top:26px}
+  .fv__h1{margin-top:4px}
+  .fv__cta{flex-direction:column;align-items:stretch;margin-top:28px}
+  .fv__cta .btn{width:100%}
+  .fv__m{display:block}
+  .assure__list{grid-template-columns:minmax(0,1fr);margin-top:40px}
+  .assure__card{display:grid;grid-template-columns:52px minmax(0,1fr);column-gap:18px;text-align:left;padding:26px 22px}
+  .assure__card::before{grid-row:1/3;width:52px;height:52px;font-size:24px;margin:0}
+  .assure__card .h3{align-self:center}
+  .assure__card p{grid-column:2;margin-top:8px}
+  .live__photo{margin-top:36px}
+  /* ★So 9/22「『昨年の』の文字がスマホで形と被って見えない」→ 写真の飾りはPCの1080px幅に合わせた大きさで、
+     375pxでは写真の3割を占め、下に34px はみ出してキャプションに重なっていた。小さくして、はみ出しを14pxに */
+  .live__photo .kv i:nth-of-type(1){--s:56px!important;--x:-16px!important;--y:calc(100% - 42px)!important}
+  .live__photo .kv i:nth-of-type(2){--s:40px!important;--x:34px!important;--y:calc(100% - 26px)!important}
+  .live__photo .kv i:nth-of-type(3){--s:56px!important;--x:calc(100% - 36px)!important;--y:-20px!important}
+  .live__cap{margin-top:20px}
+  .live__photo img{aspect-ratio:4/3;border-radius:18px}
+  .live__table,.live__table tbody,.live__table tr,.live__table td{display:block;width:100%}
+  .live__table thead{display:none}
+  .live__table tbody tr{padding:20px;border-top:1px solid var(--line)}
+  .live__table tbody tr:first-child{border-top:0}
+  .live__table tbody td{border:0;padding:0}
+  /* ★So 9/22「スマホの時の表が少し見えにくい」→ 見出しの行が消える幅では、
+     日時・名称・内容が同じ太さ・同じ大きさで2px間隔に積まれて一塊に見えていた。
+     日時は節の他の項目と同じ札の形にし、名称を一段大きく、間を空ける */
+  .live__table .live__when{display:inline-block;width:auto;background:var(--cream);border:1.5px solid var(--line2);border-radius:999px;
+    padding:3px 14px;font-size:var(--fs-sm);line-height:1.7}
+  .live__name{display:block;margin-top:14px;font-size:20px;line-height:1.6}
+  .live__cast{margin-top:12px}
+  .live__table tbody td:last-child{display:block;margin-top:14px;color:var(--ink2)}
+  .live__name{white-space:normal;word-break:keep-all;overflow-wrap:anywhere}
+  .live__info div{grid-template-columns:minmax(0,1fr);gap:8px}
+  .inst{grid-template-columns:repeat(2,minmax(0,1fr));gap:30px 20px;margin-top:34px}
+  .inst img{max-width:150px;box-shadow:0 0 0 6px var(--ring,#FFF6CC)}
+  .inst span{margin-top:14px;font-size:var(--fs)}
+  .restimg{margin-top:26px;padding:20px 16px 24px;border-radius:22px}
+  /* ★So 9/22「スマホの時は不自然」→ 縦積みの絵のすぐ上下に楽器が落ちてくるので、
+     絵との間を空け（上18px・下16px）、楽器を小さくして左右の寄せ方も変える */
+  .restimg__ics{height:52px}
+  .restimg__ics--t{margin-bottom:18px}
+  .restimg__ics--b{margin-top:16px}
+  .restimg__ic--vn{--w:44px;left:2%;bottom:0}
+  .restimg__ic--fl{--w:38px;right:8%;top:0}
+  .restimg__ic--vc{--w:40px;left:22%;top:0}
+  .restimg__ic--pf{--w:46px;right:2%;bottom:0}
+  .restimg__list{grid-template-columns:minmax(0,1fr);gap:14px}
+  .restimg__list li{display:grid;grid-template-columns:108px minmax(0,1fr);gap:18px;align-items:center}
+  .restimg__list p{margin:0;text-align:left}
+  .restimg__fig img{border-radius:16px}
+  /* 流れは縦に積み、絵を左・文を右に。矢印の代わりに番号で順を追う */
+  .gift__grid{grid-template-columns:minmax(0,1fr);gap:18px;margin-top:36px}
+  .gift{padding:32px 22px 28px}
+  .access__grid{grid-template-columns:minmax(0,1fr);margin-top:36px}
+  .spec{padding:4px 20px}
+  .spec div{grid-template-columns:minmax(0,1fr);gap:2px;padding:16px 0}
+  .access__map{min-height:260px}
+  .faq__list{margin-top:32px}
+  .faq summary{grid-template-columns:12px minmax(0,1fr) 20px;gap:14px;padding:18px 2px;font-size:var(--fs)}
+  .faq summary::before{width:12px;height:12px}
+  .faq__a p{padding:0 8px 20px 28px;font-size:var(--fs)}
+  .about__grid{grid-template-columns:minmax(0,1fr);gap:0}
+  /* So 9/15「スマホは見出し → 写真 → 本文の順」 */
+  .about__text{display:contents}
+  .about .h2{order:-1}
+  .about__photo{margin-top:28px}
+  .about__body{margin-top:26px}
+  .photocard{grid-template-columns:minmax(0,1fr);grid-template-areas:"catch" "photo";margin-top:18px;padding:32px 22px 28px}
+  .photocard__catch{text-align:center}
+  .photocard__photo{margin-top:18px}
+  .closing__panel{padding:40px 22px}
+  .closing__btns{flex-direction:column;align-items:stretch}
+  .closing__btns .btn{width:100%}
+}
+@media (max-width:900px){
+  .kv--tl{transform:scale(.5);transform-origin:0 0;top:0!important}
+  .kv--tr{transform:scale(.5);transform-origin:100% 0;top:0!important}
+  .kv--br{transform:scale(.5);transform-origin:100% 100%;bottom:0!important}
+}
+@media (max-width:480px){
+  .btn{font-size:16px;min-height:58px;padding:0 18px 0 22px;letter-spacing:.03em;gap:8px}
+  .btn svg{width:15px;height:15px}
+}
+
+/* ══════ LPの基本の作り（So FB 2026-09-14「初歩的なヘッダー固定、アニメーションとかはやってよ」） ══════ */
+:root{--head-h:84px;--ease:cubic-bezier(.22,.61,.36,1);--pop:cubic-bezier(.34,1.56,.64,1)}
+@media (max-width:900px){ :root{--head-h:66px} }
+[id]{scroll-margin-top:calc(var(--head-h) + 6px)}   /* ページ内リンクで見出しが固定ヘッダーの下に隠れない */
+
+/* ── 固定ヘッダー：動いたら地を敷いて細くする ── */
+.hd.is-scrolled{background:rgba(253,249,246,.9);-webkit-backdrop-filter:saturate(1.3) blur(12px);backdrop-filter:saturate(1.3) blur(12px);
+  box-shadow:0 1px 0 rgba(60,40,20,.07),0 10px 26px -20px rgba(60,40,20,.45)}
+@media (min-width:901px){
+  .hd.is-scrolled .hd__in{height:68px}
+  .hd.is-scrolled .hd__logo img{height:38px}
+}
+.hd__cta{min-height:46px;padding:0 20px 0 24px;font-size:15px;flex:none}
+.hd__cta svg{width:16px;height:16px}
+/* ★So FB 9/15「スマホのヘッダーもロゴ＋CTA。画面下の追従CTAも残す」→ 900px以下も出して小さくする。
+   375pxでロゴ161px＋ボタンが入るよう、420px以下は下向きの矢印を外す（飾り。行き先は文字で分かる） */
+@media (max-width:900px){
+  .hd__nav{display:none}
+  .hd__in{gap:12px}
+  .hd__cta{min-height:44px;padding:0 16px;gap:6px;font-size:14px;letter-spacing:.04em;box-shadow:0 8px 16px -12px rgba(60,140,55,.9)}
+  .hd__cta svg{width:14px;height:14px}
+}
+@media (max-width:420px){
+  .hd__cta{padding:0 14px;font-size:13px}
+  .hd__cta svg{display:none}
+}
+@media (max-width:359px){   /* 320pxで9px溢れた → ロゴだけ30pxに（押せる高さは44pxのまま） */
+  .hd__logo img{height:30px}
+  .hd__logo{padding:7px 0}
+  .fv__m-tr{display:none!important}   /* FV右上の角の図形が日付の右端（281px）に掛かる */
+}
+
+/* ── スクロールで順に出す（.fx は check.py の撮影で hh-in が付いて出し切られる） ── */
+html.fx-on .fx{opacity:0;transform:translateY(26px);
+  transition:opacity .8s var(--ease) var(--fx-d,0ms),transform .9s var(--ease) var(--fx-d,0ms),scale .9s var(--pop) var(--fx-d,0ms),
+             translate .35s var(--ease),box-shadow .35s var(--ease)}
+html.fx-on .fx[data-fx="left"]{transform:translateX(-34px)}
+html.fx-on .fx[data-fx="rise"]{transform:translateY(46px) rotate(-1.2deg)}
+html.fx-on .fx[data-fx="scale"]{transform:scale(.88)}
+html.fx-on .fx[data-fx="pop"]{transform:none;scale:.15}
+html.fx-on .fx.hh-in{opacity:1;transform:none;scale:1}
+
+/* ── 図形が常に動く（So FB 9/14「背景のシェープは常時動く感じのアニメーションが欲しい」→「90度ずつ回る＋漂う」）
+   四分円・半円がマスの中で数秒おきにくるっと向きを変え（タイルが回る）、ゆっくり上下する。
+   周期は素数っぽくずらし、遅れは負の値で初期位相もずらす（同じ周期だと機械的に見える／lp-polish）。
+   rotate と translate は別のプロパティなので、登場の scale（.fx pop）とぶつからない。動きを減らす設定では止める */
+/* ★So FB 9/14（2回目）「一気に動きすぎ。1個か2個ずつ。頻度も高すぎる」
+   前：37個が17〜31秒周期で常に回り、全部が上下にも漂っていた（FVの中で0.6秒に1回どこかが動く）。
+   今：まとまり（FV・締め・各節）の中で1つずつ順番に回す。1つの図形は80秒に1回だけ、1.4秒かけて90度回る。
+   並び（--i）ごとに8秒ずつずらすので、画面の中で動くのは8秒に1個（まとまりの境目で2個）。漂いはやめた。
+   --i は HTML に書く（nth-child だと左右の列で同じ番号が同時に回る） */
+@keyframes kv-turn{
+  0%{rotate:0deg} .4375%{rotate:90deg} 25%{rotate:90deg} 25.4375%{rotate:180deg}
+  50%{rotate:180deg} 50.4375%{rotate:270deg} 75%{rotate:270deg} 75.4375%{rotate:360deg} 100%{rotate:360deg}
+}
+@media (prefers-reduced-motion:no-preference){
+  .fv__deco i,.fv__mdeco i,.fvc__kv i,.fv__mk i,.closing__deco i[class],.sec > .kv i,.live__photo .kv i{
+    animation:kv-turn 320s cubic-bezier(.55,0,.25,1.15) calc(var(--i,0) * 8s - 72s) infinite}
+}
+
+/* ── 触れたときの反応（タップ後に残らないよう hover のある端末だけ） ── */
+.inst img{transition:scale .45s var(--pop)}
+@media (hover:hover){
+  .assure__card:hover,.gift:hover{translate:0 -6px;box-shadow:0 26px 50px -30px rgba(70,50,30,.45)}
+  .inst li:hover img{scale:1.05}
+}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--purple);outline-offset:3px;border-radius:8px}
+
+/* ★9/15 So「スマホの時、CTAが下に映るのって指示あったっけ？なければ消して良い」→ 画面下の追従CTAを外した。
+   9/14 の「他にも」として私が入れた物で、ヘッダー（ロゴ＋「会場へのアクセス」）が常に出ているので同じボタンが2つ見えていた。
+   決めごと mobile-sticky-cta から外れる理由：ヘッダーの固定CTAがスマホでも常に見えている */
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  html.fx-on .fx{opacity:1!important;transform:none!important;scale:1!important;transition:none!important}
+  .hd,.hd__in,.hd__logo img{transition:none!important}
+}
+</style>
+<!-- JSが動く時だけ演出とメニューを有効にする（動かない環境では最初から全部見える） -->
+<script>document.documentElement.classList.add("js","fx-on");if("scrollRestoration" in history)history.scrollRestoration="manual"</script>
+</head>
+<body>
+
+<header class="hd" id="hd">
+  <div class="wrap hd__in">
+    <a class="hd__logo" href="#top" aria-label="ページの先頭へ"><img src="img/logo.png" width="800" height="179" alt="Suzuki Method 80th Anniversary／音楽を通して心と能力を育む Suzuki Method スズキ・メソード"></a>
+    <nav class="hd__nav" aria-label="ページ内">
+      <a href="#concert">演奏スケジュール</a><a href="#booth">楽器体験</a><a href="#faq">よくある質問</a>
+    </nav>
+    <a class="btn btn--main hd__cta" href="#access">会場へのアクセス<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8l5 5 5-5"/></svg></a>
+  </div>
+</header>
+
+<main>
+<!-- ① ファーストビュー -->
+<!-- ★背景の図形：So FB 9/14「少し減らしてバランスよく」15→12、「もう少し減らして良さそう」12→9（左の列は1つおき・右の列は上下だけ・下端の欠片は残す） -->
+<section class="fv" id="top">
+  <div class="fv__deco" aria-hidden="true">
+    <div class="kv col" style="inset:0">
+      <i class="sp hr fx" data-fx="pop" style="--i:2;--fx-d:420ms;--x:53px;--y:192px;--s:111px"></i>
+      <i class="gy q4 fx" data-fx="pop" style="--i:4;--fx-d:1190ms;--x:53px;--y:414px;--s:111px"></i>
+      <i class="ls q1 fx" data-fx="pop" style="--i:6;--fx-d:1080ms;--x:53px;--y:636px;--s:111px"></i>
+      <i class="pk hl fx" data-fx="pop" style="--i:8;--fx-d:475ms;--x:53px;--y:858px;--s:111px"></i>
+      <i class="yl q4 fx" data-fx="pop" style="--i:9;--fx-d:1300ms;--x:1276px;--y:-20px;--s:111px"></i>
+      <i class="sp q3 fx" data-fx="pop" style="--i:10;--fx-d:1245ms;--x:1276px;--y:646px;--s:111px"></i>
+      <i class="yl ht fx" data-fx="pop" style="--i:11;--fx-d:530ms;--x:1276px;--y:868px;--s:111px"></i>
+    </div>
+    <div class="kv" style="inset:0">
+      <i class="sp q1 fx" data-fx="pop" style="--i:1;--fx-d:695ms;--x:1114px;--y:175px;--s:150px"></i>
+      <i class="yp ht fx" data-fx="pop" style="--i:3;--fx-d:1025ms;--x:846px;--y:820px;--s:150px"></i>
+      <i class="ls q2 fx" data-fx="pop" style="--i:5;--fx-d:860ms;--x:996px;--y:760px;--s:130px"></i>
+      <i class="pk q1 fx" data-fx="pop" style="--i:7;--fx-d:1355ms;--x:1126px;--y:790px;--s:150px"></i>
+    </div>
+  </div>
+  <!-- ★So FB 9/15「スマホのときFVの背景に形がない」→ PCの図形（1440px幅の列）はスマホで隠れるので、スマホ用に6つだけ置く。
+       文字に掛からない所だけ（実測375px：日付の右端281px・見出しの右端274px・CTAの下に80pxの余白）。
+       下端の半円は左端に置くと、次の節の左上の図形と縦に固まったので 34% の位置 -->
+  <div class="kv fv__mdeco" aria-hidden="true">
+    <i class="yl q4 fx fv__m-tr" data-fx="pop" style="--i:1;--fx-d:300ms;--s:56px;left:auto;right:0;top:0"></i>
+    <i class="ls ht fx" data-fx="pop" style="--i:4;--fx-d:700ms;--s:72px;left:34%;top:auto;bottom:-36px"></i>
+    <i class="pk q1 fx" data-fx="pop" style="--i:6;--fx-d:820ms;--s:64px;left:auto;right:0;top:auto;bottom:0"></i>
+  </div>
+  <div class="wrap fv__grid">
+    <div class="kv fv__mk" aria-hidden="true"><i class="sp hl fx" data-fx="pop" style="--i:3;--fx-d:560ms;--x:0;--y:0;--s:72px"></i></div>
+    <div class="fv__info">
+    <div class="fv__band fx" data-fx="left" style="--fx-d:40ms">
+      <p class="fv__when"><span class="fv__date"><b>10</b>月<b>10</b>日（土）・<b>11</b>日（日）</span><span class="fv__time"><b>11:00</b>–<b>17:00</b></span><span class="fv__place"><span class="nb">アークヒルズ</span>　<wbr><span class="nb">アーク・カラヤン広場</span></span></p>
+    </div>
+    <ul class="conds" aria-label="参加の条件">
+      <li class="fx" style="--fx-d:210ms"><span class="ic ic--free" aria-hidden="true"></span><span class="conds__t"><b>入場無料</b><span class="vh">・</span><small>事前予約不要・参加費不要</small></span></li>
+      <li class="fx" style="--fx-d:280ms"><span class="ic ic--inout" aria-hidden="true"></span><span class="conds__t"><b>出入り自由</b></span></li>
+      <li class="fx" style="--fx-d:350ms"><span class="ic ic--age3" aria-hidden="true"></span><span class="conds__t"><b>3歳前後から</b><small>体験いただけます</small></span></li>
+    </ul>
+    </div>
+    <p class="fv__tag fx" style="--fx-d:360ms">ARK Hills Music Week 2026｜音の遊び場</p>
+    <h1 class="fv__h1 fx" style="--fx-d:380ms">カラヤン広場で<br><span class="mk">はじめての楽器</span>に<br>出会う2日間</h1>
+    <p class="fv__lead fx" style="--fx-d:500ms">カラヤン広場に敷かれた芝生の広場で、スズキ・メソードの子どもたち・卒業生・指導者が演奏します。演奏を楽しんだあとは、ヴァイオリン・チェロ・フルート・ピアノに触れてみましょう。</p>
+    <div class="fv__cta fx" style="--fx-d:620ms">
+      <a class="btn btn--main" href="#access">会場へのアクセス<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8l5 5 5-5"/></svg></a>
+      <a class="btn btn--sub" href="#concert">演奏スケジュールを見る<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8l5 5 5-5"/></svg></a>
+    </div>
+    <div class="fv__photo fx" data-fx="rise" style="--fx-d:260ms"><div class="kv fvc__kv" aria-hidden="true"><i class="yp q2" style="--i:2;--x:-3%;--y:3%;--s:34%"></i><i class="gy q4" style="--i:5;--x:76%;--y:66%;--s:26%"></i></div><figure class="fvc__main"><img src="img/fv.jpg" width="1120" height="852" fetchpriority="high" alt="笑顔の先生のそばで、小さな子がはじめてチェロを構えている"></figure><figure class="fvc__sub"><img src="img/fv-piano.jpg" width="960" height="720" alt="お母さんと一緒にピアノの鍵盤に触れる男の子"></figure><img class="fvc__cut" src="img/fv-cut.webp" width="685" height="900" alt="先生に支えられて、はじめてヴァイオリンを構える女の子"></div>
+  </div>
+</section>
+
+<!-- ② 3つの安心 -->
+<section class="sec assure" id="assure">
+  <div class="kv kv--tl" aria-hidden="true" style="left:max(0px,calc(50% - 640px));top:40px;width:180px;height:180px">
+    <i class="yp q3 fx" data-fx="pop" style="--i:0;--x:0;--y:0;--s:66px"></i><i class="sp q2 fx" data-fx="pop" style="--i:1;--x:66px;--y:0;--s:66px"></i><i class="yl hb fx" data-fx="pop" style="--i:2;--x:0;--y:66px;--s:66px"></i>
+  </div>
+  <div class="wrap">
+    <h2 class="h2 fx">思い立ったら<wbr>お立ち寄り<wbr>いただけます</h2>
+    <ol class="assure__list">
+      <li class="assure__card fx" style="--c:var(--green)"><h3 class="h3">予約・申込不要</h3><p>当日広場に来ていただくだけです。参加費もかかりません。</p></li>
+      <li class="assure__card fx" style="--c:var(--sky)"><h3 class="h3">途中入場も<wbr>途中退出も自由</h3><p>演奏の途中でも体験の途中でもご自由に出入りいただけます。お子さまの機嫌に合わせて15分だけでも大丈夫です。</p></li>
+      <li class="assure__card fx" style="--c:var(--yellow)"><h3 class="h3">のびのびと<wbr>音楽を<wbr>楽しめる<wbr>芝生の広場</h3><p>芝生の広場で、のびのびと音楽を楽しめます。小さなお子さま連れでも、どうぞ気軽にお越しください。</p></li>
+    </ol>
+  </div>
+</section>
+
+<!-- ③ 演奏会 -->
+<section class="sec live" id="concert">
+  <div class="wrap">
+    <h2 class="h2 fx">広場の芝生の上で、<wbr>すぐそばで<wbr>音楽が生まれる30分</h2>
+    <p class="lead fx">芝生コンサートではステージと客席を区切らず、子どもから大人までヴァイオリン、チェロ、フルートの奏者が広場の中に散らばって、みなさんと同じ場所から演奏します。</p>
+    <!-- ★クライアントFB 9/19：表はリード文の次（写真より前）。見出し列を「プログラム名」→「コンサート」、
+         各行の名称と内容を差し替え。出演の項目は削除。
+         ★先方FB 9/22「youtubeのlive配信は一旦除外」→ 各コンサートの「YouTube LIVE配信予定」の札と
+         ライブ配信の枠を外した（主催者に映り込みを確認中）。CSS（.live__cast / .live__yt / .livest）は
+         戻す時のために残してある -->
+    <table class="live__table fx">
+      <thead><tr><th scope="col">日時</th><th scope="col">コンサート</th><th scope="col">内容</th></tr></thead>
+      <tbody>
+        <tr><td class="live__when">10/10（土）<wbr><b>11:15–11:45</b></td><td class="live__name">スズキチルドレン <wbr>アンサンブル <wbr><span class="nb">～芝生コンサート～</span></td><td>子どもたち・OB・OG・指導者 <wbr>約100名による<wbr>アンサンブル</td></tr>
+        <tr><td class="live__when">10/11（日）<wbr><b>11:00–11:30</b></td><td class="live__name">スズキ・メソード <wbr>コンサート <wbr><span class="nb">～滝前コンサート～</span></td><td>子どもたちによる、毎年恒例のコンサート　<wbr>ヴァイオリン、チェロ、フルート、<wbr>それぞれの魅力もお楽しみください</td></tr>
+      </tbody>
+    </table>
+    <dl class="live__info">
+      <div class="fx"><dt>曲目</dt><dd>スズキ・メソードの教材から6〜7曲を予定しています。どこかで聴いたことのあるメロディーもきっとあります。フィナーレは、子どもたちが一番はじめに学ぶ『キラキラ星変奏曲』。</dd></div>
+    </dl>
+    <!-- ★クライアントFB 9/19「この下にコンサートの写真を配置。キャプション例：昨年の『滝前コンサート』より」
+         → 写真（支給 IMG_8637）を表・曲目の下へ移し、キャプションを添えた。
+         これで「舞台の上の演奏＝本文と逆の絵」という指摘（_check.json image-fit）も昨年の記録として読める -->
+    <figure class="live__fig fx" data-fx="rise">
+      <div class="live__photo">
+        <img src="img/concert.jpg" width="1800" height="760" loading="lazy" alt="半円の屋根の下で子どもたちが並んで演奏し、広場で大勢が聴いている">
+        <div class="kv" aria-hidden="true">
+          <i class="yl q1 fx" data-fx="pop" style="--i:0;--x:-34px;--y:calc(100% - 64px);--s:98px"></i>
+          <i class="ls q2 fx" data-fx="pop" style="--i:2;--x:64px;--y:calc(100% - 30px);--s:64px"></i>
+          <i class="yp q3 fx" data-fx="pop" style="--i:4;--x:calc(100% - 64px);--y:-34px;--s:98px"></i>
+        </div>
+      </div>
+      <figcaption class="live__cap">昨年の「滝前コンサート」より</figcaption>
+    </figure>
+    <dl class="live__info">
+      <div class="fx"><dt>保護者の方へ</dt><dd>音楽はこんなに身近で、小さな子どもから大人まで一緒に演奏できるんだと感じていただけるコンサートです</dd></div>
+    </dl>
+  </div>
+  <div class="kv kv--br" aria-hidden="true" style="right:max(0px,calc(50% - 700px));bottom:26px;width:140px;height:140px">
+    <i class="yl q1 fx" data-fx="pop" style="--i:1;--x:70px;--y:0;--s:70px"></i><i class="yp q4 fx" data-fx="pop" style="--i:3;--x:0;--y:70px;--s:70px"></i><i class="sp q1 fx" data-fx="pop" style="--i:5;--x:70px;--y:70px;--s:70px"></i>
+  </div>
+</section>
+
+<!-- ④ ブース -->
+<section class="sec booth" id="booth">
+  <div class="kv kv--tl" aria-hidden="true" style="left:0;top:0;width:200px;height:250px">
+    <i class="yl q3 fx" data-fx="pop" style="--i:0;--x:0;--y:0;--s:100px"></i><i class="sp q4 fx" data-fx="pop" style="--i:2;--x:0;--y:100px;--s:100px"></i>
+  </div>
+  <div class="kv kv--tr" aria-hidden="true" style="right:0;top:0;width:260px;height:140px">
+    <i class="ls ht fx" data-fx="pop" style="--i:1;--x:0;--y:-60px;--s:130px"></i><i class="sp q4 fx" data-fx="pop" style="--i:3;--x:130px;--y:-60px;--s:130px"></i>
+  </div>
+  <div class="wrap">
+    <h2 class="h2 fx">演奏のあとは<wbr>そのまま楽器体験へ</h2>
+    <!-- ★クライアントFB 9/19「以下はもう少し簡潔に」→ リードと本文を短く、体験場所の注記は削除（行ってからで大丈夫） -->
+    <p class="lead fx">聴くだけではありません。広場で楽器に触れて、鳴らしてみましょう。</p>
+
+    <div class="sub" id="taiken">
+      <div class="sub__head fx">
+        <span class="sub__mark" aria-hidden="true"><i class="kvm yp q3" style="left:0;top:0"></i><i class="kvm sp q2" style="left:17px;top:0"></i><i class="kvm ls q4" style="left:0;top:17px"></i></span>
+        <h3 class="h3">楽器に触ったことがない<wbr>お子さまでも<wbr>楽器を体験できます</h3>
+      </div>
+      <!-- ★So FB 9/14「この丸写真は体験会の時の写真を使いたい」→ 公式サイトの写真から支給の体験会写真へ（IMG_3413・3501・3361・3451 を人物の位置で正方形に切り出し） -->
+      <ul class="inst">
+        <li class="fx" data-fx="scale" style="--ring:#FFF3C4"><img src="img/inst-violin-event.jpg" width="520" height="520" loading="lazy" alt="しゃがんだ先生にヴァイオリンの構え方を教わる女の子"><span>ヴァイオリン</span></li>
+        <li class="fx" data-fx="scale" style="--ring:#DDF3FB"><img src="img/inst-cello-event.jpg" width="520" height="520" loading="lazy" alt="先生のひざの前でチェロを弾く子ども"><span>チェロ</span></li>
+        <li class="fx" data-fx="scale" style="--ring:#EEF4C6"><img src="img/inst-flute-event.jpg" width="520" height="520" loading="lazy" alt="先生に教わりながら笑顔でフルートを構える女の子"><span>フルート</span></li>
+        <li class="fx" data-fx="scale" style="--ring:#FBE3EC"><img src="img/inst-piano-event.jpg" width="520" height="520" loading="lazy" alt="先生と一緒に電子ピアノを弾く男の子"><span>ピアノ</span></li>
+      </ul>
+      <p class="taiken__body fx">指導者が横につきますので、楽器を触ったことがなくても大丈夫です。</p>
+    </div>
+
+    <div class="sub" id="restaurant">
+      <div class="sub__head fx">
+        <span class="sub__mark" aria-hidden="true"><i class="kvm yl q3" style="left:0;top:0"></i><i class="kvm pk q2" style="left:17px;top:0"></i><i class="kvm sp q4" style="left:0;top:17px"></i></span>
+        <h3 class="h3">♪ 音楽レストラン</h3>
+      </div>
+      <!-- ★クライアントFB 9/19：本文はトピックス掲載分に差し替え。「初めての企画でやりながら変わるかもしれないのと、
+           想像の余地を残したいので、あまり詳しく書かないでください」→ メニュー（8曲）・シェフのひとこと・シェフのセリフ例・
+           演奏編成・「2回目のご注文も可能です」「同じ曲でも組み合わせで響きが変わります」はカット。
+           流れ（5段の手順）は「流れ」として見せず、缶バッジをつくる／メニューから1曲えらぶ／生演奏がとどく の3枚と
+           4つの楽器の絵を散らしたイメージ画像として置く -->
+      <p class="rest__catch fx">メニューから曲を選んで、オーダー！</p>
+      <p class="rest__lead fx">缶バッジをつくったら、<wbr>音楽レストランの食券をもらって、<wbr>メニューから好きな曲をオーダー。<br>すると……<br><b class="rest__punch">生演奏がやってきます♪</b><br>音楽家とやり取りし、<wbr>生の音を受け取る体験です。</p>
+      <div class="restimg fx" data-fx="rise">
+        <div class="restimg__ics restimg__ics--t" aria-hidden="true">
+          <span class="restimg__ic restimg__ic--vn"></span>
+          <span class="restimg__ic restimg__ic--fl"></span>
+        </div>
+        <ul class="restimg__list">
+          <li><span class="restimg__fig"><img src="img/rest-step1.webp" width="480" height="480" alt="" loading="lazy" decoding="async"></span><p>缶バッジをつくる</p></li>
+          <li><span class="restimg__fig"><img src="img/rest-step3.webp" width="480" height="480" alt="" loading="lazy" decoding="async"></span><p>メニューから<wbr>1曲えらぶ</p></li>
+          <li><span class="restimg__fig"><img src="img/rest-step5.webp" width="480" height="480" alt="" loading="lazy" decoding="async"></span><p>生演奏がとどく</p></li>
+        </ul>
+        <div class="restimg__ics restimg__ics--b" aria-hidden="true">
+          <span class="restimg__ic restimg__ic--vc"></span>
+          <span class="restimg__ic restimg__ic--pf"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub" id="gift">
+      <div class="sub__head fx">
+        <span class="sub__mark" aria-hidden="true"><i class="kvm sp q3" style="left:0;top:0"></i><i class="kvm yp q2" style="left:17px;top:0"></i><i class="kvm yl q4" style="left:0;top:17px"></i></span>
+        <h3 class="h3">ご来場特典あります</h3>
+      </div>
+      <div class="gift__grid">
+        <div class="gift fx">
+          <div class="gift__vis"><img class="gift__badge" src="img/badge-photo.webp" width="640" height="565" loading="lazy" alt="参加者缶バッジ3つ（フルート・ピアノ・ヴァイオリンを弾く子どもの絵）"></div>
+          <h4>缶バッジ</h4>
+          <p>ブースで自分でつくった缶バッジをそのまま持ち帰れます。完成すると音楽レストランの食券がもらえます。</p>
+          <span class="gift__qty">お一人様１回、<wbr>各日先着<wbr>150名様</span>
+        </div>
+        <div class="gift fx">
+          <div class="gift__vis"><img class="gift__illust" src="img/gift-photocard.webp" width="440" height="505" loading="lazy" alt="記念フォトカードのイラスト"></div>
+          <h4>記念フォトカード</h4>
+          <p>楽器体験のあと簡単なアンケートにご協力いただいた方に、お子さまが好きな楽器と一緒にチェキで記念撮影。その場でオリジナル台紙に貼ってお渡し。</p>
+          <span class="gift__qty">各日100名分。<wbr>アンケートに<wbr>ご回答いただいた方に<wbr>お渡しします。<wbr>なくなり次第終了。</span>
+        </div>
+      </div>
+      <div class="photocard fx">
+        <p class="photocard__catch">楽器との出会いを、<wbr>思い出の一枚に。</p>
+        <div class="photocard__photo"><figure class="gift__cheki" style="margin:0"><img src="img/photocard-face.jpg" width="540" height="560" loading="lazy" alt="チェロを構える男の子"></figure></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ⑤ 会場・アクセス -->
+<section class="sec access" id="access">
+  <div class="wrap">
+    <h2 class="h2 fx">会場・アクセス</h2>
+    <div class="access__grid">
+      <dl class="spec fx">
+        <div><dt>会場</dt><dd><span class="nb">アーク・カラヤン広場</span><wbr><span class="nb">（サントリーホール前）。</span></dd></div>
+        <div><dt>開催時間</dt><dd><span class="nb">10月10日（土）・11日（日）</span><wbr><span class="nb">11:00－17:00</span></dd></div>
+        <div><dt>アクセス</dt><dd><ul><li>東京メトロ南北線<wbr>「六本木一丁目駅」<wbr>3番出口より<wbr>徒歩1分</li><li>東京メトロ銀座線<wbr>「溜池山王駅」<wbr>13番出口より<wbr>徒歩1分</li></ul></dd></div>
+        <div><dt>雨天時</dt><dd>雨天の場合は、一部プログラムが中止となる可能性があります。あらかじめご了承ください。</dd></div>
+      </dl>
+      <iframe class="access__map fx" title="アーク・カラヤン広場の地図" src="https://www.google.com/maps?q=%E3%82%A2%E3%83%BC%E3%82%AF%E3%83%BB%E3%82%AB%E3%83%A9%E3%83%A4%E3%83%B3%E5%BA%83%E5%A0%B4&amp;output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+    </div>
+    <div class="access__more fx">
+      <p>会場では、<wbr>ほかにも<wbr>さまざまな<wbr>音楽体験を<wbr>お楽しみいただけます</p>
+      <a class="btn btn--sub" href="https://www.arkhills.com/events/2026/10/0216.html" target="_blank" rel="noopener">アークヒルズの公式<wbr>イベントページへ<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8v8M16 4L6.5 13.5M13 16H4V7"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<!-- ⑥ よくある質問 -->
+<section class="sec faq" id="faq" style="background:#fff">
+  <div class="wrap">
+    <h2 class="h2 fx">よくある質問</h2>
+    <div class="faq__list">
+      <details class="fx" style="--c:var(--sky)"><summary>予約は必要ですか<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5l5 5-5 5"/></svg></summary><div class="faq__a"><p>不要です。当日直接広場へお越しください。</p></div></details>
+      <details class="fx" style="--c:var(--purple)"><summary>参加費はかかりますか<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5l5 5-5 5"/></svg></summary><div class="faq__a"><p>かかりません。同じ広場で開催される他社のワークショップには有料のものもあります。</p></div></details>
+      <details class="fx" style="--c:var(--yellow)"><summary>何歳から<wbr>参加できますか<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5l5 5-5 5"/></svg></summary><div class="faq__a"><p>楽器体験は3歳前後からしていただけます。演奏を聴くだけであれば年齢制限はありません。</p></div></details>
+      <details class="fx" style="--c:var(--green)"><summary>楽器を<wbr>触ったことが<wbr>なくても<wbr>大丈夫ですか<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5l5 5-5 5"/></svg></summary><div class="faq__a"><p>もちろん大丈夫です。初めて楽器に触れる方にも楽しんでいただけるよう、そばで丁寧にサポートします。</p></div></details>
+      <details class="fx" style="--c:var(--pink)"><summary>途中で<wbr>帰っても<wbr>大丈夫ですか<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5l5 5-5 5"/></svg></summary><div class="faq__a"><p>はい。演奏中でも体験の途中でもご自由にどうぞ。</p></div></details>
+      <details class="fx" style="--c:var(--lime)"><summary>子どもが<wbr>泣いたり、<wbr>じっとして<wbr>いられなかったりしても<wbr>大丈夫ですか？<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5l5 5-5 5"/></svg></summary><div class="faq__a"><p>屋外の芝生広場でのイベントです。小さなお子さま連れでも、どうぞ気兼ねなくお楽しみください。</p></div></details>
+            <details class="fx" style="--c:var(--orange)"><summary>雨の場合は<wbr>どうなりますか<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5l5 5-5 5"/></svg></summary><div class="faq__a"><p>雨天の場合は、一部プログラムが中止となる可能性があります。あらかじめご了承ください。</p></div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ⑦ スズキ・メソードについて -->
+<section class="sec about" id="about">
+  <div class="wrap about__grid">
+    <div class="about__photo fx" data-fx="left"><img src="img/about.jpg" width="1200" height="800" loading="lazy" alt="ヴァイオリンを構える小さな子どもたち"></div>
+    <div class="about__text">
+      <h2 class="h2 fx">どの子も育つ　<wbr>育て方ひとつ</h2>
+      <p class="about__body fx">スズキ・メソードは世界74の国と地域に広がる音楽教育です。母語を覚えるように聴くことから音楽を学びます。今回演奏する子どもたちも最初はキラキラ星から始めました。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ⑧ フッターCTA -->
+<section class="sec closing" id="closing">
+  <div class="closing__deco" aria-hidden="true">
+    <div class="row"><i class="yl fx" data-fx="pop" style="--i:0"></i><i class="sp q3 fx" data-fx="pop" style="--i:2"></i><i></i><i class="ls hb fx" data-fx="pop" style="--i:4"></i><i class="yp q2 fx" data-fx="pop" style="--i:6"></i><i></i><i class="pk q4 fx" data-fx="pop" style="--i:8"></i><i class="gy ht fx" data-fx="pop" style="--i:10"></i></div>
+    <div class="row"><i class="sp q1 fx" data-fx="pop" style="--i:1"></i><i></i><i class="yl hb fx" data-fx="pop" style="--i:3"></i><i class="pk fx" data-fx="pop" style="--i:5"></i><i class="ls q2 fx" data-fx="pop" style="--i:7"></i><i class="yp q1 fx" data-fx="pop" style="--i:9"></i><i></i><i class="gy q4 fx" data-fx="pop" style="--i:11"></i></div>
+  </div>
+  <div class="wrap">
+    <div class="closing__panel fx" data-fx="rise">
+      <p class="closing__copy">10月10日（土）・11日（日）は<wbr>アーク・カラヤン広場へ。<br>聴いて、鳴らして、<wbr>持ち帰る2日間。</p>
+      <div class="closing__btns">
+        <a class="btn btn--main" href="#access">会場への<wbr>アクセスを見る<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8l5 5 5-5"/></svg></a>
+        <!-- ★So 9/22：.ics に替えたが「Googleのボタンに戻す」→ 元のGoogleカレンダーの追加リンクへ。
+     🚨 このリンクはブラウザがGoogleにログインしていないとサインイン画面に飛ぶ（iPhoneのUAで302を実測）。
+     アプリ内ブラウザ（Meet・LINE等）はSafari/Chromeとセッションが別なので、ログイン済みでも何も起きないことがある。
+     iPhoneは calendar.google.com を直接踏むとアプリが横取りして予定が入らないので、中継ページ gcal.html から飛ばす -->
+        <a class="btn btn--sub" href="gcal.html" target="_blank" rel="noopener">Googleカレンダーに追加</a>
+        <a class="btn btn--sub" href="https://www.arkhills.com/events/2026/10/0216.html" target="_blank" rel="noopener">アークヒルズ公式<wbr>イベントページ<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8v8M16 4L6.5 13.5M13 16H4V7"/></svg></a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+
+<footer class="ft"><img src="img/logo.png" width="800" height="179" alt="Suzuki Method スズキ・メソード" loading="lazy"></footer>
+
+<script>
+/* FAQの開閉をなめらかに（WAAPI）。details の既定は瞬間的に開く */
+document.querySelectorAll('.faq details').forEach(function(d){
+  var s=d.querySelector('summary'), a=d.querySelector('.faq__a');
+  s.addEventListener('click',function(e){
+    e.preventDefault();
+    if(d.dataset.busy) return;
+    d.dataset.busy='1';
+    if(!d.open){
+      d.open=true;
+      var h=a.scrollHeight;
+      a.animate([{height:'0px',opacity:0},{height:h+'px',opacity:1}],{duration:300,easing:'cubic-bezier(.2,.7,.2,1)'}).onfinish=function(){delete d.dataset.busy};
+    }else{
+      var h2=a.scrollHeight;
+      d.classList.add('is-closing');
+      a.animate([{height:h2+'px',opacity:1},{height:'0px',opacity:0}],{duration:220,easing:'ease-in'}).onfinish=function(){d.open=false;d.classList.remove('is-closing');delete d.dataset.busy};
+    }
+  });
+});
+</script>
+<script>
+/* ══════ LPの基本の作り ══════
+   🚨 どれも「JSが動かなければ何もしない」形にする。中身や導線が消えるのが最悪なので、
+      先に隠す処理は、判定が通ってから初めて行う */
+(function(){
+  var root = document.documentElement;
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var hasIO = 'IntersectionObserver' in window;
+
+  /* ① 固定ヘッダー：少しでも動いたら地を敷く */
+  var hd = document.getElementById('hd');
+  var onScroll = function(){ hd.classList.toggle('is-scrolled', window.scrollY > 8); };
+  onScroll();
+  addEventListener('scroll', onScroll, {passive:true});
+
+  /* ② メニュー（全画面）は作らない。9/15 にナビを外し、同日「3つだけ戻す」になった。スマホはロゴ＋CTAだけ */
+
+  /* ④ いま見ている節をナビに出す（3つ以外の節にいる時は何も付けない） */
+  var links = [].slice.call(document.querySelectorAll('.hd__nav a[href^="#"]'));
+  if (links.length && hasIO) {
+    var map = {};
+    links.forEach(function(a){ map[a.getAttribute('href').slice(1)] = a; });
+    var spy = new IntersectionObserver(function(ents){
+      ents.forEach(function(e){
+        if (!e.isIntersecting) return;
+        links.forEach(function(x){ x.removeAttribute('aria-current'); });
+        if (map[e.target.id]) map[e.target.id].setAttribute('aria-current', 'location');
+      });
+    }, {rootMargin:'-45% 0px -50% 0px'});
+    ['top','assure','concert','booth','access','faq','about','closing'].forEach(function(id){
+      var el = document.getElementById(id); if (el) spy.observe(el);
+    });
+  }
+
+  /* ③ スクロールで順に出す。同じ時に画面に入った物どうしを、DOMの順に 90ms ずつ遅らせる */
+  var fx = [].slice.call(document.querySelectorAll('.fx'));
+  var show = function(list){
+    list.sort(function(a, b){ return (a.compareDocumentPosition(b) & 2) ? 1 : -1; });
+    var n = 0;
+    list.forEach(function(el){
+      if (!el.style.getPropertyValue('--fx-d')) { el.style.setProperty('--fx-d', Math.min(n, 6) * 90 + 'ms'); n++; }
+      el.classList.add('hh-in');
+      /* 出終わったら遅延を消す。残すと hover の反応まで遅れる */
+      el.addEventListener('transitionend', function te(ev){
+        if (ev.target !== el || (ev.propertyName !== 'opacity' && ev.propertyName !== 'scale')) return;
+        el.style.setProperty('--fx-d', '0ms'); el.removeEventListener('transitionend', te);
+      });
+    });
+  };
+  var showAll = function(){ show(fx.filter(function(el){ return !el.classList.contains('hh-in'); })); };
+  /* FVは「読み込んだら出る」振り付け。スクロールの監視に任せると、縦の短い画面（ノートPCで高さ750px前後）で
+     CTAが判定線より下に残り、見えているのに透明のままになる（headlessの実測：画面813pxでCTAの上端795px） */
+  var fvFx = fx.filter(function(el){ return el.closest('#top'); });
+  fx = fx.filter(function(el){ return !el.closest('#top'); });
+  /* 🚨 同じフレームで付けると初期状態が描かれず、動かずに出る。2フレーム待つ */
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){ show(fvFx); }); });
+  if (fx.length) {
+    if (reduce || !hasIO) { showAll(); }
+    else {
+      /* 🚨 alive は「監視が動いたか」だけ。isIntersecting で立てると、読み込み直後に
+         画面外の要素しか無いときに保険が誤発動して全部いきなり出る（ADS で踏んだ） */
+      var alive = false;
+      var io = new IntersectionObserver(function(ents){
+        alive = true;
+        var hit = ents.filter(function(e){ return e.isIntersecting; })
+                      .map(function(e){ io.unobserve(e.target); return e.target; });
+        if (hit.length) show(hit);
+      }, {rootMargin:'0px 0px -8% 0px', threshold:0.06});
+      fx.forEach(function(el){ io.observe(el); });
+      setTimeout(function(){ if (!alive) showAll(); }, 1200);           /* 保険① 監視が動かない */
+      addEventListener('scroll', function once(){                        /* 保険② 動いたのに1つも出ない */
+        removeEventListener('scroll', once);
+        setTimeout(function(){ if (!fx.some(function(el){ return el.classList.contains('hh-in'); })) showAll(); }, 600);
+      }, {passive:true});
+      setTimeout(function(){ if (!fx.some(function(el){ return el.classList.contains('hh-in'); })) showAll(); }, 8000);   /* 保険③ */
+    }
+  }
+
+  /* ⑦ 本文の字間と行末（So 9/15）
+     「左に寄って右に空き」＝18pxの本文は、列の幅が1文字の倍数でないと、どの行も最大1文字手前で止まる。
+     両端揃えで埋めたら「文字と文字の間隔が大きい。同じ間隔に」（禁則で押し出された行だけ字間が広がる）。
+     → 本文の段落ごとに字間を整えて、列の幅に全角の文字がちょうど入るようにする（変化は±0.5px以内）。
+     そのうえで両端揃え（CSS）。押し出された行だけが1文字分を字間に散らす。最後の行に数文字だけ落ちたら、1行の字数を1つ増減（1px以内）→ だめなら最後の数文字を前の行から送る。
+     判定は check.py の「改行の孤立」と同じ物差しと値（最後の矩形÷最大の矩形。直下の文字が40字超は12%・以下は22%） */
+  var PROSE = '.fv__lead,.assure__card p,.live__table td:last-child,.live__info dd,.note,.gift p,.faq__a p,.about__body,.spec dd';
+  var paras = [].slice.call(document.querySelectorAll('main p, ' + PROSE));
+  var isProse = function(el){ return el.matches(PROSE) && !el.querySelector('.nb, ul'); };
+  var directLen = function(el){ var t = ''; el.childNodes.forEach(function(n){ if (n.nodeType === 3) t += n.nodeValue; }); return t.trim().length; };
+  var good = function(el){
+    var rg = document.createRange(); rg.selectNodeContents(el);
+    var ws = [].filter.call(rg.getClientRects(), function(r){ return r.width > 1 && r.height > 1; }).map(function(r){ return r.width; });
+    if (ws.length < 2) return true;
+    return ws[ws.length - 1] >= Math.max.apply(null, ws) * (directLen(el) > 40 ? 0.12 : 0.22);   // check.py と同じ値（1字だけ厳しくすると、直せる字数を捨てて孤立が残った）
+  };
+  var lastText = function(el){
+    var tw = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), t, last = null;
+    while ((t = tw.nextNode())) if (t.nodeValue.trim()) last = t;
+    return last;
+  };
+  var untail = function(el){
+    var sp = el.querySelector('.tidy-tail'); if (!sp) return;
+    var par = sp.parentNode; while (sp.firstChild) par.insertBefore(sp.firstChild, sp);
+    par.removeChild(sp); par.normalize();
+  };
+  var push = function(el, k){   // 最後の行の字数＋k 文字を、折らないまとまりにする
+    var tn = lastText(el); if (!tn) return false;
+    var body = tn.nodeValue.replace(/\s+$/, ''), rg = document.createRange(), n = 0, y0 = null;
+    for (var i = body.length - 1; i >= 0; i--) {
+      rg.setStart(tn, i); rg.setEnd(tn, i + 1);
+      var r = rg.getBoundingClientRect(), y = r.top + r.height / 2;
+      if (y0 === null) y0 = y; else if (Math.abs(y - y0) > r.height / 2) break;
+      n++;
+    }
+    if (i < 0 || body.length <= n + k) return false;   // 最後の行がこの文字のまとまりより前から始まる時は触らない
+    var rest = tn.splitText(body.length - n - k), sp = document.createElement('span');
+    sp.className = 'tidy-tail'; tn.parentNode.insertBefore(sp, rest); sp.appendChild(rest);
+    return true;
+  };
+  // 左ぞろえにして測り、最後の行以外で「行末の空き÷字の間の数」が lim(px) を超える行があれば false（両端揃えでその分だけ字間が広がる）
+  var stretchOK = function(el, lim){
+    el.style.textAlign = 'left';
+    var rows = [], rg = document.createRange(), tw = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), t, i, k;
+    while ((t = tw.nextNode())) for (k = 0; k < t.nodeValue.length; k++) {
+      if (/\s/.test(t.nodeValue[k])) continue;
+      rg.setStart(t, k); rg.setEnd(t, k + 1);
+      var r = rg.getBoundingClientRect(); if (r.width < 0.5) continue;
+      var y = r.top + r.height / 2, row = null;
+      for (i = 0; i < rows.length; i++) if (Math.abs(rows[i].y - y) < r.height / 2) { row = rows[i]; break; }
+      if (!row) { row = { y: y, l: r.left, r: r.right, n: 0 }; rows.push(row); }
+      row.l = Math.min(row.l, r.left); row.r = Math.max(row.r, r.right); row.n++;
+    }
+    el.style.textAlign = '';
+    if (rows.length < 2) return true;
+    rows.sort(function(a, b){ return a.y - b.y; });
+    var R = Math.max.apply(null, rows.map(function(o){ return o.r; }));
+    var adv = parseFloat(getComputedStyle(el).fontSize) + (parseFloat(el.style.letterSpacing) || 0);
+    for (i = 0; i < rows.length - 1; i++) {
+      var cw = (rows[i].r - rows[i].l) / rows[i].n;                       // 見かけの1文字（登場の動きで縮んでいても比で測る）
+      if ((R - rows[i].r) / cw * adv / Math.max(1, rows[i].n - 1) > lim) return false;
+    }
+    return true;
+  };
+  var tidy = function(el){
+    el.style.letterSpacing = ''; untail(el);
+    var cs = getComputedStyle(el), fs = parseFloat(cs.fontSize) || 16, base = parseFloat(cs.letterSpacing) || 0;
+    var W = el.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    if (isProse(el) && W > fs * 8) {
+      var n = Math.round(W / (fs + base));
+      var set = function(k){ el.style.letterSpacing = ((W - 0.5) / k - fs) + 'px'; };   // 0.5px 残して、k 文字目が次の行へこぼれないように
+      set(n); if (good(el)) return;
+      // 1行の字数を1つ増減（段落の中は同じ字間のまま、変化は1px以内の時だけ）→ だめなら最後の数文字を前の行から送る（両端揃えで、送った分はその1行に散る）
+      // 本文は最後の数文字を送らない（送った行だけ字間が大きく広がり So「すごく不自然」）。段落全体の字間をそろえたまま1行の字数を1つ増減する
+      var tryN = function(m, cap){ if (Math.abs((W - 0.5) / m - fs - base) > cap) return false; set(m); if (good(el)) return true; set(n); return false; };
+      if (tryN(n + 1, 1.05) || tryN(n - 1, 1.05) || tryN(n + 1, 1.6) || tryN(n - 1, 1.6)) return;
+      // 2〜3行の短い段落は、2文字増減まで（字間は段落全体で2px以内。1行だけ広がるより目立たない）
+      var rg2 = document.createRange(); rg2.selectNodeContents(el);
+      var tops = {}; [].forEach.call(rg2.getClientRects(), function(r){ if (r.width > 1) tops[Math.round(r.top / 6)] = 1; });
+      if (Object.keys(tops).length <= 3 && (tryN(n + 2, 2.0) || tryN(n - 2, 2.0))) return;
+      return;
+    }
+    if (good(el)) return;
+    var plan = [-.25, .25, -.5, .5, 'p1', 'p2', 'p3'];   // 中央ぞろえのリードなど：字間を少しだけ → 最後の数文字を送る
+    for (var i = 0; i < plan.length; i++) {
+      var st = plan[i];
+      if (typeof st === 'number') el.style.letterSpacing = (base + st) + 'px';
+      else if (!push(el, +st.slice(1))) continue;
+      if (good(el)) return;
+      el.style.letterSpacing = ''; untail(el);
+    }
+  };
+  /* 閉じたFAQの答えは、閉じている間は幅や字間を変えても組み直されない（Chrome）。最初の3回だけ、同じ処理の中で開いて直して閉じる（画面には出ない）。
+     check.py は閉じたまま測る。幅が変わった時は閉じた答えを飛ばし、開いた時に直す */
+  var tidyAll = function(first){
+    var shut = first ? [].filter.call(document.querySelectorAll('details'), function(dt){ return !dt.open; }) : [];
+    shut.forEach(function(dt){ dt.open = true; });
+    paras.forEach(function(el){ if (first || !el.closest('details:not([open])')) tidy(el); });
+    shut.forEach(function(dt){ dt.open = false; });
+  };
+  tidyAll(true);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ tidyAll(true); });
+  addEventListener('load', function(){ tidyAll(true); });
+  var tidyT; addEventListener('resize', function(){ clearTimeout(tidyT); tidyT = setTimeout(function(){ tidyAll(false); }, 150); });
+  document.querySelectorAll('.faq details').forEach(function(dt){ dt.addEventListener('toggle', function(){ if (dt.open) requestAnimationFrame(function(){ dt.querySelectorAll('p').forEach(tidy); }); }); });
+
+  /* ⑥ 開いたらいちばん上から（So FB 9/14「開いたときに ARK Hills Music Week 2026｜音の遊び場 が見えない」）
+     少し下げて再読み込みすると、ブラウザが前の位置（実測44px）を戻し、FVの一行目が固定ヘッダー（下端68px）の裏に隠れていた。
+     scrollRestoration を manual にしたうえで最上部へ。ページ内リンク（#access など）付きで開いたときはそこへ行かせる */
+  var toTop = function(){ if (!location.hash) window.scrollTo({top: 0, left: 0, behavior: 'instant'}); };
+  toTop();
+  addEventListener('pageshow', function(e){ if (e.persisted) toTop(); });
+
+})();
+</script>
+</body>
+</html>
