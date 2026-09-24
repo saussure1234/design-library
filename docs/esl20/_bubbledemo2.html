@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>写真に情報を添える｜吹き出し以外の3案</title>
+<style>
+  :root{--g:#00B21F;--g2:#6CBB00;--yel:#FFEE03;--ink:#262626;--ink3:#6b6b6b;--line:#e6e6e6;
+        --ease:cubic-bezier(.16,1,.3,1)}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Noto Sans JP",system-ui,sans-serif;
+    color:var(--ink);background:#fafafa;padding:26px 22px 90px;-webkit-font-smoothing:antialiased}
+  .head{max-width:1280px;margin:0 auto 8px}
+  .head h1{font-size:clamp(18px,2.3vw,23px);margin:0 0 6px}
+  .head p{margin:0;color:#666;font-size:13.5px;line-height:1.75}
+  .diag{max-width:1280px;margin:12px auto 0;background:#FFF8E1;border:1px solid #F0DFA0;
+    border-radius:10px;padding:13px 15px;font-size:13px;line-height:1.8;color:#5a4a20}
+  .bar{max-width:1280px;margin:12px auto 0;display:flex;gap:9px;align-items:center}
+  .bar button{font:inherit;font-size:13px;border:1px solid #111;background:#111;color:#fff;
+    padding:8px 15px;border-radius:999px;cursor:pointer;font-weight:700}
+  .wrapg{max-width:1280px;margin:18px auto 0;display:grid;gap:20px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .hd{padding:11px 14px;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;gap:9px}
+  .num{width:23px;height:23px;border-radius:7px;background:var(--ink);color:#fff;font-size:12.5px;
+    font-weight:700;display:grid;place-items:center;flex:none}
+  .ttl{font-size:14px;font-weight:700}.sub{font-size:11.5px;color:#888}
+
+  .fv{position:relative;width:100%;aspect-ratio:1440/677;background:#fff;overflow:hidden}
+  .fv .blob-a{position:absolute;left:36%;top:19%;width:17%;aspect-ratio:1/.98;background:#E2EFD6;
+    border-radius:44% 56% 61% 39%/57% 43% 57% 43%}
+  .fv .blob-b{position:absolute;left:70%;top:29%;width:15%;aspect-ratio:1/1;background:#F2E9CE;
+    border-radius:57% 43% 41% 59%/46% 57% 43% 54%}
+  .fv .hill{position:absolute;left:-8%;right:-8%;bottom:-14%;height:32%;background:var(--g);
+    border-radius:50% 50% 0 0/70% 70% 0 0}
+  .fv .copy{position:absolute;left:3.9%;top:15%;width:34%;z-index:5}
+  .fv .eyebrow{font-size:1.39vw;font-weight:800;margin:0 0 .5vw;line-height:1.6}
+  .fv .h1{font-size:2.9vw;font-weight:900;line-height:1.28;margin:0}
+  .fv .h1 em{font-style:normal;color:var(--g)}
+  .fv .nb{white-space:nowrap}
+  .fv .cta{display:inline-flex;align-items:center;gap:.5vw;margin-top:2.2vw;background:var(--yel);
+    color:#262626;font-size:1.25vw;font-weight:800;padding:1vw 1.8vw;border-radius:.4vw;
+    box-shadow:0 .55vw 0 #E0CF00}
+  .fv .pa{position:absolute;left:34%;top:24%;width:24.6%;z-index:3}
+  .fv .pb{position:absolute;left:66%;top:35%;width:28%;z-index:3}
+  .fv img{width:100%;display:block;filter:drop-shadow(0 8px 18px rgba(48,48,48,.10))}
+  .fv figure{margin:0}
+
+  /* ── 共通：出現 ── */
+  .tag{position:absolute;z-index:9;opacity:0}
+  .play .t1{animation:tagIn .55s cubic-bezier(.16,1,.3,1) 1.15s both}
+  .play .t2{animation:tagIn .55s cubic-bezier(.16,1,.3,1) 1.42s both}
+  @keyframes tagIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+  /* ══ ① 引き出し線＋タグ（発話に見せない） ══ */
+  .s1 .tag{display:flex;align-items:center;gap:0}
+  .s1 .lab{background:#fff;border:.13vw solid #262626;border-radius:.4vw;
+    padding:.55vw .95vw;font-size:1.05vw;font-weight:800;white-space:nowrap;
+    box-shadow:0 .35vw .9vw -.4vw rgba(0,0,0,.2)}
+  .s1 .lead{height:.13vw;background:#262626}
+  .s1 .dot{width:.55vw;height:.55vw;border-radius:50%;background:#262626;flex:none}
+  .s1.play .lead{animation:leadIn .5s var(--ease) 1.45s both}
+  @keyframes leadIn{from{width:0}to{width:var(--lw,4vw)}}
+  .s1 .t1{left:41%;top:57%}
+  .s1 .t2{left:61%;top:24%;flex-direction:row-reverse}
+
+  /* ══ ② 写真の下に帯（キャプション） ══ */
+  .s2 .cap{position:absolute;z-index:9;background:rgba(38,38,38,.88);color:#fff;
+    padding:.5vw 1vw;border-radius:.35vw;font-size:1.02vw;font-weight:700;white-space:nowrap}
+  .s2 .c1{left:34%;top:79%}
+  .s2 .c2{left:66%;top:73%}
+  .s2.play .c1{animation:tagIn .55s var(--ease) 1.15s both}
+  .s2.play .c2{animation:tagIn .55s var(--ease) 1.42s both}
+
+  /* ══ ③ 数字バッジ（実績をピン留め） ══ */
+  .s3 .badge{position:absolute;z-index:9;background:var(--yel);color:#262626;
+    border-radius:50%;width:9vw;height:9vw;display:grid;place-items:center;text-align:center;
+    box-shadow:0 .6vw 1.4vw -.6vw rgba(0,0,0,.3);line-height:1.25}
+  .s3 .badge b{display:block;font-size:2.1vw;font-weight:900}
+  .s3 .badge small{display:block;font-size:.92vw;font-weight:800}
+  .s3 .g1{left:41%;top:8%}
+  .s3 .g2{left:85%;top:20%}
+  .s3.play .g1{animation:pop .6s cubic-bezier(.34,1.45,.5,1) 1.15s both}
+  .s3.play .g2{animation:pop .6s cubic-bezier(.34,1.45,.5,1) 1.42s both}
+  @keyframes pop{from{opacity:0;transform:scale(.65)}to{opacity:1;transform:scale(1)}}
+
+  .note{padding:11px 14px;border-top:1px solid #f4f4f4;font-size:12px;color:#777;line-height:1.7}
+  .foot{max-width:1280px;margin:22px auto 0;background:#fff;border:1px solid var(--line);
+    border-radius:12px;padding:16px 18px;font-size:13px;color:#555;line-height:1.85}
+  .foot b{color:#111}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important}.tag,.cap,.badge{opacity:1}}
+</style>
+</head>
+<body>
+
+<div class="head">
+  <h1>写真に情報を添える｜吹き出し以外の3案</h1>
+  <p>吹き出しがしっくり来なかった原因を踏まえて、<b>発話に見せない</b>3案を作りました。</p>
+</div>
+
+<div class="diag">
+  <b>なぜ吹き出しがリアルに見えなかったか</b><br>
+  ① <b>2人とも黙って下を向いて集中している写真</b>です。話している顔ではありません。<br>
+  ② とくに<b>女の子は後ろ姿で口が見えません</b>。口が見えない人の発話は、どこに置いても発話に見えません。<br>
+  ③ 結果、吹き出しが「セリフ」ではなく「ラベル」に見え、位置を変えても解消しませんでした。<br>
+  → <b>写真の中身が「黙って集中」なら、添えるものも「注記」にすると噛み合います。</b>
+</div>
+
+<div class="bar"><button id="replay">▶ もう一度</button></div>
+
+<div class="wrapg">
+
+  <div class="card"><div class="hd"><span class="num">1</span><span class="ttl">引き出し線＋タグ</span><span class="sub">写真の一部を指して注記する</span></div>
+    <div class="fv s1 play" id="f1">
+      <div class="blob-a"></div><div class="blob-b"></div>
+      <div class="copy">
+        <p class="eyebrow">2015年の開塾以降”英検に特化”してきたからできる</p>
+        <h1 class="h1"><span class="nb">受験勉強と並走しながら</span><br><em><span class="nb">小学生・中学生で英検2級、</span></em><br><em><span class="nb">高校生で準1級</span></em>を<span class="nb">目指せる英語塾</span></h1>
+        <span class="cta">無料体験レッスンはこちら →</span>
+      </div>
+      <figure class="pa"><img src="img/fv_boy.png" alt=""></figure>
+      <figure class="pb"><img src="img/fv_girl.png" alt=""></figure>
+      <div class="tag t1"><span class="lab">部活と両立して通える</span><span class="lead" style="--lw:5vw"></span><span class="dot"></span></div>
+      <div class="tag t2"><span class="lab">オンラインで全国から</span><span class="lead" style="--lw:4.5vw"></span><span class="dot"></span></div>
+      <div class="hill"></div>
+    </div>
+    <div class="note">線が伸びて写真の一点を指します。<b>「その人が言った」ではなく「そこを説明している」</b>ので、黙っている写真と噛み合います。</div></div>
+
+  <div class="card"><div class="hd"><span class="num">2</span><span class="ttl">写真に重ねる帯</span><span class="sub">キャプション。いちばん静か</span></div>
+    <div class="fv s2 play" id="f2">
+      <div class="blob-a"></div><div class="blob-b"></div>
+      <div class="copy">
+        <p class="eyebrow">2015年の開塾以降”英検に特化”してきたからできる</p>
+        <h1 class="h1"><span class="nb">受験勉強と並走しながら</span><br><em><span class="nb">小学生・中学生で英検2級、</span></em><br><em><span class="nb">高校生で準1級</span></em>を<span class="nb">目指せる英語塾</span></h1>
+        <span class="cta">無料体験レッスンはこちら →</span>
+      </div>
+      <figure class="pa"><img src="img/fv_boy.png" alt=""></figure>
+      <figure class="pb"><img src="img/fv_girl.png" alt=""></figure>
+      <div class="cap c1">週1回・50分</div>
+      <div class="cap c2">自宅からオンライン</div>
+      <div class="hill"></div>
+    </div>
+    <div class="note">写真の下に事実を置くだけ。<b>もっとも主張が弱く、もっとも安全</b>。捏造の心配もありません。</div></div>
+
+  <div class="card"><div class="hd"><span class="num">3</span><span class="ttl">数字バッジ</span><span class="sub">実績をピン留めする</span></div>
+    <div class="fv s3 play" id="f3">
+      <div class="blob-a"></div><div class="blob-b"></div>
+      <div class="copy">
+        <p class="eyebrow">2015年の開塾以降”英検に特化”してきたからできる</p>
+        <h1 class="h1"><span class="nb">受験勉強と並走しながら</span><br><em><span class="nb">小学生・中学生で英検2級、</span></em><br><em><span class="nb">高校生で準1級</span></em>を<span class="nb">目指せる英語塾</span></h1>
+        <span class="cta">無料体験レッスンはこちら →</span>
+      </div>
+      <figure class="pa"><img src="img/fv_boy.png" alt=""></figure>
+      <figure class="pb"><img src="img/fv_girl.png" alt=""></figure>
+      <div class="badge g1"><span><b>1,000</b><small>名以上が合格</small></span></div>
+      <div class="badge g2"><span><b>10</b><small>年、英検一筋</small></span></div>
+      <div class="hill"></div>
+    </div>
+    <div class="note">跳ねて出る丸バッジ。<b>いちばん目を引きますが、チラシっぽくもなります</b>。数字はLP本文にある実績を使っています。</div></div>
+
+</div>
+
+<div class="foot">
+  <b>私の推しは ①（引き出し線＋タグ）</b>。吹き出しの「人が喋っている」感は捨てて、<b>「写真のここを説明している」</b>に振り切る形です。黙って集中している写真と矛盾せず、線が伸びる動きも足せます。<br>
+  <b>それでも「人が喋っている」感が欲しい場合</b>は、写真そのものを変える必要があります。手元の素材だと <code>school_online.jpg</code>（Zoom画面で生徒と講師が笑っている）が唯一「話している」写真です。FVの写真を差し替える前提なら、吹き出しが成立します。<br>
+  <b>①②の文言はすべて仮です。</b>③の数字だけはLP本文にある実績（累計1,000名以上・2015年開塾＝10年）を使っています。
+</div>
+
+<script>
+  document.getElementById('replay').addEventListener('click',function(){
+    ['f1','f2','f3'].forEach(function(id){
+      var e=document.getElementById(id); e.classList.remove('play'); void e.offsetWidth; e.classList.add('play');
+    });
+  });
+</script>
+</body>
+</html>

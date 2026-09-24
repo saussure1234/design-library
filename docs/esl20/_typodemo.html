@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>FV見出しの組み方｜4案＋書体</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;800;900&family=Zen+Kaku+Gothic+New:wght@700;900&family=BIZ+UDPGothic:wght@400;700&family=M+PLUS+1p:wght@700;800;900&family=Noto+Serif+JP:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root{--g:#00B21F;--g2:#6CBB00;--yel:#FFEE03;--ink:#262626;--ink2:#303030;--ink3:#6b6b6b;--line:#e6e6e6;
+        --ease:cubic-bezier(.16,1,.3,1)}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Noto Sans JP",system-ui,sans-serif;
+    color:var(--ink);background:#fafafa;padding:26px 22px 90px;-webkit-font-smoothing:antialiased}
+  .head{max-width:1300px;margin:0 auto 10px}
+  .head h1{font-size:clamp(18px,2.3vw,23px);margin:0 0 6px}
+  .head p{margin:0;color:#666;font-size:13.5px;line-height:1.75}
+  .bar{max-width:1300px;margin:12px auto 0;display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+  .bar button{font:inherit;font-size:13px;border:1px solid #d5d5d5;background:#fff;padding:8px 15px;
+    border-radius:999px;cursor:pointer}
+  .bar button:active{transform:scale(.97)}
+  .bar .go{background:#111;color:#fff;border-color:#111;font-weight:700}
+  .grid{max-width:1300px;margin:18px auto 0;display:grid;gap:18px;grid-template-columns:repeat(2,1fr)}
+  @media(max-width:1000px){.grid{grid-template-columns:1fr}}
+  .card{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .hd{padding:11px 14px;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;gap:9px}
+  .num{width:23px;height:23px;border-radius:7px;background:var(--ink);color:#fff;font-size:12.5px;
+    font-weight:700;display:grid;place-items:center;flex:none}
+  .ttl{font-size:14px;font-weight:700}.sub{font-size:11.5px;color:#888}
+  .stage{position:relative;padding:34px 30px 40px;min-height:330px;background:#fff}
+
+  /* 共通の下地：esl2の実値 */
+  .eyebrow{font-size:20px;font-weight:800;color:var(--ink2);line-height:1.6;letter-spacing:.01em;margin:0 0 8px}
+  .h1{font-size:41.8px;font-weight:900;color:var(--ink);line-height:1.28;letter-spacing:.01em;margin:0}
+  .h1 em{font-style:normal;color:var(--g)}
+  .nb{white-space:nowrap}
+
+  /* ── 下線を引く（インライン安全：背景で描くので折り返しにも追従） ── */
+  .ul{background-image:linear-gradient(var(--ulc,var(--yel)),var(--ulc,var(--yel)));
+      background-repeat:no-repeat;background-position:0 97%;
+      background-size:0% var(--ulw,10px);}
+  .play .ul{animation:ulIn .75s var(--ease) forwards}
+  @keyframes ulIn{to{background-size:100% var(--ulw,10px)}}
+  .ul--1{animation-delay:.45s} .ul--2{animation-delay:.75s} .ul--3{animation-delay:1.0s}
+
+  /* ── ② 行間をあける ── */
+  #s2 .h1{line-height:1.46}
+  #s2 .eyebrow{margin-bottom:14px}
+
+  /* ── ③ ジャンプ率をつける ── */
+  #s3 .h1{line-height:1.42}
+  #s3 .sm{font-size:.66em;font-weight:800;color:var(--ink3);letter-spacing:.02em}
+  #s3 .md{font-size:.80em;font-weight:900}
+  #s3 .eyebrow{font-size:16px;color:var(--ink3);margin-bottom:12px}
+
+  /* ── ④ 全部＋線 ── */
+  #s4 .h1{line-height:1.44}
+  #s4 .sm{font-size:.66em;font-weight:800;color:var(--ink3);letter-spacing:.02em}
+  #s4 .md{font-size:.80em;font-weight:900}
+  #s4 .eyebrow{font-size:16px;color:var(--ink3);margin-bottom:12px}
+
+  /* ── 書体比較：組みは③で固定 ── */
+  .fs{min-height:300px}
+  .fs .h1{line-height:1.42}
+  .fs .sm{font-size:.66em;font-weight:800;color:var(--ink3);letter-spacing:.02em}
+  .fs .md{font-size:.80em;font-weight:900}
+  .fs .eyebrow{font-size:16px;color:var(--ink3);margin-bottom:12px}
+  /* 数字だけ欧文にする案 */
+  .num-en .dg{font-family:"Helvetica Neue",Arial,sans-serif;font-size:1.14em;letter-spacing:-.01em}
+
+  .note{padding:10px 14px;border-top:1px solid #f4f4f4;font-size:11.5px;color:#777;line-height:1.65}
+  .foot{max-width:1300px;margin:22px auto 0;background:#fff;border:1px solid var(--line);
+    border-radius:12px;padding:16px 18px;font-size:13px;color:#555;line-height:1.85}
+  .foot b{color:#111}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important}.ul{background-size:100% var(--ulw,10px)}}
+</style>
+</head>
+<body>
+
+<div class="head">
+  <h1>FV見出しの組み方｜4案</h1>
+  <p>いまは <b>文字41.8px・行間53.4px（比1.28）</b>。日本語の見出しとしては詰まっています。<br>
+  行間・ジャンプ率（大小の差）・下線アニメを足した案を並べました。<b>文言は1文字も変えていません。</b></p>
+</div>
+
+<div class="bar"><button class="go" id="replay">▶ 線のアニメをもう一度</button>
+  <span style="font-size:12px;color:#999">下線は読み込み時に左から伸びます</span></div>
+
+<div class="grid">
+
+  <!-- ① 現状 -->
+  <div class="card"><div class="hd"><span class="num">1</span><span class="ttl">現状</span><span class="sub">行間1.28・強弱なし</span></div>
+    <div class="stage" id="s1">
+      <p class="eyebrow">2015年の開塾以降”英検に特化”してきたからできる</p>
+      <h1 class="h1"><span class="nb">受験勉強と並走しながら</span><wbr><br><em><span class="nb">小学生・中学生で英検2級、</span></em><wbr><br><em><span class="nb">高校生で準1級</span></em>を<wbr><span class="nb">目指せる英語塾</span></h1>
+    </div>
+    <div class="note">4行すべて同じ大きさ・同じ太さ。<b>どこが売りなのか目で拾えません</b>。</div></div>
+
+  <!-- ② 行間をあける -->
+  <div class="card"><div class="hd"><span class="num">2</span><span class="ttl">行間をあける</span><span class="sub">1.28 → 1.46</span></div>
+    <div class="stage" id="s2">
+      <p class="eyebrow">2015年の開塾以降”英検に特化”してきたからできる</p>
+      <h1 class="h1"><span class="nb">受験勉強と並走しながら</span><wbr><br><em><span class="nb">小学生・中学生で英検2級、</span></em><wbr><br><em><span class="nb">高校生で準1級</span></em>を<wbr><span class="nb">目指せる英語塾</span></h1>
+    </div>
+    <div class="note">これだけで<b>息継ぎができます</b>。文字も構成も変えていないので、いちばん安全な一手。</div></div>
+
+  <!-- ③ ジャンプ率 -->
+  <div class="card"><div class="hd"><span class="num">3</span><span class="ttl">ジャンプ率をつける</span><span class="sub">売り＝大／つなぎ＝小</span></div>
+    <div class="stage" id="s3">
+      <p class="eyebrow">2015年の開塾以降”英検に特化”してきたからできる</p>
+      <h1 class="h1"><span class="nb sm">受験勉強と並走しながら</span><wbr><br><em><span class="nb">小学生・中学生で英検2級、</span></em><wbr><br><em><span class="nb">高校生で準1級</span></em><span class="sm">を</span><wbr><span class="nb md">目指せる英語塾</span></h1>
+    </div>
+    <div class="note">「英検2級／準1級」だけが大きく緑。<b>0.5秒で売りが分かります</b>。つなぎは小さく墨。</div></div>
+
+  <!-- ④ 全部＋線 -->
+  <div class="card"><div class="hd"><span class="num">4</span><span class="ttl">ジャンプ率＋下線アニメ</span><span class="sub">黄色い線が左から伸びる</span></div>
+    <div class="stage play" id="s4">
+      <p class="eyebrow">2015年の開塾以降<span class="ul ul--1" style="--ulc:#FFEE03;--ulw:8px">”英検に特化”</span>してきたからできる</p>
+      <h1 class="h1"><span class="nb sm">受験勉強と並走しながら</span><wbr><br><em><span class="nb"><span class="ul ul--2" style="--ulc:#FFEE03;--ulw:12px">小学生・中学生で英検2級、</span></span></em><wbr><br><em><span class="nb"><span class="ul ul--3" style="--ulc:#FFEE03;--ulw:12px">高校生で準1級</span></span></em><span class="sm">を</span><wbr><span class="nb md">目指せる英語塾</span></h1>
+    </div>
+    <div class="note">売りの2行にだけ<b>黄色い線が左から伸びます</b>。緑地の中で黄色は既にCTAの色なので、視線が繋がります。</div></div>
+
+</div>
+
+<div class="head" style="margin-top:34px">
+  <h1>書体を変えるとどう変わるか</h1>
+  <p>組み方は<b>③（ジャンプ率あり）で固定</b>し、書体だけを差し替えたもの。すべてGoogle Fonts＝<b>無料・商用可・自前ホスト不要</b>。<br>
+  いまの esl2 は <b>Noto Sans JP</b> を読み込んでいます（<code>wght@400;500;700;900</code>）。</p>
+</div>
+
+<div class="grid" id="fonts">
+  <div class="card"><div class="hd"><span class="num">A</span><span class="ttl">Noto Sans JP</span><span class="sub">現状。癖がなく無難</span></div>
+    <div class="stage fs" style="font-family:'Noto Sans JP',sans-serif"></div>
+    <div class="note">標準的。<b>可もなく不可もなく</b>で、他社と差がつきません。</div></div>
+
+  <div class="card"><div class="hd"><span class="num">B</span><span class="ttl">Zen Kaku Gothic New</span><span class="sub">少し骨太で現代的</span></div>
+    <div class="stage fs" style="font-family:'Zen Kaku Gothic New',sans-serif"></div>
+    <div class="note">Notoより<b>字面が大きく、太さの主張が強い</b>。見出し向き。近年のLPでよく使われます。</div></div>
+
+  <div class="card"><div class="hd"><span class="num">C</span><span class="ttl">BIZ UDPGothic</span><span class="sub">読みやすさ設計（UD）</span></div>
+    <div class="stage fs" style="font-family:'BIZ UDPGothic',sans-serif"></div>
+    <div class="note"><b>読み間違えにくいことを目的に作られた書体</b>。教育・自治体で採用例が多い。ただし太さが700までで、見出しの迫力は出にくい。</div></div>
+
+  <div class="card"><div class="hd"><span class="num">D</span><span class="ttl">M PLUS 1p</span><span class="sub">やわらかく親しみ</span></div>
+    <div class="stage fs" style="font-family:'M PLUS 1p',sans-serif"></div>
+    <div class="note">角が丸く<b>子ども・保護者向けの空気</b>。ただし信頼感はNotoやZenに劣ります。</div></div>
+
+  <div class="card"><div class="hd"><span class="num">E</span><span class="ttl">Noto Serif JP</span><span class="sub">明朝＝格を出す</span></div>
+    <div class="stage fs" style="font-family:'Noto Serif JP',serif"></div>
+    <div class="note">格は出ますが<b>塾の元気さは消えます</b>。中学受験の進学塾ならアリ、英会話寄りならナシ。</div></div>
+
+  <div class="card"><div class="hd"><span class="num">F</span><span class="ttl">Zen Kaku ＋ 数字だけ欧文</span><span class="sub">「2級」「1級」の数字を際立たせる</span></div>
+    <div class="stage fs num-en" style="font-family:'Zen Kaku Gothic New',sans-serif"></div>
+    <div class="note">数字だけ欧文書体にして<b>級の数字を目立たせる</b>手。和文と混ぜても崩れにくい。</div></div>
+</div>
+
+<div class="foot">
+  <b>「詰まって読みにくい」の正体は3つあります。</b><br>
+  ① <b>行間が1.28</b>と狭い（日本語の大見出しは1.4前後が読みやすい）／② <b>4行が全部同じ大きさ・同じ太さ</b>で、どこが売りか目で拾えない／③ <b>助詞まで同じ級数</b>なので、意味の切れ目が見えない。<br>
+  <b>私の推しは ③</b>。文字を1つも変えずに、大小と色だけで「英検2級・準1級」が立ちます。線（④）は好みが割れるので、要らなければ③のままで十分です。<br>
+  <b>いずれも文言は一切変えていません。</b>改行位置（<code>.nb</code> と <code>&lt;wbr&gt;</code>）もそのままです。
+</div>
+
+<script>
+  document.getElementById('replay').addEventListener('click',function(){
+    var s=document.getElementById('s4'); s.classList.remove('play'); void s.offsetWidth; s.classList.add('play');
+  });
+
+  /* 書体比較の中身は1箇所で作って全カードに配る（文言のズレを防ぐ） */
+  var EYE='2015年の開塾以降”英検に特化”してきたからできる';
+  function build(numEn){
+    var d=function(t){ return numEn ? t.replace(/([0-9０-９])/g,'<span class="dg">$1</span>') : t; };
+    return '<p class="eyebrow">'+EYE+'</p>'+
+      '<h1 class="h1"><span class="nb sm">受験勉強と並走しながら</span><wbr><br>'+
+      '<em><span class="nb">'+d('小学生・中学生で英検2級、')+'</span></em><wbr><br>'+
+      '<em><span class="nb">'+d('高校生で準1級')+'</span></em><span class="sm">を</span><wbr>'+
+      '<span class="nb md">目指せる英語塾</span></h1>';
+  }
+  document.querySelectorAll('#fonts .fs').forEach(function(el){
+    el.innerHTML = build(el.classList.contains('num-en'));
+  });
+</script>
+</body>
+</html>
