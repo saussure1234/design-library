@@ -69,10 +69,11 @@ p,li,dd{text-wrap:pretty}
 .hd{position:fixed;inset:0 0 auto;z-index:50;transition:background .3s,border-color .3s;border-bottom:1px solid transparent}
 .hd.is-scrolled{background:rgba(246,246,243,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-color:var(--line)}
 .hd__in{display:flex;align-items:center;gap:32px;height:70px}
-.logo{display:flex;align-items:center;gap:9px;font-family:var(--en);font-weight:700;font-size:19px;letter-spacing:.02em;text-decoration:none}
-.logo i{display:grid;grid-template-columns:1fr 1fr;gap:2px;width:18px;height:18px}
-.logo i b{background:var(--ink);border-radius:2px}
-.logo i b:nth-child(4){background:var(--acc)}
+/* ロゴ：調査員の顔のアイコン（ライムの角丸四角）＋字。案は logo/ に4つ（A〜D）。今はD */
+.logo{display:flex;align-items:center;gap:9px;font-family:var(--en);font-weight:800;font-size:20px;letter-spacing:.01em;line-height:1;text-decoration:none;color:var(--ink)}
+.logo svg{display:block;width:30px;height:30px;flex:none}
+.logo--ft{gap:7px;font-size:15px;color:var(--ink2)}
+.logo--ft svg{width:22px;height:22px}
 .nav{display:flex;gap:28px;margin-left:auto}
 .nav a{font-size:14px;font-weight:700;letter-spacing:.04em;text-decoration:none;color:var(--ink2);transition:color .2s}
 .nav a:hover,.nav a.is-cur{color:var(--ink)}
@@ -238,15 +239,8 @@ p,li,dd{text-wrap:pretty}
 .ft .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:13px;color:var(--ink3)}
 
 /* ── キャラ（②調査員）。置き方はNotionの型を借りる ──
-   ① 見出しの上に丸アイコンの列　② 製品画面のふちに座る・のぞく　③ カードの角のスポット
-   ④ 見出しの横に立つ　⑤ 締めの箱から飛び出す。どれも飾りなので alt="" */
-.cast{display:flex;justify-content:center;margin:0 0 26px}
-.cast li{position:relative;width:60px;height:60px;margin-left:-10px;border:2.5px solid var(--ink);border-radius:50%;background:var(--c,#fff);overflow:hidden;
-  transition:transform .25s var(--ease);animation:pop .6s var(--ease) backwards;animation-delay:calc(.12s + var(--i) * .07s)}
-.cast li:first-child{margin-left:0}
-.cast li:hover{transform:translateY(-6px) rotate(-6deg);z-index:2}
-.cast img{display:block;width:100%;height:100%}
-@keyframes pop{from{opacity:0;transform:translateY(10px) scale(.5)}}
+   ① 製品画面のふちに座る・のぞく　② カードの角のスポット　③ 見出しの横に立つ　④ 締めの箱から飛び出す
+   （見出しの上の丸アイコンの列は So 9/29「いらない」で外した）。どれも飾りなので alt="" */
 
 /* 製品画面のふち：--w はキャラの幅。のぞく＝縁の線（画像の上から64.7%）で切る／座る＝座面（上から109.6%×幅）を画面の上端に */
 .peek{position:absolute;z-index:3;left:6%;--w:clamp(78px,10.5vw,148px);width:var(--w);height:calc(var(--w) * .647);top:calc(var(--w) * -.647);overflow:hidden}
@@ -286,7 +280,7 @@ p,li,dd{text-wrap:pretty}
   html{scroll-behavior:auto}
   .fx-on .fx{opacity:1;transform:none;transition:none}
   .bar__fill{transition:none}
-  .cast li,.peek img,.sit,.sit img{animation:none}
+  .peek img,.sit,.sit img{animation:none}
   .fx-on .fx:not(.hh-in) .spot{opacity:1;transform:none}
   .spot{transition:none}
 }
@@ -317,8 +311,6 @@ p,li,dd{text-wrap:pretty}
   .shift,.ev,.steps,.feat{grid-template-columns:minmax(0,1fr)}
   .feat--rev .feat__txt{order:0}
   /* キャラ：スマホは座る方を外し、のぞく方だけ。カードの間はキャラが乗る分あける */
-  .cast{margin-bottom:20px}
-  .cast li{width:46px;height:46px;margin-left:-8px}
   .fv__app{margin-top:64px}
   .sit{display:none}
   .shift,.steps{gap:64px;margin-top:84px}
@@ -352,7 +344,7 @@ p,li,dd{text-wrap:pretty}
 
 <header class="hd" id="hd">
   <div class="wrap hd__in">
-    <a class="logo" href="#top" aria-label="ページの先頭へ"><i aria-hidden="true"><b></b><b></b><b></b><b></b></i>LLMO</a>
+    <a class="logo" href="#top" aria-label="LLMO ページの先頭へ"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" aria-hidden="true" focusable="false" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="74" height="74" rx="18" fill="#C8F03C"/><path d="M70.3 46.0 C70.3 53.1 66.4 62.4 61.3 67.3 C56.3 72.3 47.1 75.8 40.0 75.8 C32.9 75.9 23.5 72.4 18.5 67.5 C13.6 62.5 10.2 53.1 10.3 46.0 C10.3 38.9 13.9 29.9 18.8 24.8 C23.8 19.8 33.0 15.8 40.0 15.8 C47.0 15.8 56.0 19.9 61.0 25.0 C66.1 30.0 70.2 38.9 70.3 46.0Z" fill="#fff" stroke="#141414" stroke-width="5"/><g stroke="#141414" stroke-width="4.5"><path d="M39.5 42.0 C39.5 44.5 38.1 47.6 36.3 49.3 C34.6 51.1 31.5 52.5 29.0 52.5 C26.5 52.6 23.3 51.2 21.5 49.5 C19.8 47.7 18.5 44.5 18.5 42.0 C18.5 39.5 19.8 36.3 21.5 34.5 C23.3 32.8 26.5 31.5 29.0 31.5 C31.5 31.6 34.7 32.8 36.5 34.5 C38.2 36.3 39.5 39.5 39.5 42.0Z" fill="#fff"/><path d="M62.5 42.0 C62.5 44.5 61.2 47.7 59.4 49.4 C57.7 51.2 54.5 52.5 52.0 52.5 C49.5 52.5 46.3 51.2 44.5 49.5 C42.7 47.7 41.4 44.5 41.4 42.0 C41.4 39.5 42.8 36.3 44.6 34.6 C46.3 32.8 49.5 31.4 52.0 31.5 C54.5 31.5 57.6 32.9 59.3 34.7 C61.1 36.4 62.5 39.5 62.5 42.0Z" fill="#fff"/><path d="M39.5 40 Q41 37.5 42.5 40"/><path d="M34 60 Q40 64 46 60"/></g><g fill="#141414"><circle cx="31" cy="43" r="3"/><circle cx="54" cy="43" r="3"/></g></svg><span>LLMO</span></a>
     <nav class="nav" aria-label="ページ内">
       <a href="#shift">なぜ今</a><a href="#abcd">何を測るか</a><a href="#product">ダッシュボード</a>
     </nav>
@@ -365,15 +357,6 @@ p,li,dd{text-wrap:pretty}
 <section class="fv" id="top">
   <div class="fv__stack">
     <div class="wrap fv__head">
-      <ul class="cast" aria-hidden="true">
-        <li style="--i:0"><img src="img/chara/av_p1_1.webp" alt="" width="160" height="160"></li>
-        <li style="--i:1;--c:var(--acc)"><img src="img/chara/av_c2_2.webp" alt="" width="160" height="160"></li>
-        <li style="--i:2;--c:var(--line)"><img src="img/chara/av_p1_3.webp" alt="" width="160" height="160"></li>
-        <li style="--i:3"><img src="img/chara/av_p2_3.webp" alt="" width="160" height="160"></li>
-        <li style="--i:4;--c:var(--acc)"><img src="img/chara/av_p4_3.webp" alt="" width="160" height="160"></li>
-        <li style="--i:5;--c:var(--line)"><img src="img/chara/av_c2_1.webp" alt="" width="160" height="160"></li>
-        <li style="--i:6"><img src="img/chara/av_p4_1.webp" alt="" width="160" height="160"></li>
-      </ul>
       <p class="badge fx"><span class="dots" aria-hidden="true"><i style="--c:var(--gpt)"></i><i style="--c:var(--gem)"></i><i style="--c:var(--cla)"></i><i style="--c:var(--cop)"></i></span>ChatGPT・Gemini・Claude・Copilot の回答を測る</p>
       <h1 class="h1 fv__h1 fx" style="--d:.06s"><span class="l1">AIの答えに、</span><span class="l2">あなたの名前は<wbr>あるか。</span></h1>
       <p class="fv__sub fx" style="--d:.14s">AIの回答を定点で測り、<span class="chip"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M1.5 8s2.4-4.5 6.5-4.5S14.5 8 14.5 8s-2.4 4.5-6.5 4.5S1.5 8 1.5 8z"/><circle cx="8" cy="8" r="2"/></svg>登場率</span>・<span class="chip"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 13V8M8 13V3M13 13V10"/></svg>平均順位</span>・<span class="chip"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 8.5l3 3 7-7"/></svg>合致率</span>の3つの指標で、候補入りと説明の正確さを改善します。</p>
@@ -572,7 +555,7 @@ p,li,dd{text-wrap:pretty}
 </section>
 </main>
 
-<footer class="ft"><div class="wrap"><span class="en">LLMO</span><span>AI回答での掲載・順位を保証するものではありません。</span></div></footer>
+<footer class="ft"><div class="wrap"><span class="logo logo--ft"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" aria-hidden="true" focusable="false" fill="none" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="74" height="74" rx="18" fill="#C8F03C"/><path d="M70.3 46.0 C70.3 53.1 66.4 62.4 61.3 67.3 C56.3 72.3 47.1 75.8 40.0 75.8 C32.9 75.9 23.5 72.4 18.5 67.5 C13.6 62.5 10.2 53.1 10.3 46.0 C10.3 38.9 13.9 29.9 18.8 24.8 C23.8 19.8 33.0 15.8 40.0 15.8 C47.0 15.8 56.0 19.9 61.0 25.0 C66.1 30.0 70.2 38.9 70.3 46.0Z" fill="#fff" stroke="#141414" stroke-width="5"/><g stroke="#141414" stroke-width="4.5"><path d="M39.5 42.0 C39.5 44.5 38.1 47.6 36.3 49.3 C34.6 51.1 31.5 52.5 29.0 52.5 C26.5 52.6 23.3 51.2 21.5 49.5 C19.8 47.7 18.5 44.5 18.5 42.0 C18.5 39.5 19.8 36.3 21.5 34.5 C23.3 32.8 26.5 31.5 29.0 31.5 C31.5 31.6 34.7 32.8 36.5 34.5 C38.2 36.3 39.5 39.5 39.5 42.0Z" fill="#fff"/><path d="M62.5 42.0 C62.5 44.5 61.2 47.7 59.4 49.4 C57.7 51.2 54.5 52.5 52.0 52.5 C49.5 52.5 46.3 51.2 44.5 49.5 C42.7 47.7 41.4 44.5 41.4 42.0 C41.4 39.5 42.8 36.3 44.6 34.6 C46.3 32.8 49.5 31.4 52.0 31.5 C54.5 31.5 57.6 32.9 59.3 34.7 C61.1 36.4 62.5 39.5 62.5 42.0Z" fill="#fff"/><path d="M39.5 40 Q41 37.5 42.5 40"/><path d="M34 60 Q40 64 46 60"/></g><g fill="#141414"><circle cx="31" cy="43" r="3"/><circle cx="54" cy="43" r="3"/></g></svg><span>LLMO</span></span><span>AI回答での掲載・順位を保証するものではありません。</span></div></footer>
 
 <script>
 (function(){
