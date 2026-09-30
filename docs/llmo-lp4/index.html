@@ -1,0 +1,1246 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>LLMOHack｜事業を理解し、LLMOの戦略を描く</title>
+<meta name="description" content="誰の、どのようなニーズに、貴社ならではの価値を提供するか。サムライスタイルは、市場・顧客・競合と貴社のアセットを踏まえた事業戦略から、AI回答での言及・引用機会を増やすLLMOまでを一貫して支援します。">
+<meta property="og:title" content="LLMOHack｜事業を理解し、LLMOの戦略を描く">
+<meta property="og:description" content="誰の、どのようなニーズに、貴社ならではの価値を提供するか。事業戦略から、AI回答での言及・引用機会を増やすLLMOまでを一貫して支援します。">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="img/favicon.svg">
+<meta name="theme-color" content="#FFFFFF">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* ──────────────────────────────────────────────
+   原稿：scripts/llmo-lp/v1.md（2026-09-30 の構成）を一字一句そのまま。画像は原稿の「画像イメージ」どおりの図を HTML で組む
+   見た目：E案（紺・灰・白＋青1色。図の矢印と強調はペンの線）＋3段の三角のキャラを6節に1体ずつ
+   原稿に無い素材（橋本氏の写真・経歴、ボタンの行き先）は ※要確認 のまま空けてある
+   ────────────────────────────────────────────── */
+:root{
+  --bg:#FFFFFF; --paper:#FFFFFF; --ink:#0F1A2E; --ink2:#46506A; --ink3:#5F6880; --grey:#7A8296;
+  --line:#E6E8EC; --line2:#D5D9E0; --soft:#F4F5F7;
+  --acc:#2460DD;   /* 青＝会社サイト（samurai-style.tokyo）の色。So 9/30 ライム→青 */
+  /* 強調色の使い分け（配色案を差し替えるときはここだけ変える）：on-acc＝強調色の上の字／hl＝本文の太字のマーカー／mk＝FV見出しのマーカー／tint＝薄い地／chk＝チェック印の地／acc-dk＝墨の地の上の強調 */
+  --ok:#1E8A5A; --ok-soft:#E3F3EA;   /* 済んだ・クリアの印（緑） */
+  --cta:#D04500; --cta-ink:#A83700;   /* 保護色＝ブランドの青の反対側（オレンジ）。押す場所だけに使う。白文字4.63:1。So 9/30「CTAとして保護色を」 */
+  --on-acc:#FFFFFF; --hl:rgba(36,96,221,.18); --mk:#FFE27A; --tint:#E7EEFD; --chk:#BCD0FF; --acc-dk:#8DB0FF;
+  --en:"Noto Sans JP",sans-serif;   /* 英数字も同じ書体（So 9/30「フォントは統一」） */
+  --wrap:1180px; --pad:clamp(20px,5vw,44px);
+  --h2:clamp(28px,3.2vw,44px); --fs:17px;
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:80px;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN",sans-serif;
+  font-weight:500;font-size:var(--fs);line-height:1.95;letter-spacing:.02em;line-break:strict;-webkit-font-smoothing:antialiased}
+p,h1,h2,h3,h4,ul,ol,dl,dd,figure,table{margin:0}
+ul,ol{padding:0;list-style:none}
+a{color:inherit}
+.wrap{width:min(var(--wrap),100% - var(--pad)*2);margin-inline:auto;position:relative;z-index:1}
+.narrow{max-width:800px}
+.nb{display:inline-block}
+.en{font-family:var(--en)}
+.h1,.h2,.h3,.btn,.node,.svc{word-break:keep-all;overflow-wrap:anywhere}
+p,li,dd,td{text-wrap:pretty}
+.h2{font-weight:900;font-size:var(--h2);line-height:1.4;letter-spacing:-.005em}
+.prose{margin-top:28px;display:grid;gap:14px;color:var(--ink2)}
+.prose strong,.mk{font-weight:700;color:var(--ink);background:linear-gradient(transparent 58%,var(--hl) 58%,var(--hl) 94%,transparent 94%);padding:0 2px}
+.sec{position:relative;padding:clamp(88px,10vw,140px) 0}
+.sec--paper{background:var(--paper)}
+.sample-tag{display:inline-block;font-family:var(--en);font-weight:700;font-size:11.5px;letter-spacing:.12em;color:var(--ink3);border:1px solid var(--line2);border-radius:6px;padding:1px 8px;background:var(--paper)}
+
+/* ボタン（原稿の文言が長いので、折り返しても崩れない形） */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:56px;padding:12px 26px;border-radius:10px;text-align:center;
+  font-weight:700;font-size:16px;line-height:1.5;letter-spacing:.03em;text-decoration:none;transition:transform .2s var(--ease),box-shadow .2s,background .2s,border-color .2s}
+.btn svg{width:17px;height:17px;flex:none;transition:transform .2s var(--ease)}
+.btn--ink{background:var(--cta);color:#fff;box-shadow:0 12px 26px -14px rgba(208,69,0,.75)}
+.btn--ink:hover{background:var(--cta-ink)}
+.btn::after{content:"";flex:none;width:8px;height:8px;border-top:2.5px solid currentColor;border-right:2.5px solid currentColor;transform:rotate(45deg);margin-left:2px;transition:transform .2s var(--ease)}
+.btn:hover::after{transform:translateX(3px) rotate(45deg)}
+.hd .btn::after{display:none}
+.btn--ink:hover{transform:translateY(-2px)}
+.btn--ink:hover svg{transform:translateX(3px)}
+.btn--line{background:var(--paper);color:var(--cta);border:2px solid var(--cta)}
+.btn--line:hover{background:#FFF3EC}
+.btn:focus-visible,.nav a:focus-visible{outline:3px solid #4285F4;outline-offset:3px}
+
+/* ── ヘッダー ── */
+.hd{position:fixed;inset:0 0 auto;z-index:50;transition:background .3s,border-color .3s;border-bottom:1px solid transparent}
+.hd.is-scrolled{background:rgba(255,255,255,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-color:var(--line)}
+.hd__in{display:flex;align-items:center;gap:32px;height:70px}
+.logo{display:flex;align-items:center;text-decoration:none;color:var(--ink)}
+.logo{gap:10px}
+.logo__mk{display:block;height:24px;width:auto;flex:none}
+.logo__en{font-weight:900;font-size:22px;letter-spacing:-.025em;line-height:1}
+.logo__ja{font-size:12px;font-weight:700;letter-spacing:.04em;color:var(--ink3);padding-left:11px;border-left:1px solid var(--line2);line-height:1.2;white-space:nowrap}
+.logo--ft{color:var(--ink2)}
+.logo--ft .logo__mk{height:18px}.logo--ft .logo__en{font-size:17px}
+@media (max-width:760px){ .hd .logo__ja{display:none} }
+.nav{display:flex;gap:28px;margin-left:auto}
+.nav a{font-size:14px;font-weight:700;letter-spacing:.04em;text-decoration:none;color:var(--ink2);transition:color .2s}
+.nav a:hover,.nav a.is-cur{color:var(--ink)}
+.hd .btn{min-height:42px;padding:0 18px;font-size:14px;border-radius:9px}
+
+/* ── 1．ファーストビュー（文章＋「選ばれる理由」を起点にした図） ── */
+.fv{position:relative;padding:136px 0 clamp(80px,9vw,120px)}
+.fv__grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);grid-template-areas:"txt dia" "cta dia";column-gap:clamp(40px,5vw,72px);align-items:center}
+.fv__txt{grid-area:txt}
+.fv__dia{grid-area:dia}
+.fv__cta{grid-area:cta;align-self:start;display:grid;gap:12px;max-width:480px;margin-top:32px}
+.svc{display:inline-flex;align-items:center;gap:8px;background:var(--paper);border:1px solid var(--line2);border-radius:999px;padding:4px 16px 4px 12px;
+  font-weight:700;font-size:14px;letter-spacing:.06em;color:var(--ink)}
+.svc i{width:9px;height:9px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 1.5px var(--ink)}
+.fv__h1{margin-top:22px;font-weight:900;font-size:clamp(34px,3.6vw,50px);line-height:1.34;letter-spacing:-.01em}
+.fv__body{margin-top:24px;display:grid;gap:10px;color:var(--ink2)}
+.fv__h1 .mk{font-weight:900;padding:0;background:linear-gradient(transparent 62%,var(--mk) 62%,var(--mk) 92%,transparent 92%)}   /* 決めごと：FV見出しにブランドカラーの強調を1か所（図の中心と同じ言葉） */
+
+/* 図の部品：箱（node）。つなぐ線はペン（JSで描く） */
+.dia{position:relative}
+.node{display:grid;place-items:center;text-align:center;background:var(--paper);border:1px solid var(--line2);border-radius:14px;padding:14px 14px;
+  font-weight:700;font-size:15.5px;line-height:1.5;letter-spacing:.02em;color:var(--ink)}
+.node--key{background:var(--acc);color:var(--on-acc);border:1.5px solid var(--ink);border-radius:20px;padding:30px 16px;font-weight:900;font-size:clamp(22px,2.1vw,29px);line-height:1.35;
+  box-shadow:0 24px 44px -28px rgba(0,0,0,.4)}
+.node--out{background:var(--ink);border-color:var(--ink);color:#fff}
+.dia--fv .dia__in{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr) minmax(0,1fr);grid-template-rows:auto auto;gap:26px 46px;align-items:center}
+.dia--fv [data-k="need"]{grid-area:1 / 1}
+.dia--fv [data-k="asset"]{grid-area:2 / 1}
+.dia--fv [data-k="reason"]{grid-area:1 / 2 / 3 / 3}
+.dia--fv [data-k="ai"]{grid-area:1 / 3}
+.dia--fv [data-k="cmp"]{grid-area:2 / 3}
+.dia--fv .node:not(.node--key){min-height:92px}
+
+/* ── 2．導入：相談文 → 調査論点 → 条件に合う企業と選定理由 ── */
+.dia--q{margin-top:64px;display:grid;justify-items:center}
+.q-bubble{position:relative;max-width:720px;background:var(--paper);border:1.5px solid var(--ink);border-radius:22px;padding:18px 70px 18px 58px;font-weight:700;font-size:16.5px;line-height:1.8;color:var(--ink);box-shadow:0 18px 36px -26px rgba(15,26,46,.45)}
+/* AIに聞いている入力欄（So 9/30「検索している感じ。AIに聞いている感じ」）：左にAIの印、右に送信ボタン、文は1文字ずつ打たれる */
+.q-bubble::before{content:"";position:absolute;left:18px;top:20px;width:26px;height:26px;border-radius:50%;background:var(--acc) radial-gradient(circle at 50% 50%,#fff 0 3px,transparent 3.5px)}
+.q-bubble::after{content:"";position:absolute;right:16px;bottom:14px;width:38px;height:38px;border-radius:50%;background:var(--ink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 18V6M6.5 11.5 12 6l5.5 5.5' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/20px no-repeat;transition:background-color .2s}
+.q-bubble.is-sent::after{background-color:var(--acc);animation:qsend .5s var(--ease)}
+@keyframes qsend{50%{transform:scale(1.15)}}
+.q-bubble .q-rest{color:transparent}
+.q-bubble .q-caret{display:inline-block;width:2px;height:1.1em;margin:0 1px -.18em;background:var(--acc);animation:qcaret 1s steps(1) infinite}
+@keyframes qcaret{50%{opacity:0}}
+/* 送信のあと：論点が1つずつ出て「調べ中」→チェック、最後に答えがまとまる（クエリファンアウトを動きで見せる。So 9/30） */
+.q-anim .q-points .node,.q-anim .q-result,.q-anim .q-cap{opacity:0;transform:translateY(10px);transition:opacity .45s var(--ease),transform .45s var(--ease)}
+.q-anim .q-points .node.is-on,.q-anim .q-result.is-on,.q-anim .q-cap.is-on{opacity:1;transform:none}
+.q-anim .ann{opacity:0;transition:opacity .5s}
+.q-anim.is-drawn .ann{opacity:1}
+.q-points .node{position:relative}
+.q-points .node.is-on::after{content:"";position:absolute;right:-8px;top:-8px;width:22px;height:22px;border-radius:50%;border:2.5px solid var(--line2);border-top-color:var(--acc);background:var(--paper);animation:qspin .7s linear infinite}
+.q-points .node.is-done::after{animation:none;border:0;background:var(--ok) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M4.5 9.5l3 3 6-7' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/16px no-repeat}
+@keyframes qspin{to{transform:rotate(360deg)}}
+.q-anim .q-result.is-on{animation:qpop .5s var(--ease)}
+@keyframes qpop{0%{transform:scale(.92)}60%{transform:scale(1.04)}100%{transform:scale(1)}}
+.q-points{margin-top:70px;width:100%;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.q-points .node{min-height:76px}
+.q-result{margin-top:70px;min-width:min(440px,100%)}
+.q-cap{margin-top:34px;font-weight:900;font-size:clamp(20px,2vw,26px);line-height:1.5;text-align:center}
+
+/* ── 3．事業戦略：STP と、3つを照合する図 ── */
+.stp{margin-top:40px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.stp li{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:24px 24px 26px}
+.stp h3{font-weight:900;font-size:19px;line-height:1.5}
+.stp .sep{color:var(--line2);margin:0 .2em}
+.stp .en{font-weight:600;font-size:14px;letter-spacing:.06em;color:var(--ink3)}
+.stp p{margin-top:10px;font-size:15.5px;color:var(--ink2)}
+.after{margin-top:28px;color:var(--ink2)}
+.dia--stp{margin-top:64px;display:grid;justify-items:center}
+.stp-in{width:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.stp-in .node{min-height:70px}
+.stp-core{margin-top:66px;min-width:min(420px,100%)}
+.stp-out{margin-top:66px;width:min(640px,100%);display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.stp-out .node{min-height:70px}
+
+/* ── 4．事業戦略→LLMOとは：目指す状態／現在のAI回答／ギャップ ── */
+.about{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(40px,5vw,56px)}   /* 上に見出しと本文、下に横長の図（So 9/30） */
+.about > div:first-child{width:100%;max-width:800px;margin-inline:auto}
+.about > figure{width:min(100%,1000px);margin-inline:auto}
+.dia--gap{display:grid}
+.gap-row{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:18px;align-items:stretch}
+.gap-card{background:var(--paper);border:1px solid var(--line2);border-radius:16px;padding:18px 18px 20px;display:grid;align-content:start;gap:8px}
+.gap-card--goal{border:1.5px solid var(--ink)}
+.gap-lbl{font-weight:700;font-size:13px;letter-spacing:.06em;color:var(--ink3)}
+.gap-txt{font-weight:700;font-size:16px;line-height:1.65;color:var(--ink)}
+.gap-mid{align-self:center;font-weight:900;font-size:17px;padding:6px 4px;writing-mode:horizontal-tb}
+.gap-acts{margin-top:70px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.gap-acts .node{min-height:64px;font-size:15px;background:var(--acc);color:var(--on-acc);border-color:var(--ink)}
+
+/* 1画面目 v3：左に文、右に動画（So 9/30）。前の2列は動画が約600pxで小さかった → 幅を広げ、動画側を約7/12に */
+.fv .wrap.fv__split{width:min(1320px,100% - var(--pad)*2)}
+.fv__split{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);grid-template-areas:"h vid" "b vid" "c vid";grid-template-rows:auto auto 1fr;column-gap:clamp(32px,4vw,56px);align-items:start}
+.fv__split > .fv__h1{grid-area:h;margin-top:clamp(8px,2vw,28px);font-size:clamp(32px,3.2vw,46px)}
+.fv__split > .fv__body{grid-area:b}
+.fv__split > .fv__vid{grid-area:vid;align-self:center;width:100%;margin:0;padding-top:0}
+.fv__split > .fv__cta{grid-area:c;align-self:start;max-width:480px}
+@media (max-width:1080px){
+  .fv__split{grid-template-columns:minmax(0,1fr);grid-template-areas:"h" "b" "vid" "c";grid-template-rows:auto}
+  .fv__split > .fv__vid{margin-top:32px}
+  .fv__split > .fv__cta{max-width:none}
+}
+
+/* （旧）1画面目は縦1列：キーメッセージ → 説明 → 動画 → ボタン（So 9/30。説明は「動画の上で良さそう」）。上の札「事業戦略→LLMO」は消した（So「消していい」） */
+.fv__col{display:grid;grid-template-columns:minmax(0,1fr);justify-items:center;text-align:center}
+.fv__col > *{grid-area:auto;grid-column:1}   /* 2列の時の grid-area（txt/dia/cta）が残ると崩れる */
+.fv__col .fv__h1{margin-top:0;max-width:18em}
+.fv__col .fv__vid{width:min(100%,920px);margin-top:clamp(28px,3.4vw,40px);padding-top:0}
+.fv__col .fv__body{max-width:760px;margin-top:clamp(18px,2.2vw,26px)}
+.fv__col .fv__cta{grid-template-columns:repeat(2,minmax(0,1fr));max-width:820px;width:100%;margin-top:28px}
+@media (max-width:760px){ .fv__col .fv__cta{grid-template-columns:minmax(0,1fr)} .fv__col .fv__body{text-align:left} }
+
+/* 1画面目：図の代わりに動画（図の中身＝顧客のニーズ・貴社のアセット→選ばれる理由→AI回答での紹介・引用／顧客の比較検討・相談 は動画の2〜3場面目）。
+   キャラは動画の枠の上端に腰かける。座面は絵の高さの80.2%（tools_fv_chara.py → img/chara/sit.json）。So 9/30「FVにキャラ入れないと」 */
+.fv__vid{position:relative;--cw:clamp(92px,9.5vw,136px);padding-top:calc(var(--cw) * .9)}
+.fv__vid .vid{position:relative;border-radius:18px;overflow:hidden;border:1px solid var(--line2);background:#fff;box-shadow:0 40px 70px -48px rgba(15,26,46,.45)}
+.fv__vid video{display:block;width:100%;height:auto;aspect-ratio:16/9}
+.fv__chara{position:absolute;z-index:2;right:9%;top:calc(var(--cw) * .9 - var(--cw) * 400 / 360 * .802);width:var(--cw);height:auto;pointer-events:none}
+
+/* 2．AIのチャット画面（So 9/30「矢印多すぎる。AIのチャットっぽく、裏側でどう動いているか見せる」）。
+   相談文が打たれて送られ、AIがクエリファンアウトで4つの論点を調べ、条件に合う企業と選定理由で答える */
+.qc{margin-top:56px;display:grid;justify-items:center;gap:20px}
+.qc-win{width:min(100%,860px);background:var(--paper);border:1px solid var(--line2);border-radius:20px;overflow:hidden;box-shadow:0 40px 70px -50px rgba(15,26,46,.45)}
+.qc-bar{display:flex;gap:7px;padding:12px 16px;background:var(--bg);border-bottom:1px solid var(--line)}
+.qc-bar i{width:10px;height:10px;border-radius:50%;background:var(--line2)}
+.qc-body{display:grid;gap:18px;padding:24px clamp(16px,3vw,32px) 28px}
+.qc-user{justify-self:end;max-width:560px;background:var(--ink);color:#fff;border-radius:20px 20px 6px 20px;padding:14px 20px;font-weight:700;font-size:15.5px;line-height:1.75;text-align:left}
+.qc-user .q-rest{color:transparent}
+.qc-user .q-caret{display:inline-block;width:2px;height:1.1em;margin:0 1px -.18em;background:#fff;animation:qcaret 1s steps(1) infinite}
+.qc-think{justify-self:start;width:min(100%,640px);border:1px dashed var(--line2);border-radius:16px;padding:14px 16px;background:var(--bg)}
+.qc-think__hd{display:flex;align-items:center;gap:8px;font-weight:700;font-size:13px;letter-spacing:.06em;color:var(--ink3)}
+.qc-spin{width:14px;height:14px;border-radius:50%;border:2px solid var(--line2);border-top-color:var(--acc);animation:qspin .8s linear infinite}
+.qc-think.is-done .qc-spin{animation:none;border-color:var(--ok);background:var(--ok)}
+.qc-pts{margin-top:10px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.qc-pts li{position:relative;display:grid;justify-items:center;gap:4px;text-align:center;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px 6px;font-weight:700;font-size:13.5px;line-height:1.45;word-break:keep-all;overflow-wrap:anywhere}
+.qc-pts .ico{width:30px;height:30px}
+.qc-pts li::after{content:"";position:absolute;right:-6px;top:-6px;width:18px;height:18px;border-radius:50%;background:var(--ok) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M4.5 9.5l3 3 6-7' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat}
+.qc-ans{justify-self:start;width:min(100%,640px);background:var(--paper);border:1.5px solid var(--acc);border-radius:20px 20px 20px 6px;padding:16px 20px}
+.qc-ans__hd{display:flex;align-items:center;gap:10px;font-weight:900;font-size:17px;word-break:keep-all}
+.qc-ans__hd i{flex:none;width:22px;height:22px;border-radius:50%;background:var(--acc)}
+.qc-sk{display:grid;gap:7px;margin-top:12px}
+.qc-sk i{display:block;height:9px;border-radius:5px;background:var(--soft)}
+.qc-sk i:nth-child(2){width:86%}.qc-sk i:nth-child(3){width:62%}
+/* 動く時だけの初期状態 */
+.qc-anim .qc-think,.qc-anim .qc-ans,.qc-anim .q-cap{opacity:0;transform:translateY(10px);transition:opacity .45s var(--ease),transform .45s var(--ease)}
+.qc-anim .qc-pts li{opacity:0;transform:translateY(6px);transition:opacity .35s var(--ease),transform .35s var(--ease)}
+.qc-anim .qc-pts li::after{transform:scale(0);transition:transform .3s var(--ease)}
+.qc-anim .is-on{opacity:1!important;transform:none!important}
+.qc-anim .qc-pts li.is-done::after{transform:scale(1)}
+@media (max-width:600px){ .qc-pts{grid-template-columns:repeat(2,minmax(0,1fr))} .qc-user{font-size:14.5px} }
+
+/* 3．3Cの図 v2（So 9/30「重なっていて微妙。アイコンなくていい」）：三角形の頂点に3つ（顧客・自社・競合）、
+   各頂点から中心の「優先する顧客と提供価値」へ線。そこから下の2つが決まる */
+.c3{margin-top:56px;display:grid;justify-items:center;gap:10px}
+.c3-tri{position:relative;width:min(100%,720px);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-areas:". a ." ". core ." "b . c";row-gap:clamp(26px,4vw,40px);column-gap:12px;align-items:center}
+.c3-lines{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.c3-box{position:relative;z-index:1;display:grid;justify-items:center;gap:2px;text-align:center;background:var(--paper);border:1.5px solid var(--ink);border-radius:14px;padding:14px 10px;font-weight:700;font-size:16px;line-height:1.45;word-break:keep-all}
+.c3-box .en{font-size:11.5px;font-weight:600;letter-spacing:.08em;color:var(--ink3)}
+.c3-box--1{grid-area:a}.c3-box--2{grid-area:b}.c3-box--3{grid-area:c}
+.c3-core{position:relative;z-index:1;grid-area:core;text-align:center;background:var(--acc);color:#fff;border:1.5px solid var(--ink);border-radius:16px;padding:18px 12px;font-weight:900;font-size:18px;line-height:1.45;word-break:keep-all;box-shadow:0 22px 40px -26px rgba(15,26,46,.5)}
+.c3-down{width:18px;height:36px;color:var(--ink)}
+.c3-out{width:min(560px,100%);display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.c3-out .node{min-height:64px}
+.c3-lines line{stroke:var(--ink);stroke-width:2}   /* 各頂点から中心へ。点線の三角は薄くて分かりにくいのでやめた（9/30） */
+/* 動く時だけの初期状態 */
+.c3-anim .c3-box{opacity:0;transform:scale(.9);transition:opacity .45s var(--ease),transform .45s var(--ease)}
+.c3-anim .c3-core,.c3-anim .c3-down,.c3-anim .c3-out{opacity:0;transform:translateY(10px);transition:opacity .45s var(--ease),transform .45s var(--ease)}
+.c3-anim .c3-lines line{opacity:0;transition:opacity .5s var(--ease)}
+.c3-anim .is-on{opacity:1!important;transform:none!important}
+.c3-anim .c3-lines line.is-on{opacity:1}
+@media (max-width:600px){ .c3-box{font-size:13.5px;padding:12px 6px} .c3-core{font-size:15px;padding:14px 8px} .c3-out .node{font-size:14px} }
+
+/* 4．ギャップの図 v3：現在のAI回答（左）と目指す状態（右）の間に線を引き、施策3つを関門として置く。
+   キャラが線の上を進み、通った関門から緑のチェックでクリア、最後に旗（目指す状態）に着く */
+.rd{display:grid;gap:18px}
+.rd-ends{display:grid;grid-template-columns:minmax(0,1fr) 56px minmax(0,1fr);align-items:center}
+.rd-arrow{display:block;width:44px;height:20px;margin:auto;color:var(--ink)}
+.rd-card{background:var(--paper);border:1.5px dashed var(--line2);border-radius:14px;padding:14px 16px}
+.rd-card--goal{border:1.5px solid var(--acc);text-align:right}
+.rd-lbl{font-weight:700;font-size:13px;letter-spacing:.06em;color:var(--ink3);display:flex;align-items:center;gap:6px}
+.rd-card--goal .rd-lbl{justify-content:flex-end;color:var(--acc)}
+.rd-card--goal .rd-lbl i{width:10px;height:14px;background:var(--acc);clip-path:polygon(0 0,100% 30%,0 60%)}
+.rd-txt{margin-top:6px;font-weight:700;font-size:15.5px;line-height:1.6}
+.rd-road{position:relative;padding:108px 0 0}
+.rd-gap{position:absolute;left:50%;top:0;transform:translateX(-50%);font-weight:900;font-size:14px;letter-spacing:.08em;color:var(--ink3)}
+.rd-line{position:relative;height:6px;margin:0 14px;border-radius:3px;background:repeating-linear-gradient(90deg,var(--line2) 0 8px,transparent 8px 14px)}
+.rd-fill{position:absolute;left:0;top:0;bottom:0;width:100%;border-radius:3px;background:var(--ink);transition:width .8s linear}
+.rd-walker{position:absolute;left:92%;bottom:2px;width:auto;height:72px;transform:translateX(-50%);transition:left .8s linear}
+.rd-start{position:absolute;left:4px;top:102px;width:18px;height:18px;border-radius:50%;background:var(--ink)}
+.rd-flag{position:absolute;right:4px;top:68px;width:24px;height:40px;border-left:3px solid var(--ink)}
+.rd-flag::after{content:"";position:absolute;left:0;top:0;width:22px;height:16px;background:var(--acc);clip-path:polygon(0 0,100% 50%,0 100%)}
+.rd-steps{position:relative;height:118px;margin:0 14px}
+.rd-steps li{position:absolute;left:var(--x);top:0;transform:translateX(-50%);width:clamp(96px,11vw,140px);display:grid;justify-items:center;gap:4px;text-align:center;padding-top:14px}
+.rd-steps li::before{content:"";position:absolute;top:-12px;left:50%;margin-left:-11px;width:22px;height:22px;border-radius:50%;background:var(--paper);border:2px solid var(--ink);box-sizing:border-box}
+.rd-steps li::after{content:"";position:absolute;top:-12px;left:50%;margin-left:-11px;width:22px;height:22px;border-radius:50%;background:var(--ok) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M4.5 9.5l3 3 6-7' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/16px no-repeat}
+.rd-steps .ico{width:36px;height:36px}
+.rd-steps span{font-weight:700;font-size:14px;line-height:1.45;word-break:keep-all;overflow-wrap:anywhere}
+/* 動く時だけの初期状態（動きを減らす設定では、最後の状態＝全部クリア） */
+.rd-anim .rd-fill{width:0}
+.rd-anim .rd-walker{left:0}
+.rd-anim .rd-steps li{opacity:.45;transition:opacity .4s}
+.rd-anim .rd-steps li::after{transform:scale(0);transition:transform .35s var(--ease)}
+.rd-anim .rd-steps li.is-done{opacity:1}
+.rd-anim .rd-steps li.is-done::after{transform:scale(1)}
+.rd-anim .rd-card--goal{border-style:dashed;border-color:var(--line2);transition:border-color .4s,box-shadow .4s}
+.rd-anim.is-reached .rd-card--goal{border-style:solid;border-color:var(--acc);box-shadow:0 0 0 4px rgba(36,96,221,.14)}
+@media (max-width:600px){ .rd-txt{font-size:14px} .rd-steps span{font-size:12px} .rd-steps li{width:74px} .rd-steps{height:128px} }
+
+/* （旧）4．ギャップの図（So 9/30「わかりにくい」→作り直し）。左＝現在のAI回答、右＝目指す状態（左から右へ読むと前に進む向き）。
+   間の線路は施策が1つ済むごとに1/3ずつ埋まり、3つ目で目指す状態に届く。原稿の言葉8つはそのまま */
+.g2{display:grid;gap:22px}
+.g2-row{display:grid;grid-template-columns:minmax(0,1fr) 88px minmax(0,1fr);align-items:stretch}
+.g2-card{background:var(--paper);border:1.5px dashed var(--line2);border-radius:16px;padding:16px 16px 18px;transition:border-color .4s,box-shadow .4s}
+.g2-card--goal{border:1.5px solid var(--acc)}
+.g2-lbl{display:flex;align-items:center;gap:7px;font-weight:700;font-size:13px;letter-spacing:.06em;color:var(--ink3)}
+.g2-lbl i{width:14px;height:14px;border-radius:50%;background:var(--line2)}
+.g2-card--goal .g2-lbl i{background:var(--acc)}
+.g2-txt{margin-top:8px;font-weight:700;font-size:16px;line-height:1.65;color:var(--ink)}
+.g2-mid{display:grid;align-content:center;justify-items:center;gap:8px;padding:0 8px}
+.g2-gap{font-weight:900;font-size:15px}
+.g2-track{position:relative;width:100%;height:10px;border-radius:5px;background:repeating-linear-gradient(90deg,var(--line2) 0 8px,transparent 8px 14px)}
+.g2-fill{position:absolute;left:0;top:0;bottom:0;width:100%;border-radius:5px;background:var(--acc);transition:width .7s var(--ease)}
+.g2-fill::after{content:"";position:absolute;right:-9px;top:50%;margin-top:-8px;border:8px solid transparent;border-left:10px solid var(--acc);border-right:0}
+.g2-acts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;counter-reset:g2}
+.g2-acts li{position:relative;display:grid;justify-items:center;gap:6px;text-align:center;background:var(--paper);border:1px solid var(--line2);border-radius:14px;padding:14px 10px 14px;font-weight:700;font-size:15px;line-height:1.5;transition:background .4s,border-color .4s,color .4s,opacity .4s,transform .4s}
+.g2-acts li .ico{width:40px;height:40px}
+.g2-acts li span{word-break:keep-all;overflow-wrap:anywhere}
+.g2-acts li::after{content:"";position:absolute;right:-7px;top:-7px;width:22px;height:22px;border-radius:50%;background:var(--ok) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M4.5 9.5l3 3 6-7' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/16px no-repeat}
+/* 動く時だけの初期状態（動きを減らす設定では最後の状態のまま） */
+.g2-anim .g2-fill{width:0}
+.g2-anim .g2-acts li{opacity:.35}
+.g2-anim .g2-acts li::after{transform:scale(0);transition:transform .35s var(--ease)}
+.g2-anim .g2-acts li.is-on{opacity:1;border-color:var(--acc);transform:translateY(-3px)}
+.g2-anim .g2-acts li.is-done::after{transform:scale(1)}
+.g2-anim .g2-card--goal{border-style:dashed;border-color:var(--line2)}
+.g2-anim.is-reached .g2-card--goal{border-style:solid;border-color:var(--acc);box-shadow:0 0 0 4px rgba(36,96,221,.14)}
+@media (max-width:600px){
+  .g2-row{grid-template-columns:minmax(0,1fr);gap:10px}
+  .g2-mid{grid-template-columns:auto minmax(0,1fr);align-items:center;justify-items:stretch;padding:4px 18px 4px 6px}
+  .g2-acts{gap:8px}
+  .g2-acts li{font-size:13.5px;padding:12px 6px}
+}
+
+/* アイコン（キャラと同じ画風：ペンの線＋青。So 9/30「アイコンが入りそうな箇所は全て入れたい」）。飾りなので読み上げない */
+.ico{display:block;width:40px;height:40px;flex:none}
+.node .ico{margin:0 auto 6px}
+.node--out .ico,.gap-acts .ico{background:#fff;border-radius:50%;padding:3px;width:42px;height:42px}   /* 暗い地・青い地の箱は白い丸に載せる */
+.dia--fv .node .ico{width:36px;height:36px}
+.dia--fv .node--out .ico{width:38px;height:38px}
+.stp li .ico{width:52px;height:52px;margin-bottom:12px}
+.flow__step{position:relative}
+.flow__step > .ico{position:absolute;right:20px;top:18px;width:48px;height:48px}
+.flow__step h3{padding-right:0}   /* STEPのアイコンは外した（So 9/30） */
+.checks li .ico{width:30px;height:30px}
+.shot-s video{display:block;width:100%;height:auto;aspect-ratio:1600/1000;background:#fff}
+
+/* キャラ（3段の三角。So 9/30「説明する時にキャラクターがいるとわかりやすい」「元が一番いい」）
+   1節に1体。広い画面は見出しの右（本文の段の外）、狭い画面は見出しの上の余白に置く。本文には重ねない */
+.h2wrap{position:relative}
+.chara{display:block;height:84px;width:auto;position:absolute;right:0;bottom:calc(100% + 4px);pointer-events:none}
+.chara--flip{scale:-1 1}
+.cta2__btn .chara{position:static;justify-self:end;height:96px;margin-bottom:4px}
+@media (min-width:1320px){
+  .chara{height:190px;right:auto;left:calc(100% + 40px);bottom:0}
+  .chara--wide{height:150px}
+  .cta2__btn .chara{position:static;height:120px;margin-bottom:2px}   /* ボタンの横に置くと上の本文に重なった（1320px以上）→ボタンの上に右寄せ */
+}
+
+/* 途中のボタン */
+.ctaband{padding:0 0 clamp(88px,10vw,140px)}
+.ctaband__in{background:var(--ink);border-radius:22px;padding:clamp(28px,4vw,44px);display:flex;flex-wrap:wrap;justify-content:center;gap:14px}
+.ctaband .btn--line{background:transparent;color:#fff;border-color:var(--cta)}
+.ctaband .btn--line:hover{background:rgba(208,69,0,.18)}
+
+/* ── 5．サービスの流れ：縦に5つ。STEP 5 から STEP 1・2 へ戻る線（ペン） ── */
+.flow{margin-top:52px;position:relative;display:grid;gap:14px;padding-left:92px}
+.flow__step{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:22px 26px 24px}
+.flow__step h3{font-weight:900;font-size:clamp(18px,1.7vw,21px);line-height:1.55}
+.flow__no{font-family:var(--en);font-weight:700;letter-spacing:.06em}
+.flow__sep{color:var(--line2);margin:0 .25em}
+.flow__step > p{margin-top:8px;font-size:15.5px;color:var(--ink2)}
+.flow__q{margin-top:12px;display:grid;gap:8px}
+.flow__q li{background:var(--bg);border-radius:10px;padding:9px 14px;font-size:15px;line-height:1.7;color:var(--ink2)}
+.flow__q b{color:var(--ink)}
+.flow .pen-note[data-n="loop"]{left:0;font-size:19px;--r:-90deg;transform-origin:left top}
+
+/* ── 6．提供価値：2×2 ── */
+.vals{margin-top:52px;display:grid;grid-template-columns:minmax(0,1fr);gap:18px}   /* 1列×4段（So 9/30） */
+.val{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:30px 34px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);grid-template-areas:"h fig" "txt fig";grid-template-rows:auto 1fr;column-gap:clamp(28px,4vw,56px);row-gap:12px;align-items:start}
+.val > h3{grid-area:h}.val > .val__txt{grid-area:txt}.val > .val__fig{grid-area:fig;align-self:center;margin-top:0}
+@media (max-width:900px){ .val{grid-template-columns:minmax(0,1fr);grid-template-areas:"h" "txt" "fig";padding:24px 22px} .val > .val__fig{margin-top:8px} }
+.val h3{font-weight:900;font-size:clamp(18px,1.7vw,21px);line-height:1.55}
+.val__no{font-family:var(--en);font-weight:700;margin-right:.15em}
+.val__txt{display:grid;gap:8px;font-size:15.5px;color:var(--ink2)}
+.val__fig{margin-top:8px}
+.person{display:grid;grid-template-columns:120px minmax(0,1fr);gap:16px;align-items:center}
+.person__ph{aspect-ratio:1;border-radius:14px;background:repeating-linear-gradient(45deg,var(--soft),var(--soft) 8px,#E8E8E3 8px,#E8E8E3 16px);display:grid;place-items:center;
+  font-size:13px;font-weight:700;color:var(--ink3);border:1px dashed var(--line2)}
+.person__cv{font-size:13.5px;line-height:1.8;color:var(--ink3)}   /* 経歴は hook-hack.com「メンバー紹介」の原文のまま（So 9/30「ここから引っ張ってきて」） */
+.person__img{display:block;width:100%;height:auto;aspect-ratio:1;object-fit:cover;border-radius:14px;background:#fff;border:1px solid var(--line)}
+.person__nm{margin-bottom:4px;color:var(--ink);font-size:14px}
+.person__nm b{font-size:16px;margin-right:10px}
+.person{align-items:start}
+.shot-s{border-radius:12px;border:1px solid var(--line);overflow:hidden}
+.shot-s img{display:block;width:100%;height:auto}
+.fig-cap{margin-top:6px;font-size:12.5px;color:var(--ink3)}
+.map{width:100%;border-collapse:separate;border-spacing:0 8px;font-size:14px;line-height:1.6}
+.map th{font-size:12.5px;font-weight:700;color:var(--ink3);text-align:left;padding:0 10px}
+.map td{background:var(--soft);padding:10px 12px;color:var(--ink);font-weight:700;vertical-align:middle}
+.map td:first-child{border-radius:10px 0 0 10px}
+.map td:last-child{border-radius:0 10px 10px 0;background:var(--tint)}
+.map .arw{width:26px;padding:0;text-align:center;color:var(--ink3);background:transparent}
+.checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.checks li{display:flex;align-items:center;gap:10px;background:var(--bg);border-radius:10px;padding:10px 12px;font-size:14.5px;font-weight:700;line-height:1.5}
+.checks li::before{content:"";flex:none;width:18px;height:18px;border-radius:5px;border:1.5px solid var(--ink);
+  background:var(--chk) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M4.5 9.5l3 3 6-7' fill='none' stroke='%230F1A2E' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/100% no-repeat}
+
+/* ── 7．ダッシュボードから改善施策へ（画面例＝サンプル） ── */
+.sample{margin-top:48px;background:var(--paper);border:1px solid var(--line2);border-radius:18px;padding:22px 24px 26px;box-shadow:0 40px 80px -60px rgba(0,0,0,.4)}
+.sample__hd{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.sample__hd h3{font-weight:900;font-size:17px}
+.sample__top{margin-top:16px;display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:14px}
+.mtab{width:100%;border-collapse:collapse;font-size:14.5px}
+.mtab th,.mtab td{padding:10px 12px;border-top:1px solid #EFEFEA;text-align:left}
+.mtab thead th{border-top:0;font-size:12.5px;color:var(--ink3);font-weight:700}
+.mtab td:not(:first-child),.mtab th:not(:first-child){text-align:right;font-family:var(--en);font-weight:700}
+.mtab td:first-child{font-weight:700}
+.accu{border:1px solid var(--line);border-radius:14px;padding:16px 18px;display:grid;align-content:center;gap:4px}
+.accu__l{font-size:13px;font-weight:700;color:var(--ink3)}
+.accu__v{font-family:var(--en);font-weight:700;font-size:36px;line-height:1.1}
+.accu__v small{font-size:15px}
+.acts{margin-top:18px;width:100%;border-collapse:collapse;font-size:14px;line-height:1.6}
+.acts th,.acts td{padding:11px 12px;border-top:1px solid #EFEFEA;text-align:left;vertical-align:top}
+.acts thead th{border-top:0;font-size:12.5px;color:var(--ink3);font-weight:700;background:var(--bg)}
+.acts thead th:first-child{border-radius:8px 0 0 8px}
+.acts thead th:last-child{border-radius:0 8px 8px 0}
+.acts td{color:var(--ink);font-weight:500}
+.prio{display:inline-block;font-weight:700;font-size:13px;border-radius:6px;padding:0 9px;background:var(--soft)}
+.prio--hi{background:var(--acc);color:var(--on-acc)}
+
+/* ── 締め：無料レポート／資料ダウンロード ── */
+.cta2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(40px,5vw,72px);align-items:center}
+.cta2__txt .prose{margin-top:22px}
+.cta2__btn{margin-top:30px;max-width:460px;display:grid}
+.cta2__note{margin-top:12px;font-size:13px;line-height:1.8;color:var(--ink3)}
+.report{background:var(--paper);border:1px solid var(--line2);border-radius:18px;padding:22px 24px 24px;box-shadow:0 40px 80px -60px rgba(0,0,0,.4)}
+.report__hd{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.report__hd h3{font-weight:900;font-size:17px}
+.report__kpi{margin-top:14px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.report__kpi div{border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.report__kpi p{font-size:12.5px;font-weight:700;color:var(--ink3);line-height:1.5}
+.report__kpi b{display:block;margin-top:2px;font-family:var(--en);font-size:30px;line-height:1.1}
+.report__kpi b small{font-size:14px}
+.report h4{margin-top:16px;font-size:13px;font-weight:700;color:var(--ink3)}
+.bars{margin-top:8px;display:grid;gap:7px}
+.bars li{display:grid;grid-template-columns:62px minmax(0,1fr) 40px;gap:10px;align-items:center;font-size:13.5px;font-weight:700}
+.bars i{display:block;height:8px;border-radius:4px;background:var(--line2)}
+.bars .me i{background:var(--ink)}
+.bars span:last-child{font-family:var(--en);text-align:right}
+.points{margin-top:8px;display:grid;gap:6px}
+.points li{position:relative;padding-left:18px;font-size:14px;line-height:1.7;color:var(--ink)}
+.points li::before{content:"";position:absolute;left:2px;top:.62em;width:8px;height:8px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 1.5px var(--ink)}
+.deck{position:relative;aspect-ratio:4/3.1;max-width:560px;justify-self:center;width:100%}
+.deck__pg{position:absolute;width:74%;aspect-ratio:16/9;background:var(--paper);border:1px solid var(--line2);border-radius:10px;padding:5% 6%;
+  box-shadow:0 22px 40px -28px rgba(0,0,0,.35);display:grid;align-content:start;gap:8%}
+.deck__pg h5{margin:0;font-size:clamp(12px,1.2vw,15px);font-weight:900}
+.deck__pg i{display:block;height:6px;border-radius:3px;background:var(--soft)}
+.deck__pg i:nth-child(3){width:70%}
+.deck__pg--1{right:0;top:0;transform:rotate(3deg)}
+.deck__pg--2{right:6%;top:15%;transform:rotate(-2deg)}
+.deck__pg--3{right:12%;top:30%;transform:rotate(1.5deg)}
+.deck__cover{position:absolute;left:0;bottom:0;width:74%;aspect-ratio:16/9;background:var(--ink);color:#fff;border-radius:10px;padding:6% 7%;
+  display:grid;align-content:space-between;box-shadow:0 30px 50px -30px rgba(0,0,0,.5)}
+.deck__cover b{font-size:clamp(18px,2vw,26px);font-weight:900;line-height:1.3}
+.deck__cover span{font-size:clamp(12px,1.1vw,14px);font-weight:700;color:#C9C9C3}
+.deck__cover em{font-style:normal;color:var(--acc-dk)}
+.ft{padding:28px 0 40px;border-top:1px solid var(--line)}
+.ft .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;font-size:13px;color:var(--ink3)}
+
+/* ── ペンの線（E案）：図の矢印・強調。線は .pen の上の SVG に JS で描き、画面に入ったら引かれていく ── */
+.pen{position:relative}
+.pen .ann{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:3;mix-blend-mode:multiply}   /* 🚨 層ごと乗算（蛍光ペンの下の字が透ける） */
+.ann path{stroke-dasharray:1 1;stroke-dashoffset:1;transition:stroke-dashoffset .8s cubic-bezier(.35,.1,.25,1) var(--pd,0s)}
+.pen-go .ann path{stroke-dashoffset:0}
+.pen-note{position:absolute;z-index:4;margin:0;font-family:inherit;font-weight:700;font-size:21px;line-height:1.35;
+  color:var(--ink);white-space:nowrap;letter-spacing:.02em;transform:rotate(var(--r,-2deg))}
+.fx-on .pen .pen-note{opacity:0;transition:opacity .6s var(--nd,1s)}
+.fx-on .pen-go .pen-note{opacity:1}
+.sec,.fv{overflow-x:clip}
+
+/* ── 動き（画面に入ったら出す）。JSが無ければ全部見える ── */
+.fx-on .fx{opacity:0;transform:translateY(20px);transition:opacity .8s var(--ease),transform .8s var(--ease);transition-delay:var(--d,0s)}
+.fx-on .fx.hh-in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .fx-on .fx{opacity:1;transform:none;transition:none}
+  .ann path{transition:none}
+  .fx-on .pen .pen-note{opacity:1;transition:none}
+}
+
+/* ── 幅ごとの組み替え ── */
+@media (max-width:1080px){
+  .stp{grid-template-columns:minmax(0,1fr)}
+  .vals{grid-template-columns:minmax(0,1fr)}
+  .about{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:900px){
+  :root{--fs:16px}
+  .nav{display:none}
+  .hd__in{height:60px}
+  .hd .btn{margin-left:auto;min-height:38px;padding:0 14px}
+  .fv{padding:104px 0 72px}
+  /* スマホは 見出し・本文 → 図 → ボタン（決まり：写真・図はボタンより上） */
+  .fv__grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"txt" "dia" "cta"}
+  .fv__dia{margin-top:40px}
+  .fv__cta{max-width:none}
+  .dia--fv .dia__in{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:auto auto auto;gap:56px 14px}
+  .dia--fv [data-k="need"]{grid-area:1 / 1}
+  .dia--fv [data-k="asset"]{grid-area:1 / 2}
+  .dia--fv [data-k="reason"]{grid-area:2 / 1 / 3 / 3}
+  .dia--fv [data-k="ai"]{grid-area:3 / 1}
+  .dia--fv [data-k="cmp"]{grid-area:3 / 2}
+  .dia--fv .node:not(.node--key){min-height:76px}
+  .q-points{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:56px}
+  .q-result{margin-top:56px}
+  .sample__top{grid-template-columns:minmax(0,1fr)}
+  .cta2{grid-template-columns:minmax(0,1fr)}
+  .flow{padding-left:44px}
+  .flow .pen-note[data-n="loop"]{display:none}
+}
+@media (max-width:420px){ :root{--h2:26px} }   /* 375pxで「「AIに選ばれる」とは、」の行の余りが1割を切った（実機Safariで1行増える） */
+@media (max-width:600px){
+  .stp-in{gap:10px}
+  .stp-in .node,.stp-out .node{font-size:14px;padding:12px 8px}
+  .gap-row{grid-template-columns:minmax(0,1fr);gap:44px}
+  .gap-mid{justify-self:center}
+  .gap-acts{grid-template-columns:minmax(0,1fr);margin-top:56px}
+  .val{padding:22px 20px 24px}
+  .person{grid-template-columns:96px minmax(0,1fr)}
+  .checks{grid-template-columns:minmax(0,1fr)}
+  .acts thead{display:none}
+  .acts,.acts tbody{display:block}
+  .acts tr{display:block;padding:10px 0 12px;border-top:1px solid #EFEFEA}
+  .acts td{display:grid;grid-template-columns:7.2em minmax(0,1fr);gap:10px;padding:3px 0;border:0}
+  .acts td::before{content:attr(data-l);font-size:12px;font-weight:700;color:var(--ink3);line-height:1.9}
+  .acts td .prio{justify-self:start}
+  .report__kpi b{font-size:26px}
+}
+/* ── 節のメリハリ（So 9/30「セクションごとのメリハリがない。背景を青にしたりグラデーション。hook-hack.com を参考に」）
+   地は白のまま、2．・6．・資料の節だけ濃い紺→青のグラデーション。上端は斜め、大きな角丸を半透明で重ねる（hook-hack.com と同じ作り）。
+   パステルの地は使わない（So「柔らかい色の背景は避けたい」） ── */
+.sec--deep{position:relative;isolation:isolate;overflow:hidden;color:#fff;background:linear-gradient(160deg,#0B1733 0%,#10275A 55%,#1B4BB4 100%);
+  clip-path:polygon(0 clamp(28px,4vw,64px),100% 0,100% 100%,0 100%);padding-top:clamp(120px,13vw,180px)}
+.sec--deep::before,.sec--deep::after{content:"";position:absolute;z-index:-1;width:clamp(320px,38vw,560px);aspect-ratio:1.5;border-radius:clamp(48px,6vw,90px);background:rgba(255,255,255,.06);transform:rotate(-24deg);pointer-events:none}
+.sec--deep::before{right:-8%;top:8%}
+.sec--deep::after{left:-10%;bottom:-6%;background:rgba(255,255,255,.045)}
+.sec--deep .h2{color:#fff}
+.sec--deep .prose,.sec--deep .cta2__note{color:rgba(255,255,255,.82)}
+.sec--deep .prose strong{color:#fff;background:linear-gradient(transparent 60%,rgba(255,226,122,.42) 60%,rgba(255,226,122,.42) 94%,transparent 94%)}
+.sec--deep .q-cap{color:#fff}
+.sec--deep .val{border-color:transparent;box-shadow:0 30px 60px -40px rgba(0,0,0,.6)}
+.sec--deep .val,.sec--deep .val h3{color:var(--ink)}
+.sec--deep .btn--line{background:transparent;color:#fff;border-color:var(--cta)}
+.sec--deep .btn--line:hover{background:rgba(208,69,0,.18)}
+/* フッター：濃い地に大きな白抜きの名前（hook-hack.com と同じ） */
+.ft--deep{position:relative;overflow:hidden;border-top:0;background:#0B1733;color:rgba(255,255,255,.7);padding:clamp(56px,7vw,96px) 0 36px}
+.ft__big{font-weight:900;font-size:clamp(72px,14vw,200px);line-height:1;letter-spacing:-.03em;white-space:nowrap;color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,.22);text-align:center;margin-bottom:clamp(24px,3vw,40px)}
+.ft--deep .wrap{color:rgba(255,255,255,.7)}
+.ft--deep .logo{color:#fff}
+/* 1画面目：白地に青の斜めの帯（hook-hack.com の1画面目と同じ作り） */
+.fv{overflow:hidden;isolation:isolate}
+
+/* 4．ギャップの図 v4：矢印を1本に（So 9/30「2個の矢印あるの微妙。まとめて」）。左のカード→線（関門3つ）→旗→右のカード */
+.rd-wrap{display:grid;grid-template-columns:minmax(150px,.8fr) minmax(0,2.4fr) minmax(170px,.9fr);align-items:center;gap:14px}
+.rd-wrap .rd-road{padding-top:92px}
+.rd-wrap .rd-start{top:86px}.rd-wrap .rd-flag{top:52px}
+.rd-wrap .rd-card--goal{text-align:left}
+.rd-wrap .rd-card--goal .rd-lbl{justify-content:flex-start}
+@media (max-width:760px){
+  .rd-wrap{grid-template-columns:minmax(0,1fr);gap:4px}
+  .rd-wrap .rd-card--goal{justify-self:end;max-width:78%}
+  .rd-wrap .rd-card--now{max-width:78%}
+}
+
+/* 2．のキャラは見出しの左（So 9/30） */
+.chara--left{right:auto;left:0}
+@media (min-width:1320px){ .chara--left{left:auto;right:calc(100% + 40px)} }
+/* 6．提供価値 v3：1列×4段のまま、箱はやめて段の間を細い線で（So 9/30「テキストはボックスに入れて欲しくない。整えて」） */
+#value .val{background:none;border:0;border-radius:0;box-shadow:none;padding:clamp(32px,4vw,48px) 0;border-top:1px solid var(--line)}
+#value .val:last-child{border-bottom:1px solid var(--line)}
+#value .vals{gap:0}
+/* 7．が濃い地になったので、画面見本は白い箱のまま影を強める */
+.sec--deep .sample{border-color:transparent;box-shadow:0 30px 60px -36px rgba(0,0,0,.6)}
+/* FV動画の下の細い線：いま何場面目か（So 9/30「今動画が最初なのか最後なのかわかるように細い線を」）。5場面に区切り、再生位置で伸びる */
+.vbar{display:grid;grid-template-columns:var(--segs);gap:6px;margin-top:12px}
+.vbar i{position:relative;height:3px;border-radius:2px;background:var(--line2);overflow:hidden}
+.vbar i b{position:absolute;inset:0;width:0;background:var(--acc);border-radius:2px}
+
+/* FVの文（So 9/30「FVのテキストが長いし読みにくい」）：原稿の文は変えず、1文目を導入として大きく太く、残り2文は行間を広げる */
+.fv__split > .fv__body{margin-top:22px;gap:14px;max-width:34em}
+.fv__split > .fv__body p{font-size:15.5px;line-height:1.95}
+.fv__split > .fv__body p:first-child{font-size:clamp(17px,1.35vw,19px);font-weight:700;line-height:1.7;color:var(--ink)}
+
+/* ── 節のメリハリ v2（So 9/30「単一すぎる。hook-hack.com のバリエーションを参考に」）
+   hook-hack.com の作り分け：①斜めに切った濃い節（2．・7．）②白地に大きな弧のグラデーション線（3．・無料レポート）
+   ③名前が横に流れる帯（フッターの前）④濃い地に白いカードの申込み（資料） ── */
+/* ② 白地に大きな弧 */
+.sec--arc{position:relative;overflow:hidden;isolation:isolate}
+.sec--arc::before{content:"";position:absolute;z-index:-1;width:150vw;height:150vw;max-width:2200px;max-height:2200px;border-radius:50%;
+  border:clamp(18px,2.4vw,34px) solid transparent;background:linear-gradient(90deg,rgba(36,96,221,.0),rgba(36,96,221,.55),rgba(41,197,214,.55)) border-box;
+  -webkit-mask:linear-gradient(#000 0 0) padding-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;
+  left:-75vw;top:clamp(40px,6vw,90px);pointer-events:none;opacity:.55}
+#report.sec--arc::before{left:auto;right:-80vw;top:auto;bottom:-120vw}
+/* ① 7．は下側を斜めに（2．は上側） */
+#dash.sec--deep{clip-path:polygon(0 0,100% clamp(28px,4vw,64px),100% 100%,0 calc(100% - clamp(28px,4vw,64px)))}
+/* ④ 資料：濃い地に白いカード */
+#download .cta2{background:#fff;color:var(--ink);border-radius:28px;padding:clamp(32px,4.5vw,64px);box-shadow:0 50px 90px -50px rgba(0,0,0,.6)}
+#download .cta2 .h2{color:var(--ink)}
+#download .cta2 .prose{color:var(--ink2)}
+#download .cta2 .btn--line{background:var(--paper);color:var(--cta);border-color:var(--cta)}
+/* ③ 名前が横に流れる帯（hook-hack.com と同じ。1本だけゆっくり動かす） */
+.mq{overflow:hidden;background:#0B1733;padding:clamp(20px,3vw,36px) 0 0}
+.mq__in::before{content:"LLMOHack\2003 LLMOHack\2003 LLMOHack\2003 LLMOHack\2003 LLMOHack\2003 LLMOHack\2003 LLMOHack\2003 LLMOHack"}   /* 流れる帯の字は飾り（本文の文字にしない。検査の「画面外の文字」に掛からない） */
+.mq__in{display:block;white-space:nowrap;width:max-content;font-weight:900;font-size:clamp(64px,11vw,168px);line-height:1;letter-spacing:-.03em;color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,.2);animation:mq 40s linear infinite}
+@keyframes mq{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){ .mq__in{animation:none} }
+/* フッター：samurai-style.tokyo と同じ作り（CONTACTの白いカード → 名前とリンク → ©）（So 9/30「フッターも整備」） */
+.ft--sa{background:#0B1733;color:#fff;padding:clamp(48px,6vw,80px) 0 28px}
+.ft__contact{display:flex;align-items:center;justify-content:space-between;gap:20px;width:min(600px,100%);margin:0 auto;background:#fff;color:var(--ink);border-radius:14px;padding:22px 34px;text-decoration:none;transition:transform .2s var(--ease)}
+.ft__contact:hover{transform:translateY(-2px)}
+.ft__contact b{display:block;font-size:clamp(26px,3vw,34px);font-weight:500;letter-spacing:.06em;color:var(--acc);line-height:1.2}
+.ft__contact span{display:block;margin-top:6px;font-size:14px;font-weight:500}
+.ft__contact::after{content:"";width:12px;height:12px;border-top:3px solid var(--ink);border-right:3px solid var(--ink);transform:rotate(45deg);flex:none}
+.ft__row{margin-top:clamp(40px,5vw,64px);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px 28px}
+.ft__row .logo{color:#fff}
+.ft__links{display:flex;flex-wrap:wrap;gap:8px 26px;font-size:13px}
+.ft__links a{color:rgba(255,255,255,.85);text-decoration:none}
+.ft__links a:hover{color:#fff;text-decoration:underline}
+.ft__note{margin-top:28px;font-size:12px;color:rgba(255,255,255,.55)}
+.ft__copy{margin-top:10px;text-align:center;font-size:11.5px;color:rgba(255,255,255,.6);letter-spacing:.04em}
+
+/* 濃い地の節の中の白いカードは、文字を紺に戻す（So 9/30「多くの文字が読めない。色が背景と被って」＝白が白いカードに引き継がれていた） */
+.sec--deep .sample,.sec--deep .qc-win,.sec--deep .report,.sec--deep .c3-box,.sec--deep .rd-card,.sec--deep .val,.sec--deep .cta2{color:var(--ink)}
+.ft--sa .logo__ja{color:rgba(255,255,255,.72);border-color:rgba(255,255,255,.3)}
+
+/* ロゴ S2（So 9/30「一旦S2で」）：正面の立体を3段（STP）に分け、てっぺんだけ青。文字は2段（F案の並び） */
+.logo{gap:11px}
+.logo__mk{height:30px}
+.logo__txt{display:grid;gap:3px}
+.logo__en{font-size:21px}
+.logo__ja{padding-left:0;border-left:0;font-size:10.5px;letter-spacing:.06em}
+.ft--sa .logo{--logo-a:#5B8BF0;--logo-ad:#2460DD;--logo-r:#9FB0CF}
+.ft--sa .logo__mk{height:26px}
+@media (max-width:760px){ .hd .logo__ja{display:block;font-size:9.5px} .logo__en{font-size:19px} .logo__mk{height:26px} }
+
+/* 6-3．課題 → 改善施策（So 9/30「もっとうまく表現したい」）：表をやめ、課題のカード → 矢印 → 施策のカード（アイコン＋チェック）を2組 */
+.rx{display:grid;gap:12px}
+.rx-hd{display:grid;grid-template-columns:minmax(0,1fr) 44px minmax(0,1.1fr);font-size:12.5px;font-weight:700;letter-spacing:.06em;color:var(--ink3)}
+.rx-hd span:last-child{grid-column:3}
+.rx-row{display:grid;grid-template-columns:minmax(0,1fr) 44px minmax(0,1.1fr);align-items:center}
+.rx-ar{width:34px;height:18px;margin:auto;color:var(--ink)}
+.rx-p,.rx-s{position:relative;display:flex;align-items:center;gap:12px;border-radius:14px;padding:14px 16px;font-size:14.5px;font-weight:700;line-height:1.55;min-height:86px}
+.rx-p{background:#fff;border:1.5px solid var(--line2)}
+.rx-p i{flex:none;width:26px;height:26px;border-radius:50%;background:#F2B233;color:var(--ink);display:grid;place-items:center;font-style:normal;font-weight:900;font-size:15px}
+.rx-s{background:var(--ok-soft);border:1.5px solid var(--ok)}
+.rx-s .ico{width:40px;height:40px}
+.rx-s::after{content:"";position:absolute;right:-8px;top:-8px;width:22px;height:22px;border-radius:50%;background:var(--ok) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M4.5 9.5l3 3 6-7' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/16px no-repeat}
+.rx-anim .rx-p,.rx-anim .rx-s,.rx-anim .rx-ar{opacity:0;transform:translateX(-8px);transition:opacity .45s var(--ease),transform .45s var(--ease)}
+.rx-anim .rx-s::after{transform:scale(0);transition:transform .3s var(--ease) .2s}
+.rx-anim .is-on{opacity:1!important;transform:none!important}
+.rx-anim .rx-s.is-on::after{transform:scale(1)}
+/* 6-4．依頼できる施策：アイコンのタイル。2つに順にチェックが入る＝必要なものを選んで頼める（レ点式） */
+.picks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.picks li{position:relative;display:flex;align-items:center;gap:14px;background:#fff;border:1.5px solid var(--line2);border-radius:14px;padding:18px 18px;font-size:15px;font-weight:700;line-height:1.5;transition:border-color .3s,background .3s}
+.picks .ico{width:44px;height:44px}
+.picks li::after{content:"";position:absolute;right:12px;top:12px;width:20px;height:20px;border-radius:6px;border:2px solid var(--line2);background:#fff center/14px no-repeat;transition:background-color .25s,border-color .25s}
+.picks li.is-on{border-color:var(--ok);background:var(--ok-soft)}
+.picks li.is-on::after{border-color:var(--ok);background-color:var(--ok);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M4.5 9.5l3 3 6-7' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}
+@media (max-width:600px){ .rx-hd,.rx-row{grid-template-columns:minmax(0,1fr) 30px minmax(0,1fr)} .rx-p,.rx-s{padding:12px;font-size:13px;gap:8px} .rx-s .ico{width:30px;height:30px} .picks li{font-size:13.5px;padding:14px 12px} .picks .ico{width:34px;height:34px} }
+
+/* 橋本氏の経歴は写真から出る吹き出し（So 9/30） */
+.person{grid-template-columns:120px minmax(0,1fr);gap:22px;align-items:start}
+.person__cv{position:relative;background:#fff;border:1.5px solid var(--line2);border-radius:16px;padding:16px 18px;color:var(--ink2)}
+.person__cv::before{content:"";position:absolute;left:-10px;top:34px;width:16px;height:16px;background:#fff;border-left:1.5px solid var(--line2);border-bottom:1.5px solid var(--line2);transform:rotate(45deg)}
+@media (max-width:600px){ .person{grid-template-columns:minmax(0,1fr)} .person__img{width:110px} .person__cv::before{left:34px;top:-9px;transform:rotate(135deg)} }
+
+/* 6-4：タイルの大きさはそのまま、ハイライトはしない（So 9/30） */
+.picks li.is-on{border-color:var(--line2);background:#fff}
+.picks li::after{display:none}
+</style>
+<script>document.documentElement.classList.add("fx-on");if("scrollRestoration" in history)history.scrollRestoration="manual"</script>
+</head>
+<body>
+
+<header class="hd" id="hd">
+  <div class="wrap hd__in">
+    <a class="logo" href="#top" aria-label="LLMOHack 事業を理解し、LLMOの戦略を描く（ページの先頭へ）"><svg class="logo__mk" viewBox="0 0 28 24" aria-hidden="true" focusable="false"><polygon points="14.00,1.00 14.00,7.60 10.10,6.70" style="fill:var(--logo-a,#2460DD)"/><polygon points="14.00,1.00 17.90,6.70 14.00,7.60" style="fill:var(--logo-ad,#1A47A8)"/><polygon points="9.32,7.84 14.00,8.92 14.00,15.08 5.68,13.16" style="fill:currentColor"/><polygon points="14.00,8.92 18.68,7.84 22.32,13.16 14.00,15.08" style="fill:var(--logo-r,#3A4A6A)"/><polygon points="4.90,14.30 14.00,16.40 14.00,23.00 1.00,20.00" style="fill:currentColor"/><polygon points="14.00,16.40 23.10,14.30 27.00,20.00 14.00,23.00" style="fill:var(--logo-r,#3A4A6A)"/></svg><span class="logo__txt"><span class="logo__en">LLMOHack</span><span class="logo__ja">事業を理解し、LLMOの戦略を描く</span></span></a>
+
+    <nav class="nav" aria-label="ページ内">
+      <a href="#about">サービスとは</a><a href="#flow">サービスの流れ</a><a href="#value">提供価値</a>
+    </nav>
+    <a class="btn btn--ink" href="#report">無料レポート</a>
+  </div>
+</header>
+
+<main>
+<!-- 1．ファーストビュー -->
+<section class="fv" id="top">
+  <div class="wrap fv__split">
+    <h1 class="h1 fv__h1 fx" style="--d:.06s">AIに<wbr>最適化する<wbr>前に、<wbr>貴社が<wbr><span class="mk">選ばれる理由</span>を<wbr>明確化します。</h1>
+    <div class="fv__body fx" style="--d:.18s">
+      <p>誰の、どのようなニーズに、貴社ならではの価値を提供するか。</p>
+      <p>サムライスタイルは、市場・顧客・競合と貴社のアセットを踏まえた事業戦略から、AI回答での言及・引用機会を増やすLLMOまでを一貫して支援します。</p>
+      <p>選ばれたい場面を定め、現在地を計測。理想とのギャップを可視化し、必要な施策の提案・実行まで伴走します。</p>
+    </div>
+    <div class="fv__dia fv__vid fx" style="--d:.1s">
+      <div class="vid"><video src="media/fv.mp4" poster="media/fv.webp" width="960" height="540" muted loop playsinline autoplay preload="auto" aria-label="動画：AIの回答に貴社がいない現在地から、顧客のニーズと貴社のアセットの重なりである選ばれる理由を定め、AI回答での紹介・引用と顧客の比較検討・相談へつなげ、記事・事例・FAQで目指す状態へ近づける"></video></div>
+      <div class="vbar" aria-hidden="true"><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i></div>
+    </div>
+    <div class="fv__cta fx" style="--d:.24s">
+      <a class="btn btn--ink" href="#report">貴社のAI引用率を無料でレポーティング</a>
+      <a class="btn btn--line" href="#download"><span><span class="nb">LLMOHackの</span><wbr>サービス<wbr>紹介資料を<wbr>ダウンロード</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- 2．導入：情報探索の変化と戦略の必要性 -->
+<section class="sec sec--deep" id="why">
+  <div class="wrap narrow">
+    <div class="h2wrap"><img class="chara chara--left fx" src="img/chara/confused.webp" width="358" height="587" alt="" aria-hidden="true" loading="lazy"><h2 class="h2 fx">「AIに選ばれる」とは、<br>誰の、<wbr>どのような<wbr>相談で<wbr>選ばれる<wbr>ことでしょうか。</h2></div>
+    <div class="prose fx">
+      <p>AIの回答で自社やサービスを紹介・引用してもらうための取り組みとして、LLMOが注目されています。</p>
+      <p>検索エンジンもAIも、情報を探す人と、情報を発信する企業をつなぐ接点です。その根幹にあるのは、テクノロジーの進化によって、ユーザーの意図に合う情報を届ける仕組みが高度化しているという変化です。</p>
+      <p>AIでは、目的や困りごと、予算、導入条件などを文章で伝え、比較や選定を相談できます。検索を伴うAIでは、質問を関連する複数の論点へ展開して調べ、回答を組み立てる「クエリファンアウト」という手法が使われる場合もあります。</p>
+      <p>こうした具体的な相談で候補に入るためには、顧客の条件に対して、自社がどのような価値を提供できるかを、根拠とともに示すことが重要です。</p>
+      <p>だからこそ、AIに最適化する前に、<strong>「誰のどのニーズに応え、何を理由に自社を選んでもらうか」</strong>を定める必要があります。</p>
+    </div>
+  </div>
+  <div class="wrap">
+    <figure class="dia qc fx" data-anim="q" aria-label="図：AIに相談文を送ると、AIは会議室不足への対応・オンライン会議環境・内装・ITの対応範囲・支援実績という調査論点に分けて調べ（クエリファンアウト）、条件に合う企業と選定理由にまとめて答える">
+      <div class="qc-win">
+        <div class="qc-bar" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="qc-body">
+          <p class="qc-user" data-type>「オフィス移転を検討している。会議室不足を解消し、オンライン会議の環境も整えたい。内装とITをまとめて相談できる会社は？」</p>
+          <div class="qc-think">
+            <p class="qc-think__hd"><i class="qc-spin" aria-hidden="true"></i><span class="en">クエリファンアウト</span></p>
+            <ul class="qc-pts">
+              <li data-k="p1"><img class="ico" src="img/icon/meeting.webp" width="160" height="160" alt="" aria-hidden="true" loading="lazy">会議室不足への<wbr>対応</li>
+              <li data-k="p2"><img class="ico" src="img/icon/online.webp" width="160" height="160" alt="" aria-hidden="true" loading="lazy">オンライン<wbr>会議環境</li>
+              <li data-k="p3"><img class="ico" src="img/icon/interior-it.webp" width="160" height="160" alt="" aria-hidden="true" loading="lazy">内装・<wbr>ITの<wbr>対応範囲</li>
+              <li data-k="p4"><img class="ico" src="img/icon/record.webp" width="160" height="160" alt="" aria-hidden="true" loading="lazy">支援実績</li>
+            </ul>
+          </div>
+          <div class="qc-ans"><p class="qc-ans__hd"><i aria-hidden="true"></i>条件に合う<wbr>企業と<wbr>選定理由</p><span class="qc-sk" aria-hidden="true"><i></i><i></i><i></i></span></div>
+        </div>
+      </div>
+      <figcaption class="q-cap">貴社は、<wbr>どの条件に、<wbr>何を根拠に<wbr>応えられるか？</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- 3．LLMOの起点となる事業戦略 -->
+<section class="sec" id="strategy">
+  <div class="wrap narrow">
+    <div class="h2wrap"><img class="chara fx" src="img/chara/magnifier.webp" width="326" height="471" alt="" aria-hidden="true" loading="lazy"><h2 class="h2 fx">誰に、何を届けるか。<br>その選択が、<wbr>LLMOの<wbr>起点になります。</h2></div>
+    <div class="prose fx">
+      <p>貴社の強みは、顧客のニーズや比較する選択肢によって、評価が変わります。</p>
+      <p>たとえば、幅広い対応範囲は「まとめて任せたい」顧客にとって価値になります。一方、特定領域の専門性や価格を重視する顧客には、別の選定理由が必要です。</p>
+      <p>サムライスタイルは、STPの視点から、貴社が優先して応えるニーズと提供価値を整理します。</p>
+    </div>
+  </div>
+  <div class="wrap">
+    <ul class="stp">
+      <li class="fx"><img class="ico" src="img/icon/seg.webp" width="160" height="160" alt="" aria-hidden="true" loading="lazy"><h3>市場を捉える<span class="sep">｜</span><span class="en">Segmentation</span></h3><p>顧客の属性に加え、目的・課題・選択条件から市場を整理します。</p></li>
+      <li class="fx" style="--d:.08s"><img class="ico" src="img/icon/target.webp" width="160" height="160" alt="" aria-hidden="true" loading="lazy"><h3>狙う領域を選ぶ<span class="sep">｜</span><span class="en">Targeting</span></h3><p>顧客ニーズと貴社のアセット、競争環境を照らし合わせ、価値を発揮できる領域を選びます。</p></li>
+      <li class="fx" style="--d:.16s"><img class="ico" src="img/icon/position.webp" width="160" height="160" alt="" aria-hidden="true" loading="lazy"><h3>選ばれる理由を定める<span class="sep">｜</span><span class="en">Positioning</span></h3><p>同業他社や代替手段と比較した相対的な強みを整理し、誰にどのような価値を提供するかを明確にします。</p></li>
+    </ul>
+  </div>
+  <div class="wrap narrow">
+    <p class="after fx">この戦略によって、どのような相談で、何を理由に紹介されたいかが具体的になります。それを目指す状態として、現在のAI回答を確認し、必要な施策を設計します。</p>
+  </div>
+  <div class="wrap">
+    <figure class="dia c3 fx" data-anim="c3" aria-label="図：顧客ニーズ・自社のアセット・競合・代替手段の3つ（3C）を照らし合わせ、中心に優先する顧客と提供価値を定める。そこから選ばれたい相談と伝わってほしい選定理由が決まる">
+      <div class="c3-tri">
+        <svg class="c3-lines" aria-hidden="true"></svg>
+        <p class="c3-box c3-box--1" data-k="i1"><span class="en">Customer</span>顧客ニーズ</p>
+        <p class="c3-core" data-k="core">優先する<wbr>顧客と<wbr>提供価値</p>
+        <p class="c3-box c3-box--2" data-k="i2"><span class="en">Company</span>自社の<wbr>アセット</p>
+        <p class="c3-box c3-box--3" data-k="i3"><span class="en">Competitor</span>競合・<wbr>代替手段</p>
+      </div>
+      <svg class="c3-down" viewBox="0 0 20 40" aria-hidden="true"><path d="M10 2v34M3 28l7 8 7-8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <ul class="c3-out">
+        <li class="node node--out" data-k="o1">選ばれたい相談</li>
+        <li class="node node--out" data-k="o2">伝わってほしい<wbr>選定理由</li>
+      </ul>
+    </figure>
+  </div>
+</section>
+
+<!-- 4．「LLMOHack」とは（原稿では「事業戦略→LLMO」とは） -->
+<section class="sec sec--paper" id="about">
+  <div class="wrap about">
+    <div>
+      <h2 class="h2 fx">選ばれたい場面を定め、<br>現在地との<wbr>ギャップを<wbr>埋める。</h2>
+      <div class="prose fx">
+        <p>「LLMOHack」は、貴社の提供価値を明確にしたうえで、AI回答での言及・引用機会の拡大と、比較検討からの顧客獲得につなげるサービスです。</p>
+        <p>まず、顧客と競合の視点から貴社の相対的な強みを整理し、どのような相談で、何を理由に紹介されたいかを定めます。</p>
+        <p>次に、実際のAI回答を調査し、候補への登場状況、引用元、強みの伝わり方を確認。理想と現状のギャップを可視化します。</p>
+        <p>その結果を踏まえ、情報発信、コンテンツ制作、サイト改修などの優先順位を決め、実行と検証を進めます。</p>
+      </div>
+    </div>
+    <figure class="dia rd fx" data-anim="gap" aria-label="図：現在のAI回答（一部のサービスだけで認識）から、対応範囲の明文化・統合事例の制作・関連情報の整備を1つずつ進めて、目指す状態（複数領域をまとめて支援できる会社として紹介）へ。その間がギャップ">
+      <div class="rd-wrap">
+        <div class="rd-card rd-card--now"><p class="rd-lbl">現在のAI回答</p><p class="rd-txt">一部のサービスだけで認識</p></div>
+      <div class="rd-road">
+        <p class="rd-gap">ギャップ</p>
+        <div class="rd-line" aria-hidden="true"><i class="rd-fill"></i><img class="rd-walker" src="img/chara/walk-smile.webp" width="360" height="385" alt=""></div>
+        <ol class="rd-steps">
+          <li style="--x:22%"><img class="ico" src="img/icon/scope.webp" width="160" height="160" alt="" aria-hidden="true" loading="lazy"><span>対応範囲の<wbr>明文化</span></li>
+          <li style="--x:50%"><img class="ico" src="img/icon/case.webp" width="160" height="160" alt="" aria-hidden="true" loading="lazy"><span>統合事例の<wbr>制作</span></li>
+          <li style="--x:78%"><img class="ico" src="img/icon/related.webp" width="160" height="160" alt="" aria-hidden="true" loading="lazy"><span>関連情報の<wbr>整備</span></li>
+        </ol>
+        <i class="rd-start" aria-hidden="true"></i><i class="rd-flag" aria-hidden="true"></i>
+      </div>
+        <div class="rd-card rd-card--goal"><p class="rd-lbl"><i aria-hidden="true"></i>目指す状態</p><p class="rd-txt">複数領域をまとめて支援できる会社として紹介</p></div>
+      </div>
+    </figure>
+  </div>
+</section>
+
+<!-- CTA：無料レポート・サービス紹介資料 -->
+<section class="ctaband sec--paper" aria-label="無料レポート・サービス紹介資料">
+  <div class="wrap">
+    <div class="ctaband__in fx">
+      <a class="btn btn--ink" href="#report">貴社のAI引用率を無料でレポーティング</a>
+      <a class="btn btn--line" href="#download"><span><span class="nb">LLMOHackの</span><wbr>サービス<wbr>紹介資料を<wbr>ダウンロード</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- 5．具体的なサービスの流れ -->
+<section class="sec" id="flow">
+  <div class="wrap narrow">
+    <div class="h2wrap"><img class="chara fx" src="img/chara/walk.webp" width="360" height="464" alt="" aria-hidden="true" loading="lazy"><h2 class="h2 fx">提供価値の整理から、<wbr>計測・改善まで。</h2></div>
+  </div>
+  <div class="wrap narrow">
+    <ol class="flow pen" data-dia="flow">
+      <li class="flow__step fx" data-k="s1"><h3><span class="flow__no">STEP 1</span><span class="flow__sep">｜</span>競合比較を踏まえ、貴社の提供価値を整理</h3>
+        <p>商品・サービス、実績、体制、保有する知見などを確認。同業他社に加え、顧客が比較する代替手段も調査し、相対的な強みと、それが価値になる条件を整理します。</p></li>
+      <li class="flow__step fx" data-k="s2"><h3><span class="flow__no">STEP 2</span><span class="flow__sep">｜</span>顧客の情報探索ニーズを調査</h3>
+        <p>検索ニーズの調査と、営業・カスタマーサポートなど顧客接点を持つ方へのヒアリングを通じて、顧客の目的・課題、比較条件、不安を把握します。検索語だけでは捉えにくい相談内容も反映します。</p></li>
+      <li class="flow__step fx" data-k="s3"><h3><span class="flow__no">STEP 3</span><span class="flow__sep">｜</span>ポジション・カテゴリ・目的課題から質問を設計</h3>
+        <p>提供価値の仮説を起点に、次の順序で計測用のプロンプトを設計します。</p>
+        <ul class="flow__q">
+          <li><b>ポジション：</b> 貴社の強みと合う特徴・条件を指定したときに、紹介されるか。</li>
+          <li><b>カテゴリ：</b> 属する商品・サービスのカテゴリで、候補に入るか。</li>
+          <li><b>目的・課題：</b> 顧客の困りごとを起点に、貴社へつながるか。</li>
+        </ul>
+        <p>加えて、ブランド名を指定した質問で、特徴や対応範囲の説明が正確かを確認します。</p></li>
+      <li class="flow__step fx" data-k="s4"><h3><span class="flow__no">STEP 4</span><span class="flow__sep">｜</span>現在地とギャップを可視化</h3>
+        <p>AI回答の言及・引用状況、選定理由、競合の登場状況を調査。ダッシュボード上で、目指す状態と現状の違いを整理します。</p></li>
+      <li class="flow__step fx" data-k="s5"><h3><span class="flow__no">STEP 5</span><span class="flow__sep">｜</span>施策を提案・実行し、変化を検証</h3>
+        <p>ギャップの大きさ、事業への重要性、実施負荷を踏まえて施策の優先順位を設定。制作・改修・情報発信を進め、継続的に変化を確認します。</p></li>
+      <li class="pen-note" data-n="loop" aria-hidden="true">戦略仮説も見直す</li>
+    </ol>
+  </div>
+</section>
+
+<!-- 6．サムライスタイルの提供価値 -->
+<section class="sec" id="value">
+  <div class="wrap narrow">
+    <div class="h2wrap"><img class="chara chara--wide chara--flip fx" src="img/chara/hand.webp" width="360" height="318" alt="" aria-hidden="true" loading="lazy"><h2 class="h2 fx">戦略を考え、可視化し、<br>必要な実務まで動かす。</h2></div>
+  </div>
+  <div class="wrap">
+    <div class="vals">
+      <article class="val fx">
+        <h3><span class="val__no">1．</span>事業会社・支援会社、双方の視点で戦略策定から伴走</h3>
+        <div class="val__txt"><p>代表・橋本が、事業会社とマーケティング支援会社の双方で、BtoB・BtoCの意思決定に関わってきた経験をもとに支援します。</p><p>事業目的、顧客ニーズ、競争環境、貴社のアセットを構造的に整理し、市場のどこで、何を理由に選ばれるかを明確にします。</p></div>
+        <div class="val__fig person"><img class="person__img" src="img/hashimoto.webp" width="320" height="320" alt="橋本 圭司" loading="lazy"><div class="person__cv"><p class="person__nm"><b>橋本 圭司</b>代表取締役</p><p>大手通信会社の営業、事業企画を経験後、Webコンサル会社へ転職。2018年にイラスト世界チャンピオンとともにDT合同会社を設立し、CMO着任。並行して事業会社・ベンダー双方での経験を生かし、様々な業種・規模の企業で事業企画・マーケティング・セールスまでのコンサルとして事業を推進。2024年にサムライスタイル株式会社を設立。</p></div></div>
+      </article>
+      <article class="val fx">
+        <h3><span class="val__no">2．</span>戦略の実現状況を可視化するダッシュボード</h3>
+        <div class="val__txt"><p>狙うカテゴリ、ポジション、顧客の目的・課題ごとに、AI回答での見え方を確認します。</p><p>引用率や言及率に加え、「狙った場面で紹介されているか」「意図した強みが伝わっているか」を捉え、戦略と計測をつなぎます。</p></div>
+        <figure class="val__fig"><div class="shot-s"><video src="media/dash-ui.mp4" poster="media/dash-ui.webp" width="960" height="600" muted loop playsinline preload="none" aria-label="ダッシュボードの画面例（サンプルデータ）。4つのAIごとの登場率、種類別（カテゴリ・ポジション・目的・課題）の登場率、推移"></video></div><figcaption class="fig-cap">※動画はサンプルデータです</figcaption></figure>
+      </article>
+      <article class="val fx">
+        <h3><span class="val__no">3．</span>ギャップから、改善施策の優先順位を提案</h3>
+        <div class="val__txt"><p>可視化の目的は、目指す状態と現状の違いを明らかにし、次の行動を決めることです。</p><p>どの情報が不足しているのか、どの顧客課題とのつながりが弱いのかを分析。事業への重要性も踏まえ、取り組む施策と順序を提案します。</p></div>
+        <div class="val__fig"><table class="map"><thead><tr><th>課題</th><th></th><th>改善施策</th></tr></thead><tbody>
+          <tr><td>困りごとから始まる質問で登場しない</td><td class="arw" aria-hidden="true">→</td><td>課題別の記事やFAQ、導入事例を整備</td></tr>
+          <tr><td>AIが対応範囲を狭く説明している</td><td class="arw" aria-hidden="true">→</td><td>サービスページの記載や外部の紹介情報を見直す</td></tr>
+        </tbody></table></div>
+      </article>
+      <article class="val fx">
+        <h3><span class="val__no">4．</span>広告運用からWeb・コンテンツ制作まで、必要な施策を選んで依頼</h3>
+        <div class="val__txt"><p>記事・事例・FAQの制作、WebサイトやLPの改修、デジタルPR、広告運用など、必要な実務を組み合わせて支援します。</p><p>AI回答での認識改善から、サイト訪問後の比較検討・問い合わせまでを見据え、貴社の体制に合わせてレ点式でご依頼いただけます。</p></div>
+        <ul class="val__fig picks"><li><img class="ico" src="img/icon/content.webp" width="160" height="160" alt="" aria-hidden="true" loading="lazy"><span>記事・事例・FAQの制作</span></li><li><img class="ico" src="img/icon/web.webp" width="160" height="160" alt="" aria-hidden="true" loading="lazy"><span>WebサイトやLPの改修</span></li><li><img class="ico" src="img/icon/pr.webp" width="160" height="160" alt="" aria-hidden="true" loading="lazy"><span>デジタルPR</span></li><li><img class="ico" src="img/icon/ads.webp" width="160" height="160" alt="" aria-hidden="true" loading="lazy"><span>広告運用</span></li></ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- 7．ダッシュボードから改善施策へ -->
+<section class="sec sec--deep" id="dash">
+  <div class="wrap narrow">
+    <div class="h2wrap"><img class="chara chara--wide chara--flip fx" src="img/chara/thumbs.webp" width="360" height="335" alt="" aria-hidden="true" loading="lazy"><h2 class="h2 fx">数値を、<wbr>次に取り組む<wbr>施策へ<wbr>つなげる。</h2></div>
+    <div class="prose fx">
+      <p>たとえば、貴社の強みを条件に含めた質問では紹介される一方、顧客の困りごとから始まる質問では登場しない場合。</p>
+      <p>顧客の言葉と提供価値をつなぐ情報が不足している可能性を検証し、課題別の記事やFAQ、導入事例を整備します。</p>
+      <p>また、AIが対応範囲を狭く説明している場合は、公式情報や引用元を確認し、サービスページの記載や外部の紹介情報を見直します。</p>
+      <p>ダッシュボードでは、こうした課題と対応施策を紐づけ、実施後の変化を継続的に確認します。</p>
+    </div>
+  </div>
+  <div class="wrap">
+    <figure class="sample pen fx" data-dia="dash" aria-label="画面例（サンプル）：質問の種類ごとの言及率・引用率とブランド説明の正確性、目指す状態・確認されたギャップ・改善施策・優先順位">
+      <div class="sample__hd"><h3>ダッシュボード</h3><span class="sample-tag">サンプル</span></div>
+      <div class="sample__top">
+        <table class="mtab"><thead><tr><th>質問の種類</th><th>言及率</th><th>引用率</th></tr></thead><tbody>
+          <tr><td>カテゴリ</td><td>32%</td><td>8%</td></tr>
+          <tr><td>ポジション</td><td>71%</td><td>24%</td></tr>
+          <tr><td>目的・課題</td><td data-k="low">18%</td><td>5%</td></tr>
+        </tbody></table>
+        <div class="accu"><p class="accu__l">ブランド説明の正確性</p><p class="accu__v">64<small>%</small></p></div>
+      </div>
+      <table class="acts"><thead><tr><th>目指す状態</th><th>確認されたギャップ</th><th>改善施策</th><th>優先順位</th></tr></thead><tbody>
+        <tr data-k="act1"><td data-l="目指す状態">困りごとから始まる質問で紹介される</td><td data-l="確認されたギャップ">目的・課題の質問で登場しない</td><td data-l="改善施策">課題別の記事やFAQ、導入事例を整備</td><td data-l="優先順位"><span class="prio prio--hi">高</span></td></tr>
+        <tr><td data-l="目指す状態">対応範囲を正しく説明される</td><td data-l="確認されたギャップ">対応範囲を狭く説明されている</td><td data-l="改善施策">サービスページの記載や外部の紹介情報を見直す</td><td data-l="優先順位"><span class="prio">中</span></td></tr>
+      </tbody></table>
+    </figure>
+  </div>
+</section>
+
+<!-- CTA：無料レポート -->
+<section class="sec sec--paper" id="report">
+  <div class="wrap cta2">
+    <div class="cta2__txt">
+      <h2 class="h2 fx">貴社の強みは、<wbr>AIの回答で<wbr>伝わっていますか。</h2>
+      <div class="prose fx">
+        <p>貴社に関連する質問へのAI回答を調査し、企業名・ブランド名の言及率と、公式サイトの引用率を無料でレポーティングします。</p>
+        <p>どのような企業が候補として登場し、貴社が何を理由に紹介されているか。現在の見え方と、改善に向けた着眼点をお伝えします。</p>
+      </div>
+      <div class="cta2__btn fx"><img class="chara fx" src="img/chara/jump.webp" width="360" height="473" alt="" aria-hidden="true" loading="lazy"><a class="btn btn--ink" href="#report">貴社のAI引用率を無料でレポーティング</a></div>
+      <p class="cta2__note fx">言及率・引用率は、設定した質問と取得条件の範囲で算出します。</p>
+    </div>
+    <figure class="report fx" aria-label="レポート見本（サンプル）：言及率と公式サイトの引用率、競合の登場状況、改善の着眼点">
+      <div class="report__hd"><h3>AI回答の調査レポート</h3><span class="sample-tag">サンプル</span></div>
+      <div class="report__kpi"><div><p>企業名・ブランド名の言及率</p><b>42<small>%</small></b></div><div><p>公式サイトの引用率</p><b>12<small>%</small></b></div></div>
+      <h4>競合の登場状況</h4>
+      <ul class="bars"><li><span>A社</span><i style="width:76%"></i><span>76%</span></li><li><span>B社</span><i style="width:58%"></i><span>58%</span></li><li class="me"><span>貴社</span><i style="width:42%"></i><span>42%</span></li><li><span>C社</span><i style="width:31%"></i><span>31%</span></li></ul>
+      <h4>改善の着眼点</h4>
+      <ul class="points"><li>困りごとから始まる質問で、候補に入っていない</li><li>対応範囲の説明が、一部のサービスに限られている</li></ul>
+    </figure>
+  </div>
+</section>
+
+<!-- CTA：資料ダウンロード -->
+<section class="sec sec--deep" id="download">
+  <div class="wrap cta2">
+    <div class="cta2__txt">
+      <h2 class="h2 fx">事業戦略から<span class="nb">LLMOへ。</span><br>支援の考え方と<wbr>進め方を<wbr>ご紹介します。</h2>
+      <div class="prose fx">
+        <p>提供価値の整理、顧客ニーズの調査、AI回答の計測、ダッシュボードに基づく改善まで。「LLMOHack」の全体像と支援内容をまとめた資料をご用意しています。</p>
+      </div>
+      <div class="cta2__btn fx"><a class="btn btn--line" href="#download"><span><span class="nb">LLMOHackの</span><wbr>サービス<wbr>紹介資料を<wbr>ダウンロード</span></a></div>
+    </div>
+    <figure class="deck fx" aria-label="資料見本：LLMOHack サービス紹介資料の表紙と、提供価値の整理・ダッシュボード・改善施策のページ">
+      <div class="deck__pg deck__pg--1"><h5>改善施策</h5><i></i><i></i><i></i></div>
+      <div class="deck__pg deck__pg--2"><h5>ダッシュボード</h5><i></i><i></i><i></i></div>
+      <div class="deck__pg deck__pg--3"><h5>提供価値の整理</h5><i></i><i></i><i></i></div>
+      <div class="deck__cover"><b>LLMOHack<br>サービス紹介資料</b><span>サムライスタイル</span></div>
+    </figure>
+  </div>
+</section>
+</main>
+
+<div class="mq" aria-hidden="true"><div class="mq__in"></div></div>
+<footer class="ft--sa">
+  <div class="wrap">
+    <a class="ft__contact" href="https://www.samurai-style.tokyo/#contact"><div><b>CONTACT</b><span>お問い合わせはこちらから</span></div></a>
+    <div class="ft__row">
+      <span class="logo logo--ft" role="img" aria-label="LLMOHack 事業を理解し、LLMOの戦略を描く"><svg class="logo__mk" viewBox="0 0 28 24" aria-hidden="true" focusable="false"><polygon points="14.00,1.00 14.00,7.60 10.10,6.70" style="fill:var(--logo-a,#2460DD)"/><polygon points="14.00,1.00 17.90,6.70 14.00,7.60" style="fill:var(--logo-ad,#1A47A8)"/><polygon points="9.32,7.84 14.00,8.92 14.00,15.08 5.68,13.16" style="fill:currentColor"/><polygon points="14.00,8.92 18.68,7.84 22.32,13.16 14.00,15.08" style="fill:var(--logo-r,#3A4A6A)"/><polygon points="4.90,14.30 14.00,16.40 14.00,23.00 1.00,20.00" style="fill:currentColor"/><polygon points="14.00,16.40 23.10,14.30 27.00,20.00 14.00,23.00" style="fill:var(--logo-r,#3A4A6A)"/></svg><span class="logo__txt"><span class="logo__en">LLMOHack</span><span class="logo__ja">事業を理解し、LLMOの戦略を描く</span></span></span>
+
+      <nav class="ft__links" aria-label="会社の情報"><a href="https://www.samurai-style.tokyo/">サムライスタイル株式会社</a><a href="https://www.samurai-style.tokyo/privacy-policy">プライバシーポリシー</a><a href="https://www.samurai-style.tokyo/commercial-transactions">特定商取引法に基づく表記</a></nav>
+    </div>
+    <p class="ft__note">AI回答での掲載・順位を保証するものではありません。</p>
+    <p class="ft__copy">© 2024- samurai-style All Right Reserved.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var hd = document.getElementById("hd");
+  var onScroll = function(){ hd.classList.toggle("is-scrolled", scrollY > 8); };
+  addEventListener("scroll", onScroll, {passive:true}); onScroll();
+  if (!location.hash) addEventListener("load", function(){ scrollTo(0,0); });
+
+  /* 画面に入ったら出す。FVは読み込みで出す */
+  var items = [].slice.call(document.querySelectorAll(".fx"));
+  var show = function(el){ el.classList.add("hh-in"); };
+  var fv = document.getElementById("top");
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){ [].forEach.call(fv.querySelectorAll(".fx"), show); }); });
+  if (reduce || !("IntersectionObserver" in window)) { items.forEach(show); }
+  else {
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if (e.isIntersecting){ show(e.target); io.unobserve(e.target); } });
+    }, {rootMargin:"0px 0px -8% 0px", threshold:0.01});
+    items.forEach(function(el){ if (!fv.contains(el)) io.observe(el); });
+    addEventListener("beforeprint", function(){ items.forEach(show); });
+    setTimeout(function(){ items.forEach(function(el){ if (el.getBoundingClientRect().top < innerHeight) show(el); }); }, 2500);
+  }
+
+  /* 今いる節をナビに出す */
+  var links = [].slice.call(document.querySelectorAll(".nav a"));
+  if ("IntersectionObserver" in window){
+    var navIO = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if (e.isIntersecting) links.forEach(function(a){ a.classList.toggle("is-cur", a.getAttribute("href") === "#" + e.target.id); }); });
+    }, {rootMargin:"-45% 0px -50% 0px"});
+    links.forEach(function(a){ var s = document.querySelector(a.getAttribute("href")); if (s) navIO.observe(s); });
+  }
+
+  /* 孤立行を防ぐ（最後の行が短すぎる段落だけ、字間をわずかに動かす） */
+  var TIDY = ".fv__body p,.prose p,.stp p,.after,.gap-txt,.flow__step > p,.flow__q li,.val__txt p,.person__cv,.cta2__note,.q-bubble";
+  var widths = function(el){
+    var rg = document.createRange(); rg.selectNodeContents(el); var rows = {};
+    [].forEach.call(rg.getClientRects(), function(r){ if (r.width < 1) return; var k = Math.round(r.top);
+      var o = rows[k] || (rows[k] = {l:1e9, r:0}); o.l = Math.min(o.l, r.left); o.r = Math.max(o.r, r.right); });
+    return Object.keys(rows).map(function(k){ return rows[k].r - rows[k].l; });
+  };
+  var ok = function(el){ var w = widths(el); return w.length < 2 || w[w.length-1] >= Math.max.apply(null, w) * 0.25; };
+  var tidy = function(el){
+    el.style.letterSpacing = ""; el.style.textWrap = "";
+    if (ok(el)) return;
+    var base = parseFloat(getComputedStyle(el).letterSpacing) || 0;
+    var st = [-0.3,0.3,-0.6,0.6,-0.9,0.9,-1.2,1.2];
+    for (var i = 0; i < st.length; i++){ el.style.letterSpacing = (base + st[i]) + "px"; if (ok(el)) return; }
+    el.style.letterSpacing = "";
+    if (widths(el).length <= 3){ el.style.textWrap = "balance"; if (!ok(el)) el.style.textWrap = ""; }
+  };
+  var tidyAll = function(){ [].forEach.call(document.querySelectorAll(TIDY), tidy); };
+  tidyAll();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(tidyAll);
+  addEventListener("load", tidyAll);
+  var tt; addEventListener("resize", function(){ clearTimeout(tt); tt = setTimeout(tidyAll, 150); });
+
+  /* ── ペンの線：図の矢印と強調（E案）── */
+  var NS = "http://www.w3.org/2000/svg";
+  var Pen = function(root){
+    var seed = 7, svg;
+    var rnd = function(){ seed = (seed * 9301 + 49297) % 233280; return seed / 233280 - .5; };
+    var R = function(){ return root.getBoundingClientRect(); };
+    var box = function(el){ var r = el.getBoundingClientRect(), s = R(); return {x:r.left - s.left, y:r.top - s.top, w:r.width, h:r.height}; };
+    var path = function(d, o){ o = o || {};
+      var p = document.createElementNS(NS, "path");
+      p.setAttribute("d", d); p.setAttribute("pathLength", "1"); p.setAttribute("fill", "none");
+      p.setAttribute("stroke", o.col || "#0F1A2E"); p.setAttribute("stroke-width", o.w || 2.2);
+      p.setAttribute("stroke-linecap", "round"); p.setAttribute("stroke-linejoin", "round");
+      p.style.setProperty("--pd", (o.d || 0) + "s"); svg.appendChild(p); };
+    return {
+      box: box,
+      clear: function(){ seed = 7; if (svg) svg.remove(); svg = document.createElementNS(NS, "svg"); svg.setAttribute("class", "ann"); svg.setAttribute("aria-hidden", "true"); root.appendChild(svg); },
+      ring: function(b, o){ o = o || {}; var pad = o.pad == null ? 10 : o.pad, cx = b.x + b.w / 2, cy = b.y + b.h / 2, rx = b.w / 2 + pad, ry = b.h / 2 + pad * .8, d = "";
+        for (var i = 0; i <= 50; i++){ var t = -2.2 + i / 44 * Math.PI * 2, k = 1 + rnd() * .035 + (i > 44 ? .06 : 0);
+          d += (i ? "L" : "M") + (cx + Math.cos(t) * rx * k).toFixed(1) + " " + (cy + Math.sin(t) * ry * k).toFixed(1); }
+        path(d, {w:o.w || 2.6, d:o.d}); },
+      line: function(d, o){ path(d, o); },
+      arrow: function(x1, y1, x2, y2, bend, o){ o = o || {}; bend = bend || 0;
+        var mx = (x1 + x2) / 2 + bend, my = (y1 + y2) / 2 - Math.abs(bend) * .4;
+        path("M" + x1.toFixed(1) + " " + y1.toFixed(1) + " Q" + mx.toFixed(1) + " " + my.toFixed(1) + " " + x2.toFixed(1) + " " + y2.toFixed(1), {w:o.w || 2.2, d:o.d});
+        var a = Math.atan2(y2 - my, x2 - mx), L = 10;
+        path("M" + (x2 - L * Math.cos(a - .45)).toFixed(1) + " " + (y2 - L * Math.sin(a - .45)).toFixed(1) + " L" + x2.toFixed(1) + " " + y2.toFixed(1) + " L" + (x2 - L * Math.cos(a + .45)).toFixed(1) + " " + (y2 - L * Math.sin(a + .45)).toFixed(1), {w:o.w || 2.2, d:(o.d || 0) + .4}); }
+    };
+  };
+  var clamp = function(v, a, b){ return Math.max(a, Math.min(b, v)); };
+  /* 2つの箱を、向きに合わせて（横に並べば横、縦なら縦）ペンの矢印でつなぐ */
+  var link = function(P, a, b, o){ o = o || {};
+    var ac = {x:a.x + a.w / 2, y:a.y + a.h / 2}, bc = {x:b.x + b.w / 2, y:b.y + b.h / 2}, dx = bc.x - ac.x, dy = bc.y - ac.y, g = 9, x1, y1, x2, y2;
+    if (o.dir !== "v" && (o.dir === "h" || Math.abs(dx) > Math.abs(dy) * 1.2)){
+      x1 = dx > 0 ? a.x + a.w + g : a.x - g; x2 = dx > 0 ? b.x - g - 2 : b.x + b.w + g + 2;
+      y1 = o.center1 ? ac.y : clamp(bc.y, a.y + 14, a.y + a.h - 14); y2 = o.center2 ? bc.y : clamp(ac.y, b.y + 14, b.y + b.h - 14);
+    } else {
+      y1 = dy > 0 ? a.y + a.h + g : a.y - g; y2 = dy > 0 ? b.y - g - 2 : b.y + b.h + g + 2;
+      x1 = o.x1 != null ? o.x1 : o.center1 ? ac.x : clamp(bc.x, a.x + 14, a.x + a.w - 14);
+      x2 = o.x2 != null ? o.x2 : o.center2 ? bc.x : clamp(ac.x, b.x + 14, b.x + b.w - 14);
+    }
+    P.arrow(x1, y1, x2, y2, o.bend || 0, {d:o.d});
+  };
+  var DRAW = {
+    fv: function(root, P){ var k = function(n){ return P.box(root.querySelector('[data-k="' + n + '"]')); };
+      link(P, k("need"), k("reason"), {d:0}); link(P, k("asset"), k("reason"), {d:.15});
+      link(P, k("reason"), k("ai"), {d:.55}); link(P, k("reason"), k("cmp"), {d:.7}); },
+    /* 2：論点が横1列なら、相談文から4つへ広げて、4つから1つへまとめる。2×2に折れたら、まとまりへ1本ずつ（交差させない） */
+    q: function(root, P){ var k = function(n){ return P.box(root.querySelector('[data-k="' + n + '"]')); };
+      var q = k("q"), r = k("r"), pts = ["p1", "p2", "p3", "p4"].map(k), grp = P.box(root.querySelector(".q-points"));
+      if (Math.abs(pts[0].y - pts[3].y) < 4){
+        pts.forEach(function(p, i){ var off = (i - 1.5);
+          link(P, q, p, {dir:"v", x1:q.x + q.w / 2 + off * Math.min(44, q.w / 12), center2:true, d:i * .12});
+          link(P, p, r, {dir:"v", center1:true, x2:r.x + r.w / 2 + off * Math.min(52, r.w / 8), d:.7 + i * .12}); });
+      } else { link(P, q, grp, {dir:"v", center1:true, center2:true}); link(P, grp, r, {dir:"v", center1:true, center2:true, d:.6}); } },
+    stp: function(root, P){ var k = function(n){ return P.box(root.querySelector('[data-k="' + n + '"]')); };
+      var c = k("core");
+      ["i1", "i2", "i3"].forEach(function(n, i){ link(P, k(n), c, {dir:"v", center1:true, x2:c.x + c.w / 2 + (i - 1) * Math.min(60, c.w / 5), d:i * .12}); });
+      ["o1", "o2"].forEach(function(n, i){ link(P, c, k(n), {dir:"v", x1:c.x + c.w / 2 + (i - .5) * Math.min(60, c.w / 5), center2:true, d:.7 + i * .12}); }); },
+    /* 4：横並びなら、2枚のあいだに両向きの矢印（上に「ギャップ」）、そこから3つの施策へ。縦に並んだら上下の矢印と、施策のまとまりへ1本 */
+    gap: function(root, P){ var k = function(n){ return P.box(root.querySelector('[data-k="' + n + '"]')); };
+      var go = k("goal"), nw = k("now"), g = k("gap"), acts = ["a1", "a2", "a3"].map(k), grp = P.box(root.querySelector(".gap-acts"));
+      if (Math.abs(go.y - nw.y) < 4){
+        var y = g.y + g.h + 8, cx = g.x + g.w / 2;
+        P.arrow(cx, y, go.x + go.w + 7, y, 0, {}); P.arrow(cx, y, nw.x - 7, y, 0, {});
+        acts.forEach(function(a, i){ link(P, {x:g.x, y:y, w:g.w, h:0}, a, {dir:"v", x1:cx + (i - 1) * 14, center2:true, d:.6 + i * .12}); });
+      } else { link(P, g, go, {dir:"v", center1:true, center2:true}); link(P, g, nw, {dir:"v", center1:true, center2:true});
+        link(P, nw, grp, {dir:"v", center1:true, center2:true, d:.6}); } },
+    /* 流れ：STEP 5 の左から、STEP 1・2 の間へ戻る線（計測結果で戦略仮説も見直す） */
+    flow: function(root, P){ var k = function(n){ return P.box(root.querySelector('[data-k="' + n + '"]')); };
+      var s1 = k("s1"), s2 = k("s2"), s5 = k("s5"), x0 = s1.x - 12, xl = Math.max(4, s1.x - (s1.x > 70 ? 62 : 30));
+      var yb = s5.y + s5.h * .5, yt = (s1.y + s1.h + s2.y) / 2;
+      P.line("M" + x0 + " " + yb + " C" + xl + " " + yb + " " + xl + " " + (yb - 30) + " " + xl + " " + (yb - 60) + " L" + xl + " " + (yt + 60) + " C" + xl + " " + (yt + 30) + " " + xl + " " + yt + " " + (x0 - 16) + " " + yt, {w:2.2});
+      P.arrow(x0 - 18, yt, x0, yt, 0, {d:.8});
+      var n = root.querySelector('.pen-note[data-n="loop"]');
+      if (n && getComputedStyle(n).display !== "none"){ n.style.top = ((yb + yt) / 2 + n.offsetWidth / 2) + "px"; n.style.left = (xl - 30) + "px"; } },
+    /* 7：低い数値（目的・課題の言及率）を囲み、対応する施策の行へ */
+    dash: function(root, P){ var lo = P.box(root.querySelector('[data-k="low"]')), row = P.box(root.querySelector('[data-k="act1"]'));
+      P.ring({x:lo.x + lo.w - 52, y:lo.y + 6, w:46, h:lo.h - 12}, {pad:8});
+      P.arrow(lo.x + lo.w - 40, lo.y + lo.h + 6, row.x + row.w * .42, row.y + 6, 30, {d:.4}); }
+  };
+  var shown = function(el){ return el && el.offsetParent !== null && getComputedStyle(el).display !== "none"; };
+  var pens = [].slice.call(document.querySelectorAll(".pen")).map(function(root){ return {root:root, kind:root.getAttribute("data-dia"), P:Pen(root)}; });
+  var drawPen = function(o){ o.P.clear(); if (shown(o.root)) DRAW[o.kind](o.root, o.P); o.drawn = true; };
+  /* 🚨 .fx は下から20px浮き上がって出る。動いている最中に測ると線がずれるので、止まってから測る */
+  var settled = function(el, cb){
+    var done = false, fin = function(){ if (!done){ done = true; cb(); } };
+    var t = getComputedStyle(el).transform;
+    if (reduce || t === "none" || t === "matrix(1, 0, 0, 1, 0, 0)") return fin();
+    el.addEventListener("transitionend", function h(e){ if (e.propertyName === "transform"){ el.removeEventListener("transitionend", h); fin(); } });
+    setTimeout(fin, 1800);
+  };
+  var goPen = function(o){ if (o.go) return; o.go = true;
+    var fonts = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+    var watch = o.root.classList.contains("fx") ? o.root : (o.root.querySelector(".fx") || o.root);
+    fonts.then(function(){ settled(watch, function(){ drawPen(o);
+      requestAnimationFrame(function(){ requestAnimationFrame(function(){ o.root.classList.add("pen-go"); }); }); }); }); };
+  if ("IntersectionObserver" in window && !reduce){
+    var penIO = new IntersectionObserver(function(es){ es.forEach(function(e){ if (!e.isIntersecting) return; penIO.unobserve(e.target);
+      goPen(pens.filter(function(x){ return x.root === e.target; })[0]); }); }, {threshold:.25});
+    pens.forEach(function(o){ penIO.observe(o.root); });
+  } else pens.forEach(goPen);
+  var pt; addEventListener("resize", function(){ clearTimeout(pt); pt = setTimeout(function(){ pens.forEach(function(o){ if (o.drawn) drawPen(o); }); }, 200); });
+})();
+</script>
+<script>
+/* 1画面目の動画は自動再生（動きを減らす設定なら止める）。6-2のダッシュボード動画は画面に入ったら再生、外れたら止める */
+(function(){
+  var fv = document.querySelector(".fv__vid video");
+  if (fv && matchMedia("(prefers-reduced-motion: reduce)").matches) { fv.removeAttribute("autoplay"); fv.pause(); }
+  var v = document.querySelector(".shot-s video"); if (!v) return;
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) return;
+  new IntersectionObserver(function(es){ es.forEach(function(e){
+    if (e.isIntersecting) { v.preload = "auto"; var p = v.play(); if (p && p.catch) p.catch(function(){}); } else { v.pause(); }
+  }); }, {threshold: .35}).observe(v);
+})();
+</script>
+<script>
+/* 2．のチャット：相談文を1文字ずつ打つ（文はHTMLに全部入っている。まだ打っていない字は透明にするだけ）→ 送信 → クエリファンアウトで4つを調べる → 回答 */
+(function(){
+  var el = document.querySelector("[data-type]"); if (!el || !("IntersectionObserver" in window)) return;
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  var fig = el.closest("figure"); fig.classList.add("qc-anim");
+  var full = el.textContent, n = 0, done = false;
+  var shown = document.createElement("span"), caret = document.createElement("i"), rest = document.createElement("span");
+  caret.className = "q-caret"; caret.setAttribute("aria-hidden", "true"); rest.className = "q-rest";
+  rest.textContent = full; el.textContent = ""; el.append(shown, caret, rest);
+  var at = function(ms, fn){ setTimeout(fn, ms); };
+  var fan = function(){
+    var th = fig.querySelector(".qc-think"), pts = [].slice.call(fig.querySelectorAll(".qc-pts li"));
+    at(200, function(){ th.classList.add("is-on"); });
+    pts.forEach(function(p, i){ at(600 + i * 420, function(){ p.classList.add("is-on"); }); at(1300 + i * 420, function(){ p.classList.add("is-done"); }); });
+    var t2 = 1300 + pts.length * 420 + 200;
+    at(t2, function(){ th.classList.add("is-done"); });
+    at(t2 + 400, function(){ fig.querySelector(".qc-ans").classList.add("is-on"); });
+    at(t2 + 1100, function(){ fig.querySelector(".q-cap").classList.add("is-on"); });
+  };
+  var step = function(){ n++; shown.textContent = full.slice(0, n); rest.textContent = full.slice(n);
+    if (n < full.length) setTimeout(step, 34); else { caret.remove(); fan(); } };
+  new IntersectionObserver(function(es, io){ if (es[0].isIntersecting && !done){ done = true; io.disconnect(); setTimeout(step, 400); } }, {threshold: .5}).observe(el);
+})();
+/* 3．3Cの図：三角形の頂点の3つ → 各頂点から中心へ線 → 中心 → 下の2つ。線は箱の位置を測って引く（幅が変わったら引き直す） */
+(function(){
+  var f = document.querySelector('[data-anim="c3"]'); if (!f) return;
+  var tri = f.querySelector(".c3-tri"), svg = f.querySelector(".c3-lines"), NS = "http://www.w3.org/2000/svg";
+  var boxes = [".c3-box--1", ".c3-box--2", ".c3-box--3"].map(function(s){ return f.querySelector(s); }), core = f.querySelector(".c3-core");
+  var ctr = function(el){ var r = el.getBoundingClientRect(), o = tri.getBoundingClientRect(); return [r.left - o.left + r.width / 2, r.top - o.top + r.height / 2]; };
+  var draw = function(){
+    svg.innerHTML = ""; var c = ctr(core), pts = boxes.map(ctr);
+    var ln = function(a, b, cls){ var l = document.createElementNS(NS, "line"); l.setAttribute("x1", a[0]); l.setAttribute("y1", a[1]); l.setAttribute("x2", b[0]); l.setAttribute("y2", b[1]); if (cls === "spoke") l.setAttribute("class", cls); svg.appendChild(l); return l; };
+    return pts.map(function(p){ return ln(p, c, "spoke"); });
+  };
+  var spokes = draw(), anim = ("IntersectionObserver" in window) && !matchMedia("(prefers-reduced-motion: reduce)").matches, shown = !anim;
+  var tt; addEventListener("resize", function(){ clearTimeout(tt); tt = setTimeout(function(){ spokes = draw(); if (shown) [].forEach.call(svg.children, function(l){ l.classList.add("is-on"); }); }, 150); });
+  if (!anim) return;
+  f.classList.add("c3-anim");
+  new IntersectionObserver(function(es, io){ if (!es[0].isIntersecting) return; io.disconnect();
+    boxes.forEach(function(b, i){ setTimeout(function(){ b.classList.add("is-on"); }, 200 + i * 250); });
+    spokes.forEach(function(l, i){ setTimeout(function(){ l.classList.add("is-on"); }, 1100 + i * 150); });
+    setTimeout(function(){ core.classList.add("is-on"); }, 1700);
+    setTimeout(function(){ f.querySelector(".c3-down").classList.add("is-on"); f.querySelector(".c3-out").classList.add("is-on"); shown = true; }, 2300);
+  }, {threshold: .4}).observe(f);
+})();
+</script>
+<script>
+/* 4．ギャップの図：キャラが線の上を進み、関門を1つずつクリアして旗に着く */
+(function(){
+  var f = document.querySelector('[data-anim="gap"]'); if (!f || !("IntersectionObserver" in window)) return;
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  f.classList.add("rd-anim");
+  var fill = f.querySelector(".rd-fill"), walker = f.querySelector(".rd-walker"), steps = [].slice.call(f.querySelectorAll(".rd-steps li"));
+  var go = function(pct){ fill.style.width = pct + "%"; walker.style.left = pct + "%"; };
+  new IntersectionObserver(function(es, io){ if (!es[0].isIntersecting) return; io.disconnect();
+    var stops = [22, 50, 78];
+    stops.forEach(function(x, i){
+      setTimeout(function(){ go(x); }, 500 + i * 1500);
+      setTimeout(function(){ steps[i].classList.add("is-done"); }, 500 + i * 1500 + 850);
+    });
+    setTimeout(function(){ var ln = f.querySelector(".rd-line"), stop = 100 - (walker.offsetWidth * .5 + 30) / ln.offsetWidth * 100; fill.style.width = "100%"; walker.style.left = stop + "%"; }, 500 + stops.length * 1500);   /* 旗の手前で止まる（幅から計算。スマホで旗にかかった） */
+    setTimeout(function(){ f.classList.add("is-reached"); }, 500 + stops.length * 1500 + 900);
+  }, {threshold: .5}).observe(f);
+})();
+</script>
+<script>
+/* FV動画の下の細い線：場面の区切り（秒）は ~/lab/llmo-video/src/Video2.tsx の CUT（30fps）と同じ */
+(function(){
+  var v = document.querySelector(".fv__vid video"), bar = document.querySelector(".vbar"); if (!v || !bar) return;
+  var CUT = [0, 4, 12, 16.333, 22];   /* 4場面（2・3場面をまとめた 9/30） */
+  bar.style.setProperty("--segs", CUT.slice(1).map(function(e, i){ return (e - CUT[i]).toFixed(3) + "fr"; }).join(" "));
+  var bs = [].slice.call(bar.querySelectorAll("b"));
+  var tick = function(){ var t = v.currentTime || 0;
+    bs.forEach(function(b, i){ var a = CUT[i], e = CUT[i + 1]; b.style.width = (t >= e ? 100 : t <= a ? 0 : (t - a) / (e - a) * 100) + "%"; });
+    requestAnimationFrame(tick); };
+  requestAnimationFrame(tick);
+})();
+</script>
+<script>
+/* 6-3・6-4：画面に入ったら順に出す／チェックを入れる（動きを減らす設定では最初から全部出す。6-4はチェック2つの状態） */
+(function(){
+  var rm = matchMedia("(prefers-reduced-motion: reduce)").matches, io = "IntersectionObserver" in window;
+  var rx = document.querySelector('[data-anim="rx"]'), pk = document.querySelector('[data-anim="picks"]');
+  var picks = pk ? [].slice.call(pk.querySelectorAll("li")) : [];
+  if (rm || !io){ if (picks.length){ picks[0].classList.add("is-on"); picks[1].classList.add("is-on"); } return; }
+  if (rx){ rx.classList.add("rx-anim");
+    new IntersectionObserver(function(es, o){ if (!es[0].isIntersecting) return; o.disconnect();
+      [].forEach.call(rx.querySelectorAll(".rx-row"), function(r, i){
+        var p = r.querySelector(".rx-p"), a = r.querySelector(".rx-ar"), s = r.querySelector(".rx-s"), b = 200 + i * 1100;
+        setTimeout(function(){ p.classList.add("is-on"); }, b); setTimeout(function(){ a.classList.add("is-on"); }, b + 400); setTimeout(function(){ s.classList.add("is-on"); }, b + 700);
+      });
+    }, {threshold: .4}).observe(rx);
+  }
+  if (pk){
+    new IntersectionObserver(function(es, o){ if (!es[0].isIntersecting) return; o.disconnect();
+      setTimeout(function(){ picks[0].classList.add("is-on"); }, 500); setTimeout(function(){ picks[1].classList.add("is-on"); }, 1200);
+    }, {threshold: .5}).observe(pk);
+  }
+})();
+</script>
+</body>
+</html>
