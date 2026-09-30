@@ -669,6 +669,27 @@ p,li,dd,td{text-wrap:pretty}
 /* 6-4：タイルの大きさはそのまま、ハイライトはしない（So 9/30） */
 .picks li.is-on{border-color:var(--line2);background:#fff}
 .picks li::after{display:none}
+
+/* FV動画の下の細い線は、動画の枠の中の一番下に（So 9/30） */
+.fv__vid .vbar{position:absolute;left:16px;right:16px;bottom:12px;margin:0;z-index:2}
+.fv__vid .vbar i{background:rgba(15,26,46,.14)}
+/* 7．の見本：矢印をやめ、18%と対応する施策の行に同じ番号の印（So 9/30「矢印が何を伝えたいのか分からない」） */
+.lk{position:relative;display:inline-block;padding:2px 8px;border-radius:6px;background:#FFE9A8;font-weight:900}
+.lk i,.lk-no{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;background:var(--cta);color:#fff;font-style:normal;font-size:11px;font-weight:900;line-height:1}
+.lk i{position:absolute;right:-9px;top:-9px}
+.lk-row td{background:#FFF7DB}
+.lk-no{margin-right:6px;vertical-align:1px}
+/* 4．「ギャップ」を目立たせる：現在地から旗までを括る括弧＋大きい字（So 9/30「あまり目立っていない」） */
+.rd-gap{left:14px;right:14px;transform:none;top:8px;height:34px;border:2.5px solid var(--cta);border-bottom:0;border-radius:10px 10px 0 0;text-align:center}
+.rd-gap span{position:relative;top:-15px;display:inline-block;padding:0 14px;background:#fff;color:var(--cta);font-size:20px;font-weight:900;letter-spacing:.1em}
+/* 橋本氏：吹き出しをやめ、写真の横に名前と肩書、その下に経歴（So 9/30「吹き出し変」） */
+.person{grid-template-columns:96px minmax(0,1fr);grid-template-areas:"img nm" "cv cv";gap:14px 18px;align-items:center}
+.person__img{grid-area:img}
+.person__nm{grid-area:nm;margin:0;font-size:13px;color:var(--ink3)}
+.person__nm b{display:block;font-size:20px;color:var(--ink);margin:0 0 2px}
+.person__cv{grid-area:cv;background:none;border:0;padding:0 0 0 14px;border-left:3px solid var(--acc);border-radius:0}
+.person__cv::before{display:none}
+@media (max-width:600px){ .person{grid-template-columns:80px minmax(0,1fr)} .person__img{width:80px} }
 </style>
 <script>document.documentElement.classList.add("fx-on");if("scrollRestoration" in history)history.scrollRestoration="manual"</script>
 </head>
@@ -696,8 +717,7 @@ p,li,dd,td{text-wrap:pretty}
       <p>選ばれたい場面を定め、現在地を計測。理想とのギャップを可視化し、必要な施策の提案・実行まで伴走します。</p>
     </div>
     <div class="fv__dia fv__vid fx" style="--d:.1s">
-      <div class="vid"><video src="media/fv.mp4" poster="media/fv.webp" width="960" height="540" muted loop playsinline autoplay preload="auto" aria-label="動画：AIの回答に貴社がいない現在地から、顧客のニーズと貴社のアセットの重なりである選ばれる理由を定め、AI回答での紹介・引用と顧客の比較検討・相談へつなげ、記事・事例・FAQで目指す状態へ近づける"></video></div>
-      <div class="vbar" aria-hidden="true"><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i></div>
+      <div class="vid"><video src="media/fv.mp4" poster="media/fv.webp" width="960" height="540" muted loop playsinline autoplay preload="auto" aria-label="動画：AIの回答に貴社がいない現在地から、顧客のニーズと貴社のアセットの重なりである選ばれる理由を定め、AI回答での紹介・引用と顧客の比較検討・相談へつなげ、記事・事例・FAQで目指す状態へ近づける"></video><div class="vbar" aria-hidden="true"><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i></div></div>
     </div>
     <div class="fv__cta fx" style="--d:.24s">
       <a class="btn btn--ink" href="#report">貴社のAI引用率を無料でレポーティング</a>
@@ -795,7 +815,7 @@ p,li,dd,td{text-wrap:pretty}
       <div class="rd-wrap">
         <div class="rd-card rd-card--now"><p class="rd-lbl">現在のAI回答</p><p class="rd-txt">一部のサービスだけで認識</p></div>
       <div class="rd-road">
-        <p class="rd-gap">ギャップ</p>
+        <p class="rd-gap"><span>ギャップ</span></p>
         <div class="rd-line" aria-hidden="true"><i class="rd-fill"></i><img class="rd-walker" src="img/chara/walk-smile.webp" width="360" height="385" alt=""></div>
         <ol class="rd-steps">
           <li style="--x:22%"><img class="ico" src="img/icon/scope.webp" width="160" height="160" alt="" aria-hidden="true" loading="lazy"><span>対応範囲の<wbr>明文化</span></li>
@@ -858,7 +878,7 @@ p,li,dd,td{text-wrap:pretty}
       <article class="val fx">
         <h3><span class="val__no">1．</span>事業会社・支援会社、双方の視点で戦略策定から伴走</h3>
         <div class="val__txt"><p>代表・橋本が、事業会社とマーケティング支援会社の双方で、BtoB・BtoCの意思決定に関わってきた経験をもとに支援します。</p><p>事業目的、顧客ニーズ、競争環境、貴社のアセットを構造的に整理し、市場のどこで、何を理由に選ばれるかを明確にします。</p></div>
-        <div class="val__fig person"><img class="person__img" src="img/hashimoto.webp" width="320" height="320" alt="橋本 圭司" loading="lazy"><div class="person__cv"><p class="person__nm"><b>橋本 圭司</b>代表取締役</p><p>大手通信会社の営業、事業企画を経験後、Webコンサル会社へ転職。2018年にイラスト世界チャンピオンとともにDT合同会社を設立し、CMO着任。並行して事業会社・ベンダー双方での経験を生かし、様々な業種・規模の企業で事業企画・マーケティング・セールスまでのコンサルとして事業を推進。2024年にサムライスタイル株式会社を設立。</p></div></div>
+        <div class="val__fig person"><img class="person__img" src="img/hashimoto.webp" width="320" height="320" alt="橋本 圭司" loading="lazy"><p class="person__nm"><b>橋本 圭司</b>代表取締役</p><div class="person__cv"><p>大手通信会社の営業、事業企画を経験後、Webコンサル会社へ転職。2018年にイラスト世界チャンピオンとともにDT合同会社を設立し、CMO着任。並行して事業会社・ベンダー双方での経験を生かし、様々な業種・規模の企業で事業企画・マーケティング・セールスまでのコンサルとして事業を推進。2024年にサムライスタイル株式会社を設立。</p></div></div>
       </article>
       <article class="val fx">
         <h3><span class="val__no">2．</span>戦略の実現状況を可視化するダッシュボード</h3>
@@ -894,18 +914,18 @@ p,li,dd,td{text-wrap:pretty}
     </div>
   </div>
   <div class="wrap">
-    <figure class="sample pen fx" data-dia="dash" aria-label="画面例（サンプル）：質問の種類ごとの言及率・引用率とブランド説明の正確性、目指す状態・確認されたギャップ・改善施策・優先順位">
+    <figure class="sample fx" aria-label="画面例（サンプル）：質問の種類ごとの言及率・引用率とブランド説明の正確性、目指す状態・確認されたギャップ・改善施策・優先順位">
       <div class="sample__hd"><h3>ダッシュボード</h3><span class="sample-tag">サンプル</span></div>
       <div class="sample__top">
         <table class="mtab"><thead><tr><th>質問の種類</th><th>言及率</th><th>引用率</th></tr></thead><tbody>
           <tr><td>カテゴリ</td><td>32%</td><td>8%</td></tr>
           <tr><td>ポジション</td><td>71%</td><td>24%</td></tr>
-          <tr><td>目的・課題</td><td data-k="low">18%</td><td>5%</td></tr>
+          <tr><td>目的・課題</td><td data-k="low"><span class="lk">18%<i aria-hidden="true">1</i></span></td><td>5%</td></tr>
         </tbody></table>
         <div class="accu"><p class="accu__l">ブランド説明の正確性</p><p class="accu__v">64<small>%</small></p></div>
       </div>
       <table class="acts"><thead><tr><th>目指す状態</th><th>確認されたギャップ</th><th>改善施策</th><th>優先順位</th></tr></thead><tbody>
-        <tr data-k="act1"><td data-l="目指す状態">困りごとから始まる質問で紹介される</td><td data-l="確認されたギャップ">目的・課題の質問で登場しない</td><td data-l="改善施策">課題別の記事やFAQ、導入事例を整備</td><td data-l="優先順位"><span class="prio prio--hi">高</span></td></tr>
+        <tr data-k="act1" class="lk-row"><td data-l="目指す状態"><i class="lk-no" aria-hidden="true">1</i>困りごとから始まる質問で紹介される</td><td data-l="確認されたギャップ">目的・課題の質問で登場しない</td><td data-l="改善施策">課題別の記事やFAQ、導入事例を整備</td><td data-l="優先順位"><span class="prio prio--hi">高</span></td></tr>
         <tr><td data-l="目指す状態">対応範囲を正しく説明される</td><td data-l="確認されたギャップ">対応範囲を狭く説明されている</td><td data-l="改善施策">サービスページの記載や外部の紹介情報を見直す</td><td data-l="優先順位"><span class="prio">中</span></td></tr>
       </tbody></table>
     </figure>
