@@ -1,0 +1,757 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>事業戦略→LLMO｜AIに最適化する前に、貴社が選ばれる理由を明確化します。</title>
+<meta name="description" content="誰の、どのようなニーズに、貴社ならではの価値を提供するか。サムライスタイルは、市場・顧客・競合と貴社のアセットを踏まえた事業戦略から、AI回答での言及・引用機会を増やすLLMOまでを一貫して支援します。">
+<meta property="og:title" content="事業戦略→LLMO｜AIに最適化する前に、貴社が選ばれる理由を明確化します。">
+<meta property="og:description" content="誰の、どのようなニーズに、貴社ならではの価値を提供するか。事業戦略から、AI回答での言及・引用機会を増やすLLMOまでを一貫して支援します。">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#F6F6F3">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kurenaido&display=swap&text=%E3%81%99%E3%82%82%E4%BB%AE%E6%88%A6%E7%95%A5%E7%9B%B4%E8%A6%8B%E8%AA%AC" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* ──────────────────────────────────────────────
+   原稿：scripts/llmo-lp/v1.md（2026-09-30 の構成）を一字一句そのまま。画像は原稿の「画像イメージ」どおりの図を HTML で組む
+   見た目：E案（墨・灰・白＋ライム1色。図の矢印と強調はペンの線）
+   原稿に無い素材（橋本氏の写真・経歴、ボタンの行き先）は ※要確認 のまま空けてある
+   ────────────────────────────────────────────── */
+:root{
+  --bg:#F6F6F3; --paper:#FFFFFF; --ink:#141414; --ink2:#4E4E4A; --ink3:#6E6E68; --grey:#7E7E78;
+  --line:#E4E4DF; --line2:#D6D6D0; --soft:#EFEFEB;
+  --acc:#C8F03C; --acc-ink:#3B5200;
+  --en:"Inter",system-ui,sans-serif;
+  --wrap:1180px; --pad:clamp(20px,5vw,44px);
+  --h2:clamp(28px,3.2vw,44px); --fs:17px;
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:80px;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN",sans-serif;
+  font-weight:500;font-size:var(--fs);line-height:1.95;letter-spacing:.02em;line-break:strict;-webkit-font-smoothing:antialiased}
+p,h1,h2,h3,h4,ul,ol,dl,dd,figure,table{margin:0}
+ul,ol{padding:0;list-style:none}
+a{color:inherit}
+.wrap{width:min(var(--wrap),100% - var(--pad)*2);margin-inline:auto;position:relative;z-index:1}
+.narrow{max-width:800px}
+.nb{display:inline-block}
+.en{font-family:var(--en)}
+.h1,.h2,.h3,.btn,.node,.svc{word-break:keep-all;overflow-wrap:anywhere}
+p,li,dd,td{text-wrap:pretty}
+.h2{font-weight:900;font-size:var(--h2);line-height:1.4;letter-spacing:-.005em}
+.prose{margin-top:28px;display:grid;gap:14px;color:var(--ink2)}
+.prose strong,.mk{font-weight:700;color:var(--ink);background:linear-gradient(transparent 58%,rgba(200,240,60,.85) 58%,rgba(200,240,60,.85) 94%,transparent 94%);padding:0 2px}
+.sec{position:relative;padding:clamp(88px,10vw,140px) 0}
+.sec--paper{background:var(--paper)}
+.sample-tag{display:inline-block;font-family:var(--en);font-weight:700;font-size:11.5px;letter-spacing:.12em;color:var(--ink3);border:1px solid var(--line2);border-radius:6px;padding:1px 8px;background:var(--paper)}
+
+/* ボタン（原稿の文言が長いので、折り返しても崩れない形） */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:56px;padding:12px 26px;border-radius:10px;text-align:center;
+  font-weight:700;font-size:16px;line-height:1.5;letter-spacing:.03em;text-decoration:none;transition:transform .2s var(--ease),box-shadow .2s,background .2s,border-color .2s}
+.btn svg{width:17px;height:17px;flex:none;transition:transform .2s var(--ease)}
+.btn--ink{background:var(--ink);color:#fff;box-shadow:0 10px 24px -14px rgba(0,0,0,.6)}
+.btn--ink:hover{transform:translateY(-2px)}
+.btn--ink:hover svg{transform:translateX(3px)}
+.btn--line{background:var(--paper);color:var(--ink);border:1px solid var(--line2)}
+.btn--line:hover{border-color:var(--ink)}
+.btn:focus-visible,.nav a:focus-visible{outline:3px solid #4285F4;outline-offset:3px}
+
+/* ── ヘッダー ── */
+.hd{position:fixed;inset:0 0 auto;z-index:50;transition:background .3s,border-color .3s;border-bottom:1px solid transparent}
+.hd.is-scrolled{background:rgba(246,246,243,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-color:var(--line)}
+.hd__in{display:flex;align-items:center;gap:32px;height:70px}
+.logo{display:flex;align-items:center;text-decoration:none;color:var(--ink)}
+.logo svg{display:block;height:23px;width:auto}
+.logo--ft{color:var(--ink2)}
+.logo--ft svg{height:17px}
+.nav{display:flex;gap:28px;margin-left:auto}
+.nav a{font-size:14px;font-weight:700;letter-spacing:.04em;text-decoration:none;color:var(--ink2);transition:color .2s}
+.nav a:hover,.nav a.is-cur{color:var(--ink)}
+.hd .btn{min-height:42px;padding:0 18px;font-size:14px;border-radius:9px}
+
+/* ── 1．ファーストビュー（文章＋「選ばれる理由」を起点にした図） ── */
+.fv{position:relative;padding:136px 0 clamp(80px,9vw,120px)}
+.fv__grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);grid-template-areas:"txt dia" "cta dia";column-gap:clamp(40px,5vw,72px);align-items:center}
+.fv__txt{grid-area:txt}
+.fv__dia{grid-area:dia}
+.fv__cta{grid-area:cta;align-self:start;display:grid;gap:12px;max-width:480px;margin-top:32px}
+.svc{display:inline-flex;align-items:center;gap:8px;background:var(--paper);border:1px solid var(--line2);border-radius:999px;padding:4px 16px 4px 12px;
+  font-weight:700;font-size:14px;letter-spacing:.06em;color:var(--ink)}
+.svc i{width:9px;height:9px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 1.5px var(--ink)}
+.fv__h1{margin-top:22px;font-weight:900;font-size:clamp(34px,3.6vw,50px);line-height:1.34;letter-spacing:-.01em}
+.fv__body{margin-top:24px;display:grid;gap:10px;color:var(--ink2)}
+.fv__h1 .mk{font-weight:900;padding:0;background:linear-gradient(transparent 62%,var(--acc) 62%,var(--acc) 92%,transparent 92%)}   /* 決めごと：FV見出しにブランドカラーの強調を1か所（図の中心と同じ言葉） */
+
+/* 図の部品：箱（node）。つなぐ線はペン（JSで描く） */
+.dia{position:relative}
+.node{display:grid;place-items:center;text-align:center;background:var(--paper);border:1px solid var(--line2);border-radius:14px;padding:14px 14px;
+  font-weight:700;font-size:15.5px;line-height:1.5;letter-spacing:.02em;color:var(--ink)}
+.node--key{background:var(--acc);border:1.5px solid var(--ink);border-radius:20px;padding:30px 16px;font-weight:900;font-size:clamp(22px,2.1vw,29px);line-height:1.35;
+  box-shadow:0 24px 44px -28px rgba(0,0,0,.4)}
+.node--out{background:var(--ink);border-color:var(--ink);color:#fff}
+.dia--fv .dia__in{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr) minmax(0,1fr);grid-template-rows:auto auto;gap:26px 46px;align-items:center}
+.dia--fv [data-k="need"]{grid-area:1 / 1}
+.dia--fv [data-k="asset"]{grid-area:2 / 1}
+.dia--fv [data-k="reason"]{grid-area:1 / 2 / 3 / 3}
+.dia--fv [data-k="ai"]{grid-area:1 / 3}
+.dia--fv [data-k="cmp"]{grid-area:2 / 3}
+.dia--fv .node:not(.node--key){min-height:92px}
+
+/* ── 2．導入：相談文 → 調査論点 → 条件に合う企業と選定理由 ── */
+.dia--q{margin-top:64px;display:grid;justify-items:center}
+.q-bubble{max-width:720px;background:var(--bg);border:1px solid var(--line2);border-radius:18px 18px 18px 4px;padding:18px 24px;font-weight:700;font-size:16.5px;line-height:1.8;color:var(--ink)}
+.q-points{margin-top:70px;width:100%;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.q-points .node{min-height:76px}
+.q-result{margin-top:70px;min-width:min(440px,100%)}
+.q-cap{margin-top:34px;font-weight:900;font-size:clamp(20px,2vw,26px);line-height:1.5;text-align:center}
+
+/* ── 3．事業戦略：STP と、3つを照合する図 ── */
+.stp{margin-top:40px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.stp li{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:24px 24px 26px}
+.stp h3{font-weight:900;font-size:19px;line-height:1.5}
+.stp .sep{color:var(--line2);margin:0 .2em}
+.stp .en{font-weight:600;font-size:14px;letter-spacing:.06em;color:var(--ink3)}
+.stp p{margin-top:10px;font-size:15.5px;color:var(--ink2)}
+.after{margin-top:28px;color:var(--ink2)}
+.dia--stp{margin-top:64px;display:grid;justify-items:center}
+.stp-in{width:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.stp-in .node{min-height:70px}
+.stp-core{margin-top:66px;min-width:min(420px,100%)}
+.stp-out{margin-top:66px;width:min(640px,100%);display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.stp-out .node{min-height:70px}
+
+/* ── 4．事業戦略→LLMOとは：目指す状態／現在のAI回答／ギャップ ── */
+.about{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(40px,5vw,72px);align-items:center}
+.dia--gap{display:grid}
+.gap-row{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:18px;align-items:stretch}
+.gap-card{background:var(--paper);border:1px solid var(--line2);border-radius:16px;padding:18px 18px 20px;display:grid;align-content:start;gap:8px}
+.gap-card--goal{border:1.5px solid var(--ink)}
+.gap-lbl{font-weight:700;font-size:13px;letter-spacing:.06em;color:var(--ink3)}
+.gap-txt{font-weight:700;font-size:16px;line-height:1.65;color:var(--ink)}
+.gap-mid{align-self:center;font-weight:900;font-size:17px;padding:6px 4px;writing-mode:horizontal-tb}
+.gap-acts{margin-top:70px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.gap-acts .node{min-height:64px;font-size:15px;background:var(--acc);border-color:var(--ink)}
+
+/* 途中のボタン */
+.ctaband{padding:0 0 clamp(88px,10vw,140px)}
+.ctaband__in{background:var(--ink);border-radius:22px;padding:clamp(28px,4vw,44px);display:flex;flex-wrap:wrap;justify-content:center;gap:14px}
+.ctaband .btn--ink{background:#fff;color:var(--ink)}
+.ctaband .btn--line{background:transparent;color:#fff;border-color:#5a5a55}
+.ctaband .btn--line:hover{border-color:#fff}
+
+/* ── 5．サービスの流れ：縦に5つ。STEP 5 から STEP 1・2 へ戻る線（ペン） ── */
+.flow{margin-top:52px;position:relative;display:grid;gap:14px;padding-left:92px}
+.flow__step{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:22px 26px 24px}
+.flow__step h3{font-weight:900;font-size:clamp(18px,1.7vw,21px);line-height:1.55}
+.flow__no{font-family:var(--en);font-weight:700;letter-spacing:.06em}
+.flow__sep{color:var(--line2);margin:0 .25em}
+.flow__step > p{margin-top:8px;font-size:15.5px;color:var(--ink2)}
+.flow__q{margin-top:12px;display:grid;gap:8px}
+.flow__q li{background:var(--bg);border-radius:10px;padding:9px 14px;font-size:15px;line-height:1.7;color:var(--ink2)}
+.flow__q b{color:var(--ink)}
+.flow .pen-note[data-n="loop"]{left:0;font-size:19px;--r:-90deg;transform-origin:left top}
+
+/* ── 6．提供価値：2×2 ── */
+.vals{margin-top:52px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.val{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:28px 28px 30px;display:grid;grid-template-rows:auto auto 1fr;gap:12px}
+.val h3{font-weight:900;font-size:clamp(18px,1.7vw,21px);line-height:1.55}
+.val__no{font-family:var(--en);font-weight:700;margin-right:.15em}
+.val__txt{display:grid;gap:8px;font-size:15.5px;color:var(--ink2)}
+.val__fig{margin-top:8px;align-self:end}
+.person{display:grid;grid-template-columns:120px minmax(0,1fr);gap:16px;align-items:center}
+.person__ph{aspect-ratio:1;border-radius:14px;background:repeating-linear-gradient(45deg,var(--soft),var(--soft) 8px,#E8E8E3 8px,#E8E8E3 16px);display:grid;place-items:center;
+  font-size:13px;font-weight:700;color:var(--ink3);border:1px dashed var(--line2)}
+.person__cv{font-size:14px;line-height:1.8;color:var(--ink3)}
+.shot-s{border-radius:12px;border:1px solid var(--line);overflow:hidden}
+.shot-s img{display:block;width:100%;height:auto}
+.fig-cap{margin-top:6px;font-size:12.5px;color:var(--ink3)}
+.map{width:100%;border-collapse:separate;border-spacing:0 8px;font-size:14px;line-height:1.6}
+.map th{font-size:12.5px;font-weight:700;color:var(--ink3);text-align:left;padding:0 10px}
+.map td{background:var(--bg);padding:10px 12px;color:var(--ink);font-weight:700;vertical-align:middle}
+.map td:first-child{border-radius:10px 0 0 10px}
+.map td:last-child{border-radius:0 10px 10px 0;background:#F1FBD6}
+.map .arw{width:26px;padding:0;text-align:center;color:var(--ink3);background:var(--bg)}
+.checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.checks li{display:flex;align-items:center;gap:10px;background:var(--bg);border-radius:10px;padding:10px 12px;font-size:14.5px;font-weight:700;line-height:1.5}
+.checks li::before{content:"";flex:none;width:18px;height:18px;border-radius:5px;border:1.5px solid var(--ink);
+  background:var(--acc) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M4.5 9.5l3 3 6-7' fill='none' stroke='%23141414' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/100% no-repeat}
+
+/* ── 7．ダッシュボードから改善施策へ（画面例＝サンプル） ── */
+.sample{margin-top:48px;background:var(--paper);border:1px solid var(--line2);border-radius:18px;padding:22px 24px 26px;box-shadow:0 40px 80px -60px rgba(0,0,0,.4)}
+.sample__hd{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.sample__hd h3{font-weight:900;font-size:17px}
+.sample__top{margin-top:16px;display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:14px}
+.mtab{width:100%;border-collapse:collapse;font-size:14.5px}
+.mtab th,.mtab td{padding:10px 12px;border-top:1px solid #EFEFEA;text-align:left}
+.mtab thead th{border-top:0;font-size:12.5px;color:var(--ink3);font-weight:700}
+.mtab td:not(:first-child),.mtab th:not(:first-child){text-align:right;font-family:var(--en);font-weight:700}
+.mtab td:first-child{font-weight:700}
+.accu{border:1px solid var(--line);border-radius:14px;padding:16px 18px;display:grid;align-content:center;gap:4px}
+.accu__l{font-size:13px;font-weight:700;color:var(--ink3)}
+.accu__v{font-family:var(--en);font-weight:700;font-size:36px;line-height:1.1}
+.accu__v small{font-size:15px}
+.acts{margin-top:18px;width:100%;border-collapse:collapse;font-size:14px;line-height:1.6}
+.acts th,.acts td{padding:11px 12px;border-top:1px solid #EFEFEA;text-align:left;vertical-align:top}
+.acts thead th{border-top:0;font-size:12.5px;color:var(--ink3);font-weight:700;background:var(--bg)}
+.acts thead th:first-child{border-radius:8px 0 0 8px}
+.acts thead th:last-child{border-radius:0 8px 8px 0}
+.acts td{color:var(--ink);font-weight:500}
+.prio{display:inline-block;font-weight:700;font-size:13px;border-radius:6px;padding:0 9px;background:var(--soft)}
+.prio--hi{background:var(--acc)}
+
+/* ── 締め：無料レポート／資料ダウンロード ── */
+.cta2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(40px,5vw,72px);align-items:center}
+.cta2__txt .prose{margin-top:22px}
+.cta2__btn{margin-top:30px;max-width:460px;display:grid}
+.cta2__note{margin-top:12px;font-size:13px;line-height:1.8;color:var(--ink3)}
+.report{background:var(--paper);border:1px solid var(--line2);border-radius:18px;padding:22px 24px 24px;box-shadow:0 40px 80px -60px rgba(0,0,0,.4)}
+.report__hd{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.report__hd h3{font-weight:900;font-size:17px}
+.report__kpi{margin-top:14px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.report__kpi div{border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.report__kpi p{font-size:12.5px;font-weight:700;color:var(--ink3);line-height:1.5}
+.report__kpi b{display:block;margin-top:2px;font-family:var(--en);font-size:30px;line-height:1.1}
+.report__kpi b small{font-size:14px}
+.report h4{margin-top:16px;font-size:13px;font-weight:700;color:var(--ink3)}
+.bars{margin-top:8px;display:grid;gap:7px}
+.bars li{display:grid;grid-template-columns:62px minmax(0,1fr) 40px;gap:10px;align-items:center;font-size:13.5px;font-weight:700}
+.bars i{display:block;height:8px;border-radius:4px;background:var(--line2)}
+.bars .me i{background:var(--ink)}
+.bars span:last-child{font-family:var(--en);text-align:right}
+.points{margin-top:8px;display:grid;gap:6px}
+.points li{position:relative;padding-left:18px;font-size:14px;line-height:1.7;color:var(--ink)}
+.points li::before{content:"";position:absolute;left:2px;top:.62em;width:8px;height:8px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 1.5px var(--ink)}
+.deck{position:relative;aspect-ratio:4/3.1;max-width:560px;justify-self:center;width:100%}
+.deck__pg{position:absolute;width:74%;aspect-ratio:16/9;background:var(--paper);border:1px solid var(--line2);border-radius:10px;padding:5% 6%;
+  box-shadow:0 22px 40px -28px rgba(0,0,0,.35);display:grid;align-content:start;gap:8%}
+.deck__pg h5{margin:0;font-size:clamp(12px,1.2vw,15px);font-weight:900}
+.deck__pg i{display:block;height:6px;border-radius:3px;background:var(--soft)}
+.deck__pg i:nth-child(3){width:70%}
+.deck__pg--1{right:0;top:0;transform:rotate(3deg)}
+.deck__pg--2{right:6%;top:15%;transform:rotate(-2deg)}
+.deck__pg--3{right:12%;top:30%;transform:rotate(1.5deg)}
+.deck__cover{position:absolute;left:0;bottom:0;width:74%;aspect-ratio:16/9;background:var(--ink);color:#fff;border-radius:10px;padding:6% 7%;
+  display:grid;align-content:space-between;box-shadow:0 30px 50px -30px rgba(0,0,0,.5)}
+.deck__cover b{font-size:clamp(18px,2vw,26px);font-weight:900;line-height:1.3}
+.deck__cover span{font-size:clamp(12px,1.1vw,14px);font-weight:700;color:#C9C9C3}
+.deck__cover em{font-style:normal;color:var(--acc)}
+.ft{padding:28px 0 40px;border-top:1px solid var(--line)}
+.ft .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;font-size:13px;color:var(--ink3)}
+
+/* ── ペンの線（E案）：図の矢印・強調。線は .pen の上の SVG に JS で描き、画面に入ったら引かれていく ── */
+.pen{position:relative}
+.pen .ann{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:3;mix-blend-mode:multiply}   /* 🚨 層ごと乗算（蛍光ペンの下の字が透ける） */
+.ann path{stroke-dasharray:1 1;stroke-dashoffset:1;transition:stroke-dashoffset .8s cubic-bezier(.35,.1,.25,1) var(--pd,0s)}
+.pen-go .ann path{stroke-dashoffset:0}
+.pen-note{position:absolute;z-index:4;margin:0;font-family:"Zen Kurenaido","Hiragino Maru Gothic ProN",sans-serif;font-weight:400;font-size:21px;line-height:1.35;
+  color:var(--ink);white-space:nowrap;letter-spacing:.02em;transform:rotate(var(--r,-2deg))}
+.fx-on .pen .pen-note{opacity:0;transition:opacity .6s var(--nd,1s)}
+.fx-on .pen-go .pen-note{opacity:1}
+.sec,.fv{overflow-x:clip}
+
+/* ── 動き（画面に入ったら出す）。JSが無ければ全部見える ── */
+.fx-on .fx{opacity:0;transform:translateY(20px);transition:opacity .8s var(--ease),transform .8s var(--ease);transition-delay:var(--d,0s)}
+.fx-on .fx.hh-in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .fx-on .fx{opacity:1;transform:none;transition:none}
+  .ann path{transition:none}
+  .fx-on .pen .pen-note{opacity:1;transition:none}
+}
+
+/* ── 幅ごとの組み替え ── */
+@media (max-width:1080px){
+  .stp{grid-template-columns:minmax(0,1fr)}
+  .vals{grid-template-columns:minmax(0,1fr)}
+  .about{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:900px){
+  :root{--fs:16px}
+  .nav{display:none}
+  .hd__in{height:60px}
+  .hd .btn{margin-left:auto;min-height:38px;padding:0 14px}
+  .fv{padding:104px 0 72px}
+  /* スマホは 見出し・本文 → 図 → ボタン（決まり：写真・図はボタンより上） */
+  .fv__grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"txt" "dia" "cta"}
+  .fv__dia{margin-top:40px}
+  .fv__cta{max-width:none}
+  .dia--fv .dia__in{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:auto auto auto;gap:56px 14px}
+  .dia--fv [data-k="need"]{grid-area:1 / 1}
+  .dia--fv [data-k="asset"]{grid-area:1 / 2}
+  .dia--fv [data-k="reason"]{grid-area:2 / 1 / 3 / 3}
+  .dia--fv [data-k="ai"]{grid-area:3 / 1}
+  .dia--fv [data-k="cmp"]{grid-area:3 / 2}
+  .dia--fv .node:not(.node--key){min-height:76px}
+  .q-points{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:56px}
+  .q-result{margin-top:56px}
+  .sample__top{grid-template-columns:minmax(0,1fr)}
+  .cta2{grid-template-columns:minmax(0,1fr)}
+  .flow{padding-left:44px}
+  .flow .pen-note[data-n="loop"]{display:none}
+}
+@media (max-width:420px){ :root{--h2:26px} }   /* 375pxで「「AIに選ばれる」とは、」の行の余りが1割を切った（実機Safariで1行増える） */
+@media (max-width:600px){
+  .stp-in{gap:10px}
+  .stp-in .node,.stp-out .node{font-size:14px;padding:12px 8px}
+  .gap-row{grid-template-columns:minmax(0,1fr);gap:44px}
+  .gap-mid{justify-self:center}
+  .gap-acts{grid-template-columns:minmax(0,1fr);margin-top:56px}
+  .val{padding:22px 20px 24px}
+  .person{grid-template-columns:96px minmax(0,1fr)}
+  .checks{grid-template-columns:minmax(0,1fr)}
+  .acts thead{display:none}
+  .acts,.acts tbody{display:block}
+  .acts tr{display:block;padding:10px 0 12px;border-top:1px solid #EFEFEA}
+  .acts td{display:grid;grid-template-columns:7.2em minmax(0,1fr);gap:10px;padding:3px 0;border:0}
+  .acts td::before{content:attr(data-l);font-size:12px;font-weight:700;color:var(--ink3);line-height:1.9}
+  .acts td .prio{justify-self:start}
+  .report__kpi b{font-size:26px}
+}
+</style>
+<script>document.documentElement.classList.add("fx-on");if("scrollRestoration" in history)history.scrollRestoration="manual"</script>
+</head>
+<body>
+
+<header class="hd" id="hd">
+  <div class="wrap hd__in">
+    <a class="logo" href="#top" aria-label="LLMOHack ページの先頭へ"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 584 106" aria-hidden="true" focusable="false" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M301.6 52.0 C301.6 60.9 297.1 72.6 290.8 78.8 C284.6 85.1 272.9 89.6 264.0 89.6 C255.1 89.6 243.7 84.9 237.4 78.6 C231.1 72.3 226.1 60.9 226.1 52.0 C226.0 43.1 230.6 31.2 236.9 24.9 C243.2 18.6 255.0 14.3 264.0 14.3 C273.0 14.4 284.4 19.0 290.7 25.3 C297.0 31.6 301.6 43.1 301.6 52.0Z" fill="#C8F03C"/><path d="M242 46 Q245 33 258 29" stroke="#fff" stroke-width="6"/><g stroke="currentColor" stroke-width="13"><path d="M14.0 12.0 Q14.3 52.0 14.0 92.0 Q34.0 91.4 54.0 92.0"/><path d="M78.0 12.0 Q77.8 52.0 78.0 92.0 Q98.0 91.3 118.0 92.0"/><path d="M142.0 93.0 Q142.1 53.0 142.0 13.0 Q158.2 37.4 174.0 62.0 Q189.4 37.1 206.0 13.0 Q206.0 53.0 206.0 93.0"/><path d="M301.6 52.0 C301.6 60.9 297.1 72.6 290.8 78.8 C284.6 85.1 272.9 89.6 264.0 89.6 C255.1 89.6 243.7 84.9 237.4 78.6 C231.1 72.3 226.1 60.9 226.1 52.0 C226.0 43.1 230.6 31.2 236.9 24.9 C243.2 18.6 255.0 14.3 264.0 14.3 C273.0 14.4 284.4 19.0 290.7 25.3 C297.0 31.6 301.6 43.1 301.6 52.0Z"/></g><g stroke="currentColor" stroke-width="13" opacity=".55"><path d="M340.0 12.0 Q339.7 52.0 340.0 92.0 M386.0 12.0 Q385.8 52.0 386.0 92.0 M340.0 53.0 Q363.0 53.8 386.0 53.0"/><path d="M454.7 67.0 C454.7 72.7 451.3 80.2 447.2 84.2 C443.1 88.3 435.8 91.4 430.0 91.4 C424.2 91.5 416.6 88.5 412.6 84.4 C408.6 80.3 405.8 72.8 405.8 67.0 C405.8 61.2 408.7 53.7 412.7 49.7 C416.7 45.6 424.3 42.7 430.0 42.7 C435.7 42.7 443.1 45.8 447.2 49.8 C451.3 53.9 454.7 61.3 454.7 67.0Z M455.0 42.0 Q455.7 67.0 455.0 92.0"/><path d="M515.4 83.2 L505.5 89.9 L493.9 91.0 L483.0 87.1 L475.0 78.5 L472.2 67.0 L475.3 55.7 L482.9 46.6 L494.0 42.9 L505.5 44.2 L515.2 50.6"/><path d="M536.0 12.0 Q536.4 52.0 536.0 92.0 M568.0 42.0 Q553.5 56.6 538.0 70.0 M549.0 60.0 Q560.1 75.9 571.0 92.0"/></g></svg></a>
+    <nav class="nav" aria-label="ページ内">
+      <a href="#about">サービスとは</a><a href="#flow">サービスの流れ</a><a href="#value">提供価値</a>
+    </nav>
+    <a class="btn btn--ink" href="#report">無料レポート</a>
+  </div>
+</header>
+
+<main>
+<!-- 1．ファーストビュー -->
+<section class="fv" id="top">
+  <div class="wrap fv__grid">
+    <div class="fv__txt">
+      <p class="svc fx"><i aria-hidden="true"></i>事業戦略→LLMO</p>
+      <h1 class="h1 fv__h1 fx" style="--d:.06s">AIに<wbr>最適化する<wbr>前に、<wbr>貴社が<wbr><span class="mk">選ばれる理由</span>を<wbr>明確化します。</h1>
+      <div class="fv__body fx" style="--d:.14s">
+        <p>誰の、どのようなニーズに、貴社ならではの価値を提供するか。</p>
+        <p>サムライスタイルは、市場・顧客・競合と貴社のアセットを踏まえた事業戦略から、AI回答での言及・引用機会を増やすLLMOまでを一貫して支援します。</p>
+        <p>選ばれたい場面を定め、現在地を計測。理想とのギャップを可視化し、必要な施策の提案・実行まで伴走します。</p>
+      </div>
+    </div>
+    <div class="fv__dia dia dia--fv pen fx" data-dia="fv" style="--d:.22s" role="img" aria-label="図：顧客のニーズと貴社のアセットから選ばれる理由を導き、その先にAI回答での紹介・引用と、顧客の比較検討・相談が続く">
+      <div class="dia__in">
+        <p class="node" data-k="need">顧客の<wbr>ニーズ</p>
+        <p class="node" data-k="asset">貴社の<wbr>アセット</p>
+        <p class="node node--key" data-k="reason">選ばれる理由</p>
+        <p class="node node--out" data-k="ai">AI回答での<wbr>紹介・引用</p>
+        <p class="node node--out" data-k="cmp">顧客の<wbr>比較検討・<wbr>相談</p>
+      </div>
+    </div>
+    <div class="fv__cta fx" style="--d:.3s">
+      <a class="btn btn--ink" href="#report">貴社のAI引用率を無料でレポーティング</a>
+      <a class="btn btn--line" href="#download">事業戦略→LLMOのサービス紹介資料をダウンロード</a>
+    </div>
+  </div>
+</section>
+
+<!-- 2．導入：情報探索の変化と戦略の必要性 -->
+<section class="sec sec--paper" id="why">
+  <div class="wrap narrow">
+    <h2 class="h2 fx">「AIに選ばれる」とは、<br>誰の、<wbr>どのような<wbr>相談で<wbr>選ばれる<wbr>ことでしょうか。</h2>
+    <div class="prose fx">
+      <p>AIの回答で自社やサービスを紹介・引用してもらうための取り組みとして、LLMOが注目されています。</p>
+      <p>検索エンジンもAIも、情報を探す人と、情報を発信する企業をつなぐ接点です。その根幹にあるのは、テクノロジーの進化によって、ユーザーの意図に合う情報を届ける仕組みが高度化しているという変化です。</p>
+      <p>AIでは、目的や困りごと、予算、導入条件などを文章で伝え、比較や選定を相談できます。検索を伴うAIでは、質問を関連する複数の論点へ展開して調べ、回答を組み立てる「クエリファンアウト」という手法が使われる場合もあります。</p>
+      <p>こうした具体的な相談で候補に入るためには、顧客の条件に対して、自社がどのような価値を提供できるかを、根拠とともに示すことが重要です。</p>
+      <p>だからこそ、AIに最適化する前に、<strong>「誰のどのニーズに応え、何を理由に自社を選んでもらうか」</strong>を定める必要があります。</p>
+    </div>
+  </div>
+  <div class="wrap">
+    <figure class="dia dia--q pen fx" data-dia="q" aria-label="図：相談文が、会議室不足への対応・オンライン会議環境・内装・ITの対応範囲・支援実績という調査論点に広がり、条件に合う企業と選定理由へまとまる">
+      <p class="q-bubble" data-k="q">「オフィス移転を検討している。会議室不足を解消し、オンライン会議の環境も整えたい。内装とITをまとめて相談できる会社は？」</p>
+      <ul class="q-points">
+        <li class="node" data-k="p1">会議室不足への<wbr>対応</li>
+        <li class="node" data-k="p2">オンライン<wbr>会議環境</li>
+        <li class="node" data-k="p3">内装・<wbr>ITの<wbr>対応範囲</li>
+        <li class="node" data-k="p4">支援実績</li>
+      </ul>
+      <p class="node node--out q-result" data-k="r">条件に合う<wbr>企業と<wbr>選定理由</p>
+      <figcaption class="q-cap">貴社は、<wbr>どの条件に、<wbr>何を根拠に<wbr>応えられるか？</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- 3．LLMOの起点となる事業戦略 -->
+<section class="sec" id="strategy">
+  <div class="wrap narrow">
+    <h2 class="h2 fx">誰に、何を届けるか。<br>その選択が、<wbr>LLMOの<wbr>起点になります。</h2>
+    <div class="prose fx">
+      <p>貴社の強みは、顧客のニーズや比較する選択肢によって、評価が変わります。</p>
+      <p>たとえば、幅広い対応範囲は「まとめて任せたい」顧客にとって価値になります。一方、特定領域の専門性や価格を重視する顧客には、別の選定理由が必要です。</p>
+      <p>サムライスタイルは、STPの視点から、貴社が優先して応えるニーズと提供価値を整理します。</p>
+    </div>
+  </div>
+  <div class="wrap">
+    <ul class="stp">
+      <li class="fx"><h3>市場を捉える<span class="sep">｜</span><span class="en">Segmentation</span></h3><p>顧客の属性に加え、目的・課題・選択条件から市場を整理します。</p></li>
+      <li class="fx" style="--d:.08s"><h3>狙う領域を選ぶ<span class="sep">｜</span><span class="en">Targeting</span></h3><p>顧客ニーズと貴社のアセット、競争環境を照らし合わせ、価値を発揮できる領域を選びます。</p></li>
+      <li class="fx" style="--d:.16s"><h3>選ばれる理由を定める<span class="sep">｜</span><span class="en">Positioning</span></h3><p>同業他社や代替手段と比較した相対的な強みを整理し、誰にどのような価値を提供するかを明確にします。</p></li>
+    </ul>
+  </div>
+  <div class="wrap narrow">
+    <p class="after fx">この戦略によって、どのような相談で、何を理由に紹介されたいかが具体的になります。それを目指す状態として、現在のAI回答を確認し、必要な施策を設計します。</p>
+  </div>
+  <div class="wrap">
+    <figure class="dia dia--stp pen fx" data-dia="stp" aria-label="図：顧客ニーズ・自社のアセット・競合・代替手段の3つを照合して、優先する顧客と提供価値を定め、そこから選ばれたい相談と伝わってほしい選定理由が決まる">
+      <ul class="stp-in">
+        <li class="node" data-k="i1">顧客<wbr>ニーズ</li>
+        <li class="node" data-k="i2">自社の<wbr>アセット</li>
+        <li class="node" data-k="i3">競合・<wbr>代替手段</li>
+      </ul>
+      <p class="node node--key stp-core" data-k="core">優先する<wbr>顧客と<wbr>提供価値</p>
+      <ul class="stp-out">
+        <li class="node node--out" data-k="o1">選ばれたい相談</li>
+        <li class="node node--out" data-k="o2">伝わってほしい<wbr>選定理由</li>
+      </ul>
+    </figure>
+  </div>
+</section>
+
+<!-- 4．「事業戦略→LLMO」とは -->
+<section class="sec sec--paper" id="about">
+  <div class="wrap about">
+    <div>
+      <h2 class="h2 fx">選ばれたい場面を定め、<br>現在地との<wbr>ギャップを<wbr>埋める。</h2>
+      <div class="prose fx">
+        <p>「事業戦略→LLMO」は、貴社の提供価値を明確にしたうえで、AI回答での言及・引用機会の拡大と、比較検討からの顧客獲得につなげるサービスです。</p>
+        <p>まず、顧客と競合の視点から貴社の相対的な強みを整理し、どのような相談で、何を理由に紹介されたいかを定めます。</p>
+        <p>次に、実際のAI回答を調査し、候補への登場状況、引用元、強みの伝わり方を確認。理想と現状のギャップを可視化します。</p>
+        <p>その結果を踏まえ、情報発信、コンテンツ制作、サイト改修などの優先順位を決め、実行と検証を進めます。</p>
+      </div>
+    </div>
+    <figure class="dia dia--gap pen fx" data-dia="gap" aria-label="図：目指す状態は複数領域をまとめて支援できる会社として紹介、現在のAI回答は一部のサービスだけで認識。そのギャップを、対応範囲の明文化・統合事例の制作・関連情報の整備で埋める">
+      <div class="gap-row">
+        <div class="gap-card gap-card--goal" data-k="goal"><p class="gap-lbl">目指す状態</p><p class="gap-txt">複数領域をまとめて支援できる会社として紹介</p></div>
+        <p class="gap-mid" data-k="gap">ギャップ</p>
+        <div class="gap-card" data-k="now"><p class="gap-lbl">現在のAI回答</p><p class="gap-txt">一部のサービスだけで認識</p></div>
+      </div>
+      <ul class="gap-acts">
+        <li class="node" data-k="a1">対応範囲の明文化</li>
+        <li class="node" data-k="a2">統合事例の制作</li>
+        <li class="node" data-k="a3">関連情報の整備</li>
+      </ul>
+    </figure>
+  </div>
+</section>
+
+<!-- CTA：無料レポート・サービス紹介資料 -->
+<section class="ctaband sec--paper" aria-label="無料レポート・サービス紹介資料">
+  <div class="wrap">
+    <div class="ctaband__in fx">
+      <a class="btn btn--ink" href="#report">貴社のAI引用率を無料でレポーティング</a>
+      <a class="btn btn--line" href="#download">事業戦略→LLMOのサービス紹介資料をダウンロード</a>
+    </div>
+  </div>
+</section>
+
+<!-- 5．具体的なサービスの流れ -->
+<section class="sec" id="flow">
+  <div class="wrap narrow">
+    <h2 class="h2 fx">提供価値の整理から、<wbr>計測・改善まで。</h2>
+  </div>
+  <div class="wrap narrow">
+    <ol class="flow pen" data-dia="flow">
+      <li class="flow__step fx" data-k="s1"><h3><span class="flow__no">STEP 1</span><span class="flow__sep">｜</span>競合比較を踏まえ、貴社の提供価値を整理</h3>
+        <p>商品・サービス、実績、体制、保有する知見などを確認。同業他社に加え、顧客が比較する代替手段も調査し、相対的な強みと、それが価値になる条件を整理します。</p></li>
+      <li class="flow__step fx" data-k="s2"><h3><span class="flow__no">STEP 2</span><span class="flow__sep">｜</span>顧客の情報探索ニーズを調査</h3>
+        <p>検索ニーズの調査と、営業・カスタマーサポートなど顧客接点を持つ方へのヒアリングを通じて、顧客の目的・課題、比較条件、不安を把握します。検索語だけでは捉えにくい相談内容も反映します。</p></li>
+      <li class="flow__step fx" data-k="s3"><h3><span class="flow__no">STEP 3</span><span class="flow__sep">｜</span>ポジション・カテゴリ・目的課題から質問を設計</h3>
+        <p>提供価値の仮説を起点に、次の順序で計測用のプロンプトを設計します。</p>
+        <ul class="flow__q">
+          <li><b>ポジション：</b> 貴社の強みと合う特徴・条件を指定したときに、紹介されるか。</li>
+          <li><b>カテゴリ：</b> 属する商品・サービスのカテゴリで、候補に入るか。</li>
+          <li><b>目的・課題：</b> 顧客の困りごとを起点に、貴社へつながるか。</li>
+        </ul>
+        <p>加えて、ブランド名を指定した質問で、特徴や対応範囲の説明が正確かを確認します。</p></li>
+      <li class="flow__step fx" data-k="s4"><h3><span class="flow__no">STEP 4</span><span class="flow__sep">｜</span>現在地とギャップを可視化</h3>
+        <p>AI回答の言及・引用状況、選定理由、競合の登場状況を調査。ダッシュボード上で、目指す状態と現状の違いを整理します。</p></li>
+      <li class="flow__step fx" data-k="s5"><h3><span class="flow__no">STEP 5</span><span class="flow__sep">｜</span>施策を提案・実行し、変化を検証</h3>
+        <p>ギャップの大きさ、事業への重要性、実施負荷を踏まえて施策の優先順位を設定。制作・改修・情報発信を進め、継続的に変化を確認します。</p></li>
+      <li class="pen-note" data-n="loop" aria-hidden="true">戦略仮説も見直す</li>
+    </ol>
+  </div>
+</section>
+
+<!-- 6．サムライスタイルの提供価値 -->
+<section class="sec sec--paper" id="value">
+  <div class="wrap narrow">
+    <h2 class="h2 fx">戦略を考え、可視化し、<br>必要な実務まで動かす。</h2>
+  </div>
+  <div class="wrap">
+    <div class="vals">
+      <article class="val fx">
+        <h3><span class="val__no">1．</span>事業会社・支援会社、双方の視点で戦略策定から伴走</h3>
+        <div class="val__txt"><p>代表・橋本が、事業会社とマーケティング支援会社の双方で、BtoB・BtoCの意思決定に関わってきた経験をもとに支援します。</p><p>事業目的、顧客ニーズ、競争環境、貴社のアセットを構造的に整理し、市場のどこで、何を理由に選ばれるかを明確にします。</p></div>
+        <div class="val__fig person"><div class="person__ph" role="img" aria-label="橋本氏の写真（準備中）">写真</div><p class="person__cv">橋本氏の写真と簡潔な経歴（※要確認）</p></div>
+      </article>
+      <article class="val fx" style="--d:.08s">
+        <h3><span class="val__no">2．</span>戦略の実現状況を可視化するダッシュボード</h3>
+        <div class="val__txt"><p>狙うカテゴリ、ポジション、顧客の目的・課題ごとに、AI回答での見え方を確認します。</p><p>引用率や言及率に加え、「狙った場面で紹介されているか」「意図した強みが伝わっているか」を捉え、戦略と計測をつなぎます。</p></div>
+        <figure class="val__fig"><div class="shot-s"><img src="img/dash-pc.webp" width="1920" height="853" alt="ダッシュボードの画面例（サンプルデータ）。4つのAIごとの登場率と平均順位、種類別の登場率" loading="lazy"></div><figcaption class="fig-cap">※画面はサンプルデータです</figcaption></figure>
+      </article>
+      <article class="val fx">
+        <h3><span class="val__no">3．</span>ギャップから、改善施策の優先順位を提案</h3>
+        <div class="val__txt"><p>可視化の目的は、目指す状態と現状の違いを明らかにし、次の行動を決めることです。</p><p>どの情報が不足しているのか、どの顧客課題とのつながりが弱いのかを分析。事業への重要性も踏まえ、取り組む施策と順序を提案します。</p></div>
+        <div class="val__fig"><table class="map"><thead><tr><th>課題</th><th></th><th>改善施策</th></tr></thead><tbody>
+          <tr><td>困りごとから始まる質問で登場しない</td><td class="arw" aria-hidden="true">→</td><td>課題別の記事やFAQ、導入事例を整備</td></tr>
+          <tr><td>AIが対応範囲を狭く説明している</td><td class="arw" aria-hidden="true">→</td><td>サービスページの記載や外部の紹介情報を見直す</td></tr>
+        </tbody></table></div>
+      </article>
+      <article class="val fx" style="--d:.08s">
+        <h3><span class="val__no">4．</span>広告運用からWeb・コンテンツ制作まで、必要な施策を選んで依頼</h3>
+        <div class="val__txt"><p>記事・事例・FAQの制作、WebサイトやLPの改修、デジタルPR、広告運用など、必要な実務を組み合わせて支援します。</p><p>AI回答での認識改善から、サイト訪問後の比較検討・問い合わせまでを見据え、貴社の体制に合わせてレ点式でご依頼いただけます。</p></div>
+        <ul class="val__fig checks"><li>記事・事例・FAQの制作</li><li>WebサイトやLPの改修</li><li>デジタルPR</li><li>広告運用</li></ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- 7．ダッシュボードから改善施策へ -->
+<section class="sec" id="dash">
+  <div class="wrap narrow">
+    <h2 class="h2 fx">数値を、<wbr>次に取り組む<wbr>施策へ<wbr>つなげる。</h2>
+    <div class="prose fx">
+      <p>たとえば、貴社の強みを条件に含めた質問では紹介される一方、顧客の困りごとから始まる質問では登場しない場合。</p>
+      <p>顧客の言葉と提供価値をつなぐ情報が不足している可能性を検証し、課題別の記事やFAQ、導入事例を整備します。</p>
+      <p>また、AIが対応範囲を狭く説明している場合は、公式情報や引用元を確認し、サービスページの記載や外部の紹介情報を見直します。</p>
+      <p>ダッシュボードでは、こうした課題と対応施策を紐づけ、実施後の変化を継続的に確認します。</p>
+    </div>
+  </div>
+  <div class="wrap">
+    <figure class="sample pen fx" data-dia="dash" aria-label="画面例（サンプル）：質問の種類ごとの言及率・引用率とブランド説明の正確性、目指す状態・確認されたギャップ・改善施策・優先順位">
+      <div class="sample__hd"><h3>ダッシュボード</h3><span class="sample-tag">サンプル</span></div>
+      <div class="sample__top">
+        <table class="mtab"><thead><tr><th>質問の種類</th><th>言及率</th><th>引用率</th></tr></thead><tbody>
+          <tr><td>カテゴリ</td><td>32%</td><td>8%</td></tr>
+          <tr><td>ポジション</td><td>71%</td><td>24%</td></tr>
+          <tr><td>目的・課題</td><td data-k="low">18%</td><td>5%</td></tr>
+        </tbody></table>
+        <div class="accu"><p class="accu__l">ブランド説明の正確性</p><p class="accu__v">64<small>%</small></p></div>
+      </div>
+      <table class="acts"><thead><tr><th>目指す状態</th><th>確認されたギャップ</th><th>改善施策</th><th>優先順位</th></tr></thead><tbody>
+        <tr data-k="act1"><td data-l="目指す状態">困りごとから始まる質問で紹介される</td><td data-l="確認されたギャップ">目的・課題の質問で登場しない</td><td data-l="改善施策">課題別の記事やFAQ、導入事例を整備</td><td data-l="優先順位"><span class="prio prio--hi">高</span></td></tr>
+        <tr><td data-l="目指す状態">対応範囲を正しく説明される</td><td data-l="確認されたギャップ">対応範囲を狭く説明されている</td><td data-l="改善施策">サービスページの記載や外部の紹介情報を見直す</td><td data-l="優先順位"><span class="prio">中</span></td></tr>
+      </tbody></table>
+    </figure>
+  </div>
+</section>
+
+<!-- CTA：無料レポート -->
+<section class="sec sec--paper" id="report">
+  <div class="wrap cta2">
+    <div class="cta2__txt">
+      <h2 class="h2 fx">貴社の強みは、<wbr>AIの回答で<wbr>伝わっていますか。</h2>
+      <div class="prose fx">
+        <p>貴社に関連する質問へのAI回答を調査し、企業名・ブランド名の言及率と、公式サイトの引用率を無料でレポーティングします。</p>
+        <p>どのような企業が候補として登場し、貴社が何を理由に紹介されているか。現在の見え方と、改善に向けた着眼点をお伝えします。</p>
+      </div>
+      <div class="cta2__btn fx"><a class="btn btn--ink" href="#report">貴社のAI引用率を無料でレポーティング</a></div>
+      <p class="cta2__note fx">言及率・引用率は、設定した質問と取得条件の範囲で算出します。</p>
+    </div>
+    <figure class="report fx" aria-label="レポート見本（サンプル）：言及率と公式サイトの引用率、競合の登場状況、改善の着眼点">
+      <div class="report__hd"><h3>AI回答の調査レポート</h3><span class="sample-tag">サンプル</span></div>
+      <div class="report__kpi"><div><p>企業名・ブランド名の言及率</p><b>42<small>%</small></b></div><div><p>公式サイトの引用率</p><b>12<small>%</small></b></div></div>
+      <h4>競合の登場状況</h4>
+      <ul class="bars"><li><span>A社</span><i style="width:76%"></i><span>76%</span></li><li><span>B社</span><i style="width:58%"></i><span>58%</span></li><li class="me"><span>貴社</span><i style="width:42%"></i><span>42%</span></li><li><span>C社</span><i style="width:31%"></i><span>31%</span></li></ul>
+      <h4>改善の着眼点</h4>
+      <ul class="points"><li>困りごとから始まる質問で、候補に入っていない</li><li>対応範囲の説明が、一部のサービスに限られている</li></ul>
+    </figure>
+  </div>
+</section>
+
+<!-- CTA：資料ダウンロード -->
+<section class="sec" id="download">
+  <div class="wrap cta2">
+    <div class="cta2__txt">
+      <h2 class="h2 fx">事業戦略からLLMOへ。<br>支援の考え方と<wbr>進め方を<wbr>ご紹介します。</h2>
+      <div class="prose fx">
+        <p>提供価値の整理、顧客ニーズの調査、AI回答の計測、ダッシュボードに基づく改善まで。「事業戦略→LLMO」の全体像と支援内容をまとめた資料をご用意しています。</p>
+      </div>
+      <div class="cta2__btn fx"><a class="btn btn--line" href="#download">事業戦略→LLMOのサービス紹介資料をダウンロード</a></div>
+    </div>
+    <figure class="deck fx" aria-label="資料見本：事業戦略→LLMO サービス紹介資料の表紙と、提供価値の整理・ダッシュボード・改善施策のページ">
+      <div class="deck__pg deck__pg--1"><h5>改善施策</h5><i></i><i></i><i></i></div>
+      <div class="deck__pg deck__pg--2"><h5>ダッシュボード</h5><i></i><i></i><i></i></div>
+      <div class="deck__pg deck__pg--3"><h5>提供価値の整理</h5><i></i><i></i><i></i></div>
+      <div class="deck__cover"><b>事業戦略<em>→</em>LLMO<br>サービス紹介資料</b><span>サムライスタイル</span></div>
+    </figure>
+  </div>
+</section>
+</main>
+
+<footer class="ft"><div class="wrap"><span class="logo logo--ft" role="img" aria-label="LLMOHack"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 584 106" aria-hidden="true" focusable="false" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M301.6 52.0 C301.6 60.9 297.1 72.6 290.8 78.8 C284.6 85.1 272.9 89.6 264.0 89.6 C255.1 89.6 243.7 84.9 237.4 78.6 C231.1 72.3 226.1 60.9 226.1 52.0 C226.0 43.1 230.6 31.2 236.9 24.9 C243.2 18.6 255.0 14.3 264.0 14.3 C273.0 14.4 284.4 19.0 290.7 25.3 C297.0 31.6 301.6 43.1 301.6 52.0Z" fill="#C8F03C"/><path d="M242 46 Q245 33 258 29" stroke="#fff" stroke-width="6"/><g stroke="currentColor" stroke-width="13"><path d="M14.0 12.0 Q14.3 52.0 14.0 92.0 Q34.0 91.4 54.0 92.0"/><path d="M78.0 12.0 Q77.8 52.0 78.0 92.0 Q98.0 91.3 118.0 92.0"/><path d="M142.0 93.0 Q142.1 53.0 142.0 13.0 Q158.2 37.4 174.0 62.0 Q189.4 37.1 206.0 13.0 Q206.0 53.0 206.0 93.0"/><path d="M301.6 52.0 C301.6 60.9 297.1 72.6 290.8 78.8 C284.6 85.1 272.9 89.6 264.0 89.6 C255.1 89.6 243.7 84.9 237.4 78.6 C231.1 72.3 226.1 60.9 226.1 52.0 C226.0 43.1 230.6 31.2 236.9 24.9 C243.2 18.6 255.0 14.3 264.0 14.3 C273.0 14.4 284.4 19.0 290.7 25.3 C297.0 31.6 301.6 43.1 301.6 52.0Z"/></g><g stroke="currentColor" stroke-width="13" opacity=".55"><path d="M340.0 12.0 Q339.7 52.0 340.0 92.0 M386.0 12.0 Q385.8 52.0 386.0 92.0 M340.0 53.0 Q363.0 53.8 386.0 53.0"/><path d="M454.7 67.0 C454.7 72.7 451.3 80.2 447.2 84.2 C443.1 88.3 435.8 91.4 430.0 91.4 C424.2 91.5 416.6 88.5 412.6 84.4 C408.6 80.3 405.8 72.8 405.8 67.0 C405.8 61.2 408.7 53.7 412.7 49.7 C416.7 45.6 424.3 42.7 430.0 42.7 C435.7 42.7 443.1 45.8 447.2 49.8 C451.3 53.9 454.7 61.3 454.7 67.0Z M455.0 42.0 Q455.7 67.0 455.0 92.0"/><path d="M515.4 83.2 L505.5 89.9 L493.9 91.0 L483.0 87.1 L475.0 78.5 L472.2 67.0 L475.3 55.7 L482.9 46.6 L494.0 42.9 L505.5 44.2 L515.2 50.6"/><path d="M536.0 12.0 Q536.4 52.0 536.0 92.0 M568.0 42.0 Q553.5 56.6 538.0 70.0 M549.0 60.0 Q560.1 75.9 571.0 92.0"/></g></svg></span><span>AI回答での掲載・順位を保証するものではありません。</span></div></footer>
+
+<script>
+(function(){
+  var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var hd = document.getElementById("hd");
+  var onScroll = function(){ hd.classList.toggle("is-scrolled", scrollY > 8); };
+  addEventListener("scroll", onScroll, {passive:true}); onScroll();
+  if (!location.hash) addEventListener("load", function(){ scrollTo(0,0); });
+
+  /* 画面に入ったら出す。FVは読み込みで出す */
+  var items = [].slice.call(document.querySelectorAll(".fx"));
+  var show = function(el){ el.classList.add("hh-in"); };
+  var fv = document.getElementById("top");
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){ [].forEach.call(fv.querySelectorAll(".fx"), show); }); });
+  if (reduce || !("IntersectionObserver" in window)) { items.forEach(show); }
+  else {
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if (e.isIntersecting){ show(e.target); io.unobserve(e.target); } });
+    }, {rootMargin:"0px 0px -8% 0px", threshold:0.01});
+    items.forEach(function(el){ if (!fv.contains(el)) io.observe(el); });
+    addEventListener("beforeprint", function(){ items.forEach(show); });
+    setTimeout(function(){ items.forEach(function(el){ if (el.getBoundingClientRect().top < innerHeight) show(el); }); }, 2500);
+  }
+
+  /* 今いる節をナビに出す */
+  var links = [].slice.call(document.querySelectorAll(".nav a"));
+  if ("IntersectionObserver" in window){
+    var navIO = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if (e.isIntersecting) links.forEach(function(a){ a.classList.toggle("is-cur", a.getAttribute("href") === "#" + e.target.id); }); });
+    }, {rootMargin:"-45% 0px -50% 0px"});
+    links.forEach(function(a){ var s = document.querySelector(a.getAttribute("href")); if (s) navIO.observe(s); });
+  }
+
+  /* 孤立行を防ぐ（最後の行が短すぎる段落だけ、字間をわずかに動かす） */
+  var TIDY = ".fv__body p,.prose p,.stp p,.after,.gap-txt,.flow__step > p,.flow__q li,.val__txt p,.person__cv,.cta2__note,.q-bubble";
+  var widths = function(el){
+    var rg = document.createRange(); rg.selectNodeContents(el); var rows = {};
+    [].forEach.call(rg.getClientRects(), function(r){ if (r.width < 1) return; var k = Math.round(r.top);
+      var o = rows[k] || (rows[k] = {l:1e9, r:0}); o.l = Math.min(o.l, r.left); o.r = Math.max(o.r, r.right); });
+    return Object.keys(rows).map(function(k){ return rows[k].r - rows[k].l; });
+  };
+  var ok = function(el){ var w = widths(el); return w.length < 2 || w[w.length-1] >= Math.max.apply(null, w) * 0.25; };
+  var tidy = function(el){
+    el.style.letterSpacing = ""; el.style.textWrap = "";
+    if (ok(el)) return;
+    var base = parseFloat(getComputedStyle(el).letterSpacing) || 0;
+    var st = [-0.3,0.3,-0.6,0.6,-0.9,0.9,-1.2,1.2];
+    for (var i = 0; i < st.length; i++){ el.style.letterSpacing = (base + st[i]) + "px"; if (ok(el)) return; }
+    el.style.letterSpacing = "";
+    if (widths(el).length <= 3){ el.style.textWrap = "balance"; if (!ok(el)) el.style.textWrap = ""; }
+  };
+  var tidyAll = function(){ [].forEach.call(document.querySelectorAll(TIDY), tidy); };
+  tidyAll();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(tidyAll);
+  addEventListener("load", tidyAll);
+  var tt; addEventListener("resize", function(){ clearTimeout(tt); tt = setTimeout(tidyAll, 150); });
+
+  /* ── ペンの線：図の矢印と強調（E案）── */
+  var NS = "http://www.w3.org/2000/svg";
+  var Pen = function(root){
+    var seed = 7, svg;
+    var rnd = function(){ seed = (seed * 9301 + 49297) % 233280; return seed / 233280 - .5; };
+    var R = function(){ return root.getBoundingClientRect(); };
+    var box = function(el){ var r = el.getBoundingClientRect(), s = R(); return {x:r.left - s.left, y:r.top - s.top, w:r.width, h:r.height}; };
+    var path = function(d, o){ o = o || {};
+      var p = document.createElementNS(NS, "path");
+      p.setAttribute("d", d); p.setAttribute("pathLength", "1"); p.setAttribute("fill", "none");
+      p.setAttribute("stroke", o.col || "#141414"); p.setAttribute("stroke-width", o.w || 2.2);
+      p.setAttribute("stroke-linecap", "round"); p.setAttribute("stroke-linejoin", "round");
+      p.style.setProperty("--pd", (o.d || 0) + "s"); svg.appendChild(p); };
+    return {
+      box: box,
+      clear: function(){ seed = 7; if (svg) svg.remove(); svg = document.createElementNS(NS, "svg"); svg.setAttribute("class", "ann"); svg.setAttribute("aria-hidden", "true"); root.appendChild(svg); },
+      ring: function(b, o){ o = o || {}; var pad = o.pad == null ? 10 : o.pad, cx = b.x + b.w / 2, cy = b.y + b.h / 2, rx = b.w / 2 + pad, ry = b.h / 2 + pad * .8, d = "";
+        for (var i = 0; i <= 50; i++){ var t = -2.2 + i / 44 * Math.PI * 2, k = 1 + rnd() * .035 + (i > 44 ? .06 : 0);
+          d += (i ? "L" : "M") + (cx + Math.cos(t) * rx * k).toFixed(1) + " " + (cy + Math.sin(t) * ry * k).toFixed(1); }
+        path(d, {w:o.w || 2.6, d:o.d}); },
+      line: function(d, o){ path(d, o); },
+      arrow: function(x1, y1, x2, y2, bend, o){ o = o || {}; bend = bend || 0;
+        var mx = (x1 + x2) / 2 + bend, my = (y1 + y2) / 2 - Math.abs(bend) * .4;
+        path("M" + x1.toFixed(1) + " " + y1.toFixed(1) + " Q" + mx.toFixed(1) + " " + my.toFixed(1) + " " + x2.toFixed(1) + " " + y2.toFixed(1), {w:o.w || 2.2, d:o.d});
+        var a = Math.atan2(y2 - my, x2 - mx), L = 10;
+        path("M" + (x2 - L * Math.cos(a - .45)).toFixed(1) + " " + (y2 - L * Math.sin(a - .45)).toFixed(1) + " L" + x2.toFixed(1) + " " + y2.toFixed(1) + " L" + (x2 - L * Math.cos(a + .45)).toFixed(1) + " " + (y2 - L * Math.sin(a + .45)).toFixed(1), {w:o.w || 2.2, d:(o.d || 0) + .4}); }
+    };
+  };
+  var clamp = function(v, a, b){ return Math.max(a, Math.min(b, v)); };
+  /* 2つの箱を、向きに合わせて（横に並べば横、縦なら縦）ペンの矢印でつなぐ */
+  var link = function(P, a, b, o){ o = o || {};
+    var ac = {x:a.x + a.w / 2, y:a.y + a.h / 2}, bc = {x:b.x + b.w / 2, y:b.y + b.h / 2}, dx = bc.x - ac.x, dy = bc.y - ac.y, g = 9, x1, y1, x2, y2;
+    if (o.dir !== "v" && (o.dir === "h" || Math.abs(dx) > Math.abs(dy) * 1.2)){
+      x1 = dx > 0 ? a.x + a.w + g : a.x - g; x2 = dx > 0 ? b.x - g - 2 : b.x + b.w + g + 2;
+      y1 = o.center1 ? ac.y : clamp(bc.y, a.y + 14, a.y + a.h - 14); y2 = o.center2 ? bc.y : clamp(ac.y, b.y + 14, b.y + b.h - 14);
+    } else {
+      y1 = dy > 0 ? a.y + a.h + g : a.y - g; y2 = dy > 0 ? b.y - g - 2 : b.y + b.h + g + 2;
+      x1 = o.x1 != null ? o.x1 : o.center1 ? ac.x : clamp(bc.x, a.x + 14, a.x + a.w - 14);
+      x2 = o.x2 != null ? o.x2 : o.center2 ? bc.x : clamp(ac.x, b.x + 14, b.x + b.w - 14);
+    }
+    P.arrow(x1, y1, x2, y2, o.bend || 0, {d:o.d});
+  };
+  var DRAW = {
+    fv: function(root, P){ var k = function(n){ return P.box(root.querySelector('[data-k="' + n + '"]')); };
+      link(P, k("need"), k("reason"), {d:0}); link(P, k("asset"), k("reason"), {d:.15});
+      link(P, k("reason"), k("ai"), {d:.55}); link(P, k("reason"), k("cmp"), {d:.7}); },
+    /* 2：論点が横1列なら、相談文から4つへ広げて、4つから1つへまとめる。2×2に折れたら、まとまりへ1本ずつ（交差させない） */
+    q: function(root, P){ var k = function(n){ return P.box(root.querySelector('[data-k="' + n + '"]')); };
+      var q = k("q"), r = k("r"), pts = ["p1", "p2", "p3", "p4"].map(k), grp = P.box(root.querySelector(".q-points"));
+      if (Math.abs(pts[0].y - pts[3].y) < 4){
+        pts.forEach(function(p, i){ var off = (i - 1.5);
+          link(P, q, p, {dir:"v", x1:q.x + q.w / 2 + off * Math.min(44, q.w / 12), center2:true, d:i * .12});
+          link(P, p, r, {dir:"v", center1:true, x2:r.x + r.w / 2 + off * Math.min(52, r.w / 8), d:.7 + i * .12}); });
+      } else { link(P, q, grp, {dir:"v", center1:true, center2:true}); link(P, grp, r, {dir:"v", center1:true, center2:true, d:.6}); } },
+    stp: function(root, P){ var k = function(n){ return P.box(root.querySelector('[data-k="' + n + '"]')); };
+      var c = k("core");
+      ["i1", "i2", "i3"].forEach(function(n, i){ link(P, k(n), c, {dir:"v", center1:true, x2:c.x + c.w / 2 + (i - 1) * Math.min(60, c.w / 5), d:i * .12}); });
+      ["o1", "o2"].forEach(function(n, i){ link(P, c, k(n), {dir:"v", x1:c.x + c.w / 2 + (i - .5) * Math.min(60, c.w / 5), center2:true, d:.7 + i * .12}); }); },
+    /* 4：横並びなら、2枚のあいだに両向きの矢印（上に「ギャップ」）、そこから3つの施策へ。縦に並んだら上下の矢印と、施策のまとまりへ1本 */
+    gap: function(root, P){ var k = function(n){ return P.box(root.querySelector('[data-k="' + n + '"]')); };
+      var go = k("goal"), nw = k("now"), g = k("gap"), acts = ["a1", "a2", "a3"].map(k), grp = P.box(root.querySelector(".gap-acts"));
+      if (Math.abs(go.y - nw.y) < 4){
+        var y = g.y + g.h + 8, cx = g.x + g.w / 2;
+        P.arrow(cx, y, go.x + go.w + 7, y, 0, {}); P.arrow(cx, y, nw.x - 7, y, 0, {});
+        acts.forEach(function(a, i){ link(P, {x:g.x, y:y, w:g.w, h:0}, a, {dir:"v", x1:cx + (i - 1) * 14, center2:true, d:.6 + i * .12}); });
+      } else { link(P, g, go, {dir:"v", center1:true, center2:true}); link(P, g, nw, {dir:"v", center1:true, center2:true});
+        link(P, nw, grp, {dir:"v", center1:true, center2:true, d:.6}); } },
+    /* 流れ：STEP 5 の左から、STEP 1・2 の間へ戻る線（計測結果で戦略仮説も見直す） */
+    flow: function(root, P){ var k = function(n){ return P.box(root.querySelector('[data-k="' + n + '"]')); };
+      var s1 = k("s1"), s2 = k("s2"), s5 = k("s5"), x0 = s1.x - 12, xl = Math.max(4, s1.x - (s1.x > 70 ? 62 : 30));
+      var yb = s5.y + s5.h * .5, yt = (s1.y + s1.h + s2.y) / 2;
+      P.line("M" + x0 + " " + yb + " C" + xl + " " + yb + " " + xl + " " + (yb - 30) + " " + xl + " " + (yb - 60) + " L" + xl + " " + (yt + 60) + " C" + xl + " " + (yt + 30) + " " + xl + " " + yt + " " + (x0 - 16) + " " + yt, {w:2.2});
+      P.arrow(x0 - 18, yt, x0, yt, 0, {d:.8});
+      var n = root.querySelector('.pen-note[data-n="loop"]');
+      if (n && getComputedStyle(n).display !== "none"){ n.style.top = ((yb + yt) / 2 + n.offsetWidth / 2) + "px"; n.style.left = (xl - 30) + "px"; } },
+    /* 7：低い数値（目的・課題の言及率）を囲み、対応する施策の行へ */
+    dash: function(root, P){ var lo = P.box(root.querySelector('[data-k="low"]')), row = P.box(root.querySelector('[data-k="act1"]'));
+      P.ring({x:lo.x + lo.w - 52, y:lo.y + 6, w:46, h:lo.h - 12}, {pad:8});
+      P.arrow(lo.x + lo.w - 40, lo.y + lo.h + 6, row.x + row.w * .42, row.y + 6, 30, {d:.4}); }
+  };
+  var shown = function(el){ return el && el.offsetParent !== null && getComputedStyle(el).display !== "none"; };
+  var pens = [].slice.call(document.querySelectorAll(".pen")).map(function(root){ return {root:root, kind:root.getAttribute("data-dia"), P:Pen(root)}; });
+  var drawPen = function(o){ o.P.clear(); if (shown(o.root)) DRAW[o.kind](o.root, o.P); o.drawn = true; };
+  /* 🚨 .fx は下から20px浮き上がって出る。動いている最中に測ると線がずれるので、止まってから測る */
+  var settled = function(el, cb){
+    var done = false, fin = function(){ if (!done){ done = true; cb(); } };
+    var t = getComputedStyle(el).transform;
+    if (reduce || t === "none" || t === "matrix(1, 0, 0, 1, 0, 0)") return fin();
+    el.addEventListener("transitionend", function h(e){ if (e.propertyName === "transform"){ el.removeEventListener("transitionend", h); fin(); } });
+    setTimeout(fin, 1800);
+  };
+  var goPen = function(o){ if (o.go) return; o.go = true;
+    var fonts = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+    var watch = o.root.classList.contains("fx") ? o.root : (o.root.querySelector(".fx") || o.root);
+    fonts.then(function(){ settled(watch, function(){ drawPen(o);
+      requestAnimationFrame(function(){ requestAnimationFrame(function(){ o.root.classList.add("pen-go"); }); }); }); }); };
+  if ("IntersectionObserver" in window && !reduce){
+    var penIO = new IntersectionObserver(function(es){ es.forEach(function(e){ if (!e.isIntersecting) return; penIO.unobserve(e.target);
+      goPen(pens.filter(function(x){ return x.root === e.target; })[0]); }); }, {threshold:.25});
+    pens.forEach(function(o){ penIO.observe(o.root); });
+  } else pens.forEach(goPen);
+  var pt; addEventListener("resize", function(){ clearTimeout(pt); pt = setTimeout(function(){ pens.forEach(function(o){ if (o.drawn) drawPen(o); }); }, 200); });
+})();
+</script>
+</body>
+</html>
