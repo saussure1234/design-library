@@ -696,6 +696,11 @@ p,li,dd,td{text-wrap:pretty}
 .chara-box img{display:block;height:84px;width:auto}
 .chara-name{margin-top:4px;padding:2px 10px;border-radius:999px;background:var(--acc);color:#fff;font-size:11px;font-weight:700;letter-spacing:.04em;line-height:1.6;white-space:nowrap}
 @media (min-width:1320px){ .chara-box{height:auto} .chara-box img{height:176px} .chara-name{font-size:12.5px;padding:3px 12px} }
+
+/* ヘッダーのボタン：原稿のボタンの言葉から「無料でレポーティング」。1行に収める（So 9/30「名前おかしい」。前は「無料レポー／ト」と折れた） */
+.hd__cta{white-space:nowrap}
+@media (max-width:760px){ .hd .hd__cta{min-height:38px;padding:0 12px;font-size:12.5px} .hd .logo__ja{display:none} .hd__in{gap:12px} }
+@media (max-width:360px){ .hd .hd__cta{padding:0 9px;font-size:11px} .hd .logo__en{font-size:16px} .hd .logo__mk{height:22px} .hd .logo{gap:7px} }
 </style>
 <script>document.documentElement.classList.add("fx-on");if("scrollRestoration" in history)history.scrollRestoration="manual"</script>
 </head>
@@ -708,7 +713,7 @@ p,li,dd,td{text-wrap:pretty}
     <nav class="nav" aria-label="ページ内">
       <a href="#about">サービスとは</a><a href="#flow">サービスの流れ</a><a href="#value">提供価値</a>
     </nav>
-    <a class="btn btn--ink" href="#report">無料レポート</a>
+    <a class="btn btn--ink hd__cta" href="#report">無料でレポーティング</a>
   </div>
 </header>
 
