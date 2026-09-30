@@ -690,6 +690,12 @@ p,li,dd,td{text-wrap:pretty}
 .person__cv{grid-area:cv;background:none;border:0;padding:0 0 0 14px;border-left:3px solid var(--acc);border-radius:0}
 .person__cv::before{display:none}
 @media (max-width:600px){ .person{grid-template-columns:80px minmax(0,1fr)} .person__img{width:80px} }
+
+/* キャラの名前：エルモーくん（So 9/30）。最初に出てくる2．の節だけ、キャラの下に名札 */
+.chara-box{display:flex;flex-direction:column;align-items:center;height:auto;width:auto}
+.chara-box img{display:block;height:84px;width:auto}
+.chara-name{margin-top:4px;padding:2px 10px;border-radius:999px;background:var(--acc);color:#fff;font-size:11px;font-weight:700;letter-spacing:.04em;line-height:1.6;white-space:nowrap}
+@media (min-width:1320px){ .chara-box{height:auto} .chara-box img{height:176px} .chara-name{font-size:12.5px;padding:3px 12px} }
 </style>
 <script>document.documentElement.classList.add("fx-on");if("scrollRestoration" in history)history.scrollRestoration="manual"</script>
 </head>
@@ -729,7 +735,7 @@ p,li,dd,td{text-wrap:pretty}
 <!-- 2．導入：情報探索の変化と戦略の必要性 -->
 <section class="sec sec--deep" id="why">
   <div class="wrap narrow">
-    <div class="h2wrap"><img class="chara chara--left fx" src="img/chara/confused.webp" width="358" height="587" alt="" aria-hidden="true" loading="lazy"><h2 class="h2 fx">「AIに選ばれる」とは、<br>誰の、<wbr>どのような<wbr>相談で<wbr>選ばれる<wbr>ことでしょうか。</h2></div>
+    <div class="h2wrap"><span class="chara chara--left chara-box fx"><img src="img/chara/confused.webp" width="358" height="587" alt="" loading="lazy"><span class="chara-name">エルモーくん</span></span><h2 class="h2 fx">「AIに選ばれる」とは、<br>誰の、<wbr>どのような<wbr>相談で<wbr>選ばれる<wbr>ことでしょうか。</h2></div>
     <div class="prose fx">
       <p>AIの回答で自社やサービスを紹介・引用してもらうための取り組みとして、LLMOが注目されています。</p>
       <p>検索エンジンもAIも、情報を探す人と、情報を発信する企業をつなぐ接点です。その根幹にあるのは、テクノロジーの進化によって、ユーザーの意図に合う情報を届ける仕組みが高度化しているという変化です。</p>
