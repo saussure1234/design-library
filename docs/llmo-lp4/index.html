@@ -701,6 +701,44 @@ p,li,dd,td{text-wrap:pretty}
 .hd__cta{white-space:nowrap}
 @media (max-width:760px){ .hd .hd__cta{min-height:38px;padding:0 12px;font-size:12.5px} .hd .logo__ja{display:none} .hd__in{gap:12px} }
 @media (max-width:360px){ .hd .hd__cta{padding:0 9px;font-size:11px} .hd .logo__en{font-size:16px} .hd .logo__mk{height:22px} .hd .logo{gap:7px} }
+
+/* 左端をそろえる（So 9/30「全体的に右にmarginが空いている印象」）：見出しと本文の段（800px）を中央に置くと、
+   下の図やカード（1180px）より左端が内側に入り、文の右側が空いて見えた。広い画面では段を図と同じ左端に寄せる。
+   空いた右側には各節のキャラ（見出しの右）が入る */
+@media (min-width:1100px){
+  .wrap.narrow{width:min(var(--wrap),100% - var(--pad)*2);max-width:none}
+  .wrap.narrow > .h2wrap,.wrap.narrow > .h2,.wrap.narrow > .prose,.wrap.narrow > .after,.wrap.narrow > .flow{max-width:800px}
+  .about > div:first-child{margin-inline:0}
+}
+@media (min-width:1320px){
+  /* 2．はキャラを見出しの左に（So 9/30）。見出しをキャラの分だけ右へ */
+  #why .h2wrap{padding-left:150px}
+  #why .chara--left{right:auto;left:0}
+}
+
+/* 4．ギャップの図：スマホは縦に（So 9/30「ギャップの部分とかも横から縦にしてもいいかも」）。
+   上＝現在のAI回答 → 線を下へ（関門3つは線の右に縦に並ぶ）→ 下＝目指す状態 */
+@media (max-width:600px){
+  .rd-wrap{grid-template-columns:minmax(0,1fr);gap:0}
+  .rd-wrap .rd-card--now,.rd-wrap .rd-card--goal{max-width:none;justify-self:stretch}
+  .rd-wrap .rd-road{position:relative;padding:44px 0 34px 64px}
+  .rd-gap{position:absolute;left:0;top:0;right:auto;height:auto;border:0;text-align:left}
+  .rd-gap span{position:static;padding:0;font-size:16px}
+  .rd-line{position:absolute;left:26px;top:40px;bottom:28px;width:5px;height:auto;margin:0;background:repeating-linear-gradient(180deg,var(--line2) 0 8px,transparent 8px 14px)}
+  .rd-fill{width:100%;height:100%;transition:height .8s linear}
+  .rd-anim .rd-fill{width:100%;height:0}
+  .rd-walker{left:50%!important;top:100%;bottom:auto;height:54px;transform:translate(-40%,-100%);transition:top .8s linear}
+  .rd-anim .rd-walker{top:0}
+  .rd-wrap .rd-start{left:19px;top:32px}
+  .rd-wrap .rd-flag{left:26px;right:auto;top:auto;bottom:-6px;height:30px}
+  .rd-steps{position:static;height:auto;margin:0;display:grid;gap:22px;padding:14px 0 10px}
+  .rd-steps li{position:relative;left:auto!important;top:auto;transform:none;width:auto;display:flex;align-items:center;justify-items:start;gap:10px;text-align:left;padding:0}
+  .rd-steps li::before,.rd-steps li::after{top:50%;left:-49px;margin:-11px 0 0}
+  .rd-steps span{font-size:14px}
+}
+
+/* スマホは縦長（4:5）の動画に差し替える（So 9/30「FVの動画が小さいので縦用に」）。横長を縮めると字が小さすぎた */
+@media (max-width:600px){ .fv__vid video{aspect-ratio:4/5} }
 </style>
 <script>document.documentElement.classList.add("fx-on");if("scrollRestoration" in history)history.scrollRestoration="manual"</script>
 </head>
@@ -713,7 +751,7 @@ p,li,dd,td{text-wrap:pretty}
     <nav class="nav" aria-label="ページ内">
       <a href="#about">サービスとは</a><a href="#flow">サービスの流れ</a><a href="#value">提供価値</a>
     </nav>
-    <a class="btn btn--ink hd__cta" href="#report">無料でレポーティング</a>
+    <a class="btn btn--ink hd__cta" href="#report">無料レポートを申し込む</a>
   </div>
 </header>
 
@@ -728,7 +766,7 @@ p,li,dd,td{text-wrap:pretty}
       <p>選ばれたい場面を定め、現在地を計測。理想とのギャップを可視化し、必要な施策の提案・実行まで伴走します。</p>
     </div>
     <div class="fv__dia fv__vid fx" style="--d:.1s">
-      <div class="vid"><video src="media/fv.mp4" poster="media/fv.webp" width="960" height="540" muted loop playsinline autoplay preload="auto" aria-label="動画：AIの回答に貴社がいない現在地から、顧客のニーズと貴社のアセットの重なりである選ばれる理由を定め、AI回答での紹介・引用と顧客の比較検討・相談へつなげ、記事・事例・FAQで目指す状態へ近づける"></video><div class="vbar" aria-hidden="true"><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i></div></div>
+      <div class="vid"><video src="media/fv.mp4" poster="media/fv.webp" data-sp="media/fv-sp.mp4" data-sp-poster="media/fv-sp.webp" width="960" height="540" muted loop playsinline autoplay preload="auto" aria-label="動画：AIの回答に貴社がいない現在地から、顧客のニーズと貴社のアセットの重なりである選ばれる理由を定め、AI回答での紹介・引用と顧客の比較検討・相談へつなげ、記事・事例・FAQで目指す状態へ近づける"></video><div class="vbar" aria-hidden="true"><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i></div></div>
     </div>
     <div class="fv__cta fx" style="--d:.24s">
       <a class="btn btn--ink" href="#report">貴社のAI引用率を無料でレポーティング</a>
@@ -1226,14 +1264,16 @@ p,li,dd,td{text-wrap:pretty}
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   f.classList.add("rd-anim");
   var fill = f.querySelector(".rd-fill"), walker = f.querySelector(".rd-walker"), steps = [].slice.call(f.querySelectorAll(".rd-steps li"));
-  var go = function(pct){ fill.style.width = pct + "%"; walker.style.left = pct + "%"; };
+  var vert = matchMedia("(max-width:600px)").matches;   // スマホは縦
+  var go = function(pct){ if (vert){ fill.style.height = pct + "%"; walker.style.top = pct + "%"; } else { fill.style.width = pct + "%"; walker.style.left = pct + "%"; } };
   new IntersectionObserver(function(es, io){ if (!es[0].isIntersecting) return; io.disconnect();
     var stops = [22, 50, 78];
+    if (vert){ var ln = f.querySelector(".rd-line").getBoundingClientRect(); stops = steps.map(function(s){ var r = s.getBoundingClientRect(); return Math.max(0, Math.min(100, (r.top + r.height / 2 - ln.top) / ln.height * 100)); }); }
     stops.forEach(function(x, i){
       setTimeout(function(){ go(x); }, 500 + i * 1500);
       setTimeout(function(){ steps[i].classList.add("is-done"); }, 500 + i * 1500 + 850);
     });
-    setTimeout(function(){ var ln = f.querySelector(".rd-line"), stop = 100 - (walker.offsetWidth * .5 + 30) / ln.offsetWidth * 100; fill.style.width = "100%"; walker.style.left = stop + "%"; }, 500 + stops.length * 1500);   /* 旗の手前で止まる（幅から計算。スマホで旗にかかった） */
+    setTimeout(function(){ if (vert){ go(100); return; } var ln = f.querySelector(".rd-line"), stop = 100 - (walker.offsetWidth * .5 + 30) / ln.offsetWidth * 100; fill.style.width = "100%"; walker.style.left = stop + "%"; }, 500 + stops.length * 1500);   /* 旗の手前で止まる（幅から計算。スマホで旗にかかった） */
     setTimeout(function(){ f.classList.add("is-reached"); }, 500 + stops.length * 1500 + 900);
   }, {threshold: .5}).observe(f);
 })();
@@ -1271,6 +1311,14 @@ p,li,dd,td{text-wrap:pretty}
       setTimeout(function(){ picks[0].classList.add("is-on"); }, 500); setTimeout(function(){ picks[1].classList.add("is-on"); }, 1200);
     }, {threshold: .5}).observe(pk);
   }
+})();
+</script>
+<script>
+/* スマホ（600px以下）は縦長の動画・表紙に替える。読み込む前に替えるので、横長は読み込まない */
+(function(){
+  var v = document.querySelector(".fv__vid video"); if (!v || !matchMedia("(max-width:600px)").matches) return;
+  v.poster = v.getAttribute("data-sp-poster"); v.src = v.getAttribute("data-sp");
+  if (!matchMedia("(prefers-reduced-motion: reduce)").matches){ var p = v.play(); if (p && p.catch) p.catch(function(){}); }
 })();
 </script>
 </body>
