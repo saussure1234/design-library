@@ -739,6 +739,18 @@ p,li,dd,td{text-wrap:pretty}
 
 /* スマホは縦長（4:5）の動画に差し替える（So 9/30「FVの動画が小さいので縦用に」）。横長を縮めると字が小さすぎた */
 @media (max-width:600px){ .fv__vid video{aspect-ratio:4/5} }
+
+/* スマホ：文の右に余白が残る（So 10/1「テキストの右に謎の余白。ボックスと比べると明らかに余白がある」）。
+   実測で本文の行の右端が箱より平均15px・最大25px手前で終わっていた（字間0.02emの端数＋text-wrap:pretty の早い改行）。
+   小見出し（STEP等）は keep-all で最大180px空いた。→ 本文と箇条は両端そろえ、小見出しは途中で折ってよい */
+@media (max-width:600px){
+  p,li,dd,td{text-wrap:wrap}
+  .prose p,.fv__body p,.stp p,.after,.flow__step > p,.flow__q li,.val__txt p,.person__cv p,.cta2__note,.qc-user,.rd-txt,.gap-txt{text-align:justify;text-justify:inter-character}
+  .flow__step h3,.stp h3,.val h3{word-break:normal;line-break:strict}
+}
+
+/* スマホ：5．のSTEPのカードが左に44px寄って狭かった（戻り線のための左の余白が残っていた）。スマホは戻り線を出さないので余白も外す */
+@media (max-width:600px){ .flow{padding-left:0} .flow.pen .ann{display:none} }
 </style>
 <script>document.documentElement.classList.add("fx-on");if("scrollRestoration" in history)history.scrollRestoration="manual"</script>
 </head>
