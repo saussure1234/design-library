@@ -751,10 +751,6 @@ p,li,dd,td{text-wrap:pretty}
 /* スマホ：5．のSTEPのカードが左に44px寄って狭かった（戻り線のための左の余白が残っていた）。スマホは戻り線を出さないので余白も外す */
 @media (max-width:600px){ .flow{padding-left:0} .flow.pen .ann{display:none} }
 
-/* 両端そろえはスマホ（480px以下）だけ。600px幅では6．の本文の1行で字間が1字あたり13px開いた（check.py 字間の広がり） */
-@media (max-width:480px){
-  .prose p,.fv__body p,.stp p,.after,.flow__step > p,.flow__q li,.val__txt p,.person__cv p,.cta2__note,.qc-user,.rd-txt,.gap-txt{text-align:justify;text-justify:inter-character}
-}
 
 /* スマホ：エルモーくんは見出しの上ではなく、2．の図の最後の問い「貴社は、どの条件に…応えられるか？」の横に（So 10/1「最初にくるの意味がわからない。場所を見て入れる」） */
 .qc-chara{display:none}
@@ -777,6 +773,14 @@ p,li,dd,td{text-wrap:pretty}
   .rd-gap span{position:absolute!important;left:-24px;top:50%;transform:translateY(-50%);writing-mode:vertical-rl;letter-spacing:.2em;font-size:15px;background:#fff;padding:4px 0}
   .rd-walker{display:none}
 }
+
+/* スマホの文の右の余白（So 10/1「字の間隔を開けずに余白をなくしてほしい」）：両端そろえは字間が開くのでやめた。
+   字間の上乗せ（0.02em）をやめ、段落ごとに「全角の字が1行にちょうど整数個入る大きさ」に字の大きさを合わせる（下のスクリプト） */
+@media (max-width:480px){
+  .prose p,.fv__body p,.stp p,.after,.flow__step > p,.flow__q li,.val__txt p,.person__cv p,.cta2__note,.rd-txt,.q-cap__t{letter-spacing:0!important;text-align:start}
+}
+
+@media (max-width:600px){ .shot-s video{aspect-ratio:4/5} }   /* 6-2のダッシュボード動画もスマホは縦長（So 10/1「スマホだと見えずらい。縦版を」） */
 </style>
 <script>document.documentElement.classList.add("fx-on");if("scrollRestoration" in history)history.scrollRestoration="manual"</script>
 </head>
@@ -970,7 +974,7 @@ p,li,dd,td{text-wrap:pretty}
       <article class="val fx">
         <h3><span class="val__no">2．</span>戦略の実現状況を可視化するダッシュボード</h3>
         <div class="val__txt"><p>狙うカテゴリ、ポジション、顧客の目的・課題ごとに、AI回答での見え方を確認します。</p><p>引用率や言及率に加え、「狙った場面で紹介されているか」「意図した強みが伝わっているか」を捉え、戦略と計測をつなぎます。</p></div>
-        <figure class="val__fig"><div class="shot-s"><video src="media/dash-ui.mp4" poster="media/dash-ui.webp" width="960" height="600" muted loop playsinline preload="none" aria-label="ダッシュボードの画面例（サンプルデータ）。4つのAIごとの登場率、種類別（カテゴリ・ポジション・目的・課題）の登場率、推移"></video></div><figcaption class="fig-cap">※動画はサンプルデータです</figcaption></figure>
+        <figure class="val__fig"><div class="shot-s"><video src="media/dash-ui.mp4" poster="media/dash-ui.webp" data-sp="media/dash-sp.mp4" data-sp-poster="media/dash-sp.webp" width="960" height="600" muted loop playsinline preload="none" aria-label="ダッシュボードの画面例（サンプルデータ）。4つのAIごとの登場率、種類別（カテゴリ・ポジション・目的・課題）の登場率、推移"></video></div><figcaption class="fig-cap">※動画はサンプルデータです</figcaption></figure>
       </article>
       <article class="val fx">
         <h3><span class="val__no">3．</span>ギャップから、改善施策の優先順位を提案</h3>
@@ -1119,6 +1123,7 @@ p,li,dd,td{text-wrap:pretty}
   var ok = function(el){ var w = widths(el); return w.length < 2 || w[w.length-1] >= Math.max.apply(null, w) * 0.25; };
   var tidy = function(el){
     el.style.letterSpacing = ""; el.style.textWrap = "";
+    if (matchMedia("(max-width:480px)").matches) return;   /* スマホは字間を動かさない（So 10/1） */
     if (ok(el)) return;
     var base = parseFloat(getComputedStyle(el).letterSpacing) || 0;
     var st = [-0.3,0.3,-0.6,0.6,-0.9,0.9,-1.2,1.2];
@@ -1354,9 +1359,42 @@ p,li,dd,td{text-wrap:pretty}
 <script>
 /* スマホ（600px以下）は縦長の動画・表紙に替える。読み込む前に替えるので、横長は読み込まない */
 (function(){
-  var v = document.querySelector(".fv__vid video"); if (!v || !matchMedia("(max-width:600px)").matches) return;
-  v.poster = v.getAttribute("data-sp-poster"); v.src = v.getAttribute("data-sp");
+  if (!matchMedia("(max-width:600px)").matches) return;
+  [].forEach.call(document.querySelectorAll("video[data-sp]"), function(x){ x.poster = x.getAttribute("data-sp-poster"); x.src = x.getAttribute("data-sp"); });   /* 6-2のダッシュボード動画もスマホは縦長に */
+  var v = document.querySelector(".fv__vid video"); if (!v) return;
   if (!matchMedia("(prefers-reduced-motion: reduce)").matches){ var p = v.play(); if (p && p.catch) p.catch(function(){}); }
+})();
+</script>
+<script>
+/* スマホ（480px以下）：段落ごとに幅を測り、全角の字がちょうど整数個で1行に入る大きさに合わせる。字間は変えない（So 10/1） */
+(function(){
+  var SEL = ".prose p,.fv__body p,.stp p,.after,.flow__step > p,.flow__q li,.val__txt p,.person__cv p,.cta2__note,.rd-txt,.q-cap__t";
+  var lastOk = function(el){
+    var rg = document.createRange(); rg.selectNodeContents(el); var rows = {};
+    [].forEach.call(rg.getClientRects(), function(r){ if (r.width < 1) return; var k = Math.round(r.top / 4); var o = rows[k] || (rows[k] = {l: 1e9, r: 0}); o.l = Math.min(o.l, r.left); o.r = Math.max(o.r, r.right); });
+    var w = Object.keys(rows).sort(function(a, b){ return a - b; }).map(function(k){ return rows[k].r - rows[k].l; });
+    return w.length < 2 || w[w.length - 1] >= Math.max.apply(null, w) * 0.25;
+  };
+  var fit = function(){
+    var on = matchMedia("(max-width:480px)").matches;
+    [].forEach.call(document.querySelectorAll(SEL), function(el){
+      el.style.fontSize = "";
+      if (!on) return;
+      var cs = getComputedStyle(el), w = el.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight), base = parseFloat(cs.fontSize);
+      if (!w || !base) return;
+      var n0 = Math.max(1, Math.round(w / base));
+      /* 最後の行が1〜2文字だけ落ちる時は、1行の字数を1つ増やすか減らす（字の大きさが約5%変わるだけ。字間は変えない） */
+      var tries = [n0, n0 + 1, n0 - 1, n0 + 2], pick = n0;
+      for (var i = 0; i < tries.length; i++){
+        var n = tries[i]; if (n < 8) continue;
+        el.style.fontSize = (Math.floor(w / n * 100) / 100) + "px";
+        if (lastOk(el)){ pick = n; break; }
+      }
+      el.style.fontSize = (Math.floor(w / pick * 100) / 100) + "px";
+    });
+  };
+  fit(); if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+  var tt; addEventListener("resize", function(){ clearTimeout(tt); tt = setTimeout(fit, 150); });
 })();
 </script>
 </body>
