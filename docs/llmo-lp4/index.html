@@ -745,12 +745,38 @@ p,li,dd,td{text-wrap:pretty}
    小見出し（STEP等）は keep-all で最大180px空いた。→ 本文と箇条は両端そろえ、小見出しは途中で折ってよい */
 @media (max-width:600px){
   p,li,dd,td{text-wrap:wrap}
-  .prose p,.fv__body p,.stp p,.after,.flow__step > p,.flow__q li,.val__txt p,.person__cv p,.cta2__note,.qc-user,.rd-txt,.gap-txt{text-align:justify;text-justify:inter-character}
   .flow__step h3,.stp h3,.val h3{word-break:normal;line-break:strict}
 }
 
 /* スマホ：5．のSTEPのカードが左に44px寄って狭かった（戻り線のための左の余白が残っていた）。スマホは戻り線を出さないので余白も外す */
 @media (max-width:600px){ .flow{padding-left:0} .flow.pen .ann{display:none} }
+
+/* 両端そろえはスマホ（480px以下）だけ。600px幅では6．の本文の1行で字間が1字あたり13px開いた（check.py 字間の広がり） */
+@media (max-width:480px){
+  .prose p,.fv__body p,.stp p,.after,.flow__step > p,.flow__q li,.val__txt p,.person__cv p,.cta2__note,.qc-user,.rd-txt,.gap-txt{text-align:justify;text-justify:inter-character}
+}
+
+/* スマホ：エルモーくんは見出しの上ではなく、2．の図の最後の問い「貴社は、どの条件に…応えられるか？」の横に（So 10/1「最初にくるの意味がわからない。場所を見て入れる」） */
+.qc-chara{display:none}
+@media (max-width:600px){
+  #why .chara-box{display:none}
+  .q-cap{display:flex;align-items:center;gap:12px;text-align:left}
+  .qc-chara{display:flex;flex-direction:column;align-items:center;flex:none}
+  .qc-chara img{height:92px;width:auto}
+  .q-cap__t{flex:1}
+}
+/* スマホのギャップの図（So 10/1）：「ギャップ」が何を指すか分からなかった → 線の左に、始まりから旗までを括る縦の括弧＋縦書き。
+   歩くキャラは線の上のチェックに重なったので、縦向きでは出さない（線が伸びるのとチェックで進み具合を見せる） */
+@media (max-width:600px){
+  .rd-wrap .rd-road{padding-left:92px}
+  .rd-line{left:58px}
+  .rd-wrap .rd-start{left:51px}
+  .rd-wrap .rd-flag{left:58px}
+  .rd-steps li::before,.rd-steps li::after{left:-45px}
+  .rd-gap{left:24px!important;top:40px;bottom:28px;width:14px;height:auto;border:2.5px solid var(--cta);border-right:0;border-radius:10px 0 0 10px}
+  .rd-gap span{position:absolute!important;left:-24px;top:50%;transform:translateY(-50%);writing-mode:vertical-rl;letter-spacing:.2em;font-size:15px;background:#fff;padding:4px 0}
+  .rd-walker{display:none}
+}
 </style>
 <script>document.documentElement.classList.add("fx-on");if("scrollRestoration" in history)history.scrollRestoration="manual"</script>
 </head>
@@ -817,7 +843,7 @@ p,li,dd,td{text-wrap:pretty}
           <div class="qc-ans"><p class="qc-ans__hd"><i aria-hidden="true"></i>条件に合う<wbr>企業と<wbr>選定理由</p><span class="qc-sk" aria-hidden="true"><i></i><i></i><i></i></span></div>
         </div>
       </div>
-      <figcaption class="q-cap">貴社は、<wbr>どの条件に、<wbr>何を根拠に<wbr>応えられるか？</figcaption>
+      <figcaption class="q-cap"><span class="qc-chara" aria-hidden="true"><img src="img/chara/confused.webp" width="358" height="587" alt="" loading="lazy"><span class="chara-name">エルモーくん</span></span><span class="q-cap__t">貴社は、<wbr>どの条件に、<wbr>何を根拠に<wbr>応えられるか？</span></figcaption>
     </figure>
   </div>
 </section>
