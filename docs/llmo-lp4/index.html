@@ -792,6 +792,11 @@ p,li,dd,td{text-wrap:pretty}
   font-size:clamp(16px,1.6vw,20px);font-weight:900;line-height:1.55;box-shadow:0 20px 40px -24px rgba(0,0,0,.5)}
 .q-cap__t::before{content:"";position:absolute;left:-10px;top:50%;width:20px;height:20px;margin-top:-10px;background:#fff;transform:rotate(45deg);border-radius:3px}
 @media (max-width:600px){ .q-cap{justify-content:flex-start} .q-cap__t{flex:1} }
+
+/* パソコンでは2．の見出しの左にもキャラ（So 10/2「PCから無くさないで」）。名札なし・吹き出しのエルモーくんとは別のポーズ（手を振る）。
+   スマホはすぐ下に吹き出しのエルモーくんがいるので出さない */
+@media (min-width:1320px){ #why .h2wrap{padding-left:190px} }   /* 手を振るポーズは幅159px。150pxだと見出しに9px重なった */
+@media (max-width:1319px){ .chara--why{display:none} }
 </style>
 <script>document.documentElement.classList.add("fx-on");if("scrollRestoration" in history)history.scrollRestoration="manual"</script>
 </head>
@@ -831,7 +836,7 @@ p,li,dd,td{text-wrap:pretty}
 <!-- 2．導入：情報探索の変化と戦略の必要性 -->
 <section class="sec sec--deep" id="why">
   <div class="wrap narrow">
-    <div class="h2wrap"><h2 class="h2 fx">「AIに選ばれる」とは、<br>誰の、<wbr>どのような<wbr>相談で<wbr>選ばれる<wbr>ことでしょうか。</h2></div>
+    <div class="h2wrap"><img class="chara chara--left chara--why fx" src="img/chara/wave.webp" width="360" height="431" alt="" aria-hidden="true" loading="lazy"><h2 class="h2 fx">「AIに選ばれる」とは、<br>誰の、<wbr>どのような<wbr>相談で<wbr>選ばれる<wbr>ことでしょうか。</h2></div>
     <div class="prose fx">
       <p>AIの回答で自社やサービスを紹介・引用してもらうための取り組みとして、LLMOが注目されています。</p>
       <p>検索エンジンもAIも、情報を探す人と、情報を発信する企業をつなぐ接点です。その根幹にあるのは、テクノロジーの進化によって、ユーザーの意図に合う情報を届ける仕組みが高度化しているという変化です。</p>
