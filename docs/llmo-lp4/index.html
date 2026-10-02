@@ -15,21 +15,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
-<style>
-/* ──────────────────────────────────────────────
-   原稿：scripts/llmo-lp/v1.md（2026-09-30 の構成）を一字一句そのまま。画像は原稿の「画像イメージ」どおりの図を HTML で組む
-   見た目：E案（紺・灰・白＋青1色。図の矢印と強調はペンの線）＋3段の三角のキャラを6節に1体ずつ
-   原稿に無い素材（橋本氏の写真・経歴、ボタンの行き先）は ※要確認 のまま空けてある
-   ────────────────────────────────────────────── */
-:root{
+<style>:root{
   --bg:#FFFFFF; --paper:#FFFFFF; --ink:#0F1A2E; --ink2:#46506A; --ink3:#5F6880; --grey:#7A8296;
   --line:#E6E8EC; --line2:#D5D9E0; --soft:#F4F5F7;
-  --acc:#2460DD;   /* 青＝会社サイト（samurai-style.tokyo）の色。So 9/30 ライム→青 */
-  /* 強調色の使い分け（配色案を差し替えるときはここだけ変える）：on-acc＝強調色の上の字／hl＝本文の太字のマーカー／mk＝FV見出しのマーカー／tint＝薄い地／chk＝チェック印の地／acc-dk＝墨の地の上の強調 */
-  --ok:#1E8A5A; --ok-soft:#E3F3EA;   /* 済んだ・クリアの印（緑） */
-  --cta:#D04500; --cta-ink:#A83700;   /* 保護色＝ブランドの青の反対側（オレンジ）。押す場所だけに使う。白文字4.63:1。So 9/30「CTAとして保護色を」 */
+  --acc:#2460DD;    
+  --ok:#1E8A5A; --ok-soft:#E3F3EA;    
+  --cta:#D04500; --cta-ink:#A83700;    
   --on-acc:#FFFFFF; --hl:rgba(36,96,221,.18); --mk:#FFE27A; --tint:#E7EEFD; --chk:#BCD0FF; --acc-dk:#8DB0FF;
-  --en:"Noto Sans JP",sans-serif;   /* 英数字も同じ書体（So 9/30「フォントは統一」） */
+  --en:"Noto Sans JP",sans-serif;    
   --wrap:1180px; --pad:clamp(20px,5vw,44px);
   --h2:clamp(28px,3.2vw,44px); --fs:17px;
   --ease:cubic-bezier(.2,.7,.2,1);
@@ -53,8 +46,6 @@ p,li,dd,td{text-wrap:pretty}
 .sec{position:relative;padding:clamp(88px,10vw,140px) 0}
 .sec--paper{background:var(--paper)}
 .sample-tag{display:inline-block;font-family:var(--en);font-weight:700;font-size:11.5px;letter-spacing:.12em;color:var(--ink3);border:1px solid var(--line2);border-radius:6px;padding:1px 8px;background:var(--paper)}
-
-/* ボタン（原稿の文言が長いので、折り返しても崩れない形） */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:56px;padding:12px 26px;border-radius:10px;text-align:center;
   font-weight:700;font-size:16px;line-height:1.5;letter-spacing:.03em;text-decoration:none;transition:transform .2s var(--ease),box-shadow .2s,background .2s,border-color .2s}
 .btn svg{width:17px;height:17px;flex:none;transition:transform .2s var(--ease)}
@@ -68,8 +59,6 @@ p,li,dd,td{text-wrap:pretty}
 .btn--line{background:var(--paper);color:var(--cta);border:2px solid var(--cta)}
 .btn--line:hover{background:#FFF3EC}
 .btn:focus-visible,.nav a:focus-visible{outline:3px solid #4285F4;outline-offset:3px}
-
-/* ── ヘッダー ── */
 .hd{position:fixed;inset:0 0 auto;z-index:50;transition:background .3s,border-color .3s;border-bottom:1px solid transparent}
 .hd.is-scrolled{background:rgba(255,255,255,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-color:var(--line)}
 .hd__in{display:flex;align-items:center;gap:32px;height:70px}
@@ -85,8 +74,6 @@ p,li,dd,td{text-wrap:pretty}
 .nav a{font-size:14px;font-weight:700;letter-spacing:.04em;text-decoration:none;color:var(--ink2);transition:color .2s}
 .nav a:hover,.nav a.is-cur{color:var(--ink)}
 .hd .btn{min-height:42px;padding:0 18px;font-size:14px;border-radius:9px}
-
-/* ── 1．ファーストビュー（文章＋「選ばれる理由」を起点にした図） ── */
 .fv{position:relative;padding:136px 0 clamp(80px,9vw,120px)}
 .fv__grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);grid-template-areas:"txt dia" "cta dia";column-gap:clamp(40px,5vw,72px);align-items:center}
 .fv__txt{grid-area:txt}
@@ -97,9 +84,7 @@ p,li,dd,td{text-wrap:pretty}
 .svc i{width:9px;height:9px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 1.5px var(--ink)}
 .fv__h1{margin-top:22px;font-weight:900;font-size:clamp(34px,3.6vw,50px);line-height:1.34;letter-spacing:-.01em}
 .fv__body{margin-top:24px;display:grid;gap:10px;color:var(--ink2)}
-.fv__h1 .mk{font-weight:900;padding:0;background:linear-gradient(transparent 62%,var(--mk) 62%,var(--mk) 92%,transparent 92%)}   /* 決めごと：FV見出しにブランドカラーの強調を1か所（図の中心と同じ言葉） */
-
-/* 図の部品：箱（node）。つなぐ線はペン（JSで描く） */
+.fv__h1 .mk{font-weight:900;padding:0;background:linear-gradient(transparent 62%,var(--mk) 62%,var(--mk) 92%,transparent 92%)}    
 .dia{position:relative}
 .node{display:grid;place-items:center;text-align:center;background:var(--paper);border:1px solid var(--line2);border-radius:14px;padding:14px 14px;
   font-weight:700;font-size:15.5px;line-height:1.5;letter-spacing:.02em;color:var(--ink)}
@@ -113,11 +98,8 @@ p,li,dd,td{text-wrap:pretty}
 .dia--fv [data-k="ai"]{grid-area:1 / 3}
 .dia--fv [data-k="cmp"]{grid-area:2 / 3}
 .dia--fv .node:not(.node--key){min-height:92px}
-
-/* ── 2．導入：相談文 → 調査論点 → 条件に合う企業と選定理由 ── */
 .dia--q{margin-top:64px;display:grid;justify-items:center}
 .q-bubble{position:relative;max-width:720px;background:var(--paper);border:1.5px solid var(--ink);border-radius:22px;padding:18px 70px 18px 58px;font-weight:700;font-size:16.5px;line-height:1.8;color:var(--ink);box-shadow:0 18px 36px -26px rgba(15,26,46,.45)}
-/* AIに聞いている入力欄（So 9/30「検索している感じ。AIに聞いている感じ」）：左にAIの印、右に送信ボタン、文は1文字ずつ打たれる */
 .q-bubble::before{content:"";position:absolute;left:18px;top:20px;width:26px;height:26px;border-radius:50%;background:var(--acc) radial-gradient(circle at 50% 50%,#fff 0 3px,transparent 3.5px)}
 .q-bubble::after{content:"";position:absolute;right:16px;bottom:14px;width:38px;height:38px;border-radius:50%;background:var(--ink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 18V6M6.5 11.5 12 6l5.5 5.5' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/20px no-repeat;transition:background-color .2s}
 .q-bubble.is-sent::after{background-color:var(--acc);animation:qsend .5s var(--ease)}
@@ -125,7 +107,6 @@ p,li,dd,td{text-wrap:pretty}
 .q-bubble .q-rest{color:transparent}
 .q-bubble .q-caret{display:inline-block;width:2px;height:1.1em;margin:0 1px -.18em;background:var(--acc);animation:qcaret 1s steps(1) infinite}
 @keyframes qcaret{50%{opacity:0}}
-/* 送信のあと：論点が1つずつ出て「調べ中」→チェック、最後に答えがまとまる（クエリファンアウトを動きで見せる。So 9/30） */
 .q-anim .q-points .node,.q-anim .q-result,.q-anim .q-cap{opacity:0;transform:translateY(10px);transition:opacity .45s var(--ease),transform .45s var(--ease)}
 .q-anim .q-points .node.is-on,.q-anim .q-result.is-on,.q-anim .q-cap.is-on{opacity:1;transform:none}
 .q-anim .ann{opacity:0;transition:opacity .5s}
@@ -140,8 +121,6 @@ p,li,dd,td{text-wrap:pretty}
 .q-points .node{min-height:76px}
 .q-result{margin-top:70px;min-width:min(440px,100%)}
 .q-cap{margin-top:34px;font-weight:900;font-size:clamp(20px,2vw,26px);line-height:1.5;text-align:center}
-
-/* ── 3．事業戦略：STP と、3つを照合する図 ── */
 .stp{margin-top:40px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
 .stp li{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:24px 24px 26px}
 .stp h3{font-weight:900;font-size:19px;line-height:1.5}
@@ -155,9 +134,7 @@ p,li,dd,td{text-wrap:pretty}
 .stp-core{margin-top:66px;min-width:min(420px,100%)}
 .stp-out{margin-top:66px;width:min(640px,100%);display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
 .stp-out .node{min-height:70px}
-
-/* ── 4．事業戦略→LLMOとは：目指す状態／現在のAI回答／ギャップ ── */
-.about{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(40px,5vw,56px)}   /* 上に見出しと本文、下に横長の図（So 9/30） */
+.about{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(40px,5vw,56px)}    
 .about > div:first-child{width:100%;max-width:800px;margin-inline:auto}
 .about > figure{width:min(100%,1000px);margin-inline:auto}
 .dia--gap{display:grid}
@@ -169,8 +146,6 @@ p,li,dd,td{text-wrap:pretty}
 .gap-mid{align-self:center;font-weight:900;font-size:17px;padding:6px 4px;writing-mode:horizontal-tb}
 .gap-acts{margin-top:70px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 .gap-acts .node{min-height:64px;font-size:15px;background:var(--acc);color:var(--on-acc);border-color:var(--ink)}
-
-/* 1画面目 v3：左に文、右に動画（So 9/30）。前の2列は動画が約600pxで小さかった → 幅を広げ、動画側を約7/12に */
 .fv .wrap.fv__split{width:min(1320px,100% - var(--pad)*2)}
 .fv__split{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);grid-template-areas:"h vid" "b vid" "c vid";grid-template-rows:auto auto 1fr;column-gap:clamp(32px,4vw,56px);align-items:start}
 .fv__split > .fv__h1{grid-area:h;margin-top:clamp(8px,2vw,28px);font-size:clamp(32px,3.2vw,46px)}
@@ -182,25 +157,17 @@ p,li,dd,td{text-wrap:pretty}
   .fv__split > .fv__vid{margin-top:32px}
   .fv__split > .fv__cta{max-width:none}
 }
-
-/* （旧）1画面目は縦1列：キーメッセージ → 説明 → 動画 → ボタン（So 9/30。説明は「動画の上で良さそう」）。上の札「事業戦略→LLMO」は消した（So「消していい」） */
 .fv__col{display:grid;grid-template-columns:minmax(0,1fr);justify-items:center;text-align:center}
-.fv__col > *{grid-area:auto;grid-column:1}   /* 2列の時の grid-area（txt/dia/cta）が残ると崩れる */
+.fv__col > *{grid-area:auto;grid-column:1}    
 .fv__col .fv__h1{margin-top:0;max-width:18em}
 .fv__col .fv__vid{width:min(100%,920px);margin-top:clamp(28px,3.4vw,40px);padding-top:0}
 .fv__col .fv__body{max-width:760px;margin-top:clamp(18px,2.2vw,26px)}
 .fv__col .fv__cta{grid-template-columns:repeat(2,minmax(0,1fr));max-width:820px;width:100%;margin-top:28px}
 @media (max-width:760px){ .fv__col .fv__cta{grid-template-columns:minmax(0,1fr)} .fv__col .fv__body{text-align:left} }
-
-/* 1画面目：図の代わりに動画（図の中身＝顧客のニーズ・貴社のアセット→選ばれる理由→AI回答での紹介・引用／顧客の比較検討・相談 は動画の2〜3場面目）。
-   キャラは動画の枠の上端に腰かける。座面は絵の高さの80.2%（tools_fv_chara.py → img/chara/sit.json）。So 9/30「FVにキャラ入れないと」 */
 .fv__vid{position:relative;--cw:clamp(92px,9.5vw,136px);padding-top:calc(var(--cw) * .9)}
 .fv__vid .vid{position:relative;border-radius:18px;overflow:hidden;border:1px solid var(--line2);background:#fff;box-shadow:0 40px 70px -48px rgba(15,26,46,.45)}
 .fv__vid video{display:block;width:100%;height:auto;aspect-ratio:16/9}
 .fv__chara{position:absolute;z-index:2;right:9%;top:calc(var(--cw) * .9 - var(--cw) * 400 / 360 * .802);width:var(--cw);height:auto;pointer-events:none}
-
-/* 2．AIのチャット画面（So 9/30「矢印多すぎる。AIのチャットっぽく、裏側でどう動いているか見せる」）。
-   相談文が打たれて送られ、AIがクエリファンアウトで4つの論点を調べ、条件に合う企業と選定理由で答える */
 .qc{margin-top:56px;display:grid;justify-items:center;gap:20px}
 .qc-win{width:min(100%,860px);background:var(--paper);border:1px solid var(--line2);border-radius:20px;overflow:hidden;box-shadow:0 40px 70px -50px rgba(15,26,46,.45)}
 .qc-bar{display:flex;gap:7px;padding:12px 16px;background:var(--bg);border-bottom:1px solid var(--line)}
@@ -223,16 +190,12 @@ p,li,dd,td{text-wrap:pretty}
 .qc-sk{display:grid;gap:7px;margin-top:12px}
 .qc-sk i{display:block;height:9px;border-radius:5px;background:var(--soft)}
 .qc-sk i:nth-child(2){width:86%}.qc-sk i:nth-child(3){width:62%}
-/* 動く時だけの初期状態 */
 .qc-anim .qc-think,.qc-anim .qc-ans{opacity:0;transform:translateY(10px);transition:opacity .45s var(--ease),transform .45s var(--ease)}
 .qc-anim .qc-pts li{opacity:0;transform:translateY(6px);transition:opacity .35s var(--ease),transform .35s var(--ease)}
 .qc-anim .qc-pts li::after{transform:scale(0);transition:transform .3s var(--ease)}
 .qc-anim .is-on{opacity:1!important;transform:none!important}
 .qc-anim .qc-pts li.is-done::after{transform:scale(1)}
 @media (max-width:600px){ .qc-pts{grid-template-columns:repeat(2,minmax(0,1fr))} .qc-user{font-size:14.5px} }
-
-/* 3．3Cの図 v2（So 9/30「重なっていて微妙。アイコンなくていい」）：三角形の頂点に3つ（顧客・自社・競合）、
-   各頂点から中心の「優先する顧客と提供価値」へ線。そこから下の2つが決まる */
 .c3{margin-top:56px;display:grid;justify-items:center;gap:10px}
 .c3-tri{position:relative;width:min(100%,720px);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-areas:". a ." ". core ." "b . c";row-gap:clamp(26px,4vw,40px);column-gap:12px;align-items:center}
 .c3-lines{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
@@ -243,17 +206,13 @@ p,li,dd,td{text-wrap:pretty}
 .c3-down{width:18px;height:36px;color:var(--ink)}
 .c3-out{width:min(560px,100%);display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 .c3-out .node{min-height:64px}
-.c3-lines line{stroke:var(--ink);stroke-width:2}   /* 各頂点から中心へ。点線の三角は薄くて分かりにくいのでやめた（9/30） */
-/* 動く時だけの初期状態 */
+.c3-lines line{stroke:var(--ink);stroke-width:2}    
 .c3-anim .c3-box{opacity:0;transform:scale(.9);transition:opacity .45s var(--ease),transform .45s var(--ease)}
 .c3-anim .c3-core,.c3-anim .c3-down,.c3-anim .c3-out{opacity:0;transform:translateY(10px);transition:opacity .45s var(--ease),transform .45s var(--ease)}
 .c3-anim .c3-lines line{opacity:0;transition:opacity .5s var(--ease)}
 .c3-anim .is-on{opacity:1!important;transform:none!important}
 .c3-anim .c3-lines line.is-on{opacity:1}
 @media (max-width:600px){ .c3-box{font-size:13.5px;padding:12px 6px} .c3-core{font-size:15px;padding:14px 8px} .c3-out .node{font-size:14px} }
-
-/* 4．ギャップの図 v3：現在のAI回答（左）と目指す状態（右）の間に線を引き、施策3つを関門として置く。
-   キャラが線の上を進み、通った関門から緑のチェックでクリア、最後に旗（目指す状態）に着く */
 .rd{display:grid;gap:18px}
 .rd-ends{display:grid;grid-template-columns:minmax(0,1fr) 56px minmax(0,1fr);align-items:center}
 .rd-arrow{display:block;width:44px;height:20px;margin:auto;color:var(--ink)}
@@ -277,7 +236,6 @@ p,li,dd,td{text-wrap:pretty}
 .rd-steps li::after{content:"";position:absolute;top:-12px;left:50%;margin-left:-11px;width:22px;height:22px;border-radius:50%;background:var(--ok) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M4.5 9.5l3 3 6-7' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/16px no-repeat}
 .rd-steps .ico{width:36px;height:36px}
 .rd-steps span{font-weight:700;font-size:14px;line-height:1.45;word-break:keep-all;overflow-wrap:anywhere}
-/* 動く時だけの初期状態（動きを減らす設定では、最後の状態＝全部クリア） */
 .rd-anim .rd-fill{width:0}
 .rd-anim .rd-walker{left:0}
 .rd-anim .rd-steps li{opacity:.45;transition:opacity .4s}
@@ -287,9 +245,6 @@ p,li,dd,td{text-wrap:pretty}
 .rd-anim .rd-card--goal{border-style:dashed;border-color:var(--line2);transition:border-color .4s,box-shadow .4s}
 .rd-anim.is-reached .rd-card--goal{border-style:solid;border-color:var(--acc);box-shadow:0 0 0 4px rgba(36,96,221,.14)}
 @media (max-width:600px){ .rd-txt{font-size:14px} .rd-steps span{font-size:12px} .rd-steps li{width:74px} .rd-steps{height:128px} }
-
-/* （旧）4．ギャップの図（So 9/30「わかりにくい」→作り直し）。左＝現在のAI回答、右＝目指す状態（左から右へ読むと前に進む向き）。
-   間の線路は施策が1つ済むごとに1/3ずつ埋まり、3つ目で目指す状態に届く。原稿の言葉8つはそのまま */
 .g2{display:grid;gap:22px}
 .g2-row{display:grid;grid-template-columns:minmax(0,1fr) 88px minmax(0,1fr);align-items:stretch}
 .g2-card{background:var(--paper);border:1.5px dashed var(--line2);border-radius:16px;padding:16px 16px 18px;transition:border-color .4s,box-shadow .4s}
@@ -308,7 +263,6 @@ p,li,dd,td{text-wrap:pretty}
 .g2-acts li .ico{width:40px;height:40px}
 .g2-acts li span{word-break:keep-all;overflow-wrap:anywhere}
 .g2-acts li::after{content:"";position:absolute;right:-7px;top:-7px;width:22px;height:22px;border-radius:50%;background:var(--ok) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M4.5 9.5l3 3 6-7' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/16px no-repeat}
-/* 動く時だけの初期状態（動きを減らす設定では最後の状態のまま） */
 .g2-anim .g2-fill{width:0}
 .g2-anim .g2-acts li{opacity:.35}
 .g2-anim .g2-acts li::after{transform:scale(0);transition:transform .35s var(--ease)}
@@ -322,22 +276,17 @@ p,li,dd,td{text-wrap:pretty}
   .g2-acts{gap:8px}
   .g2-acts li{font-size:13.5px;padding:12px 6px}
 }
-
-/* アイコン（キャラと同じ画風：ペンの線＋青。So 9/30「アイコンが入りそうな箇所は全て入れたい」）。飾りなので読み上げない */
 .ico{display:block;width:40px;height:40px;flex:none}
 .node .ico{margin:0 auto 6px}
-.node--out .ico,.gap-acts .ico{background:#fff;border-radius:50%;padding:3px;width:42px;height:42px}   /* 暗い地・青い地の箱は白い丸に載せる */
+.node--out .ico,.gap-acts .ico{background:#fff;border-radius:50%;padding:3px;width:42px;height:42px}    
 .dia--fv .node .ico{width:36px;height:36px}
 .dia--fv .node--out .ico{width:38px;height:38px}
 .stp li .ico{width:52px;height:52px;margin-bottom:12px}
 .flow__step{position:relative}
 .flow__step > .ico{position:absolute;right:20px;top:18px;width:48px;height:48px}
-.flow__step h3{padding-right:0}   /* STEPのアイコンは外した（So 9/30） */
+.flow__step h3{padding-right:0}    
 .checks li .ico{width:30px;height:30px}
 .shot-s video{display:block;width:100%;height:auto;aspect-ratio:1600/1000;background:#fff}
-
-/* キャラ（3段の三角。So 9/30「説明する時にキャラクターがいるとわかりやすい」「元が一番いい」）
-   1節に1体。広い画面は見出しの右（本文の段の外）、狭い画面は見出しの上の余白に置く。本文には重ねない */
 .h2wrap{position:relative}
 .chara{display:block;height:84px;width:auto;position:absolute;right:0;bottom:calc(100% + 4px);pointer-events:none}
 .chara--flip{scale:-1 1}
@@ -345,16 +294,12 @@ p,li,dd,td{text-wrap:pretty}
 @media (min-width:1320px){
   .chara{height:190px;right:auto;left:calc(100% + 40px);bottom:0}
   .chara--wide{height:150px}
-  .cta2__btn .chara{position:static;height:120px;margin-bottom:2px}   /* ボタンの横に置くと上の本文に重なった（1320px以上）→ボタンの上に右寄せ */
+  .cta2__btn .chara{position:static;height:120px;margin-bottom:2px}    
 }
-
-/* 途中のボタン */
 .ctaband{padding:0 0 clamp(88px,10vw,140px)}
 .ctaband__in{background:var(--ink);border-radius:22px;padding:clamp(28px,4vw,44px);display:flex;flex-wrap:wrap;justify-content:center;gap:14px}
 .ctaband .btn--line{background:transparent;color:#fff;border-color:var(--cta)}
 .ctaband .btn--line:hover{background:rgba(208,69,0,.18)}
-
-/* ── 5．サービスの流れ：縦に5つ。STEP 5 から STEP 1・2 へ戻る線（ペン） ── */
 .flow{margin-top:52px;position:relative;display:grid;gap:14px;padding-left:92px}
 .flow__step{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:22px 26px 24px}
 .flow__step h3{font-weight:900;font-size:clamp(18px,1.7vw,21px);line-height:1.55}
@@ -365,9 +310,7 @@ p,li,dd,td{text-wrap:pretty}
 .flow__q li{background:var(--bg);border-radius:10px;padding:9px 14px;font-size:15px;line-height:1.7;color:var(--ink2)}
 .flow__q b{color:var(--ink)}
 .flow .pen-note[data-n="loop"]{left:0;font-size:19px;--r:-90deg;transform-origin:left top}
-
-/* ── 6．提供価値：2×2 ── */
-.vals{margin-top:52px;display:grid;grid-template-columns:minmax(0,1fr);gap:18px}   /* 1列×4段（So 9/30） */
+.vals{margin-top:52px;display:grid;grid-template-columns:minmax(0,1fr);gap:18px}    
 .val{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:30px 34px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);grid-template-areas:"h fig" "txt fig";grid-template-rows:auto 1fr;column-gap:clamp(28px,4vw,56px);row-gap:12px;align-items:start}
 .val > h3{grid-area:h}.val > .val__txt{grid-area:txt}.val > .val__fig{grid-area:fig;align-self:center;margin-top:0}
 @media (max-width:900px){ .val{grid-template-columns:minmax(0,1fr);grid-template-areas:"h" "txt" "fig";padding:24px 22px} .val > .val__fig{margin-top:8px} }
@@ -378,7 +321,7 @@ p,li,dd,td{text-wrap:pretty}
 .person{display:grid;grid-template-columns:120px minmax(0,1fr);gap:16px;align-items:center}
 .person__ph{aspect-ratio:1;border-radius:14px;background:repeating-linear-gradient(45deg,var(--soft),var(--soft) 8px,#E8E8E3 8px,#E8E8E3 16px);display:grid;place-items:center;
   font-size:13px;font-weight:700;color:var(--ink3);border:1px dashed var(--line2)}
-.person__cv{font-size:13.5px;line-height:1.8;color:var(--ink3)}   /* 経歴は hook-hack.com「メンバー紹介」の原文のまま（So 9/30「ここから引っ張ってきて」） */
+.person__cv{font-size:13.5px;line-height:1.8;color:var(--ink3)}    
 .person__img{display:block;width:100%;height:auto;aspect-ratio:1;object-fit:cover;border-radius:14px;background:#fff;border:1px solid var(--line)}
 .person__nm{margin-bottom:4px;color:var(--ink);font-size:14px}
 .person__nm b{font-size:16px;margin-right:10px}
@@ -396,8 +339,6 @@ p,li,dd,td{text-wrap:pretty}
 .checks li{display:flex;align-items:center;gap:10px;background:var(--bg);border-radius:10px;padding:10px 12px;font-size:14.5px;font-weight:700;line-height:1.5}
 .checks li::before{content:"";flex:none;width:18px;height:18px;border-radius:5px;border:1.5px solid var(--ink);
   background:var(--chk) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M4.5 9.5l3 3 6-7' fill='none' stroke='%230F1A2E' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/100% no-repeat}
-
-/* ── 7．ダッシュボードから改善施策へ（画面例＝サンプル） ── */
 .sample{margin-top:48px;background:var(--paper);border:1px solid var(--line2);border-radius:18px;padding:22px 24px 26px;box-shadow:0 40px 80px -60px rgba(0,0,0,.4)}
 .sample__hd{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .sample__hd h3{font-weight:900;font-size:17px}
@@ -419,8 +360,6 @@ p,li,dd,td{text-wrap:pretty}
 .acts td{color:var(--ink);font-weight:500}
 .prio{display:inline-block;font-weight:700;font-size:13px;border-radius:6px;padding:0 9px;background:var(--soft)}
 .prio--hi{background:var(--acc);color:var(--on-acc)}
-
-/* ── 締め：無料レポート／資料ダウンロード ── */
 .cta2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(40px,5vw,72px);align-items:center}
 .cta2__txt .prose{margin-top:22px}
 .cta2__btn{margin-top:30px;max-width:460px;display:grid}
@@ -458,10 +397,8 @@ p,li,dd,td{text-wrap:pretty}
 .deck__cover em{font-style:normal;color:var(--acc-dk)}
 .ft{padding:28px 0 40px;border-top:1px solid var(--line)}
 .ft .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;font-size:13px;color:var(--ink3)}
-
-/* ── ペンの線（E案）：図の矢印・強調。線は .pen の上の SVG に JS で描き、画面に入ったら引かれていく ── */
 .pen{position:relative}
-.pen .ann{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:3;mix-blend-mode:multiply}   /* 🚨 層ごと乗算（蛍光ペンの下の字が透ける） */
+.pen .ann{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:3;mix-blend-mode:multiply}    
 .ann path{stroke-dasharray:1 1;stroke-dashoffset:1;transition:stroke-dashoffset .8s cubic-bezier(.35,.1,.25,1) var(--pd,0s)}
 .pen-go .ann path{stroke-dashoffset:0}
 .pen-note{position:absolute;z-index:4;margin:0;font-family:inherit;font-weight:700;font-size:21px;line-height:1.35;
@@ -469,8 +406,6 @@ p,li,dd,td{text-wrap:pretty}
 .fx-on .pen .pen-note{opacity:0;transition:opacity .6s var(--nd,1s)}
 .fx-on .pen-go .pen-note{opacity:1}
 .sec,.fv{overflow-x:clip}
-
-/* ── 動き（画面に入ったら出す）。JSが無ければ全部見える ── */
 .fx-on .fx{opacity:0;transform:translateY(20px);transition:opacity .8s var(--ease),transform .8s var(--ease);transition-delay:var(--d,0s)}
 .fx-on .fx.hh-in{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){
@@ -479,8 +414,6 @@ p,li,dd,td{text-wrap:pretty}
   .ann path{transition:none}
   .fx-on .pen .pen-note{opacity:1;transition:none}
 }
-
-/* ── 幅ごとの組み替え ── */
 @media (max-width:1080px){
   .stp{grid-template-columns:minmax(0,1fr)}
   .vals{grid-template-columns:minmax(0,1fr)}
@@ -492,7 +425,6 @@ p,li,dd,td{text-wrap:pretty}
   .hd__in{height:60px}
   .hd .btn{margin-left:auto;min-height:38px;padding:0 14px}
   .fv{padding:104px 0 72px}
-  /* スマホは 見出し・本文 → 図 → ボタン（決まり：写真・図はボタンより上） */
   .fv__grid{grid-template-columns:minmax(0,1fr);grid-template-areas:"txt" "dia" "cta"}
   .fv__dia{margin-top:40px}
   .fv__cta{max-width:none}
@@ -510,7 +442,7 @@ p,li,dd,td{text-wrap:pretty}
   .flow{padding-left:44px}
   .flow .pen-note[data-n="loop"]{display:none}
 }
-@media (max-width:420px){ :root{--h2:26px} }   /* 375pxで「「AIに選ばれる」とは、」の行の余りが1割を切った（実機Safariで1行増える） */
+@media (max-width:420px){ :root{--h2:26px} }    
 @media (max-width:600px){
   .stp-in{gap:10px}
   .stp-in .node,.stp-out .node{font-size:14px;padding:12px 8px}
@@ -528,9 +460,6 @@ p,li,dd,td{text-wrap:pretty}
   .acts td .prio{justify-self:start}
   .report__kpi b{font-size:26px}
 }
-/* ── 節のメリハリ（So 9/30「セクションごとのメリハリがない。背景を青にしたりグラデーション。hook-hack.com を参考に」）
-   地は白のまま、2．・6．・資料の節だけ濃い紺→青のグラデーション。上端は斜め、大きな角丸を半透明で重ねる（hook-hack.com と同じ作り）。
-   パステルの地は使わない（So「柔らかい色の背景は避けたい」） ── */
 .sec--deep{position:relative;isolation:isolate;overflow:hidden;color:#fff;background:linear-gradient(160deg,#0B1733 0%,#10275A 55%,#1B4BB4 100%);
   clip-path:polygon(0 clamp(28px,4vw,64px),100% 0,100% 100%,0 100%);padding-top:clamp(120px,13vw,180px)}
 .sec--deep::before,.sec--deep::after{content:"";position:absolute;z-index:-1;width:clamp(320px,38vw,560px);aspect-ratio:1.5;border-radius:clamp(48px,6vw,90px);background:rgba(255,255,255,.06);transform:rotate(-24deg);pointer-events:none}
@@ -544,15 +473,11 @@ p,li,dd,td{text-wrap:pretty}
 .sec--deep .val,.sec--deep .val h3{color:var(--ink)}
 .sec--deep .btn--line{background:transparent;color:#fff;border-color:var(--cta)}
 .sec--deep .btn--line:hover{background:rgba(208,69,0,.18)}
-/* フッター：濃い地に大きな白抜きの名前（hook-hack.com と同じ） */
 .ft--deep{position:relative;overflow:hidden;border-top:0;background:#0B1733;color:rgba(255,255,255,.7);padding:clamp(56px,7vw,96px) 0 36px}
 .ft__big{font-weight:900;font-size:clamp(72px,14vw,200px);line-height:1;letter-spacing:-.03em;white-space:nowrap;color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,.22);text-align:center;margin-bottom:clamp(24px,3vw,40px)}
 .ft--deep .wrap{color:rgba(255,255,255,.7)}
 .ft--deep .logo{color:#fff}
-/* 1画面目：白地に青の斜めの帯（hook-hack.com の1画面目と同じ作り） */
 .fv{overflow:hidden;isolation:isolate}
-
-/* 4．ギャップの図 v4：矢印を1本に（So 9/30「2個の矢印あるの微妙。まとめて」）。左のカード→線（関門3つ）→旗→右のカード */
 .rd-wrap{display:grid;grid-template-columns:minmax(150px,.8fr) minmax(0,2.4fr) minmax(170px,.9fr);align-items:center;gap:14px}
 .rd-wrap .rd-road{padding-top:92px}
 .rd-wrap .rd-start{top:86px}.rd-wrap .rd-flag{top:52px}
@@ -563,50 +488,34 @@ p,li,dd,td{text-wrap:pretty}
   .rd-wrap .rd-card--goal{justify-self:end;max-width:78%}
   .rd-wrap .rd-card--now{max-width:78%}
 }
-
-/* 2．のキャラは見出しの左（So 9/30） */
 .chara--left{right:auto;left:0}
 @media (min-width:1320px){ .chara--left{left:auto;right:calc(100% + 40px)} }
-/* 6．提供価値 v3：1列×4段のまま、箱はやめて段の間を細い線で（So 9/30「テキストはボックスに入れて欲しくない。整えて」） */
 #value .val{background:none;border:0;border-radius:0;box-shadow:none;padding:clamp(32px,4vw,48px) 0;border-top:1px solid var(--line)}
 #value .val:last-child{border-bottom:1px solid var(--line)}
 #value .vals{gap:0}
-/* 7．が濃い地になったので、画面見本は白い箱のまま影を強める */
 .sec--deep .sample{border-color:transparent;box-shadow:0 30px 60px -36px rgba(0,0,0,.6)}
-/* FV動画の下の細い線：いま何場面目か（So 9/30「今動画が最初なのか最後なのかわかるように細い線を」）。5場面に区切り、再生位置で伸びる */
 .vbar{display:grid;grid-template-columns:var(--segs);gap:6px;margin-top:12px}
 .vbar i{position:relative;height:3px;border-radius:2px;background:var(--line2);overflow:hidden}
 .vbar i b{position:absolute;inset:0;width:0;background:var(--acc);border-radius:2px}
-
-/* FVの文（So 9/30「FVのテキストが長いし読みにくい」）：原稿の文は変えず、1文目を導入として大きく太く、残り2文は行間を広げる */
 .fv__split > .fv__body{margin-top:22px;gap:14px;max-width:34em}
 .fv__split > .fv__body p{font-size:15.5px;line-height:1.95}
 .fv__split > .fv__body p:first-child{font-size:clamp(17px,1.35vw,19px);font-weight:700;line-height:1.7;color:var(--ink)}
-
-/* ── 節のメリハリ v2（So 9/30「単一すぎる。hook-hack.com のバリエーションを参考に」）
-   hook-hack.com の作り分け：①斜めに切った濃い節（2．・7．）②白地に大きな弧のグラデーション線（3．・無料レポート）
-   ③名前が横に流れる帯（フッターの前）④濃い地に白いカードの申込み（資料） ── */
-/* ② 白地に大きな弧 */
 .sec--arc{position:relative;overflow:hidden;isolation:isolate}
 .sec--arc::before{content:"";position:absolute;z-index:-1;width:150vw;height:150vw;max-width:2200px;max-height:2200px;border-radius:50%;
   border:clamp(18px,2.4vw,34px) solid transparent;background:linear-gradient(90deg,rgba(36,96,221,.0),rgba(36,96,221,.55),rgba(41,197,214,.55)) border-box;
   -webkit-mask:linear-gradient(#000 0 0) padding-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;
   left:-75vw;top:clamp(40px,6vw,90px);pointer-events:none;opacity:.55}
 #report.sec--arc::before{left:auto;right:-80vw;top:auto;bottom:-120vw}
-/* ① 7．は下側を斜めに（2．は上側） */
 #dash.sec--deep{clip-path:polygon(0 0,100% clamp(28px,4vw,64px),100% 100%,0 calc(100% - clamp(28px,4vw,64px)))}
-/* ④ 資料：濃い地に白いカード */
 #download .cta2{background:#fff;color:var(--ink);border-radius:28px;padding:clamp(32px,4.5vw,64px);box-shadow:0 50px 90px -50px rgba(0,0,0,.6)}
 #download .cta2 .h2{color:var(--ink)}
 #download .cta2 .prose{color:var(--ink2)}
 #download .cta2 .btn--line{background:var(--paper);color:var(--cta);border-color:var(--cta)}
-/* ③ 名前が横に流れる帯（hook-hack.com と同じ。1本だけゆっくり動かす） */
 .mq{overflow:hidden;background:#0B1733;padding:clamp(20px,3vw,36px) 0 0}
-.mq__in::before{content:"LLMOHack\2003 LLMOHack\2003 LLMOHack\2003 LLMOHack\2003 LLMOHack\2003 LLMOHack\2003 LLMOHack\2003 LLMOHack"}   /* 流れる帯の字は飾り（本文の文字にしない。検査の「画面外の文字」に掛からない） */
+.mq__in::before{content:"LLMOHack\2003 LLMOHack\2003 LLMOHack\2003 LLMOHack\2003 LLMOHack\2003 LLMOHack\2003 LLMOHack\2003 LLMOHack"}    
 .mq__in{display:block;white-space:nowrap;width:max-content;font-weight:900;font-size:clamp(64px,11vw,168px);line-height:1;letter-spacing:-.03em;color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,.2);animation:mq 40s linear infinite}
 @keyframes mq{to{transform:translateX(-50%)}}
 @media (prefers-reduced-motion:reduce){ .mq__in{animation:none} }
-/* フッター：samurai-style.tokyo と同じ作り（CONTACTの白いカード → 名前とリンク → ©）（So 9/30「フッターも整備」） */
 .ft--sa{background:#0B1733;color:#fff;padding:clamp(48px,6vw,80px) 0 28px}
 .ft__contact{display:flex;align-items:center;justify-content:space-between;gap:20px;width:min(600px,100%);margin:0 auto;background:#fff;color:var(--ink);border-radius:14px;padding:22px 34px;text-decoration:none;transition:transform .2s var(--ease)}
 .ft__contact:hover{transform:translateY(-2px)}
@@ -620,12 +529,8 @@ p,li,dd,td{text-wrap:pretty}
 .ft__links a:hover{color:#fff;text-decoration:underline}
 .ft__note{margin-top:28px;font-size:12px;color:rgba(255,255,255,.55)}
 .ft__copy{margin-top:10px;text-align:center;font-size:11.5px;color:rgba(255,255,255,.6);letter-spacing:.04em}
-
-/* 濃い地の節の中の白いカードは、文字を紺に戻す（So 9/30「多くの文字が読めない。色が背景と被って」＝白が白いカードに引き継がれていた） */
 .sec--deep .sample,.sec--deep .qc-win,.sec--deep .report,.sec--deep .c3-box,.sec--deep .rd-card,.sec--deep .val,.sec--deep .cta2{color:var(--ink)}
 .ft--sa .logo__ja{color:rgba(255,255,255,.72);border-color:rgba(255,255,255,.3)}
-
-/* ロゴ S2（So 9/30「一旦S2で」）：正面の立体を3段（STP）に分け、てっぺんだけ青。文字は2段（F案の並び） */
 .logo{gap:11px}
 .logo__mk{height:30px}
 .logo__txt{display:grid;gap:3px}
@@ -634,8 +539,6 @@ p,li,dd,td{text-wrap:pretty}
 .ft--sa .logo{--logo-a:#5B8BF0;--logo-ad:#2460DD;--logo-r:#9FB0CF}
 .ft--sa .logo__mk{height:26px}
 @media (max-width:760px){ .hd .logo__ja{display:block;font-size:9.5px} .logo__en{font-size:19px} .logo__mk{height:26px} }
-
-/* 6-3．課題 → 改善施策（So 9/30「もっとうまく表現したい」）：表をやめ、課題のカード → 矢印 → 施策のカード（アイコン＋チェック）を2組 */
 .rx{display:grid;gap:12px}
 .rx-hd{display:grid;grid-template-columns:minmax(0,1fr) 44px minmax(0,1.1fr);font-size:12.5px;font-weight:700;letter-spacing:.06em;color:var(--ink3)}
 .rx-hd span:last-child{grid-column:3}
@@ -651,7 +554,6 @@ p,li,dd,td{text-wrap:pretty}
 .rx-anim .rx-s::after{transform:scale(0);transition:transform .3s var(--ease) .2s}
 .rx-anim .is-on{opacity:1!important;transform:none!important}
 .rx-anim .rx-s.is-on::after{transform:scale(1)}
-/* 6-4．依頼できる施策：アイコンのタイル。2つに順にチェックが入る＝必要なものを選んで頼める（レ点式） */
 .picks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .picks li{position:relative;display:flex;align-items:center;gap:14px;background:#fff;border:1.5px solid var(--line2);border-radius:14px;padding:18px 18px;font-size:15px;font-weight:700;line-height:1.5;transition:border-color .3s,background .3s}
 .picks .ico{width:44px;height:44px}
@@ -659,30 +561,21 @@ p,li,dd,td{text-wrap:pretty}
 .picks li.is-on{border-color:var(--ok);background:var(--ok-soft)}
 .picks li.is-on::after{border-color:var(--ok);background-color:var(--ok);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M4.5 9.5l3 3 6-7' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}
 @media (max-width:600px){ .rx-hd,.rx-row{grid-template-columns:minmax(0,1fr) 30px minmax(0,1fr)} .rx-p,.rx-s{padding:12px;font-size:13px;gap:8px} .rx-s .ico{width:30px;height:30px} .picks li{font-size:13.5px;padding:14px 12px} .picks .ico{width:34px;height:34px} }
-
-/* 橋本氏の経歴は写真から出る吹き出し（So 9/30） */
 .person{grid-template-columns:120px minmax(0,1fr);gap:22px;align-items:start}
 .person__cv{position:relative;background:#fff;border:1.5px solid var(--line2);border-radius:16px;padding:16px 18px;color:var(--ink2)}
 .person__cv::before{content:"";position:absolute;left:-10px;top:34px;width:16px;height:16px;background:#fff;border-left:1.5px solid var(--line2);border-bottom:1.5px solid var(--line2);transform:rotate(45deg)}
 @media (max-width:600px){ .person{grid-template-columns:minmax(0,1fr)} .person__img{width:110px} .person__cv::before{left:34px;top:-9px;transform:rotate(135deg)} }
-
-/* 6-4：タイルの大きさはそのまま、ハイライトはしない（So 9/30） */
 .picks li.is-on{border-color:var(--line2);background:#fff}
 .picks li::after{display:none}
-
-/* FV動画の下の細い線は、動画の枠の中の一番下に（So 9/30） */
 .fv__vid .vbar{position:absolute;left:16px;right:16px;bottom:12px;margin:0;z-index:2}
 .fv__vid .vbar i{background:rgba(15,26,46,.14)}
-/* 7．の見本：矢印をやめ、18%と対応する施策の行に同じ番号の印（So 9/30「矢印が何を伝えたいのか分からない」） */
 .lk{position:relative;display:inline-block;padding:2px 8px;border-radius:6px;background:#FFE9A8;font-weight:900}
 .lk i,.lk-no{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;background:var(--cta);color:#fff;font-style:normal;font-size:11px;font-weight:900;line-height:1}
 .lk i{position:absolute;right:-9px;top:-9px}
 .lk-row td{background:#FFF7DB}
 .lk-no{margin-right:6px;vertical-align:1px}
-/* 4．「ギャップ」を目立たせる：現在地から旗までを括る括弧＋大きい字（So 9/30「あまり目立っていない」） */
 .rd-gap{left:14px;right:14px;transform:none;top:8px;height:34px;border:2.5px solid var(--cta);border-bottom:0;border-radius:10px 10px 0 0;text-align:center}
 .rd-gap span{position:relative;top:-15px;display:inline-block;padding:0 14px;background:#fff;color:var(--cta);font-size:20px;font-weight:900;letter-spacing:.1em}
-/* 橋本氏：吹き出しをやめ、写真の横に名前と肩書、その下に経歴（So 9/30「吹き出し変」） */
 .person{grid-template-columns:96px minmax(0,1fr);grid-template-areas:"img nm" "cv cv";gap:14px 18px;align-items:center}
 .person__img{grid-area:img}
 .person__nm{grid-area:nm;margin:0;font-size:13px;color:var(--ink3)}
@@ -690,34 +583,22 @@ p,li,dd,td{text-wrap:pretty}
 .person__cv{grid-area:cv;background:none;border:0;padding:0 0 0 14px;border-left:3px solid var(--acc);border-radius:0}
 .person__cv::before{display:none}
 @media (max-width:600px){ .person{grid-template-columns:80px minmax(0,1fr)} .person__img{width:80px} }
-
-/* キャラの名前：エルモーくん（So 9/30）。最初に出てくる2．の節だけ、キャラの下に名札 */
 .chara-box{display:flex;flex-direction:column;align-items:center;height:auto;width:auto}
 .chara-box img{display:block;height:84px;width:auto}
 .chara-name{margin-top:4px;padding:2px 10px;border-radius:999px;background:var(--acc);color:#fff;font-size:11px;font-weight:700;letter-spacing:.04em;line-height:1.6;white-space:nowrap}
 @media (min-width:1320px){ .chara-box{height:auto} .chara-box img{height:176px} .chara-name{font-size:12.5px;padding:3px 12px} }
-
-/* ヘッダーのボタン：原稿のボタンの言葉から「無料でレポーティング」。1行に収める（So 9/30「名前おかしい」。前は「無料レポー／ト」と折れた） */
 .hd__cta{white-space:nowrap}
 @media (max-width:760px){ .hd .hd__cta{min-height:38px;padding:0 12px;font-size:12.5px} .hd .logo__ja{display:none} .hd__in{gap:12px} }
 @media (max-width:360px){ .hd .hd__cta{padding:0 9px;font-size:11px} .hd .logo__en{font-size:16px} .hd .logo__mk{height:22px} .hd .logo{gap:7px} }
-
-/* 左端をそろえる（So 9/30「全体的に右にmarginが空いている印象」）：見出しと本文の段（800px）を中央に置くと、
-   下の図やカード（1180px）より左端が内側に入り、文の右側が空いて見えた。広い画面では段を図と同じ左端に寄せる。
-   空いた右側には各節のキャラ（見出しの右）が入る */
 @media (min-width:1100px){
   .wrap.narrow{width:min(var(--wrap),100% - var(--pad)*2);max-width:none}
   .wrap.narrow > .h2wrap,.wrap.narrow > .h2,.wrap.narrow > .prose,.wrap.narrow > .after,.wrap.narrow > .flow{max-width:800px}
   .about > div:first-child{margin-inline:0}
 }
 @media (min-width:1320px){
-  /* 2．はキャラを見出しの左に（So 9/30）。見出しをキャラの分だけ右へ */
   #why .h2wrap{padding-left:150px}
   #why .chara--left{right:auto;left:0}
 }
-
-/* 4．ギャップの図：スマホは縦に（So 9/30「ギャップの部分とかも横から縦にしてもいいかも」）。
-   上＝現在のAI回答 → 線を下へ（関門3つは線の右に縦に並ぶ）→ 下＝目指す状態 */
 @media (max-width:600px){
   .rd-wrap{grid-template-columns:minmax(0,1fr);gap:0}
   .rd-wrap .rd-card--now,.rd-wrap .rd-card--goal{max-width:none;justify-self:stretch}
@@ -736,23 +617,12 @@ p,li,dd,td{text-wrap:pretty}
   .rd-steps li::before,.rd-steps li::after{top:50%;left:-49px;margin:-11px 0 0}
   .rd-steps span{font-size:14px}
 }
-
-/* スマホは縦長（4:5）の動画に差し替える（So 9/30「FVの動画が小さいので縦用に」）。横長を縮めると字が小さすぎた */
 @media (max-width:600px){ .fv__vid video{aspect-ratio:4/5} }
-
-/* スマホ：文の右に余白が残る（So 10/1「テキストの右に謎の余白。ボックスと比べると明らかに余白がある」）。
-   実測で本文の行の右端が箱より平均15px・最大25px手前で終わっていた（字間0.02emの端数＋text-wrap:pretty の早い改行）。
-   小見出し（STEP等）は keep-all で最大180px空いた。→ 本文と箇条は両端そろえ、小見出しは途中で折ってよい */
 @media (max-width:600px){
   p,li,dd,td{text-wrap:wrap}
   .flow__step h3,.stp h3,.val h3{word-break:normal;line-break:strict}
 }
-
-/* スマホ：5．のSTEPのカードが左に44px寄って狭かった（戻り線のための左の余白が残っていた）。スマホは戻り線を出さないので余白も外す */
 @media (max-width:600px){ .flow{padding-left:0} .flow.pen .ann{display:none} }
-
-
-/* スマホ：エルモーくんは見出しの上ではなく、2．の図の最後の問い「貴社は、どの条件に…応えられるか？」の横に（So 10/1「最初にくるの意味がわからない。場所を見て入れる」） */
 .qc-chara{display:none}
 @media (max-width:600px){
   #why .chara-box{display:none}
@@ -761,8 +631,6 @@ p,li,dd,td{text-wrap:pretty}
   .qc-chara img{height:92px;width:auto}
   .q-cap__t{flex:1}
 }
-/* スマホのギャップの図（So 10/1）：「ギャップ」が何を指すか分からなかった → 線の左に、始まりから旗までを括る縦の括弧＋縦書き。
-   歩くキャラは線の上のチェックに重なったので、縦向きでは出さない（線が伸びるのとチェックで進み具合を見せる） */
 @media (max-width:600px){
   .rd-wrap .rd-road{padding-left:92px}
   .rd-line{left:58px}
@@ -773,17 +641,10 @@ p,li,dd,td{text-wrap:pretty}
   .rd-gap span{position:absolute!important;left:-24px;top:50%;transform:translateY(-50%);writing-mode:vertical-rl;letter-spacing:.2em;font-size:15px;background:#fff;padding:4px 0}
   .rd-walker{display:none}
 }
-
-/* スマホの文の右の余白（So 10/1「字の間隔を開けずに余白をなくしてほしい」）：両端そろえは字間が開くのでやめた。
-   字間の上乗せ（0.02em）をやめ、段落ごとに「全角の字が1行にちょうど整数個入る大きさ」に字の大きさを合わせる（下のスクリプト） */
 @media (max-width:480px){
   .prose p,.fv__body p,.stp p,.after,.flow__step > p,.flow__q li,.val__txt p,.person__cv p,.cta2__note,.rd-txt,.q-cap__t{letter-spacing:0!important;text-align:start}
 }
-
-@media (max-width:600px){ .shot-s video{aspect-ratio:4/5} }   /* 6-2のダッシュボード動画もスマホは縦長（So 10/1「スマホだと見えずらい。縦版を」） */
-
-/* エルモーくんは1か所だけ（So 10/2「タイトルの隣だと変。スマホの位置も変。吹き出しにしても良い」）：
-   2．の図の最後の問いを、エルモーくんのせりふの吹き出しに。左にエルモーくん（名札）、右に白い吹き出し（尾はエルモーくんへ） */
+@media (max-width:600px){ .shot-s video{aspect-ratio:4/5} }    
 @media (min-width:1320px){ #why .h2wrap{padding-left:0} }
 .q-cap{display:flex!important;align-items:center;justify-content:center;gap:clamp(14px,2vw,24px);text-align:left!important}
 .qc-chara{display:flex!important;flex-direction:column;align-items:center;flex:none}
@@ -792,34 +653,24 @@ p,li,dd,td{text-wrap:pretty}
   font-size:clamp(16px,1.6vw,20px);font-weight:900;line-height:1.55;box-shadow:0 20px 40px -24px rgba(0,0,0,.5)}
 .q-cap__t::before{content:"";position:absolute;left:-10px;top:50%;width:20px;height:20px;margin-top:-10px;background:#fff;transform:rotate(45deg);border-radius:3px}
 @media (max-width:600px){ .q-cap{justify-content:flex-start} .q-cap__t{flex:1} }
-
-/* パソコンでは2．の見出しの左にもキャラ（So 10/2「PCから無くさないで」）。名札なし・吹き出しのエルモーくんとは別のポーズ（手を振る）。
-   スマホはすぐ下に吹き出しのエルモーくんがいるので出さない */
-@media (min-width:1320px){ #why .h2wrap{padding-left:0} }   /* 2．の見出しの横にはキャラを置かない（So 10/2「タイトルの隣に置くな」） */
-
-/* 2．の節の右側の空いた所に、さりげなくキャラ（So 10/2「画面の右側に無造作に置いて欲しかった」）。パソコン幅のみ・名札なし・少し傾ける */
+@media (min-width:1320px){ #why .h2wrap{padding-left:0} }    
 .why-deco{display:none}
 @media (min-width:1100px){
   .why-deco{display:block;position:absolute;z-index:1;right:max(48px,calc((100vw - 1180px) / 2 + 40px));top:clamp(230px,18vw,300px);height:clamp(190px,16vw,240px);width:auto;transform:rotate(7deg);pointer-events:none}
-}
-</style>
+}</style>
 <script>document.documentElement.classList.add("fx-on");if("scrollRestoration" in history)history.scrollRestoration="manual"</script>
 </head>
 <body>
-
 <header class="hd" id="hd">
   <div class="wrap hd__in">
     <a class="logo" href="#top" aria-label="LLMOHack 事業を理解し、LLMOの戦略を描く（ページの先頭へ）"><svg class="logo__mk" viewBox="0 0 28 24" aria-hidden="true" focusable="false"><polygon points="14.00,1.00 14.00,7.60 10.10,6.70" style="fill:var(--logo-a,#2460DD)"/><polygon points="14.00,1.00 17.90,6.70 14.00,7.60" style="fill:var(--logo-ad,#1A47A8)"/><polygon points="9.32,7.84 14.00,8.92 14.00,15.08 5.68,13.16" style="fill:currentColor"/><polygon points="14.00,8.92 18.68,7.84 22.32,13.16 14.00,15.08" style="fill:var(--logo-r,#3A4A6A)"/><polygon points="4.90,14.30 14.00,16.40 14.00,23.00 1.00,20.00" style="fill:currentColor"/><polygon points="14.00,16.40 23.10,14.30 27.00,20.00 14.00,23.00" style="fill:var(--logo-r,#3A4A6A)"/></svg><span class="logo__txt"><span class="logo__en">LLMOHack</span><span class="logo__ja">事業を理解し、LLMOの戦略を描く</span></span></a>
-
     <nav class="nav" aria-label="ページ内">
       <a href="#about">サービスとは</a><a href="#flow">サービスの流れ</a><a href="#value">提供価値</a>
     </nav>
     <a class="btn btn--ink hd__cta" href="#report">無料レポートを申し込む</a>
   </div>
 </header>
-
 <main>
-<!-- 1．ファーストビュー -->
 <section class="fv" id="top">
   <div class="wrap fv__split">
     <h1 class="h1 fv__h1 fx" style="--d:.06s">AIに<wbr>最適化する<wbr>前に、<wbr>貴社が<wbr><span class="mk">選ばれる理由</span>を<wbr>明確化します。</h1>
@@ -837,8 +688,6 @@ p,li,dd,td{text-wrap:pretty}
     </div>
   </div>
 </section>
-
-<!-- 2．導入：情報探索の変化と戦略の必要性 -->
 <section class="sec sec--deep" id="why">
   <img class="why-deco" src="img/chara/wave.webp" width="360" height="431" alt="" aria-hidden="true" loading="lazy">
   <div class="wrap narrow">
@@ -873,8 +722,6 @@ p,li,dd,td{text-wrap:pretty}
     </figure>
   </div>
 </section>
-
-<!-- 3．LLMOの起点となる事業戦略 -->
 <section class="sec" id="strategy">
   <div class="wrap narrow">
     <div class="h2wrap"><img class="chara fx" src="img/chara/magnifier.webp" width="326" height="471" alt="" aria-hidden="true" loading="lazy"><h2 class="h2 fx">誰に、何を届けるか。<br>その選択が、<wbr>LLMOの<wbr>起点になります。</h2></div>
@@ -911,8 +758,6 @@ p,li,dd,td{text-wrap:pretty}
     </figure>
   </div>
 </section>
-
-<!-- 4．「LLMOHack」とは（原稿では「事業戦略→LLMO」とは） -->
 <section class="sec sec--paper" id="about">
   <div class="wrap about">
     <div>
@@ -942,8 +787,6 @@ p,li,dd,td{text-wrap:pretty}
     </figure>
   </div>
 </section>
-
-<!-- CTA：無料レポート・サービス紹介資料 -->
 <section class="ctaband sec--paper" aria-label="無料レポート・サービス紹介資料">
   <div class="wrap">
     <div class="ctaband__in fx">
@@ -952,8 +795,6 @@ p,li,dd,td{text-wrap:pretty}
     </div>
   </div>
 </section>
-
-<!-- 5．具体的なサービスの流れ -->
 <section class="sec" id="flow">
   <div class="wrap narrow">
     <div class="h2wrap"><img class="chara fx" src="img/chara/walk.webp" width="360" height="464" alt="" aria-hidden="true" loading="lazy"><h2 class="h2 fx">提供価値の整理から、<wbr>計測・改善まで。</h2></div>
@@ -980,8 +821,6 @@ p,li,dd,td{text-wrap:pretty}
     </ol>
   </div>
 </section>
-
-<!-- 6．サムライスタイルの提供価値 -->
 <section class="sec" id="value">
   <div class="wrap narrow">
     <div class="h2wrap"><img class="chara chara--wide chara--flip fx" src="img/chara/hand.webp" width="360" height="318" alt="" aria-hidden="true" loading="lazy"><h2 class="h2 fx">戦略を考え、可視化し、<br>必要な実務まで動かす。</h2></div>
@@ -1014,8 +853,6 @@ p,li,dd,td{text-wrap:pretty}
     </div>
   </div>
 </section>
-
-<!-- 7．ダッシュボードから改善施策へ -->
 <section class="sec sec--deep" id="dash">
   <div class="wrap narrow">
     <div class="h2wrap"><img class="chara chara--wide chara--flip fx" src="img/chara/thumbs.webp" width="360" height="335" alt="" aria-hidden="true" loading="lazy"><h2 class="h2 fx">数値を、<wbr>次に取り組む<wbr>施策へ<wbr>つなげる。</h2></div>
@@ -1044,8 +881,6 @@ p,li,dd,td{text-wrap:pretty}
     </figure>
   </div>
 </section>
-
-<!-- CTA：無料レポート -->
 <section class="sec sec--paper" id="report">
   <div class="wrap cta2">
     <div class="cta2__txt">
@@ -1067,8 +902,6 @@ p,li,dd,td{text-wrap:pretty}
     </figure>
   </div>
 </section>
-
-<!-- CTA：資料ダウンロード -->
 <section class="sec sec--deep" id="download">
   <div class="wrap cta2">
     <div class="cta2__txt">
@@ -1087,30 +920,24 @@ p,li,dd,td{text-wrap:pretty}
   </div>
 </section>
 </main>
-
 <div class="mq" aria-hidden="true"><div class="mq__in"></div></div>
 <footer class="ft--sa">
   <div class="wrap">
     <a class="ft__contact" href="https://www.samurai-style.tokyo/#contact"><div><b>CONTACT</b><span>お問い合わせはこちらから</span></div></a>
     <div class="ft__row">
       <span class="logo logo--ft" role="img" aria-label="LLMOHack 事業を理解し、LLMOの戦略を描く"><svg class="logo__mk" viewBox="0 0 28 24" aria-hidden="true" focusable="false"><polygon points="14.00,1.00 14.00,7.60 10.10,6.70" style="fill:var(--logo-a,#2460DD)"/><polygon points="14.00,1.00 17.90,6.70 14.00,7.60" style="fill:var(--logo-ad,#1A47A8)"/><polygon points="9.32,7.84 14.00,8.92 14.00,15.08 5.68,13.16" style="fill:currentColor"/><polygon points="14.00,8.92 18.68,7.84 22.32,13.16 14.00,15.08" style="fill:var(--logo-r,#3A4A6A)"/><polygon points="4.90,14.30 14.00,16.40 14.00,23.00 1.00,20.00" style="fill:currentColor"/><polygon points="14.00,16.40 23.10,14.30 27.00,20.00 14.00,23.00" style="fill:var(--logo-r,#3A4A6A)"/></svg><span class="logo__txt"><span class="logo__en">LLMOHack</span><span class="logo__ja">事業を理解し、LLMOの戦略を描く</span></span></span>
-
       <nav class="ft__links" aria-label="会社の情報"><a href="https://www.samurai-style.tokyo/">サムライスタイル株式会社</a><a href="https://www.samurai-style.tokyo/privacy-policy">プライバシーポリシー</a><a href="https://www.samurai-style.tokyo/commercial-transactions">特定商取引法に基づく表記</a></nav>
     </div>
     <p class="ft__note">AI回答での掲載・順位を保証するものではありません。</p>
     <p class="ft__copy">© 2024- samurai-style All Right Reserved.</p>
   </div>
 </footer>
-
-<script>
-(function(){
+<script>(function(){
   var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   var hd = document.getElementById("hd");
   var onScroll = function(){ hd.classList.toggle("is-scrolled", scrollY > 8); };
   addEventListener("scroll", onScroll, {passive:true}); onScroll();
   if (!location.hash) addEventListener("load", function(){ scrollTo(0,0); });
-
-  /* 画面に入ったら出す。FVは読み込みで出す */
   var items = [].slice.call(document.querySelectorAll(".fx"));
   var show = function(el){ el.classList.add("hh-in"); };
   var fv = document.getElementById("top");
@@ -1124,8 +951,6 @@ p,li,dd,td{text-wrap:pretty}
     addEventListener("beforeprint", function(){ items.forEach(show); });
     setTimeout(function(){ items.forEach(function(el){ if (el.getBoundingClientRect().top < innerHeight) show(el); }); }, 2500);
   }
-
-  /* 今いる節をナビに出す */
   var links = [].slice.call(document.querySelectorAll(".nav a"));
   if ("IntersectionObserver" in window){
     var navIO = new IntersectionObserver(function(es){
@@ -1133,8 +958,6 @@ p,li,dd,td{text-wrap:pretty}
     }, {rootMargin:"-45% 0px -50% 0px"});
     links.forEach(function(a){ var s = document.querySelector(a.getAttribute("href")); if (s) navIO.observe(s); });
   }
-
-  /* 孤立行を防ぐ（最後の行が短すぎる段落だけ、字間をわずかに動かす） */
   var TIDY = ".fv__body p,.prose p,.stp p,.after,.gap-txt,.flow__step > p,.flow__q li,.val__txt p,.person__cv,.cta2__note,.q-bubble";
   var widths = function(el){
     var rg = document.createRange(); rg.selectNodeContents(el); var rows = {};
@@ -1145,7 +968,7 @@ p,li,dd,td{text-wrap:pretty}
   var ok = function(el){ var w = widths(el); return w.length < 2 || w[w.length-1] >= Math.max.apply(null, w) * 0.25; };
   var tidy = function(el){
     el.style.letterSpacing = ""; el.style.textWrap = "";
-    if (matchMedia("(max-width:480px)").matches) return;   /* スマホは字間を動かさない（So 10/1） */
+    if (matchMedia("(max-width:480px)").matches) return;    
     if (ok(el)) return;
     var base = parseFloat(getComputedStyle(el).letterSpacing) || 0;
     var st = [-0.3,0.3,-0.6,0.6,-0.9,0.9,-1.2,1.2];
@@ -1158,8 +981,6 @@ p,li,dd,td{text-wrap:pretty}
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(tidyAll);
   addEventListener("load", tidyAll);
   var tt; addEventListener("resize", function(){ clearTimeout(tt); tt = setTimeout(tidyAll, 150); });
-
-  /* ── ペンの線：図の矢印と強調（E案）── */
   var NS = "http://www.w3.org/2000/svg";
   var Pen = function(root){
     var seed = 7, svg;
@@ -1188,7 +1009,6 @@ p,li,dd,td{text-wrap:pretty}
     };
   };
   var clamp = function(v, a, b){ return Math.max(a, Math.min(b, v)); };
-  /* 2つの箱を、向きに合わせて（横に並べば横、縦なら縦）ペンの矢印でつなぐ */
   var link = function(P, a, b, o){ o = o || {};
     var ac = {x:a.x + a.w / 2, y:a.y + a.h / 2}, bc = {x:b.x + b.w / 2, y:b.y + b.h / 2}, dx = bc.x - ac.x, dy = bc.y - ac.y, g = 9, x1, y1, x2, y2;
     if (o.dir !== "v" && (o.dir === "h" || Math.abs(dx) > Math.abs(dy) * 1.2)){
@@ -1205,7 +1025,6 @@ p,li,dd,td{text-wrap:pretty}
     fv: function(root, P){ var k = function(n){ return P.box(root.querySelector('[data-k="' + n + '"]')); };
       link(P, k("need"), k("reason"), {d:0}); link(P, k("asset"), k("reason"), {d:.15});
       link(P, k("reason"), k("ai"), {d:.55}); link(P, k("reason"), k("cmp"), {d:.7}); },
-    /* 2：論点が横1列なら、相談文から4つへ広げて、4つから1つへまとめる。2×2に折れたら、まとまりへ1本ずつ（交差させない） */
     q: function(root, P){ var k = function(n){ return P.box(root.querySelector('[data-k="' + n + '"]')); };
       var q = k("q"), r = k("r"), pts = ["p1", "p2", "p3", "p4"].map(k), grp = P.box(root.querySelector(".q-points"));
       if (Math.abs(pts[0].y - pts[3].y) < 4){
@@ -1217,7 +1036,6 @@ p,li,dd,td{text-wrap:pretty}
       var c = k("core");
       ["i1", "i2", "i3"].forEach(function(n, i){ link(P, k(n), c, {dir:"v", center1:true, x2:c.x + c.w / 2 + (i - 1) * Math.min(60, c.w / 5), d:i * .12}); });
       ["o1", "o2"].forEach(function(n, i){ link(P, c, k(n), {dir:"v", x1:c.x + c.w / 2 + (i - .5) * Math.min(60, c.w / 5), center2:true, d:.7 + i * .12}); }); },
-    /* 4：横並びなら、2枚のあいだに両向きの矢印（上に「ギャップ」）、そこから3つの施策へ。縦に並んだら上下の矢印と、施策のまとまりへ1本 */
     gap: function(root, P){ var k = function(n){ return P.box(root.querySelector('[data-k="' + n + '"]')); };
       var go = k("goal"), nw = k("now"), g = k("gap"), acts = ["a1", "a2", "a3"].map(k), grp = P.box(root.querySelector(".gap-acts"));
       if (Math.abs(go.y - nw.y) < 4){
@@ -1226,7 +1044,6 @@ p,li,dd,td{text-wrap:pretty}
         acts.forEach(function(a, i){ link(P, {x:g.x, y:y, w:g.w, h:0}, a, {dir:"v", x1:cx + (i - 1) * 14, center2:true, d:.6 + i * .12}); });
       } else { link(P, g, go, {dir:"v", center1:true, center2:true}); link(P, g, nw, {dir:"v", center1:true, center2:true});
         link(P, nw, grp, {dir:"v", center1:true, center2:true, d:.6}); } },
-    /* 流れ：STEP 5 の左から、STEP 1・2 の間へ戻る線（計測結果で戦略仮説も見直す） */
     flow: function(root, P){ var k = function(n){ return P.box(root.querySelector('[data-k="' + n + '"]')); };
       var s1 = k("s1"), s2 = k("s2"), s5 = k("s5"), x0 = s1.x - 12, xl = Math.max(4, s1.x - (s1.x > 70 ? 62 : 30));
       var yb = s5.y + s5.h * .5, yt = (s1.y + s1.h + s2.y) / 2;
@@ -1234,7 +1051,6 @@ p,li,dd,td{text-wrap:pretty}
       P.arrow(x0 - 18, yt, x0, yt, 0, {d:.8});
       var n = root.querySelector('.pen-note[data-n="loop"]');
       if (n && getComputedStyle(n).display !== "none"){ n.style.top = ((yb + yt) / 2 + n.offsetWidth / 2) + "px"; n.style.left = (xl - 30) + "px"; } },
-    /* 7：低い数値（目的・課題の言及率）を囲み、対応する施策の行へ */
     dash: function(root, P){ var lo = P.box(root.querySelector('[data-k="low"]')), row = P.box(root.querySelector('[data-k="act1"]'));
       P.ring({x:lo.x + lo.w - 52, y:lo.y + 6, w:46, h:lo.h - 12}, {pad:8});
       P.arrow(lo.x + lo.w - 40, lo.y + lo.h + 6, row.x + row.w * .42, row.y + 6, 30, {d:.4}); }
@@ -1242,7 +1058,6 @@ p,li,dd,td{text-wrap:pretty}
   var shown = function(el){ return el && el.offsetParent !== null && getComputedStyle(el).display !== "none"; };
   var pens = [].slice.call(document.querySelectorAll(".pen")).map(function(root){ return {root:root, kind:root.getAttribute("data-dia"), P:Pen(root)}; });
   var drawPen = function(o){ o.P.clear(); if (shown(o.root)) DRAW[o.kind](o.root, o.P); o.drawn = true; };
-  /* 🚨 .fx は下から20px浮き上がって出る。動いている最中に測ると線がずれるので、止まってから測る */
   var settled = function(el, cb){
     var done = false, fin = function(){ if (!done){ done = true; cb(); } };
     var t = getComputedStyle(el).transform;
@@ -1261,11 +1076,8 @@ p,li,dd,td{text-wrap:pretty}
     pens.forEach(function(o){ penIO.observe(o.root); });
   } else pens.forEach(goPen);
   var pt; addEventListener("resize", function(){ clearTimeout(pt); pt = setTimeout(function(){ pens.forEach(function(o){ if (o.drawn) drawPen(o); }); }, 200); });
-})();
-</script>
-<script>
-/* 1画面目の動画は自動再生（動きを減らす設定なら止める）。6-2のダッシュボード動画は画面に入ったら再生、外れたら止める */
-(function(){
+})();</script>
+<script>(function(){
   var fv = document.querySelector(".fv__vid video");
   if (fv && matchMedia("(prefers-reduced-motion: reduce)").matches) { fv.removeAttribute("autoplay"); fv.pause(); }
   var v = document.querySelector(".shot-s video"); if (!v) return;
@@ -1273,11 +1085,8 @@ p,li,dd,td{text-wrap:pretty}
   new IntersectionObserver(function(es){ es.forEach(function(e){
     if (e.isIntersecting) { v.preload = "auto"; var p = v.play(); if (p && p.catch) p.catch(function(){}); } else { v.pause(); }
   }); }, {threshold: .35}).observe(v);
-})();
-</script>
-<script>
-/* 2．のチャット：相談文を1文字ずつ打つ（文はHTMLに全部入っている。まだ打っていない字は透明にするだけ）→ 送信 → クエリファンアウトで4つを調べる → 回答 */
-(function(){
+})();</script>
+<script>(function(){
   var el = document.querySelector("[data-type]"); if (!el || !("IntersectionObserver" in window)) return;
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   var fig = el.closest("figure"); fig.classList.add("qc-anim");
@@ -1299,7 +1108,6 @@ p,li,dd,td{text-wrap:pretty}
     if (n < full.length) setTimeout(step, 34); else { caret.remove(); fan(); } };
   new IntersectionObserver(function(es, io){ if (es[0].isIntersecting && !done){ done = true; io.disconnect(); setTimeout(step, 400); } }, {threshold: .5}).observe(el);
 })();
-/* 3．3Cの図：三角形の頂点の3つ → 各頂点から中心へ線 → 中心 → 下の2つ。線は箱の位置を測って引く（幅が変わったら引き直す） */
 (function(){
   var f = document.querySelector('[data-anim="c3"]'); if (!f) return;
   var tri = f.querySelector(".c3-tri"), svg = f.querySelector(".c3-lines"), NS = "http://www.w3.org/2000/svg";
@@ -1320,16 +1128,13 @@ p,li,dd,td{text-wrap:pretty}
     setTimeout(function(){ core.classList.add("is-on"); }, 1700);
     setTimeout(function(){ f.querySelector(".c3-down").classList.add("is-on"); f.querySelector(".c3-out").classList.add("is-on"); shown = true; }, 2300);
   }, {threshold: .4}).observe(f);
-})();
-</script>
-<script>
-/* 4．ギャップの図：キャラが線の上を進み、関門を1つずつクリアして旗に着く */
-(function(){
+})();</script>
+<script>(function(){
   var f = document.querySelector('[data-anim="gap"]'); if (!f || !("IntersectionObserver" in window)) return;
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   f.classList.add("rd-anim");
   var fill = f.querySelector(".rd-fill"), walker = f.querySelector(".rd-walker"), steps = [].slice.call(f.querySelectorAll(".rd-steps li"));
-  var vert = matchMedia("(max-width:600px)").matches;   // スマホは縦
+  var vert = matchMedia("(max-width:600px)").matches;   
   var go = function(pct){ if (vert){ fill.style.height = pct + "%"; walker.style.top = pct + "%"; } else { fill.style.width = pct + "%"; walker.style.left = pct + "%"; } };
   new IntersectionObserver(function(es, io){ if (!es[0].isIntersecting) return; io.disconnect();
     var stops = [22, 50, 78];
@@ -1338,27 +1143,21 @@ p,li,dd,td{text-wrap:pretty}
       setTimeout(function(){ go(x); }, 500 + i * 1500);
       setTimeout(function(){ steps[i].classList.add("is-done"); }, 500 + i * 1500 + 850);
     });
-    setTimeout(function(){ if (vert){ go(100); return; } var ln = f.querySelector(".rd-line"), stop = 100 - (walker.offsetWidth * .5 + 30) / ln.offsetWidth * 100; fill.style.width = "100%"; walker.style.left = stop + "%"; }, 500 + stops.length * 1500);   /* 旗の手前で止まる（幅から計算。スマホで旗にかかった） */
+    setTimeout(function(){ if (vert){ go(100); return; } var ln = f.querySelector(".rd-line"), stop = 100 - (walker.offsetWidth * .5 + 30) / ln.offsetWidth * 100; fill.style.width = "100%"; walker.style.left = stop + "%"; }, 500 + stops.length * 1500);    
     setTimeout(function(){ f.classList.add("is-reached"); }, 500 + stops.length * 1500 + 900);
   }, {threshold: .5}).observe(f);
-})();
-</script>
-<script>
-/* FV動画の下の細い線：場面の区切り（秒）は ~/lab/llmo-video/src/Video2.tsx の CUT（30fps）と同じ */
-(function(){
+})();</script>
+<script>(function(){
   var v = document.querySelector(".fv__vid video"), bar = document.querySelector(".vbar"); if (!v || !bar) return;
-  var CUT = [0, 4, 12, 16.333, 22];   /* 4場面（2・3場面をまとめた 9/30） */
+  var CUT = [0, 4, 12, 16.333, 22];    
   bar.style.setProperty("--segs", CUT.slice(1).map(function(e, i){ return (e - CUT[i]).toFixed(3) + "fr"; }).join(" "));
   var bs = [].slice.call(bar.querySelectorAll("b"));
   var tick = function(){ var t = v.currentTime || 0;
     bs.forEach(function(b, i){ var a = CUT[i], e = CUT[i + 1]; b.style.width = (t >= e ? 100 : t <= a ? 0 : (t - a) / (e - a) * 100) + "%"; });
     requestAnimationFrame(tick); };
   requestAnimationFrame(tick);
-})();
-</script>
-<script>
-/* 6-3・6-4：画面に入ったら順に出す／チェックを入れる（動きを減らす設定では最初から全部出す。6-4はチェック2つの状態） */
-(function(){
+})();</script>
+<script>(function(){
   var rm = matchMedia("(prefers-reduced-motion: reduce)").matches, io = "IntersectionObserver" in window;
   var rx = document.querySelector('[data-anim="rx"]'), pk = document.querySelector('[data-anim="picks"]');
   var picks = pk ? [].slice.call(pk.querySelectorAll("li")) : [];
@@ -1376,20 +1175,14 @@ p,li,dd,td{text-wrap:pretty}
       setTimeout(function(){ picks[0].classList.add("is-on"); }, 500); setTimeout(function(){ picks[1].classList.add("is-on"); }, 1200);
     }, {threshold: .5}).observe(pk);
   }
-})();
-</script>
-<script>
-/* スマホ（600px以下）は縦長の動画・表紙に替える。読み込む前に替えるので、横長は読み込まない */
-(function(){
+})();</script>
+<script>(function(){
   if (!matchMedia("(max-width:600px)").matches) return;
-  [].forEach.call(document.querySelectorAll("video[data-sp]"), function(x){ x.poster = x.getAttribute("data-sp-poster"); x.src = x.getAttribute("data-sp"); });   /* 6-2のダッシュボード動画もスマホは縦長に */
+  [].forEach.call(document.querySelectorAll("video[data-sp]"), function(x){ x.poster = x.getAttribute("data-sp-poster"); x.src = x.getAttribute("data-sp"); });    
   var v = document.querySelector(".fv__vid video"); if (!v) return;
   if (!matchMedia("(prefers-reduced-motion: reduce)").matches){ var p = v.play(); if (p && p.catch) p.catch(function(){}); }
-})();
-</script>
-<script>
-/* スマホ（480px以下）：段落ごとに幅を測り、全角の字がちょうど整数個で1行に入る大きさに合わせる。字間は変えない（So 10/1） */
-(function(){
+})();</script>
+<script>(function(){
   var SEL = ".prose p,.fv__body p,.stp p,.after,.flow__step > p,.flow__q li,.val__txt p,.person__cv p,.cta2__note,.rd-txt,.q-cap__t";
   var lastOk = function(el){
     var rg = document.createRange(); rg.selectNodeContents(el); var rows = {};
@@ -1405,7 +1198,6 @@ p,li,dd,td{text-wrap:pretty}
       var cs = getComputedStyle(el), w = el.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight), base = parseFloat(cs.fontSize);
       if (!w || !base) return;
       var n0 = Math.max(1, Math.round(w / base));
-      /* 最後の行が1〜2文字だけ落ちる時は、1行の字数を1つ増やすか減らす（字の大きさが約5%変わるだけ。字間は変えない） */
       var tries = [n0, n0 + 1, n0 - 1, n0 + 2], pick = n0;
       for (var i = 0; i < tries.length; i++){
         var n = tries[i]; if (n < 8) continue;
@@ -1417,7 +1209,6 @@ p,li,dd,td{text-wrap:pretty}
   };
   fit(); if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
   var tt; addEventListener("resize", function(){ clearTimeout(tt); tt = setTimeout(fit, 150); });
-})();
-</script>
+})();</script>
 </body>
 </html>
