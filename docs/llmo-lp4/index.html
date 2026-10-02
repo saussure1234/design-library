@@ -781,6 +781,17 @@ p,li,dd,td{text-wrap:pretty}
 }
 
 @media (max-width:600px){ .shot-s video{aspect-ratio:4/5} }   /* 6-2のダッシュボード動画もスマホは縦長（So 10/1「スマホだと見えずらい。縦版を」） */
+
+/* エルモーくんは1か所だけ（So 10/2「タイトルの隣だと変。スマホの位置も変。吹き出しにしても良い」）：
+   2．の図の最後の問いを、エルモーくんのせりふの吹き出しに。左にエルモーくん（名札）、右に白い吹き出し（尾はエルモーくんへ） */
+@media (min-width:1320px){ #why .h2wrap{padding-left:0} }
+.q-cap{display:flex!important;align-items:center;justify-content:center;gap:clamp(14px,2vw,24px);text-align:left!important}
+.qc-chara{display:flex!important;flex-direction:column;align-items:center;flex:none}
+.qc-chara img{height:clamp(84px,9vw,128px);width:auto}
+.q-cap__t{position:relative;flex:0 1 auto;max-width:560px;background:#fff;color:var(--ink);border-radius:18px;padding:clamp(14px,1.6vw,20px) clamp(18px,2vw,28px);
+  font-size:clamp(16px,1.6vw,20px);font-weight:900;line-height:1.55;box-shadow:0 20px 40px -24px rgba(0,0,0,.5)}
+.q-cap__t::before{content:"";position:absolute;left:-10px;top:50%;width:20px;height:20px;margin-top:-10px;background:#fff;transform:rotate(45deg);border-radius:3px}
+@media (max-width:600px){ .q-cap{justify-content:flex-start} .q-cap__t{flex:1} }
 </style>
 <script>document.documentElement.classList.add("fx-on");if("scrollRestoration" in history)history.scrollRestoration="manual"</script>
 </head>
@@ -820,7 +831,7 @@ p,li,dd,td{text-wrap:pretty}
 <!-- 2．導入：情報探索の変化と戦略の必要性 -->
 <section class="sec sec--deep" id="why">
   <div class="wrap narrow">
-    <div class="h2wrap"><span class="chara chara--left chara-box fx"><img src="img/chara/confused.webp" width="358" height="587" alt="" loading="lazy"><span class="chara-name">エルモーくん</span></span><h2 class="h2 fx">「AIに選ばれる」とは、<br>誰の、<wbr>どのような<wbr>相談で<wbr>選ばれる<wbr>ことでしょうか。</h2></div>
+    <div class="h2wrap"><h2 class="h2 fx">「AIに選ばれる」とは、<br>誰の、<wbr>どのような<wbr>相談で<wbr>選ばれる<wbr>ことでしょうか。</h2></div>
     <div class="prose fx">
       <p>AIの回答で自社やサービスを紹介・引用してもらうための取り組みとして、LLMOが注目されています。</p>
       <p>検索エンジンもAIも、情報を探す人と、情報を発信する企業をつなぐ接点です。その根幹にあるのは、テクノロジーの進化によって、ユーザーの意図に合う情報を届ける仕組みが高度化しているという変化です。</p>
@@ -847,7 +858,7 @@ p,li,dd,td{text-wrap:pretty}
           <div class="qc-ans"><p class="qc-ans__hd"><i aria-hidden="true"></i>条件に合う<wbr>企業と<wbr>選定理由</p><span class="qc-sk" aria-hidden="true"><i></i><i></i><i></i></span></div>
         </div>
       </div>
-      <figcaption class="q-cap"><span class="qc-chara" aria-hidden="true"><img src="img/chara/confused.webp" width="358" height="587" alt="" loading="lazy"><span class="chara-name">エルモーくん</span></span><span class="q-cap__t">貴社は、<wbr>どの条件に、<wbr>何を根拠に<wbr>応えられるか？</span></figcaption>
+      <figcaption class="q-cap"><span class="qc-chara" aria-hidden="true"><img src="img/chara/confused.webp" width="358" height="587" alt=""><span class="chara-name">エルモーくん</span></span><span class="q-cap__t">貴社は、<wbr>どの条件に、<wbr>何を根拠に<wbr>応えられるか？</span></figcaption>
     </figure>
   </div>
 </section>
