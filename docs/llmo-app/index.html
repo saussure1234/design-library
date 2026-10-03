@@ -381,6 +381,7 @@ mark.flash { animation: flash 1.2s ease; }
 .lform { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
 .lform .search { flex: 1; min-width: 220px; }
 .pform { display: grid; grid-template-columns: minmax(0, 1fr); max-width: 360px; }
+.pform > * { width: 100%; box-sizing: border-box; }
 .lalt { margin-top: 18px; }
 .mform { margin-top: 10px; }
 .acct { margin: 18px 8px 0; padding-top: 12px; border-top: 1px solid var(--line); display: grid; gap: 6px; justify-items: start; }
@@ -1496,9 +1497,6 @@ async function bootSupabase() {
   try { await new Promise((ok, ng) => { const s = document.createElement("script"); s.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"; s.onload = ok; s.onerror = ng; document.head.append(s); }); }
   catch (e) { msg("読み込みに失敗しました。通信を確かめて、もう一度開いてください。"); return; }
   const sb = window.supabase.createClient(SB.url, SB.anonKey);
-  if (/type=recovery/.test(location.hash + location.search)) {   // パスワード再設定のメールから来た
-    sb.auth.onAuthStateChange((ev) => { if (ev === "PASSWORD_RECOVERY") setPasswordView(sb, () => { location.hash = ""; location.reload(); }); });
-  }
   const { data: { session } } = await sb.auth.getSession();
   if (!session) { loginView(sb); return; }
   const { data: clients, error } = await sb.from("clients").select("*").order("name");
@@ -1532,27 +1530,22 @@ async function loadClient(sb, cl) {
     rounds: Math.max(1, ...as.map((a) => a.round)),
   };
 }
+// 会社ごとのログイン用アカウント（メールは送らない。URL の ?c=<会社ID> とパスワードだけで入る）
+const clientLogin = (slug) => `llmo-${slug}@samurai-style.tokyo`;
 function loginView(sb) {
-  // メール＋パスワードで入る。忘れたとき・パスワード無しで入りたいときはメールのリンク
   const page = document.getElementById("page"); const w = document.createElement("div"); w.className = "login";
-  w.innerHTML = '<h1 class="ptitle">ログイン</h1>'
-    + '<form class="lform pform"><input class="search" type="email" required autocomplete="email" placeholder="メールアドレス"><input class="search" type="password" required autocomplete="current-password" placeholder="パスワード"><button class="btn primary" type="submit">ログイン</button></form>'
-    + '<p class="psub lmsg"></p>'
-    + '<details class="tdet lalt"><summary>パスワードを忘れた／メールのリンクで入る</summary><form class="lform mform"><input class="search" type="email" required autocomplete="email" placeholder="メールアドレス"><button class="btn" type="submit" data-k="link">リンクで入る</button><button class="btn" type="submit" data-k="reset">パスワードを再設定</button></form></details>';
-  const pf = w.querySelector(".pform"), mf = w.querySelector(".mform"), m = w.querySelector(".lmsg");
-  pf.addEventListener("submit", async (e) => {
-    e.preventDefault(); const [em, pw] = pf.querySelectorAll("input"); const b = pf.querySelector("button"); b.disabled = true;
-    const { error } = await sb.auth.signInWithPassword({ email: em.value.trim(), password: pw.value });
+  const slug = new URLSearchParams(location.search).get("c");
+  w.innerHTML = slug
+    ? '<h1 class="ptitle">ログイン</h1><p class="psub">お渡ししたパスワードを入れてください。</p><form class="lform pform"><input class="search" type="password" required autocomplete="current-password" placeholder="パスワード"><button class="btn primary" type="submit">開く</button></form><p class="psub lmsg"></p>'
+    : '<h1 class="ptitle">ログイン</h1><form class="lform pform"><input class="search" type="email" required autocomplete="email" placeholder="メールアドレス"><input class="search" type="password" required autocomplete="current-password" placeholder="パスワード"><button class="btn primary" type="submit">ログイン</button></form><p class="psub lmsg"></p>';
+  const f = w.querySelector("form"), m = w.querySelector(".lmsg");
+  f.addEventListener("submit", async (e) => {
+    e.preventDefault(); const ins = f.querySelectorAll("input"); const b = f.querySelector("button"); b.disabled = true;
+    const email = slug ? clientLogin(slug) : ins[0].value.trim(); const password = ins[ins.length - 1].value;
+    const { error } = await sb.auth.signInWithPassword({ email, password });
     b.disabled = false;
-    if (error) { m.textContent = "ログインできませんでした。メールアドレスとパスワードを確かめてください。"; return; }
+    if (error) { m.textContent = "開けませんでした。パスワードを確かめてください。"; return; }
     location.reload();
-  });
-  mf.addEventListener("submit", async (e) => {
-    e.preventDefault(); const email = mf.querySelector("input").value.trim(); const kind = (e.submitter || {}).dataset ? e.submitter.dataset.k : "link";
-    const back = location.origin + location.pathname;
-    const { error } = kind === "reset" ? await sb.auth.resetPasswordForEmail(email, { redirectTo: back })
-                                       : await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: back, shouldCreateUser: false } });
-    m.textContent = error ? "送れませんでした。登録済みのアドレスか確かめてください。" : "メールを送りました。メールのリンクから開いてください。";
   });
   page.replaceChildren(w);
 }
@@ -1579,10 +1572,12 @@ function pickerView(clients) {
 }
 function accountBar(sb, session, clients, cl) {
   const side = document.querySelector(".side"); const bar = document.createElement("div"); bar.className = "acct";
-  const who = document.createElement("p"); who.textContent = session.user.email; bar.append(who);
+  const who = document.createElement("p"); who.textContent = /^llmo-/.test(session.user.email || "") && cl ? `${cl.name} 様` : session.user.email; bar.append(who);
   if (clients.length > 1) { const a = document.createElement("button"); a.type = "button"; a.className = "lnk"; a.textContent = "クライアントを切り替える"; a.addEventListener("click", () => { location.search = ""; }); bar.append(a); }
-  const pw = document.createElement("button"); pw.type = "button"; pw.className = "lnk"; pw.textContent = "パスワードを変更";
-  pw.addEventListener("click", () => setPasswordView(sb, () => location.reload())); bar.append(pw);
+  if (clients.length > 1) {   // 会社ごとのアカウントは共有なので、変更は So さんが行う（ここには出さない）
+    const pw = document.createElement("button"); pw.type = "button"; pw.className = "lnk"; pw.textContent = "パスワードを変更";
+    pw.addEventListener("click", () => setPasswordView(sb, () => location.reload())); bar.append(pw);
+  }
   const out = document.createElement("button"); out.type = "button"; out.className = "lnk"; out.textContent = "ログアウト";
   out.addEventListener("click", async () => { await sb.auth.signOut(); location.search = ""; location.reload(); }); bar.append(out);
   side.append(bar);
