@@ -382,19 +382,10 @@ p,li,dd,td{text-wrap:pretty}
 .points li{position:relative;padding-left:18px;font-size:14px;line-height:1.7;color:var(--ink)}
 .points li::before{content:"";position:absolute;left:2px;top:.62em;width:8px;height:8px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 1.5px var(--ink)}
 .deck{position:relative;aspect-ratio:4/3.1;max-width:560px;justify-self:center;width:100%}
-.deck__pg{position:absolute;width:74%;aspect-ratio:16/9;background:var(--paper);border:1px solid var(--line2);border-radius:10px;padding:5% 6%;
-  box-shadow:0 22px 40px -28px rgba(0,0,0,.35);display:grid;align-content:start;gap:8%}
-.deck__pg h5{margin:0;font-size:clamp(12px,1.2vw,15px);font-weight:900}
-.deck__pg i{display:block;height:6px;border-radius:3px;background:var(--soft)}
-.deck__pg i:nth-child(3){width:70%}
-.deck__pg--1{right:0;top:0;transform:rotate(3deg)}
-.deck__pg--2{right:6%;top:15%;transform:rotate(-2deg)}
-.deck__pg--3{right:12%;top:30%;transform:rotate(1.5deg)}
-.deck__cover{position:absolute;left:0;bottom:0;width:74%;aspect-ratio:16/9;background:var(--ink);color:#fff;border-radius:10px;padding:6% 7%;
-  display:grid;align-content:space-between;box-shadow:0 30px 50px -30px rgba(0,0,0,.5)}
-.deck__cover b{font-size:clamp(18px,2vw,26px);font-weight:900;line-height:1.3}
-.deck__cover span{font-size:clamp(12px,1.1vw,14px);font-weight:700;color:#C9C9C3}
-.deck__cover em{font-style:normal;color:var(--acc-dk)}
+.deck__im{position:absolute;width:80%;height:auto;border:1px solid var(--line2);border-radius:8px;background:#fff;box-shadow:0 24px 44px -26px rgba(15,26,46,.45)}
+.deck__im--1{right:0;top:0;transform:rotate(3deg)}
+.deck__im--2{right:8%;top:20%;transform:rotate(-2deg)}
+.deck__im--3{left:0;bottom:0;transform:rotate(1deg);box-shadow:0 30px 60px -28px rgba(15,26,46,.55)}
 .ft{padding:28px 0 40px;border-top:1px solid var(--line)}
 .ft .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;font-size:13px;color:var(--ink3)}
 .pen{position:relative}
@@ -942,11 +933,10 @@ p,li,dd,td{text-wrap:pretty}
       </div>
       <div class="cta2__btn fx"><a class="btn btn--line" href="#download" data-form="download"><span><span class="nb">LLMOHackの</span><wbr>サービス<wbr>紹介資料を<wbr>ダウンロード</span></a></div>
     </div>
-    <figure class="deck fx" aria-label="資料見本：LLMOHack サービス紹介資料の表紙と、提供価値の整理・ダッシュボード・改善施策のページ">
-      <div class="deck__pg deck__pg--1"><h5>改善施策</h5><i></i><i></i><i></i></div>
-      <div class="deck__pg deck__pg--2"><h5>ダッシュボード</h5><i></i><i></i><i></i></div>
-      <div class="deck__pg deck__pg--3"><h5>提供価値の整理</h5><i></i><i></i><i></i></div>
-      <div class="deck__cover"><b>LLMOHack<br>サービス紹介資料</b><span>サムライスタイル</span></div>
+    <figure class="deck fx" aria-label="資料見本：LLMOHack サービス紹介資料のページ（本文はぼかしています）">
+      <img class="deck__im deck__im--1" src="img/deck/p4.webp" width="960" height="539" alt="" loading="lazy">
+      <img class="deck__im deck__im--2" src="img/deck/p2.webp" width="960" height="539" alt="" loading="lazy">
+      <img class="deck__im deck__im--3" src="img/deck/p5.webp" width="960" height="539" alt="" loading="lazy">
     </figure>
   </div>
 </section>
@@ -1311,8 +1301,17 @@ p,li,dd,td{text-wrap:pretty}
       if (!ENDPOINT){ show("ただいま準備中です。時間をおいてお試しください。"); return; }
       var d = {}; new FormData(f).forEach(function(v, k){ d[k] = v; });
       d.agree = !!f.agree.checked; d.from = dlg.dataset.from || ""; d.page = location.href.split("#")[0];
+      d.rid = Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
       go.disabled = true; var label = go.textContent; go.textContent = "送信中…";
-      fetch(ENDPOINT, { method: "POST", body: JSON.stringify(d) }).then(function(r){ return r.json(); }).then(function(res){
+      var post = function(n){
+        return fetch(ENDPOINT, { method: "POST", body: JSON.stringify(d) }).then(function(r){ return r.text(); }).then(function(s){
+          try { return JSON.parse(s); } catch (e) { throw new Error("retry"); }
+        }).catch(function(e){
+          if (n >= 3) throw new Error("送信に失敗しました。時間をおいてお試しください。");
+          return new Promise(function(ok){ setTimeout(ok, 1200 * n); }).then(function(){ return post(n + 1); });
+        });
+      };
+      post(1).then(function(res){
         if (!res.ok) throw new Error(res.error || "送信に失敗しました");
         if (res.url){
           var a0 = dlg.querySelector(".fm__dl"); a0.href = res.url; a0.removeAttribute("download"); a0.target = "_blank"; a0.rel = "noopener";
