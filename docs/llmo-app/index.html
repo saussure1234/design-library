@@ -380,6 +380,9 @@ mark.flash { animation: flash 1.2s ease; }
 .login { max-width: 420px; }
 .lform { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
 .lform .search { flex: 1; min-width: 220px; }
+.pform { display: grid; grid-template-columns: minmax(0, 1fr); max-width: 360px; }
+.lalt { margin-top: 18px; }
+.mform { margin-top: 10px; }
 .acct { margin: 18px 8px 0; padding-top: 12px; border-top: 1px solid var(--line); display: grid; gap: 6px; justify-items: start; }
 .acct p { font-size: 12px; color: var(--muted); overflow-wrap: anywhere; }
 
@@ -1493,6 +1496,9 @@ async function bootSupabase() {
   try { await new Promise((ok, ng) => { const s = document.createElement("script"); s.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"; s.onload = ok; s.onerror = ng; document.head.append(s); }); }
   catch (e) { msg("読み込みに失敗しました。通信を確かめて、もう一度開いてください。"); return; }
   const sb = window.supabase.createClient(SB.url, SB.anonKey);
+  if (/type=recovery/.test(location.hash + location.search)) {   // パスワード再設定のメールから来た
+    sb.auth.onAuthStateChange((ev) => { if (ev === "PASSWORD_RECOVERY") setPasswordView(sb, () => { location.hash = ""; location.reload(); }); });
+  }
   const { data: { session } } = await sb.auth.getSession();
   if (!session) { loginView(sb); return; }
   const { data: clients, error } = await sb.from("clients").select("*").order("name");
@@ -1527,14 +1533,38 @@ async function loadClient(sb, cl) {
   };
 }
 function loginView(sb) {
+  // メール＋パスワードで入る。忘れたとき・パスワード無しで入りたいときはメールのリンク
   const page = document.getElementById("page"); const w = document.createElement("div"); w.className = "login";
-  w.innerHTML = '<h1 class="ptitle">ログイン</h1><p class="psub">登録したメールアドレスに、ログイン用のリンクを送ります。</p><form class="lform"><input class="search" type="email" required autocomplete="email" placeholder="you@example.com"><button class="btn primary" type="submit">リンクを送る</button></form><p class="psub lmsg"></p>';
+  w.innerHTML = '<h1 class="ptitle">ログイン</h1>'
+    + '<form class="lform pform"><input class="search" type="email" required autocomplete="email" placeholder="メールアドレス"><input class="search" type="password" required autocomplete="current-password" placeholder="パスワード"><button class="btn primary" type="submit">ログイン</button></form>'
+    + '<p class="psub lmsg"></p>'
+    + '<details class="tdet lalt"><summary>パスワードを忘れた／メールのリンクで入る</summary><form class="lform mform"><input class="search" type="email" required autocomplete="email" placeholder="メールアドレス"><button class="btn" type="submit" data-k="link">リンクで入る</button><button class="btn" type="submit" data-k="reset">パスワードを再設定</button></form></details>';
+  const pf = w.querySelector(".pform"), mf = w.querySelector(".mform"), m = w.querySelector(".lmsg");
+  pf.addEventListener("submit", async (e) => {
+    e.preventDefault(); const [em, pw] = pf.querySelectorAll("input"); const b = pf.querySelector("button"); b.disabled = true;
+    const { error } = await sb.auth.signInWithPassword({ email: em.value.trim(), password: pw.value });
+    b.disabled = false;
+    if (error) { m.textContent = "ログインできませんでした。メールアドレスとパスワードを確かめてください。"; return; }
+    location.reload();
+  });
+  mf.addEventListener("submit", async (e) => {
+    e.preventDefault(); const email = mf.querySelector("input").value.trim(); const kind = (e.submitter || {}).dataset ? e.submitter.dataset.k : "link";
+    const back = location.origin + location.pathname;
+    const { error } = kind === "reset" ? await sb.auth.resetPasswordForEmail(email, { redirectTo: back })
+                                       : await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: back, shouldCreateUser: false } });
+    m.textContent = error ? "送れませんでした。登録済みのアドレスか確かめてください。" : "メールを送りました。メールのリンクから開いてください。";
+  });
+  page.replaceChildren(w);
+}
+function setPasswordView(sb, after) {
+  // パスワードの再設定（メールのリンクから来たとき）と、ログイン後の変更
+  const page = document.getElementById("page"); const w = document.createElement("div"); w.className = "login";
+  w.innerHTML = '<h1 class="ptitle">パスワードを決める</h1><p class="psub">8文字以上で入れてください。</p><form class="lform"><input class="search" type="password" required minlength="8" autocomplete="new-password" placeholder="新しいパスワード"><button class="btn primary" type="submit">保存</button></form><p class="psub lmsg"></p>';
   const f = w.querySelector("form"), m = w.querySelector(".lmsg");
   f.addEventListener("submit", async (e) => {
-    e.preventDefault(); const email = f.querySelector("input").value.trim(); f.querySelector("button").disabled = true;
-    const { error } = await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: location.origin + location.pathname, shouldCreateUser: false } });
-    m.textContent = error ? "送れませんでした。登録済みのアドレスか確かめてください。" : "メールを送りました。メールのリンクから開いてください。";
-    f.querySelector("button").disabled = false;
+    e.preventDefault(); const { error } = await sb.auth.updateUser({ password: f.querySelector("input").value });
+    if (error) { m.textContent = "保存できませんでした：" + error.message; return; }
+    m.textContent = "保存しました。"; setTimeout(after, 800);
   });
   page.replaceChildren(w);
 }
@@ -1551,6 +1581,8 @@ function accountBar(sb, session, clients, cl) {
   const side = document.querySelector(".side"); const bar = document.createElement("div"); bar.className = "acct";
   const who = document.createElement("p"); who.textContent = session.user.email; bar.append(who);
   if (clients.length > 1) { const a = document.createElement("button"); a.type = "button"; a.className = "lnk"; a.textContent = "クライアントを切り替える"; a.addEventListener("click", () => { location.search = ""; }); bar.append(a); }
+  const pw = document.createElement("button"); pw.type = "button"; pw.className = "lnk"; pw.textContent = "パスワードを変更";
+  pw.addEventListener("click", () => setPasswordView(sb, () => location.reload())); bar.append(pw);
   const out = document.createElement("button"); out.type = "button"; out.className = "lnk"; out.textContent = "ログアウト";
   out.addEventListener("click", async () => { await sb.auth.signOut(); location.search = ""; location.reload(); }); bar.append(out);
   side.append(bar);
