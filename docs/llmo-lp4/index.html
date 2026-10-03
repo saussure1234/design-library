@@ -662,7 +662,33 @@ p,li,dd,td{text-wrap:pretty}
   .q-cap{text-align:center!important}
   .q-cap__t{background:none;color:inherit;padding:0;box-shadow:none;border-radius:0;max-width:none;font-size:inherit;line-height:inherit}
   .q-cap__t::before{display:none}
-}</style>
+}
+.fm{width:min(560px,calc(100vw - 32px));max-height:calc(100dvh - 32px);padding:0;border:0;border-radius:16px;background:var(--paper);color:var(--ink);box-shadow:0 30px 80px -20px rgba(15,26,46,.45);overflow:auto}
+.fm::backdrop{background:rgba(15,26,46,.55)}
+.fm__in{padding:clamp(22px,4vw,34px)}
+.fm__x{position:absolute;top:10px;right:10px;width:40px;height:40px;border:0;border-radius:50%;background:transparent;color:var(--ink3);font-size:26px;line-height:1;cursor:pointer}
+.fm__x:hover{background:var(--soft);color:var(--ink)}
+.fm__h{margin:0 32px 6px 0;font-size:clamp(19px,2.2vw,22px);font-weight:900;line-height:1.45}
+.fm__lead{margin:0 0 20px;font-size:14px;color:var(--ink2);line-height:1.7}
+.fm__f{display:grid;gap:14px}
+.fm label{display:flex;flex-wrap:wrap;align-items:center;row-gap:6px;font-size:14px;font-weight:700}
+.fm label>input:not([type=checkbox]),.fm label>textarea{flex:1 0 100%}
+.fm .req,.fm .opt{margin-left:6px;font-size:11px;font-weight:700;padding:1px 6px;border-radius:4px;vertical-align:1px}
+.fm .req{background:var(--cta);color:#fff}.fm .opt{background:var(--soft);color:var(--ink3)}
+.fm input[type=text],.fm input[type=email],.fm input[type=url],.fm textarea{width:100%;box-sizing:border-box;font:inherit;font-weight:400;font-size:16px;color:var(--ink);background:#fff;border:1.5px solid var(--line2);border-radius:10px;padding:11px 13px}
+.fm textarea{min-height:88px;resize:vertical}
+.fm input:focus,.fm textarea:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px var(--tint)}
+.fm .fm__agree{display:flex;align-items:center;gap:8px;font-weight:400}
+.fm .fm__agree input{width:18px;height:18px;accent-color:var(--acc)}
+.fm .fm__agree a{color:var(--acc)}
+.fm .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.fm__go{width:100%;margin-top:6px;border:0;cursor:pointer;font:inherit;font-weight:700;font-size:16px}
+.fm__go[disabled]{opacity:.6;cursor:wait}
+.fm__err{margin:0;color:#C0281B;font-size:14px;font-weight:700}
+.fm__done{display:none;text-align:center;padding:10px 0 4px}
+.fm__done p{margin:0 0 8px;line-height:1.8}
+.fm__done a{color:var(--acc);font-weight:700}
+.fm.is-done .fm__f,.fm.is-done .fm__lead{display:none}.fm.is-done .fm__done{display:block}</style>
 <script>document.documentElement.classList.add("fx-on");if("scrollRestoration" in history)history.scrollRestoration="manual"</script>
 </head>
 <body>
@@ -672,7 +698,7 @@ p,li,dd,td{text-wrap:pretty}
     <nav class="nav" aria-label="ページ内">
       <a href="#about">サービスとは</a><a href="#flow">サービスの流れ</a><a href="#value">提供価値</a>
     </nav>
-    <a class="btn btn--ink hd__cta" href="#report">無料レポートを申し込む</a>
+    <a class="btn btn--ink hd__cta" href="#report" data-form="report">無料レポートを申し込む</a>
   </div>
 </header>
 <main>
@@ -688,8 +714,8 @@ p,li,dd,td{text-wrap:pretty}
       <div class="vid"><video src="media/fv.mp4" poster="media/fv.webp" data-sp="media/fv-sp.mp4" data-sp-poster="media/fv-sp.webp" width="960" height="540" muted loop playsinline autoplay preload="auto" aria-label="動画：AIの回答に貴社がいない現在地から、顧客のニーズと貴社のアセットの重なりである選ばれる理由を定め、AI回答での紹介・引用と顧客の比較検討・相談へつなげ、記事・事例・FAQで目指す状態へ近づける"></video><div class="vbar" aria-hidden="true"><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i></div></div>
     </div>
     <div class="fv__cta fx" style="--d:.24s">
-      <a class="btn btn--ink" href="#report">貴社のAI引用率を無料でレポーティング</a>
-      <a class="btn btn--line" href="#download"><span><span class="nb">LLMOHackの</span><wbr>サービス<wbr>紹介資料を<wbr>ダウンロード</span></a>
+      <a class="btn btn--ink" href="#report" data-form="report">貴社のAI引用率を無料でレポーティング</a>
+      <a class="btn btn--line" href="#download" data-form="download"><span><span class="nb">LLMOHackの</span><wbr>サービス<wbr>紹介資料を<wbr>ダウンロード</span></a>
     </div>
   </div>
 </section>
@@ -795,8 +821,8 @@ p,li,dd,td{text-wrap:pretty}
 <section class="ctaband sec--paper" aria-label="無料レポート・サービス紹介資料">
   <div class="wrap">
     <div class="ctaband__in fx">
-      <a class="btn btn--ink" href="#report">貴社のAI引用率を無料でレポーティング</a>
-      <a class="btn btn--line" href="#download"><span><span class="nb">LLMOHackの</span><wbr>サービス<wbr>紹介資料を<wbr>ダウンロード</span></a>
+      <a class="btn btn--ink" href="#report" data-form="report">貴社のAI引用率を無料でレポーティング</a>
+      <a class="btn btn--line" href="#download" data-form="download"><span><span class="nb">LLMOHackの</span><wbr>サービス<wbr>紹介資料を<wbr>ダウンロード</span></a>
     </div>
   </div>
 </section>
@@ -894,7 +920,7 @@ p,li,dd,td{text-wrap:pretty}
         <p>貴社に関連する質問へのAI回答を調査し、企業名・ブランド名の言及率と、公式サイトの引用率を無料でレポーティングします。</p>
         <p>どのような企業が候補として登場し、貴社が何を理由に紹介されているか。現在の見え方と、改善に向けた着眼点をお伝えします。</p>
       </div>
-      <div class="cta2__btn fx"><img class="chara fx" src="img/chara/jump.webp" width="360" height="473" alt="" aria-hidden="true" loading="lazy"><a class="btn btn--ink" href="#report">貴社のAI引用率を無料でレポーティング</a></div>
+      <div class="cta2__btn fx"><img class="chara fx" src="img/chara/jump.webp" width="360" height="473" alt="" aria-hidden="true" loading="lazy"><a class="btn btn--ink" href="#report" data-form="report">貴社のAI引用率を無料でレポーティング</a></div>
       <p class="cta2__note fx">言及率・引用率は、設定した質問と取得条件の範囲で算出します。</p>
     </div>
     <figure class="report fx" aria-label="レポート見本（サンプル）：言及率と公式サイトの引用率、競合の登場状況、改善の着眼点">
@@ -914,7 +940,7 @@ p,li,dd,td{text-wrap:pretty}
       <div class="prose fx">
         <p>提供価値の整理、顧客ニーズの調査、AI回答の計測、ダッシュボードに基づく改善まで。「LLMOHack」の全体像と支援内容をまとめた資料をご用意しています。</p>
       </div>
-      <div class="cta2__btn fx"><a class="btn btn--line" href="#download"><span><span class="nb">LLMOHackの</span><wbr>サービス<wbr>紹介資料を<wbr>ダウンロード</span></a></div>
+      <div class="cta2__btn fx"><a class="btn btn--line" href="#download" data-form="download"><span><span class="nb">LLMOHackの</span><wbr>サービス<wbr>紹介資料を<wbr>ダウンロード</span></a></div>
     </div>
     <figure class="deck fx" aria-label="資料見本：LLMOHack サービス紹介資料の表紙と、提供価値の整理・ダッシュボード・改善施策のページ">
       <div class="deck__pg deck__pg--1"><h5>改善施策</h5><i></i><i></i><i></i></div>
@@ -1214,6 +1240,96 @@ p,li,dd,td{text-wrap:pretty}
   };
   fit(); if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
   var tt; addEventListener("resize", function(){ clearTimeout(tt); tt = setTimeout(fit, 150); });
+})();</script>
+<dialog class="fm" id="fm-report" aria-labelledby="fm-report-h">
+  <div class="fm__in">
+    <button class="fm__x" type="button" aria-label="閉じる" data-close>&times;</button>
+    <h2 class="fm__h" id="fm-report-h"><span class="nb">貴社のAI引用率を</span><wbr><span class="nb">無料でレポーティング</span></h2>
+    <p class="fm__lead">以下をご入力ください。内容を確認のうえ、ご連絡します。</p>
+    <form class="fm__f" novalidate>
+      <input type="hidden" name="form" value="report">
+      <label>会社名<span class="req">必須</span><input type="text" name="company" autocomplete="organization" required></label>
+      <label>お名前<span class="req">必須</span><input type="text" name="name" autocomplete="name" required></label>
+      <label>メールアドレス<span class="req">必須</span><input type="email" name="email" autocomplete="email" required></label>
+      <label>会社サイトのURL<span class="req">必須</span><input type="url" name="site" placeholder="https://" required></label>
+      <label>競合・気になる質問<span class="opt">任意</span><textarea name="note"></textarea></label>
+      <label class="hp" aria-hidden="true">空欄のまま<input type="text" name="hp" tabindex="-1" autocomplete="off"></label>
+      <label class="fm__agree"><input type="checkbox" name="agree" required><span><a href="https://www.samurai-style.tokyo/privacy-policy" target="_blank" rel="noopener">プライバシーポリシー</a>に同意する</span></label>
+      <p class="fm__err" role="alert" hidden></p>
+      <button class="btn btn--ink fm__go" type="submit">申し込む</button>
+    </form>
+    <div class="fm__done" role="status"><p><strong>お申し込みを受け付けました。</strong></p><p>内容を確認のうえ、ご連絡します。</p></div>
+  </div>
+</dialog>
+<dialog class="fm" id="fm-download" aria-labelledby="fm-download-h">
+  <div class="fm__in">
+    <button class="fm__x" type="button" aria-label="閉じる" data-close>&times;</button>
+    <h2 class="fm__h" id="fm-download-h"><span class="nb">LLMOHackの</span><wbr><span class="nb">サービス紹介資料を</span><wbr><span class="nb">ダウンロード</span></h2>
+    <p class="fm__lead">以下をご入力いただくと、そのまま資料（PDF）をダウンロードできます。</p>
+    <form class="fm__f" novalidate>
+      <input type="hidden" name="form" value="download">
+      <label>会社名<span class="req">必須</span><input type="text" name="company" autocomplete="organization" required></label>
+      <label>お名前<span class="req">必須</span><input type="text" name="name" autocomplete="name" required></label>
+      <label>メールアドレス<span class="req">必須</span><input type="email" name="email" autocomplete="email" required></label>
+      <label>役職<span class="opt">任意</span><input type="text" name="role" autocomplete="organization-title"></label>
+      <label class="hp" aria-hidden="true">空欄のまま<input type="text" name="hp" tabindex="-1" autocomplete="off"></label>
+      <label class="fm__agree"><input type="checkbox" name="agree" required><span><a href="https://www.samurai-style.tokyo/privacy-policy" target="_blank" rel="noopener">プライバシーポリシー</a>に同意する</span></label>
+      <p class="fm__err" role="alert" hidden></p>
+      <button class="btn btn--ink fm__go" type="submit">ダウンロードする</button>
+    </form>
+    <div class="fm__done" role="status"><p><strong>ダウンロードを開始しました。</strong></p><p>始まらない場合は<a class="fm__dl" href="#" download>こちら</a>から保存してください。</p></div>
+  </div>
+</dialog>
+<script>(function(){
+  var ENDPOINT = "https://script.google.com/macros/s/AKfycbznXTfyo_cb0uBXnE32zUC_Xf7vIc6YN9gtrndgO_2JjkGP5qz5wA00qU78_sX7CBcckw/exec";
+  var labelOf = function(a){
+    if (a.closest(".hd")) return "ヘッダー";
+    var s = a.closest("section[id]"); return (s ? s.id : "?") + "：" + a.textContent.replace(/\s+/g, "");
+  };
+  document.querySelectorAll("a[data-form]").forEach(function(a){
+    a.addEventListener("click", function(ev){
+      var dlg = document.getElementById("fm-" + a.dataset.form);
+      if (!dlg || !dlg.showModal) return;
+      ev.preventDefault();
+      dlg.dataset.from = labelOf(a);
+      dlg.classList.remove("is-done");
+      dlg.showModal();
+      if (window.dataLayer) dataLayer.push({ event: "lead_open", form: a.dataset.form, from: dlg.dataset.from });
+    });
+  });
+  document.querySelectorAll(".fm").forEach(function(dlg){
+    var f = dlg.querySelector("form"), err = dlg.querySelector(".fm__err"), go = dlg.querySelector(".fm__go");
+    dlg.querySelector("[data-close]").addEventListener("click", function(){ dlg.close(); });
+    dlg.addEventListener("click", function(ev){ if (ev.target === dlg) dlg.close(); });
+    var show = function(m){ err.textContent = m; err.hidden = !m; };
+    f.addEventListener("input", function(){ show(""); });
+    f.addEventListener("change", function(){ show(""); });
+    f.addEventListener("submit", function(ev){
+      ev.preventDefault(); show("");
+      var bad = [].filter.call(f.querySelectorAll("[required]"), function(el){ return !el.checkValidity(); });
+      if (bad.length){ show(bad[0].type === "checkbox" ? "プライバシーポリシーへの同意が必要です" : "未入力または形式の正しくない項目があります"); bad[0].focus(); return; }
+      if (!ENDPOINT){ show("ただいま準備中です。時間をおいてお試しください。"); return; }
+      var d = {}; new FormData(f).forEach(function(v, k){ d[k] = v; });
+      d.agree = !!f.agree.checked; d.from = dlg.dataset.from || ""; d.page = location.href.split("#")[0];
+      go.disabled = true; var label = go.textContent; go.textContent = "送信中…";
+      fetch(ENDPOINT, { method: "POST", body: JSON.stringify(d) }).then(function(r){ return r.json(); }).then(function(res){
+        if (!res.ok) throw new Error(res.error || "送信に失敗しました");
+        if (res.url){
+          var a0 = dlg.querySelector(".fm__dl"); a0.href = res.url; a0.removeAttribute("download"); a0.target = "_blank"; a0.rel = "noopener";
+          location.href = res.url;
+        }
+        if (res.file){
+          var bin = atob(res.file.data), u8 = new Uint8Array(bin.length);
+          for (var i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+          var url = URL.createObjectURL(new Blob([u8], { type: "application/pdf" }));
+          var a = dlg.querySelector(".fm__dl"); a.href = url; a.download = res.file.name; a.click();
+        }
+        dlg.classList.add("is-done"); f.reset();
+        if (window.dataLayer) dataLayer.push({ event: "lead_submit", form: d.form, from: d.from });
+      }).catch(function(e){ show(e.message || "送信に失敗しました。時間をおいてお試しください。"); })
+        .then(function(){ go.disabled = false; go.textContent = label; });
+    });
+  });
 })();</script>
 </body>
 </html>
