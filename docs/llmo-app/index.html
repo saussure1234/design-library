@@ -468,7 +468,7 @@ function bootApp(D) {
     const s2 = document.createElementNS("http://www.w3.org/2000/svg", "svg"); s2.setAttribute("viewBox", "0 0 24 24"); s2.setAttribute("class", "aim"); s2.setAttribute("aria-hidden", "true");
     s2.style.color = `var(--${pc(pid)})`;
     if (/^copilot/.test(pid)) s2.innerHTML = COPILOT_COLOR.replace(/__ID__/g, `cpg${++icoSeq}`);   // Bing版・チャット版とも同じマーク
-    else if (AI_ICON[pid]) s2.innerHTML = `<path fill="currentColor" d="${AI_ICON[pid]}"/>`;
+    else if (AI_ICON[pid] || /^claude/.test(pid)) s2.innerHTML = `<path fill="currentColor" d="${AI_ICON[pid] || AI_ICON.claude_free}"/>`;   // 画面版・API版とも同じマーク
     else s2.innerHTML = '<rect x="1.5" y="1.5" width="21" height="21" rx="6" fill="currentColor"/><text x="12" y="16.2" text-anchor="middle" font-size="10.5" font-weight="800" fill="#fff" font-family="system-ui, sans-serif">' + ((P.find((x) => x.id === pid) || {}).label || "?").slice(0, 2) + '</text>';
     return s2;
   }
@@ -1520,6 +1520,8 @@ async function loadClient(sb, cl) {
   const qs = await fetchAll(() => sb.from("questions").select("*").eq("client_id", cl.id).order("no"));
   const as = await fetchAll(() => sb.from("answers").select("q,platform,batch,round,run_at,model,region,login,appeared,rank,brands,competitors,text,stores,sources,cards,reason,match,image,feat_hits").eq("client_id", cl.id).order("id"));
   const day = (iso) => new Date(iso).toLocaleDateString("sv-SE", { timeZone: "Asia/Tokyo" });
+  const pids = new Set((cl.platforms || []).map((p) => p.id));
+  if (pids.size) as.splice(0, as.length, ...as.filter((a) => pids.has(a.platform)));   // AI一覧に無い媒体（入れ替え前の古い行）は数えない
   return {
     subject: cl.name, subject_pattern: cl.subject_pattern, tracked: cl.tracked || [], features_all: cl.features || [],
     layers: cl.layers || [], branches: cl.branches || [], competitor_by_layer: !!cl.competitor_by_layer, platforms: cl.platforms || [],
