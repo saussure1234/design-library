@@ -58,7 +58,7 @@ p,li,dd,td{text-wrap:pretty}
 .btn--ink:hover svg{transform:translateX(3px)}
 .btn--line{background:var(--paper);color:var(--cta);border:2px solid var(--cta)}
 .btn--line:hover{background:#FFF3EC}
-.btn:focus-visible,.nav a:focus-visible{outline:3px solid #4285F4;outline-offset:3px}
+.btn:focus-visible{outline:3px solid #4285F4;outline-offset:3px}
 .hd{position:fixed;inset:0 0 auto;z-index:50;transition:background .3s,border-color .3s;border-bottom:1px solid transparent}
 .hd.is-scrolled{background:rgba(255,255,255,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-color:var(--line)}
 .hd__in{display:flex;align-items:center;gap:32px;height:70px}
@@ -70,9 +70,6 @@ p,li,dd,td{text-wrap:pretty}
 .logo--ft{color:var(--ink2)}
 .logo--ft .logo__mk{height:18px}.logo--ft .logo__en{font-size:17px}
 @media (max-width:760px){ .hd .logo__ja{display:none} }
-.nav{display:flex;gap:28px;margin-left:auto}
-.nav a{font-size:14px;font-weight:700;letter-spacing:.04em;text-decoration:none;color:var(--ink2);transition:color .2s}
-.nav a:hover,.nav a.is-cur{color:var(--ink)}
 .hd .btn{min-height:42px;padding:0 18px;font-size:14px;border-radius:9px}
 .fv{position:relative;padding:136px 0 clamp(80px,9vw,120px)}
 .fv__grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);grid-template-areas:"txt dia" "cta dia";column-gap:clamp(40px,5vw,72px);align-items:center}
@@ -165,6 +162,9 @@ p,li,dd,td{text-wrap:pretty}
 .fv__col .fv__cta{grid-template-columns:repeat(2,minmax(0,1fr));max-width:820px;width:100%;margin-top:28px}
 @media (max-width:760px){ .fv__col .fv__cta{grid-template-columns:minmax(0,1fr)} .fv__col .fv__body{text-align:left} }
 .fv__vid{position:relative;--cw:clamp(92px,9.5vw,136px);padding-top:calc(var(--cw) * .9)}
+.vid-play{position:absolute;inset:0;z-index:2;display:none;place-items:center;border:0;padding:0;background:rgba(15,26,46,.12);cursor:pointer}
+.vid-play::before{content:"";width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,.94) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 6.5v11l9-5.5z' fill='%230F1A2E'/%3E%3C/svg%3E") center/30px no-repeat;box-shadow:0 10px 30px -10px rgba(15,26,46,.5)}
+.is-blocked > .vid-play{display:grid}
 .fv__vid .vid{position:relative;border-radius:18px;overflow:hidden;border:1px solid var(--line2);background:#fff;box-shadow:0 40px 70px -48px rgba(15,26,46,.45)}
 .fv__vid video{display:block;width:100%;height:auto;aspect-ratio:16/9}
 .fv__chara{position:absolute;z-index:2;right:9%;top:calc(var(--cw) * .9 - var(--cw) * 400 / 360 * .802);width:var(--cw);height:auto;pointer-events:none}
@@ -326,7 +326,7 @@ p,li,dd,td{text-wrap:pretty}
 .person__nm{margin-bottom:4px;color:var(--ink);font-size:14px}
 .person__nm b{font-size:16px;margin-right:10px}
 .person{align-items:start}
-.shot-s{border-radius:12px;border:1px solid var(--line);overflow:hidden}
+.shot-s{position:relative;border-radius:12px;border:1px solid var(--line);overflow:hidden}
 .shot-s img{display:block;width:100%;height:auto}
 .fig-cap{margin-top:6px;font-size:12.5px;color:var(--ink3)}
 .map{width:100%;border-collapse:separate;border-spacing:0 8px;font-size:14px;line-height:1.6}
@@ -412,7 +412,6 @@ p,li,dd,td{text-wrap:pretty}
 }
 @media (max-width:900px){
   :root{--fs:16px}
-  .nav{display:none}
   .hd__in{height:60px}
   .hd .btn{margin-left:auto;min-height:38px;padding:0 14px}
   .fv{padding:104px 0 72px}
@@ -578,7 +577,7 @@ p,li,dd,td{text-wrap:pretty}
 .chara-box img{display:block;height:84px;width:auto}
 .chara-name{margin-top:4px;padding:2px 10px;border-radius:999px;background:var(--acc);color:#fff;font-size:11px;font-weight:700;letter-spacing:.04em;line-height:1.6;white-space:nowrap}
 @media (min-width:1320px){ .chara-box{height:auto} .chara-box img{height:176px} .chara-name{font-size:12.5px;padding:3px 12px} }
-.hd__cta{white-space:nowrap}
+.hd__cta{white-space:nowrap;margin-left:auto}
 @media (max-width:760px){ .hd .hd__cta{min-height:38px;padding:0 12px;font-size:12.5px} .hd .logo__ja{display:none} .hd__in{gap:12px} }
 @media (max-width:360px){ .hd .hd__cta{padding:0 9px;font-size:11px} .hd .logo__en{font-size:16px} .hd .logo__mk{height:22px} .hd .logo{gap:7px} }
 @media (min-width:1100px){
@@ -668,6 +667,8 @@ p,li,dd,td{text-wrap:pretty}
 .fm .req{background:var(--cta);color:#fff}.fm .opt{background:var(--soft);color:var(--ink3)}
 .fm input[type=text],.fm input[type=email],.fm input[type=url],.fm textarea{width:100%;box-sizing:border-box;font:inherit;font-weight:400;font-size:16px;color:var(--ink);background:#fff;border:1.5px solid var(--line2);border-radius:10px;padding:11px 13px}
 .fm textarea{min-height:88px;resize:vertical}
+.fm__hint{flex:1 0 100%;margin-top:-2px;font-size:12.5px;font-weight:400;color:var(--ink3)}
+.fm ::placeholder{color:#A3A9B6}
 .fm input:focus,.fm textarea:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px var(--tint)}
 .fm .fm__agree{display:flex;align-items:center;gap:8px;font-weight:400}
 .fm .fm__agree input{width:18px;height:18px;accent-color:var(--acc)}
@@ -676,9 +677,23 @@ p,li,dd,td{text-wrap:pretty}
 .fm__go{width:100%;margin-top:6px;border:0;cursor:pointer;font:inherit;font-weight:700;font-size:16px}
 .fm__go[disabled]{opacity:.6;cursor:wait}
 .fm__err{margin:0;color:#C0281B;font-size:14px;font-weight:700}
-.fm__done{display:none;text-align:center;padding:10px 0 4px}
-.fm__done p{margin:0 0 8px;line-height:1.8}
-.fm__done a{color:var(--acc);font-weight:700}
+.fm__done{display:none;text-align:center;padding:14px 0 2px}
+.fm__done p{margin:0 0 6px;line-height:1.8;color:var(--ink2);font-size:15px}
+.fm__ok{display:grid;place-items:center;width:64px;height:64px;margin:0 auto 14px;border-radius:50%;background:var(--ok-soft)}
+.fm__ok svg{width:30px;height:30px;fill:none;stroke:var(--ok);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.fm.is-done .fm__ok svg path{stroke-dasharray:24;stroke-dashoffset:24;animation:fmCheck .5s .15s var(--ease) forwards}
+@keyframes fmCheck{to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){ .fm.is-done .fm__ok svg path{animation:none;stroke-dashoffset:0} }
+.fm__done .fm__dh{margin:0 0 8px;font-size:clamp(19px,2.2vw,22px);font-weight:900;color:var(--ink);line-height:1.5}
+.fm__doc{display:flex;align-items:center;gap:16px;margin:20px auto 18px;padding:14px;max-width:400px;border:1px solid var(--line);border-radius:14px;background:var(--soft);text-align:left}
+.fm__doc img{width:132px;height:auto;flex:none;border-radius:6px;border:1px solid var(--line2);box-shadow:0 10px 22px -14px rgba(15,26,46,.5);background:#fff}
+.fm__doc b{display:block;font-size:15px;font-weight:900;line-height:1.45;color:var(--ink)}
+.fm__doc small{display:block;margin-top:4px;font-size:12.5px;color:var(--ink3)}
+@media (max-width:480px){ .fm__doc{gap:12px;padding:12px} .fm__doc img{width:108px} }
+.fm__done .fm__dl{width:100%;max-width:400px;margin:0 auto}
+.fm__close{display:block;margin:14px auto 0;padding:8px 14px;border:0;background:none;font:inherit;font-size:14px;font-weight:700;color:var(--ink3);cursor:pointer;border-radius:8px}
+.fm__close:hover{background:var(--soft);color:var(--ink)}
+.fm.is-done .fm__h{display:none}
 .fm.is-done .fm__f,.fm.is-done .fm__lead{display:none}.fm.is-done .fm__done{display:block}</style>
 <script>document.documentElement.classList.add("fx-on");if("scrollRestoration" in history)history.scrollRestoration="manual"</script>
 </head>
@@ -686,9 +701,6 @@ p,li,dd,td{text-wrap:pretty}
 <header class="hd" id="hd">
   <div class="wrap hd__in">
     <a class="logo" href="#top" aria-label="LLMOHack 事業を理解し、LLMOの戦略を描く（ページの先頭へ）"><svg class="logo__mk" viewBox="0 0 28 24" aria-hidden="true" focusable="false"><polygon points="14.00,1.00 14.00,7.60 10.10,6.70" style="fill:var(--logo-a,#2460DD)"/><polygon points="14.00,1.00 17.90,6.70 14.00,7.60" style="fill:var(--logo-ad,#1A47A8)"/><polygon points="9.32,7.84 14.00,8.92 14.00,15.08 5.68,13.16" style="fill:currentColor"/><polygon points="14.00,8.92 18.68,7.84 22.32,13.16 14.00,15.08" style="fill:var(--logo-r,#3A4A6A)"/><polygon points="4.90,14.30 14.00,16.40 14.00,23.00 1.00,20.00" style="fill:currentColor"/><polygon points="14.00,16.40 23.10,14.30 27.00,20.00 14.00,23.00" style="fill:var(--logo-r,#3A4A6A)"/></svg><span class="logo__txt"><span class="logo__en">LLMOHack</span><span class="logo__ja">事業を理解し、LLMOの戦略を描く</span></span></a>
-    <nav class="nav" aria-label="ページ内">
-      <a href="#about">サービスとは</a><a href="#flow">サービスの流れ</a><a href="#value">提供価値</a>
-    </nav>
     <a class="btn btn--ink hd__cta" href="#report" data-form="report">無料レポートを申し込む</a>
   </div>
 </header>
@@ -702,7 +714,7 @@ p,li,dd,td{text-wrap:pretty}
       <p>選ばれたい場面を定め、現在地を計測。理想とのギャップを可視化し、必要な施策の提案・実行まで伴走します。</p>
     </div>
     <div class="fv__dia fv__vid fx" style="--d:.1s">
-      <div class="vid"><video src="media/fv.mp4" poster="media/fv.webp" data-sp="media/fv-sp.mp4" data-sp-poster="media/fv-sp.webp" width="960" height="540" muted loop playsinline autoplay preload="auto" aria-label="動画：AIの回答に貴社がいない現在地から、顧客のニーズと貴社のアセットの重なりである選ばれる理由を定め、AI回答での紹介・引用と顧客の比較検討・相談へつなげ、記事・事例・FAQで目指す状態へ近づける"></video><div class="vbar" aria-hidden="true"><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i></div></div>
+      <div class="vid"><video data-pc="media/fv.mp4" poster="media/fv.webp" data-sp="media/fv-sp.mp4" data-sp-poster="media/fv-sp.webp" width="960" height="540" muted loop playsinline autoplay preload="auto" aria-label="動画：AIの回答に貴社がいない現在地から、顧客のニーズと貴社のアセットの重なりである選ばれる理由を定め、AI回答での紹介・引用と顧客の比較検討・相談へつなげ、記事・事例・FAQで目指す状態へ近づける"></video><script>(function(v){var sp=matchMedia("(max-width:600px)").matches;if(sp)v.poster=v.getAttribute("data-sp-poster");v.muted=true;v.src=v.getAttribute(sp?"data-sp":"data-pc");})(document.currentScript.previousElementSibling);</script><div class="vbar" aria-hidden="true"><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i></div></div>
     </div>
     <div class="fv__cta fx" style="--d:.24s">
       <a class="btn btn--ink" href="#report" data-form="report">貴社のAI引用率を無料でレポーティング</a>
@@ -972,13 +984,6 @@ p,li,dd,td{text-wrap:pretty}
     addEventListener("beforeprint", function(){ items.forEach(show); });
     setTimeout(function(){ items.forEach(function(el){ if (el.getBoundingClientRect().top < innerHeight) show(el); }); }, 2500);
   }
-  var links = [].slice.call(document.querySelectorAll(".nav a"));
-  if ("IntersectionObserver" in window){
-    var navIO = new IntersectionObserver(function(es){
-      es.forEach(function(e){ if (e.isIntersecting) links.forEach(function(a){ a.classList.toggle("is-cur", a.getAttribute("href") === "#" + e.target.id); }); });
-    }, {rootMargin:"-45% 0px -50% 0px"});
-    links.forEach(function(a){ var s = document.querySelector(a.getAttribute("href")); if (s) navIO.observe(s); });
-  }
   var TIDY = ".fv__body p,.prose p,.stp p,.after,.gap-txt,.flow__step > p,.flow__q li,.val__txt p,.person__cv,.cta2__note,.q-bubble";
   var widths = function(el){
     var rg = document.createRange(); rg.selectNodeContents(el); var rows = {};
@@ -1199,7 +1204,7 @@ p,li,dd,td{text-wrap:pretty}
 })();</script>
 <script>(function(){
   if (!matchMedia("(max-width:600px)").matches) return;
-  [].forEach.call(document.querySelectorAll("video[data-sp]"), function(x){ x.poster = x.getAttribute("data-sp-poster"); x.src = x.getAttribute("data-sp"); });    
+  [].forEach.call(document.querySelectorAll("video[data-sp]:not([data-pc])"), function(x){ x.poster = x.getAttribute("data-sp-poster"); x.src = x.getAttribute("data-sp"); });    
   var v = document.querySelector(".fv__vid video"); if (!v) return;
   if (!matchMedia("(prefers-reduced-motion: reduce)").matches){ var p = v.play(); if (p && p.catch) p.catch(function(){}); }
 })();</script>
@@ -1235,20 +1240,26 @@ p,li,dd,td{text-wrap:pretty}
   <div class="fm__in">
     <button class="fm__x" type="button" aria-label="閉じる" data-close>&times;</button>
     <h2 class="fm__h" id="fm-report-h"><span class="nb">貴社のAI引用率を</span><wbr><span class="nb">無料でレポーティング</span></h2>
-    <p class="fm__lead">以下をご入力ください。内容を確認のうえ、ご連絡します。</p>
+    <p class="fm__lead">以下をご入力ください。<wbr>レポートの作成には<wbr><span class="nb">数日いただきます。</span><wbr><span class="nb">内容を確認のうえ、</span><wbr><span class="nb">ご連絡します。</span></p>
     <form class="fm__f" novalidate>
       <input type="hidden" name="form" value="report">
       <label>会社名<span class="req">必須</span><input type="text" name="company" autocomplete="organization" required></label>
       <label>お名前<span class="req">必須</span><input type="text" name="name" autocomplete="name" required></label>
       <label>メールアドレス<span class="req">必須</span><input type="email" name="email" autocomplete="email" required></label>
       <label>会社サイトのURL<span class="req">必須</span><input type="url" name="site" placeholder="https://" required></label>
-      <label>競合・気になる質問<span class="opt">任意</span><textarea name="note"></textarea></label>
+      <label>比べてほしい競合<span class="opt">任意</span><input type="text" name="rivals" placeholder="例：〇〇株式会社、△△"></label>
+      <label>AIに聞いてほしい質問<span class="opt">任意</span><span class="fm__hint">お客様がAIに聞きそうな質問を、そのまま</span><textarea name="asks" placeholder="例：〇〇県で△△の相談ができる会社は？"></textarea></label>
       <label class="hp" aria-hidden="true">空欄のまま<input type="text" name="hp" tabindex="-1" autocomplete="off"></label>
       <label class="fm__agree"><input type="checkbox" name="agree" required><span><a href="https://www.samurai-style.tokyo/privacy-policy" target="_blank" rel="noopener">プライバシーポリシー</a>に同意する</span></label>
       <p class="fm__err" role="alert" hidden></p>
       <button class="btn btn--ink fm__go" type="submit">申し込む</button>
     </form>
-    <div class="fm__done" role="status"><p><strong>お申し込みを受け付けました。</strong></p><p>内容を確認のうえ、ご連絡します。</p></div>
+    <div class="fm__done" role="status">
+      <span class="fm__ok" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.2 4.2L19 7"/></svg></span>
+      <p class="fm__dh">お申し込みを<wbr>受け付けました</p>
+      <p>確認のメールをお送りしました。<br>レポートの作成には<wbr><span class="nb">数日いただきます。</span><wbr><span class="nb">内容を確認のうえ、</span><wbr><span class="nb">ご連絡します。</span></p>
+      <button class="fm__close" type="button" data-close>閉じる</button>
+    </div>
   </div>
 </dialog>
 <dialog class="fm" id="fm-download" aria-labelledby="fm-download-h">
@@ -1267,7 +1278,14 @@ p,li,dd,td{text-wrap:pretty}
       <p class="fm__err" role="alert" hidden></p>
       <button class="btn btn--ink fm__go" type="submit">ダウンロードする</button>
     </form>
-    <div class="fm__done" role="status"><p><strong>ダウンロードを開始しました。</strong></p><p>始まらない場合は<a class="fm__dl" href="#" download>こちら</a>から保存してください。</p></div>
+    <div class="fm__done" role="status">
+      <span class="fm__ok" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.2 4.2L19 7"/></svg></span>
+      <p class="fm__dh">ダウンロードを<wbr>開始しました</p>
+      <p>資料のリンクは、<wbr><span class="nb">メールでもお送りしました。</span></p>
+      <div class="fm__doc"><img src="img/deck/p1.webp" width="960" height="539" alt="" loading="lazy"><span><b>LLMOHack<br><span class="nb">サービス紹介資料</span></b><small>PDF・5ページ</small></span></div>
+      <a class="btn btn--line fm__dl" href="#" download>もう一度ダウンロード</a>
+      <button class="fm__close" type="button" data-close>閉じる</button>
+    </div>
   </div>
 </dialog>
 <script>(function(){
@@ -1291,7 +1309,7 @@ p,li,dd,td{text-wrap:pretty}
   });
   document.querySelectorAll(".fm").forEach(function(dlg){
     var f = dlg.querySelector("form"), err = dlg.querySelector(".fm__err"), go = dlg.querySelector(".fm__go");
-    dlg.querySelector("[data-close]").addEventListener("click", function(){ dlg.close(); });
+    dlg.querySelectorAll("[data-close]").forEach(function(b){ b.addEventListener("click", function(){ dlg.close(); }); });
     dlg.addEventListener("click", function(ev){ if (ev.target === dlg) dlg.close(); });
     var show = function(m){ err.textContent = m; err.hidden = !m; };
     f.addEventListener("input", function(){ show(""); });
@@ -1302,6 +1320,7 @@ p,li,dd,td{text-wrap:pretty}
       if (bad.length){ show(bad[0].type === "checkbox" ? "プライバシーポリシーへの同意が必要です" : "未入力または形式の正しくない項目があります"); bad[0].focus(); return; }
       if (!ENDPOINT){ show("ただいま準備中です。時間をおいてお試しください。"); return; }
       var d = {}; new FormData(f).forEach(function(v, k){ d[k] = v; });
+      d.note = [d.rivals ? "競合：" + d.rivals : "", d.asks ? "質問：" + d.asks : ""].filter(Boolean).join("\n"); delete d.rivals; delete d.asks;
       d.agree = !!f.agree.checked; d.from = dlg.dataset.from || ""; d.page = location.href.split("#")[0];
       d.rid = Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
       go.disabled = true; var label = go.textContent; go.textContent = "送信中…";
@@ -1331,6 +1350,28 @@ p,li,dd,td{text-wrap:pretty}
         .then(function(){ go.disabled = false; go.textContent = label; });
     });
   });
+})();</script>
+<script>(function(){
+  var vids = [].slice.call(document.querySelectorAll(".fv__vid video, .shot-s video"));
+  var box = function(v){ return v.parentElement; };
+  var kick = function(v){
+    v.muted = true;
+    var p = v.play();
+    if (p && p.then) p.then(function(){ box(v).classList.remove("is-blocked"); }, function(){ box(v).classList.add("is-blocked"); });
+  };
+  vids.forEach(function(v){
+    var b = document.createElement("button"); b.type = "button"; b.className = "vid-play"; b.setAttribute("aria-label", "動画を再生");
+    b.addEventListener("click", function(){ kick(v); });
+    box(v).appendChild(b);
+    v.addEventListener("playing", function(){ box(v).classList.remove("is-blocked"); });
+  });
+  var fv = vids[0];
+  if (fv && !matchMedia("(prefers-reduced-motion: reduce)").matches) setTimeout(function(){ if (fv.paused) kick(fv); }, 1200);
+  var once = function(){
+    vids.forEach(function(v){ var r = v.getBoundingClientRect(); if (v.paused && r.bottom > 0 && r.top < innerHeight) kick(v); });
+    removeEventListener("touchstart", once); removeEventListener("click", once);
+  };
+  addEventListener("touchstart", once, {passive: true}); addEventListener("click", once);
 })();</script>
 </body>
 </html>
