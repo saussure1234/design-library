@@ -584,6 +584,9 @@ p,li,dd,td{text-wrap:pretty}
   .wrap.narrow{width:min(var(--wrap),100% - var(--pad)*2);max-width:none}
   .wrap.narrow > .h2wrap,.wrap.narrow > .h2,.wrap.narrow > .prose,.wrap.narrow > .after,.wrap.narrow > .flow{max-width:800px}
   .about > div:first-child{margin-inline:0}
+  #flow .wrap.narrow > .h2wrap,#flow .wrap.narrow > .flow{margin-inline:auto}
+  #about .about > div:first-child{margin-inline:auto}
+  #about .about .h2,#about .about .prose p{text-align:center}
 }
 @media (min-width:1320px){
   #why .h2wrap{padding-left:150px}
@@ -1248,7 +1251,7 @@ p,li,dd,td{text-wrap:pretty}
       <label>会社名<span class="req">必須</span><input type="text" name="company" autocomplete="organization" required></label>
       <label>お名前<span class="req">必須</span><input type="text" name="name" autocomplete="name" required></label>
       <label>メールアドレス<span class="req">必須</span><input type="email" name="email" autocomplete="email" required></label>
-      <label>会社サイトのURL<span class="req">必須</span><input type="url" name="site" placeholder="https://" required></label>
+      <label>診断したいサイトのURL<span class="req">必須</span><span class="fm__hint">サービスサイト・製品サイトなど、<wbr><span class="nb">AIに紹介されたいページ</span></span><input type="url" name="site" placeholder="https://" required></label>
       <label>比べてほしい競合<span class="opt">任意</span><input type="text" name="rivals" placeholder="例：〇〇株式会社、△△"></label>
       <label>AIに聞いてほしい質問<span class="opt">任意</span><span class="fm__hint">具体的な質問でも、「こういう相談で選ばれたい」という方向性でも構いません。</span><textarea name="asks" rows="4" placeholder="例）&#10;ポジション：〇〇に強い会社は？&#10;カテゴリ：〇〇のおすすめは？&#10;目的・課題：〇〇に困ったら？"></textarea></label>
       <label class="hp" aria-hidden="true">空欄のまま<input type="text" name="hp" tabindex="-1" autocomplete="off"></label>
