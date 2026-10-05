@@ -210,7 +210,13 @@ p,li,dd,td{text-wrap:pretty}
 .c3-box--1{grid-area:a}.c3-box--2{grid-area:b}.c3-box--3{grid-area:c}
 .c3-core{position:relative;z-index:1;grid-area:core;text-align:center;background:var(--acc);color:#fff;border:1.5px solid var(--ink);border-radius:16px;padding:18px 12px;font-weight:900;font-size:18px;line-height:1.45;word-break:keep-all;box-shadow:0 22px 40px -26px rgba(15,26,46,.5)}
 .c3-down{width:18px;height:36px;color:var(--ink)}
-.c3-out{width:min(560px,100%);display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.c3-out{width:min(620px,100%)}
+.c3-out__hd{margin:0 0 10px;text-align:center;font-size:14px;font-weight:700;letter-spacing:.04em;color:var(--ink3)}
+.c3-out ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.c3-out .node small{display:block;margin-top:6px;font-size:12.5px;font-weight:500;line-height:1.55;color:rgba(255,255,255,.78)}
+.c3-stp .node .en{display:block;font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--ink3);margin-bottom:2px}
+.c3-stp .node--acc .en{color:var(--acc)}
+@media (max-width:600px){ .c3-stp .node .en{font-size:9px;letter-spacing:0} .c3-out ul{grid-template-columns:minmax(0,1fr);gap:10px} .c3-out .node{min-height:0;padding:14px 12px} }
 .c3-stp{list-style:none;margin:0;padding:0;width:min(720px,100%);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px;counter-reset:none}
 .c3-stp .node{position:relative;min-height:60px;font-weight:700;font-size:15px;line-height:1.45}
 .c3-stp .node + .node::before{content:"";position:absolute;left:-23px;top:50%;width:18px;height:2px;background:var(--ink)}
@@ -792,7 +798,7 @@ p,li,dd,td{text-wrap:pretty}
     <p class="after fx">この戦略によって、どのような相談で、何を理由に紹介されたいかが具体的になります。顧客のニーズと貴社の提供価値を計測用の質問に落とし込み、現在のAI回答とのギャップから必要な施策を設計します。</p>
   </div>
   <div class="wrap">
-    <figure class="dia c3 fx" data-anim="c3" aria-label="図：顧客のニーズと需要の規模・自社のアセット・競合・代替手段を照らし合わせ、市場を分ける、狙う領域を選ぶ、選ばれる理由を定める。そこから選ばれたい相談と伝わってほしい選定理由、つまり計測の対象が決まる">
+    <figure class="dia c3 fx" data-anim="c3" aria-label="図：顧客のニーズと需要の規模・自社のアセット・競合・代替手段を照らし合わせ、市場を捉える、狙う領域を選ぶ、選ばれる理由を定める。そこから計測の対象として、選ばれたい相談（例：習い事と両立できる英検対策の塾は？）と伝わってほしい選定理由（例：オンライン受講・英検向けカリキュラム・合格実績）が決まる">
       <div class="c3-tri">
         <svg class="c3-lines" aria-hidden="true"></svg>
         <p class="c3-box c3-box--1" data-k="i1"><span class="en">Customer</span>顧客のニーズと<wbr>需要の規模</p>
@@ -802,15 +808,18 @@ p,li,dd,td{text-wrap:pretty}
       </div>
       <svg class="c3-down" viewBox="0 0 20 40" aria-hidden="true"><path d="M10 2v34M3 28l7 8 7-8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <ol class="c3-stp">
-        <li class="node" data-k="s1">市場を<wbr>分ける</li>
-        <li class="node" data-k="s2">狙う領域を<wbr>選ぶ</li>
-        <li class="node node--acc" data-k="s3">選ばれる理由を<wbr>定める</li>
+        <li class="node" data-k="s1"><span class="en">Segmentation</span>市場を<wbr>捉える</li>
+        <li class="node" data-k="s2"><span class="en">Targeting</span>狙う領域を<wbr>選ぶ</li>
+        <li class="node node--acc" data-k="s3"><span class="en">Positioning</span>選ばれる理由を<wbr>定める</li>
       </ol>
       <svg class="c3-down" viewBox="0 0 20 40" aria-hidden="true"><path d="M10 2v34M3 28l7 8 7-8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <ul class="c3-out">
-        <li class="node node--out" data-k="o1">選ばれたい相談</li>
-        <li class="node node--out" data-k="o2">伝わってほしい<wbr>選定理由</li>
-      </ul>
+      <div class="c3-out">
+        <p class="c3-out__hd">戦略から決まる、計測の対象</p>
+        <ul>
+          <li class="node node--out" data-k="o1">選ばれたい相談<small>例：<span class="nb">習い事と両立できる</span><wbr><span class="nb">英検対策の塾は？</span></small></li>
+          <li class="node node--out" data-k="o2">伝わってほしい<wbr>選定理由<small>例：<span class="nb">オンライン受講・</span><wbr><span class="nb">英検向けカリキュラム・</span><wbr><span class="nb">合格実績</span></small></li>
+        </ul>
+      </div>
     </figure>
   </div>
 </section>
