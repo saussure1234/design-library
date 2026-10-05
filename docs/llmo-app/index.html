@@ -74,6 +74,11 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .fbar .segc { flex-wrap: wrap; max-width: 100%; min-width: 0; }   /* 狭い画面ではボタンを折り返す（横にはみ出さない） */
 .fl { display: inline-flex; align-items: center; gap: 6px; }
 .fl > span { font-size: 12px; color: var(--muted); font-weight: 600; flex: none; white-space: nowrap; }
+.btabs { display: flex; gap: 2px; margin-top: 12px; border-bottom: 1px solid var(--line); overflow-x: auto; scrollbar-width: none; }
+.btabs::-webkit-scrollbar { display: none; }
+.btabs button { flex: none; border: 0; background: transparent; padding: 8px 12px; font: inherit; font-size: 14px; font-weight: 700; color: var(--ink-2); border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; cursor: pointer; }
+.btabs button:hover { color: var(--ink); }
+.btabs button[aria-selected="true"] { color: var(--accent); border-bottom-color: var(--accent); }
 .segc { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; padding: 2px; background: #fff; }
 .segc button { border: 0; background: transparent; border-radius: 6px; padding: 4px 10px; font-size: 13px; font-weight: 600; color: var(--ink-2); display: inline-flex; align-items: center; gap: 6px; }
 .segc button[aria-pressed="true"] { background: var(--tint); color: var(--accent); box-shadow: 0 0 0 1px var(--chk); }
@@ -124,12 +129,13 @@ td .nodata { justify-content: flex-start; }   /* 質問一覧は横に長いの�
 @media (max-width: 600px) {
   .phead { gap: 10px; } .chara img { height: 52px; } .chara.wide img { height: 46px; }
   /* スマホはキャラをタイトルの横に置き、吹き出しと絞り込みは横幅いっぱいに使う */
-  .phead.hasbar, .phead.hasbubble { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "crumb chara" "title chara" "bubble bubble" "bar bar"; align-items: end; column-gap: 10px; }
+  .phead.hasbar, .phead.hasbubble { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "crumb chara" "title chara" "bubble bubble" "tabs tabs" "bar bar"; align-items: end; column-gap: 10px; }
   .phead.hasbar .ptxt, .phead.hasbubble .ptxt, .phead .prow { display: contents; }
   .phead .crumb { grid-area: crumb; }
   .phead .ptitle { grid-area: title; }
   .phead .chara { grid-area: chara; }
   .phead .fbar { grid-area: bar; }
+  .phead .btabs { grid-area: tabs; }
   .phead .bubble { grid-area: bubble; margin: 12px 0 0; min-width: 0; }
   .phead .bubble::before { right: 18px; top: -10px; border-width: 0 7px 10px 7px; border-color: transparent transparent var(--ink) transparent; }
   .phead .bubble::after { right: 19.5px; top: -7.5px; border-width: 0 5.5px 8px 5.5px; border-color: transparent transparent #fff transparent; }
@@ -526,16 +532,9 @@ function bootApp(D) {
     pick.append(cal, document.createTextNode(rangeLabel(rangeOf(page))), el("span", "caret", "▾"));
     pick.addEventListener("click", (e) => { e.stopPropagation(); openCalendar(pick, page); });
     f3.append(pick);
-    // 分岐（ある案件だけ）。ダッシュボードにも出す（分岐ごとに顧客の入り口が違うため）
-    const fb = el("div", "fl");
-    if (BRANCHES.length) {
-      fb.append(el("span", null, "分岐")); const sb = el("div", "segc");
-      [["all", "すべて"], ...BRANCHES.map((b) => [b.code, `${b.code} ${b.name}`])].forEach(([v, lab]) => { const bt = el("button", null, lab); bt.type = "button"; bt.setAttribute("aria-pressed", String(state.branch === v));
-        bt.addEventListener("click", () => { state.branch = v; route(); }); sb.append(bt); });
-      fb.append(sb);
-    }
-    if (page === "overview") { t.append(f3); if (BRANCHES.length) t.append(fb); }   // ダッシュボードは期間（と分岐）だけ
-    else { t.append(f3); if (BRANCHES.length) t.append(fb); t.append(f2, f1); }
+    // 分岐（01〜04）は絞り込みではなく、見出しの下のタブで切り替える（branchTabs）
+    if (page === "overview") t.append(f3);   // ダッシュボードは期間だけ
+    else t.append(f3, f2, f1);
     if (page === "trend" || page === "prompts") {   // ブランド（ほかの絞り込みと同じく「すべて」か1つ）。推移と質問一覧で別々に覚える
       const BR = (D.tracked || [SUBJ]).filter(Boolean); const key = page === "trend" ? "brand" : "qbrand";
       const f4 = el("div", "fl"); f4.append(el("span", null, "ブランド"));
@@ -622,6 +621,14 @@ function bootApp(D) {
   function nodata(text, cls) { const w = el("div", `nodata ${cls || ""}`); if (SHOW_CHARA && CHARA.confused) w.append(charaImg("confused")); w.append(el("span", null, text)); return w; }
   // ポーズごとの向き（指さし・本を差し出す絵は左右反転して、吹き出し側を向かせる）
   const POSE = { thumbs: { flip: true, wide: true }, hand: { flip: true, wide: true }, jump: {}, confused: {}, magnifier: {}, "walk-smile": {} };
+  function branchTabs() {
+    const nav = el("div", "btabs"); nav.setAttribute("role", "tablist"); nav.setAttribute("aria-label", "分岐");
+    [["all", "すべて"], ...BRANCHES.map((b) => [b.code, `${b.code} ${b.name}`])].forEach(([v, lab]) => {
+      const b = el("button", null, lab); b.type = "button"; b.setAttribute("role", "tab"); b.setAttribute("aria-selected", String(state.branch === v));
+      b.addEventListener("click", () => { state.branch = v; route(); }); nav.append(b);
+    });
+    return nav;
+  }
   function head(title, sub, crumbs, bar, ch) {
     const w = document.createDocumentFragment();
     if (!SHOW_CHARA) ch = null;
@@ -637,6 +644,7 @@ function bootApp(D) {
       tx.append(c);
     }
     const row = el("div", "prow"); row.append(el("h1", "ptitle", title)); tx.append(row);
+    if (bar && BRANCHES.length) tx.append(branchTabs());   // 分岐（01〜04）はタブで切り替える
     if (bar) tx.append(bar);   // 絞り込みはタイトルのすぐ下
     hd.append(tx);
     // キャラは見出しの横（言うことに合わせてポーズを変える。名札は最初の画面だけ）
