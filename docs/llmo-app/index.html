@@ -459,13 +459,14 @@ function bootApp(D) {
   // 見出し（種類）は案件ごとに違う（ケイウノ：A カテゴリ〜D ブランドイメージ／内田洋行：A 目的・課題〜E ブランドイメージ）
   const LAYER_BASE = D.layers && D.layers.length ? D.layers : [{ code: "A", name: "カテゴリ", counted: true }, { code: "B", name: "ポジション", counted: true }, { code: "C", name: "目的・課題", counted: true }, { code: "D", name: "ブランドイメージ", counted: false }];
   // 分岐ごとに設計が違う案件（内田洋行：01＝A〜E、02〜04＝⓪→C→A→B→D）は、選んだ分岐の見出しだけを使う
-  let LAYER_DEF, LAYERS, LCODES, CNT, IMG;
+  let LAYER_DEF, LAYERS, LCODES, CNT, IMG, F_ALL;
   function setLayers(b) {
     LAYER_DEF = (D.layers_by_branch && D.layers_by_branch[b]) || LAYER_BASE;   // 定義した見出しは、まだ回答が無くても出す（「—」になる）
     LAYERS = Object.fromEntries(LAYER_DEF.map((l) => [l.code, l.name]));
     LCODES = LAYER_DEF.map((l) => l.code);                                  // 全部の見出し
     CNT = LAYER_DEF.filter((l) => l.counted !== false).map((l) => l.code);  // 社名を入れない質問（登場率で見る）
     IMG = (LAYER_DEF.find((l) => l.counted === false) || {}).code || null;   // 社名を入れた質問（合致率で見る）
+    F_ALL = (D.features_by_branch && D.features_by_branch[b]) || D.features_all || [];   // 打ち出したい特徴（分岐ごとに違う案件がある）
   }
   // 「A〜D」のように並びが続く時だけ範囲で書く（⓪・C・A・B のような並びは列挙）
   const span = (ks) => { if (ks.length <= 1) return ks[0] || ""; const ok = ks.every((k, i) => /^[A-Z]$/.test(k) && (i === 0 || k.charCodeAt(0) === ks[i - 1].charCodeAt(0) + 1)); return ok ? `${ks[0]}〜${ks[ks.length - 1]}` : ks.join("・"); };
@@ -791,9 +792,9 @@ function bootApp(D) {
     return [...m.values()].sort((x, y) => y.answers - x.answers || y.cites - x.cites);
   }
 
-  const F_ALL = D.features_all || [];
+  // F_ALL は setLayers で分岐ごとに決まる
   // D の合致率：狙う特徴のうち説明された割合（回答ごと）の平均
-  const dRate = (list) => (list.length && F_ALL.length ? Math.round(100 * list.reduce((s2, a) => s2 + (a.feat_hits || []).length / F_ALL.length, 0) / list.length) : null);
+  const dRate = (list) => (list.length && F_ALL.length ? Math.round(100 * list.reduce((s2, a) => s2 + (a.feat_hits || []).filter((f) => F_ALL.includes(f)).length / F_ALL.length, 0) / list.length) : null);
   // ---- 計測日ごとの推移（折れ線1枚） ----
   const LSTYLE = { O: { dash: "", mark: "circle" }, A: { dash: "", mark: "circle" }, B: { dash: "7 4", mark: "square" }, C: { dash: "2 3", mark: "triangle" }, D: { dash: "9 3 2 3", mark: "diamond" } };
   // mode: "ai"＝AIどうしを比べる（種類を1つ選ぶ）／"layer"＝1つのAIで A〜D を比べる
@@ -1001,7 +1002,7 @@ function bootApp(D) {
     const h2 = el("h2"); h2.append(el("span", null, `種類別（${span(LCODES)}）`)); const m2 = el("button", "more", "質問一覧 →"); m2.type = "button"; m2.addEventListener("click", () => { location.hash = "#/prompts"; }); h2.append(m2);
     const imgQs = Q.filter((q) => q.layer === IMG && qInBranch(q));
     p2.append(h2, el("p", "desc", `${span(CNT)}はブランド名を入れていない質問での登場率と平均順位。` + (IMG ? `${IMG}は${imgQs.length === 1 ? `「${imgQs[0].prompt}」` : `${SUBJ}の名前を入れた質問`}の答えに、打ち出したい特徴${F_ALL.length}つのうち何割が出たか（合致率）` : "")));
-    const SHOW_BREAKDOWN = false;   // 各行の下の内訳（So 9/28「一回内訳消して」で止めている。戻すときは true にするだけ）
+    // 内訳は、ブランドイメージ（社名を入れた質問）の行だけ畳んで出す（So 10/5。A〜D の行の内訳は 9/28 に止めたまま）
     const rows2 = LCODES.flatMap((k) => {
       const tr = el("tr"); tr.dataset.kind = k === IMG ? "d" : "ac";
       const td0 = el("td", "clk nowrap"); td0.append(el("span", "tag", k), document.createTextNode(` ${LAYERS[k]}`));
@@ -1017,7 +1018,7 @@ function bootApp(D) {
         [td, tdr].forEach((x) => { x.title = `押すと、${k}（${LAYERS[k]}）×${p.label}に絞り込んだ質問一覧を開きます`; x.addEventListener("click", () => openFiltered({ layer: layerFull(k), ai: p.label })); });
         tr.append(td, tdr);
       });
-      if (!SHOW_BREAKDOWN || (k === IMG && !F_ALL.length)) return [tr];
+      if (k !== IMG || !F_ALL.length) return [tr];
       // この行の内訳を、すぐ下の行に畳んで入れる
       tr.classList.add("has-sub");
       const sub = el("tr", "sub"); const std = el("td"); std.colSpan = 1 + P.length * 2; std.append(breakdown(k)); sub.append(std);
@@ -1046,7 +1047,7 @@ function bootApp(D) {
     function breakdown(k) {
       const isD = k === IMG;
       const det = el("details", "tdet");
-      det.append(el("summary", null, isD ? "D の内訳を見る（どの特徴が説明されたか）" : `${k} の内訳を見る（質問ごとの登場率）`));
+      det.append(el("summary", null, isD ? `内訳を見る（打ち出したい特徴${F_ALL.length}つ）` : `${k} の内訳を見る（質問ごとの登場率）`));
       const base = (p) => xs.filter((a) => a.platform === p.id && qByNo.get(a.q).layer === k && (isD || qByNo.get(a.q).counted));
       let rows;
       if (isD) {
@@ -1059,10 +1060,10 @@ function bootApp(D) {
             const td = el("td"); if (list.length) td.append(meter(pct(n, list.length), pc(p.id))); else td.textContent = "—";
             const tdn = el("td", "num muted", `${n}/${list.length}`);
             // 0件のところは押しても空になるので押せなくする
-            if (n) [td, tdn].forEach((x) => { x.classList.add("clk"); x.title = `押すと、D×${p.label}で「${f}」が説明された回答（${n}件）を質問一覧で開きます`; x.addEventListener("click", () => openFiltered({ layer: layerFull(k), ai: p.label, feature })); });
+            if (n) [td, tdn].forEach((x) => { x.classList.add("clk"); x.title = `押すと、${k}×${p.label}で「${f}」が説明された回答（${n}件）を質問一覧で開きます`; x.addEventListener("click", () => openFiltered({ layer: layerFull(k), ai: p.label, feature })); });
             tr.append(td, tdn);
           });
-          if (total) { tdf.classList.add("clk"); tdf.title = `押すと、Dで「${f}」が説明された回答（${total}件）を質問一覧で開きます`; tdf.addEventListener("click", () => openFiltered({ layer: layerFull(k), feature })); }
+          if (total) { tdf.classList.add("clk"); tdf.title = `押すと、${k}で「${f}」が説明された回答（${total}件）を質問一覧で開きます`; tdf.addEventListener("click", () => openFiltered({ layer: layerFull(k), feature })); }
           return tr;
         });
       } else {
@@ -1609,7 +1610,7 @@ async function loadClient(sb, cl) {
   if (pids.size) as.splice(0, as.length, ...as.filter((a) => pids.has(a.platform)));   // AI一覧に無い媒体（入れ替え前の古い行）は数えない
   return {
     subject: cl.name, subject_pattern: cl.subject_pattern, tracked: cl.tracked || [], features_all: cl.features || [],
-    layers: Array.isArray(cl.layers) ? cl.layers : ((cl.layers || {}).default || []), layers_by_branch: Array.isArray(cl.layers) ? null : ((cl.layers || {}).by_branch || null), branches: cl.branches || [], competitor_by_layer: !!cl.competitor_by_layer, platforms: cl.platforms || [],
+    layers: Array.isArray(cl.layers) ? cl.layers : ((cl.layers || {}).default || []), layers_by_branch: Array.isArray(cl.layers) ? null : ((cl.layers || {}).by_branch || null), features_by_branch: Array.isArray(cl.layers) ? null : ((cl.layers || {}).features_by_branch || null), branches: cl.branches || [], competitor_by_layer: !!cl.competitor_by_layer, platforms: cl.platforms || [],
     questions: qs.map((q) => ({ no: q.no, id: q.code, layer: q.layer, layer_label: q.layer_label, layer_full: q.layer_full, theme: q.theme, branches: q.branches || [], prompt: q.prompt, counted: q.counted })),
     answers: as.map((a) => ({ ...a, appeared: a.appeared ? 1 : 0, brands: a.brands || [], competitors: a.competitors || [], sources: a.sources || [], cards: a.cards || [], stores: a.stores || [], feat_hits: a.feat_hits || [] })),
     batches: [...new Set(as.map((a) => a.batch))].sort(),
