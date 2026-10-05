@@ -210,14 +210,19 @@ p,li,dd,td{text-wrap:pretty}
 .c3-core{position:relative;z-index:1;grid-area:core;text-align:center;background:var(--acc);color:#fff;border:1.5px solid var(--ink);border-radius:16px;padding:18px 12px;font-weight:900;font-size:18px;line-height:1.45;word-break:keep-all;box-shadow:0 22px 40px -26px rgba(15,26,46,.5)}
 .c3-down{width:18px;height:36px;color:var(--ink)}
 .c3-out{width:min(560px,100%);display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.c3-stp{list-style:none;margin:0;padding:0;width:min(720px,100%);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px;counter-reset:none}
+.c3-stp .node{position:relative;min-height:60px;font-weight:700;font-size:15px;line-height:1.45}
+.c3-stp .node + .node::before{content:"";position:absolute;left:-23px;top:50%;width:18px;height:2px;background:var(--ink)}
+.c3-stp .node + .node::after{content:"";position:absolute;left:-12px;top:50%;width:8px;height:8px;margin-top:-4px;border-top:2px solid var(--ink);border-right:2px solid var(--ink);transform:rotate(45deg)}
+.c3-stp .node--acc{border-color:var(--acc);color:var(--acc);border-width:1.5px}
 .c3-out .node{min-height:64px}
 .c3-lines line{stroke:var(--ink);stroke-width:2}    
 .c3-anim .c3-box{opacity:0;transform:scale(.9);transition:opacity .45s var(--ease),transform .45s var(--ease)}
-.c3-anim .c3-core,.c3-anim .c3-down,.c3-anim .c3-out{opacity:0;transform:translateY(10px);transition:opacity .45s var(--ease),transform .45s var(--ease)}
+.c3-anim .c3-core,.c3-anim .c3-down,.c3-anim .c3-stp,.c3-anim .c3-out{opacity:0;transform:translateY(10px);transition:opacity .45s var(--ease),transform .45s var(--ease)}
 .c3-anim .c3-lines line{opacity:0;transition:opacity .5s var(--ease)}
 .c3-anim .is-on{opacity:1!important;transform:none!important}
 .c3-anim .c3-lines line.is-on{opacity:1}
-@media (max-width:600px){ .c3-box{font-size:13.5px;padding:12px 6px} .c3-core{font-size:15px;padding:14px 8px} .c3-out .node{font-size:14px} }
+@media (max-width:600px){ .c3-tri{grid-template-areas:"a a a" ". core ." "b . c"} .c3-box--1{justify-self:center;width:min(100%,230px)} .c3-box{font-size:13.5px;padding:12px 6px} .c3-core{font-size:15px;padding:14px 8px} .c3-out .node{font-size:14px} .c3-stp{gap:18px} .c3-stp .node{font-size:13px;padding:10px 6px} .c3-stp .node + .node::before{left:-16px;width:12px} .c3-stp .node + .node::after{left:-10px;width:6px;height:6px;margin-top:-3px} }
 .rd{display:grid;gap:18px}
 .rd-ends{display:grid;grid-template-columns:minmax(0,1fr) 56px minmax(0,1fr);align-items:center}
 .rd-arrow{display:block;width:44px;height:20px;margin:auto;color:var(--ink)}
@@ -305,7 +310,7 @@ p,li,dd,td{text-wrap:pretty}
 .ctaband__in{background:var(--ink);border-radius:22px;padding:clamp(28px,4vw,44px);display:flex;flex-wrap:wrap;justify-content:center;gap:14px}
 .ctaband .btn--line{background:transparent;color:#fff;border-color:var(--cta)}
 .ctaband .btn--line:hover{background:rgba(208,69,0,.18)}
-.flow{margin-top:52px;position:relative;display:grid;gap:14px;padding-left:92px}
+.flow{margin-top:52px;position:relative;display:grid;gap:14px;padding-right:92px}
 .flow__step{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:22px 26px 24px}
 .flow__step h3{font-weight:900;font-size:clamp(18px,1.7vw,21px);line-height:1.55}
 .flow__no{font-family:var(--en);font-weight:700;letter-spacing:.06em}
@@ -314,7 +319,9 @@ p,li,dd,td{text-wrap:pretty}
 .flow__q{margin-top:12px;display:grid;gap:8px}
 .flow__q li{background:var(--bg);border-radius:10px;padding:9px 14px;font-size:15px;line-height:1.7;color:var(--ink2)}
 .flow__q b{color:var(--ink)}
-.flow .pen-note[data-n="loop"]{left:0;font-size:19px;--r:-90deg;transform-origin:left top}
+.flow__ex{display:block;font-size:13.5px;color:var(--ink3)}
+.flow__tag{display:inline-block;margin-top:10px;padding:3px 10px;border-radius:6px;background:var(--tint);color:var(--acc);font-size:13px;font-weight:700;line-height:1.6}
+.flow .pen-note[data-n="loop"]{left:0;font-size:19px;--r:0deg;writing-mode:vertical-rl;text-orientation:upright;letter-spacing:.08em}
 .vals{margin-top:52px;display:grid;grid-template-columns:minmax(0,1fr);gap:18px}    
 .val{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:30px 34px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);grid-template-areas:"h fig" "txt fig";grid-template-rows:auto 1fr;column-gap:clamp(28px,4vw,56px);row-gap:12px;align-items:start}
 .val > h3{grid-area:h}.val > .val__txt{grid-area:txt}.val > .val__fig{grid-area:fig;align-self:center;margin-top:0}
@@ -334,6 +341,7 @@ p,li,dd,td{text-wrap:pretty}
 .shot-s{position:relative;border-radius:12px;border:1px solid var(--line);overflow:hidden}
 .shot-s img{display:block;width:100%;height:auto}
 .fig-cap{margin-top:6px;font-size:12.5px;color:var(--ink3)}
+.rd-note{margin-top:14px;text-align:center}
 .map{width:100%;border-collapse:separate;border-spacing:0 8px;font-size:14px;line-height:1.6}
 .map th{font-size:12.5px;font-weight:700;color:var(--ink3);text-align:left;padding:0 10px}
 .map td{background:var(--soft);padding:10px 12px;color:var(--ink);font-weight:700;vertical-align:middle}
@@ -434,7 +442,7 @@ p,li,dd,td{text-wrap:pretty}
   .q-result{margin-top:56px}
   .sample__top{grid-template-columns:minmax(0,1fr)}
   .cta2{grid-template-columns:minmax(0,1fr)}
-  .flow{padding-left:44px}
+  .flow{padding-right:44px}
   .flow .pen-note[data-n="loop"]{display:none}
 }
 @media (max-width:420px){ :root{--h2:26px} }    
@@ -618,7 +626,7 @@ p,li,dd,td{text-wrap:pretty}
   p,li,dd,td{text-wrap:wrap}
   .flow__step h3,.stp h3,.val h3{word-break:normal;line-break:strict}
 }
-@media (max-width:600px){ .flow{padding-left:0} .flow.pen .ann{display:none} }
+@media (max-width:600px){ .flow{padding-right:0} .flow.pen .ann{display:none} }
 .qc-chara{display:none}
 @media (max-width:600px){
   #why .chara-box{display:none}
@@ -638,7 +646,7 @@ p,li,dd,td{text-wrap:pretty}
   .rd-walker{display:none}
 }
 @media (max-width:480px){
-  .prose p,.fv__body p,.stp p,.after,.flow__step > p,.flow__q li,.val__txt p,.person__cv p,.cta2__note,.rd-txt,.q-cap__t{letter-spacing:0!important;text-align:start}
+  .prose p,.fv__body p,.stp p,.after,.flow__step > p:not(.flow__tag),.flow__q li,.val__txt p,.person__cv p,.cta2__note,.rd-txt,.q-cap__t{letter-spacing:0!important;text-align:start}
 }
 @media (max-width:600px){ .shot-s video{aspect-ratio:4/5} }    
 @media (min-width:1320px){ #why .h2wrap{padding-left:0} }
@@ -742,24 +750,24 @@ p,li,dd,td{text-wrap:pretty}
     </div>
   </div>
   <div class="wrap">
-    <figure class="dia qc fx" data-anim="q" aria-label="図：AIに相談文を送ると、AIは会議室不足への対応・オンライン会議環境・内装・ITの対応範囲・支援実績という調査論点に分けて調べ（クエリファンアウト）、条件に合う企業と選定理由にまとめて答える">
+    <figure class="dia qc fx" data-anim="q" aria-label="図：顧客の相談文から、他の習い事との両立・オンライン受講・英検向けカリキュラム・合格実績という条件が読み取られ、条件に合う英語塾と選定理由へつながる。顧客の状況や条件と、企業の提供価値が結びつく概念図">
       <div class="qc-win">
         <div class="qc-bar" aria-hidden="true"><i></i><i></i><i></i></div>
         <div class="qc-body">
-          <p class="qc-user" data-type>「オフィス移転を検討している。会議室不足を解消し、オンライン会議の環境も整えたい。内装とITをまとめて相談できる会社は？」</p>
+          <p class="qc-user" data-type>「子どもが他の習い事と両立して続けられる、英検対策ができる英語塾を探しています。オンラインで受講できて、英検向けのカリキュラムと合格実績がある塾は？」</p>
           <div class="qc-think">
-            <p class="qc-think__hd"><i class="qc-spin" aria-hidden="true"></i><span class="en">クエリファンアウト</span></p>
+            <p class="qc-think__hd"><i class="qc-spin" aria-hidden="true"></i><span>相談に含まれる条件</span></p>
             <ul class="qc-pts">
-              <li data-k="p1"><img class="ico" src="img/icon/meeting.webp" width="160" height="160" alt="" aria-hidden="true" loading="lazy">会議室不足への<wbr>対応</li>
-              <li data-k="p2"><img class="ico" src="img/icon/online.webp" width="160" height="160" alt="" aria-hidden="true" loading="lazy">オンライン<wbr>会議環境</li>
-              <li data-k="p3"><img class="ico" src="img/icon/interior-it.webp" width="160" height="160" alt="" aria-hidden="true" loading="lazy">内装・<wbr>ITの<wbr>対応範囲</li>
-              <li data-k="p4"><img class="ico" src="img/icon/record.webp" width="160" height="160" alt="" aria-hidden="true" loading="lazy">支援実績</li>
+              <li data-k="p1"><img class="ico" src="img/icon/balance.webp" width="160" height="160" alt="" aria-hidden="true" loading="lazy">他の習い事との<wbr>両立</li>
+              <li data-k="p2"><img class="ico" src="img/icon/online.webp" width="160" height="160" alt="" aria-hidden="true" loading="lazy">オンライン<wbr>受講</li>
+              <li data-k="p3"><img class="ico" src="img/icon/curriculum.webp" width="160" height="160" alt="" aria-hidden="true" loading="lazy">英検向け<wbr>カリキュラム</li>
+              <li data-k="p4"><img class="ico" src="img/icon/record.webp" width="160" height="160" alt="" aria-hidden="true" loading="lazy">合格実績</li>
             </ul>
           </div>
-          <div class="qc-ans"><p class="qc-ans__hd"><i aria-hidden="true"></i>条件に合う<wbr>企業と<wbr>選定理由</p><span class="qc-sk" aria-hidden="true"><i></i><i></i><i></i></span></div>
+          <div class="qc-ans"><p class="qc-ans__hd"><i aria-hidden="true"></i>条件に合う<wbr>英語塾と<wbr>選定理由</p><span class="qc-sk" aria-hidden="true"><i></i><i></i><i></i></span></div>
         </div>
       </div>
-      <figcaption class="q-cap"><span class="qc-chara" aria-hidden="true"><img src="img/chara/confused.webp" width="358" height="587" alt=""><span class="chara-name">エルモーくん</span></span><span class="q-cap__t">貴社は、<wbr>どの条件に、<wbr>何を根拠に<wbr>応えられるか？</span></figcaption>
+      <figcaption class="q-cap"><span class="qc-chara" aria-hidden="true"><img src="img/chara/confused.webp" width="358" height="587" alt=""><span class="chara-name">エルモーくん</span></span><span class="q-cap__t">貴社の提供価値は、<wbr>誰のどのニーズに<wbr>応えられるか？</span></figcaption>
     </figure>
   </div>
 </section>
@@ -783,14 +791,20 @@ p,li,dd,td{text-wrap:pretty}
     <p class="after fx">この戦略によって、どのような相談で、何を理由に紹介されたいかが具体的になります。顧客のニーズと貴社の提供価値を計測用の質問に落とし込み、現在のAI回答とのギャップから必要な施策を設計します。</p>
   </div>
   <div class="wrap">
-    <figure class="dia c3 fx" data-anim="c3" aria-label="図：顧客ニーズ・自社のアセット・競合・代替手段の3つ（3C）を照らし合わせ、中心に優先する顧客と提供価値を定める。そこから選ばれたい相談と伝わってほしい選定理由が決まる">
+    <figure class="dia c3 fx" data-anim="c3" aria-label="図：顧客のニーズと需要の規模・自社のアセット・競合・代替手段を照らし合わせ、市場を分ける、狙う領域を選ぶ、選ばれる理由を定める。そこから選ばれたい相談と伝わってほしい選定理由、つまり計測の対象が決まる">
       <div class="c3-tri">
         <svg class="c3-lines" aria-hidden="true"></svg>
-        <p class="c3-box c3-box--1" data-k="i1"><span class="en">Customer</span>顧客ニーズ</p>
-        <p class="c3-core" data-k="core">優先する<wbr>顧客と<wbr>提供価値</p>
+        <p class="c3-box c3-box--1" data-k="i1"><span class="en">Customer</span>顧客のニーズと<wbr>需要の規模</p>
+        <p class="c3-core" data-k="core">照らし<wbr>合わせる</p>
         <p class="c3-box c3-box--2" data-k="i2"><span class="en">Company</span>自社の<wbr>アセット</p>
         <p class="c3-box c3-box--3" data-k="i3"><span class="en">Competitor</span>競合・<wbr>代替手段</p>
       </div>
+      <svg class="c3-down" viewBox="0 0 20 40" aria-hidden="true"><path d="M10 2v34M3 28l7 8 7-8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <ol class="c3-stp">
+        <li class="node" data-k="s1">市場を<wbr>分ける</li>
+        <li class="node" data-k="s2">狙う領域を<wbr>選ぶ</li>
+        <li class="node node--acc" data-k="s3">選ばれる理由を<wbr>定める</li>
+      </ol>
       <svg class="c3-down" viewBox="0 0 20 40" aria-hidden="true"><path d="M10 2v34M3 28l7 8 7-8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <ul class="c3-out">
         <li class="node node--out" data-k="o1">選ばれたい相談</li>
@@ -810,21 +824,22 @@ p,li,dd,td{text-wrap:pretty}
         <p>次に、実際のAI回答から候補への登場状況、引用元、強みの伝わり方を確認し、理想と現状のギャップを可視化。その結果を踏まえ、情報発信、コンテンツ制作、サイト改修などの優先順位を決め、実行と検証を進めます。</p>
       </div>
     </div>
-    <figure class="dia rd fx" data-anim="gap" aria-label="図：現在のAI回答（一部のサービスだけで認識）から、対応範囲の明文化・統合事例の制作・関連情報の整備を1つずつ進めて、目指す状態（複数領域をまとめて支援できる会社として紹介）へ。その間がギャップ">
+    <figure class="dia rd fx" data-anim="gap" aria-label="図（説明用の仮想例）：現在のAI回答（一般的な英語塾として認識され、両立のしやすさや英検対策の根拠が伝わっていない）から、受講条件の明文化・英検カリキュラムの掲載・合格実績や受講事例の整備を1つずつ進めて、目指す状態（他の習い事と両立できるオンライン英検対策の候補として紹介）へ。その間がギャップ">
       <div class="rd-wrap">
-        <div class="rd-card rd-card--now"><p class="rd-lbl">現在のAI回答</p><p class="rd-txt">一部のサービスだけで認識</p></div>
+        <div class="rd-card rd-card--now"><p class="rd-lbl">現在のAI回答</p><p class="rd-txt">一般的な英語塾として<wbr>認識され、<wbr>両立のしやすさや<wbr>英検対策の根拠が<wbr><span class="nb">伝わっていない</span></p></div>
       <div class="rd-road">
         <p class="rd-gap"><span>ギャップ</span></p>
         <div class="rd-line" aria-hidden="true"><i class="rd-fill"></i><img class="rd-walker" src="img/chara/walk-smile.webp" width="360" height="385" alt=""></div>
         <ol class="rd-steps">
-          <li style="--x:22%"><img class="ico" src="img/icon/scope.webp" width="160" height="160" alt="" aria-hidden="true" loading="lazy"><span>対応範囲の<wbr>明文化</span></li>
-          <li style="--x:50%"><img class="ico" src="img/icon/case.webp" width="160" height="160" alt="" aria-hidden="true" loading="lazy"><span>統合事例の<wbr>制作</span></li>
-          <li style="--x:78%"><img class="ico" src="img/icon/related.webp" width="160" height="160" alt="" aria-hidden="true" loading="lazy"><span>関連情報の<wbr>整備</span></li>
+          <li style="--x:22%"><img class="ico" src="img/icon/scope.webp" width="160" height="160" alt="" aria-hidden="true" loading="lazy"><span>受講条件の<wbr>明文化</span></li>
+          <li style="--x:50%"><img class="ico" src="img/icon/curriculum.webp" width="160" height="160" alt="" aria-hidden="true" loading="lazy"><span>英検<wbr>カリキュラムの<wbr>掲載</span></li>
+          <li style="--x:78%"><img class="ico" src="img/icon/diploma.webp" width="160" height="160" alt="" aria-hidden="true" loading="lazy"><span>合格実績や<wbr>受講事例の<wbr>整備</span></li>
         </ol>
         <i class="rd-start" aria-hidden="true"></i><i class="rd-flag" aria-hidden="true"></i>
       </div>
-        <div class="rd-card rd-card--goal"><p class="rd-lbl"><i aria-hidden="true"></i>目指す状態</p><p class="rd-txt">複数領域をまとめて支援できる会社として紹介</p></div>
+        <div class="rd-card rd-card--goal"><p class="rd-lbl"><i aria-hidden="true"></i>目指す状態</p><p class="rd-txt">他の習い事と<wbr>両立できる<wbr>オンライン<wbr>英検対策の<wbr>候補として<wbr><span class="nb">紹介</span></p></div>
       </div>
+      <figcaption class="fig-cap rd-note">※説明用の仮想例です</figcaption>
     </figure>
     <img class="about-deco" src="img/chara/flagplant.webp" width="358" height="404" alt="" aria-hidden="true" loading="lazy">
   </div>
@@ -844,22 +859,24 @@ p,li,dd,td{text-wrap:pretty}
   <div class="wrap narrow">
     <ol class="flow pen" data-dia="flow">
       <li class="flow__step fx" data-k="s1"><h3><span class="flow__no">STEP 1</span><span class="flow__sep">｜</span>顧客のニーズと需要の規模を調査</h3>
+        <p class="flow__tag">検索需要・PAA・顧客の声</p>
         <p>キーワード・月間検索数・PAAの調査と、営業やカスタマーサポートなど顧客接点を持つ方へのヒアリングを通じて、目的・課題、比較条件、不安を把握します。検索需要を参考にニーズの規模を捉え、検索語だけでは表しにくい相談内容も整理します。</p></li>
       <li class="flow__step fx" data-k="s2"><h3><span class="flow__no">STEP 2</span><span class="flow__sep">｜</span>競合・自社を比較し、STPを整理</h3>
+        <p class="flow__tag">競合・自社の比較→STP</p>
         <p>同業他社や代替手段の提供内容と、貴社の商品・サービス、実績、体制、保有する知見を比較し、相対的な強みを定義します。顧客ニーズと需要の規模を踏まえて市場を分け、狙う領域と選ばれる理由を定めます。</p></li>
       <li class="flow__step fx" data-k="s3"><h3><span class="flow__no">STEP 3</span><span class="flow__sep">｜</span>ポジション・カテゴリ・目的課題から質問を設計</h3>
         <p>STPで定めた顧客ニーズと提供価値を起点に、次の観点で計測用のプロンプトを設計します。</p>
         <ul class="flow__q">
-          <li><b>ポジション：</b> 貴社の強みと合う特徴・条件を指定したときに、紹介されるか。</li>
-          <li><b>カテゴリ：</b> 属する商品・サービスのカテゴリで、候補に入るか。</li>
-          <li><b>目的・課題：</b> 顧客の困りごとを起点に、貴社へつながるか。</li>
+          <li><b>ポジション：</b> 貴社の強みと合う特徴・条件を指定したときに、紹介されるか。<span class="flow__ex">例：「英検対策に強いオンライン英語塾は？」</span></li>
+          <li><b>カテゴリ：</b> 属する商品・サービスのカテゴリで、候補に入るか。<span class="flow__ex">例：「子ども向けのおすすめの英語塾は？」</span></li>
+          <li><b>目的・課題：</b> 顧客の困りごとを起点に、貴社へつながるか。<span class="flow__ex">例：「習い事が多くても、英語を続けられる方法は？」</span></li>
         </ul>
         <p>加えて、ブランド名を指定した質問で、特徴や対応範囲の説明が正確かを確認します。</p></li>
       <li class="flow__step fx" data-k="s4"><h3><span class="flow__no">STEP 4</span><span class="flow__sep">｜</span>現在地とギャップを可視化</h3>
         <p>AI回答の言及・引用状況、選定理由、競合の登場状況を調査。ダッシュボード上で、目指す状態と現状の違いを整理します。</p></li>
       <li class="flow__step fx" data-k="s5"><h3><span class="flow__no">STEP 5</span><span class="flow__sep">｜</span>施策を提案・実行し、変化を検証</h3>
         <p>ギャップの大きさ、事業への重要性、実施負荷を踏まえて施策の優先順位を設定。制作・改修・情報発信を進め、継続的に変化を確認します。</p></li>
-      <li class="pen-note" data-n="loop" aria-hidden="true">戦略仮説も見直す</li>
+      <li class="pen-note" data-n="loop" aria-hidden="true">顧客ニーズや戦略仮説も見直す</li>
     </ol>
   </div>
 </section>
@@ -992,7 +1009,7 @@ p,li,dd,td{text-wrap:pretty}
     addEventListener("beforeprint", function(){ items.forEach(show); });
     setTimeout(function(){ items.forEach(function(el){ if (el.getBoundingClientRect().top < innerHeight) show(el); }); }, 2500);
   }
-  var TIDY = ".fv__body p,.prose p,.stp p,.after,.gap-txt,.flow__step > p,.flow__q li,.val__txt p,.person__cv,.cta2__note,.q-bubble";
+  var TIDY = ".fv__body p,.prose p,.stp p,.after,.gap-txt,.flow__step > p:not(.flow__tag),.flow__q li,.val__txt p,.person__cv,.cta2__note,.q-bubble";
   var widths = function(el){
     var rg = document.createRange(); rg.selectNodeContents(el); var rows = {};
     [].forEach.call(rg.getClientRects(), function(r){ if (r.width < 1) return; var k = Math.round(r.top);
@@ -1079,12 +1096,12 @@ p,li,dd,td{text-wrap:pretty}
       } else { link(P, g, go, {dir:"v", center1:true, center2:true}); link(P, g, nw, {dir:"v", center1:true, center2:true});
         link(P, nw, grp, {dir:"v", center1:true, center2:true, d:.6}); } },
     flow: function(root, P){ var k = function(n){ return P.box(root.querySelector('[data-k="' + n + '"]')); };
-      var s1 = k("s1"), s2 = k("s2"), s5 = k("s5"), x0 = s1.x - 12, xl = Math.max(4, s1.x - (s1.x > 70 ? 62 : 30));
+      var s1 = k("s1"), s2 = k("s2"), s5 = k("s5"), R = s1.x + s1.w, x0 = R + 12, room = root.clientWidth - R, xr = R + Math.min(62, Math.max(26, room - 30));
       var yb = s5.y + s5.h * .5, yt = (s1.y + s1.h + s2.y) / 2;
-      P.line("M" + x0 + " " + yb + " C" + xl + " " + yb + " " + xl + " " + (yb - 30) + " " + xl + " " + (yb - 60) + " L" + xl + " " + (yt + 60) + " C" + xl + " " + (yt + 30) + " " + xl + " " + yt + " " + (x0 - 16) + " " + yt, {w:2.2});
-      P.arrow(x0 - 18, yt, x0, yt, 0, {d:.8});
+      P.line("M" + x0 + " " + yb + " C" + xr + " " + yb + " " + xr + " " + (yb - 30) + " " + xr + " " + (yb - 60) + " L" + xr + " " + (yt + 60) + " C" + xr + " " + (yt + 30) + " " + xr + " " + yt + " " + (x0 + 16) + " " + yt, {w:2.2});
+      P.arrow(x0 + 18, yt, x0, yt, 0, {d:.8});
       var n = root.querySelector('.pen-note[data-n="loop"]');
-      if (n && getComputedStyle(n).display !== "none"){ n.style.top = ((yb + yt) / 2 + n.offsetWidth / 2) + "px"; n.style.left = (xl - 30) + "px"; } },
+      if (n && getComputedStyle(n).display !== "none"){ n.style.top = ((yb + yt) / 2 - n.offsetHeight / 2) + "px"; n.style.left = (xr + 10) + "px"; } },
     dash: function(root, P){ var lo = P.box(root.querySelector('[data-k="low"]')), row = P.box(root.querySelector('[data-k="act1"]'));
       P.ring({x:lo.x + lo.w - 52, y:lo.y + 6, w:46, h:lo.h - 12}, {pad:8});
       P.arrow(lo.x + lo.w - 40, lo.y + lo.h + 6, row.x + row.w * .42, row.y + 6, 30, {d:.4}); }
@@ -1160,7 +1177,7 @@ p,li,dd,td{text-wrap:pretty}
     boxes.forEach(function(b, i){ setTimeout(function(){ b.classList.add("is-on"); }, 200 + i * 250); });
     spokes.forEach(function(l, i){ setTimeout(function(){ l.classList.add("is-on"); }, 1100 + i * 150); });
     setTimeout(function(){ core.classList.add("is-on"); }, 1700);
-    setTimeout(function(){ f.querySelector(".c3-down").classList.add("is-on"); f.querySelector(".c3-out").classList.add("is-on"); shown = true; }, 2300);
+    [].forEach.call(f.querySelectorAll(".c3-down,.c3-stp,.c3-out"), function(el, i){ setTimeout(function(){ el.classList.add("is-on"); if (el.classList.contains("c3-out")) shown = true; }, 2300 + i * 450); });
   }, {threshold: .4}).observe(f);
 })();</script>
 <script>(function(){
@@ -1217,7 +1234,7 @@ p,li,dd,td{text-wrap:pretty}
   if (!matchMedia("(prefers-reduced-motion: reduce)").matches){ var p = v.play(); if (p && p.catch) p.catch(function(){}); }
 })();</script>
 <script>(function(){
-  var SEL = ".prose p,.fv__body p,.stp p,.after,.flow__step > p,.flow__q li,.val__txt p,.person__cv p,.cta2__note,.rd-txt,.q-cap__t";
+  var SEL = ".prose p,.fv__body p,.stp p,.after,.flow__step > p:not(.flow__tag),.flow__q li,.val__txt p,.person__cv p,.cta2__note,.rd-txt,.q-cap__t";
   var lastOk = function(el){
     var rg = document.createRange(); rg.selectNodeContents(el); var rows = {};
     [].forEach.call(rg.getClientRects(), function(r){ if (r.width < 1) return; var k = Math.round(r.top / 4); var o = rows[k] || (rows[k] = {l: 1e9, r: 0}); o.l = Math.min(o.l, r.left); o.r = Math.max(o.r, r.right); });
