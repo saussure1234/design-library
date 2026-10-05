@@ -1047,7 +1047,7 @@ function bootApp(D) {
     function breakdown(k) {
       const isD = k === IMG;
       const det = el("details", "tdet");
-      det.append(el("summary", null, isD ? `内訳を見る（打ち出したい特徴${F_ALL.length}つ）` : `${k} の内訳を見る（質問ごとの登場率）`));
+      det.append(el("summary", null, isD ? "内訳を見る" : `${k} の内訳を見る（質問ごとの登場率）`));
       const base = (p) => xs.filter((a) => a.platform === p.id && qByNo.get(a.q).layer === k && (isD || qByNo.get(a.q).counted));
       let rows;
       if (isD) {
