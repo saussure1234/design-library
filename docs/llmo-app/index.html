@@ -1659,9 +1659,10 @@ function pickerView(clients) {
 }
 function accountBar(sb, session, clients, cl) {
   const side = document.querySelector(".side"); const bar = document.createElement("div"); bar.className = "acct";
-  const who = document.createElement("p"); who.textContent = /^llmo-/.test(session.user.email || "") && cl ? `${cl.name} 様` : session.user.email; bar.append(who);
-  if (clients.length > 1) { const a = document.createElement("button"); a.type = "button"; a.className = "lnk"; a.textContent = "クライアントを切り替える"; a.addEventListener("click", () => { location.search = ""; }); bar.append(a); }
-  if (clients.length > 1) {   // 会社ごとのアカウントは共有なので、変更は So さんが行う（ここには出さない）
+  const em = session.user.email || ""; const shared = /^llmo-/.test(em);   // llmo-○○@… は共有アカウント（会社ごと・admin）
+  const who = document.createElement("p"); who.textContent = /^llmo-admin@/.test(em) ? "admin（共有）" : shared && cl ? `${cl.name} 様` : em; bar.append(who);
+  if (clients.length > 1) { const a = document.createElement("button"); a.type = "button"; a.className = "lnk"; a.textContent = "クライアントを切り替える"; a.addEventListener("click", () => { location.search = /^llmo-admin@/.test(em) ? "?c=admin" : ""; }); bar.append(a); }
+  if (clients.length > 1 && !shared) {   // 共有アカウント（会社ごと・admin）のパスワードは So さんが管理画面で変える（ここには出さない）
     const pw = document.createElement("button"); pw.type = "button"; pw.className = "lnk"; pw.textContent = "パスワードを変更";
     pw.addEventListener("click", () => setPasswordView(sb, () => location.reload())); bar.append(pw);
   }
