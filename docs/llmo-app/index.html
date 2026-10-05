@@ -79,6 +79,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .btabs button { flex: none; border: 0; background: transparent; padding: 8px 12px; font: inherit; font-size: 14px; font-weight: 700; color: var(--ink-2); border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; cursor: pointer; }
 .btabs button:hover { color: var(--ink); }
 .btabs button[aria-selected="true"] { color: var(--accent); border-bottom-color: var(--accent); }
+.compseg { margin: 10px 0 4px; flex-wrap: wrap; max-width: 100%; }
 .segc { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; padding: 2px; background: #fff; }
 .segc button { border: 0; background: transparent; border-radius: 6px; padding: 4px 10px; font-size: 13px; font-weight: 600; color: var(--ink-2); display: inline-flex; align-items: center; gap: 6px; }
 .segc button[aria-pressed="true"] { background: var(--tint); color: var(--accent); box-shadow: 0 0 0 1px var(--chk); }
@@ -1099,7 +1100,7 @@ function bootApp(D) {
     if (COMP.length > 1) {
       const p3 = el("div", "panel"); p3.style.marginTop = "12px"; p3.id = "comp"; p3.style.scrollMarginTop = "12px";
       const h3 = el("h2"); h3.append(el("span", null, "競合との比較"));
-      p3.append(h3, el("p", "desc", `ブランド名を入れていない質問（${span(CNT)}）で、各ブランドが答えに出た割合` + (D.competitor_by_layer ? "。見出しごとに分けて出す" : "")));
+      p3.append(h3, el("p", "desc", `ブランド名を入れていない質問で、各ブランドが答えに出た割合。ボタンで見出しごとに切り替えられます`));
       const cx = counted(xs);
       // 押すと、そのブランドが出た回答だけの質問一覧へ（社名を入れない質問・この期間。数は表の分子と同じ）
       const ACL = CNT.map(layerFull).filter(Boolean);
@@ -1121,22 +1122,27 @@ function bootApp(D) {
         });
         return tr;
       });
-      let rowsB;
-      if (D.competitor_by_layer) {
-        // 見出しごとに分ける（各見出しの前に、見出しの名前の行を入れる）
-        rowsB = CNT.flatMap((k) => {
-          const hd = el("tr", "subh"); const c = el("td", null, `${k} ${LAYERS[k]}`); c.colSpan = 1 + P.length; hd.append(c);
-          return [hd, ...brandRows(cx.filter((a) => qByNo.get(a.q).layer === k), k)];
-        });
-      } else rowsB = brandRows(cx, null);
+      // 表は1つ。上のボタンで「合計」か見出し1つかを切り替える（ケイウノも内田洋行も同じ形）
       const colsB = [{ label: "ブランド" }]; P.forEach((p) => colsB.push({ label: p.label }));
-      const tB = table(colsB, rowsB);
-      [...tB.querySelector("thead").querySelectorAll("th")].slice(1).forEach((h, i) => {
-        h.prepend(aiMark(P[i].id));
-        if (!cx.some((a) => a.platform === P[i].id)) return;
-        h.classList.add("clk"); h.title = `押すと、${P[i].label}の${span(CNT)}の回答を質問一覧で開きます`; h.addEventListener("click", () => openFiltered({ layers: ACL, ai: P[i].label }));
-      });
-      p3.append(tB); w.append(p3);
+      const opts = [["all", `合計（${span(CNT)}）`], ...CNT.map((k) => [k, `${k} ${LAYERS[k]}`])];
+      if (!opts.some(([v]) => v === compLayer)) compLayer = "all";
+      const pick = el("div", "segc compseg"); const holder = el("div");
+      const drawComp = () => {
+        pick.replaceChildren();
+        opts.forEach(([v, lab]) => { const b = el("button", null, lab); b.type = "button"; b.setAttribute("aria-pressed", String(compLayer === v)); b.addEventListener("click", () => { compLayer = v; drawComp(); }); pick.append(b); });
+        const one = compLayer !== "all";
+        const list = one ? cx.filter((a) => qByNo.get(a.q).layer === compLayer) : cx;
+        const tB = table(colsB, brandRows(list, one ? compLayer : null));
+        const lays = one ? [layerFull(compLayer)].filter(Boolean) : ACL;
+        [...tB.querySelector("thead").querySelectorAll("th")].slice(1).forEach((h, i) => {
+          h.prepend(aiMark(P[i].id));
+          if (!list.some((a) => a.platform === P[i].id)) return;
+          h.classList.add("clk"); h.title = `押すと、${P[i].label}の${one ? `${compLayer}（${LAYERS[compLayer]}）` : span(CNT)}の回答を質問一覧で開きます`; h.addEventListener("click", () => openFiltered({ layers: lays, ai: P[i].label }));
+        });
+        holder.replaceChildren(tB);
+      };
+      drawComp();
+      p3.append(pick, holder); w.append(p3);
     }
 
     return w;
@@ -1242,7 +1248,8 @@ function bootApp(D) {
     rowOrder = ord; saveOrder();
   }
   let dragKey = null;
-  let sheetFull = false;   // 質問一覧：切らずに全文で見せるか（その画面を開いている間だけ覚える）
+  let sheetFull = false;
+  let compLayer = "all";   // 競合との比較：合計か、見出し1つか（全クライアント同じ形）   // 質問一覧：切らずに全文で見せるか（その画面を開いている間だけ覚える）
   function openRowView(a, q) {
     const back = el("div", "rvback"); const box = el("div", "rview");
     box.setAttribute("role", "dialog"); box.setAttribute("aria-modal", "true"); box.setAttribute("aria-label", "回答の全文");
