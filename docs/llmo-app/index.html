@@ -999,7 +999,7 @@ function bootApp(D) {
     // 種類別：社名を入れない見出しは登場率と平均順位、社名を入れた見出し（ブランドイメージ）は合致率。表1つにまとめる
     const layerFull = (k) => (Q.find((q) => q.layer === k && qInBranch(q)) || {}).layer_full;
     const p2 = el("div", "panel"); p2.style.marginTop = "12px";
-    const h2 = el("h2"); h2.append(el("span", null, `種類別（${span(LCODES)}）`)); const m2 = el("button", "more", "質問一覧 →"); m2.type = "button"; m2.addEventListener("click", () => { location.hash = "#/prompts"; }); h2.append(m2);
+    const h2 = el("h2"); h2.append(el("span", null, "種類別")); const m2 = el("button", "more", "質問一覧 →"); m2.type = "button"; m2.addEventListener("click", () => { location.hash = "#/prompts"; }); h2.append(m2);
     const imgQs = Q.filter((q) => q.layer === IMG && qInBranch(q));
     p2.append(h2, el("p", "desc", `${span(CNT)}はブランド名を入れていない質問での登場率と平均順位。` + (IMG ? `${IMG}は${imgQs.length === 1 ? `「${imgQs[0].prompt}」` : `${SUBJ}の名前を入れた質問`}の答えに、打ち出したい特徴${F_ALL.length}つのうち何割が出たか（合致率）` : "")));
     // 内訳は、ブランドイメージ（社名を入れた質問）の行だけ畳んで出す（So 10/5。A〜D の行の内訳は 9/28 に止めたまま）
@@ -1125,7 +1125,7 @@ function bootApp(D) {
       });
       // 表は1つ。上のボタンで「合計」か見出し1つかを切り替える（ケイウノも内田洋行も同じ形）
       const colsB = [{ label: "ブランド" }]; P.forEach((p) => colsB.push({ label: p.label }));
-      const opts = [["all", `合計（${span(CNT)}）`], ...CNT.map((k) => [k, `${k} ${LAYERS[k]}`])];
+      const opts = [["all", "合計"], ...CNT.map((k) => [k, `${k} ${LAYERS[k]}`])];
       if (!opts.some(([v]) => v === compLayer)) compLayer = "all";
       const pick = el("div", "segc compseg"); const holder = el("div");
       const drawComp = () => {
@@ -1262,7 +1262,7 @@ function bootApp(D) {
     ht.append(meta, el("p", "rvq", q.prompt));
     const x = el("button", "rvx", "×"); x.type = "button"; x.setAttribute("aria-label", "閉じる"); x.addEventListener("click", close);
     hd.append(ht, x); box.append(hd);
-    box.append(el("h3", null, "AIの回答（全文）"));
+    box.append(el("h3", null, "AIの回答"));
     const t = el("div", "rvt");
     for (const part of (a.text || "").split(/(\*\*[^*\n]+\*\*)/)) {
       const bold = /^\*\*[^*\n]+\*\*$/.test(part); const target = bold ? el("b") : t; const str = bold ? part.slice(2, -2) : part; let last = 0, m; SUBJ_RE.lastIndex = 0;
@@ -1271,7 +1271,7 @@ function bootApp(D) {
     }
     box.append(t);
     if ((a.stores || []).length) { box.append(el("h3", null, "回答に出た店舗・カード")); const st = el("div", "rvt"); st.textContent = a.stores.join("\n"); box.append(st); }
-    box.append(el("h3", null, "記録（シートと同じ項目）"));
+    box.append(el("h3", null, "記録"));
     const rec = el("dl", "rvrec");
     [[`${SUBJ}登場`, q.counted ? (a.appeared ? `○（${a.rank}番目）` : "×") : "—（社名を入れた質問）"], ["選定理由・説明", a.reason || "—"], ["仮説との一致", a.match || "—"],
      ["競合", (a.competitors || []).join(" / ") || "—"], ...(a.image ? [["イメージ要約", a.image]] : [])].forEach(([k, v]) => rec.append(el("dt", null, k), el("dd", null, v)));
@@ -1523,7 +1523,7 @@ function bootApp(D) {
     const meta = el("p", "meta"); [`${fmt(a.run_at)}（日本時間）`, a.model === "不明" ? "モデル名表示なし" : a.model, a.region, a.login ? `ログイン${a.login}` : ""].filter(Boolean).forEach((t) => meta.append(el("span", null, t))); w.append(meta);
 
     const det = el("div", "det");
-    const left = el("div"); const ah = el("div", "ahead"); ah.append(el("h2", null, "AIの回答（原文）"));
+    const left = el("div"); const ah = el("div", "ahead"); ah.append(el("h2", null, "AIの回答"));
     const box = el("div", "answer"); let count = 0;
     for (const part of a.text.split(/(\*\*[^*\n]+\*\*)/)) { const bold = /^\*\*[^*\n]+\*\*$/.test(part); const target = bold ? el("b") : box; const s = bold ? part.slice(2, -2) : part; let last = 0, m; SUBJ_RE.lastIndex = 0;
       while ((m = SUBJ_RE.exec(s))) { if (m.index > last) target.append(s.slice(last, m.index)); target.append(el("mark", null, m[0])); count++; last = m.index + m[0].length; if (!m[0].length) SUBJ_RE.lastIndex++; }
@@ -1535,7 +1535,7 @@ function bootApp(D) {
     const rec = el("dl", "rec");
     [["仮説との一致", a.match], ["推薦順位", a.rank ? `${a.rank}番目` : "—"], ["選定理由・説明", a.reason || "—"], ["競合", a.competitors.join(" / ") || "—"], ...(a.image ? [["イメージ要約", a.image]] : [])]
       .forEach(([k, v]) => rec.append(el("dt", null, k), el("dd", null, v)));
-    right.append(pn("記録（シートと同じ項目）", rec));
+    right.append(pn("記録", rec));
     if (a.brands.length) { const c = el("div", "chips"); a.brands.forEach((b) => c.append(el("span", "chip" + (b === SUBJ ? " me" : ""), b))); right.append(pn("回答に出たブランド（出た順）", c)); }
     const ul = el("ul", "list");
     if (a.sources.length) a.sources.forEach((s) => { const li = el("li"); li.append(el("span", "kind", s.kind), document.createTextNode(" "));
