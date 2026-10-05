@@ -134,6 +134,11 @@ p,li,dd,td{text-wrap:pretty}
 .about{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(40px,5vw,56px)}    
 .about > div:first-child{width:100%;max-width:800px;margin-inline:auto}
 .about > figure{width:min(100%,1000px);margin-inline:auto}
+.about-deco{display:none}
+@media (min-width:1200px){
+  .wrap.about{position:relative}
+  .about-deco{display:block;position:absolute;z-index:1;right:clamp(24px,4vw,70px);top:clamp(60px,6vw,96px);height:clamp(190px,16vw,240px);width:auto;transform:rotate(-4deg);pointer-events:none}
+}
 .dia--gap{display:grid}
 .gap-row{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:18px;align-items:stretch}
 .gap-card{background:var(--paper);border:1px solid var(--line2);border-radius:16px;padding:18px 18px 20px;display:grid;align-content:start;gap:8px}
@@ -822,6 +827,7 @@ p,li,dd,td{text-wrap:pretty}
         <div class="rd-card rd-card--goal"><p class="rd-lbl"><i aria-hidden="true"></i>目指す状態</p><p class="rd-txt">複数領域をまとめて支援できる会社として紹介</p></div>
       </div>
     </figure>
+    <img class="about-deco" src="img/chara/flagplant.webp" width="358" height="404" alt="" aria-hidden="true" loading="lazy">
   </div>
 </section>
 <section class="ctaband sec--paper" aria-label="無料レポート・サービス紹介資料">
