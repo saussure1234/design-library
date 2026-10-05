@@ -453,7 +453,7 @@ function bootApp(D) {
   // 期間：ダッシュボード・質問一覧は最新の計測日から、推移は全期間から（1日分だと線にならないため）。回は常に1〜3回目すべて
   // 推移・質問一覧のブランドは1つ選ぶか「すべて」。推移の最初は自社（＝AIごとの線）、質問一覧の最初は「すべて」（So 10/1 で一度ケイウノにして戻した）
   // ダッシュボードの「競合との比較」から飛ぶ時は、押したマスのブランドで絞る
-  const state = { ai: "all", round: "all", layer: "all", brand: (D.tracked || []).includes(D.subject) ? D.subject : "all", qbrand: "all", branch: "all", range: { from: LAST_B, to: LAST_B }, trange: { from: FIRST_B, to: LAST_B } };
+  const state = { ai: "all", round: "all", layer: "all", brand: (D.tracked || []).includes(D.subject) ? D.subject : "all", qbrand: "all", branch: (D.branches && D.branches.length) ? D.branches[0].code : "all", range: { from: LAST_B, to: LAST_B }, trange: { from: FIRST_B, to: LAST_B } };
   // ブランドの色（AIの4色と被らない4色。色覚の検査済み：全組でΔE 24以上・薄い2色は線の端の名前と数値の一覧で補う）
   const BRAND_COLOR = ["#034da8", "#8e5400", "#d391fa", "#a5bf36"];
   const brandColor = (b) => BRAND_COLOR[(D.tracked || []).indexOf(b)] || "#8a92a5";
@@ -623,7 +623,7 @@ function bootApp(D) {
   const POSE = { thumbs: { flip: true, wide: true }, hand: { flip: true, wide: true }, jump: {}, confused: {}, magnifier: {}, "walk-smile": {} };
   function branchTabs() {
     const nav = el("div", "btabs"); nav.setAttribute("role", "tablist"); nav.setAttribute("aria-label", "分岐");
-    [["all", "すべて"], ...BRANCHES.map((b) => [b.code, `${b.code} ${b.name}`])].forEach(([v, lab]) => {
+    BRANCHES.map((b) => [b.code, `${b.code} ${b.name}`]).forEach(([v, lab]) => {   // 「すべて」は出さない：分岐ごとに設計が違い、足すと意味が崩れる
       const b = el("button", null, lab); b.type = "button"; b.setAttribute("role", "tab"); b.setAttribute("aria-selected", String(state.branch === v));
       b.addEventListener("click", () => { state.branch = v; route(); }); nav.append(b);
     });
