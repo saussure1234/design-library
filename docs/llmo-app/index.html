@@ -435,13 +435,18 @@ function bootApp(D) {
   const A = new Map(ALL.map((a) => [`${a.q}|${a.platform}|${a.round}`, a]));
   const ROUNDS = Array.from({ length: D.rounds }, (_, i) => i + 1);
   // 見出し（種類）は案件ごとに違う（ケイウノ：A カテゴリ〜D ブランドイメージ／内田洋行：A 目的・課題〜E ブランドイメージ）
-  const LAYER_DEF = (D.layers && D.layers.length ? D.layers : [{ code: "A", name: "カテゴリ", counted: true }, { code: "B", name: "ポジション", counted: true }, { code: "C", name: "目的・課題", counted: true }, { code: "D", name: "ブランドイメージ", counted: false }])
-    .filter((l) => !D.layers || !D.layers.length || true);   // 定義した見出しは、まだ回答が無くても出す（「—」になる）
-  const LAYERS = Object.fromEntries(LAYER_DEF.map((l) => [l.code, l.name]));
-  const LCODES = LAYER_DEF.map((l) => l.code);                                  // 全部の見出し
-  const CNT = LAYER_DEF.filter((l) => l.counted !== false).map((l) => l.code);  // 社名を入れない質問（登場率で見る）
-  const IMG = (LAYER_DEF.find((l) => l.counted === false) || {}).code || null;   // 社名を入れた質問（合致率で見る）
-  const span = (ks) => (ks.length > 1 ? `${ks[0]}〜${ks[ks.length - 1]}` : ks[0] || "");
+  const LAYER_BASE = D.layers && D.layers.length ? D.layers : [{ code: "A", name: "カテゴリ", counted: true }, { code: "B", name: "ポジション", counted: true }, { code: "C", name: "目的・課題", counted: true }, { code: "D", name: "ブランドイメージ", counted: false }];
+  // 分岐ごとに設計が違う案件（内田洋行：01＝A〜E、02〜04＝⓪→C→A→B→D）は、選んだ分岐の見出しだけを使う
+  let LAYER_DEF, LAYERS, LCODES, CNT, IMG;
+  function setLayers(b) {
+    LAYER_DEF = (D.layers_by_branch && D.layers_by_branch[b]) || LAYER_BASE;   // 定義した見出しは、まだ回答が無くても出す（「—」になる）
+    LAYERS = Object.fromEntries(LAYER_DEF.map((l) => [l.code, l.name]));
+    LCODES = LAYER_DEF.map((l) => l.code);                                  // 全部の見出し
+    CNT = LAYER_DEF.filter((l) => l.counted !== false).map((l) => l.code);  // 社名を入れない質問（登場率で見る）
+    IMG = (LAYER_DEF.find((l) => l.counted === false) || {}).code || null;   // 社名を入れた質問（合致率で見る）
+  }
+  // 「A〜D」のように並びが続く時だけ範囲で書く（⓪・C・A・B のような並びは列挙）
+  const span = (ks) => { if (ks.length <= 1) return ks[0] || ""; const ok = ks.every((k, i) => /^[A-Z]$/.test(k) && (i === 0 || k.charCodeAt(0) === ks[i - 1].charCodeAt(0) + 1)); return ok ? `${ks[0]}〜${ks[ks.length - 1]}` : ks.join("・"); };
   const BRANCHES = D.branches || [];   // 分岐（内田洋行の4テーマなど。無い案件は絞り込みを出さない）
   const jst = new Intl.DateTimeFormat("ja-JP", { timeZone: "Asia/Tokyo", month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
   const fmt = (iso) => { const d = new Date(iso); return isNaN(d) ? "—" : jst.format(d); };
@@ -454,6 +459,7 @@ function bootApp(D) {
   // 推移・質問一覧のブランドは1つ選ぶか「すべて」。推移の最初は自社（＝AIごとの線）、質問一覧の最初は「すべて」（So 10/1 で一度ケイウノにして戻した）
   // ダッシュボードの「競合との比較」から飛ぶ時は、押したマスのブランドで絞る
   const state = { ai: "all", round: "all", layer: "all", brand: (D.tracked || []).includes(D.subject) ? D.subject : "all", qbrand: "all", branch: (D.branches && D.branches.length) ? D.branches[0].code : "all", range: { from: LAST_B, to: LAST_B }, trange: { from: FIRST_B, to: LAST_B } };
+  setLayers(state.branch);
   // ブランドの色（AIの4色と被らない4色。色覚の検査済み：全組でΔE 24以上・薄い2色は線の端の名前と数値の一覧で補う）
   const BRAND_COLOR = ["#034da8", "#8e5400", "#d391fa", "#a5bf36"];
   const brandColor = (b) => BRAND_COLOR[(D.tracked || []).indexOf(b)] || "#8a92a5";
@@ -625,7 +631,7 @@ function bootApp(D) {
     const nav = el("div", "btabs"); nav.setAttribute("role", "tablist"); nav.setAttribute("aria-label", "分岐");
     BRANCHES.map((b) => [b.code, `${b.code} ${b.name}`]).forEach(([v, lab]) => {   // 「すべて」は出さない：分岐ごとに設計が違い、足すと意味が崩れる
       const b = el("button", null, lab); b.type = "button"; b.setAttribute("role", "tab"); b.setAttribute("aria-selected", String(state.branch === v));
-      b.addEventListener("click", () => { state.branch = v; route(); }); nav.append(b);
+      b.addEventListener("click", () => { state.branch = v; state.layer = "all"; setLayers(v); route(); }); nav.append(b);
     });
     return nav;
   }
@@ -682,7 +688,8 @@ function bootApp(D) {
   const B = (t) => ({ b: t });
   const NW = (t) => ({ nw: t });   // 数字の組（9/26 41% → 9/28 51%）は途中で折り返さない
   const sgn = (d) => (d > 0 ? `+${d}` : d < 0 ? `−${-d}` : "±0");
-  const layerFullOf = (k) => (Q.find((q) => q.layer === k) || {}).layer_full;
+  const qInBranch = (q) => state.branch === "all" || (q.branches || []).includes(state.branch);
+  const layerFullOf = (k) => (Q.find((q) => q.layer === k && qInBranch(q)) || {}).layer_full;
   const rateOf = (list) => { const c = counted(list); return c.length ? pct(c.filter((a) => a.appeared).length, c.length) : null; };
   // 同じ質問×AIで、何回聞いても1回も名前が出ない組み合わせ（2回以上聞いたものだけ）
   function zeroPairs(xs) {
@@ -967,10 +974,10 @@ function bootApp(D) {
     w.append(cards);
 
     // 種類別：社名を入れない見出しは登場率と平均順位、社名を入れた見出し（ブランドイメージ）は合致率。表1つにまとめる
-    const layerFull = (k) => (Q.find((q) => q.layer === k) || {}).layer_full;
+    const layerFull = (k) => (Q.find((q) => q.layer === k && qInBranch(q)) || {}).layer_full;
     const p2 = el("div", "panel"); p2.style.marginTop = "12px";
     const h2 = el("h2"); h2.append(el("span", null, `種類別（${span(LCODES)}）`)); const m2 = el("button", "more", "質問一覧 →"); m2.type = "button"; m2.addEventListener("click", () => { location.hash = "#/prompts"; }); h2.append(m2);
-    const imgQs = Q.filter((q) => q.layer === IMG);
+    const imgQs = Q.filter((q) => q.layer === IMG && qInBranch(q));
     p2.append(h2, el("p", "desc", `${span(CNT)}はブランド名を入れていない質問での登場率と平均順位。` + (IMG ? `${IMG}は${imgQs.length === 1 ? `「${imgQs[0].prompt}」` : `${SUBJ}の名前を入れた質問`}の答えに、打ち出したい特徴${F_ALL.length}つのうち何割が出たか（合致率）` : "")));
     const SHOW_BREAKDOWN = false;   // 各行の下の内訳（So 9/28「一回内訳消して」で止めている。戻すときは true にするだけ）
     const rows2 = LCODES.flatMap((k) => {
@@ -1037,7 +1044,7 @@ function bootApp(D) {
           return tr;
         });
       } else {
-        rows = Q.filter((q) => q.layer === k && q.counted).map((q) => {
+        rows = Q.filter((q) => q.layer === k && q.counted && qInBranch(q)).map((q) => {
           const tr = el("tr"); const tdq = el("td", "nowrap clk"); tdq.append(el("b", "qid", q.id), document.createTextNode(` ${q.theme}`));
           tdq.title = `${q.prompt}\n押すと、この質問（${q.id}）の回答を質問一覧で開きます`; tdq.addEventListener("click", () => openFiltered({ qid: q.id }));
           tr.append(tdq);
@@ -1532,7 +1539,7 @@ async function loadClient(sb, cl) {
   if (pids.size) as.splice(0, as.length, ...as.filter((a) => pids.has(a.platform)));   // AI一覧に無い媒体（入れ替え前の古い行）は数えない
   return {
     subject: cl.name, subject_pattern: cl.subject_pattern, tracked: cl.tracked || [], features_all: cl.features || [],
-    layers: cl.layers || [], branches: cl.branches || [], competitor_by_layer: !!cl.competitor_by_layer, platforms: cl.platforms || [],
+    layers: Array.isArray(cl.layers) ? cl.layers : ((cl.layers || {}).default || []), layers_by_branch: Array.isArray(cl.layers) ? null : ((cl.layers || {}).by_branch || null), branches: cl.branches || [], competitor_by_layer: !!cl.competitor_by_layer, platforms: cl.platforms || [],
     questions: qs.map((q) => ({ no: q.no, id: q.code, layer: q.layer, layer_label: q.layer_label, layer_full: q.layer_full, theme: q.theme, branches: q.branches || [], prompt: q.prompt, counted: q.counted })),
     answers: as.map((a) => ({ ...a, appeared: a.appeared ? 1 : 0, brands: a.brands || [], competitors: a.competitors || [], sources: a.sources || [], cards: a.cards || [], stores: a.stores || [], feat_hits: a.feat_hits || [] })),
     batches: [...new Set(as.map((a) => a.batch))].sort(),
