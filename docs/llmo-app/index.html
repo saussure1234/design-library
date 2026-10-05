@@ -217,6 +217,27 @@ a.full:hover { text-decoration: underline; }
 .sheet .cl { display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; white-space: pre-line; }
 .sheet .cl3 { -webkit-line-clamp: 3; }
 .sheet .cl4 { -webkit-line-clamp: 4; }
+.sheet.fulltext .cl { display: block; -webkit-line-clamp: unset; overflow: visible; }
+.sheet td.more { cursor: zoom-in; }
+.sheethint { color: var(--muted); font-size: 12px; margin-top: 8px; }
+.btn[aria-pressed="true"] { background: var(--tint); color: var(--accent); border-color: var(--accent); }
+.rvback { position: fixed; inset: 0; z-index: 80; background: rgba(15,26,46,.38); display: grid; place-items: center; padding: 16px; }
+.rview { width: min(880px, 100%); max-height: calc(100vh - 32px); overflow: auto; background: #fff; border-radius: 12px; box-shadow: 0 18px 44px rgba(15,26,46,.28); padding: 18px 22px 22px; }
+.rview .rvh { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.rview .rvmeta { color: var(--ink-2); font-size: 12.5px; display: flex; flex-wrap: wrap; gap: 4px 12px; }
+.rview .rvq { font-size: 15px; font-weight: 800; margin-top: 6px; line-height: 1.6; }
+.rview h3 { font-size: 12.5px; font-weight: 800; color: var(--ink-2); margin: 18px 0 6px; letter-spacing: .02em; }
+.rview .rvt { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.8; font-size: 14px; color: var(--ink); }
+.rview .rvt mark { background: #fff1a8; padding: 0 1px; }
+.rview dl.rvrec { display: grid; grid-template-columns: 9em 1fr; gap: 6px 12px; font-size: 13px; }
+.rview dl.rvrec dt { color: var(--ink-2); font-weight: 700; }
+.rview dl.rvrec dd { white-space: pre-wrap; overflow-wrap: anywhere; }
+.rview .rvsrc a { display: block; overflow-wrap: anywhere; color: var(--accent); font-size: 13px; line-height: 1.7; }
+.rview .rvx { flex: none; border: 1px solid var(--line); background: #fff; border-radius: 8px; width: 34px; height: 34px; font-size: 18px; line-height: 1; cursor: pointer; color: var(--ink-2); }
+.rview .rvx:hover { background: var(--soft); }
+.rview .rvgo { display: inline-block; margin-top: 18px; font-weight: 700; color: var(--accent); text-decoration: none; }
+.rview .rvgo:hover { text-decoration: underline; }
+@media (max-width: 640px) { .rview { padding: 14px 14px 18px; } .rview dl.rvrec { grid-template-columns: 1fr; } }
 .sheet th { position: sticky; top: 0; z-index: 2; background: var(--soft); color: var(--ink); font-weight: 700; }
 .sheet .rn { position: sticky; left: 0; z-index: 1; background: var(--soft); color: var(--muted); text-align: center; padding: 6px 0; cursor: grab; user-select: none; }
 .sheet th.rn { z-index: 3; }
@@ -1221,6 +1242,41 @@ function bootApp(D) {
     rowOrder = ord; saveOrder();
   }
   let dragKey = null;
+  let sheetFull = false;   // 質問一覧：切らずに全文で見せるか（その画面を開いている間だけ覚える）
+  function openRowView(a, q) {
+    const back = el("div", "rvback"); const box = el("div", "rview");
+    box.setAttribute("role", "dialog"); box.setAttribute("aria-modal", "true"); box.setAttribute("aria-label", "回答の全文");
+    const close = () => { back.remove(); document.removeEventListener("keydown", onKey); };
+    const onKey = (e) => { if (e.key === "Escape") close(); };
+    back.addEventListener("click", (e) => { if (e.target === back) close(); });
+    const hd = el("div", "rvh"); const ht = el("div");
+    const meta = el("div", "rvmeta"); [q.id, q.layer_full, pname(a.platform), `${a.round}回目`, a.run_at ? `${fmt(a.run_at)}（日本時間）` : ""].filter(Boolean).forEach((t) => meta.append(el("span", null, t)));
+    ht.append(meta, el("p", "rvq", q.prompt));
+    const x = el("button", "rvx", "×"); x.type = "button"; x.setAttribute("aria-label", "閉じる"); x.addEventListener("click", close);
+    hd.append(ht, x); box.append(hd);
+    box.append(el("h3", null, "AIの回答（全文）"));
+    const t = el("div", "rvt");
+    for (const part of (a.text || "").split(/(\*\*[^*\n]+\*\*)/)) {
+      const bold = /^\*\*[^*\n]+\*\*$/.test(part); const target = bold ? el("b") : t; const str = bold ? part.slice(2, -2) : part; let last = 0, m; SUBJ_RE.lastIndex = 0;
+      while ((m = SUBJ_RE.exec(str))) { if (m.index > last) target.append(str.slice(last, m.index)); target.append(el("mark", null, m[0])); last = m.index + m[0].length; if (!m[0].length) SUBJ_RE.lastIndex++; }
+      target.append(str.slice(last)); if (bold) t.append(target);
+    }
+    box.append(t);
+    if ((a.stores || []).length) { box.append(el("h3", null, "回答に出た店舗・カード")); const st = el("div", "rvt"); st.textContent = a.stores.join("\n"); box.append(st); }
+    box.append(el("h3", null, "記録（シートと同じ項目）"));
+    const rec = el("dl", "rvrec");
+    [[`${SUBJ}登場`, q.counted ? (a.appeared ? `○（${a.rank}番目）` : "×") : "—（社名を入れた質問）"], ["選定理由・説明", a.reason || "—"], ["仮説との一致", a.match || "—"],
+     ["競合", (a.competitors || []).join(" / ") || "—"], ...(a.image ? [["イメージ要約", a.image]] : [])].forEach(([k, v]) => rec.append(el("dt", null, k), el("dd", null, v)));
+    box.append(rec);
+    box.append(el("h3", null, "引用URL・出典"));
+    const src = el("div", "rvsrc");
+    if ((a.sources || []).length) a.sources.forEach((sx) => { const u = sx.url || ""; if (u) { const l = el("a", null, (sx.label ? `${sx.label}｜` : "") + u); l.href = u; l.target = "_blank"; l.rel = "noopener"; src.append(l); } else src.append(el("div", null, sx.domain || sx.label || "")); });
+    else src.append(el("div", null, "（引用の表示なし）"));
+    box.append(src);
+    const go = el("a", "rvgo", "この回答のページを開く（AI・回の切り替え） →"); go.href = `#/prompts/${encodeURIComponent(q.id)}/${a.platform}/${a.round}`; go.addEventListener("click", close);
+    box.append(go);
+    back.append(box); document.body.append(back); document.addEventListener("keydown", onKey); x.focus();
+  }
   // 列の定義（見出し・幅・値・寄せ）。表示・絞り込み・CSVの3つで同じ値を使う（記録シート 04_AI回答記録 と同じ列）
   const COLS = () => [   // [見出し, 幅, 値, 寄せ, 折り返して見せる最大行数（0＝全部）]
     ["設問ID", 80, (a, q) => q.id],
@@ -1335,7 +1391,10 @@ function bootApp(D) {
     const clearF = el("button", "btn", "絞り込みを解除"); clearF.type = "button";
     const dl = el("button", "btn primary", "CSVダウンロード"); dl.type = "button";
     const chip = el("span", "fchip");   // 内訳から開いたときだけ出す（何で絞っているか）
-    bar.append(s, chip, reset, clearF, dl); w.append(bar);
+    const fullBtn = el("button", "btn", "全文で表示"); fullBtn.type = "button"; fullBtn.setAttribute("aria-pressed", String(sheetFull));
+    fullBtn.title = "長い回答を切らずに、表の中で全部見せます";
+    bar.append(s, chip, reset, clearF, fullBtn, dl); w.append(bar);
+    w.append(el("p", "sheethint", "セルをダブルクリックすると、その回答を全文で開けます。「全文で表示」を押すと、表の中で切らずに見られます。"));
     const box = el("div"); w.append(box);
     let shown = [];
     const vals = (a) => { const q = qByNo.get(a.q); return cols.map((c) => c[2](a, q) || ""); };
@@ -1361,7 +1420,7 @@ function bootApp(D) {
         x.addEventListener("click", () => { featFilter = null; draw(); });
         chip.append(el("span", null, `${featFilter.layer} の内訳から：「${featFilter.feature}」が説明された回答だけ`), x);
       }
-      const g = el("div", "sheet"); const t = el("table"); const th = el("thead"); const hr = el("tr");
+      const g = el("div", "sheet" + (sheetFull ? " fulltext" : "")); const t = el("table"); const th = el("thead"); const hr = el("tr");
       const rn = el("th", "rn", ""); rn.style.width = "44px"; hr.append(rn);
       cols.forEach(([lab, px], i) => {
         const c = el("th"); c.style.width = `${px}px`; c.title = lab;
@@ -1384,9 +1443,11 @@ function bootApp(D) {
           const c = el("td", cols[i][3] || null); const lines = cols[i][4];
           if (cols[i][0] === "取得日時" && x.includes("T")) { const [d, t2] = x.split("T"); c.append(`${d}T`, el("wbr"), t2); }
           else if (cols[i][0] === "AI") c.append(aiMark(a.platform), x);
-          else if (lines && x) c.append(el("div", `cl cl${lines}`, x));
+          else if (lines && x) { c.append(el("div", `cl cl${lines}`, x)); c.classList.add("more"); }
           else c.textContent = x;
-          if (x) c.title = x; tr.append(c);
+          if (x) c.title = lines ? "ダブルクリックで全文を表示" : x;
+          c.addEventListener("dblclick", (e) => { e.preventDefault(); const sel = window.getSelection && window.getSelection(); if (sel) sel.removeAllRanges(); openRowView(a, qByNo.get(a.q)); });
+          tr.append(c);
         });
         // 行番号をつかんだ時だけ行をドラッグできるようにする（スプレッドシートの行移動と同じ）
         num.addEventListener("pointerdown", () => { tr.draggable = true; });
@@ -1411,6 +1472,8 @@ function bootApp(D) {
     };
     reset.addEventListener("click", () => { rowOrder = []; saveOrder(); draw(); });
     clearF.addEventListener("click", () => { colFilters.clear(); featFilter = null; closeFilter(); draw(); });
+    fullBtn.addEventListener("click", () => { sheetFull = !sheetFull; fullBtn.setAttribute("aria-pressed", String(sheetFull)); fullBtn.textContent = sheetFull ? "切って表示" : "全文で表示"; draw(); });
+    if (sheetFull) fullBtn.textContent = "切って表示";
     dl.addEventListener("click", () => downloadCsv(cols.map((c) => c[0]), shown.map((r) => r.v)));
     s.addEventListener("input", draw); draw();
     return w;
