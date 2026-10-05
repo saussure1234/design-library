@@ -320,7 +320,6 @@ p,li,dd,td{text-wrap:pretty}
 .flow__q li{background:var(--bg);border-radius:10px;padding:9px 14px;font-size:15px;line-height:1.7;color:var(--ink2)}
 .flow__q b{color:var(--ink)}
 .flow__ex{display:block;font-size:13.5px;color:var(--ink3)}
-.flow__tag{display:inline-block;margin-top:10px;padding:3px 10px;border-radius:6px;background:var(--tint);color:var(--acc);font-size:13px;font-weight:700;line-height:1.6}
 .flow .pen-note[data-n="loop"]{left:0;font-size:19px;--r:0deg;writing-mode:vertical-rl;text-orientation:upright;letter-spacing:.08em}
 .vals{margin-top:52px;display:grid;grid-template-columns:minmax(0,1fr);gap:18px}    
 .val{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:30px 34px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);grid-template-areas:"h fig" "txt fig";grid-template-rows:auto 1fr;column-gap:clamp(28px,4vw,56px);row-gap:12px;align-items:start}
@@ -646,7 +645,7 @@ p,li,dd,td{text-wrap:pretty}
   .rd-walker{display:none}
 }
 @media (max-width:480px){
-  .prose p,.fv__body p,.stp p,.after,.flow__step > p:not(.flow__tag),.flow__q li,.val__txt p,.person__cv p,.cta2__note,.rd-txt,.q-cap__t{letter-spacing:0!important;text-align:start}
+  .prose p,.fv__body p,.stp p,.after,.flow__step > p,.flow__q li,.val__txt p,.person__cv p,.cta2__note,.rd-txt,.q-cap__t{letter-spacing:0!important;text-align:start}
 }
 @media (max-width:600px){ .shot-s video{aspect-ratio:4/5} }    
 @media (min-width:1320px){ #why .h2wrap{padding-left:0} }
@@ -859,10 +858,8 @@ p,li,dd,td{text-wrap:pretty}
   <div class="wrap narrow">
     <ol class="flow pen" data-dia="flow">
       <li class="flow__step fx" data-k="s1"><h3><span class="flow__no">STEP 1</span><span class="flow__sep">｜</span>顧客のニーズと需要の規模を調査</h3>
-        <p class="flow__tag">検索需要・PAA・顧客の声</p>
         <p>キーワード・月間検索数・PAAの調査と、営業やカスタマーサポートなど顧客接点を持つ方へのヒアリングを通じて、目的・課題、比較条件、不安を把握します。検索需要を参考にニーズの規模を捉え、検索語だけでは表しにくい相談内容も整理します。</p></li>
       <li class="flow__step fx" data-k="s2"><h3><span class="flow__no">STEP 2</span><span class="flow__sep">｜</span>競合・自社を比較し、STPを整理</h3>
-        <p class="flow__tag">競合・自社の比較→STP</p>
         <p>同業他社や代替手段の提供内容と、貴社の商品・サービス、実績、体制、保有する知見を比較し、相対的な強みを定義します。顧客ニーズと需要の規模を踏まえて市場を分け、狙う領域と選ばれる理由を定めます。</p></li>
       <li class="flow__step fx" data-k="s3"><h3><span class="flow__no">STEP 3</span><span class="flow__sep">｜</span>ポジション・カテゴリ・目的課題から質問を設計</h3>
         <p>STPで定めた顧客ニーズと提供価値を起点に、次の観点で計測用のプロンプトを設計します。</p>
@@ -1009,7 +1006,7 @@ p,li,dd,td{text-wrap:pretty}
     addEventListener("beforeprint", function(){ items.forEach(show); });
     setTimeout(function(){ items.forEach(function(el){ if (el.getBoundingClientRect().top < innerHeight) show(el); }); }, 2500);
   }
-  var TIDY = ".fv__body p,.prose p,.stp p,.after,.gap-txt,.flow__step > p:not(.flow__tag),.flow__q li,.val__txt p,.person__cv,.cta2__note,.q-bubble";
+  var TIDY = ".fv__body p,.prose p,.stp p,.after,.gap-txt,.flow__step > p,.flow__q li,.val__txt p,.person__cv,.cta2__note,.q-bubble";
   var widths = function(el){
     var rg = document.createRange(); rg.selectNodeContents(el); var rows = {};
     [].forEach.call(rg.getClientRects(), function(r){ if (r.width < 1) return; var k = Math.round(r.top);
@@ -1234,7 +1231,7 @@ p,li,dd,td{text-wrap:pretty}
   if (!matchMedia("(prefers-reduced-motion: reduce)").matches){ var p = v.play(); if (p && p.catch) p.catch(function(){}); }
 })();</script>
 <script>(function(){
-  var SEL = ".prose p,.fv__body p,.stp p,.after,.flow__step > p:not(.flow__tag),.flow__q li,.val__txt p,.person__cv p,.cta2__note,.rd-txt,.q-cap__t";
+  var SEL = ".prose p,.fv__body p,.stp p,.after,.flow__step > p,.flow__q li,.val__txt p,.person__cv p,.cta2__note,.rd-txt,.q-cap__t";
   var lastOk = function(el){
     var rg = document.createRange(); rg.selectNodeContents(el); var rows = {};
     [].forEach.call(rg.getClientRects(), function(r){ if (r.width < 1) return; var k = Math.round(r.top / 4); var o = rows[k] || (rows[k] = {l: 1e9, r: 0}); o.l = Math.min(o.l, r.left); o.r = Math.max(o.r, r.right); });
