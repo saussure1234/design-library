@@ -527,7 +527,7 @@ function bootApp(D) {
   const inRound = (a) => state.round === "all" || a.round === state.round;
   const inBatch = (a) => !state.range.from || (a.batch >= state.range.from && a.batch <= state.range.to);
   const inLayer = (a) => state.layer === "all" || qByNo.get(a.q).layer === state.layer;
-  const inBranch = (a) => state.branch === "all" || (qByNo.get(a.q).branches || []).includes(state.branch);
+  const inBranch = (a) => { const q = qByNo.get(a.q); return (state.branch === "all" || (q.branches || []).includes(state.branch)) && LCODES.includes(q.layer); };   // その分岐で定義した見出しの質問だけ（外した見出しは数えない）
   const sel = () => ALL.filter((a) => inAI(a) && inRound(a) && inBatch(a) && inLayer(a) && inBranch(a));
   const counted = (xs) => xs.filter((a) => qByNo.get(a.q).counted);
   const plats = () => (state.ai === "all" ? P : P.filter((p) => p.id === state.ai));
@@ -729,10 +729,10 @@ function bootApp(D) {
     const bs = BATCHES.filter((bt) => xs.some((a) => a.batch === bt)); const lastB = bs[bs.length - 1];
     if (lastB) {
       const moves = P.map((p) => {
-        const prevB = [...BATCHES].reverse().find((bt) => bt < lastB && ALL.some((a) => a.batch === bt && a.platform === p.id && inRound(a)));
+        const prevB = [...BATCHES].reverse().find((bt) => bt < lastB && ALL.some((a) => a.batch === bt && a.platform === p.id && inRound(a) && inBranch(a)));
         if (!prevB) return null;
-        const v1 = rateOf(ALL.filter((a) => a.platform === p.id && a.batch === lastB && inRound(a)));
-        const v0 = rateOf(ALL.filter((a) => a.platform === p.id && a.batch === prevB && inRound(a)));
+        const v1 = rateOf(ALL.filter((a) => a.platform === p.id && a.batch === lastB && inRound(a) && inBranch(a)));
+        const v0 = rateOf(ALL.filter((a) => a.platform === p.id && a.batch === prevB && inRound(a) && inBranch(a)));
         return v1 == null || v0 == null ? null : { p, prevB, v0, v1, d: v1 - v0 };
       }).filter(Boolean).sort((x, y) => Math.abs(y.d) - Math.abs(x.d));
       const t = moves[0];
@@ -837,7 +837,7 @@ function bootApp(D) {
       // データ
       const idx = []; for (let i = trend.from; i <= trend.to; i++) idx.push(i);
       if (!idx.length) { box.append(nodata("この期間に計測はありません", "note")); return; }
-      const rows = ALL.filter((a) => inRound(a) && (opts.simple ? inLayer(a) : true));
+      const rows = ALL.filter((a) => inRound(a) && inBranch(a) && (opts.simple ? inLayer(a) : true));   // 推移のグラフも選んだ分岐の中だけ
       const series = [];
       const valOf = (k, p, i) => {
         const list = rows.filter((a) => a.platform === p.id && a.batch === BATCHES[i] && (k === "O" || qByNo.get(a.q).layer === k));
