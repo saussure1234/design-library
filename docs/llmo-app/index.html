@@ -1719,7 +1719,9 @@ async function paaView(sb, clients) {
       const cols = ss.filter((x) => x.n);
       const by = new Map();
       its.forEach((x) => { if (!by.has(x.question)) by.set(x.question, new Set()); by.get(x.question).add(x.seed); });
-      const qs = [...by.entries()].map(([q, set]) => ({ q, set })).sort((x, y) => y.set.size - x.set.size);
+      const pos = new Map(cols.map((c, i) => [c.seed, i]));
+      const first = (set) => Math.min(...[...set].map((v) => pos.has(v) ? pos.get(v) : 1e9));
+      const qs = [...by.entries()].map(([q, set]) => ({ q, set, f: first(set) })).sort((x, y) => y.set.size - x.set.size || x.f - y.f);
       const bar = mk("div", "toolbar");
       const sel = mk("select", "sel"); sel.append(new Option("すべての検索ワード", ""));
       cols.forEach((x) => sel.append(new Option(`${x.seed}（${x.n}）`, x.seed))); sel.value = st.seed;
@@ -1727,13 +1729,13 @@ async function paaView(sb, clients) {
       const cnt = mk("span", "muted"); bar.append(sel, q, cnt); w.append(bar);
       const p = mk("div", "grid"); const t = mk("table"); t.style.width = "max-content";
       const hr = mk("tr");
-      const h0 = mk("th", null, "質問"); h0.style.cssText = "min-width:300px;max-width:360px;vertical-align:bottom"; hr.append(h0);
-      const h1 = mk("th", null, "検索ワード数"); h1.style.cssText = "vertical-align:bottom;text-align:right"; hr.append(h1);
+      const h0 = mk("th", null, "質問"); h0.style.cssText = "min-width:240px;max-width:280px;vertical-align:bottom"; hr.append(h0);
+      const h1 = mk("th"); h1.style.cssText = "width:30px;min-width:30px;padding:6px 2px;text-align:center;vertical-align:bottom"; const h1t = mk("span", null, "出た検索ワード数"); h1t.style.cssText = "writing-mode:vertical-rl;white-space:nowrap;display:inline-block"; h1.append(h1t); hr.append(h1);
       cols.forEach((x) => {
-        const th = mk("th"); th.style.cssText = "width:34px;min-width:34px;padding:6px 2px;text-align:center;vertical-align:bottom";
+        const th = mk("th"); th.style.cssText = "width:25px;min-width:25px;max-width:25px;padding:6px 0;text-align:center;vertical-align:bottom";
         th.title = `${x.seed}・月間検索数 ${x.vol == null ? "—" : x.vol.toLocaleString()}`;
-        const v = mk("span", null, x.seed); v.style.cssText = "writing-mode:vertical-rl;white-space:nowrap;display:inline-block;max-height:190px;overflow:hidden;color:var(--ink);font-weight:700";
-        const n = mk("div", null, x.vol == null ? "—" : x.vol.toLocaleString()); n.style.cssText = "font-size:10px;font-weight:600;color:var(--muted);margin-top:4px;font-variant-numeric:tabular-nums";
+        const v = mk("span", null, x.seed); v.style.cssText = "writing-mode:vertical-rl;white-space:nowrap;display:inline-block;max-height:190px;overflow:hidden;color:var(--ink);font-weight:700;font-size:11.5px";
+        const n = mk("div", null, x.vol == null ? "—" : x.vol.toLocaleString()); n.style.cssText = "font-size:9px;font-weight:600;color:var(--muted);margin-top:4px;font-variant-numeric:tabular-nums;letter-spacing:-0.3px;white-space:nowrap";
         th.append(v, n); hr.append(th);
       });
       const th = mk("thead"); th.append(hr); t.append(th);
@@ -1743,9 +1745,9 @@ async function paaView(sb, clients) {
         const rows = qs.filter((x) => (!st.seed || x.set.has(st.seed)) && (!k || x.q.toLowerCase().includes(k)));
         cnt.textContent = `${rows.length}問`;
         tb.replaceChildren(...rows.map((x) => { const tr = mk("tr");
-          const c0 = mk("td", "b", x.q); c0.style.cssText = "min-width:300px;max-width:360px;white-space:normal"; tr.append(c0);
-          const c1 = mk("td", null, String(x.set.size)); c1.style.cssText = "text-align:right;font-variant-numeric:tabular-nums"; tr.append(c1);
-          cols.forEach((c) => { const td = mk("td", null, x.set.has(c.seed) ? "●" : ""); td.style.cssText = "text-align:center;color:var(--accent);padding:6px 2px" + (c.seed === st.seed ? ";background:var(--soft)" : ""); tr.append(td); });
+          const c0 = mk("td", "b", x.q); c0.style.cssText = "min-width:240px;max-width:280px;white-space:normal"; tr.append(c0);
+          const c1 = mk("td", null, String(x.set.size)); c1.style.cssText = "text-align:center;font-variant-numeric:tabular-nums;padding:6px 2px"; tr.append(c1);
+          cols.forEach((c) => { const td = mk("td", null, x.set.has(c.seed) ? "●" : ""); td.style.cssText = "text-align:center;color:var(--accent);padding:6px 0" + (c.seed === st.seed ? ";background:var(--soft)" : ""); tr.append(td); });
           return tr; }));
         if (!rows.length) { const tr = mk("tr"); const td = mk("td", "empty", "当てはまる質問はありません。"); td.colSpan = cols.length + 2; tr.append(td); tb.append(tr); }
       };
