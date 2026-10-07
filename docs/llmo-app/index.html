@@ -1589,8 +1589,11 @@ async function bootSupabase() {
   if (error) { msg("読み込みに失敗しました：" + error.message); return; }
   if (!clients.length) { msg("このアカウントで見られるクライアントがありません。担当者にお知らせください。"); accountBar(sb, session, [], null); return; }
   const want = new URLSearchParams(location.search).get("c");
+  const { data: mem } = await sb.from("members").select("role");
+  const isAdmin = (mem || []).some((m) => m.role === "admin");
+  if (want === "paa" && isAdmin) { await paaView(sb, clients); accountBar(sb, session, clients, null); return; }
   const cl = clients.find((c) => c.slug === want) || (clients.length === 1 ? clients[0] : null);
-  if (!cl) { pickerView(clients); accountBar(sb, session, clients, null); return; }
+  if (!cl) { pickerView(clients, isAdmin); accountBar(sb, session, clients, null); return; }
   msg(`${cl.name} のデータを読み込み中…`);
   const D = await loadClient(sb, cl);
   if (!D.answers.length) { msg(`${cl.name} の回答はまだありません。`); accountBar(sb, session, clients, cl); return; }
@@ -1619,7 +1622,7 @@ async function loadClient(sb, cl) {
   };
 }
 // 会社ごとのログイン用アカウント（メールは送らない。URL の ?c=<会社ID> とパスワードだけで入る）
-const clientLogin = (slug) => `llmo-${slug}@samurai-style.tokyo`;
+const clientLogin = (slug) => `llmo-${slug === "paa" ? "admin" : slug}@samurai-style.tokyo`;   // PAA は admin のパスワードで入る
 function loginView(sb) {
   const page = document.getElementById("page"); const w = document.createElement("div"); w.className = "login";
   const slug = new URLSearchParams(location.search).get("c");
@@ -1649,14 +1652,93 @@ function setPasswordView(sb, after) {
   });
   page.replaceChildren(w);
 }
-function pickerView(clients) {
+function pickerView(clients, isAdmin) {
   const page = document.getElementById("page"); const w = document.createElement("div");
   const h = document.createElement("h1"); h.className = "ptitle"; h.textContent = "クライアント"; w.append(h);
   const box = document.createElement("div"); box.className = "panel"; box.style.marginTop = "14px";
   const t = document.createElement("table"); t.innerHTML = "<thead><tr><th>クライアント</th><th>ID</th></tr></thead>"; const tb = document.createElement("tbody");
   clients.forEach((c) => { const tr = document.createElement("tr"); tr.className = "go"; tr.innerHTML = "<td></td><td class=\"muted\"></td>"; tr.children[0].textContent = c.name; tr.children[1].textContent = c.slug;
     tr.addEventListener("click", () => { location.search = "?c=" + encodeURIComponent(c.slug); }); tb.append(tr); });
-  t.append(tb); box.append(t); w.append(box); page.replaceChildren(w);
+  t.append(tb); box.append(t); w.append(box);
+  if (isAdmin) {
+    const h2 = document.createElement("h2"); h2.className = "ptitle"; h2.style.cssText = "font-size:16px;margin-top:26px"; h2.textContent = "admin だけ"; w.append(h2);
+    const box2 = document.createElement("div"); box2.className = "panel"; box2.style.marginTop = "10px";
+    const t2 = document.createElement("table"); t2.innerHTML = "<tbody><tr class=\"go\"><td>PAA</td><td class=\"muted\">検索ワードから広げた質問。クライアントには見えません</td></tr></tbody>";
+    t2.querySelector("tr").addEventListener("click", () => { location.search = "?c=paa"; }); box2.append(t2); w.append(box2);
+  }
+  page.replaceChildren(w);
+}
+// PAA：admin だけの画面。クライアントのアカウントからはテーブル自体が読めない（RLS）
+async function paaView(sb, clients) {
+  const page = document.getElementById("page");
+  const mk = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = String(text); return e; };
+  page.replaceChildren(mk("p", "psub", "PAA を読み込み中…"));
+  let seeds, items;
+  try {
+    seeds = await fetchAll(() => sb.from("paa_seeds").select("client_id,batch,seed,vol,phase,n").order("id"));
+    items = await fetchAll(() => sb.from("paa_items").select("client_id,batch,seed,depth,question,excerpt,sources").order("id"));
+  } catch (e) { page.replaceChildren(mk("p", "psub", "読み込みに失敗しました：" + e.message)); return; }
+  const latest = {};   // クライアントごとに一番新しい取得日だけ出す
+  for (const x of seeds) if (!latest[x.client_id] || x.batch > latest[x.client_id]) latest[x.client_id] = x.batch;
+  const tabs = clients.filter((c) => latest[c.id]);
+  if (!tabs.length) { page.replaceChildren(mk("h1", "ptitle", "PAA"), mk("p", "psub", "PAA のデータはまだありません。")); return; }
+  const HOW = ["最初から", "1回押して", "2回押して", "3回押して"];
+  const st = { c: tabs[0].slug, view: "seeds", seed: "", q: "" };
+  const [hc, hv] = decodeURIComponent(location.hash.replace(/^#/, "")).split("/");
+  if (tabs.some((c) => c.slug === hc)) st.c = hc;
+  if (hv === "items") st.view = "items";
+  const tabBar = (list, cur, onPick) => {
+    const n = mk("div", "btabs"); n.setAttribute("role", "tablist");
+    list.forEach(([v, lab]) => { const b = mk("button", null, lab); b.type = "button"; b.setAttribute("role", "tab"); b.setAttribute("aria-selected", String(v === cur)); b.addEventListener("click", () => onPick(v)); n.append(b); });
+    return n;
+  };
+  const render = () => {
+    history.replaceState(null, "", "#" + st.c + "/" + st.view);
+    const cl = tabs.find((c) => c.slug === st.c); const b = latest[cl.id];
+    const ss = seeds.filter((x) => x.client_id === cl.id && x.batch === b).sort((x, y) => (y.vol ?? -1) - (x.vol ?? -1));
+    const its = items.filter((x) => x.client_id === cl.id && x.batch === b);
+    const w = mk("div");
+    w.append(mk("h1", "ptitle", "PAA"), mk("p", "psub", `クライアントには見えない画面です。取得日 ${b}`));
+    w.append(tabBar(tabs.map((c) => [c.slug, c.name]), st.c, (v) => { st.c = v; st.seed = ""; st.q = ""; render(); }));
+    w.append(tabBar([["seeds", `検索ワード ${ss.length}`], ["items", `PAAの出力 ${its.length}`]], st.view, (v) => { st.view = v; st.seed = ""; st.q = ""; render(); }));
+    if (st.view === "seeds") {
+      const hasPhase = ss.some((x) => x.phase);
+      const p = mk("div", "grid"); const t = mk("table");
+      t.innerHTML = "<thead><tr><th style=\"min-width:200px\">検索ワード</th><th style=\"text-align:right\">月間検索数</th>" + (hasPhase ? "<th>フェーズ</th>" : "") + "<th style=\"text-align:right\">集まった質問</th></tr></thead>";
+      const tb = mk("tbody");
+      ss.forEach((x) => {
+        const tr = mk("tr", "go"); tr.append(mk("td", "b", x.seed));
+        const v = mk("td", null, x.vol == null ? "—" : x.vol.toLocaleString()); v.style.cssText = "text-align:right;font-variant-numeric:tabular-nums"; tr.append(v);
+        if (hasPhase) { const ph = mk("td", "muted", x.phase || ""); ph.style.whiteSpace = "nowrap"; tr.append(ph); }
+        const n = mk("td", null, `${x.n}問`); n.style.cssText = "text-align:right;font-variant-numeric:tabular-nums"; tr.append(n);
+        tr.addEventListener("click", () => { st.view = "items"; st.seed = x.seed; st.q = ""; render(); }); tb.append(tr);
+      });
+      t.append(tb); p.append(t); w.append(p);
+    } else {
+      const bar = mk("div", "toolbar");
+      const sel = mk("select", "sel"); sel.append(new Option("すべての検索ワード", ""));
+      ss.filter((x) => x.n).forEach((x) => sel.append(new Option(`${x.seed}（${x.n}）`, x.seed))); sel.value = st.seed;
+      const q = mk("input", "search"); q.type = "search"; q.placeholder = "質問・回答の抜粋で探す"; q.value = st.q;
+      const cnt = mk("span", "muted"); bar.append(sel, q, cnt); w.append(bar);
+      const p = mk("div", "grid"); const t = mk("table");
+      t.innerHTML = "<thead><tr><th style=\"min-width:240px\">質問</th><th style=\"min-width:140px\">検索ワード</th><th>出方</th><th style=\"min-width:380px\">回答の抜粋</th><th style=\"min-width:180px\">出典</th></tr></thead>";
+      const tb = mk("tbody"); t.append(tb); p.append(t); w.append(p);
+      const fill = () => {
+        const k = st.q.trim().toLowerCase();
+        const rows = its.filter((x) => (!st.seed || x.seed === st.seed) && (!k || (x.question + " " + (x.excerpt || "")).toLowerCase().includes(k)));
+        cnt.textContent = `${rows.length}問`;
+        tb.replaceChildren(...rows.map((x) => { const tr = mk("tr");
+          tr.append(mk("td", "b", x.question), mk("td", "muted", x.seed), Object.assign(mk("td", "muted", HOW[x.depth] || `${x.depth}回押して`), { style: "white-space:nowrap" }), mk("td", null, x.excerpt || "—"), mk("td", "muted", x.sources || "—"));
+          tr.lastChild.style.overflowWrap = "anywhere"; return tr; }));
+        if (!rows.length) { const tr = mk("tr"); const td = mk("td", "empty", "当てはまる質問はありません。"); td.colSpan = 5; tr.append(td); tb.append(tr); }
+      };
+      sel.addEventListener("change", () => { st.seed = sel.value; fill(); });
+      q.addEventListener("input", () => { st.q = q.value; fill(); });
+      fill();
+    }
+    page.replaceChildren(w);
+  };
+  render();
 }
 function accountBar(sb, session, clients, cl) {
   const side = document.querySelector(".side"); const bar = document.createElement("div"); bar.className = "acct";
