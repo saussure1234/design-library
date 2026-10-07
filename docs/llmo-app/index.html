@@ -1683,38 +1683,23 @@ async function paaView(sb, clients) {
   const tabs = clients.filter((c) => latest[c.id]);
   if (!tabs.length) { page.replaceChildren(mk("h1", "ptitle", "PAA"), mk("p", "psub", "PAA のデータはまだありません。")); return; }
   const HOW = ["最初から", "1回押して", "2回押して", "3回押して"];
-  const st = { c: tabs[0].slug, view: "seeds", seed: "", q: "" };
-  const [hc, hv] = decodeURIComponent(location.hash.replace(/^#/, "")).split("/");
+  const st = { c: tabs[0].slug, seed: "", q: "" };
+  const hc = decodeURIComponent(location.hash.replace(/^#/, "")).split("/")[0];
   if (tabs.some((c) => c.slug === hc)) st.c = hc;
-  if (hv === "items") st.view = "items";
   const tabBar = (list, cur, onPick) => {
     const n = mk("div", "btabs"); n.setAttribute("role", "tablist");
     list.forEach(([v, lab]) => { const b = mk("button", null, lab); b.type = "button"; b.setAttribute("role", "tab"); b.setAttribute("aria-selected", String(v === cur)); b.addEventListener("click", () => onPick(v)); n.append(b); });
     return n;
   };
   const render = () => {
-    history.replaceState(null, "", "#" + st.c + "/" + st.view);
+    history.replaceState(null, "", "#" + st.c);
     const cl = tabs.find((c) => c.slug === st.c); const b = latest[cl.id];
     const ss = seeds.filter((x) => x.client_id === cl.id && x.batch === b).sort((x, y) => (y.vol ?? -1) - (x.vol ?? -1));
     const its = items.filter((x) => x.client_id === cl.id && x.batch === b);
     const w = mk("div");
     w.append(mk("h1", "ptitle", "PAA"), mk("p", "psub", `クライアントには見えない画面です。取得日 ${b}`));
     w.append(tabBar(tabs.map((c) => [c.slug, c.name]), st.c, (v) => { st.c = v; st.seed = ""; st.q = ""; render(); }));
-    w.append(tabBar([["seeds", `検索ワード ${ss.length}`], ["items", `PAAの出力 ${new Set(its.map((x) => x.question)).size}`]], st.view, (v) => { st.view = v; st.seed = ""; st.q = ""; render(); }));
-    if (st.view === "seeds") {
-      const hasPhase = ss.some((x) => x.phase);
-      const p = mk("div", "grid"); const t = mk("table");
-      t.innerHTML = "<thead><tr><th style=\"min-width:200px\">検索ワード</th><th style=\"text-align:right\">月間検索数</th>" + (hasPhase ? "<th>フェーズ</th>" : "") + "<th style=\"text-align:right\">集まった質問</th></tr></thead>";
-      const tb = mk("tbody");
-      ss.forEach((x) => {
-        const tr = mk("tr", "go"); tr.append(mk("td", "b", x.seed));
-        const v = mk("td", null, x.vol == null ? "—" : x.vol.toLocaleString()); v.style.cssText = "text-align:right;font-variant-numeric:tabular-nums"; tr.append(v);
-        if (hasPhase) { const ph = mk("td", "muted", x.phase || ""); ph.style.whiteSpace = "nowrap"; tr.append(ph); }
-        const n = mk("td", null, `${x.n}問`); n.style.cssText = "text-align:right;font-variant-numeric:tabular-nums"; tr.append(n);
-        tr.addEventListener("click", () => { st.view = "items"; st.seed = x.seed; st.q = ""; render(); }); tb.append(tr);
-      });
-      t.append(tb); p.append(t); w.append(p);
-    } else {
+    {
       // 横に検索ワード（月間検索数の多い順）、縦に質問。その検索ワードで出た質問に●
       const cols = ss.filter((x) => x.n);
       const by = new Map();
