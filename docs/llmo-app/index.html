@@ -1676,7 +1676,7 @@ async function paaView(sb, clients) {
   let seeds, items;
   try {
     seeds = await fetchAll(() => sb.from("paa_seeds").select("client_id,batch,seed,vol,phase,n").order("id"));
-    items = await fetchAll(() => sb.from("paa_items").select("client_id,batch,seed,depth,question,excerpt,sources").order("id"));
+    items = await fetchAll(() => sb.from("paa_items").select("client_id,batch,seed,question").order("id"));
   } catch (e) { page.replaceChildren(mk("p", "psub", "読み込みに失敗しました：" + e.message)); return; }
   const latest = {};   // クライアントごとに一番新しい取得日だけ出す
   for (const x of seeds) if (!latest[x.client_id] || x.batch > latest[x.client_id]) latest[x.client_id] = x.batch;
@@ -1700,7 +1700,7 @@ async function paaView(sb, clients) {
     const w = mk("div");
     w.append(mk("h1", "ptitle", "PAA"), mk("p", "psub", `クライアントには見えない画面です。取得日 ${b}`));
     w.append(tabBar(tabs.map((c) => [c.slug, c.name]), st.c, (v) => { st.c = v; st.seed = ""; st.q = ""; render(); }));
-    w.append(tabBar([["seeds", `検索ワード ${ss.length}`], ["items", `PAAの出力 ${its.length}`]], st.view, (v) => { st.view = v; st.seed = ""; st.q = ""; render(); }));
+    w.append(tabBar([["seeds", `検索ワード ${ss.length}`], ["items", `PAAの出力 ${new Set(its.map((x) => x.question)).size}`]], st.view, (v) => { st.view = v; st.seed = ""; st.q = ""; render(); }));
     if (st.view === "seeds") {
       const hasPhase = ss.some((x) => x.phase);
       const p = mk("div", "grid"); const t = mk("table");
@@ -1715,22 +1715,39 @@ async function paaView(sb, clients) {
       });
       t.append(tb); p.append(t); w.append(p);
     } else {
+      // 横に検索ワード（月間検索数の多い順）、縦に質問。その検索ワードで出た質問に●
+      const cols = ss.filter((x) => x.n);
+      const by = new Map();
+      its.forEach((x) => { if (!by.has(x.question)) by.set(x.question, new Set()); by.get(x.question).add(x.seed); });
+      const qs = [...by.entries()].map(([q, set]) => ({ q, set })).sort((x, y) => y.set.size - x.set.size);
       const bar = mk("div", "toolbar");
       const sel = mk("select", "sel"); sel.append(new Option("すべての検索ワード", ""));
-      ss.filter((x) => x.n).forEach((x) => sel.append(new Option(`${x.seed}（${x.n}）`, x.seed))); sel.value = st.seed;
-      const q = mk("input", "search"); q.type = "search"; q.placeholder = "質問・回答の抜粋で探す"; q.value = st.q;
+      cols.forEach((x) => sel.append(new Option(`${x.seed}（${x.n}）`, x.seed))); sel.value = st.seed;
+      const q = mk("input", "search"); q.type = "search"; q.placeholder = "質問で探す"; q.value = st.q;
       const cnt = mk("span", "muted"); bar.append(sel, q, cnt); w.append(bar);
-      const p = mk("div", "grid"); const t = mk("table");
-      t.innerHTML = "<thead><tr><th style=\"min-width:240px\">質問</th><th style=\"min-width:140px\">検索ワード</th><th>出方</th><th style=\"min-width:380px\">回答の抜粋</th><th style=\"min-width:180px\">出典</th></tr></thead>";
+      const p = mk("div", "grid"); const t = mk("table"); t.style.width = "max-content";
+      const hr = mk("tr");
+      const h0 = mk("th", null, "質問"); h0.style.cssText = "min-width:300px;max-width:360px;vertical-align:bottom"; hr.append(h0);
+      const h1 = mk("th", null, "検索ワード数"); h1.style.cssText = "vertical-align:bottom;text-align:right"; hr.append(h1);
+      cols.forEach((x) => {
+        const th = mk("th"); th.style.cssText = "width:34px;min-width:34px;padding:6px 2px;text-align:center;vertical-align:bottom";
+        th.title = `${x.seed}・月間検索数 ${x.vol == null ? "—" : x.vol.toLocaleString()}`;
+        const v = mk("span", null, x.seed); v.style.cssText = "writing-mode:vertical-rl;white-space:nowrap;display:inline-block;max-height:190px;overflow:hidden;color:var(--ink);font-weight:700";
+        const n = mk("div", null, x.vol == null ? "—" : x.vol.toLocaleString()); n.style.cssText = "font-size:10px;font-weight:600;color:var(--muted);margin-top:4px;font-variant-numeric:tabular-nums";
+        th.append(v, n); hr.append(th);
+      });
+      const th = mk("thead"); th.append(hr); t.append(th);
       const tb = mk("tbody"); t.append(tb); p.append(t); w.append(p);
       const fill = () => {
         const k = st.q.trim().toLowerCase();
-        const rows = its.filter((x) => (!st.seed || x.seed === st.seed) && (!k || (x.question + " " + (x.excerpt || "")).toLowerCase().includes(k)));
+        const rows = qs.filter((x) => (!st.seed || x.set.has(st.seed)) && (!k || x.q.toLowerCase().includes(k)));
         cnt.textContent = `${rows.length}問`;
         tb.replaceChildren(...rows.map((x) => { const tr = mk("tr");
-          tr.append(mk("td", "b", x.question), mk("td", "muted", x.seed), Object.assign(mk("td", "muted", HOW[x.depth] || `${x.depth}回押して`), { style: "white-space:nowrap" }), mk("td", null, x.excerpt || "—"), mk("td", "muted", x.sources || "—"));
-          tr.lastChild.style.overflowWrap = "anywhere"; return tr; }));
-        if (!rows.length) { const tr = mk("tr"); const td = mk("td", "empty", "当てはまる質問はありません。"); td.colSpan = 5; tr.append(td); tb.append(tr); }
+          const c0 = mk("td", "b", x.q); c0.style.cssText = "min-width:300px;max-width:360px;white-space:normal"; tr.append(c0);
+          const c1 = mk("td", null, String(x.set.size)); c1.style.cssText = "text-align:right;font-variant-numeric:tabular-nums"; tr.append(c1);
+          cols.forEach((c) => { const td = mk("td", null, x.set.has(c.seed) ? "●" : ""); td.style.cssText = "text-align:center;color:var(--accent);padding:6px 2px" + (c.seed === st.seed ? ";background:var(--soft)" : ""); tr.append(td); });
+          return tr; }));
+        if (!rows.length) { const tr = mk("tr"); const td = mk("td", "empty", "当てはまる質問はありません。"); td.colSpan = cols.length + 2; tr.append(td); tb.append(tr); }
       };
       sel.addEventListener("change", () => { st.seed = sel.value; fill(); });
       q.addEventListener("input", () => { st.q = q.value; fill(); });
