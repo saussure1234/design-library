@@ -1683,7 +1683,7 @@ async function paaView(sb, clients) {
   const tabs = clients.filter((c) => latest[c.id]);
   if (!tabs.length) { page.replaceChildren(mk("h1", "ptitle", "PAA"), mk("p", "psub", "PAA のデータはまだありません。")); return; }
   const HOW = ["最初から", "1回押して", "2回押して", "3回押して"];
-  const st = { c: tabs[0].slug, seed: "", q: "", fit: "", cat: "" };
+  const st = { c: tabs[0].slug, seed: "", q: "", fit: "", cat: "", br: "" };
   const hc = decodeURIComponent(location.hash.replace(/^#/, "")).split("/")[0];
   if (tabs.some((c) => c.slug === hc)) st.c = hc;
   const tabBar = (list, cur, onPick) => {
@@ -1698,14 +1698,22 @@ async function paaView(sb, clients) {
     const its = items.filter((x) => x.client_id === cl.id && x.batch === b);
     const w = mk("div");
     w.append(mk("h1", "ptitle", "PAA"), mk("p", "psub", `クライアントには見えない画面です。取得日 ${b}`));
-    w.append(tabBar(tabs.map((c) => [c.slug, c.name]), st.c, (v) => { st.c = v; st.seed = ""; st.q = ""; st.fit = ""; st.cat = ""; render(); }));
+    w.append(tabBar(tabs.map((c) => [c.slug, c.name]), st.c, (v) => { st.c = v; st.seed = ""; st.q = ""; st.fit = ""; st.cat = ""; st.br = ""; render(); }));
     {
-      // カテゴリー＝検索ワードの段（各社の Excel のキーワード対応表）。タブで選んだカテゴリーの検索ワードだけを横に、そこから出た PAA を縦に（「すべて」は出さない）
-      const ORDER = ["目的達成・課題解決", "カテゴリ認知", "抽象的な業者探索", "具体条件・特徴付帯での業者探索", "潜在課題の自覚", "目的・課題の具体化", "解決カテゴリの認知", "選択条件・ポジション", "ブランド理解・相談"];
-      const cats = [...new Set(ss.filter((x) => x.n && x.phase).map((x) => x.phase))].sort((a, b) => (ORDER.indexOf(a) + 1 || 99) - (ORDER.indexOf(b) + 1 || 99));
+      // カテゴリー＝検索ワードの分岐と段（各社の Excel の「検索キーワード」の行。runner/paa_seeds_from_excel.py が phase に「分岐:段|分岐:段」で入れる）
+      // 分岐が2つ以上なら分岐のタブ → 段のタブ。「すべて」は出さない。選んだ段の検索ワードだけを横に、そこから出た PAA を縦に
+      const ORDER = ["目的・課題", "手段", "カテゴリ", "ポジション", "ブランドイメージ", "潜在課題の自覚", "目的・課題の具体化", "解決カテゴリの認知", "選択条件・ポジション", "ブランド理解・相談"];
+      const byOrder = (a, b) => (ORDER.indexOf(a) + 1 || 99) - (ORDER.indexOf(b) + 1 || 99);
+      const memb = (x) => (x.phase || "").split("|").filter(Boolean).map((t) => (t.includes(":") ? { b: t.split(":")[0], p: t.split(":").slice(1).join(":") } : { b: "01", p: t }));
+      const brs = [...new Set(ss.flatMap((x) => memb(x).map((m) => m.b)))].sort();
+      if (brs.length && !brs.includes(st.br)) st.br = brs[0];
+      const bname = (b) => { const f = (cl.branches || []).find((y) => y.code === b); return f ? `${b} ${f.name}` : b; };
+      if (brs.length > 1) w.append(tabBar(brs.map((b) => [b, bname(b)]), st.br, (v) => { st.br = v; st.cat = ""; st.seed = ""; st.q = ""; st.fit = ""; render(); }));
+      const cats = [...new Set(ss.flatMap((x) => memb(x).filter((m) => m.b === st.br).map((m) => m.p)))].sort(byOrder);
       if (cats.length && !cats.includes(st.cat)) st.cat = cats[0];
-      if (cats.length) w.append(tabBar(cats.map((v) => [v, `${v} ${ss.filter((x) => x.n && x.phase === v).length}語`]), st.cat, (v) => { st.cat = v; st.seed = ""; st.q = ""; st.fit = ""; render(); }));
-      const cols = ss.filter((x) => x.n && (!cats.length || x.phase === st.cat));
+      const inCatSeed = (x) => memb(x).some((m) => m.b === st.br && m.p === st.cat);
+      if (cats.length) w.append(tabBar(cats.map((v) => [v, `${v} ${ss.filter((x) => memb(x).some((m) => m.b === st.br && m.p === v)).length}語`]), st.cat, (v) => { st.cat = v; st.seed = ""; st.q = ""; st.fit = ""; render(); }));
+      const cols = cats.length ? ss.filter(inCatSeed) : ss.filter((x) => x.n);
       const inCat = new Set(cols.map((c) => c.seed));
       const by = new Map(); const fitOf = new Map();   // ターゲットのニーズに合うか（runner/paa_fit.py の判定）
       its.forEach((x) => { if (!inCat.has(x.seed)) return; if (!by.has(x.question)) by.set(x.question, new Set()); by.get(x.question).add(x.seed); if (x.fit && !fitOf.has(x.question)) fitOf.set(x.question, { fit: x.fit, reason: x.fit_reason || "" }); });
@@ -1714,7 +1722,7 @@ async function paaView(sb, clients) {
       const qs = [...by.entries()].map(([q, set]) => ({ q, set, f: first(set), fit: (fitOf.get(q) || {}).fit || "", reason: (fitOf.get(q) || {}).reason || "" })).sort((x, y) => y.set.size - x.set.size || x.f - y.f);
       const bar = mk("div", "toolbar");
       const sel = mk("select", "sel"); sel.append(new Option("すべての検索ワード", ""));
-      cols.forEach((x) => sel.append(new Option(`${x.seed}（${x.n}）`, x.seed))); sel.value = st.seed;
+      cols.filter((x) => x.n).forEach((x) => sel.append(new Option(`${x.seed}（${x.n}）`, x.seed))); sel.value = st.seed;
       const q = mk("input", "search"); q.type = "search"; q.placeholder = "質問で探す"; q.value = st.q;
       const fs = mk("select", "sel"); fs.append(new Option("ターゲット：すべて", ""));
       ["合う", "どちらとも", "合わない"].forEach((v) => fs.append(new Option(`ターゲット：${v}（${qs.filter((x) => x.fit === v).length}）`, v))); fs.value = st.fit;
@@ -1727,7 +1735,8 @@ async function paaView(sb, clients) {
       cols.forEach((x) => {
         const th = mk("th"); th.style.cssText = "width:26px;min-width:26px;max-width:26px;padding:6px 0;text-align:center;vertical-align:bottom";
         th.title = `${x.seed}・月間検索数 ${x.vol == null ? "—" : x.vol.toLocaleString()}`;
-        const v = mk("span", null, x.seed); v.style.cssText = "writing-mode:vertical-rl;white-space:nowrap;display:inline-block;max-height:190px;overflow:hidden;color:var(--ink);font-weight:700;font-size:11.5px";
+        const v = mk("span", null, x.seed); v.style.cssText = "writing-mode:vertical-rl;white-space:nowrap;display:inline-block;max-height:190px;overflow:hidden;font-weight:700;font-size:11.5px;color:" + (x.n ? "var(--ink)" : "var(--muted)");
+        if (!x.n) th.title = `${x.seed}・PAA なし（Google に「関連する質問」が出なかった）`;
         const n = mk("div", null, x.vol == null ? "—" : x.vol.toLocaleString()); n.style.cssText = "font-size:9px;font-weight:600;color:var(--muted);margin-top:4px;font-variant-numeric:tabular-nums;letter-spacing:-0.3px;white-space:nowrap";
         th.append(v, n); hr.append(th);
       });
