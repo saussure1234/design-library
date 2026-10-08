@@ -1676,14 +1676,14 @@ async function paaView(sb, clients) {
   let seeds, items;
   try {
     seeds = await fetchAll(() => sb.from("paa_seeds").select("client_id,batch,seed,vol,phase,n").order("id"));
-    items = await fetchAll(() => sb.from("paa_items").select("client_id,batch,seed,question").order("id"));
+    items = await fetchAll(() => sb.from("paa_items").select("client_id,batch,seed,question,fit,fit_reason").order("id"));
   } catch (e) { page.replaceChildren(mk("p", "psub", "読み込みに失敗しました：" + e.message)); return; }
   const latest = {};   // クライアントごとに一番新しい取得日だけ出す
   for (const x of seeds) if (!latest[x.client_id] || x.batch > latest[x.client_id]) latest[x.client_id] = x.batch;
   const tabs = clients.filter((c) => latest[c.id]);
   if (!tabs.length) { page.replaceChildren(mk("h1", "ptitle", "PAA"), mk("p", "psub", "PAA のデータはまだありません。")); return; }
   const HOW = ["最初から", "1回押して", "2回押して", "3回押して"];
-  const st = { c: tabs[0].slug, seed: "", q: "" };
+  const st = { c: tabs[0].slug, seed: "", q: "", fit: "" };
   const hc = decodeURIComponent(location.hash.replace(/^#/, "")).split("/")[0];
   if (tabs.some((c) => c.slug === hc)) st.c = hc;
   const tabBar = (list, cur, onPick) => {
@@ -1698,23 +1698,28 @@ async function paaView(sb, clients) {
     const its = items.filter((x) => x.client_id === cl.id && x.batch === b);
     const w = mk("div");
     w.append(mk("h1", "ptitle", "PAA"), mk("p", "psub", `クライアントには見えない画面です。取得日 ${b}`));
-    w.append(tabBar(tabs.map((c) => [c.slug, c.name]), st.c, (v) => { st.c = v; st.seed = ""; st.q = ""; render(); }));
+    w.append(tabBar(tabs.map((c) => [c.slug, c.name]), st.c, (v) => { st.c = v; st.seed = ""; st.q = ""; st.fit = ""; render(); }));
     {
       // 横に検索ワード（月間検索数の多い順）、縦に質問。その検索ワードで出た質問に●
       const cols = ss.filter((x) => x.n);
       const by = new Map();
-      its.forEach((x) => { if (!by.has(x.question)) by.set(x.question, new Set()); by.get(x.question).add(x.seed); });
+      const fitOf = new Map();   // ターゲットのニーズに合うか（runner/paa_fit.py の判定）
+      its.forEach((x) => { if (!by.has(x.question)) by.set(x.question, new Set()); by.get(x.question).add(x.seed); if (x.fit && !fitOf.has(x.question)) fitOf.set(x.question, { fit: x.fit, reason: x.fit_reason || "" }); });
       const pos = new Map(cols.map((c, i) => [c.seed, i]));
       const first = (set) => Math.min(...[...set].map((v) => pos.has(v) ? pos.get(v) : 1e9));
-      const qs = [...by.entries()].map(([q, set]) => ({ q, set, f: first(set) })).sort((x, y) => y.set.size - x.set.size || x.f - y.f);
+      const qs = [...by.entries()].map(([q, set]) => ({ q, set, f: first(set), fit: (fitOf.get(q) || {}).fit || "", reason: (fitOf.get(q) || {}).reason || "" })).sort((x, y) => y.set.size - x.set.size || x.f - y.f);
       const bar = mk("div", "toolbar");
       const sel = mk("select", "sel"); sel.append(new Option("すべての検索ワード", ""));
       cols.forEach((x) => sel.append(new Option(`${x.seed}（${x.n}）`, x.seed))); sel.value = st.seed;
       const q = mk("input", "search"); q.type = "search"; q.placeholder = "質問で探す"; q.value = st.q;
-      const cnt = mk("span", "muted"); bar.append(sel, q, cnt); w.append(bar);
+      const FITS = ["合う", "どちらとも", "合わない"];
+      const fs = mk("select", "sel"); fs.append(new Option("ターゲット：すべて", ""));
+      FITS.forEach((v) => fs.append(new Option(`ターゲット：${v}（${qs.filter((x) => x.fit === v).length}）`, v))); fs.value = st.fit;
+      const cnt = mk("span", "muted"); bar.append(sel, fs, q, cnt); w.append(bar);
       const p = mk("div", "grid"); const t = mk("table"); t.style.width = "max-content";
       const hr = mk("tr");
-      const h0 = mk("th", null, "質問"); h0.style.cssText = "min-width:240px;max-width:280px;vertical-align:bottom"; hr.append(h0);
+      const h0 = mk("th", null, "質問"); h0.style.cssText = "min-width:210px;max-width:240px;vertical-align:bottom"; hr.append(h0);
+      const hf = mk("th", null, "ターゲット"); hf.style.cssText = "vertical-align:bottom;padding:8px 4px;font-size:11px"; hr.append(hf);
       const h1 = mk("th"); h1.style.cssText = "width:30px;min-width:30px;padding:6px 2px;text-align:center;vertical-align:bottom"; const h1t = mk("span", null, "出た検索ワード数"); h1t.style.cssText = "writing-mode:vertical-rl;white-space:nowrap;display:inline-block"; h1.append(h1t); hr.append(h1);
       cols.forEach((x) => {
         const th = mk("th"); th.style.cssText = "width:25px;min-width:25px;max-width:25px;padding:6px 0;text-align:center;vertical-align:bottom";
@@ -1727,16 +1732,21 @@ async function paaView(sb, clients) {
       const tb = mk("tbody"); t.append(tb); p.append(t); w.append(p);
       const fill = () => {
         const k = st.q.trim().toLowerCase();
-        const rows = qs.filter((x) => (!st.seed || x.set.has(st.seed)) && (!k || x.q.toLowerCase().includes(k)));
+        const rows = qs.filter((x) => (!st.seed || x.set.has(st.seed)) && (!st.fit || x.fit === st.fit) && (!k || x.q.toLowerCase().includes(k)));
         cnt.textContent = `${rows.length}問`;
         tb.replaceChildren(...rows.map((x) => { const tr = mk("tr");
-          const c0 = mk("td", "b", x.q); c0.style.cssText = "min-width:240px;max-width:280px;white-space:normal"; tr.append(c0);
+          const c0 = mk("td", "b", x.q); c0.style.cssText = "min-width:210px;max-width:240px;white-space:normal";
+          if (x.fit && x.fit !== "合う" && x.reason) { const why = mk("span", null, x.reason); why.style.cssText = "display:block;font-size:11px;font-weight:500;color:var(--muted);margin-top:2px"; c0.append(why); }
+          tr.append(c0);
+          const cf = mk("td"); cf.style.cssText = "white-space:nowrap;padding:6px 4px"; if (x.fit) { const k = mk("span", "kind", x.fit); k.title = x.reason; k.style.color = x.fit === "合う" ? "var(--accent)" : x.fit === "合わない" ? "var(--muted)" : "var(--ink-2)"; cf.append(k); } tr.append(cf);
+          if (x.fit === "合わない") tr.style.opacity = ".5";
           const c1 = mk("td", null, String(x.set.size)); c1.style.cssText = "text-align:center;font-variant-numeric:tabular-nums;padding:6px 2px"; tr.append(c1);
           cols.forEach((c) => { const td = mk("td", null, x.set.has(c.seed) ? "●" : ""); td.style.cssText = "text-align:center;color:var(--accent);padding:6px 0" + (c.seed === st.seed ? ";background:var(--soft)" : ""); tr.append(td); });
           return tr; }));
-        if (!rows.length) { const tr = mk("tr"); const td = mk("td", "empty", "当てはまる質問はありません。"); td.colSpan = cols.length + 2; tr.append(td); tb.append(tr); }
+        if (!rows.length) { const tr = mk("tr"); const td = mk("td", "empty", "当てはまる質問はありません。"); td.colSpan = cols.length + 3; tr.append(td); tb.append(tr); }
       };
       sel.addEventListener("change", () => { st.seed = sel.value; fill(); });
+      fs.addEventListener("change", () => { st.fit = fs.value; fill(); });
       q.addEventListener("input", () => { st.q = q.value; fill(); });
       fill();
     }
