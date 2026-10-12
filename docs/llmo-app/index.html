@@ -219,7 +219,7 @@ a.full:hover { text-decoration: underline; }
 .sheet .cl3 { -webkit-line-clamp: 3; }
 .sheet .cl4 { -webkit-line-clamp: 4; }
 .sheet.fulltext .cl { display: block; -webkit-line-clamp: unset; overflow: visible; }
-.sheet td.more { cursor: zoom-in; }
+.sheet tbody td:not(.rn):not(.none) { cursor: pointer; }
 .sheethint { color: var(--muted); font-size: 12px; margin-top: 8px; }
 .btn[aria-pressed="true"] { background: var(--tint); color: var(--accent); border-color: var(--accent); }
 .rvback { position: fixed; inset: 0; z-index: 80; background: rgba(15,26,46,.38); display: grid; place-items: center; padding: 16px; }
@@ -1402,7 +1402,7 @@ function bootApp(D) {
     const fullBtn = el("button", "btn", "全文で表示"); fullBtn.type = "button"; fullBtn.setAttribute("aria-pressed", String(sheetFull));
     fullBtn.title = "長い回答を切らずに、表の中で全部見せます";
     bar.append(s, chip, reset, clearF, fullBtn, dl); w.append(bar);
-    w.append(el("p", "sheethint", "セルをダブルクリックすると、その回答を全文で開けます。「全文で表示」を押すと、表の中で切らずに見られます。"));
+    w.append(el("p", "sheethint", "行を押すと、その回答を全文で開けます。「全文で表示」を押すと、表の中で切らずに見られます。"));
     const box = el("div"); w.append(box);
     let shown = [];
     const vals = (a) => { const q = qByNo.get(a.q); return cols.map((c) => c[2](a, q) || ""); };
@@ -1453,8 +1453,8 @@ function bootApp(D) {
           else if (cols[i][0] === "AI") c.append(aiMark(a.platform), x);
           else if (lines && x) { c.append(el("div", `cl cl${lines}`, x)); c.classList.add("more"); }
           else c.textContent = x;
-          if (x) c.title = lines ? "ダブルクリックで全文を表示" : x;
-          c.addEventListener("dblclick", (e) => { e.preventDefault(); const sel = window.getSelection && window.getSelection(); if (sel) sel.removeAllRanges(); openRowView(a, qByNo.get(a.q)); });
+          if (x) c.title = lines ? "押すと全文を表示" : x;
+          c.addEventListener("click", () => { const sel = window.getSelection && window.getSelection(); if (sel && !sel.isCollapsed) return; openRowView(a, qByNo.get(a.q)); });   // 文字を選んでコピーしている時は開かない
           tr.append(c);
         });
         // 行番号をつかんだ時だけ行をドラッグできるようにする（スプレッドシートの行移動と同じ）
