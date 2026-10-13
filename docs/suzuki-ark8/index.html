@@ -500,16 +500,19 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var
 .yt__snsbtns{margin-top:12px;display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
 @media (max-width:900px){ .yt__list{grid-template-columns:minmax(0,1fr)} .yt__btn{align-self:stretch} }
 
-.endnote{background:var(--ink);color:#fff;text-align:center;padding:14px 16px}
-.endnote p{margin:0;font-weight:700;font-size:var(--fs);line-height:1.7;letter-spacing:.04em}
+.endnote{background:var(--yellow);color:var(--ink);text-align:center;padding:10px 16px;box-shadow:0 1px 0 rgba(0,0,0,.08)}
+.endnote p{margin:0;font-weight:700;font-size:15px;line-height:1.6;letter-spacing:.04em}
+:root{--endnote-h:44px}
+[id]{scroll-margin-top:calc(var(--head-h) + var(--endnote-h) + 6px)}
+@media (max-width:760px){ .endnote{padding:8px 12px} .endnote p{font-size:13px} :root{--endnote-h:58px} }
 </style>
 
 <script>document.documentElement.classList.add("js","fx-on");if("scrollRestoration" in history)history.scrollRestoration="manual"</script>
 </head>
 <body>
 
-<div class="endnote"><p><span class="nb">このイベントは終了しました。</span><wbr><span class="nb">ご来場いただいた皆様、</span><wbr><span class="nb">ありがとうございました</span></p></div>
 <header class="hd" id="hd">
+<div class="endnote"><p><span class="nb">このイベントは終了しました。</span><wbr><span class="nb">ご来場いただいた皆様、</span><wbr><span class="nb">ありがとうございました</span></p></div>
   <div class="wrap hd__in">
     <a class="hd__logo" href="#top" aria-label="ページの先頭へ"><img src="img/logo.png" width="800" height="179" alt="Suzuki Method 80th Anniversary／音楽を通して心と能力を育む Suzuki Method スズキ・メソード"></a>
     <nav class="hd__nav" aria-label="ページ内">
