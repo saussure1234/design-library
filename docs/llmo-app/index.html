@@ -1783,10 +1783,12 @@ async function paaView(sb, clients) {
     seeds = await fetchAll(() => sb.from("paa_seeds").select("client_id,batch,seed,vol,phase,n").order("id"));
     items = await fetchAll(() => sb.from("paa_items").select("client_id,batch,seed,question,fit,fit_reason").order("id"));
   } catch (e) { page.replaceChildren(mk("p", "psub", "読み込みに失敗しました：" + e.message)); return; }
+  const PAA_FROM = "2026-10-14";   // これより前の取得分は出さない（消してはいない。上司の指定リストで取り直すため・So 10/14）
+  seeds = seeds.filter((x) => x.batch >= PAA_FROM); items = items.filter((x) => x.batch >= PAA_FROM);
   const latest = {};   // クライアントごとに一番新しい取得日だけ出す
   for (const x of seeds) if (!latest[x.client_id] || x.batch > latest[x.client_id]) latest[x.client_id] = x.batch;
   const tabs = clients.filter((c) => latest[c.id]);
-  if (!tabs.length) { page.replaceChildren(mk("h1", "ptitle", "PAA"), mk("p", "psub", "PAA のデータはまだありません。")); return; }
+  if (!tabs.length) { page.replaceChildren(mk("h1", "ptitle", "PAA"), mk("p", "psub", "新しい PAA はまだありません（10月13日までの取得分は非表示）。")); return; }
   const HOW = ["最初から", "1回押して", "2回押して", "3回押して"];
   const st = { c: tabs[0].slug, seed: "", q: "", fit: "", cat: "", br: "" };
   const hc = decodeURIComponent(location.hash.replace(/^#/, "")).split("/")[0];
