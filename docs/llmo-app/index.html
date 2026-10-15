@@ -82,6 +82,10 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .geomap .gval { font-size: 14px; fill: var(--ink-2); paint-order: stroke; stroke: #fff; stroke-width: 4px; stroke-linejoin: round; pointer-events: none; }
 .geomap .gpt { stroke: #fff; stroke-width: 2.5; }
 .geomap .gscl { font-size: 13px; fill: #8a909a; }
+.geomap .grv { fill: #64748b; stroke: #fff; stroke-width: 2; }
+.geomap .grvname { font-size: 15px; font-weight: 700; fill: #475569; paint-order: stroke; stroke: #fff; stroke-width: 4px; stroke-linejoin: round; pointer-events: none; }
+.maptbl .mbar.rv i { background: #64748b; }
+.maptbl tr.rvrow td.pl { color: #475569; }
 .geomap .gscale { fill: none; stroke: #8a909a; stroke-width: 1.5; }
 .maplegend { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; font-size: 12px; color: var(--muted); margin: 12px 0 4px; }
 .maplegend .sw { display: inline-block; width: 14px; height: 14px; border-radius: 50%; vertical-align: -3px; margin-right: 4px; }
@@ -1594,7 +1598,7 @@ function bootApp(D) {
     const nm = (p) => p.label.replace(/^明光キッズ.*/, "教室").replace(/小学校$/, "小");
     const lg = el("div", "maplegend");
     [[0, "0回"], [0.5, "半分"], [1, "毎回"]].forEach(([r, t]) => { const x = el("span"); const sw = el("span", "sw"); sw.style.background = col(r); x.append(sw, document.createTextNode(t)); lg.append(x); });
-    lg.append(el("span", null, "■＝教室　●＝送迎対象の小学校　2枚とも同じ縮尺"));
+    lg.append(el("span", null, "■＝教室　●＝送迎対象の小学校　" + ((G.rivals || []).length ? "◆＝他社（大きさ＝名前が出た回数）　" : "") + "2枚とも同じ縮尺"));
     w.append(lg);
     const grid = el("div", "mapgrid");
     Object.entries(G.branch_names).forEach(([b, name]) => {
@@ -1608,14 +1612,22 @@ function bootApp(D) {
       const sv = mk("svg", { viewBox: `0 0 ${G.width} ${G.height}`, class: "geomap", role: "img", "aria-label": `${name}教室のまわりで${MLAB[m]}割合の地図` });
       V.paths.forEach((d) => sv.append(mk("path", { d, class: "gpoly" })));
       V.labels.forEach((l) => sv.append(mk("text", { x: l.x, y: l.y, class: "glab" }, l.t)));
-      const boxes = ps.map((p) => [p.x - 14, p.y - 14, p.x + 14, p.y + 14]);   // 点そのもの
+      const rv = (G.rivals || []).filter((c) => c.branch === b);   // 他社（地図の中にあるものだけ。build_geo.py）
+      const rst = (c) => (q === "all" ? c.all : (c.by_q[q] || { n: 0, k: 0 }));
+      const rsize = (c) => { const s = rst(c); return 7 + 12 * Math.sqrt(s.n ? s.k / s.n : 0); };   // 大きさ＝名前が出た割合（面積で比べる）
+      const boxes = ps.map((p) => [p.x - 14, p.y - 14, p.x + 14, p.y + 14]).concat(rv.map((c) => { const z = rsize(c) + 2; return [c.x - z, c.y - z, c.x + z, c.y + z]; }));   // 点そのもの
       const hit = (a) => boxes.some((c) => a[0] < c[2] && c[0] < a[2] && a[1] < c[3] && c[1] < a[3]);
-      const place = (p) => {
-        const tw = Math.max(nm(p).length * 16, 48), th = 36;
-        const cand = [["start", p.x + 17, p.y - 1], ["end", p.x - 17, p.y - 1], ["middle", p.x, p.y - 36], ["middle", p.x, p.y + 30]];
+      const place = (p, label, gap) => {
+        const tw = Math.max((label || nm(p)).length * 16, 48), th = 36, d = gap || 17;
+        const cand = [["start", p.x + d, p.y - 1], ["end", p.x - d, p.y - 1], ["middle", p.x, p.y - d - 19], ["middle", p.x, p.y + d + 13],
+          ["end", p.x - d, p.y - d - 14], ["start", p.x + d, p.y - d - 14], ["end", p.x - d, p.y + d + 10], ["start", p.x + d, p.y + d + 10]];   // 右・左・上・下・斜め
         for (const [an, x, y] of cand) {
           const x0 = an === "start" ? x : an === "end" ? x - tw : x - tw / 2; const bx = [x0, y - 16, x0 + tw, y - 16 + th];
           if (bx[0] >= 2 && bx[2] <= G.width - 2 && bx[1] >= 2 && bx[3] <= G.height - 2 && !hit(bx)) { boxes.push(bx); return [an, x, y]; }
+        }
+        for (const [an, x, y] of cand) {   // どこも重なるときは、せめて地図からはみ出さない所に置く
+          const x0 = an === "start" ? x : an === "end" ? x - tw : x - tw / 2;
+          if (x0 >= 2 && x0 + tw <= G.width - 2 && y - 16 >= 2 && y - 16 + th <= G.height - 2) { boxes.push([x0, y - 16, x0 + tw, y - 16 + th]); return [an, x, y]; }
         }
         return cand[0];
       };
@@ -1627,6 +1639,16 @@ function bootApp(D) {
         const [an, tx, ty] = place(p);
         g.append(mk("text", { x: tx, y: ty, class: "gname", "text-anchor": an }, nm(p)));
         g.append(mk("text", { x: tx, y: ty + 17, class: "gval", "text-anchor": an }, `${s[m]}/${s.n}回`));
+        sv.append(g);
+      });
+      rv.forEach((c) => {
+        const s = rst(c), z = rsize(c), g = mk("g", {});
+        const shape = mk("path", { d: `M${c.x},${c.y - z}L${c.x + z},${c.y}L${c.x},${c.y + z}L${c.x - z},${c.y}Z`, class: "grv" });
+        shape.append(mk("title", {}, `${c.name}（他社）\n名前が出た：${s.k}/${s.n}回`));
+        g.append(shape);
+        const [an, tx, ty] = place(c, c.name, z + 5);
+        g.append(mk("text", { x: tx, y: ty, class: "grvname", "text-anchor": an }, c.name));
+        g.append(mk("text", { x: tx, y: ty + 16, class: "gval", "text-anchor": an }, `${s.k}/${s.n}回`));
         sv.append(g);
       });
       if (G.km_per_px) {   // 500m の目盛り
@@ -1642,6 +1664,13 @@ function bootApp(D) {
         tr.append(el("td", "pl", `${p.kind === "教室" ? "■ " : "● "}${p.kind === "教室" ? "教室" : nm(p)}`));
         const td = el("td", "rate", `${s[m]}/${s.n}回`); const bb = el("span", "mbar"); const i = el("i"); i.style.width = `${s.n ? Math.round(s[m] / s.n * 100) : 0}%`; bb.append(i); td.append(bb); tr.append(td);
         tr.append(el("td", "oth", (s.others || []).join("／") || "—"));
+        t.append(tr);
+      });
+      [...rv].sort((x, y) => rst(y).k - rst(x).k).forEach((c) => {
+        const s = rst(c); const tr = el("tr"); tr.className = "rvrow";
+        tr.append(el("td", "pl", `◆ ${c.name}`));
+        const td = el("td", "rate", `${s.k}/${s.n}回`); const bb = el("span", "mbar rv"); const i = el("i"); i.style.width = `${s.n ? Math.round(s.k / s.n * 100) : 0}%`; bb.append(i); td.append(bb); tr.append(td);
+        tr.append(el("td", "oth", "他社（このまわりの答え全体で名前が出た回数）"));
         t.append(tr);
       });
       pan.append(t);
@@ -1809,7 +1838,7 @@ async function paaView(sb, clients) {
     {
       // カテゴリー＝検索ワードの分岐と段（各社の Excel の「検索キーワード」の行。runner/paa_seeds_from_excel.py が phase に「分岐:段|分岐:段」で入れる）
       // 分岐が2つ以上なら分岐のタブ → 段のタブ。「すべて」は出さない。選んだ段の検索ワードだけを横に、そこから出た PAA を縦に
-      const ORDER = ["目的・課題", "手段", "カテゴリ", "ポジション", "ブランドイメージ", "潜在課題の自覚", "目的・課題の具体化", "解決カテゴリの認知", "選択条件・ポジション", "ブランド理解・相談"];
+      const ORDER = ["優先1", "優先2", "保留", "目的・課題", "手段", "カテゴリ", "ポジション", "ブランドイメージ", "潜在課題の自覚", "目的・課題の具体化", "解決カテゴリの認知", "選択条件・ポジション", "ブランド理解・相談"];
       const byOrder = (a, b) => (ORDER.indexOf(a) + 1 || 99) - (ORDER.indexOf(b) + 1 || 99);
       const memb = (x) => (x.phase || "").split("|").filter(Boolean).map((t) => (t.includes(":") ? { b: t.split(":")[0], p: t.split(":").slice(1).join(":") } : { b: "01", p: t }));
       const brs = [...new Set(ss.flatMap((x) => memb(x).map((m) => m.b)))].sort();
