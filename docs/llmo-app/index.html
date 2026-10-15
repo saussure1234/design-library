@@ -86,6 +86,19 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .geomap .grvname { font-size: 15px; font-weight: 700; fill: #475569; paint-order: stroke; stroke: #fff; stroke-width: 4px; stroke-linejoin: round; pointer-events: none; }
 .maptbl .mbar.rv i { background: #64748b; }
 .maptbl tr.rvrow td.pl { color: #475569; }
+.maptbl .mbar.pub i { background: #a3acb6; }
+.geomap .gctx { fill: #cfd5dc; stroke: #fff; stroke-width: 2; }
+.geomap .gctxname { font-size: 12px; fill: #8a909a; paint-order: stroke; stroke: #fff; stroke-width: 3px; stroke-linejoin: round; pointer-events: none; }
+h3.svh { font-size: 14px; margin: 20px 0 8px; }
+.svwrap { overflow-x: auto; }
+table.svmat { width: 100%; min-width: 620px; border-collapse: collapse; table-layout: fixed; }
+.svmat th:first-child { width: 120px; }
+.svmat th { font-size: 12px; color: var(--muted); font-weight: 600; padding: 6px; text-align: center; line-height: 1.35; word-break: keep-all; overflow-wrap: anywhere; }
+.svmat td { padding: 7px 6px; border: 1px solid #fff; font-size: 13px; }
+.svmat td.pl { font-weight: 600; text-align: left; }
+.svmat td.cell { text-align: center; cursor: pointer; font-variant-numeric: tabular-nums; background: #f4f6f8; }
+.svmat td.cell:hover { outline: 2px solid #9ad3c4; }
+.svmat td.sel { outline: 2px solid #1f8a7a; font-weight: 700; }
 .geomap .gscale { fill: none; stroke: #8a909a; stroke-width: 1.5; }
 .maplegend { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; font-size: 12px; color: var(--muted); margin: 12px 0 4px; }
 .maplegend .sw { display: inline-block; width: 14px; height: 14px; border-radius: 50%; vertical-align: -3px; margin-right: 4px; }
@@ -548,9 +561,10 @@ function bootApp(D) {
     urls: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
     about: '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/>',
     map: '<path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>',
+    stagemap: '<path d="M3 5h18v14H3z"/><path d="M3 10h18M3 15h18M9 5v14M15 5v14"/>',
   };
   const PAGES = [
-    ["一般", [["overview", "ダッシュボード"], ["trend", "推移"], ["prompts", "質問一覧"], ...(D.geo ? [["map", "地図"]] : [])]],   // 地図はローカル案件（geo のある案件）だけ
+    ["一般", [["overview", "ダッシュボード"], ["trend", "推移"], ["prompts", "質問一覧"], ...(D.geo ? [["map", "地図"]] : []), ...(D.geo && D.geo.stage_view ? [["stagemap", "AI×段階の地図"]] : [])]],   // 地図はローカル案件（geo のある案件）だけ
   ];
 
   /* ---------- 絞り込み（全画面に効く） ---------- */
@@ -1595,7 +1609,7 @@ function bootApp(D) {
     const col = (r) => `rgba(31,138,122,${(0.12 + 0.88 * r).toFixed(2)})`;
     const ns = "http://www.w3.org/2000/svg";
     const mk = (tag, at, txt) => { const e = document.createElementNS(ns, tag); Object.entries(at).forEach(([k, v]) => e.setAttribute(k, v)); if (txt != null) e.textContent = txt; return e; };
-    const nm = (p) => p.label.replace(/^明光キッズ.*/, "教室").replace(/小学校$/, "小");
+    const nm = (p) => p.label.replace(/小学校$/, "小");   // 教室は「明光キッズ光が丘」のように名前で出す（So 10/16「スクールでは何の話かわからない」）
     const lg = el("div", "maplegend");
     [[0, "0回"], [0.5, "半分"], [1, "毎回"]].forEach(([r, t]) => { const x = el("span"); const sw = el("span", "sw"); sw.style.background = col(r); x.append(sw, document.createTextNode(t)); lg.append(x); });
     lg.append(el("span", null, "■＝教室　●＝送迎対象の小学校　" + ((G.rivals || []).length ? "◆＝他社（大きさ＝名前が出た回数）　" : "") + "2枚とも同じ縮尺"));
@@ -1661,7 +1675,7 @@ function bootApp(D) {
       const t = el("table", "maptbl"); const h = el("tr"); ["地点", "回数", "代わりによく出た施設"].forEach((x) => h.append(el("th", null, x))); t.append(h);
       ps.forEach((p) => {
         const s = st(p); const tr = el("tr");
-        tr.append(el("td", "pl", `${p.kind === "教室" ? "■ " : "● "}${p.kind === "教室" ? "教室" : nm(p)}`));
+        tr.append(el("td", "pl", `${p.kind === "教室" ? "■ " : "● "}${nm(p)}`));
         const td = el("td", "rate", `${s[m]}/${s.n}回`); const bb = el("span", "mbar"); const i = el("i"); i.style.width = `${s.n ? Math.round(s[m] / s.n * 100) : 0}%`; bb.append(i); td.append(bb); tr.append(td);
         tr.append(el("td", "oth", (s.others || []).join("／") || "—"));
         t.append(tr);
@@ -1681,6 +1695,128 @@ function bootApp(D) {
     return w;
   }
 
+  // AI×段階の地図：79問の答えで、AI ごと・検討の段ごとに、地図の上の施設の名前がどれだけ出たか（build_geo.py の stage_view。明光キッズのようなローカル案件だけ）
+  function pageStage() {
+    const G = D.geo, SV = G.stage_view; const w = el("div");
+    const plats = Object.keys(SV.platforms);
+    const stg = [...SV.stages.map((x) => [x.id, x.label]), ["all", "すべての段"]];
+    if (!plats.includes(state.svai)) state.svai = plats[0];
+    if (!stg.some(([v]) => v === state.svst)) state.svst = "C";
+    if (!G.branch_names[state.svb]) state.svb = Object.keys(G.branch_names)[0];
+    const b = state.svb, ai = state.svai, L = state.svst, bname = G.branch_names[b];
+    const cellOf = (p, bb, LL) => SV.platforms[p].cells[`${bb}|${LL}`] || null;
+    const seg = (lab, opts, cur, set) => {
+      const f = el("div", "fl"); f.append(el("span", null, lab)); const sg = el("div", "segc");
+      opts.forEach(([v, t]) => { const bt = el("button", null, t); bt.type = "button"; bt.setAttribute("aria-pressed", String(cur === v)); bt.addEventListener("click", () => { set(v); route(); }); sg.append(bt); });
+      f.append(sg); return f;
+    };
+    const bar = el("div", "fbar");
+    bar.append(seg("地域", Object.entries(G.branch_names).map(([k, v]) => [k, `明光キッズ${v}のまわり`]), b, (v) => { state.svb = v; }));
+    bar.append(seg("AI", plats.map((p) => [p, SV.platforms[p].label]), ai, (v) => { state.svai = v; }));
+    bar.append(seg("段階", stg, L, (v) => { state.svst = v; }));
+    w.append(head("AI×段階の地図", null, null, null, null)); w.append(bar);
+    const c = cellOf(ai, b, L); const n = c ? c.n : 0;
+    const rate = (k) => (n ? k / n : 0);
+    const col = (r) => `rgba(31,138,122,${(0.12 + 0.88 * r).toFixed(2)})`;
+    const ns = "http://www.w3.org/2000/svg";
+    const mk = (tag, at, txt) => { const e = document.createElementNS(ns, tag); Object.entries(at).forEach(([k, v]) => e.setAttribute(k, v)); if (txt != null) e.textContent = txt; return e; };
+    const grid = el("div", "mapgrid");
+    // 左：地図
+    const pan = el("div", "mappanel");
+    pan.append(el("h3", null, `明光キッズ${bname}のまわり`));
+    const box = el("div", "mapwrap"); const V = G.views[b];
+    const sv = mk("svg", { viewBox: `0 0 ${G.width} ${G.height}`, class: "geomap", role: "img", "aria-label": `${SV.platforms[ai].label}の答えで、明光キッズ${bname}のまわりの施設の名前が出た回数の地図` });
+    V.paths.forEach((d) => sv.append(mk("path", { d, class: "gpoly" })));
+    V.labels.forEach((l) => sv.append(mk("text", { x: l.x, y: l.y, class: "glab" }, l.t)));
+    const pts = G.points.filter((p) => p.branch === b); const sch = pts.find((p) => p.kind === "教室");
+    const rv = (G.rivals || []).filter((r) => r.branch === b);
+    const rk = (r) => (c && c.rv ? c.rv[r.name] || 0 : 0);
+    const rsz = (r) => 7 + 12 * Math.sqrt(rate(rk(r)));
+    const boxes = pts.map((p) => [p.x - 12, p.y - 12, p.x + 12, p.y + 12]).concat(rv.map((r) => { const z = rsz(r) + 2; return [r.x - z, r.y - z, r.x + z, r.y + z]; }));
+    const hit = (a) => boxes.some((q) => a[0] < q[2] && q[0] < a[2] && a[1] < q[3] && q[1] < a[3]);
+    const place = (x0, y0, label, d, th) => {
+      const tw = Math.max(label.length * 15, 44);
+      const cand = [["start", x0 + d, y0 - 1], ["end", x0 - d, y0 - 1], ["middle", x0, y0 - d - 19], ["middle", x0, y0 + d + 13], ["end", x0 - d, y0 - d - 14], ["start", x0 + d, y0 - d - 14], ["end", x0 - d, y0 + d + 10], ["start", x0 + d, y0 + d + 10]];
+      const bx = (an, x, y) => { const s = an === "start" ? x : an === "end" ? x - tw : x - tw / 2; return [s, y - 15, s + tw, y - 15 + th]; };
+      const inside = (q) => q[0] >= 2 && q[2] <= G.width - 2 && q[1] >= 2 && q[3] <= G.height - 2;
+      for (const [an, x, y] of cand) { const q = bx(an, x, y); if (inside(q) && !hit(q)) { boxes.push(q); return [an, x, y]; } }
+      for (const [an, x, y] of cand) { const q = bx(an, x, y); if (inside(q)) { boxes.push(q); return [an, x, y]; } }
+      return cand[0];
+    };
+    // 送迎対象の小学校（場所の目安。数は数えていない）
+    pts.filter((p) => p.kind !== "教室").forEach((p) => {
+      sv.append(mk("circle", { cx: p.x, cy: p.y, r: 6, class: "gctx" }));
+      const nm = p.label.replace(/小学校$/, "小"); const [an, x, y] = place(p.x, p.y, nm, 10, 18);
+      sv.append(mk("text", { x, y, class: "gctxname", "text-anchor": an }, nm));
+    });
+    // 明光キッズ（その地域の教室）
+    if (sch) {
+      const r = c ? rate(c.own) : 0; const g = mk("g", {});
+      const sh = mk("rect", { x: sch.x - 12, y: sch.y - 12, width: 24, height: 24, rx: 4, class: "gpt", fill: c ? col(r) : "#e5e7eb" });
+      sh.append(mk("title", {}, `${sch.label}\n名前が出た：${c ? c.own : 0}/${n}回`)); g.append(sh);
+      const [an, x, y] = place(sch.x, sch.y, sch.label, 17, 36);
+      g.append(mk("text", { x, y, class: "gname", "text-anchor": an }, sch.label));
+      g.append(mk("text", { x, y: y + 17, class: "gval", "text-anchor": an }, c ? `${c.own}/${n}回` : "答えなし"));
+      sv.append(g);
+    }
+    // 他社
+    rv.forEach((r) => {
+      const z = rsz(r), k = rk(r), g = mk("g", {});
+      const sh = mk("path", { d: `M${r.x},${r.y - z}L${r.x + z},${r.y}L${r.x},${r.y + z}L${r.x - z},${r.y}Z`, class: "grv" });
+      sh.append(mk("title", {}, `${r.name}（他社）\n名前が出た：${k}/${n}回`)); g.append(sh);
+      const [an, x, y] = place(r.x, r.y, r.name, z + 5, 34);
+      g.append(mk("text", { x, y, class: "grvname", "text-anchor": an }, r.name));
+      g.append(mk("text", { x, y: y + 16, class: "gval", "text-anchor": an }, `${k}/${n}回`));
+      sv.append(g);
+    });
+    if (G.km_per_px) {
+      const Lm = 0.5 / G.km_per_px, y = G.height - 16, x0 = 14;
+      sv.append(mk("path", { d: `M${x0},${y - 5}V${y}H${x0 + Lm}V${y - 5}`, class: "gscale" }));
+      sv.append(mk("text", { x: x0 + Lm + 6, y: y + 1, class: "gscl" }, "500m"));
+    }
+    box.append(sv); pan.append(box);
+    const lg = el("div", "maplegend");
+    lg.append(el("span", null, "■＝明光キッズ（色＝名前が出た割合）　◆＝他社（大きさ＝名前が出た回数）　●＝送迎対象の小学校（場所の目安）"));
+    pan.append(lg); grid.append(pan);
+    // 右：この組み合わせで名前が出た施設
+    const side = el("div", "mappanel");
+    const stLab = (stg.find(([v]) => v === L) || [L, L])[1];
+    side.append(el("h3", null, `${SV.platforms[ai].label}・${stLab}`));
+    if (!c) {
+      side.append(el("p", "mapnote", "この組み合わせの答えはまだありません（計測中、またはこの AI では聞いていない段です）"));
+    } else {
+      side.append(el("p", "mapnote", `明光キッズ${bname}のまわりについての答え ${n}回のうち、名前が出た回数`));
+      const rows = [[`■ 明光キッズ${bname}`, c.own, "own"], ["■ 明光キッズ（ほかの教室）", c.other, "own"], ...rv.map((r) => [`◆ ${r.name}`, rk(r), "rv"]).sort((x, y) => y[1] - x[1]), ["区立の学童・ねりっこ", c.public, "pub"]];
+      const t = el("table", "maptbl"); const h = el("tr"); ["施設", "回数"].forEach((x) => h.append(el("th", null, x))); t.append(h);
+      rows.forEach(([nm, k, kind]) => {
+        const tr = el("tr"); if (kind === "rv") tr.className = "rvrow";
+        tr.append(el("td", "pl", nm));
+        const td = el("td", "rate", `${k}/${n}回`); const bb = el("span", "mbar" + (kind === "rv" ? " rv" : kind === "pub" ? " pub" : "")); const i = el("i"); i.style.width = `${Math.round(rate(k) * 100)}%`; bb.append(i); td.append(bb); tr.append(td);
+        t.append(tr);
+      });
+      side.append(t);
+      if (c.top && c.top.length) side.append(el("p", "mapnote", "そのほかに名前が出た施設：" + c.top.map(([nm, k]) => `${nm}（${k}回）`).join("／")));
+    }
+    grid.append(side);
+    w.append(grid);
+    // 下：AI × 段階（明光キッズ{地域}の名前が出た割合）。押すと、その組み合わせを地図に出す
+    w.append(el("h3", "svh", `AI × 段階：明光キッズ${bname}の名前が出た割合（押すと地図が切り替わります）`));
+    const mt = el("table", "svmat"); const hr = el("tr"); hr.append(el("th", null, "")); stg.forEach(([, lab]) => hr.append(el("th", null, lab))); mt.append(hr);
+    plats.forEach((p) => {
+      const tr = el("tr"); tr.append(el("td", "pl", SV.platforms[p].label));
+      stg.forEach(([v]) => {
+        const cc = cellOf(p, b, v); const td = el("td", "cell" + (p === ai && v === L ? " sel" : ""), cc ? `${cc.own}/${cc.n}` : "—");
+        if (cc && cc.n) td.style.background = col(cc.own / cc.n).replace(/,([\d.]+)\)$/, (m0, a) => `,${(Number(a) * 0.55).toFixed(2)})`);
+        td.addEventListener("click", () => { state.svai = p; state.svst = v; route(); window.scrollTo(0, 0); });
+        tr.append(td);
+      });
+      mt.append(tr);
+    });
+    const mw = el("div", "svwrap"); mw.append(mt); w.append(mw);
+    w.append(el("p", "mapnote", "数え方：同じ79問を各 AI に3回ずつ聞いた答えで、施設の名前が出た回数。教室を探す・条件で探すの段は「光が丘駅の近く」「練馬駅の近く」などで聞いたので、その地域に数えています。地名の入らない段（目的・課題、学童の種類を知る、ブランドの印象の共通の質問）は両方の地域に数えています。「Gemini（近くで）」はブラウザの位置を教室・送迎対象校に置いて、地名を入れずに聞いたものです。他社の位置は公開されている住所から。"));
+    return w;
+  }
+
   /* ---------- 画面の切り替え ---------- */
   function route() {
     closeFilter();
@@ -1692,10 +1828,10 @@ function bootApp(D) {
     const pageEl = document.getElementById("page");
     if (page === "prompts" && parts[1] && qById.has(parts[1]) && P.some((p) => p.id === parts[2])) { body = pageDetail(parts[1], parts[2], Number(parts[3]) || 1); page = "prompts"; }
     else {
-      if (!["prompts", "trend", ...(D.geo ? ["map"] : [])].includes(page)) page = "overview";
+      if (!["prompts", "trend", ...(D.geo ? ["map"] : []), ...(D.geo && D.geo.stage_view ? ["stagemap"] : [])].includes(page)) page = "overview";
       if (page === "trend" && state.layer === IMG) state.layer = "all";   // 推移に社名入りの見出しは出さない
       if (page === "prompts" && state.qbrand !== "all" && state.layer === IMG) state.layer = "all";   // ブランドで絞るのは社名を入れない見出しだけ
-      body = ({ prompts: pagePrompts, trend: pageTrend, overview: pageOverview, map: pageMap }[page])();
+      body = ({ prompts: pagePrompts, trend: pageTrend, overview: pageOverview, map: pageMap, stagemap: pageStage }[page])();
     }
     closeCalendar(); renderNav(page);
     pageEl.replaceChildren(body);
