@@ -82,12 +82,14 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .geomap .gval { font-size: 14px; fill: var(--ink-2); paint-order: stroke; stroke: #fff; stroke-width: 4px; stroke-linejoin: round; pointer-events: none; }
 .geomap .gpt { stroke: #fff; stroke-width: 2.5; }
 .geomap .gscl { font-size: 13px; fill: #8a909a; }
-.geomap .grv { fill: #64748b; stroke: #fff; stroke-width: 2; }
-.geomap .grvname { font-size: 15px; font-weight: 700; fill: #475569; paint-order: stroke; stroke: #fff; stroke-width: 4px; stroke-linejoin: round; pointer-events: none; }
-.maptbl .mbar.rv i { background: #64748b; }
-.maptbl tr.rvrow td.pl { color: #475569; }
+.geomap .grv { fill: #e07020; stroke: #fff; stroke-width: 2; }
+.geomap .grvname { font-size: 15px; font-weight: 700; fill: #b4530f; paint-order: stroke; stroke: #fff; stroke-width: 4px; stroke-linejoin: round; pointer-events: none; }
+.maptbl .mbar.rv i { background: #e07020; }
+.maptbl .mbar.sch i { background: #6b4fd1; }
+.maplegend .sw.swrv { border-radius: 2px; transform: rotate(45deg) scale(.8); }
+.maptbl tr.rvrow td.pl { color: #b4530f; }
 .maptbl .mbar.pub i { background: #a3acb6; }
-.geomap .gctx { fill: #cfd5dc; stroke: #fff; stroke-width: 2; }
+.geomap .gctx { fill: #c4b8f0; stroke: #fff; stroke-width: 2; }
 .geomap .gctxname { font-size: 12px; fill: #8a909a; paint-order: stroke; stroke: #fff; stroke-width: 3px; stroke-linejoin: round; pointer-events: none; }
 h3.svh { font-size: 14px; margin: 20px 0 8px; }
 .svwrap { overflow-x: auto; }
@@ -99,6 +101,8 @@ table.svmat { width: 100%; min-width: 620px; border-collapse: collapse; table-la
 .svmat td.cell { text-align: center; cursor: pointer; font-variant-numeric: tabular-nums; background: #f4f6f8; }
 .svmat td.cell:hover { outline: 2px solid #9ad3c4; }
 .svmat td.sel { outline: 2px solid #1f8a7a; font-weight: 700; }
+.repwrap { position: relative; overflow: hidden; border: 1px solid var(--line); border-radius: 10px; background: #fff; margin-top: 10px; }
+.repframe { border: 0; display: block; transform-origin: 0 0; }
 .geomap .gscale { fill: none; stroke: #8a909a; stroke-width: 1.5; }
 .maplegend { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; font-size: 12px; color: var(--muted); margin: 12px 0 4px; }
 .maplegend .sw { display: inline-block; width: 14px; height: 14px; border-radius: 50%; vertical-align: -3px; margin-right: 4px; }
@@ -562,9 +566,10 @@ function bootApp(D) {
     about: '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/>',
     map: '<path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>',
     stagemap: '<path d="M3 5h18v14H3z"/><path d="M3 10h18M3 15h18M9 5v14M15 5v14"/>',
+    report: '<path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4M9 12h7M9 16h7"/>',
   };
   const PAGES = [
-    ["一般", [["overview", "ダッシュボード"], ["trend", "推移"], ["prompts", "質問一覧"], ...(D.geo ? [["map", "地図"]] : []), ...(D.geo && D.geo.stage_view ? [["stagemap", "AI×段階の地図"]] : [])]],   // 地図はローカル案件（geo のある案件）だけ
+    ["一般", [["overview", "ダッシュボード"], ["trend", "推移"], ["prompts", "質問一覧"], ...(D.geo ? [["map", "地図"]] : []), ...(D.geo && D.geo.stage_view ? [["stagemap", "AI×段階の地図"]] : []), ...(D.report ? [["report", "報告書"]] : [])]],   // 地図はローカル案件（geo のある案件）だけ
   ];
 
   /* ---------- 絞り込み（全画面に効く） ---------- */
@@ -1606,13 +1611,14 @@ function bootApp(D) {
     bar.append(seg("数えるもの", Object.entries(MLAB), m, (v) => { state.mapm = v; }));
     w.append(head("地図", null, null, null, null)); w.append(bar);   // 教室のタブは出さない（2教室を1枚の地図で並べる）
     const st = (p) => (q === "all" ? p.all : (p.by_q[q] || { n: 0, own: 0, meiko: 0, first: 0, others: [] }));
-    const col = (r) => `rgba(31,138,122,${(0.12 + 0.88 * r).toFixed(2)})`;
+    const col = (r) => `rgba(15,154,135,${(0.15 + 0.85 * r).toFixed(2)})`;    // 自社の教室（青緑）
+    const colS = (r) => `rgba(107,79,209,${(0.15 + 0.85 * r).toFixed(2)})`;   // 小学校（紫）。他社は橙（.grv）
     const ns = "http://www.w3.org/2000/svg";
     const mk = (tag, at, txt) => { const e = document.createElementNS(ns, tag); Object.entries(at).forEach(([k, v]) => e.setAttribute(k, v)); if (txt != null) e.textContent = txt; return e; };
     const nm = (p) => p.label.replace(/小学校$/, "小");   // 教室は「スクール」ではなく名前で出す
     const lg = el("div", "maplegend");
-    [[0, "0回"], [0.5, "半分"], [1, "毎回"]].forEach(([r, t]) => { const x = el("span"); const sw = el("span", "sw"); sw.style.background = col(r); x.append(sw, document.createTextNode(t)); lg.append(x); });
-    lg.append(el("span", null, "■＝教室　●＝送迎対象の小学校　" + ((G.rivals || []).length ? "◆＝他社（大きさ＝名前が出た回数）　" : "") + "2枚とも同じ縮尺"));
+    [[col(1), `${SUBJ}の教室`, ""], [colS(1), "送迎対象の小学校", "50%"], ...((G.rivals || []).length ? [["#e07020", "他社", "rv"]] : [])].forEach(([c, t, k]) => { const x = el("span"); const sw = el("span", "sw" + (k === "rv" ? " swrv" : "")); sw.style.background = c; if (k === "50%") sw.style.borderRadius = "50%"; else if (!k) sw.style.borderRadius = "3px"; x.append(sw, document.createTextNode(t)); lg.append(x); });
+    lg.append(el("span", null, "教室・小学校の色の濃さ＝その場所で聞いたとき自社の名前が出た回数（薄い＝0回、濃い＝毎回）" + ((G.rivals || []).length ? "。他社の印の大きさ＝名前が出た回数" : "") + "。2枚とも同じ縮尺"));
     w.append(lg);
     const grid = el("div", "mapgrid");
     Object.entries(G.branch_names).forEach(([b, name]) => {
@@ -1647,7 +1653,7 @@ function bootApp(D) {
       };
       ps.forEach((p) => {
         const s = st(p); const r = s.n ? s[m] / s.n : 0; const g = mk("g", {});
-        const shape = p.kind === "教室" ? mk("rect", { x: p.x - 12, y: p.y - 12, width: 24, height: 24, rx: 4, class: "gpt", fill: col(r) }) : mk("circle", { cx: p.x, cy: p.y, r: 11, class: "gpt", fill: col(r) });
+        const shape = p.kind === "教室" ? mk("rect", { x: p.x - 12, y: p.y - 12, width: 24, height: 24, rx: 4, class: "gpt", fill: col(r) }) : mk("circle", { cx: p.x, cy: p.y, r: 11, class: "gpt", fill: colS(r) });
         shape.append(mk("title", {}, `${p.label}\n${MLAB[m]}：${s[m]}/${s.n}回`));
         g.append(shape);
         const [an, tx, ty] = place(p);
@@ -1676,7 +1682,7 @@ function bootApp(D) {
       ps.forEach((p) => {
         const s = st(p); const tr = el("tr");
         tr.append(el("td", "pl", `${p.kind === "教室" ? "■ " : "● "}${nm(p)}`));
-        const td = el("td", "rate", `${s[m]}/${s.n}回`); const bb = el("span", "mbar"); const i = el("i"); i.style.width = `${s.n ? Math.round(s[m] / s.n * 100) : 0}%`; bb.append(i); td.append(bb); tr.append(td);
+        const td = el("td", "rate", `${s[m]}/${s.n}回`); const bb = el("span", "mbar" + (p.kind === "教室" ? "" : " sch")); const i = el("i"); i.style.width = `${s.n ? Math.round(s[m] / s.n * 100) : 0}%`; bb.append(i); td.append(bb); tr.append(td);
         tr.append(el("td", "oth", (s.others || []).join("／") || "—"));
         t.append(tr);
       });
@@ -1717,7 +1723,7 @@ function bootApp(D) {
     w.append(head("AI×段階の地図", null, null, null, null)); w.append(bar);
     const c = cellOf(ai, b, L); const n = c ? c.n : 0;
     const rate = (k) => (n ? k / n : 0);
-    const col = (r) => `rgba(31,138,122,${(0.12 + 0.88 * r).toFixed(2)})`;
+    const col = (r) => `rgba(15,154,135,${(0.15 + 0.85 * r).toFixed(2)})`;   // 自社の教室（青緑）。小学校＝薄い紫（.gctx）、他社＝橙（.grv）
     const ns = "http://www.w3.org/2000/svg";
     const mk = (tag, at, txt) => { const e = document.createElementNS(ns, tag); Object.entries(at).forEach(([k, v]) => e.setAttribute(k, v)); if (txt != null) e.textContent = txt; return e; };
     const grid = el("div", "mapgrid");
@@ -1817,6 +1823,23 @@ function bootApp(D) {
     return w;
   }
 
+  // 報告書：案件フォルダの report/ の HTML をそのまま見せる（ログインした人だけ。公開の HTML には入れない）
+  function pageReport() {
+    const R = D.report; const w = el("div");
+    w.append(head("報告書", null, null, null, null));
+    const bar = el("div", "toolbar"); const pb = el("button", "lnk", "印刷・PDFで保存"); pb.type = "button"; bar.append(pb, el("span", "muted", R.name)); w.append(bar);
+    const wrap = el("div", "repwrap"); const fr = document.createElement("iframe"); fr.className = "repframe"; fr.setAttribute("title", "報告書"); fr.srcdoc = R.html; wrap.append(fr); w.append(wrap);
+    const fit = () => {   // 報告書は A4 横（297mm＝1123px）で作ってあるので、幅に合わせて縮める
+      const doc = fr.contentDocument; if (!doc || !doc.body) return;
+      const k = Math.min(1, wrap.clientWidth / 1123); const h = doc.body.scrollHeight;
+      fr.style.width = "1123px"; fr.style.height = h + "px"; fr.style.transform = `scale(${k})`; wrap.style.height = Math.ceil(h * k) + "px";
+    };
+    fr.addEventListener("load", () => { fit(); setTimeout(fit, 300); });
+    window.addEventListener("resize", fit);
+    pb.addEventListener("click", () => fr.contentWindow && fr.contentWindow.print());
+    return w;
+  }
+
   /* ---------- 画面の切り替え ---------- */
   function route() {
     closeFilter();
@@ -1828,10 +1851,10 @@ function bootApp(D) {
     const pageEl = document.getElementById("page");
     if (page === "prompts" && parts[1] && qById.has(parts[1]) && P.some((p) => p.id === parts[2])) { body = pageDetail(parts[1], parts[2], Number(parts[3]) || 1); page = "prompts"; }
     else {
-      if (!["prompts", "trend", ...(D.geo ? ["map"] : []), ...(D.geo && D.geo.stage_view ? ["stagemap"] : [])].includes(page)) page = "overview";
+      if (!["prompts", "trend", ...(D.geo ? ["map"] : []), ...(D.geo && D.geo.stage_view ? ["stagemap"] : []), ...(D.report ? ["report"] : [])].includes(page)) page = "overview";
       if (page === "trend" && state.layer === IMG) state.layer = "all";   // 推移に社名入りの見出しは出さない
       if (page === "prompts" && state.qbrand !== "all" && state.layer === IMG) state.layer = "all";   // ブランドで絞るのは社名を入れない見出しだけ
-      body = ({ prompts: pagePrompts, trend: pageTrend, overview: pageOverview, map: pageMap, stagemap: pageStage }[page])();
+      body = ({ prompts: pagePrompts, trend: pageTrend, overview: pageOverview, map: pageMap, stagemap: pageStage, report: pageReport }[page])();
     }
     closeCalendar(); renderNav(page);
     pageEl.replaceChildren(body);
@@ -1883,7 +1906,7 @@ async function loadClient(sb, cl) {
   if (pids.size) as.splice(0, as.length, ...as.filter((a) => pids.has(a.platform)));   // AI一覧に無い媒体（入れ替え前の古い行）は数えない
   return {
     subject: cl.name, subject_pattern: cl.subject_pattern, tracked: cl.tracked || [], features_all: cl.features || [],
-    layers: Array.isArray(cl.layers) ? cl.layers : ((cl.layers || {}).default || []), layers_by_branch: Array.isArray(cl.layers) ? null : ((cl.layers || {}).by_branch || null), geo: Array.isArray(cl.layers) ? null : ((cl.layers || {}).geo || null), features_by_branch: Array.isArray(cl.layers) ? null : ((cl.layers || {}).features_by_branch || null), branches: cl.branches || [], competitor_by_layer: !!cl.competitor_by_layer, platforms: cl.platforms || [],
+    layers: Array.isArray(cl.layers) ? cl.layers : ((cl.layers || {}).default || []), layers_by_branch: Array.isArray(cl.layers) ? null : ((cl.layers || {}).by_branch || null), geo: Array.isArray(cl.layers) ? null : ((cl.layers || {}).geo || null), report: Array.isArray(cl.layers) ? null : ((cl.layers || {}).report || null), features_by_branch: Array.isArray(cl.layers) ? null : ((cl.layers || {}).features_by_branch || null), branches: cl.branches || [], competitor_by_layer: !!cl.competitor_by_layer, platforms: cl.platforms || [],
     questions: qs.map((q) => ({ no: q.no, id: q.code, layer: q.layer, layer_label: q.layer_label, layer_full: q.layer_full, theme: q.theme, branches: q.branches || [], prompt: q.prompt, counted: q.counted })),
     answers: as.map((a) => ({ ...a, appeared: a.appeared ? 1 : 0, brands: a.brands || [], competitors: a.competitors || [], sources: a.sources || [], cards: a.cards || [], stores: a.stores || [], feat_hits: a.feat_hits || [] })),
     batches: [...new Set(as.map((a) => a.batch))].sort(),
