@@ -1601,6 +1601,7 @@ function bootApp(D) {
     const G = D.geo; const w = el("div");
     const q = state.mapq || "all", m = state.mapm || "own";
     const MLAB = { own: "その教室の名前が出た", meiko: `${SUBJ}のどれかが出た`, first: "競合より先に出た" };
+    const VLAB = { own: "教室名が出た", meiko: `${SUBJ}が出た`, first: "他社より先に出た" };   // 地図の数字のそばに書く言葉
     const bar = el("div", "fbar");
     const seg = (lab, opts, cur, set) => {
       const f = el("div", "fl"); f.append(el("span", null, lab)); const sg = el("div", "segc");
@@ -1620,6 +1621,8 @@ function bootApp(D) {
     [[col(1), `${SUBJ}の教室`, ""], [colS(1), "送迎対象の小学校", "50%"], ...((G.rivals || []).length ? [["#e07020", "他社", "rv"]] : [])].forEach(([c, t, k]) => { const x = el("span"); const sw = el("span", "sw" + (k === "rv" ? " swrv" : "")); sw.style.background = c; if (k === "50%") sw.style.borderRadius = "50%"; else if (!k) sw.style.borderRadius = "3px"; x.append(sw, document.createTextNode(t)); lg.append(x); });
     lg.append(el("span", null, "教室・小学校の色の濃さ＝その場所で聞いたとき自社の名前が出た回数（薄い＝0回、濃い＝毎回）" + ((G.rivals || []).length ? "。他社の印の大きさ＝名前が出た回数" : "") + "。2枚とも同じ縮尺"));
     w.append(lg);
+    const nPer = q === "all" ? 8 : 2;
+    w.append(el("p", "mapnote", `回数の見方：「${VLAB[m]} 2/${nPer}回」＝その場所にブラウザの位置を置いて聞いた${nPer}回の答え（${q === "all" ? "4問×2回" : "この質問×2回"}）のうち、${m === "own" ? "その地図の教室の名前" : m === "meiko" ? `${SUBJ}のどれかの名前` : "その教室の名前が他社より先"}が出た回数です。` + ((G.rivals || []).length ? `「名前が出た 21/47回」＝その教室のまわりの地点の答えの合計のうち、その他社の名前が出た回数です。` : "")));
     const grid = el("div", "mapgrid");
     Object.entries(G.branch_names).forEach(([b, name]) => {
       const ps = G.points.filter((p) => p.branch === b); const V = G.views[b]; if (!ps.length || !V) return;
@@ -1656,9 +1659,10 @@ function bootApp(D) {
         const shape = p.kind === "教室" ? mk("rect", { x: p.x - 12, y: p.y - 12, width: 24, height: 24, rx: 4, class: "gpt", fill: col(r) }) : mk("circle", { cx: p.x, cy: p.y, r: 11, class: "gpt", fill: colS(r) });
         shape.append(mk("title", {}, `${p.label}\n${MLAB[m]}：${s[m]}/${s.n}回`));
         g.append(shape);
-        const [an, tx, ty] = place(p);
+        const vl = `${VLAB[m]} ${s[m]}/${s.n}回`;
+        const [an, tx, ty] = place(p, [nm(p), vl].sort((x, y) => y.length - x.length)[0]);
         g.append(mk("text", { x: tx, y: ty, class: "gname", "text-anchor": an }, nm(p)));
-        g.append(mk("text", { x: tx, y: ty + 17, class: "gval", "text-anchor": an }, `${s[m]}/${s.n}回`));
+        g.append(mk("text", { x: tx, y: ty + 17, class: "gval", "text-anchor": an }, vl));
         sv.append(g);
       });
       rv.forEach((c) => {
@@ -1666,9 +1670,10 @@ function bootApp(D) {
         const shape = mk("path", { d: `M${c.x},${c.y - z}L${c.x + z},${c.y}L${c.x},${c.y + z}L${c.x - z},${c.y}Z`, class: "grv" });
         shape.append(mk("title", {}, `${c.name}（他社）\n名前が出た：${s.k}/${s.n}回`));
         g.append(shape);
-        const [an, tx, ty] = place(c, c.name, z + 5);
+        const vr = `名前が出た ${s.k}/${s.n}回`;
+        const [an, tx, ty] = place(c, [c.name, vr].sort((x, y) => y.length - x.length)[0], z + 5);
         g.append(mk("text", { x: tx, y: ty, class: "grvname", "text-anchor": an }, c.name));
-        g.append(mk("text", { x: tx, y: ty + 16, class: "gval", "text-anchor": an }, `${s.k}/${s.n}回`));
+        g.append(mk("text", { x: tx, y: ty + 16, class: "gval", "text-anchor": an }, vr));
         sv.append(g);
       });
       if (G.km_per_px) {   // 500m の目盛り
@@ -1678,7 +1683,7 @@ function bootApp(D) {
       }
       box.append(sv); pan.append(box);
       // 表
-      const t = el("table", "maptbl"); const h = el("tr"); ["地点", "回数", "代わりによく出た施設"].forEach((x) => h.append(el("th", null, x))); t.append(h);
+      const t = el("table", "maptbl"); const h = el("tr"); ["地点", `${VLAB[m]}回数（答えの数のうち）`, "代わりによく出た施設"].forEach((x) => h.append(el("th", null, x))); t.append(h);
       ps.forEach((p) => {
         const s = st(p); const tr = el("tr");
         tr.append(el("td", "pl", `${p.kind === "教室" ? "■ " : "● "}${nm(p)}`));
@@ -1762,7 +1767,7 @@ function bootApp(D) {
       sh.append(mk("title", {}, `${sch.label}\n名前が出た：${c ? c.own : 0}/${n}回`)); g.append(sh);
       const [an, x, y] = place(sch.x, sch.y, sch.label, 17, 36);
       g.append(mk("text", { x, y, class: "gname", "text-anchor": an }, sch.label));
-      g.append(mk("text", { x, y: y + 17, class: "gval", "text-anchor": an }, c ? `${c.own}/${n}回` : "答えなし"));
+      g.append(mk("text", { x, y: y + 17, class: "gval", "text-anchor": an }, c ? `名前が出た ${c.own}/${n}回` : "答えなし"));
       sv.append(g);
     }
     // 他社
@@ -1772,7 +1777,7 @@ function bootApp(D) {
       sh.append(mk("title", {}, `${r.name}（他社）\n名前が出た：${k}/${n}回`)); g.append(sh);
       const [an, x, y] = place(r.x, r.y, r.name, z + 5, 34);
       g.append(mk("text", { x, y, class: "grvname", "text-anchor": an }, r.name));
-      g.append(mk("text", { x, y: y + 16, class: "gval", "text-anchor": an }, `${k}/${n}回`));
+      g.append(mk("text", { x, y: y + 16, class: "gval", "text-anchor": an }, `名前が出た ${k}/${n}回`));
       sv.append(g);
     });
     if (G.km_per_px) {
@@ -1783,7 +1788,9 @@ function bootApp(D) {
     box.append(sv); pan.append(box);
     const lg = el("div", "maplegend");
     lg.append(el("span", null, `■＝${SUBJ}（色＝名前が出た割合）　◆＝他社（大きさ＝名前が出た回数）　●＝送迎対象の小学校（場所の目安）`));
-    pan.append(lg); grid.append(pan);
+    pan.append(lg);
+    if (c) pan.append(el("p", "mapnote", `回数の見方：「名前が出た 18/${n}回」の${n}回は、${SV.platforms[ai].label}に「${(stg.find(([v]) => v === L) || [L, L])[1]}」の質問を3回ずつ聞いた答えのうち、${SUBJ}${bname}のまわりについての答えの数です。左の数字は、そのうち名前が出た答えの数です。`));
+    grid.append(pan);
     // 右：この組み合わせで名前が出た施設
     const side = el("div", "mappanel");
     const stLab = (stg.find(([v]) => v === L) || [L, L])[1];
@@ -1793,7 +1800,7 @@ function bootApp(D) {
     } else {
       side.append(el("p", "mapnote", `${SUBJ}${bname}のまわりについての答え ${n}回のうち、名前が出た回数`));
       const rows = [[`■ ${SUBJ}${bname}`, c.own, "own"], [`■ ${SUBJ}（ほかの教室）`, c.other, "own"], ...rv.map((r) => [`◆ ${r.name}`, rk(r), "rv"]).sort((x, y) => y[1] - x[1]), ["区立の学童・ねりっこ", c.public, "pub"]];
-      const t = el("table", "maptbl"); const h = el("tr"); ["施設", "回数"].forEach((x) => h.append(el("th", null, x))); t.append(h);
+      const t = el("table", "maptbl"); const h = el("tr"); ["施設", `名前が出た回数（${n}回の答えのうち）`].forEach((x) => h.append(el("th", null, x))); t.append(h);
       rows.forEach(([nm, k, kind]) => {
         const tr = el("tr"); if (kind === "rv") tr.className = "rvrow";
         tr.append(el("td", "pl", nm));
@@ -1806,7 +1813,8 @@ function bootApp(D) {
     grid.append(side);
     w.append(grid);
     // 下：AI × 段階（自社の名前が出た割合）。押すと、その組み合わせを地図に出す
-    w.append(el("h3", "svh", `AI × 段階：${SUBJ}${bname}の名前が出た割合（押すと地図が切り替わります）`));
+    w.append(el("h3", "svh", `AI × 段階：${SUBJ}${bname}の名前が出た回数（押すと地図が切り替わります）`));
+    w.append(el("p", "mapnote", "各マスの「27/30」＝そのAIにその段の質問を聞いた答え30回のうち、名前が出た答えが27回、という意味です。色が濃いほど多く出ています。"));
     const mt = el("table", "svmat"); const hr = el("tr"); hr.append(el("th", null, "")); stg.forEach(([, lab]) => hr.append(el("th", null, lab))); mt.append(hr);
     plats.forEach((p) => {
       const tr = el("tr"); tr.append(el("td", "pl", SV.platforms[p].label));
