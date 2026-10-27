@@ -1,0 +1,955 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>LLMOHack Indonesia</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+:root{
+  --bg:#F4F6FA;
+  --paper:#FFFFFF;
+  --ink:#0F1A2E;
+  --ink2:#46506A;
+  --ink3:#636D86;
+  --line:#E1E5EE;
+  --line2:#C9D0DE;
+  --acc:#2460DD;
+  --acc-ink:#1A47A8;
+  --tint:#E7EEFD;
+  --on-acc:#FFFFFF;
+  --mk:#FFE27A;
+  --rival:#A3ACBF;
+  --ok:#1E7F53;
+  --ok-soft:#E1F2E8;
+  --bad:#B8322A;
+  --bad-soft:#FBE7E4;
+  --mute-soft:#EDF0F5;
+  --logo-a:#5B8BF0;
+  --logo-ad:#2460DD;
+  --logo-r:#9FB0CF;
+  --sans:"Plus Jakarta Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0C1220;--paper:#131B2D;--ink:#E9EDF6;--ink2:#B8C0D3;--ink3:#8F98AE;--line:#232D44;--line2:#36425F;
+    --acc:#7FA6FF;--acc-ink:#A9C3FF;--tint:#1A2645;--on-acc:#0C1220;--mk:rgba(255,226,122,.30);--rival:#5E6884;
+    --ok:#5CCB94;--ok-soft:#14301F;--bad:#FF8C7D;--bad-soft:#3A1B18;--mute-soft:#1B2336;
+    --logo-a:#8DB0FF;--logo-ad:#5B8BF0;--logo-r:#56627F;color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0C1220;--paper:#131B2D;--ink:#E9EDF6;--ink2:#B8C0D3;--ink3:#8F98AE;--line:#232D44;--line2:#36425F;
+  --acc:#7FA6FF;--acc-ink:#A9C3FF;--tint:#1A2645;--on-acc:#0C1220;--mk:rgba(255,226,122,.30);--rival:#5E6884;
+  --ok:#5CCB94;--ok-soft:#14301F;--bad:#FF8C7D;--bad-soft:#3A1B18;--mute-soft:#1B2336;
+  --logo-a:#8DB0FF;--logo-ad:#5B8BF0;--logo-r:#56627F;color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:1120px;margin-inline:auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3,h4{text-wrap:balance}
+a{color:var(--acc)}
+a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+
+.bar{background:var(--paper);border-bottom:1px solid var(--line)}
+.bar__in{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding-block:12px}
+.logo{display:flex;align-items:center;gap:8px;color:var(--ink);text-decoration:none}
+.logo svg{width:28px;height:24px;flex:none}
+.logo__en{font-weight:800;font-size:18px;letter-spacing:-.01em}
+.logo__id{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--acc);border:1px solid currentColor;border-radius:4px;padding:1px 6px}
+.pill{font-size:12px;font-weight:600;color:var(--ink2);background:var(--mute-soft);border-radius:999px;padding:3px 10px}
+.lang{margin-left:auto;display:inline-flex;border:1px solid var(--line2);border-radius:8px;overflow:hidden}
+.lang button{font:600 13px var(--sans);padding:6px 12px;background:transparent;color:var(--ink2);border:0;cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+
+.intro{padding-block:28px 20px;display:grid;gap:8px}
+.intro h1{font-size:clamp(26px,4vw,38px);font-weight:800;letter-spacing:-.02em;line-height:1.2;margin:0;max-width:24ch}
+.intro p{margin:0;color:var(--ink2);font-size:16px;max-width:64ch}
+
+.steps{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.steps__in{display:flex;gap:4px;overflow-x:auto;padding-block:8px}
+.steps a{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;color:var(--ink2);text-decoration:none;font-weight:600;font-size:14px;white-space:nowrap}
+.steps a b{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;background:var(--mute-soft);color:var(--ink2)}
+.steps a[aria-current="step"]{background:var(--paper);color:var(--ink);box-shadow:0 0 0 1px var(--line)}
+.steps a[aria-current="step"] b{background:var(--acc);color:var(--on-acc)}
+
+main{padding-block:24px 64px}
+.sheet{display:grid;gap:20px}
+.h2{font-size:24px;font-weight:800;letter-spacing:-.015em;line-height:1.25;margin:0}
+.h3{font-size:16px;font-weight:700;margin:0;line-height:1.4}
+.sub{color:var(--ink2);margin:6px 0 0;max-width:70ch}
+.hint{font-size:13px;color:var(--ink3);margin:0}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:20px;min-width:0}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
+.head{display:grid;gap:4px}
+
+.pf{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:20px;align-items:start}
+.fgrid{display:grid;gap:18px}
+.field{display:grid;gap:6px;min-width:0}
+fieldset.field{border:0;padding:0;margin:0}
+legend,label{font-weight:600;font-size:14px;padding:0}
+input[type="text"]{font:inherit;font-size:15px;padding:10px 12px;border:1px solid var(--line2);border-radius:8px;background:var(--paper);color:var(--ink);width:100%;min-width:0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.yang{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:8px}
+.yang span{font-family:var(--mono);color:var(--ink3);font-size:13px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:700 14px var(--sans);padding:11px 16px;border-radius:8px;border:1px solid transparent;cursor:pointer;text-decoration:none;line-height:1.3}
+.btn--pri{background:var(--acc);color:var(--on-acc)}
+.btn--pri:hover{background:var(--acc-ink)}
+.btn--ghost{background:transparent;color:var(--ink2);border-color:var(--line2)}
+.btn--ghost:hover{color:var(--ink);border-color:var(--ink3)}
+
+.plan{display:grid;gap:16px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 64px)}
+.formula{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 8px;font-variant-numeric:tabular-nums}
+.formula b{font-size:30px;font-weight:800;letter-spacing:-.02em;line-height:1}
+.formula span{color:var(--ink3);font-size:14px}
+.formula .eq{color:var(--ink);font-weight:700}
+.formula .total{color:var(--acc)}
+.ailist{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.ailist li{font-size:13px;font-weight:600;padding:4px 10px;border-radius:6px;background:var(--tint);color:var(--acc-ink)}
+.conds{margin:0;padding-left:18px;display:grid;gap:6px;color:var(--ink2);font-size:14px}
+
+.pipe{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.pipe__col{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:grid;gap:10px;align-content:start;position:relative;min-width:0}
+.pipe__col:not(:last-child)::after{content:"→";position:absolute;right:-13px;top:16px;width:22px;height:22px;display:grid;place-items:center;font-size:13px;color:var(--ink3);background:var(--bg);border-radius:50%;z-index:1}
+.pipe__col h3{display:flex;gap:8px;align-items:center}
+.pipe__col h3 b{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;background:var(--ink);color:var(--paper);flex:none}
+.chiplist{display:flex;flex-wrap:wrap;gap:6px}
+.kw{font-family:var(--mono);font-size:13px;background:var(--mute-soft);padding:4px 8px;border-radius:6px;overflow-wrap:anywhere}
+.paa{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.paa li{font-size:14px;padding:6px 0 6px 12px;border-left:2px solid var(--line2);color:var(--ink2)}
+.lcount{display:grid;gap:8px}
+.lcount div{display:flex;justify-content:space-between;gap:8px;font-size:14px;padding:6px 0;border-bottom:1px dashed var(--line)}
+.lcount b{font-variant-numeric:tabular-nums}
+
+.layer{display:grid;grid-template-columns:220px minmax(0,1fr);gap:20px;padding-block:18px;border-top:1px solid var(--line)}
+.layer:first-child{border-top:0;padding-top:0}
+.layer:last-child{padding-bottom:0}
+.layer__meta{display:grid;gap:6px;align-content:start}
+.layer__tag{font-family:var(--mono);font-size:12px;color:var(--acc);font-weight:500}
+.plist{list-style:none;margin:0;padding:0;display:grid;gap:8px;min-width:0}
+.prompt{display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:10px;align-items:start;padding:10px 12px;background:var(--bg);border-radius:8px}
+.pid{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--ink3);padding-top:2px}
+.ptext{font-family:var(--mono);font-size:14px;line-height:1.55;overflow-wrap:anywhere}
+.src{font-size:12px;color:var(--ink2);background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:2px 8px;white-space:nowrap}
+.rules ul{margin:10px 0 0;padding-left:18px;display:grid;gap:8px;color:var(--ink2);max-width:80ch}
+
+.demo{background:var(--tint);border:1px dashed var(--acc);border-radius:var(--r);padding:12px 16px;font-size:14px;color:var(--ink);display:grid;gap:4px}
+.demo b{color:var(--acc-ink)}
+.rhead{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:baseline;justify-content:space-between}
+.rhead__name{font-size:14px;color:var(--ink2)}
+.rhead__name b{color:var(--ink);font-size:16px}
+.verdict{font-size:clamp(19px,2.4vw,26px);font-weight:700;line-height:1.45;letter-spacing:-.01em;margin:0;max-width:46ch;text-wrap:pretty}
+.mk{background:linear-gradient(transparent 58%,var(--mk) 58%);padding-inline:2px}
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.kpi{display:grid;gap:6px;align-content:start}
+.kpi .big{font-size:42px;font-weight:800;letter-spacing:-.03em;line-height:1.05;font-variant-numeric:tabular-nums}
+.kpi .frac{font-size:14px;color:var(--ink2);font-variant-numeric:tabular-nums}
+.kpi .note{font-size:13px;color:var(--ink3);border-top:1px solid var(--line);padding-top:8px;margin-top:4px}
+.kpi--bad .big{color:var(--bad)}
+
+.scroll{overflow-x:auto}
+.tbl{width:100%;border-collapse:collapse;font-size:14px;min-width:560px}
+.tbl th{font-size:12px;text-align:left;color:var(--ink3);font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:bottom}
+.tbl td{padding:11px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:0}
+.tbl td:first-child{font-weight:600}
+.cellbar{display:grid;grid-template-columns:minmax(60px,1fr) 92px;gap:10px;align-items:center}
+.track{height:8px;background:var(--mute-soft);border-radius:4px;overflow:hidden}
+.fill{height:100%;background:var(--acc);border-radius:4px}
+.fill--rival{background:var(--rival)}
+.num{font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap}
+.num small{font-weight:400;color:var(--ink3)}
+.badn{color:var(--bad);font-weight:700;font-variant-numeric:tabular-nums}
+
+.bars{display:grid;gap:12px}
+.brow{display:grid;grid-template-columns:minmax(0,200px) minmax(0,1fr) 64px 92px;gap:12px;align-items:center}
+.brow__name{font-weight:600;font-size:14px;display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center;min-width:0}
+.brow .track{height:12px;border-radius:6px}
+.brow .fill{border-radius:6px}
+.brow__v{font-variant-numeric:tabular-nums;font-weight:700;text-align:right}
+.brow__r{font-variant-numeric:tabular-nums;font-size:13px;color:var(--ink2);text-align:right}
+.bhead{font-size:12px;color:var(--ink3);font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.tag{font-size:11px;font-weight:700;padding:1px 6px;border-radius:4px;background:var(--mute-soft);color:var(--ink2);white-space:nowrap}
+.tag--you{background:var(--tint);color:var(--acc-ink)}
+.tag--new{background:var(--bad-soft);color:var(--bad)}
+.axis{display:grid;grid-template-columns:minmax(0,200px) minmax(0,1fr) 64px 92px;gap:12px;font-size:11px;color:var(--ink3);font-variant-numeric:tabular-nums}
+.axis__t{display:flex;justify-content:space-between}
+
+.qhead,.qsum{display:grid;grid-template-columns:40px minmax(0,1fr) repeat(4,88px);gap:10px;align-items:center}
+.qhead{font-size:12px;color:var(--ink3);font-weight:600;padding:0 12px 8px;border-bottom:1px solid var(--line)}
+.qcells{display:contents}
+details.q{border-bottom:1px solid var(--line)}
+.qsum{padding:12px;cursor:pointer;list-style:none;border-radius:6px}
+.qsum::-webkit-details-marker{display:none}
+.qsum:hover{background:var(--bg)}
+.qsum .ptext{font-size:13px}
+.qai{display:grid;gap:3px}
+.qai small{display:none;font-size:11px;color:var(--ink3)}
+.dots{display:flex;gap:4px}
+.dot{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--line2);display:grid;place-items:center;font-size:11px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--ink3)}
+.dot.on{background:var(--acc);border-color:var(--acc);color:var(--on-acc)}
+.qlayer{font-size:12px;font-weight:700;color:var(--ink3);letter-spacing:.06em;text-transform:uppercase;padding:16px 12px 6px}
+.qbody{padding:4px 12px 16px 62px;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.qbody h4{font-size:13px;margin:0 0 6px}
+.run{display:grid;grid-template-columns:44px minmax(0,1fr);gap:6px;font-size:13px;color:var(--ink2);padding:3px 0}
+.run em{font-style:normal;color:var(--ink3);font-size:12px}
+.run ol{margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:2px 10px}
+.run li{white-space:nowrap}
+.run li b{font-variant-numeric:tabular-nums;color:var(--ink3);font-weight:600;margin-right:3px}
+.run li.me{color:var(--acc-ink);font-weight:700}
+.run li.me b{color:var(--acc-ink)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--ink2);align-items:center}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+
+.st{display:inline-flex;flex-direction:column;gap:2px;font-size:13px;font-weight:700;padding:4px 8px;border-radius:6px;line-height:1.35}
+.st small{font-weight:500}
+.st--ok{background:var(--ok-soft);color:var(--ok)}
+.st--bad{background:var(--bad-soft);color:var(--bad)}
+.st--none{background:var(--mute-soft);color:var(--ink3);font-weight:600}
+.truth{font-family:var(--mono);font-size:13px;font-weight:500}
+.origin{display:grid;gap:10px;margin-top:16px}
+.origin div{display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr);gap:12px;font-size:14px;padding-top:10px;border-top:1px solid var(--line)}
+.origin b{color:var(--bad)}
+.yes{color:var(--ok);font-weight:700}
+.no{color:var(--bad);font-weight:700}
+
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px}
+.method{margin:0;padding-left:18px;display:grid;gap:6px;color:var(--ink2);font-size:14px}
+
+.acts{list-style:none;margin:0;padding:0;display:grid;gap:12px;counter-reset:a}
+.act{display:grid;grid-template-columns:44px minmax(0,1fr);gap:14px;counter-increment:a}
+.act::before{content:counter(a);width:36px;height:36px;border-radius:50%;background:var(--ink);color:var(--paper);display:grid;place-items:center;font-weight:800;font-variant-numeric:tabular-nums}
+.act h3{font-size:17px;margin:4px 0 10px}
+.act dl{display:grid;grid-template-columns:150px minmax(0,1fr);gap:8px 16px;margin:0;font-size:14px}
+.act dt{color:var(--ink3);font-weight:600}
+.act dd{margin:0;color:var(--ink)}
+.act .caveat{font-size:13px;color:var(--ink3);margin-top:8px}
+.next{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+
+footer{border-top:1px solid var(--line);padding-block:20px 32px;color:var(--ink3);font-size:13px}
+
+@media (max-width:860px){
+  .pf{grid-template-columns:1fr}
+  .plan{position:static}
+  .pipe{grid-template-columns:1fr}
+  .pipe__col:not(:last-child)::after{content:"↓";right:auto;left:50%;top:auto;bottom:-14px;transform:translateX(-50%)}
+  .kpis{grid-template-columns:1fr}
+  .grid2{grid-template-columns:1fr}
+}
+@media (max-width:760px){
+  .layer{grid-template-columns:1fr;gap:10px}
+  .qhead{display:none}
+  .qsum{grid-template-columns:36px minmax(0,1fr)}
+  .qcells{grid-column:1/-1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .qai small{display:block}
+  .qbody{padding-left:12px}
+  .brow,.axis{grid-template-columns:minmax(0,1fr) 56px 64px}
+  .brow .track,.axis__t{grid-column:1/-1;grid-row:2}
+  .axis span:first-child{display:none}
+  .origin div{grid-template-columns:1fr;gap:4px}
+  .act dl{grid-template-columns:1fr;gap:2px}
+  .act dd{margin-bottom:8px}
+}
+@media (max-width:560px){
+  .two{grid-template-columns:1fr}
+  .prompt{grid-template-columns:34px minmax(0,1fr)}
+  .prompt .src{grid-column:2;justify-self:start}
+  .act{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion: no-preference){
+  .fill{transition:width .5s ease}
+}
+</style>
+</head>
+<body>
+<header class="bar">
+  <div class="wrap bar__in">
+    <a class="logo" href="#profil" aria-label="LLMOHack Indonesia">
+      <svg viewBox="0 0 28 24" aria-hidden="true" focusable="false"><polygon points="14.00,1.00 14.00,7.60 10.10,6.70" style="fill:var(--logo-a)"/><polygon points="14.00,1.00 17.90,6.70 14.00,7.60" style="fill:var(--logo-ad)"/><polygon points="9.32,7.84 14.00,8.92 14.00,15.08 5.68,13.16" style="fill:currentColor"/><polygon points="14.00,8.92 18.68,7.84 22.32,13.16 14.00,15.08" style="fill:var(--logo-r)"/><polygon points="4.90,14.30 14.00,16.40 14.00,23.00 1.00,20.00" style="fill:currentColor"/><polygon points="14.00,16.40 23.10,14.30 27.00,20.00 14.00,23.00" style="fill:var(--logo-r)"/></svg>
+      <span class="logo__en">LLMOHack</span><span class="logo__id">Indonesia</span>
+    </a>
+    <span class="pill" data-t="demoPill">Prototype · simulated data</span>
+    <div class="lang" role="group" aria-label="Language / Bahasa">
+      <button type="button" id="lang-en" data-lang="en" aria-pressed="true">EN</button>
+      <button type="button" id="lang-id" data-lang="id" aria-pressed="false">ID</button>
+    </div>
+  </div>
+</header>
+
+<section class="wrap intro">
+  <h1 data-t="h1">Does AI recommend your business?</h1>
+  <p data-t="lead">We ask ChatGPT, Gemini and Google AI the same questions, then show when you are mentioned, who gets mentioned instead, and what AI gets wrong about you.</p>
+</section>
+
+<nav class="steps" aria-label="Steps">
+  <div class="wrap steps__in">
+    <a href="#profil" data-step="profil"><b>1</b><span data-t="s1">Business profile</span></a>
+    <a href="#pertanyaan" data-step="pertanyaan"><b>2</b><span data-t="s2">Question design</span></a>
+    <a href="#laporan" data-step="laporan"><b>3</b><span data-t="s3">Report</span></a>
+    <a href="#perbaikan" data-step="perbaikan"><b>4</b><span data-t="s4">Action plan</span></a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <section id="profil" class="sheet" aria-labelledby="h-profil">
+    <div class="head">
+      <h2 class="h2" id="h-profil" data-t="pfTitle">Business profile</h2>
+      <p class="sub" data-t="pfSub">Fill this in the way customers search for you. We build the AI questions from it. The values below are a fictional example business.</p>
+    </div>
+    <div class="pf">
+      <form class="panel fgrid" id="pf-form" autocomplete="off">
+        <div class="two">
+          <div class="field">
+            <label for="f-name" data-t="fName">Business name</label>
+            <input type="text" id="f-name">
+          </div>
+          <div class="field">
+            <label for="f-city" data-t="fCity">City / area</label>
+            <input type="text" id="f-city">
+          </div>
+        </div>
+        <div class="field">
+          <label for="f-cat" data-t="fCat">Type of business</label>
+          <input type="text" id="f-cat">
+          <p class="hint" data-t="fCatHint">Write it the way people type it into Google, for example "healthy catering" or "souvenir shop".</p>
+        </div>
+        <fieldset class="field">
+          <legend data-t="fFeat">Strengths you want AI to know</legend>
+          <p class="hint" data-t="fFeatHint">Complete the phrase "a business that …". One strength per line.</p>
+          <div class="yang"><span data-t="that">that</span><input type="text" id="f-feat1" aria-label="Strength 1"></div>
+          <div class="yang"><span data-t="that">that</span><input type="text" id="f-feat2" aria-label="Strength 2"></div>
+          <div class="yang"><span data-t="that">that</span><input type="text" id="f-feat3" aria-label="Strength 3"></div>
+        </fieldset>
+        <fieldset class="field">
+          <legend data-t="fRiv">Competitors you know</legend>
+          <div class="two">
+            <input type="text" id="f-riv1" aria-label="Competitor 1">
+            <input type="text" id="f-riv2" aria-label="Competitor 2">
+          </div>
+          <p class="hint" data-t="fRivHint">AI may name competitors you have not heard of. We report those too.</p>
+        </fieldset>
+        <div class="field">
+          <label for="f-site" data-t="fSite">Website or Instagram (optional)</label>
+          <input type="text" id="f-site" placeholder="instagram.com/yourbusiness">
+          <p class="hint" data-t="fSiteHint">Used to count how often AI cites your own pages.</p>
+        </div>
+        <div class="row">
+          <button type="button" class="btn btn--ghost" id="btn-reset" data-t="reset">Restore example</button>
+        </div>
+      </form>
+      <aside class="panel plan" aria-labelledby="h-plan">
+        <span class="eyebrow" id="h-plan" data-t="planEyebrow">What we will measure</span>
+        <div class="formula" id="formula"></div>
+        <ul class="ailist" id="ailist"></ul>
+        <ul class="conds" id="conds"></ul>
+        <a class="btn btn--pri" href="#pertanyaan" data-t="toQ">Next: question design →</a>
+      </aside>
+    </div>
+  </section>
+
+  <section id="pertanyaan" class="sheet" aria-labelledby="h-q" hidden>
+    <div class="head">
+      <h2 class="h2" id="h-q" data-t="qTitle">Question design</h2>
+      <p class="sub" data-t="qSub">We do not invent the questions. We start from what people type into Google, add the follow-up questions Google shows under "People also ask", then rewrite them as conversational questions for AI.</p>
+    </div>
+    <div class="pipe">
+      <div class="pipe__col">
+        <h3 class="h3"><b>1</b><span data-t="p1">Google keywords</span></h3>
+        <p class="hint" data-t="p1h">What people type when looking for your type of business.</p>
+        <div class="chiplist" id="kwlist"></div>
+      </div>
+      <div class="pipe__col">
+        <h3 class="h3"><b>2</b><span data-t="p2">People also ask</span></h3>
+        <p class="hint" data-t="p2h">Follow-up questions from Google results. These are examples; during measurement they are collected from Google directly.</p>
+        <ul class="paa" id="paalist"></ul>
+      </div>
+      <div class="pipe__col">
+        <h3 class="h3"><b>3</b><span data-t="p3">Questions for AI</span></h3>
+        <p class="hint" data-t="p3h">Rewritten as conversational questions and split into 3 layers.</p>
+        <div class="lcount" id="lcount"></div>
+      </div>
+    </div>
+    <div class="panel" id="layers"></div>
+    <div class="panel rules">
+      <h3 class="h3" data-t="rulesTitle">How to read the results</h3>
+      <ul>
+        <li data-t="rule1">Layers are never added together. Layer 3 questions contain your name, so you always appear. Merging them would make the numbers look better than they are.</li>
+        <li data-t="rule2">AI answers change from run to run. Each question is asked 3 times and we report "appeared 2 of 3 times", not just yes or no.</li>
+        <li data-t="rule3">These are AI answers to questions we designed. We do not know exactly what your customers type, so the question list can be revised after the first measurement.</li>
+      </ul>
+    </div>
+    <div class="row"><a class="btn btn--pri" href="#laporan" data-t="toR">See the example report →</a></div>
+  </section>
+
+  <section id="laporan" class="sheet" aria-labelledby="h-r" hidden>
+    <div class="demo" id="demo-note"></div>
+    <div class="rhead">
+      <h2 class="h2" id="h-r" data-t="rTitle">Report</h2>
+      <span class="rhead__name" id="r-name"></span>
+    </div>
+    <p class="verdict" id="verdict"></p>
+    <div class="kpis" id="kpis"></div>
+
+    <div class="panel">
+      <div class="head">
+        <h3 class="h3" data-t="aiTitle">By AI</h3>
+        <p class="hint" data-t="aiSub">Layers 1 and 2: share of answers that mention you. Layer 3: number of wrong facts out of the 5 checked.</p>
+      </div>
+      <div class="scroll"><table class="tbl" id="ai-table"></table></div>
+    </div>
+
+    <div class="panel">
+      <div class="head">
+        <h3 class="h3" data-t="rvTitle">Who AI mentions</h3>
+        <p class="hint" id="rv-sub"></p>
+      </div>
+      <div class="bars" id="rivals" style="margin-top:14px"></div>
+    </div>
+
+    <div class="panel">
+      <div class="head">
+        <h3 class="h3" data-t="qlTitle">By question</h3>
+        <div class="legend" id="q-legend"></div>
+      </div>
+      <div style="margin-top:14px">
+        <div class="qhead" id="q-head"></div>
+        <div id="qlist"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="head">
+        <h3 class="h3" data-t="fcTitle">Facts about you</h3>
+        <p class="hint" data-t="fcSub">From layer 3 answers (B1–B4), 3 runs per AI, compared with the information you gave us.</p>
+      </div>
+      <div class="scroll" style="margin-top:10px"><table class="tbl" id="fact-table"></table></div>
+      <div class="origin" id="origin"></div>
+    </div>
+
+    <div class="panel">
+      <div class="head">
+        <h3 class="h3" data-t="srcTitle">Sources AI cites</h3>
+        <p class="hint" id="src-sub"></p>
+      </div>
+      <div class="grid2" style="margin-top:14px">
+        <div class="bars" id="srctypes"></div>
+        <div class="scroll"><table class="tbl" id="toppages" style="min-width:420px"></table></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3 class="h3" data-t="mTitle">How we measure</h3>
+      <ul class="method" id="method" style="margin-top:10px"></ul>
+    </div>
+    <div class="row"><a class="btn btn--pri" href="#perbaikan" data-t="toA">See the action plan →</a></div>
+  </section>
+
+  <section id="perbaikan" class="sheet" aria-labelledby="h-a" hidden>
+    <div class="head">
+      <h2 class="h2" id="h-a" data-t="aTitle">Action plan</h2>
+      <p class="sub" data-t="aSub">Built from the findings in the example report, ordered from quickest to slowest. Every step is checked again in the next measurement.</p>
+    </div>
+    <ol class="acts" id="acts"></ol>
+    <div class="panel next">
+      <div class="head">
+        <h3 class="h3" data-t="nextTitle">Next measurement</h3>
+        <p class="hint" data-t="nextSub">Same questions, 30 days later, same conditions. Results are compared by layer and by AI.</p>
+      </div>
+      <a class="btn btn--ghost" href="#profil" data-t="toStart">Back to business profile</a>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap" data-t="foot">LLMOHack Indonesia · prototype. The report on this page uses a fictional business and simulated numbers.</div>
+</footer>
+
+<script>
+(function(){
+  var IDT = {
+    demoPill:'Prototipe · data simulasi',
+    h1:'Apakah AI merekomendasikan bisnis Anda?',
+    lead:'Kami mengajukan pertanyaan yang sama ke ChatGPT, Gemini, dan Google AI, lalu menunjukkan kapan Anda disebut, siapa yang disebut sebagai gantinya, dan info apa tentang Anda yang salah.',
+    s1:'Profil bisnis', s2:'Rancangan pertanyaan', s3:'Laporan', s4:'Rencana perbaikan',
+    pfTitle:'Profil bisnis',
+    pfSub:'Isi seperti cara pelanggan mencari Anda. Dari sini kami menyusun pertanyaan untuk AI. Isian di bawah adalah contoh bisnis fiktif.',
+    fName:'Nama bisnis', fCity:'Kota / area', fCat:'Jenis usaha',
+    fCatHint:'Tulis seperti orang mengetiknya di Google, misalnya "catering sehat" atau "toko oleh-oleh".',
+    fFeat:'Keunggulan yang ingin dikenal AI', fFeatHint:'Lanjutkan kalimat "bisnis yang …". Satu keunggulan per baris.', that:'yang',
+    fRiv:'Pesaing yang Anda ketahui', fRivHint:'AI bisa menyebut pesaing lain yang belum Anda kenal. Itu juga kami laporkan.',
+    fSite:'Situs web atau Instagram (opsional)', fSiteHint:'Untuk menghitung berapa kali AI mengutip halaman Anda sendiri.',
+    reset:'Kembalikan contoh', planEyebrow:'Yang akan kami ukur', toQ:'Lanjut: rancangan pertanyaan →',
+    qTitle:'Rancangan pertanyaan',
+    qSub:'Pertanyaan tidak kami karang dari nol. Kami mulai dari kata yang orang ketik di Google, lalu dari pertanyaan di bagian "Orang juga bertanya", lalu menulisnya ulang sebagai percakapan dengan AI.',
+    p1:'Kata kunci Google', p1h:'Yang orang ketik saat mencari jenis usaha Anda.',
+    p2:'Orang juga bertanya', p2h:'Pertanyaan lanjutan dari hasil Google. Yang di bawah ini contoh; saat pengukuran, pertanyaan diambil langsung dari Google.',
+    p3:'Pertanyaan untuk AI', p3h:'Ditulis ulang sebagai kalimat percakapan, lalu dibagi ke 3 lapisan.',
+    rulesTitle:'Cara membaca hasilnya',
+    rule1:'Lapisan tidak dijumlahkan. Pertanyaan lapisan 3 memuat nama Anda, jadi nama Anda pasti muncul. Kalau digabung, angkanya terlihat lebih bagus dari kenyataan.',
+    rule2:'Jawaban AI berubah-ubah. Setiap pertanyaan diajukan 3 kali, dan kami melaporkan "muncul 2 dari 3 kali", bukan sekadar "muncul" atau "tidak".',
+    rule3:'Ini jawaban AI untuk pertanyaan yang kami rancang. Kami tidak tahu pasti apa yang diketik pelanggan Anda, jadi daftar pertanyaan bisa diganti setelah pengukuran pertama.',
+    toR:'Lihat contoh laporan →', rTitle:'Laporan',
+    aiTitle:'Per AI', aiSub:'Lapisan 1 dan 2: persentase jawaban yang menyebut Anda. Lapisan 3: jumlah fakta yang salah dari 5 fakta yang dicek.',
+    rvTitle:'Siapa yang disebut AI', qlTitle:'Per pertanyaan',
+    fcTitle:'Fakta tentang Anda', fcSub:'Dari jawaban pertanyaan lapisan 3 (B1–B4), 3 kali per AI. Kami bandingkan dengan data yang Anda berikan.',
+    srcTitle:'Sumber yang dikutip AI', mTitle:'Cara pengukuran', toA:'Lihat rencana perbaikan →',
+    aTitle:'Rencana perbaikan', aSub:'Disusun dari temuan di contoh laporan, diurutkan dari yang paling cepat dikerjakan. Setiap langkah dicek ulang di pengukuran berikutnya.',
+    nextTitle:'Pengukuran berikutnya', nextSub:'Pertanyaan yang sama, 30 hari kemudian, dengan kondisi yang sama. Hasilnya dibandingkan per lapisan dan per AI.',
+    toStart:'Kembali ke profil bisnis',
+    foot:'LLMOHack Indonesia · prototipe. Laporan di halaman ini memakai bisnis fiktif dan angka simulasi.'
+  };
+  var ENT = {};
+  var LANG = 'en';
+  try { var saved = localStorage.getItem('llmohack-id-lang'); if (saved === 'en' || saved === 'id') LANG = saved; } catch (e) {}
+  function L(en, id){ return LANG === 'id' ? id : en; }
+  function tx(o){ return LANG === 'id' ? o.id : o.en; }
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function cap(s){ return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
+  function pct(a, b){ return b ? Math.round(a / b * 100) : 0; }
+  function $(id){ return document.getElementById(id); }
+
+  var AIS = [
+    {id:'chatgpt', en:'ChatGPT', idn:'ChatGPT'},
+    {id:'gemini', en:'Gemini', idn:'Gemini'},
+    {id:'aimode', en:'Google AI Mode', idn:'Mode AI Google'},
+    {id:'aio', en:'Google AI Overviews', idn:'Ringkasan AI Google'}
+  ];
+  function aiName(a){ return LANG === 'id' ? a.idn : a.en; }
+  var ROUNDS = 3;
+
+  var DEMOS = {
+    en:{name:'Dapur Sekar', cat:'healthy catering', city:'South Jakarta',
+        feats:['offers a low-calorie menu','changes the menu every day','takes orders on WhatsApp and delivers to offices'],
+        rivals:['Kotak Hijau Kitchen','Santap Sehat Kemang'], site:''},
+    id:{name:'Dapur Sekar', cat:'catering sehat', city:'Jakarta Selatan',
+        feats:['menunya rendah kalori','menunya ganti setiap hari','bisa pesan lewat WhatsApp dan antar ke kantor'],
+        rivals:['Kotak Hijau Kitchen','Santap Sehat Kemang'], site:''}
+  };
+  function demo(){ return DEMOS[LANG]; }
+
+  var FEAT_IDS = ['f-feat1','f-feat2','f-feat3'], RIV_IDS = ['f-riv1','f-riv2'];
+  function val(id){ return $(id).value.trim(); }
+  function readProfile(){
+    return {
+      name: val('f-name'), cat: val('f-cat'), city: val('f-city'),
+      feats: FEAT_IDS.map(val).filter(Boolean), rivals: RIV_IDS.map(val).filter(Boolean), site: val('f-site')
+    };
+  }
+  function fillForm(p){
+    $('f-name').value = p.name; $('f-cat').value = p.cat; $('f-city').value = p.city; $('f-site').value = p.site;
+    FEAT_IDS.forEach(function(id, i){ $(id).value = p.feats[i] || ''; });
+    RIV_IDS.forEach(function(id, i){ $(id).value = p.rivals[i] || ''; });
+  }
+  function same(p, d){
+    return p.name === d.name && p.cat === d.cat && p.city === d.city &&
+      p.feats.join('|') === d.feats.join('|') && p.rivals.join('|') === d.rivals.join('|');
+  }
+
+  var SRC = {
+    kw:{en:'Keyword', id:'Kata kunci'},
+    paa:{en:'People also ask', id:'Orang juga bertanya'},
+    local:{en:'Location: near me', id:'Lokasi: dekat saya'},
+    feat:{en:'Your strength', id:'Keunggulan Anda'},
+    name:{en:'Business name', id:'Nama bisnis'}
+  };
+  function buildPrompts(p){
+    var out = [], r = p.rivals;
+    if (LANG === 'id') {
+      var c = (p.cat || 'jenis usaha').toLowerCase(), k = p.city || 'kota Anda', n = p.name || 'nama bisnis';
+      out.push({id:'K1', layer:1, src:'kw', text:'Rekomendasi ' + c + ' terbaik di ' + k + '?'});
+      out.push({id:'K2', layer:1, src:'paa', text:'Saya cari ' + c + ' di ' + k + ' yang bagus dan harganya wajar. Ada saran?'});
+      out.push({id:'K3', layer:1, src:'paa', text:'Bandingkan beberapa ' + c + ' di ' + k + ' beserta kelebihan dan kekurangannya.'});
+      out.push({id:'K4', layer:1, src:'local', text:cap(c) + ' terdekat dari saya yang bagus, ada rekomendasi?'});
+      (p.feats.length ? p.feats : ['…']).forEach(function(f, i){
+        out.push({id:'F' + (i + 1), layer:2, src:'feat', text:cap(c) + ' di ' + k + ' yang ' + f + ', mana yang paling direkomendasikan?'});
+      });
+      var cmp = r.length >= 2 ? r[0] + ' dan ' + r[1] : r.length === 1 ? r[0] : 'pesaingnya di ' + k;
+      out.push({id:'B1', layer:3, src:'name', text:'Apa itu ' + n + ' di ' + k + '? Apa kelebihannya?'});
+      out.push({id:'B2', layer:3, src:'name', text:'Berapa harga di ' + n + ' dan bagaimana cara memesannya?'});
+      out.push({id:'B3', layer:3, src:'name', text:'Bandingkan ' + n + ' dengan ' + cmp + '.'});
+      out.push({id:'B4', layer:3, src:'name', text:'Bagaimana ulasan pelanggan tentang ' + n + '?'});
+    } else {
+      var ce = (p.cat || 'your type of business').toLowerCase(), ke = p.city || 'your city', ne = p.name || 'your business';
+      out.push({id:'K1', layer:1, src:'kw', text:'Recommend the best ' + ce + ' in ' + ke + '.'});
+      out.push({id:'K2', layer:1, src:'paa', text:'I am looking for good, fairly priced ' + ce + ' in ' + ke + '. Any suggestions?'});
+      out.push({id:'K3', layer:1, src:'paa', text:'Compare a few ' + ce + ' options in ' + ke + ', with pros and cons.'});
+      out.push({id:'K4', layer:1, src:'local', text:'Any good ' + ce + ' near me?'});
+      (p.feats.length ? p.feats : ['…']).forEach(function(f, i){
+        out.push({id:'F' + (i + 1), layer:2, src:'feat', text:'I need ' + ce + ' in ' + ke + ' that ' + f + '. Which one do you recommend?'});
+      });
+      var cmpe = r.length >= 2 ? r[0] + ' and ' + r[1] : r.length === 1 ? r[0] : 'its competitors in ' + ke;
+      out.push({id:'B1', layer:3, src:'name', text:'What is ' + ne + ' in ' + ke + '? What are its strengths?'});
+      out.push({id:'B2', layer:3, src:'name', text:'How much does ' + ne + ' cost, and how do I order?'});
+      out.push({id:'B3', layer:3, src:'name', text:'Compare ' + ne + ' with ' + cmpe + '.'});
+      out.push({id:'B4', layer:3, src:'name', text:'What do customers say about ' + ne + '?'});
+    }
+    return out;
+  }
+  function buildKeywords(p){
+    if (LANG === 'id') {
+      var c = (p.cat || 'jenis usaha').toLowerCase(), k = (p.city || 'kota').toLowerCase();
+      return [c + ' ' + k, c + ' terdekat', c + ' terbaik ' + k, 'harga ' + c + ' ' + k];
+    }
+    var ce = (p.cat || 'business').toLowerCase(), ke = (p.city || 'city').toLowerCase();
+    return [ce + ' ' + ke, ce + ' near me', 'best ' + ce + ' ' + ke, ce + ' price ' + ke];
+  }
+  function buildPAA(p){
+    if (LANG === 'id') {
+      var c = (p.cat || 'jenis usaha').toLowerCase(), k = p.city || 'kota Anda';
+      return ['Berapa kisaran harga ' + c + ' di ' + k + '?', cap(c) + ' apa yang paling bagus di ' + k + '?',
+        'Bagaimana cara memilih ' + c + ' yang bagus?', 'Apakah ' + c + ' bisa dipesan lewat WhatsApp?', cap(c) + ' mana yang buka hari ini?'];
+    }
+    var ce = (p.cat || 'this business').toLowerCase(), ke = p.city || 'your city';
+    return ['How much does ' + ce + ' cost in ' + ke + '?', 'What is the best ' + ce + ' in ' + ke + '?',
+      'How do I choose good ' + ce + '?', 'Can I order ' + ce + ' on WhatsApp?', 'Which ' + ce + ' is open today?'];
+  }
+  var LAYERS = {
+    1:{t:{en:'Layer 1 · Category', id:'Lapisan 1 · Kategori'}, tag:'K', d:{en:'General questions without your name. Does AI list you as an option?', id:'Pertanyaan umum tanpa nama Anda. Apakah AI menyebut Anda sebagai pilihan?'}},
+    2:{t:{en:'Layer 2 · Strengths', id:'Lapisan 2 · Keunggulan'}, tag:'F', d:{en:'Questions about a specific strength, without your name. Does AI connect that strength with you?', id:'Pertanyaan tentang keunggulan tertentu, tanpa nama Anda. Apakah AI mengaitkan keunggulan itu dengan Anda?'}},
+    3:{t:{en:'Layer 3 · Business name', id:'Lapisan 3 · Nama bisnis'}, tag:'B', d:{en:'Questions that include your name. Is what AI says about you correct?', id:'Pertanyaan yang menyebut nama Anda. Apakah info yang diberikan AI benar?'}}
+  };
+
+  function renderPlan(){
+    var p = readProfile(), qs = buildPrompts(p), n = qs.length, total = n * AIS.length * ROUNDS;
+    $('formula').innerHTML =
+      '<b>' + n + '</b><span>' + L('questions', 'pertanyaan') + '</span><span>×</span>' +
+      '<b>' + AIS.length + '</b><span>AI</span><span>×</span>' +
+      '<b>' + ROUNDS + '</b><span>' + L('runs', 'kali') + '</span><span class="eq">=</span>' +
+      '<b class="total">' + total + '</b><span>' + L('answers', 'jawaban') + '</span>';
+    $('ailist').innerHTML = AIS.map(function(a){ return '<li>' + esc(aiName(a)) + '</li>'; }).join('');
+    var city = esc(p.city || L('your city', 'kota Anda'));
+    $('conds').innerHTML = [
+      L('Measured from a location in ' + city + '. For businesses in Indonesia, questions are asked in Bahasa Indonesia (switch to ID to see them).', 'Diukur dari lokasi ' + city + ', dalam Bahasa Indonesia.'),
+      L('Logged out with no history, so answers are not personalised.', 'Tanpa login dan tanpa riwayat, supaya jawaban tidak dipersonalisasi.'),
+      L('Each question is asked 3 times because AI answers vary.', 'Setiap pertanyaan diulang 3 kali karena jawaban AI berubah-ubah.'),
+      L('First results are ready in about 2 days.', 'Hasil pertama siap dalam ±2 hari.')
+    ].map(function(s){ return '<li>' + s + '</li>'; }).join('');
+  }
+
+  function promptItem(q){
+    return '<li class="prompt"><span class="pid">' + q.id + '</span><div class="ptext">' + esc(q.text) + '</div><span class="src">' + esc(tx(SRC[q.src])) + '</span></li>';
+  }
+  function renderQuestions(){
+    var p = readProfile(), qs = buildPrompts(p);
+    $('kwlist').innerHTML = buildKeywords(p).map(function(k){ return '<span class="kw">' + esc(k) + '</span>'; }).join('');
+    $('paalist').innerHTML = buildPAA(p).map(function(s){ return '<li>' + esc(s) + '</li>'; }).join('');
+    $('lcount').innerHTML = [1,2,3].map(function(l){
+      var c = qs.filter(function(q){ return q.layer === l; }).length;
+      return '<div><span>' + esc(tx(LAYERS[l].t)) + '</span><b>' + c + '</b></div>';
+    }).join('') + '<div><span>Total</span><b>' + qs.length + '</b></div>';
+    $('layers').innerHTML = [1,2,3].map(function(l){
+      var items = qs.filter(function(q){ return q.layer === l; });
+      return '<div class="layer"><div class="layer__meta"><span class="layer__tag">' + LAYERS[l].tag + '1–' + LAYERS[l].tag + items.length + '</span>' +
+        '<h3 class="h3">' + esc(tx(LAYERS[l].t)) + '</h3><p class="hint">' + esc(tx(LAYERS[l].d)) + '</p></div>' +
+        '<ul class="plist">' + items.map(promptItem).join('') + '</ul></div>';
+    }).join('');
+  }
+
+  var BR = {DS:'Dapur Sekar', KH:'Kotak Hijau Kitchen', SS:'Santap Sehat Kemang', RB:'Rantang Bu Ratih'};
+  var L1 = ['K1','K2','K3','K4'], L2 = ['F1','F2','F3'];
+  var TARGET = {K1:[0,1,1,0], K2:[1,1,1,1], K3:[0,0,0,0], K4:[0,2,1,0], F1:[0,1,0,0], F2:[1,1,1,1], F3:[1,2,3,1]};
+  var PROB = {
+    K1:{KH:.9,SS:.7,RB:.35}, K2:{KH:.85,SS:.55,RB:.5}, K3:{KH:.95,SS:.8,RB:.45}, K4:{KH:.6,SS:.45,RB:.6},
+    F1:{KH:.95,SS:.75,RB:.1}, F2:{KH:.7,SS:.4,RB:.6}, F3:{KH:.55,SS:.3,RB:.5}
+  };
+  var BASE = {KH:3, SS:2.2, RB:1.7};
+  var CAP = {chatgpt:6, gemini:5, aimode:5, aio:4};
+  function rng(a){ return function(){ a |= 0; a = a + 0x6D2B79F5 | 0; var t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  function genAnswers(){
+    var R = rng(20261027), out = {};
+    Object.keys(TARGET).forEach(function(pid){
+      out[pid] = {};
+      AIS.forEach(function(a, ai){
+        var order = [0,1,2];
+        for (var i = order.length - 1; i > 0; i--) { var j = Math.floor(R() * (i + 1)); var t = order[i]; order[i] = order[j]; order[j] = t; }
+        var withDS = order.slice(0, TARGET[pid][ai]);
+        out[pid][a.id] = [0,1,2].map(function(r){
+          var items = [];
+          ['KH','SS','RB'].forEach(function(b){ if (R() < PROB[pid][b]) items.push({b:b, s:BASE[b] + R() * 1.6}); });
+          var hasDS = withDS.indexOf(r) >= 0;
+          if (hasDS) items.push({b:'DS', s:(pid === 'F3' ? 2.7 : 1.1) + R() * 1.6});
+          var others = 1 + Math.floor(R() * 3);
+          for (var k = 0; k < others; k++) items.push({b:'o', s:.6 + R() * 2});
+          items.sort(function(x, y){ return y.s - x.s; });
+          var list = items.slice(0, CAP[a.id]).map(function(x){ return x.b; });
+          if (hasDS && list.indexOf('DS') < 0) list[list.length - 1] = 'DS';
+          return list;
+        });
+      });
+    });
+    return out;
+  }
+  var ANS = genAnswers();
+  function count(ids, brand, aiId){
+    var n = 0, t = 0, rs = 0;
+    ids.forEach(function(p){ AIS.forEach(function(a){
+      if (aiId && a.id !== aiId) return;
+      ANS[p][a.id].forEach(function(list){ t++; var i = list.indexOf(brand); if (i >= 0) { n++; rs += i + 1; } });
+    }); });
+    return {n:n, t:t, rank: n ? rs / n : null};
+  }
+
+  var FACTS = [
+    {k:'harga', en:'Starting price', id:'Harga mulai', truth:{en:'Rp38,000 per portion', id:'Rp38.000/porsi'}},
+    {k:'jam', en:'Opening days & hours', id:'Hari & jam buka', truth:{en:'Mon–Sat, 07:00–19:00', id:'Senin–Sabtu, 07.00–19.00'}},
+    {k:'area', en:'Delivery area', id:'Area antar', truth:{en:'South & Central Jakarta', id:'Jakarta Selatan & Jakarta Pusat'}},
+    {k:'pesan', en:'How to order', id:'Cara pesan', truth:{en:'WhatsApp & GoFood', id:'WhatsApp & GoFood'}},
+    {k:'langganan', en:'Subscription plan', id:'Paket langganan', truth:{en:'20-working-day plan', id:'Paket 20 hari kerja'}}
+  ];
+  var C_PRICE = {en:'Rp25,000 per portion', id:'Rp25.000/porsi'};
+  var C_DAILY = {en:'Open every day, including Sunday', id:'Buka setiap hari, termasuk Minggu'};
+  var C_CLOSE = {en:'Closes at 17:00', id:'Tutup pukul 17.00'};
+  var ACC = {
+    chatgpt:{harga:['bad',C_PRICE], jam:['none'], area:['ok'], pesan:['ok'], langganan:['none']},
+    gemini:{harga:['ok'], jam:['bad',C_DAILY], area:['ok'], pesan:['ok'], langganan:['ok']},
+    aimode:{harga:['bad',C_PRICE], jam:['bad',C_DAILY], area:['none'], pesan:['ok'], langganan:['ok']},
+    aio:{harga:['none'], jam:['bad',C_CLOSE], area:['ok'], pesan:['none'], langganan:['none']}
+  };
+  function wrongCount(aiId){
+    var n = 0;
+    AIS.forEach(function(a){ if (aiId && a.id !== aiId) return; FACTS.forEach(function(f){ if (ACC[a.id][f.k][0] === 'bad') n++; }); });
+    return n;
+  }
+  function whoGotWrong(k){ return AIS.filter(function(a){ return ACC[a.id][k][0] === 'bad'; }).map(aiName).join(', '); }
+  var ORIGIN = [
+    {k:'harga', claim:C_PRICE,
+     d:{en:'The Dapur Sekar GoFood page still shows old prices. That page is cited in the same answers.', id:'Halaman GoFood Dapur Sekar masih memuat harga lama. Halaman ini dikutip di jawaban yang sama.'}},
+    {k:'jam', claim:{en:'Opening hours', id:'Jam buka'},
+     d:{en:'The opening hours on the Google Maps profile were not updated after the schedule changed.', id:'Jam buka di profil Google Maps belum diperbarui sejak jadwal berubah.'}}
+  ];
+  var SRC_TYPES = [
+    {en:'Google Maps & reviews', id:'Google Maps & ulasan', n:41},
+    {en:'List articles on blogs & media', id:'Artikel daftar di blog & media', n:33},
+    {en:'GoFood / GrabFood', id:'GoFood / GrabFood', n:18},
+    {en:'Instagram & TikTok', id:'Instagram & TikTok', n:9},
+    {en:'Other', id:'Lainnya', n:7},
+    {en:'Your own pages', id:'Halaman Anda sendiri', n:2, you:true}
+  ];
+  var TOP = [
+    {en:'Article "12 Healthy Caterers in South Jakarta for Office Lunch"', id:'Artikel "12 Catering Sehat di Jakarta Selatan untuk Makan Siang Kantor"', type:{en:'Food blog', id:'Blog kuliner'}, n:14, you:false, list:true},
+    {en:'Google Maps profile of Kotak Hijau Kitchen (★4.8 · 1,240 reviews)', id:'Profil Google Maps Kotak Hijau Kitchen (★4,8 · 1.240 ulasan)', type:{en:'Google Maps', id:'Google Maps'}, n:11, you:false},
+    {en:'Article "Best Monthly Catering Subscriptions 2026"', id:'Artikel "Catering Langganan Bulanan Terbaik 2026"', type:{en:'Lifestyle media', id:'Media gaya hidup'}, n:8, you:false, list:true},
+    {en:'Google Maps profile of Dapur Sekar (★4.7 · 86 reviews)', id:'Profil Google Maps Dapur Sekar (★4,7 · 86 ulasan)', type:{en:'Google Maps', id:'Google Maps'}, n:6, you:true},
+    {en:'Dapur Sekar GoFood page', id:'Halaman GoFood Dapur Sekar', type:{en:'GoFood', id:'GoFood'}, n:5, you:true}
+  ];
+
+  function nameOf(code){ return code === 'o' ? L('Other business', 'Bisnis lain') : BR[code]; }
+  function bar(v, max, rival){ return '<div class="track"><div class="fill' + (rival ? ' fill--rival' : '') + '" style="width:' + (max ? v / max * 100 : 0).toFixed(1) + '%"></div></div>'; }
+  function rankTxt(r){ return r == null ? '—' : (LANG === 'id' ? r.toFixed(1).replace('.', ',') : r.toFixed(1)); }
+
+  function renderReport(){
+    var d = demo(), me = d.name;
+    var edited = !same(readProfile(), d);
+    $('demo-note').innerHTML = '<span>' + L(
+      '<b>Example report.</b> "' + esc(me) + '" is a fictional business and every number is simulated to show what the report looks like. Your report is built from a real measurement.',
+      '<b>Contoh laporan.</b> Bisnis "' + esc(me) + '" fiktif dan semua angka adalah simulasi untuk menunjukkan bentuk laporan. Laporan untuk bisnis Anda dibuat dari pengukuran nyata.'
+    ) + '</span>' + (edited ? '<span>' + L('You edited the profile in step 1; the example report still uses this fictional business.', 'Profil di langkah 1 sudah diubah, tetapi contoh laporan tetap memakai bisnis fiktif ini.') + '</span>' : '');
+    $('r-name').innerHTML = '<b>' + esc(me) + '</b> · ' + esc(d.cat) + ' · ' + esc(d.city);
+
+    var a1 = count(L1, 'DS'), a2 = count(L2, 'DS'), wr = wrongCount();
+    var rivals = ['KH','SS','RB'].map(function(b){ return {b:b, c:count(L1.concat(L2), b)}; }).sort(function(x, y){ return y.c.n - x.c.n; });
+    var top = rivals[0], topL1 = count(L1, top.b);
+    $('verdict').innerHTML = L(
+      'When people ask in general terms, AI mentions ' + esc(me) + ' in <span class="mk">' + a1.n + ' of ' + a1.t + ' answers</span>, while ' + esc(BR[top.b]) + ' appears in ' + topL1.n + '. When asked directly, AI gives <span class="mk">' + wr + ' wrong facts</span>, including the price.',
+      'Saat orang bertanya secara umum, AI menyebut ' + esc(me) + ' di <span class="mk">' + a1.n + ' dari ' + a1.t + ' jawaban</span>, sedangkan ' + esc(BR[top.b]) + ' disebut di ' + topL1.n + '. Saat ditanya langsung, AI memberi <span class="mk">' + wr + ' info yang salah</span>, termasuk harga.'
+    );
+
+    var featRates = L2.map(function(f, i){ return {f:d.feats[i], c:count([f], 'DS')}; }).sort(function(x, y){ return x.c.n - y.c.n; });
+    var weak = featRates[0], checks = FACTS.length * AIS.length;
+    $('kpis').innerHTML =
+      '<div class="panel kpi"><span class="eyebrow">' + esc(tx(LAYERS[1].t)) + '</span><span class="big">' + pct(a1.n, a1.t) + '%</span>' +
+        '<span class="frac">' + L('mentioned in ' + a1.n + ' of ' + a1.t + ' answers', 'disebut di ' + a1.n + ' dari ' + a1.t + ' jawaban') + '</span>' +
+        '<span class="note">' + L('General questions without your name.', 'Pertanyaan umum tanpa nama Anda.') + '</span></div>' +
+      '<div class="panel kpi"><span class="eyebrow">' + esc(tx(LAYERS[2].t)) + '</span><span class="big">' + pct(a2.n, a2.t) + '%</span>' +
+        '<span class="frac">' + L('connected in ' + a2.n + ' of ' + a2.t + ' answers', 'dikaitkan di ' + a2.n + ' dari ' + a2.t + ' jawaban') + '</span>' +
+        '<span class="note">' + L('Weakest: "' + esc(weak.f) + '" (' + weak.c.n + ' of ' + weak.c.t + ').', 'Paling lemah: "' + esc(weak.f) + '" (' + weak.c.n + ' dari ' + weak.c.t + ').') + '</span></div>' +
+      '<div class="panel kpi kpi--bad"><span class="eyebrow">' + L('Layer 3 · Accuracy', 'Lapisan 3 · Akurasi') + '</span><span class="big">' + wr + '</span>' +
+        '<span class="frac">' + L('wrong facts out of ' + checks + ' checked', 'fakta salah dari ' + checks + ' yang dicek') + '</span>' +
+        '<span class="note">' + L(FACTS.length + ' facts × ' + AIS.length + ' AIs. Price and opening hours are wrong most often.', FACTS.length + ' fakta × ' + AIS.length + ' AI. Harga dan jam buka paling sering salah.') + '</span></div>';
+
+    $('ai-table').innerHTML = '<thead><tr><th>AI</th><th>' + esc(tx(LAYERS[1].t)) + '</th><th>' + esc(tx(LAYERS[2].t)) + '</th><th>' + L('Layer 3 · Wrong facts', 'Lapisan 3 · Fakta salah') + '</th></tr></thead><tbody>' +
+      AIS.map(function(a){
+        var c1 = count(L1, 'DS', a.id), c2 = count(L2, 'DS', a.id), w = wrongCount(a.id);
+        return '<tr><td>' + esc(aiName(a)) + '</td>' +
+          '<td><div class="cellbar">' + bar(c1.n, c1.t) + '<span class="num">' + pct(c1.n, c1.t) + '% <small>(' + c1.n + '/' + c1.t + ')</small></span></div></td>' +
+          '<td><div class="cellbar">' + bar(c2.n, c2.t) + '<span class="num">' + pct(c2.n, c2.t) + '% <small>(' + c2.n + '/' + c2.t + ')</small></span></div></td>' +
+          '<td><span class="badn">' + w + '</span> <span class="num"><small>/ ' + FACTS.length + '</small></span></td></tr>';
+      }).join('') + '</tbody>';
+
+    var allIds = L1.concat(L2), tot = count(allIds, 'DS').t;
+    $('rv-sub').textContent = L(
+      'Across ' + tot + ' layer 1 and 2 answers. Average position = where the business appears when mentioned (1 = first).',
+      'Dari ' + tot + ' jawaban lapisan 1 dan 2. Urutan rata-rata = posisi saat disebut (1 = disebut pertama).'
+    );
+    var rows = [{b:'DS', c:count(allIds, 'DS')}].concat(rivals).sort(function(x, y){ return y.c.n - x.c.n; });
+    $('rivals').innerHTML = '<div class="axis"><span></span><span class="axis__t"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></span><span class="bhead" style="text-align:right">' + L('Mentioned', 'Disebut') + '</span><span class="bhead" style="text-align:right">' + L('Avg. position', 'Urutan rata-rata') + '</span></div>' +
+      rows.map(function(r){
+        var tag = r.b === 'DS' ? '<span class="tag tag--you">' + L('You', 'Anda') + '</span>' : (d.rivals.indexOf(BR[r.b]) < 0 ? '<span class="tag tag--new">' + L('Not on your list', 'Tidak Anda daftarkan') + '</span>' : '');
+        return '<div class="brow"><span class="brow__name">' + esc(BR[r.b]) + tag + '</span>' + bar(r.c.n, r.c.t, r.b !== 'DS') +
+          '<span class="brow__v">' + pct(r.c.n, r.c.t) + '%</span><span class="brow__r">' + rankTxt(r.c.rank) + '</span></div>';
+      }).join('');
+
+    $('q-legend').innerHTML =
+      '<span><span class="dot on">3</span>' + L('number = position of ' + esc(me) + ' in the answer', 'angka = urutan ' + esc(me) + ' di jawaban') + '</span>' +
+      '<span><span class="dot"></span>' + L('not mentioned', 'tidak disebut') + '</span>' +
+      '<span>' + L('Click a row to see who was mentioned.', 'Klik baris untuk melihat siapa yang disebut.') + '</span>';
+    $('q-head').innerHTML = '<span></span><span>' + L('Question', 'Pertanyaan') + '</span>' + AIS.map(function(a){ return '<span>' + esc(aiName(a)) + '</span>'; }).join('');
+    var qs = buildPrompts(d), html = '';
+    [1,2].forEach(function(l){
+      html += '<div class="qlayer">' + esc(tx(LAYERS[l].t)) + '</div>';
+      qs.filter(function(q){ return q.layer === l; }).forEach(function(q){
+        var cells = AIS.map(function(a){
+          var dots = ANS[q.id][a.id].map(function(list){ var i = list.indexOf('DS'); return i >= 0 ? '<span class="dot on">' + (i + 1) + '</span>' : '<span class="dot"></span>'; }).join('');
+          return '<span class="qai"><small>' + esc(aiName(a)) + '</small><span class="dots">' + dots + '</span></span>';
+        }).join('');
+        var body = AIS.map(function(a){
+          return '<div><h4>' + esc(aiName(a)) + '</h4>' + ANS[q.id][a.id].map(function(list, r){
+            return '<div class="run"><em>' + L('Run ', 'Ke-') + (r + 1) + '</em><ol>' + list.map(function(b, i){
+              return '<li' + (b === 'DS' ? ' class="me"' : '') + '><b>' + (i + 1) + '</b>' + esc(nameOf(b)) + '</li>';
+            }).join('') + '</ol></div>';
+          }).join('') + '</div>';
+        }).join('');
+        html += '<details class="q"><summary class="qsum"><span class="pid">' + q.id + '</span><span class="ptext">' + esc(q.text) + '</span><span class="qcells">' + cells + '</span></summary><div class="qbody">' + body + '</div></details>';
+      });
+    });
+    html += '<div class="qlayer">' + esc(tx(LAYERS[3].t)) + '</div><p class="hint" style="padding:0 12px 4px">' + L('Questions B1–B4 contain your name, so they are not counted here. Their results are under "Facts about you".', 'Pertanyaan B1–B4 memuat nama Anda, jadi tidak dihitung di sini. Hasilnya ada di bagian "Fakta tentang Anda".') + '</p>';
+    $('qlist').innerHTML = html;
+
+    $('fact-table').innerHTML = '<thead><tr><th>' + L('Fact', 'Fakta') + '</th><th>' + L('Correct value', 'Yang benar') + '</th>' + AIS.map(function(a){ return '<th>' + esc(aiName(a)) + '</th>'; }).join('') + '</tr></thead><tbody>' +
+      FACTS.map(function(f){
+        return '<tr><td>' + esc(tx(f)) + '</td><td class="truth">' + esc(tx(f.truth)) + '</td>' + AIS.map(function(a){
+          var s = ACC[a.id][f.k];
+          if (s[0] === 'ok') return '<td><span class="st st--ok">' + L('Correct', 'Benar') + '</span></td>';
+          if (s[0] === 'bad') return '<td><span class="st st--bad">' + L('Wrong', 'Salah') + '<small>"' + esc(tx(s[1])) + '"</small></span></td>';
+          return '<td><span class="st st--none">' + L('Not stated', 'Tidak disebut') + '</span></td>';
+        }).join('') + '</tr>';
+      }).join('') + '</tbody>';
+    $('origin').innerHTML = '<span class="eyebrow">' + L('Where the wrong facts likely come from (based on cited sources)', 'Dari mana info yang salah (dugaan dari sumber yang dikutip)') + '</span>' +
+      ORIGIN.map(function(o){
+        return '<div><span><b>' + esc(tx(o.claim)) + '</b><br><span class="hint">' + esc(whoGotWrong(o.k)) + '</span></span><span>' + esc(tx(o.d)) + '</span></div>';
+      }).join('');
+
+    var stot = SRC_TYPES.reduce(function(s, x){ return s + x.n; }, 0), smax = Math.max.apply(null, SRC_TYPES.map(function(x){ return x.n; }));
+    $('src-sub').textContent = L(stot + ' citations across all answers. Your own pages are almost never cited.', stot + ' kutipan dari semua jawaban. Halaman Anda sendiri hampir tidak dikutip.');
+    $('srctypes').innerHTML = SRC_TYPES.map(function(s){
+      return '<div class="brow" style="grid-template-columns:minmax(0,1fr) minmax(0,1.2fr) 40px"><span class="brow__name">' + esc(tx(s)) + (s.you ? '<span class="tag tag--you">' + L('You', 'Anda') + '</span>' : '') + '</span>' + bar(s.n, smax, !s.you) + '<span class="brow__v">' + s.n + '</span></div>';
+    }).join('');
+    $('toppages').innerHTML = '<thead><tr><th>' + L('Most cited pages', 'Halaman yang paling sering dikutip') + '</th><th>' + L('Cited', 'Dikutip') + '</th><th>' + L(esc(me) + ' listed?', 'Ada ' + esc(me) + '?') + '</th></tr></thead><tbody>' +
+      TOP.map(function(t){
+        return '<tr><td style="font-weight:500">' + esc(tx(t)) + '<br><span class="hint">' + esc(tx(t.type)) + '</span></td><td class="num">' + t.n + '×</td><td>' + (t.you ? '<span class="yes">' + L('Yes', 'Ya') + '</span>' : '<span class="no">' + L('No', 'Tidak') + '</span>') + '</td></tr>';
+      }).join('') + '</tbody>';
+
+    var nq = qs.length, na = nq * AIS.length * ROUNDS;
+    $('method').innerHTML = [
+      L(nq + ' questions × ' + AIS.length + ' AIs × ' + ROUNDS + ' runs = ' + na + ' answers.', nq + ' pertanyaan × ' + AIS.length + ' AI × ' + ROUNDS + ' kali = ' + na + ' jawaban.'),
+      L('AIs: ChatGPT and Gemini (free, logged out), Google AI Mode, and AI Overviews in Google Search results.', 'AI: ChatGPT dan Gemini (versi gratis, tanpa login), Mode AI Google, dan Ringkasan AI di hasil pencarian Google.'),
+      L('Measurement location: ' + d.city + '. Questions asked in Bahasa Indonesia. No search history.', 'Lokasi pengukuran: ' + d.city + '. Bahasa: Indonesia. Tanpa riwayat pencarian.'),
+      L('Name matching includes spelling variants (for example "Dapur Sekar" and "DapurSekar").', 'Nama dihitung termasuk variasi penulisan (misalnya "Dapur Sekar" dan "DapurSekar").'),
+      L('These numbers show AI answers to the questions we designed, not how many customers actually ask AI.', 'Angka ini menunjukkan jawaban AI untuk pertanyaan yang kami rancang, bukan jumlah pelanggan yang benar-benar bertanya ke AI.')
+    ].map(function(s){ return '<li>' + esc(s) + '</li>'; }).join('');
+  }
+
+  function renderActions(){
+    var d = demo(), me = d.name, wr = wrongCount(), f1 = count(['F1'], 'DS');
+    var lists = TOP.filter(function(t){ return t.list && !t.you; });
+    var listN = lists.reduce(function(s, t){ return s + t.n; }, 0);
+    var kh = TOP[1], mine = TOP[3];
+    var own = SRC_TYPES.filter(function(s){ return s.you; })[0], stot = SRC_TYPES.reduce(function(s, x){ return s + x.n; }, 0);
+    var acts = [
+      {t:L('Fix the wrong price and opening hours', 'Perbaiki harga dan jam buka yang salah'),
+       f:L(wr + ' wrong facts in layer 3. The old price comes from the GoFood page, the hours from the Google Maps profile.', wr + ' fakta salah di lapisan 3. Harga lama berasal dari halaman GoFood, jam buka dari profil Google Maps.'),
+       d:L('Update menu and prices on GoFood/GrabFood, then the hours on Google Business Profile. We give you the list of what to change.', 'Perbarui menu dan harga di GoFood/GrabFood, lalu jam buka di Google Business Profile. Kami beri daftar yang harus diubah.'),
+       w:L('About 30 minutes', '±30 menit'), m:L('Layer 3 · wrong facts', 'Lapisan 3 · fakta salah')},
+      {t:L('Collect Google reviews through WhatsApp', 'Kumpulkan ulasan Google lewat WhatsApp'),
+       f:L('The Kotak Hijau Kitchen Google Maps profile (1,240 reviews) was cited ' + kh.n + ' times, yours (86 reviews) ' + mine.n + ' times.', 'Profil Google Maps Kotak Hijau Kitchen (1.240 ulasan) dikutip ' + kh.n + ' kali, profil Anda (86 ulasan) ' + mine.n + ' kali.'),
+       d:L('Send a review link to customers after each order. We prepare the WhatsApp message template.', 'Kirim link ulasan ke pelanggan setelah pesanan selesai. Template pesan WhatsApp kami siapkan.'),
+       w:L('About 5 minutes a day', '±5 menit per hari'), m:L('Layer 1 · Gemini and Google AI Mode', 'Lapisan 1 · Gemini dan Mode AI Google'),
+       c:L('The effect of review count on AI choices is not proven. We check it in the next measurement.', 'Pengaruh jumlah ulasan terhadap pilihan AI belum pasti. Kami lihat di pengukuran berikutnya.')},
+      {t:L('Get into the list articles AI cites', 'Masuk ke artikel daftar yang sering dikutip AI'),
+       f:L(lists.length + ' list articles were cited ' + listN + ' times, and ' + me + ' is in neither.', lists.length + ' artikel daftar dikutip ' + listN + ' kali, dan ' + me + ' tidak ada di keduanya.'),
+       d:L('Contact the writers or media behind these articles and offer a menu sample for review.', 'Hubungi penulis atau media artikel tersebut dan tawarkan sampel menu untuk diulas.'),
+       w:L('1–2 weeks', '1–2 minggu'), m:L('Layer 1 · ChatGPT', 'Lapisan 1 · ChatGPT')},
+      {t:L('Describe your strengths in the words people ask with', 'Tulis keunggulan dengan kata yang sama seperti pertanyaan orang'),
+       f:L('"' + d.feats[0] + '" is connected with ' + me + ' in only ' + f1.n + ' of ' + f1.t + ' answers.', '"' + d.feats[0] + '" hanya dikaitkan dengan ' + me + ' di ' + f1.n + ' dari ' + f1.t + ' jawaban.'),
+       d:L('Write "menu rendah kalori" (low-calorie menu) with calories per portion on your Google profile, GoFood and Instagram bio.', 'Tulis "menu rendah kalori" beserta kalori per porsi di profil Google, GoFood, dan bio Instagram.'),
+       w:L('About 1 hour', '±1 jam'), m:L('Layer 2 · F1', 'Lapisan 2 · F1')},
+      {t:L('Make one Q&A page', 'Buat satu halaman tanya-jawab'),
+       f:L('Your own pages were cited ' + own.n + ' of ' + stot + ' times.', 'Halaman Anda sendiri dikutip ' + own.n + ' dari ' + stot + ' kali.'),
+       d:L('One page in Bahasa Indonesia with prices, delivery area, how to order, opening hours and subscription plans. It can live on a website or the Instagram bio link.', 'Satu halaman berbahasa Indonesia berisi harga, area antar, cara pesan, jam buka, dan paket langganan. Bisa di situs atau link di bio Instagram.'),
+       w:L('About 2 hours', '±2 jam'), m:L('Sources · your own pages', 'Sumber · halaman Anda sendiri')}
+    ];
+    $('acts').innerHTML = acts.map(function(a){
+      return '<li class="panel act"><div><h3 class="h3">' + esc(a.t) + '</h3><dl>' +
+        '<dt>' + L('Finding', 'Temuan') + '</dt><dd>' + esc(a.f) + '</dd>' +
+        '<dt>' + L('What to do', 'Yang dikerjakan') + '</dt><dd>' + esc(a.d) + '</dd>' +
+        '<dt>' + L('Time', 'Waktu') + '</dt><dd>' + esc(a.w) + '</dd>' +
+        '<dt>' + L('Checked again in', 'Dicek ulang di') + '</dt><dd>' + esc(a.m) + '</dd></dl>' +
+        (a.c ? '<p class="caveat">' + esc(a.c) + '</p>' : '') + '</div></li>';
+    }).join('');
+  }
+
+  function applyLang(){
+    document.documentElement.lang = LANG;
+    document.querySelectorAll('[data-t]').forEach(function(el){
+      var k = el.getAttribute('data-t');
+      if (!(k in ENT)) ENT[k] = el.innerHTML;
+      el.innerHTML = LANG === 'id' && IDT[k] ? IDT[k] : ENT[k];
+    });
+    $('lang-en').setAttribute('aria-pressed', String(LANG === 'en'));
+    $('lang-id').setAttribute('aria-pressed', String(LANG === 'id'));
+    renderAll();
+  }
+  function renderAll(){ renderPlan(); renderQuestions(); renderReport(); renderActions(); }
+
+  var STEPS = ['profil','pertanyaan','laporan','perbaikan'];
+  function show(step, scroll){
+    if (STEPS.indexOf(step) < 0) step = 'profil';
+    STEPS.forEach(function(s){ $(s).hidden = s !== step; });
+    document.querySelectorAll('.steps a').forEach(function(a){
+      if (a.getAttribute('data-step') === step) a.setAttribute('aria-current', 'step'); else a.removeAttribute('aria-current');
+    });
+    if (scroll) { var top = document.querySelector('.steps').offsetTop; if (window.scrollY > top) window.scrollTo(0, top); }
+  }
+  document.addEventListener('click', function(e){
+    var a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    var step = a.getAttribute('href').slice(1);
+    if (STEPS.indexOf(step) < 0) return;
+    e.preventDefault();
+    try { history.replaceState(null, '', '#' + step); } catch (err) {}
+    show(step, true);
+  });
+  window.addEventListener('hashchange', function(){ show(location.hash.slice(1), true); });
+
+  document.querySelectorAll('.lang button').forEach(function(b){
+    b.addEventListener('click', function(){
+      var next = b.getAttribute('data-lang');
+      if (next === LANG) return;
+      var wasDemo = same(readProfile(), demo());
+      LANG = next;
+      try { localStorage.setItem('llmohack-id-lang', LANG); } catch (e) {}
+      if (wasDemo) fillForm(demo());
+      applyLang();
+    });
+  });
+  $('pf-form').addEventListener('input', function(){ renderPlan(); renderQuestions(); renderReport(); });
+  $('pf-form').addEventListener('submit', function(e){ e.preventDefault(); });
+  $('btn-reset').addEventListener('click', function(){ fillForm(demo()); renderAll(); });
+
+  fillForm(demo());
+  applyLang();
+  show(location.hash.slice(1), false);
+})();
+</script>
+</body>
+</html>
