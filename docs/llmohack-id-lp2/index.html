@@ -1027,10 +1027,10 @@ p,li,dd,td{text-wrap:pretty}
   var tidy = function(el){
     el.style.wordSpacing = ""; el.style.textWrap = "";
     if (ok(el)) return;
-    var st = [-0.5,0.5,-1,1,-1.5,1.5,-2,2];
+    if (widths(el).length <= 4){ el.style.textWrap = "balance"; if (ok(el)) return; el.style.textWrap = ""; }
+    var st = [-0.5,0.5,-1,1];    
     for (var i = 0; i < st.length; i++){ el.style.wordSpacing = st[i] + "px"; if (ok(el)) return; }
     el.style.wordSpacing = "";
-    if (widths(el).length <= 4){ el.style.textWrap = "balance"; if (!ok(el)) el.style.textWrap = ""; }
   };
   var tidyAll = function(){ [].forEach.call(document.querySelectorAll(TIDY), tidy); };
   tidyAll();
