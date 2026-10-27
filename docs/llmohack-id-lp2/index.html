@@ -740,6 +740,19 @@ p,li,dd,td{text-wrap:pretty}
 .br-pc{display:none}
 @media (min-width:601px){ .br-pc{display:inline} }
 .fv__note{margin:2px 0 0;font-size:14px;line-height:1.55;color:var(--ink3)}
+.plans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:40px}
+.plan{position:relative;background:var(--paper);border:1px solid var(--line2);border-radius:16px;padding:28px 26px 26px;display:grid;grid-row:span 4;grid-template-rows:subgrid;row-gap:14px;align-content:start}
+.plan--year{border:2px solid var(--ink)}
+.plan__k{font-weight:700;font-size:14px;letter-spacing:.04em;color:var(--ink2);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.plan__tag{display:inline-block;background:var(--mk);color:var(--ink);font-size:12px;font-weight:800;border-radius:999px;padding:2px 10px;letter-spacing:0}
+.plan__p{font-weight:800;font-size:clamp(28px,2.6vw,36px);line-height:1.15;letter-spacing:-.02em}
+.plan__p small{font-size:15px;font-weight:600;color:var(--ink3);letter-spacing:0}
+.plan__l{display:grid;gap:9px;align-content:start;border-top:1px solid var(--line);padding-top:16px}
+.plan__l li{display:grid;grid-template-columns:18px minmax(0,1fr);gap:10px;font-size:15px;line-height:1.55;color:var(--ink2)}
+.plan__l li::before{content:"";width:16px;height:16px;margin-top:3px;border-radius:50%;background:var(--acc) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4.5 8.2l2.3 2.3 4.7-4.9' fill='none' stroke='%23fff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/16px no-repeat}
+.plan .btn,.plan .tbc{align-self:end;justify-self:start}
+.plans__note{margin-top:22px;font-size:15px;color:var(--ink2)}
+@media (max-width:900px){ .plans{grid-template-columns:minmax(0,1fr)} }
 @media (min-width:901px){ .stp li{display:grid;grid-row:span 3;grid-template-rows:subgrid;row-gap:0;align-content:start} }
 .mcta{display:none}
 @media (max-width:900px){
@@ -873,7 +886,7 @@ p,li,dd,td{text-wrap:pretty}
       <li class="flow__step fx" data-k="s4"><h3><span class="flow__no">STEP 4</span><span class="flow__sep"> | </span>Show where you are, and the gap</h3>
         <p>We look at mentions and citations in AI answers, the reasons given, and which competitors appear. For each thing you want AI to say, we sort out why it is missing: it is written but not picked up, it is not written anywhere, or AI cites your page but its main point does not reach the answer. On the dashboard, we lay out the difference between where you want to be and where you are now.</p></li>
       <li class="flow__step fx" data-k="s5"><h3><span class="flow__no">STEP 5</span><span class="flow__sep"> | </span>Suggest fixes, and check the change every month</h3>
-        <p>We set priorities by the size of the gap, importance to your business and effort, and suggest what to write, and where. You make the changes, and we ask AI again every month to check what changed.</p></li>
+        <p>We set priorities by the size of the gap, importance to your business and effort, and suggest what to write, and where. You make the changes, or ask us to, and we ask AI again every month to check what changed.</p></li>
       <li class="pen-note" data-n="loop" aria-hidden="true">Review needs and strategy too</li>
     </ol>
     </div>
@@ -913,8 +926,8 @@ p,li,dd,td{text-wrap:pretty}
         </tbody></table></div>
       </article>
       <article class="val fx">
-        <h3><span class="val__no">4.</span>Suggestions you can act on yourself</h3>
-        <div class="val__txt"><p>We don't make the changes for you. Each month, we tell you what to write, and where: a page on your website, your Google Maps profile, your marketplace listings, or an FAQ.</p><p>Most fixes are about content, so you can make them yourself, without a developer.</p></div>
+        <h3><span class="val__no">4.</span>Clear suggestions, ready to act on</h3>
+        <div class="val__txt"><p>Each month, we tell you what to write, and where: a page on your website, your Google Maps profile, your marketplace listings, or an FAQ.</p><p>Most fixes are about content, so your team can make them without a developer. If you'd like us to make the changes, we can also take them on as a separate project.</p></div>
         <ul class="val__fig picks"><li><img class="ico" src="img/icon/content.webp" width="160" height="160" alt="" aria-hidden="true" loading="lazy"><span>Articles and FAQs</span></li><li><img class="ico" src="img/icon/web.webp" width="160" height="160" alt="" aria-hidden="true" loading="lazy"><span>Website pages</span></li><li><img class="ico" src="img/icon/sentence.webp" width="160" height="160" alt="" aria-hidden="true" loading="lazy"><span>Profile descriptions</span></li><li><img class="ico" src="img/icon/sitelist.webp" width="160" height="160" alt="" aria-hidden="true" loading="lazy"><span>Marketplace listings</span></li></ul>
       </article>
     </div>
@@ -957,7 +970,7 @@ p,li,dd,td{text-wrap:pretty}
         <p>Which businesses appear as candidates, and for what reason are you recommended? We share how you look today, and what is missing.</p>
       </div>
       <div class="cta2__btn fx"><img class="chara fx" src="img/chara/jump.webp" width="360" height="473" alt="" aria-hidden="true" loading="lazy"><a class="btn btn--ink" href="#report" data-form="report">Start your free month</a></div>
-      <p class="cta2__note fx">From month 2, a monthly plan. <span class="tbc">※要確認：月額</span> Mention and citation rates are calculated within the questions and conditions we set.</p>
+      <p class="cta2__note fx">From month 2, choose a monthly or yearly plan (<a href="#price">see plans</a>). Mention and citation rates are calculated within the questions and conditions we set.</p>
     </div>
     <figure class="report fx" aria-label="Report sample: mention rate and official site citation rate, competitors that appear, and where to improve">
       <div class="report__hd"><h3>AI answer report</h3><span class="sample-tag">SAMPLE</span></div>
@@ -983,6 +996,37 @@ p,li,dd,td{text-wrap:pretty}
       <img class="deck__im deck__im--2" src="img/sample/missing.webp" width="1280" height="720" alt="" loading="lazy">
       <img class="deck__im deck__im--3" src="img/sample/dashboard.webp" width="1280" height="720" alt="" loading="lazy">
     </figure>
+  </div>
+</section>
+<section class="sec sec--paper" id="price">
+  <div class="wrap narrow">
+    <div class="h2wrap"><h2 class="h2 fx">Start free. Then keep checking, every month.</h2></div>
+    <div class="prose fx">
+      <p>Your first month is free. After that, choose monthly, or yearly for a regular AI health check at a lower price.</p>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="plans">
+      <article class="plan fx">
+        <p class="plan__k">Month 1</p>
+        <p class="plan__p">Free</p>
+        <ul class="plan__l"><li>Questions written for your business, in Bahasa Indonesia</li><li>ChatGPT, Gemini and Google AI Mode, three times each, from Indonesia</li><li>Your dashboard, and what is missing</li><li>Suggestions on what to write, and where</li></ul>
+        <a class="btn btn--ink" href="#report" data-form="report">Start your free month</a>
+      </article>
+      <article class="plan fx" style="--d:.08s">
+        <p class="plan__k">Monthly</p>
+        <p class="plan__p">Rp 799.000<small> / month</small></p>
+        <ul class="plan__l"><li>We ask AI again every month</li><li>Your list of what is missing, updated in order of priority</li><li>We check whether your changes worked</li><li>Your dashboard, updated every month</li></ul>
+        <span class="tbc">※仮の価格（根拠：lp-en/価格の根拠.md）</span>
+      </article>
+      <article class="plan plan--year fx" style="--d:.16s">
+        <p class="plan__k">Yearly <span class="plan__tag">2 months free</span></p>
+        <p class="plan__p">Rp 7.990.000<small> / year</small></p>
+        <ul class="plan__l"><li>Everything in Monthly</li><li>Pay for 10 months, get 12</li><li>A regular AI health check for your business, all year round</li></ul>
+        <span class="tbc">※仮の価格</span>
+      </article>
+    </div>
+    <p class="plans__note fx">Want us to make the changes too? We can take on content and page updates as a separate project. Ask us anytime.</p>
   </div>
 </section>
 </main>
