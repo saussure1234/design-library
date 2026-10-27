@@ -37,7 +37,7 @@ a{color:var(--acc)}
 .logo svg{width:26px;height:22px}
 .logo small{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);padding-left:8px;border-left:1px solid var(--line2)}
 .lang{margin-left:auto;display:inline-flex;gap:2px;background:var(--soft);border-radius:999px;padding:3px}
-.lang button{font:600 13px var(--sans);padding:5px 12px;border:0;border-radius:999px;background:transparent;color:var(--ink3);cursor:pointer}
+.lang button{font:600 13px var(--sans);padding:5px 12px;border:0;border-radius:999px;background:transparent;color:var(--ink2);cursor:pointer}
 .lang button[aria-pressed="true"]{background:var(--bg);color:var(--ink);box-shadow:0 1px 2px rgba(26,26,24,.12)}
 
 .hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,460px);gap:56px;align-items:start;padding-block:32px 72px}
@@ -47,19 +47,19 @@ h1{font-size:clamp(34px,5vw,56px);line-height:1.08;letter-spacing:-.03em;font-we
 mark{background:linear-gradient(transparent 60%,var(--mk) 60%);color:inherit;padding-inline:2px}
 .lead{font-size:18px;color:var(--ink2);margin:0;max-width:34em}
 
-.ask{background:var(--soft);border-radius:16px;padding:20px;display:grid;gap:12px;max-width:440px}
-.ask__q{justify-self:end;background:var(--ink);color:var(--bg);border-radius:14px 14px 4px 14px;padding:10px 14px;font-size:14px;max-width:90%}
-.ask__a{background:var(--bg);border-radius:14px 14px 14px 4px;padding:14px;display:grid;gap:10px;max-width:92%}
-.ask__a span{font-size:12px;font-weight:600;color:var(--ink3)}
-.ask__row{display:grid;grid-template-columns:18px minmax(0,1fr);gap:8px;align-items:center;font-family:var(--mono);font-size:12px;color:var(--ink3)}
-.ask__bar{height:9px;border-radius:5px;background:var(--line)}
-.ask__you{font-family:var(--sans);font-size:14px;font-weight:700;color:var(--ink)}
+.fv{position:relative;--cw:clamp(84px,9vw,116px);padding-top:calc(var(--cw) * .9)}
+.fv__box{position:relative;border-radius:16px;overflow:hidden;border:1px solid var(--line2);background:var(--bg);box-shadow:0 30px 60px -44px rgba(26,26,24,.45)}
+.fv video{display:block;width:100%;height:auto;aspect-ratio:16/9}
+.fv__chara{position:absolute;z-index:2;right:4%;top:calc(var(--cw) * .9 - var(--cw) * 400 / 360 * .802);width:var(--cw);height:auto;pointer-events:none}
+.vbar{position:absolute;left:14px;right:14px;bottom:10px;z-index:2;display:grid;grid-template-columns:5fr 5fr 5fr 6fr;gap:6px}
+.vbar i{position:relative;height:3px;border-radius:2px;background:rgba(26,26,24,.12);overflow:hidden}
+.vbar b{position:absolute;inset:0;width:0;background:var(--acc);border-radius:2px}
 
 .how{list-style:none;margin:0;padding:0;display:grid;gap:18px;counter-reset:s}
 .how li{display:grid;grid-template-columns:32px minmax(0,1fr);gap:14px;counter-increment:s}
 .how li::before{content:counter(s);width:28px;height:28px;border-radius:50%;border:1.5px solid var(--ink);display:grid;place-items:center;font-size:13px;font-weight:700}
 .how b{display:block;font-size:16px}
-.how p{margin:2px 0 0;color:var(--ink2);font-size:15px}
+.how p{margin:2px 0 0;color:var(--ink2);font-size:15px;max-width:40em;text-wrap:balance}
 .free{font-size:14px;color:var(--ink3);margin:0}
 
 .card{background:var(--bg);border:1px solid var(--line);border-radius:18px;padding:28px;box-shadow:0 1px 2px rgba(26,26,24,.04),0 12px 32px rgba(26,26,24,.06)}
@@ -84,16 +84,24 @@ input[aria-invalid="true"],textarea[aria-invalid="true"]{border-color:var(--bad)
 .go:hover{background:#000}
 .go:disabled{opacity:.6;cursor:progress}
 .err{color:var(--bad);font-size:14px;font-weight:600;margin:0}
-.done{display:grid;gap:10px;padding-block:12px}
+.done{display:grid;grid-template-columns:minmax(0,1fr) 104px;gap:10px 16px;align-items:center;padding-block:12px}
+.done > div{display:grid;gap:10px}
 .done b{font-size:20px}
 .done p{margin:0;color:var(--ink2)}
 .done svg{width:40px;height:40px}
+.done img{width:104px;height:auto}
 
 footer{border-top:1px solid var(--line);padding-block:24px 40px;font-size:13px;color:var(--ink3)}
 
 @media (max-width:900px){
   .hero{grid-template-columns:1fr;gap:36px;padding-top:12px}
   .pitch{padding-top:0}
+}
+@media (max-width:600px),(min-width:901px){
+  .fv video{aspect-ratio:4/5}
+}
+@media (min-width:901px){
+  .fv{max-width:440px}
 }
 @media (max-width:520px){
   .two{grid-template-columns:1fr}
@@ -119,14 +127,11 @@ footer{border-top:1px solid var(--line);padding-block:24px 40px;font-size:13px;c
     <span class="eyebrow" data-t="eyebrow">Free AI visibility check</span>
     <h1 data-t="h1">Is AI <mark>recommending</mark> your business?</h1>
     <p class="lead" data-t="lead">When people ask ChatGPT, Gemini or Google where to buy, AI answers with a few names. Find out if yours is one of them.</p>
-    <div class="ask" aria-hidden="true">
-      <div class="ask__q" data-t="askQ">Rekomendasi catering sehat di Jakarta Selatan?</div>
-      <div class="ask__a">
-        <span data-t="askA">AI answer</span>
-        <div class="ask__row">1<div class="ask__bar" style="width:82%"></div></div>
-        <div class="ask__row">2<div class="ask__bar" style="width:64%"></div></div>
-        <div class="ask__row">3<div class="ask__bar" style="width:72%"></div></div>
-        <div class="ask__row">?<span class="ask__you" data-t="askYou">Is your business here?</span></div>
+    <div class="fv">
+      <img class="fv__chara" src="img/chara/sit.webp" width="360" height="400" alt="" aria-hidden="true">
+      <div class="fv__box">
+        <video id="fv" width="960" height="540" muted loop playsinline autoplay preload="auto" poster="media/fv-en.webp" aria-label="Video: a customer asks AI where to buy and your business is not in the answer. You send your link, city and what you sell. We ask ChatGPT, Gemini and Google AI Mode from Indonesia, three times each. You get a report on how AI sees you."></video>
+        <div class="vbar" aria-hidden="true"><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i></div>
       </div>
     </div>
     <ol class="how">
@@ -187,9 +192,12 @@ footer{border-top:1px solid var(--line);padding-block:24px 40px;font-size:13px;c
       </form>
     </div>
     <div class="done" id="done" hidden>
-      <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="19" fill="#0F6B4E"/><path d="M12 20.5l5.5 5.5L28.5 15" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <b data-t="doneT">Thank you. We have your request.</b>
-      <p data-t="doneP">We will contact you on WhatsApp or by email when your report is ready.</p>
+      <div>
+        <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="19" fill="#0F6B4E"/><path d="M12 20.5l5.5 5.5L28.5 15" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <b data-t="doneT">Thank you. We have your request.</b>
+        <p data-t="doneP">We will contact you on WhatsApp or by email when your report is ready.</p>
+      </div>
+      <img src="img/chara/cheer.webp" width="360" height="464" alt="" aria-hidden="true" loading="lazy">
     </div>
   </section>
 </main>
@@ -203,7 +211,6 @@ footer{border-top:1px solid var(--line);padding-block:24px 40px;font-size:13px;c
     eyebrow:'Cek visibilitas AI gratis',
     h1:'Apakah AI <mark>merekomendasikan</mark> bisnis Anda?',
     lead:'Saat orang bertanya ke ChatGPT, Gemini, atau Google tentang tempat untuk membeli sesuatu, AI menjawab dengan beberapa nama. Cari tahu apakah bisnis Anda salah satunya.',
-    askA:'Jawaban AI', askYou:'Apakah bisnis Anda ada di sini?',
     s1t:'Ceritakan bisnis Anda', s1p:'Link, kota, dan apa yang Anda jual. Sekitar 2 menit.',
     s2t:'Kami bertanya ke AI dari Indonesia', s2p:'Kami ubah menjadi pertanyaan yang biasa ditanyakan pelanggan, dalam Bahasa Indonesia, lalu menanyakannya ke ChatGPT, Gemini, dan Google AI masing-masing tiga kali.',
     s3t:'Anda menerima laporan', s3p:'Di mana AI menyebut Anda, siapa yang direkomendasikan sebagai gantinya, dan info apa yang salah tentang Anda. Dikirim ke WhatsApp atau email Anda.',
@@ -226,9 +233,27 @@ footer{border-top:1px solid var(--line);padding-block:24px 40px;font-size:13px;c
     en:{missing:'Please fill in the required fields.', agree:'Please tick the box to agree.', fail:'Could not send. Please check your connection and try again.', sending:'Sending…'},
     id:{missing:'Mohon isi kolom yang wajib.', agree:'Mohon centang kotak persetujuan.', fail:'Gagal mengirim. Periksa koneksi Anda lalu coba lagi.', sending:'Mengirim…'}
   };
+  var VLABEL = {
+    en: 'Video: a customer asks AI where to buy and your business is not in the answer. You send your link, city and what you sell. We ask ChatGPT, Gemini and Google AI Mode from Indonesia, three times each. You get a report on how AI sees you.',
+    id: 'Video: pelanggan bertanya ke AI di mana membeli dan bisnis Anda tidak ada di jawaban. Anda mengirim link, kota, dan apa yang Anda jual. Kami bertanya ke ChatGPT, Gemini, dan Google AI Mode dari Indonesia, masing-masing tiga kali. Anda menerima laporan tentang bagaimana AI melihat bisnis Anda.'
+  };
   var EN = {}, LANG = 'en';
   try { var s = localStorage.getItem('llmohack-id-lang'); if (s === 'id' || s === 'en') LANG = s; } catch (e) {}
+  var v = document.getElementById('fv'), still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var tall = matchMedia('(max-width:600px), (min-width:901px)');
+  function video(){
+    var name = 'media/fv-' + (tall.matches ? 'sp-' : '') + LANG;
+    if (v.getAttribute('data-src') === name) return;
+    v.setAttribute('data-src', name);
+    v.poster = name + '.webp';
+    v.setAttribute('aria-label', VLABEL[LANG]);
+    v.muted = true;
+    v.src = name + '.mp4';
+    if (still) { v.removeAttribute('autoplay'); v.pause(); return; }
+    var p = v.play(); if (p && p.catch) p.catch(function(){});
+  }
   function apply(){
+    video();
     document.documentElement.lang = LANG;
     document.querySelectorAll('[data-t]').forEach(function(el){
       var k = el.getAttribute('data-t');
@@ -275,6 +300,14 @@ footer{border-top:1px solid var(--line);padding-block:24px 40px;font-size:13px;c
     }).then(function(){ go.disabled = false; go.textContent = label; });
   });
   apply();
+  tall.addEventListener('change', video);
+
+  var CUT = [0, 5, 10, 15, 21], bs = [].slice.call(document.querySelectorAll('.vbar b'));
+  (function tick(){
+    var t = v.currentTime || 0;
+    bs.forEach(function(b, i){ var a = CUT[i], e = CUT[i + 1]; b.style.width = (t >= e ? 100 : t <= a ? 0 : (t - a) / (e - a) * 100) + '%'; });
+    requestAnimationFrame(tick);
+  })();
 })();
 </script>
 </body>
