@@ -14,7 +14,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>:root{
   --navy:#0E1E3A; --navy2:#0A1730; --foot:#08122A;
-  --ink:#0E1E3A; --ink2:#3F4A5E; --ink3:#5E6878;
+  --ink:#0E1E3A; --ink2:#2E3748; --ink3:#545E6E;
   --line:#D9DEE6; --line2:#C4CCD8; --gray:#F2F4F7; --tint:#E9EFF8;
   --cta:#D04500; --cta-ink:#A83700;
   --on-navy2:#C9D2E3; --num-navy:#8A9BBA;
@@ -63,7 +63,6 @@ p,li{text-wrap:pretty}
 .hd .btn{min-height:44px;padding:0 22px;font-size:14px}
 @media (max-width:600px){ .hd__in{height:64px} .logo__svg{width:138px} .hd .btn{min-height:40px;padding:0 14px;font-size:13px;gap:8px} }
 .hero{position:relative;background:#fff;color:var(--ink);padding:150px 0 clamp(80px,9vw,120px);overflow:hidden}
-.hero::before{content:"";position:absolute;right:0;top:76px;bottom:0;width:38%;background:var(--gray)}
 .hero .wrap{z-index:1}
 .hero__grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);grid-template-areas:"txt vis" "cta vis";column-gap:clamp(32px,4.5vw,72px);align-items:center}
 .hero__txt{grid-area:txt;align-self:end}
@@ -75,7 +74,7 @@ p,li{text-wrap:pretty}
 .hero__h1 .br{display:block}
 .hero__h1 .mk{box-shadow:inset 0 -.18em 0 var(--cta)}
 .hero__lead{margin-top:26px;color:var(--ink2);line-height:2;max-width:36em}
-.frame{position:relative;background:#fff;border:1px solid var(--line2);box-shadow:16px 16px 0 var(--navy)}
+.frame{position:relative;background:#fff;border:1px solid var(--line2)}
 .frame video{display:block;width:100%;height:auto;aspect-ratio:16/9}
 .vbar{position:absolute;left:14px;right:14px;bottom:10px;z-index:2;display:grid;grid-template-columns:var(--segs,1fr 1fr 1fr 1.2fr);gap:6px}
 .vbar i{position:relative;height:3px;background:rgba(14,30,58,.14);overflow:hidden}
@@ -88,8 +87,6 @@ p,li{text-wrap:pretty}
 @media (max-width:600px){
   .hero{padding-top:110px}
   .hero__h1{font-size:27px}
-  .frame{box-shadow:8px 8px 0 var(--navy)}
-  .hero::before{display:none}
   .frame video{aspect-ratio:4/5}
   .hero__cta .btn{width:100%}
 }
@@ -113,7 +110,7 @@ p,li{text-wrap:pretty}
   .sec--navy2 .nums > li + li{border-top-color:rgba(255,255,255,.18)}
 }
 .cmp{margin-top:48px;display:grid;grid-template-columns:150px minmax(0,1fr) minmax(0,1.1fr);border:1px solid var(--line2)}
-.cmp > *{padding:18px 24px;border-top:1px solid var(--line);font-size:15.5px;line-height:1.75;display:flex;align-items:center}
+.cmp > *{padding:18px 24px;border-top:1px solid var(--line);font-size:16px;line-height:1.75;display:flex;align-items:center}
 .cmp > :nth-child(-n+3){border-top:0}
 .cmp__k{background:var(--gray);font-weight:900;white-space:nowrap}
 .cmp__a{color:var(--ink3);border-left:1px solid var(--line)}
@@ -126,7 +123,7 @@ p,li{text-wrap:pretty}
 .rsn h3{margin-top:24px;font-weight:900;font-size:clamp(18px,1.7vw,21px);line-height:1.6}
 @media (min-width:901px){ .rsn h3{min-height:calc(1.6em * 3)} }
 @media (min-width:901px) and (max-width:1180px){ .rsn h3{min-height:calc(1.6em * 4)} }
-.rsn p{margin-top:14px;font-size:15.5px;color:var(--ink2);text-wrap:balance}
+.rsn p{margin-top:14px;font-size:16px;color:var(--ink2);text-wrap:balance}
 .rsn .prod{margin-top:18px;padding-top:14px;border-top:1px solid var(--line2);font-size:14px;color:var(--ink)}
 .chk{margin-top:18px;display:flex;flex-wrap:wrap;gap:8px}
 .chk label{display:inline-flex;align-items:center;gap:8px;white-space:nowrap;cursor:pointer;border:1px solid var(--line2);background:#fff;padding:7px 12px;font-weight:700;font-size:14px;line-height:1.4;transition:background .2s,border-color .2s,color .2s}
@@ -142,7 +139,7 @@ p,li{text-wrap:pretty}
 .steps__no small{display:block;font-weight:600;font-size:12px;letter-spacing:.18em;color:var(--ink3)}
 .steps__no b{display:block;margin-top:8px;font-weight:700;font-size:56px;letter-spacing:-.02em;color:var(--ink)}
 .steps h3{font-weight:900;font-size:clamp(19px,1.8vw,23px);line-height:1.6}
-.steps p{margin-top:12px;font-size:15.5px;color:var(--ink2);text-wrap:balance}
+.steps p{margin-top:12px;font-size:16px;color:var(--ink2);text-wrap:balance}
 .steps > li.is-key{background:var(--gray);margin:0 -28px;padding:36px 28px;border-bottom:0}
 .steps > li.is-key .steps__no b{color:var(--cta)}
 .mtr{margin-top:18px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border:1px solid var(--line2);background:#fff}
@@ -300,16 +297,16 @@ p,li{text-wrap:pretty}
 .worry .num::after{margin-top:0}
 .worry .num-row{padding-bottom:22px;border-bottom:2px solid rgba(255,255,255,.3)}
 .worry .num::after{display:none}
-.scene{display:block;width:100%;height:190px;object-fit:contain;object-position:left bottom;margin-bottom:26px}
+.scene{display:block;width:auto;max-width:100%;height:112px;object-fit:contain;object-position:left bottom;margin-bottom:22px}
 .steps__side{display:grid;justify-items:start;gap:16px;align-content:start}
 .steps__side .pic{height:56px}
 .lf-node{display:flex;align-items:center;justify-content:center;gap:14px}
 .lf-node .pic{height:36px}
 .lf-src .s{display:grid;justify-items:center;gap:10px}
 .lf-src .s .pic{height:44px}
-.band__in{grid-template-columns:auto minmax(0,1fr) auto}
+.band__in{grid-template-columns:minmax(0,1fr) auto}
 .band__ic{height:76px}
-.closing__il{width:min(520px,100%);height:auto;margin:0 auto 44px}
+.closing__il{width:min(320px,80%);height:auto;margin:0 auto 36px}
 @media (max-width:860px){ .band__in{grid-template-columns:minmax(0,1fr)} .band__ic{height:56px} }
 @media (max-width:760px){ .steps__side{grid-auto-flow:column;align-items:center;justify-content:start} .steps__side .pic{height:44px} .scene{height:160px} }
 .fx{opacity:0;transform:translateY(16px);transition:opacity .8s var(--ease),transform .8s var(--ease);transition-delay:var(--d,0s)}
@@ -345,9 +342,9 @@ p,li{text-wrap:pretty}
     <p class="lbl fx">PROBLEM</p>
     <h2 class="h2 fx"><span class="nb">施策は進めているが、</span><br><span class="nb">目標に届かない</span></h2>
     <ol class="nums">
-      <li class="fx"><div class="num-row"><span class="num">01</span><img class="pic" src="img/il2/i11w.webp" alt="" aria-hidden="true"></div><p>目標数値に未達だが、<wbr>ボトルネックが何で、<wbr>どうすれば<wbr>改善するか<wbr><span class="nb">分からない</span></p></li>
-      <li class="fx" style="--d:.08s"><div class="num-row"><span class="num">02</span><img class="pic" src="img/il2/i12w.webp" alt="" aria-hidden="true"></div><p>広告、SEO、LLMO。<wbr>施策の優先順位も、<wbr>それぞれが<wbr>最適化できているかも<wbr><span class="nb">自信がない</span></p></li>
-      <li class="fx" style="--d:.16s"><div class="num-row"><span class="num">03</span><img class="pic" src="img/il2/i13w.webp" alt="" aria-hidden="true"></div><p>ベンダーごとに<wbr>レポートは届くが、<wbr>内容を理解しきれないまま<wbr>次の月に<wbr><span class="nb">進んでいる</span></p></li>
+      <li class="fx"><div class="num-row"><span class="num">01</span></div><p>目標数値に未達だが、<wbr>ボトルネックが何で、<wbr>どうすれば<wbr>改善するか<wbr><span class="nb">分からない</span></p></li>
+      <li class="fx" style="--d:.08s"><div class="num-row"><span class="num">02</span></div><p>広告、SEO、LLMO。<wbr>施策の優先順位も、<wbr>それぞれが<wbr>最適化できているかも<wbr><span class="nb">自信がない</span></p></li>
+      <li class="fx" style="--d:.16s"><div class="num-row"><span class="num">03</span></div><p>ベンダーごとに<wbr>レポートは届くが、<wbr>内容を理解しきれないまま<wbr>次の月に<wbr><span class="nb">進んでいる</span></p></li>
     </ol>
   </div>
 </section>
@@ -391,16 +388,16 @@ p,li{text-wrap:pretty}
     <p class="lead fx">現状把握と方針のすり合わせ、優先順位、役割分担、可視化の4段で進めます。可視化した結果は<wbr>次のすり合わせに戻り、<wbr><span class="nb">改善を続けます。</span></p>
     <div class="steps-wrap">
       <ol class="steps">
-        <li class="fx"><div class="steps__side"><p class="steps__no"><small>STEP</small><b>01</b></p><img class="pic" src="img/il2/i21.webp" alt="" aria-hidden="true"></div><div>
+        <li class="fx"><div class="steps__side"><p class="steps__no"><small>STEP</small><b>01</b></p></div><div>
           <h3>3C分析と施策の現状から、<wbr>ボトルネックと<wbr>改善方針を<wbr>すり合わせ</h3>
           <p>顧客・競合・自社の3C分析と、現状の施策の実施状況を照らし合わせます。Webでのリサーチに加え、貴社の営業・CS担当など顧客接点を持つ方の声をもとにニーズを把握し、競争環境と貴社のアセットを比較。現状の施策や課題をお伺いした上で、ボトルネックと改善の方針を提案し、すり合わせます。</p></div></li>
-        <li class="fx"><div class="steps__side"><p class="steps__no"><small>STEP</small><b>02</b></p><img class="pic" src="img/il2/i22.webp" alt="" aria-hidden="true"></div><div>
+        <li class="fx"><div class="steps__side"><p class="steps__no"><small>STEP</small><b>02</b></p></div><div>
           <h3>すり合わせた方針から、<wbr>タスクの<wbr>優先順位を整理</h3>
           <p>すり合わせた改善方針をもとに、取り組むタスクを洗い出し、事業への重要性も踏まえて<wbr>着手する順序を<wbr><span class="nb">整理します。</span></p></div></li>
-        <li class="fx"><div class="steps__side"><p class="steps__no"><small>STEP</small><b>03</b></p><img class="pic" src="img/il2/i23.webp" alt="" aria-hidden="true"></div><div>
+        <li class="fx"><div class="steps__side"><p class="steps__no"><small>STEP</small><b>03</b></p></div><div>
           <h3>タスクごとに<wbr>役割分担</h3>
           <p>広告運用、Web制作、SEO／LLMO、ホワイトペーパー制作、アウトバウンド営業など、整理したタスクごとに弊社と貴社の役割を分担します。貴社の体制に合わせて、必要な施策をレ点式でご依頼いただけます。</p></div></li>
-        <li class="fx is-key"><div class="steps__side"><p class="steps__no"><small>STEP</small><b>04</b></p><img class="pic" src="img/il2/i24.webp" alt="" aria-hidden="true"></div><div>
+        <li class="fx is-key"><div class="steps__side"><p class="steps__no"><small>STEP</small><b>04</b></p></div><div>
           <h3>ダッシュボードで<wbr>可視化し、<wbr>経営層・上長への<wbr>レポートも<wbr>スムーズに</h3>
           <p>マーケティングの数値をKPIツリーに沿って並べ、どこがボトルネックになっているかを確認できるようにします。施策ごとに分かれていたレポートがひとつにまとまるため、経営層・上長への報告にもそのまま使えます。</p>
           <p>LLMOにおいては狙うカテゴリ、ポジション、顧客の目的・課題ごとに、AI回答での見え方を確認します。引用率や言及率に加え、「狙った場面で紹介されているか」「意図した強みが伝わっているか」を捉え、<wbr><span class="nb">戦略と計測をつなぎます。</span></p>
@@ -451,7 +448,7 @@ p,li{text-wrap:pretty}
 </section>
 <section class="band">
   <div class="wrap band__in fx">
-    <img class="pic band__ic" src="img/il2/i16w.webp" alt="" aria-hidden="true"><div><b>施策を進める理由を説明する3つのフレームワーク</b><p>施策の中身ではなく、順序の根拠が問われた時の対処法をまとめました。</p></div>
+    <div><b>施策を進める理由を説明する3つのフレームワーク</b><p>施策の中身ではなく、順序の根拠が問われた時の対処法をまとめました。</p></div>
     <a class="btn btn--main" href="#dl">資料をダウンロード</a>
   </div>
 </section>
@@ -461,15 +458,15 @@ p,li{text-wrap:pretty}
     <h2 class="h2 fx"><span class="nb">AIは、担当の境目を</span><wbr><span class="nb">越えて答えている</span></h2>
     <p class="lead fx">この流れのまま、LLMOにも対応します。3C分析で決めた強みがAIの答えでどう伝わっているかをダッシュボードで確かめ、必要な改善をほかのタスクと同じ優先順位の中で進めます。</p>
     <figure class="lf fx" aria-label="図：顧客（AIに相談して選ぶ）は生成AIの回答からひとつの答えを受け取り、生成AIは自社サイト・LP、検索上位の記事、比較・紹介メディア、SNS・口コミの複数の情報源をまとめて参照する。各社は担当範囲を最適化し、AIの答え全体を見る担当はいない">
-      <p class="lf-node"><img class="pic" src="img/il2/i14.webp" alt="" aria-hidden="true">顧客（AIに相談して選ぶ）</p>
+      <p class="lf-node">顧客（AIに相談して選ぶ）</p>
       <p class="lf-arw"><svg viewBox="0 0 14 28" aria-hidden="true"><path d="M7 27V2M2 7l5-5 5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>ひとつの答え</p>
-      <p class="lf-node lf-node--ai"><img class="pic" src="img/il2/i15w.webp" alt="" aria-hidden="true">生成AIの回答</p>
+      <p class="lf-node lf-node--ai">生成AIの回答</p>
       <p class="lf-arw"><svg viewBox="0 0 14 28" aria-hidden="true"><path d="M7 27V2M2 7l5-5 5 5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>複数の情報源をまとめて参照</p>
       <ul class="lf-src">
-        <li><span class="s"><img class="pic" src="img/il2/i25.webp" alt="" aria-hidden="true">自社サイト・LP</span><span class="v">制作会社</span></li>
-        <li><span class="s"><img class="pic" src="img/il2/i31.webp" alt="" aria-hidden="true">検索上位の記事</span><span class="v">SEO会社</span></li>
-        <li><span class="s"><img class="pic" src="img/il2/i26.webp" alt="" aria-hidden="true">比較・紹介メディア</span><span class="v">広告・PR会社</span></li>
-        <li><span class="s"><img class="pic" src="img/il2/i32.webp" alt="" aria-hidden="true">SNS・口コミ</span><span class="v">SNS運用会社</span></li>
+        <li><span class="s">自社サイト・LP</span><span class="v">制作会社</span></li>
+        <li><span class="s">検索上位の記事</span><span class="v">SEO会社</span></li>
+        <li><span class="s">比較・紹介メディア</span><span class="v">広告・PR会社</span></li>
+        <li><span class="s">SNS・口コミ</span><span class="v">SNS運用会社</span></li>
       </ul>
       <p class="lf-cap">各社は担当範囲を最適化。AIの答え全体を見る担当はいない</p>
     </figure>
