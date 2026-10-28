@@ -11,7 +11,7 @@
 <meta name="theme-color" content="#FFFFFF">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400&family=Montserrat:wght@500;600;700&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>:root{
   --navy:#0E1E3A; --navy2:#0A1730; --foot:#08122A;
   --ink:#0E1E3A; --ink2:#2E3748; --ink3:#545E6E;
@@ -59,14 +59,17 @@ p,li{text-wrap:pretty}
 .hd__in{display:flex;align-items:center;justify-content:space-between;gap:20px;height:76px}
 .logo{display:inline-flex;align-items:center;color:var(--navy);text-decoration:none}
 .ft .logo{color:#fff}
-.logo__svg{display:block;width:170px;height:auto}
+.logo__txt{display:block;font-family:"Kumbh Sans",sans-serif;font-weight:400;font-size:29px;line-height:1;letter-spacing:-.01em;color:var(--navy)}
+.logo__txt b{font-weight:inherit;color:#2460DD}
+.ft .logo__txt{color:#fff;font-size:26px}
+.ft .ft__co .logo__txt b{color:#7BA3F2;font-size:inherit;font-weight:inherit;letter-spacing:inherit}
 .gnav{display:flex;gap:30px;margin-left:auto;margin-right:12px}
 .gnav a{font-weight:700;font-size:14.5px;letter-spacing:.04em;text-decoration:none;color:var(--ink);white-space:nowrap}
 .gnav a:hover{color:var(--cta)}
 @media (max-width:1000px){ .gnav{display:none} }
 .hero__tag{font-family:var(--en);font-weight:700;font-size:16px!important;letter-spacing:.06em!important;color:var(--ink)!important}
 .hd .btn{min-height:44px;padding:0 22px;font-size:14px}
-@media (max-width:600px){ .hd__in{height:64px} .logo__svg{width:138px} .hd .btn{min-height:40px;padding:0 14px;font-size:13px;gap:8px} }
+@media (max-width:600px){ .hd__in{height:64px} .logo__txt{font-size:24px} .hd .btn{min-height:40px;padding:0 14px;font-size:13px;gap:8px} }
 .hero{position:relative;background:#fff;color:var(--ink);padding:150px 0 clamp(80px,9vw,120px);overflow:hidden}
 .hero .wrap{z-index:1}
 .hero__grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);grid-template-areas:"txt vis" "cta vis";column-gap:clamp(32px,4.5vw,72px);align-items:center}
@@ -335,7 +338,7 @@ p,li{text-wrap:pretty}
 <body>
 <header class="hd" id="hd">
   <div class="wrap hd__in">
-    <a class="logo" href="#top" aria-label="MarkeHack（ページの先頭へ）"><svg class="logo__svg" viewBox="0 0 178 30" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M1 27L11 3h7L8 27z" fill="currentColor"/><path d="M12 27L22 3h7L19 27z" fill="#E8590C"/><text x="38" y="23" font-family="Montserrat,'Noto Sans JP',sans-serif" font-weight="700" font-size="21" letter-spacing=".2" fill="currentColor">MarkeHack</text></svg></a>
+    <a class="logo" href="#top" aria-label="MarkeHack（ページの先頭へ）"><span class="logo__txt">Marke<b>Hack</b></span></a>
     <nav class="gnav" aria-label="ページ内"><a href="#reason">選ばれる理由</a><a href="#flow">支援の進め方</a><a href="#llm">LLM対応</a><a href="#ceo">代表紹介</a></nav>
     <a class="btn btn--main" href="#dl">資料ダウンロード</a>
   </div>
@@ -559,7 +562,7 @@ p,li{text-wrap:pretty}
 <footer class="ft">
   <div class="wrap">
     <div class="ft__row">
-      <div class="ft__co"><span class="logo"><svg class="logo__svg" viewBox="0 0 178 30" role="img" aria-label="MarkeHack" xmlns="http://www.w3.org/2000/svg"><path d="M1 27L11 3h7L8 27z" fill="currentColor"/><path d="M12 27L22 3h7L19 27z" fill="#E8590C"/><text x="38" y="23" font-family="Montserrat,'Noto Sans JP',sans-serif" font-weight="700" font-size="21" letter-spacing=".2" fill="currentColor">MarkeHack</text></svg></span><b>サムライスタイル株式会社</b></div>
+      <div class="ft__co"><span class="logo"><span class="logo__txt">Marke<b>Hack</b></span></span><b>サムライスタイル株式会社</b></div>
       <nav aria-label="会社の情報"><a href="https://www.samurai-style.tokyo/company">会社概要</a><a href="https://www.samurai-style.tokyo/privacy-policy">プライバシーポリシー</a><a href="https://www.samurai-style.tokyo/commercial-transactions">特定商取引法に基づく表記</a></nav>
     </div>
     <p class="ft__copy">© 2024- samurai-style All Right Reserved.</p>
