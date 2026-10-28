@@ -1294,8 +1294,6 @@ p,li,dd,td{text-wrap:pretty}
       <label>Your name<span class="req">Required</span><input type="text" name="contact_name" autocomplete="name" maxlength="200" required></label>
       <label>WhatsApp number or email<span class="req">Required</span><input type="text" name="contact" inputmode="email" maxlength="200" placeholder="+62 812 0000 0000" required></label>
       <label>Link to your business<span class="req">Required</span><span class="fm__hint">Website, Google Maps, Instagram, Tokopedia or GoFood. The page you want AI to recommend.</span><input type="text" name="link" inputmode="url" maxlength="500" placeholder="https://" required></label>
-      <label>City / area<span class="req">Required</span><input type="text" name="city" maxlength="200" placeholder="South Jakarta" required></label>
-      <label>What you sell<span class="req">Required</span><input type="text" name="industry" maxlength="200" placeholder="healthy catering" required></label>
       <label>Competitors to compare<span class="opt">Optional</span><input type="text" name="rivals" maxlength="1000" placeholder="e.g. Brand A, Brand B"></label>
       <label>Questions you want AI to be asked<span class="opt">Optional</span><span class="fm__hint">A full question, or just the topic you want to be recommended for.</span><textarea name="asks" rows="4" maxlength="3000" placeholder="e.g.&#10;Position: who is good at ...?&#10;Category: what is the best ...?&#10;Goal / problem: what should I do if ...?"></textarea></label>
       <label class="hp" aria-hidden="true">Leave empty<input type="text" name="hp" tabindex="-1" autocomplete="off"></label>
@@ -1350,7 +1348,7 @@ p,li,dd,td{text-wrap:pretty}
       if (bad.length){ show(bad[0].type === "checkbox" ? "Please agree to the privacy policy." : "Please fill in the required fields."); bad[0].focus(); return; }
       if (f.hp.value){ dlg.classList.add("is-done"); f.reset(); return; }
       var v = function(k){ return f[k].value.trim(); };
-      var d = { business: v("business"), contact_name: v("contact_name"), contact: v("contact"), link: v("link"), city: v("city"), industry: v("industry"),
+      var d = { business: v("business"), contact_name: v("contact_name"), contact: v("contact"), link: v("link"),
         rivals: v("rivals") || null, asks: v("asks") || null, lang: "en", agree: true };
       go.disabled = true; var label = go.textContent; go.textContent = "Sending…";
       fetch(SB_URL + "/rest/v1/id_requests", {
