@@ -71,7 +71,11 @@ p,li{text-wrap:pretty}
 .hero .wrap{z-index:1}
 .hero__grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);grid-template-areas:"txt vis" "cta vis";column-gap:clamp(32px,4.5vw,72px);align-items:center}
 .hero__txt{grid-area:txt;align-self:end}
-.hero__vis{grid-area:vis}
+.hero__vis{grid-area:vis;position:relative}
+.hero__hm{position:absolute;z-index:3;left:-36px;bottom:-54px;height:230px;width:auto;pointer-events:none}
+@media (max-width:1180px){ .hero__hm{left:-24px;height:190px} }
+@media (max-width:1080px){ .hero__hm{left:auto;right:-6px;bottom:-30px;height:150px} }
+@media (max-width:600px){ .hero__hm{height:110px;bottom:-24px} }
 .hero__cta{grid-area:cta;align-self:start;display:flex;flex-wrap:wrap;gap:14px;margin-top:40px}
 .hero__tag{display:flex;align-items:center;gap:14px;font-size:14.5px;letter-spacing:.08em;color:var(--ink3)}
 .hero__tag::before{content:"";width:28px;height:1.5px;background:var(--cta)}
@@ -344,6 +348,7 @@ p,li{text-wrap:pretty}
       <p class="hero__lead fx" style="--d:.12s">マーケティング・営業双方の経験を元に、『数値が停滞しているボトルネックが何か』を明らかにした上で、改善のための広告運用・SEO／LLMO・制作の実行から<wbr>ダッシュボードによる<wbr><span class="nb">可視化まで対応します。</span></p>
     </div>
     <div class="hero__vis fx" style="--d:.18s">
+      <img class="hero__hm" src="img/hm/fv1.webp" alt="" aria-hidden="true">
       <div class="frame"><video data-pc="media/fv.mp4" poster="media/fv.webp" data-sp="media/fv-sp.mp4" data-sp-poster="media/fv-sp.webp" width="1280" height="720" muted loop playsinline autoplay preload="auto" aria-label="動画：KPIツリーでボトルネックを見つけ、タスクの優先順位を整理し、タスクごとに弊社と貴社で役割を分担し、ダッシュボードで可視化して経営層・上長へのレポートにする"></video><script>(function(v){var sp=matchMedia("(max-width:600px)").matches;if(sp)v.poster=v.getAttribute("data-sp-poster");v.muted=true;v.src=v.getAttribute(sp?"data-sp":"data-pc");})(document.currentScript.previousElementSibling);</script><div class="vbar" aria-hidden="true"><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i></div></div>
     </div>
     <div class="hero__cta fx" style="--d:.24s">
