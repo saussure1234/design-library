@@ -252,57 +252,99 @@ p,li{text-wrap:pretty}
 .ft nav a:hover{color:#fff;text-decoration:underline}
 .ft__copy{margin-top:22px;font-family:var(--en);font-size:11.5px;letter-spacing:.06em}
 @media (max-width:600px){ .closing .btn{min-width:0;width:100%} }
-.dsh{margin-top:18px;border:1px solid var(--line2);background:#fff;font-size:13px;line-height:1.5}
-.dsh__bar{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:var(--navy);color:#fff}
-.dsh__bar b{font-weight:700;font-size:13.5px;letter-spacing:.04em}
-.dsh__bar span{font-size:11.5px;color:var(--on-navy2);letter-spacing:.06em}
-.dsh__kpi{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-bottom:1px solid var(--line)}
-.dsh__kpi > div{padding:14px 16px}
-.dsh__kpi > div + div{border-left:1px solid var(--line)}
-.dsh__kpi span{display:block;font-weight:700;font-size:12px;color:var(--ink3)}
-.dsh__kpi b{display:inline-block;margin-top:4px;font-family:var(--en);font-weight:700;font-size:28px;line-height:1.1;color:var(--ink)}
-.dsh__kpi small{font-family:var(--en);font-weight:700;font-size:14px;margin-left:1px}
-.dsh__kpi em{font-style:normal;font-size:11.5px;color:var(--ink3);margin-left:6px}
-.dsh__kpi .is-ng small{color:var(--cta)}
-.steps .dsh .dsh__h{margin:0 0 10px;font-size:12px;color:var(--ink3);text-wrap:wrap}
-.steps .dsh .dsh__h + .dsh__h,.steps .dsh .hb + .dsh__h{margin-top:16px}
-.dsh__kpi .is-ng b{color:var(--cta)}
-.dsh__mid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)}
-.dsh__box{padding:16px}
-.dsh__box + .dsh__box{border-left:1px solid var(--line)}
-.dsh__h{font-weight:700;font-size:12px;color:var(--ink3);margin-bottom:10px}
-.kt{display:grid;grid-template-columns:minmax(0,1fr) 14px minmax(0,1fr) 14px minmax(0,1fr);grid-template-rows:repeat(4,auto);row-gap:6px;align-items:center}
-.kt__n{position:relative;border:1px solid var(--line2);padding:5px 8px;font-weight:700;font-size:11.5px;line-height:1.3;white-space:nowrap;background:#fff}
-.kt__n b{display:block;font-family:var(--en);font-size:15px}
-.kt__root{grid-column:1;grid-row:1 / 5;background:var(--navy);color:#fff;border-color:var(--navy)}
-.kt__a{grid-column:3;grid-row:1 / 3}.kt__b{grid-column:3;grid-row:3 / 5}
-.kt__c{grid-column:5;grid-row:1}.kt__d{grid-column:5;grid-row:2}.kt__e{grid-column:5;grid-row:3}.kt__f{grid-column:5;grid-row:4}
-.kt__l{align-self:stretch;position:relative}
-.kt__l::before{content:"";position:absolute;left:0;width:50%;top:50%;border-top:1px solid var(--line2)}
-.kt__l::after{content:"";position:absolute;left:50%;right:0;top:25%;bottom:25%;border:1px solid var(--line2);border-right:0}
-.kt__l1{grid-column:2;grid-row:1 / 5}.kt__l2{grid-column:4;grid-row:1 / 3}.kt__l3{grid-column:4;grid-row:3 / 5}
-.kt__ng{border-color:var(--cta);background:#FDEDE4}
-.kt__ng i{position:absolute;right:-4px;top:-9px;background:var(--cta);color:#fff;font-style:normal;font-size:9.5px;padding:0 5px;line-height:1.6}
-.hb{display:grid;gap:8px}
-.hb li{display:grid;grid-template-columns:76px minmax(0,1fr) 36px;align-items:center;gap:8px;font-weight:700;font-size:12px}
-.hb i{display:block;height:10px;background:var(--gray);position:relative}
-.hb i::after{content:"";position:absolute;inset:0 auto 0 0;width:var(--w);background:var(--navy);transform:scaleX(0);transform-origin:left;transition:transform 1.1s var(--ease) .3s}
-.hb .is-ng i::after{background:var(--cta)}
-.hb b{font-family:var(--en);font-size:12.5px;text-align:right}
-.tr{display:block;width:100%;height:auto}
-.tr__bars rect{fill:var(--tint);transform:scaleY(0);transform-origin:center bottom;transform-box:fill-box;transition:transform .9s var(--ease)}
-.tr__bars rect:nth-child(2){transition-delay:.08s}.tr__bars rect:nth-child(3){transition-delay:.16s}.tr__bars rect:nth-child(4){transition-delay:.24s}.tr__bars rect:nth-child(5){transition-delay:.32s}.tr__bars rect:nth-child(6){transition-delay:.4s}
-.tr__line{fill:none;stroke:var(--cta);stroke-width:2.5;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1.4s var(--ease) .6s}
-.dsh.is-on .hb i::after,.dsh.is-on .tr__bars rect{transform:none}
-.dsh.is-on .tr__line{stroke-dashoffset:0}
-@media (max-width:760px){
-  .dsh__kpi{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .dsh__kpi > div:nth-child(3){border-left:0;border-top:1px solid var(--line)}
-  .dsh__kpi > div:nth-child(4){border-top:1px solid var(--line)}
-  .dsh__mid{grid-template-columns:minmax(0,1fr)}
-  .dsh__box + .dsh__box{border-left:0;border-top:1px solid var(--line)}
+.steps > li > .lk{grid-column:1 / -1}
+.lk i{font-style:normal}
+.lk{margin-top:8px;border:1px solid var(--line2);background:#fff;font-family:"Roboto","Noto Sans JP",sans-serif;font-size:13px;line-height:1.5;color:#202124}
+.lk__bar{display:flex;justify-content:space-between;align-items:center;padding:10px 18px;background:var(--navy);color:#fff}
+.lk__bar b{font-weight:700;font-size:13.5px;letter-spacing:.04em}
+.lk__bar span{font-size:11.5px;color:var(--on-navy2);letter-spacing:.06em}
+.lk__pg1,.lk__pg2{padding:clamp(18px,2.6vw,32px)}
+.lk__pg2{border-top:1px solid var(--line)}
+.lk__hd{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px}
+.lk__ttl{grid-column:2;font-weight:900;font-size:clamp(17px,1.7vw,21px)}
+.lk__date{justify-self:end;display:flex;align-items:center;gap:18px;padding:8px 14px;border:1px solid #DADCE0;box-shadow:0 1px 3px rgba(60,64,67,.25);font-size:12px;white-space:nowrap}
+.lk__date i,.lk__tb th i{font-style:normal;font-size:9px;color:#5F6368}
+.lk__kpi{margin-top:22px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px 20px}
+.lk__ch{border:2px solid #202124;padding:8px 6px;text-align:center;font-weight:700;font-size:14px}
+.lk__cb{margin-top:6px;border:1px solid #9AA0A6;padding:10px 12px 8px}
+.lk__v{display:flex;align-items:baseline;gap:8px;white-space:nowrap}
+.lk__v b{font-weight:400;font-size:clamp(20px,2vw,27px);line-height:1.1;font-variant-numeric:tabular-nums}
+.lk__v span{font-size:15px}
+.lk__v small{margin-left:auto;font-size:12px}
+.lk__r{margin-top:6px;display:flex;justify-content:space-between;align-items:flex-end;font-size:14.5px;font-variant-numeric:tabular-nums}
+.lk__mom{display:grid;justify-items:center;line-height:1.25}
+.lk__mom small{font-size:10.5px}
+.lk__h{margin-top:30px;font-weight:700;font-size:14.5px}
+.hz{margin-top:14px;margin-right:12px;display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:10px 12px}
+.hz__k{text-align:right;font-weight:700;font-size:12.5px;white-space:nowrap}
+.hz__t{height:30px;border-left:1px solid #9AA0A6;background:repeating-linear-gradient(90deg,transparent 0,transparent calc(100% / 12 - 1px),#E3E5E8 calc(100% / 12 - 1px),#E3E5E8 calc(100% / 12))}
+.hz__t i{display:flex;justify-content:flex-end;align-items:center;height:100%;width:var(--w);background:#1C64BE;transform:scaleX(0);transform-origin:left;transition:transform 1s var(--ease)}
+.hz__t b{padding-right:6px;color:#fff;font-weight:700;font-size:12px;white-space:nowrap;opacity:0;transition:opacity .4s .8s}
+.hz__ax{position:relative;height:16px;font-size:10.5px;color:#5F6368}
+.hz__ax span{position:absolute;top:0;left:var(--x);transform:translateX(-50%);white-space:nowrap}
+.lc{margin-top:12px}
+.lc__lg,.gb__lg{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:12px;color:#3C4043}
+.lc__lg span,.gb__lg span{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.lc__lg span::before{content:"";width:22px;height:2px;background:var(--c);box-shadow:0 0 0 0 var(--c)}
+.gb__lg span::before{content:"";width:18px;height:10px;background:var(--c)}
+.tk{position:absolute;left:0;right:0;bottom:var(--y);border-top:1px solid #E3E5E8;pointer-events:none}
+.tk:first-child{border-top-color:#9AA0A6}
+.tk em{position:absolute;right:100%;top:0;margin-right:8px;transform:translateY(-50%);font-style:normal;font-size:10.5px;color:#5F6368;white-space:nowrap}
+.lc__wrap,.gb__wrap{margin-top:12px;padding-left:44px}
+.lc__x b,.gb__g span b{font-weight:inherit}
+.lc__plot{position:relative;height:clamp(150px,18vw,210px)}
+.lc__plot svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;clip-path:inset(0 100% 0 0);transition:clip-path 1.4s var(--ease)}
+.lc__plot polyline{fill:none;stroke-width:2;vector-effect:non-scaling-stroke}
+.lc__plot i{position:absolute;left:var(--x);bottom:var(--y);width:8px;height:8px;margin:0 0 -4px -4px;border-radius:50%;background:var(--c);opacity:0;transition:opacity .3s}
+.lc__plot i:nth-of-type(2n){transition-delay:1.1s}
+.lc__x{position:relative;height:18px;margin:6px 0 0 44px;font-size:10.5px;color:#5F6368}
+.lc__x span{position:absolute;top:0;left:var(--x);transform:translateX(-50%);white-space:nowrap}
+.lc__x span:first-child{transform:none}
+.lc__x span:last-child{transform:translateX(-100%)}
+.lk__tw{margin-top:18px;overflow-x:auto}
+.lk__tb{width:100%;min-width:560px;border-collapse:collapse;border:1px solid #9AA0A6;font-size:12.5px;font-variant-numeric:tabular-nums}
+.lk__tb caption{caption-side:top;text-align:left;padding-bottom:10px;font-weight:700;font-size:14.5px;color:#202124}
+.lk__tb th{background:#E8F0FE;padding:8px 10px;font-weight:700;text-align:right;white-space:nowrap}
+.lk__tb td{padding:7px 10px;text-align:right;border-top:1px solid #DADCE0;white-space:nowrap}
+.lk__tb th:nth-child(-n+2),.lk__tb td:nth-child(-n+2){text-align:left}
+.lk__tb th:first-child,.lk__tb td:first-child{width:40px}
+.lk__tb tbody tr:nth-child(2n){background:#F8F9FA}
+.lk__pg{padding:6px 4px 0;text-align:right;font-size:11.5px;color:#5F6368}
+.gb{margin-top:12px;padding:16px;border:1px solid #9AA0A6}
+.gb__plot{position:relative;height:clamp(140px,16vw,190px);display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+.gb__plot > .tk{grid-area:auto}
+.gb__g{position:relative;display:flex;align-items:flex-end;justify-content:center;gap:0;padding:0 12%}
+.gb__g i{flex:1;height:var(--h);background:var(--c);transform:scaleY(0);transform-origin:bottom;transition:transform .9s var(--ease)}
+.gb__g span{position:absolute;left:0;right:0;top:100%;margin-top:6px;text-align:center;font-size:10.5px;color:#5F6368;white-space:nowrap}
+.gb__wrap{margin-bottom:22px}
+.lk__pg2 > .lk__h{margin-top:28px}
+.dsh.is-on .hz__t i,.dsh.is-on .gb__g i{transform:none}
+.dsh.is-on .hz__t b,.dsh.is-on .lc__plot i{opacity:1}
+.dsh.is-on .lc__plot svg{clip-path:inset(0 0 0 0)}
+.gb__g:nth-of-type(2) i{transition-delay:.1s}.gb__g:nth-of-type(3) i{transition-delay:.2s}.gb__g:nth-of-type(4) i{transition-delay:.3s}
+@media (max-width:900px){ .lk__kpi{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:600px){
+  .lk__hd{grid-template-columns:minmax(0,1fr);justify-items:start}
+  .lk__ttl{grid-column:1}
+  .lk__date{justify-self:start;padding:6px 10px;font-size:11px}
+  .lk__kpi{gap:10px}
+  .lk__ch{padding:6px 2px;font-size:12px;white-space:nowrap;letter-spacing:-.02em}
+  .lk__cb{padding:8px}
+  .lk__v{flex-wrap:wrap;gap:0 4px}
+  .lk__v b{font-size:17px}
+  .lk__v span,.lk__v small{font-size:10.5px}
+  .lk__v small{margin-left:0}
+  .lk__r{flex-wrap:wrap;gap:2px 6px;font-size:11.5px}
+  .lk__mom{display:flex;gap:4px;align-items:baseline}
+  .hz__ax span:not(:nth-child(4n+1)){visibility:hidden}
+  .lc__x b,.gb__g span b{display:none}
+  .lc__wrap,.gb__wrap{padding-left:34px}
+  .lc__x{margin-left:34px}
+  .hz__k{font-size:11px}
+  .gb{padding:12px 8px}
+  .gb__g{padding:0 6%}
 }
-@media (prefers-reduced-motion:reduce){ .hb i::after,.tr__bars rect{transform:none!important} .tr__line{stroke-dashoffset:0} }
+@media (prefers-reduced-motion:reduce){ .hz__t i,.gb__g i{transform:none!important} .hz__t b,.lc__plot i{opacity:1!important} .lc__plot svg{clip-path:none!important} }
 .pic{display:block;width:auto;flex:none}
 .num-row{display:flex;align-items:flex-end;justify-content:space-between;gap:16px}
 .num-row .pic{height:64px}
@@ -449,45 +491,45 @@ p,li{text-wrap:pretty}
           <p>マーケティングの数値をKPIツリーに沿って並べ、どこがボトルネックになっているかを確認できるようにします。施策ごとに分かれていたレポートがひとつにまとまるため、経営層・上長への報告にもそのまま使えます。</p>
           <p>LLMOにおいては狙うカテゴリ、ポジション、顧客の目的・課題ごとに、AI回答での見え方を確認します。引用率や言及率に加え、「狙った場面で紹介されているか」「意図した強みが伝わっているか」を捉え、<wbr><span class="nb">戦略と計測をつなぎます。</span></p>
           <div class="mtr mtr--one"><div><b>マーケティング数値</b><span>KPIツリーに沿った各施策の数値とボトルネック</span></div></div>
-          <figure class="dsh" data-dsh aria-label="ダッシュボードの画面イメージ：売上・商談数・商談化率・AI回答での言及率、KPIツリーで商談化率がボトルネック、質問の種類別のAI回答での言及率、月ごとの商談数と商談化率">
-            <div class="dsh__bar"><b>マーケティングダッシュボード</b><span>画面イメージ</span></div>
-            <div class="dsh__kpi">
-              <div><span>売上</span><b data-to="82">82</b><small>%</small><em>目標比</em></div>
-              <div><span>商談数</span><b data-to="74">74</b><small>%</small><em>目標比</em></div>
-              <div class="is-ng"><span>商談化率</span><b data-to="61">61</b><small>%</small><em>目標比</em></div>
-              <div><span>AI回答での言及率</span><b data-to="38">38</b><small>%</small></div>
-            </div>
-            <div class="dsh__mid">
-              <div class="dsh__box">
-                <p class="dsh__h">KPIツリー</p>
-                <div class="kt">
-                  <span class="kt__n kt__root">売上<b>82%</b></span>
-                  <span class="kt__l kt__l1" aria-hidden="true"></span>
-                  <span class="kt__n kt__a">商談数<b>74%</b></span>
-                  <span class="kt__n kt__b">受注率<b>98%</b></span>
-                  <span class="kt__l kt__l2" aria-hidden="true"></span>
-                  <span class="kt__l kt__l3" aria-hidden="true"></span>
-                  <span class="kt__n kt__c">リード数<b>104%</b></span>
-                  <span class="kt__n kt__d kt__ng">商談化率<b>61%</b><i>ボトルネック</i></span>
-                  <span class="kt__n kt__e">単価<b>96%</b></span>
-                  <span class="kt__n kt__f">案件数<b>100%</b></span>
-                </div>
-              </div>
-              <div class="dsh__box">
-                <p class="dsh__h">AI回答での言及率（質問の種類別）</p>
-                <ul class="hb">
-                  <li><span>カテゴリ</span><i style="--w:32%"></i><b>32%</b></li>
-                  <li><span>ポジション</span><i style="--w:71%"></i><b>71%</b></li>
-                  <li class="is-ng"><span>目的・課題</span><i style="--w:18%"></i><b>18%</b></li>
-                </ul>
-                <p class="dsh__h">商談数と商談化率（月別）</p>
-                <svg class="tr" viewBox="0 0 300 96" aria-hidden="true">
-                  <g class="tr__bars"><rect x="12" y="52" width="26" height="40"/><rect x="60" y="46" width="26" height="46"/><rect x="108" y="40" width="26" height="52"/><rect x="156" y="44" width="26" height="48"/><rect x="204" y="34" width="26" height="58"/><rect x="252" y="28" width="26" height="64"/></g>
-                  <polyline class="tr__line" points="25,30 73,34 121,40 169,46 217,42 265,22" pathLength="1"/>
-                </svg>
-              </div>
-            </div>
-          </figure></div></li>
+          </div><figure class="dsh lk" data-dsh aria-label="ダッシュボードの画面イメージ：フロー月次進捗（アクセス数・新規会員獲得数・注文数・売上の目標と到達率、項目ごとの目標到達率と月次推移）と、経路別流入 月次進捗（経路別流入数、過去4か月の推移、自然流入×ページ分類）">
+<div class="lk__bar"><b>マーケティング数値</b><span>画面イメージ</span></div>
+<div class="lk__pg1"><div class="lk__hd"><p class="lk__ttl">フロー 月次進捗</p><p class="lk__date">2026/09/01 - 2026/09/30<i>▾</i></p></div>
+<div class="lk__kpi">
+<div class="lk__card"><p class="lk__ch">アクセス数</p><div class="lk__cb"><p class="lk__v"><b data-to="10084">10,084</b><span>/</span><small>9,000</small></p><p class="lk__r"><span>112.36%</span><span class="lk__mom"><small>MoM</small>61.53%</span></p></div></div>
+<div class="lk__card"><p class="lk__ch">新規会員獲得数</p><div class="lk__cb"><p class="lk__v"><b data-to="70">70</b><span>/</span><small>70</small></p><p class="lk__r"><span>100.00%</span><span class="lk__mom"><small>MoM</small>12.90%</span></p></div></div>
+<div class="lk__card"><p class="lk__ch">注文数</p><div class="lk__cb"><p class="lk__v"><b data-to="24">24</b><span>/</span><small>50</small></p><p class="lk__r"><span>48.00%</span><span class="lk__mom"><small>MoM</small>-45.45%</span></p></div></div>
+<div class="lk__card"><p class="lk__ch">売上</p><div class="lk__cb"><p class="lk__v"><b data-to="2977700">2,977,700</b><span>/</span><small>2,960,100</small></p><p class="lk__r"><span>100.59%</span><span class="lk__mom"><small>MoM</small>-17.58%</span></p></div></div>
+</div>
+<p class="lk__h">項目ごとの目標到達率</p><div class="hz">
+<p class="hz__k">アクセス数</p><div class="hz__t"><i style="--w:93.63%"><b>112.36%</b></i></div>
+<p class="hz__k">新規会員獲得数</p><div class="hz__t"><i style="--w:83.33%"><b>100%</b></i></div>
+<p class="hz__k">注文数</p><div class="hz__t"><i style="--w:40.00%"><b>48%</b></i></div>
+<p class="hz__k">売上</p><div class="hz__t"><i style="--w:83.83%"><b>100.59%</b></i></div>
+<span></span><p class="hz__ax"><span style="--x:0.000%">0%</span><span style="--x:8.333%">10%</span><span style="--x:16.667%">20%</span><span style="--x:25.000%">30%</span><span style="--x:33.333%">40%</span><span style="--x:41.667%">50%</span><span style="--x:50.000%">60%</span><span style="--x:58.333%">70%</span><span style="--x:66.667%">80%</span><span style="--x:75.000%">90%</span><span style="--x:83.333%">100%</span><span style="--x:91.667%">110%</span><span style="--x:100.000%">120%</span></p></div>
+<p class="lk__h">項目ごとの目標到達率月次推移</p><div class="lc"><p class="lc__lg"><span style="--c:#B5C46E">アクセス数</span><span style="--c:#E57DB5">新規会員獲得数</span><span style="--c:#3BB8C9">注文数</span><span style="--c:#6A63B8">売上</span></p>
+<div class="lc__wrap"><div class="lc__plot"><span class="tk" style="--y:0.000%"><em>0%</em></span><span class="tk" style="--y:16.667%"></span><span class="tk" style="--y:33.333%"><em>50%</em></span><span class="tk" style="--y:50.000%"></span><span class="tk" style="--y:66.667%"><em>100%</em></span><span class="tk" style="--y:83.333%"></span><span class="tk" style="--y:100.000%"><em>150%</em></span>
+<svg viewBox="0 0 300 150" preserveAspectRatio="none" aria-hidden="true">
+<polyline points="0,76.00 100,37.64" stroke="#B5C46E"/>
+<polyline points="0,46.50 100,50.00" stroke="#E57DB5"/>
+<polyline points="0,62.00 100,102.00" stroke="#3BB8C9"/>
+<polyline points="0,46.50 100,49.41" stroke="#6A63B8"/>
+</svg>
+<i style="--c:#B5C46E;--x:0%;--y:49.33%"></i><i style="--c:#B5C46E;--x:33.333%;--y:74.91%"></i>
+<i style="--c:#E57DB5;--x:0%;--y:69.00%"></i><i style="--c:#E57DB5;--x:33.333%;--y:66.67%"></i>
+<i style="--c:#3BB8C9;--x:0%;--y:58.67%"></i><i style="--c:#3BB8C9;--x:33.333%;--y:32.00%"></i>
+<i style="--c:#6A63B8;--x:0%;--y:69.00%"></i><i style="--c:#6A63B8;--x:33.333%;--y:67.06%"></i>
+</div></div><p class="lc__x"><span style="--x:0.000%"><b>2026年</b>8月</span><span style="--x:33.333%"><b>2026年</b>9月</span><span style="--x:66.667%"><b>2026年</b>10月</span><span style="--x:100.000%"><b>2026年</b>11月</span></p></div></div>
+<div class="lk__pg2"><div class="lk__hd"><p class="lk__ttl">経路別流入 月次進捗</p><p class="lk__date">2026/10/04 - 2026/10/31<i>▾</i></p></div>
+<div class="lk__tw"><table class="lk__tb"><caption>経路別流入数</caption><thead><tr><th></th><th>セッションのメディア</th><th>セッション<i>▾</i></th><th>購入数</th><th>購入率</th><th>購入額</th></tr></thead><tbody><tr><td>1.</td><td>(none)</td><td>16,553</td><td>19</td><td>0.11%</td><td>¥612,000</td></tr><tr><td>2.</td><td>organic</td><td>3,021</td><td>15</td><td>0.5%</td><td>¥333,400</td></tr><tr><td>3.</td><td>cpc</td><td>1,809</td><td>5</td><td>0.28%</td><td>¥194,500</td></tr><tr><td>4.</td><td>email</td><td>634</td><td>0</td><td>0%</td><td>¥0</td></tr><tr><td>5.</td><td>referral</td><td>165</td><td>2</td><td>1.21%</td><td>¥161,500</td></tr><tr><td>6.</td><td>ai-assistant</td><td>53</td><td>0</td><td>0%</td><td>¥0</td></tr><tr><td>7.</td><td>(not set)</td><td>37</td><td>0</td><td>0%</td><td>¥0</td></tr><tr><td>8.</td><td>(data not available)</td><td>16</td><td>0</td><td>0%</td><td>¥0</td></tr></tbody></table><p class="lk__pg">1 - 8 / 8</p></div>
+<p class="lk__h">経路別流入数（過去4か月推移）</p><div class="gb"><p class="gb__lg"><span style="--c:#FF8F2D">organic</span><span style="--c:#AC86E2">cpc</span><span style="--c:#1C64BE">(none)</span><span style="--c:#B5C46E">email</span><span style="--c:#3BB8C9">referral</span><span style="--c:#E57DB5">(not set)</span><span style="--c:#EBC654">ai-assistant</span><span style="--c:#6A63B8">(data not available)</span><span style="--c:#E2BC8C">influencer</span></p>
+<div class="gb__wrap"><div class="gb__plot"><span class="tk" style="--y:0.000%"><em>0</em></span><span class="tk" style="--y:12.500%"></span><span class="tk" style="--y:25.000%"><em>1,000</em></span><span class="tk" style="--y:37.500%"></span><span class="tk" style="--y:50.000%"><em>2,000</em></span><span class="tk" style="--y:62.500%"></span><span class="tk" style="--y:75.000%"><em>3,000</em></span><span class="tk" style="--y:87.500%"></span><span class="tk" style="--y:100.000%"><em>4,000</em></span>
+<div class="gb__g"><i style="--c:#FF8F2D;--h:46.25%"></i><i style="--c:#AC86E2;--h:23.25%"></i><i style="--c:#1C64BE;--h:26.00%"></i><i style="--c:#B5C46E;--h:2.25%"></i><i style="--c:#3BB8C9;--h:6.25%"></i><i style="--c:#E57DB5;--h:0.50%"></i><i style="--c:#EBC654;--h:0.15%"></i><i style="--c:#6A63B8;--h:0.35%"></i><i style="--c:#E2BC8C;--h:0.10%"></i><span><b>2026年</b>5月</span></div>
+<div class="gb__g"><i style="--c:#FF8F2D;--h:58.50%"></i><i style="--c:#AC86E2;--h:36.25%"></i><i style="--c:#1C64BE;--h:25.25%"></i><i style="--c:#B5C46E;--h:5.25%"></i><i style="--c:#3BB8C9;--h:4.25%"></i><i style="--c:#E57DB5;--h:0.50%"></i><i style="--c:#EBC654;--h:0.50%"></i><i style="--c:#6A63B8;--h:0.35%"></i><i style="--c:#E2BC8C;--h:0.10%"></i><span><b>2026年</b>6月</span></div>
+<div class="gb__g"><i style="--c:#FF8F2D;--h:75.75%"></i><i style="--c:#AC86E2;--h:39.00%"></i><i style="--c:#1C64BE;--h:35.75%"></i><i style="--c:#B5C46E;--h:7.75%"></i><i style="--c:#3BB8C9;--h:4.25%"></i><i style="--c:#E57DB5;--h:0.50%"></i><i style="--c:#EBC654;--h:0.50%"></i><i style="--c:#6A63B8;--h:0.50%"></i><i style="--c:#E2BC8C;--h:0.10%"></i><span><b>2026年</b>7月</span></div>
+<div class="gb__g"><i style="--c:#FF8F2D;--h:73.00%"></i><i style="--c:#AC86E2;--h:37.25%"></i><i style="--c:#1C64BE;--h:39.00%"></i><i style="--c:#B5C46E;--h:4.25%"></i><i style="--c:#3BB8C9;--h:4.00%"></i><i style="--c:#E57DB5;--h:0.50%"></i><i style="--c:#EBC654;--h:0.50%"></i><i style="--c:#6A63B8;--h:0.62%"></i><i style="--c:#E2BC8C;--h:0.10%"></i><span><b>2026年</b>8月</span></div>
+</div></div></div>
+<div class="lk__tw"><table class="lk__tb"><caption>自然流入×ページ分類</caption><thead><tr><th></th><th>ページ分類</th><th>セッション<i>▾</i></th><th>購入数</th><th>購入率</th><th>購入額</th></tr></thead><tbody><tr><td>1.</td><td>型式</td><td>2,049</td><td>4</td><td>0.2%</td><td>¥93,500</td></tr><tr><td>2.</td><td>その他</td><td>384</td><td>6</td><td>1.56%</td><td>¥193,400</td></tr><tr><td>3.</td><td>トップ</td><td>283</td><td>5</td><td>1.77%</td><td>¥46,500</td></tr><tr><td>4.</td><td>カテゴリ</td><td>172</td><td>0</td><td>0%</td><td>¥0</td></tr><tr><td>5.</td><td>メーカー</td><td>90</td><td>0</td><td>0%</td><td>¥0</td></tr></tbody></table><p class="lk__pg">1 - 5 / 5</p></div>
+</div></figure></li>
       </ol>
       <span class="loop" aria-hidden="true"></span>
     </div>
@@ -639,14 +681,14 @@ p,li{text-wrap:pretty}
   var dsh = document.querySelector("[data-dsh]");
   if (dsh) {
     var nums = [].slice.call(dsh.querySelectorAll("[data-to]"));
-    if (!reduce && "IntersectionObserver" in window) nums.forEach(function(n){ n.textContent = "0"; });
+    var fmt = function(x){ return Math.round(x).toLocaleString("en-US"); };
     var run = function(){ dsh.classList.add("is-on");
       nums.forEach(function(n){ var to = +n.getAttribute("data-to"), t0 = null;
-        if (reduce){ n.textContent = to; return; }
-        var step = function(ts){ if (t0 === null) t0 = ts; var k = Math.min(1, (ts - t0) / 1200); n.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(step); };
+        if (reduce){ n.textContent = fmt(to); return; }
+        var step = function(ts){ if (t0 === null) t0 = ts; var k = Math.min(1, (ts - t0) / 1200); n.textContent = fmt(to * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(step); };
         requestAnimationFrame(step); }); };
     if (reduce || !("IntersectionObserver" in window)) run();
-    else new IntersectionObserver(function(es, o){ if (es[0].isIntersecting){ o.disconnect(); run(); } }, {threshold:.3}).observe(dsh);
+    else new IntersectionObserver(function(es, o){ if (es[0].isIntersecting){ o.disconnect(); run(); } }, {threshold:.15}).observe(dsh);
   }
   var f = document.getElementById("dlForm");
   if (f) f.addEventListener("submit", function(e){ e.preventDefault(); });
