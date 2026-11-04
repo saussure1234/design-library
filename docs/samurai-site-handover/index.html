@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Samurai Style Site Update</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<style>
+
+:root{
+  --bg:#ffffff; --panel:#f5f6f8; --line:#dfe2e7; --ink:#16181c; --ink2:#4a505b; --ink3:#7a808b;
+  --accent:#1c5fbe; --accent-soft:#e8f0fc; --del:#b4321f; --del-soft:#fcebe7; --add:#1f7a4d; --add-soft:#e5f4ec;
+  --code:#f1f3f6;
+  --sans:"IBM Plex Sans","Noto Sans JP","Hiragino Sans",system-ui,sans-serif;
+  --jp:"Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121417; --panel:#1b1e23; --line:#2d3239; --ink:#eceef1; --ink2:#b5bbc5; --ink3:#8a909b;
+  --accent:#7aa8f0; --accent-soft:#1d2a3f; --del:#f08a76; --del-soft:#3a1f1a; --add:#6fcf9f; --add-soft:#16301f; --code:#1d2127; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121417; --panel:#1b1e23; --line:#2d3239; --ink:#eceef1; --ink2:#b5bbc5; --ink3:#8a909b;
+  --accent:#7aa8f0; --accent-soft:#1d2a3f; --del:#f08a76; --del-soft:#3a1f1a; --add:#6fcf9f; --add-soft:#16301f; --code:#1d2127; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15.5px;line-height:1.65;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1040px;margin:0 auto;padding-block:40px 80px;display:grid;gap:56px}
+h1,h2,h3{text-wrap:balance;line-height:1.3;margin:0}
+h1{font-size:30px;font-weight:700;letter-spacing:-.01em}
+h2{font-size:22px;font-weight:700}
+h3{font-size:16px;font-weight:600}
+p{margin:0}
+a{color:var(--accent)}
+.lede{display:grid;gap:14px;max-width:70ch;color:var(--ink2)}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
+.toc{display:flex;flex-wrap:wrap;gap:10px}
+.toc a{display:inline-flex;gap:8px;align-items:center;padding:8px 14px;border:1px solid var(--line);border-radius:8px;text-decoration:none;color:var(--ink);font-weight:500}
+.toc code{font-family:var(--mono);font-size:13px;color:var(--ink3)}
+.rules{display:grid;gap:8px;padding:18px 20px;background:var(--panel);border-radius:10px;max-width:78ch}
+.rules li{color:var(--ink2)}
+.rules ul{margin:0;padding-left:20px;display:grid;gap:6px}
+section.page{display:grid;gap:26px}
+.page-hd{display:grid;gap:8px;padding-top:28px;border-top:2px solid var(--ink)}
+.url{font-family:var(--mono);font-size:14px;color:var(--ink2);overflow-wrap:anywhere}
+
+.viewer{display:grid;gap:12px}
+.vtabs{display:flex;gap:6px}
+.vtabs button{font:inherit;font-size:14px;padding:6px 14px;border:1px solid var(--line);background:var(--bg);color:var(--ink2);border-radius:999px;cursor:pointer}
+.vtabs button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.vtabs button:focus-visible,.copy:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.shot{display:grid;gap:8px;min-width:0}
+.shot b{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.shot.bf b{color:var(--ink3)} .shot.af b{color:var(--add)}
+.frame{border:1px solid var(--line);border-radius:8px;max-height:620px;overflow:auto;background:#fff}
+.frame img{display:block;width:100%;height:auto}
+.pair.sp .frame{max-width:375px}
+
+ol.changes{list-style:none;margin:0;padding:0;display:grid;gap:18px;counter-reset:c}
+ol.changes > li{counter-increment:c;display:grid;grid-template-columns:34px minmax(0,1fr);gap:14px;padding:18px 18px 18px 14px;border:1px solid var(--line);border-radius:10px}
+ol.changes > li::before{content:counter(c);font-family:var(--mono);font-weight:500;font-size:14px;width:28px;height:28px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center}
+.body{display:grid;gap:12px;min-width:0}
+.tag{display:inline-block;font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:4px;margin-right:8px;vertical-align:2px}
+.tag.rep{background:var(--accent-soft);color:var(--accent)} .tag.rm{background:var(--del-soft);color:var(--del)} .tag.keep{background:var(--panel);color:var(--ink3)} .tag.style{background:var(--add-soft);color:var(--add)}
+.field{display:grid;grid-template-columns:110px minmax(0,1fr);gap:4px 14px;align-items:start}
+.field > span{font-size:13px;color:var(--ink3);padding-top:9px}
+.cp{display:flex;gap:8px;align-items:flex-start;min-width:0}
+.cp output, .cp .txt{flex:1;min-width:0;font-family:var(--jp);font-size:15px;line-height:1.7;background:var(--code);padding:8px 12px;border-radius:6px;overflow-wrap:anywhere;user-select:all}
+.cp .txt.mono{font-family:var(--mono);font-size:13.5px}
+.cp .txt.old{text-decoration:line-through;text-decoration-color:var(--del);color:var(--ink2)}
+.copy{font:inherit;font-size:12.5px;font-weight:500;padding:7px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);cursor:pointer;white-space:nowrap;flex:none}
+.copy.ok{color:var(--add);border-color:var(--add)}
+.note{font-size:14px;color:var(--ink2)}
+.cardimg{display:grid;gap:8px;max-width:420px}
+.cardimg img{border:1px solid var(--line);border-radius:6px}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;min-width:620px;font-size:14px}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);font-weight:500;background:var(--panel)}
+tr:last-child td{border-bottom:0}
+td code{font-family:var(--mono);font-size:13px;background:var(--code);padding:1px 6px;border-radius:4px;white-space:nowrap}
+.out{display:grid;gap:8px;padding:18px 20px;border:1px dashed var(--line);border-radius:10px}
+.out ul{margin:0;padding-left:20px;display:grid;gap:6px;color:var(--ink2)}
+@media (max-width:720px){
+  .pair{grid-template-columns:minmax(0,1fr)}
+  .field{grid-template-columns:minmax(0,1fr)} .field > span{padding-top:0}
+  ol.changes > li{grid-template-columns:minmax(0,1fr)}
+  h1{font-size:25px}
+}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+
+<header class="lede">
+  <p class="eyebrow">Handover · samurai-style.tokyo · Japanese site</p>
+  <h1>Samurai Style site update: service list and video production page</h1>
+  <p>Two pages change. The service list goes down to four services. The video production page is rebuilt as a service page for clients in Japan (planning, shooting and editing), with the same structure as our other service pages, and restyled from a dark theme to the light look of the other pages.</p>
+  <p>Each page below has a before / after screenshot and a numbered list of changes. Japanese text that appears on the site is shown in grey boxes. Please copy it with the <b>Copy</b> button instead of retyping it, so no character changes.</p>
+  <nav class="toc" aria-label="Pages in this handover">
+    <a href="#service">1. Service list <code>/service</code></a>
+    <a href="#video">2. Video production <code>/tiktok-production</code></a>
+  </nav>
+  <div class="rules">
+    <h3>Ground rules</h3>
+    <ul>
+      <li>Keep the existing components, fonts and spacing. Only the items in the change lists change.</li>
+      <li>The Japanese language version (JA) only. Leave ID and EN as they are.</li>
+      <li>Class names below are the Tailwind classes in the current build.</li>
+    </ul>
+  </div>
+</header>
+
+<section class="page" id="service">
+  <div class="page-hd">
+    <p class="eyebrow">Page 1</p>
+    <h2>Service list</h2>
+    <p class="url">https://samurai-style.tokyo/service</p>
+  </div>
+
+  <div class="viewer" data-viewer="service">
+    <div class="vtabs" role="group" aria-label="Screen size">
+      <button type="button" id="svc-pc" data-w="pc" aria-pressed="true">Desktop 1440px</button>
+      <button type="button" id="svc-sp" data-w="sp" aria-pressed="false">Mobile 375px</button>
+    </div>
+    <div class="pair">
+      <div class="shot bf"><b>Before</b><div class="frame"><img data-src="img/service_before_{w}.webp" src="img/service_before_pc.webp" alt="Service list now: six cards" loading="lazy"></div></div>
+      <div class="shot af"><b>After</b><div class="frame"><img data-src="img/service_after_{w}.webp" src="img/service_after_pc.webp" alt="Service list after: four cards" loading="lazy"></div></div>
+    </div>
+  </div>
+
+  <h3>Changes</h3>
+  <ol class="changes">
+    <li><div class="body">
+      <p><span class="tag rep">Replace</span>Card 1: 「マーケティング支援」 becomes 「Strategy2Action」</p>
+      <div class="field"><span>Title</span><div class="cp"><div class="txt">Strategy2Action</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>Description</span><div class="cp"><div class="txt">事業理解に基づいて戦略を考え、実行まで伴走し、ダッシュボード作成による経営層・上長への可視化まで対応。</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>Link</span><div class="cp"><div class="txt mono">https://saussure1234.github.io/design-library/samurai-marke7/</div><button class="copy" type="button">Copy</button></div></div>
+      <p class="note">The link goes to another site, so open it in a new tab (<code>target="_blank" rel="noopener"</code>). Keep the card image of the current マーケティング支援 card.</p>
+    </div></li>
+
+    <li><div class="body">
+      <p><span class="tag keep">No change</span>Card 2: 「HookHack」 stays as it is.</p>
+    </div></li>
+
+    <li><div class="body">
+      <p><span class="tag rep">Replace</span>Card 3: 「オフショア開発」 becomes 「HookHacker」 (LP and website production)</p>
+      <div class="field"><span>Title</span><div class="cp"><div class="txt">HookHacker</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>Description</span><div class="cp"><div class="txt">自社開発AIツール「HookHack」×インドネシアオフショアチーム×日本人ディレクターでLP・サイト制作を代行。</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>Link</span><div class="cp"><div class="txt mono">https://www.hook-hack.com/hookhacker</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>Image</span><div class="cardimg">
+        <img src="img/hookhacker-card.webp" alt="HookHacker logo centred on a white 16:9 image" width="640" height="360">
+        <p class="note">New image, 1280 × 720 px, white background, HookHacker logo 700 px wide in the centre. Logo file:</p>
+        <div class="cp"><div class="txt mono">https://www.hook-hack.com/hookhacker-logo.png</div><button class="copy" type="button">Copy</button></div>
+      </div></div>
+      <p class="note">Open in a new tab, same as card 1.</p>
+    </div></li>
+
+    <li><div class="body">
+      <p><span class="tag keep">No change</span>Card 4: 「動画制作」 keeps its text and link. It moves to the 4th position.</p>
+    </div></li>
+
+    <li><div class="body">
+      <p><span class="tag rm">Remove</span>Remove two cards from the list: 「新規事業開発PMO」 and 「海外進出支援PMO」.</p>
+      <p class="note">Final order: Strategy2Action, HookHack, HookHacker, 動画制作 (2 × 2 on desktop, 1 column on mobile).</p>
+    </div></li>
+  </ol>
+
+  <div class="out">
+    <h3>Not part of this change</h3>
+    <ul>
+      <li>Do not delete the old pages (/marketing-support, /indonesia-offshore, /newbusiness-pmo). Only their cards leave this list.</li>
+      <li>The service cards on the TOP page and the service options in the contact form stay as they are for now.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="page" id="video">
+  <div class="page-hd">
+    <p class="eyebrow">Page 2</p>
+    <h2>Video production</h2>
+    <p class="url">https://samurai-style.tokyo/tiktok-production</p>
+  </div>
+
+  <div class="viewer" data-viewer="video">
+    <div class="vtabs" role="group" aria-label="Screen size">
+      <button type="button" id="vid-pc" data-w="pc" aria-pressed="true">Desktop 1440px</button>
+      <button type="button" id="vid-sp" data-w="sp" aria-pressed="false">Mobile 375px</button>
+    </div>
+    <div class="pair">
+      <div class="shot bf"><b>Before</b><div class="frame"><img data-src="img/video_before_{w}.webp" src="img/video_before_pc.webp" alt="Video production page now, dark theme" loading="lazy"></div></div>
+      <div class="shot af"><b>After</b><div class="frame"><img data-src="img/video_after_{w}.webp" src="img/video_after_pc.webp" alt="Video production page after, light theme" loading="lazy"></div></div>
+    </div>
+  </div>
+
+  <h3>Content changes</h3>
+  <p class="note">Final order of the page: Hero, Problem (new), About, Strength, Work Flow, Price (new), Member, Contact.</p>
+  <ol class="changes">
+    <li><div class="body">
+      <p><span class="tag rep">Replace</span>Hero: the sub copy under the headline. The headline and the background video stay.</p>
+      <div class="field"><span>Now</span><div class="cp"><div class="txt old">視聴者の心を動かすオリジナルコンテンツを制作</div></div></div>
+      <div class="field"><span>New</span><div class="cp"><div class="txt">貴社の顧客理解に基づき、動画を企画・撮影・編集までワンストップで制作します。</div><button class="copy" type="button">Copy</button></div></div>
+    </div></li>
+
+    <li><div class="body">
+      <p><span class="tag rep">Add</span>Hero: add the 「お問い合わせ」 button under the sub copy. Use the same button component and link as the one in Work Flow, and keep it white here because it sits on the video.</p>
+      
+    </div></li>
+
+    <li><div class="body">
+      <p><span class="tag style">New section</span>Problem: add a new section between the hero and About. Build it with the About section component (small label, heading, white chips without icons).</p>
+      <div class="field"><span>Label</span><div class="cp"><div class="txt">Problem</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>Heading</span><div class="cp"><div class="txt">こんなお悩みはありませんか</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>Chip 1</span><div class="cp"><div class="txt">企画から撮影・編集まで、まとめて任せられる制作先がない</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>Chip 2</span><div class="cp"><div class="txt">撮影はできても、ブランドの世界観や顧客に合った企画にならない</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>Chip 3</span><div class="cp"><div class="txt">作った動画の成果を検証できず、次に活かせていない</div><button class="copy" type="button">Copy</button></div></div>
+    </div></li>
+
+    <li><div class="body">
+      <p><span class="tag rm">Delete text</span>About: delete this sentence from the paragraph that starts with 「私たちは、マーケティングリサーチ…」</p>
+      <div class="cp"><div class="txt old">さらに、マイクロインフルエンサーのネットワークを活用し、リーチ拡大とエンゲージメント向上を両立。</div><button class="copy" type="button">Copy</button></div>
+    </div></li>
+
+    <li><div class="body">
+      <p><span class="tag rm">Remove</span>About: remove the white chip 「マイクロインフルエンサー」. Two chips remain: 「クリエイティブスタジオ」 and 「専門的な市場調査」.</p>
+      
+    </div></li>
+
+    <li><div class="body">
+      <p><span class="tag rep">Replace</span>Strength: section heading</p>
+      <div class="field"><span>Now</span><div class="cp"><div class="txt old">TikTokマーケティングを成功に導く3つの強み</div></div></div>
+      <div class="field"><span>New</span><div class="cp"><div class="txt">動画制作を成功に導く3つの強み</div><button class="copy" type="button">Copy</button></div></div>
+    </div></li>
+
+    <li><div class="body">
+      <p><span class="tag rm">Remove</span>Strength: remove the whole block 「低投資で高品質なインプレッションを獲得」 (heading, text and the Indonesian-language research screenshot under it).</p>
+      
+    </div></li>
+
+    <li><div class="body">
+      <p><span class="tag rm">Remove</span>Strength: remove the image under 「効果的なマーケティングの本質」 (the micro-influencer database screenshot).</p>
+      <p class="note"><b>Keep the two product photos</b> under 「強力なブランドイメージの構築」. Do not remove or replace them.</p>
+    </div></li>
+
+    <li><div class="body">
+      <p><span class="tag rep">Add</span>Strength: add a 3rd block after 「効果的なマーケティングの本質」. Same component and spacing as the other blocks, the camera icon of block 1, no image.</p>
+      <div class="field"><span>Heading</span><div class="cp"><div class="txt">国内への出張撮影に対応</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>Text</span><div class="cp"><div class="txt">撮影は、ご指定の場所に出張して行います。最短翌日から対応します（交通費・宿泊費は実費）。</div><button class="copy" type="button">Copy</button></div></div>
+    </div></li>
+
+    <li><div class="body">
+      <p><span class="tag rep">Replace</span>Work Flow: heading and paragraph (the free trial is no longer offered)</p>
+      <div class="field"><span>Heading now</span><div class="cp"><div class="txt old">無料トライアルで、ブランド成長を体験</div></div></div>
+      <div class="field"><span>Heading new</span><div class="cp"><div class="txt">企画から撮影・編集まで、一貫して制作</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>Text now</span><div class="cp"><div class="txt old">私たちは「クライアントと共に成長する」ことを大切にするスタートアップです。ショート動画でのブランディングに課題を感じている方は、ぜひ無料トライアルをご活用ください。調査から戦略立案、コンテンツ制作、インフルエンサー連携まで、一連のプロセスを体験いただけます。実際の成果を見ながら、ブランドの価値を高めていきましょう。</div></div></div>
+      <div class="field"><span>Text new</span><div class="cp"><div class="txt">市場調査と企画から、撮影・編集、公開後の分析まで、社内チームが一貫して対応します。</div><button class="copy" type="button">Copy</button></div></div>
+    </div></li>
+
+    <li><div class="body">
+      <p><span class="tag rep">Replace</span>Work Flow: the steps become 1 市場調査・企画, 2 撮影, 3 編集, 4 分析. Remove the step 「マイクロインフルエンサー」.</p>
+      <div class="field"><span>Step 1 title</span><div class="cp"><div class="txt">市場調査・企画</div><button class="copy" type="button">Copy</button></div></div>
+      <p class="note">Step 1 text stays: 仮説を立て、調査を通じてデータを収集。明確で説得力のある戦略を策定します。</p>
+      <div class="field"><span>Step 2 title</span><div class="cp"><div class="txt">撮影</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>Step 2 text</span><div class="cp"><div class="txt">ご指定の場所に出張して撮影します。最短翌日から対応します。</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>Step 3 title</span><div class="cp"><div class="txt">編集</div><button class="copy" type="button">Copy</button></div></div>
+      <p class="note">Step 3 text: use the current text of 「コンテンツ制作」 unchanged: ブランドに合った雰囲気を表現するコンテンツを、社内チームが制作。</p>
+      <p class="note">Step 4 「分析」 keeps its number and text.</p>
+    </div></li>
+
+    <li><div class="body">
+      <p><span class="tag style">New section</span>Price: add a new section between Work Flow and Member. Build it with the Work Flow section component without the steps (label, heading, paragraph, 「お問い合わせ」 button).</p>
+      <div class="field"><span>Label</span><div class="cp"><div class="txt">Price</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>Heading</span><div class="cp"><div class="txt">費用・納期</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>Text</span><div class="cp"><div class="txt">動画の内容や本数、撮影の有無をお伺いしたうえで、ご相談によりお見積りします。撮影の出張にかかる交通費・宿泊費は実費です。</div><button class="copy" type="button">Copy</button></div></div>
+    </div></li>
+
+    <li><div class="body">
+      <p><span class="tag keep">No change</span>Member (three members) stays as it is.</p>
+      
+    </div></li>
+  </ol>
+
+  <h3>Style changes: dark theme to light theme</h3>
+  <p class="note">Apply to every section under the hero, including the two new ones. The hero keeps white text on the video. The new values are already used on the other pages (for example /marketing-support).</p>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Where</th><th>Now</th><th>New</th></tr></thead>
+      <tbody>
+        <tr><td>Section background</td><td><code>bg-coal-dark</code></td><td><code>bg-white</code></td></tr>
+        <tr><td>Headings, body text and icons that are white</td><td><code>text-white</code></td><td><code>text-[#222222]</code></td></tr>
+        <tr><td>Small labels 「Problem」「About」「Strength」「Work Flow」「Price」「Member」</td><td><code>text-[#c9d9f9]</code></td><td><code>text-[#aaaaaa]</code></td></tr>
+        <tr><td>Step descriptions in Work Flow</td><td><code>text-[#c8c8c8]</code></td><td><code>text-[#333]</code></td></tr>
+        <tr><td>Problem and About: the white chips</td><td><code>rounded-[12px] bg-white</code></td><td>add <code>border border-[#dddddd]</code></td></tr>
+        <tr><td>Work Flow: number circles</td><td><code>bg-white</code>, number in dark text</td><td><code>bg-[#222222]</code>, number <code>text-white</code></td></tr>
+        <tr><td>「お問い合わせ」 buttons in Work Flow and Price</td><td><code>bg-white</code>, text and arrow <code>#333</code></td><td><code>bg-black</code>, text and arrow <code>text-white</code> (same as the black buttons on /service). The button in the hero stays white.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+</div>
+
+<script>
+(function(){
+  document.querySelectorAll("[data-viewer]").forEach(function(v){
+    var btns = v.querySelectorAll(".vtabs button"), imgs = v.querySelectorAll("img[data-src]"), pair = v.querySelector(".pair");
+    btns.forEach(function(b){ b.addEventListener("click", function(){
+      var w = b.getAttribute("data-w");
+      btns.forEach(function(x){ x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+      imgs.forEach(function(i){ i.src = i.getAttribute("data-src").replace("{w}", w); });
+      pair.classList.toggle("sp", w === "sp");
+    }); });
+  });
+  document.querySelectorAll(".copy").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var t = btn.parentNode.querySelector(".txt"), s = t.textContent;
+      var done = function(){ btn.textContent = "Copied"; btn.classList.add("ok"); setTimeout(function(){ btn.textContent = "Copy"; btn.classList.remove("ok"); }, 1600); };
+      var pick = function(){ var r = document.createRange(); r.selectNodeContents(t); var sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); btn.textContent = "Selected: press Ctrl+C"; };
+      try { navigator.clipboard.writeText(s).then(done, pick); } catch(e){ pick(); }
+    });
+  });
+})();
+</script>
+
+</html>
