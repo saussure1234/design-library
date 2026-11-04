@@ -203,6 +203,9 @@ p,li{text-wrap:pretty}
 .vs li::before{content:"";width:18px;height:18px;margin-top:4px}
 .vs__l li::before{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M4 4l10 10M14 4L4 14' stroke='%235E6878' stroke-width='1.6'/%3E%3C/svg%3E") center/16px no-repeat}
 .vs__r li::before{background:var(--cta) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 18'%3E%3Cpath d='M4.5 9.5l3 3 6-7' fill='none' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E") center/16px no-repeat}
+.vs > div{display:flex;flex-direction:column}
+.vs__r ul{flex:1;display:grid;grid-template-rows:1fr 1fr}
+.vs__r li{align-content:center}
 .ex{margin-top:40px}
 .ex__hd{font-weight:900;font-size:17px}
 .ex ul{margin-top:14px;display:grid;gap:10px}
@@ -252,6 +255,8 @@ p,li{text-wrap:pretty}
 .ft nav a:hover{color:#fff;text-decoration:underline}
 .ft__copy{margin-top:22px;font-family:var(--en);font-size:11.5px;letter-spacing:.06em}
 @media (max-width:600px){ .closing .btn{min-width:0;width:100%} }
+.lk__vid{display:block;width:100%;height:auto;aspect-ratio:16 / 10;background:#fff}
+@media (max-width:600px){ .lk__vid{aspect-ratio:4 / 5} }
 .steps > li > .lk{grid-column:1 / -1}
 .lk i{font-style:normal}
 .lk{margin-top:8px;border:1px solid var(--line2);background:#fff;font-family:"Roboto","Noto Sans JP",sans-serif;font-size:13px;line-height:1.5;color:#202124}
@@ -430,7 +435,7 @@ p,li{text-wrap:pretty}
     </div>
     <div class="hero__vis fx" style="--d:.18s">
       <img class="hero__hm" src="img/hm/fv1.webp" alt="" aria-hidden="true">
-      <div class="frame"><video data-pc="media/fv6.mp4" poster="media/fv6.webp" data-sp="media/fv6-sp.mp4" data-sp-poster="media/fv6-sp.webp" width="1280" height="720" muted loop playsinline autoplay preload="auto" aria-label="動画：KPIツリーでボトルネックを見つけ、タスクの優先順位を整理し、タスクごとに弊社と貴社で役割を分担し、ダッシュボードで可視化して経営層・上長へのレポートにする"></video><script>(function(v){var sp=matchMedia("(max-width:600px)").matches;if(sp)v.poster=v.getAttribute("data-sp-poster");v.muted=true;v.src=v.getAttribute(sp?"data-sp":"data-pc");})(document.currentScript.previousElementSibling);</script><div class="vbar" aria-hidden="true"><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i></div></div>
+      <div class="frame"><video data-pc="media/fv6.mp4" poster="media/fv6.webp" data-sp="media/fv6-sp.mp4" data-sp-poster="media/fv6-sp.webp" width="1280" height="720" muted loop playsinline autoplay preload="auto" aria-label="動画：3C分析と施策の現状からボトルネックと改善方針をすり合わせ、タスクの優先順位を整理し、タスクごとに弊社と貴社で役割を分担し、ダッシュボードで可視化して経営層・上長へのレポートにする"></video><script>(function(v){var sp=matchMedia("(max-width:600px)").matches;if(sp)v.poster=v.getAttribute("data-sp-poster");v.muted=true;v.src=v.getAttribute(sp?"data-sp":"data-pc");})(document.currentScript.previousElementSibling);</script><div class="vbar" aria-hidden="true"><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i></div></div>
     </div>
     <div class="hero__cta fx" style="--d:.24s">
       <a class="btn btn--main" href="#dl">資料をダウンロード</a>
@@ -491,45 +496,10 @@ p,li{text-wrap:pretty}
           <p>マーケティングの数値をKPIツリーに沿って並べ、どこがボトルネックになっているかを確認できるようにします。施策ごとに分かれていたレポートがひとつにまとまるため、経営層・上長への報告にもそのまま使えます。</p>
           <p>LLMOにおいては狙うカテゴリ、ポジション、顧客の目的・課題ごとに、AI回答での見え方を確認します。引用率や言及率に加え、「狙った場面で紹介されているか」「意図した強みが伝わっているか」を捉え、<wbr><span class="nb">戦略と計測をつなぎます。</span></p>
           <div class="mtr mtr--one"><div><b>マーケティング数値</b><span>KPIツリーに沿った各施策の数値とボトルネック</span></div></div>
-          </div><figure class="dsh lk" data-dsh aria-label="ダッシュボードの画面イメージ：フロー月次進捗（アクセス数・新規会員獲得数・注文数・売上の目標と到達率、項目ごとの目標到達率と月次推移）と、経路別流入 月次進捗（経路別流入数、過去4か月の推移、自然流入×ページ分類）">
+          </div><figure class="dsh lk" data-dsh>
 <div class="lk__bar"><b>マーケティング数値</b><span>画面イメージ</span></div>
-<div class="lk__pg1"><div class="lk__hd"><p class="lk__ttl">フロー 月次進捗</p><p class="lk__date">2026/09/01 - 2026/09/30<i>▾</i></p></div>
-<div class="lk__kpi">
-<div class="lk__card"><p class="lk__ch">アクセス数</p><div class="lk__cb"><p class="lk__v"><b data-to="10084">10,084</b><span>/</span><small>9,000</small></p><p class="lk__r"><span>112.36%</span><span class="lk__mom"><small>MoM</small>61.53%</span></p></div></div>
-<div class="lk__card"><p class="lk__ch">新規会員獲得数</p><div class="lk__cb"><p class="lk__v"><b data-to="70">70</b><span>/</span><small>70</small></p><p class="lk__r"><span>100.00%</span><span class="lk__mom"><small>MoM</small>12.90%</span></p></div></div>
-<div class="lk__card"><p class="lk__ch">注文数</p><div class="lk__cb"><p class="lk__v"><b data-to="24">24</b><span>/</span><small>50</small></p><p class="lk__r"><span>48.00%</span><span class="lk__mom"><small>MoM</small>-45.45%</span></p></div></div>
-<div class="lk__card"><p class="lk__ch">売上</p><div class="lk__cb"><p class="lk__v"><b data-to="2977700">2,977,700</b><span>/</span><small>2,960,100</small></p><p class="lk__r"><span>100.59%</span><span class="lk__mom"><small>MoM</small>-17.58%</span></p></div></div>
-</div>
-<p class="lk__h">項目ごとの目標到達率</p><div class="hz">
-<p class="hz__k">アクセス数</p><div class="hz__t"><i style="--w:93.63%"><b>112.36%</b></i></div>
-<p class="hz__k">新規会員獲得数</p><div class="hz__t"><i style="--w:83.33%"><b>100%</b></i></div>
-<p class="hz__k">注文数</p><div class="hz__t"><i style="--w:40.00%"><b>48%</b></i></div>
-<p class="hz__k">売上</p><div class="hz__t"><i style="--w:83.83%"><b>100.59%</b></i></div>
-<span></span><p class="hz__ax"><span style="--x:0.000%">0%</span><span style="--x:8.333%">10%</span><span style="--x:16.667%">20%</span><span style="--x:25.000%">30%</span><span style="--x:33.333%">40%</span><span style="--x:41.667%">50%</span><span style="--x:50.000%">60%</span><span style="--x:58.333%">70%</span><span style="--x:66.667%">80%</span><span style="--x:75.000%">90%</span><span style="--x:83.333%">100%</span><span style="--x:91.667%">110%</span><span style="--x:100.000%">120%</span></p></div>
-<p class="lk__h">項目ごとの目標到達率月次推移</p><div class="lc"><p class="lc__lg"><span style="--c:#B5C46E">アクセス数</span><span style="--c:#E57DB5">新規会員獲得数</span><span style="--c:#3BB8C9">注文数</span><span style="--c:#6A63B8">売上</span></p>
-<div class="lc__wrap"><div class="lc__plot"><span class="tk" style="--y:0.000%"><em>0%</em></span><span class="tk" style="--y:16.667%"></span><span class="tk" style="--y:33.333%"><em>50%</em></span><span class="tk" style="--y:50.000%"></span><span class="tk" style="--y:66.667%"><em>100%</em></span><span class="tk" style="--y:83.333%"></span><span class="tk" style="--y:100.000%"><em>150%</em></span>
-<svg viewBox="0 0 300 150" preserveAspectRatio="none" aria-hidden="true">
-<polyline points="0,76.00 100,37.64" stroke="#B5C46E"/>
-<polyline points="0,46.50 100,50.00" stroke="#E57DB5"/>
-<polyline points="0,62.00 100,102.00" stroke="#3BB8C9"/>
-<polyline points="0,46.50 100,49.41" stroke="#6A63B8"/>
-</svg>
-<i style="--c:#B5C46E;--x:0%;--y:49.33%"></i><i style="--c:#B5C46E;--x:33.333%;--y:74.91%"></i>
-<i style="--c:#E57DB5;--x:0%;--y:69.00%"></i><i style="--c:#E57DB5;--x:33.333%;--y:66.67%"></i>
-<i style="--c:#3BB8C9;--x:0%;--y:58.67%"></i><i style="--c:#3BB8C9;--x:33.333%;--y:32.00%"></i>
-<i style="--c:#6A63B8;--x:0%;--y:69.00%"></i><i style="--c:#6A63B8;--x:33.333%;--y:67.06%"></i>
-</div></div><p class="lc__x"><span style="--x:0.000%"><b>2026年</b>8月</span><span style="--x:33.333%"><b>2026年</b>9月</span><span style="--x:66.667%"><b>2026年</b>10月</span><span style="--x:100.000%"><b>2026年</b>11月</span></p></div></div>
-<div class="lk__pg2"><div class="lk__hd"><p class="lk__ttl">経路別流入 月次進捗</p><p class="lk__date">2026/10/04 - 2026/10/31<i>▾</i></p></div>
-<div class="lk__tw"><table class="lk__tb"><caption>経路別流入数</caption><thead><tr><th></th><th>セッションのメディア</th><th>セッション<i>▾</i></th><th>購入数</th><th>購入率</th><th>購入額</th></tr></thead><tbody><tr><td>1.</td><td>(none)</td><td>16,553</td><td>19</td><td>0.11%</td><td>¥612,000</td></tr><tr><td>2.</td><td>organic</td><td>3,021</td><td>15</td><td>0.5%</td><td>¥333,400</td></tr><tr><td>3.</td><td>cpc</td><td>1,809</td><td>5</td><td>0.28%</td><td>¥194,500</td></tr><tr><td>4.</td><td>email</td><td>634</td><td>0</td><td>0%</td><td>¥0</td></tr><tr><td>5.</td><td>referral</td><td>165</td><td>2</td><td>1.21%</td><td>¥161,500</td></tr><tr><td>6.</td><td>ai-assistant</td><td>53</td><td>0</td><td>0%</td><td>¥0</td></tr><tr><td>7.</td><td>(not set)</td><td>37</td><td>0</td><td>0%</td><td>¥0</td></tr><tr><td>8.</td><td>(data not available)</td><td>16</td><td>0</td><td>0%</td><td>¥0</td></tr></tbody></table><p class="lk__pg">1 - 8 / 8</p></div>
-<p class="lk__h">経路別流入数（過去4か月推移）</p><div class="gb"><p class="gb__lg"><span style="--c:#FF8F2D">organic</span><span style="--c:#AC86E2">cpc</span><span style="--c:#1C64BE">(none)</span><span style="--c:#B5C46E">email</span><span style="--c:#3BB8C9">referral</span><span style="--c:#E57DB5">(not set)</span><span style="--c:#EBC654">ai-assistant</span><span style="--c:#6A63B8">(data not available)</span><span style="--c:#E2BC8C">influencer</span></p>
-<div class="gb__wrap"><div class="gb__plot"><span class="tk" style="--y:0.000%"><em>0</em></span><span class="tk" style="--y:12.500%"></span><span class="tk" style="--y:25.000%"><em>1,000</em></span><span class="tk" style="--y:37.500%"></span><span class="tk" style="--y:50.000%"><em>2,000</em></span><span class="tk" style="--y:62.500%"></span><span class="tk" style="--y:75.000%"><em>3,000</em></span><span class="tk" style="--y:87.500%"></span><span class="tk" style="--y:100.000%"><em>4,000</em></span>
-<div class="gb__g"><i style="--c:#FF8F2D;--h:46.25%"></i><i style="--c:#AC86E2;--h:23.25%"></i><i style="--c:#1C64BE;--h:26.00%"></i><i style="--c:#B5C46E;--h:2.25%"></i><i style="--c:#3BB8C9;--h:6.25%"></i><i style="--c:#E57DB5;--h:0.50%"></i><i style="--c:#EBC654;--h:0.15%"></i><i style="--c:#6A63B8;--h:0.35%"></i><i style="--c:#E2BC8C;--h:0.10%"></i><span><b>2026年</b>5月</span></div>
-<div class="gb__g"><i style="--c:#FF8F2D;--h:58.50%"></i><i style="--c:#AC86E2;--h:36.25%"></i><i style="--c:#1C64BE;--h:25.25%"></i><i style="--c:#B5C46E;--h:5.25%"></i><i style="--c:#3BB8C9;--h:4.25%"></i><i style="--c:#E57DB5;--h:0.50%"></i><i style="--c:#EBC654;--h:0.50%"></i><i style="--c:#6A63B8;--h:0.35%"></i><i style="--c:#E2BC8C;--h:0.10%"></i><span><b>2026年</b>6月</span></div>
-<div class="gb__g"><i style="--c:#FF8F2D;--h:75.75%"></i><i style="--c:#AC86E2;--h:39.00%"></i><i style="--c:#1C64BE;--h:35.75%"></i><i style="--c:#B5C46E;--h:7.75%"></i><i style="--c:#3BB8C9;--h:4.25%"></i><i style="--c:#E57DB5;--h:0.50%"></i><i style="--c:#EBC654;--h:0.50%"></i><i style="--c:#6A63B8;--h:0.50%"></i><i style="--c:#E2BC8C;--h:0.10%"></i><span><b>2026年</b>7月</span></div>
-<div class="gb__g"><i style="--c:#FF8F2D;--h:73.00%"></i><i style="--c:#AC86E2;--h:37.25%"></i><i style="--c:#1C64BE;--h:39.00%"></i><i style="--c:#B5C46E;--h:4.25%"></i><i style="--c:#3BB8C9;--h:4.00%"></i><i style="--c:#E57DB5;--h:0.50%"></i><i style="--c:#EBC654;--h:0.50%"></i><i style="--c:#6A63B8;--h:0.62%"></i><i style="--c:#E2BC8C;--h:0.10%"></i><span><b>2026年</b>8月</span></div>
-</div></div></div>
-<div class="lk__tw"><table class="lk__tb"><caption>自然流入×ページ分類</caption><thead><tr><th></th><th>ページ分類</th><th>セッション<i>▾</i></th><th>購入数</th><th>購入率</th><th>購入額</th></tr></thead><tbody><tr><td>1.</td><td>型式</td><td>2,049</td><td>4</td><td>0.2%</td><td>¥93,500</td></tr><tr><td>2.</td><td>その他</td><td>384</td><td>6</td><td>1.56%</td><td>¥193,400</td></tr><tr><td>3.</td><td>トップ</td><td>283</td><td>5</td><td>1.77%</td><td>¥46,500</td></tr><tr><td>4.</td><td>カテゴリ</td><td>172</td><td>0</td><td>0%</td><td>¥0</td></tr><tr><td>5.</td><td>メーカー</td><td>90</td><td>0</td><td>0%</td><td>¥0</td></tr></tbody></table><p class="lk__pg">1 - 5 / 5</p></div>
-</div></figure></li>
+<video class="lk__vid" data-pc="media/dash.mp4" poster="media/dash.webp" data-sp="media/dash-sp.mp4" data-sp-poster="media/dash-sp.webp" width="1600" height="1000" muted loop playsinline preload="none" aria-label="動画：ダッシュボードの画面イメージ。フロー 月次進捗で、アクセス数・新規会員獲得数・注文数・売上の目標と到達率を見て、目標に届いていない注文数を示す。続けて項目ごとの目標到達率と月次推移、経路別流入 月次進捗（経路別流入数・過去4か月推移・自然流入×ページ分類）を順に見せる"></video><script>(function(v){var sp=matchMedia("(max-width:600px)").matches;if(sp){v.poster=v.getAttribute("data-sp-poster");v.width=1080;v.height=1350;}v.muted=true;v.src=v.getAttribute(sp?"data-sp":"data-pc");})(document.currentScript.previousElementSibling);</script>
+</figure></li>
       </ol>
       <span class="loop" aria-hidden="true"></span>
     </div>
@@ -678,17 +648,12 @@ p,li{text-wrap:pretty}
       requestAnimationFrame(tick); };
     requestAnimationFrame(tick);
   }
-  var dsh = document.querySelector("[data-dsh]");
-  if (dsh) {
-    var nums = [].slice.call(dsh.querySelectorAll("[data-to]"));
-    var fmt = function(x){ return Math.round(x).toLocaleString("en-US"); };
-    var run = function(){ dsh.classList.add("is-on");
-      nums.forEach(function(n){ var to = +n.getAttribute("data-to"), t0 = null;
-        if (reduce){ n.textContent = fmt(to); return; }
-        var step = function(ts){ if (t0 === null) t0 = ts; var k = Math.min(1, (ts - t0) / 1200); n.textContent = fmt(to * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(step); };
-        requestAnimationFrame(step); }); };
-    if (reduce || !("IntersectionObserver" in window)) run();
-    else new IntersectionObserver(function(es, o){ if (es[0].isIntersecting){ o.disconnect(); run(); } }, {threshold:.15}).observe(dsh);
+  var dv = document.querySelector(".lk__vid");
+  if (dv && !reduce) {
+    if (!("IntersectionObserver" in window)) { dv.play().catch(function(){}); }
+    else new IntersectionObserver(function(es){ es.forEach(function(e){
+      if (e.isIntersecting) { if (dv.paused) { var p = dv.play(); if (p && p.catch) p.catch(function(){}); } }
+      else if (!dv.paused) dv.pause(); }); }, {threshold:.35}).observe(dv);
   }
   var f = document.getElementById("dlForm");
   if (f) f.addEventListener("submit", function(e){ e.preventDefault(); });
