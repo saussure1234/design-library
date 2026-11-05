@@ -97,7 +97,7 @@ td code{font-family:var(--mono);font-size:13px;background:var(--code);padding:1p
 <header class="lede">
   <p class="eyebrow">Handover · samurai-style.tokyo · Japanese site</p>
   <h1>Samurai Style site update: service list, video production and company pages</h1>
-  <p>Three pages change. The service list goes down to four services. The video production page is rebuilt as a service page for clients in Japan (planning, shooting and editing), with the same structure as our other service pages, and restyled from a dark theme to the light look of the other pages. On the company page, the VALUES section changes its layout.</p>
+  <p>Three pages change. The service list goes down to four services. The video production page is rebuilt as a service page for clients in Japan: live-action video for any use (not only short videos), planned from an understanding of the client's business, then shot and edited, with the same structure as our other service pages, and restyled from a dark theme to the light look of the other pages. On the company page, the VALUES section changes its layout.</p>
   <p>Each page below has a before / after screenshot and a numbered list of changes. Japanese text that appears on the site is shown in grey boxes. Please copy it with the <b>Copy</b> button instead of retyping it, so no character changes.</p>
   <nav class="toc" aria-label="Pages in this handover">
     <a href="#service">1. Service list <code>/service</code></a>
@@ -197,36 +197,66 @@ td code{font-family:var(--mono);font-size:13px;background:var(--code);padding:1p
   </div>
 
   <h3>Content changes</h3>
-  <p class="note">Final order of the page: Hero, Problem (new), About, Strength, Work Flow, Price (new), Member, Contact.</p>
+  <p class="note">The page is no longer about short videos only. It sells live-action video production for any use, planned from an understanding of the client's business. Final order of the page: Hero, Problem (new), About, Menu (new), Strength, Work Flow, Price (new), Member, Contact.</p>
   <ol class="changes">
     <li><div class="body">
-      <p><span class="tag rep">Replace</span>Hero: the sub copy under the headline. The headline and the background video stay.</p>
-      <div class="field"><span>Now</span><div class="cp"><div class="txt old">視聴者の心を動かすオリジナルコンテンツを制作</div></div></div>
-      <div class="field"><span>New</span><div class="cp"><div class="txt">貴社の顧客理解に基づき、動画を企画・撮影・編集までワンストップで制作します。</div><button class="copy" type="button">Copy</button></div></div>
+      <p><span class="tag rep">Replace</span>Page title (<code>&lt;title&gt;</code> and og:title)</p>
+      <div class="field"><span>Now</span><div class="cp"><div class="txt old">TikTok・ショート動画制作 | サムライスタイル株式会社</div></div></div>
+      <div class="field"><span>New</span><div class="cp"><div class="txt">動画制作（企画・撮影・編集） | サムライスタイル株式会社</div><button class="copy" type="button">Copy</button></div></div>
+    </div></li>
+
+    <li><div class="body">
+      <p><span class="tag rep">Replace</span>Hero: headline and sub copy. The background video stays.</p>
+      <div class="field"><span>Headline now</span><div class="cp"><div class="txt old">ショート動画で伝わる。ブランドを加速させるコンテンツ戦略。</div></div></div>
+      <div class="field"><span>Headline new (HTML)</span><div class="cp"><div class="txt mono">事業理解から、&lt;br&gt;伝わる動画をつくる。</div><button class="copy" type="button">Copy</button></div></div>
+      <p class="note">Two lines on all screen sizes. Remove the old <code>&lt;br class="hidden max-md:inline"&gt;</code>.</p>
+      <div class="field"><span>Sub copy now</span><div class="cp"><div class="txt old">視聴者の心を動かすオリジナルコンテンツを制作</div></div></div>
+      <div class="field"><span>Sub copy new</span><div class="cp"><div class="txt">会社紹介・サービス紹介・採用・SNSなどの実写動画を、事業理解に基づく企画から撮影・編集までワンストップで制作します。</div><button class="copy" type="button">Copy</button></div></div>
     </div></li>
 
     <li><div class="body">
       <p><span class="tag rep">Add</span>Hero: add the 「お問い合わせ」 button under the sub copy. Use the same button component and link as the one in Work Flow, and keep it white here because it sits on the video.</p>
-      
     </div></li>
 
     <li><div class="body">
-      <p><span class="tag style">New section</span>Problem: add a new section between the hero and About. Build it with the About section component (small label, heading, white chips without icons).</p>
+      <p><span class="tag style">New section</span>Problem: add a new section between the hero and About. Build it with the About section component (small label, heading, white chips without icons), with the layout changes in item 7.</p>
       <div class="field"><span>Label</span><div class="cp"><div class="txt">Problem</div><button class="copy" type="button">Copy</button></div></div>
       <div class="field"><span>Heading</span><div class="cp"><div class="txt">こんなお悩みはありませんか</div><button class="copy" type="button">Copy</button></div></div>
       <div class="field"><span>Chip 1</span><div class="cp"><div class="txt">企画から撮影・編集まで、まとめて任せられる制作先がない</div><button class="copy" type="button">Copy</button></div></div>
-      <div class="field"><span>Chip 2</span><div class="cp"><div class="txt">撮影はできても、ブランドの世界観や顧客に合った企画にならない</div><button class="copy" type="button">Copy</button></div></div>
-      <div class="field"><span>Chip 3</span><div class="cp"><div class="txt">作った動画の成果を検証できず、次に活かせていない</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>Chip 2</span><div class="cp"><div class="txt">撮影はできても、事業や顧客に合った企画にならない</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>Chip 3</span><div class="cp"><div class="txt">動画で何をどう伝えればよいか、社内で決めきれていない</div><button class="copy" type="button">Copy</button></div></div>
     </div></li>
 
     <li><div class="body">
-      <p><span class="tag rm">Delete text</span>About: delete this sentence from the paragraph that starts with 「私たちは、マーケティングリサーチ…」</p>
-      <div class="cp"><div class="txt old">さらに、マイクロインフルエンサーのネットワークを活用し、リーチ拡大とエンゲージメント向上を両立。</div><button class="copy" type="button">Copy</button></div>
+      <p><span class="tag rep">Replace</span>About: heading and paragraph (whole text)</p>
+      <div class="field"><span>Heading now</span><div class="cp"><div class="txt old">ショート動画専門チームが、ブランドの成長をサポート</div></div></div>
+      <div class="field"><span>Heading new (HTML)</span><div class="cp"><div class="txt mono">事業の「伝えたいこと」を、&lt;br&gt;動画のかたちに</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>Text now</span><div class="cp"><div class="txt old">私たちは、マーケティングリサーチ、コンテンツ制作、コンサルティングを通じて、ショート動画でのブランド成功を支援します。（whole paragraph）</div></div></div>
+      <div class="field"><span>Text new</span><div class="cp"><div class="txt">私たちは、事業理解に基づく企画から、撮影・編集までを一貫して手がける動画制作チームです。顧客・競合・自社の視点で伝えるべきことを整理し、専任チームと自社スタジオで、ブランドの世界観に沿った実写動画を制作します。</div><button class="copy" type="button">Copy</button></div></div>
     </div></li>
 
     <li><div class="body">
       <p><span class="tag rm">Remove</span>About: remove the white chip 「マイクロインフルエンサー」. Two chips remain: 「クリエイティブスタジオ」 and 「専門的な市場調査」.</p>
-      
+    </div></li>
+
+    <li><div class="body">
+      <p><span class="tag style">New section</span>Menu: add a new section between About and Strength. Same component as Problem, plus a one-line paragraph under the heading (same style as the About paragraph) and six chips.</p>
+      <div class="field"><span>Label</span><div class="cp"><div class="txt">Menu</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>Heading</span><div class="cp"><div class="txt">制作できる動画</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>Text</span><div class="cp"><div class="txt">実写の動画を、用途に合わせて企画・制作します。</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>Chip 1</span><div class="cp"><div class="txt">会社紹介動画</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>Chip 2</span><div class="cp"><div class="txt">サービス紹介動画</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>Chip 3</span><div class="cp"><div class="txt">採用動画</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>Chip 4 (HTML)</span><div class="cp"><div class="txt mono">SNS動画&lt;wbr&gt;（ショート動画）</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>Chip 5</span><div class="cp"><div class="txt">Web広告動画</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>Chip 6 (HTML)</span><div class="cp"><div class="txt mono">展示会・&lt;wbr&gt;イベント動画</div><button class="copy" type="button">Copy</button></div></div>
+      <p class="note">On the chip text add <code>break-keep max-sm:text-center</code>, so 「SNS動画」 and 「展示会・」 break only at the <code>&lt;wbr&gt;</code>.</p>
+      <p class="note"><b>Layout for Problem and Menu only</b> (About keeps its current layout):</p>
+      <div class="field"><span>Heading column</span><div class="cp"><div class="txt mono">w-full flex-col items-start justify-center max-md:w-full</div><button class="copy" type="button">Copy</button></div></div>
+      <p class="note">Replaces <code>w-[60%]</code> and <code>items-center</code>, so the heading sits on the left like About.</p>
+      <div class="field"><span>Chip wrapper, Problem</span><div class="cp"><div class="txt mono">grid w-full grid-cols-3 gap-[20px] max-md:grid-cols-2 max-sm:grid-cols-1 max-sm:gap-[12px]</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>Chip wrapper, Menu</span><div class="cp"><div class="txt mono">grid w-full grid-cols-3 gap-[20px] max-md:grid-cols-2 max-sm:grid-cols-2 max-sm:gap-[12px]</div><button class="copy" type="button">Copy</button></div></div>
+      <p class="note">Replaces <code>flex w-[40%] flex-col items-center justify-center gap-[30px] max-md:w-full max-md:gap-[15px]</code>. Desktop: 3 chips per row. Mobile: Problem 1 per row, Menu 2 per row.</p>
     </div></li>
 
     <li><div class="body">
@@ -237,16 +267,23 @@ td code{font-family:var(--mono);font-size:13px;background:var(--code);padding:1p
 
     <li><div class="body">
       <p><span class="tag rm">Remove</span>Strength: remove the whole block 「低投資で高品質なインプレッションを獲得」 (heading, text and the Indonesian-language research screenshot under it).</p>
-      
     </div></li>
 
     <li><div class="body">
-      <p><span class="tag rm">Remove</span>Strength: remove the image under 「効果的なマーケティングの本質」 (the micro-influencer database screenshot).</p>
-      <p class="note"><b>Keep the two product photos</b> under 「強力なブランドイメージの構築」. Do not remove or replace them.</p>
+      <p><span class="tag rep">Replace</span>Strength block 「効果的なマーケティングの本質」: new heading and text, remove its image (the micro-influencer database screenshot), and <b>move it to the first position</b>. Keep its laptop icon.</p>
+      <div class="field"><span>Heading</span><div class="cp"><div class="txt">事業理解に基づく企画</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>Text</span><div class="cp"><div class="txt">顧客・競合・自社の3つの視点で事業を整理し、誰に何を伝える動画かを決めてから企画します。戦略から実行まで伴走する「Strategy2Action」の進め方を、動画の企画にも生かしています。</div><button class="copy" type="button">Copy</button></div></div>
     </div></li>
 
     <li><div class="body">
-      <p><span class="tag rep">Add</span>Strength: add a 3rd block after 「効果的なマーケティングの本質」. Same component and spacing as the other blocks, the camera icon of block 1, no image.</p>
+      <p><span class="tag rep">Replace</span>Strength block 「強力なブランドイメージの構築」: new heading and text. It becomes the second block.</p>
+      <div class="field"><span>Heading</span><div class="cp"><div class="txt">企画から撮影・編集まで自社で一貫</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>Text</span><div class="cp"><div class="txt">社内クリエイティブチームが、企画から撮影・編集・仕上げまで一貫して対応します。ブランドの世界観を反映した、質の高い実写動画を制作します。</div><button class="copy" type="button">Copy</button></div></div>
+      <p class="note"><b>Keep the two product photos</b> in this block. Do not remove or replace them.</p>
+    </div></li>
+
+    <li><div class="body">
+      <p><span class="tag rep">Add</span>Strength: add a third block at the end. Same component and spacing as the other blocks, the camera icon, no image.</p>
       <div class="field"><span>Heading</span><div class="cp"><div class="txt">国内への出張撮影に対応</div><button class="copy" type="button">Copy</button></div></div>
       <div class="field"><span>Text</span><div class="cp"><div class="txt">撮影は、ご指定の場所に出張して行います。最短翌日から対応します（交通費・宿泊費は実費）。</div><button class="copy" type="button">Copy</button></div></div>
     </div></li>
@@ -255,19 +292,19 @@ td code{font-family:var(--mono);font-size:13px;background:var(--code);padding:1p
       <p><span class="tag rep">Replace</span>Work Flow: heading and paragraph (the free trial is no longer offered)</p>
       <div class="field"><span>Heading now</span><div class="cp"><div class="txt old">無料トライアルで、ブランド成長を体験</div></div></div>
       <div class="field"><span>Heading new</span><div class="cp"><div class="txt">企画から撮影・編集まで、一貫して制作</div><button class="copy" type="button">Copy</button></div></div>
-      <div class="field"><span>Text now</span><div class="cp"><div class="txt old">私たちは「クライアントと共に成長する」ことを大切にするスタートアップです。ショート動画でのブランディングに課題を感じている方は、ぜひ無料トライアルをご活用ください。調査から戦略立案、コンテンツ制作、インフルエンサー連携まで、一連のプロセスを体験いただけます。実際の成果を見ながら、ブランドの価値を高めていきましょう。</div></div></div>
-      <div class="field"><span>Text new</span><div class="cp"><div class="txt">市場調査と企画から、撮影・編集、公開後の分析まで、社内チームが一貫して対応します。</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>Text new</span><div class="cp"><div class="txt">ヒアリングと企画から、撮影・編集、納品まで、社内チームが一貫して対応します。</div><button class="copy" type="button">Copy</button></div></div>
     </div></li>
 
     <li><div class="body">
-      <p><span class="tag rep">Replace</span>Work Flow: the steps become 1 市場調査・企画, 2 撮影, 3 編集, 4 分析. Remove the step 「マイクロインフルエンサー」.</p>
-      <div class="field"><span>Step 1 title</span><div class="cp"><div class="txt">市場調査・企画</div><button class="copy" type="button">Copy</button></div></div>
-      <p class="note">Step 1 text stays: 仮説を立て、調査を通じてデータを収集。明確で説得力のある戦略を策定します。</p>
-      <div class="field"><span>Step 2 title</span><div class="cp"><div class="txt">撮影</div><button class="copy" type="button">Copy</button></div></div>
-      <div class="field"><span>Step 2 text</span><div class="cp"><div class="txt">ご指定の場所に出張して撮影します。最短翌日から対応します。</div><button class="copy" type="button">Copy</button></div></div>
-      <div class="field"><span>Step 3 title</span><div class="cp"><div class="txt">編集</div><button class="copy" type="button">Copy</button></div></div>
-      <p class="note">Step 3 text: use the current text of 「コンテンツ制作」 unchanged: ブランドに合った雰囲気を表現するコンテンツを、社内チームが制作。</p>
-      <p class="note">Step 4 「分析」 keeps its number and text.</p>
+      <p><span class="tag rep">Replace</span>Work Flow: four steps. Remove the step 「マイクロインフルエンサー」.</p>
+      <div class="field"><span>1 title</span><div class="cp"><div class="txt">ヒアリング・企画</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>1 text</span><div class="cp"><div class="txt">事業や顧客、動画の用途をお伺いし、伝える内容と構成を企画します。</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>2 title</span><div class="cp"><div class="txt">撮影</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>2 text</span><div class="cp"><div class="txt">ご指定の場所に出張して撮影します。最短翌日から対応します。</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>3 title</span><div class="cp"><div class="txt">編集</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>3 text</span><div class="cp"><div class="txt">撮影した素材を、用途に合った長さと形式に編集します。</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>4 title</span><div class="cp"><div class="txt">納品</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>4 text</span><div class="cp"><div class="txt">ご確認いただいた内容を反映し、完成した動画を納品します。</div><button class="copy" type="button">Copy</button></div></div>
     </div></li>
 
     <li><div class="body">
@@ -279,7 +316,6 @@ td code{font-family:var(--mono);font-size:13px;background:var(--code);padding:1p
 
     <li><div class="body">
       <p><span class="tag keep">No change</span>Member (three members) stays as it is.</p>
-      
     </div></li>
   </ol>
 
@@ -291,9 +327,9 @@ td code{font-family:var(--mono);font-size:13px;background:var(--code);padding:1p
       <tbody>
         <tr><td>Section background</td><td><code>bg-coal-dark</code></td><td><code>bg-white</code></td></tr>
         <tr><td>Headings, body text and icons that are white</td><td><code>text-white</code></td><td><code>text-[#222222]</code></td></tr>
-        <tr><td>Small labels 「Problem」「About」「Strength」「Work Flow」「Price」「Member」</td><td><code>text-[#c9d9f9]</code></td><td><code>text-[#aaaaaa]</code></td></tr>
+        <tr><td>Small labels 「Problem」「About」「Menu」「Strength」「Work Flow」「Price」「Member」</td><td><code>text-[#c9d9f9]</code></td><td><code>text-[#aaaaaa]</code></td></tr>
         <tr><td>Step descriptions in Work Flow</td><td><code>text-[#c8c8c8]</code></td><td><code>text-[#333]</code></td></tr>
-        <tr><td>Problem and About: the white chips</td><td><code>rounded-[12px] bg-white</code></td><td>add <code>border border-[#dddddd]</code></td></tr>
+        <tr><td>Problem, About and Menu: the white chips</td><td><code>rounded-[12px] bg-white</code></td><td>add <code>border border-[#dddddd]</code></td></tr>
         <tr><td>Work Flow: number circles</td><td><code>bg-white</code>, number in dark text</td><td><code>bg-[#222222]</code>, number <code>text-white</code></td></tr>
         <tr><td>「お問い合わせ」 buttons in Work Flow and Price</td><td><code>bg-white</code>, text and arrow <code>#333</code></td><td><code>bg-black</code>, text and arrow <code>text-white</code> (same as the black buttons on /service). The button in the hero stays white.</td></tr>
       </tbody>
