@@ -96,12 +96,13 @@ td code{font-family:var(--mono);font-size:13px;background:var(--code);padding:1p
 
 <header class="lede">
   <p class="eyebrow">Handover · samurai-style.tokyo · Japanese site</p>
-  <h1>Samurai Style site update: service list and video production page</h1>
-  <p>Two pages change. The service list goes down to four services. The video production page is rebuilt as a service page for clients in Japan (planning, shooting and editing), with the same structure as our other service pages, and restyled from a dark theme to the light look of the other pages.</p>
+  <h1>Samurai Style site update: service list, video production and company pages</h1>
+  <p>Three pages change. The service list goes down to four services. The video production page is rebuilt as a service page for clients in Japan (planning, shooting and editing), with the same structure as our other service pages, and restyled from a dark theme to the light look of the other pages. On the company page, the VALUES section changes its layout.</p>
   <p>Each page below has a before / after screenshot and a numbered list of changes. Japanese text that appears on the site is shown in grey boxes. Please copy it with the <b>Copy</b> button instead of retyping it, so no character changes.</p>
   <nav class="toc" aria-label="Pages in this handover">
     <a href="#service">1. Service list <code>/service</code></a>
     <a href="#video">2. Video production <code>/tiktok-production</code></a>
+    <a href="#company">3. Company <code>/company</code></a>
   </nav>
   <div class="rules">
     <h3>Ground rules</h3>
@@ -298,6 +299,60 @@ td code{font-family:var(--mono);font-size:13px;background:var(--code);padding:1p
       </tbody>
     </table>
   </div>
+</section>
+
+<section class="page" id="company">
+  <div class="page-hd">
+    <p class="eyebrow">Page 3</p>
+    <h2>Company: VALUES section</h2>
+    <p class="url">https://samurai-style.tokyo/company</p>
+  </div>
+
+  <div class="viewer" data-viewer="company">
+    <div class="vtabs" role="group" aria-label="Screen size">
+      <button type="button" id="co-pc" data-w="pc" aria-pressed="true">Desktop 1440px</button>
+      <button type="button" id="co-sp" data-w="sp" aria-pressed="false">Mobile 375px</button>
+    </div>
+    <div class="pair">
+      <div class="shot bf"><b>Before</b><div class="frame"><img data-src="img/company_before_{w}.webp" src="img/company_before_pc.webp" alt="VALUES now: five cards stacked, text aligned left"></div></div>
+      <div class="shot af"><b>After</b><div class="frame"><img data-src="img/company_after_{w}.webp" src="img/company_after_pc.webp" alt="VALUES after: FUN (PLAY) in one wide card, the other four in a 2 by 2 grid, text centred"></div></div>
+    </div>
+  </div>
+
+  <h3>Changes</h3>
+  <p class="note">Only the section <code>#values</code> changes. The five texts stay exactly the same. FUN (PLAY) is the main value, so it gets its own wide card on the first row. The heading 「VALUES」 above is centred, so the card texts are centred too.</p>
+  <ol class="changes">
+    <li><div class="body">
+      <p><span class="tag style">Layout</span>The wrapper of the five cards becomes a 2-column grid.</p>
+      <div class="field"><span>Now</span><div class="cp"><div class="txt mono old">flex flex-row flex-wrap items-center justify-center</div></div></div>
+      <div class="field"><span>New</span><div class="cp"><div class="txt mono">grid grid-cols-2 max-md:grid-cols-1</div><button class="copy" type="button">Copy</button></div></div>
+      <p class="note">Keep <code>gap-[40px] max-md:gap-[20px] max-sm:gap-[16px]</code>. Row 1: FUN (PLAY) alone, full width. Row 2: Free | Flat. Row 3: Open | Optimization. Under 768px: one column in the same order.</p>
+    </div></li>
+
+    <li><div class="body">
+      <p><span class="tag style">Style</span>All five cards: centre the content.</p>
+      <div class="field"><span>Now</span><div class="cp"><div class="txt mono old">items-start justify-between</div></div></div>
+      <div class="field"><span>New</span><div class="cp"><div class="txt mono">items-center justify-center text-center</div><button class="copy" type="button">Copy</button></div></div>
+    </div></li>
+
+    <li><div class="body">
+      <p><span class="tag style">Style</span>FUN (PLAY) card only: span both columns and make it larger.</p>
+      <div class="field"><span>Card</span><div class="cp"><div class="txt mono">col-span-2 max-md:col-span-1 py-[80px]</div><button class="copy" type="button">Copy</button></div></div>
+      <p class="note">Replace <code>py-[60px]</code> with <code>py-[80px]</code>. Keep <code>max-md:p-[24px]</code>, so mobile padding does not change.</p>
+      <div class="field"><span>Title</span><div class="cp"><div class="txt mono">text-[48px] max-md:text-[32px]</div><button class="copy" type="button">Copy</button></div></div>
+      <p class="note">Replaces <code>text-[36px] max-md:text-[28px]</code> on 「FUN (PLAY)」. The other four titles stay at 36px / 28px.</p>
+    </div></li>
+
+    <li><div class="body">
+      <p><span class="tag style">Line breaks</span>The Japanese line in each card: add <code>text-balance break-keep</code> and replace the text with the HTML below. The words are the same; only <code>&lt;wbr&gt;</code> break points are added, so lines break between phrases and not in the middle of a word.</p>
+      <div class="field"><span>FUN (PLAY)</span><div class="cp"><div class="txt mono">世界で1番&lt;wbr&gt;楽しそうに働く&lt;wbr&gt;チームを目指す</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>Free</span><div class="cp"><div class="txt mono">各自の責任感の下、&lt;wbr&gt;場所や時間に捉われず&lt;wbr&gt;自由に裁量を持って働く</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>Flat</span><div class="cp"><div class="txt mono">年齢や役職などの&lt;wbr&gt;上下関係なく接する</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>Open</span><div class="cp"><div class="txt mono">チーム内では本音で向き合い、&lt;wbr&gt;人格は否定しない</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>Optimization</span><div class="cp"><div class="txt mono">全体最適視点で&lt;wbr&gt;判断する</div><button class="copy" type="button">Copy</button></div></div>
+      <p class="note"><code>break-keep</code> stops breaks inside words, so the <code>&lt;wbr&gt;</code> points are required. Without them a long line can run out of the card on mobile.</p>
+    </div></li>
+  </ol>
 </section>
 
 </div>
