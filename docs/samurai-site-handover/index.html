@@ -225,6 +225,8 @@ td code{font-family:var(--mono);font-size:13px;background:var(--code);padding:1p
       <div class="field"><span>Chip 1</span><div class="cp"><div class="txt">企画から撮影・編集まで、まとめて任せられる制作先がない</div><button class="copy" type="button">Copy</button></div></div>
       <div class="field"><span>Chip 2</span><div class="cp"><div class="txt">撮影はできても、事業や顧客に合った企画にならない</div><button class="copy" type="button">Copy</button></div></div>
       <div class="field"><span>Chip 3</span><div class="cp"><div class="txt">動画で何をどう伝えればよいか、社内で決めきれていない</div><button class="copy" type="button">Copy</button></div></div>
+      <p class="note"><b>Illustration</b> to the right of the heading. Heading column: replace <code>flex-col items-start</code> with <code>flex-row items-end justify-between gap-[40px] max-md:flex-col max-md:items-start</code>. Image classes: <code>w-[400px] max-w-[45%] h-auto max-md:w-[300px] max-md:max-w-full max-md:self-center</code>.</p>
+      <div class="cardimg"><img src="img/video-problem.webp" alt="動画づくりに悩む会社員2人のイラスト" width="500" style="background:#f5f5f5"><p class="note">File: <a href="img/video-problem.webp" download>video-problem.webp</a> (transparent background). Alt text:</p><div class="cp"><div class="txt">動画づくりに悩む会社員2人のイラスト</div><button class="copy" type="button">Copy</button></div></div>
     </div></li>
 
     <li><div class="body">
@@ -273,6 +275,8 @@ td code{font-family:var(--mono);font-size:13px;background:var(--code);padding:1p
       <p><span class="tag rep">Replace</span>Strength block 「効果的なマーケティングの本質」: new heading and text, remove its image (the micro-influencer database screenshot), and <b>move it to the first position</b>. Keep its laptop icon.</p>
       <div class="field"><span>Heading</span><div class="cp"><div class="txt">事業理解に基づく企画</div><button class="copy" type="button">Copy</button></div></div>
       <div class="field"><span>Text</span><div class="cp"><div class="txt">顧客・競合・自社の3つの視点で事業を整理し、誰に何を伝える動画かを決めてから企画します。戦略から実行まで伴走する「Strategy2Action」の進め方を、動画の企画にも生かしています。</div><button class="copy" type="button">Copy</button></div></div>
+      <p class="note"><b>Illustration</b> in the image column of this block (where the removed screenshot was). Wrapper: <code>flex w-1/2 items-center justify-center max-md:w-full max-md:max-w-[450px]</code>, image <code>h-auto w-full</code>.</p>
+      <div class="cardimg"><img src="img/video-plan.webp" alt="動画の企画会議で3つの視点を説明するイラスト" width="500" style="background:#f5f5f5"><p class="note">File: <a href="img/video-plan.webp" download>video-plan.webp</a> (transparent background). Alt text:</p><div class="cp"><div class="txt">動画の企画会議で3つの視点を説明するイラスト</div><button class="copy" type="button">Copy</button></div></div>
     </div></li>
 
     <li><div class="body">
@@ -315,23 +319,49 @@ td code{font-family:var(--mono);font-size:13px;background:var(--code);padding:1p
     </div></li>
 
     <li><div class="body">
-      <p><span class="tag keep">No change</span>Member (three members) stays as it is.</p>
+      <p><span class="tag rep">Replace</span>Member: heading, paragraph, and the role and profile of 林 壮</p>
+      <div class="field"><span>Heading now</span><div class="cp"><div class="txt old">グローバルに活躍する専門チーム</div></div></div>
+      <div class="field"><span>Heading new</span><div class="cp"><div class="txt">動画制作を担うメンバー</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>Text new</span><div class="cp"><div class="txt">事業づくりとマーケティングの経験を持つ代表と、映像ディレクターの経験を持つメンバーが、企画から撮影・編集まで担当します。</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>林 壮: role</span><div class="cp"><div class="txt">映像ディレクター</div><button class="copy" type="button">Copy</button></div></div>
+      <div class="field"><span>林 壮: profile</span><div class="cp"><div class="txt">東京生まれ、イギリス・シンガポール育ち。
+映像ディレクターの経験を生かし、動画制作の企画・撮影・編集を担当。</div><button class="copy" type="button">Copy</button></div></div>
+      <p class="note">Keep the line break after 「育ち。」. 橋本 圭司 stays as it is.</p>
+    </div></li>
+
+    <li><div class="body">
+      <p><span class="tag rm">Remove</span>Member: remove the 3rd card 「フルスタックエンジニア / Satrio Buwono」 and the scroll arrow under the cards. Card row: <code>justify-start</code> becomes <code>justify-center</code>, so the 2 cards sit in the centre.</p>
     </div></li>
   </ol>
 
-  <h3>Style changes: dark theme to light theme</h3>
-  <p class="note">Apply to every section under the hero, including the two new ones. The hero keeps white text on the video. The new values are already used on the other pages (for example /marketing-support).</p>
+  <h3>Style changes: section colours</h3>
+  <p class="note">The page alternates light grey, white and dark sections. Dark sections keep the current dark classes; grey and white sections use the light values below.</p>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Section</th><th>Background</th><th>Text</th></tr></thead>
+      <tbody>
+        <tr><td>Hero</td><td>video (no change)</td><td>white (no change)</td></tr>
+        <tr><td>Problem</td><td><code>bg-[#f5f5f5]</code></td><td>light values</td></tr>
+        <tr><td>About</td><td><code>bg-white</code></td><td>light values</td></tr>
+        <tr><td>Menu</td><td><code>bg-coal-dark</code> (current dark)</td><td>current dark values: <code>text-white</code>, label <code>text-[#c9d9f9]</code>, paragraph <code>text-[#c8c8c8]</code>. Chips stay white.</td></tr>
+        <tr><td>Strength</td><td><code>bg-white</code></td><td>light values</td></tr>
+        <tr><td>Work Flow</td><td><code>bg-[#f5f5f5]</code></td><td>light values</td></tr>
+        <tr><td>Price</td><td><code>bg-coal-dark</code> (current dark)</td><td>current dark values. The 「お問い合わせ」 button stays white.</td></tr>
+        <tr><td>Member</td><td><code>bg-white</code></td><td>light values</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note"><b>Light values</b> (grey and white sections):</p>
   <div class="tw">
     <table>
       <thead><tr><th>Where</th><th>Now</th><th>New</th></tr></thead>
       <tbody>
-        <tr><td>Section background</td><td><code>bg-coal-dark</code></td><td><code>bg-white</code></td></tr>
         <tr><td>Headings, body text and icons that are white</td><td><code>text-white</code></td><td><code>text-[#222222]</code></td></tr>
-        <tr><td>Small labels 「Problem」「About」「Menu」「Strength」「Work Flow」「Price」「Member」</td><td><code>text-[#c9d9f9]</code></td><td><code>text-[#aaaaaa]</code></td></tr>
+        <tr><td>Small labels (Problem, About, Strength, Work Flow, Member)</td><td><code>text-[#c9d9f9]</code></td><td><code>text-[#aaaaaa]</code></td></tr>
         <tr><td>Step descriptions in Work Flow</td><td><code>text-[#c8c8c8]</code></td><td><code>text-[#333]</code></td></tr>
-        <tr><td>Problem, About and Menu: the white chips</td><td><code>rounded-[12px] bg-white</code></td><td>add <code>border border-[#dddddd]</code></td></tr>
+        <tr><td>Problem and About: the white chips</td><td><code>rounded-[12px] bg-white</code></td><td>add <code>border border-[#dddddd]</code></td></tr>
         <tr><td>Work Flow: number circles</td><td><code>bg-white</code>, number in dark text</td><td><code>bg-[#222222]</code>, number <code>text-white</code></td></tr>
-        <tr><td>「お問い合わせ」 buttons in Work Flow and Price</td><td><code>bg-white</code>, text and arrow <code>#333</code></td><td><code>bg-black</code>, text and arrow <code>text-white</code> (same as the black buttons on /service). The button in the hero stays white.</td></tr>
+        <tr><td>「お問い合わせ」 button in Work Flow</td><td><code>bg-white</code>, text and arrow <code>#333</code></td><td><code>bg-black</code>, text and arrow <code>text-white</code></td></tr>
       </tbody>
     </table>
   </div>
