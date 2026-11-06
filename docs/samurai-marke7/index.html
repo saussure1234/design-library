@@ -373,7 +373,14 @@ p,li{text-wrap:pretty}
 .hm-tile{display:flex;justify-content:center;align-items:flex-end;margin-top:auto;padding:18px 12px 14px;background:#fff;height:170px}
 .worry p{margin-bottom:24px}
 .hm-tile .hm{height:132px}
-.rsn .nums > li{display:flex;flex-direction:column}
+.rsn .nums{margin-top:48px;grid-template-columns:minmax(0,1fr)}
+.rsn .nums > li{display:grid;grid-template-columns:minmax(0,1fr) 220px;column-gap:56px;align-content:start;padding:44px 0!important;border-left:0!important;border-top:1px solid var(--line2);margin-top:0!important}
+.rsn .nums > li:first-child{border-top:0;padding-top:8px!important}
+.rsn .nums > li > *{grid-column:1}
+.rsn .nums > li > .hm--rsn{grid-column:2;grid-row:1 / span 5;align-self:center;margin:0;padding:0}
+.rsn .nums > li > .pos{grid-column:1 / -1}
+.rsn h3{min-height:0!important;margin-top:14px}
+@media (max-width:760px){ .rsn .nums > li{grid-template-columns:minmax(0,1fr);padding:32px 0!important} .rsn .nums > li > .hm--rsn{grid-column:1;grid-row:auto;justify-self:center;margin-top:20px} }
 .hm--rsn{margin-top:auto;padding-top:26px;align-self:center;height:170px}
 .hm--step{margin-top:18px;height:120px}
 .hm--close{margin:44px auto 0;height:190px}
@@ -416,6 +423,36 @@ p,li{text-wrap:pretty}
 @media (max-width:359px){ .mtg .btn{white-space:normal} }
 @media (max-width:600px){ .steps .mtg{margin-left:-2px;margin-right:-2px;padding:16px 14px} .steps .mtg .btn{padding:0 10px;gap:8px;font-size:13.5px} .steps .mtg .btn::after{display:none} }
 @media (max-width:600px){ .mtg{padding:18px} .mtg .btn{width:100%;padding:0 14px;gap:10px;font-size:15px;white-space:nowrap} .mtg--wide .btn{justify-self:stretch} .cs__dl > div{grid-template-columns:minmax(0,1fr);gap:2px} }
+.pos{margin-top:40px;padding:36px clamp(20px,3vw,40px) 28px;background:#fff;border:1px solid var(--line)}
+.rsn .pos__ttl,.pos__ttl{font-weight:900;font-size:clamp(20px,2vw,26px);line-height:1.5;text-align:center;color:var(--ink)}
+.rsn .pos p{margin-top:0;text-wrap:initial}
+.rsn .pos .pos__lead{margin-top:8px!important;text-align:center;font-size:15px}
+.pos__grid{margin-top:28px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.pos__card{display:flex;flex-direction:column;border:1px solid var(--line2);border-radius:14px;overflow:hidden;background:#fff}
+.rsn .pos__hd,.pos__hd{padding:18px 16px;text-align:center;font-weight:900;font-size:clamp(20px,1.9vw,26px);letter-spacing:.06em;color:#fff;background:#5E7A94}
+.rsn .pos__sub,.pos__sub{padding:12px 16px;text-align:center;font-weight:700;font-size:clamp(15px,1.3vw,18px);letter-spacing:.04em;color:var(--ink);background:var(--tint)}
+.pos__mx{display:grid;grid-template-columns:auto repeat(4,minmax(0,1fr));grid-template-rows:auto repeat(3,40px);gap:10px 8px;align-items:center;padding:22px 20px 24px}
+.pos__mx span{font-weight:700;font-size:13px;color:var(--ink2);text-align:center;white-space:nowrap}
+.pos__mx .rl{text-align:left;padding-right:4px}
+.pos__mx i{display:block;border-radius:10px;background:#E6EAF0}
+.pos__mx i.on{background:#8EA7BE}
+.pos__mx i.v{grid-row:2 / span 3;height:100%}
+.pos__mx i.h{grid-column:2 / span 4;height:100%}
+.pos__ft{margin:auto 20px 0;padding:18px 0 24px;border-top:1px solid var(--line);text-align:center}
+.rsn .pos__ft p{font-size:15px;color:var(--ink2);line-height:1.7}
+.pos__ft strong{display:block;margin-top:6px;font-weight:900;font-size:clamp(17px,1.5vw,21px);color:var(--ink);line-height:1.5}
+.pos__card--us{border:2px solid var(--cta);background:#FFF7F2}
+.pos__card--us .pos__hd{background:var(--cta)}
+.pos__card--us .pos__sub{background:#FBE3D6;color:var(--cta-ink)}
+.pos__card--us .pos__mx i.on{background:var(--cta)}
+.pos__card--us .pos__ft{border-color:#F3C9B2}
+.pos__card--us .pos__ft strong{color:var(--cta-ink)}
+.rsn .pos__eq,.pos__eq{margin-top:32px!important;text-align:center;font-weight:900;font-size:clamp(18px,1.9vw,24px);color:var(--ink);line-height:1.6;letter-spacing:.02em}
+.pos__eq b{color:var(--cta-ink)}
+.pos__is{margin:0 .4em}
+@media (max-width:600px){ .pos__is{margin-left:0} }
+.rsn .pos__note,.pos__note{margin-top:10px!important;text-align:right;font-size:12px;color:var(--ink3)}
+@media (max-width:900px){ .pos__grid{grid-template-columns:minmax(0,1fr);max-width:520px;margin-inline:auto} }
 .fx{opacity:0;transform:translateY(16px);transition:opacity .8s var(--ease),transform .8s var(--ease);transition-delay:var(--d,0s)}
 .fx.is-in{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){ .fx{opacity:1;transform:none;transition:none} html{scroll-behavior:auto} }</style>
@@ -463,7 +500,16 @@ p,li{text-wrap:pretty}
     <ol class="nums">
       <li class="fx"><span class="num">01</span>
         <h3>事業会社とベンダー、<wbr>マーケティングと営業<wbr>双方の経験による<wbr>一貫支援</h3>
-        <p>代表・橋本が、事業会社とマーケティング支援会社の双方で、戦略立案から施策の意思決定・実行に関わり、リード獲得後の営業まで対応してきた経験を元に、数値のボトルネックが何かをともに解明し、改善に向けて伴走します。</p><img class="hm hm--rsn" src="img/hm/r1.webp" alt="" aria-hidden="true"></li>
+        <p>代表・橋本が、事業会社とマーケティング支援会社の双方で、戦略立案から施策の意思決定・実行に関わり、リード獲得後の営業まで対応してきた経験を元に、数値のボトルネックが何かをともに解明し、改善に向けて伴走します。</p><img class="hm hm--rsn" src="img/hm/r1.webp" alt="" aria-hidden="true">
+        <div class="pos"><p class="pos__ttl"><span class="nb">業界を横断する知見と、</span><wbr><span class="nb">事業を横断する視点。</span></p><p class="pos__lead"><span class="nb">ベンダーとインハウス、</span><wbr><span class="nb">双方の経験を事業の全体最適へ。</span></p>
+    <ul class="pos__grid">
+      <li class="pos__card fx" style="--d:0s"><p class="pos__hd">ベンダー</p><p class="pos__sub">専門領域 × 複数業界</p><div class="pos__mx" aria-hidden="true"><span></span><span>SEO</span><span>広告</span><span>制作</span><span>CRM</span><span class="rl" style="grid-row:2;grid-column:1">業界A</span><span class="rl" style="grid-row:3;grid-column:1">業界B</span><span class="rl" style="grid-row:4;grid-column:1">業界C</span><i class="v on" style="grid-column:2"></i><i class="v on" style="grid-column:3"></i><i class="v on" style="grid-column:4"></i><i class="v on" style="grid-column:5"></i></div><div class="pos__ft"><p>各領域の専門性を活かす</p><strong>施策ごとの最適化</strong></div></li>
+      <li class="pos__card fx" style="--d:.08s"><p class="pos__hd">インハウス</p><p class="pos__sub">業務横断 × 特定業界</p><div class="pos__mx" aria-hidden="true"><span></span><span>SEO</span><span>広告</span><span>制作</span><span>CRM</span><span class="rl" style="grid-row:2;grid-column:1">業界A</span><span class="rl" style="grid-row:3;grid-column:1">業界B</span><span class="rl" style="grid-row:4;grid-column:1">業界C</span><i class="h" style="grid-row:2"></i><i class="h on" style="grid-row:3"></i><i class="h" style="grid-row:4"></i></div><div class="pos__ft"><p>自社事業を深く理解する</p><strong>業界を超えた再現性が課題</strong></div></li>
+      <li class="pos__card pos__card--us fx" style="--d:.16s"><p class="pos__hd">サムライスタイル</p><p class="pos__sub">業務横断 × 複数業界</p><div class="pos__mx" aria-hidden="true"><span></span><span>SEO</span><span>広告</span><span>制作</span><span>CRM</span><span class="rl" style="grid-row:2;grid-column:1">業界A</span><span class="rl" style="grid-row:3;grid-column:1">業界B</span><span class="rl" style="grid-row:4;grid-column:1">業界C</span><i class="h on" style="grid-row:2"></i><i class="h on" style="grid-row:3"></i><i class="h on" style="grid-row:4"></i></div><div class="pos__ft"><p>業界を超えて知見を応用する</p><strong>事業全体から施策を設計</strong></div></li>
+    </ul>
+    <p class="pos__eq fx"><span class="nb">複数業界の知見 × 事業全体の視点</span><wbr><span class="nb"><span class="pos__is">＝</span><b>サムライスタイルの全体最適</b></span></p>
+    <p class="pos__note">※経験領域の違いを示した概念図です。</p>
+    </div></li>
       <li class="fx" style="--d:.08s"><span class="num">02</span>
         <h3>AI活用による<wbr>運用・制作・<wbr>テクニカル領域の<wbr>効率化</h3>
         <p>広告運用、制作、SEO／LLMOのテクニカル領域は、AIと自社開発のツールで効率化しています。実務経験のあるエンジニアが社内にいるため、サイトの改修や構造化データなどの技術対応も内製で進められます。</p>
