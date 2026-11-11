@@ -1151,6 +1151,12 @@ function bootApp(D) {
       const p3 = el("div", "panel"); p3.style.marginTop = "12px"; p3.id = "comp"; p3.style.scrollMarginTop = "12px";
       const h3 = el("h2"); h3.append(el("span", null, "競合との比較"));
       p3.append(h3, el("p", "desc", `ブランド名を入れていない質問で、各ブランドが答えに出た割合。ボタンで見出しごとに切り替えられます`));
+      if (D.count_terms) {   // 11/11 登場として数える言葉（社名のほかに製品名なども数える案件だけ。設定の count_terms）
+        const ct = el("div", "desc"); ct.append(el("p", null, "数え方：答えに次の言葉が出たら、そのブランドが出たと数えています"));
+        const ul = el("ul"); ul.style.margin = "4px 0 0"; ul.style.paddingLeft = "1.2em";
+        COMP.filter((b) => D.count_terms[b]).forEach((b) => ul.append(el("li", null, `${b}：${D.count_terms[b]}`)));
+        ct.append(ul); p3.append(ct);
+      }
       const cx = counted(xs);
       // 押すと、そのブランドが出た回答だけの質問一覧へ（社名を入れない質問・この期間。数は表の分子と同じ）
       const ACL = CNT.map(layerFull).filter(Boolean);
@@ -1914,7 +1920,7 @@ async function loadClient(sb, cl) {
   if (pids.size) as.splice(0, as.length, ...as.filter((a) => pids.has(a.platform)));   // AI一覧に無い媒体（入れ替え前の古い行）は数えない
   return {
     subject: cl.name, subject_pattern: cl.subject_pattern, tracked: cl.tracked || [], features_all: cl.features || [],
-    layers: Array.isArray(cl.layers) ? cl.layers : ((cl.layers || {}).default || []), layers_by_branch: Array.isArray(cl.layers) ? null : ((cl.layers || {}).by_branch || null), geo: Array.isArray(cl.layers) ? null : ((cl.layers || {}).geo || null), report: Array.isArray(cl.layers) ? null : ((cl.layers || {}).report || null), features_by_branch: Array.isArray(cl.layers) ? null : ((cl.layers || {}).features_by_branch || null), branches: cl.branches || [], competitor_by_layer: !!cl.competitor_by_layer, platforms: cl.platforms || [],
+    layers: Array.isArray(cl.layers) ? cl.layers : ((cl.layers || {}).default || []), layers_by_branch: Array.isArray(cl.layers) ? null : ((cl.layers || {}).by_branch || null), geo: Array.isArray(cl.layers) ? null : ((cl.layers || {}).geo || null), report: Array.isArray(cl.layers) ? null : ((cl.layers || {}).report || null), features_by_branch: Array.isArray(cl.layers) ? null : ((cl.layers || {}).features_by_branch || null), count_terms: Array.isArray(cl.layers) ? null : ((cl.layers || {}).count_terms || null), branches: cl.branches || [], competitor_by_layer: !!cl.competitor_by_layer, platforms: cl.platforms || [],
     questions: qs.map((q) => ({ no: q.no, id: q.code, layer: q.layer, layer_label: q.layer_label, layer_full: q.layer_full, theme: q.theme, branches: q.branches || [], prompt: q.prompt, counted: q.counted })),
     answers: as.map((a) => ({ ...a, appeared: a.appeared ? 1 : 0, brands: a.brands || [], competitors: a.competitors || [], sources: a.sources || [], cards: a.cards || [], stores: a.stores || [], feat_hits: a.feat_hits || [] })),
     batches: [...new Set(as.map((a) => a.batch))].sort(),
