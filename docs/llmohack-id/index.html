@@ -135,9 +135,9 @@ footer{border-top:1px solid var(--line);padding-block:24px 40px;font-size:13px;c
       </div>
     </div>
     <ol class="how">
-      <li><div><b data-t="s1t">Tell us about your business</b><p data-t="s1p">Your link, your city and what you sell. About 2 minutes.</p></div></li>
+      <li><div><b data-t="s1t">Tell us about your business</b><p data-t="s1p">Your website link and your email. About 1 minute.</p></div></li>
       <li><div><b data-t="s2t">We ask AI from Indonesia</b><p data-t="s2p">We turn it into the questions your customers ask, in Bahasa Indonesia, and ask ChatGPT, Gemini and Google AI three times each.</p></div></li>
-      <li><div><b data-t="s3t">You get a report</b><p data-t="s3p">Where AI mentions you, who it recommends instead, and what it gets wrong about you. Sent to your WhatsApp or email.</p></div></li>
+      <li><div><b data-t="s3t">You get a report</b><p data-t="s3p">Where AI mentions you, who it recommends instead, what on your website stops AI, and what to do first. Sent to your email.</p></div></li>
     </ol>
     <p class="free" data-t="free">Free. No account needed.</p>
   </section>
@@ -149,17 +149,17 @@ footer{border-top:1px solid var(--line);padding-block:24px 40px;font-size:13px;c
       <form id="req" novalidate>
         <div class="two">
           <div class="f">
-            <label for="business"><span data-t="lBiz">Business name</span><span class="req" data-t="req">Required</span></label>
-            <input type="text" id="business" name="business" required maxlength="200" autocomplete="organization">
+            <label for="business"><span data-t="lBiz">Business name</span><span class="opt" data-t="opt">Optional</span></label>
+            <input type="text" id="business" name="business" maxlength="200" autocomplete="organization">
           </div>
           <div class="f">
-            <label for="contact_name"><span data-t="lName">Your name</span><span class="req" data-t="req">Required</span></label>
-            <input type="text" id="contact_name" name="contact_name" required maxlength="200" autocomplete="name">
+            <label for="contact_name"><span data-t="lName">Your name</span><span class="opt" data-t="opt">Optional</span></label>
+            <input type="text" id="contact_name" name="contact_name" maxlength="200" autocomplete="name">
           </div>
         </div>
         <div class="f">
-          <label for="contact"><span data-t="lContact">WhatsApp number or email</span><span class="req" data-t="req">Required</span></label>
-          <input type="text" id="contact" name="contact" required maxlength="200" inputmode="email" placeholder="+62 812 0000 0000">
+          <label for="contact"><span data-t="lContact">Email</span><span class="req" data-t="req">Required</span></label>
+          <input type="email" id="contact" name="contact" required maxlength="200" inputmode="email" autocomplete="email" placeholder="you@example.com">
         </div>
         <div class="f">
           <label for="link"><span data-t="lLink">Link to your business</span><span class="req" data-t="req">Required</span></label>
@@ -168,12 +168,12 @@ footer{border-top:1px solid var(--line);padding-block:24px 40px;font-size:13px;c
         </div>
         <div class="two">
           <div class="f">
-            <label for="city"><span data-t="lCity">City / area</span><span class="req" data-t="req">Required</span></label>
-            <input type="text" id="city" name="city" required maxlength="200" data-ph="phCity" placeholder="South Jakarta">
+            <label for="city"><span data-t="lCity">City / area</span><span class="opt" data-t="opt">Optional</span></label>
+            <input type="text" id="city" name="city" maxlength="200" data-ph="phCity" placeholder="South Jakarta">
           </div>
           <div class="f">
-            <label for="industry"><span data-t="lInd">What you sell</span><span class="req" data-t="req">Required</span></label>
-            <input type="text" id="industry" name="industry" required maxlength="200" data-ph="phInd" placeholder="healthy catering">
+            <label for="industry"><span data-t="lInd">What you sell</span><span class="opt" data-t="opt">Optional</span></label>
+            <input type="text" id="industry" name="industry" maxlength="200" data-ph="phInd" placeholder="healthy catering">
           </div>
         </div>
         <div class="f">
@@ -195,7 +195,7 @@ footer{border-top:1px solid var(--line);padding-block:24px 40px;font-size:13px;c
       <div>
         <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="19" fill="#0F6B4E"/><path d="M12 20.5l5.5 5.5L28.5 15" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <b data-t="doneT">Thank you. We have your request.</b>
-        <p data-t="doneP">We will contact you on WhatsApp or by email when your report is ready.</p>
+        <p data-t="doneP">We will email you when your report is ready.</p>
       </div>
       <img src="img/chara/cheer.webp" width="360" height="464" alt="" aria-hidden="true" loading="lazy">
     </div>
@@ -211,18 +211,18 @@ footer{border-top:1px solid var(--line);padding-block:24px 40px;font-size:13px;c
     eyebrow:'Cek visibilitas AI gratis',
     h1:'Apakah AI <mark>merekomendasikan</mark> bisnis Anda?',
     lead:'Saat orang bertanya ke ChatGPT, Gemini, atau Google tentang tempat untuk membeli sesuatu, AI menjawab dengan beberapa nama. Cari tahu apakah bisnis Anda salah satunya.',
-    s1t:'Ceritakan bisnis Anda', s1p:'Link, kota, dan apa yang Anda jual. Sekitar 2 menit.',
+    s1t:'Ceritakan bisnis Anda', s1p:'Link situs web dan email Anda. Sekitar 1 menit.',
     s2t:'Kami bertanya ke AI dari Indonesia', s2p:'Kami ubah menjadi pertanyaan yang biasa ditanyakan pelanggan, dalam Bahasa Indonesia, lalu menanyakannya ke ChatGPT, Gemini, dan Google AI masing-masing tiga kali.',
-    s3t:'Anda menerima laporan', s3p:'Di mana AI menyebut Anda, siapa yang direkomendasikan sebagai gantinya, dan info apa yang salah tentang Anda. Dikirim ke WhatsApp atau email Anda.',
+    s3t:'Anda menerima laporan', s3p:'Di mana AI menyebut Anda, siapa yang direkomendasikan sebagai gantinya, apa di situs Anda yang menghalangi AI, dan apa yang perlu dilakukan dulu. Dikirim ke email Anda.',
     free:'Gratis. Tanpa perlu membuat akun.',
     fTitle:'Minta laporan gratis', fSub:'Kolom bertanda Wajib diperlukan untuk menyiapkan laporan.',
-    lBiz:'Nama bisnis', lName:'Nama Anda', lContact:'Nomor WhatsApp atau email', lLink:'Link bisnis Anda',
+    lBiz:'Nama bisnis', lName:'Nama Anda', lContact:'Email', lLink:'Link bisnis Anda',
     hLink:'Situs web, Google Maps, Instagram, Tokopedia, atau GoFood. Halaman yang ingin direkomendasikan oleh AI.',
     lCity:'Kota / area', lInd:'Apa yang Anda jual', lRiv:'Pesaing yang ingin dibandingkan', lAsk:'Pertanyaan yang ingin ditanyakan ke AI',
     hAsk:'Boleh pertanyaan lengkap atau hanya topik yang ingin Anda rekomendasikan.',
     lAgree:'Saya setuju LLMOHack menyimpan informasi ini untuk menyiapkan laporan dan menghubungi saya tentang laporan tersebut.',
     req:'Wajib', opt:'Opsional', go:'Kirim permintaan',
-    doneT:'Terima kasih. Permintaan Anda sudah kami terima.', doneP:'Kami akan menghubungi Anda lewat WhatsApp atau email saat laporan siap.',
+    doneT:'Terima kasih. Permintaan Anda sudah kami terima.', doneP:'Kami akan mengirim email saat laporan Anda siap.',
     foot:'LLMOHack Indonesia · Kami memeriksa bagaimana AI menjawab pertanyaan tentang bisnis lokal di Indonesia.'
   };
   var PH = {
@@ -281,9 +281,13 @@ footer{border-top:1px solid var(--line);padding-block:24px 40px;font-size:13px;c
     if (bad.length){ show(MSG[LANG].missing); bad[0].focus(); return; }
     if (!f.agree.checked){ show(MSG[LANG].agree); f.agree.focus(); return; }
     if (f.website2.value){ document.getElementById('form-box').hidden = true; document.getElementById('done').hidden = false; return; }
-    var d = {
-      business: f.business.value.trim(), contact_name: f.contact_name.value.trim(), contact: f.contact.value.trim(),
-      link: f.link.value.trim(), city: f.city.value.trim(), industry: f.industry.value.trim(),
+    var em = f.contact.value.trim();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){ f.contact.setAttribute('aria-invalid', 'true'); show(MSG[LANG].missing); f.contact.focus(); return; }
+    var lk = f.link.value.trim(); if (!/^https?:\/\//i.test(lk)) lk = 'https://' + lk;
+    var host = ''; try { host = new URL(lk).hostname.replace(/^www\./, ''); } catch (x) {}
+    var d = {   // 11/12 入力は「リンクとメール」だけで出せる。店名・名前が空なら、リンクの名前・メールの名前で埋める（表の必須を満たすため）
+      business: f.business.value.trim() || host || lk, contact_name: f.contact_name.value.trim() || em.split('@')[0], contact: em,
+      link: lk, city: f.city.value.trim() || null, industry: f.industry.value.trim() || null,
       rivals: f.rivals.value.trim() || null, asks: f.asks.value.trim() || null, lang: LANG, agree: true
     };
     go.disabled = true; var label = go.textContent; go.textContent = MSG[LANG].sending;
