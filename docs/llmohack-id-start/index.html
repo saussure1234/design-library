@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>LLMOHack Indonesia · Free AI check</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+:root{
+  --bg:#FFFFFF; --soft:#F5F5F3; --ink:#1A1A18; --ink2:#4B4A45; --ink3:#76746D;
+  --line:#E6E4DE; --line2:#CFCCC4; --acc:#0F6B4E; --mk:#F7D45C; --bad:#B42318;
+  --sans:"Plus Jakarta Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin-inline:auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+
+.top{display:flex;align-items:center;padding-block:20px}
+.logo{display:flex;align-items:center;gap:8px;color:var(--ink);text-decoration:none;font-weight:800;font-size:18px;letter-spacing:-.01em}
+.logo svg{width:26px;height:22px}
+.logo small{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);padding-left:8px;border-left:1px solid var(--line2)}
+
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,520px);gap:56px;align-items:center;padding-block:28px 64px}
+.pitch{display:grid;gap:22px}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--acc);margin:0}
+h1{font-size:clamp(36px,5.2vw,60px);line-height:1.06;letter-spacing:-.03em;font-weight:800;margin:0;text-wrap:balance}
+mark{background:linear-gradient(transparent 60%,var(--mk) 60%);color:inherit;padding-inline:2px}
+.lead{font-size:18px;color:var(--ink2);margin:0;max-width:30em}
+.cta{display:flex;flex-wrap:wrap;align-items:center;gap:14px 18px}
+.go{font:700 17px var(--sans);padding:16px 26px;border:0;border-radius:14px;background:var(--ink);color:var(--bg);cursor:pointer;display:inline-flex;align-items:center;gap:10px}
+.go:hover{background:#000}
+.go:disabled{opacity:.6;cursor:progress}
+.go svg{width:18px;height:18px}
+.note{font-size:14px;color:var(--ink3);margin:0}
+.fv{border-radius:18px;overflow:hidden;border:1px solid var(--line2);box-shadow:0 30px 60px -44px rgba(26,26,24,.45);background:var(--soft)}
+.fv video{display:block;width:100%;height:auto;aspect-ratio:16/9}
+
+section.band{padding-block:56px;border-top:1px solid var(--line)}
+h2{font-size:clamp(24px,3vw,32px);letter-spacing:-.02em;line-height:1.2;margin:0 0 28px;text-wrap:balance}
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;counter-reset:s}
+.steps li{counter-increment:s;background:var(--soft);border-radius:16px;padding:22px;display:grid;gap:6px;align-content:start}
+.steps li::before{content:counter(s);width:32px;height:32px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-weight:800;font-size:14px;margin-bottom:6px}
+.steps b{font-size:17px}
+.steps p{margin:0;color:var(--ink2);font-size:15px}
+.checks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.check{border:1px solid var(--line);border-radius:16px;padding:24px;display:grid;gap:10px;align-content:start}
+.check .tag{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--acc)}
+.check b{font-size:19px;letter-spacing:-.01em}
+.check ul{margin:0;padding-left:1.1em;color:var(--ink2);display:grid;gap:4px}
+.again{display:flex;justify-content:center;padding-top:36px}
+footer{border-top:1px solid var(--line);padding-block:24px 40px;font-size:13px;color:var(--ink3)}
+
+/* 診断の入力（1問ずつ） */
+dialog{border:0;padding:0;border-radius:20px;width:min(560px,calc(100vw - 32px));max-height:calc(100dvh - 32px);box-shadow:0 40px 80px -40px rgba(26,26,24,.55);color:var(--ink)}
+dialog::backdrop{background:rgba(26,26,24,.45)}
+.wiz{display:grid;gap:20px;padding:28px}
+.wtop{display:flex;align-items:center;gap:12px}
+.bar{flex:1;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;width:25%;background:var(--acc);border-radius:3px;transition:width .3s}
+.count{font-size:13px;color:var(--ink3);white-space:nowrap}
+.x{border:0;background:transparent;font-size:22px;line-height:1;color:var(--ink3);cursor:pointer;padding:4px}
+.wiz h3{font-size:24px;letter-spacing:-.02em;line-height:1.25;margin:0;text-wrap:balance}
+.wiz .sub{margin:-12px 0 0;color:var(--ink3);font-size:15px}
+.f{display:grid;gap:6px}
+.f label{font-size:14px;font-weight:600}
+input[type="text"],input[type="url"],input[type="tel"]{font:inherit;font-size:16px;width:100%;min-width:0;padding:13px 14px;border:1px solid var(--line2);border-radius:12px;background:var(--bg);color:var(--ink)}
+input::placeholder{color:#A3A099}
+input[aria-invalid="true"]{border-color:var(--bad)}
+.linkish{border:0;background:none;padding:0;font:600 14px var(--sans);color:var(--acc);cursor:pointer;justify-self:start;text-decoration:underline;text-underline-offset:3px}
+.agree{display:grid;grid-template-columns:20px minmax(0,1fr);gap:10px;align-items:start;font-size:13px;color:var(--ink2)}
+.agree input{width:18px;height:18px;margin:2px 0 0;accent-color:var(--acc)}
+.nav{display:flex;gap:12px;justify-content:space-between;align-items:center}
+.back{border:0;background:none;font:600 15px var(--sans);color:var(--ink2);cursor:pointer;padding:12px 4px}
+.err{color:var(--bad);font-size:14px;font-weight:600;margin:0}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.done{display:grid;gap:14px;justify-items:start}
+.done svg{width:48px;height:48px}
+.done p{margin:0;color:var(--ink2)}
+
+@media (max-width:900px){
+  .hero{grid-template-columns:1fr;gap:32px;padding-top:8px}
+  .steps,.checks{grid-template-columns:1fr}
+}
+@media (max-width:520px){
+  .logo small{display:none}
+  .wiz{padding:22px}
+  .go{width:100%;justify-content:center}
+}
+</style>
+</head>
+<body>
+<header class="wrap top">
+  <a class="logo" href="#" aria-label="LLMOHack Indonesia">
+    <svg viewBox="0 0 28 24" aria-hidden="true" focusable="false"><polygon points="14,1 14,7.6 10.1,6.7" fill="#0F6B4E"/><polygon points="14,1 17.9,6.7 14,7.6" fill="#0A4F39"/><polygon points="9.32,7.84 14,8.92 14,15.08 5.68,13.16" fill="#1A1A18"/><polygon points="14,8.92 18.68,7.84 22.32,13.16 14,15.08" fill="#76746D"/><polygon points="4.9,14.3 14,16.4 14,23 1,20" fill="#1A1A18"/><polygon points="14,16.4 23.1,14.3 27,20 14,23" fill="#76746D"/></svg>
+    LLMOHack<small>Indonesia</small>
+  </a>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <section class="pitch">
+      <p class="eyebrow">Free AI check for businesses in Indonesia</p>
+      <h1>Is AI <mark>recommending</mark> your business?</h1>
+      <p class="lead">We ask ChatGPT, Gemini and Google AI what your customers ask, and check whether AI can read your website.</p>
+      <div class="cta">
+        <button class="go" type="button" data-start>Start my free check <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <p class="note">Free · about 1 minute · results on WhatsApp</p>
+      </div>
+    </section>
+    <div class="fv">
+      <video width="960" height="540" muted loop playsinline autoplay preload="metadata" poster="media/fv-en.webp" aria-label="Video: a customer asks AI where to buy, and your business is not in the answer.">
+        <source src="media/fv-en.mp4" type="video/mp4">
+      </video>
+    </div>
+  </div>
+
+  <section class="band">
+    <div class="wrap">
+      <h2>How it works</h2>
+      <ol class="steps">
+        <li><b>Tell us about your business</b><p>Your business name, your link and your competitors. About 1 minute.</p></li>
+        <li><b>We check AI and your website</b><p>We ask AI the questions your customers ask, from Indonesia, and check how your website talks to AI.</p></li>
+        <li><b>Get your results on WhatsApp</b><p>In a few days: where AI names you, who it recommends instead, and what to fix first.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <h2>Two things we check</h2>
+      <div class="checks">
+        <div class="check"><span class="tag">What AI says</span><b>Does AI recommend you?</b>
+          <ul><li>How often ChatGPT, Gemini and Google AI name you</li><li>Which competitors they name instead, and which websites they read</li></ul></div>
+        <div class="check"><span class="tag">Your website</span><b>Can AI read your website?</b>
+          <ul><li>Settings that block AI, such as robots.txt and firewalls</li><li>Speed, text AI can read, and images without descriptions</li></ul></div>
+      </div>
+      <div class="again"><button class="go" type="button" data-start>Start my free check</button></div>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap">LLMOHack Indonesia · We check how AI answers questions about local businesses in Indonesia.</div></footer>
+
+<dialog id="wiz" aria-label="Free AI check">
+  <form class="wiz" id="f" novalidate>
+    <div class="wtop">
+      <div class="bar"><i id="barfill"></i></div><span class="count" id="count">Step 1 of 4</span>
+      <button class="x" type="button" id="close" aria-label="Close">×</button>
+    </div>
+
+    <div class="step" data-step="1">
+      <h3>What is your business called?</h3>
+      <div class="f"><label for="business">Business name</label><input type="text" id="business" name="business" maxlength="200" autocomplete="organization" placeholder="e.g. Dapur Sekar"></div>
+    </div>
+
+    <div class="step" data-step="2" hidden>
+      <h3>Where can we find you online?</h3>
+      <p class="sub">The page you want AI to recommend.</p>
+      <div class="f" id="linkbox"><label for="link">Website, Google Maps, Instagram or Tokopedia link</label><input type="url" id="link" name="link" maxlength="500" inputmode="url" placeholder="https://"></div>
+      <button class="linkish" type="button" id="nolink">I don't have a link</button>
+      <div id="desc" hidden>
+        <div class="f"><label for="industry">What do you sell?</label><input type="text" id="industry" name="industry" maxlength="200" placeholder="e.g. healthy catering"></div>
+        <div class="f" style="margin-top:14px"><label for="city">City or area</label><input type="text" id="city" name="city" maxlength="200" placeholder="e.g. South Jakarta"></div>
+      </div>
+    </div>
+
+    <div class="step" data-step="3" hidden>
+      <h3>Who are your competitors?</h3>
+      <p class="sub">We compare how AI talks about them. Optional.</p>
+      <div class="f"><label for="r1">Competitor 1</label><input type="text" id="r1" maxlength="200"></div>
+      <div class="f"><label for="r2">Competitor 2</label><input type="text" id="r2" maxlength="200"></div>
+      <div class="f"><label for="r3">Competitor 3</label><input type="text" id="r3" maxlength="200"></div>
+    </div>
+
+    <div class="step" data-step="4" hidden>
+      <h3>Where should we send your results?</h3>
+      <p class="sub">We send your results on WhatsApp.</p>
+      <div class="f"><label for="wa">WhatsApp number</label><input type="tel" id="wa" name="wa" maxlength="30" inputmode="tel" autocomplete="tel" value="+62 "></div>
+      <label class="agree" for="agree"><input type="checkbox" id="agree"><span>I agree that LLMOHack keeps this information to prepare my results and to contact me about them.</span></label>
+      <div class="hp" aria-hidden="true"><label for="website2">Leave empty</label><input type="text" id="website2" tabindex="-1" autocomplete="off"></div>
+    </div>
+
+    <div class="done" id="done" hidden>
+      <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="#0F6B4E"/><path d="M14 24.5l6.5 6.5L34 17.5" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <h3>Your check has started</h3>
+      <p>We are asking AI about your business and checking your website. It usually takes a few days. We will send your results to your WhatsApp.</p>
+    </div>
+
+    <p class="err" id="err" role="alert"></p>
+    <div class="nav" id="nav">
+      <button class="back" type="button" id="back" hidden>Back</button>
+      <button class="go" type="submit" id="next" style="margin-left:auto">Next</button>
+    </div>
+  </form>
+</dialog>
+
+<script>
+(function(){
+  var SB_URL = "https://apeoqdkjwuvmeyepqyht.supabase.co", SB_ANON = "sb_publishable_MiyUNKE1MunAMjfc07LfIg_Ruhq49OJ";
+  var dlg = document.getElementById('wiz'), f = document.getElementById('f');
+  var step = 1, LAST = 4, noLink = false;
+  var $ = function(id){ return document.getElementById(id); };
+  function err(t){ $('err').textContent = t || ''; }
+  function show(){
+    [].forEach.call(f.querySelectorAll('.step'), function(s){ s.hidden = +s.dataset.step !== step; });
+    $('count').textContent = 'Step ' + step + ' of ' + LAST;
+    $('barfill').style.width = (step / LAST * 100) + '%';
+    $('back').hidden = step === 1;
+    $('next').textContent = step === LAST ? 'Start my check' : (step === 3 ? 'Next (or skip)' : 'Next');
+    err('');
+    var first = f.querySelector('.step[data-step="' + step + '"] input:not([type=checkbox])');
+    if (first) setTimeout(function(){ first.focus(); }, 30);
+  }
+  function bad(el, t){ el.setAttribute('aria-invalid', 'true'); err(t); el.focus(); return false; }
+  function ok(){
+    if (step === 1 && !$('business').value.trim()) return bad($('business'), 'Please enter your business name.');
+    if (step === 2) {
+      if (!noLink && !$('link').value.trim()) return bad($('link'), 'Please paste your link, or choose "I don\'t have a link".');
+      if (noLink && !$('industry').value.trim()) return bad($('industry'), 'Please tell us what you sell.');
+      if (noLink && !$('city').value.trim()) return bad($('city'), 'Please tell us your city or area.');
+    }
+    if (step === 4) {
+      if ($('wa').value.replace(/\D/g, '').length < 9) return bad($('wa'), 'Please enter your WhatsApp number.');
+      if (!$('agree').checked) { err('Please tick the box to agree.'); $('agree').focus(); return false; }
+    }
+    return true;
+  }
+  [].forEach.call(document.querySelectorAll('[data-start]'), function(b){ b.addEventListener('click', function(){ step = 1; show(); dlg.showModal(); }); });
+  $('close').addEventListener('click', function(){ dlg.close(); });
+  $('back').addEventListener('click', function(){ if (step > 1) { step--; show(); } });
+  $('nolink').addEventListener('click', function(){
+    noLink = !noLink; $('desc').hidden = !noLink; $('linkbox').hidden = noLink;
+    this.textContent = noLink ? 'I have a link' : "I don't have a link"; err('');
+  });
+  f.addEventListener('input', function(e){ e.target.removeAttribute('aria-invalid'); err(''); });
+  f.addEventListener('submit', function(e){
+    e.preventDefault();
+    if (!ok()) return;
+    if (step < LAST) { step++; show(); return; }
+    if ($('website2').value) { finish(); return; }
+    var lk = $('link').value.trim(); if (lk && !/^https?:\/\//i.test(lk)) lk = 'https://' + lk;
+    var rivals = ['r1', 'r2', 'r3'].map(function(i){ return $(i).value.trim(); }).filter(Boolean).join(', ');
+    var biz = $('business').value.trim();
+    var d = {   // 表の必須（名前・連絡先・リンク）を満たす形にして送る
+      business: biz, contact_name: biz, contact: 'WhatsApp ' + $('wa').value.trim(),
+      link: noLink || !lk ? '(no link)' : lk, city: $('city').value.trim() || null, industry: $('industry').value.trim() || null,
+      rivals: rivals || null, asks: null, lang: 'en', agree: true
+    };
+    var go = $('next'); go.disabled = true; go.textContent = 'Sending…';
+    fetch(SB_URL + '/rest/v1/id_requests', {
+      method: 'POST',
+      headers: {'apikey': SB_ANON, 'Authorization': 'Bearer ' + SB_ANON, 'Content-Type': 'application/json', 'Prefer': 'return=minimal'},
+      body: JSON.stringify(d)
+    }).then(function(r){ if (!r.ok) throw new Error(String(r.status)); finish(); })
+      .catch(function(){ err('Could not send. Please check your connection and try again.'); go.disabled = false; go.textContent = 'Start my check'; });
+  });
+  function finish(){
+    [].forEach.call(f.querySelectorAll('.step'), function(s){ s.hidden = true; });
+    $('done').hidden = false; $('nav').hidden = true; $('count').textContent = 'Done'; $('barfill').style.width = '100%';
+  }
+})();
+</script>
+</body>
+</html>
