@@ -83,6 +83,10 @@ input[aria-invalid="true"]{border-color:var(--bad)}
 .done{display:grid;gap:14px;justify-items:start}
 .done svg{width:48px;height:48px}
 .done p{margin:0;color:var(--ink2)}
+a.go{text-decoration:none}
+.gbtn{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;font:700 16px var(--sans);padding:14px 18px;border:1px solid var(--line2);border-radius:12px;background:var(--bg);color:var(--ink);cursor:pointer}
+.gbtn:hover{background:var(--soft)}
+.gbtn svg{width:22px;height:22px}
 
 @media (max-width:900px){
   .hero{grid-template-columns:1fr;gap:32px;padding-top:8px}
@@ -151,7 +155,7 @@ input[aria-invalid="true"]{border-color:var(--bad)}
 <dialog id="wiz" aria-label="Free AI check">
   <form class="wiz" id="f" novalidate>
     <div class="wtop">
-      <div class="bar"><i id="barfill"></i></div><span class="count" id="count">Step 1 of 4</span>
+      <div class="bar"><i id="barfill"></i></div><span class="count" id="count">Step 1 of 5</span>
       <button class="x" type="button" id="close" aria-label="Close">×</button>
     </div>
 
@@ -187,10 +191,17 @@ input[aria-invalid="true"]{border-color:var(--bad)}
       <div class="hp" aria-hidden="true"><label for="website2">Leave empty</label><input type="text" id="website2" tabindex="-1" autocomplete="off"></div>
     </div>
 
+    <div class="step" data-step="5" hidden>
+      <h3>Create your account to see your results</h3>
+      <p class="sub">Your results will appear on your own dashboard. We also message you on WhatsApp when they are ready.</p>
+      <button class="gbtn" type="button" id="google"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>Continue with Google</button>
+    </div>
+
     <div class="done" id="done" hidden>
       <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="#0F6B4E"/><path d="M14 24.5l6.5 6.5L34 17.5" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <h3>Your check has started</h3>
-      <p>We are asking AI about your business and checking your website. It usually takes a few days. We will send your results to your WhatsApp.</p>
+      <p>We are asking AI about your business and checking your website. It usually takes a few days. We will message you on WhatsApp when your results are ready.</p>
+      <a class="go" id="todash" href="../llmohack-id/app/">Go to my dashboard</a>
     </div>
 
     <p class="err" id="err" role="alert"></p>
@@ -201,11 +212,14 @@ input[aria-invalid="true"]{border-color:var(--bad)}
   </form>
 </dialog>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
 (function(){
   var SB_URL = "https://apeoqdkjwuvmeyepqyht.supabase.co", SB_ANON = "sb_publishable_MiyUNKE1MunAMjfc07LfIg_Ruhq49OJ";
+  var sb = window.supabase ? window.supabase.createClient(SB_URL, SB_ANON) : null;
+  var KEY = 'llmohack_id_pending';   // Google に行って戻るまで、入力を手元に置いておく
   var dlg = document.getElementById('wiz'), f = document.getElementById('f');
-  var step = 1, LAST = 4, noLink = false;
+  var step = 1, LAST = 5, noLink = false;
   var $ = function(id){ return document.getElementById(id); };
   function err(t){ $('err').textContent = t || ''; }
   function show(){
@@ -213,7 +227,8 @@ input[aria-invalid="true"]{border-color:var(--bad)}
     $('count').textContent = 'Step ' + step + ' of ' + LAST;
     $('barfill').style.width = (step / LAST * 100) + '%';
     $('back').hidden = step === 1;
-    $('next').textContent = step === LAST ? 'Start my check' : (step === 3 ? 'Next (or skip)' : 'Next');
+    $('next').textContent = step === 3 ? 'Next (or skip)' : 'Next';
+    $('nav').hidden = false; $('next').hidden = step === LAST;
     err('');
     var first = f.querySelector('.step[data-step="' + step + '"] input:not([type=checkbox])');
     if (first) setTimeout(function(){ first.focus(); }, 30);
@@ -244,23 +259,42 @@ input[aria-invalid="true"]{border-color:var(--bad)}
     e.preventDefault();
     if (!ok()) return;
     if (step < LAST) { step++; show(); return; }
-    if ($('website2').value) { finish(); return; }
+  });
+  function payload(){
     var lk = $('link').value.trim(); if (lk && !/^https?:\/\//i.test(lk)) lk = 'https://' + lk;
     var rivals = ['r1', 'r2', 'r3'].map(function(i){ return $(i).value.trim(); }).filter(Boolean).join(', ');
     var biz = $('business').value.trim();
-    var d = {   // 表の必須（名前・連絡先・リンク）を満たす形にして送る
+    return {   // 表の必須（名前・連絡先・リンク）を満たす形にして送る
       business: biz, contact_name: biz, contact: 'WhatsApp ' + $('wa').value.trim(),
       link: noLink || !lk ? '(no link)' : lk, city: $('city').value.trim() || null, industry: $('industry').value.trim() || null,
       rivals: rivals || null, asks: null, lang: 'en', agree: true
     };
-    var go = $('next'); go.disabled = true; go.textContent = 'Sending…';
-    fetch(SB_URL + '/rest/v1/id_requests', {
-      method: 'POST',
-      headers: {'apikey': SB_ANON, 'Authorization': 'Bearer ' + SB_ANON, 'Content-Type': 'application/json', 'Prefer': 'return=minimal'},
-      body: JSON.stringify(d)
-    }).then(function(r){ if (!r.ok) throw new Error(String(r.status)); finish(); })
-      .catch(function(){ err('Could not send. Please check your connection and try again.'); go.disabled = false; go.textContent = 'Start my check'; });
+  }
+  $('google').addEventListener('click', function(){
+    if ($('website2').value) { finish(); return; }
+    if (!sb) { err('Could not load sign-in. Please check your connection and try again.'); return; }
+    try { localStorage.setItem(KEY, JSON.stringify(payload())); } catch (x) {}
+    this.disabled = true;
+    sb.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: location.origin + location.pathname + '?resume=1' } })
+      .then(function(r){ if (r.error) { err('Could not open Google sign-in. Please try again.'); $('google').disabled = false; } });
   });
+  // Google から戻ってきたら、手元に置いた入力を自分の名前で送る
+  (function resume(){
+    var raw = null; try { raw = localStorage.getItem(KEY); } catch (x) {}
+    if (!sb || !raw) return;
+    sb.auth.getSession().then(function(r){
+      var s = r.data && r.data.session; if (!s) return;
+      var d = JSON.parse(raw); d.user_id = s.user.id;
+      dlg.showModal(); [].forEach.call(f.querySelectorAll('.step'), function(x){ x.hidden = true; }); $('nav').hidden = true;
+      $('count').textContent = 'Sending…';
+      sb.from('id_requests').insert(d).then(function(res){
+        if (res.error) { err('Could not send. Please try again. (' + res.error.message + ')'); step = 1; show(); return; }
+        try { localStorage.removeItem(KEY); } catch (x) {}
+        history.replaceState(null, '', location.pathname);
+        finish();
+      });
+    });
+  })();
   function finish(){
     [].forEach.call(f.querySelectorAll('.step'), function(s){ s.hidden = true; });
     $('done').hidden = false; $('nav').hidden = true; $('count').textContent = 'Done'; $('barfill').style.width = '100%';
