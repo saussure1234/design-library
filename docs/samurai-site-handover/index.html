@@ -97,12 +97,13 @@ td code{font-family:var(--mono);font-size:13px;background:var(--code);padding:1p
 <header class="lede">
   <p class="eyebrow">Handover · samurai-style.tokyo · Japanese site</p>
   <h1>Samurai Style site update: service list, video production and company pages</h1>
-  <p>Three pages change. The service list goes down to four services. The video production page is rebuilt as a service page for clients in Japan: live-action video for any use (not only short videos), planned from an understanding of the client's business, then shot and edited, with the same structure as our other service pages, and restyled from a dark theme to the light look of the other pages. On the company page, the VALUES section changes its layout.</p>
+  <p>Three pages change. The service list goes down to four services. The video production page is rebuilt as a service page for clients in Japan: live-action video for any use (not only short videos), planned from an understanding of the client's business, then shot and edited, with the same structure as our other service pages, and restyled from a dark theme to the light look of the other pages. On the company page, the VALUES section changes its layout. In the contact form, the service options change to the same four services.</p>
   <p>Each page below has a before / after screenshot and a numbered list of changes. Japanese text that appears on the site is shown in grey boxes. Please copy it with the <b>Copy</b> button instead of retyping it, so no character changes.</p>
   <nav class="toc" aria-label="Pages in this handover">
     <a href="#service">1. Service list <code>/service</code></a>
     <a href="#video">2. Video production <code>/tiktok-production</code></a>
     <a href="#company">3. Company <code>/company</code></a>
+    <a href="#contact">4. Contact form <code>/#contact</code></a>
   </nav>
   <div class="rules">
     <h3>Ground rules</h3>
@@ -173,7 +174,7 @@ td code{font-family:var(--mono);font-size:13px;background:var(--code);padding:1p
     <h3>Not part of this change</h3>
     <ul>
       <li>Do not delete the old pages (/marketing-support, /indonesia-offshore, /newbusiness-pmo). Only their cards leave this list.</li>
-      <li>The service cards on the TOP page and the service options in the contact form stay as they are for now.</li>
+      <li>The service cards on the TOP page stay as they are for now. The contact form options change: see page 4.</li>
     </ul>
   </div>
 </section>
@@ -428,6 +429,55 @@ td code{font-family:var(--mono);font-size:13px;background:var(--code);padding:1p
       <p class="note"><code>break-keep</code> stops breaks inside words, so the <code>&lt;wbr&gt;</code> points are required. Without them a long line can run out of the card on mobile.</p>
     </div></li>
   </ol>
+</section>
+
+<section class="page" id="contact">
+  <div class="page-hd">
+    <p class="eyebrow">Page 4</p>
+    <h2>Contact form: service options</h2>
+    <p class="url">https://samurai-style.tokyo/#contact</p>
+  </div>
+
+  <p>The radio buttons under 「お問い合わせ内容（必須）」 change to match the four services in the new service list. The form is on the TOP page only.</p>
+
+  <h3>Changes</h3>
+  <ol class="changes">
+    <li><div class="body">
+      <p><span class="tag rep">Add</span>New first option: Strategy2Action</p>
+      <div class="field"><span>Label and value</span><div class="cp"><div class="txt">サービスについて（Strategy2Action）</div><button class="copy" type="button">Copy</button></div></div>
+    </div></li>
+
+    <li><div class="body">
+      <p><span class="tag keep">No change</span>「サービスについて（HOOKHACK）」 stays as it is, in 2nd position.</p>
+    </div></li>
+
+    <li><div class="body">
+      <p><span class="tag rep">Add</span>New 3rd option: HookHacker</p>
+      <div class="field"><span>Label and value</span><div class="cp"><div class="txt">サービスについて（HookHacker）</div><button class="copy" type="button">Copy</button></div></div>
+    </div></li>
+
+    <li><div class="body">
+      <p><span class="tag rep">Replace</span>「サービスについて（ショート動画制作支援）」 becomes 「サービスについて（動画制作）」, in 4th position.</p>
+      <div class="field"><span>Label and value</span><div class="cp"><div class="txt">サービスについて（動画制作）</div><button class="copy" type="button">Copy</button></div></div>
+    </div></li>
+
+    <li><div class="body">
+      <p><span class="tag rm">Remove</span>Remove three options: 「サービスについて（オフショア開発）」, 「サービスについて（新規事業開発PMO）」 and 「サービスについて（海外進出支援PMO）」.</p>
+    </div></li>
+
+    <li><div class="body">
+      <p><span class="tag keep">No change</span>「取材・メディア関係」 and 「その他のお問い合わせ」 stay as they are, at the end.</p>
+      <p class="note">Final order (6 options): サービスについて（Strategy2Action）, サービスについて（HOOKHACK）, サービスについて（HookHacker）, サービスについて（動画制作）, 取材・メディア関係, その他のお問い合わせ.</p>
+    </div></li>
+  </ol>
+
+  <div class="out">
+    <h3>Please check</h3>
+    <ul>
+      <li>Each radio button sends its label text as <code>value</code> (<code>name="topic"</code>). Set the same new text in <code>value</code>.</li>
+      <li>If anything after the form uses these values (notification email, Slack, spreadsheet, filters), update it to the new texts too.</li>
+    </ul>
+  </div>
 </section>
 
 </div>
