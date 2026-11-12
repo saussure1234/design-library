@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
+<title>Card Videos v3</title>
+<style>
+:root{--bg:#f5f5f3;--ink:#111;--sub:#666;--line:#ddd}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141414;--ink:#eee;--sub:#aaa;--line:#333}}
+:root[data-theme="dark"]{--bg:#141414;--ink:#eee;--sub:#aaa;--line:#333}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans JP","Hiragino Sans",system-ui,sans-serif}
+.wrap{max-width:1060px;margin:0 auto;padding:28px 16px 64px}
+h1{font-size:20px;margin:0 0 6px}
+.note{color:var(--sub);font-size:14px;margin:0 0 24px;line-height:1.7}
+.row{display:grid;grid-template-columns:auto 1fr;gap:20px 28px;align-items:start;padding:24px 0;border-top:1px solid var(--line)}
+.row h2{grid-column:1/-1;font-size:17px;margin:0}
+.lab{font-size:12px;color:var(--sub);margin:0 0 6px;font-weight:700}
+.pc{position:relative;width:450px;height:325px;border-radius:5px;overflow:hidden;box-shadow:0 2px 5px rgba(0,0,0,.2);background:#000}
+.pc video,.sp video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.pc .ov{position:absolute;inset:0;background:rgba(42,42,42,.6);display:flex;align-items:flex-end;padding:10px}
+.tx{display:flex;width:100%;align-items:center;justify-content:space-between;padding:8px 20px 20px 8px;gap:8px}
+.tx div{width:302px;max-width:100%;display:grid;gap:5px}
+.tag{font-size:13px;font-weight:700;color:#fff}
+.tt{font-size:25px;font-weight:700;color:#fff;line-height:1.4}
+.ds{font-size:13px;color:#fff;line-height:1.4}
+.bt{flex:none;margin-top:50px;width:100px;height:30px;border-radius:9px;background:#000;color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center}
+.sp{width:300px;border-radius:5px;overflow:hidden;box-shadow:0 2px 5px rgba(0,0,0,.2);background:#fff;color:#111}
+.sp .m{position:relative;aspect-ratio:16/9}
+.sp .b{padding:16px 16px 18px;display:grid;gap:6px}
+.sp .tag{color:#111;font-size:12px}.sp .tt{color:#111;font-size:19px}.sp .ds{color:#333;font-size:13.5px;line-height:1.7}
+.sp .bt{justify-self:end;margin-top:8px}
+@media (max-width:820px){.row{grid-template-columns:minmax(0,1fr)}.pc{width:100%;max-width:450px;height:auto;aspect-ratio:450/325}.sp{width:100%;max-width:340px}}
+</style></head><body><div class="wrap">
+<h1>サービス一覧のカード動画（第3版）</h1>
+<p class="note">左＝PCでカードにマウスを乗せた時（本番と同じく暗くなり、文字が下に乗る）。PCはブランド色の地にPCの画面が乗る、PC専用の動画です。右＝スマホ（動画の下に文字）。ここでは見比べやすいように、最初から自動で動かしています。</p>
+<div id="rows"></div>
+</div>
+<script>
+const R=[
+ ["Strategy2Action（案A）","cards3/a","","Strategy2Action","事業理解に基づいて戦略を考え、実行まで伴走し、ダッシュボード作成による経営層・上長への可視化まで対応。"],
+ ["HookHack：文章（T）と画像を決める → 本物の広告動画","cards3/h","動画広告の制作ツール","HookHack","売れる動画広告をLPから5分で制作。検証から成果改善まで、動画広告のPDCAに必要な機能を1ツールで網羅します。"],
+ ["HookHacker　案1：同じ位置の骨組み → 本物 → ゆっくり下へ","cards3/k1","LP・サイト制作の代行","HookHacker","自社開発AIツール「HookHack」×インドネシアオフショアチーム×日本人ディレクターでLP・サイト制作を代行。"],
+ ["HookHacker　案2：PCとスマホで同じLPが流れる","cards3/k2","LP・サイト制作の代行","HookHacker","自社開発AIツール「HookHack」×インドネシアオフショアチーム×日本人ディレクターでLP・サイト制作を代行。"],
+ ["HookHacker　案3：節が下から積み上がって1枚のLPになる","cards3/k3","LP・サイト制作の代行","HookHacker","自社開発AIツール「HookHack」×インドネシアオフショアチーム×日本人ディレクターでLP・サイト制作を代行。"],
+ ["動画制作（今の公式サイトの動画・比較用）","https://samurai-style.tokyo/videos/video-production","","動画制作","貴社の顧客理解に基づき、動画を企画・撮影・編集までワンストップで制作します。"]];
+const v=(s,p)=>`<video src="${s}.mp4" poster="${p}" muted loop playsinline autoplay></video>`;
+const sv=(s,k)=>s.startsWith('http')?v(s,'https://samurai-style.tokyo/images/video-production-poster.webp'):v(s+'_'+k,s+'_'+k+'.jpg');
+document.getElementById('rows').innerHTML=R.map(([h,s,tag,tt,ds])=>{const p=s.startsWith('http')?'https://samurai-style.tokyo/images/video-production-poster.webp':s+'.jpg';const T=`${tag?`<span class="tag">${tag}</span>`:''}<span class="tt">${tt}</span><span class="ds">${ds}</span>`;
+return `<section class="row"><h2>${h}</h2><div><p class="lab">PC（マウスを乗せた時）</p><div class="pc">${sv(s,"pc")}<div class="ov"><div class="tx"><div>${T}</div><span class="bt">詳しく見る</span></div></div></div></div><div><p class="lab">スマホ</p><div class="sp"><div class="m">${sv(s,"sp")}</div><div class="b">${T}<span class="bt">詳しく見る</span></div></div></div></section>`}).join('');
+</script></body></html>
