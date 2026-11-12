@@ -72,9 +72,10 @@ td:first-child{font-weight:600;white-space:nowrap}
         <td data-k="New code"><div class="links"><a href="code/service.html" target="_blank" rel="noopener">Open</a><a href="code/service.html" download>Download</a></div></td>
         <td data-k="What changes">
           <p class="what">6 cards become 4: Strategy2Action, HookHack, HookHacker, 動画制作.</p>
-          <p class="what">Strategy2Action and HookHacker link to other sites, so they open in a new tab.</p>
+          <p class="what">Strategy2Action links to the new page <code>/strategy2action</code> (row 5). HookHacker links to another site, so it opens in a new tab.</p>
+          <p class="what">Strategy2Action, HookHack and HookHacker now show a video in the card, the same way as the 動画制作 card already does (same <code>&lt;video&gt;</code> element; it plays on hover on desktop). The current images become the posters.</p>
           <p class="what">HookHack and HookHacker each get a short line above the title (動画広告の制作ツール / LP・サイト制作の代行), so they are easy to tell apart.</p>
-          <p class="files">New image: <a href="code/hookhacker-card.png" download>hookhacker-card.png</a></p>
+          <p class="files">New files: <a href="code/hookhacker-card.png" download>hookhacker-card.png</a>, <code>cards/</code> folder (3 videos, in the zip). Put the videos where the 動画制作 video is (<code>/videos/</code>).</p>
         </td>
       </tr>
       <tr>
@@ -109,7 +110,7 @@ td:first-child{font-weight:600;white-space:nowrap}
         <td data-k="What changes">
           <p class="what">A new landing page for the service Strategy2Action. The folder <code>strategy2action/</code> has the page and its images and videos. It is a standalone page, not built with the site components.</p>
           <p class="what">All buttons on the page scroll down to the contact form at the bottom (<code>#contact</code>). Please connect this form to the same place as the contact form on TOP. The service is fixed by a hidden field: <code>topic</code> = 戦略立案・実行支援（Strategy2Action）.</p>
-          <p class="what">The domain is not decided yet. When it is, change the link of the Strategy2Action card on /service to the new URL.</p>
+          <p class="what">URL: <code>https://samurai-style.tokyo/strategy2action</code> (JA). The Strategy2Action card on /service already links here.</p>
         </td>
       </tr>
     </tbody>
@@ -120,7 +121,7 @@ td:first-child{font-weight:600;white-space:nowrap}
     <ul>
       <li>Each file is the live page saved from the browser, so it uses the same Tailwind classes and components as the current build.</li>
       <li>Scripts are removed and image paths point to https://samurai-style.tokyo, so each file opens on its own.</li>
-      <li>Do not copy the <code>&lt;style&gt;</code> blocks <code>id="mock-utils-base"</code>, <code>id="mock-fix"</code> and <code>id="mock-utils"</code>, or the <code>_next/</code> folder (a copy of the live CSS and fonts). They are only for this preview.</li>
+      <li>Do not copy the script <code>id="mock-play"</code> (it only imitates the hover play of the live site) or the <code>&lt;style&gt;</code> blocks <code>id="mock-utils-base"</code>, <code>id="mock-fix"</code> and <code>id="mock-utils"</code>, or the <code>_next/</code> folder (a copy of the live CSS and fonts). They are only for this preview.</li>
       <li>Change the Japanese (JA) version only. Leave ID and EN as they are.</li>
     </ul>
   </div>
