@@ -227,6 +227,7 @@ p,li{text-wrap:pretty}
 .ceo__nm b{font-size:28px;font-weight:900;color:var(--ink);letter-spacing:.08em;margin-right:16px}
 .ceo__cv{margin-top:20px;font-size:15.5px;line-height:2.05;color:var(--ink2);text-wrap:balance}
 @media (max-width:760px){ .ceo{grid-template-columns:minmax(0,1fr)} .ceo__img{width:200px} }
+.lead--kp{word-break:keep-all;overflow-wrap:anywhere}
 .dl{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.85fr);gap:clamp(36px,5vw,80px);align-items:start}
 .fw{margin-top:32px;border-top:1px solid rgba(255,255,255,.2);counter-reset:fw}
 .fw li{display:grid;grid-template-columns:64px minmax(0,1fr);align-items:baseline;padding:18px 0;border-bottom:1px solid rgba(255,255,255,.2)}
@@ -237,8 +238,8 @@ p,li{text-wrap:pretty}
 .dlf__hd{font-weight:900;font-size:20px}
 .dlf form{margin-top:18px;display:grid;gap:16px}
 .dlf label{display:grid;gap:6px;font-weight:700;font-size:14px}
-.dlf input{width:100%;font:inherit;font-weight:500;font-size:16px;padding:13px 14px;border:1px solid var(--line2);border-radius:0;background:#fff;color:var(--ink)}
-.dlf input:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 2px rgba(14,30,58,.15)}
+.dlf input,.dlf textarea{width:100%;resize:vertical;font:inherit;font-weight:500;font-size:16px;padding:13px 14px;border:1px solid var(--line2);border-radius:0;background:#fff;color:var(--ink)}
+.dlf input:focus,.dlf textarea:focus{outline:none;border-color:var(--navy);box-shadow:0 0 0 2px rgba(14,30,58,.15)}
 .dlf .btn{width:100%;margin-top:6px;cursor:pointer;font-family:inherit}
 .dlf__note{margin-top:14px;font-size:12.5px;color:var(--ink3);line-height:1.8}
 .dlf__note a{color:var(--ink2)}
@@ -462,7 +463,7 @@ p,li{text-wrap:pretty}
   <div class="wrap hd__in">
     <a class="logo" href="#top" aria-label="Strategy2Action（ページの先頭へ）"><span class="logo__txt">Strategy<b>2</b>Action</span></a>
     <nav class="gnav" aria-label="ページ内"><a href="#reason">選ばれる理由</a><a href="#flow">支援の進め方</a><a href="#llm">LLM対応</a><a href="#ceo">代表紹介</a></nav>
-    <a class="btn btn--main" href="https://www.samurai-style.tokyo/#contact" target="_blank" rel="noopener">相談する</a>
+    <a class="btn btn--main" href="#contact">相談する</a>
   </div>
 </header>
 <main>
@@ -477,7 +478,7 @@ p,li{text-wrap:pretty}
       <div class="frame"><video data-pc="media/fv6.mp4" poster="media/fv6.webp" data-sp="media/fv6-sp.mp4" data-sp-poster="media/fv6-sp.webp" width="1280" height="720" muted loop playsinline autoplay preload="auto" aria-label="動画：3C分析と施策の現状からボトルネックと改善方針をすり合わせ、タスクの優先順位を整理し、タスクごとに弊社と貴社で役割を分担し、ダッシュボードで可視化して経営層・上長へのレポートにする"></video><script>(function(v){var sp=matchMedia("(max-width:600px)").matches;if(sp)v.poster=v.getAttribute("data-sp-poster");v.muted=true;v.src=v.getAttribute(sp?"data-sp":"data-pc");})(document.currentScript.previousElementSibling);</script><div class="vbar" aria-hidden="true"><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i></div></div>
     </div>
     <div class="hero__cta fx" style="--d:.24s">
-      <a class="btn btn--main" href="https://www.samurai-style.tokyo/#contact" target="_blank" rel="noopener">相談する</a>
+      <a class="btn btn--main" href="#contact">相談する</a>
     </div>
   </div>
 </section>
@@ -531,7 +532,7 @@ p,li{text-wrap:pretty}
           <h3>3C分析と施策の現状から、<wbr>ボトルネックと<wbr>改善方針を<wbr>すり合わせ</h3>
           <p>顧客・競合・自社の3C分析と、現状の施策の実施状況を照らし合わせます。Webでのリサーチに加え、貴社の営業・CS担当など顧客接点を持つ方の声をもとにニーズを把握し、競争環境と貴社のアセットを比較。現状の施策や課題をお伺いした上で、ボトルネックと改善の方針を提案し、すり合わせます。</p>
           <div class="mtg"><p>まずは初回ミーティングで、これまでのお取り組みや現状課題を<span class="nb">お伺いさせてください。</span><br>弊社側でミーティング前に同業他社様の施策内容を調査・把握した上で、弊社でのこれまでの実践経験も踏まえ、ボトルネックと<wbr>施策優先順位までを<wbr><span class="nb">明確化します。</span></p>
-          <a class="btn btn--main" href="https://www.samurai-style.tokyo/#contact" target="_blank" rel="noopener">初回ミーティングを申し込む<span class="btn__tag">無料</span></a></div></div></li>
+          <a class="btn btn--main" href="#contact">初回ミーティングを申し込む<span class="btn__tag">無料</span></a></div></div></li>
         <li class="fx"><div class="steps__side"><p class="steps__no"><small>STEP</small><b>02</b></p><img class="hm hm--step" src="img/hm/s2.webp" alt="" aria-hidden="true"></div><div>
           <h3>すり合わせた方針から、<wbr>タスクの<wbr>優先順位を整理</h3>
           <p>すり合わせた改善方針をもとに、取り組むタスクを洗い出し、事業への重要性も踏まえて<wbr>着手する順序を<wbr><span class="nb">整理します。</span></p></div></li>
@@ -568,7 +569,7 @@ p,li{text-wrap:pretty}
       </div>
     </div>
     <div class="mtg mtg--wide fx"><p>まずは初回ミーティングで、これまでのお取り組みや現状課題を<span class="nb">お伺いさせてください。</span><br>弊社側でミーティング前に同業他社様の施策内容を調査・把握した上で、弊社でのこれまでの実践経験も踏まえ、ボトルネックと<wbr>施策優先順位までを<wbr><span class="nb">明確化します。</span></p>
-      <a class="btn btn--main" href="https://www.samurai-style.tokyo/#contact" target="_blank" rel="noopener">初回ミーティングを申し込む<span class="btn__tag">無料</span></a></div>
+      <a class="btn btn--main" href="#contact">初回ミーティングを申し込む<span class="btn__tag">無料</span></a></div>
   </div>
 </section>
 <section class="sec" id="case">
@@ -636,6 +637,27 @@ p,li{text-wrap:pretty}
     </div>
   </div>
 </section>
+<section class="sec sec--navy" id="contact">
+  <div class="wrap dl">
+    <div>
+      <p class="lbl fx">CONTACT</p>
+      <h2 class="h2 fx">お問い合わせ</h2>
+      <p class="lead lead--kp fx">まずは初回ミーティングで、<wbr>これまでのお取り組みや<wbr>現状課題を<wbr>お伺いさせてください。<br>弊社側でミーティング前に<wbr>同業他社様の<wbr>施策内容を<wbr>調査・把握した上で、<wbr>弊社でのこれまでの<wbr>実践経験も踏まえ、<wbr>ボトルネックと<wbr>施策優先順位までを<wbr>明確化します。</p>
+    </div>
+    <div class="dlf fx" style="--d:.08s">
+      <form id="contactForm" novalidate>
+        <input type="hidden" name="topic" value="サービスについて（Strategy2Action）">
+        <label>会社名（必須）<input type="text" name="company" autocomplete="organization" required></label>
+        <label>担当者名（必須）<input type="text" name="name" autocomplete="name" required></label>
+        <label>メールアドレス（必須）<input type="email" name="email" autocomplete="email" required></label>
+        <label>電話番号（必須）<input type="tel" name="phone" autocomplete="tel" required></label>
+        <label>本文（必須）<textarea name="message" rows="6" required></textarea></label>
+        <button class="btn btn--main" type="submit">送信</button>
+      </form>
+      <p class="dlf__note">上記ボタンを押すことで、当社の提供するサービス等に関する情報を提供する目的で、サムライスタイル株式会社が上記から送信された個人情報を保管・処理することに同意したものとみなされます。お客様はこれらの情報提供をいつでも停止できます。個人情報の開示や削除依頼等のお問い合わせ先、およびお客様の個人情報を尊重して保護するための弊社の取り組みについては、弊社の<a href="https://www.samurai-style.tokyo/privacy-policy" target="_blank" rel="noopener">プライバシーポリシー</a>をご覧ください。</p>
+    </div>
+  </div>
+</section>
 </main>
 <footer class="ft">
   <div class="wrap">
@@ -682,7 +704,7 @@ p,li{text-wrap:pretty}
       if (e.isIntersecting) { if (dv.paused) { var p = dv.play(); if (p && p.catch) p.catch(function(){}); } }
       else if (!dv.paused) dv.pause(); }); }, {threshold:.35}).observe(dv);
   }
-  var f = document.getElementById("dlForm");
+  var f = document.getElementById("contactForm");
   if (f) f.addEventListener("submit", function(e){ e.preventDefault(); });
 })();</script>
 </body>
