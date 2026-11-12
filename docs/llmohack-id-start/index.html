@@ -67,10 +67,11 @@ dialog::backdrop{background:rgba(26,26,24,.45)}
 .count{font-size:13px;color:var(--ink3);white-space:nowrap}
 .x{border:0;background:transparent;font-size:22px;line-height:1;color:var(--ink3);cursor:pointer;padding:4px}
 .wiz h3{font-size:24px;letter-spacing:-.02em;line-height:1.25;margin:0;text-wrap:balance}
-.wiz .sub{margin:-12px 0 0;color:var(--ink3);font-size:15px}
+.step:not([hidden]){display:grid;gap:16px}
+.wiz .sub{margin:-8px 0 0;color:var(--ink3);font-size:15px}
 .f{display:grid;gap:6px}
 .f label{font-size:14px;font-weight:600}
-input[type="text"],input[type="url"],input[type="tel"]{font:inherit;font-size:16px;width:100%;min-width:0;padding:13px 14px;border:1px solid var(--line2);border-radius:12px;background:var(--bg);color:var(--ink)}
+textarea,input[type="text"],input[type="url"],input[type="tel"]{font:inherit;font-size:16px;width:100%;min-width:0;padding:13px 14px;border:1px solid var(--line2);border-radius:12px;background:var(--bg);color:var(--ink)}
 input::placeholder{color:#A3A099}
 input[aria-invalid="true"]{border-color:var(--bad)}
 .linkish{border:0;background:none;padding:0;font:600 14px var(--sans);color:var(--acc);cursor:pointer;justify-self:start;text-decoration:underline;text-underline-offset:3px}
@@ -102,6 +103,9 @@ a.go{text-decoration:none}
   .wiz{padding:22px}
   .go{width:100%;justify-content:center}
 }
+.opt{font-weight:400;color:var(--ink3,var(--ink2));font-size:12px;margin-left:6px}
+textarea{resize:vertical;line-height:1.5}
+.fine{font-size:12px;color:var(--ink2);margin:14px 0 0;line-height:1.5}
 </style>
 </head>
 <body>
@@ -120,7 +124,7 @@ a.go{text-decoration:none}
       <p class="lead">We ask ChatGPT, Gemini and Google AI what your customers ask, and check whether AI can read your website.</p>
       <div class="cta">
         <button class="go" type="button" data-start>Start my free check <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h11M11 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-        <p class="note">Free · about 1 minute · results on WhatsApp</p>
+        <p class="note">Free · about 1 minute · results on WhatsApp or email</p>
       </div>
     </section>
     <div class="fv">
@@ -134,9 +138,9 @@ a.go{text-decoration:none}
     <div class="wrap">
       <h2>How it works</h2>
       <ol class="steps">
-        <li><b>Tell us about your business</b><p>Your business name, your link and your competitors. About 1 minute.</p></li>
+        <li><b>Tell us about your business</b><p>Your link and your competitors. About 1 minute.</p></li>
         <li><b>We check AI and your website</b><p>We ask AI the questions your customers ask, from Indonesia, and check how your website talks to AI.</p></li>
-        <li><b>Get your results on WhatsApp</b><p>In a few days: where AI names you, who it recommends instead, and what to fix first.</p></li>
+        <li><b>Get your results on WhatsApp or email</b><p>In a few days: where AI names you, who it recommends instead, and what to fix first.</p></li>
       </ol>
     </div>
   </section>
@@ -165,22 +169,14 @@ a.go{text-decoration:none}
     </div>
 
     <div class="step" data-step="1">
-      <h3>What is your business called?</h3>
-      <div class="f"><label for="business">Business name</label><input type="text" id="business" name="business" maxlength="200" autocomplete="organization" placeholder="e.g. Dapur Sekar"></div>
+      <h3>Where can we find you online?</h3>
+      <p class="sub">The page you want AI to recommend. We read your business name from it.</p>
+      <div class="f"><label for="link">Website, Google Maps, Instagram or Tokopedia link</label><input type="url" id="link" name="link" maxlength="500" inputmode="url" placeholder="https://"></div>
+      <div class="f"><label for="note">Anything we should know? <span class="opt">Optional</span></label><textarea id="note" name="note" maxlength="1000" rows="3" placeholder="e.g. We sell healthy catering in South Jakarta. Customers often ask about delivery."></textarea></div>
+      <div class="hp" aria-hidden="true"><label for="website2">Leave empty</label><input type="text" id="website2" tabindex="-1" autocomplete="off"></div>
     </div>
 
     <div class="step" data-step="2" hidden>
-      <h3>Where can we find you online?</h3>
-      <p class="sub">The page you want AI to recommend.</p>
-      <div class="f" id="linkbox"><label for="link">Website, Google Maps, Instagram or Tokopedia link</label><input type="url" id="link" name="link" maxlength="500" inputmode="url" placeholder="https://"></div>
-      <button class="linkish" type="button" id="nolink">I don't have a link</button>
-      <div id="desc" hidden>
-        <div class="f"><label for="industry">What do you sell?</label><input type="text" id="industry" name="industry" maxlength="200" placeholder="e.g. healthy catering"></div>
-        <div class="f" style="margin-top:14px"><label for="city">City or area</label><input type="text" id="city" name="city" maxlength="200" placeholder="e.g. South Jakarta"></div>
-      </div>
-    </div>
-
-    <div class="step" data-step="3" hidden>
       <h3>Who are your competitors?</h3>
       <p class="sub">We compare how AI talks about them. Optional.</p>
       <div class="f"><label for="r1">Competitor 1</label><input type="text" id="r1" maxlength="200"></div>
@@ -188,30 +184,27 @@ a.go{text-decoration:none}
       <div class="f"><label for="r3">Competitor 3</label><input type="text" id="r3" maxlength="200"></div>
     </div>
 
-    <div class="step" data-step="4" hidden>
-      <h3>Where should we send your results?</h3>
-      <p class="sub">We send your results on WhatsApp.</p>
-      <div class="f"><label for="wa">WhatsApp number</label><input type="tel" id="wa" name="wa" maxlength="30" inputmode="tel" autocomplete="tel" value="+62 "></div>
-      <label class="agree" for="agree"><input type="checkbox" id="agree"><span>I agree that LLMOHack keeps this information to prepare my results and to contact me about them.</span></label>
-      <div class="hp" aria-hidden="true"><label for="website2">Leave empty</label><input type="text" id="website2" tabindex="-1" autocomplete="off"></div>
-    </div>
-
-    <div class="step" data-step="5" hidden>
+    <div class="step" data-step="3" hidden>
       <h3>Create your account to see your results</h3>
-      <p class="sub">Your results will appear on your own dashboard. We also message you on WhatsApp when they are ready.</p>
+      <p class="sub">Your results will appear on your own dashboard. We tell you when they are ready: on WhatsApp if you sign up with WhatsApp, by email if you sign up with Google.</p>
       <button class="wbtn" type="button" id="wabtn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4a.5.5 0 0 0 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.3.8 3.2.7a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z"/></svg>Continue with WhatsApp</button>
+      <div id="phonebox" hidden>
+        <div class="f"><label for="wa">WhatsApp number</label><input type="tel" id="wa" name="wa" maxlength="30" inputmode="tel" autocomplete="tel" value="+62 "></div>
+        <div class="nav" style="margin-top:12px"><button class="go" type="button" id="sendcode" style="margin-left:auto">Send me a code</button></div>
+      </div>
       <div id="otpbox" hidden>
         <div class="f"><label for="otp" id="otplabel">Enter the 6-digit code we sent to your WhatsApp</label><input type="text" id="otp" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="123456"></div>
         <div class="nav" style="margin-top:12px"><button class="back" type="button" id="resend">Send the code again</button><button class="go" type="button" id="verify">Verify</button></div>
       </div>
       <p class="or"><span>or</span></p>
       <button class="gbtn" type="button" id="google"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>Continue with Google</button>
+      <p class="fine">By continuing, you agree that LLMOHack keeps this information to prepare your results and to contact you about them.</p>
     </div>
 
     <div class="done" id="done" hidden>
       <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="#0F6B4E"/><path d="M14 24.5l6.5 6.5L34 17.5" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <h3>Your check has started</h3>
-      <p>We are asking AI about your business and checking your website. It usually takes a few days. We will message you on WhatsApp when your results are ready.</p>
+      <p>We are asking AI about your business and checking your website. It usually takes a few days. <span id="donewhere">We will tell you when your results are ready.</span></p>
       <a class="go" id="todash" href="../llmohack-id/app/">Go to my dashboard</a>
     </div>
 
@@ -230,7 +223,7 @@ a.go{text-decoration:none}
   var sb = window.supabase ? window.supabase.createClient(SB_URL, SB_ANON) : null;
   var KEY = 'llmohack_id_pending';   // Google に行って戻るまで、入力を手元に置いておく
   var dlg = document.getElementById('wiz'), f = document.getElementById('f');
-  var step = 1, LAST = 5, noLink = false;
+  var step = 1, LAST = 3;
   var $ = function(id){ return document.getElementById(id); };
   function err(t){ $('err').textContent = t || ''; }
   function show(){
@@ -238,7 +231,7 @@ a.go{text-decoration:none}
     $('count').textContent = 'Step ' + step + ' of ' + LAST;
     $('barfill').style.width = (step / LAST * 100) + '%';
     $('back').hidden = step === 1;
-    $('next').textContent = step === 3 ? 'Next (or skip)' : 'Next';
+    $('next').textContent = step === 2 ? 'Next (or skip)' : 'Next';
     $('nav').hidden = false; $('next').hidden = step === LAST;
     err('');
     var first = f.querySelector('.step[data-step="' + step + '"] input:not([type=checkbox])');
@@ -246,39 +239,38 @@ a.go{text-decoration:none}
   }
   function bad(el, t){ el.setAttribute('aria-invalid', 'true'); err(t); el.focus(); return false; }
   function ok(){
-    if (step === 1 && !$('business').value.trim()) return bad($('business'), 'Please enter your business name.');
-    if (step === 2) {
-      if (!noLink && !$('link').value.trim()) return bad($('link'), 'Please paste your link, or choose "I don\'t have a link".');
-      if (noLink && !$('industry').value.trim()) return bad($('industry'), 'Please tell us what you sell.');
-      if (noLink && !$('city').value.trim()) return bad($('city'), 'Please tell us your city or area.');
-    }
-    if (step === 4) {
-      if ($('wa').value.replace(/\D/g, '').length < 9) return bad($('wa'), 'Please enter your WhatsApp number.');
-      if (!$('agree').checked) { err('Please tick the box to agree.'); $('agree').focus(); return false; }
+    if (step === 1) {
+      var v = $('link').value.trim();
+      if (!v) return bad($('link'), 'Please paste your link.');
+      if (!/^(https?:\/\/)?[^\s\/]+\.[^\s]{2,}/i.test(v)) return bad($('link'), 'This does not look like a link. Please copy it from your browser or app.');
     }
     return true;
   }
   [].forEach.call(document.querySelectorAll('[data-start]'), function(b){ b.addEventListener('click', function(){ step = 1; show(); dlg.showModal(); }); });
   $('close').addEventListener('click', function(){ dlg.close(); });
   $('back').addEventListener('click', function(){ if (step > 1) { step--; show(); } });
-  $('nolink').addEventListener('click', function(){
-    noLink = !noLink; $('desc').hidden = !noLink; $('linkbox').hidden = noLink;
-    this.textContent = noLink ? 'I have a link' : "I don't have a link"; err('');
-  });
   f.addEventListener('input', function(e){ e.target.removeAttribute('aria-invalid'); err(''); });
   f.addEventListener('submit', function(e){
     e.preventDefault();
     if (!ok()) return;
     if (step < LAST) { step++; show(); return; }
   });
+  function nameFrom(lk){   // 店名はリンクから仮に取る（本当の名前は質問を作るときにページを読んで確かめる）
+    try {
+      var u = new URL(lk), h = u.hostname.replace(/^www\./, ''), parts = u.pathname.split('/').filter(Boolean);
+      var m = u.pathname.match(/\/maps\/place\/([^\/]+)/);
+      if (m) return decodeURIComponent(m[1]).replace(/\+/g, ' ').slice(0, 200);
+      if (/instagram\.com|tokopedia\.com|facebook\.com|tiktok\.com|shopee\.co\.id/.test(h) && parts[0]) return parts[0].replace(/^@/, '').slice(0, 200);
+      return h.slice(0, 200);
+    } catch (x) { return lk.slice(0, 200); }
+  }
   function payload(){
     var lk = $('link').value.trim(); if (lk && !/^https?:\/\//i.test(lk)) lk = 'https://' + lk;
     var rivals = ['r1', 'r2', 'r3'].map(function(i){ return $(i).value.trim(); }).filter(Boolean).join(', ');
-    var biz = $('business').value.trim();
-    return {   // 表の必須（名前・連絡先・リンク）を満たす形にして送る
-      business: biz, contact_name: biz, contact: 'WhatsApp ' + $('wa').value.trim(),
-      link: noLink || !lk ? '(no link)' : lk, city: $('city').value.trim() || null, industry: $('industry').value.trim() || null,
-      rivals: rivals || null, asks: null, lang: 'en', agree: true
+    var biz = nameFrom(lk);
+    return {   // 表の必須（名前・連絡先・リンク）を満たす形にして送る。連絡先はログインの仕方で決まる（submitAs）
+      business: biz, contact_name: biz, contact: '-', link: lk,
+      city: null, industry: null, rivals: rivals || null, asks: $('note').value.trim() || null, lang: 'en', agree: true
     };
   }
   function phone(){   // 入力された番号を +62… の形にそろえる（0 始まり・62 始まりも受ける）
@@ -288,8 +280,12 @@ a.go{text-decoration:none}
     if (d.charAt(0) === '0') return '+62' + d.slice(1);
     return '+' + d;
   }
-  function submitAs(user){   // ログインできた人の名前で申し込みを送る
-    var d = payload(); d.user_id = user.id;
+  function submitAs(user, d){   // ログインできた人の名前で申し込みを送る。WhatsApp なら WhatsApp、Google ならメールで知らせる
+    d = d || payload(); d.user_id = user.id;
+    var meta = user.user_metadata || {};
+    if (user.phone) { d.contact = 'WhatsApp +' + String(user.phone).replace(/^\+/, ''); d.contact_name = meta.full_name || 'there'; }
+    else if (user.email) { d.contact = user.email; d.contact_name = (meta.full_name || meta.name || user.email.split('@')[0]).slice(0, 200); }
+    $('donewhere').textContent = user.phone ? 'We will message you on WhatsApp when your results are ready.' : 'We will email you at ' + (user.email || 'your Gmail') + ' when your results are ready.';
     $('count').textContent = 'Sending…';
     return sb.from('id_requests').insert(d).then(function(res){
       if (res.error) { err('Could not send. Please try again. (' + res.error.message + ')'); return; }
@@ -299,14 +295,17 @@ a.go{text-decoration:none}
   }
   function sendCode(){
     if (!sb) { err('Could not load sign-in. Please check your connection and try again.'); return; }
-    $('wabtn').disabled = true; err('');
+    err('');
+    if ($('wa').value.replace(/\D/g, '').length < 9) { bad($('wa'), 'Please enter your WhatsApp number.'); return; }
+    $('sendcode').disabled = true;
     sb.auth.signInWithOtp({ phone: phone(), options: { channel: 'whatsapp' } }).then(function(r){
-      $('wabtn').disabled = false;
+      $('wabtn').disabled = false; $('sendcode').disabled = false;
       if (r.error) { err('Could not send the code to ' + phone() + '. Please check the number. (' + r.error.message + ')'); return; }
       $('otpbox').hidden = false; $('otplabel').textContent = 'Enter the 6-digit code we sent to your WhatsApp ' + phone(); $('otp').focus();
     });
   }
-  $('wabtn').addEventListener('click', function(){ if ($('website2').value) { finish(); return; } sendCode(); });
+  $('wabtn').addEventListener('click', function(){ if ($('website2').value) { finish(); return; } $('phonebox').hidden = false; $('wa').focus(); });
+  $('sendcode').addEventListener('click', sendCode);
   $('resend').addEventListener('click', sendCode);
   $('verify').addEventListener('click', function(){
     var code = $('otp').value.replace(/\D/g, '');
@@ -335,11 +334,7 @@ a.go{text-decoration:none}
       var d0 = JSON.parse(raw);
       dlg.showModal(); [].forEach.call(f.querySelectorAll('.step'), function(x){ x.hidden = true; }); $('nav').hidden = true;
       history.replaceState(null, '', location.pathname);
-      // 手元に置いた入力を画面に戻してから、ログインした人の名前で送る
-      $('business').value = d0.business || ''; $('link').value = d0.link === '(no link)' ? '' : (d0.link || ''); noLink = d0.link === '(no link)';
-      $('city').value = d0.city || ''; $('industry').value = d0.industry || ''; $('wa').value = (d0.contact || '').replace(/^WhatsApp\s*/, '');
-      (d0.rivals || '').split(', ').forEach(function(v, i){ if (i < 3) $('r' + (i + 1)).value = v; });
-      submitAs(s.user);
+      submitAs(s.user, d0);   // 手元に置いた入力を、ログインした人の名前で送る
     });
   })();
   function finish(){
