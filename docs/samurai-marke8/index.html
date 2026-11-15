@@ -455,33 +455,34 @@ p,li{text-wrap:pretty}
 .rsn .pos__note,.pos__note{margin-top:4px!important;text-align:right;font-size:11px;color:var(--ink3)}
 @media (max-width:640px){ .pos__grid{grid-template-columns:minmax(0,1fr);max-width:360px;margin-inline:auto} .pos__mx{grid-template-rows:auto repeat(3,14px)} }
 .cx__sample{margin-top:20px;display:inline-block;padding:6px 12px;background:var(--tint);font-size:13px;font-weight:700;color:var(--ink2)}
-.cx{margin-top:32px;display:grid;gap:40px}
-.cx__item{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(24px,3.5vw,48px);align-items:start;padding:clamp(22px,3vw,36px);background:#fff;border:1px solid var(--line2);border-top:4px solid var(--navy)}
-.cx__item--rev{grid-template-columns:minmax(0,7fr) minmax(0,5fr)}
-.cx__item--rev .cx__ph{order:2}
+.cx{margin-top:28px;display:grid;gap:28px}
+.cx__item{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);grid-template-areas:"ph body" "more body";grid-template-rows:auto 1fr;gap:16px clamp(24px,3.5vw,44px);align-items:start;padding:clamp(20px,2.6vw,30px);background:#fff;border:1px solid var(--line2);border-top:4px solid var(--navy)}
+.cx__item--rev{grid-template-columns:minmax(0,7fr) minmax(0,5fr);grid-template-areas:"body ph" "body more"}
+.cx__ph{grid-area:ph}
+.cx__body{grid-area:body}
+.cx__more{grid-area:more}
 .cx__ph{margin:0}
 .cx__ph img{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover}
 .cx__ph figcaption{margin-top:10px;font-size:13px;color:var(--ink3)}
 .cx__co{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;font-weight:700;font-size:14px;color:var(--ink2)}
 .cx__ind{padding:3px 10px;background:var(--navy);color:#fff;font-size:12.5px;letter-spacing:.04em}
 .cx__sum{margin-top:10px;font-weight:700;font-size:14.5px;color:var(--navy)}
-.cx__q{margin-top:10px;font-weight:900;font-size:clamp(20px,2vw,26px);line-height:1.55}
-.cx__nums{margin-top:20px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.cx__nums > div{padding:14px 16px;background:var(--gray)}
+.cx__q{margin-top:8px;font-weight:900;font-size:clamp(19px,1.8vw,23px);line-height:1.55}
+.cx__nums{margin-top:14px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.cx__nums > div{padding:10px 14px;background:var(--gray)}
 .cx__nums dt{font-size:13px;font-weight:700;color:var(--ink3)}
 .cx__nums dd{margin-top:4px;font-weight:700;font-size:15px;color:var(--ink2)}
 .cx__nums b{font-family:var(--en);font-weight:700;font-size:clamp(24px,2.4vw,30px);color:var(--navy);margin:0 2px}
 .cx__nums b.up{color:var(--cta)}
-.cx__dl{margin-top:18px;border-top:1px solid var(--line)}
-.cx__dl > div{display:grid;grid-template-columns:84px minmax(0,1fr);gap:12px;padding:12px 0;border-bottom:1px solid var(--line);font-size:15px;line-height:1.75}
+.cx__dl{margin-top:12px;border-top:1px solid var(--line)}
+.cx__dl > div{display:grid;grid-template-columns:84px minmax(0,1fr);gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:15px;line-height:1.75}
 .cx__dl dt{font-weight:700;color:var(--ink3)}
-.cx__cm{margin:20px 0 0;padding:18px 20px;background:var(--tint);border-left:3px solid var(--cta)}
-.cx__cm p{font-size:15px;line-height:1.95;color:var(--ink2)}
-.cx__more{margin-top:22px}
-.cx__more .btn{min-height:52px;padding:0 28px;font-weight:700;font-size:15px}
-@media (max-width:600px){ .cx__more .btn{width:100%} }
+.cx__cm{margin:14px 0 0;padding:14px 18px;background:var(--tint);border-left:3px solid var(--cta)}
+.cx__cm p{font-size:14.5px;line-height:1.85;text-wrap:pretty;color:var(--ink2)}
+.cx__more{margin:0}
+.cx__more .btn{width:100%;min-height:48px;padding:0 20px;font-weight:700;font-size:14.5px}
 .cx__cm cite{display:block;margin-top:8px;font-style:normal;font-size:13px;font-weight:700;color:var(--ink3);text-align:right}
-@media (max-width:860px){ .cx__item,.cx__item--rev{grid-template-columns:minmax(0,1fr)} .cx__item--rev .cx__ph{order:0} }
+@media (max-width:860px){ .cx__item,.cx__item--rev{grid-template-columns:minmax(0,1fr);grid-template-areas:"ph" "body" "more";grid-template-rows:auto} }
 @media (max-width:600px){ .cx__nums{grid-template-columns:minmax(0,1fr)} .cx__dl > div{grid-template-columns:minmax(0,1fr);gap:2px} }
 .fx{opacity:0;transform:translateY(16px);transition:opacity .8s var(--ease),transform .8s var(--ease);transition-delay:var(--d,0s)}
 .fx.is-in{opacity:1;transform:none}
@@ -589,26 +590,26 @@ p,li{text-wrap:pretty}
     <ol class="cx">
       <li class="cx__item fx" style="--d:0s">
         <figure class="cx__ph"><img src="img/case/p_edu.webp" alt="インタビューに答える学習塾のマーケティング責任者" width="1200" height="800" loading="lazy" decoding="async"><figcaption>マーケティング部 部長　山田 健一 様</figcaption></figure>
+        <p class="cx__more"><a class="btn btn--ghost" href="#">インタビューを読む</a></p>
         <div class="cx__body">
-          <p class="cx__co"><span class="cx__ind">教育業界</span>株式会社サンプル学院（個別指導塾）</p>
+          <p class="cx__co"><span class="cx__ind">教育業界</span><span><span class="nb">株式会社サンプル学院</span><wbr><span class="nb">（個別指導塾）</span></span></p>
           <p class="cx__sum">Web領域のCPA改善から<wbr>面談でのヒアリング項目策定・<wbr>資料改善まで対応</p>
           <h3 class="cx__q"><span class="nb">広告の数字だけでなく、</span><wbr><span class="nb">面談の進め方まで</span><wbr><span class="nb">一緒に見直してもらえました</span></h3>
           <dl class="cx__nums"><div><dt>問い合わせ1件あたりの費用</dt><dd><span class="nb"><b>5.5</b>万円 → <b class="up">3.0</b>万円</span></dd></div><div><dt>面談からの入塾率</dt><dd><span class="nb"><b>30</b>% → <b class="up">60</b>%</span></dd></div></dl>
           <dl class="cx__dl"><div><dt>課題</dt><dd>広告からの問い合わせ単価が高止まりし、面談後の入塾率も伸び悩んでいた</dd></div><div><dt>実施内容</dt><dd>広告運用、LP改善、面談のヒアリング項目と資料の改善、ダッシュボードでの可視化</dd></div></dl>
-          <blockquote class="cx__cm"><p>ベンダーごとにばらばらだったレポートが1枚のダッシュボードにまとまり、どこがボトルネックかを社内で同じ数字を見て話せるようになりました。面談で何を聞くかまで踏み込んでもらえたのは、これまでの支援会社にはなかったことです。</p><cite>マーケティング部 部長　山田 健一 様</cite></blockquote>
-          <p class="cx__more"><a class="btn btn--ghost" href="#">インタビューを読む</a></p>
+          <blockquote class="cx__cm"><p>ベンダーごとにばらばらだったレポートが1枚のダッシュボードにまとまり、どこがボトルネックかを社内で同じ数字を見て話せるようになりました。面談で何を聞くかまで踏み込んでもらえたのは、<wbr><span class="nb">これまでの支援会社には</span><wbr><span class="nb">なかったことです。</span></p><cite>マーケティング部 部長　山田 健一 様</cite></blockquote>
         </div>
       </li>
       <li class="cx__item cx__item--rev fx" style="--d:.08s">
         <figure class="cx__ph"><img src="img/case/p_sec.webp" alt="オフィスでタブレットを持つ情報セキュリティ会社の広報担当" width="1200" height="800" loading="lazy" decoding="async"><figcaption>広報・マーケティング室 室長　佐藤 美咲 様</figcaption></figure>
+        <p class="cx__more"><a class="btn btn--ghost" href="#">インタビューを読む</a></p>
         <div class="cx__body">
-          <p class="cx__co"><span class="cx__ind">セキュリティ業界</span>株式会社サンプルセキュリティ（情報セキュリティ）</p>
+          <p class="cx__co"><span class="cx__ind">セキュリティ業界</span><span><span class="nb">株式会社サンプルセキュリティ</span><wbr><span class="nb">（情報セキュリティ）</span></span></p>
           <p class="cx__sum">SEO記事制作、<wbr>ホワイトペーパー制作、<wbr>LLMOまで対応</p>
           <h3 class="cx__q"><span class="nb">記事、ホワイトペーパー、</span><wbr><span class="nb">AIでの見え方まで</span><wbr><span class="nb">ひとつの窓口で進められました</span></h3>
           <dl class="cx__nums"><div><dt>自然検索からの流入</dt><dd><span class="nb"><b>1.0</b>倍 → <b class="up">1.8</b>倍</span></dd></div><div><dt>資料ダウンロード</dt><dd><span class="nb">月<b>12</b>件 → 月<b class="up">38</b>件</span></dd></div></dl>
           <dl class="cx__dl"><div><dt>課題</dt><dd>専門性の高い商材で、検索からの問い合わせが少なく、社内では記事や資料を作る手が回っていなかった</dd></div><div><dt>実施内容</dt><dd>SEO記事制作、ホワイトペーパー制作、LLMO（AI回答での見え方）の改善</dd></div></dl>
-          <blockquote class="cx__cm"><p>技術的な内容を、私たちが説明しなくても理解したうえで記事にしてもらえるので、確認の手間がほとんどかかりません。AIに聞かれたときにどう答えられているかまで毎月見てもらえるのが心強いです。</p><cite>広報・マーケティング室 室長　佐藤 美咲 様</cite></blockquote>
-          <p class="cx__more"><a class="btn btn--ghost" href="#">インタビューを読む</a></p>
+          <blockquote class="cx__cm"><p>技術的な内容を、私たちが説明しなくても理解したうえで記事にしてもらえるので、確認の手間がほとんどかかりません。AIに聞かれたときにどう答えられているかまで<wbr><span class="nb">毎月見てもらえるのが</span><wbr><span class="nb">心強いです。</span></p><cite>広報・マーケティング室 室長　佐藤 美咲 様</cite></blockquote>
         </div>
       </li>
     </ol>
