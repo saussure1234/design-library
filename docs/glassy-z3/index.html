@@ -648,7 +648,8 @@ main{position:relative}
 .fva .b1{width:24vw;height:24vw;max-width:360px;max-height:360px;background:#BEE2F2;opacity:.9}
 .fva .b2{width:26vw;height:26vw;max-width:380px;max-height:380px;background:#C3E4F3;opacity:.9}
 .fva .b3{width:20vw;height:20vw;max-width:300px;max-height:300px;background:#D3EBF6;opacity:.9}
-.fva .pk{width:13vw;height:13vw;max-width:200px;max-height:200px;background:#EFB6C9;opacity:.75;filter:blur(40px)}
+.fva .pk{width:20vw;height:20vw;max-width:300px;max-height:300px;background:#EFB6C9;opacity:.8;filter:blur(46px)}
+.fva .pk2{width:9vw;height:9vw;max-width:140px;max-height:140px;background:#F2C3D3;opacity:.6;filter:blur(34px)}
 @media (max-width:600px){.fva .b1,.fva .b2{width:46vw;height:46vw}.fva .b3{width:38vw;height:38vw}.fva .pk{width:28vw;height:28vw}}
 .art--p6 .shk{animation:pShk 3.2s cubic-bezier(.3,0,.2,1) infinite}
 @keyframes pShk{0%,15%{transform:translateY(-14px)}30%{transform:translateY(2px)}36%,85%{transform:translateY(0)}100%{transform:translateY(-14px)}}
@@ -725,7 +726,7 @@ main{position:relative}
 <main id="top">
 <div class="pga" aria-hidden="true"></div>
 <section class="fv">
-  <div class="fva" aria-hidden="true"><span class="b1"></span><span class="b2"></span><span class="b3"></span><span class="pk"></span></div>
+  <div class="fva" aria-hidden="true"><span class="b1"></span><span class="b2"></span><span class="b3"></span><span class="pk"></span><span class="pk2"></span></div>
   <div class="wrap fv__grid">
     <div class="fv__copy">
       <p class="fv__sh"><span class="nb">10年超の社内報事業で培った</span><span class="nb">ノウハウで運用をサポート</span></p>
@@ -1160,10 +1161,11 @@ if("scrollRestoration" in history && !location.hash){history.scrollRestoration="
     {x:.92,y:.22,r:9,T:-30,a:2},    // 右上：青
     {x:.80,y:.86,r:7,T:22,a:4},     // 右下：薄い青
     {x:.62,y:.5,r:2.2,T:-18,a:1}    // ピンク：スマホ寄りの後ろ（位置は動画から決める・小さく）
+    ,{x:.04,y:.62,r:2.6,T:23,a:3}    // 左側の小さいピンク
   ];
   var t0=performance.now(), reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
   function pinkPos(){var r=v.getBoundingClientRect(), f=fv.getBoundingClientRect(); if(!r.width) return;
-    P[3].x=(r.left-f.left+r.width*.36)/f.width; P[3].y=(r.top-f.top+r.height*.4)/f.height;}
+    P[3].x=(r.left-f.left+r.width*.17)/f.width; P[3].y=(r.top-f.top+r.height*.5)/f.height;}
   pinkPos(); addEventListener("resize",pinkPos); v.addEventListener("loadedmetadata",pinkPos); addEventListener("load",pinkPos);
   function frame(now){
     var t=reduce?0:(now-t0)/1000, W=innerWidth/100;
