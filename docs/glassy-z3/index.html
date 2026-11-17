@@ -606,6 +606,42 @@ main{position:relative}
 .hd__nav{font-size:15px}
 @media (max-width:900px){:root{--hd:64px}.hd__logo img{height:28px}.hd__cta{height:42px;padding:0 16px;font-size:13px}}
 @media (max-width:600px){.hd__logo img{height:26px}.hd__cta{padding:0 14px;font-size:12px}}
+
+/* FVのにじみ：JSで動かす（波はやめた） */
+.fva span{animation:none!important;transition:none!important;left:0;top:0}
+.fva .b1{width:48vw;height:48vw}.fva .b2{width:40vw;height:40vw}.fva .b3{width:32vw;height:32vw}.fva .b4{width:28vw;height:28vw}
+.fva .pk{width:30vw;height:30vw;max-width:440px;max-height:440px;background:#F1BFD0;opacity:.85;filter:blur(70px)}
+/* 他の節のピンクは少しだけ・薄く */
+.pga .p{display:block;background:#F4D2DD;opacity:.55}
+
+/* 特徴01〜03：薄い水色×白でメリハリがない（So）→ 絵の枠を濃い青の面に。他の節の紺カードとは違う見せ方 */
+.feat .ft__vis{background:linear-gradient(150deg,#0E80B2 0%,#0A5C8B 100%);border-radius:24px;padding:40px}
+.feat .ft__vis .cert{border:0;box-shadow:0 14px 30px rgba(0,30,60,.25)}
+.feat .ft__vis .cert__note{color:rgba(255,255,255,.9)}
+.feat .ft__vis--plain{background:none;padding:0;position:relative}
+.feat .ft__vis--plain::before{content:"";position:absolute;inset:22px -18px -18px 22px;border-radius:26px;background:linear-gradient(150deg,#0E80B2,#0A5C8B);z-index:-1}
+.feat .ft__vis--plain .photo{position:relative}
+.feat .ft{isolation:isolate}
+.feat .sup > div{background:#fff;border:1px solid #D6E5EE;border-top:4px solid #0A6E9E;border-radius:6px 6px 18px 18px;box-shadow:0 10px 24px rgba(20,48,79,.06)}
+@media (max-width:600px){.feat .ft__vis{padding:22px}.feat .ft__vis--plain::before{inset:14px -10px -10px 14px}}
+
+/* スマホ（So「スマホのUIにも」） */
+.btn{word-break:keep-all;overflow-wrap:anywhere}
+.fv__pts .tx{word-break:keep-all;overflow-wrap:anywhere}
+@media (max-width:900px){
+  .fv__img{margin:10px -24px 0;overflow:hidden}
+  .fv__img video,.fv__vid{width:150%!important;max-width:none;margin-left:-6%!important}
+  .fv__cap{margin-right:24px}
+}
+@media (max-width:600px){
+  .fv__sh{display:block;font-size:13px;line-height:1.7}
+  .fv__sh::before{display:none}
+  .fv__img{margin:6px -16px 0}
+  .fv__img video,.fv__vid{width:168%!important;margin-left:-10%!important}
+  .fv__pts .pt{width:auto;margin-right:2px}
+  .fv__pts li{gap:10px}
+  .pr__main .btns .btn{font-size:15px}
+}
 </style>
 </head>
 <body>
@@ -624,7 +660,7 @@ main{position:relative}
 <main id="top">
 <div class="pga" aria-hidden="true"></div>
 <section class="fv">
-  <div class="fva" aria-hidden="true"><span class="b1"></span><span class="b2"></span><span class="b3"></span><span class="b4"></span><i class="rp r1"></i><i class="rp r2"></i></div>
+  <div class="fva" aria-hidden="true"><span class="b1"></span><span class="b2"></span><span class="b3"></span><span class="b4"></span><span class="pk"></span></div>
   <div class="wrap fv__grid">
     <div class="fv__copy">
       <p class="fv__sh"><span class="nb">10年超の社内報事業で培った</span><span class="nb">ノウハウで運用をサポート</span></p>
@@ -1032,8 +1068,9 @@ if("scrollRestoration" in history && !location.hash){history.scrollRestoration="
     for(var i=1;i<secs.length;i++){
       var a=secs[i-1], b=secs[i];
       if(!(plain(a)||plain(b))) continue;
+      if(/\bfv\b/.test(a.className)) continue;
       var y=b.getBoundingClientRect().top+scrollY-top, left=i%2, sz=Math.min(640,Math.max(360,W*.42));
-      [[left?-.14:.72,"s d1",1]].forEach(function(o){
+      (i%3===0?[[left?-.14:.72,"s d1",1],[left?.8:-.06,"p d2",.5]]:[[left?-.14:.72,"s d1",1]]).forEach(function(o){
         var sp=document.createElement("span"); sp.className=o[1];
         var z=sz*o[2]; sp.style.width=sp.style.height=z+"px";
         sp.style.left=(W*o[0])+"px"; sp.style.top=(y-z/2+(o[2]<1?z*.4:0))+"px"; L.appendChild(sp);
@@ -1051,13 +1088,27 @@ if("scrollRestoration" in history && !location.hash){history.scrollRestoration="
   v.src=useWebm?v.getAttribute("data-webm"):v.getAttribute("data-mp4");
   if(!useWebm) v.classList.add("is-mp4");
   v.play&&v.play().catch(function(){});
-  var KICK=58/30, prev=0, tm;
-  function pos(){var r=v.getBoundingClientRect(), f=fv.getBoundingClientRect();
-    fv.style.setProperty("--px",(r.left-f.left+r.width*.355)+"px"); fv.style.setProperty("--py",(r.top-f.top+r.height*.42)+"px");}
-  function tick(){var t=v.currentTime||0;
-    if(prev<KICK&&t>=KICK){pos();fv.classList.remove("kick");void fv.offsetWidth;fv.classList.add("kick");clearTimeout(tm);tm=setTimeout(function(){fv.classList.remove("kick")},2600);}
-    prev=t; requestAnimationFrame(tick);}
-  requestAnimationFrame(tick);
+  /* にじみ：いつもゆっくり漂い、通知が鳴った瞬間だけ少し速くなる（So 11/17「波ではなく、後ろの円の動きが速くなる」） */
+  var B=[].slice.call(fv.querySelectorAll(".fva span"));
+  var P=[ // 中心(fvの幅・高さに対する割合)・振れ幅(vw)・周期の係数
+    {x:.70,y:.12,ax:5,ay:4,k:1.0,ph:0},{x:.06,y:.92,ax:4,ay:3,k:.8,ph:2},{x:.95,y:.88,ax:4,ay:4,k:.7,ph:4},{x:.36,y:.04,ax:4,ay:3,k:.9,ph:1},
+    {x:.5,y:.5,ax:2.4,ay:2,k:1.1,ph:3} // ピンク（スマホの左うしろ。位置は動画から決める）
+  ];
+  var KICK=58/30, prev=0, speed=1, boost=0, ph=0, last=performance.now(), reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function pinkPos(){var r=v.getBoundingClientRect(), f=fv.getBoundingClientRect();
+    P[4].x=(r.left-f.left+r.width*.13)/f.width; P[4].y=(r.top-f.top+r.height*.5)/f.height;}
+  function frame(now){
+    var dt=Math.min(.05,(now-last)/1000); last=now;
+    var t=v.currentTime||0; if(prev<KICK&&t>=KICK) boost=1; prev=t;
+    boost=Math.max(0,boost-dt/2.6); speed=1+3.2*Math.sin(Math.PI*Math.min(1,boost))*(boost>0?1:0);
+    if(!reduce) ph+=dt*speed*.32;
+    var W=innerWidth/100;
+    B.forEach(function(e,i){var q=P[i]; if(!q) return;
+      var x=Math.sin(ph*q.k+q.ph)*q.ax*W, y=Math.cos(ph*q.k*.8+q.ph)*q.ay*W;
+      e.style.left=(q.x*100)+"%"; e.style.top=(q.y*100)+"%"; e.style.transform="translate(-50%,-50%) translate("+x.toFixed(1)+"px,"+y.toFixed(1)+"px)";});
+    requestAnimationFrame(frame);}
+  pinkPos(); addEventListener("resize",pinkPos); v.addEventListener("loadedmetadata",pinkPos);
+  requestAnimationFrame(frame);
 })();
 </script>
 </body>
