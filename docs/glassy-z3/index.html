@@ -648,7 +648,7 @@ main{position:relative}
 .fva .b1{width:24vw;height:24vw;max-width:360px;max-height:360px;background:#BEE2F2;opacity:.9}
 .fva .b2{width:26vw;height:26vw;max-width:380px;max-height:380px;background:#C3E4F3;opacity:.9}
 .fva .b3{width:20vw;height:20vw;max-width:300px;max-height:300px;background:#D3EBF6;opacity:.9}
-.fva .pk{width:15vw;height:15vw;max-width:220px;max-height:220px;background:#F3CCD9;opacity:.6;filter:blur(50px)}
+.fva .pk{width:13vw;height:13vw;max-width:200px;max-height:200px;background:#EFB6C9;opacity:.75;filter:blur(40px)}
 @media (max-width:600px){.fva .b1,.fva .b2{width:46vw;height:46vw}.fva .b3{width:38vw;height:38vw}.fva .pk{width:28vw;height:28vw}}
 .art--p6 .shk{animation:pShk 3.2s cubic-bezier(.3,0,.2,1) infinite}
 @keyframes pShk{0%,15%{transform:translateY(-14px)}30%{transform:translateY(2px)}36%,85%{transform:translateY(0)}100%{transform:translateY(-14px)}}
@@ -687,6 +687,14 @@ main{position:relative}
 @media (max-width:600px){.csm{margin:0 -16px}.csm__track{padding:0 16px}}
 
 .photo video{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}
+
+/* 最終CTA：左に見出しと本文、右にボタンを縦に2つ（So「右が空いて見える」） */
+.last__in{grid-template-columns:minmax(0,1fr) minmax(0,380px)!important;gap:56px;align-items:center}
+.last__in > .fx{display:contents}
+.last__in > .fx > h2,.last__in > .fx > p{grid-column:1}
+.last__in > .fx > .btns{grid-column:2;grid-row:1 / span 2;flex-direction:column;margin-top:0;gap:14px}
+.last__in > .fx > .btns .btn{width:100%}
+@media (max-width:900px){.last__in{grid-template-columns:1fr!important;gap:0}.last__in > .fx > .btns{grid-column:1;grid-row:auto;margin-top:32px}}
 </style>
 </head>
 <body>
@@ -1139,9 +1147,12 @@ if("scrollRestoration" in history && !location.hash){history.scrollRestoration="
     {x:.10,y:.30,r:8,T:26,a:0},     // 左上：青
     {x:.92,y:.22,r:9,T:-30,a:2},    // 右上：青
     {x:.80,y:.86,r:7,T:22,a:4},     // 右下：薄い青
-    {x:.16,y:.82,r:6,T:-24,a:1}     // 左下：ピンク（小さく薄く）
+    {x:.62,y:.5,r:2.2,T:-18,a:1}    // ピンク：スマホ寄りの後ろ（位置は動画から決める・小さく）
   ];
   var t0=performance.now(), reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function pinkPos(){var r=v.getBoundingClientRect(), f=fv.getBoundingClientRect(); if(!r.width) return;
+    P[3].x=(r.left-f.left+r.width*.36)/f.width; P[3].y=(r.top-f.top+r.height*.4)/f.height;}
+  pinkPos(); addEventListener("resize",pinkPos); v.addEventListener("loadedmetadata",pinkPos); addEventListener("load",pinkPos);
   function frame(now){
     var t=reduce?0:(now-t0)/1000, W=innerWidth/100;
     B.forEach(function(e,i){var q=P[i]; if(!q) return;
