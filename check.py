@@ -472,6 +472,9 @@ addEventListener("load",function(){
         var own=""; [].forEach.call(e.childNodes,function(n){if(n.nodeType===3) own+=n.nodeValue});
         if(own.trim().length<2) return;
         if(e.closest("figure")||e.closest("figcaption")) return;   // 写真の中の字は意図
+        // ★読み上げ用の見えない文字（1px に縮めて clip で隠したもの）は画面に出ていない。
+        //   文字の矩形は縮まないので「被り」と数えていた（esl-col1 の特徴カードの飛び先リンク、2026-11-17）
+        var eb=e.getBoundingClientRect(); if(eb.width<=2||eb.height<=2) return;
         // 🚨 親が overflow で切っている部分は画面に出ていない。畳んだ長文（高さを絞った器）の中の
         //    段落を、隠れているのに「被り」と数えていた（2026-09-14、B2C版テンプレの保護者の声・
         //    375px で次の人の写真に69px）。行の矩形を、切っている親の矩形で削ってから比べる
