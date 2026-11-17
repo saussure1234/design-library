@@ -571,6 +571,41 @@ main{position:relative}
 .brg__arw::after{content:"";position:absolute;left:0;right:0;top:-50%;height:50%;border-radius:2px;background:linear-gradient(rgba(0,119,163,0),var(--sky-d));animation:brgShoot 1.5s cubic-bezier(.55,0,.25,1) infinite}
 @keyframes brgShoot{0%{top:-50%}30%{top:100%}31%{top:-50%}60%{top:100%}100%{top:100%}}
 @media (prefers-reduced-motion:reduce){.brg__arw::after{animation:none;top:0;height:100%}}
+
+/* FV：青いにじみは1画面目の全体に（So「画面全体にやって」）。動画は背景透明で、後ろに円や四角を出さない */
+.fv__img video,.fv__vid{-webkit-mask-image:none!important;mask-image:none!important}
+.fv__vid.is-mp4{mix-blend-mode:multiply}
+.fva{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.fva span{position:absolute;border-radius:50%;filter:blur(80px);transition:transform 1.1s cubic-bezier(.2,.7,.2,1)}
+.fva .b1{width:46vw;height:46vw;left:46%;top:-16vw;background:#BEE2F2;animation:fa1 19s ease-in-out infinite}
+.fva .b2{width:38vw;height:38vw;left:-10vw;bottom:-14vw;background:#CDE7F4;animation:fa2 24s ease-in-out infinite}
+.fva .b3{width:30vw;height:30vw;right:-8vw;bottom:-6vw;background:#B7DDF0;animation:fa1 27s ease-in-out -8s infinite reverse}
+.fva .b4{width:26vw;height:26vw;left:22vw;top:-8vw;background:#D8EDF7;animation:fa2 21s ease-in-out -5s infinite}
+@keyframes fa1{0%,100%{translate:0 0}50%{translate:-5vw 4vw}}
+@keyframes fa2{0%,100%{translate:0 0}50%{translate:4vw -3vw}}
+/* 通知の瞬間（動画の再生位置に合わせてJSが .kick を付ける）：にじみが押し出され、波が画面全体に走る */
+.fv.kick .fva .b1{transform:translate(4vw,-2vw) scale(1.3)}
+.fv.kick .fva .b2{transform:translate(-4vw,3vw) scale(1.25)}
+.fv.kick .fva .b3{transform:translate(4vw,3vw) scale(1.3)}
+.fv.kick .fva .b4{transform:translate(-3vw,-3vw) scale(1.25)}
+.fva .rp{position:absolute;left:var(--px,70%);top:var(--py,50%);width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;border:40px solid rgba(110,175,206,.0);filter:blur(16px);opacity:0}
+.fv.kick .fva .r1{animation:fRing 2.2s cubic-bezier(.2,.6,.3,1) forwards}
+.fv.kick .fva .r2{animation:fRing 2.4s cubic-bezier(.2,.6,.3,1) .25s forwards}
+@keyframes fRing{0%{width:60px;height:60px;margin:-30px 0 0 -30px;opacity:.85;border-color:rgba(110,175,206,.7);border-width:46px}100%{width:150vw;height:150vw;margin:-75vw 0 0 -75vw;opacity:0;border-color:rgba(110,175,206,0);border-width:8px}}
+/* 他の節のにじみは青だけ（So「赤は入れなくていい・目がいく」） */
+.pga .p{display:none}
+@media (prefers-reduced-motion:reduce){.fva span{animation:none}.fv.kick .fva .rp{animation:none}}
+
+/* 赤いボタンの後ろの赤い影をやめる（So） */
+.btn--main,.btn--main:hover{box-shadow:none}
+
+/* ヘッダー：68px→84px・ロゴ30px→38px（So「縦が小さい」。今のZのLPは110px・ロゴ52px） */
+:root{--hd:84px}
+.hd__logo img{height:38px}
+.hd__cta{height:48px;padding:0 26px;font-size:15px}
+.hd__nav{font-size:15px}
+@media (max-width:900px){:root{--hd:64px}.hd__logo img{height:28px}.hd__cta{height:42px;padding:0 16px;font-size:13px}}
+@media (max-width:600px){.hd__logo img{height:26px}.hd__cta{padding:0 14px;font-size:12px}}
 </style>
 </head>
 <body>
@@ -589,14 +624,14 @@ main{position:relative}
 <main id="top">
 <div class="pga" aria-hidden="true"></div>
 <section class="fv">
-  <div class="aura aura--fv" aria-hidden="true"><span></span><span></span></div>
+  <div class="fva" aria-hidden="true"><span class="b1"></span><span class="b2"></span><span class="b3"></span><span class="b4"></span><i class="rp r1"></i><i class="rp r2"></i></div>
   <div class="wrap fv__grid">
     <div class="fv__copy">
       <p class="fv__sh"><span class="nb">10年超の社内報事業で培った</span><span class="nb">ノウハウで運用をサポート</span></p>
       <h1><span class="nb">会社の想いと、</span><span class="nb">社員の姿が届く。</span><br><span class="nb">続けられる</span><span class="nb em">WEB社内報「<span class="z">Z</span>」</span></h1>
       <p class="fv__lead">紙の社内報制作で培った経験をもとに、使いやすいシステムと、コンテンツ制作から運営体制の構築までをご支援。<br>Web社内報の立ち上げが初めてでも安心して取り組んでいただけます。</p>
     </div>
-    <div class="fv__img"><video src="img/fv.mp4" poster="img/fv_poster.webp" autoplay muted loop playsinline width="1680" height="1120" aria-label="PCとスマートフォンで表示したWEB社内報「Z」の画面"></video><p class="fv__cap">※画面はイメージです</p></div>
+    <div class="fv__img"><video class="fv__vid" data-webm="img/fv_alpha.webm" data-mp4="img/fv_white.mp4" autoplay muted loop playsinline width="1680" height="1120" aria-label="PCとスマートフォンで表示したWEB社内報「Z」の画面"></video><p class="fv__cap">※画面はイメージです</p></div>
     <div class="fv__pts">
       <ul>
         <li><span class="pt__art"><svg class="art art--device" viewBox="0 0 240 200" role="img" aria-hidden="true" focusable="false"><defs><radialGradient id="fl120170104" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#1F3A5F" stop-opacity=".16"/><stop offset="1" stop-color="#1F3A5F" stop-opacity="0"/></radialGradient></defs><ellipse cx="120" cy="174" rx="89" ry="15" fill="url(#fl120170104)"/><g><polygon points="30,150 36,144 186,144 180,150" fill="#F2F7FA"/><polygon points="180,150 186,144 186,152 180,158" fill="#B9CEDC"/><rect x="30" y="150" width="150" height="8" rx="3" fill="#FFFFFF" stroke="#C3D6E3" stroke-width="1.2"/></g><g><polygon points="42,66 48,62 176,62 170,66" fill="#33598A"/><polygon points="170,66 176,62 176,146 170,150" fill="#13283F"/><rect x="42" y="66" width="128" height="84" rx="3" fill="#1F3A5F"/></g><rect x="47" y="71" width="118" height="74" fill="#FFFFFF"/><rect x="47" y="71" width="118" height="9" fill="#E3F2F8"/><rect x="53" y="86" width="50" height="34" fill="#7FB6D0"/><rect x="109" y="88" width="50" height="3" rx="1.5" fill="#D5E3EC"/><rect x="109" y="95" width="50" height="3" rx="1.5" fill="#D5E3EC"/><rect x="109" y="102" width="30" height="3" rx="1.5" fill="#D5E3EC"/><rect x="53" y="126" width="106" height="3" rx="1.5" fill="#D5E3EC"/><rect x="53" y="133" width="64" height="3" rx="1.5" fill="#D5E3EC"/><g><polygon points="150,94 156,90 206,90 200,94" fill="#33598A"/><polygon points="200,94 206,90 206,182 200,186" fill="#13283F"/><rect x="150" y="94" width="50" height="92" rx="3" fill="#1F3A5F"/></g><rect x="154" y="100" width="42" height="80" rx="2" fill="#FFFFFF"/><rect x="168.0" y="96" width="14" height="2.5" rx="1.2" fill="#0C1A2B"/><g class="mv"><rect x="157" y="132" width="36" height="22" fill="#A50031"/><rect x="157" y="158" width="36" height="3" rx="1.5" fill="#D5E3EC"/><rect x="157" y="164" width="22" height="3" rx="1.5" fill="#D5E3EC"/></g><rect x="154" y="100" width="42" height="10" fill="#E3F2F8"/></svg></span><span class="pt">POINT 1</span><span class="tx">マルチデバイス対応の<wbr>高品質アプリ</span></li>
@@ -998,7 +1033,7 @@ if("scrollRestoration" in history && !location.hash){history.scrollRestoration="
       var a=secs[i-1], b=secs[i];
       if(!(plain(a)||plain(b))) continue;
       var y=b.getBoundingClientRect().top+scrollY-top, left=i%2, sz=Math.min(640,Math.max(360,W*.42));
-      [[left?-.14:.72,"s d1",1],[left?.78:-.08,"p d2",.62]].forEach(function(o){
+      [[left?-.14:.72,"s d1",1]].forEach(function(o){
         var sp=document.createElement("span"); sp.className=o[1];
         var z=sz*o[2]; sp.style.width=sp.style.height=z+"px";
         sp.style.left=(W*o[0])+"px"; sp.style.top=(y-z/2+(o[2]<1?z*.4:0))+"px"; L.appendChild(sp);
@@ -1006,6 +1041,23 @@ if("scrollRestoration" in history && !location.hash){history.scrollRestoration="
     }
   }
   addEventListener("load",place); var t; addEventListener("resize",function(){clearTimeout(t);t=setTimeout(place,200)});
+})();
+</script>
+<script>
+(function(){
+  var v=document.querySelector(".fv__vid"), fv=document.querySelector(".fv"); if(!v||!fv) return;
+  var ua=navigator.userAgent, safari=/Safari/.test(ua)&&!/Chrome|Chromium|Edg|CriOS|FxiOS/.test(ua);
+  var useWebm=!safari && v.canPlayType('video/webm; codecs="vp9"');
+  v.src=useWebm?v.getAttribute("data-webm"):v.getAttribute("data-mp4");
+  if(!useWebm) v.classList.add("is-mp4");
+  v.play&&v.play().catch(function(){});
+  var KICK=58/30, prev=0, tm;
+  function pos(){var r=v.getBoundingClientRect(), f=fv.getBoundingClientRect();
+    fv.style.setProperty("--px",(r.left-f.left+r.width*.355)+"px"); fv.style.setProperty("--py",(r.top-f.top+r.height*.42)+"px");}
+  function tick(){var t=v.currentTime||0;
+    if(prev<KICK&&t>=KICK){pos();fv.classList.remove("kick");void fv.offsetWidth;fv.classList.add("kick");clearTimeout(tm);tm=setTimeout(function(){fv.classList.remove("kick")},2600);}
+    prev=t; requestAnimationFrame(tick);}
+  requestAnimationFrame(tick);
 })();
 </script>
 </body>
