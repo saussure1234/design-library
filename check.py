@@ -69,6 +69,8 @@ addEventListener("load",function(){
       for (var p=e.parentElement; p; p=p.parentElement){
         var s=getComputedStyle(p);
         if (s.overflowX==="auto" || s.overflowX==="scroll") return true;
+        // ★外側を切っている器（横に流れ続ける事例など）の中で、器そのものが画面内なら、はみ出した分は見えていない（glassy-z3 2026-11-17）
+        if ((s.overflowX==="hidden" || s.overflowX==="clip") && p.getBoundingClientRect().right <= W + 1 && p.getBoundingClientRect().width < W * 1.05) return true;
       }
       return false;
     }

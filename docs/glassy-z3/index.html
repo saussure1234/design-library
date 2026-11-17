@@ -483,6 +483,65 @@ h1,h2,h3,h4{letter-spacing:.02em}
 
 .sec--blue .ft,.sec--blue .pp li,.sec--blue .faq details{color:var(--ink)}
 .sec--blue .ft .note{color:var(--sub)}
+
+/* FV：地は動画の四隅の実測色にそろえる（#EEF8FC＝rgb(238,248,252)）。縁は広めに溶かす */
+.fv{background:#EEF8FC}
+.fv__img video{-webkit-mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 78%,transparent 100%);mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 78%,transparent 100%)}
+
+/* にじみ：輪郭のない色の面がゆっくり漂う（FVのCと同じ考え方） */
+.aura{position:absolute;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+.aura span{position:absolute;border-radius:50%;filter:blur(80px)}
+.aura span:nth-child(1){width:46vw;height:46vw;max-width:640px;max-height:640px;left:-12vw;top:-10vw;background:#D9EEF7;opacity:.9;animation:au1 22s ease-in-out infinite}
+.aura span:nth-child(2){width:30vw;height:30vw;max-width:420px;max-height:420px;right:-8vw;bottom:-8vw;background:#F6DCE4;opacity:.7;animation:au2 27s ease-in-out infinite}
+.aura--r span:nth-child(1){left:auto;right:-12vw}
+.aura--r span:nth-child(2){right:auto;left:-8vw}
+.aura--fv span:nth-child(2){display:none}
+@keyframes au1{0%,100%{transform:translate(0,0)}50%{transform:translate(6vw,4vw)}}
+@keyframes au2{0%,100%{transform:translate(0,0)}50%{transform:translate(-5vw,-3vw)}}
+
+/* 悩み：紺のカード6枚。上の白い面にアイコン */
+.pns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.pn{background:#17345A;border-radius:22px;padding:14px 14px 26px;color:#fff;box-shadow:0 16px 34px rgba(20,48,79,.16)}
+.pn__art{background:#fff;border-radius:14px;height:150px;display:flex;align-items:center;justify-content:center;padding:6px 10px}
+.pn__art .art{height:100%;width:auto;max-width:100%}
+.pn__no{margin:18px 12px 4px;font-size:15px;font-weight:700;color:#8FD6EE;letter-spacing:.06em}
+.pn__tx{margin:0 12px;font-weight:500;line-height:1.75}
+.brg{margin:64px auto 0;max-width:820px;text-align:center}
+.brg__arw{display:block;width:2px;height:48px;margin:0 auto 28px;background:linear-gradient(var(--sky-d),rgba(0,119,163,0))}
+.brg p{font-size:26px;line-height:1.75;font-weight:700;color:var(--navy);word-break:keep-all;overflow-wrap:anywhere}
+.brg p + p{margin-top:10px;font-size:17px;font-weight:500;color:var(--ink)}
+.brg mark{background:linear-gradient(transparent 64%,#F6D3DE 64%);color:inherit}
+
+/* 特徴：白い地。箱をやめ、罫で区切る */
+.feat .ft{background:none;border:0;box-shadow:none;border-radius:0;padding:56px 0;border-top:1px solid #D6E5EE}
+.feat .ft + .ft{margin-top:0}
+.feat .ft:last-child{border-bottom:1px solid #D6E5EE}
+.feat .ft__vis{background:#F1F7FA}
+.feat .ft__vis--plain{background:none}
+
+/* 事例：白い地。カードは枠と影で立たせる。右から左へ流れる（So） */
+@keyframes csm{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.cases .csm article{border:1px solid #D6E5EE;box-shadow:0 12px 28px rgba(20,48,79,.10)}
+.cases .cs__more .btn--sub{background:#fff;color:var(--navy);border-color:var(--navy)}
+.cases .cs__more .btn--sub:hover{background:var(--navy);color:#fff}
+
+/* FAQ：白い地。問いは枠で立たせる */
+#faq .faq details{border:1px solid #D6E5EE;box-shadow:0 6px 16px rgba(20,48,79,.06)}
+
+@media (max-width:900px){
+  .pns{grid-template-columns:1fr 1fr}
+  .brg p{font-size:21px}
+}
+@media (max-width:600px){
+  .pns{grid-template-columns:1fr}
+  .pn__art{height:136px}
+  .brg p{font-size:19px}
+  .brg p + p{font-size:15px}
+  .feat .ft{padding:40px 0}
+}
+
+.cases{clip-path:inset(0)}
+.last h2{font-weight:700}
 </style>
 </head>
 <body>
@@ -500,14 +559,14 @@ h1,h2,h3,h4{letter-spacing:.02em}
 
 <main id="top">
 <section class="fv">
-  <div class="fvbg" aria-hidden="true"><svg class="flow fvbg__a" viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="flg"><stop offset="0" stop-color="#0089B4" stop-opacity="0"/><stop offset=".7" stop-color="#0089B4" stop-opacity=".75"/><stop offset="1" stop-color="#0089B4" stop-opacity="0"/></linearGradient></defs><line x1="-80" y1="820" x2="760" y2="-40" stroke="#0089B4" stroke-opacity=".16" stroke-width="1.2"/><line class="fl0" x1="-80" y1="820" x2="760" y2="-40" stroke="url(#flg)" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="160 1202" stroke-dashoffset="160"/><line x1="120" y1="860" x2="980" y2="-40" stroke="#0089B4" stroke-opacity=".16" stroke-width="1.2"/><line class="fl1" x1="120" y1="860" x2="980" y2="-40" stroke="url(#flg)" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="160 1245" stroke-dashoffset="160"/><line x1="380" y1="880" x2="1240" y2="-40" stroke="#0089B4" stroke-opacity=".16" stroke-width="1.2"/><line class="fl2" x1="380" y1="880" x2="1240" y2="-40" stroke="url(#flg)" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="160 1259" stroke-dashoffset="160"/><line x1="640" y1="900" x2="1500" y2="-20" stroke="#0089B4" stroke-opacity=".16" stroke-width="1.2"/><line class="fl3" x1="640" y1="900" x2="1500" y2="-20" stroke="url(#flg)" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="160 1259" stroke-dashoffset="160"/><line x1="900" y1="900" x2="1600" y2="80" stroke="#0089B4" stroke-opacity=".16" stroke-width="1.2"/><line class="fl4" x1="900" y1="900" x2="1600" y2="80" stroke="url(#flg)" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="160 1078" stroke-dashoffset="160"/><line x1="-200" y1="600" x2="420" y2="-40" stroke="#0089B4" stroke-opacity=".16" stroke-width="1.2"/><line class="fl5" x1="-200" y1="600" x2="420" y2="-40" stroke="url(#flg)" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="160 891" stroke-dashoffset="160"/></svg><div class="fvbg__b"><span></span></div><div class="fvbg__c"><span></span><span></span><span></span></div></div>
+  <div class="aura aura--fv" aria-hidden="true"><span></span><span></span></div>
   <div class="wrap fv__grid">
     <div class="fv__copy">
       <p class="fv__sh"><span class="nb">10年超の社内報事業で培った</span><span class="nb">ノウハウで運用をサポート</span></p>
       <h1><span class="nb">会社の想いと、</span><span class="nb">社員の姿が届く。</span><br><span class="nb">続けられる</span><span class="nb em">WEB社内報「<span class="z">Z</span>」</span></h1>
       <p class="fv__lead">紙の社内報制作で培った経験をもとに、使いやすいシステムと、コンテンツ制作から運営体制の構築までをご支援。<br>Web社内報の立ち上げが初めてでも安心して取り組んでいただけます。</p>
     </div>
-    <div class="fv__img"><video src="img/fv.mp4" poster="img/fv_poster.webp" autoplay muted loop playsinline width="1600" height="1040" aria-label="PCとスマートフォンで表示したWEB社内報「Z」の画面"></video><p class="fv__cap">※画面はイメージです</p></div>
+    <div class="fv__img"><video src="img/fv.mp4" poster="img/fv_poster.webp" autoplay muted loop playsinline width="1680" height="1120" aria-label="PCとスマートフォンで表示したWEB社内報「Z」の画面"></video><p class="fv__cap">※画面はイメージです</p></div>
     <div class="fv__pts">
       <ul>
         <li><span class="pt__art"><svg class="art art--device" viewBox="0 0 240 200" role="img" aria-hidden="true" focusable="false"><defs><radialGradient id="fl120170104" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#1F3A5F" stop-opacity=".16"/><stop offset="1" stop-color="#1F3A5F" stop-opacity="0"/></radialGradient></defs><ellipse cx="120" cy="174" rx="89" ry="15" fill="url(#fl120170104)"/><g><polygon points="30,150 36,144 186,144 180,150" fill="#F2F7FA"/><polygon points="180,150 186,144 186,152 180,158" fill="#B9CEDC"/><rect x="30" y="150" width="150" height="8" rx="3" fill="#FFFFFF" stroke="#C3D6E3" stroke-width="1.2"/></g><g><polygon points="42,66 48,62 176,62 170,66" fill="#33598A"/><polygon points="170,66 176,62 176,146 170,150" fill="#13283F"/><rect x="42" y="66" width="128" height="84" rx="3" fill="#1F3A5F"/></g><rect x="47" y="71" width="118" height="74" fill="#FFFFFF"/><rect x="47" y="71" width="118" height="9" fill="#E3F2F8"/><rect x="53" y="86" width="50" height="34" fill="#7FB6D0"/><rect x="109" y="88" width="50" height="3" rx="1.5" fill="#D5E3EC"/><rect x="109" y="95" width="50" height="3" rx="1.5" fill="#D5E3EC"/><rect x="109" y="102" width="30" height="3" rx="1.5" fill="#D5E3EC"/><rect x="53" y="126" width="106" height="3" rx="1.5" fill="#D5E3EC"/><rect x="53" y="133" width="64" height="3" rx="1.5" fill="#D5E3EC"/><g><polygon points="150,94 156,90 206,90 200,94" fill="#33598A"/><polygon points="200,94 206,90 206,182 200,186" fill="#13283F"/><rect x="150" y="94" width="50" height="92" rx="3" fill="#1F3A5F"/></g><rect x="154" y="100" width="42" height="80" rx="2" fill="#FFFFFF"/><rect x="168.0" y="96" width="14" height="2.5" rx="1.2" fill="#0C1A2B"/><g class="mv"><rect x="157" y="132" width="36" height="22" fill="#A50031"/><rect x="157" y="158" width="36" height="3" rx="1.5" fill="#D5E3EC"/><rect x="157" y="164" width="22" height="3" rx="1.5" fill="#D5E3EC"/></g><rect x="154" y="100" width="42" height="10" fill="#E3F2F8"/></svg></span><span class="pt">POINT 1</span><span class="tx">マルチデバイス対応の<wbr>高品質アプリ</span></li>
@@ -525,34 +584,22 @@ h1,h2,h3,h4{letter-spacing:.02em}
 </section>
 
 <section class="sec pain">
+  <div class="aura" aria-hidden="true"><span></span><span></span></div>
   <div class="wrap">
-    <div class="pain__box">
-      <div class="fx">
-        <div class="ttl">
-          <h2><span class="nb">社内報の発信・運営で、</span><span class="nb">こんなお悩みは</span><span class="nb">ありませんか？</span></h2>
-        </div>
-        <div class="pain__il"><svg class="art art--pain" viewBox="0 0 240 200" role="img" aria-hidden="true" focusable="false"><defs><radialGradient id="fl128172112" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#1F3A5F" stop-opacity=".16"/><stop offset="1" stop-color="#1F3A5F" stop-opacity="0"/></radialGradient></defs><ellipse cx="128" cy="176" rx="96" ry="16" fill="url(#fl128172112)"/><g><polygon points="40,136 46,132 138,132 132,136" fill="#F2F7FA"/><polygon points="132,136 138,132 138,154 132,158" fill="#B9CEDC"/><rect x="40" y="136" width="92" height="22" rx="3" fill="#FFFFFF" stroke="#C3D6E3" stroke-width="1.2"/></g><g><polygon points="46,114 52,110 140,110 134,114" fill="#A9D3E6"/><polygon points="134,114 140,110 140,132 134,136" fill="#5B95B1"/><rect x="46" y="114" width="88" height="22" rx="3" fill="#7FB6D0"/></g><g><polygon points="38,92 44,88 136,88 130,92" fill="#F2F7FA"/><polygon points="130,92 136,88 136,110 130,114" fill="#B9CEDC"/><rect x="38" y="92" width="92" height="22" rx="3" fill="#FFFFFF" stroke="#C3D6E3" stroke-width="1.2"/></g><g class="top"><g><polygon points="48,70 54,66 138,66 132,70" fill="#F2F7FA"/><polygon points="132,70 138,66 138,88 132,92" fill="#B9CEDC"/><rect x="48" y="70" width="84" height="22" rx="3" fill="#FFFFFF" stroke="#C3D6E3" stroke-width="1.2"/></g></g><g><polygon points="146,150 152,145 222,145 216,150" fill="#F2F7FA"/><polygon points="216,150 222,145 222,151 216,156" fill="#B9CEDC"/><rect x="146" y="150" width="70" height="6" rx="3" fill="#FFFFFF" stroke="#C3D6E3" stroke-width="1.2"/></g><g><polygon points="152,104 158,100 216,100 210,104" fill="#33598A"/><polygon points="210,104 216,100 216,146 210,150" fill="#13283F"/><rect x="152" y="104" width="58" height="46" rx="3" fill="#1F3A5F"/></g><rect x="156" y="108" width="50" height="38" fill="#FFFFFF"/><rect x="160" y="114" width="40" height="3" rx="1.5" fill="#D5E3EC"/><rect x="160" y="121" width="40" height="3" rx="1.5" fill="#D5E3EC"/><rect x="160" y="128" width="40" height="3" rx="1.5" fill="#D5E3EC"/><rect x="160" y="135" width="24" height="3" rx="1.5" fill="#D5E3EC"/><g class="q"><circle cx="196" cy="62" r="16" fill="#1F3A5F"/><path d="M190.5 57.5 C190.5 50 201.5 50 201.5 57 C201.5 61 196 61.5 196 66" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/><circle cx="196" cy="71.5" r="2.2" fill="#fff"/></g></svg></div>
-      </div>
-      <ol class="pain__list">
-        <li class="fx"><span class="n" aria-hidden="true">01</span><span>経営方針や理念が現場に届かず、拠点・部門間の<span class="nb">相互理解も進みにくい</span></span></li>
-        <li class="fx" data-d="1"><span class="n" aria-hidden="true">02</span><span>記事の作成・更新に手間がかかり、<span class="nb">タイムリーに発信できない</span></span></li>
-        <li class="fx" data-d="2"><span class="n" aria-hidden="true">03</span><span>誰に、どの記事が読まれているか分からず、<span class="nb">改善につなげにくい</span></span></li>
-        <li class="fx" data-d="3"><span class="n" aria-hidden="true">04</span><span>社内報を始めたいが、運営体制や役割分担を<span class="nb">どう整えればよいか分からない</span></span></li>
-        <li class="fx" data-d="4"><span class="n" aria-hidden="true">05</span><span>企画・取材・執筆・撮影の経験が少なく、記事を<span class="nb">継続してつくれるか不安</span></span></li>
-        <li class="fx" data-d="5"><span class="n" aria-hidden="true">06</span><span>個人情報を扱うため、アクセス管理や情報漏えいなどセキュリティが<span class="nb">気になる</span></span></li>
-      </ol>
+    <div class="ttl ttl--c fx">
+      <h2><span class="nb">社内報の発信・運営で、</span><span class="nb">こんなお悩みは</span><span class="nb">ありませんか？</span></h2>
     </div>
-    <div class="bridge fx">
-      <div>
-        <p><span class="nb">社内報に必要なのは、</span><mark><span class="nb">使いやすい仕組みと</span><span class="nb">続けられる運営体制。</span></mark></p>
+    <ul class="pns"><li class="pn fx" data-d="0"><div class="pn__art"><svg class="art art--p1" viewBox="0 0 240 200" role="img" aria-hidden="true" focusable="false"><defs><radialGradient id="fl120170104" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#1F3A5F" stop-opacity=".16"/><stop offset="1" stop-color="#1F3A5F" stop-opacity="0"/></radialGradient></defs><ellipse cx="120" cy="174" rx="89" ry="15" fill="url(#fl120170104)"/><g><polygon points="36,70 42,66 98,66 92,70" fill="#33598A"/><polygon points="92,70 98,66 98,156 92,160" fill="#13283F"/><rect x="36" y="70" width="56" height="90" rx="3" fill="#1F3A5F"/></g><rect x="44" y="80" width="9" height="9" fill="#5C7DA6"/><rect x="59" y="80" width="9" height="9" fill="#5C7DA6"/><rect x="74" y="80" width="9" height="9" fill="#5C7DA6"/><rect x="44" y="96" width="9" height="9" fill="#5C7DA6"/><rect x="59" y="96" width="9" height="9" fill="#5C7DA6"/><rect x="74" y="96" width="9" height="9" fill="#5C7DA6"/><rect x="44" y="112" width="9" height="9" fill="#5C7DA6"/><rect x="59" y="112" width="9" height="9" fill="#5C7DA6"/><rect x="74" y="112" width="9" height="9" fill="#5C7DA6"/><rect x="44" y="128" width="9" height="9" fill="#5C7DA6"/><rect x="59" y="128" width="9" height="9" fill="#5C7DA6"/><rect x="74" y="128" width="9" height="9" fill="#5C7DA6"/><g><polygon points="150,112 156,108 196,108 190,112" fill="#A9D3E6"/><polygon points="190,112 196,108 196,156 190,160" fill="#5B95B1"/><rect x="150" y="112" width="40" height="48" rx="3" fill="#7FB6D0"/></g><g><polygon points="196,124 202,120 232,120 226,124" fill="#A9D3E6"/><polygon points="226,124 232,120 232,156 226,160" fill="#5B95B1"/><rect x="196" y="124" width="30" height="36" rx="3" fill="#7FB6D0"/></g><path d="M98 100 C130 80 160 88 172 104" fill="none" stroke="#9FBCCF" stroke-width="2.4" stroke-dasharray="5 6"/><g class="mv"><rect x="96" y="90" width="22" height="15" rx="2" fill="#A50031"/><path d="M96 91 L107 99 L118 91" fill="none" stroke="#fff" stroke-width="1.8"/></g></svg></div><p class="pn__no" aria-hidden="true">01</p><p class="pn__tx">経営方針や理念が現場に届かず、拠点・部門間の<span class="nb">相互理解も進みにくい</span></p></li><li class="pn fx" data-d="1"><div class="pn__art"><svg class="art art--p2" viewBox="0 0 240 200" role="img" aria-hidden="true" focusable="false"><defs><radialGradient id="fl120170104" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#1F3A5F" stop-opacity=".16"/><stop offset="1" stop-color="#1F3A5F" stop-opacity="0"/></radialGradient></defs><ellipse cx="120" cy="174" rx="89" ry="15" fill="url(#fl120170104)"/><g><polygon points="44,56 50,52 136,52 130,56" fill="#F2F7FA"/><polygon points="130,56 136,52 136,160 130,164" fill="#B9CEDC"/><rect x="44" y="56" width="86" height="108" rx="3" fill="#FFFFFF" stroke="#C3D6E3" stroke-width="1.2"/></g><rect x="54" y="66" width="66" height="28" fill="#7FB6D0"/><rect x="54" y="102" width="66" height="3" rx="1.5" fill="#D5E3EC"/><rect x="54" y="111" width="66" height="3" rx="1.5" fill="#D5E3EC"/><rect x="54" y="120" width="66" height="3" rx="1.5" fill="#D5E3EC"/><rect x="54" y="129" width="40" height="3" rx="1.5" fill="#D5E3EC"/><circle cx="168" cy="96" r="38" fill="#fff" stroke="#1F3A5F" stroke-width="7"/><rect x="166.5" y="62" width="3" height="7" fill="#1F3A5F" transform="rotate(0 168 96)"/><rect x="166.5" y="62" width="3" height="7" fill="#1F3A5F" transform="rotate(30 168 96)"/><rect x="166.5" y="62" width="3" height="7" fill="#1F3A5F" transform="rotate(60 168 96)"/><rect x="166.5" y="62" width="3" height="7" fill="#1F3A5F" transform="rotate(90 168 96)"/><rect x="166.5" y="62" width="3" height="7" fill="#1F3A5F" transform="rotate(120 168 96)"/><rect x="166.5" y="62" width="3" height="7" fill="#1F3A5F" transform="rotate(150 168 96)"/><rect x="166.5" y="62" width="3" height="7" fill="#1F3A5F" transform="rotate(180 168 96)"/><rect x="166.5" y="62" width="3" height="7" fill="#1F3A5F" transform="rotate(210 168 96)"/><rect x="166.5" y="62" width="3" height="7" fill="#1F3A5F" transform="rotate(240 168 96)"/><rect x="166.5" y="62" width="3" height="7" fill="#1F3A5F" transform="rotate(270 168 96)"/><rect x="166.5" y="62" width="3" height="7" fill="#1F3A5F" transform="rotate(300 168 96)"/><rect x="166.5" y="62" width="3" height="7" fill="#1F3A5F" transform="rotate(330 168 96)"/><rect x="166" y="76" width="4" height="22" rx="2" fill="#1F3A5F"/><g class="hand"><rect x="166.8" y="68" width="2.4" height="30" rx="1.2" fill="#A50031"/></g><circle cx="168" cy="96" r="4" fill="#1F3A5F"/></svg></div><p class="pn__no" aria-hidden="true">02</p><p class="pn__tx">記事の作成・更新に手間がかかり、<span class="nb">タイムリーに発信できない</span></p></li><li class="pn fx" data-d="2"><div class="pn__art"><svg class="art art--p3" viewBox="0 0 240 200" role="img" aria-hidden="true" focusable="false"><defs><radialGradient id="fl120170104" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#1F3A5F" stop-opacity=".16"/><stop offset="1" stop-color="#1F3A5F" stop-opacity="0"/></radialGradient></defs><ellipse cx="120" cy="174" rx="89" ry="15" fill="url(#fl120170104)"/><g><polygon points="34,60 40,56 114,56 108,60" fill="#F2F7FA"/><polygon points="108,60 114,56 114,148 108,152" fill="#B9CEDC"/><rect x="34" y="60" width="74" height="92" rx="3" fill="#FFFFFF" stroke="#C3D6E3" stroke-width="1.2"/></g><rect x="42" y="68" width="58" height="26" fill="#7FB6D0"/><rect x="42" y="102" width="58" height="3" rx="1.5" fill="#D5E3EC"/><rect x="42" y="111" width="58" height="3" rx="1.5" fill="#D5E3EC"/><rect x="42" y="120" width="58" height="3" rx="1.5" fill="#D5E3EC"/><rect x="42" y="129" width="35" height="3" rx="1.5" fill="#D5E3EC"/><g><path d="M112.5 160.0 C112.5 137.9 122.2 131.1 132.0 131.1 C141.8 131.1 151.6 137.9 151.6 160.0 Z" fill="#7FB6D0"/><path d="M126.9 131.9 L132.0 141.3 L137.1 131.9 Z" fill="#fff"/><circle cx="132.0" cy="117.5" r="11.0" fill="#7FB6D0"/><path d="M133.7 107.3 A11.0 11.0 0 0 1 143.1 117.5" fill="none" stroke="#A9D3E6" stroke-width="2.5" stroke-linecap="round" opacity=".7"/></g><g><path d="M148.2 160.0 C148.2 135.3 159.1 127.7 170.0 127.7 C180.9 127.7 191.8 135.3 191.8 160.0 Z" fill="#1F3A5F"/><path d="M164.3 128.7 L170.0 139.1 L175.7 128.7 Z" fill="#fff"/><circle cx="170.0" cy="112.5" r="12.3" fill="#1F3A5F"/><path d="M171.9 101.1 A12.3 12.3 0 0 1 182.3 112.5" fill="none" stroke="#33598A" stroke-width="2.8" stroke-linecap="round" opacity=".7"/></g><g><path d="M188.4 160.0 C188.4 137.9 198.2 131.1 208.0 131.1 C217.8 131.1 227.6 137.9 227.6 160.0 Z" fill="#7FB6D0"/><path d="M202.9 131.9 L208.0 141.3 L213.1 131.9 Z" fill="#fff"/><circle cx="208.0" cy="117.5" r="11.0" fill="#7FB6D0"/><path d="M209.7 107.3 A11.0 11.0 0 0 1 219.1 117.5" fill="none" stroke="#A9D3E6" stroke-width="2.5" stroke-linecap="round" opacity=".7"/></g><g class="q q0"><circle cx="132" cy="88" r="11" fill="#A50031"/><path d="M128.5 84.5 C128.5 80 135.5 80 135.5 84.5 C135.5 87 132 87.5 132 90.5" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/><circle cx="132" cy="94" r="1.5" fill="#fff"/></g><g class="q q1"><circle cx="170" cy="76" r="11" fill="#A50031"/><path d="M166.5 72.5 C166.5 68 173.5 68 173.5 72.5 C173.5 75 170 75.5 170 78.5" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/><circle cx="170" cy="82" r="1.5" fill="#fff"/></g><g class="q q2"><circle cx="208" cy="88" r="11" fill="#A50031"/><path d="M204.5 84.5 C204.5 80 211.5 80 211.5 84.5 C211.5 87 208 87.5 208 90.5" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/><circle cx="208" cy="94" r="1.5" fill="#fff"/></g></svg></div><p class="pn__no" aria-hidden="true">03</p><p class="pn__tx">誰に、どの記事が読まれているか分からず、<span class="nb">改善につなげにくい</span></p></li><li class="pn fx" data-d="0"><div class="pn__art"><svg class="art art--p4" viewBox="0 0 240 200" role="img" aria-hidden="true" focusable="false"><defs><radialGradient id="fl120170104" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#1F3A5F" stop-opacity=".16"/><stop offset="1" stop-color="#1F3A5F" stop-opacity="0"/></radialGradient></defs><ellipse cx="120" cy="174" rx="89" ry="15" fill="url(#fl120170104)"/><path d="M74 92 H166" stroke="#9FBCCF" stroke-width="2.4" stroke-dasharray="5 6"/><g><path d="M47.0 150.0 C47.0 124.0 58.5 116.0 70.0 116.0 C81.5 116.0 93.0 124.0 93.0 150.0 Z" fill="#1F3A5F"/><path d="M64.0 117.0 L70.0 128.0 L76.0 117.0 Z" fill="#fff"/><circle cx="70.0" cy="100.0" r="13.0" fill="#1F3A5F"/><path d="M72.0 88.0 A13.0 13.0 0 0 1 83.0 100.0" fill="none" stroke="#33598A" stroke-width="3.0" stroke-linecap="round" opacity=".7"/></g><g><path d="M147.0 150.0 C147.0 124.0 158.5 116.0 170.0 116.0 C181.5 116.0 193.0 124.0 193.0 150.0 Z" fill="#7FB6D0"/><path d="M164.0 117.0 L170.0 128.0 L176.0 117.0 Z" fill="#fff"/><circle cx="170.0" cy="100.0" r="13.0" fill="#7FB6D0"/><path d="M172.0 88.0 A13.0 13.0 0 0 1 183.0 100.0" fill="none" stroke="#A9D3E6" stroke-width="3.0" stroke-linecap="round" opacity=".7"/></g><g class="seat"><circle cx="120" cy="78" r="13" fill="none" stroke="#A50031" stroke-width="2.6" stroke-dasharray="4 4"/><path d="M97 150 C97 124 108 116 120 116 C132 116 143 124 143 150" fill="none" stroke="#A50031" stroke-width="2.6" stroke-dasharray="4 4"/></g></svg></div><p class="pn__no" aria-hidden="true">04</p><p class="pn__tx">社内報を始めたいが、運営体制や役割分担を<span class="nb">どう整えればよいか分からない</span></p></li><li class="pn fx" data-d="1"><div class="pn__art"><svg class="art art--p5" viewBox="0 0 240 200" role="img" aria-hidden="true" focusable="false"><defs><radialGradient id="fl120170104" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#1F3A5F" stop-opacity=".16"/><stop offset="1" stop-color="#1F3A5F" stop-opacity="0"/></radialGradient></defs><ellipse cx="120" cy="174" rx="89" ry="15" fill="url(#fl120170104)"/><g><path d="M73.5 164.0 C73.5 134.1 86.8 124.9 100.0 124.9 C113.2 124.9 126.5 134.1 126.5 164.0 Z" fill="#1F3A5F"/><path d="M93.1 126.1 L100.0 138.7 L106.9 126.1 Z" fill="#fff"/><circle cx="100.0" cy="106.5" r="14.9" fill="#1F3A5F"/><path d="M102.3 92.7 A14.9 14.9 0 0 1 115.0 106.5" fill="none" stroke="#33598A" stroke-width="3.4" stroke-linecap="round" opacity=".7"/></g><g><polygon points="108,92 113,89 183,89 178,92" fill="#33598A"/><polygon points="178,92 183,89 183,135 178,138" fill="#13283F"/><rect x="108" y="92" width="70" height="46" rx="3" fill="#1F3A5F"/></g><rect x="120" y="86" width="20" height="8" rx="2" fill="#33598A"/><circle cx="143" cy="115" r="16" fill="#7FB6D0" stroke="#13283F" stroke-width="5"/><circle cx="143" cy="115" r="6" fill="#13283F"/><g class="flash"><circle cx="170" cy="98" r="6" fill="#FFF6C7"/><path d="M170 82 V74 M184 98 H192 M180 86 L186 80 M180 110 L186 116" stroke="#A50031" stroke-width="3" stroke-linecap="round"/></g></svg></div><p class="pn__no" aria-hidden="true">05</p><p class="pn__tx">企画・取材・執筆・撮影の経験が少なく、記事を<span class="nb">継続してつくれるか不安</span></p></li><li class="pn fx" data-d="2"><div class="pn__art"><svg class="art art--p6" viewBox="0 0 240 200" role="img" aria-hidden="true" focusable="false"><defs><radialGradient id="fl120170104" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#1F3A5F" stop-opacity=".16"/><stop offset="1" stop-color="#1F3A5F" stop-opacity="0"/></radialGradient></defs><ellipse cx="120" cy="174" rx="89" ry="15" fill="url(#fl120170104)"/><g><polygon points="36,70 42,66 142,66 136,70" fill="#F2F7FA"/><polygon points="136,70 142,66 142,136 136,140" fill="#B9CEDC"/><rect x="36" y="70" width="100" height="70" rx="3" fill="#FFFFFF" stroke="#C3D6E3" stroke-width="1.2"/></g><g><path d="M47.9 130.0 C47.9 111.8 56.0 106.2 64.0 106.2 C72.0 106.2 80.1 111.8 80.1 130.0 Z" fill="#7FB6D0"/><path d="M59.8 106.9 L64.0 114.6 L68.2 106.9 Z" fill="#fff"/><circle cx="64.0" cy="95.0" r="9.1" fill="#7FB6D0"/><path d="M65.4 86.6 A9.1 9.1 0 0 1 73.1 95.0" fill="none" stroke="#A9D3E6" stroke-width="2.1" stroke-linecap="round" opacity=".7"/></g><rect x="88" y="92" width="38" height="3" rx="1.5" fill="#D5E3EC"/><rect x="88" y="102" width="38" height="3" rx="1.5" fill="#D5E3EC"/><rect x="88" y="112" width="23" height="3" rx="1.5" fill="#D5E3EC"/><rect x="44" y="78" width="40" height="5" rx="2.5" fill="#1F3A5F"/><g><polygon points="150,104 155,101 207,101 202,104" fill="#33598A"/><polygon points="202,104 207,101 207,143 202,146" fill="#13283F"/><rect x="150" y="104" width="52" height="42" rx="3" fill="#1F3A5F"/></g><circle cx="176" cy="121" r="5" fill="#A50031"/><rect x="174" y="122" width="4" height="12" rx="2" fill="#A50031"/><g class="shk"><path d="M160 104 V88 A16 16 0 0 1 192 88 V94" fill="none" stroke="#7FB6D0" stroke-width="7" stroke-linecap="round"/></g></svg></div><p class="pn__no" aria-hidden="true">06</p><p class="pn__tx">個人情報を扱うため、アクセス管理や情報漏えいなど<span class="nb">セキュリティが気になる</span></p></li></ul>
+    <div class="brg fx">
+      <span class="brg__arw" aria-hidden="true"></span>
+      <p><span class="nb">社内報に必要なのは、</span><mark><span class="nb">使いやすい仕組みと</span><span class="nb">続けられる運営体制。</span></mark></p>
         <p><span class="nb">WEB社内報「Z」は、</span><span class="nb">機能・セキュリティ・</span><span class="nb">導入前後のサポートで、</span><span class="nb">その両方を支えます。</span></p>
-      </div>
-      <div class="bridge__il"><svg class="art art--reach" viewBox="0 0 240 200" role="img" aria-hidden="true" focusable="false"><defs><radialGradient id="fl120170104" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#1F3A5F" stop-opacity=".16"/><stop offset="1" stop-color="#1F3A5F" stop-opacity="0"/></radialGradient></defs><ellipse cx="120" cy="174" rx="89" ry="15" fill="url(#fl120170104)"/><g><polygon points="30,150 36,144 186,144 180,150" fill="#F2F7FA"/><polygon points="180,150 186,144 186,152 180,158" fill="#B9CEDC"/><rect x="30" y="150" width="150" height="8" rx="3" fill="#FFFFFF" stroke="#C3D6E3" stroke-width="1.2"/></g><g><polygon points="42,66 48,62 176,62 170,66" fill="#33598A"/><polygon points="170,66 176,62 176,146 170,150" fill="#13283F"/><rect x="42" y="66" width="128" height="84" rx="3" fill="#1F3A5F"/></g><rect x="47" y="71" width="118" height="74" fill="#FFFFFF"/><rect x="47" y="71" width="118" height="9" fill="#E3F2F8"/><rect x="53" y="86" width="50" height="34" fill="#7FB6D0"/><rect x="109" y="88" width="50" height="3" rx="1.5" fill="#D5E3EC"/><rect x="109" y="95" width="50" height="3" rx="1.5" fill="#D5E3EC"/><rect x="109" y="102" width="30" height="3" rx="1.5" fill="#D5E3EC"/><rect x="53" y="126" width="106" height="3" rx="1.5" fill="#D5E3EC"/><rect x="53" y="133" width="64" height="3" rx="1.5" fill="#D5E3EC"/><g><polygon points="150,94 156,90 206,90 200,94" fill="#33598A"/><polygon points="200,94 206,90 206,182 200,186" fill="#13283F"/><rect x="150" y="94" width="50" height="92" rx="3" fill="#1F3A5F"/></g><rect x="154" y="100" width="42" height="80" rx="2" fill="#FFFFFF"/><rect x="168.0" y="96" width="14" height="2.5" rx="1.2" fill="#0C1A2B"/><rect x="157" y="104" width="36" height="22" fill="#7FB6D0"/><rect x="157" y="132" width="36" height="3" rx="1.5" fill="#D5E3EC"/><rect x="157" y="139" width="36" height="3" rx="1.5" fill="#D5E3EC"/><rect x="157" y="146" width="22" height="3" rx="1.5" fill="#D5E3EC"/><g class="pop p0"><path d="M176 78 c-5 -6 -14 -3 -14 4 c0 7 14 14 14 14 c0 0 14 -7 14 -14 c0 -7 -9 -10 -14 -4z" fill="#A50031"/></g><g class="pop p1"><path d="M154 62 c-5 -6 -14 -3 -14 4 c0 7 14 14 14 14 c0 0 14 -7 14 -14 c0 -7 -9 -10 -14 -4z" fill="#A50031"/></g><g class="pop p2"><path d="M196 52 c-5 -6 -14 -3 -14 4 c0 7 14 14 14 14 c0 0 14 -7 14 -14 c0 -7 -9 -10 -14 -4z" fill="#A50031"/></g><g class="pop p3"><path d="M206 56 h30 v18 h-20 l-8 7 v-7 h-2 z" fill="#1F3A5F"/><rect x="211" y="61" width="20" height="3" rx="1.5" fill="#7F9BC0"/><rect x="211" y="67" width="12" height="3" rx="1.5" fill="#7F9BC0"/></g></svg></div>
     </div>
   </div>
 </section>
 
-<section class="sec sec--tilt sec--blue" id="feature">
+<section class="sec feat" id="feature">
+  <div class="aura" aria-hidden="true"><span></span><span></span></div>
   <div class="wrap">
     <div class="ttl fx">
       <h2><span class="nb">WEB社内報「Z」が、</span><span class="nb">発信と運営を支える</span><span class="nb">3つの特徴</span></h2>
@@ -648,6 +695,7 @@ h1,h2,h3,h4{letter-spacing:.02em}
 </section>
 
 <section class="sec fns">
+  <div class="aura aura--r" aria-hidden="true"><span></span><span></span></div>
   <div class="wrap">
     <div class="ttl fx">
       <h2><span class="nb">日々の発信を支える、</span><span class="nb">主な機能</span></h2>
@@ -719,7 +767,8 @@ h1,h2,h3,h4{letter-spacing:.02em}
   </div>
 </section>
 
-<section class="sec sec--tilt sec--navy" id="case">
+<section class="sec cases" id="case">
+  <div class="aura" aria-hidden="true"><span></span><span></span></div>
   <div class="wrap">
     <div class="ttl fx">
       <h2><span class="nb">使いやすさも、情報の届け方も。</span><span class="nb">導入企業の活用事例</span></h2>
@@ -823,6 +872,7 @@ h1,h2,h3,h4{letter-spacing:.02em}
 </section>
 
 <section class="sec" id="price">
+  <div class="aura" aria-hidden="true"><span></span><span></span></div>
   <div class="wrap">
     <div class="ttl fx">
       <h2><span class="nb">ご利用人数と運用に合わせて、</span><span class="nb">個別にお見積もりします</span></h2>
@@ -850,7 +900,8 @@ h1,h2,h3,h4{letter-spacing:.02em}
   </div>
 </section>
 
-<section class="sec sec--tilt sec--tilt-r sec--blue" id="faq">
+<section class="sec" id="faq">
+  <div class="aura aura--r" aria-hidden="true"><span></span><span></span></div>
   <div class="wrap faqw">
     <div class="ttl fx">
       <h2>よくあるご質問</h2>
@@ -875,7 +926,7 @@ h1,h2,h3,h4{letter-spacing:.02em}
   <div class="wrap last__in">
     <div class="fx">
       <h2><span class="nb">自社に合った社内報づくりを、</span><span class="nb">ここから。</span></h2>
-      <p>必要な機能も、社内の運営体制も、記事制作の進め方も。<br>紙の社内報制作で培ったノウハウと、使いやすいWebの仕組みで、立ち上げから日々の運用まで支援します。</p>
+      <p><span class="nb">必要な機能も、</span><span class="nb">社内の運営体制も、</span><span class="nb">記事制作の進め方も。</span><br>紙の社内報制作で培ったノウハウと、使いやすいWebの仕組みで、立ち上げから<span class="nb">日々の運用まで支援します。</span></p>
       <div class="btns">
         <a class="btn btn--main" href="https://secure-link.jp/wf/?c=wf33423047" target="_blank" rel="noopener">導入・費用について相談する</a>
         <a class="btn btn--ghost" href="https://secure-link.jp/wf/?c=wf33423047" target="_blank" rel="noopener">サービス資料をダウンロードする</a>
@@ -886,7 +937,6 @@ h1,h2,h3,h4{letter-spacing:.02em}
 </main>
 <footer class="ft-bar">© glassy株式会社</footer>
 <script>
-(function(){var m=location.search.match(/bg=([abc])/);document.documentElement.setAttribute("data-bg",m?m[1]:"a")})();
 if("scrollRestoration" in history && !location.hash){history.scrollRestoration="manual";window.scrollTo(0,0)}
 (function(){
   var els=[].slice.call(document.querySelectorAll(".fx"));
