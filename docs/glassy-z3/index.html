@@ -196,7 +196,7 @@ h1,h2,h3,h4{font-family:var(--head);font-feature-settings:"palt" 1;letter-spacin
 .paper{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px;align-items:start}
 .paper__ph{position:relative;border-radius:28px;overflow:visible}
 .paper__ph > img{border-radius:28px;width:100%;aspect-ratio:3/2;object-fit:cover}
-.paper__ph .stage{position:absolute;left:-40px;bottom:-50px;width:150px;height:150px;background:#fff;border-radius:50%;box-shadow:0 12px 30px rgba(31,58,95,.12)}
+.paper__ph .stage{position:absolute;right:-24px;bottom:-44px;width:150px;height:150px;background:#fff;border-radius:50%;box-shadow:0 12px 30px rgba(31,58,95,.12)}
 .paper__ph .stage img{width:110px}
 .pp{display:grid;gap:14px}
 .pp li{display:grid;grid-template-columns:48px 1fr;gap:16px;background:#fff;border-radius:20px;padding:22px 24px;border:1px solid #E4EEF4}
@@ -339,9 +339,60 @@ h1,h2,h3,h4{font-family:var(--head);font-feature-settings:"palt" 1;letter-spacin
   .faq summary{grid-template-columns:30px 1fr 16px;gap:10px;padding:18px}
   .faq .q,.faq .a{width:30px;height:30px;font-size:14px}
   .faq__a{grid-template-columns:30px 1fr;gap:10px;padding:0 18px 20px}
-  .paper__ph .stage{left:-8px;bottom:-56px;width:120px;height:120px}
+  .paper__ph .stage{right:-6px;bottom:-50px;width:130px;height:116px}
   .paper__ph .stage img{width:88px}
 }
+
+.art{display:block;width:100%;height:auto;overflow:visible}
+.art .mv,.art .pen,.art .bell,.art .lens,.art .heart,.art .bar,.art .card,.art .top,.art .q,.art .pop,.art .dot,.art .ln,.art .badge,.art .trend{transform-box:fill-box}
+.art--device .mv{animation:artUp 3.2s cubic-bezier(.3,0,.2,1) infinite}
+@keyframes artUp{0%,12%{transform:translateY(26px);opacity:0}30%,80%{transform:translateY(0);opacity:1}94%,100%{transform:translateY(-6px);opacity:0}}
+.art--shield .mv{animation:artLock 3s cubic-bezier(.3,0,.2,1) infinite}
+@keyframes artLock{0%,18%{transform:translateY(-14px)}34%{transform:translateY(2px)}40%,82%{transform:translateY(0)}100%{transform:translateY(-14px)}}
+.art--support .dot{animation:artDot 1.4s ease-in-out infinite}
+.art--support .d1{animation-delay:.18s}.art--support .d2{animation-delay:.36s}
+@keyframes artDot{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-9px)}}
+.art--write .ln{transform-origin:0 50%;animation:artLn 3s cubic-bezier(.4,0,.2,1) infinite}
+.art--write .pen{animation:artPen 3s cubic-bezier(.4,0,.2,1) infinite}
+@keyframes artLn{0%,10%{transform:scaleX(.02)}70%,88%{transform:scaleX(1)}100%{transform:scaleX(.02)}}
+@keyframes artPen{0%,10%{transform:translate(-68px,0)}70%,88%{transform:translate(0,0)}100%{transform:translate(-68px,0)}}
+.art--notify .bell{transform-origin:50% 0;animation:artBell 2.4s ease-in-out infinite}
+@keyframes artBell{0%,46%,100%{transform:rotate(0)}6%{transform:rotate(18deg)}14%{transform:rotate(-15deg)}22%{transform:rotate(11deg)}30%{transform:rotate(-7deg)}38%{transform:rotate(3deg)}}
+.art--notify .badge{transform-origin:50% 50%;animation:artBadge 2.4s ease-out infinite}
+@keyframes artBadge{0%,4%{transform:scale(0)}12%{transform:scale(1.35)}18%,100%{transform:scale(1)}}
+.art--search .lens{animation:artLens 3.4s cubic-bezier(.45,0,.25,1) infinite}
+@keyframes artLens{0%,14%{transform:translate(0,0)}46%,78%{transform:translate(84px,-16px)}100%{transform:translate(0,0)}}
+.art--search .heart{transform-origin:50% 100%;animation:artHeart 3.4s ease-out infinite}
+@keyframes artHeart{0%,44%{transform:scale(0);opacity:0}54%{transform:scale(1.25);opacity:1}62%,80%{transform:scale(1);opacity:1}92%,100%{transform:scale(.6);opacity:0}}
+.art--chart .bar{transform-origin:50% 100%;animation:artBar 3.4s cubic-bezier(.3,0,.2,1) infinite}
+.art--chart .b1{animation-delay:.12s}.art--chart .b2{animation-delay:.24s}.art--chart .b3{animation-delay:.36s}
+@keyframes artBar{0%,6%{transform:scaleY(.25)}36%,84%{transform:scaleY(1)}100%{transform:scaleY(.25)}}
+.art--chart .trend{stroke-dasharray:140;animation:artTrend 3.4s cubic-bezier(.3,0,.2,1) infinite}
+@keyframes artTrend{0%,30%{stroke-dashoffset:140}62%,84%{stroke-dashoffset:0}100%{stroke-dashoffset:140}}
+.art--paper .card{animation:artCard 3.4s cubic-bezier(.45,0,.25,1) infinite}
+@keyframes artCard{0%,12%{transform:translate(0,0)}36%{transform:translate(42px,-46px)}58%,84%{transform:translate(88px,10px)}100%{transform:translate(88px,10px);opacity:0}}
+.art--pain .top{transform-origin:20% 100%;animation:artTop 2.8s ease-in-out infinite}
+@keyframes artTop{0%,100%{transform:rotate(0) translateX(0)}20%{transform:rotate(-5deg) translateX(-3px)}40%{transform:rotate(4deg) translateX(4px)}56%{transform:rotate(-2deg)}70%{transform:rotate(0)}}
+.art--pain .q{transform-origin:50% 100%;animation:artQ 2.8s ease-in-out infinite}
+@keyframes artQ{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.art--reach .pop{transform-origin:50% 100%;animation:artPop 3.6s cubic-bezier(.2,.8,.2,1) infinite;opacity:0}
+.art--reach .p1{animation-delay:.3s}.art--reach .p2{animation-delay:.6s}.art--reach .p3{animation-delay:.95s}
+@keyframes artPop{0%{transform:translateY(16px) scale(.4);opacity:0}14%{transform:translateY(0) scale(1.1);opacity:1}22%,70%{transform:translateY(-4px) scale(1);opacity:1}86%,100%{transform:translateY(-22px) scale(.9);opacity:0}}
+@media (prefers-reduced-motion:reduce){.art *{animation:none!important;opacity:1!important}}
+.fl0{animation:flk0 9.5s linear 0s infinite}@keyframes flk0{from{stroke-dashoffset:160}to{stroke-dashoffset:-1202}}.fl1{animation:flk1 12.5s linear -4s infinite}@keyframes flk1{from{stroke-dashoffset:160}to{stroke-dashoffset:-1245}}.fl2{animation:flk2 10.5s linear -7s infinite}@keyframes flk2{from{stroke-dashoffset:160}to{stroke-dashoffset:-1259}}.fl3{animation:flk3 13.5s linear -2s infinite}@keyframes flk3{from{stroke-dashoffset:160}to{stroke-dashoffset:-1259}}.fl4{animation:flk4 11.0s linear -9s infinite}@keyframes flk4{from{stroke-dashoffset:160}to{stroke-dashoffset:-1078}}.fl5{animation:flk5 14.0s linear -6s infinite}@keyframes flk5{from{stroke-dashoffset:160}to{stroke-dashoffset:-891}}.nl0{animation:nlk0 8.5s linear 0s infinite}@keyframes nlk0{from{stroke-dashoffset:160}to{stroke-dashoffset:-868}}.nl1{animation:nlk1 11.0s linear -3s infinite}@keyframes nlk1{from{stroke-dashoffset:160}to{stroke-dashoffset:-894}}.nl2{animation:nlk2 9.5s linear -6s infinite}@keyframes nlk2{from{stroke-dashoffset:160}to{stroke-dashoffset:-894}}.nl3{animation:nlk3 12.0s linear -1s infinite}@keyframes nlk3{from{stroke-dashoffset:160}to{stroke-dashoffset:-681}}
+.flow{position:absolute;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
+.fv__pts .pt__art{width:62px;height:52px;flex:none;display:grid;place-items:center;background:var(--sky-ll);border-radius:10px;padding:2px 4px}
+.fv__pts .pt__art .art{width:100%}
+.fn .stage{display:flex;align-items:center;justify-content:center;height:180px;padding:8px 12px}
+.fn .stage .art{width:auto;height:100%;max-width:100%}
+.paper__ph .stage{display:flex;align-items:center;justify-content:center}
+.paper__ph .stage .art{width:100%;height:auto}
+.stage::after{display:none}
+.paper__ph .stage{width:170px;height:150px;border-radius:24px;padding:10px}
+.pain__il{padding:24px 28px 18px}
+.bridge__il{margin:-70px 0 -14px}
+.last__il{border-radius:32px;aspect-ratio:auto;padding:28px 32px}
+@media (max-width:600px){.fv__pts .pt__art{width:52px;height:44px}.paper__ph .stage{width:130px;height:116px}}
 </style>
 </head>
 <body>
@@ -359,10 +410,7 @@ h1,h2,h3,h4{font-family:var(--head);font-feature-settings:"palt" 1;letter-spacin
 
 <main id="top">
 <section class="fv">
-  <span class="geo geo--q" aria-hidden="true"></span>
-  <span class="geo geo--dots" aria-hidden="true"></span>
-  <span class="fv__blob fv__blob--a" aria-hidden="true"></span>
-  <span class="fv__blob fv__blob--b" aria-hidden="true"></span>
+  <svg class="flow" viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="flg"><stop offset="0" stop-color="#0089B4" stop-opacity="0"/><stop offset=".7" stop-color="#0089B4" stop-opacity=".75"/><stop offset="1" stop-color="#0089B4" stop-opacity="0"/></linearGradient></defs><line x1="-80" y1="820" x2="760" y2="-40" stroke="#0089B4" stroke-opacity=".16" stroke-width="1.2"/><line class="fl0" x1="-80" y1="820" x2="760" y2="-40" stroke="url(#flg)" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="160 1202" stroke-dashoffset="160"/><line x1="120" y1="860" x2="980" y2="-40" stroke="#0089B4" stroke-opacity=".16" stroke-width="1.2"/><line class="fl1" x1="120" y1="860" x2="980" y2="-40" stroke="url(#flg)" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="160 1245" stroke-dashoffset="160"/><line x1="380" y1="880" x2="1240" y2="-40" stroke="#0089B4" stroke-opacity=".16" stroke-width="1.2"/><line class="fl2" x1="380" y1="880" x2="1240" y2="-40" stroke="url(#flg)" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="160 1259" stroke-dashoffset="160"/><line x1="640" y1="900" x2="1500" y2="-20" stroke="#0089B4" stroke-opacity=".16" stroke-width="1.2"/><line class="fl3" x1="640" y1="900" x2="1500" y2="-20" stroke="url(#flg)" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="160 1259" stroke-dashoffset="160"/><line x1="900" y1="900" x2="1600" y2="80" stroke="#0089B4" stroke-opacity=".16" stroke-width="1.2"/><line class="fl4" x1="900" y1="900" x2="1600" y2="80" stroke="url(#flg)" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="160 1078" stroke-dashoffset="160"/><line x1="-200" y1="600" x2="420" y2="-40" stroke="#0089B4" stroke-opacity=".16" stroke-width="1.2"/><line class="fl5" x1="-200" y1="600" x2="420" y2="-40" stroke="url(#flg)" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="160 891" stroke-dashoffset="160"/></svg>
   <div class="wrap fv__grid">
     <div class="fv__copy">
       <p class="fv__sh"><span class="nb">10年超の社内報事業で培った</span><span class="nb">ノウハウで運用をサポート</span></p>
@@ -372,9 +420,9 @@ h1,h2,h3,h4{font-family:var(--head);font-feature-settings:"palt" 1;letter-spacin
     <div class="fv__img"><video src="img/fv.mp4" poster="img/fv_poster.webp" autoplay muted loop playsinline width="1600" height="1040" aria-label="PCとスマートフォンで表示したWEB社内報「Z」の画面"></video><p class="fv__cap">※画面はイメージです</p></div>
     <div class="fv__pts">
       <ul>
-        <li><img src="img/sp_device.webp" alt="" width="300" height="300"><span class="pt">POINT 1</span><span class="tx">マルチデバイス対応の<wbr>高品質アプリ</span></li>
-        <li><img src="img/sp_shield.webp" alt="" width="300" height="300"><span class="pt">POINT 2</span><span class="tx">安心のセキュリティ<wbr>システム</span></li>
-        <li><img src="img/sp_support.webp" alt="" width="300" height="300"><span class="pt">POINT 3</span><span class="tx">充実のサポートで<wbr>らくらく運用</span></li>
+        <li><span class="pt__art"><svg class="art art--device" viewBox="0 0 240 200" role="img" aria-hidden="true" focusable="false"><polygon points="16,170 120,194 120,200 16,176" fill="#D3E4EE"/><polygon points="120,194 224,170 224,176 120,200" fill="#BCD3E1"/><polygon points="16,170 120,146 224,170 120,194" fill="#E9F3F8"/><g><polygon points="30,150 42,144 192,144 180,150" fill="#F2F7FA"/><polygon points="180,150 192,144 192,152 180,158" fill="#B9CEDC"/><rect x="30" y="150" width="150" height="8" fill="#FFFFFF" stroke="#C3D6E3" stroke-width="1.2"/></g><g><polygon points="42,66 54,58 182,58 170,66" fill="#33598A"/><polygon points="170,66 182,58 182,142 170,150" fill="#13283F"/><rect x="42" y="66" width="128" height="84" fill="#1F3A5F"/></g><rect x="47" y="71" width="118" height="74" fill="#FFFFFF"/><rect x="47" y="71" width="118" height="9" fill="#E3F2F8"/><rect x="53" y="86" width="50" height="34" fill="#7FB6D0"/><rect x="109" y="88" width="50" height="3" rx="1.5" fill="#D5E3EC"/><rect x="109" y="95" width="50" height="3" rx="1.5" fill="#D5E3EC"/><rect x="109" y="102" width="30" height="3" rx="1.5" fill="#D5E3EC"/><rect x="53" y="126" width="106" height="3" rx="1.5" fill="#D5E3EC"/><rect x="53" y="133" width="64" height="3" rx="1.5" fill="#D5E3EC"/><g><polygon points="150,94 162,86 212,86 200,94" fill="#33598A"/><polygon points="200,94 212,86 212,178 200,186" fill="#13283F"/><rect x="150" y="94" width="50" height="92" fill="#1F3A5F"/></g><rect x="154" y="100" width="42" height="80" rx="2" fill="#FFFFFF"/><rect x="168.0" y="96" width="14" height="2.5" rx="1.2" fill="#0C1A2B"/><g class="mv"><rect x="157" y="132" width="36" height="22" fill="#A50031"/><rect x="157" y="158" width="36" height="3" rx="1.5" fill="#D5E3EC"/><rect x="157" y="164" width="22" height="3" rx="1.5" fill="#D5E3EC"/></g><rect x="154" y="100" width="42" height="10" fill="#E3F2F8"/></svg></span><span class="pt">POINT 1</span><span class="tx">マルチデバイス対応の<wbr>高品質アプリ</span></li>
+        <li><span class="pt__art"><svg class="art art--shield" viewBox="0 0 240 200" role="img" aria-hidden="true" focusable="false"><polygon points="16,170 120,194 120,200 16,176" fill="#D3E4EE"/><polygon points="120,194 224,170 224,176 120,200" fill="#BCD3E1"/><polygon points="16,170 120,146 224,170 120,194" fill="#E9F3F8"/><path d="M120 40 L170 56 V102 C170 132 147 152 120 164 C93 152 70 132 70 102 V56 Z" transform="translate(9 -6)" fill="#13283F"/><path d="M120 40 L170 56 V102 C170 132 147 152 120 164 C93 152 70 132 70 102 V56 Z" fill="#1F3A5F"/><path d="M120 52 L160 65 V102 C160 125 142 141 120 151 Z" fill="#33598A" opacity=".55"/><g class="mv"><path d="M106 102 V88 A14 14 0 0 1 134 88 V102" fill="none" stroke="#A9D3E6" stroke-width="8" stroke-linecap="round"/></g><g><polygon points="98,100 104,96 148,96 142,100" fill="#F2F7FA"/><polygon points="142,100 148,96 148,130 142,134" fill="#B9CEDC"/><rect x="98" y="100" width="44" height="34" fill="#FFFFFF" stroke="#C3D6E3" stroke-width="1.2"/></g><circle cx="120" cy="113" r="4.5" fill="#A50031"/><rect x="118" y="114" width="4" height="10" rx="2" fill="#A50031"/></svg></span><span class="pt">POINT 2</span><span class="tx">安心のセキュリティ<wbr>システム</span></li>
+        <li><span class="pt__art"><svg class="art art--support" viewBox="0 0 240 200" role="img" aria-hidden="true" focusable="false"><polygon points="16,170 120,194 120,200 16,176" fill="#D3E4EE"/><polygon points="120,194 224,170 224,176 120,200" fill="#BCD3E1"/><polygon points="16,170 120,146 224,170 120,194" fill="#E9F3F8"/><g><polygon points="36,58 46,51 150,51 140,58" fill="#33598A"/><polygon points="140,58 150,51 150,101 140,108" fill="#13283F"/><rect x="36" y="58" width="104" height="50" fill="#1F3A5F"/></g><polygon points="54,108 66,108 50,122" fill="#1F3A5F"/><rect x="50" y="74" width="70" height="3" rx="1.5" fill="#5C7DA6"/><rect x="50" y="82" width="70" height="3" rx="1.5" fill="#5C7DA6"/><rect x="50" y="90" width="42" height="3" rx="1.5" fill="#5C7DA6"/><g><polygon points="98,104 108,97 208,97 198,104" fill="#F2F7FA"/><polygon points="198,104 208,97 208,143 198,150" fill="#B9CEDC"/><rect x="98" y="104" width="100" height="46" fill="#FFFFFF" stroke="#C3D6E3" stroke-width="1.2"/></g><polygon points="180,150 168,150 184,164" fill="#FFFFFF"/><circle class="dot d0" cx="126" cy="127" r="6" fill="#7FB6D0"/><circle class="dot d1" cx="148" cy="127" r="6" fill="#7FB6D0"/><circle class="dot d2" cx="170" cy="127" r="6" fill="#A50031"/></svg></span><span class="pt">POINT 3</span><span class="tx">充実のサポートで<wbr>らくらく運用</span></li>
       </ul>
     </div>
     <div class="fv__cta">
@@ -389,12 +437,11 @@ h1,h2,h3,h4{font-family:var(--head);font-feature-settings:"palt" 1;letter-spacin
 <section class="sec pain">
   <div class="wrap">
     <div class="pain__box">
-      <span class="geo geo--qr" aria-hidden="true" style="right:0;top:0;border-radius:0 36px 0 100%"></span>
       <div class="fx">
         <div class="ttl">
           <h2><span class="nb">社内報の発信・運営で、</span><span class="nb">こんなお悩みは</span><span class="nb">ありませんか？</span></h2>
         </div>
-        <div class="pain__il"><img src="img/il_pain.webp" alt="デスクで社内報の運営に悩む担当者" width="1000" height="763" loading="lazy"></div>
+        <div class="pain__il"><svg class="art art--pain" viewBox="0 0 240 200" role="img" aria-hidden="true" focusable="false"><polygon points="16,172 128,198 128,204 16,178" fill="#D3E4EE"/><polygon points="128,198 240,172 240,178 128,204" fill="#BCD3E1"/><polygon points="16,172 128,146 240,172 128,198" fill="#E9F3F8"/><g><polygon points="40,136 52,128 144,128 132,136" fill="#F2F7FA"/><polygon points="132,136 144,128 144,150 132,158" fill="#B9CEDC"/><rect x="40" y="136" width="92" height="22" fill="#FFFFFF" stroke="#C3D6E3" stroke-width="1.2"/></g><g><polygon points="46,114 58,106 146,106 134,114" fill="#A9D3E6"/><polygon points="134,114 146,106 146,128 134,136" fill="#5B95B1"/><rect x="46" y="114" width="88" height="22" fill="#7FB6D0"/></g><g><polygon points="38,92 50,84 142,84 130,92" fill="#F2F7FA"/><polygon points="130,92 142,84 142,106 130,114" fill="#B9CEDC"/><rect x="38" y="92" width="92" height="22" fill="#FFFFFF" stroke="#C3D6E3" stroke-width="1.2"/></g><g class="top"><g><polygon points="48,70 60,62 144,62 132,70" fill="#F2F7FA"/><polygon points="132,70 144,62 144,84 132,92" fill="#B9CEDC"/><rect x="48" y="70" width="84" height="22" fill="#FFFFFF" stroke="#C3D6E3" stroke-width="1.2"/></g></g><g><polygon points="146,150 158,145 228,145 216,150" fill="#F2F7FA"/><polygon points="216,150 228,145 228,151 216,156" fill="#B9CEDC"/><rect x="146" y="150" width="70" height="6" fill="#FFFFFF" stroke="#C3D6E3" stroke-width="1.2"/></g><g><polygon points="152,104 164,96 222,96 210,104" fill="#33598A"/><polygon points="210,104 222,96 222,142 210,150" fill="#13283F"/><rect x="152" y="104" width="58" height="46" fill="#1F3A5F"/></g><rect x="156" y="108" width="50" height="38" fill="#FFFFFF"/><rect x="160" y="114" width="40" height="3" rx="1.5" fill="#D5E3EC"/><rect x="160" y="121" width="40" height="3" rx="1.5" fill="#D5E3EC"/><rect x="160" y="128" width="40" height="3" rx="1.5" fill="#D5E3EC"/><rect x="160" y="135" width="24" height="3" rx="1.5" fill="#D5E3EC"/><g class="q"><circle cx="196" cy="62" r="16" fill="#1F3A5F"/><path d="M190.5 57.5 C190.5 50 201.5 50 201.5 57 C201.5 61 196 61.5 196 66" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/><circle cx="196" cy="71.5" r="2.2" fill="#fff"/></g></svg></div>
       </div>
       <ol class="pain__list">
         <li class="fx"><span class="n" aria-hidden="true">01</span><span>経営方針や理念が現場に届かず、拠点・部門間の<span class="nb">相互理解も進みにくい</span></span></li>
@@ -410,13 +457,12 @@ h1,h2,h3,h4{font-family:var(--head);font-feature-settings:"palt" 1;letter-spacin
         <p><span class="nb">社内報に必要なのは、</span><mark><span class="nb">使いやすい仕組みと</span><span class="nb">続けられる運営体制。</span></mark></p>
         <p><span class="nb">WEB社内報「Z」は、</span><span class="nb">機能・セキュリティ・</span><span class="nb">導入前後のサポートで、</span><span class="nb">その両方を支えます。</span></p>
       </div>
-      <div class="bridge__il"><img src="img/il_team.webp" alt="スマートフォンやタブレットで社内報を読む社員たち" width="1000" height="690" loading="lazy"></div>
+      <div class="bridge__il"><svg class="art art--reach" viewBox="0 0 240 200" role="img" aria-hidden="true" focusable="false"><polygon points="16,170 120,194 120,200 16,176" fill="#D3E4EE"/><polygon points="120,194 224,170 224,176 120,200" fill="#BCD3E1"/><polygon points="16,170 120,146 224,170 120,194" fill="#E9F3F8"/><g><polygon points="30,150 42,144 192,144 180,150" fill="#F2F7FA"/><polygon points="180,150 192,144 192,152 180,158" fill="#B9CEDC"/><rect x="30" y="150" width="150" height="8" fill="#FFFFFF" stroke="#C3D6E3" stroke-width="1.2"/></g><g><polygon points="42,66 54,58 182,58 170,66" fill="#33598A"/><polygon points="170,66 182,58 182,142 170,150" fill="#13283F"/><rect x="42" y="66" width="128" height="84" fill="#1F3A5F"/></g><rect x="47" y="71" width="118" height="74" fill="#FFFFFF"/><rect x="47" y="71" width="118" height="9" fill="#E3F2F8"/><rect x="53" y="86" width="50" height="34" fill="#7FB6D0"/><rect x="109" y="88" width="50" height="3" rx="1.5" fill="#D5E3EC"/><rect x="109" y="95" width="50" height="3" rx="1.5" fill="#D5E3EC"/><rect x="109" y="102" width="30" height="3" rx="1.5" fill="#D5E3EC"/><rect x="53" y="126" width="106" height="3" rx="1.5" fill="#D5E3EC"/><rect x="53" y="133" width="64" height="3" rx="1.5" fill="#D5E3EC"/><g><polygon points="150,94 162,86 212,86 200,94" fill="#33598A"/><polygon points="200,94 212,86 212,178 200,186" fill="#13283F"/><rect x="150" y="94" width="50" height="92" fill="#1F3A5F"/></g><rect x="154" y="100" width="42" height="80" rx="2" fill="#FFFFFF"/><rect x="168.0" y="96" width="14" height="2.5" rx="1.2" fill="#0C1A2B"/><rect x="157" y="104" width="36" height="22" fill="#7FB6D0"/><rect x="157" y="132" width="36" height="3" rx="1.5" fill="#D5E3EC"/><rect x="157" y="139" width="36" height="3" rx="1.5" fill="#D5E3EC"/><rect x="157" y="146" width="22" height="3" rx="1.5" fill="#D5E3EC"/><g class="pop p0"><path d="M176 78 c-5 -6 -14 -3 -14 4 c0 7 14 14 14 14 c0 0 14 -7 14 -14 c0 -7 -9 -10 -14 -4z" fill="#A50031"/></g><g class="pop p1"><path d="M154 62 c-5 -6 -14 -3 -14 4 c0 7 14 14 14 14 c0 0 14 -7 14 -14 c0 -7 -9 -10 -14 -4z" fill="#A50031"/></g><g class="pop p2"><path d="M196 52 c-5 -6 -14 -3 -14 4 c0 7 14 14 14 14 c0 0 14 -7 14 -14 c0 -7 -9 -10 -14 -4z" fill="#A50031"/></g><g class="pop p3"><path d="M206 56 h30 v18 h-20 l-8 7 v-7 h-2 z" fill="#1F3A5F"/><rect x="211" y="61" width="20" height="3" rx="1.5" fill="#7F9BC0"/><rect x="211" y="67" width="12" height="3" rx="1.5" fill="#7F9BC0"/></g></svg></div>
     </div>
   </div>
 </section>
 
 <section class="sec sec--tilt sec--sky" id="feature">
-  <span class="geo geo--dots" aria-hidden="true" style="right:6%;top:calc(var(--cut) + 64px)"></span>
   <div class="wrap">
     <div class="ttl fx">
       <h2><span class="nb">WEB社内報「Z」が、</span><span class="nb">発信と運営を支える</span><span class="nb">3つの特徴</span></h2>
@@ -452,7 +498,6 @@ h1,h2,h3,h4{font-family:var(--head);font-feature-settings:"palt" 1;letter-spacin
         <p class="note">※IP制限・多要素認証は無料オプション、SSO連携は有料オプションです。</p>
       </div>
       <div class="ft__vis">
-        <img class="ft__spot bob" src="img/sp_shield.webp" alt="" width="300" height="300" loading="lazy">
         <div class="cert">
           <figure>
             <div class="mk"><img class="msa" src="img/mark_msa.webp" alt="MSA認証マーク" width="304" height="300" loading="lazy"><img src="img/mark_isms.webp" alt="ISMS-AC認定シンボル" width="231" height="300" loading="lazy"></div>
@@ -474,7 +519,6 @@ h1,h2,h3,h4{font-family:var(--head);font-feature-settings:"palt" 1;letter-spacin
         <p>紙の社内報制作で培ったノウハウを活かし、専任のカスタマーサポート担当が導入前後を支援。<br>操作方法に加え、「何のために発行するか」「誰がつくるか」「どんな企画を届けるか」から相談できます。</p>
       </div>
       <div class="ft__vis ft__vis--plain">
-        <img class="ft__spot bob bob--2" src="img/sp_support.webp" alt="" width="300" height="300" loading="lazy">
         <div class="photo"><img src="img/support.webp" alt="社内報の誌面案を見ながら打ち合わせをする担当者たち" width="1200" height="800" loading="lazy"></div>
       </div>
       <div class="sup">
@@ -503,7 +547,7 @@ h1,h2,h3,h4{font-family:var(--head);font-feature-settings:"palt" 1;letter-spacin
 </section>
 
 <section class="sec sec--tilt sec--tilt-r sec--navy mid">
-  <span class="geo geo--ring" aria-hidden="true"></span><span class="geo geo--ring" aria-hidden="true"></span>
+  <svg class="flow" viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="nlg"><stop offset="0" stop-color="#7FD3EA" stop-opacity="0"/><stop offset=".7" stop-color="#7FD3EA" stop-opacity=".75"/><stop offset="1" stop-color="#7FD3EA" stop-opacity="0"/></linearGradient></defs><line x1="-60" y1="520" x2="620" y2="-20" stroke="#7FD3EA" stroke-opacity=".16" stroke-width="1.2"/><line class="nl0" x1="-60" y1="520" x2="620" y2="-20" stroke="url(#nlg)" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="160 868" stroke-dashoffset="160"/><line x1="300" y1="560" x2="980" y2="-20" stroke="#7FD3EA" stroke-opacity=".16" stroke-width="1.2"/><line class="nl1" x1="300" y1="560" x2="980" y2="-20" stroke="url(#nlg)" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="160 894" stroke-dashoffset="160"/><line x1="700" y1="560" x2="1380" y2="-20" stroke="#7FD3EA" stroke-opacity=".16" stroke-width="1.2"/><line class="nl2" x1="700" y1="560" x2="1380" y2="-20" stroke="url(#nlg)" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="160 894" stroke-dashoffset="160"/><line x1="1040" y1="560" x2="1560" y2="120" stroke="#7FD3EA" stroke-opacity=".16" stroke-width="1.2"/><line class="nl3" x1="1040" y1="560" x2="1560" y2="120" stroke="url(#nlg)" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="160 681" stroke-dashoffset="160"/></svg>
   <div class="wrap mid__in fx">
     <p><span class="nb">自社に合う運用方法を、</span><span class="nb">相談してみませんか？</span></p>
     <div class="btns">
@@ -514,14 +558,13 @@ h1,h2,h3,h4{font-family:var(--head);font-feature-settings:"palt" 1;letter-spacin
 </section>
 
 <section class="sec fns">
-  <span class="geo geo--q" aria-hidden="true" style="right:0;top:0"></span>
   <div class="wrap">
     <div class="ttl fx">
       <h2><span class="nb">日々の発信を支える、</span><span class="nb">主な機能</span></h2>
     </div>
     <div class="fn">
       <div class="fx">
-        <div class="stage"><img class="bob" src="img/sp_write.webp" alt="" width="300" height="300" loading="lazy"></div>
+        <div class="stage"><svg class="art art--write" viewBox="0 0 240 200" role="img" aria-hidden="true" focusable="false"><polygon points="16,170 120,194 120,200 16,176" fill="#D3E4EE"/><polygon points="120,194 224,170 224,176 120,200" fill="#BCD3E1"/><polygon points="16,170 120,146 224,170 120,194" fill="#E9F3F8"/><g><polygon points="56,44 68,36 180,36 168,44" fill="#F2F7FA"/><polygon points="168,44 180,36 180,160 168,168" fill="#B9CEDC"/><rect x="56" y="44" width="112" height="124" fill="#FFFFFF" stroke="#C3D6E3" stroke-width="1.2"/></g><rect x="68" y="56" width="88" height="40" fill="#7FB6D0"/><rect x="68" y="106" width="88" height="3" rx="1.5" fill="#D5E3EC"/><rect x="68" y="115" width="88" height="3" rx="1.5" fill="#D5E3EC"/><rect x="68" y="124" width="53" height="3" rx="1.5" fill="#D5E3EC"/><rect class="ln" x="68" y="134" width="70" height="3" rx="1.5" fill="#1F3A5F"/><g class="pen"><polygon points="138,134 146,120 196,70 204,78 154,128" fill="#1F3A5F"/><polygon points="196,70 204,78 210,72 202,64" fill="#7FB6D0"/><polygon points="138,134 146,120 154,128" fill="#A50031"/></g></svg></div>
         <h3>記事をつくる</h3>
         <dl>
           <div><dt>記事投稿</dt><dd>タイトル・画像・本文を<span class="nb">シンプルな画面で入力</span></dd></div>
@@ -531,7 +574,7 @@ h1,h2,h3,h4{font-family:var(--head);font-feature-settings:"palt" 1;letter-spacin
         </dl>
       </div>
       <div class="fx" data-d="1">
-        <div class="stage"><img class="bob bob--2" src="img/sp_notify.webp" alt="" width="300" height="300" loading="lazy"></div>
+        <div class="stage"><svg class="art art--notify" viewBox="0 0 240 200" role="img" aria-hidden="true" focusable="false"><polygon points="16,170 120,194 120,200 16,176" fill="#D3E4EE"/><polygon points="120,194 224,170 224,176 120,200" fill="#BCD3E1"/><polygon points="16,170 120,146 224,170 120,194" fill="#E9F3F8"/><g><polygon points="84,66 96,58 168,58 156,66" fill="#33598A"/><polygon points="156,66 168,58 168,162 156,170" fill="#13283F"/><rect x="84" y="66" width="72" height="104" fill="#1F3A5F"/></g><rect x="88" y="72" width="64" height="92" rx="2" fill="#FFFFFF"/><rect x="113.0" y="68" width="14" height="2.5" rx="1.2" fill="#0C1A2B"/><rect x="92" y="80" width="56" height="22" fill="#7FB6D0"/><rect x="92" y="108" width="56" height="3" rx="1.5" fill="#D5E3EC"/><rect x="92" y="115" width="56" height="3" rx="1.5" fill="#D5E3EC"/><rect x="92" y="122" width="34" height="3" rx="1.5" fill="#D5E3EC"/><g class="bell"><path d="M168 46 C168 32 178 26 186 26 C194 26 204 32 204 46 V60 L210 68 H162 L168 60 Z" fill="#1F3A5F"/><path d="M180 70 A6 6 0 0 0 192 70" fill="#1F3A5F"/><path d="M186 26 C194 26 204 32 204 46 V60 L210 68 H190 Z" fill="#33598A" opacity=".6"/></g><circle class="badge" cx="206" cy="30" r="8" fill="#A50031"/></svg></div>
         <h3>社員に届ける</h3>
         <dl>
           <div><dt>マルチデバイス対応</dt><dd>PC・スマートフォン・タブレットで閲覧</dd></div>
@@ -541,7 +584,7 @@ h1,h2,h3,h4{font-family:var(--head);font-feature-settings:"palt" 1;letter-spacin
         </dl>
       </div>
       <div class="fx" data-d="2">
-        <div class="stage"><img class="bob bob--3" src="img/sp_search.webp" alt="" width="300" height="300" loading="lazy"></div>
+        <div class="stage"><svg class="art art--search" viewBox="0 0 240 200" role="img" aria-hidden="true" focusable="false"><polygon points="16,170 120,194 120,200 16,176" fill="#D3E4EE"/><polygon points="120,194 224,170 224,176 120,200" fill="#BCD3E1"/><polygon points="16,170 120,146 224,170 120,194" fill="#E9F3F8"/><g><polygon points="40,88 52,80 122,80 110,88" fill="#F2F7FA"/><polygon points="110,88 122,80 122,146 110,154" fill="#B9CEDC"/><rect x="40" y="88" width="70" height="66" fill="#FFFFFF" stroke="#C3D6E3" stroke-width="1.2"/></g><rect x="48" y="96" width="54" height="26" fill="#7FB6D0"/><rect x="48" y="128" width="54" height="3" rx="1.5" fill="#D5E3EC"/><rect x="48" y="135" width="32" height="3" rx="1.5" fill="#D5E3EC"/><g><polygon points="124,72 136,64 206,64 194,72" fill="#F2F7FA"/><polygon points="194,72 206,64 206,130 194,138" fill="#B9CEDC"/><rect x="124" y="72" width="70" height="66" fill="#FFFFFF" stroke="#C3D6E3" stroke-width="1.2"/></g><rect x="132" y="80" width="54" height="26" fill="#7FB6D0"/><rect x="132" y="112" width="54" height="3" rx="1.5" fill="#D5E3EC"/><rect x="132" y="119" width="32" height="3" rx="1.5" fill="#D5E3EC"/><g class="heart"><path d="M159 52 C152 44 140 47 140 57 C140 66 159 76 159 76 C159 76 178 66 178 57 C178 47 166 44 159 52 Z" fill="#A50031"/></g><g class="lens"><circle cx="86" cy="108" r="24" fill="#FFFFFF" fill-opacity=".35" stroke="#1F3A5F" stroke-width="8"/><line x1="104" y1="126" x2="122" y2="144" stroke="#1F3A5F" stroke-width="10" stroke-linecap="round"/></g></svg></div>
         <h3>情報を探す・反応する</h3>
         <dl>
           <div><dt>カテゴリー・ハッシュタグ</dt><dd>記事を分類し、探しやすく整理</dd></div>
@@ -551,7 +594,7 @@ h1,h2,h3,h4{font-family:var(--head);font-feature-settings:"palt" 1;letter-spacin
         </dl>
       </div>
       <div class="fx" data-d="3">
-        <div class="stage"><img class="bob bob--4" src="img/sp_chart.webp" alt="" width="300" height="300" loading="lazy"></div>
+        <div class="stage"><svg class="art art--chart" viewBox="0 0 240 200" role="img" aria-hidden="true" focusable="false"><polygon points="16,170 120,194 120,200 16,176" fill="#D3E4EE"/><polygon points="120,194 224,170 224,176 120,200" fill="#BCD3E1"/><polygon points="16,170 120,146 224,170 120,194" fill="#E9F3F8"/><g class="bar b0"><g><polygon points="52,120 61,114 87,114 78,120" fill="#DDEEF6"/><polygon points="78,120 87,114 87,154 78,160" fill="#9FC4D6"/><rect x="52" y="120" width="26" height="40" fill="#C5E1EE"/></g></g><g class="bar b1"><g><polygon points="88,102 97,96 123,96 114,102" fill="#A9D3E6"/><polygon points="114,102 123,96 123,154 114,160" fill="#5B95B1"/><rect x="88" y="102" width="26" height="58" fill="#7FB6D0"/></g></g><g class="bar b2"><g><polygon points="124,82 133,76 159,76 150,82" fill="#A9D3E6"/><polygon points="150,82 159,76 159,154 150,160" fill="#5B95B1"/><rect x="124" y="82" width="26" height="78" fill="#7FB6D0"/></g></g><g class="bar b3"><g><polygon points="160,54 169,48 195,48 186,54" fill="#C9234F"/><polygon points="186,54 195,48 195,154 186,160" fill="#760024"/><rect x="160" y="54" width="26" height="106" fill="#A50031"/></g></g><polyline class="trend" points="65,108 101,90 137,70 173,42" fill="none" stroke="#1F3A5F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <h3>管理・改善する</h3>
         <dl>
           <div><dt>アクセス分析</dt><dd>日々の閲覧動向をダッシュボードで確認</dd></div>
@@ -573,7 +616,7 @@ h1,h2,h3,h4{font-family:var(--head);font-feature-settings:"palt" 1;letter-spacin
       </div>
       <div class="paper__ph">
         <img src="img/paper.webp" alt="紙の社内報と、同じ記事を表示したスマートフォン" width="1200" height="800" loading="lazy">
-        <div class="stage"><img class="bob" src="img/sp_paper.webp" alt="" width="300" height="300" loading="lazy"></div>
+        <div class="stage"><svg class="art art--paper" viewBox="0 0 240 200" role="img" aria-hidden="true" focusable="false"><polygon points="16,170 120,194 120,200 16,176" fill="#D3E4EE"/><polygon points="120,194 224,170 224,176 120,200" fill="#BCD3E1"/><polygon points="16,170 120,146 224,170 120,194" fill="#E9F3F8"/><g><polygon points="32,76 44,68 128,68 116,76" fill="#F2F7FA"/><polygon points="116,76 128,68 128,154 116,162" fill="#B9CEDC"/><rect x="32" y="76" width="84" height="86" fill="#FFFFFF" stroke="#C3D6E3" stroke-width="1.2"/></g><rect x="40" y="84" width="68" height="30" fill="#7FB6D0"/><rect x="40" y="122" width="68" height="3" rx="1.5" fill="#D5E3EC"/><rect x="40" y="129" width="68" height="3" rx="1.5" fill="#D5E3EC"/><rect x="40" y="136" width="41" height="3" rx="1.5" fill="#D5E3EC"/><rect x="73" y="76" width="2" height="86" fill="#CFDEE8"/><g><polygon points="146,72 158,64 212,64 200,72" fill="#33598A"/><polygon points="200,72 212,64 212,160 200,168" fill="#13283F"/><rect x="146" y="72" width="54" height="96" fill="#1F3A5F"/></g><rect x="150" y="78" width="46" height="84" rx="2" fill="#FFFFFF"/><rect x="166.0" y="74" width="14" height="2.5" rx="1.2" fill="#0C1A2B"/><rect x="154" y="120" width="38" height="3" rx="1.5" fill="#D5E3EC"/><rect x="154" y="127" width="38" height="3" rx="1.5" fill="#D5E3EC"/><rect x="154" y="134" width="23" height="3" rx="1.5" fill="#D5E3EC"/><g class="card"><rect x="70" y="86" width="34" height="22" fill="#A50031"/></g></svg></div>
       </div>
     </div>
     <div>
@@ -588,7 +631,6 @@ h1,h2,h3,h4{font-family:var(--head);font-feature-settings:"palt" 1;letter-spacin
 </section>
 
 <section class="sec" id="case">
-  <span class="geo geo--qr" aria-hidden="true" style="left:0;bottom:0;border-radius:0 100% 0 0"></span>
   <div class="wrap">
     <div class="ttl fx">
       <h2><span class="nb">使いやすさも、情報の届け方も。</span><span class="nb">導入企業の活用事例</span></h2>
@@ -653,7 +695,6 @@ h1,h2,h3,h4{font-family:var(--head);font-feature-settings:"palt" 1;letter-spacin
     </div>
     <div class="pr fx">
       <div class="pr__side">
-        <span class="geo geo--ring" aria-hidden="true"></span>
         <h3>相談できること</h3>
         <ul class="dash">
           <li>初期費用・月額費用のお見積もり</li>
@@ -696,7 +737,7 @@ h1,h2,h3,h4{font-family:var(--head);font-feature-settings:"palt" 1;letter-spacin
 </section>
 
 <section class="sec sec--tilt sec--navy last">
-  <span class="geo geo--ring" aria-hidden="true"></span>
+  <svg class="flow" viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="nlg2"><stop offset="0" stop-color="#7FD3EA" stop-opacity="0"/><stop offset=".7" stop-color="#7FD3EA" stop-opacity=".75"/><stop offset="1" stop-color="#7FD3EA" stop-opacity="0"/></linearGradient></defs><line x1="-60" y1="520" x2="620" y2="-20" stroke="#7FD3EA" stroke-opacity=".16" stroke-width="1.2"/><line class="nl0" x1="-60" y1="520" x2="620" y2="-20" stroke="url(#nlg2)" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="160 868" stroke-dashoffset="160"/><line x1="300" y1="560" x2="980" y2="-20" stroke="#7FD3EA" stroke-opacity=".16" stroke-width="1.2"/><line class="nl1" x1="300" y1="560" x2="980" y2="-20" stroke="url(#nlg2)" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="160 894" stroke-dashoffset="160"/><line x1="700" y1="560" x2="1380" y2="-20" stroke="#7FD3EA" stroke-opacity=".16" stroke-width="1.2"/><line class="nl2" x1="700" y1="560" x2="1380" y2="-20" stroke="url(#nlg2)" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="160 894" stroke-dashoffset="160"/><line x1="1040" y1="560" x2="1560" y2="120" stroke="#7FD3EA" stroke-opacity=".16" stroke-width="1.2"/><line class="nl3" x1="1040" y1="560" x2="1560" y2="120" stroke="url(#nlg2)" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="160 681" stroke-dashoffset="160"/></svg>
   <div class="wrap last__in">
     <div class="fx">
       <h2><span class="nb">自社に合った社内報づくりを、</span><span class="nb">ここから。</span></h2>
@@ -706,7 +747,7 @@ h1,h2,h3,h4{font-family:var(--head);font-feature-settings:"palt" 1;letter-spacin
         <a class="btn btn--ghost" href="https://secure-link.jp/wf/?c=wf33423047" target="_blank" rel="noopener">サービス資料をダウンロードする</a>
       </div>
     </div>
-    <div class="last__il fx" data-d="1"><img class="bob" src="img/il_team.webp" alt="" width="1000" height="690" loading="lazy"></div>
+    <div class="last__il fx" data-d="1"><svg class="art art--device" viewBox="0 0 240 200" role="img" aria-hidden="true" focusable="false"><polygon points="16,170 120,194 120,200 16,176" fill="#D3E4EE"/><polygon points="120,194 224,170 224,176 120,200" fill="#BCD3E1"/><polygon points="16,170 120,146 224,170 120,194" fill="#E9F3F8"/><g><polygon points="30,150 42,144 192,144 180,150" fill="#F2F7FA"/><polygon points="180,150 192,144 192,152 180,158" fill="#B9CEDC"/><rect x="30" y="150" width="150" height="8" fill="#FFFFFF" stroke="#C3D6E3" stroke-width="1.2"/></g><g><polygon points="42,66 54,58 182,58 170,66" fill="#33598A"/><polygon points="170,66 182,58 182,142 170,150" fill="#13283F"/><rect x="42" y="66" width="128" height="84" fill="#1F3A5F"/></g><rect x="47" y="71" width="118" height="74" fill="#FFFFFF"/><rect x="47" y="71" width="118" height="9" fill="#E3F2F8"/><rect x="53" y="86" width="50" height="34" fill="#7FB6D0"/><rect x="109" y="88" width="50" height="3" rx="1.5" fill="#D5E3EC"/><rect x="109" y="95" width="50" height="3" rx="1.5" fill="#D5E3EC"/><rect x="109" y="102" width="30" height="3" rx="1.5" fill="#D5E3EC"/><rect x="53" y="126" width="106" height="3" rx="1.5" fill="#D5E3EC"/><rect x="53" y="133" width="64" height="3" rx="1.5" fill="#D5E3EC"/><g><polygon points="150,94 162,86 212,86 200,94" fill="#33598A"/><polygon points="200,94 212,86 212,178 200,186" fill="#13283F"/><rect x="150" y="94" width="50" height="92" fill="#1F3A5F"/></g><rect x="154" y="100" width="42" height="80" rx="2" fill="#FFFFFF"/><rect x="168.0" y="96" width="14" height="2.5" rx="1.2" fill="#0C1A2B"/><g class="mv"><rect x="157" y="132" width="36" height="22" fill="#A50031"/><rect x="157" y="158" width="36" height="3" rx="1.5" fill="#D5E3EC"/><rect x="157" y="164" width="22" height="3" rx="1.5" fill="#D5E3EC"/></g><rect x="154" y="100" width="42" height="10" fill="#E3F2F8"/></svg></div>
   </div>
 </section>
 </main>
