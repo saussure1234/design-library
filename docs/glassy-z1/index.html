@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>WEB社内報「Z」｜続けられるWEB社内報 - glassy株式会社</title>
+<meta name="description" content="紙の社内報制作で培った経験をもとに、使いやすいシステムと、コンテンツ制作から運営体制の構築までをご支援。Web社内報の立ち上げが初めてでも安心して取り組んでいただけます。">
+<meta name="robots" content="noindex,nofollow">
+<meta property="og:title" content="WEB社内報「Z」｜続けられるWEB社内報">
+<meta property="og:description" content="紙の社内報制作で培った経験をもとに、使いやすいシステムと、コンテンツ制作から運営体制の構築までをご支援。">
+<meta property="og:type" content="website">
+<meta property="og:image" content="img/og.jpg">
+<link rel="icon" href="img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --sky:#0089b4;
+  --sky-d:#0077a3;
+  --sky-l:#e5f5fa;
+  --sky-ll:#f2fafc;
+  --navy:#0d3c6e;
+  --ink:#24323f;
+  --sub:#55636f;
+  --line:#d3e6ee;
+  --cta:#a50031;
+  --cta-h:#8a0029;
+  --white:#fff;
+  --r:14px;
+  --hd:68px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--hd) + 12px)}
+body{line-break:strict;font-family:"Noto Sans JP",sans-serif;color:var(--ink);background:var(--white);line-height:1.85;font-size:16px;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;height:auto;display:block}
+a{color:inherit;text-decoration:none}
+ul{list-style:none}
+.nb{display:inline-block}
+.wrap{width:min(1120px,100% - 48px);margin-inline:auto}
+.sec{padding:112px 0}
+.sec--l{background:var(--sky-ll)}
+.sec__hd{text-align:center;margin-bottom:56px}
+.sec__en{display:block;font-family:Outfit,sans-serif;font-weight:600;letter-spacing:.16em;color:var(--sky-d);font-size:14px;margin-bottom:10px}
+.sec h2{font-size:32px;line-height:1.5;font-weight:700;color:var(--navy);word-break:keep-all;overflow-wrap:anywhere}
+.sec__lead{margin-top:20px;color:var(--sub);text-wrap:pretty}
+
+/* header */
+.hd{position:fixed;inset:0 0 auto;height:var(--hd);background:rgba(255,255,255,.96);backdrop-filter:blur(6px);z-index:50;border-bottom:1px solid var(--line)}
+.hd__in{height:100%;width:min(1240px,100% - 40px);margin-inline:auto;display:flex;align-items:center;gap:32px}
+.hd__logo img{height:30px;width:auto}
+.hd__nav{display:flex;gap:28px;margin-left:auto;font-size:14px;font-weight:500}
+.hd__nav a:hover{color:var(--sky-d)}
+.hd__cta{display:inline-flex;align-items:center;height:44px;padding:0 20px;border-radius:999px;background:var(--cta);color:#fff;font-size:14px;font-weight:700;white-space:nowrap;transition:background .2s}
+.hd__cta:hover{background:var(--cta-h)}
+
+/* buttons */
+.btns{display:flex;gap:16px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:60px;padding:14px 32px;border-radius:999px;font-weight:700;font-size:16px;line-height:1.5;transition:background .2s,color .2s,transform .2s;text-align:center}
+.btn::after{content:"";width:8px;height:8px;border-top:2px solid currentColor;border-right:2px solid currentColor;transform:rotate(45deg);flex:none}
+.btn--main{background:var(--cta);color:#fff;box-shadow:0 6px 18px rgba(165,0,49,.22)}
+.btn--main:hover{background:var(--cta-h);transform:translateY(-2px)}
+.btn--sub{background:#fff;color:var(--navy);border:2px solid var(--navy)}
+.btn--sub:hover{background:var(--navy);color:#fff}
+.btn--onDark{background:#fff;color:var(--navy);border:2px solid #fff}
+.btn--onDark:hover{background:transparent;color:#fff}
+
+/* FV */
+.fv{position:relative;padding:calc(var(--hd) + 64px) 0 88px;background:linear-gradient(160deg,#f4fbfd 0%,#e2f3f9 55%,#cfeaf4 100%);overflow:hidden}
+.fv__bg{position:absolute;inset:0;pointer-events:none}
+.fv__bg span{position:absolute;border-radius:50%;background:rgba(0,159,201,.08)}
+.fv__bg span:nth-child(1){width:620px;height:620px;right:-160px;top:-120px}
+.fv__bg span:nth-child(2){width:300px;height:300px;left:-120px;bottom:-140px;background:rgba(0,159,201,.06)}
+.fv__grid{position:relative;display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr);grid-template-areas:"copy img" "pts img" "cta img";column-gap:40px;align-items:start}
+.fv__copy{grid-area:copy}
+.fv__img{grid-area:img;align-self:center}
+.fv__pts{grid-area:pts}
+.fv__cta{grid-area:cta}
+.fv__sh{display:inline-block;font-size:15px;font-weight:700;color:var(--sky-d);background:#fff;border:1px solid #bfe3ef;border-radius:999px;padding:6px 18px;margin-bottom:22px}
+.fv h1{font-size:40px;line-height:1.5;font-weight:900;color:var(--navy);letter-spacing:.02em;word-break:keep-all;overflow-wrap:anywhere}
+.fv h1 .em{color:var(--sky-d)}
+.fv h1 .z{font-family:Outfit,sans-serif;font-weight:700;font-size:1.25em;color:var(--sky)}
+.fv__lead{margin-top:22px;font-size:16px;color:var(--ink);text-wrap:pretty}
+.fv__pts ul{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:30px}
+.fv__pts li{background:#fff;border-radius:12px;padding:16px 12px 14px;text-align:center;box-shadow:0 4px 14px rgba(13,60,110,.07)}
+.fv__pts svg{width:40px;height:40px;margin:0 auto 6px;color:var(--sky)}
+.fv__pts .pt{display:block;font-family:Outfit,sans-serif;font-weight:600;font-size:13px;letter-spacing:.08em;color:var(--sky-d)}
+.fv__pts .tx{display:block;font-size:14px;font-weight:700;line-height:1.55;color:var(--navy);word-break:keep-all;overflow-wrap:anywhere}
+.fv__cta .btns{margin-top:32px;flex-wrap:nowrap;gap:12px}
+.fv__cta .btn{padding:14px 20px;font-size:15px;gap:10px;white-space:nowrap;flex:1 1 0}
+.fv__img img{width:128%;max-width:none;filter:drop-shadow(0 18px 30px rgba(13,60,110,.16))}
+
+/* 課題 */
+.pain ul{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.pain li{position:relative;background:#fff;border-radius:var(--r);padding:30px 26px 28px;font-weight:500;line-height:1.75;box-shadow:0 4px 16px rgba(13,60,110,.06)}
+.pain li .n{display:block;font-family:Outfit,sans-serif;font-weight:700;font-size:15px;color:var(--sky-d);letter-spacing:.08em;margin-bottom:8px}
+.bridge{margin-top:64px;text-align:center}
+.bridge__arw{width:44px;height:24px;margin:0 auto 28px;color:var(--sky)}
+.bridge p{font-size:22px;line-height:1.8;font-weight:700;color:var(--navy);word-break:keep-all;overflow-wrap:anywhere}
+.bridge p + p{margin-top:8px;font-size:17px;font-weight:500;color:var(--ink)}
+.bridge mark{background:linear-gradient(transparent 62%,#bfe8f4 62%);color:inherit}
+
+/* 特徴 */
+.ft{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:64px;align-items:center}
+.ft + .ft{margin-top:104px}
+.ft--rev .ft__txt{order:2}
+.ft__num{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.ft__num b{font-family:Outfit,sans-serif;font-weight:700;font-size:56px;line-height:1;color:var(--sky)}
+.ft__num span{font-family:Outfit,sans-serif;font-weight:600;font-size:13px;letter-spacing:.18em;color:var(--sky-d)}
+.ft h3{font-size:26px;line-height:1.55;font-weight:700;color:var(--navy);word-break:keep-all;overflow-wrap:anywhere;margin-bottom:20px}
+.ft__txt p{text-wrap:pretty}
+.ft__txt p + p{margin-top:12px}
+.chk{margin-top:22px;display:grid;gap:10px}
+.chk li{position:relative;padding-left:32px;font-weight:500;line-height:1.7}
+.chk li::before{content:"";position:absolute;left:0;top:.2em;width:22px;height:22px;border-radius:50%;background:var(--sky-l) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 12.5l4 4 8-9' fill='none' stroke='%230077a3' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat}
+.note{margin-top:14px;font-size:14px;color:var(--sub)}
+.ft__vis{border-radius:20px;background:var(--sky-l);padding:40px}
+.scr{display:flex;justify-content:center;align-items:flex-end;gap:24px}
+.scr{align-items:stretch}
+.scr img{border-radius:12px;background:#fff;box-shadow:0 10px 26px rgba(13,60,110,.14);height:440px;width:auto;object-fit:contain}
+.cert{background:#fff;border-radius:16px;padding:30px 26px;display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.cert figure{text-align:center}
+.cert .mk{display:flex;justify-content:center;align-items:center;gap:10px;height:96px}
+.cert .mk img{height:88px;width:auto}
+.cert .mk img.msa{height:80px}
+.cert figcaption{margin-top:10px;font-size:13px;line-height:1.6;color:var(--sub)}
+.cert figcaption b{display:block;font-size:14px;color:var(--navy)}
+.photo{border-radius:20px;overflow:hidden}
+.photo img{width:100%;aspect-ratio:5/4;object-fit:cover}
+.sup{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:40px}
+.sup > div{border:1px solid var(--line);border-radius:var(--r);padding:28px 26px;background:#fff}
+.sup h4{font-size:18px;font-weight:700;color:var(--navy);padding-bottom:12px;margin-bottom:6px;border-bottom:2px solid var(--sky-l)}
+.sup .chk{margin-top:14px}
+.sup__note{margin-top:24px;text-align:center;text-wrap:pretty}
+
+/* 中間CTA */
+.mid{background:linear-gradient(120deg,#0b4a80 0%,#0077a3 100%);color:#fff;padding:72px 0;text-align:center}
+.mid p{font-size:26px;font-weight:700;line-height:1.6;word-break:keep-all;overflow-wrap:anywhere}
+.mid .btns{justify-content:center;margin-top:32px}
+
+/* 機能 */
+.fn{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.fn > div{background:#fff;border-radius:var(--r);padding:30px 24px 28px;box-shadow:0 4px 16px rgba(13,60,110,.06)}
+.fn__ic{width:60px;height:60px;border-radius:16px;background:var(--sky-l);display:grid;place-items:center;color:var(--sky-d);margin-bottom:16px}
+.fn__ic svg{width:32px;height:32px}
+.fn h3{font-size:19px;font-weight:700;color:var(--navy);margin-bottom:14px}
+.fn dl{display:grid;gap:14px}
+.fn dt{font-weight:700;font-size:15px;color:var(--sky-d);line-height:1.6}
+.fn dd{font-size:14px;line-height:1.7;color:var(--ink)}
+
+/* 紙 */
+.paper{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:64px;align-items:start}
+.paper .sec__hd{text-align:left;margin-bottom:0}
+.paper .sec__lead{color:var(--ink)}
+.paper__img{border-radius:20px;overflow:hidden;margin-top:36px}
+.paper__img img{width:100%;aspect-ratio:16/10;object-fit:cover}
+.pp{display:grid;gap:16px}
+.pp li{display:grid;grid-template-columns:52px 1fr;gap:18px;background:var(--sky-ll);border-radius:var(--r);padding:24px 26px}
+.pp .n{width:52px;height:52px;border-radius:50%;background:#fff;color:var(--sky-d);font-family:Outfit,sans-serif;font-weight:700;font-size:20px;display:grid;place-items:center;border:2px solid var(--sky-l)}
+.pp h3{font-size:18px;font-weight:700;color:var(--navy);line-height:1.6;margin-bottom:6px}
+.pp p{font-size:15px;line-height:1.8}
+
+/* 事例 */
+.cs{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.cs article{background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 4px 18px rgba(13,60,110,.07);display:flex;flex-direction:column}
+.cs__ph{display:block;overflow:hidden}
+.cs__ph img{width:100%;aspect-ratio:16/9;object-fit:cover;transition:transform .5s}
+.cs__ph:hover img{transform:scale(1.04)}
+.cs__body{padding:26px 28px 30px}
+.cs__co{font-size:14px;font-weight:700;color:var(--sky-d)}
+.cs h3{font-size:20px;line-height:1.6;font-weight:700;color:var(--navy);margin:6px 0 18px;word-break:keep-all;overflow-wrap:anywhere}
+.cs dl{display:grid;gap:12px}
+.cs dt{display:inline-block;font-size:13px;font-weight:700;padding:2px 12px;border-radius:999px;background:#eef2f5;color:var(--sub)}
+.cs dt.af{background:#fbe9ee;color:var(--cta)}
+.cs dd{margin-top:6px;font-size:15px;line-height:1.8}
+.cs__more{text-align:center;margin-top:48px}
+.cs__more .btns{justify-content:center}
+
+/* 費用 */
+.pr{max-width:880px;margin-inline:auto}
+.pr__body{text-align:center;text-wrap:pretty}
+.pr__box{margin-top:40px;border:2px solid var(--sky-l);border-radius:20px;padding:36px 44px;background:var(--sky-ll)}
+.pr__box h3{font-size:19px;font-weight:700;color:var(--navy);text-align:center;margin-bottom:18px}
+.pr__box .chk{grid-template-columns:1fr 1fr;column-gap:32px;margin-top:0}
+.pr__lead{margin-top:40px;text-align:center;font-weight:500}
+.pr .btns{justify-content:center;margin-top:28px}
+
+/* FAQ */
+.faq{max-width:880px;margin-inline:auto;display:grid;gap:12px}
+.faq details{background:#fff;border-radius:12px;box-shadow:0 2px 10px rgba(13,60,110,.05)}
+.faq summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:36px 1fr 20px;gap:14px;align-items:center;padding:22px 26px;font-weight:700;color:var(--navy);line-height:1.6}
+.faq summary::-webkit-details-marker{display:none}
+.faq .q,.faq .a{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-family:Outfit,sans-serif;font-weight:700;font-size:17px}
+.faq .q{background:var(--sky-d);color:#fff}
+.faq .a{background:#fbe9ee;color:var(--cta)}
+.faq .arw{width:12px;height:12px;border-right:2px solid var(--sky-d);border-bottom:2px solid var(--sky-d);transform:rotate(45deg) translate(-3px,-3px);transition:transform .25s;justify-self:center}
+.faq details[open] .arw{transform:rotate(-135deg) translate(-3px,-3px)}
+.faq__a{overflow:hidden;display:grid;grid-template-columns:36px 1fr;gap:14px;padding:0 26px 24px;line-height:1.85}
+.faq__a p{padding-top:4px}
+
+/* 最終CTA */
+.last{background:linear-gradient(135deg,#0b3f70 0%,#0a6f9c 60%,#0a8fb8 100%);color:#fff;text-align:center;padding:104px 0;position:relative;overflow:hidden}
+.last::before{content:"";position:absolute;width:520px;height:520px;border-radius:50%;background:rgba(255,255,255,.05);right:-140px;top:-180px}
+.last h2{font-size:32px;line-height:1.5;font-weight:700;word-break:keep-all;overflow-wrap:anywhere;position:relative}
+.last p{margin-top:22px;position:relative;text-wrap:pretty}
+.last .btns{justify-content:center;margin-top:40px;position:relative}
+
+.ft-bar{background:#0a2b4d;color:#c9d6e2;text-align:center;font-size:13px;padding:28px 16px}
+
+/* motion */
+.fx{opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .8s ease}
+.fx.hh-in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.fx{opacity:1;transform:none;transition:none}}
+
+/* responsive */
+@media (max-width:1024px){
+  .hd__nav{gap:18px}
+  .fv h1{font-size:30px}
+  .fv__cta .btns{flex-wrap:wrap}
+  .fn{grid-template-columns:1fr 1fr}
+}
+@media (max-width:900px){
+  :root{--hd:60px}
+  .hd__nav{display:none}
+  .hd__cta{margin-left:auto;height:40px;padding:0 16px;font-size:13px}
+  .sec{padding:80px 0}
+  .sec h2,.last h2{font-size:26px}
+  .fv{padding:calc(var(--hd) + 40px) 0 64px}
+  .fv__grid{grid-template-columns:1fr;grid-template-areas:"copy" "img" "pts" "cta"}
+  .fv__img{margin-top:28px;max-width:560px;justify-self:center}
+  .fv__img img{width:100%}
+  .fv__cta .btns{flex-wrap:wrap}
+  .fv__cta .btn{flex:none;white-space:normal}
+  .fv__cta .btns{flex-direction:column}
+  .fv__cta .btn{width:100%}
+  .pain ul{grid-template-columns:1fr 1fr}
+  .ft,.paper{grid-template-columns:1fr;gap:36px}
+  .ft--rev .ft__txt{order:0}
+  .ft + .ft{margin-top:80px}
+  .cs{grid-template-columns:1fr}
+  .mid p{font-size:22px}
+}
+@media (max-width:600px){
+  body{font-size:15px}
+  .wrap{width:calc(100% - 32px)}
+  .hd__logo img{height:24px}
+  .hd__cta{padding:0 14px;font-size:12px}
+  .sec{padding:68px 0}
+  .sec__hd{margin-bottom:40px}
+  .sec h2,.last h2{font-size:23px}
+  .fv h1{font-size:29px}
+  .fv__sh{font-size:13px;padding:5px 14px}
+  .fv__pts ul{gap:8px}
+  .fv__pts li{padding:12px 6px}
+  .fv__pts svg{width:32px;height:32px}
+  .fv__pts .tx{font-size:12.5px}
+  .pain ul{grid-template-columns:1fr}
+  .pain li{padding:22px 22px}
+  .bridge p{font-size:19px}
+  .bridge p + p{font-size:15px}
+  .ft h3{font-size:22px}
+  .ft__num b{font-size:46px}
+  .ft__vis{padding:24px}
+  .scr{gap:14px}
+  .scr img{height:300px}
+  .cert{grid-template-columns:1fr;padding:24px 18px}
+  .sup{grid-template-columns:1fr}
+  .btns{flex-direction:column}
+  .btn{width:100%;padding:14px 22px}
+  .fn{grid-template-columns:1fr}
+  .pp li{grid-template-columns:44px 1fr;gap:14px;padding:20px}
+  .pp .n{width:44px;height:44px;font-size:17px}
+  .cs__body{padding:22px 20px 26px}
+  .cs h3{font-size:18px}
+  .pr__box{padding:26px 22px}
+  .pr__box .chk{grid-template-columns:1fr}
+  .faq summary{grid-template-columns:32px 1fr 16px;gap:10px;padding:18px}
+  .faq .q,.faq .a{width:32px;height:32px;font-size:15px}
+  .faq__a{grid-template-columns:32px 1fr;gap:10px;padding:0 18px 20px}
+  .mid p{font-size:20px}
+}
+</style>
+</head>
+<body>
+<header class="hd">
+  <div class="hd__in">
+    <a class="hd__logo" href="#top"><img src="img/logo.png" alt="WEB社内報「Z」" width="881" height="143"></a>
+    <nav class="hd__nav" aria-label="ページ内">
+      <a href="#feature">できること</a>
+      <a href="#case">導入事例</a>
+      <a href="#price">費用</a>
+    </nav>
+    <a class="hd__cta" href="https://secure-link.jp/wf/?c=wf33423047" target="_blank" rel="noopener">資料ダウンロード</a>
+  </div>
+</header>
+
+<main id="top">
+<section class="fv">
+  <div class="fv__bg" aria-hidden="true"><span></span><span></span></div>
+  <div class="wrap fv__grid">
+    <div class="fv__copy">
+      <p class="fv__sh"><span class="nb">10年超の社内報事業で培った</span><span class="nb">ノウハウで運用をサポート</span></p>
+      <h1><span class="nb">会社の想いと、</span><span class="nb">社員の姿が届く。</span><br><span class="nb">続けられる</span><span class="nb em">WEB社内報「<span class="z">Z</span>」</span></h1>
+      <p class="fv__lead">紙の社内報制作で培った経験をもとに、使いやすいシステムと、コンテンツ制作から運営体制の構築までをご支援。<br>Web社内報の立ち上げが初めてでも安心して取り組んでいただけます。</p>
+    </div>
+    <div class="fv__img"><img src="img/devices.webp" alt="PC・タブレット・スマートフォンで表示したWEB社内報「Z」の画面" width="833" height="373"></div>
+    <div class="fv__pts">
+      <ul>
+        <li><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="26" height="18" rx="2"/><path d="M2 33h32"/><rect x="31" y="17" width="14" height="22" rx="2.5"/><path d="M36 35h4"/></svg><span class="pt">POINT 1</span><span class="tx">マルチデバイス対応の<wbr>高品質アプリ</span></li>
+        <li><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M24 5l15 6v11c0 10-6.5 17-15 21C15.5 39 9 32 9 22V11z"/><path d="M17 24l5 5 9-10"/></svg><span class="pt">POINT 2</span><span class="tx">安心のセキュリティ<wbr>システム</span></li>
+        <li><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="24" cy="19" r="8"/><path d="M11 21v-3a13 13 0 0 1 26 0v3"/><rect x="8" y="19" width="5" height="9" rx="2"/><rect x="35" y="19" width="5" height="9" rx="2"/><path d="M37 28c0 4-4 6-9 6"/><path d="M12 43c1.5-6 6.5-9 12-9s10.5 3 12 9"/></svg><span class="pt">POINT 3</span><span class="tx">充実のサポートで<wbr>らくらく運用</span></li>
+      </ul>
+    </div>
+    <div class="fv__cta">
+      <div class="btns">
+        <a class="btn btn--main" href="https://secure-link.jp/wf/?c=wf33423047" target="_blank" rel="noopener">サービス資料をダウンロードする</a>
+        <a class="btn btn--sub" href="https://secure-link.jp/wf/?c=wf33423047" target="_blank" rel="noopener">導入・費用について問い合わせる</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec--l pain">
+  <div class="wrap">
+    <div class="sec__hd fx">
+      <span class="sec__en" aria-hidden="true">ISSUES</span>
+      <h2><span class="nb">社内報の発信・運営で、</span><span class="nb">こんなお悩みは</span><span class="nb">ありませんか？</span></h2>
+    </div>
+    <ul>
+      <li class="fx"><span class="n" aria-hidden="true">01</span>経営方針や理念が現場に届かず、拠点・部門間の<span class="nb">相互理解も進みにくい</span></li>
+      <li class="fx" data-d="1"><span class="n" aria-hidden="true">02</span>記事の作成・更新に手間がかかり、<span class="nb">タイムリーに発信できない</span></li>
+      <li class="fx" data-d="2"><span class="n" aria-hidden="true">03</span>誰に、どの記事が読まれているか分からず、<span class="nb">改善につなげにくい</span></li>
+      <li class="fx" data-d="3"><span class="n" aria-hidden="true">04</span>社内報を始めたいが、運営体制や役割分担を<span class="nb">どう整えればよいか分からない</span></li>
+      <li class="fx" data-d="4"><span class="n" aria-hidden="true">05</span>企画・取材・執筆・撮影の経験が少なく、記事を<span class="nb">継続してつくれるか不安</span></li>
+      <li class="fx" data-d="5"><span class="n" aria-hidden="true">06</span>個人情報を扱うため、アクセス管理や情報漏えいなどセキュリティが<span class="nb">気になる</span></li>
+    </ul>
+    <div class="bridge fx">
+      <svg class="bridge__arw" viewBox="0 0 44 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4l18 16L40 4"/></svg>
+      <p><span class="nb">社内報に必要なのは、</span><mark><span class="nb">使いやすい仕組みと</span><span class="nb">続けられる運営体制。</span></mark></p>
+      <p><span class="nb">WEB社内報「Z」は、</span><span class="nb">機能・セキュリティ・</span><span class="nb">導入前後のサポートで、</span><span class="nb">その両方を支えます。</span></p>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="feature">
+  <div class="wrap">
+    <div class="sec__hd fx">
+      <span class="sec__en" aria-hidden="true">FEATURES</span>
+      <h2><span class="nb">WEB社内報「Z」が、</span><span class="nb">発信と運営を支える</span><span class="nb">3つの特徴</span></h2>
+    </div>
+
+    <div class="ft">
+      <div class="ft__txt fx">
+        <div class="ft__num" aria-hidden="true"><b>01</b><span>FEATURE</span></div>
+        <h3><span class="nb">使いやすいから発信できる。</span><span class="nb">分析できるから改善できる。</span></h3>
+        <p>シンプルな投稿画面で、文章・写真・動画を使った記事を作成。<br>プッシュ通知で更新を知らせ、いいね・コメントで社員の反応を受け取り、アクセス分析を次の企画に活かせます。</p>
+        <p>作成・配信・分析まで、日々の社内報運営に必要な機能をひとつにまとめました。</p>
+        <ul class="chk">
+          <li>直感的に使える記事投稿画面</li>
+          <li>プッシュ通知・メールによる更新案内</li>
+          <li>いいね・コメント・アンケート</li>
+          <li>アクセス分析・CSVダウンロード</li>
+        </ul>
+      </div>
+      <div class="ft__vis fx" data-d="1">
+        <div class="scr">
+          <img src="img/scr_comment.webp" alt="いいね・コメントの画面" width="224" height="543" loading="lazy">
+          <img src="img/scr_analytics.webp" alt="アクセス分析の画面" width="256" height="473" loading="lazy">
+        </div>
+      </div>
+    </div>
+
+    <div class="ft ft--rev">
+      <div class="ft__txt fx">
+        <div class="ft__num" aria-hidden="true"><b>02</b><span>FEATURE</span></div>
+        <h3><span class="nb">社内情報を扱うための、</span><span class="nb">セキュリティ対策</span></h3>
+        <p>利用者ごとのID・パスワードに加え、権限管理や記事の承認フローを搭載。<br>IP制限、多要素認証、SSOにも対応し、自社の運用方針に合わせてアクセス環境を整えられます。</p>
+        <ul class="chk">
+          <li>5段階の権限管理と<span class="nb">記事の公開範囲設定</span></li>
+          <li>承認フローによる公開前の確認</li>
+          <li>IP制限・多要素認証に対応</li>
+          <li>Microsoft 365、Google Workspaceとの<span class="nb">SSO連携に対応</span></li>
+        </ul>
+        <p class="note">※IP制限・多要素認証は無料オプション、SSO連携は有料オプションです。</p>
+      </div>
+      <div class="ft__vis fx" data-d="1">
+        <div class="cert">
+          <figure>
+            <div class="mk"><img class="msa" src="img/mark_msa.webp" alt="MSA認証マーク" width="304" height="300" loading="lazy"><img src="img/mark_isms.webp" alt="ISMS-AC認定シンボル" width="231" height="300" loading="lazy"></div>
+            <figcaption><b>ISO27001（ISMS）</b>MSA-IS-764</figcaption>
+          </figure>
+          <figure>
+            <div class="mk"><img class="msa" src="img/mark_msa.webp" alt="MSA認証マーク" width="304" height="300" loading="lazy"><img src="img/mark_isms_cls.webp" alt="ISMS-AC認定シンボル（ISMSクラウドセキュリティ）" width="217" height="300" loading="lazy"></div>
+            <figcaption><b>ISMSクラウドセキュリティ</b>MSA-IS-764-CL</figcaption>
+          </figure>
+        </div>
+        <p class="note" style="text-align:center"><span class="nb">運営会社のglassyは、</span><span class="nb">ISO27001・ISMSクラウドセキュリティ認証を</span><span class="nb">取得しています。</span></p>
+      </div>
+    </div>
+
+    <div class="ft">
+      <div class="ft__txt fx">
+        <div class="ft__num" aria-hidden="true"><b>03</b><span>FEATURE</span></div>
+        <h3><span class="nb">運営体制づくりから記事制作まで。</span><span class="nb">初めての担当者をサポート</span></h3>
+        <p>紙の社内報制作で培ったノウハウを活かし、専任のカスタマーサポート担当が導入前後を支援。<br>操作方法に加え、「何のために発行するか」「誰がつくるか」「どんな企画を届けるか」から相談できます。</p>
+      </div>
+      <div class="photo fx" data-d="1"><img src="img/support.webp" alt="社内報の運営について打ち合わせをする担当者たち" width="1000" height="797" loading="lazy"></div>
+    </div>
+    <div class="sup">
+      <div class="fx">
+        <h4>運営体制を整える支援</h4>
+        <ul class="chk">
+          <li>社内報の目的・役割の整理</li>
+          <li>編集メンバーの役割分担と<span class="nb">品質管理体制の検討</span></li>
+          <li>企画づくり、更新スケジュール、<span class="nb">KPIの整理</span></li>
+          <li>社内告知や閲覧促進の<span class="nb">進め方のアドバイス</span></li>
+        </ul>
+      </div>
+      <div class="fx" data-d="1">
+        <h4>記事をつくるための支援</h4>
+        <ul class="chk">
+          <li>取材・ライティング・写真撮影の<span class="nb">ノウハウ</span></li>
+          <li>原稿依頼・撮影依頼に<span class="nb">使えるフォーマット</span></li>
+          <li>企画の方向性を<span class="nb">整理する企画開発シート</span></li>
+          <li>納品前後に<span class="nb">計3回の機能説明会</span></li>
+        </ul>
+      </div>
+    </div>
+    <p class="sup__note fx"><span class="nb">媒体設計・広報体制構築のアドバイスは、</span><span class="nb">初期導入費内で対応。</span><br>制作に手が回らない場合は、取材・執筆・撮影などの有償サポートも<span class="nb">ご相談いただけます。</span></p>
+  </div>
+</section>
+
+<section class="mid">
+  <div class="wrap fx">
+    <p><span class="nb">自社に合う運用方法を、</span><span class="nb">相談してみませんか？</span></p>
+    <div class="btns">
+      <a class="btn btn--main" href="https://secure-link.jp/wf/?c=wf33423047" target="_blank" rel="noopener">サービス資料をダウンロードする</a>
+      <a class="btn btn--onDark" href="https://secure-link.jp/wf/?c=wf33423047" target="_blank" rel="noopener">導入・運用について相談する</a>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec--l">
+  <div class="wrap">
+    <div class="sec__hd fx">
+      <span class="sec__en" aria-hidden="true">FUNCTIONS</span>
+      <h2><span class="nb">日々の発信を支える、</span><span class="nb">主な機能</span></h2>
+    </div>
+    <div class="fn">
+      <div class="fx">
+        <div class="fn__ic" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 5l7 7-14 14H6v-7z"/><path d="M17 8l7 7"/></svg></div>
+        <h3>記事をつくる</h3>
+        <dl>
+          <div><dt>記事投稿</dt><dd>タイトル・画像・本文を<span class="nb">シンプルな画面で入力</span></dd></div>
+          <div><dt>画像トリミング</dt><dd>投稿画面上で画像を調整</dd></div>
+          <div><dt>動画掲載</dt><dd>YouTubeなどの<span class="nb">動画を記事内に埋め込み</span></dd></div>
+          <div><dt>予約配信</dt><dd>発信したいタイミングに<span class="nb">合わせて公開を予約</span></dd></div>
+        </dl>
+      </div>
+      <div class="fx" data-d="1">
+        <div class="fn__ic" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4a8 8 0 0 0-8 8v5l-3 4h22l-3-4v-5a8 8 0 0 0-8-8z"/><path d="M13 25a3 3 0 0 0 6 0"/></svg></div>
+        <h3>社員に届ける</h3>
+        <dl>
+          <div><dt>マルチデバイス対応</dt><dd>PC・スマートフォン・タブレットで閲覧</dd></div>
+          <div><dt>プッシュ通知</dt><dd>アプリで新着記事をお知らせ</dd></div>
+          <div><dt>メール通知</dt><dd>登録メールアドレスへ更新を案内</dd></div>
+          <div><dt>ピックアップ表示</dt><dd>読んでほしい記事を<span class="nb">トップページに固定表示</span></dd></div>
+        </dl>
+      </div>
+      <div class="fx" data-d="2">
+        <div class="fn__ic" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="14" cy="14" r="8"/><path d="M20 20l7 7"/><path d="M11 14h6M14 11v6"/></svg></div>
+        <h3>情報を探す・反応する</h3>
+        <dl>
+          <div><dt>カテゴリー・ハッシュタグ</dt><dd>記事を分類し、探しやすく整理</dd></div>
+          <div><dt>ランキング</dt><dd>PV数・いいね数の多い記事を表示</dd></div>
+          <div><dt>いいね・コメント</dt><dd>記事への反応や感想を共有</dd></div>
+          <div><dt>アンケート</dt><dd>トップページにアンケートを表示</dd></div>
+        </dl>
+      </div>
+      <div class="fx" data-d="3">
+        <div class="fn__ic" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 27h22"/><rect x="7" y="16" width="4" height="8"/><rect x="14" y="10" width="4" height="14"/><rect x="21" y="5" width="4" height="19"/></svg></div>
+        <h3>管理・改善する</h3>
+        <dl>
+          <div><dt>アクセス分析</dt><dd>日々の閲覧動向をダッシュボードで確認</dd></div>
+          <div><dt>CSV出力</dt><dd>アクセス情報をダウンロード</dd></div>
+          <div><dt>権限管理・承認フロー</dt><dd>役割に合わせた記事制作・公開</dd></div>
+          <div><dt>公開範囲設定</dt><dd>記事を届ける対象を設定</dd></div>
+        </dl>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap paper">
+    <div class="fx">
+      <div class="sec__hd">
+        <span class="sec__en" aria-hidden="true">PAPER &amp; WEB</span>
+        <h2><span class="nb">紙の社内報からの移行も、</span><span class="nb">紙とWebの併用も。</span></h2>
+        <p class="sec__lead">これまで制作してきた紙の社内報を活かしながら、Webへ。<br>紙とWebの両方を支援するglassyだからこそ、自社の運営体制や社員の閲覧環境に合わせた進め方を<span class="nb">ご相談いただけます。</span></p>
+      </div>
+      <div class="paper__img"><img src="img/paper.webp" alt="紙の社内報" width="650" height="354" loading="lazy"></div>
+    </div>
+    <div>
+      <ul class="pp">
+        <li class="fx"><span class="n" aria-hidden="true">01</span><div><h3>過去の紙の社内報を、Webでも閲覧</h3><p>紙面ビューワーで社内報PDFを掲載。過去の記事にも、PCやスマートフォンからアクセスできます。</p></div></li>
+        <li class="fx" data-d="1"><span class="n" aria-hidden="true">02</span><div><h3>スマートフォンで読みやすい形にも対応</h3><p>紙面のネイティブデータがあれば、HTML化にも対応。スマートフォンでの読みやすさを<span class="nb">整えられます。</span></p></div></li>
+        <li class="fx" data-d="2"><span class="n" aria-hidden="true">03</span><div><h3>紙とWebの制作・運用をまとめて相談</h3><p>全面的なWeb移行だけでなく、紙とWebそれぞれの良さを活かした併用も可能です。紙の社内報制作からWebでの発信まで、まとめてご相談いただけます。</p></div></li>
+      </ul>
+      <p class="note fx">※紙面ビューワーは有料オプションです。HTML化・制作支援の対応条件や費用はお問い合わせください。</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec--l" id="case">
+  <div class="wrap">
+    <div class="sec__hd fx">
+      <span class="sec__en" aria-hidden="true">CASE STUDY</span>
+      <h2><span class="nb">使いやすさも、情報の届け方も。</span><span class="nb">導入企業の活用事例</span></h2>
+      <p class="sec__lead">記事制作の負担軽減、閲覧状況をもとにした改善、紙からWebへの移行。<br>それぞれの課題に合わせた、WEB社内報「Z」の活用をご紹介します。</p>
+    </div>
+    <div class="cs">
+      <article class="fx">
+        <a class="cs__ph" href="https://glassy-co.jp/web-z_lp/user-interview/" target="_blank" rel="noopener"><img src="img/case_mayekawa.webp" alt="株式会社前川製作所のご担当者" width="1000" height="750" loading="lazy"></a>
+        <div class="cs__body">
+          <p class="cs__co">株式会社前川製作所</p>
+          <h3><span class="nb">使いやすさと分析機能で、</span><span class="nb">継続的な更新・改善へ</span></h3>
+          <dl>
+            <div><dt>導入前の課題</dt><dd>従来のシステムが使いづらく、<span class="nb">更新頻度や閲覧数も低下。</span></dd></div>
+            <div><dt class="af">導入後の変化</dt><dd>閲覧状況を可視化し、制作意欲と更新の安定につなげています。確認作業も効率化し、トラブル時の<span class="nb">対応も評価されています。</span></dd></div>
+          </dl>
+        </div>
+      </article>
+      <article class="fx" data-d="1">
+        <a class="cs__ph" href="https://glassy-co.jp/web-z_lp/user-interview/" target="_blank" rel="noopener"><img src="img/case_andersen.webp" alt="株式会社アンデルセン・パン生活文化研究所のご担当者" width="1000" height="667" loading="lazy"></a>
+        <div class="cs__body">
+          <p class="cs__co">株式会社アンデルセン・パン生活文化研究所</p>
+          <h3><span class="nb">紙からWebへ。</span><span class="nb">閲覧状況を把握し、</span><span class="nb">情報管理も見直し</span></h3>
+          <dl>
+            <div><dt>導入前の課題</dt><dd>紙の社内報は閲覧実態が分からず、配布負担や情報漏えいへの<span class="nb">懸念もありました。</span></dd></div>
+            <div><dt class="af">導入後の変化</dt><dd>PV・いいねを企画に活用。編集作業を短縮し、ID・パスワードやアクセスログで管理できるようになりました。</dd></div>
+          </dl>
+        </div>
+      </article>
+      <article class="fx" data-d="2">
+        <a class="cs__ph" href="https://glassy-co.jp/web-z_lp/user-interview/" target="_blank" rel="noopener"><img src="img/case_sapporolion.webp" alt="株式会社サッポロライオンのご担当者" width="1000" height="667" loading="lazy"></a>
+        <div class="cs__body">
+          <p class="cs__co">株式会社サッポロライオン</p>
+          <h3><span class="nb">更新の負担を減らし、</span><span class="nb">現場の声をタイムリーに発信</span></h3>
+          <dl>
+            <div><dt>導入前の課題</dt><dd>PDF制作の編集・デザインに時間がかかり、情報発信が<span class="nb">遅れがちでした。</span></dd></div>
+            <div><dt class="af">導入後の変化</dt><dd>記事単位で更新でき、社内向け発信に時間を割きやすくなりました。プッシュ通知も認知向上に<span class="nb">活用しています。</span></dd></div>
+          </dl>
+        </div>
+      </article>
+      <article class="fx" data-d="3">
+        <a class="cs__ph" href="https://glassy-co.jp/web-z_lp/user-interview/" target="_blank" rel="noopener"><img src="img/case_nissanchem.webp" alt="日産化学株式会社のご担当者" width="1000" height="749" loading="lazy"></a>
+        <div class="cs__body">
+          <p class="cs__co">日産化学株式会社</p>
+          <h3><span class="nb">紙の社内報にWebを組み合わせ、</span><span class="nb">情報の鮮度と届けやすさを両立</span></h3>
+          <dl>
+            <div><dt>導入前の課題</dt><dd>年4回の紙の社内報では速報性に課題があり、紙を好む読者への<span class="nb">配慮も必要でした。</span></dd></div>
+            <div><dt class="af">導入後の変化</dt><dd>最新ニュースはWeb、経営方針などは紙を中心に発信。長年の制作経緯を知るglassyの支援が、担当者交代後も運営の<span class="nb">安心感につながっています。</span></dd></div>
+          </dl>
+        </div>
+      </article>
+    </div>
+    <div class="cs__more fx">
+      <div class="btns"><a class="btn btn--sub" href="https://glassy-co.jp/web-z_lp/user-interview/" target="_blank" rel="noopener">導入事例を詳しく見る</a></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="price">
+  <div class="wrap pr">
+    <div class="sec__hd fx">
+      <span class="sec__en" aria-hidden="true">PRICE</span>
+      <h2><span class="nb">ご利用人数と運用に合わせて、</span><span class="nb">個別にお見積もりします</span></h2>
+    </div>
+    <p class="pr__body fx">初期費用・月額費用は、ご利用人数やオプション機能などに応じてご案内します。<br>社内報の目的や運営体制を伺い、自社に合う機能とサポート内容をご提案します。</p>
+    <div class="pr__box fx">
+      <h3>相談できること</h3>
+      <ul class="chk">
+        <li>初期費用・月額費用のお見積もり</li>
+        <li>必要な機能・オプションの選定</li>
+        <li>社内報の<span class="nb">立ち上げ・運営体制づくり</span></li>
+        <li>取材・執筆・撮影などの<span class="nb">制作支援</span></li>
+        <li>紙の社内報からの移行・併用</li>
+      </ul>
+    </div>
+    <p class="pr__lead fx"><span class="nb">これから社内報を始める方も、</span><span class="nb">既存の社内報を見直したい方も。</span><br><span class="nb">現在の課題やご希望を</span><span class="nb">お聞かせください。</span></p>
+    <div class="btns fx">
+      <a class="btn btn--main" href="https://secure-link.jp/wf/?c=wf33423047" target="_blank" rel="noopener">費用・導入について相談する</a>
+      <a class="btn btn--sub" href="https://secure-link.jp/wf/?c=wf33423047" target="_blank" rel="noopener">まずはサービス資料をダウンロードする</a>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec--l" id="faq">
+  <div class="wrap">
+    <div class="sec__hd fx">
+      <span class="sec__en" aria-hidden="true">FAQ</span>
+      <h2>よくあるご質問</h2>
+    </div>
+    <div class="faq fx">
+      <details><summary><span class="q" aria-hidden="true">Q</span>初めて社内報を立ち上げる場合でも相談できますか？<span class="arw" aria-hidden="true"></span></summary><div class="faq__a"><span class="a" aria-hidden="true">A</span><p>はい。社内報の目的や企画、運営体制の整理からご相談いただけます。媒体設計・広報体制構築のアドバイスは、初期導入費内で<span class="nb">対応しています。</span></p></div></details>
+      <details><summary><span class="q" aria-hidden="true">Q</span>記事制作の経験がなくても運用できますか？<span class="arw" aria-hidden="true"></span></summary><div class="faq__a"><span class="a" aria-hidden="true">A</span><p>取材・ライティング・写真撮影のノウハウや、原稿・撮影の依頼に使えるフォーマットをご用意しています。操作方法は、納品前後の機能説明会でもご案内します。</p></div></details>
+      <details><summary><span class="q" aria-hidden="true">Q</span>社用メールアドレスを持たない社員も利用できますか？<span class="arw" aria-hidden="true"></span></summary><div class="faq__a"><span class="a" aria-hidden="true">A</span><p>個別のID・パスワードでログインできます。ログイン情報の案内に使える名刺サイズのインビテーションカードは、導入時に限り無料で制作しています。利用環境に合わせた案内方法もご相談ください。</p></div></details>
+      <details><summary><span class="q" aria-hidden="true">Q</span>社外からのアクセスを制限できますか？<span class="arw" aria-hidden="true"></span></summary><div class="faq__a"><span class="a" aria-hidden="true">A</span><p>IP制限に対応しています。管理者画面・ユーザー画面の両方、またはいずれか一方に制限を設定できます。多要素認証も無料オプションでご利用いただけます。</p></div></details>
+      <details><summary><span class="q" aria-hidden="true">Q</span>Microsoft 365やGoogle Workspaceと連携できますか？<span class="arw" aria-hidden="true"></span></summary><div class="faq__a"><span class="a" aria-hidden="true">A</span><p>有料オプションでSSO連携に対応しています。既存のアカウントを利用して、WEB社内報「Z」に<span class="nb">アクセスできます。</span></p></div></details>
+      <details><summary><span class="q" aria-hidden="true">Q</span>紙の社内報と併用できますか？<span class="arw" aria-hidden="true"></span></summary><div class="faq__a"><span class="a" aria-hidden="true">A</span><p>はい。有料オプションの紙面ビューワーで、紙の社内報PDFを掲載・閲覧できます。ネイティブデータがあれば、スマートフォンで読みやすいHTML化にも対応可能です。紙とWebの制作・運用もまとめて<span class="nb">ご相談いただけます。</span></p></div></details>
+      <details><summary><span class="q" aria-hidden="true">Q</span>閲覧状況や社員の反応は確認できますか？<span class="arw" aria-hidden="true"></span></summary><div class="faq__a"><span class="a" aria-hidden="true">A</span><p>管理画面のダッシュボードでアクセス動向を確認できます。アクセス情報のCSV出力に加え、いいね・コメントなどから社員の<span class="nb">反応も把握できます。</span></p></div></details>
+      <details><summary><span class="q" aria-hidden="true">Q</span>記事の取材・執筆・撮影を依頼できますか？<span class="arw" aria-hidden="true"></span></summary><div class="faq__a"><span class="a" aria-hidden="true">A</span><p>はい。有償で取材・ライティング・撮影・サムネイル制作などを承っています。社内で対応する範囲と、外部に依頼する範囲を含めて<span class="nb">ご相談いただけます。</span></p></div></details>
+      <details><summary><span class="q" aria-hidden="true">Q</span>導入から社内公開まで、どのくらいかかりますか？<span class="arw" aria-hidden="true"></span></summary><div class="faq__a"><span class="a" aria-hidden="true">A</span><p>ご納品は最短10営業日です。ご納品後は、記事の準備や社内への案内などのため、社内公開までに1〜2か月程度の準備期間を設ける企業様が多くなっています。ご希望の公開時期に<span class="nb">合わせてご相談ください。</span></p></div></details>
+      <details><summary><span class="q" aria-hidden="true">Q</span>初期費用・月額費用はいくらですか？<span class="arw" aria-hidden="true"></span></summary><div class="faq__a"><span class="a" aria-hidden="true">A</span><p>ご利用人数やオプション機能などにより異なります。ご希望の運用方法を伺った上で、初期費用・月額費用を個別にお見積もりします。詳しくはお問い合わせください。</p></div></details>
+    </div>
+  </div>
+</section>
+
+<section class="last">
+  <div class="wrap fx">
+    <h2><span class="nb">自社に合った社内報づくりを、</span><span class="nb">ここから。</span></h2>
+    <p>必要な機能も、社内の運営体制も、記事制作の進め方も。<br>紙の社内報制作で培ったノウハウと、使いやすいWebの仕組みで、立ち上げから日々の運用まで支援します。</p>
+    <div class="btns">
+      <a class="btn btn--main" href="https://secure-link.jp/wf/?c=wf33423047" target="_blank" rel="noopener">導入・費用について相談する</a>
+      <a class="btn btn--onDark" href="https://secure-link.jp/wf/?c=wf33423047" target="_blank" rel="noopener">サービス資料をダウンロードする</a>
+    </div>
+  </div>
+</section>
+</main>
+<footer class="ft-bar">© glassy株式会社</footer>
+<script>
+if("scrollRestoration" in history){history.scrollRestoration="manual"}
+window.scrollTo(0,0);
+(function(){
+  var els=[].slice.call(document.querySelectorAll(".fx"));
+  els.forEach(function(e){var d=+e.getAttribute("data-d")||0;e.style.transitionDelay=(d*0.12)+"s"});
+  if(!("IntersectionObserver" in window)){els.forEach(function(e){e.classList.add("hh-in")});return}
+  var io=new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting){en.target.classList.add("hh-in");io.unobserve(en.target)}})},{rootMargin:"0px 0px -8% 0px"});
+  els.forEach(function(e){io.observe(e)});
+})();
+(function(){
+  [].slice.call(document.querySelectorAll(".faq details")).forEach(function(d){
+    var sm=d.querySelector("summary"),body=d.querySelector(".faq__a");
+    sm.addEventListener("click",function(e){
+      e.preventDefault();
+      if(d.open){
+        var h=body.offsetHeight;
+        body.animate([{height:h+"px",opacity:1},{height:"0px",opacity:0}],{duration:280,easing:"ease"}).onfinish=function(){d.open=false};
+        d.classList.remove("is-open");
+      }else{
+        d.open=true;d.classList.add("is-open");
+        var h2=body.offsetHeight;
+        body.animate([{height:"0px",opacity:0},{height:h2+"px",opacity:1}],{duration:320,easing:"ease"});
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>

@@ -472,9 +472,23 @@ addEventListener("load",function(){
         var own=""; [].forEach.call(e.childNodes,function(n){if(n.nodeType===3) own+=n.nodeValue});
         if(own.trim().length<2) return;
         if(e.closest("figure")||e.closest("figcaption")) return;   // 写真の中の字は意図
+        // 🚨 親が overflow で切っている部分は画面に出ていない。畳んだ長文（高さを絞った器）の中の
+        //    段落を、隠れているのに「被り」と数えていた（2026-09-14、B2C版テンプレの保護者の声・
+        //    375px で次の人の写真に69px）。行の矩形を、切っている親の矩形で削ってから比べる
+        var clips=[];
+        for(var ca=e.parentElement; ca&&ca!==document.body; ca=ca.parentElement){
+          var sca=getComputedStyle(ca);
+          if(sca.overflowX!=="visible"||sca.overflowY!=="visible") clips.push(ca.getBoundingClientRect());
+        }
         var rg=document.createRange(); rg.selectNodeContents(e);
-        [].slice.call(rg.getClientRects()).forEach(function(tr){
-          if(ovl.length>=6||tr.width<4) return;
+        [].slice.call(rg.getClientRects()).forEach(function(tr0){
+          var tr={left:tr0.left,right:tr0.right,top:tr0.top,bottom:tr0.bottom};
+          clips.forEach(function(c){
+            tr.left=Math.max(tr.left,c.left); tr.right=Math.min(tr.right,c.right);
+            tr.top=Math.max(tr.top,c.top); tr.bottom=Math.min(tr.bottom,c.bottom);
+          });
+          tr.width=tr.right-tr.left;
+          if(ovl.length>=6||tr.width<4||tr.bottom-tr.top<2) return;
           medias.forEach(function(m){
             if(m.contains(e)||e.contains(m)) return;
             var mr=m.getBoundingClientRect();
@@ -488,6 +502,80 @@ addEventListener("load",function(){
       });
     }
     if(ovl.length) out.push("文字が写真に被っている: "+ovl.join(" / "));
+
+    // ── 両端揃えで字間が広がりすぎていないか
+    //   🚨 これが無くて見落とした（2026-09-22）。孤立行を直すために最後の文節を
+    //      nb（inline-block）で囲んだら、その前の行が両端揃えで引き伸ばされ、
+    //      1文字あたり6.2px（18pxの字に対して35%）広がった。So「字の間隔が広い」。
+    //   ★測り方：広がった分は文字と文字の隙間ではなく【各文字の送り幅】に入る。
+    //      同じ段落を text-align:left にして測り直し、1文字あたりの差の中央値を見る。
+    //      2.5px/字（18pxで14%）以上で赤。均等に広がった行だけが出る。
+    var wide=[], seenW=0;
+    (function(){
+      function chs(el){
+        var tn=[], o=[];
+        (function walk(n){ [].forEach.call(n.childNodes,function(c){
+            if(c.nodeType===3) tn.push(c); else if(c.nodeType===1) walk(c); }); })(el);
+        tn.forEach(function(t,ti){
+          for(var i=0;i<t.nodeValue.length;i++){
+            if(/\s/.test(t.nodeValue[i])) continue;
+            var r=document.createRange(); r.setStart(t,i); r.setEnd(t,i+1);
+            var b=r.getClientRects()[0]; if(!b||b.width<=0) continue;
+            o.push({k:ti+":"+i, top:Math.round(b.top), w:b.width, c:t.nodeValue[i]});
+          }
+        });
+        return o;
+      }
+      document.querySelectorAll("p,li,dd,td,summary,h4").forEach(function(el){
+        if(wide.length>=4||seenW>2600) return;
+        var st=getComputedStyle(el);
+        if(st.textAlign!=="justify") return;                 // 広がるのは両端揃えだけ
+        if(st.display==="none"||st.visibility==="hidden") return;
+        var a=chs(el); if(a.length<12) return;
+        seenW+=a.length;
+        var ta=el.style.textAlign, tj=el.style.textJustify;
+        el.style.textAlign="left"; el.style.textJustify="auto";
+        el.offsetHeight;
+        var nat={}; chs(el).forEach(function(c){ nat[c.k]=c.w; });
+        el.style.textAlign=ta; el.style.textJustify=tj;
+        var g={};
+        a.forEach(function(c){ if(nat[c.k]!==undefined) (g[c.top]=g[c.top]||[]).push({d:c.w-nat[c.k],c:c.c}); });
+        Object.keys(g).forEach(function(k){
+          var L=g[k]; if(L.length<6||wide.length>=4) return;
+          var d=L.map(function(x){return x.d}).sort(function(p,q){return p-q});
+          var med=d.length%2 ? d[(d.length-1)/2] : (d[d.length/2-1]+d[d.length/2])/2;
+          if(med>=2.5) wide.push(nm(el)+"「"+L.map(function(x){return x.c}).join("").slice(0,14)+"」1字あたり"+med.toFixed(1)+"px（字は"+parseFloat(st.fontSize).toFixed(0)+"px）");
+        });
+      });
+    })();
+    if(wide.length) out.push("両端揃えで字間が広がっている: "+wide.join(" / "));
+
+    // ── 表のセルから文字がはみ出して、隣の列の文字に重なっていないか
+    //   🚨 これが無くて見落とした（2026-09-22、suzuki-ark4 のコンサート表）。
+    //      セルが white-space:nowrap で、中の札「YouTube LIVE配信予定」が列の外へ出て
+    //      隣の「内容」の文字に重なった。写真との被りしか見ていないので「被り」は通り、
+    //      表自体が overflow:hidden で切れるので「横スクロール」にも出なかった。
+    //   ★判定：td/th の中の文字の行の矩形が、そのセルの矩形より左右に4pxを超えて出ている。
+    var cellov=[];
+    document.querySelectorAll("td,th").forEach(function(c){
+      if(cellov.length>=6) return;
+      var cr=c.getBoundingClientRect(); if(cr.width<8) return;
+      [c].concat([].slice.call(c.querySelectorAll("*"))).forEach(function(e){
+        if(cellov.length>=6) return;
+        var st=getComputedStyle(e);
+        if(st.display==="none"||st.visibility==="hidden") return;
+        if(st.position==="absolute"||st.position==="fixed") return;
+        var own=""; [].forEach.call(e.childNodes,function(n){if(n.nodeType===3) own+=n.nodeValue});
+        if(own.trim().length<1) return;
+        var rg=document.createRange(); rg.selectNodeContents(e);
+        [].slice.call(rg.getClientRects()).forEach(function(tr){
+          if(tr.width<4||cellov.length>=6) return;
+          var over=Math.max(tr.right-cr.right, cr.left-tr.left);
+          if(over>4) cellov.push(nm(c)+"「"+own.trim().slice(0,14)+"」が列の外へ"+Math.round(over)+"px");
+        });
+      });
+    });
+    if(cellov.length) out.push("セルから文字がはみ出している: "+cellov.join(" / "));
 
     // ── 行頭の禁則（長音・小書き仮名・句読点・中黒が行の先頭に落ちていないか）
     //   ★ここは長く「私が画像を見る」項目だった。文字ごとの矩形を測れば機械で出せる
@@ -766,6 +854,8 @@ addEventListener("load",function(){
       soft.some(function(x){return /箱の中に大きな空きがある/.test(x)}),
       soft.some(function(x){return /カードの中の見出しと本文の位置がそろっていない/.test(x)}),
       soft.some(function(x){return /飾りが一度にたくさん動いている/.test(x)}),
+      out.some(function(x){return /セルから文字がはみ出している/.test(x)}),
+      out.some(function(x){return /両端揃えで字間が広がっている/.test(x)}),
     ];
     var fl=document.createElement("div");
     fl.style.cssText="position:absolute;left:0;top:0;z-index:2147483647;display:flex";
@@ -1046,6 +1136,11 @@ HOW = {
                 "面（ボタン）なら塗りを地から離す色にする。地が緑ならボタンは緑を避ける",
     "text-contrast": "文字色をブランドの明るい色から外す。明るい主役色は面（ボタン・帯・マーカー）に使い、"
                      "文字の強調は白地で4.5を超える色（補色など）か墨にする",
+    "letter-spread": "その行が短いまま両端に伸ばされている。原因はたいてい、後ろの語を nb（inline-block）で"
+    "囲んで次の行へ送っていること。nb を外し、孤立行は段落の max-width を1〜2字ぶん詰めて直す。"
+    "1文だけの段落は両端揃えをやめて中央か左に寄せる。",
+    "cell-overflow": "そのセルの white-space:nowrap を外し（word-break:keep-all と <wbr> で文節で折る）、"
+    "中の札・補足は display:flex などで行を分ける。列幅を変えるより、はみ出している中身を折る。",
     "overlap": "文字の器の幅を写真の手前で止める（width を 100% 以下に・min-width:0）。"
                "意図して写真の上に字を置くなら、写真を position:absolute の背景にして"
                "文字との比を測る",
@@ -1118,7 +1213,7 @@ def read_flags(png):
     content-gone（probe の FLAGS と同じ8本）。"""
     px = Image.open(png).convert("RGB").load()
     out = []
-    for i in range(17):
+    for i in range(19):
         c = px[i * 16 + 8, 8]
         out.append("ng" if (c[0] > 150 and c[1] < 90) else ("ok" if (c[1] > 110 and c[0] < 90) else "?"))
     return out
@@ -1195,11 +1290,16 @@ def check_script(lines, sp):
         if s.startswith("# "):         # 文書の題（「── LP原稿 v1」）
             continue
         s = re.sub(r"^[-#\s*]+", "", s).strip()
+        # ★［〜を配置］は素材の置き場所の指示。LPには出ない（glassy-z v1 2026-11-17）
+        if re.match(r"^［[^］]*］$", s):
+            continue
+        # ★行頭の「・」は箇条書きの記号。LPでは ul の li になって付かない（glassy-z v1）
+        s = re.sub(r"^・\s*", "", s)
         # ★見出し・ラベル・注記は「LPにそのまま出る文」ではないので対象外
         if len(s) < 20 or s.startswith(("（", "注記", "見出し", "受領", "反映先", "現状のLP")):
             continue
         label = ""
-        if "：" in s[:12]:              # 「補助コピー：」「ボタン：」など
+        if "：" in s[:14]:              # 「補助コピー：」「ボタン：」など（「カテゴリー・ハッシュタグ：」12字＝glassy-z）
             label, s = s.split("：", 1)
             s = s.strip()
         if s.startswith("ESL club オンライン校") and "原稿" in s:
@@ -1628,7 +1728,8 @@ def main():
         # 撮影で得たフラグ（5幅ぶん）を項目へ振り分ける。1幅でも ng なら ng
         order = ["responsive", "orphan-line", "br-margin", "embed-controls",
                  "alignment", "contrast", "h2-uniform", "content-gone", "kinsoku",
-                 "overlap", "text-contrast", "fv-busy", "fv-deco", "fv-wrap", "box-hole", "card-inner", "motion-calm"]
+                 "overlap", "text-contrast", "fv-busy", "fv-deco", "fv-wrap", "box-hole", "card-inner", "motion-calm",
+                 "cell-overflow", "letter-spread"]
         # 🚨 マーカーが読めない（"?"）のを「ok」にしてはいけない。
         #    probe が途中で例外を投げるとマーカーが描かれず、全項目が緑に見える。
         #    2026-09-11 に実際に踏んだ（alignment を足した直後、6件の上限で
@@ -1648,7 +1749,9 @@ def main():
                  "fv-wrap": "1画面目の横並び（2〜5個）は、折り返しても段ごとの個数がそろっている",
                  "box-hole": "角丸の箱の中で、中身の下に150px以上（箱の高さの35%以上）の空きは無い",
                  "card-inner": "横に並ぶ同じ作りのカードは、本文の書き出しの位置が8px以内でそろっている",
-                 "motion-calm": "1画面目で動く飾りは6個未満か、平均して同時に動くのが2.5個以下"}
+                 "motion-calm": "1画面目で動く飾りは6個未満か、平均して同時に動くのが2.5個以下",
+                 "cell-overflow": "表のセルの中の文字は、どれも自分の列に収まっている（5幅で実測）",
+                 "letter-spread": "両端揃えの行で字間が広がりすぎている所は無い（5幅で実測・1字あたり2.5px未満）"}
         # 検出文の頭の言葉で項目に振り分ける。probe が push する文言と対応させる
         MARK = {
             "responsive":     ("横スクロール", "画面外", "切れている"),
@@ -1668,6 +1771,8 @@ def main():
             "box-hole":       ("箱の中に大きな空きがある",),
             "card-inner":     ("カードの中の見出しと本文の位置がそろっていない",),
             "motion-calm":    ("飾りが一度にたくさん動いている",),
+            "cell-overflow":  ("セルから文字がはみ出している",),
+            "letter-spread":  ("両端揃えで字間が広がっている",),
         }
         allmsg = (detail.get("out") or []) + (detail.get("soft") or [])
         found = {}
