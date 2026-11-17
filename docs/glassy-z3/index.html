@@ -735,7 +735,7 @@ main{position:relative}
       <h1><span class="nb">会社の想いと、</span><span class="nb">社員の姿が届く。</span><br><span class="nb">続けられる</span><span class="nb em">WEB社内報「<span class="z">Z</span>」</span></h1>
       <p class="fv__lead">紙の社内報制作で培った経験をもとに、使いやすいシステムと、コンテンツ制作から運営体制の構築までをご支援。<br>Web社内報の立ち上げが初めてでも安心して取り組んでいただけます。</p>
     </div>
-    <div class="fv__img"><video class="fv__vid" data-webm="img/fv_once.webm" data-mp4="img/fv_once.mp4" autoplay muted playsinline width="1680" height="1120" aria-label="PCとスマートフォンで表示したWEB社内報「Z」の画面"></video><p class="fv__cap">※画面はイメージです</p></div>
+    <div class="fv__img"><video class="fv__vid" data-webm="img/fv_cut.mp4" data-mp4="img/fv_cut.mp4" autoplay muted playsinline width="1680" height="1120" aria-label="PCとスマートフォンで表示したWEB社内報「Z」の画面"></video><p class="fv__cap">※画面はイメージです</p></div>
     <div class="fv__pts">
       <ul>
         <li><span class="pt__art"><svg class="art art--device" viewBox="0 0 240 200" role="img" aria-hidden="true" focusable="false"><defs><radialGradient id="fl120170104" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#1F3A5F" stop-opacity=".16"/><stop offset="1" stop-color="#1F3A5F" stop-opacity="0"/></radialGradient></defs><ellipse cx="120" cy="174" rx="89" ry="15" fill="url(#fl120170104)"/><g><polygon points="30,150 36,144 186,144 180,150" fill="#F2F7FA"/><polygon points="180,150 186,144 186,152 180,158" fill="#B9CEDC"/><rect x="30" y="150" width="150" height="8" rx="3" fill="#FFFFFF" stroke="#C3D6E3" stroke-width="1.2"/></g><g><polygon points="42,66 48,62 176,62 170,66" fill="#33598A"/><polygon points="170,66 176,62 176,146 170,150" fill="#13283F"/><rect x="42" y="66" width="128" height="84" rx="3" fill="#1F3A5F"/></g><rect x="47" y="71" width="118" height="74" fill="#FFFFFF"/><rect x="47" y="71" width="118" height="9" fill="#E3F2F8"/><rect x="53" y="86" width="50" height="34" fill="#7FB6D0"/><rect x="109" y="88" width="50" height="3" rx="1.5" fill="#D5E3EC"/><rect x="109" y="95" width="50" height="3" rx="1.5" fill="#D5E3EC"/><rect x="109" y="102" width="30" height="3" rx="1.5" fill="#D5E3EC"/><rect x="53" y="126" width="106" height="3" rx="1.5" fill="#D5E3EC"/><rect x="53" y="133" width="64" height="3" rx="1.5" fill="#D5E3EC"/><g><polygon points="150,94 156,90 206,90 200,94" fill="#33598A"/><polygon points="200,94 206,90 206,182 200,186" fill="#13283F"/><rect x="150" y="94" width="50" height="92" rx="3" fill="#1F3A5F"/></g><rect x="154" y="100" width="42" height="80" rx="2" fill="#FFFFFF"/><rect x="168.0" y="96" width="14" height="2.5" rx="1.2" fill="#0C1A2B"/><g class="mv"><rect x="157" y="132" width="36" height="22" fill="#A50031"/><rect x="157" y="158" width="36" height="3" rx="1.5" fill="#D5E3EC"/><rect x="157" y="164" width="22" height="3" rx="1.5" fill="#D5E3EC"/></g><rect x="154" y="100" width="42" height="10" fill="#E3F2F8"/></svg></span><span class="pt">POINT 1</span><span class="tx">マルチデバイス対応の<wbr>高品質アプリ</span></li>
@@ -1152,8 +1152,8 @@ if("scrollRestoration" in history && !location.hash){history.scrollRestoration="
 (function(){
   var v=document.querySelector(".fv__vid"), fv=document.querySelector(".fv"); if(!v||!fv) return;
   var ua=navigator.userAgent, safari=/Safari/.test(ua)&&!/Chrome|Chromium|Edg|CriOS|FxiOS/.test(ua);
-  var useWebm=!safari && v.canPlayType('video/webm; codecs="vp9"');
-  v.src=useWebm?v.getAttribute("data-webm"):v.getAttribute("data-mp4");
+  var useWebm=false; /* 当面は全ブラウザで白地の mp4（乗算で地になじませる） */
+  v.src=v.getAttribute("data-mp4");
   if(!useWebm) v.classList.add("is-mp4");
   v.play&&v.play().catch(function(){});
   /* にじみ：左に2つ・右に2つ、小さめ。それぞれが円を描いてぐるっと回る（So 11/17「上下ではなく、ぐるーっと動く」）。通知での加速はやめた */
