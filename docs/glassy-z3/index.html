@@ -642,6 +642,14 @@ main{position:relative}
   .fv__pts li{gap:10px}
   .pr__main .btns .btn{font-size:15px}
 }
+
+/* FVのにじみ：小さめ4つ（左2・右2） */
+.fva span{filter:blur(60px)}
+.fva .b1{width:24vw;height:24vw;max-width:360px;max-height:360px;background:#BEE2F2;opacity:.9}
+.fva .b2{width:26vw;height:26vw;max-width:380px;max-height:380px;background:#C3E4F3;opacity:.9}
+.fva .b3{width:20vw;height:20vw;max-width:300px;max-height:300px;background:#D3EBF6;opacity:.9}
+.fva .pk{width:15vw;height:15vw;max-width:220px;max-height:220px;background:#F3CCD9;opacity:.6;filter:blur(50px)}
+@media (max-width:600px){.fva .b1,.fva .b2{width:46vw;height:46vw}.fva .b3{width:38vw;height:38vw}.fva .pk{width:28vw;height:28vw}}
 </style>
 </head>
 <body>
@@ -660,7 +668,7 @@ main{position:relative}
 <main id="top">
 <div class="pga" aria-hidden="true"></div>
 <section class="fv">
-  <div class="fva" aria-hidden="true"><span class="b1"></span><span class="b2"></span><span class="b3"></span><span class="b4"></span><span class="pk"></span></div>
+  <div class="fva" aria-hidden="true"><span class="b1"></span><span class="b2"></span><span class="b3"></span><span class="pk"></span></div>
   <div class="wrap fv__grid">
     <div class="fv__copy">
       <p class="fv__sh"><span class="nb">10年超の社内報事業で培った</span><span class="nb">ノウハウで運用をサポート</span></p>
@@ -1088,26 +1096,21 @@ if("scrollRestoration" in history && !location.hash){history.scrollRestoration="
   v.src=useWebm?v.getAttribute("data-webm"):v.getAttribute("data-mp4");
   if(!useWebm) v.classList.add("is-mp4");
   v.play&&v.play().catch(function(){});
-  /* にじみ：いつもゆっくり漂い、通知が鳴った瞬間だけ少し速くなる（So 11/17「波ではなく、後ろの円の動きが速くなる」） */
+  /* にじみ：左に2つ・右に2つ、小さめ。それぞれが円を描いてぐるっと回る（So 11/17「上下ではなく、ぐるーっと動く」）。通知での加速はやめた */
   var B=[].slice.call(fv.querySelectorAll(".fva span"));
-  var P=[ // 中心(fvの幅・高さに対する割合)・振れ幅(vw)・周期の係数
-    {x:.70,y:.12,ax:5,ay:4,k:1.0,ph:0},{x:.06,y:.92,ax:4,ay:3,k:.8,ph:2},{x:.95,y:.88,ax:4,ay:4,k:.7,ph:4},{x:.36,y:.04,ax:4,ay:3,k:.9,ph:1},
-    {x:.5,y:.5,ax:2.4,ay:2,k:1.1,ph:3} // ピンク（スマホの左うしろ。位置は動画から決める）
+  var P=[ // 回る中心(fvの幅・高さに対する割合)・半径(vw)・1周の秒数（負は逆回り）・始まりの角度
+    {x:.10,y:.30,r:8,T:26,a:0},     // 左上：青
+    {x:.92,y:.22,r:9,T:-30,a:2},    // 右上：青
+    {x:.80,y:.86,r:7,T:22,a:4},     // 右下：薄い青
+    {x:.16,y:.82,r:6,T:-24,a:1}     // 左下：ピンク（小さく薄く）
   ];
-  var KICK=58/30, prev=0, speed=1, boost=0, ph=0, last=performance.now(), reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
-  function pinkPos(){var r=v.getBoundingClientRect(), f=fv.getBoundingClientRect();
-    P[4].x=(r.left-f.left+r.width*.13)/f.width; P[4].y=(r.top-f.top+r.height*.5)/f.height;}
+  var t0=performance.now(), reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
   function frame(now){
-    var dt=Math.min(.05,(now-last)/1000); last=now;
-    var t=v.currentTime||0; if(prev<KICK&&t>=KICK) boost=1; prev=t;
-    boost=Math.max(0,boost-dt/2.6); speed=1+3.2*Math.sin(Math.PI*Math.min(1,boost))*(boost>0?1:0);
-    if(!reduce) ph+=dt*speed*.32;
-    var W=innerWidth/100;
+    var t=reduce?0:(now-t0)/1000, W=innerWidth/100;
     B.forEach(function(e,i){var q=P[i]; if(!q) return;
-      var x=Math.sin(ph*q.k+q.ph)*q.ax*W, y=Math.cos(ph*q.k*.8+q.ph)*q.ay*W;
+      var th=q.a+t*2*Math.PI/q.T, x=Math.cos(th)*q.r*W, y=Math.sin(th)*q.r*W*.75;
       e.style.left=(q.x*100)+"%"; e.style.top=(q.y*100)+"%"; e.style.transform="translate(-50%,-50%) translate("+x.toFixed(1)+"px,"+y.toFixed(1)+"px)";});
     requestAnimationFrame(frame);}
-  pinkPos(); addEventListener("resize",pinkPos); v.addEventListener("loadedmetadata",pinkPos);
   requestAnimationFrame(frame);
 })();
 </script>
