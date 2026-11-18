@@ -2160,11 +2160,11 @@ body{line-break:strict}
 .c2-filter button i{font-style:normal;font-size:14px;min-width:24px;padding:2px 7px;border-radius:999px;background:rgba(255,255,255,.22)}
 .c2-filter button[aria-pressed="true"]{background:#fff;color:#0B6B1E}
 .c2-filter button[aria-pressed="true"] i{background:#0B6B1E;color:#fff}
-.c2-list{list-style:none;margin:0 auto;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;max-width:1080px}
+.c2-list{list-style:none;margin:0 auto;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;max-width:1080px}
 .c2-item{background:#fff;color:#303030;border-radius:20px;padding:22px 22px 18px;display:flex;flex-direction:column;gap:14px}
 .c2-item[hidden]{display:none}
 .c2-who{display:flex;align-items:center;gap:14px}
-.c2-ph{flex:none;width:64px;height:64px;border-radius:50%;object-fit:cover;object-position:50% 20%;background:#EEF4EF}
+.c2-ph{flex:none;width:96px;height:96px;border-radius:50%;object-fit:cover;object-position:50% 30%;background:#EEF4EF}
 .c2-name{margin:0;font-size:18px;font-weight:800;line-height:1.35}
 .c2-name small{display:block;font-size:15px;font-weight:500;color:#555}
 .c2-tags{margin:4px 0 0;display:flex;flex-wrap:wrap;gap:4px 10px;font-size:15px;font-weight:700;color:#007F17}
@@ -2188,8 +2188,7 @@ body{line-break:strict}
 .c2-more a{font-size:16px;color:#007F17;font-weight:700}
 .c2 .cas__att{margin-top:18px;text-align:center}
 .c2-more-btn{display:block;margin:18px auto 0;font:inherit;font-size:17px;font-weight:800;padding:13px 28px;border-radius:999px;border:2px solid #fff;background:transparent;color:#fff;cursor:pointer}
-.c2-list.is-short .c2-item:nth-child(n+5){display:none}
-@media (min-width:768px){.c2-more-btn{display:none}.c2-list.is-short .c2-item:nth-child(n+5){display:flex}}
+.c2-list.is-short .c2-item:nth-child(n+4){display:none}
 @media (max-width:767.98px){
   .c2-list{grid-template-columns:minmax(0,1fr);gap:12px}
   .c2-item{padding:18px 16px 16px}
@@ -2203,6 +2202,13 @@ body{line-break:strict}
 }
 [data-chg].x-mark{outline:3px dashed #FF3B30;outline-offset:-3px;position:relative}
 [data-chg].x-mark::before{content:attr(data-chg-label);position:absolute;left:12px;top:12px;z-index:50;padding:6px 12px;border-radius:6px;background:#FF3B30;color:#fff;font-size:14px;font-weight:800;line-height:1.3;max-width:calc(100% - 24px)}
+
+@media (min-width:768px){
+  .c2-run{grid-template-columns:minmax(0,1fr)}
+  .c2-per{justify-content:flex-start;padding:2px 16px}
+  .c2-per::after{position:static;margin:0 0 0 10px;transform:rotate(135deg)}
+}
+@media (max-width:767.98px){.c2-ph{width:88px;height:88px}}
 .r3cts .cts__top{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:24px;align-items:start}
 .r3cts .cts__figure{margin:0}
 .r3cts .cts__figure img{width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:14px;display:block}
@@ -2239,111 +2245,13 @@ body{line-break:strict}
   .r3cts .cts__price{}
   .r3cts .cts__slots li{}
 }
-.f3 .sec-head{margin-bottom:30px}
-.f3-list{display:flex;flex-direction:column;gap:16px;max-width:1080px;margin:0 auto}
-.f3-row{position:relative;background:#fff;color:#303030;border-radius:22px;padding:26px 30px 28px;display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.6fr);gap:20px 34px;align-items:start}
-.f3-head{display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"no ico" "hd hd";align-items:end;gap:6px 12px}
-.f3-no{grid-area:no;font-family:var(--f-num,"Montserrat",sans-serif);font-weight:800;font-size:52px;line-height:.9;color:#007F17;letter-spacing:-.02em}
-.f3-head .x-ico{grid-area:ico;width:118px;max-width:100%;margin:0 0 -6px auto}
-.f3-hd{grid-area:hd;border-top:2px solid #00B21F;padding-top:12px}
-.f3-t{margin:0;font-size:22px;font-weight:800;line-height:1.45}
-.f3-lab{margin:0 0 4px;font-size:15px;font-weight:800;color:#007F17;letter-spacing:.06em}
-.f3-sub{margin:6px 0 0;font-size:18px;font-weight:700;line-height:1.6;color:#007F17}
-.f3-body{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:20px;align-items:start}
-.f3-fig{margin:0}
-.f3-fig img{display:block;width:100%;border-radius:14px;aspect-ratio:4/3;object-fit:cover}
-.f3-fig--fit img{aspect-ratio:auto;object-fit:contain;background:#F6FAF7}
-.f3-text p{margin:0;font-size:18px;line-height:1.9;color:#303030}
-.f3-text .pmp__media{margin-top:16px}
-.f3-text .pmp__grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;list-style:none;margin:8px 0 0;padding:0}
-.f3-text .pmp__mh{margin:0;font-size:14px;font-weight:800;color:#0B5E22}
-.f3-go{grid-column:2;align-self:center;margin:0}
-.f3-go a{display:inline-flex;align-items:center;gap:8px;font-weight:800;color:#007F17;border-bottom:2px solid currentColor;padding-bottom:2px}
-.f3-go a::after{content:"↑"}
-@media (max-width:900px){
-  .f3-row{grid-template-columns:minmax(0,1fr);padding:20px 18px 22px;border-radius:18px}
-  .f3-body{grid-template-columns:minmax(0,1fr);gap:14px}
-  .f3-go{grid-column:1}
-  .f3-no{font-size:44px}
-  .f3-head .x-ico{width:96px}
-  .f3-t{font-size:20px}
-  .f3-text p{font-size:18px;line-height:1.85}
-}
-.f3-row > .anc{position:absolute;left:0;top:-90px;width:1px;height:1px}
-.f3-text .pmp__media{max-width:100%;overflow:hidden}
-.f3-text .pmp__item{min-width:0;margin:0;width:auto!important}
-.f3-text .pmp__thumb{display:block;width:100%!important;max-width:100%;padding:0}
-.f3-text .pmp__thumb img{width:100%!important;height:auto;display:block;border-radius:10px}
-.f3-text .pmp__cap{font-size:12.5px;margin-top:4px}
-@media (min-width:901px){.f3-row:nth-child(4) .f3-body{grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr)}}
-.f3-text .pmp__media{padding:0!important;min-height:0!important;height:auto!important;margin-top:16px;position:static!important;transform:none!important}
-.f3-text .pmp__grid{height:auto!important}
-
-.f3-row--head{grid-template-columns:minmax(0,1fr)}
-.f3-row--head .f3-head{max-width:520px}
-.f3-media{grid-column:1/-1;border-top:1px solid #E6EFE8;padding-top:18px}
-.f3-media .pmp__media{margin:0!important;padding:0!important;transform:none!important;min-height:0!important}
-.f3-media .pmp__mh{margin:0 0 12px;font-size:18px;font-weight:800;color:#0B5E22}
-.f3-media .pmp__grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;list-style:none;margin:0;padding:0;max-width:none!important;width:100%!important}
-.f3-media .pmp__item{width:auto!important;min-width:0;margin:0}
-.f3-media .pmp__thumb{display:block;width:100%!important;padding:0}
-.f3-media .pmp__thumb img{width:100%!important;height:auto;display:block;border-radius:12px}
-.f3-media .pmp__cap{margin-top:8px}
-.f3-media .pmp__cap b,.f3-media .pmp__cap em{color:#303030!important}
-@media (max-width:900px){.f3-media .pmp__grid{grid-template-columns:minmax(0,1fr)}}
 .v3-rest[hidden]{display:none}
 .v3-more{margin-top:10px;font:inherit;font-size:16px;font-weight:700;color:#007F17;background:none;border:0;padding:0;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
 .v3-more::after{content:"";width:8px;height:8px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg) translateY(-2px);transition:transform .2s}
 .v3-more[aria-expanded="true"]::after{transform:rotate(225deg) translateY(-1px)}
-.m3 .mbl__list,.m3 .msc__grid{list-style:none;margin:0 auto;padding:0;display:grid;gap:14px;max-width:1080px}
-.m3 .mbl__list{grid-template-columns:repeat(2,minmax(0,1fr))}
-.m3 .msc__grid{grid-template-columns:repeat(3,minmax(0,1fr))}
-.m3 .mbl__item,.m3 .msc__item{margin:0}
-.m3 .mbl__item,.m3 .msc__card{background:#fff;color:#303030;border-radius:18px;padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;height:100%;box-shadow:none}
-.m3 .mbl__head{display:flex;align-items:center;gap:14px;margin:0}
-.m3 .mbl__figwrap,.m3 .mbl__fig{margin:0;width:72px;height:72px;flex:none}
-.m3 .mbl__fig img,.m3 .msc__fig img{width:72px;height:72px;border-radius:50%;object-fit:cover;object-position:50% 15%;background:#EEF4EF;display:block}
-.m3 .mbl__role,.m3 .msc__name span{margin:0;font-weight:700;color:#007F17}
-.m3 .mbl__name{margin:2px 0 0;font-weight:800;line-height:1.3}
-.m3 .mbl__name span{display:block;font-weight:600;color:#707070;margin-top:2px}
-.m3 .mbl__lead{margin:4px 0 0;font-weight:700;line-height:1.75}
-.m3 .mbl__fold[data-folded="1"]{height:0!important;margin:0}
-.m3 .mbl__body p{line-height:1.85;margin:8px 0 0}
-.m3 .mbl__more{margin-top:4px}
-.m3 .msc__card{display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"fig name" "spec spec";column-gap:14px;row-gap:10px;align-content:start}
-.m3 .msc__fig{grid-area:fig;margin:0;width:72px;height:72px}
-.m3 .msc__name{grid-area:name;margin:0;display:flex;flex-direction:column;justify-content:center}
-.m3 .msc__name b{font-weight:800}
-.m3 .msc__spec{grid-area:spec;display:flex;flex-direction:column;gap:6px}
-.m3 .msc__dl{display:flex;gap:8px;margin:0;line-height:1.55}
-.m3 .msc__dl dt{flex:none;font-weight:700;color:#007F17;padding:1px 8px;border-radius:999px;background:#F1FAF2}
-.m3 .msc__dl dd{margin:0}
-.m3 .msc__cmt{margin:4px 0 0;line-height:1.8;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
-.m3 .msc__cmt.is-open{display:block;-webkit-line-clamp:unset}
-.m3-more{align-self:flex-start;font:inherit;font-weight:700;color:#007F17;background:none;border:0;padding:0;cursor:pointer}
-.mbl.m3{padding-bottom:28px}.msc.m3{padding-top:28px}
-@media (max-width:900px){
-  .m3 .mbl__list,.m3 .msc__grid{grid-template-columns:minmax(0,1fr);gap:10px}
-  .m3 .mbl__item,.m3 .msc__card{padding:16px 16px 14px}
-}
-.m3 .mbl__list{background:transparent!important;box-shadow:none!important;padding:0!important;border:0!important}
-#growth{display:none!important}
-.vbi::before,.vbi::after,.tone-blob::before,.tone-blob::after{display:none!important}
-.x3-soft{background:#F3F7F4!important;color:#303030}
-.x3-soft .sec-head__ja{color:#303030!important}
-.x3-soft .c2-filter button{border-color:#0B6B1E;color:#0B6B1E}
-.x3-soft .c2-filter button i{background:#E3F1E6}
-.x3-soft .c2-filter button[aria-pressed="true"]{background:#0B6B1E;color:#fff}
-.x3-soft .c2-filter button[aria-pressed="true"] i{background:#fff;color:#0B6B1E}
-.x3-soft .c2-item,.x3-soft .mbl__item,.x3-soft .msc__card{border:1.5px solid #E1E8E3}
-.x3-soft .c2-more-btn{border-color:#0B6B1E;color:#0B6B1E}
-.x3-soft .mbl__list{background:transparent!important;box-shadow:none!important;padding:0!important}
-.x3-soft .cps__note,.x3-soft .hbc__note{color:#4A4A4A!important}
-.grad-band,.grad-band > div{border-radius:0}
-.f3-t,.f3-sub{text-wrap:balance}
-.f3-text p,.c2-catch,.c2-cmt,.r3cts .cts__body,.v3 .vbi__body p,.m3 .mbl__body p,.m3 .msc__cmt,.k3-own b,.c2-from small,.c2-to small{text-wrap:pretty}
-.f3-text .pmp__cap,.f3-text .pmp__cap b,.f3-text .pmp__cap em{color:#303030!important}
-.f3-text .pmp__cap em{color:#4A4A4A!important}
+@media (min-width:768px){.v3-rest[hidden]{display:block!important}.v3-more{display:none!important}}
+.f3-text .pmp__cap,.f3-text .pmp__cap b{color:inherit}
+.t-x{}
 section.c2 .cv{display:none}
 section.c2[data-show="a"] .cv[data-v="a"],section.c2:not([data-show]) .cv[data-v="a"],section.c2[data-show="b"] .cv[data-v="b"],section.c2[data-show="c"] .cv[data-v="c"],section.c2[data-show="d"] .cv[data-v="d"]{display:block}
 [data-grp][hidden]{display:none!important}
@@ -2538,10 +2446,81 @@ section.c2[data-show="a"] .cv[data-v="a"],section.c2:not([data-show]) .cv[data-v
 </div>
 <div class="grad-band">
 <div class="tone-brand hill-top is-grad">
-
-<section class="sec fnc f3" data-chg="3" data-chg-label="変更①　4つの特徴＋POINT02〜04：同じ見出しが2回出ていたのを、特徴ごとに1かたまりへ統合（文言はそのまま）"><div class="wrap"><div class="sec-head">
-<h2 class="sec-head__ja">短期で英検合格を目指せる<span class="nb">4つの特徴</span></h2>
-</div><div class="f3-list"><article class="f3-row f3-row--head"><div class="f3-head"><span class="f3-no">01</span><div class="x-ico"><svg aria-hidden="true" class="art art--pass" focusable="false" viewbox="0 0 240 200"><defs><radialgradient cx="50%" cy="50%" id="fl120172" r="50%"><stop offset="0" stop-color="#0E7F2A" stop-opacity=".18"></stop><stop offset="1" stop-color="#0E7F2A" stop-opacity="0"></stop></radialgradient></defs><ellipse cx="120" cy="172" fill="url(#fl120172)" rx="86" ry="13"></ellipse><g><polygon fill="#F1F8F3" points="62,40 68,36 176,36 170,40"></polygon><polygon fill="#BFD9C6" points="170,40 176,36 176,164 170,168"></polygon><rect fill="#FFFFFF" height="128" rx="3" stroke="#CFE3D5" stroke-width="1.2" width="108" x="62" y="40"></rect></g><rect fill="#16A83A" height="22" rx="3" width="108" x="62" y="40"></rect><rect fill="#D3E6D9" height="3.2" rx="1.6" width="80" x="76" y="76"></rect><rect fill="#D3E6D9" height="3.2" rx="1.6" width="80" x="76" y="86"></rect><rect fill="#D3E6D9" height="3.2" rx="1.6" width="48" x="76" y="96"></rect><rect fill="#E2EFE6" height="4" rx="2" width="46" x="76" y="112"></rect><circle cx="92" cy="142" fill="#4CC86A" r="11"></circle><path d="M86 152 L82 166 L92 160 L102 166 L98 152" fill="#0E7F2A"></path><g class="mv"><circle cx="148" cy="134" fill="#FFC61A" r="22"></circle><circle cx="148" cy="134" fill="none" r="16" stroke="#fff" stroke-width="2.4"></circle><path d="M139 134 L146 141 L158 127" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.5"></path></g></svg></div><div class="f3-hd"><h3 class="f3-t">高い英検合格率を実現</h3><p class="f3-sub">累計1,000名以上を合格に導いた英検ベースのカリキュラム</p></div></div></article><article class="f3-row"><span aria-hidden="true" class="anc" id="point2"></span><div class="f3-head"><span class="f3-no">02</span><div class="x-ico"><svg aria-hidden="true" class="art art--plan" focusable="false" viewbox="0 0 240 200"><defs><radialgradient cx="50%" cy="50%" id="fl120172" r="50%"><stop offset="0" stop-color="#0E7F2A" stop-opacity=".18"></stop><stop offset="1" stop-color="#0E7F2A" stop-opacity="0"></stop></radialgradient></defs><ellipse cx="120" cy="172" fill="url(#fl120172)" rx="86" ry="13"></ellipse><g><polygon fill="#F1F8F3" points="42,44 48,40 164,40 158,44"></polygon><polygon fill="#BFD9C6" points="158,44 164,40 164,148 158,152"></polygon><rect fill="#FFFFFF" height="108" rx="3" stroke="#CFE3D5" stroke-width="1.2" width="116" x="42" y="44"></rect></g><rect fill="#16A83A" height="18" rx="3" width="116" x="42" y="44"></rect><rect fill="#1D3527" height="14" rx="2" width="5" x="60" y="36"></rect><rect fill="#1D3527" height="14" rx="2" width="5" x="134" y="36"></rect><rect fill="#E2EFE6" height="12" rx="2" width="15" x="52" y="72"></rect><rect fill="#E2EFE6" height="12" rx="2" width="15" x="72" y="72"></rect><rect fill="#E2EFE6" height="12" rx="2" width="15" x="92" y="72"></rect><rect fill="#E2EFE6" height="12" rx="2" width="15" x="112" y="72"></rect><rect fill="#E2EFE6" height="12" rx="2" width="15" x="132" y="72"></rect><rect fill="#E2EFE6" height="12" rx="2" width="15" x="52" y="90"></rect><rect fill="#E2EFE6" height="12" rx="2" width="15" x="72" y="90"></rect><rect fill="#E2EFE6" height="12" rx="2" width="15" x="92" y="90"></rect><rect fill="#E2EFE6" height="12" rx="2" width="15" x="112" y="90"></rect><rect fill="#E2EFE6" height="12" rx="2" width="15" x="132" y="90"></rect><rect fill="#E2EFE6" height="12" rx="2" width="15" x="52" y="108"></rect><rect fill="#E2EFE6" height="12" rx="2" width="15" x="72" y="108"></rect><rect fill="#E2EFE6" height="12" rx="2" width="15" x="92" y="108"></rect><rect fill="#E2EFE6" height="12" rx="2" width="15" x="112" y="108"></rect><rect fill="#E2EFE6" height="12" rx="2" width="15" x="132" y="108"></rect><rect class="c c0" fill="#FFC61A" height="12" rx="2" width="15" x="72" y="72"></rect><rect class="c c1" fill="#16A83A" height="12" rx="2" width="15" x="112" y="72"></rect><rect class="c c2" fill="#FFC61A" height="12" rx="2" width="15" x="72" y="90"></rect><rect class="c c3" fill="#16A83A" height="12" rx="2" width="15" x="112" y="90"></rect><rect class="c c4" fill="#FFC61A" height="12" rx="2" width="15" x="92" y="108"></rect><circle cx="172" cy="136" fill="#0E7F2A" r="27"></circle><circle cx="170" cy="134" fill="#fff" r="27" stroke="#16A83A" stroke-width="5"></circle><rect fill="#1D3527" height="17" rx="1.5" width="3" x="168.5" y="118"></rect><g class="hand"><rect fill="#D29E00" height="13" rx="1.5" width="3" x="168.5" y="122"></rect></g><circle cx="170" cy="134" fill="#1D3527" r="3.5"></circle></svg></div><div class="f3-hd"><p class="f3-lab">（ POINT 02 ）</p><h3 class="f3-t">受験勉強と並行可能</h3><p class="f3-sub">目標級・時期と現在のレベルから作成する個別の学習計画</p></div></div><div class="f3-body"><figure class="f3-fig"><img alt="受験勉強と並行して英語に取り組む生徒" loading="lazy" src="img/p06.jpg"/></figure><div class="f3-text"><p>目標とする級と受験の時期、そして現在の英語レベル、学習に充てられる時間の4点から逆算して個別の学習計画を作成し、確保できる学習時間に合わせてレッスンの進め方と宿題量を設計します。学習時間そのものを増やすのではなく、限られた時間の使い方を組み立て直すため、中学受験から大学受験までの受験勉強や、部活動・他の習い事を続けながら、<span class="nb">英検合格を目指すことができます。</span></p></div></div></article><article class="f3-row"><span aria-hidden="true" class="anc" id="point3"></span><div class="f3-head"><span class="f3-no">03</span><div class="x-ico"><svg aria-hidden="true" class="art art--lesson" focusable="false" viewbox="0 0 240 200"><defs><radialgradient cx="50%" cy="50%" id="fl120172" r="50%"><stop offset="0" stop-color="#0E7F2A" stop-opacity=".18"></stop><stop offset="1" stop-color="#0E7F2A" stop-opacity="0"></stop></radialgradient></defs><ellipse cx="120" cy="172" fill="url(#fl120172)" rx="86" ry="13"></ellipse><g><polygon fill="#F1F8F3" points="36,150 42,144 192,144 186,150"></polygon><polygon fill="#BFD9C6" points="186,150 192,144 192,152 186,158"></polygon><rect fill="#FFFFFF" height="8" rx="3" stroke="#CFE3D5" stroke-width="1.2" width="150" x="36" y="150"></rect></g><g><polygon fill="#4CC86A" points="48,68 54,64 180,64 174,68"></polygon><polygon fill="#0E7F2A" points="174,68 180,64 180,146 174,150"></polygon><rect fill="#16A83A" height="82" rx="3" width="126" x="48" y="68"></rect></g><rect fill="#fff" height="70" rx="2" width="114" x="54" y="74"></rect><circle cx="111" cy="100" fill="#1D3527" r="13"></circle><path d="M88 144 C88 124 134 124 134 144 Z" fill="#0E7F2A"></path><rect fill="#fff" height="38" rx="10" width="70" x="146" y="30"></rect><polygon fill="#fff" points="156,68 168,68 154,80"></polygon><rect fill="none" height="38" rx="10" stroke="#CFE3D5" stroke-width="1.4" width="70" x="146" y="30"></rect><circle class="dot d0" cx="166" cy="49" fill="#16A83A" r="5"></circle><circle class="dot d1" cx="181" cy="49" fill="#FFC61A" r="5"></circle><circle class="dot d2" cx="196" cy="49" fill="#16A83A" r="5"></circle></svg></div><div class="f3-hd"><p class="f3-lab">（ POINT 03 ）</p><h3 class="f3-t">学習効率を向上</h3><p class="f3-sub">バイリンガル講師の<br class="br-sp"/>マンツーマンレッスン</p></div></div><div class="f3-body"><figure class="f3-fig"><img alt="ESL clubのバイリンガル講師" loading="lazy" src="img/teachers_kv.jpg"/></figure><div class="f3-text"><p>ESL clubでは、英検1級・TOEFL iBT95点・TOEIC900点レベル以上のバイリンガル講師のみを採用しています。年齢の近い講師との距離の近さがそのまま学習の動機づけになり、ライティングや長文読解では、その場で日本語に切り替えて解説します。必要な時に日本語で補えるため、疑問をその場で解消し、1回のレッ<span class="nb">スンで進める量を最大化できます。</span></p></div></div><div class="f3-media"><div class="pmp__media">
+<span aria-hidden="true" class="hill"><svg preserveaspectratio="none" viewbox="0 0 1440 120"><path d="M0 120 L0 78 C 78 18, 176 0, 286 16 C 600 62, 1010 102, 1440 108 L1440 120 Z"></path></svg></span>
+<section class="sec fnc" data-chg="1" data-chg-label="変更①　特徴：01（高い英検合格率）は上の合格実績と重なるので外し、POINT02〜04 を 01〜03 に。「3つの特徴」に（作りは元のまま・アイコンを付けた）">
+<div class="wrap">
+<div class="sec-head">
+<h2 class="sec-head__ja">短期で英検合格を目指せる<span class="nb">3つの特徴</span></h2>
+</div>
+<ul class="fnc__grid">
+<li class="fnc__item fx" data-d="90" data-fx="fadeup">
+<div class="fnc__card"><div class="x-ico"><svg aria-hidden="true" class="art art--plan" focusable="false" viewbox="0 0 240 200"><defs><radialgradient cx="50%" cy="50%" id="fl120172" r="50%"><stop offset="0" stop-color="#0E7F2A" stop-opacity=".18"></stop><stop offset="1" stop-color="#0E7F2A" stop-opacity="0"></stop></radialgradient></defs><ellipse cx="120" cy="172" fill="url(#fl120172)" rx="86" ry="13"></ellipse><g><polygon fill="#F1F8F3" points="42,44 48,40 164,40 158,44"></polygon><polygon fill="#BFD9C6" points="158,44 164,40 164,148 158,152"></polygon><rect fill="#FFFFFF" height="108" rx="3" stroke="#CFE3D5" stroke-width="1.2" width="116" x="42" y="44"></rect></g><rect fill="#16A83A" height="18" rx="3" width="116" x="42" y="44"></rect><rect fill="#1D3527" height="14" rx="2" width="5" x="60" y="36"></rect><rect fill="#1D3527" height="14" rx="2" width="5" x="134" y="36"></rect><rect fill="#E2EFE6" height="12" rx="2" width="15" x="52" y="72"></rect><rect fill="#E2EFE6" height="12" rx="2" width="15" x="72" y="72"></rect><rect fill="#E2EFE6" height="12" rx="2" width="15" x="92" y="72"></rect><rect fill="#E2EFE6" height="12" rx="2" width="15" x="112" y="72"></rect><rect fill="#E2EFE6" height="12" rx="2" width="15" x="132" y="72"></rect><rect fill="#E2EFE6" height="12" rx="2" width="15" x="52" y="90"></rect><rect fill="#E2EFE6" height="12" rx="2" width="15" x="72" y="90"></rect><rect fill="#E2EFE6" height="12" rx="2" width="15" x="92" y="90"></rect><rect fill="#E2EFE6" height="12" rx="2" width="15" x="112" y="90"></rect><rect fill="#E2EFE6" height="12" rx="2" width="15" x="132" y="90"></rect><rect fill="#E2EFE6" height="12" rx="2" width="15" x="52" y="108"></rect><rect fill="#E2EFE6" height="12" rx="2" width="15" x="72" y="108"></rect><rect fill="#E2EFE6" height="12" rx="2" width="15" x="92" y="108"></rect><rect fill="#E2EFE6" height="12" rx="2" width="15" x="112" y="108"></rect><rect fill="#E2EFE6" height="12" rx="2" width="15" x="132" y="108"></rect><rect class="c c0" fill="#FFC61A" height="12" rx="2" width="15" x="72" y="72"></rect><rect class="c c1" fill="#16A83A" height="12" rx="2" width="15" x="112" y="72"></rect><rect class="c c2" fill="#FFC61A" height="12" rx="2" width="15" x="72" y="90"></rect><rect class="c c3" fill="#16A83A" height="12" rx="2" width="15" x="112" y="90"></rect><rect class="c c4" fill="#FFC61A" height="12" rx="2" width="15" x="92" y="108"></rect><circle cx="172" cy="136" fill="#0E7F2A" r="27"></circle><circle cx="170" cy="134" fill="#fff" r="27" stroke="#16A83A" stroke-width="5"></circle><rect fill="#1D3527" height="17" rx="1.5" width="3" x="168.5" y="118"></rect><g class="hand"><rect fill="#D29E00" height="13" rx="1.5" width="3" x="168.5" y="122"></rect></g><circle cx="170" cy="134" fill="#1D3527" r="3.5"></circle></svg></div>
+<span class="fnc__no">01</span>
+<p class="fnc__t">受験勉強と並行可能</p>
+<p class="fnc__d">目標級・時期と現在のレベルから作成する個別の学習計画</p>
+<a class="fnc__jump" href="#point2"><span>受験勉強と並行可能</span></a>
+</div>
+</li><li class="fnc__item fx" data-d="180" data-fx="fadeup">
+<div class="fnc__card"><div class="x-ico"><svg aria-hidden="true" class="art art--lesson" focusable="false" viewbox="0 0 240 200"><defs><radialgradient cx="50%" cy="50%" id="fl120172" r="50%"><stop offset="0" stop-color="#0E7F2A" stop-opacity=".18"></stop><stop offset="1" stop-color="#0E7F2A" stop-opacity="0"></stop></radialgradient></defs><ellipse cx="120" cy="172" fill="url(#fl120172)" rx="86" ry="13"></ellipse><g><polygon fill="#F1F8F3" points="36,150 42,144 192,144 186,150"></polygon><polygon fill="#BFD9C6" points="186,150 192,144 192,152 186,158"></polygon><rect fill="#FFFFFF" height="8" rx="3" stroke="#CFE3D5" stroke-width="1.2" width="150" x="36" y="150"></rect></g><g><polygon fill="#4CC86A" points="48,68 54,64 180,64 174,68"></polygon><polygon fill="#0E7F2A" points="174,68 180,64 180,146 174,150"></polygon><rect fill="#16A83A" height="82" rx="3" width="126" x="48" y="68"></rect></g><rect fill="#fff" height="70" rx="2" width="114" x="54" y="74"></rect><circle cx="111" cy="100" fill="#1D3527" r="13"></circle><path d="M88 144 C88 124 134 124 134 144 Z" fill="#0E7F2A"></path><rect fill="#fff" height="38" rx="10" width="70" x="146" y="30"></rect><polygon fill="#fff" points="156,68 168,68 154,80"></polygon><rect fill="none" height="38" rx="10" stroke="#CFE3D5" stroke-width="1.4" width="70" x="146" y="30"></rect><circle class="dot d0" cx="166" cy="49" fill="#16A83A" r="5"></circle><circle class="dot d1" cx="181" cy="49" fill="#FFC61A" r="5"></circle><circle class="dot d2" cx="196" cy="49" fill="#16A83A" r="5"></circle></svg></div>
+<span class="fnc__no">02</span>
+<p class="fnc__t">学習効率を向上</p>
+<p class="fnc__d">バイリンガル講師の<br class="br-sp"/>マンツーマンレッスン</p>
+<a class="fnc__jump" href="#point3"><span>学習効率を向上</span></a>
+</div>
+</li><li class="fnc__item fx" data-d="270" data-fx="fadeup">
+<div class="fnc__card"><div class="x-ico"><svg aria-hidden="true" class="art art--parent" focusable="false" viewbox="0 0 240 200"><defs><radialgradient cx="50%" cy="50%" id="fl120172" r="50%"><stop offset="0" stop-color="#0E7F2A" stop-opacity=".18"></stop><stop offset="1" stop-color="#0E7F2A" stop-opacity="0"></stop></radialgradient></defs><ellipse cx="120" cy="172" fill="url(#fl120172)" rx="86" ry="13"></ellipse><g><polygon fill="#4CC86A" points="78,46 84,42 160,42 154,46"></polygon><polygon fill="#0E7F2A" points="154,46 160,42 160,166 154,170"></polygon><rect fill="#16A83A" height="124" rx="3" width="76" x="78" y="46"></rect></g><rect fill="#fff" height="104" rx="3" width="64" x="84" y="56"></rect><rect fill="#E8F5EC" height="16" rx="3" width="64" x="84" y="56"></rect><rect fill="#E8F5EC" height="24" rx="3" width="48" x="92" y="82"></rect><rect fill="#16A83A" height="6" rx="1.5" width="7" x="96" y="94"></rect><rect fill="#16A83A" height="10" rx="1.5" width="7" x="107" y="90"></rect><rect fill="#16A83A" height="13" rx="1.5" width="7" x="118" y="87"></rect><rect fill="#FFC61A" height="17" rx="1.5" width="7" x="129" y="83"></rect><rect fill="#D3E6D9" height="3.2" rx="1.6" width="48" x="92" y="116"></rect><rect fill="#D3E6D9" height="3.2" rx="1.6" width="48" x="92" y="125"></rect><rect fill="#D3E6D9" height="3.2" rx="1.6" width="29" x="92" y="134"></rect><g class="bell"><path d="M168 54 C168 40 176 34 184 34 C192 34 200 40 200 54 V66 L206 74 H162 L168 66 Z" fill="#FFC61A"></path><path d="M168 54 C168 40 176 34 184 34 L184 74 H162 L168 66 Z" fill="#FFDD66" opacity=".55"></path><circle cx="184" cy="80" fill="#D29E00" r="5.5"></circle></g><circle class="badge" cx="203" cy="40" fill="#16A83A" r="8" stroke="#fff" stroke-width="2.5"></circle></svg></div>
+<span class="fnc__no">03</span>
+<p class="fnc__t">保護者さまが忙しくても安心</p>
+<p class="fnc__d">計画の実行をフォローするスクールマネージャー</p>
+<a class="fnc__jump" href="#point4"><span>保護者さまが忙しくても安心</span></a>
+</div>
+</li>
+</ul>
+</div>
+</section>
+</div>
+<div class="tone-brand is-grad">
+<span aria-hidden="true" class="anc" id="point2"></span>
+<div style="--b1x:3%;--b1y:9%;--b1w:25vw;--b1max:350px;--b2r:3%;--b2y:56%;--b2w:26vw;--b2max:370px">
+<section class="sec vhr">
+<div class="wrap">
+<div class="sec-head">
+<h2 class="sec-head__ja"></h2>
+</div>
+<ul class="vhr__list">
+<li class="vhr__item fx" data-d="0" data-fx="fadeup">
+<div class="vhr__top">
+<div class="vhr__vert">
+<p class="vhr__label">（ POINT 01 ）</p>
+<h3 class="vhr__title">受験勉強と並行可能</h3>
+</div>
+<figure class="vhr__fig"><img alt="受験勉強と並行して英語に取り組む生徒" loading="lazy" src="img/p06.jpg"/></figure>
+</div>
+<p class="vhr__sub">目標級・時期と現在のレベルから作成する個別の学習計画</p>
+<p class="vhr__body">目標とする級と受験の時期、そして現在の英語レベル、学習に充てられる時間の4点から逆算して個別の学習計画を作成し、確保できる学習時間に合わせてレッスンの進め方と宿題量を設計します。学習時間そのものを増やすのではなく、限られた時間の使い方を組み立て直すため、中学受験から大学受験までの受験勉強や、部活動・他の習い事を続けながら、英検合格を目指すことができます。</p>
+</li>
+</ul>
+</div>
+</section>
+</div>
+<span aria-hidden="true" class="anc" id="point3"></span>
+<section class="sec pmp">
+<div class="wrap">
+<div class="pmp__row fx" data-fx="pair">
+<div class="pmp__box">
+<div class="vhr__item">
+<div class="vhr__top">
+<div class="vhr__vert">
+<p class="vhr__label">（ POINT 02 ）</p>
+<h3 class="vhr__title">学習効率を向上</h3>
+</div>
+<figure class="vhr__fig"><img alt="ESL clubのバイリンガル講師" loading="lazy" src="img/teachers_kv.jpg"/></figure>
+</div>
+<p class="vhr__sub">バイリンガル講師の<br class="br-sp"/>マンツーマンレッスン</p>
+<p class="vhr__body">ESL clubでは、英検1級・TOEFL iBT95点・TOEIC900点レベル以上のバイリンガル講師のみを採用しています。年齢の近い講師との距離の近さがそのまま学習の動機づけになり、ライティングや長文読解では、その場で日本語に切り替えて解説します。必要な時に日本語で補えるため、疑問をその場で解消し、1回のレッスンで進める量を最大化できます。</p>
+</div>
+</div>
+<div class="pmp__media">
 <p class="pmp__mh"><span>レッスンの様子</span></p>
 <ul class="pmp__grid">
 <li class="pmp__item">
@@ -2558,12 +2537,37 @@ section.c2[data-show="a"] .cv[data-v="a"],section.c2:not([data-show]) .cv[data-v
 <p class="pmp__cap"><b>小4女子　学習経験者</b><em>オオツカキサちゃん</em></p>
 </li>
 </ul>
-</div></div></article><article class="f3-row"><span aria-hidden="true" class="anc" id="point4"></span><div class="f3-head"><span class="f3-no">04</span><div class="x-ico"><svg aria-hidden="true" class="art art--parent" focusable="false" viewbox="0 0 240 200"><defs><radialgradient cx="50%" cy="50%" id="fl120172" r="50%"><stop offset="0" stop-color="#0E7F2A" stop-opacity=".18"></stop><stop offset="1" stop-color="#0E7F2A" stop-opacity="0"></stop></radialgradient></defs><ellipse cx="120" cy="172" fill="url(#fl120172)" rx="86" ry="13"></ellipse><g><polygon fill="#4CC86A" points="78,46 84,42 160,42 154,46"></polygon><polygon fill="#0E7F2A" points="154,46 160,42 160,166 154,170"></polygon><rect fill="#16A83A" height="124" rx="3" width="76" x="78" y="46"></rect></g><rect fill="#fff" height="104" rx="3" width="64" x="84" y="56"></rect><rect fill="#E8F5EC" height="16" rx="3" width="64" x="84" y="56"></rect><rect fill="#E8F5EC" height="24" rx="3" width="48" x="92" y="82"></rect><rect fill="#16A83A" height="6" rx="1.5" width="7" x="96" y="94"></rect><rect fill="#16A83A" height="10" rx="1.5" width="7" x="107" y="90"></rect><rect fill="#16A83A" height="13" rx="1.5" width="7" x="118" y="87"></rect><rect fill="#FFC61A" height="17" rx="1.5" width="7" x="129" y="83"></rect><rect fill="#D3E6D9" height="3.2" rx="1.6" width="48" x="92" y="116"></rect><rect fill="#D3E6D9" height="3.2" rx="1.6" width="48" x="92" y="125"></rect><rect fill="#D3E6D9" height="3.2" rx="1.6" width="29" x="92" y="134"></rect><g class="bell"><path d="M168 54 C168 40 176 34 184 34 C192 34 200 40 200 54 V66 L206 74 H162 L168 66 Z" fill="#FFC61A"></path><path d="M168 54 C168 40 176 34 184 34 L184 74 H162 L168 66 Z" fill="#FFDD66" opacity=".55"></path><circle cx="184" cy="80" fill="#D29E00" r="5.5"></circle></g><circle class="badge" cx="203" cy="40" fill="#16A83A" r="8" stroke="#fff" stroke-width="2.5"></circle></svg></div><div class="f3-hd"><p class="f3-lab">（ POINT 04 ）</p><h3 class="f3-t">保護者さまが忙しくても安心</h3><p class="f3-sub">計画の実行をフォローするスクールマネージャー</p></div></div><div class="f3-body"><figure class="f3-fig f3-fig--fit"><picture>
+</div>
+</div>
+</div>
+</section>
+<span aria-hidden="true" class="anc" id="point4"></span>
+<div style="--b1x:5%;--b1y:8%;--b1w:21vw;--b1max:290px;--b2r:4%;--b2y:44%;--b2w:18vw;--b2max:250px">
+<section class="sec vhr">
+<div class="wrap">
+<div class="sec-head">
+<h2 class="sec-head__ja"></h2>
+</div>
+<ul class="vhr__list">
+<li class="vhr__item fx" data-d="0" data-fx="fadeup">
+<div class="vhr__top">
+<div class="vhr__vert">
+<p class="vhr__label">（ POINT 03 ）</p>
+<h3 class="vhr__title">保護者さまが忙しくても安心</h3>
+</div>
+<figure class="vhr__fig vhr__fig--fit vhr__fig--sp"><picture>
 <source media="(max-width:900px)" srcset="img/reason_diagram_sp.webp"/>
 <img alt="スクールマネジャーを中心に、保護者さま・講師・生徒さまで情報を共有する図" src="img/reason_diagram.jpg"/>
-</picture></figure><div class="f3-text"><p>スクールマネージャーが中心となり、学習計画どおりにレッスンが進むよう講師へ内容を伝達し、生徒さまの進捗をレッスンごとに保護者さまへ共有します。レッスン後、保護者さまへフィードバックを行うので、レッスンに付き添わなくとも、お子さまの英語力の伸び<span class="nb">を安心して見守っていただけます。</span></p></div></div></article></div></div></section>
+</picture></figure>
 </div>
-
+<p class="vhr__sub">計画の実行をフォローするスクールマネージャー</p>
+<p class="vhr__body">スクールマネージャーが中心となり、学習計画どおりにレッスンが進むよう講師へ内容を伝達し、生徒さまの進捗をレッスンごとに保護者さまへ共有します。レッスン後、保護者さまへフィードバックを行うので、レッスンに付き添わなくとも、お子さまの英語力の伸びを安心して見守っていただけます。</p>
+</li>
+</ul>
+</div>
+</section>
+</div>
+</div>
 </div><div class="tone-base">
 <section class="sec cmx">
 <div class="wrap">
@@ -2717,7 +2721,7 @@ section.c2[data-show="a"] .cv[data-v="a"],section.c2:not([data-show]) .cv[data-v
 </div>
 </section>
 </div><div class="tone-brand tone-deepg">
-<section class="sec cas c2" data-chg="1" data-chg-label="変更②　実績：横に流すカード → はじまり・期間・結果が並ぶ一覧。小学生／中高生はタブ → しぼり込み" id="case">
+<section class="sec cas c2" data-chg="2" data-chg-label="変更②　実績：横に流すカード → はじまり・期間・結果が並ぶ一覧。小学生／中高生はタブ → しぼり込み" id="case">
 <div class="wrap">
 <div class="sec-head"><h2 class="sec-head__ja">ESL clubの実績</h2></div>
 <div aria-label="学年でしぼる" class="c2-filter" role="group">
@@ -2814,13 +2818,13 @@ section.c2[data-show="a"] .cv[data-v="a"],section.c2:not([data-show]) .cv[data-v
 </div>
 <details class="c2-more"><summary>くわしく</summary><p class="c2-catch">上智大学国際総合グローバル学部を受験するために、高校生でESL clubに入塾。たった3ヶ月で、準1級に合格し、見事<span class="nb">志望校にも入学するまでに急成長！</span></p><p class="c2-cmt">ESL clubは、英検準1級合格にむかってスケジュールや課題の内容を組んでくれるので、それをこなしていくと合格に向か<span class="nb">えるという点が心強かったですね。</span></p><a href="https://eslclub.jp/blog/intervire_hr/" rel="noopener" target="_blank">インタビューを読む</a></details>
 </li></ol>
-<button aria-expanded="false" class="c2-more-btn" type="button">残り7件を見る</button></div>
+<button aria-expanded="false" class="c2-more-btn" type="button">残り8件を見る</button></div>
 <p class="cas__att">※学習成果は、生徒さま一人ひとりの頑張りによって個人差があります</p>
 </div>
 </section>
 </div>
 <div class="tone-base">
-<section class="sec vbi v3" data-chg="5" data-chg-label="変更③　保護者の声：最初の段落だけ出し、残りは「続きを読む」で開く（並びは元のまま）">
+<section class="sec vbi v3" data-chg="5" data-chg-label="変更③　保護者の声（スマホ）：最初の段落だけ出し、残りは「続きを読む」。PCは全部出す（講師コメントは元どおりたたむ）">
 <div class="wrap">
 <div class="sec-head">
 <h2 class="sec-head__ja">保護者さまの声</h2>
@@ -2860,8 +2864,8 @@ section.c2[data-show="a"] .cv[data-v="a"],section.c2:not([data-show]) .cv[data-v
 </section>
 </div>
 <div class="tone-brand wave-cut">
-<div class="">
-<section class="sec mbl m3" data-chg="6" data-chg-label="変更④　スクールマネジャー＋講師：5人を同じ形の詰めたカードにそろえ、紹介文・コメントは開いて読む形に（地は緑のまま）">
+<div class="wave-top">
+<section class="sec mbl">
 <div class="wrap">
 <div class="sec-head">
 <h2 class="sec-head__ja">スクールマネジャー紹介</h2>
@@ -2912,7 +2916,7 @@ section.c2[data-show="a"] .cv[data-v="a"],section.c2:not([data-show]) .cv[data-v
 </div>
 </section>
 </div>
-<section class="sec msc m3">
+<section class="sec msc">
 <div class="wrap">
 <div class="sec-head">
 <h2 class="sec-head__ja">講師紹介</h2>
@@ -2924,7 +2928,7 @@ section.c2[data-show="a"] .cv[data-v="a"],section.c2:not([data-show]) .cv[data-v
 <p class="msc__name"><span>バイリンガル講師</span><b>A.M.先生</b></p>
 <div class="msc__spec">
 <dl class="msc__dl"><dt>英語レベル</dt><dd>英検1級／IELTS 8.0</dd></dl><dl class="msc__dl"><dt>海外経験</dt><dd>アメリカ9年／シンガポール1年</dd></dl>
-<p class="msc__cmt" id="m3c1">英語を学ぶことで様々な価値観に触れ、これまで以上に広い世界が見えてきます。思いがけない挑戦をするきっかけにもなるかもしれません！英語を使って未来の可能性を広げる楽し<span class="nb">さを知ってもらえたら嬉しいです。</span></p><button aria-controls="m3c1" aria-expanded="false" class="m3-more" type="button">続きを読む</button>
+<p class="msc__cmt">英語を学ぶことで様々な価値観に触れ、これまで以上に広い世界が見えてきます。思いがけない挑戦をするきっかけにもなるかもしれません！英語を使って未来の可能性を広げる楽し<span class="nb">さを知ってもらえたら嬉しいです。</span></p>
 </div>
 </div>
 </li><li class="msc__item fx" data-d="90" data-fx="fadeup">
@@ -2933,7 +2937,7 @@ section.c2[data-show="a"] .cv[data-v="a"],section.c2:not([data-show]) .cv[data-v
 <p class="msc__name"><span>バイリンガル講師</span><b>K.N.先生</b></p>
 <div class="msc__spec">
 <dl class="msc__dl"><dt>英語レベル</dt><dd>英検1級／TOEFL ITP 623点</dd></dl><dl class="msc__dl"><dt>海外経験</dt><dd>エチオピア2年／アメリカ2年／オランダ1年</dd></dl>
-<p class="msc__cmt" id="m3c2">英語は、異なる国の多様な価値観を持った人々と対話をするためのツールであり、あなたの可能性を広げる武器となり、自信となります。言語学習を通してみなさんに世界を見ることが<span class="nb">できる人になってもらいたいです。</span></p><button aria-controls="m3c2" aria-expanded="false" class="m3-more" type="button">続きを読む</button>
+<p class="msc__cmt">英語は、異なる国の多様な価値観を持った人々と対話をするためのツールであり、あなたの可能性を広げる武器となり、自信となります。言語学習を通してみなさんに世界を見ることが<span class="nb">できる人になってもらいたいです。</span></p>
 </div>
 </div>
 </li><li class="msc__item fx" data-d="180" data-fx="fadeup">
@@ -2942,7 +2946,7 @@ section.c2[data-show="a"] .cv[data-v="a"],section.c2:not([data-show]) .cv[data-v
 <p class="msc__name"><span>バイリンガル講師</span><b>A.M.先生</b></p>
 <div class="msc__spec">
 <dl class="msc__dl"><dt>英語レベル</dt><dd>英検1級</dd></dl><dl class="msc__dl"><dt>海外経験</dt><dd>タイ5年／ロシア5年／パキスタン2年</dd></dl>
-<p class="msc__cmt" id="m3c3">英語話者は世界中にいるため、英語が話せればどこへ行っても自分の思いを伝えられます。それはとても心強く、自信にもつながります。皆さんも英語を通じて様々な文化と出会い、<span class="nb">自身の可能性を広げてみましょう！</span></p><button aria-controls="m3c3" aria-expanded="false" class="m3-more" type="button">続きを読む</button>
+<p class="msc__cmt">英語話者は世界中にいるため、英語が話せればどこへ行っても自分の思いを伝えられます。それはとても心強く、自信にもつながります。皆さんも英語を通じて様々な文化と出会い、<span class="nb">自身の可能性を広げてみましょう！</span></p>
 </div>
 </div>
 </li>
@@ -2977,7 +2981,7 @@ section.c2[data-show="a"] .cv[data-v="a"],section.c2:not([data-show]) .cv[data-v
 </section>
 </div>
 </div><div class="tone-base tone-cts">
-<section class="sec cts r3cts" data-chg="2" data-chg-label="変更⑤　教室・料金・時間割：料金を横一列に／時間割を曜日3列の表に／教室の情報を詰めた表に">
+<section class="sec cts r3cts" data-chg="2" data-chg-label="変更④　教室・料金・時間割：料金を横一列に／時間割を曜日3列の表に／教室の情報を詰めた表に">
 <div class="wrap">
 <div class="sec-head">
 <h2 class="sec-head__ja">教室紹介</h2>
@@ -2997,7 +3001,7 @@ section.c2[data-show="a"] .cv[data-v="a"],section.c2:not([data-show]) .cv[data-v
 <p class="cts__tel"><span>Tel.</span><a href="tel:0337973380">03-3797-3380</a></p>
 <dl class="cts__dl">
 <dt>住所</dt><dd>〒150-0002　渋谷区渋谷1-8-6　宮益坂STビル10階</dd>
-<dt>営業時間</dt><dd>火曜日から金曜日　14:00から20:00（土曜日14:00から19:00）<span class="x-today" hidden=""></span></dd>
+<dt>営業時間</dt><dd>火曜日から金曜日　14:00から20:00（土曜日14:00から19:00）</dd>
 <dt>休校日</dt><dd>月曜日・日曜日</dd>
 <dt>対象</dt><dd>小学1年生から高校3年生（既卒含む）／未就学児はご相談ください</dd>
 <dt>レッスン形式</dt><dd>バイリンガル講師によるマンツーマンレッスン</dd>
@@ -3066,7 +3070,7 @@ section.c2[data-show="a"] .cv[data-v="a"],section.c2:not([data-show]) .cv[data-v
 </figure>
 <div class="cts__info">
 <dl class="cts__dl">
-<dt>営業時間</dt><dd>火曜日から金曜日　14:00から20:00（土曜日14:00から19:00）<span class="x-today" hidden=""></span></dd>
+<dt>営業時間</dt><dd>火曜日から金曜日　14:00から20:00（土曜日14:00から19:00）</dd>
 <dt>休校日</dt><dd>月曜日・日曜日</dd>
 <dt>対象</dt><dd>小学1年生から高校3年生（既卒含む）／未就学児はご相談ください</dd>
 <dt>レッスン形式</dt><dd>バイリンガル講師による完全マンツーマンレッスン</dd>
@@ -3114,7 +3118,7 @@ section.c2[data-show="a"] .cv[data-v="a"],section.c2:not([data-show]) .cv[data-v
 </section>
 </div>
 <div class="tone-brand tone-deepg">
-<section class="sec flw" data-chg="8" data-chg-label="変更⑥　体験の流れ（スマホ）：大きく場所を取っていたアイコンを、STEP番号と見出しの右に小さく">
+<section class="sec flw" data-chg="8" data-chg-label="変更⑤　体験の流れ（スマホ）：大きく場所を取っていたアイコンを、STEP番号と見出しの右に小さく">
 <div class="wrap">
 <div class="sec-head">
 <h2 class="sec-head__ja">無料体験レッスンの流れ</h2>
@@ -3176,7 +3180,7 @@ section.c2[data-show="a"] .cv[data-v="a"],section.c2:not([data-show]) .cv[data-v
 </div>
 </section>
 </div>
-<div class="tone-ink" style="--wave-from:var(--c-primary)">
+<div class="tone-ink wave-top" style="--wave-from:var(--c-primary)">
 <footer class="ftc">
 <div class="ftc__strip">
 </div>

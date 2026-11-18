@@ -474,6 +474,9 @@ addEventListener("load",function(){
         var own=""; [].forEach.call(e.childNodes,function(n){if(n.nodeType===3) own+=n.nodeValue});
         if(own.trim().length<2) return;
         if(e.closest("figure")||e.closest("figcaption")) return;   // 写真の中の字は意図
+        // ★閉じた details の中身は画面に出ていない。なのに Chrome は架空の矩形（本来より約2,000px下）を返し、
+        //   そこにある別の写真と「被り」と数えていた（esl-col3 実績カードの「くわしく」、2026-11-18）
+        var cd=e.closest("details"); if(cd&&!cd.open&&!e.closest("summary")) return;
         // ★読み上げ用の見えない文字（1px に縮めて clip で隠したもの）は画面に出ていない。
         //   文字の矩形は縮まないので「被り」と数えていた（esl-col1 の特徴カードの飛び先リンク、2026-11-17）
         var eb=e.getBoundingClientRect(); if(eb.width<=2||eb.height<=2) return;
@@ -1352,13 +1355,15 @@ def check_self(html):
     if not li or not ti:
         return ("skip", "対象の型ではない")
     bad = []
-    for i, (a, b) in enumerate(zip(li, ti), 1):
+    dets = [re.sub(r"<[^>]+>", "", b).strip() for b in ti]
+    # ★位置で組にしない。一覧の1つを外すと（esl-col3 で特徴01を外した）以降が全部ずれて誤検出する。一覧の見出しが詳細のどれかと一致するかで見る
+    for i, a in enumerate(li, 1):
         at = [x.strip() for x in re.sub(r"<[^>]+>", "\n", a).split("\n") if x.strip()]
         at = [x for x in at if not re.fullmatch(r"0?\d+", x)]   # 「01」などの番号は見出しではない
         head = at[0] if at else ""
-        det = re.sub(r"<[^>]+>", "", b).strip()
-        if head and det and head != det:
-            bad.append(f"POINT{i}: 一覧「{head}」/ 詳細「{det}」")
+        if head and head not in dets:
+            near = dets[i - 1] if i - 1 < len(dets) else ""
+            bad.append(f"POINT{i}: 一覧「{head}」/ 詳細「{near}」")
     return ("ng", " / ".join(bad)) if bad else ("ok", f"一覧と詳細の見出しが一致（{len(ti)}件）")
 
 
