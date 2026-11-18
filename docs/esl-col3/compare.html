@@ -31,7 +31,7 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family
 </head>
 <body>
 <div class="bar">
-  <h1>ESL コラム流入LP　前（esl-col1）と後（esl-col2）</h1>
+  <h1>ESL コラム流入LP　前（esl-col1）と後（esl-col3）</h1>
   <div class="sw" role="group" aria-label="画面の幅">
     <button type="button" data-w="390" aria-pressed="true">スマホ</button>
     <button type="button" data-w="1440" aria-pressed="false">PC</button>
@@ -57,7 +57,7 @@ var SPOTS = [
 ];
 var A = document.getElementById("A"), B = document.getElementById("B"), W = 390, lock = false;
 function fit(){ [A, B].forEach(function(f){ var box = f.parentNode, s = Math.min(1, box.clientWidth / W);
-  f.style.width = W + "px"; f.style.height = (box.clientHeight / s) + "px"; f.style.transform = "scale(" + s + ")"; }); }
+  f.style.width = W + "px"; f.style.height = (box.clientHeight / s) + "px"; f.style.left = Math.max(0, (box.clientWidth - W * s) / 2) + "px"; f.style.transform = "scale(" + s + ")"; }); }
 function win(f){ try { return f.contentWindow; } catch(e){ return null; } }
 function go(sel, again){
   [A, B].forEach(function(f){ var w = win(f); if (!w) return; var d = w.document, el = d.querySelector(sel); if (!el) return;
