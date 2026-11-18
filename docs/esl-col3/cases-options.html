@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>ESL 実績の見せ方 候補</title>
+<style>
+:root{--bg:#F4F6F4;--ink:#1F2A22;--sub:#5B675F;--line:#D5DDD7;--ac:#007F17}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141815;--ink:#E8EEE9;--sub:#A3B0A7;--line:#2E3631;--ac:#6FD07F}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Hiragino Sans","Noto Sans JP",system-ui,sans-serif}
+.top{padding:16px 16px 6px}
+.top h1{font-size:17px;margin:0 0 6px}
+.top p{margin:0;font-size:13.5px;color:var(--sub);line-height:1.7}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;padding:14px 16px 24px;overflow-x:auto}
+.col{min-width:300px}
+.col h2{font-size:15px;margin:0 0 4px}
+.col h2 b{color:var(--ac);margin-right:6px}
+.col p{margin:0 0 8px;font-size:12.5px;color:var(--sub);line-height:1.6;min-height:4.8em}
+.frame{height:78vh;min-height:560px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
+.frame iframe{width:390px;height:100%;border:0;display:block;margin:0 auto}
+@media (max-width:820px){.grid{grid-template-columns:minmax(0,1fr)}.col{min-width:0}.frame iframe{width:100%}}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>「ESL clubの実績」の見せ方　候補4つ（スマホ）</h1>
+  <p>中身（11人の紹介文・写真・リンク）はどれも同じで、見せ方だけが違います。どの候補も、名前や「くわしく」を押すと紹介文と本人の言葉が開きます。上の「すべて・小学生・中高生」でしぼり込めます。</p>
+</div>
+<div class="grid">
+  <div class="col"><h2><b>A</b>はじまり→期間→結果の一覧</h2><p>1人1枚。始めた時と結果を横に並べ、間に期間。最初は4人、残りは「残り7件を見る」。</p><div class="frame"><iframe src="index.html?case=a#case" title="候補A"></iframe></div></div>
+  <div class="col"><h2><b>B</b>成績ボード（1人1行）</h2><p>写真・名前・学年と期間・結果を1行に。11人が一目で見渡せ、一番短い。行を押すと開く。</p><div class="frame"><iframe src="index.html?case=b#case" title="候補B"></iframe></div></div>
+  <div class="col"><h2><b>C</b>結果を大きく（2列のカード）</h2><p>合格した級を一番大きく。期間は黄色の札。2列に並べ、名前と写真は下に小さく。</p><div class="frame"><iframe src="index.html?case=c#case" title="候補C"></iframe></div></div>
+  <div class="col"><h2><b>D</b>たどり着いた級ごと</h2><p>準1級・2級・準2級・4級…と級ごとにまとめ、その級に届いた人を並べる。どの級まで届くかが一目で分かる。</p><div class="frame"><iframe src="index.html?case=d#case" title="候補D"></iframe></div></div>
+</div>
+</body>
+</html>
