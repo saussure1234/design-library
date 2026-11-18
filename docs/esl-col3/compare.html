@@ -39,7 +39,7 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family
   <label class="sync"><input type="checkbox" id="sync" checked>左右のスクロールを合わせる</label>
 </div>
 <div class="jump" id="jump"></div>
-<p class="note" id="note">上のボタンを押すと、左右が同じ場所に飛びます。右の赤い点線の枠が、作り直した節です（文言は変えていません）。</p>
+<p class="note" id="note">上のボタンを押すと、左右が同じ場所に飛びます。右の赤い点線の枠が、作り直した節です（文言は変えていません。文字の大きさも元のまま）。</p>
 <div class="pair">
   <div class="col"><p>前<span>esl-col1</span></p><div class="frame"><iframe id="A" src="../esl-col1/index.html" title="前 esl-col1"></iframe></div></div>
   <div class="col"><p>後<span>esl-col3（変えた所に赤い枠）</span></p><div class="frame"><iframe id="B" src="index.html?mark=1" title="後 esl-col3"></iframe></div></div>
@@ -47,14 +47,14 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family
 <script>
 var SPOTS = [
   ["section.res", "合格実績", "<b>そのまま：</b>合格実績は文も並びも同じ（1,000名以上の数え上げだけ足した）"],
-  ["section.fnc", "① 4つの特徴", "<b>変更①　4つの特徴＋POINT02〜04：</b>同じ見出しが2回出ていた（特徴の一覧と、POINT の詳しい説明）のを、特徴ごとに1かたまりへ統合。スマホで約4,660px → 約3,140px"],
-  ["section.cmx", "② 比較表", "<b>変更②　比較表：</b>スマホは横に流す表 → 項目ごとに1枚（ESL club を大きく、A社・B社を下に小さく）。PCは表のまま"],
-  ["section.cas", "③ 実績", "<b>変更③　ESL clubの実績：</b>横に流すカード・タブ → 「はじまり → 期間 → 結果」が並ぶ一覧。小学生／中高生はしぼり込み。最初は4件・残りは「残り7件を見る」"],
-  ["section.vbi", "④ 保護者の声", "<b>変更④　保護者の声：</b>最初の段落だけ出し、残りと講師コメントは開いて読む形に。PCは2人を横に。スマホで約2,310px → 約1,300px"],
-  ["section.mbl", "⑤ 教える人", "<b>変更⑤　スクールマネジャー＋講師：</b>5人を同じ形の詰めたカードに。紹介文・コメントは開いて読む形に。地は緑のまま。スマホで約3,480px → 約2,310px"],
-  ["section.cts", "⑥ 教室・料金", "<b>変更⑥　教室・料金・時間割：</b>料金を横一列に／時間割を曜日3列の表に／教室の情報を詰めた表に。スマホで約3,180px → 約1,570px"],
-  ["section.flw", "⑧ 体験の流れ", "<b>変更⑧　体験の流れ（スマホ）：</b>大きく場所を取っていたアイコンを、STEP番号と見出しの右に小さく"],
-  ["body", "⑦ ページ全体の地", "<b>変更⑦　ページ全体の地：</b>緑の帯は「4つの特徴」「教える人」「体験の流れ」。実績は白に近い地。波・丸いにじみ・背景の斜めの線は外した。ページの長さ（スマホ）約22,900px → 約18,400px"]
+  ["section.fnc", "① 4つの特徴", "<b>変更①　4つの特徴＋POINT02〜04：</b>同じ見出しが2回出ていたのを、特徴ごとに1かたまりへ統合。文言・POINTの札はそのまま。レッスン動画は大きく"],
+  ["section.cmx", "比較表", "<b>比較表：</b>元のまま"],
+  ["section.cas", "② 実績", "<b>変更②　ESL clubの実績：</b>横に流すカード・タブ → 「はじまり → 期間 → 結果」が並ぶ一覧（緑の地に白いカード）。小学生／中高生はしぼり込み。スマホは最初4件・残りは「残り7件を見る」"],
+  ["section.vbi", "③ 保護者の声", "<b>変更③　保護者の声：</b>並びは元のまま。最初の段落だけ出し、残りは「続きを読む」で開く"],
+  ["section.mbl", "④ 教える人", "<b>変更④　スクールマネジャー＋講師：</b>5人を同じ形の詰めたカードに。紹介文・コメントは開いて読む形に。地は緑のまま"],
+  ["section.cts", "⑤ 教室・料金", "<b>変更⑤　教室・料金・時間割：</b>料金を横一列に／時間割を曜日3列の表に／教室の情報を詰めた表に"],
+  ["section.flw", "⑥ 体験の流れ", "<b>変更⑥　体験の流れ（スマホ）：</b>大きく場所を取っていたアイコンを、STEP番号と見出しの右に小さく"],
+  ["body", "⑦ ページ全体の地", "<b>変更⑦　ページ全体の地：</b>波・丸いにじみ・背景の斜めの線は外し、境目はまっすぐに"]
 ];
 var A = document.getElementById("A"), B = document.getElementById("B"), W = 390, lock = false;
 function fit(){ [A, B].forEach(function(f){ var box = f.parentNode, s = Math.min(1, box.clientWidth / W);
