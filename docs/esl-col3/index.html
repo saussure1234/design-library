@@ -2201,7 +2201,7 @@ body{line-break:strict}
   .c2-per span.is-none + *{display:none}
 }
 [data-chg].x-mark{outline:3px dashed #FF3B30;outline-offset:-3px;position:relative}
-[data-chg].x-mark::before{content:attr(data-chg-label);position:absolute;left:12px;top:12px;z-index:50;padding:6px 12px;border-radius:6px;background:#FF3B30;color:#fff;font-size:14px;font-weight:800;line-height:1.3;max-width:calc(100% - 24px)}
+.x-mark-tag{position:absolute;left:12px;top:12px;z-index:50;padding:6px 12px;border-radius:6px;background:#FF3B30;color:#fff;font-size:14px;font-weight:800;line-height:1.3;max-width:calc(100% - 24px);pointer-events:none}
 
 @media (min-width:768px){
   .c2-run{grid-template-columns:minmax(0,1fr)}
@@ -2252,6 +2252,7 @@ body{line-break:strict}
 @media (min-width:768px){.v3-rest[hidden]{display:block!important}.v3-more{display:none!important}}
 .f3-text .pmp__cap,.f3-text .pmp__cap b{color:inherit}
 .t-x{}
+@media (min-width:901px){section.fnc .fnc__grid{grid-template-columns:repeat(3,calc((100% - 36px) / 4));justify-content:center}}
 section.c2 .cv{display:none}
 section.c2[data-show="a"] .cv[data-v="a"],section.c2:not([data-show]) .cv[data-v="a"],section.c2[data-show="b"] .cv[data-v="b"],section.c2[data-show="c"] .cv[data-v="c"],section.c2[data-show="d"] .cv[data-v="d"]{display:block}
 [data-grp][hidden]{display:none!important}
@@ -2309,6 +2310,92 @@ section.c2[data-show="a"] .cv[data-v="a"],section.c2:not([data-show]) .cv[data-v
   .flw__item > .flw__d,.flw__item > .flw__n{grid-column:1 / -1}
 }
 .flw .flw__item::after{display:none!important}
+section.c2[data-show="e"] .cv[data-v="e"]{display:block}
+.k3-who{display:flex;align-items:center;gap:14px}
+.k3-who img{flex:none;width:96px;height:96px;border-radius:50%;object-fit:cover;background:#EEF4EF}
+.k3-who--sm img{width:64px;height:64px}
+.k3-name{margin:0;font-size:18px;font-weight:800;color:#303030;line-height:1.4}
+.k3-name small{font-size:15px;font-weight:600;color:#555}
+.k3-tags{margin:4px 0 0;display:flex;flex-wrap:wrap;gap:2px 10px;font-size:15px;font-weight:700;color:#007F17;line-height:1.5}
+.k3-catch{margin:0;font-size:18px;font-weight:700;line-height:1.75;color:#303030}
+.k3-cmt{margin:0;font-size:18px;line-height:1.85;color:#303030}
+.k3-link{display:inline-flex;align-items:center;gap:6px;font-size:16px;font-weight:700;color:#007F17}
+.k3-link::after{content:"";width:7px;height:7px;border-top:2px solid currentColor;border-right:2px solid currentColor;transform:rotate(45deg)}
+/* 公式の図（白い丸→黄色い矢印→緑の丸） */
+.k3-step{position:relative;container-type:inline-size;aspect-ratio:814/390;width:100%}
+.k3-mid{position:absolute;left:0;top:2%;width:58%;margin:0;text-align:center;font-weight:800;color:#0F7A17;line-height:1.35;font-size:clamp(15px,5.4cqw,22px)}
+.k3-from{position:absolute;left:0;top:36%;width:36%;aspect-ratio:1;border-radius:50%;border:max(3px,1cqw) solid #1A801B;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;color:#222;line-height:1.3;font-size:clamp(14px,4.9cqw,20px)}
+.k3-to{position:absolute;right:0;top:0;width:47%;aspect-ratio:1;border-radius:50%;background:#1A801B;box-shadow:0 6px 14px -6px rgba(0,60,10,.45);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-weight:800;line-height:1.25;font-size:clamp(16px,6.2cqw,26px);text-align:center}
+.k3-to b{font-size:clamp(20px,8.6cqw,36px);font-weight:900;letter-spacing:.02em}
+.k3-arw{position:absolute;left:28%;bottom:-2%;width:30%;height:auto;z-index:1}
+.k3-to{z-index:2}
+/* B */
+.k3b{list-style:none;margin:0 auto;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;max-width:1080px}
+.k3b-card{background:#fff;border-radius:18px;padding:22px 20px 20px;display:flex;flex-direction:column;gap:16px}
+.k3b-card .k3-link{margin-top:auto}
+/* C はしご */
+.k3c{max-width:980px;margin:0 auto;background:#fff;border-radius:18px;padding:22px 24px 8px}
+.k3c-head{display:grid;grid-template-columns:220px minmax(0,1fr);gap:16px;padding-bottom:10px;border-bottom:1.5px solid #E1E8E3}
+.k3c-scale,.k3c-track{display:grid;grid-template-columns:repeat(6,minmax(0,1fr))}
+.k3c-scale span{text-align:center;font-size:16px;font-weight:800;color:#303030}
+.k3c-list{list-style:none;margin:0;padding:0}
+.k3c-row{display:grid;grid-template-columns:220px minmax(0,1fr);grid-template-areas:"who track" "who cap";column-gap:16px;row-gap:6px;padding:18px 0;border-bottom:1px solid #E8EEEA}
+.k3c-row:last-child{border-bottom:0}
+.k3c-row .k3-who{grid-area:who}
+.k3c-track{grid-area:track;position:relative;align-items:center;background:repeating-linear-gradient(90deg,transparent 0 calc(100%/6 - 1px),#E3EAE5 calc(100%/6 - 1px) calc(100%/6))}
+.k3c-bar{position:relative;height:14px;border-radius:7px;background:linear-gradient(90deg,#BFE3C2,#1A801B)}
+.k3c-a,.k3c-z{position:absolute;top:50%;width:26px;height:26px;border-radius:50%;transform:translate(-50%,-50%)}
+.k3c-a{left:0;background:#fff;border:4px solid #1A801B}
+.k3c-z{left:100%;background:#1A801B;box-shadow:0 0 0 4px #fff,0 3px 8px rgba(0,60,10,.4)}
+.k3c-cap{grid-area:cap;margin:0;font-size:16px;font-weight:700;color:#0F7A17;line-height:1.6}
+.k3c-cap b{color:#303030}.k3c-cap b.is-to{color:#007F17}
+/* D 誌面 */
+.k3d{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:16px;max-width:1080px;margin:0 auto}
+.k3d-main{background:#fff;border-radius:18px;overflow:hidden}
+.k3d-wide{display:block;width:100%;aspect-ratio:480/230;object-fit:cover}
+.k3d-body{padding:22px 24px 24px;display:flex;flex-direction:column;gap:16px}
+.k3d-catch{margin:0;font-size:24px;font-weight:900;line-height:1.55;color:#303030}
+.k3-step.is-lg{max-width:420px}
+.k3d-side{display:grid;gap:16px;align-content:start}
+.k3d-sub{background:#fff;border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:14px}
+.k3d-sub .k3-step{max-width:300px}
+/* E 本人の声 */
+.k3e{list-style:none;margin:0 auto;padding:0;display:grid;gap:18px;max-width:900px}
+.k3e-item{display:grid;grid-template-columns:120px minmax(0,1fr);gap:20px;align-items:start}
+.k3e-face img{display:block;width:120px;height:120px;border-radius:50%;object-fit:cover;border:4px solid #fff;background:#EEF4EF}
+.k3e-main{background:#fff;border-radius:18px;padding:20px 24px;position:relative;display:flex;flex-direction:column;gap:12px}
+.k3e-main::before{content:"";position:absolute;left:-12px;top:44px;border:12px solid transparent;border-left:0;border-right-color:#fff}
+.k3e-say{margin:0;font-size:20px;font-weight:700;line-height:1.8;color:#303030}
+.k3e-res{margin:0;display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px}
+.k3e-from,.k3e-to{display:inline-block;padding:5px 14px;border-radius:999px;font-size:16px;font-weight:800;line-height:1.4}
+.k3e-from{border:2px solid #1A801B;color:#303030;background:#fff}
+.k3e-to{background:#1A801B;color:#fff}
+.k3e-arr{width:26px;height:12px;background:#FFD500;clip-path:polygon(0 30%,64% 30%,64% 0,100% 50%,64% 100%,64% 70%,0 70%)}
+.k3e-mid{font-size:16px;font-weight:800;color:#0F7A17}
+@media (max-width:900px){
+  .k3b{grid-template-columns:minmax(0,1fr);max-width:520px}
+  .k3d{grid-template-columns:minmax(0,1fr);max-width:560px}
+}
+@media (max-width:767.98px){
+  .k3-who img{width:88px;height:88px}
+  .k3-who--sm img{width:56px;height:56px}
+  .k3c{padding:16px 14px 4px}
+  .k3c-head{grid-template-columns:minmax(0,1fr)}
+  .k3c-sp{display:none}
+  .k3c-scale span{font-size:14px}
+  .k3c-row{grid-template-columns:minmax(0,1fr);grid-template-areas:"who" "track" "cap";row-gap:10px}
+  .k3c-cap{font-size:15px}
+  .k3d-catch{font-size:20px}
+  .k3d-body{padding:18px 18px 20px}
+  .k3e-item{grid-template-columns:minmax(0,1fr);gap:10px}
+  .k3e-face img{width:88px;height:88px;margin:0 auto}
+  .k3e-main::before{left:50%;top:-12px;transform:translateX(-50%);border:12px solid transparent;border-top:0;border-bottom-color:#fff}
+  .k3e-say{font-size:18px}
+  .k3e-main{padding:18px}
+}
+
+.k3c .k3-tags{display:none}
+.k3c-row{align-items:center}
 </style></head>
 <body data-x3="1"><div aria-hidden="true" class="x-read"><i></i></div>
 <div aria-hidden="true" id="intro"><svg preserveaspectratio="none" viewbox="0 0 1000 1000"><path d="M0,0 L1000,0 L1000,1000 C1000,1000 750,1000 500,1000 C250,1000 0,1000 0,1000 Z" fill="#00B21F" id="introPath"></path></svg></div>
@@ -2748,7 +2835,7 @@ section.c2[data-show="a"] .cv[data-v="a"],section.c2:not([data-show]) .cv[data-v
 <div class="c2-to"><span class="c2-k">結果</span><b>英検準2級 合格</b><small>中学入試で志望中学校の選抜コースに合格</small></div>
 </div>
 <details class="c2-more"><summary>くわしく</summary><p class="c2-catch">三重県からESL clubオンライン校に入会し、半年で英検準2級に合格。英語特別入試を利用した中学入試では見事<span class="nb">、志望中学校の選抜コースに合格！</span></p><p class="c2-cmt">海外でこれからいろいろなことを勉強してみたいです。留学も面白そうなのでやってみたいし、英検はなるべく1級を取りたいですね<span class="nb">。高校3年生ぐらいで取れるかな。</span></p><a href="https://eslclub.jp/blog/interview-soichiro/" rel="noopener" target="_blank">インタビューを読む</a></details>
-</li></ol></div>
+</li></ol></div><div class="cv" data-v="b"><ol class="k3b"><li class="k3b-card"><div class="k3-step"><p class="k3-mid">簡単な絵本レベルから<br/>1年半</p><div class="k3-from"><span>小2</span><span>英検未取得</span></div><svg aria-hidden="true" class="k3-arw" viewbox="0 0 300 120"><path d="M14 58 C 70 104, 170 112, 238 62" fill="none" stroke="#FFEE03" stroke-linecap="round" stroke-width="26"></path><path d="M214 30 L 292 22 L 262 96 Z" fill="#FFEE03" stroke="#FFEE03" stroke-linejoin="round" stroke-width="8"></path></svg><div class="k3-to"><span>小3</span><b>英検2級</b></div></div><div class="k3-who"><img alt="" loading="lazy" src="img/case/performance01_photo_face.jpg"/><div><p class="k3-name">杉江篤<small>（すぎえ あつし）さん</small></p><p class="k3-tags"><span>#読書大好き</span> <span>#渋谷校</span></p></div></div><p class="k3-catch">小学2年からESL clubに入塾。簡単な絵本を読むレベルから、約1年半努力を積み重ねて、小学3年生の終わりに2級に合格するまでに急成長！</p><a class="k3-link" href="https://eslclub.jp/blog/grade2-interview-atushi/" rel="noopener" target="_blank">インタビューを読む</a></li><li class="k3b-card"><div class="k3-step"><p class="k3-mid">3ヶ月で合格！</p><div class="k3-from"><span>小4</span><span>英検5級</span></div><svg aria-hidden="true" class="k3-arw" viewbox="0 0 300 120"><path d="M14 58 C 70 104, 170 112, 238 62" fill="none" stroke="#FFEE03" stroke-linecap="round" stroke-width="26"></path><path d="M214 30 L 292 22 L 262 96 Z" fill="#FFEE03" stroke="#FFEE03" stroke-linejoin="round" stroke-width="8"></path></svg><div class="k3-to"><span>小4</span><b>英検4級</b></div></div><div class="k3-who"><img alt="" loading="lazy" src="img/case/performance07_photo_face.jpg"/><div><p class="k3-name">大塚貴咲<small>（おおつかきさ）さん</small></p><p class="k3-tags"><span>#レッスン大好き</span> <span>#オンライン校</span></p></div></div><p class="k3-catch">4年間通っていた学童から、ESL clubオンライン校へ。楽しくマンツーマンレッスンに取り組み、リスニングで満点を達成し、英検4級に合格！</p><a class="k3-link" href="https://eslclub.jp/blog/interview-otsuka/" rel="noopener" target="_blank">インタビューを読む</a></li><li class="k3b-card"><div class="k3-step"><p class="k3-mid">スピーキング力も<br/>アップ！</p><div class="k3-from"><span>英検3級</span><span>レベル</span></div><svg aria-hidden="true" class="k3-arw" viewbox="0 0 300 120"><path d="M14 58 C 70 104, 170 112, 238 62" fill="none" stroke="#FFEE03" stroke-linecap="round" stroke-width="26"></path><path d="M214 30 L 292 22 L 262 96 Z" fill="#FFEE03" stroke="#FFEE03" stroke-linejoin="round" stroke-width="8"></path></svg><div class="k3-to"><span>英検準2級</span><b>合格</b></div></div><div class="k3-who"><img alt="" loading="lazy" src="img/case/performance13_photo_face.jpg"/><div><p class="k3-name">北川創一郎<small>（きたがわそういちろう）さん</small></p><p class="k3-tags"><span>#面接対策</span> <span>#中学受験</span> <span>#オンライン校</span></p></div></div><p class="k3-catch">三重県からESL clubオンライン校に入会し、半年で英検準2級に合格。英語特別入試を利用した中学入試では見事、志望中学校の選抜コースに合格！</p><a class="k3-link" href="https://eslclub.jp/blog/interview-soichiro/" rel="noopener" target="_blank">インタビューを読む</a></li></ol></div><div class="cv" data-v="c"><div class="k3c"><div class="k3c-head"><span class="k3c-sp"></span><div class="k3c-scale"><span>未取得</span><span>5級</span><span>4級</span><span>3級</span><span>準2級</span><span>2級</span></div></div><ol class="k3c-list"><li class="k3c-row"><div class="k3-who k3-who--sm"><img alt="" loading="lazy" src="img/case/performance01_photo_face.jpg"/><div><p class="k3-name">杉江篤<small>（すぎえ あつし）さん</small></p><p class="k3-tags"><span>#読書大好き</span> <span>#渋谷校</span></p></div></div><div class="k3c-track"><div class="k3c-bar" style="grid-column:1/7;margin:0 calc(100% / 12)"><i class="k3c-a"></i><i class="k3c-z"></i></div></div><p class="k3c-cap"><b>小2 英検未取得</b> → <b class="is-to">小3 英検2級</b>　簡単な絵本レベルから1年半</p></li><li class="k3c-row"><div class="k3-who k3-who--sm"><img alt="" loading="lazy" src="img/case/performance07_photo_face.jpg"/><div><p class="k3-name">大塚貴咲<small>（おおつかきさ）さん</small></p><p class="k3-tags"><span>#レッスン大好き</span> <span>#オンライン校</span></p></div></div><div class="k3c-track"><div class="k3c-bar" style="grid-column:2/4;margin:0 calc(100% / 4)"><i class="k3c-a"></i><i class="k3c-z"></i></div></div><p class="k3c-cap"><b>小4 英検5級</b> → <b class="is-to">小4 英検4級</b>　3ヶ月で合格！</p></li><li class="k3c-row"><div class="k3-who k3-who--sm"><img alt="" loading="lazy" src="img/case/performance13_photo_face.jpg"/><div><p class="k3-name">北川創一郎<small>（きたがわそういちろう）さん</small></p><p class="k3-tags"><span>#面接対策</span> <span>#中学受験</span> <span>#オンライン校</span></p></div></div><div class="k3c-track"><div class="k3c-bar" style="grid-column:4/6;margin:0 calc(100% / 4)"><i class="k3c-a"></i><i class="k3c-z"></i></div></div><p class="k3c-cap"><b>英検3級 レベル</b> → <b class="is-to">英検準2級 合格</b>　スピーキング力もアップ！</p></li></ol></div></div><div class="cv" data-v="d"><div class="k3d"><article class="k3d-main"><img alt="" class="k3d-wide" loading="lazy" src="img/case/performance01_photo.jpg"/><div class="k3d-body"><p class="k3d-catch">小学2年からESL clubに入塾。簡単な絵本を読むレベルから、約1年半努力を積み重ねて、小学3年生の終わりに2級に合格するまでに急成長！</p><div class="k3-step is-lg"><p class="k3-mid">簡単な絵本レベルから<br/>1年半</p><div class="k3-from"><span>小2</span><span>英検未取得</span></div><svg aria-hidden="true" class="k3-arw" viewbox="0 0 300 120"><path d="M14 58 C 70 104, 170 112, 238 62" fill="none" stroke="#FFEE03" stroke-linecap="round" stroke-width="26"></path><path d="M214 30 L 292 22 L 262 96 Z" fill="#FFEE03" stroke="#FFEE03" stroke-linejoin="round" stroke-width="8"></path></svg><div class="k3-to"><span>小3</span><b>英検2級</b></div></div><div class="k3-who"><img alt="" loading="lazy" src="img/case/performance01_photo_face.jpg"/><div><p class="k3-name">杉江篤<small>（すぎえ あつし）さん</small></p><p class="k3-tags"><span>#読書大好き</span> <span>#渋谷校</span></p></div></div><p class="k3-cmt">「海外の学校に行きたいな。自分の力をためしてみたいから。<br/>もう今から行きたいくらい。海外に行って会話したいし生活文化を知りたい！」</p><a class="k3-link" href="https://eslclub.jp/blog/grade2-interview-atushi/" rel="noopener" target="_blank">インタビューを読む</a></div></article><div class="k3d-side"><article class="k3d-sub"><div class="k3-who"><img alt="" loading="lazy" src="img/case/performance07_photo_face.jpg"/><div><p class="k3-name">大塚貴咲<small>（おおつかきさ）さん</small></p><p class="k3-tags"><span>#レッスン大好き</span> <span>#オンライン校</span></p></div></div><div class="k3-step"><p class="k3-mid">3ヶ月で合格！</p><div class="k3-from"><span>小4</span><span>英検5級</span></div><svg aria-hidden="true" class="k3-arw" viewbox="0 0 300 120"><path d="M14 58 C 70 104, 170 112, 238 62" fill="none" stroke="#FFEE03" stroke-linecap="round" stroke-width="26"></path><path d="M214 30 L 292 22 L 262 96 Z" fill="#FFEE03" stroke="#FFEE03" stroke-linejoin="round" stroke-width="8"></path></svg><div class="k3-to"><span>小4</span><b>英検4級</b></div></div><p class="k3-catch">4年間通っていた学童から、ESL clubオンライン校へ。楽しくマンツーマンレッスンに取り組み、リスニングで満点を達成し、英検4級に合格！</p><a class="k3-link" href="https://eslclub.jp/blog/interview-otsuka/" rel="noopener" target="_blank">インタビューを読む</a></article><article class="k3d-sub"><div class="k3-who"><img alt="" loading="lazy" src="img/case/performance13_photo_face.jpg"/><div><p class="k3-name">北川創一郎<small>（きたがわそういちろう）さん</small></p><p class="k3-tags"><span>#面接対策</span> <span>#中学受験</span> <span>#オンライン校</span></p></div></div><div class="k3-step"><p class="k3-mid">スピーキング力も<br/>アップ！</p><div class="k3-from"><span>英検3級</span><span>レベル</span></div><svg aria-hidden="true" class="k3-arw" viewbox="0 0 300 120"><path d="M14 58 C 70 104, 170 112, 238 62" fill="none" stroke="#FFEE03" stroke-linecap="round" stroke-width="26"></path><path d="M214 30 L 292 22 L 262 96 Z" fill="#FFEE03" stroke="#FFEE03" stroke-linejoin="round" stroke-width="8"></path></svg><div class="k3-to"><span>英検準2級</span><b>合格</b></div></div><p class="k3-catch">三重県からESL clubオンライン校に入会し、半年で英検準2級に合格。英語特別入試を利用した中学入試では見事、志望中学校の選抜コースに合格！</p><a class="k3-link" href="https://eslclub.jp/blog/interview-soichiro/" rel="noopener" target="_blank">インタビューを読む</a></article></div></div></div><div class="cv" data-v="e"><ol class="k3e"><li class="k3e-item"><div class="k3e-face"><img alt="" loading="lazy" src="img/case/performance01_photo_face.jpg"/></div><div class="k3e-main"><p class="k3e-say">海外の学校に行きたいな。自分の力をためしてみたいから。<br/>もう今から行きたいくらい。海外に行って会話したいし生活文化を知りたい！</p><p class="k3e-res"><span class="k3e-from">小2 英検未取得</span><span aria-hidden="true" class="k3e-arr"></span><span class="k3e-to">小3 英検2級</span><span class="k3e-mid">簡単な絵本レベルから1年半</span></p><p class="k3-name">杉江篤<small>（すぎえ あつし）さん</small></p><a class="k3-link" href="https://eslclub.jp/blog/grade2-interview-atushi/" rel="noopener" target="_blank">インタビューを読む</a></div></li><li class="k3e-item"><div class="k3e-face"><img alt="" loading="lazy" src="img/case/performance07_photo_face.jpg"/></div><div class="k3e-main"><p class="k3e-say">体験レッスンがとても楽しくて、先生が気に入りました。できたときにすごく褒めてもらえたのが嬉しかったです。</p><p class="k3e-res"><span class="k3e-from">小4 英検5級</span><span aria-hidden="true" class="k3e-arr"></span><span class="k3e-to">小4 英検4級</span><span class="k3e-mid">3ヶ月で合格！</span></p><p class="k3-name">大塚貴咲<small>（おおつかきさ）さん</small></p><a class="k3-link" href="https://eslclub.jp/blog/interview-otsuka/" rel="noopener" target="_blank">インタビューを読む</a></div></li><li class="k3e-item"><div class="k3e-face"><img alt="" loading="lazy" src="img/case/performance13_photo_face.jpg"/></div><div class="k3e-main"><p class="k3e-say">海外でこれからいろいろなことを勉強してみたいです。留学も面白そうなのでやってみたいし、英検はなるべく1級を取りたいですね。高校3年生ぐらいで取れるかな。</p><p class="k3e-res"><span class="k3e-from">英検3級 レベル</span><span aria-hidden="true" class="k3e-arr"></span><span class="k3e-to">英検準2級 合格</span><span class="k3e-mid">スピーキング力もアップ！</span></p><p class="k3-name">北川創一郎<small>（きたがわそういちろう）さん</small></p><a class="k3-link" href="https://eslclub.jp/blog/interview-soichiro/" rel="noopener" target="_blank">インタビューを読む</a></div></li></ol></div>
 <p class="cas__att">※学習成果は、生徒さま一人ひとりの頑張りによって個人差があります</p>
 </div>
 </section>
@@ -3684,7 +3771,7 @@ if("scrollRestoration" in history && !location.hash){history.scrollRestoration="
   }
 })();
 </script><script id="x3js">(function(){
-  var cv = (location.search.match(/[?&]case=([abcd])/) || [])[1]; var c2s = document.querySelector("section.c2"); if (c2s && cv) c2s.setAttribute("data-show", cv);
+  var cv = (location.search.match(/[?&]case=([abcde])/) || [])[1]; var c2s = document.querySelector("section.c2"); if (c2s && cv) c2s.setAttribute("data-show", cv);
   var f = document.querySelector(".c2-filter");
   if (f) f.addEventListener("click", function(e){
     var btn = e.target.closest("button"); if (!btn) return; var k = btn.getAttribute("data-f");
@@ -3703,7 +3790,8 @@ if("scrollRestoration" in history && !location.hash){history.scrollRestoration="
     if (c && c.scrollHeight <= c.clientHeight + 4) { btn.hidden = true; return; }
     btn.addEventListener("click", function(){ var o = !c.classList.contains("is-open"); c.classList.toggle("is-open", o);
       btn.setAttribute("aria-expanded", o ? "true" : "false"); btn.textContent = o ? "閉じる" : "続きを読む"; }); });
-  if (/[?&]mark=1/.test(location.search)) [].forEach.call(document.querySelectorAll("[data-chg]"), function(s){ s.classList.add("x-mark"); });
+  if (/[?&]mark=1/.test(location.search)) [].forEach.call(document.querySelectorAll("[data-chg]"), function(s){ s.classList.add("x-mark");
+    var t = document.createElement("span"); t.className = "x-mark-tag"; t.textContent = s.getAttribute("data-chg-label") || ""; s.insertBefore(t, s.firstChild); });
 })();
 </script></body>
 </html>
