@@ -1360,6 +1360,7 @@ def check_self(html):
     for i, a in enumerate(li, 1):
         # ★文中の飾り・改行止め（span/wbr/em など）で見出しを分けない。「保護者さまが<span class=nb>忙しくても安心</span>」を
         #   「保護者さまが」だけと読んで不一致にしていた（esl-col3、2026-11-19）
+        a = re.sub(r"<svg\b.*?</svg>", "", a, flags=re.S)   # ★アイコンの中の文字（「A」「あ」）は見出しではない（esl-col3、2026-11-19）
         a = re.sub(r"</?(?:span|wbr|em|strong|b|i|small|br)\b[^>]*>", "", a)
         at = [x.strip() for x in re.sub(r"<[^>]+>", "\n", a).split("\n") if x.strip()]
         at = [x for x in at if not re.fullmatch(r"0?\d+", x)]   # 「01」などの番号は見出しではない
