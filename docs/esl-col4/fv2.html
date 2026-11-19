@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>ESL FV配置の案</title>
+<style>
+:root{--bg:#F4F6F4;--ink:#1F2A22;--sub:#5B675F;--line:#D5DDD7;--ac:#00A01C}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141815;--ink:#E8EEE9;--sub:#A3B0A7;--line:#2E3631}}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:"Hiragino Sans","Noto Sans JP",system-ui,sans-serif}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:10px 16px;border-bottom:1px solid var(--line)}
+.bar h1{font-size:15px;margin:0 8px 0 0}
+.g{display:flex;flex-wrap:wrap;gap:6px}
+.g button{font:inherit;font-size:13.5px;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:999px;padding:6px 12px;cursor:pointer}
+.g button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.note{padding:8px 16px;margin:0;font-size:14px;color:var(--sub);min-height:2.6em}
+.note b{color:var(--ink)}
+.frame{position:relative;margin:0 16px 16px;height:calc(100% - 190px);min-height:520px;overflow:hidden;border:1px solid var(--line);border-radius:10px;background:#fff}
+.frame iframe{position:absolute;left:0;top:0;border:0;transform-origin:0 0}
+@media (max-width:820px){.frame{height:75vh}}
+</style>
+</head>
+<body>
+<div class="bar">
+  <h1>FV　新しい配置の案</h1>
+  <div class="g" id="vs"></div><div class="g" id="cs"></div>
+  <div class="g"><button type="button" data-w="390" aria-pressed="true">スマホ</button><button type="button" data-w="1440" aria-pressed="false">PC</button></div>
+</div>
+<p class="note" id="note"></p>
+<div class="frame"><iframe id="F" title="実績の案"></iframe></div>
+<script>
+var V = [
+  ["1", "1 縦長パネル2枚", "縦長の角丸パネル2枚に1人ずつ。パネルの上に校名の札、吹き出しはパネルの上"],
+  ["2", "2 中央の見出し＋左右に写真", "見出しを中央に大きく。その下でボタンを左右の写真2枚がはさむ"],
+  ["3", "3 円から頭が出る", "オンライン校は緑の円から頭と肘がはみ出す。渋谷校は先生と生徒の2人を枠なしで"],
+  ["4", "4 斜めの帯の上に立つ", "緑と黄色の斜めの帯を地にして、2人が帯の上に並んで立つ"]
+];
+var C = [["x", "X オンライン校の男の子＋渋谷校の女の子"], ["y", "Y 渋谷校の男の子＋オンライン校の女の子"]];
+var F = document.getElementById("F"), W = 390, cur = "1", cc = "x";
+function fit(){ var box = F.parentNode, s = Math.min(1, box.clientWidth / W);
+  F.style.width = W + "px"; F.style.height = (box.clientHeight / s) + "px"; F.style.left = Math.max(0, (box.clientWidth - W * s) / 2) + "px"; F.style.transform = "scale(" + s + ")"; }
+function show(){ F.src = "index.html?fvl=" + cur + "&fvc=" + cc; F.onload = function(){ fit(); }; }
+var note = document.getElementById("note");
+function setNote(){ var v = V.filter(function(x){ return x[0] === cur; })[0], c = C.filter(function(x){ return x[0] === cc; })[0]; note.innerHTML = "<b>" + v[1] + "／" + c[1] + "：</b>" + v[2] + "。文言は今のFVのまま、校名の札だけ足している"; }
+function group(id, list, get, set){ var g = document.getElementById(id);
+  list.forEach(function(v){ var b = document.createElement("button"); b.type = "button"; b.textContent = v[1]; b.setAttribute("aria-pressed", v[0] === get() ? "true" : "false");
+    b.onclick = function(){ set(v[0]); [].forEach.call(g.children, function(x){ x.setAttribute("aria-pressed", x === b ? "true" : "false"); }); setNote(); show(); }; g.appendChild(b); }); }
+group("vs", V, function(){ return cur; }, function(v){ cur = v; });
+group("cs", C, function(){ return cc; }, function(v){ cc = v; });
+setNote();
+[].forEach.call(document.querySelectorAll("[data-w]"), function(b){ b.onclick = function(){
+  [].forEach.call(document.querySelectorAll("[data-w]"), function(x){ x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+  W = +b.getAttribute("data-w"); fit(); show(); }; });
+addEventListener("resize", fit); fit(); show();
+</script>
+</body>
+</html>
