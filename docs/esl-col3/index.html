@@ -2606,13 +2606,19 @@ section.res[data-rshow="f"] .rv[data-rv="f"],section.res[data-rshow="g"] .rv[dat
   .r5j-seal{right:50%;transform:translateX(50%) rotate(-10deg);bottom:16px;width:80px;height:80px}
 }
 @media (prefers-reduced-motion:reduce){.r5h-dots{clip-path:none;transition:none}.r5h-bar i{height:var(--p);transition:none}.r5i-fg{transition:none}}
-section.res[data-rshow="k"] .rv[data-rv="a"],section.res[data-rshow="l"] .rv[data-rv="a"],section.res[data-rshow="m"] .rv[data-rv="a"]{display:block}
+section.res[data-rshow] .rv[data-rv="a"]{display:block}
+section.res .res__card.fx{clip-path:none!important}
 section.res[data-rshow="k"] .res__card{background:#fff;box-shadow:0 22px 40px -26px rgba(0,70,20,.45),0 2px 6px rgba(0,60,15,.06);border:1px solid #E1ECE4}
 section.res[data-rshow="l"] .res__card{background:#fff;box-shadow:0 22px 40px -26px rgba(0,70,20,.45),0 2px 6px rgba(0,60,15,.06)}
 section.res[data-rshow="l"] .res__card--total{background:linear-gradient(160deg,#128A28,#0B6E1F 70%)}
 section.res[data-rshow="l"] .res__card--total .res__k,section.res[data-rshow="l"] .res__card--total .res__s,section.res[data-rshow="l"] .res__card--total .res__unit{color:#fff}
 section.res[data-rshow="l"] .res__card--total .res__num{color:#FFE100}
 section.res[data-rshow="m"] .res__card{background:#fff;border:2.5px solid #1A801B;box-shadow:8px 8px 0 #CFE7D3}
+section.res[data-rshow="n"] .res__card{background:#fff;box-shadow:0 30px 60px -22px rgba(0,70,20,.38),0 8px 18px -8px rgba(0,70,20,.16)}
+section.res[data-rshow="o"] .res__card{background:#fff;box-shadow:0 44px 80px -30px rgba(0,60,20,.5),0 0 0 1px rgba(0,80,20,.07)}
+section.res[data-rshow="p"] .res__card{background:#fff;box-shadow:0 30px 60px -22px rgba(0,70,20,.38),0 8px 18px -8px rgba(0,70,20,.16);border-top:6px solid #1A801B}
+section.res[data-rshow="q"] .res__card{background:#fff;box-shadow:0 30px 60px -22px rgba(0,70,20,.38),0 8px 18px -8px rgba(0,70,20,.16)}
+section.res[data-rshow="q"]{background:#E3F1E6}
 </style></head>
 <body data-x3="1"><div aria-hidden="true" class="x-read"><i></i></div>
 <div aria-hidden="true" id="intro"><svg preserveaspectratio="none" viewbox="0 0 1000 1000"><path d="M0,0 L1000,0 L1000,1000 C1000,1000 750,1000 500,1000 C250,1000 0,1000 0,1000 Z" fill="#00B21F" id="introPath"></path></svg></div>
@@ -3979,7 +3985,7 @@ if("scrollRestoration" in history && !location.hash){history.scrollRestoration="
       btn.setAttribute("aria-expanded", o ? "true" : "false"); btn.textContent = o ? "閉じる" : "続きを読む"; }); });
   if (/[?&]mark=1/.test(location.search)) [].forEach.call(document.querySelectorAll("[data-chg]"), function(s){ s.classList.add("x-mark");
     var t = document.createElement("span"); t.className = "x-mark-tag"; t.textContent = s.getAttribute("data-chg-label") || ""; s.insertBefore(t, s.firstChild); });
-  var rv = (location.search.match(/[?&]res=([aklm])/) || [])[1], rs = document.querySelector("section.res"); if (rs && rv) rs.setAttribute("data-rshow", rv);
+  var rv = (location.search.match(/[?&]res=([aklmnopq])/) || [])[1], rs = document.querySelector("section.res"); if (rs && rv) rs.setAttribute("data-rshow", rv);
   var red = matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (rs && "IntersectionObserver" in window) {
     var io = new IntersectionObserver(function(es){ es.forEach(function(e){ if (!e.isIntersecting) return; io.unobserve(e.target); e.target.classList.add("r4-on");
