@@ -3472,14 +3472,14 @@ section.hbc[data-fvl="3"][data-fvb="r"] .fvl-card--a::before{left:0;width:100%;a
 <h2 class="sec-head__ja">無料体験レッスン</h2>
 </div>
 <p class="frm__lead">こちらのフォームにて、無料体験レッスンのお申し込みをしていただけます。<br class="pc-br"/>お電話でも受け付けておりますので、お気軽にお問い合わせください。</p>
-<form action="#form" class="frm__box" data-preview="1" method="post">
+<form action="https://form.k3r.jp/eslclub/trial2024" class="frm__box" id="esl-ksform" method="POST"><input name="f_item_text7" type="hidden" value=""/>
 <p class="frm__req-note"><span class="frm__req">必須</span>の項目は必ずご入力ください</p>
 <div class="frm__row"><p class="frm__label">お子さまの氏名<span class="frm__req">必須</span></p>
 <div class="frm__pair"><input autocomplete="family-name" name="f_item_name_last" placeholder="姓" required=""/><input autocomplete="given-name" name="f_item_name_first" placeholder="名" required=""/></div></div>
 <div class="frm__row"><p class="frm__label">フリガナ<span class="frm__req">必須</span></p>
 <div class="frm__pair"><input name="f_item_name_kana_last" placeholder="セイ" required=""/><input name="f_item_name_kana_first" placeholder="メイ" required=""/></div>
 <p class="frm__hint">※カタカナで入力してください</p></div>
-<div class="frm__row"><label class="frm__label" for="f-zip">郵便番号</label><input autocomplete="postal-code" id="f-zip" inputmode="numeric" name="f_item_zip"/></div>
+<div class="frm__row"><label class="frm__label" for="f-zip">郵便番号</label><input autocomplete="postal-code" id="f-zip" inputmode="numeric" name="f_item_zip" required="" type="tel"/></div>
 <div class="frm__row"><label class="frm__label" for="f-addr">住所</label><input autocomplete="street-address" id="f-addr" name="f_item_text6"/></div>
 <div class="frm__row"><label class="frm__label" for="f-tel">電話番号<span class="frm__req">必須</span></label><input autocomplete="tel" id="f-tel" name="f_item_tel" required="" type="tel"/></div>
 <div class="frm__row"><label class="frm__label" for="f-mail">メールアドレス<span class="frm__req">必須</span></label><input autocomplete="email" id="f-mail" name="f_item_mail" required="" type="email"/>
@@ -3492,7 +3492,7 @@ section.hbc[data-fvl="3"][data-fvb="r"] .fvl-card--a::before{left:0;width:100%;a
 <p><a href="https://eslclub.jp/privacypolicy/" rel="noopener" target="_blank">プライバシーポリシー</a>に同意の上、下記ボタンより送信してください。</p>
 <label class="frm__check"><input name="privacy_check" required="" type="checkbox"/>同意する</label>
 </div>
-<button class="frm__submit" type="submit">送信する</button>
+<input name="api_key" type="hidden" value="82c4c92d466743b363c42632d2d9d2bfc22575f6"/><input name="opt" type="hidden" value="1"/><input name="red" type="hidden" value="https://eslclub.jp/trial/complete/"/><input name="red_error" type="hidden" value="https://eslclub.jp/trial/error/"/><input name="tag" type="hidden" value="小学部"/><input name="test_mode" type="hidden" value="false"/><input name="test_mail" type="hidden" value="online@eslclub.jp"/><button class="frm__submit" type="submit">送信する</button>
 </form>
 <div class="frm__tel">
 <p class="frm__tel-k">TEL：<a href="tel:0337973380">03-3797-3380</a></p>
@@ -4053,6 +4053,15 @@ document.addEventListener('DOMContentLoaded', function(){ setTimeout(fvIn, 2600)
       setTimeout(function(){ el.scrollTo({left:64, behavior:"smooth"}); setTimeout(function(){ el.scrollTo({left:0, behavior:"smooth"}); }, 650); }, 350);
     }, {threshold:.6});
   }
+})();</script><script>(function(){
+  var f=document.getElementById("esl-ksform"); if(!f) return;
+  var uid=String(Math.floor(100000+Math.random()*900000));
+  var trialId="trial"+uid, onlineId="online"+uid;
+  var trial="https://eslclub.jp/trial/complete/?"+trialId, online="https://eslclub.jp/trial/online-complete/?"+onlineId;
+  var red=f.querySelector('input[name="red"]'), t7=f.querySelector('input[name="f_item_text7"]');
+  function set(v){ if(v==="オンライン校"){red.value=online;t7.value=onlineId;} else {red.value=trial;t7.value=trialId;} }
+  var cur=f.querySelector('input[type=radio][name="f_item_radio3[]"]:checked'); set(cur?cur.value:"");
+  [].forEach.call(f.querySelectorAll('input[type=radio][name="f_item_radio3[]"]'),function(r){r.addEventListener("change",function(){set(r.value)})});
 })();</script><script id="x3js">(function(){
   var cv = (location.search.match(/[?&]case=([abcde])/) || [])[1]; var c2s = document.querySelector("section.c2"); if (c2s && cv) c2s.setAttribute("data-show", cv);
   var f = document.querySelector(".c2-filter");
