@@ -2619,6 +2619,7 @@ section.res[data-rshow="o"] .res__card{background:#fff;box-shadow:0 44px 80px -3
 section.res[data-rshow="p"] .res__card{background:#fff;box-shadow:0 30px 60px -22px rgba(0,70,20,.38),0 8px 18px -8px rgba(0,70,20,.16);border-top:6px solid #1A801B}
 section.res[data-rshow="q"] .res__card{background:#fff;box-shadow:0 30px 60px -22px rgba(0,70,20,.38),0 8px 18px -8px rgba(0,70,20,.16)}
 section.res[data-rshow="q"]{background:#E3F1E6}
+@media (min-width:901px){section.res[data-rshow="r"] .res__grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style></head>
 <body data-x3="1"><div aria-hidden="true" class="x-read"><i></i></div>
 <div aria-hidden="true" id="intro"><svg preserveaspectratio="none" viewbox="0 0 1000 1000"><path d="M0,0 L1000,0 L1000,1000 C1000,1000 750,1000 500,1000 C250,1000 0,1000 0,1000 Z" fill="#00B21F" id="introPath"></path></svg></div>
@@ -3985,7 +3986,7 @@ if("scrollRestoration" in history && !location.hash){history.scrollRestoration="
       btn.setAttribute("aria-expanded", o ? "true" : "false"); btn.textContent = o ? "閉じる" : "続きを読む"; }); });
   if (/[?&]mark=1/.test(location.search)) [].forEach.call(document.querySelectorAll("[data-chg]"), function(s){ s.classList.add("x-mark");
     var t = document.createElement("span"); t.className = "x-mark-tag"; t.textContent = s.getAttribute("data-chg-label") || ""; s.insertBefore(t, s.firstChild); });
-  var rv = (location.search.match(/[?&]res=([aklmnopq])/) || [])[1], rs = document.querySelector("section.res"); if (rs && rv) rs.setAttribute("data-rshow", rv);
+  var rv = (location.search.match(/[?&]res=([aklmnopqr])/) || [])[1], rs = document.querySelector("section.res"); if (rs && rv) rs.setAttribute("data-rshow", rv);
   var red = matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (rs && "IntersectionObserver" in window) {
     var io = new IntersectionObserver(function(es){ es.forEach(function(e){ if (!e.isIntersecting) return; io.unobserve(e.target); e.target.classList.add("r4-on");
