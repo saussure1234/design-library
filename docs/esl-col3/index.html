@@ -2622,6 +2622,13 @@ section.res[data-rshow="q"]{background:#E3F1E6}
 @media (min-width:901px){section.res .res__grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .r-br{display:none}
 @media (min-width:1100px){.r-br{display:inline}}
+.fv-tag{position:absolute;left:50%;bottom:-14px;transform:translateX(-50%);z-index:5;white-space:nowrap;padding:5px 14px;border-radius:999px;background:#1A801B;color:#fff;font-size:15px;font-weight:800;line-height:1.4;box-shadow:0 6px 14px -8px rgba(0,60,15,.6)}
+@media (min-width:768px){
+  section.hbc[data-fv="3"] .hbc__ph--a{left:37%;top:30%;width:30%}
+  section.hbc[data-fv="3"] .hbc__ph--b{left:70%;top:36%;width:25%}
+}
+@media (max-width:767.98px){.fv-tag{font-size:13px;padding:3px 10px;bottom:-10px}
+  section.hbc[data-fv="1"] .hbc__in,section.hbc[data-fv="2"] .hbc__in,section.hbc[data-fv="4"] .hbc__in{grid-template-columns:minmax(0,.78fr) minmax(0,1.22fr)}}
 </style></head>
 <body data-x3="1"><div aria-hidden="true" class="x-read"><i></i></div>
 <div aria-hidden="true" id="intro"><svg preserveaspectratio="none" viewbox="0 0 1000 1000"><path d="M0,0 L1000,0 L1000,1000 C1000,1000 750,1000 500,1000 C250,1000 0,1000 0,1000 Z" fill="#00B21F" id="introPath"></path></svg></div>
@@ -4004,6 +4011,17 @@ if("scrollRestoration" in history && !location.hash){history.scrollRestoration="
     function start(){ if (seen) return; seen = true; pick(0); if (!matchMedia("(prefers-reduced-motion: reduce)").matches) timer = setInterval(function(){ pick((idx + 1) % bs.length); }, 2600); }
     if ("IntersectionObserver" in window) { var o = new IntersectionObserver(function(es){ if (es[0].isIntersecting) { o.disconnect(); start(); } }, {threshold:.4}); o.observe(box); } else start();
   });
+  var fv = (location.search.match(/[?&]fv=([1-4])/) || [])[1], hb = document.querySelector("section.hbc");
+  if (fv && hb) {
+    hb.setAttribute("data-fv", fv);
+    var A = hb.querySelector(".hbc__ph--a img"), B = hb.querySelector(".hbc__ph--b img");
+    var SG = ["img/fv_shibuya_girl.webp", "渋谷校で年の近い先生と話す生徒"], SB = ["img/fv_shibuya_boy.webp", "渋谷校で先生とテキストを読む小学生"], OG = [B.getAttribute("src"), B.getAttribute("alt")];
+    function put(img, v){ img.setAttribute("src", v[0]); img.setAttribute("alt", v[1]); }
+    if (fv === "1" || fv === "4") put(B, SG);
+    if (fv === "2") put(B, SB);
+    if (fv === "3") { put(A, SB); put(B, OG); }
+    if (fv === "4") [["a", "オンライン校"], ["b", "渋谷校"]].forEach(function(t){ var f = hb.querySelector(".hbc__ph--" + t[0]), s = document.createElement("span"); s.className = "fv-tag"; s.textContent = t[1]; f.appendChild(s); });
+  }
 })();
 </script></body>
 </html>
