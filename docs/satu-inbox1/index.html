@@ -280,6 +280,116 @@ h1,h2,h3{text-wrap:balance}
   .sticky .btn{width:100%;height:52px}
 }
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.fx{opacity:1;transform:none;transition:none}.typed{max-width:220px;transition:none}}
+
+.si{display:block;width:100%;height:auto;overflow:visible}
+.si .glass,.si .pile,.si .hand,.si .late,.si .dot,.si .spark,.si .ok,.si .bar,.si .wv,.si .shackle,.si .k,.si .tag{transform-box:fill-box}
+.si--invisible .glass{animation:sGlass 5s ease-in-out infinite}
+@keyframes sGlass{0%,100%{transform:translate(-62px,-30px)}25%{transform:translate(32px,-40px)}50%{transform:translate(38px,22px)}75%{transform:translate(-58px,26px)}}
+.si--overwhelmed .pile{opacity:0;animation:sPile 3.6s cubic-bezier(.3,1.4,.5,1) infinite}
+.si--overwhelmed .p1{animation-delay:.45s}.si--overwhelmed .p2{animation-delay:.9s}
+@keyframes sPile{0%{opacity:0;transform:translateY(-26px)}12%{opacity:1;transform:translateY(0)}80%{opacity:1;transform:translateY(0)}95%,100%{opacity:0;transform:translateY(0)}}
+.si--target .hand{transform-origin:50% 96%;animation:sHand 4s linear infinite}
+@keyframes sHand{to{transform:rotate(360deg)}}
+.si--target .late{transform-origin:50% 50%;animation:sLate 4s ease-in-out infinite}
+@keyframes sLate{0%,30%{transform:scale(0)}38%{transform:scale(1.25)}44%,90%{transform:scale(1)}100%{transform:scale(0)}}
+.si--suggest .dot{animation:sDot 1.2s ease-in-out infinite}
+.si--suggest .d1{animation-delay:.15s}.si--suggest .d2{animation-delay:.3s}
+@keyframes sDot{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-7px)}}
+.si--suggest .spark{transform-origin:50% 50%;animation:sSpark 2.4s ease-in-out infinite}
+@keyframes sSpark{0%,100%{transform:scale(.7) rotate(0)}50%{transform:scale(1.1) rotate(25deg)}}
+.si--suggest .ok{transform-origin:50% 50%;animation:sOk 2.4s ease-out infinite}
+@keyframes sOk{0%,55%{transform:scale(0)}68%{transform:scale(1.2)}75%,100%{transform:scale(1)}}
+.si--compare .bar{transform-origin:50% 100%;animation:sBar 3.4s cubic-bezier(.3,1,.4,1) infinite}
+.si--compare .b1{animation-delay:.1s}.si--compare .b2{animation-delay:.25s}.si--compare .b3{animation-delay:.4s}
+@keyframes sBar{0%,8%{transform:scaleY(.1)}40%,85%{transform:scaleY(1)}100%{transform:scaleY(.1)}}
+.si--compare .trend{stroke-dasharray:130;stroke-dashoffset:130;animation:sTrend 3.4s ease-out infinite}
+@keyframes sTrend{0%,30%{stroke-dashoffset:130}60%,85%{stroke-dashoffset:0}100%{stroke-dashoffset:130}}
+.si--broadcast .wv{opacity:0;animation:sWave 1.8s ease-out infinite}
+.si--broadcast .w1{animation-delay:.25s}.si--broadcast .w2{animation-delay:.5s}
+@keyframes sWave{0%{opacity:0;transform:translateX(-6px)}30%{opacity:1}100%{opacity:0;transform:translateX(8px)}}
+.si--key .k{animation:sKey 3.2s cubic-bezier(.4,0,.2,1) infinite}
+@keyframes sKey{0%,10%{transform:translateX(-14px)}40%,85%{transform:translateX(26px)}100%{transform:translateX(-14px)}}
+.si--key .shackle{animation:sShackle 3.2s ease-in-out infinite}
+@keyframes sShackle{0%,40%{transform:translateY(-10px)}52%,85%{transform:translateY(0)}100%{transform:translateY(-10px)}}
+.si--team .tag{opacity:0;transform-origin:50% 100%;animation:sTag 3.6s ease-out infinite}
+.si--team .t1{animation-delay:1.2s}.si--team .t2{animation-delay:2.4s}
+@keyframes sTag{0%{opacity:0;transform:translateY(8px) scale(.6)}10%{opacity:1;transform:none}30%{opacity:1;transform:none}40%,100%{opacity:0;transform:translateY(-6px)}}
+@media (prefers-reduced-motion:reduce){.si *{animation:none!important}.si .pile,.si .tag,.si .wv{opacity:1}.si--suggest .ok,.si--target .late{transform:none}.si--compare .trend{stroke-dashoffset:0}}
+
+.ic{width:120px;margin:-6px 0 12px -10px}
+.ic--sm{width:104px;margin:-8px 0 4px -10px}
+.step .ic{width:132px;margin:-10px 0 6px -12px}
+.step::before{position:absolute;top:24px;right:24px;margin:0;width:34px;height:34px;border-radius:10px;font-size:15px}
+.app{transform:perspective(1600px) rotateY(-6deg) rotateX(2deg);transform-origin:left center}
+.app__in{display:grid;grid-template-columns:150px 230px minmax(0,1fr);height:430px;font-size:13px;background:#FCFCFB}
+.app__side{border-right:1px solid var(--line);padding:14px 10px}
+.app__h{margin:0 0 8px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)}
+.ch{display:flex;align-items:center;gap:8px;margin:0;padding:7px 8px;border-radius:8px;font-weight:600;color:var(--ink2)}
+.ch i{width:8px;height:8px;border-radius:50%;background:var(--c)}
+.ch b{margin-left:auto;font-size:11.5px;color:var(--ink3);font-weight:700;position:relative;display:inline-grid}
+.ch b span{grid-area:1/1}
+.ch--sp{transition:background .3s}
+.app[data-step] .ch--sp.hl{background:#FFF0EC}
+.app__list{border-right:1px solid var(--line);overflow:hidden}
+.row{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:9px;align-items:center;padding:10px 12px;border-bottom:1px solid #EFEFF3;position:relative}
+.row::after{content:"";position:absolute;left:30px;top:30px;width:9px;height:9px;border-radius:50%;background:var(--c);box-shadow:0 0 0 2px #FCFCFB}
+.av{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:#ECEAF8;color:var(--ac-d);font-style:normal;font-size:10.5px;font-weight:800}
+.row p{margin:0;min-width:0;line-height:1.3}
+.row b{display:block;font-size:12.5px}
+.row span{display:block;font-size:11.5px;color:var(--ink3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row em{font-style:normal;font-size:10.5px;color:var(--ink3)}
+.row--new{background:var(--ac-ll);box-shadow:inset 3px 0 0 var(--ac)}
+.row--new em{color:var(--ac);font-weight:800}
+.app__chat{display:flex;flex-direction:column;min-width:0}
+.app__ch{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line);background:#fff}
+.app__ch p{margin:0;line-height:1.25}
+.app__ch b{display:block;font-size:13px}
+.app__ch p span{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--ink3)}
+.app__ch p span i{width:7px;height:7px;border-radius:50%}
+.tag-ok{margin-left:auto;font-size:11.5px;font-weight:800;color:#0E8A3A;background:#E6F6EC;border-radius:999px;padding:4px 10px}
+.app__msgs{flex:1;display:flex;flex-direction:column;gap:8px;padding:14px;overflow:hidden;justify-content:flex-end}
+.m{max-width:86%;padding:9px 12px;border-radius:13px;font-size:12.5px;line-height:1.45}
+.m--in{background:#fff;box-shadow:0 0 0 1px var(--line);border-bottom-left-radius:4px}
+.m--ai{align-self:flex-end;background:var(--ac-ll);box-shadow:inset 0 0 0 1.5px #D8D4FA;border-bottom-right-radius:4px}
+.m--ai small{display:block;font-size:10px;font-weight:800;color:var(--ac);letter-spacing:.04em;text-transform:uppercase;margin-bottom:3px}
+.m--typing,.msg--typing{align-self:flex-end;justify-self:end;display:flex;gap:4px;padding:11px 14px;background:var(--ac-ll);border-radius:13px}
+.m--typing i,.msg--typing i{width:6px;height:6px;border-radius:50%;background:var(--ac);animation:sDot 1s ease-in-out infinite}
+.m--typing i:nth-child(2),.msg--typing i:nth-child(2){animation-delay:.15s}.m--typing i:nth-child(3),.msg--typing i:nth-child(3){animation-delay:.3s}
+.m--photo{display:grid;gap:6px}
+.rcpt{display:grid;gap:4px;width:150px;padding:9px 10px;border-radius:9px;background:#F4F6FA;box-shadow:inset 0 0 0 1px #E1E5EE}
+.rcpt i{display:block;height:4px;border-radius:2px;background:#D5DAE5}.rcpt i:nth-child(2){width:70%}.rcpt i:nth-child(3){width:50%}
+.rcpt b{font-size:13px;color:#0B7230}
+.app__comp{display:flex;align-items:center;justify-content:space-between;margin:0 12px 12px;padding:9px 12px;border-radius:10px;background:#fff;box-shadow:0 0 0 1px var(--line);font-size:12px;color:var(--ink3)}
+.app__comp b{color:#fff;background:var(--ac);padding:4px 10px;border-radius:7px;font-size:11px}
+.app-recap{opacity:1;transform:none}
+[data-seq] [data-at]{opacity:0;transform:translateY(8px);transition:opacity .45s ease,transform .45s cubic-bezier(.2,.8,.2,1)}
+[data-seq] .row[data-at]{transform:translateY(-100%);max-height:0;padding-block:0;transition:opacity .5s,transform .5s cubic-bezier(.2,.8,.2,1),max-height .5s,padding .5s}
+[data-seq] [data-at].on{opacity:1;transform:none}
+[data-seq] .row[data-at].on{max-height:80px;padding-block:10px}
+[data-seq] .fill[data-at]{display:inline-block;transform:translateX(6px)}
+[data-seq] .ch b .n0{transition:opacity .3s}
+[data-seq] .ch b .n1[data-at]{transform:translateY(6px)}
+[data-seq] .ch b .n1.on~*,[data-seq] .ch b:has(.n1.on) .n0{opacity:0}
+[data-seq] [data-flash].on{animation:sFlash .9s ease}
+@keyframes sFlash{0%{box-shadow:0 0 0 0 rgba(91,79,214,.6)}100%{box-shadow:0 0 0 12px rgba(91,79,214,0)}}
+[data-seq] .m[data-at],[data-seq] .msg[data-at]{max-height:0;margin-block:0;padding-block:0;overflow:hidden;transition:opacity .45s,transform .45s cubic-bezier(.2,.8,.2,1),max-height .45s,padding .45s,margin .45s}
+[data-seq] .m[data-at].on{max-height:160px;padding-block:9px}
+[data-seq] .m--typing[data-at].on,[data-seq] .msg--typing[data-at].on{padding-block:11px}
+[data-seq] .msg[data-at].on{max-height:200px;padding-block:11px}
+.chat[data-seq]{min-height:330px;align-content:start}
+.alert .pop{display:block}
+@media (max-width:1080px){.app{transform:none}}
+@media (max-width:767.98px){
+  .app__in{grid-template-columns:minmax(0,1fr);height:390px}
+  .app__side,.app__list{display:none}
+  .m{font-size:12px}
+  .ic{width:104px}
+  .step .ic{width:118px}
+  .chat[data-seq]{min-height:360px}
+}
+@media (prefers-reduced-motion:reduce){[data-seq] [data-at]{opacity:1!important;transform:none!important;max-height:none!important}[data-seq] [data-until]{display:none}}
+@media (max-width:767.98px){.hero .f-recap.app-recap{position:relative;left:auto;bottom:auto;width:auto;margin:12px 0 0;padding:14px 16px}.hero .f-recap.app-recap .rc__row{font-size:13px;padding:6px 0}.shot{margin-bottom:40px!important}}
+@media (max-width:1080px) and (min-width:768px){.alert{right:12px}}
 </style>
 </head>
 <body>
@@ -309,15 +419,43 @@ h1,h2,h3{text-wrap:balance}
 </div>
 </div>
 <div class="shot">
-<div class="frame"><div class="frame__bar"><i></i><i></i><i></i><span>app.satuinbox · Inbox</span></div><img alt="Satu Inbox showing conversations from five channels in one list" height="1125" src="img/inbox.webp" width="1800"/></div>
-<div aria-hidden="true" class="float f-target">Past reply target <b>3</b></div>
-<div aria-hidden="true" class="float f-recap fx">
+<div class="frame app" data-seq data-loop="14000" aria-hidden="true">
+<div class="frame__bar"><i></i><i></i><i></i><span>app.satuinbox · Inbox</span></div>
+<div class="app__in">
+<div class="app__side"><p class="app__h">Channels</p>
+<p class="ch" style="--c:var(--wa)"><i></i>WhatsApp<b>19</b></p>
+<p class="ch" style="--c:var(--ig)"><i></i>Instagram<b>10</b></p>
+<p class="ch" style="--c:var(--tt)"><i></i>TikTok Shop<b>9</b></p>
+<p class="ch ch--sp" style="--c:var(--sp)"><i></i>Shopee<b><span class="n0">10</span><span class="n1" data-at="900">11</span></b></p>
+<p class="ch" style="--c:var(--tp)"><i></i>Tokopedia<b>7</b></p></div>
+<div class="app__list">
+<div class="row row--new" data-at="900" style="--c:var(--sp)"><i class="av">SW</i><p><b>Sari Wulandari</b><span>Hi kak, 4 boxes cheese bakpia…</span></p><em>now</em></div>
+<div class="row" style="--c:var(--wa)"><i class="av">AN</i><p><b>Andi Nugroho</b><span>Okay, I'll take 3</span></p><em>2m</em></div>
+<div class="row" style="--c:var(--ig)"><i class="av">VP</i><p><b>Vina Pratama</b><span>Do you ship to Bekasi?</span></p><em>5m</em></div>
+<div class="row" style="--c:var(--tt)"><i class="av">RK</i><p><b>Rizky Kusuma</b><span>📷 Photo</span></p><em>9m</em></div>
+<div class="row" style="--c:var(--tp)"><i class="av">MU</i><p><b>Maya Utami</b><span>Gift box available?</span></p><em>12m</em></div>
+</div>
+<div class="app__chat">
+<div class="app__ch"><i class="av">SW</i><p><b>Sari Wulandari</b><span><i style="background:var(--sp)"></i>Shopee</span></p><span class="tag-ok" data-at="11600">✓ Order saved</span></div>
+<div class="app__msgs">
+<div class="m m--in" data-at="2000">Hi kak, is the cheese bakpia ready? I want 4 boxes and 2 gift boxes 🎁</div>
+<div class="m m--in" data-at="3200">Send to Jl. Kaliurang 12, Yogyakarta. Sari, 0812-0000-1234</div>
+<div class="m m--typing" data-at="4300" data-until="5600"><i></i><i></i><i></i></div>
+<div class="m m--ai" data-at="5600"><small>✨ Suggested reply</small>Ready kak! 4 boxes + 2 gift boxes, total Rp 188.000 incl. shipping. Shall I prepare the order?</div>
+<div class="m m--in m--photo" data-at="7600"><span class="rcpt"><i></i><i></i><i></i><b>Rp 188.000</b></span>Transfer done 🙏</div>
+</div>
+<div class="app__comp"><span>Type a reply…</span><b>Send</b></div>
+</div>
+</div>
+</div>
+<div aria-hidden="true" class="float f-target" data-seq-ref>Past reply target <b>3</b></div>
+<div aria-hidden="true" class="float f-recap app-recap" data-seq data-loop="14000" data-delay="0">
 <div class="rc__h">Order recap <span>✨ from chat</span></div>
-<div class="rc__row"><em>Recipient</em><b><span class="typed t1">Sari Wulandari</span></b></div>
-<div class="rc__row"><em>Items</em><b><span class="typed t2">Bakpia box × 4</span></b></div>
-<div class="rc__row"><em>Gift box</em><b><span class="typed t3">× 2</span></b></div>
-<div class="rc__row"><em>Payment</em><b><span class="typed t4">Transfer photo read</span></b></div>
-<div class="rc__ok"><span class="a">Save order</span><span class="b">Insert into reply</span></div>
+<div class="rc__row"><em>Recipient</em><b><span class="fill" data-at="8600">Sari Wulandari</span></b></div>
+<div class="rc__row"><em>Items</em><b><span class="fill" data-at="9100">Bakpia box × 4</span></b></div>
+<div class="rc__row"><em>Gift box</em><b><span class="fill" data-at="9600">× 2</span></b></div>
+<div class="rc__row"><em>Payment</em><b><span class="fill" data-at="10100">Rp 188.000 · read</span></b></div>
+<div class="rc__ok"><span class="a" data-at="11000" data-flash>Save order</span><span class="b">Insert into reply</span></div>
 </div>
 </div>
 </div>
@@ -330,9 +468,9 @@ h1,h2,h3{text-wrap:balance}
 <p class="lead">Buyers message on five apps at once and compare shops while they wait. When replies are slow, they buy somewhere else, and marketplace reply-rate badges and <span class="nb">rankings drop with them.</span></p>
 </div>
 <div class="pain">
-<div class="card fx"><span class="pain__k">Invisible</span><h3>No one can see who's still waiting.</h3><p>Conversations are split across five apps, so nobody on the team can answer the simplest question: who <span class="nb">haven't we replied to yet?</span></p><p class="pain__fix">One inbox, <span class="nb">unreplied chats on top.</span></p></div>
-<div class="card fx"><span class="pain__k">Overwhelmed</span><h3>The same questions, all day long.</h3><p>Price, stock, order status, payment methods. Volume multiplies during Ramadan, Lebaran, year-end and school holidays, and <span class="nb">the team can't keep up.</span></p><p class="pain__fix">AI drafts the <span class="nb">answers from your catalog.</span></p></div>
-<div class="card fx"><span class="pain__k">No standard</span><h3>No one owns the reply time.</h3><p>There's no agreed target for how fast each channel gets an answer, so slow chats only surface after <span class="nb">the customer has gone.</span></p><p class="pain__fix">Reply targets <span class="nb">per channel, with alerts.</span></p></div>
+<div class="card fx"><div class="ic"><svg class="si si--invisible" viewBox="0 0 240 200" aria-hidden="true" focusable="false"><defs><radialGradient id="sf120176" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#4338B8" stop-opacity=".16"/><stop offset="1" stop-color="#4338B8" stop-opacity="0"/></radialGradient></defs><ellipse cx="120" cy="176" rx="96" ry="13" fill="url(#sf120176)"/><g><rect x="36" y="46" width="46" height="26" rx="12" fill="#fff" stroke="#E2DFF8" stroke-width="1.4"/><polygon points="48,71 57,71 47,81" fill="#fff"/></g><circle cx="48" cy="59" r="5" fill="#1FAF5A"/><rect x="57" y="57" width="18" height="4" rx="2" fill="#E7E5F7"/><g><rect x="150" y="34" width="46" height="26" rx="12" fill="#fff" stroke="#E2DFF8" stroke-width="1.4"/><polygon points="162,59 171,59 161,69" fill="#fff"/></g><circle cx="162" cy="47" r="5" fill="#E1306C"/><rect x="171" y="45" width="18" height="4" rx="2" fill="#E7E5F7"/><g><rect x="40" y="118" width="46" height="26" rx="12" fill="#fff" stroke="#E2DFF8" stroke-width="1.4"/><polygon points="52,143 61,143 51,153" fill="#fff"/></g><circle cx="52" cy="131" r="5" fill="#EE4D2D"/><rect x="61" y="129" width="18" height="4" rx="2" fill="#E7E5F7"/><g><rect x="160" y="112" width="46" height="26" rx="12" fill="#fff" stroke="#E2DFF8" stroke-width="1.4"/><polygon points="172,137 181,137 171,147" fill="#fff"/></g><circle cx="172" cy="125" r="5" fill="#111111"/><rect x="181" y="123" width="18" height="4" rx="2" fill="#E7E5F7"/><g><rect x="98" y="82" width="46" height="26" rx="12" fill="#fff" stroke="#E2DFF8" stroke-width="1.4"/><polygon points="110,107 119,107 109,117" fill="#fff"/></g><circle cx="110" cy="95" r="5" fill="#03AC0E"/><rect x="119" y="93" width="18" height="4" rx="2" fill="#E7E5F7"/><g class="glass"><circle cx="128" cy="96" r="24" fill="#fff" fill-opacity=".55" stroke="#5B4FD6" stroke-width="7"/><rect x="144" y="114" width="30" height="11" rx="5.5" fill="#4338B8" transform="rotate(45 144 114)"/></g></svg></div><span class="pain__k">Invisible</span><h3>No one can see who's still waiting.</h3><p>Conversations are split across five apps, so nobody on the team can answer the simplest question: who <span class="nb">haven't we replied to yet?</span></p><p class="pain__fix">One inbox, <span class="nb">unreplied chats on top.</span></p></div>
+<div class="card fx"><div class="ic"><svg class="si si--overwhelmed" viewBox="0 0 240 200" aria-hidden="true" focusable="false"><defs><radialGradient id="sf120176" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#4338B8" stop-opacity=".16"/><stop offset="1" stop-color="#4338B8" stop-opacity="0"/></radialGradient></defs><ellipse cx="120" cy="176" rx="96" ry="13" fill="url(#sf120176)"/><polygon points="70,132 76,128 180,128 174,132" fill="#F4F3FD"/><polygon points="174,132 180,128 180,154 174,158" fill="#D6D2F6"/><rect x="70" y="132" width="104" height="26" rx="4" fill="#FFFFFF" stroke="#E2DFF8" stroke-width="1.2"/><rect x="80" y="141" width="60" height="5" rx="2.5" fill="#E7E5F7"/><g class="pile p0"><polygon points="70,102 76,98 180,98 174,102" fill="#8378EC"/><polygon points="174,102 180,98 180,124 174,128" fill="#4338B8"/><rect x="70" y="102" width="104" height="26" rx="4" fill="#5B4FD6"/><rect x="80" y="111" width="42" height="5" rx="2.5" fill="#fff"/><text x="150" y="121" font-size="15" font-weight="900" font-family="Helvetica Neue,Arial,sans-serif" fill="#fff">?</text></g><g class="pile p1"><polygon points="78,72 84,68 188,68 182,72" fill="#F4F3FD"/><polygon points="182,72 188,68 188,94 182,98" fill="#D6D2F6"/><rect x="78" y="72" width="104" height="26" rx="4" fill="#FFFFFF" stroke="#E2DFF8" stroke-width="1.2"/><rect x="88" y="81" width="42" height="5" rx="2.5" fill="#E7E5F7"/><text x="158" y="91" font-size="15" font-weight="900" font-family="Helvetica Neue,Arial,sans-serif" fill="#5B4FD6">?</text></g><g class="pile p2"><polygon points="70,42 76,38 180,38 174,42" fill="#8378EC"/><polygon points="174,42 180,38 180,64 174,68" fill="#4338B8"/><rect x="70" y="42" width="104" height="26" rx="4" fill="#5B4FD6"/><rect x="80" y="51" width="42" height="5" rx="2.5" fill="#fff"/><text x="150" y="61" font-size="15" font-weight="900" font-family="Helvetica Neue,Arial,sans-serif" fill="#fff">?</text></g></svg></div><span class="pain__k">Overwhelmed</span><h3>The same questions, all day long.</h3><p>Price, stock, order status, payment methods. Volume multiplies during Ramadan, Lebaran, year-end and school holidays, and <span class="nb">the team can't keep up.</span></p><p class="pain__fix">AI drafts the <span class="nb">answers from your catalog.</span></p></div>
+<div class="card fx"><div class="ic"><svg class="si si--target" viewBox="0 0 240 200" aria-hidden="true" focusable="false"><defs><radialGradient id="sf120176" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#4338B8" stop-opacity=".16"/><stop offset="1" stop-color="#4338B8" stop-opacity="0"/></radialGradient></defs><ellipse cx="120" cy="176" rx="96" ry="13" fill="url(#sf120176)"/><rect x="112" y="26" width="16" height="12" rx="3" fill="#4338B8"/><rect x="106" y="20" width="28" height="9" rx="4" fill="#5B4FD6"/><circle cx="122" cy="104" r="58" fill="#4338B8"/><circle cx="119" cy="101" r="58" fill="#fff" stroke="#5B4FD6" stroke-width="8"/><rect x="117.5" y="50" width="3" height="9" rx="1.5" fill="#C9C5EE" transform="rotate(0 119 101)"/><rect x="117.5" y="50" width="3" height="9" rx="1.5" fill="#C9C5EE" transform="rotate(30 119 101)"/><rect x="117.5" y="50" width="3" height="9" rx="1.5" fill="#C9C5EE" transform="rotate(60 119 101)"/><rect x="117.5" y="50" width="3" height="9" rx="1.5" fill="#C9C5EE" transform="rotate(90 119 101)"/><rect x="117.5" y="50" width="3" height="9" rx="1.5" fill="#C9C5EE" transform="rotate(120 119 101)"/><rect x="117.5" y="50" width="3" height="9" rx="1.5" fill="#C9C5EE" transform="rotate(150 119 101)"/><rect x="117.5" y="50" width="3" height="9" rx="1.5" fill="#C9C5EE" transform="rotate(180 119 101)"/><rect x="117.5" y="50" width="3" height="9" rx="1.5" fill="#C9C5EE" transform="rotate(210 119 101)"/><rect x="117.5" y="50" width="3" height="9" rx="1.5" fill="#C9C5EE" transform="rotate(240 119 101)"/><rect x="117.5" y="50" width="3" height="9" rx="1.5" fill="#C9C5EE" transform="rotate(270 119 101)"/><rect x="117.5" y="50" width="3" height="9" rx="1.5" fill="#C9C5EE" transform="rotate(300 119 101)"/><rect x="117.5" y="50" width="3" height="9" rx="1.5" fill="#C9C5EE" transform="rotate(330 119 101)"/><path d="M119 101 L119 47 A54 54 0 0 1 165 74 Z" fill="#FFD08A" opacity=".55"/><g class="hand"><rect x="117" y="56" width="4" height="47" rx="2" fill="#1F1D33"/></g><circle cx="119" cy="101" r="6" fill="#1F1D33"/><circle class="late" cx="176" cy="54" r="11" fill="#E5484D"/><rect x="174.5" y="47" width="3" height="9" rx="1.5" fill="#fff"/><circle cx="176" cy="60" r="1.8" fill="#fff"/></svg></div><span class="pain__k">No standard</span><h3>No one owns the reply time.</h3><p>There's no agreed target for how fast each channel gets an answer, so slow chats only surface after <span class="nb">the customer has gone.</span></p><p class="pain__fix">Reply targets <span class="nb">per channel, with alerts.</span></p></div>
 </div>
 <div class="strip fx">
 <h3>And every chat order<br/>is typed twice.</h3>
@@ -384,11 +522,13 @@ h1,h2,h3{text-wrap:balance}
 <div class="mode on"><b>Suggest</b>AI drafts, your agent sends.</div>
 <div class="mode"><b>Auto</b>AI replies on its own.</div>
 </div>
-<div class="chat">
-<div class="msg msg--in">Kak, cheese bakpia still available? How much for 3 boxes?</div>
-<div class="msg msg--ai"><small>✨ Suggested reply · from catalog</small>Yes, cheese bakpia is in stock. 3 boxes are Rp 105.000. Shall I prepare the order?</div>
-<div class="msg msg--in">The last order arrived damaged, can I get a refund?</div>
-<div class="msg msg--hand">Refund request → handed to an agent. AI won't answer this one.</div>
+<div class="chat" data-seq data-loop="11000">
+<div class="msg msg--in" data-at="400">Kak, cheese bakpia still available? How much for 3 boxes?</div>
+<div class="msg msg--typing" data-at="1400" data-until="2700"><i></i><i></i><i></i></div>
+<div class="msg msg--ai" data-at="2700"><small>✨ Suggested reply · from catalog</small>Yes, cheese bakpia is in stock. 3 boxes are Rp 105.000. Shall I prepare the order?</div>
+<div class="msg msg--in" data-at="5200">The last order arrived damaged, can I get a refund?</div>
+<div class="msg msg--hand" data-at="6600">Refund request → handed to an agent. AI won't answer this one.</div>
+</div>
 </div>
 </div>
 </div>
@@ -405,17 +545,17 @@ h1,h2,h3{text-wrap:balance}
 </ul>
 </div>
 <div class="vis fx">
-<div aria-hidden="true" class="pane recap-big">
+<div aria-hidden="true" class="pane recap-big" data-seq data-loop="10000">
 <div class="rc__h">Order recap <span>✨ Read again</span></div>
 <div class="src"><span>💬 4 messages</span><span>📷 Transfer photo</span><span>🎙 Voice note</span></div>
-<div class="rc__row"><em>Recipient</em><b>Sari Wulandari</b></div>
-<div class="rc__row"><em>Phone</em><b>+62 812-0000-1234</b></div>
-<div class="rc__row"><em>Address</em><b>Jl. Kaliurang 12, Yogyakarta</b></div>
-<div class="rc__row"><em>Bakpia box × 4</em><b>Rp 140.000</b></div>
-<div class="rc__row"><em>Gift box × 2</em><b>Rp 30.000</b></div>
-<div class="rc__row"><em>Shipping</em><b>Rp 18.000</b></div>
-<div class="rc__tot"><span>Total</span><span>Rp 188.000</span></div>
-<div class="rc__ok"><span class="a">Save order</span><span class="b">Insert into reply</span></div>
+<div class="rc__row"><em>Recipient</em><b><span class="fill" data-at="600">Sari Wulandari</span></b></div>
+<div class="rc__row"><em>Phone</em><b><span class="fill" data-at="1150">+62 812-0000-1234</span></b></div>
+<div class="rc__row"><em>Address</em><b><span class="fill" data-at="1700">Jl. Kaliurang 12, Yogyakarta</span></b></div>
+<div class="rc__row"><em>Bakpia box × 4</em><b><span class="fill" data-at="2250">Rp 140.000</span></b></div>
+<div class="rc__row"><em>Gift box × 2</em><b><span class="fill" data-at="2800">Rp 30.000</span></b></div>
+<div class="rc__row"><em>Shipping</em><b><span class="fill" data-at="3350">Rp 18.000</span></b></div>
+<div class="rc__tot"><span>Total</span><span class="fill" data-at="4200" data-count="188000">Rp 188.000</span></div>
+<div class="rc__ok"><span class="a" data-at="5400" data-flash>Save order</span><span class="b">Insert into reply</span></div>
 </div>
 </div>
 </div>
@@ -432,23 +572,23 @@ h1,h2,h3{text-wrap:balance}
 </div>
 <div class="vis fx">
 <div class="frame"><img alt="Dashboard with conversations, first response time, resolution rate, orders and revenue by channel" height="780" loading="lazy" src="img/dashboard.webp" width="1600"/></div>
-<div aria-hidden="true" class="float alert"><b>Past reply target</b>3 Shopee chats have waited longer than your 15-minute target.</div>
+<div aria-hidden="true" class="float alert" data-seq data-loop="7000"><span class="pop" data-at="900" data-until="6200"><b>Past reply target</b>3 Shopee chats have waited longer than your 15-minute target.</span></div>
 </div>
 </div>
 <div class="minis">
 <div class="card mini fx">
-<div class="mini__ic"><svg viewbox="0 0 24 24"><path d="M4 10v4a1 1 0 0 0 1 1h2l5 4V5L7 9H5a1 1 0 0 0-1 1z"></path><path d="M16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12"></path></svg></div>
+<div class="ic ic--sm"><svg class="si si--broadcast" viewBox="0 0 240 200" aria-hidden="true" focusable="false"><defs><radialGradient id="sf120176" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#4338B8" stop-opacity=".16"/><stop offset="1" stop-color="#4338B8" stop-opacity="0"/></radialGradient></defs><ellipse cx="120" cy="176" rx="96" ry="13" fill="url(#sf120176)"/><polygon points="54,84 106,60 106,140 54,116" fill="#5B4FD6"/><polygon points="106,60 112,56 112,136 106,140" fill="#4338B8"/><polygon points="30,82 36,78 62,78 56,82" fill="#F4F3FD"/><polygon points="56,82 62,78 62,114 56,118" fill="#D6D2F6"/><rect x="30" y="82" width="26" height="36" rx="3" fill="#FFFFFF" stroke="#E2DFF8" stroke-width="1.2"/><rect x="58" y="116" width="16" height="30" rx="5" fill="#4338B8"/><path class="wv w0" d="M130 78 Q144 100 130 122" fill="none" stroke="#8378EC" stroke-width="5" stroke-linecap="round"/><path class="wv w1" d="M148 68 Q168 100 148 132" fill="none" stroke="#FFB547" stroke-width="5" stroke-linecap="round"/><path class="wv w2" d="M166 58 Q192 100 166 142" fill="none" stroke="#8378EC" stroke-width="5" stroke-linecap="round"/></svg></div>
 <h3>WhatsApp broadcasts</h3>
 <p>Send approved templates to a group of customers. Anyone who replies STOP is <span class="nb">left out automatically.</span></p>
 <div class="bc"><img alt="WhatsApp broadcast templates for Lebaran hampers and a bakpia restock" height="396" loading="lazy" src="img/broadcasts.webp" width="1400"/></div>
 </div>
 <div class="card mini fx">
-<div class="mini__ic"><svg viewbox="0 0 24 24"><rect height="10" rx="2" width="16" x="4" y="10"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg></div>
+<div class="ic ic--sm"><svg class="si si--key" viewBox="0 0 240 200" aria-hidden="true" focusable="false"><defs><radialGradient id="sf120176" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#4338B8" stop-opacity=".16"/><stop offset="1" stop-color="#4338B8" stop-opacity="0"/></radialGradient></defs><ellipse cx="120" cy="176" rx="96" ry="13" fill="url(#sf120176)"/><g class="shackle"><path d="M118 92 V70 a24 24 0 0 1 48 0 V92" fill="none" stroke="#4338B8" stroke-width="11" stroke-linecap="round"/></g><polygon points="104,88 110,84 186,84 180,88" fill="#8378EC"/><polygon points="180,88 186,84 186,150 180,154" fill="#4338B8"/><rect x="104" y="88" width="76" height="66" rx="4" fill="#5B4FD6"/><circle cx="142" cy="114" r="8" fill="#fff"/><rect x="139" y="116" width="6" height="18" rx="3" fill="#fff"/><g class="k"><circle cx="58" cy="121" r="17" fill="#FFB547"/><circle cx="58" cy="121" r="7" fill="#fff"/><rect x="72" y="117" width="34" height="8" rx="3" fill="#D98E1C"/><rect x="92" y="125" width="5" height="8" rx="1.5" fill="#D98E1C"/><rect x="100" y="125" width="5" height="6" rx="1.5" fill="#D98E1C"/></g></svg></div>
 <h3>Your own AI key</h3>
 <p>Use Claude, OpenAI or Gemini on your own account. Keys are encrypted before they're stored and never <span class="nb">sent back to the browser.</span></p>
 </div>
 <div class="card mini fx">
-<div class="mini__ic"><svg viewbox="0 0 24 24"><path d="M17 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"></path><circle cx="10" cy="7" r="4"></circle><path d="M21 20v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"></path></svg></div>
+<div class="ic ic--sm"><svg class="si si--team" viewBox="0 0 240 200" aria-hidden="true" focusable="false"><defs><radialGradient id="sf120176" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#4338B8" stop-opacity=".16"/><stop offset="1" stop-color="#4338B8" stop-opacity="0"/></radialGradient></defs><ellipse cx="120" cy="176" rx="96" ry="13" fill="url(#sf120176)"/><path d="M46 166 V130 C46 119 56 116 70 116 C84 116 94 119 94 130 V166 Z" fill="#D6D2F6"/><circle cx="70" cy="104" r="14" fill="#1F1D33"/><path d="M146 166 V130 C146 119 156 116 170 116 C184 116 194 119 194 130 V166 Z" fill="#D6D2F6"/><circle cx="170" cy="104" r="14" fill="#1F1D33"/><path d="M92 166 V114 C92 103 102 100 120 100 C138 100 148 103 148 114 V166 Z" fill="#5B4FD6"/><circle cx="120" cy="85" r="17" fill="#1F1D33"/><g class="tag t0"><rect x="54" y="70" width="32" height="20" rx="6" fill="#FFB547"/><path d="M64 80 l4 4 l8 -8" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></g><g class="tag t1"><rect x="104" y="52" width="32" height="20" rx="6" fill="#FFB547"/><path d="M114 62 l4 4 l8 -8" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></g><g class="tag t2"><rect x="154" y="70" width="32" height="20" rx="6" fill="#FFB547"/><path d="M164 80 l4 4 l8 -8" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></g></svg></div>
 <h3>Built for your team</h3>
 <p>Five seats included, with assignment, labels and internal notes, so handovers between shifts <span class="nb">don't lose the thread.</span></p>
 </div>
@@ -463,9 +603,9 @@ h1,h2,h3{text-wrap:balance}
 <p class="lead">We set it up with you, start the AI in suggestion mode, and compare the numbers before you <span class="nb">decide how far to automate.</span></p>
 </div>
 <div class="steps">
-<div class="step fx"><h3>Connect your channels</h3><p>Link WhatsApp, Instagram, TikTok Shop, Shopee and Tokopedia. Add your product catalog with prices and stock, your shop details <span class="nb">and reply-time targets.</span></p><small>Week 1</small></div>
-<div class="step fx"><h3>Start in suggestion mode</h3><p>We train your agents. The AI drafts replies and orders, and your team sends and saves them, so <span class="nb">nothing goes out unchecked.</span></p><small>Week 2</small></div>
-<div class="step fx"><h3>Compare, then automate</h3><p>Track reply rate, chat orders and time per order from week 3, then compare against where you started and decide where <span class="nb">auto-reply makes sense.</span></p><small>Weeks 3–4</small></div>
+<div class="step fx"><div class="ic"><svg class="si si--connect" viewBox="0 0 240 200" aria-hidden="true" focusable="false"><defs><radialGradient id="sf140178" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#4338B8" stop-opacity=".16"/><stop offset="1" stop-color="#4338B8" stop-opacity="0"/></radialGradient></defs><ellipse cx="140" cy="178" rx="84" ry="13" fill="url(#sf140178)"/><path d="M20 40 C 70 40, 80 112, 112 112" fill="none" stroke="#1FAF5A" stroke-width="4" stroke-linecap="round" opacity=".9"/><circle class="flow f0" r="4.5" fill="#1FAF5A"><animateMotion dur="2.4s" begin="0.0s" repeatCount="indefinite" path="M20 40 C 70 40, 80 112, 112 112"/></circle><path d="M26 62 C 70 62, 80 112, 112 112" fill="none" stroke="#E1306C" stroke-width="4" stroke-linecap="round" opacity=".9"/><circle class="flow f1" r="4.5" fill="#E1306C"><animateMotion dur="2.4s" begin="0.35s" repeatCount="indefinite" path="M26 62 C 70 62, 80 112, 112 112"/></circle><path d="M32 84 C 70 84, 80 112, 112 112" fill="none" stroke="#111111" stroke-width="4" stroke-linecap="round" opacity=".9"/><circle class="flow f2" r="4.5" fill="#111111"><animateMotion dur="2.4s" begin="0.7s" repeatCount="indefinite" path="M32 84 C 70 84, 80 112, 112 112"/></circle><path d="M38 106 C 70 106, 80 112, 112 112" fill="none" stroke="#EE4D2D" stroke-width="4" stroke-linecap="round" opacity=".9"/><circle class="flow f3" r="4.5" fill="#EE4D2D"><animateMotion dur="2.4s" begin="1.0499999999999998s" repeatCount="indefinite" path="M38 106 C 70 106, 80 112, 112 112"/></circle><path d="M44 128 C 70 128, 80 112, 112 112" fill="none" stroke="#03AC0E" stroke-width="4" stroke-linecap="round" opacity=".9"/><circle class="flow f4" r="4.5" fill="#03AC0E"><animateMotion dur="2.4s" begin="1.4s" repeatCount="indefinite" path="M44 128 C 70 128, 80 112, 112 112"/></circle><polygon points="112,86 118,82 222,82 216,86" fill="#8378EC"/><polygon points="216,86 222,82 222,146 216,150" fill="#4338B8"/><rect x="112" y="86" width="104" height="64" rx="4" fill="#5B4FD6"/><rect x="122" y="96" width="84" height="44" rx="4" fill="#fff"/><rect x="130" y="104" width="68" height="5" rx="2.5" fill="#8378EC"/><rect x="130" y="115" width="54" height="5" rx="2.5" fill="#E7E5F7"/><rect x="130" y="126" width="40" height="5" rx="2.5" fill="#E7E5F7"/><circle cx="208" cy="88" r="11" fill="#FFB547"/><text x="208" y="93" text-anchor="middle" font-size="13" font-weight="900" font-family="Helvetica Neue,Arial,sans-serif" fill="#fff">5</text></svg></div><h3>Connect your channels</h3><p>Link WhatsApp, Instagram, TikTok Shop, Shopee and Tokopedia. Add your product catalog with prices and stock, your shop details <span class="nb">and reply-time targets.</span></p><small>Week 1</small></div>
+<div class="step fx"><div class="ic"><svg class="si si--suggest" viewBox="0 0 240 200" aria-hidden="true" focusable="false"><defs><radialGradient id="sf120176" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#4338B8" stop-opacity=".16"/><stop offset="1" stop-color="#4338B8" stop-opacity="0"/></radialGradient></defs><ellipse cx="120" cy="176" rx="96" ry="13" fill="url(#sf120176)"/><g><rect x="34" y="46" width="104" height="40" rx="12" fill="#F1F0F7"/><polygon points="46,85 55,85 45,95" fill="#F1F0F7"/></g><rect x="48" y="58" width="70" height="5" rx="2.5" fill="#DCD9EC"/><rect x="48" y="70" width="46" height="5" rx="2.5" fill="#DCD9EC"/><g><rect x="96" y="104" width="112" height="44" rx="12" fill="#fff" stroke="#D6D2F6" stroke-width="1.4"/><polygon points="196,147 187,147 197,157" fill="#fff"/></g><circle class="dot d0" cx="126" cy="126" r="5.5" fill="#5B4FD6"/><circle class="dot d1" cx="142" cy="126" r="5.5" fill="#5B4FD6"/><circle class="dot d2" cx="158" cy="126" r="5.5" fill="#5B4FD6"/><g class="spark"><path d="M206 74 L210 86 L222 90 L210 94 L206 106 L202 94 L190 90 L202 86 Z" fill="#FFB547"/></g><g class="ok"><circle cx="196" cy="150" r="14" fill="#5B4FD6"/><path d="M189 150 L194 155 L203 145" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></g></svg></div><h3>Start in suggestion mode</h3><p>We train your agents. The AI drafts replies and orders, and your team sends and saves them, so <span class="nb">nothing goes out unchecked.</span></p><small>Week 2</small></div>
+<div class="step fx"><div class="ic"><svg class="si si--compare" viewBox="0 0 240 200" aria-hidden="true" focusable="false"><defs><radialGradient id="sf120176" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#4338B8" stop-opacity=".16"/><stop offset="1" stop-color="#4338B8" stop-opacity="0"/></radialGradient></defs><ellipse cx="120" cy="176" rx="96" ry="13" fill="url(#sf120176)"/><polygon points="40,40 46,36 206,36 200,40" fill="#F4F3FD"/><polygon points="200,40 206,36 206,156 200,160" fill="#D6D2F6"/><rect x="40" y="40" width="160" height="120" rx="4" fill="#FFFFFF" stroke="#E2DFF8" stroke-width="1.2"/><rect x="40" y="40" width="160" height="18" rx="4" fill="#5B4FD6"/><rect x="62" y="106" width="22" height="34" rx="3" fill="#D6D2F6" class="bar b0"/><rect x="96" y="96" width="22" height="44" rx="3" fill="#D6D2F6" class="bar b1"/><rect x="130" y="78" width="22" height="62" rx="3" fill="#5B4FD6" class="bar b2"/><rect x="164" y="62" width="22" height="78" rx="3" fill="#5B4FD6" class="bar b3"/><rect x="54" y="140" width="132" height="3" rx="1.5" fill="#E2DFF8"/><path class="trend" d="M70 104 L106 92 L140 76 L176 58" fill="none" stroke="#FFB547" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Compare, then automate</h3><p>Track reply rate, chat orders and time per order from week 3, then compare against where you started and decide where <span class="nb">auto-reply makes sense.</span></p><small>Weeks 3–4</small></div>
 </div>
 </div>
 </section>
@@ -605,6 +745,23 @@ h1,h2,h3{text-wrap:balance}
       else { d.open = true; var h2 = body.offsetHeight; body.animate([{height:"0px",opacity:0},{height:h2+"px",opacity:1}],{duration:300,easing:"ease"}); }
     });
   });
+
+  var RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function runSeq(root){
+    var items = [].slice.call(root.querySelectorAll("[data-at]")), loop = +root.getAttribute("data-loop") || 10000, timers = [], on = false;
+    function clear(){ timers.forEach(clearTimeout); timers = []; items.forEach(function(e){ e.classList.remove("on"); }); }
+    function play(){ clear();
+      items.forEach(function(e){ var t = +e.getAttribute("data-at"), u = e.getAttribute("data-until");
+        timers.push(setTimeout(function(){ e.classList.add("on");
+          var c = e.getAttribute("data-count"); if (c) { var g = +c, t0 = performance.now(); (function f(n){ var k = Math.min(1, (n - t0) / 700); e.textContent = "Rp " + Math.round(g * k).toLocaleString("id-ID"); if (k < 1) requestAnimationFrame(f); })(t0); }
+        }, t));
+        if (u) timers.push(setTimeout(function(){ e.classList.remove("on"); }, +u)); });
+      timers.push(setTimeout(function(){ if (on) play(); }, loop)); }
+    if (RM) { items.forEach(function(e){ e.classList.add("on"); }); return; }
+    var io = new IntersectionObserver(function(es){ es.forEach(function(en){ if (en.isIntersecting && !on) { on = true; play(); } else if (!en.isIntersecting && on) { on = false; clear(); } }); }, {threshold:.25});
+    io.observe(root);
+  }
+  [].forEach.call(document.querySelectorAll("[data-seq]"), runSeq);
   var f = document.getElementById("trialForm"), m = document.getElementById("formMsg");
   f.addEventListener("submit", function(ev){ ev.preventDefault();
     var bad = [].filter.call(f.querySelectorAll("input"), function(i){ return !i.value.trim() || (i.type === "email" && !/^\S+@\S+\.\S+$/.test(i.value)); });
