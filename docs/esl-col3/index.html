@@ -2629,6 +2629,75 @@ section.res[data-rshow="q"]{background:#E3F1E6}
 }
 @media (max-width:767.98px){.fv-tag{font-size:13px;padding:3px 10px;bottom:-10px}
   section.hbc[data-fv="1"] .hbc__in,section.hbc[data-fv="2"] .hbc__in,section.hbc[data-fv="4"] .hbc__in{grid-template-columns:minmax(0,.78fr) minmax(0,1.22fr)}}
+html[data-fvl] #growth,section.hbc[data-fvl] .hbc__ph,section.hbc[data-fvl] .hbc__blob,section.hbc[data-fvl] .hbc__conf{display:none!important}
+section.hbc[data-fvl] .hbc__in{height:auto;min-height:0;grid-template-rows:none;align-content:center}
+section.hbc[data-fvl] .hbc__copy,section.hbc[data-fvl] .hbc__stats{display:none}
+section.hbc[data-fvl] .hbc__head,section.hbc[data-fvl] .hbc__cta,section.hbc[data-fvl] .fvl-card{opacity:1!important;animation:none!important;transform:none}
+.fvl-ph{position:relative}
+.fvl-card{position:relative;margin:0}
+.fvl-img{position:relative;overflow:hidden}
+.fvl-img img{display:block;width:100%;height:100%;object-fit:cover}
+.fvl-tag{position:absolute;z-index:4;white-space:nowrap;padding:5px 14px;border-radius:999px;background:#1A801B;color:#fff;font-size:15px;font-weight:800;line-height:1.4}
+.fvl-card--b .fvl-tag{background:#fff;color:#0B6E1F;box-shadow:inset 0 0 0 2px #1A801B}
+.fvl-bb{position:absolute;z-index:4;margin:0;white-space:nowrap;padding:7px 14px;border-radius:999px;background:#fff;color:#0B6E1F;font-size:15px;font-weight:800;line-height:1.4;box-shadow:0 0 0 1.5px #1A801B}
+.fvl-bb::after{content:"";position:absolute;left:50%;bottom:-7px;width:12px;height:12px;background:#fff;border-right:1.5px solid #1A801B;border-bottom:1.5px solid #1A801B;transform:translateX(-50%) rotate(45deg)}
+/* 1 左右に縦長のパネル2枚 */
+section.hbc[data-fvl="1"] .hbc__in{grid-template-columns:minmax(0,40%) minmax(0,60%);grid-template-areas:"head ph" "cta ph";column-gap:40px;row-gap:24px;padding-block:40px 64px}
+section.hbc[data-fvl="1"] .hbc__head{grid-area:head;align-self:end}
+section.hbc[data-fvl="1"] .hbc__cta{grid-area:cta;align-self:start}
+section.hbc[data-fvl="1"] .fvl-ph{grid-area:ph;display:grid;grid-template-columns:1fr 1fr;gap:18px;padding-top:44px}
+section.hbc[data-fvl="1"] .fvl-img{aspect-ratio:4/5;border-radius:28px;background:linear-gradient(180deg,#E3F2E6,#C9E6CF)}
+section.hbc[data-fvl="1"] .fvl-card--b .fvl-img{background:linear-gradient(180deg,#FFF8D6,#FBEBA6)}
+section.hbc[data-fvl="1"] .fvl-card--b{margin-top:48px}
+section.hbc[data-fvl="1"] .fvl-tag{left:18px;top:16px}
+section.hbc[data-fvl="1"] .fvl-bb{left:50%;top:-42px;transform:translateX(-50%)}
+/* 2 中央に見出し、下にボタンを挟んで写真2枚 */
+section.hbc[data-fvl="2"] .hbc__in{grid-template-columns:minmax(0,1fr) minmax(0,440px) minmax(0,1fr);grid-template-areas:"head head head" "pa cta pb";column-gap:28px;row-gap:28px;padding-block:44px 56px;text-align:center}
+section.hbc[data-fvl="2"] .hbc__head{grid-area:head;justify-self:center;text-align:center}
+section.hbc[data-fvl="2"] .hbc__cta{grid-area:cta;align-self:center;width:100%;text-align:center}
+section.hbc[data-fvl="2"] .fvl-ph{display:contents}
+section.hbc[data-fvl="2"] .fvl-card{width:100%;max-width:330px}
+section.hbc[data-fvl="2"] .fvl-card--a{grid-area:pa;justify-self:end}
+section.hbc[data-fvl="2"] .fvl-card--b{grid-area:pb;justify-self:start}
+section.hbc[data-fvl="2"] .fvl-img{aspect-ratio:1/1;border-radius:50% 50% 24px 24px;background:radial-gradient(circle at 50% 70%,#DDF0E1,#C3E3CA)}
+section.hbc[data-fvl="2"] .fvl-card--b .fvl-img{background:radial-gradient(circle at 50% 70%,#FFF6CC,#F8E59A)}
+section.hbc[data-fvl="2"] .fvl-tag{left:50%;bottom:14px;transform:translateX(-50%)}
+section.hbc[data-fvl="2"] .fvl-bb{left:50%;top:-20px;transform:translateX(-50%)}
+/* 3 円2つ（頭が円からはみ出す） */
+section.hbc[data-fvl="3"] .hbc__in{grid-template-columns:minmax(0,42%) minmax(0,58%);grid-template-areas:"head ph" "cta ph";column-gap:32px;row-gap:24px;padding-block:40px 60px}
+section.hbc[data-fvl="3"] .hbc__head{grid-area:head;align-self:end}
+section.hbc[data-fvl="3"] .hbc__cta{grid-area:cta;align-self:start}
+section.hbc[data-fvl="3"] .fvl-ph{grid-area:ph;display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:end;padding-top:40px}
+section.hbc[data-fvl="3"] .fvl-card{position:relative}
+section.hbc[data-fvl="3"] .fvl-card::before{content:"";position:absolute;left:4%;right:4%;bottom:0;aspect-ratio:1;border-radius:50%;background:#CDE9D3;z-index:0}
+section.hbc[data-fvl="3"] .fvl-card--b::before{background:#FBEBA6}
+section.hbc[data-fvl="3"] .fvl-img{position:relative;z-index:1;aspect-ratio:92/112;margin-inline:4%;border-radius:0 0 999px 999px}
+section.hbc[data-fvl="3"] .fvl-card--b{margin-left:-6%;margin-bottom:-24px}
+section.hbc[data-fvl="3"] .fvl-tag{left:50%;bottom:-14px;transform:translateX(-50%)}
+section.hbc[data-fvl="3"] .fvl-bb{left:50%;top:-18px;transform:translateX(-50%)}
+/* 4 斜めの帯の上に2人が立つ */
+section.hbc[data-fvl="4"]{background:linear-gradient(170deg,transparent 0 62%,#1A801B 62% 74%,#FFE100 74% 79%,transparent 79%)}
+section.hbc[data-fvl="4"] .hbc__in{grid-template-columns:minmax(0,40%) minmax(0,60%);grid-template-areas:"head ph" "cta ph";column-gap:24px;row-gap:24px;padding-block:40px 40px}
+section.hbc[data-fvl="4"] .hbc__head{grid-area:head;align-self:end}
+section.hbc[data-fvl="4"] .hbc__cta{grid-area:cta;align-self:start}
+section.hbc[data-fvl="4"] .fvl-ph{grid-area:ph;display:grid;grid-template-columns:1fr 1fr;align-items:end;padding-top:40px}
+section.hbc[data-fvl="4"] .fvl-img{aspect-ratio:4/5}
+section.hbc[data-fvl="4"][data-fvc="x"] .fvl-card--b .fvl-img img,section.hbc[data-fvl="4"][data-fvc="y"] .fvl-card--a .fvl-img img{object-fit:cover;object-position:75% 100%!important}
+section.hbc[data-fvl="4"] .fvl-img img{object-fit:contain;object-position:50% 100%!important}
+section.hbc[data-fvl="4"] .fvl-card--b{margin-left:-4%;margin-bottom:28px}
+section.hbc[data-fvl="4"] .fvl-tag{left:50%;bottom:8px;transform:translateX(-50%)}
+section.hbc[data-fvl="4"] .fvl-bb{left:50%;top:-6px;transform:translateX(-50%)}
+@media (max-width:767.98px){
+  section.hbc[data-fvl] .hbc__in{grid-template-columns:minmax(0,1fr)!important;grid-template-areas:"head" "ph" "cta"!important;padding:24px 16px 48px;row-gap:22px;text-align:left}
+  section.hbc[data-fvl] .hbc__head{justify-self:stretch;text-align:left}
+  section.hbc[data-fvl] .fvl-ph{grid-area:ph;display:grid!important;grid-template-columns:1fr 1fr;gap:10px;align-items:end;padding-top:36px}
+  section.hbc[data-fvl] .fvl-card{grid-area:auto!important;margin:0!important}
+  section.hbc[data-fvl] .fvl-tag{font-size:13px;padding:3px 10px}
+  section.hbc[data-fvl] .fvl-bb{font-size:12.5px;padding:4px 9px;white-space:nowrap}
+  section.hbc[data-fvl="1"] .fvl-card--b{margin-top:28px!important}
+  section.hbc[data-fvl="3"] .fvl-card--b{margin-left:-4%!important}
+  section.hbc[data-fvl="4"]{background:linear-gradient(165deg,transparent 0 58%,#1A801B 58% 66%,#FFE100 66% 69%,transparent 69%)}
+}
 </style></head>
 <body data-x3="1"><div aria-hidden="true" class="x-read"><i></i></div>
 <div aria-hidden="true" id="intro"><svg preserveaspectratio="none" viewbox="0 0 1000 1000"><path d="M0,0 L1000,0 L1000,1000 C1000,1000 750,1000 500,1000 C250,1000 0,1000 0,1000 Z" fill="#00B21F" id="introPath"></path></svg></div>
@@ -4021,6 +4090,20 @@ if("scrollRestoration" in history && !location.hash){history.scrollRestoration="
     if (fv === "2") put(B, SB);
     if (fv === "3") { put(A, SB); put(B, OG); }
     if (fv === "4") [["a", "オンライン校"], ["b", "渋谷校"]].forEach(function(t){ var f = hb.querySelector(".hbc__ph--" + t[0]), s = document.createElement("span"); s.className = "fv-tag"; s.textContent = t[1]; f.appendChild(s); });
+  }
+  var fl = (location.search.match(/[?&]fvl=([1-4])/) || [])[1], fc = (location.search.match(/[?&]fvc=([xy])/) || [])[1] || "x", hb2 = document.querySelector("section.hbc");
+  if (fl && hb2) {
+    document.documentElement.setAttribute("data-fvl", fl); hb2.setAttribute("data-fvl", fl); hb2.setAttribute("data-fvc", fc);
+    var bbA = (hb2.querySelector(".hbc__bb--a") || {}).textContent || "", bbB = (hb2.querySelector(".hbc__bb--b") || {}).textContent || "";
+    var OB = ["img/fv_boy.webp", "自宅の机で学習に取り組む小学生", "オンライン校", "50% 100%"], OG2 = ["img/fv_girl.png", "オンラインで英検対策を受ける中高生", "オンライン校", "72% 100%"];
+    var SGi = ["img/fv_shibuya_girl.webp", "渋谷校で年の近い先生と話す生徒", "渋谷校", "78% 100%"], SBi = ["img/fv_shibuya_boy.webp", "渋谷校で先生とテキストを読む小学生", "渋谷校", "70% 100%"];
+    var P = fc === "x" ? [[OB, bbA], [SGi, bbB]] : [[SBi, bbA], [OG2, bbB]];
+    var box = document.createElement("div"); box.className = "fvl-ph";
+    P.forEach(function(p, k){ var f = document.createElement("figure"); f.className = "fvl-card fvl-card--" + (k ? "b" : "a");
+      f.innerHTML = '<span class="fvl-tag"></span><div class="fvl-img"><img alt=""></div><p class="fvl-bb" aria-hidden="true"></p>';
+      var im = f.querySelector("img"); im.src = p[0][0]; im.alt = p[0][1]; im.style.objectPosition = p[0][3];
+      f.querySelector(".fvl-tag").textContent = p[0][2]; f.querySelector(".fvl-bb").textContent = p[1]; box.appendChild(f); });
+    hb2.querySelector(".hbc__in").appendChild(box);
   }
 })();
 </script></body>
