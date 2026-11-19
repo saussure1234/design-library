@@ -2663,18 +2663,28 @@ section.hbc[data-fvl="2"] .fvl-img{aspect-ratio:1/1;border-radius:50% 50% 24px 2
 section.hbc[data-fvl="2"] .fvl-card--b .fvl-img{background:radial-gradient(circle at 50% 70%,#FFF6CC,#F8E59A)}
 section.hbc[data-fvl="2"] .fvl-tag{left:50%;bottom:14px;transform:translateX(-50%)}
 section.hbc[data-fvl="2"] .fvl-bb{left:50%;top:-20px;transform:translateX(-50%)}
-/* 3 円2つ（頭が円からはみ出す） */
-section.hbc[data-fvl="3"] .hbc__in{grid-template-columns:minmax(0,42%) minmax(0,58%);grid-template-areas:"head ph" "cta ph";column-gap:32px;row-gap:24px;padding-block:40px 60px}
+/* 3 男の子は円から頭と肘が出る／渋谷校は枠なしの切り抜き */
+section.hbc[data-fvl="3"] .hbc__in{grid-template-columns:minmax(0,42%) minmax(0,58%);grid-template-areas:"head ph" "cta ph";column-gap:28px;row-gap:24px;padding-block:36px 56px}
 section.hbc[data-fvl="3"] .hbc__head{grid-area:head;align-self:end}
 section.hbc[data-fvl="3"] .hbc__cta{grid-area:cta;align-self:start}
-section.hbc[data-fvl="3"] .fvl-ph{grid-area:ph;display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:end;padding-top:40px}
+section.hbc[data-fvl="3"] .fvl-ph{grid-area:ph;display:grid;grid-template-columns:.8fr 1.3fr;column-gap:2%;align-items:end;padding:52px 0 22px}
 section.hbc[data-fvl="3"] .fvl-card{position:relative}
-section.hbc[data-fvl="3"] .fvl-card::before{content:"";position:absolute;left:4%;right:4%;bottom:0;aspect-ratio:1;border-radius:50%;background:#CDE9D3;z-index:0}
-section.hbc[data-fvl="3"] .fvl-card--b::before{background:#FBEBA6}
-section.hbc[data-fvl="3"] .fvl-img{position:relative;z-index:1;aspect-ratio:92/112;margin-inline:4%;border-radius:0 0 999px 999px}
-section.hbc[data-fvl="3"] .fvl-card--b{margin-left:-6%;margin-bottom:-24px}
-section.hbc[data-fvl="3"] .fvl-tag{left:50%;bottom:-14px;transform:translateX(-50%)}
-section.hbc[data-fvl="3"] .fvl-bb{left:50%;top:-18px;transform:translateX(-50%)}
+section.hbc[data-fvl="3"] .fvl-img{position:relative;background:none!important;border-radius:0}
+section.hbc[data-fvl="3"] .fvl-img img{position:absolute;height:auto!important;max-width:none;object-fit:fill}
+section.hbc[data-fvl="3"] .fvl-card--a .fvl-img{aspect-ratio:1.08/1.36;overflow:hidden;
+  -webkit-mask-image:linear-gradient(#000,#000),radial-gradient(circle closest-side,#000 99.4%,transparent 100%),linear-gradient(#000,#000);mask-image:linear-gradient(#000,#000),radial-gradient(circle closest-side,#000 99.4%,transparent 100%),linear-gradient(#000,#000);
+  -webkit-mask-size:100% 67.7%,92.6% 73.5%,30% 82%;mask-size:100% 67.7%,92.6% 73.5%,30% 82%;-webkit-mask-position:top,left bottom,right top;mask-position:top,left bottom,right top;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat}
+section.hbc[data-fvl="3"] .fvl-card--a::before{content:"";position:absolute;left:0;bottom:0;width:92.6%;aspect-ratio:1;border-radius:50%;background:#CDE9D3}
+section.hbc[data-fvl="3"] .fvl-card--a .fvl-img img{width:103.7%;left:-5.6%;bottom:-19.9%}
+section.hbc[data-fvl="3"] .fvl-card--a .fvl-tag{left:46.3%}
+section.hbc[data-fvl="3"] .fvl-card--a .fvl-bb{left:46.3%}
+section.hbc[data-fvl="3"] .fvl-card--b .fvl-img{aspect-ratio:640/356;overflow:visible;width:108%;margin-left:-1%}
+section.hbc[data-fvl="3"] .fvl-card--b .fvl-img img{position:static;width:100%;display:block;
+  -webkit-mask-image:linear-gradient(to top,transparent 0,#000 16%),linear-gradient(to right,transparent 0,#000 9%);mask-image:linear-gradient(to top,transparent 0,#000 16%),linear-gradient(to right,transparent 0,#000 9%);
+  -webkit-mask-composite:source-in;mask-composite:intersect}
+section.hbc[data-fvl="3"] .fvl-card--b{margin-bottom:4%}
+section.hbc[data-fvl="3"] .fvl-tag{left:50%;bottom:-16px;transform:translateX(-50%)}
+section.hbc[data-fvl="3"] .fvl-bb{left:50%;top:-48px;transform:translateX(-50%)}
 /* 4 斜めの帯の上に2人が立つ */
 section.hbc[data-fvl="4"]{background:linear-gradient(170deg,transparent 0 62%,#1A801B 62% 74%,#FFE100 74% 79%,transparent 79%)}
 section.hbc[data-fvl="4"] .hbc__in{grid-template-columns:minmax(0,40%) minmax(0,60%);grid-template-areas:"head ph" "cta ph";column-gap:24px;row-gap:24px;padding-block:40px 40px}
@@ -2695,7 +2705,10 @@ section.hbc[data-fvl="4"] .fvl-bb{left:50%;top:-6px;transform:translateX(-50%)}
   section.hbc[data-fvl] .fvl-tag{font-size:13px;padding:3px 10px}
   section.hbc[data-fvl] .fvl-bb{font-size:12.5px;padding:4px 9px;white-space:nowrap}
   section.hbc[data-fvl="1"] .fvl-card--b{margin-top:28px!important}
-  section.hbc[data-fvl="3"] .fvl-card--b{margin-left:-4%!important}
+  section.hbc[data-fvl="3"] .fvl-ph{grid-template-columns:.8fr 1.3fr;column-gap:2%;padding:48px 0 18px}
+  section.hbc[data-fvl="3"] .fvl-card--a .fvl-bb{left:0;transform:none}
+  section.hbc[data-fvl="3"] .fvl-card--b .fvl-img{width:106%;margin-left:-3%}
+  section.hbc[data-fvl="3"] .fvl-bb{top:-40px}
   section.hbc[data-fvl="4"]{background:linear-gradient(165deg,transparent 0 58%,#1A801B 58% 66%,#FFE100 66% 69%,transparent 69%)}
 }
 </style></head>
