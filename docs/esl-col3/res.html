@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>ESL 実績の案</title>
+<style>
+:root{--bg:#F4F6F4;--ink:#1F2A22;--sub:#5B675F;--line:#D5DDD7;--ac:#00A01C}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141815;--ink:#E8EEE9;--sub:#A3B0A7;--line:#2E3631}}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:"Hiragino Sans","Noto Sans JP",system-ui,sans-serif}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:10px 16px;border-bottom:1px solid var(--line)}
+.bar h1{font-size:15px;margin:0 8px 0 0}
+.g{display:flex;flex-wrap:wrap;gap:6px}
+.g button{font:inherit;font-size:13.5px;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:999px;padding:6px 12px;cursor:pointer}
+.g button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.note{padding:8px 16px;margin:0;font-size:14px;color:var(--sub);min-height:2.6em}
+.note b{color:var(--ink)}
+.frame{position:relative;margin:0 16px 16px;height:calc(100% - 150px);min-height:520px;overflow:hidden;border:1px solid var(--line);border-radius:10px;background:#fff}
+.frame iframe{position:absolute;left:0;top:0;border:0;transform-origin:0 0}
+@media (max-width:820px){.frame{height:75vh}}
+</style>
+</head>
+<body>
+<div class="bar">
+  <h1>英検合格実績　見せ方の案</h1>
+  <div class="g" id="vs"></div>
+  <div class="g"><button type="button" data-w="390" aria-pressed="true">スマホ</button><button type="button" data-w="1440" aria-pressed="false">PC</button></div>
+</div>
+<p class="note" id="note"></p>
+<div class="frame"><iframe id="F" title="実績の案"></iframe></div>
+<script>
+var V = [
+  ["a", "A 今のまま", "<b>A　今のまま：</b>薄い緑の箱2つ（1,000名以上／合格率の円）＋学校名の箱"],
+  ["b", "B 濃い帯と横棒", "<b>B　濃い緑の帯と横棒：</b>左に合格証のアイコンと1,000名以上、右に級ごとの合格率を横棒で。学校名は校舎のアイコン付きの一覧（スマホで変な改行が出ない）"],
+  ["c", "C 月桂樹とメダル", "<b>C　月桂樹とメダル：</b>1,000名以上を月桂樹で囲み、級ごとの合格率を5つのメダルに。学校名はチェック付きの一覧"],
+  ["d", "D 記録ボード", "<b>D　記録ボード：</b>色を絞り、罫線と大きな数字だけで見せる。新聞の記録欄のような硬い見せ方。学校名は番号付き"],
+  ["e", "E 級の階段", "<b>E　級の階段：</b>5級から2級へ上る階段に、級ごとの合格率を載せる。上った先に旗。学校名は校舎のアイコン付き"]
+];
+var F = document.getElementById("F"), W = 390, cur = "a";
+function fit(){ var box = F.parentNode, s = Math.min(1, box.clientWidth / W);
+  F.style.width = W + "px"; F.style.height = (box.clientHeight / s) + "px"; F.style.left = Math.max(0, (box.clientWidth - W * s) / 2) + "px"; F.style.transform = "scale(" + s + ")"; }
+function show(){ F.src = "index.html?res=" + cur;
+  F.onload = function(){ fit(); try { var w = F.contentWindow; w.document.documentElement.style.scrollBehavior = "auto";
+    setTimeout(function(){ var el = w.document.querySelector("section.res"); if (el) w.scrollTo(0, el.getBoundingClientRect().top + w.scrollY - (W < 768 ? 70 : 90)); }, 500); } catch(e){} }; }
+var vs = document.getElementById("vs"), note = document.getElementById("note");
+V.forEach(function(v){ var b = document.createElement("button"); b.type = "button"; b.textContent = v[1]; b.setAttribute("aria-pressed", v[0] === cur ? "true" : "false");
+  b.onclick = function(){ cur = v[0]; [].forEach.call(vs.children, function(x){ x.setAttribute("aria-pressed", x === b ? "true" : "false"); }); note.innerHTML = v[2]; show(); };
+  vs.appendChild(b); });
+note.innerHTML = V[0][2];
+[].forEach.call(document.querySelectorAll("[data-w]"), function(b){ b.onclick = function(){
+  [].forEach.call(document.querySelectorAll("[data-w]"), function(x){ x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+  W = +b.getAttribute("data-w"); fit(); show(); }; });
+addEventListener("resize", fit); fit(); show();
+</script>
+</body>
+</html>
