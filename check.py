@@ -502,6 +502,21 @@ addEventListener("load",function(){
             var mr=m.getBoundingClientRect();
             var ox=Math.min(tr.right,mr.right)-Math.max(tr.left,mr.left);
             var oy=Math.min(tr.bottom,mr.bottom)-Math.max(tr.top,mr.top);
+            // ★写真の手前に置いた不透明な箱（白いカード等）の上の文字は、写真の上の文字ではない。
+            //   箱が写真より手前にあることを、重なりの中心で一番上にある要素で確かめる（Satu Inbox のFVの注文カード、2026-11-19）
+            if(ox>6&&oy>6){
+              var ob=null;
+              for(var q=e; q&&q!==document.body; q=q.parentElement){
+                var bc=getComputedStyle(q).backgroundColor, mm=bc.match(/rgba?\(([^)]+)\)/);
+                var al=mm?(mm[1].split(",")[3]===undefined?1:parseFloat(mm[1].split(",")[3])):0;
+                if(al>=.95){ ob=q; break; }
+              }
+              if(ob && !ob.contains(m)){
+                var cx=(Math.max(tr.left,mr.left)+Math.min(tr.right,mr.right))/2, cy=(Math.max(tr.top,mr.top)+Math.min(tr.bottom,mr.bottom))/2;
+                var hit=document.elementFromPoint(cx,cy);
+                if(hit && ob.contains(hit)) return;
+              }
+            }
             if(ox>6&&oy>6&&ovl.length<6){
               ovl.push(nm(e)+"「"+own.trim().slice(0,14)+"」が写真に"+Math.round(ox)+"px被っている");
             }
