@@ -31,14 +31,14 @@ html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family
 <p class="note" id="note"></p>
 <div class="frame"><iframe id="F" title="実績の案"></iframe></div>
 <script>
-var V = [["s", "今の3本線"], ["n", "なし"], ["d", "点の網"], ["w", "やわらかい波"], ["b", "ぼかした丸"], ["a", "弧"]];
+var V = [["t", "2本線"], ["s", "今の3本線"], ["n", "なし"], ["d", "点の網"], ["w", "やわらかい波"], ["b", "ぼかした丸"], ["a", "弧"]];
 var BS = [["r", "男の子もやわらかい丸"], ["c", "男の子は円"]];
-var F = document.getElementById("F"), W = 390, cur = "n", bs = "r";
+var F = document.getElementById("F"), W = 390, cur = "t", bs = "r";
 function fit(){ var box = F.parentNode, s = Math.min(1, box.clientWidth / W);
   F.style.width = W + "px"; F.style.height = (box.clientHeight / s) + "px"; F.style.left = Math.max(0, (box.clientWidth - W * s) / 2) + "px"; F.style.transform = "scale(" + s + ")"; }
 function show(){ F.src = "index.html?fvl=3&fvc=x&fvs=r&fvb=" + bs + "&fvbg=" + cur; F.onload = function(){ fit(); }; }
 var note = document.getElementById("note");
-var NOTE = {s:"今の緑と黄色の3本線（写真と同化しやすい）", n:"背景の飾りなし。写真と形だけ", d:"写真の後ろだけに薄い緑の点の網。外側に向かって消える", w:"下にやわらかい波の面1枚と黄色の細い線1本", b:"写真の後ろに、ぼかした薄緑と薄黄の丸", a:"写真の後ろを回る黄色い弧と緑の細い弧"};
+var NOTE = {t:"スマホと同じ2本（薄い緑と黄色）。PCでも濃い緑の1本を外して2本に", s:"今の緑と黄色の3本線（写真と同化しやすい）", n:"背景の飾りなし。写真と形だけ", d:"写真の後ろだけに薄い緑の点の網。外側に向かって消える", w:"下にやわらかい波の面1枚と黄色の細い線1本", b:"写真の後ろに、ぼかした薄緑と薄黄の丸", a:"写真の後ろを回る黄色い弧と緑の細い弧"};
 function setNote(){ note.innerHTML = "<b>背景：" + V.filter(function(x){ return x[0] === cur; })[0][1] + "</b>　" + NOTE[cur] + "。渋谷校はやわらかい丸（尖りなし）"; }
 function group(id, list, get, set){ var g = document.getElementById(id);
   list.forEach(function(v){ var b = document.createElement("button"); b.type = "button"; b.textContent = v[1]; b.setAttribute("aria-pressed", v[0] === get() ? "true" : "false");
