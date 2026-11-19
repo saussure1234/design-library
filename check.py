@@ -74,6 +74,40 @@ addEventListener("load",function(){
       }
       return false;
     }
+    // ★画面の端で切れている部品（2026-11-19 Satu Inbox：FVの製品画面が右へはみ出し、外側の overflow:hidden で切られていた。
+    //   横スクロールが出ないので「横スクロール」も「消えている中身」も通り、画面では切れていた）。
+    //   文字・画像・動画・SVG が画面の左右の外へ出ていたら数える。横スクロールの器（overflow:auto/scroll）の中と、
+    //   画面より狭い窓（流れる帯など、幅が画面の98%未満で overflow を切る器）の中は意図なので除く。
+    var cut=[];
+    (function(){
+      function legit(e){
+        for (var q=e.parentElement; q; q=q.parentElement){
+          var sq=getComputedStyle(q);
+          if (sq.overflowX==="auto"||sq.overflowX==="scroll") return true;
+          if ((sq.overflowX==="hidden"||sq.overflowX==="clip") && q.getBoundingClientRect().width < W*0.98 && q.getBoundingClientRect().right <= W+1 && q.getBoundingClientRect().left >= -1) return true;
+          // 横に流れ続ける帯（アニメーションで動く器）の中は、端で切れるのが意図（glassy-z3 の事例の帯）
+          if (sq.animationName && sq.animationName!=="none" && q.children.length>=3) return true;
+        }
+        return false;
+      }
+      document.querySelectorAll("body *").forEach(function(e){
+        if (cut.length>=6) return;
+        if (e.tagName==="VIDEO" || e.closest("video")) return;   // 動画は透明な余白ごと箱が大きい（glassy-z3 のFV）ので箱では判定しない
+        var isMedia = /^(IMG|CANVAS|IFRAME)$/.test(e.tagName) || (e.tagName.toLowerCase()==="svg" && !(e.parentElement && e.parentElement.closest("svg")));
+        var own=""; if(!isMedia && !(e instanceof SVGElement)) e.childNodes.forEach(function(n){ if(n.nodeType===3) own+=n.nodeValue; });
+        var s=getComputedStyle(e);
+        // 地・影・枠線のある箱（カード・製品画面の枠など）も数える。画面幅いっぱいの節の地は意図なので除く
+        var bgm=s.backgroundColor.match(/rgba?\(([^)]+)\)/), bga=bgm?(bgm[1].split(",")[3]===undefined?1:parseFloat(bgm[1].split(",")[3])):0;
+        var isPanel = !isMedia && !(e instanceof SVGElement) && (bga>0.5 || s.boxShadow!=="none" || parseFloat(s.borderTopWidth)>0) && e.getBoundingClientRect().width < W*0.95 && s.pointerEvents!=="none";
+        if (!isMedia && !isPanel && own.trim().length<2) return;
+        if (s.position==="fixed"||s.display==="none"||s.visibility==="hidden"||parseFloat(s.opacity)<0.05) return;
+        for (var a=e.parentElement; a; a=a.parentElement){ var sa=getComputedStyle(a); if (sa.display==="none"||sa.visibility==="hidden"||parseFloat(sa.opacity)<0.05||sa.position==="fixed") return; }
+        var r=e.getBoundingClientRect(); if (r.width<8||r.height<8) return;
+        if ((r.right>W+2 || r.left<-2) && !legit(e))
+          { cut.push(nm(e)+(own.trim()?"「"+own.trim().slice(0,12)+"」":"（"+e.tagName.toLowerCase()+"）")+" 左"+Math.round(r.left)+"・右"+Math.round(r.right)); }
+      });
+    })();
+    if (cut.length) out.push("画面の端で切れている: "+cut.join(" / "));
     document.querySelectorAll("body *").forEach(function(e){
       if (e instanceof SVGElement) return;               // 装飾のSVGは対象外
       var s = getComputedStyle(e);
@@ -1386,6 +1420,39 @@ def check_self(html):
     return ("ng", " / ".join(bad)) if bad else ("ok", f"一覧と詳細の見出しが一致（{len(ti)}件）")
 
 
+def check_nesting(html):
+    """HTMLの入れ子の崩れ。閉じタグが1つ余ると、その後ろの節が中央の枠（.wrap）の外に出て左端に寄る。
+    ★Satu Inbox（2026-11-19）：文を差し替えたときに </div> が1つ余り、解決の節の後半2段が画面の左端に張り付いた。
+      横スクロールも出ず、見た目のずれなので他の項目では捕まらなかった"""
+    from html.parser import HTMLParser
+    void = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "source", "track", "wbr", "param"}
+
+    class P(HTMLParser):
+        def __init__(self):
+            super().__init__(convert_charrefs=True); self.st = []; self.err = []; self.svg = 0
+        def handle_starttag(self, t, a):
+            if t == "svg": self.svg += 1
+            if self.svg or t in void: return
+            self.st.append((t, self.getpos()[0]))
+        def handle_endtag(self, t):
+            if t == "svg": self.svg = max(0, self.svg - 1); return
+            if self.svg or t in void: return
+            if self.st and self.st[-1][0] == t: self.st.pop(); return
+            names = [x[0] for x in self.st]
+            if t in names:
+                while self.st and self.st[-1][0] != t:
+                    x = self.st.pop()
+                    if x[0] not in ("p", "li", "dt", "dd", "option", "tr", "td", "th"): self.err.append(f"<{x[0]}>（{x[1]}行）の閉じ忘れ")
+                self.st.pop()
+            else:
+                self.err.append(f"</{t}>（{self.getpos()[0]}行）が余っている")
+    body = re.sub(r"(?is)<(script|style)\b.*?</\1>", "", html)
+    pr = P(); pr.feed(body)
+    left = [f"<{x[0]}>（{x[1]}行）" for x in pr.st if x[0] not in ("html", "body", "head", "p", "li")]
+    bad = pr.err + ([f"閉じていない：{'、'.join(left[:3])}"] if left else [])
+    return ("ng", " / ".join(bad[:4])) if bad else ("ok", "開きタグと閉じタグが全部対応している")
+
+
 def check_links(html, base):
     """画像の実在と YouTube の再生可否。"""
     miss = []
@@ -1598,6 +1665,7 @@ def run_checklist(src, vid, out_json):
            # ★<title>/<meta> の文字で本文の抜けが隠れる（タグ行を消しても題名が一致して通った）。本文だけで見る
            "script-diff": lambda: check_script(plain(re.sub(r"(?is)<head\b.*?</head>", " ", html)), sp),
            "self-consistency": lambda: check_self(html),
+           "html-nest": lambda: check_nesting(html),
            "links": lambda: check_links(html, base),
            "lineage": lambda: check_lineage(vid),
            "sibling": lambda: check_sibling(vid),
