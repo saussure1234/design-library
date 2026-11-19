@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="ja">
+<html data-fvbg="a" data-fvl="3" lang="ja">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
@@ -2047,7 +2047,7 @@ body{line-break:strict}
 </style>
 <style id="x2">
 .art{display:block;width:100%;height:auto;overflow:visible}
-.art .mv,.art .hand,.art .dot,.art .bell,.art .badge,.art .ck,.art .pen,.art .pulse,.art .wv,.art .flag,.art .c{transform-box:fill-box}
+.art .mv,.art .hand,.art .dot,.art .bell,.art .badge,.art .ck,.art .pen,.art .b1,.art .b2,.art .flag,.art .c{transform-box:fill-box}
 .art--pass .mv{transform-origin:50% 100%;animation:xStamp 3.2s cubic-bezier(.3,0,.2,1) infinite}
 @keyframes xStamp{0%,10%{transform:translateY(-34px) scale(1.15);opacity:0}24%{transform:translateY(0) scale(1.12);opacity:1}30%{transform:translateY(0) scale(.92)}36%,84%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-6px) scale(1);opacity:0}}
 .art--plan .hand{transform-origin:50% 100%;animation:xHand 3.2s linear infinite}
@@ -2067,16 +2067,14 @@ body{line-break:strict}
 @keyframes xCk{0%,8%{stroke-dashoffset:22}20%,84%{stroke-dashoffset:0}100%{stroke-dashoffset:22}}
 .art--apply .pen{animation:xPen 3.6s ease-in-out infinite}
 @keyframes xPen{0%,100%{transform:translate(0,0)}30%{transform:translate(-8px,-28px)}60%{transform:translate(-4px,-58px)}}
-.art--trial .pulse{transform-origin:50% 50%;animation:xPulse 1.6s ease-in-out infinite}
-@keyframes xPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
-.art--trial .wv{animation:xWave 1.6s ease-out infinite;opacity:0}
-.art--trial .wv1{animation-delay:.2s}.art--trial .wv2{animation-delay:.4s}
-@keyframes xWave{0%{opacity:0}30%{opacity:1}100%{opacity:0}}
+.art--trial .b1,.art--trial .b2{transform-box:fill-box;transform-origin:20% 100%;opacity:0;animation:xTalk 4s ease-in-out infinite}
+.art--trial .b2{transform-origin:80% 100%;animation-delay:2s}
+@keyframes xTalk{0%{opacity:0;transform:scale(.6)}8%{opacity:1;transform:scale(1.06)}12%,42%{opacity:1;transform:scale(1)}50%,100%{opacity:0;transform:scale(.9)}}
 .art--guide .road{stroke-dashoffset:0;animation:xRoad 1.4s linear infinite}
 @keyframes xRoad{to{stroke-dashoffset:-28}}
 .art--guide .flag{transform-origin:0 50%;animation:xFlag 1.4s ease-in-out infinite}
 @keyframes xFlag{0%,100%{transform:skewY(0) scaleX(1)}50%{transform:skewY(-6deg) scaleX(.92)}}
-@media (prefers-reduced-motion:reduce){.art *{animation:none!important}.art--apply .ck{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.art *{animation:none!important}.art--apply .ck{stroke-dashoffset:0}.art--trial .b1,.art--trial .b2{opacity:1}}
 
 .x-ico{width:132px;max-width:56%;margin:-4px 0 10px -6px}
 .x-ico--flw{width:150px;max-width:62%;margin:-6px auto 6px}
@@ -2775,15 +2773,12 @@ section.hbc[data-fvl="3"][data-fvs="r"] .fvl-card--b .fvl-img{-webkit-mask-image
 <a class="btn btn--sm hdr__cta" href="#form">無料体験レッスンはこちら</a>
 </header>
 <div class="tone-clear">
-<section class="hbc">
+<section class="hbc" data-fvb="r" data-fvbg="a" data-fvc="x" data-fvl="3" data-fvs="r">
 <div class="hbc__in">
-<div class="hbc__blob hbc__blob--a"></div>
-<div class="hbc__blob hbc__blob--b"></div>
-<figure class="hbc__ph hbc__ph--a"><img alt="自宅の机で学習に取り組む小学生" src="img/fv_boy.webp"/><p aria-hidden="true" class="hbc__bb hbc__bb--a">部活と両立しながら、2級へ</p></figure>
-<figure class="hbc__ph hbc__ph--b">
-<img alt="オンラインで英検対策を受ける中高生" src="img/fv_girl.png"/>
-<p aria-hidden="true" class="hbc__bb hbc__bb--b">年の近い先生と、準1級へ</p>
-</figure>
+
+
+
+
 <div class="hbc__head">
 <p class="hbc__eyebrow">2015年の開塾以降<span class="mk">”英検に特化”</span>してきたからできる</p>
 <h1 class="hbc__h1"><span class="nb">受験勉強と並走しながら</span><wbr/><br/><em><span class="nb">小学生・中学生で英検2級、</span></em><wbr/><br/><em><span class="nb">高校生で準1級</span></em>を<wbr/><span class="nb">目指せる英語塾</span></h1>
@@ -2807,7 +2802,7 @@ section.hbc[data-fvl="3"][data-fvs="r"] .fvl-card--b .fvl-img{-webkit-mask-image
 </section>
 <span class="hbc__note">目標級までの合格スケジュールを<br class="sp-br"/>レッスン後にご案内します</span>
 </div>
-</div>
+<div class="fvl-ph"><figure class="fvl-card fvl-card--a"><div class="fvl-img"><img alt="自宅の机で学習に取り組む小学生" src="img/fv_boy.webp"/></div><p aria-hidden="true" class="fvl-bb">部活と両立しながら、2級へ</p></figure><figure class="fvl-card fvl-card--b"><div class="fvl-img"><img alt="渋谷校で年の近い先生と話す生徒" src="img/fv_shibuya_girl.webp"/></div><p aria-hidden="true" class="fvl-bb">年の近い先生と、準1級へ</p></figure></div></div>
 </section>
 </div><div class="tone-base">
 <section class="sec res">
@@ -3468,7 +3463,7 @@ section.hbc[data-fvl="3"][data-fvs="r"] .fvl-card--b .fvl-img{-webkit-mask-image
 <p class="flw__d">このページのフォームから、無料体験レッスンをお申し込みいただけます。お電話（<a href="tel:0337973380">03-3797-3380</a>）でも受け付けております。</p>
 <p class="flw__n">受付時間　火曜日〜金曜日 14：00〜20：00（土曜日 14：00〜19：00）</p>
 </li>
-<li class="flw__item fx" data-d="120" data-fx="fadeup"><div class="x-ico x-ico--flw"><svg aria-hidden="true" class="art art--trial" focusable="false" viewbox="0 0 240 200"><defs><radialgradient cx="50%" cy="50%" id="fl120172" r="50%"><stop offset="0" stop-color="#0E7F2A" stop-opacity=".18"></stop><stop offset="1" stop-color="#0E7F2A" stop-opacity="0"></stop></radialgradient></defs><ellipse cx="120" cy="172" fill="url(#fl120172)" rx="86" ry="13"></ellipse><g><polygon fill="#4CC86A" points="50,46 56,42 188,42 182,46"></polygon><polygon fill="#0E7F2A" points="182,46 188,42 188,144 182,148"></polygon><rect fill="#16A83A" height="102" rx="3" width="132" x="50" y="46"></rect></g><rect fill="#fff" height="88" rx="3" width="118" x="57" y="53"></rect><circle class="pulse" cx="116" cy="97" fill="#FFC61A" r="24"></circle><polygon fill="#fff" points="109,84 109,110 130,97"></polygon><path class="wv wv0" d="M190 80 Q198 97 190 114" fill="none" stroke="#4CC86A" stroke-linecap="round" stroke-width="3.5"></path><path class="wv wv1" d="M200 74 Q210 97 200 120" fill="none" stroke="#4CC86A" stroke-linecap="round" stroke-width="3.5"></path><path class="wv wv2" d="M210 68 Q222 97 210 126" fill="none" stroke="#4CC86A" stroke-linecap="round" stroke-width="3.5"></path></svg></div>
+<li class="flw__item fx" data-d="120" data-fx="fadeup"><div class="x-ico x-ico--flw"><svg aria-hidden="true" class="art art--trial" focusable="false" viewbox="0 0 240 200"><defs><radialgradient cx="50%" cy="50%" id="fl120178" r="50%"><stop offset="0" stop-color="#0E7F2A" stop-opacity=".18"></stop><stop offset="1" stop-color="#0E7F2A" stop-opacity="0"></stop></radialgradient></defs><ellipse cx="120" cy="178" fill="url(#fl120178)" rx="89" ry="13"></ellipse><path d="M42 166 V136 C42 124 54 120 70 120 C86 120 98 124 98 136 V166 Z" fill="#FFC61A"></path><path d="M84 121 C94 124 98 130 98 136 V166 H88 Z" fill="#D29E00" opacity=".28"></path><circle cx="70" cy="108" fill="#1D3527" r="15"></circle><path d="M137 166 V126 C137 114 149 110 171 110 C193 110 205 114 205 126 V166 Z" fill="#16A83A"></path><path d="M188 111 C200 114 205 122 205 128 V166 H194 Z" fill="#0E7F2A" opacity=".35"></path><circle cx="171" cy="96" fill="#1D3527" r="18"></circle><g><polygon fill="#F1F8F3" points="24,156 30,151 224,151 218,156"></polygon><polygon fill="#BFD9C6" points="218,156 224,151 224,165 218,170"></polygon><rect fill="#FFFFFF" height="14" rx="3" stroke="#CFE3D5" stroke-width="1.2" width="194" x="24" y="156"></rect></g><circle cx="60" cy="155" fill="#D29E00" r="6"></circle><circle cx="84" cy="155" fill="#D29E00" r="6"></circle><circle cx="156" cy="154" fill="#0E7F2A" r="6.5"></circle><polygon fill="#fff" points="94,153 120,148 120,157 94,159" stroke="#CFE3D5" stroke-width="1"></polygon><polygon fill="#F4FAF5" points="120,148 146,153 146,159 120,157" stroke="#CFE3D5" stroke-width="1"></polygon><rect fill="#16A83A" height="9" width="3" x="118.5" y="148"></rect><g class="b1"><rect fill="#fff" height="30" rx="10" stroke="#CFE3D5" stroke-width="1.4" width="54" x="26" y="54"></rect><polygon fill="#fff" points="38,84 48,84 36,94"></polygon><circle cx="41" cy="69" fill="#16A83A" r="3.6"></circle><circle cx="53" cy="69" fill="#FFC61A" r="3.6"></circle><circle cx="65" cy="69" fill="#16A83A" r="3.6"></circle></g><g class="b2"><rect fill="#fff" height="30" rx="10" stroke="#CFE3D5" stroke-width="1.4" width="54" x="156" y="36"></rect><polygon fill="#fff" points="198,66 188,66 200,76"></polygon><circle cx="171" cy="51" fill="#16A83A" r="3.6"></circle><circle cx="183" cy="51" fill="#FFC61A" r="3.6"></circle><circle cx="195" cy="51" fill="#16A83A" r="3.6"></circle></g></svg></div>
 <p class="flw__no">STEP<b>02</b></p>
 <h3 class="flw__t">無料体験レッスン</h3>
 <p class="flw__d">渋谷校またはオンライン校で、<span class="nb">無料体験レッスンを</span><span class="nb">受けていただけます。</span></p>
@@ -4130,9 +4125,10 @@ if("scrollRestoration" in history && !location.hash){history.scrollRestoration="
     if ("IntersectionObserver" in window) { var o = new IntersectionObserver(function(es){ if (es[0].isIntersecting) { o.disconnect(); start(); } }, {threshold:.4}); o.observe(box); } else start();
   });
   var fv = (location.search.match(/[?&]fv=([1-4])/) || [])[1], hb = document.querySelector("section.hbc");
-  if (fv && hb) {
+  var A = hb && hb.querySelector(".hbc__ph--a img"), B = hb && hb.querySelector(".hbc__ph--b img");
+  if (fv && hb && A && B) {
     hb.setAttribute("data-fv", fv);
-    var A = hb.querySelector(".hbc__ph--a img"), B = hb.querySelector(".hbc__ph--b img");
+    
     var SG = ["img/fv_shibuya_girl.webp", "渋谷校で年の近い先生と話す生徒"], SB = ["img/fv_shibuya_boy.webp", "渋谷校で先生とテキストを読む小学生"], OG = [B.getAttribute("src"), B.getAttribute("alt")];
     function put(img, v){ img.setAttribute("src", v[0]); img.setAttribute("alt", v[1]); }
     if (fv === "1" || fv === "4") put(B, SG);
@@ -4143,7 +4139,7 @@ if("scrollRestoration" in history && !location.hash){history.scrollRestoration="
   var fl = (location.search.match(/[?&]fvl=([1-4])/) || [])[1], fc = (location.search.match(/[?&]fvc=([xy])/) || [])[1] || "x", hb2 = document.querySelector("section.hbc");
   if (fl && hb2) {
     document.documentElement.setAttribute("data-fvl", fl); hb2.setAttribute("data-fvl", fl); hb2.setAttribute("data-fvc", fc); var fs = (location.search.match(/[?&]fvs=([npobar])/) || [])[1]; if (fs) hb2.setAttribute("data-fvs", fs); var fb = (location.search.match(/[?&]fvb=([cr])/) || [])[1]; if (fb) hb2.setAttribute("data-fvb", fb); var fg = (location.search.match(/[?&]fvbg=([sndwbat])/) || [])[1]; if (fg) { hb2.setAttribute("data-fvbg", fg); document.documentElement.setAttribute("data-fvbg", fg); }
-    var bbA = (hb2.querySelector(".hbc__bb--a") || {}).textContent || "", bbB = (hb2.querySelector(".hbc__bb--b") || {}).textContent || "";
+    var oldB = hb2.querySelectorAll(".fvl-bb"), bbA = ((hb2.querySelector(".hbc__bb--a") || oldB[0]) || {}).textContent || "", bbB = ((hb2.querySelector(".hbc__bb--b") || oldB[1]) || {}).textContent || ""; var oldPh = hb2.querySelector(".fvl-ph"); if (oldPh) oldPh.remove();
     var OB = ["img/fv_boy.webp", "自宅の机で学習に取り組む小学生", "オンライン校", "50% 100%"], OG2 = ["img/fv_girl.png", "オンラインで英検対策を受ける中高生", "オンライン校", "72% 100%"];
     var SGi = ["img/fv_shibuya_girl.webp", "渋谷校で年の近い先生と話す生徒", "渋谷校", "78% 100%"], SBi = ["img/fv_shibuya_boy.webp", "渋谷校で先生とテキストを読む小学生", "渋谷校", "70% 100%"];
     var P = fc === "x" ? [[OB, bbA], [SGi, bbB]] : [[SBi, bbA], [OG2, bbB]];
