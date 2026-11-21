@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="ja">
+<head><meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SAMURAI STYLE — Cinematic</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#f3f1ec;--dim:rgba(243,241,236,.62);--bg:#070708;--pad:48px}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{overflow-x:clip}
+body{background:var(--bg);color:var(--ink);font-family:Archivo,"Noto Sans JP",sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.nw{white-space:nowrap}
+.wide{font-stretch:125%}
+
+header{position:fixed;inset:0 0 auto 0;z-index:40;display:flex;justify-content:space-between;align-items:center;padding:30px var(--pad);mix-blend-mode:difference;color:#fff}
+.logo{font-weight:800;font-stretch:125%;font-size:15px;letter-spacing:.02em}
+nav{display:flex;gap:30px;align-items:center;font-size:13px;font-weight:500;letter-spacing:.02em}
+nav .links{display:flex;gap:28px}
+nav .links a{opacity:.85;transition:opacity .3s}
+nav .links a:hover{opacity:1}
+.lang{display:flex;gap:10px;font-size:12px;opacity:.6}
+.lang b{opacity:1;font-weight:600}
+.menu{display:none;align-items:center;gap:10px;font-size:13px}
+.menu i{display:block;width:22px;height:8px;border-top:1.5px solid #fff;border-bottom:1.5px solid #fff}
+
+.fv{position:relative;height:100vh;height:100svh;min-height:600px;overflow:hidden;background:#000}
+.media{position:absolute;inset:0;transform-origin:50% 60%}
+.media video,.media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.2);filter:saturate(.75) contrast(1.15) brightness(.82) blur(.6px)}
+#streak{position:absolute;inset:0;width:100%;height:100%;mix-blend-mode:screen}
+.shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,0) 22%,rgba(0,0,0,0) 48%,rgba(0,0,0,.7) 100%),radial-gradient(120% 90% at 50% 45%,transparent 50%,rgba(0,0,0,.55) 100%)}
+.grain{position:absolute;inset:-50%;width:200%;height:200%;opacity:.16;pointer-events:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");animation:grain .9s steps(6) infinite}
+@keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(-6%,4%)}40%{transform:translate(5%,-3%)}60%{transform:translate(-3%,-6%)}80%{transform:translate(6%,5%)}100%{transform:translate(0,0)}}
+.bar{position:absolute;left:0;right:0;height:50.5%;background:#000;z-index:5;transition:transform 1.6s cubic-bezier(.8,0,.15,1)}
+.bar.t{top:0;transform-origin:top}.bar.b{bottom:0;transform-origin:bottom}
+.ready .bar{transform:scaleY(.0)}
+
+.lede{position:absolute;left:calc(var(--pad) + 6vw);top:36%;z-index:6;max-width:460px}
+.lede .lab{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);display:flex;align-items:center;gap:12px}
+.lede .lab::before{content:"";width:28px;height:1px;background:currentColor}
+.lede p{font-family:"Noto Sans JP",sans-serif;font-weight:500;font-size:clamp(18px,1.6vw,24px);line-height:1.75;margin-top:18px;letter-spacing:.02em}
+.lede .ln{display:block;overflow:hidden}
+.lede .ln>span{display:inline-block;transform:translateY(110%);transition:transform 1.2s cubic-bezier(.2,.8,.1,1)}
+.ready .lede .ln>span{transform:none}
+.side{position:absolute;right:var(--pad);top:36%;z-index:6;text-align:right;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);line-height:2}
+.side .tc{font-variant-numeric:tabular-nums;color:var(--ink);letter-spacing:.08em}
+.side .rec{display:inline-block;width:7px;height:7px;border-radius:50%;background:#ff3b2f;margin-right:8px;animation:blink 1.2s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+.scroll{position:absolute;right:var(--pad);top:calc(36% + 76px);z-index:6;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);display:flex;gap:10px;align-items:center}
+.scroll i{width:40px;height:1px;background:var(--dim);position:relative;overflow:hidden}
+.scroll i::after{content:"";position:absolute;inset:0;background:#fff;animation:run 2s cubic-bezier(.7,0,.2,1) infinite}
+@keyframes run{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+
+.huge{position:absolute;left:0;right:0;bottom:0;z-index:4;padding:0 var(--pad);line-height:.8;pointer-events:none}
+.huge h1{font-weight:800;font-stretch:125%;letter-spacing:-.02em;white-space:nowrap;line-height:.8;transform:translateY(17%);display:flex;justify-content:space-between}
+.huge h1 span{display:inline-block;transform:translateY(105%);transition:transform 1.5s cubic-bezier(.2,.9,.1,1)}
+.ready .huge h1 span{transform:none}
+
+.scenes{position:relative;background:var(--bg);padding:0 0 10vh}
+.sc-head{display:flex;justify-content:space-between;align-items:flex-end;padding:18vh var(--pad) 8vh;gap:40px}
+.sc-head h2{font-weight:800;font-stretch:125%;font-size:clamp(40px,7vw,108px);line-height:.88;letter-spacing:-.02em}
+.sc-head h2 em{font-style:normal;font-weight:300;color:var(--dim)}
+.sc-head p{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);text-align:right;line-height:2}
+.scene{position:sticky;top:0;height:100vh;height:100svh;min-height:600px;overflow:hidden;background:#000}
+.scene .pic{position:absolute;inset:0;background-size:cover;background-position:center;transform:scale(1.08);filter:brightness(.62) saturate(.9);will-change:transform}
+.scene::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.35),rgba(0,0,0,0) 30%,rgba(0,0,0,.15) 55%,rgba(0,0,0,.85));pointer-events:none}
+.scene .inner{position:absolute;inset:0;z-index:2;display:grid;grid-template-columns:1fr minmax(260px,400px);grid-template-rows:auto 1fr auto;padding:110px var(--pad) 54px;column-gap:6vw}
+.scene .top{grid-column:1/3;display:flex;justify-content:space-between;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);border-top:1px solid rgba(255,255,255,.25);padding-top:14px}
+.scene h3{grid-column:1/2;grid-row:3;align-self:end;font-weight:800;font-stretch:125%;font-size:clamp(44px,7vw,112px);line-height:.88;letter-spacing:-.03em}
+.scene h3 .jp{font-family:"Noto Sans JP",sans-serif;font-weight:700;letter-spacing:.02em;font-stretch:100%}
+.scene h3 small{display:block;font-family:"Noto Sans JP",sans-serif;font-stretch:100%;font-size:14px;font-weight:500;letter-spacing:.06em;color:var(--dim);margin-bottom:22px}
+.scene .desc{grid-column:2/3;grid-row:3;align-self:end;font-family:"Noto Sans JP",sans-serif;font-size:15px;line-height:2;color:var(--ink)}
+.scene .desc a{display:inline-flex;align-items:center;gap:12px;margin-top:22px;font-family:Archivo,sans-serif;font-size:12px;letter-spacing:.14em;text-transform:uppercase;border:1px solid rgba(255,255,255,.4);border-radius:40px;padding:12px 20px;transition:background .35s,color .35s}
+.scene .desc a:hover{background:#fff;color:#000}
+.scene .frame{position:absolute;inset:22px;border:1px solid rgba(255,255,255,.12);pointer-events:none;z-index:2}
+.scene .frame::before,.scene .frame::after{content:"";position:absolute;width:18px;height:18px;border:1px solid rgba(255,255,255,.7)}
+.scene .frame::before{left:-1px;top:-1px;border-right:0;border-bottom:0}
+.scene .frame::after{right:-1px;bottom:-1px;border-left:0;border-top:0}
+
+@media (max-width:900px){
+  :root{--pad:20px}
+  nav .links,nav .lang{display:none}
+  .menu{display:flex}
+  header{padding:22px var(--pad)}
+  .lede{left:var(--pad);right:var(--pad);top:24%}
+  .lede p{font-size:18px}
+  .side{top:auto;bottom:calc(var(--h) + 54px);left:var(--pad);right:auto;text-align:left}
+  .scroll{display:none}
+  .sc-head{flex-direction:column;align-items:flex-start;padding:14vh var(--pad) 6vh;gap:20px}
+  .sc-head p{text-align:left}
+  .scene .inner{grid-template-columns:1fr;grid-template-rows:auto 1fr auto auto;padding:84px var(--pad) 40px;row-gap:22px}
+  .scene .top{grid-column:1}
+  .scene h3{grid-column:1;grid-row:3;font-size:clamp(34px,10.6vw,60px)}
+  .scene .desc{grid-column:1;grid-row:4;font-size:14px}
+  .scene .frame{inset:12px}
+  .scene .pic{background-size:118% auto;background-repeat:no-repeat;background-position:50% 30%;filter:brightness(.8)}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .bar{display:none}
+  .lede .ln>span,.huge h1 span{transform:none}
+}
+</style>
+</head>
+<body>
+<header>
+  <a class="logo" href="#">SAMURAI STYLE</a>
+  <nav>
+    <div class="links"><a href="#">HOME</a><a href="#svc">SERVICE</a><a href="#">MEDIA</a><a href="#">COMPANY</a><a href="#">RECRUIT</a><a href="#">CONTACT</a></div>
+    <div class="lang"><span>ID</span><span>EN</span><b>JA</b></div>
+    <a class="menu" href="#"><span>MENU</span><i></i></a>
+  </nav>
+</header>
+
+<main>
+<section class="fv" id="fv">
+  <div class="media" id="media">
+    <video id="vid" src="home-hero.mp4" poster="home-hero-poster.webp" autoplay muted loop playsinline></video>
+    <canvas id="streak"></canvas>
+  </div>
+  <div class="shade"></div>
+  <div class="grain"></div>
+  <div class="lede">
+    <div class="lab">Find the signal</div>
+    <p><span class="ln"><span class="nw">短期的な個別最適ではなく、</span></span><span class="ln"><span class="nw">長期的な全体最適へ。</span></span></p>
+  </div>
+  <div class="side"><div><span class="rec"></span><span class="tc" id="tc">00:00:00:00</span></div><div>Reel</div></div>
+  <div class="scroll"><span>Scroll</span><i></i></div>
+  <div class="huge" id="huge"><h1 class="wide" id="word"><span>S</span><span>A</span><span>M</span><span>U</span><span>R</span><span>A</span><span>I</span></h1></div>
+  <div class="bar t"></div><div class="bar b"></div>
+</section>
+
+<section class="scenes" id="svc">
+  <div class="sc-head">
+    <h2>Services<br><em>in four scenes</em></h2>
+    <p>Scene 01 — 04<br>SAMURAI STYLE</p>
+  </div>
+  <article class="scene"><div class="pic" style="background-image:url(strategy2action_pc.jpg)"></div><div class="frame"></div>
+    <div class="inner"><div class="top"><span>Scene 01</span><span>Strategy</span></div>
+      <h3>Strategy<wbr>2Action</h3>
+      <div class="desc">事業理解に基づいて戦略を考え、実行まで伴走し、ダッシュボード作成による経営層・上長への可視化まで対応。<br><a href="#">Watch →</a></div></div></article>
+  <article class="scene"><div class="pic" style="background-image:url(hookhack_pc.jpg)"></div><div class="frame"></div>
+    <div class="inner"><div class="top"><span>Scene 02</span><span>Tool</span></div>
+      <h3><small>動画広告の制作ツール</small>HookHack</h3>
+      <div class="desc">売れる動画広告をLPから5分で制作。検証から成果改善まで、動画広告のPDCAに必要な機能を1ツールで網羅します。<br><a href="#">Watch →</a></div></div></article>
+  <article class="scene"><div class="pic" style="background-image:url(hookhacker_pc.jpg)"></div><div class="frame"></div>
+    <div class="inner"><div class="top"><span>Scene 03</span><span>Production</span></div>
+      <h3><small>LP・サイト制作の代行</small>HookHacker</h3>
+      <div class="desc">自社開発AIツール「HookHack」×インドネシアオフショアチーム×日本人ディレクターでLP・サイト制作を代行。<br><a href="#">Watch →</a></div></div></article>
+  <article class="scene"><div class="pic" style="background-image:url(video-production-poster.webp)"></div><div class="frame"></div>
+    <div class="inner"><div class="top"><span>Scene 04</span><span>Film</span></div>
+      <h3><span class="jp">動画制作</span></h3>
+      <div class="desc">貴社の顧客理解に基づき、動画を企画・撮影・編集までワンストップで制作します。<br><a href="#">Watch →</a></div></div></article>
+</section>
+</main>
+
+<script>
+const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+const word=document.getElementById("word"),huge=document.getElementById("huge");
+function fit(){
+  word.style.fontSize="100px";
+  const pad=parseFloat(getComputedStyle(huge).paddingLeft)*2;
+  const w=[...word.children].reduce((a,c)=>a+c.offsetWidth,0);const target=innerWidth-pad;
+  const fs=Math.min(100*target/w,innerHeight*0.6);
+  word.style.fontSize=fs+"px";
+  document.documentElement.style.setProperty("--h",(fs*.62)+"px");
+}
+fit();document.fonts&&document.fonts.ready.then(fit);addEventListener("resize",fit);
+[...word.children].forEach((s,i)=>s.style.transitionDelay=(.9+i*.07)+"s");
+document.querySelectorAll(".lede .ln>span").forEach((s,i)=>s.style.transitionDelay=(1.5+i*.12)+"s");
+requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.add("ready")));
+
+const vid=document.getElementById("vid"),tc=document.getElementById("tc");
+if(reduce){vid.removeAttribute("autoplay");vid.pause()}
+let frames=0;
+setInterval(()=>{frames++;const t=frames/24;const f=n=>String(Math.floor(n)).padStart(2,"0");
+  tc.textContent=f(t/3600)+":"+f(t/60%60)+":"+f(t%60)+":"+f(frames%24)},1000/24);
+
+const cv=document.getElementById("streak"),cx=cv.getContext("2d");
+let W,H,S=[];
+function size(){const d=Math.min(devicePixelRatio,1.5);W=cv.width=cv.clientWidth*d;H=cv.height=cv.clientHeight*d}
+size();addEventListener("resize",size);
+function spawn(){const a=Math.random()*Math.PI*2;return{a,r:Math.random()*40+10,v:Math.random()*.018+.008,w:Math.random()*1.4+.3}}
+for(let i=0;i<110;i++){const s=spawn();s.r=Math.random()*900;S.push(s)}
+let last=0;
+function draw(t){
+  if(!reduce)requestAnimationFrame(draw);
+  if(t-last<33)return;last=t;
+  cx.clearRect(0,0,W,H);const ox=W*.5,oy=H*.46,m=Math.max(W,H);
+  for(const s of S){
+    const r0=s.r,r1=s.r*1.18+4;s.r+=s.r*s.v+0.6;
+    if(s.r>m){Object.assign(s,spawn())}
+    const al=Math.min(1,s.r/(m*.35))*.75;
+    cx.strokeStyle="rgba(235,245,255,"+al+")";cx.lineWidth=s.w*(1+s.r/m*2);
+    cx.beginPath();cx.moveTo(ox+Math.cos(s.a)*r0,oy+Math.sin(s.a)*r0);cx.lineTo(ox+Math.cos(s.a)*r1,oy+Math.sin(s.a)*r1);cx.stroke();
+  }
+}
+requestAnimationFrame(draw);
+
+if(!reduce){
+  const media=document.getElementById("media"),lede=document.querySelector(".lede");
+  const pics=[...document.querySelectorAll(".scene .pic")];
+  addEventListener("scroll",()=>{
+    const y=scrollY,h=innerHeight;
+    if(y<h*1.1){const p=y/h;media.style.transform="scale("+(1+p*.18)+")";huge.style.transform="translateY("+(-p*h*.28)+"px)";lede.style.transform="translateY("+(-p*h*.12)+"px)";lede.style.opacity=1-p*1.4}
+    pics.forEach(pc=>{const r=pc.parentNode.getBoundingClientRect();const q=Math.max(-1,Math.min(1,r.top/h));pc.style.transform="scale("+(1.08+Math.abs(q)*.08)+") translateY("+(q*6)+"%)"});
+  },{passive:true});
+}
+</script>
+</body>
+</html>

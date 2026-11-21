@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="ja">
+<head><meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SAMURAI STYLE — Dark Luxe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Noto+Serif+JP:wght@200;300&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a0a;--fg:#ece6da;--mute:#7c766b;--line:rgba(236,230,218,.12);--pad:clamp(20px,3.6vw,56px)}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font-family:"Noto Serif JP",serif;font-weight:300;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+.nb{white-space:nowrap}
+#light{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.grain{position:fixed;inset:-50%;z-index:1;pointer-events:none;opacity:.07;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");animation:grain 1s steps(4) infinite}
+@keyframes grain{25%{transform:translate(-3%,2%)}50%{transform:translate(2%,-3%)}75%{transform:translate(-2%,-1%)}}
+main,.hd{position:relative;z-index:2}
+.ui{font:300 10.5px/1 "Inter",sans-serif;letter-spacing:.3em;text-transform:uppercase}
+.hd{position:fixed;top:0;left:0;right:0;z-index:10;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:34px var(--pad)}
+.logo{font:400 14px/1 "Cormorant Garamond",serif;letter-spacing:.42em}
+.nav{display:flex;gap:34px;color:var(--mute)}
+.nav a{transition:color .6s}
+.nav a:hover{color:var(--fg)}
+.lang{justify-self:end;display:flex;gap:16px;color:var(--mute)}
+.lang b{color:var(--fg);font-weight:400}
+.menu{display:none;justify-self:end;background:none;border:0;color:var(--fg);padding:6px 0;cursor:pointer}
+.ov{position:fixed;inset:0;z-index:9;background:rgba(10,10,10,.96);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:22px;font:300 34px/1 "Cormorant Garamond",serif;letter-spacing:.06em;opacity:0;pointer-events:none;transition:opacity .8s}
+.ov .lang{margin-top:16px;justify-self:auto}
+body.mopen .ov{opacity:1;pointer-events:auto}
+
+.fv{position:relative;height:100vh;height:100svh;min-height:600px}
+.row{position:absolute;left:var(--pad);right:var(--pad);top:50%;transform:translateY(-50%);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:40px}
+.row .l{font:200 12px/1 "Noto Serif JP",serif;letter-spacing:.36em;color:var(--mute);opacity:0;animation:in 2.4s 1.6s cubic-bezier(.2,.6,.2,1) forwards}
+.row .r{justify-self:end;display:flex;align-items:center;gap:16px;color:var(--mute);opacity:0;animation:in 2.4s 1.9s cubic-bezier(.2,.6,.2,1) forwards}
+.row .r i{display:block;width:60px;height:1px;background:var(--line);position:relative;overflow:hidden}
+.row .r i::after{content:"";position:absolute;inset:0;background:var(--fg);animation:sweep 3.6s cubic-bezier(.6,0,.3,1) infinite}
+@keyframes sweep{0%{transform:translateX(-100%)}60%,100%{transform:translateX(100%)}}
+h1{margin:0;font:300 clamp(44px,5.4vw,88px)/1 "Cormorant Garamond",serif;letter-spacing:.01em;white-space:nowrap}
+h1 em{font-style:italic;font-weight:300}
+h1 .c{display:inline-block;opacity:0;filter:blur(12px);animation:ink 2.2s cubic-bezier(.2,.6,.2,1) forwards;animation-delay:calc(var(--i) * 90ms + .4s)}
+@keyframes ink{to{opacity:1;filter:blur(0)}}
+@keyframes in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.lead{position:absolute;left:var(--pad);right:var(--pad);bottom:15vh;margin:0;text-align:center;font:200 15px/2.4 "Noto Serif JP",serif;letter-spacing:.14em;color:#bdb6a9;opacity:0;animation:in 2.6s 2.2s cubic-bezier(.2,.6,.2,1) forwards}
+.corner{position:absolute;bottom:34px;color:var(--mute)}
+.corner.bl{left:var(--pad)}
+.corner.br{right:var(--pad);display:flex;align-items:center;gap:12px}
+.corner.br b{display:block;width:5px;height:5px;border-radius:50%;background:var(--fg);animation:dot 3s ease-in-out infinite}
+@keyframes dot{50%{opacity:.2}}
+
+.sv{position:relative;padding:26vh var(--pad) 22vh}
+.sv-head{display:grid;grid-template-columns:1fr 1fr;align-items:end;margin-bottom:9vh}
+.sv-head h2{margin:0;font:300 italic clamp(30px,2.6vw,40px)/1 "Cormorant Garamond",serif;letter-spacing:.02em}
+.sv-head h2 span{font-style:normal;font-size:.5em;letter-spacing:.3em;color:var(--mute);margin-left:16px;vertical-align:middle}
+.sv-head p{margin:0;justify-self:end;font:200 13px/2 "Noto Serif JP",serif;letter-spacing:.2em;color:var(--mute)}
+.item{position:relative;display:grid;grid-template-columns:7% 37% 1fr 19%;gap:0 3vw;align-items:start;padding:5.2vh 0;cursor:pointer;opacity:0;transform:translateY(30px);transition:opacity 1.8s cubic-bezier(.2,.6,.2,1),transform 1.8s cubic-bezier(.2,.6,.2,1)}
+.item::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:var(--line);transform:scaleX(0);transform-origin:left;transition:transform 1.6s cubic-bezier(.6,0,.2,1),background .8s}
+.items .item:last-child::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--line)}
+.item.in{opacity:1;transform:none}
+.item.in::before{transform:scaleX(1)}
+.item:hover::before{background:rgba(236,230,218,.5)}
+.num{font:300 italic 18px/1 "Cormorant Garamond",serif;color:var(--mute);padding-top:.9em}
+.item h3{margin:0;font:300 clamp(38px,4.4vw,70px)/1 "Cormorant Garamond",serif;letter-spacing:.005em;transition:transform 1s cubic-bezier(.2,.6,.2,1),letter-spacing 1s;white-space:nowrap}
+.item h3.jp{font:200 clamp(32px,3.6vw,58px)/1.1 "Noto Serif JP",serif;letter-spacing:.12em}
+.item:hover h3{transform:translateX(14px)}
+.txt{padding-top:.4em}
+.lb{display:block;font:300 11px/1 "Noto Serif JP",serif;letter-spacing:.3em;color:var(--mute);margin-bottom:16px}
+.txt p{margin:0;font:200 14.5px/2.15 "Noto Serif JP",serif;letter-spacing:.08em;color:#cfc8bb}
+.th{position:relative;aspect-ratio:4/3;overflow:hidden;background:#141414}
+.th img{width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(1) brightness(.55) contrast(1.05);opacity:.7;transform:scale(1.06);transition:filter 1.4s,opacity 1.4s,transform 2.4s cubic-bezier(.2,.6,.2,1)}
+.item:hover .th img{filter:grayscale(.1) brightness(.95);opacity:1;transform:scale(1)}
+.th::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 1px rgba(236,230,218,.08)}
+
+@media (max-width:860px){
+  .hd{grid-template-columns:1fr auto;padding:22px 20px}
+  .nav,.hd>.lang{display:none}
+  .menu{display:block}
+  .row{grid-template-columns:1fr;justify-items:center;text-align:center;gap:22px;top:44%}
+  .row .r{justify-self:center}
+  h1{font-size:13.2vw}
+  .lead{font-size:13px;line-height:2.3;bottom:13vh;letter-spacing:.08em;left:20px;right:20px}
+  .lead br{display:none}
+  .corner.bl,.corner.br{display:none}
+  .sv{padding:16vh 20px 14vh}
+  .sv-head{grid-template-columns:1fr;gap:18px}
+  .sv-head p{justify-self:start}
+  .item{grid-template-columns:44px 1fr;gap:18px 0;padding:44px 0}
+  .num{padding-top:.6em}
+  .item h3{font-size:42px}
+  .item h3.jp{font-size:34px}
+  .txt,.th{grid-column:2}
+  .txt{padding-top:0}
+  .txt p{font-size:14px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  h1 .c,.row .l,.row .r,.lead{opacity:1;filter:none}
+  .item{opacity:1;transform:none}.item::before{transform:none}
+}
+</style>
+</head>
+<body>
+<canvas id="light" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+<header class="hd ui">
+  <a class="logo" href="#">SAMURAI STYLE</a>
+  <nav class="nav"><a href="#">Home</a><a href="#service">Service</a><a href="#">Media</a><a href="#">Company</a><a href="#">Recruit</a><a href="#">Contact</a></nav>
+  <div class="lang"><span>ID</span><span>EN</span><b>JA</b></div>
+  <button class="menu ui">Menu</button>
+</header>
+<div class="ov"><a href="#">Home</a><a href="#service">Service</a><a href="#">Media</a><a href="#">Company</a><a href="#">Recruit</a><a href="#">Contact</a><div class="lang ui"><span>ID</span><span>EN</span><b>JA</b></div></div>
+
+<main>
+<section class="fv">
+  <div class="row">
+    <span class="l">株式会社サムライスタイル</span>
+    <h1 id="h1">Find the <em>signal</em></h1>
+    <span class="r ui">Scroll <i></i></span>
+  </div>
+  <p class="lead"><span class="nb">AIで無数の“もっともらしさ”が</span><wbr><span class="nb">生まれ続ける時代に、</span><br><span class="nb">何が本質的なシグナルで</span><wbr><span class="nb">何が一時的なノイズなのかを</span><wbr><span class="nb">見極める。</span></p>
+  <span class="corner bl ui">Services — I / IV</span>
+  <span class="corner br ui"><b></b>SAMURAI STYLE</span>
+</section>
+
+<section class="sv" id="service">
+  <div class="sv-head">
+    <h2>Services<span>IV</span></h2>
+    <p><span class="nb">地道に、</span><wbr><span class="nb">泥臭くをコアバリューとして</span><wbr><span class="nb">事業を運営。</span></p>
+  </div>
+  <div class="items">
+    <article class="item">
+      <span class="num">i.</span>
+      <h3>Strategy2Action</h3>
+      <div class="txt"><p>事業理解に基づいて戦略を考え、実行まで伴走し、ダッシュボード作成による経営層・上長への可視化まで対応。</p></div>
+      <figure class="th" style="margin:0"><img src="strategy2action_pc.jpg" alt="Strategy2Action" loading="lazy"></figure>
+    </article>
+    <article class="item">
+      <span class="num">ii.</span>
+      <h3>HookHack</h3>
+      <div class="txt"><span class="lb">動画広告の制作ツール</span><p>売れる動画広告をLPから5分で制作。検証から成果改善まで、動画広告のPDCAに必要な機能を1ツールで網羅します。</p></div>
+      <figure class="th" style="margin:0"><img src="hookhack_pc.jpg" alt="HookHack" loading="lazy"></figure>
+    </article>
+    <article class="item">
+      <span class="num">iii.</span>
+      <h3>HookHacker</h3>
+      <div class="txt"><span class="lb">LP・サイト制作の代行</span><p>自社開発AIツール「HookHack」×インドネシアオフショアチーム×日本人ディレクターでLP・サイト制作を代行。</p></div>
+      <figure class="th" style="margin:0"><img src="hookhacker_pc.jpg" alt="HookHacker" loading="lazy"></figure>
+    </article>
+    <article class="item">
+      <span class="num">iv.</span>
+      <h3 class="jp">動画制作</h3>
+      <div class="txt"><p>貴社の顧客理解に基づき、動画を企画・撮影・編集までワンストップで制作します。</p></div>
+      <figure class="th" style="margin:0"><img src="video-production-poster.webp" alt="動画制作" loading="lazy"></figure>
+    </article>
+  </div>
+</section>
+</main>
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const h1 = document.getElementById('h1'); let i = 0;
+  const wrap = node => {
+    [...node.childNodes].forEach(n => {
+      if (n.nodeType === 3) { const f = document.createDocumentFragment(); for (const ch of n.textContent) { const s = document.createElement('span'); s.className = 'c'; s.style.setProperty('--i', i++); s.textContent = ch === ' ' ? ' ' : ch; f.appendChild(s); } n.replaceWith(f); }
+      else wrap(n);
+    });
+  };
+  wrap(h1);
+  const btn = document.querySelector('.menu');
+  btn.addEventListener('click', () => { const o = document.body.classList.toggle('mopen'); btn.textContent = o ? 'Close' : 'Menu'; });
+  document.querySelectorAll('.ov a').forEach(a => a.addEventListener('click', () => btn.click()));
+
+  const items = document.querySelectorAll('.item');
+  if (reduce || !('IntersectionObserver' in window)) items.forEach(it => it.classList.add('in'));
+  else {
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .15 });
+    items.forEach(it => io.observe(it));
+  }
+
+  const cv = document.getElementById('light'), ctx = cv.getContext('2d');
+  let W, H, dpr;
+  const size = () => { dpr = Math.min(devicePixelRatio || 1, 1.5); W = innerWidth; H = innerHeight; cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); };
+  size(); addEventListener('resize', size);
+  const PERIOD = 15000, t0 = performance.now() - PERIOD * .36;
+  let last = 0;
+  const draw = now => {
+    if (now - last < 33) { if (!reduce) requestAnimationFrame(draw); return; }
+    last = now;
+    const t = ((now - t0) % PERIOD) / PERIOD;
+    const sy = Math.min(scrollY / H, 3);
+    ctx.clearRect(0, 0, W, H);
+    const ang = -0.32 + sy * 0.05;
+    const dx = Math.cos(ang), dy = Math.sin(ang);
+    const len = Math.max(W, H) * 0.55;
+    const travel = W + len * 1.25;
+    const e = t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+    const hx = -len + e * travel, hy = H * 0.64 + (hx - W * .5) * dy / dx * 0.62 - sy * 40;
+    const tx = hx - dx * len, ty = hy - dy * len;
+    const fade = Math.sin(Math.PI * t);
+    const g = ctx.createLinearGradient(tx, ty, hx, hy);
+    g.addColorStop(0, 'rgba(255,238,214,0)');
+    g.addColorStop(.75, `rgba(255,238,214,${.18 * fade})`);
+    g.addColorStop(1, `rgba(255,244,228,${.95 * fade})`);
+    ctx.lineCap = 'round';
+    ctx.save();
+    ctx.shadowColor = `rgba(255,214,170,${.7 * fade})`;
+    ctx.shadowBlur = 24;
+    ctx.strokeStyle = g; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(hx, hy); ctx.stroke();
+    ctx.restore();
+    const g2 = ctx.createLinearGradient(tx, ty, hx, hy);
+    g2.addColorStop(0, 'rgba(255,220,180,0)'); g2.addColorStop(1, `rgba(255,220,180,${.08 * fade})`);
+    ctx.strokeStyle = g2; ctx.lineWidth = 10;
+    ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(hx, hy); ctx.stroke();
+    const rg = ctx.createRadialGradient(hx, hy, 0, hx, hy, 140);
+    rg.addColorStop(0, `rgba(255,236,210,${.16 * fade})`); rg.addColorStop(1, 'rgba(255,236,210,0)');
+    ctx.fillStyle = rg; ctx.fillRect(hx - 140, hy - 140, 280, 280);
+    if (!reduce) requestAnimationFrame(draw);
+  };
+  requestAnimationFrame(draw);
+})();
+</script>
+</body>
+</html>

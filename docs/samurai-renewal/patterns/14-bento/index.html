@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="ja">
+<head><meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SAMURAI STYLE — Bento</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#cbc5d1;--dark:#111113;--light:#f3f1f5;--acc:#ffe500;--ink:#111113;--mute:#6f6977;--r:26px;--gap:8px}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{overflow-x:clip}
+body{background:var(--bg);color:var(--ink);font-family:Geist,"Noto Sans JP",sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.nw{white-space:nowrap}
+.mono{font-family:"Geist Mono",monospace;font-size:11px;letter-spacing:.04em;text-transform:uppercase}
+.tile{border-radius:var(--r);position:relative;overflow:hidden;opacity:0;transform:scale(.965) translateY(14px);transition:opacity .8s,transform 1s cubic-bezier(.2,.9,.2,1)}
+.in .tile,.tile.vis{opacity:1;transform:none}
+.dark{background:var(--dark);color:#f3f1f5}
+.light{background:var(--light)}
+.acc{background:var(--acc)}
+
+.fv{height:100vh;height:100svh;min-height:640px;padding:var(--gap);display:grid;grid-template-columns:repeat(12,1fr);grid-template-rows:44px 52px 1fr auto;gap:var(--gap)}
+.brand{grid-column:1/6;grid-row:1/3;display:flex;align-items:center;justify-content:space-between;padding:0 22px 0 26px}
+.brand .name{font-size:34px;font-weight:500;letter-spacing:-.035em;line-height:1}
+.brand .name small{display:block;font-size:12px;letter-spacing:.06em;font-weight:500;margin-top:6px;opacity:.9}
+.brand .mid{opacity:.7}
+.brand svg{width:66px;height:66px}
+.brand svg .rot{transform-origin:33px 33px;animation:spin 14s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.nav{grid-column:6/13;grid-row:1/2;display:flex;align-items:center;justify-content:space-between;padding:0 10px 0 26px;font-size:15px;border-radius:14px}
+.nav .links{display:flex;gap:clamp(18px,2.6vw,44px)}
+.nav .links a{position:relative}
+.nav .links a sup{font-family:"Geist Mono",monospace;font-size:9px;margin-left:3px;opacity:.6}
+.nav .links a::before{content:"";position:absolute;left:-12px;top:50%;width:5px;height:5px;border-radius:50%;background:var(--acc);transform:translateY(-50%) scale(0);transition:transform .3s}
+.nav .links a:hover::before{transform:translateY(-50%) scale(1)}
+.nav .lang{display:flex;gap:4px}
+.nav .lang span{padding:5px 9px;border-radius:20px;font-family:"Geist Mono",monospace;font-size:11px;opacity:.6}
+.nav .lang span.on{background:#2a2a2e;opacity:1}
+.screen{grid-column:6/13;grid-row:2/4;background:#05060a}
+.screen img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.15);filter:saturate(.4) brightness(.45) hue-rotate(10deg)}
+.screen canvas{position:absolute;inset:0;width:100%;height:100%}
+.screen .lab{position:absolute;color:#e9e7ee}
+.screen .tl{left:24px;top:22px}.screen .tr{right:24px;top:22px;display:flex;gap:8px;align-items:center}
+.screen .bl{left:24px;bottom:22px}.screen .br{right:24px;bottom:22px}
+.screen .tr i{width:7px;height:7px;border-radius:50%;background:var(--acc);animation:blink 1.4s steps(2) infinite}
+@keyframes blink{50%{opacity:.15}}
+.screen .state{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#000;color:#fff;padding:18px 26px;border-radius:4px;display:flex;flex-direction:column;align-items:center;gap:6px;min-width:150px}
+.screen .state b{font-weight:500;font-size:26px;letter-spacing:-.02em;font-family:Geist,sans-serif;text-transform:none}
+.arrow{grid-column:1/6;grid-row:3/4;display:flex;flex-direction:column;justify-content:space-between;padding:22px 6px 6px 26px;background:transparent;opacity:1;transform:none;overflow:visible}
+.arrow svg{width:min(56%,300px);height:auto;display:block}
+.arrow svg path{fill:none;stroke:var(--ink);stroke-width:30;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:900;stroke-dashoffset:900;transition:stroke-dashoffset 1.6s .4s cubic-bezier(.7,0,.2,1)}
+.in .arrow svg path{stroke-dashoffset:0}
+.arrow .chip{align-self:flex-end;display:flex;gap:10px;align-items:center;margin-bottom:12px}
+.chip span{background:var(--acc);border-radius:30px;padding:8px 14px}
+.chip span.k{background:var(--dark);color:#fff}
+.strip{border-radius:0;grid-column:1/13;grid-row:4/5;display:grid;grid-template-columns:5fr 4fr 3fr;gap:var(--gap);padding:6px 8px 8px;border-bottom:1px solid var(--ink);align-items:end}
+.strip .big{font-size:clamp(22px,1.8vw,28px);letter-spacing:-.03em;font-weight:500}
+.strip p{font-size:15px;font-weight:500}
+.strip .yr{display:flex;justify-content:space-between;align-items:end}
+
+.svc{padding:14vh var(--gap) var(--gap)}
+.svc-head{display:flex;justify-content:space-between;align-items:end;padding:0 18px 22px}
+.svc-head h2{font-size:clamp(56px,9vw,140px);font-weight:500;letter-spacing:-.06em;line-height:.85}
+.svc-head h2 sup{font-family:"Geist Mono",monospace;font-size:14px;letter-spacing:0;vertical-align:top;margin-left:6px;font-weight:400}
+.svc-head p{font-family:"Noto Sans JP",sans-serif;font-size:14px;font-weight:500;max-width:22em;line-height:1.9;text-align:right}
+.bento{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--gap)}
+.card{padding:22px;display:flex;flex-direction:column;gap:18px;cursor:pointer}
+.card .bar{display:flex;justify-content:space-between;align-items:center}
+.card .go{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;border:1px solid currentColor;transition:transform .5s cubic-bezier(.7,0,.2,1),background .3s,color .3s}
+.card .go svg{width:14px;height:14px}
+.card:hover .go{transform:rotate(-45deg);background:currentColor}
+.card:hover .go svg{color:var(--bg)}
+.card.dark:hover .go svg{color:var(--dark)}
+.card .pic{border-radius:16px;overflow:hidden;flex:1;min-height:200px;position:relative}
+.card .pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 45%;transition:transform 1.1s cubic-bezier(.2,.9,.2,1)}
+.card:hover .pic img{transform:scale(1.06)}
+.card h3{font-size:clamp(30px,3vw,46px);font-weight:500;letter-spacing:-.045em;line-height:1}
+.card h3 .jp{font-family:"Noto Sans JP",sans-serif;font-weight:700;letter-spacing:-.01em}
+.card .tag{display:inline-block;margin-top:10px;font-family:"Noto Sans JP",sans-serif;font-size:12px;font-weight:500;border:1px solid currentColor;border-radius:30px;padding:4px 10px;opacity:.75}
+.card .desc{font-family:"Noto Sans JP",sans-serif;font-size:14px;line-height:1.9;opacity:.85}
+.c1{grid-column:1/8;grid-row:span 2;min-height:760px}
+.c2{grid-column:8/13}
+.c3{grid-column:8/13}
+.c2 .pic,.c3 .pic{min-height:170px}
+.c4{grid-column:1/6}
+.c4 .pic{min-height:220px}
+.feat{grid-column:6/13;padding:22px;display:flex;flex-direction:column;justify-content:space-between;gap:22px}
+.feat h4{font-size:clamp(26px,2.4vw,36px);font-weight:500;letter-spacing:-.04em;line-height:1.05}
+.feat ul{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.feat li{background:#1d1d21;border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:22px;font-family:"Noto Sans JP",sans-serif;transition:background .3s,color .3s}
+.feat li:hover{background:var(--acc);color:var(--ink)}
+.feat li b{font-size:18px;font-weight:700}
+.feat li span{font-size:13px;opacity:.75}
+.feat li .mono{opacity:.55}
+
+@media (max-width:900px){
+  :root{--r:20px}
+  .fv{grid-template-columns:1fr;grid-template-rows:auto 1fr auto auto}
+  .brand{grid-column:1;grid-row:1;padding:16px 16px 16px 20px}
+  .brand .name{font-size:26px}
+  .brand .mid{display:none}
+  .brand svg{width:48px;height:48px}
+  .nav{grid-column:1;grid-row:4;padding:0 6px 0 18px;height:44px;font-size:13px}
+  .nav .links{display:none}
+  .nav::before{content:"Menu";font-family:"Geist Mono",monospace;font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+  .screen{grid-column:1;grid-row:2}
+  .screen .state{padding:12px 18px;min-width:120px}
+  .screen .state b{font-size:20px}
+  .arrow{display:none}
+  .strip{grid-column:1;grid-row:3;grid-template-columns:1fr;gap:4px;padding:6px 4px 10px}
+  .strip p,.strip .yr{display:none}
+  .svc{padding:10vh var(--gap) var(--gap)}
+  .svc-head{flex-direction:column;align-items:flex-start;gap:14px;padding:0 8px 18px}
+  .svc-head p{text-align:left}
+  .bento{grid-template-columns:1fr}
+  .c1,.c2,.c3,.c4,.feat{grid-column:1;grid-row:auto;min-height:0}
+  .card{padding:18px}
+  .card .pic{flex:none;aspect-ratio:900/650;min-height:0}
+  .feat ul{grid-template-columns:1fr 1fr}
+  .feat li{padding:14px}
+  .feat li b{font-size:15px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .tile{opacity:1;transform:none}
+  .arrow svg path{stroke-dashoffset:0}
+}
+</style>
+</head>
+<body>
+<main>
+<section class="fv" id="fv">
+  <a href="#" class="tile dark brand">
+    <span class="name">SAMURAI STYLE<small>サムライスタイル</small></span>
+    <span class="mid mono">Find the signal</span>
+    <svg viewBox="0 0 66 66" fill="none" stroke="#f3f1f5" stroke-width="1.2"><g class="rot"><circle cx="33" cy="33" r="16"/><circle cx="33" cy="33" r="16" stroke-dasharray="3 5" transform="translate(9 0)"/><line x1="33" y1="2" x2="33" y2="64"/></g><circle cx="11" cy="33" r="2.6" fill="#f3f1f5" stroke="none"/></svg>
+  </a>
+  <nav class="tile dark nav">
+    <div class="links"><a href="#">HOME</a><a href="#svc">SERVICE<sup>(4)</sup></a><a href="#">MEDIA</a><a href="#">COMPANY</a><a href="#">RECRUIT</a><a href="#">CONTACT</a></div>
+    <div class="lang"><span>ID</span><span>EN</span><span class="on">JA</span></div>
+  </nav>
+  <div class="tile screen" id="screen">
+    <img src="home-hero-poster.webp" alt="">
+    <canvas id="wave"></canvas>
+    <span class="lab tl mono">Input — AI</span>
+    <span class="lab tr mono"><i></i>Live</span>
+    <span class="lab bl mono">Noise</span>
+    <span class="lab br mono">Signal</span>
+    <div class="state mono"><span id="stLab">Filtering</span><b id="stWord">Noise</b></div>
+  </div>
+  <div class="tile arrow">
+    <svg viewBox="0 0 300 330"><path d="M140 20 L60 56 Q30 70 30 110 Q30 150 60 180 L200 315 M206 140 L206 300 L40 300"/></svg>
+    <div class="chip mono"><span class="k">Services</span><span>04 ↓</span></div>
+  </div>
+  <div class="tile strip">
+    <span class="big">Find the signal</span>
+    <p>笑顔の総量の最大化</p>
+    <p class="yr"><span>地道に、泥臭く</span><span class="mono">サムライスタイル</span></p>
+  </div>
+</section>
+
+<section class="svc" id="svc">
+  <div class="svc-head"><h2>Services<sup>(04)</sup></h2><p>短期的な個別最適ではなく、<br>長期的な全体最適へ。</p></div>
+  <div class="bento">
+    <article class="tile card dark c1">
+      <div class="bar"><span class="mono">01 / Strategy</span><span class="go"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1 7h12M8 2l5 5-5 5"/></svg></span></div>
+      <div class="pic"><img src="strategy2action_pc.jpg" alt=""></div>
+      <div><h3>Strategy2Action</h3></div>
+      <p class="desc">事業理解に基づいて戦略を考え、実行まで伴走し、ダッシュボード作成による経営層・上長への可視化まで対応。</p>
+    </article>
+    <article class="tile card light c2">
+      <div class="bar"><span class="mono">02 / Tool</span><span class="go"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1 7h12M8 2l5 5-5 5"/></svg></span></div>
+      <div class="pic"><img src="hookhack_pc.jpg" alt=""></div>
+      <div><h3>HookHack</h3><span class="tag">動画広告の制作ツール</span></div>
+      <p class="desc">売れる動画広告をLPから5分で制作。検証から成果改善まで、動画広告のPDCAに必要な機能を1ツールで網羅します。</p>
+    </article>
+    <article class="tile card acc c3">
+      <div class="bar"><span class="mono">03 / Production</span><span class="go"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1 7h12M8 2l5 5-5 5"/></svg></span></div>
+      <div class="pic"><img src="hookhacker_pc.jpg" alt=""></div>
+      <div><h3>HookHacker</h3><span class="tag">LP・サイト制作の代行</span></div>
+      <p class="desc">自社開発AIツール「HookHack」×インドネシアオフショアチーム×日本人ディレクターでLP・サイト制作を代行。</p>
+    </article>
+    <article class="tile card light c4">
+      <div class="bar"><span class="mono">04 / Film</span><span class="go"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1 7h12M8 2l5 5-5 5"/></svg></span></div>
+      <div class="pic"><img src="video-production-poster.webp" alt=""></div>
+      <div><h3><span class="jp">動画制作</span></h3></div>
+      <p class="desc">貴社の顧客理解に基づき、動画を企画・撮影・編集までワンストップで制作します。</p>
+    </article>
+    <div class="tile dark feat">
+      <div class="bar" style="display:flex;justify-content:space-between"><span class="mono">Why us</span><span class="mono">(4)</span></div>
+      <h4>Find the signal,<br>together.</h4>
+      <ul>
+        <li><span class="mono">A</span><div><b>コミットメント</b><br><span>新規事業立ち上げ経験</span></div></li>
+        <li><span class="mono">B</span><div><b>多言語対応</b><br><span>英語・インドネシア語</span></div></li>
+        <li><span class="mono">C</span><div><b>構造理解力</b><br><span>多業種経験</span></div></li>
+        <li><span class="mono">D</span><div><b>スピード感</b><br><span>少数精鋭</span></div></li>
+      </ul>
+    </div>
+  </div>
+</section>
+</main>
+
+<script>
+const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+const fv=document.getElementById("fv");
+fv.querySelectorAll(".tile").forEach((t,i)=>t.style.transitionDelay=(i*.09)+"s");
+requestAnimationFrame(()=>requestAnimationFrame(()=>fv.classList.add("in")));
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("vis");io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll(".svc .tile").forEach((t,i)=>{t.style.transitionDelay=(i%3*.08)+"s";io.observe(t)});
+
+const cv=document.getElementById("wave"),cx=cv.getContext("2d"),stW=document.getElementById("stWord"),stL=document.getElementById("stLab");
+let W,H;function size(){const d=Math.min(devicePixelRatio,1.5);W=cv.width=cv.clientWidth*d;H=cv.height=cv.clientHeight*d}
+size();addEventListener("resize",size);
+const seeds=[...Array(7)].map(()=>[Math.random()*10,Math.random()*.5+.5,Math.random()*3]);
+let last=0,state="";
+function n(x,s){return Math.sin(x*1.7+s)*.5+Math.sin(x*3.9+s*2)*.3+Math.sin(x*9.3+s*3)*.2}
+function draw(t){
+  if(!reduce)requestAnimationFrame(draw);
+  if(t-last<33&&!reduce)return;last=t;
+  const T=reduce?6.5:t/1000,cyc=(T%8)/8;
+  let clean=cyc<.35?0:cyc<.55?(cyc-.35)/.2:cyc<.9?1:1-(cyc-.9)/.1;
+  clean=clean*clean*(3-2*clean);
+  const s=clean>.6?"Signal":"Noise";
+  if(s!==state){state=s;stW.textContent=s;stL.textContent=s==="Signal"?"Found":"Filtering"}
+  cx.clearRect(0,0,W,H);
+  const mid=H*.5,amp=H*.22;
+  cx.lineWidth=Math.max(1,W/900);
+  seeds.forEach((sd,k)=>{
+    cx.strokeStyle="rgba(230,228,240,"+(.28*(1-clean)+.04)+")";cx.beginPath();
+    for(let x=0;x<=W;x+=6){const u=x/W*12;const y=mid+(n(u+T*sd[1]*1.6,sd[0])*amp*(1.1-clean*.8))+Math.sin(u*14+T*9+k)*amp*.08*(1-clean);x?cx.lineTo(x,y):cx.moveTo(x,y)}
+    cx.stroke();
+  });
+  cx.strokeStyle="#ffe500";cx.lineWidth=Math.max(2,W/420);cx.beginPath();
+  for(let x=0;x<=W;x+=4){const u=x/W*12;const nz=n(u*1.3+T*2.2,4.2)*amp*.9*(1-clean)+Math.sin(u*17+T*12)*amp*.12*(1-clean);const y=mid+Math.sin(u*.9-T*2)*amp*.55*clean+nz;x?cx.lineTo(x,y):cx.moveTo(x,y)}
+  cx.stroke();
+}
+requestAnimationFrame(draw);
+</script>
+</body>
+</html>

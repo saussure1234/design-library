@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="ja">
+<head><meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SAMURAI STYLE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#f4f1ff;--mint:#c9ffcf;--red:#ff3b2e;--violet:#5b1cff;--pink:#ff4fd8;--bg:#050308}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg);-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font-family:"Archivo","Noto Sans JP",sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.nb{white-space:nowrap}
+
+.hd{position:fixed;inset:0 0 auto 0;z-index:20;display:flex;align-items:flex-start;justify-content:space-between;padding:18px 22px;text-shadow:0 1px 18px rgba(0,0,0,.45)}
+.hd::before{content:"";position:absolute;inset:0 0 -40px 0;z-index:-1;background:linear-gradient(rgba(5,3,8,.55),rgba(5,3,8,0));pointer-events:none}
+.logo{font-weight:800;font-stretch:112%;font-size:19px;line-height:.92;letter-spacing:-.01em;text-transform:uppercase}
+.logo span{display:block}
+.logo span:last-child{padding-left:1.1em}
+.nav{display:flex;gap:clamp(18px,3.6vw,64px);font-size:20px;font-weight:400;font-stretch:100%}
+.nav a{position:relative;animation:navIn .8s cubic-bezier(.2,.7,.1,1) both}
+.nav a::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .45s cubic-bezier(.7,0,.2,1)}
+.nav a:hover::after{transform:scaleX(1);transform-origin:left}
+.lang{display:flex;gap:10px;font-size:13px;font-weight:500;letter-spacing:.08em;margin-top:5px}
+.lang b{font-weight:500;opacity:.45}
+.menu{display:none;font-size:15px;font-weight:600;letter-spacing:.06em}
+@keyframes navIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+
+.fv{position:relative;height:100vh;height:100svh;min-height:560px;overflow:hidden}
+#gl{position:absolute;inset:0;width:100%;height:100%;display:block;background:radial-gradient(circle at 50% 50%,#000 0 8%,#5b1cff 18%,#ff3b2e 34%,#ff4fd8 46%,#2a0a7a 62%,#050308 80%)}
+.grain{position:absolute;inset:-50%;pointer-events:none;opacity:.13;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>");animation:grain 1.2s steps(6) infinite}
+@keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(-3%,2%)}40%{transform:translate(2%,-4%)}60%{transform:translate(-4%,-1%)}80%{transform:translate(3%,3%)}100%{transform:translate(0,0)}}
+
+.core{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.core-in{text-align:center;transform:translateY(-2vh)}
+.kick{font-size:clamp(13px,1.15vw,17px);font-weight:500;letter-spacing:.42em;text-transform:uppercase;color:var(--mint);margin-bottom:1.2vw;opacity:0;animation:fadeUp 1.2s .9s cubic-bezier(.2,.7,.1,1) forwards}
+.sig{font-weight:850;font-stretch:125%;font-size:clamp(84px,17.5vw,300px);line-height:.8;letter-spacing:-.045em;display:flex;justify-content:center;color:#fff;text-shadow:0 0 60px rgba(255,80,220,.35)}
+.sig i{font-style:normal;display:inline-block;opacity:0;filter:blur(24px);transform:scale(1.6) rotate(var(--r));animation:charIn 1.5s cubic-bezier(.16,.84,.2,1) forwards;animation-delay:calc(.25s + var(--i)*.09s)}
+@keyframes charIn{to{opacity:1;filter:blur(0);transform:none}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+.fv::after{content:"";position:absolute;inset:auto 0 0 0;height:34%;background:linear-gradient(rgba(5,3,8,0),rgba(5,3,8,.7));pointer-events:none}
+.fv-foot{z-index:2;position:absolute;left:22px;right:22px;bottom:20px;display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:24px;font-size:14px;line-height:1.75}
+.fv-foot p{max-width:470px;font-size:13px;font-weight:500;color:rgba(255,255,255,.86);opacity:0;animation:fadeUp 1.2s 1.6s forwards;text-shadow:0 1px 14px rgba(0,0,0,.6)}
+.scroll{display:flex;flex-direction:column;align-items:center;gap:10px;font-size:11px;letter-spacing:.3em;text-transform:uppercase;opacity:0;animation:fadeUp 1s 2s forwards}
+.scroll span{width:1px;height:44px;background:linear-gradient(var(--mint),transparent);transform-origin:top;animation:drip 2.2s cubic-bezier(.6,0,.2,1) infinite}
+@keyframes drip{0%{transform:scaleY(0)}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+.cap{justify-self:end;font-size:clamp(15px,1.4vw,21px);font-weight:400;opacity:0;animation:fadeUp 1.2s 1.8s forwards}
+
+.sv{position:relative;background:#000;padding:clamp(80px,11vw,170px) 22px clamp(80px,9vw,140px)}
+.sv-head{display:grid;grid-template-columns:1fr 1fr;align-items:end;gap:24px;margin-bottom:clamp(36px,5vw,72px)}
+.sv-head h2{font-weight:800;font-stretch:125%;font-size:clamp(46px,8.4vw,150px);line-height:.85;letter-spacing:-.04em;text-transform:uppercase}
+.sv-head h2 sup{font-size:.22em;font-weight:500;letter-spacing:0;vertical-align:top;margin-left:.3em;color:var(--mint)}
+.sv-head p{font-size:15px;line-height:1.9;color:rgba(255,255,255,.66);max-width:520px;justify-self:end}
+.list{list-style:none;border-top:1px solid rgba(255,255,255,.22)}
+.row{position:relative;display:grid;grid-template-columns:90px minmax(0,1.25fr) minmax(0,1fr) 220px;gap:28px;align-items:center;padding:34px 0;border-bottom:1px solid rgba(255,255,255,.22);overflow:hidden;isolation:isolate;cursor:pointer}
+.row::before{content:"";position:absolute;inset:0;z-index:-1;background:conic-gradient(from var(--a,0deg) at 30% 50%,#ff3b2e,#ff4fd8,#5b1cff,#0a0430,#5b1cff,#ff3b2e);clip-path:inset(0 0 100% 0);transition:clip-path .6s cubic-bezier(.7,0,.2,1)}
+.row:hover::before{clip-path:inset(0 0 0 0)}
+.no{font-size:14px;font-weight:500;letter-spacing:.1em;color:var(--mint);align-self:start;padding-top:12px;transition:color .4s}
+.nm{min-width:0;font-weight:800;font-stretch:104%;font-size:clamp(34px,4.1vw,66px);line-height:.95;letter-spacing:-.035em;transition:transform .6s cubic-bezier(.2,.7,.1,1)}
+.nm small{display:block;font-family:"Noto Sans JP";font-size:13px;font-weight:500;letter-spacing:.08em;margin-top:14px;color:rgba(255,255,255,.6);transition:color .4s}
+.ds{font-size:14.5px;line-height:1.95;color:rgba(255,255,255,.8);font-weight:400}
+.th{width:220px;aspect-ratio:900/650;overflow:hidden;border-radius:2px;transform:scale(.86);filter:saturate(0) brightness(.75);transition:transform .7s cubic-bezier(.2,.7,.1,1),filter .7s}
+.th img{width:100%;height:100%;object-fit:cover;display:block}
+.row:hover .nm{transform:translateX(18px)}
+.row:hover .no,.row:hover .nm small{color:#fff}
+.row:hover .th{transform:scale(1) rotate(-2deg);filter:none}
+.rv{opacity:0;transform:translateY(40px);transition:opacity 1s,transform 1.1s cubic-bezier(.2,.7,.1,1)}
+.rv.on{opacity:1;transform:none}
+
+@media (max-width:900px){
+  .nav,.lang{display:none}
+  .menu{display:block}
+  .hd{padding:16px}
+  .logo{font-size:16px}
+  .kick{letter-spacing:.3em;margin-bottom:14px}
+  .sig{font-size:24vw;letter-spacing:-.05em}
+  .fv-foot{left:16px;right:16px;bottom:16px;grid-template-columns:1fr auto}
+  .fv-foot p{grid-column:1/-1;font-size:12.5px;line-height:1.8}
+  .scroll{display:none}
+  .cap{justify-self:start;font-size:14px}
+  .sv{padding:80px 16px 90px}
+  .sv-head{grid-template-columns:1fr}
+  .sv-head p{justify-self:start;font-size:14px}
+  .row{grid-template-columns:44px minmax(0,1fr);gap:12px 10px;padding:28px 0}
+  .no{padding-top:6px}
+  .nm{font-size:clamp(26px,8.2vw,40px);font-stretch:100%}
+  .ds{grid-column:2;font-size:14px;line-height:1.85}
+  .th{grid-column:2;width:100%;transform:none;filter:none;margin-top:8px}
+  .row:hover .nm{transform:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .grain{animation:none}
+  .rv{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+<header class="hd">
+  <a class="logo" href="#"><span>Samurai</span><span>Style</span></a>
+  <nav class="nav">
+    <a href="#" style="animation-delay:.1s">HOME</a><a href="#sv" style="animation-delay:.16s">SERVICE</a><a href="#" style="animation-delay:.22s">MEDIA</a><a href="#" style="animation-delay:.28s">COMPANY</a><a href="#" style="animation-delay:.34s">RECRUIT</a><a href="#" style="animation-delay:.4s">CONTACT</a>
+  </nav>
+  <div class="lang"><b>ID</b><b>EN</b><span>JA</span></div>
+  <div class="menu">MENU</div>
+</header>
+
+<section class="fv" id="fv">
+  <canvas id="gl"></canvas>
+  <div class="grain"></div>
+  <div class="core">
+    <div class="core-in">
+      <div class="kick">Find the</div>
+      <h1 class="sig" aria-label="Find the signal"><i style="--i:0;--r:-14deg">s</i><i style="--i:1;--r:10deg">i</i><i style="--i:2;--r:-6deg">g</i><i style="--i:3;--r:12deg">n</i><i style="--i:4;--r:-10deg">a</i><i style="--i:5;--r:8deg">l</i></h1>
+    </div>
+  </div>
+  <div class="fv-foot">
+    <p><span class="nb">AIで無数の</span><span class="nb">“もっともらしさ”が</span><wbr><span class="nb">生まれ続ける</span><span class="nb">時代に、</span><wbr><span class="nb">何が本質的な</span><span class="nb">シグナルで</span><wbr><span class="nb">何が一時的な</span><span class="nb">ノイズなのかを</span><wbr><span class="nb">見極める。</span></p>
+    <div class="scroll">Scroll<span></span></div>
+    <div class="cap">株式会社サムライスタイル</div>
+  </div>
+</section>
+
+<section class="sv" id="sv">
+  <div class="sv-head rv">
+    <h2>Services<sup>(04)</sup></h2>
+    <p>短期的な個別最適ではなく、長期的な全体最適へ。</p>
+  </div>
+  <ul class="list">
+    <li class="row rv">
+      <span class="no">01</span>
+      <div class="nm">Strategy2Action<small>Strategy → Action</small></div>
+      <p class="ds">事業理解に基づいて戦略を考え、実行まで伴走し、ダッシュボード作成による経営層・上長への可視化まで対応。</p>
+      <div class="th"><img src="strategy2action_pc.jpg" alt="Strategy2Action"></div>
+    </li>
+    <li class="row rv">
+      <span class="no">02</span>
+      <div class="nm">HookHack<small>動画広告の制作ツール</small></div>
+      <p class="ds">売れる動画広告をLPから5分で制作。検証から成果改善まで、動画広告のPDCAに必要な機能を1ツールで網羅します。</p>
+      <div class="th"><img src="hookhack_pc.jpg" alt="HookHack"></div>
+    </li>
+    <li class="row rv">
+      <span class="no">03</span>
+      <div class="nm">HookHacker<small>LP・サイト制作の代行</small></div>
+      <p class="ds">自社開発AIツール「HookHack」×インドネシアオフショアチーム×日本人ディレクターでLP・サイト制作を代行。</p>
+      <div class="th"><img src="hookhacker_pc.jpg" alt="HookHacker"></div>
+    </li>
+    <li class="row rv">
+      <span class="no">04</span>
+      <div class="nm">動画制作<small>Video Production</small></div>
+      <p class="ds">貴社の顧客理解に基づき、動画を企画・撮影・編集までワンストップで制作します。</p>
+      <div class="th"><img src="video-production-poster.webp" alt="動画制作"></div>
+    </li>
+  </ul>
+</section>
+
+<script>
+(()=>{
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const cv=document.getElementById('gl');
+const gl=cv.getContext('webgl',{antialias:false,preserveDrawingBuffer:true,powerPreference:'low-power'});
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}}),{threshold:.15});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+let ang=0;const rows=document.querySelectorAll('.row');
+if(!reduce){(function spin(){ang=(ang+.6)%360;rows.forEach(r=>r.style.setProperty('--a',ang+'deg'));requestAnimationFrame(spin)})()}
+if(!gl)return;
+const vs='attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
+const fs=`precision highp float;
+uniform vec2 R;uniform float T;uniform vec2 M;uniform float S;
+float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
+float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<5;i++){v+=a*n(p);p=p*2.03+vec2(1.7,9.2);a*=.5;}return v;}
+void main(){
+  vec2 uv=(gl_FragCoord.xy-.5*R)/min(R.x,R.y);
+  uv-=(M-.5)*vec2(.22,-.22);
+  float r=length(uv);
+  float a=atan(uv.y,uv.x);
+  float tw=1.6+S*5.0;
+  float a2=a+tw/(r+.22)-T*.32;
+  vec2 q=vec2(cos(a2),sin(a2))*r;
+  float w=fbm(q*1.35+vec2(T*.06,-T*.045));
+  float v=sin(a2*2.+w*3.6+r*2.4-T*.2)*.5+.5;
+  vec3 c0=vec3(.012,.004,.05);
+  vec3 c1=vec3(.30,.07,1.0);
+  vec3 c2=vec3(1.0,.28,.86);
+  vec3 c3=vec3(1.0,.21,.15);
+  vec3 col=mix(c0,c1,smoothstep(.08,.40,v));
+  col=mix(col,c2,smoothstep(.42,.60,v));
+  col=mix(col,c3,smoothstep(.62,.80,v));
+  float e=smoothstep(.05,.0,abs(v-.41))+smoothstep(.04,.0,abs(v-.86))*.7;
+  col+=vec3(.78,1.,.80)*e*.85;
+  float dk=smoothstep(.40,.92,fbm(q*5.0-T*.1))*.35;
+  col*=1.-dk*smoothstep(.6,.9,v);
+  float hole=smoothstep(.07,.34,r+(w-.5)*.22);
+  col*=hole;
+  col*=1.-smoothstep(.75,1.5,r)*.75;
+  col+=(h(gl_FragCoord.xy+fract(T)*61.)-.5)*.05;
+  gl_FragColor=vec4(col,1.);
+}`;
+function sh(t,s){const o=gl.createShader(t);gl.shaderSource(o,s);gl.compileShader(o);if(!gl.getShaderParameter(o,gl.COMPILE_STATUS))console.error(gl.getShaderInfoLog(o));return o}
+const pr=gl.createProgram();gl.attachShader(pr,sh(gl.VERTEX_SHADER,vs));gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,fs));gl.linkProgram(pr);gl.useProgram(pr);
+const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+const loc=gl.getAttribLocation(pr,'p');gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+const uR=gl.getUniformLocation(pr,'R'),uT=gl.getUniformLocation(pr,'T'),uM=gl.getUniformLocation(pr,'M'),uS=gl.getUniformLocation(pr,'S');
+const Q=.5;
+function size(){const w=cv.clientWidth,h=cv.clientHeight;cv.width=Math.max(2,Math.round(w*Q));cv.height=Math.max(2,Math.round(h*Q));gl.viewport(0,0,cv.width,cv.height)}
+size();addEventListener('resize',size);
+let mx=.5,my=.5,tx=.5,ty=.5,sc=0,vis=true,last=0;
+addEventListener('pointermove',e=>{tx=e.clientX/innerWidth;ty=e.clientY/innerHeight});
+new IntersectionObserver(e=>{vis=e[0].isIntersecting}).observe(cv);
+const t0=performance.now();
+function draw(now){
+  mx+=(tx-mx)*.04;my+=(ty-my)*.04;
+  sc=Math.min(1,scrollY/innerHeight);
+  gl.uniform2f(uR,cv.width,cv.height);gl.uniform1f(uT,reduce?4.:(now-t0)/1000+4.);gl.uniform2f(uM,mx,my);gl.uniform1f(uS,sc);
+  gl.drawArrays(gl.TRIANGLES,0,3);
+}
+draw(t0);
+if(reduce)return;
+function loop(now){requestAnimationFrame(loop);if(!vis||now-last<33)return;last=now;draw(now)}
+requestAnimationFrame(loop);
+const core=document.querySelector('.core-in');
+addEventListener('scroll',()=>{const s=Math.min(1,scrollY/innerHeight);core.style.transform=`translateY(${-2+s*-14}vh) scale(${1+s*.35})`;core.style.opacity=1-s*1.2},{passive:true});
+})();
+</script>
+</body>
+</html>

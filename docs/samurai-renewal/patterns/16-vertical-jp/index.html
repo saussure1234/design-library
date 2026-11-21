@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="ja">
+<head><meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SAMURAI STYLE — Vertical JP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;700;800&family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#eee9df;--paper2:#e6e0d3;--ink:#16130f;--mute:#6f675b;--red:#cf3a1e;--line:rgba(22,19,15,.13);--pad:40px;--fs:min(10.4vh,15vw)}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:"Shippori Mincho B1",serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:50;opacity:.42;mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .4 0 0 0 0 .33 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+a{color:inherit;text-decoration:none}
+.hd{position:fixed;top:0;left:0;right:0;z-index:40;display:flex;align-items:center;justify-content:space-between;height:72px;padding:0 var(--pad);font:500 11px/1 "Inter Tight",sans-serif;letter-spacing:.16em;text-transform:uppercase}
+.logo{display:flex;align-items:center;gap:10px;font-weight:600;letter-spacing:.22em}
+.logo i{width:10px;height:10px;background:var(--red);display:block}
+.nav{display:flex;gap:28px}
+.nav a{position:relative;padding:4px 0}
+.nav a::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:1px;background:var(--ink);transform:scaleX(0);transform-origin:right;transition:transform .5s cubic-bezier(.7,0,.2,1)}
+.nav a:hover::after{transform:scaleX(1);transform-origin:left}
+.lang{display:flex;gap:14px;color:var(--mute)}
+.lang b{color:var(--ink);font-weight:600}
+.menu{display:none;background:none;border:0;font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;padding:8px 0;cursor:pointer}
+.ov{position:fixed;inset:0;z-index:39;background:var(--ink);color:var(--paper);display:flex;flex-direction:column;justify-content:center;gap:18px;padding:0 28px;font:500 30px/1.1 "Inter Tight",sans-serif;letter-spacing:.04em;transform:translateY(-100%);transition:transform .6s cubic-bezier(.7,0,.2,1)}
+.ov.open{transform:none}
+.ov .lang{font-size:12px;margin-top:20px;color:#9b9285}.ov .lang b{color:var(--paper)}
+body.mopen .hd{color:var(--paper)}
+
+.fv{position:relative;height:100vh;height:100svh;min-height:600px;overflow:hidden}
+.grid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(12,1fr);padding:0 var(--pad);pointer-events:none}
+.grid span{border-left:1px solid var(--line);transform-origin:top;animation:draw 1.6s cubic-bezier(.6,0,.1,1) both}
+.grid span:last-child{border-right:1px solid var(--line)}
+@keyframes draw{from{transform:scaleY(0)}}
+.vt{position:absolute;top:calc(72px + 5vh);right:9vw;margin:0;writing-mode:vertical-rl;font-size:var(--fs);line-height:1.12;font-weight:800;letter-spacing:.04em;white-space:nowrap}
+.vt .l{display:block}
+.vt .l2{padding-inline-start:3.1em}
+.vt .c{display:inline-block;animation:drop 1.1s cubic-bezier(.2,.75,.1,1) both;animation-delay:calc(var(--i) * 75ms + .35s);transition:color .3s}
+.vt .c:hover{color:var(--red)}
+@keyframes drop{from{opacity:0;transform:translateY(-.5em);filter:blur(10px)}}
+.bar{position:absolute;top:calc(72px + 5vh);right:calc(9vw - 22px);width:3px;height:calc(var(--fs) * 7.3);background:var(--red);transform-origin:top;animation:draw 1.8s .2s cubic-bezier(.6,0,.1,1) both}
+.phil{position:absolute;top:calc(72px + 5vh + var(--fs) * 1.1);right:calc(9vw + var(--fs) * 2.4 + 4vw);writing-mode:vertical-rl;margin:0;font-size:15px;line-height:2.3;letter-spacing:.2em;font-weight:500;color:#2c2721}
+.phil>span{display:block;animation:fade 1.4s ease both}
+.phil>span:nth-child(1){animation-delay:1.3s}.phil>span:nth-child(2){animation-delay:1.45s}.phil>span:nth-child(3){animation-delay:1.6s}
+.phil .em{color:var(--red)}
+@keyframes fade{from{opacity:0;transform:translateY(14px)}}
+.outline{position:absolute;left:var(--pad);top:104px;writing-mode:vertical-rl;margin:0;font:800 7.2vh/1 "Inter Tight",sans-serif;letter-spacing:.02em;color:transparent;-webkit-text-stroke:1px rgba(22,19,15,.38);white-space:nowrap;animation:fade 1.6s .6s ease both}
+.sig{position:absolute;left:calc(var(--pad) + 9vh);bottom:56px;animation:fade 1.4s 1.1s ease both}
+.sig h2{margin:0;font:italic 400 clamp(52px,7.4vw,118px)/.86 "Instrument Serif",serif;letter-spacing:-.01em}
+.sig h2 i{display:inline-block;width:.16em;height:.16em;border-radius:50%;background:var(--red);vertical-align:.12em;margin-left:.08em;animation:pulse 2.6s 2s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.6);opacity:.55}}
+.sig p{margin:22px 0 0;font:500 11px/1.6 "Inter Tight",sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--mute);display:flex;gap:18px;align-items:center}
+.sig p span{font-family:"Shippori Mincho B1",serif;letter-spacing:.24em;color:var(--ink);font-size:12px;text-transform:none}
+.scroll{position:absolute;right:var(--pad);bottom:40px;display:flex;flex-direction:column;align-items:center;gap:12px;font:500 10px/1 "Inter Tight",sans-serif;letter-spacing:.24em;text-transform:uppercase;writing-mode:vertical-rl}
+.scroll i{display:block;width:1px;height:64px;background:var(--line);position:relative;overflow:hidden}
+.scroll i::after{content:"";position:absolute;inset:0;background:var(--ink);animation:run 2.2s cubic-bezier(.7,0,.3,1) infinite}
+@keyframes run{0%{transform:translateY(-100%)}60%,100%{transform:translateY(100%)}}
+
+.sv{position:relative;padding:150px var(--pad) 160px;border-top:1px solid var(--line)}
+.sv-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:64px}
+.sv-head h2{margin:0;font:italic 400 clamp(64px,9vw,140px)/.8 "Instrument Serif",serif;letter-spacing:-.02em}
+.sv-head h2 sup{font:500 12px/1 "Inter Tight",sans-serif;letter-spacing:.18em;vertical-align:top;margin-left:10px;color:var(--red);font-style:normal}
+.sv-head p{margin:0;font:500 11px/1.8 "Inter Tight",sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--mute);text-align:right}
+.cols{display:flex;flex-direction:row-reverse;border-top:1px solid var(--ink)}
+.col{position:relative;flex:1;min-width:0;padding:30px 26px 30px;border-left:1px solid var(--line);display:flex;flex-direction:column;gap:30px;cursor:pointer;isolation:isolate;clip-path:inset(0 0 100% 0);transition:clip-path 1.2s cubic-bezier(.7,0,.2,1),color .5s}
+.col:first-child{border-right:0}
+.col.in{clip-path:inset(0 0 0 0)}
+.col::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--ink);transform:scaleY(0);transform-origin:top;transition:transform .7s cubic-bezier(.7,0,.2,1)}
+.col:hover{color:var(--paper)}
+.col:hover::before{transform:scaleY(1)}
+.v{writing-mode:vertical-rl;height:470px;display:flex;flex-direction:column;gap:18px;align-self:flex-end}
+.no{font:500 12px/1 "Inter Tight",sans-serif;letter-spacing:.2em;color:var(--red);text-combine-upright:none}
+.v h3{margin:0;font-size:38px;line-height:1.15;font-weight:800;letter-spacing:.03em;white-space:nowrap}
+.lb{font-size:13px;font-weight:700;letter-spacing:.24em;color:var(--red)}
+.v p{margin:0;font-size:15px;line-height:2.05;letter-spacing:.1em;font-weight:500}
+.tcy{text-combine-upright:all}
+.col figure{margin:0;margin-top:auto;aspect-ratio:4/3;overflow:hidden;background:var(--paper2)}
+.col img{width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(1) contrast(1.05) sepia(.18);transform:scale(1.04);transition:filter .7s,transform 1.2s cubic-bezier(.2,.7,.1,1)}
+.col:hover img{filter:none;transform:scale(1.1)}
+.col .arr{position:absolute;left:26px;top:30px;font:400 22px/1 "Inter Tight",sans-serif;transition:transform .5s cubic-bezier(.7,0,.2,1)}
+.col:hover .arr{transform:translate(-6px,6px) rotate(-45deg)}
+
+@media (max-width:900px){
+  :root{--pad:18px;--fs:min(8.6vh,20vw)}
+  .nav,.hd>.lang{display:none}
+  .menu{display:block}
+  .hd{height:60px}
+  .vt{top:calc(64px + 3vh);right:22px}
+  .bar{top:calc(64px + 3vh);right:12px}
+  .phil{top:calc(64px + 3vh + var(--fs) * 1.1);right:calc(22px + var(--fs) * 2.3 + 14px);font-size:13px;letter-spacing:.14em;line-height:2.1}
+  .outline{display:none}
+  .grid{grid-template-columns:repeat(6,1fr)}
+  .grid span:nth-child(n+7){display:none}
+  .grid span:nth-child(6){border-right:1px solid var(--line)}
+  .sig{left:var(--pad);bottom:34px}
+  .sig h2{font-size:56px}
+  .sig p{margin-top:14px;gap:10px;font-size:9px}
+  .sig p span{font-size:11px}
+  .scroll{display:none}
+  .sv{padding:96px var(--pad) 100px}
+  .sv-head{flex-direction:column;align-items:flex-start;gap:20px;margin-bottom:36px}
+  .sv-head p{text-align:left}
+  .cols{flex-wrap:wrap;flex-direction:row-reverse}
+  .col{flex:0 0 50%;padding:22px 12px;gap:20px;border-bottom:1px solid var(--line)}
+  .v{height:430px;gap:12px}
+  .v h3{font-size:24px}
+  .lb{font-size:11px;letter-spacing:.14em}
+  .v p{font-size:13px;line-height:1.9;letter-spacing:.06em}
+  .col .arr{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .col{clip-path:none}
+}
+</style>
+</head>
+<body>
+<header class="hd">
+  <a class="logo" href="#"><i></i>SAMURAI STYLE</a>
+  <nav class="nav"><a href="#">HOME</a><a href="#service">SERVICE</a><a href="#">MEDIA</a><a href="#">COMPANY</a><a href="#">RECRUIT</a><a href="#">CONTACT</a></nav>
+  <div class="lang"><span>ID</span><span>EN</span><b>JA</b></div>
+  <button class="menu" aria-expanded="false">Menu</button>
+</header>
+<div class="ov" aria-hidden="true"><a href="#">HOME</a><a href="#service">SERVICE</a><a href="#">MEDIA</a><a href="#">COMPANY</a><a href="#">RECRUIT</a><a href="#">CONTACT</a><div class="lang"><span>ID</span><span>EN</span><b>JA</b></div></div>
+
+<main>
+<section class="fv">
+  <div class="grid"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+  <p class="outline" data-par="0.18">SAMURAI STYLE</p>
+  <h1 class="vt" data-par="-0.22"><span class="l">「笑顔の総量の</span><span class="l l2">最大化」</span></h1>
+  <div class="bar" data-par="-0.22"></div>
+  <p class="phil" data-par="-0.1"><span>創業時に掲げた<span class="em">「笑顔の総量の最大化」</span>を軸に置く。</span><span>短期的な個別最適ではなく、長期的な全体最適へ。</span><span>地道に、泥臭くをコアバリューとして事業を運営。</span></p>
+  <div class="sig">
+    <h2>Find the<br>signal<i></i></h2>
+    <p><span>株式会社サムライスタイル</span>SAMURAI STYLE</p>
+  </div>
+  <div class="scroll">Scroll<i></i></div>
+</section>
+
+<section class="sv" id="service">
+  <div class="sv-head">
+    <h2>Services<sup>(04)</sup></h2>
+    <p>Read from right<br>to left — ←</p>
+  </div>
+  <div class="cols">
+    <article class="col" style="--d:0">
+      <span class="arr">↙</span>
+      <div class="v">
+        <span class="no">01</span>
+        <h3>Strategy2Action</h3>
+        <p>事業理解に基づいて戦略を考え、実行まで伴走し、ダッシュボード作成による経営層・上長への可視化まで対応。</p>
+      </div>
+      <figure><img src="strategy2action_pc.jpg" alt="Strategy2Action" loading="lazy"></figure>
+    </article>
+    <article class="col" style="--d:1">
+      <span class="arr">↙</span>
+      <div class="v">
+        <span class="no">02</span>
+        <h3>HookHack</h3>
+        <span class="lb">動画広告の制作ツール</span>
+        <p>売れる動画広告を<span class="tcy">LP</span>から<span class="tcy">5</span>分で制作。検証から成果改善まで、動画広告のPDCAに必要な機能を<span class="tcy">1</span>ツールで網羅します。</p>
+      </div>
+      <figure><img src="hookhack_pc.jpg" alt="HookHack" loading="lazy"></figure>
+    </article>
+    <article class="col" style="--d:2">
+      <span class="arr">↙</span>
+      <div class="v">
+        <span class="no">03</span>
+        <h3>HookHacker</h3>
+        <span class="lb"><span class="tcy">LP</span>・サイト制作の代行</span>
+        <p>自社開発<span class="tcy">AI</span>ツール「HookHack」×インドネシアオフショアチーム×日本人ディレクターで<span class="tcy">LP</span>・サイト制作を代行。</p>
+      </div>
+      <figure><img src="hookhacker_pc.jpg" alt="HookHacker" loading="lazy"></figure>
+    </article>
+    <article class="col" style="--d:3">
+      <span class="arr">↙</span>
+      <div class="v">
+        <span class="no">04</span>
+        <h3>動画制作</h3>
+        <p>貴社の顧客理解に基づき、動画を企画・撮影・編集までワンストップで制作します。</p>
+      </div>
+      <figure><img src="video-production-poster.webp" alt="動画制作" loading="lazy"></figure>
+    </article>
+  </div>
+</section>
+</main>
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let i = 0;
+  document.querySelectorAll('.vt .l').forEach(l => {
+    const t = l.textContent; l.textContent = '';
+    for (const ch of t) { const s = document.createElement('span'); s.className = 'c'; s.style.setProperty('--i', i++); s.textContent = ch; l.appendChild(s); }
+  });
+  const btn = document.querySelector('.menu'), ov = document.querySelector('.ov');
+  btn.addEventListener('click', () => { const o = ov.classList.toggle('open'); document.body.classList.toggle('mopen', o); btn.textContent = o ? 'Close' : 'Menu'; btn.setAttribute('aria-expanded', o); });
+  ov.querySelectorAll('a').forEach(a => a.addEventListener('click', () => btn.click()));
+  const cols = document.querySelectorAll('.col');
+  if (reduce || !('IntersectionObserver' in window)) { cols.forEach(c => c.classList.add('in')); return; }
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { cols.forEach((c, k) => setTimeout(() => c.classList.add('in'), k * 140)); io.disconnect(); }
+  }), { threshold: .05 });
+  io.observe(document.querySelector('.cols'));
+  const par = [...document.querySelectorAll('[data-par]')];
+  let ticking = false;
+  const upd = () => { const y = scrollY; if (y < innerHeight * 1.2) par.forEach(el => el.style.translate = `0 ${y * +el.dataset.par}px`); ticking = false; };
+  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(upd); } }, { passive: true });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="ja">
+<head><meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SAMURAI STYLE — 04 Editorial Serif</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Zen+Old+Mincho:wght@400;500;700&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:rgb(243,238,227);--fg:rgb(28,20,14);--g:clamp(18px,6.6vw,96px);--serif:"EB Garamond","Zen Old Mincho",serif;--min:"Zen Old Mincho",serif;--sans:"Inter Tight","Zen Old Mincho",sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg);-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--min);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.nb{white-space:nowrap}
+header{position:fixed;inset:0 0 auto 0;z-index:30;display:flex;justify-content:space-between;align-items:center;padding:26px var(--g);font-family:var(--sans);color:var(--fg)}
+header .logo{font-weight:600;font-size:15px;letter-spacing:.2em}
+header .r{display:flex;align-items:center;gap:34px;font-size:13px;letter-spacing:.02em}
+header nav{display:flex;gap:22px}
+header nav a{position:relative}
+header nav a::after{content:"";position:absolute;left:0;right:0;bottom:-3px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .5s cubic-bezier(.65,0,.35,1)}
+header nav a:hover::after{transform:scaleX(1)}
+header .lang{opacity:.55}
+.burger{display:inline-grid;gap:5px;width:18px}
+.burger i{display:block;height:1.5px;background:currentColor}
+.fv{position:relative;height:100vh;height:100svh;min-height:600px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 var(--g)}
+.fv h1{font-family:var(--serif);font-weight:400;font-size:clamp(52px,7.4vw,124px);line-height:1.02;letter-spacing:-.018em;margin-top:-8vh;position:relative}
+.fv h1 .w{display:inline-block;opacity:0;transform:translateY(.25em);filter:blur(8px);transition:opacity 1.4s,transform 1.6s cubic-bezier(.16,1,.3,1),filter 1.4s}
+.fv.in h1 .w{opacity:1;transform:none;filter:none}
+.ul{position:relative;display:inline-block}
+.ul svg{position:absolute;left:-2%;width:104%;bottom:-.08em;height:.22em;overflow:visible}
+.ul path{fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-dasharray:600;stroke-dashoffset:600;transition:stroke-dashoffset 1.6s 1.3s cubic-bezier(.65,0,.35,1)}
+.in .ul path{stroke-dashoffset:0}
+.fv .lede{margin-top:34px;font-size:clamp(14px,1.15vw,17px);letter-spacing:.14em;line-height:2;opacity:0;transition:opacity 1.4s 1.6s}
+.fv .feat{position:absolute;left:0;right:0;bottom:calc(14vh + 20px);display:flex;flex-direction:column;align-items:center;gap:14px;font-family:var(--sans);opacity:0;transition:opacity 1.4s 2s}
+.fv.in .lede,.fv.in .feat{opacity:1}
+.feat small{font-size:12px;opacity:.6;letter-spacing:.02em}
+.feat ul{list-style:none;display:flex;flex-wrap:wrap;justify-content:center;gap:10px 30px;font-family:var(--min);font-size:13px;letter-spacing:.08em}
+.feat li{display:flex;align-items:center;gap:9px}
+.feat li::before,.feat li::after{content:"";width:7px;height:12px;border:1px solid currentColor;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;opacity:.55}
+.feat li::before{transform:rotate(-25deg)}
+.feat li::after{transform:rotate(25deg)}
+.plate{position:relative;margin:-12vh auto 0;width:70%;max-width:none;border-radius:14px;overflow:hidden;aspect-ratio:16/9;max-height:92vh;will-change:width;z-index:2}
+.plate .ph{position:absolute;inset:-8% 0;background:url(home-hero-poster.webp) center/cover;filter:sepia(.55) saturate(1.6) hue-rotate(-12deg) brightness(.82) contrast(1.05);will-change:transform}
+.plate .veil{position:absolute;inset:0;background:radial-gradient(70% 70% at 50% 50%,rgba(20,10,4,.25),rgba(20,10,4,.6))}
+.plate p{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 8%;color:#f4ecdb;font-family:var(--min);font-weight:500;font-size:clamp(20px,2.6vw,42px);line-height:1.6;letter-spacing:.08em}
+.plate .cr{position:absolute;left:20px;bottom:16px;color:#f4ecdb;font-family:var(--sans);font-size:13px;opacity:.85}
+
+.toc{padding:clamp(90px,10vw,150px) var(--g) clamp(100px,12vw,180px)}
+.toc-h{display:grid;grid-template-columns:repeat(12,1fr);gap:20px;align-items:end;margin-bottom:clamp(40px,6vw,90px)}
+.toc-h .k{grid-column:1/3;font-family:var(--sans);font-size:12px;opacity:.6}
+.toc-h h2{grid-column:1/8;font-family:var(--serif);font-weight:400;font-size:clamp(60px,9vw,150px);line-height:.9;letter-spacing:-.02em}
+.toc-h h2 em{font-style:italic}
+.toc-h p{grid-column:8/13;font-family:var(--min);font-size:clamp(17px,1.5vw,22px);line-height:1.9;letter-spacing:.05em;padding-bottom:10px}
+.toc-h p u{text-decoration:none;background:linear-gradient(currentColor,currentColor) 0 100%/100% 1px no-repeat;padding-bottom:2px}
+.ent{display:grid;grid-template-columns:repeat(12,1fr);gap:20px;padding:34px 0 38px;border-top:1px solid color-mix(in srgb,var(--fg) 22%,transparent);cursor:pointer}
+.ent:last-child{border-bottom:1px solid color-mix(in srgb,var(--fg) 22%,transparent)}
+.ent .no{grid-column:1/2;font-family:var(--serif);font-style:italic;font-size:22px;padding-top:12px}
+.ent .main{grid-column:2/10}
+.ent .line{display:flex;align-items:baseline;gap:18px}
+.ent h3{font-family:var(--serif);font-weight:400;font-size:clamp(40px,5vw,80px);line-height:1;letter-spacing:-.015em;white-space:nowrap;transition:letter-spacing .6s cubic-bezier(.16,1,.3,1)}
+.ent h3 .it{font-style:normal;transition:font-style .1s}
+.ent:hover h3 .it{font-style:italic}
+.ent h3.ja{font-family:var(--min);font-weight:500;font-size:clamp(34px,4.2vw,66px);letter-spacing:.04em}
+.ent .lead{flex:1;height:1px;border-bottom:1.5px dotted color-mix(in srgb,var(--fg) 45%,transparent);transform:translateY(-.4em);min-width:30px}
+.ent .pg{font-family:var(--serif);font-size:26px}
+.ent .tg{display:block;font-family:var(--sans);font-size:12px;letter-spacing:.06em;opacity:.65;margin:16px 0 10px}
+.ent .ds{font-size:15.5px;line-height:2;letter-spacing:.05em;max-width:640px;word-break:auto-phrase;text-wrap:pretty}
+.ent .th{grid-column:10/13;align-self:center;border-radius:10px;overflow:hidden;aspect-ratio:900/650}
+.ent .th img{width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(1) contrast(1.05);transform:scale(1.04);transition:filter .8s,transform 1.2s cubic-bezier(.16,1,.3,1)}
+.ent:hover .th img,.ent.on .th img{filter:none;transform:none}
+.rv{opacity:0;transform:translateY(26px);transition:opacity 1.2s,transform 1.4s cubic-bezier(.16,1,.3,1)}
+.rv.in{opacity:1;transform:none}
+
+@media (max-width:820px){
+  header{padding:18px 18px}
+  header nav,header .lang{display:none}
+  :root{--g:18px}
+  .fv h1{font-size:clamp(44px,13.6vw,64px);margin-top:-6vh}
+  .fv .lede{font-size:13.5px;letter-spacing:.1em;margin-top:26px}
+  .fv .feat{bottom:calc(10vh + 20px)}
+  .feat ul{display:grid;grid-template-columns:repeat(2,auto);justify-content:center;font-size:12px;gap:12px 22px;padding:0 10px}
+  .plate{width:86%;margin-top:-8vh;aspect-ratio:4/5;border-radius:10px}
+  .plate p{font-size:20px;padding:0 10%}
+  .toc-h{grid-template-columns:1fr;gap:18px}
+  .toc-h h2,.toc-h p,.toc-h .k{grid-column:1}
+  .toc-h p{font-size:16px}
+  .ent{grid-template-columns:28px 1fr;gap:10px;padding:26px 0 30px}
+  .ent .no{grid-column:1;font-size:17px;padding-top:6px}
+  .ent .main{grid-column:2}
+  .ent h3{font-size:clamp(28px,8.4vw,40px)}
+  .ent h3.ja{font-size:clamp(26px,7.6vw,36px)}
+  .ent .pg{font-size:18px}
+  .ent .ds{font-size:14px;word-break:normal;overflow-wrap:anywhere}
+  .ent .th{grid-column:2;max-width:none;margin-top:14px}
+}
+@media (prefers-reduced-motion:reduce){
+  .fv h1 .w,.fv .lede,.fv .feat,.rv{transition:none!important;opacity:1!important;transform:none!important;filter:none!important}
+  .ul path{transition:none;stroke-dashoffset:0}
+}
+</style>
+</head>
+<body>
+<header>
+  <a class="logo" href="#">SAMURAI STYLE</a>
+  <div class="r">
+    <nav><a href="#">HOME</a><a href="#svc">SERVICE</a><a href="#">MEDIA</a><a href="#">COMPANY</a><a href="#">RECRUIT</a><a href="#">CONTACT</a></nav>
+    <span class="lang">ID · EN · JA</span>
+    <span class="burger" aria-label="menu"><i></i><i></i></span>
+  </div>
+</header>
+
+<section class="fv" id="fv">
+  <h1><span class="w">Find</span> <span class="w">the</span> <span class="w ul">signal.<svg viewBox="0 0 300 20" preserveAspectRatio="none"><path d="M2 12 C 60 4, 120 16, 180 9 S 270 6, 298 11"/></svg></span></h1>
+  <p class="lede"><span class="nb">創業時に掲げた</span><wbr><span class="nb">「笑顔の総量の最大化」を</span><wbr><span class="nb">軸に置く。</span></p>
+  <div class="feat">
+    <small>Four strengths of Samurai Style</small>
+    <ul><li>コミットメント</li><li>多言語対応</li><li>構造理解力</li><li>スピード感</li></ul>
+  </div>
+</section>
+
+<div class="plate" id="plate">
+  <div class="ph" id="ph"></div>
+  <div class="veil"></div>
+  <p><span><span class="nb">短期的な個別最適ではなく、</span><wbr><span class="nb">長期的な全体最適へ。</span></span></p>
+  <span class="cr">株式会社サムライスタイル</span>
+</div>
+
+<section class="toc" id="svc">
+  <div class="toc-h rv">
+    <h2><em>Contents</em></h2>
+    <p><span class="nb">AIで無数の“もっともらしさ”が</span><wbr><span class="nb">生まれ続ける時代に、</span><wbr><span class="nb">何が本質的な<u>シグナル</u>で</span><wbr><span class="nb">何が一時的な<u>ノイズ</u>なのかを</span><wbr><span class="nb">見極める。</span></p>
+  </div>
+  <a class="ent rv" href="#">
+    <span class="no">i.</span>
+    <div class="main">
+      <div class="line"><h3><span class="it">Strategy2Action</span></h3><span class="lead"></span><span class="pg">01</span></div>
+      <span class="tg">Strategy</span>
+      <p class="ds">事業理解に基づいて戦略を考え、実行まで伴走し、ダッシュボード作成による経営層・上長への可視化まで対応。</p>
+    </div>
+    <div class="th"><img src="strategy2action_pc.jpg" alt="Strategy2Action" loading="lazy"></div>
+  </a>
+  <a class="ent rv" href="#">
+    <span class="no">ii.</span>
+    <div class="main">
+      <div class="line"><h3><span class="it">HookHack</span></h3><span class="lead"></span><span class="pg">02</span></div>
+      <span class="tg">動画広告の制作ツール</span>
+      <p class="ds">売れる動画広告をLPから5分で制作。検証から成果改善まで、動画広告のPDCAに必要な機能を1ツールで網羅します。</p>
+    </div>
+    <div class="th"><img src="hookhack_pc.jpg" alt="HookHack" loading="lazy"></div>
+  </a>
+  <a class="ent rv" href="#">
+    <span class="no">iii.</span>
+    <div class="main">
+      <div class="line"><h3><span class="it">HookHacker</span></h3><span class="lead"></span><span class="pg">03</span></div>
+      <span class="tg">LP・サイト制作の代行</span>
+      <p class="ds">自社開発AIツール「HookHack」×インドネシアオフショアチーム×日本人ディレクターでLP・サイト制作を代行。</p>
+    </div>
+    <div class="th"><img src="hookhacker_pc.jpg" alt="HookHacker" loading="lazy"></div>
+  </a>
+  <a class="ent rv" href="#">
+    <span class="no">iv.</span>
+    <div class="main">
+      <div class="line"><h3 class="ja">動画制作</h3><span class="lead"></span><span class="pg">04</span></div>
+      <span class="tg">Video</span>
+      <p class="ds">貴社の顧客理解に基づき、動画を企画・撮影・編集までワンストップで制作します。</p>
+    </div>
+    <div class="th"><img src="video-production-poster.webp" alt="動画制作" loading="lazy"></div>
+  </a>
+</section>
+
+<script>
+(function(){
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var root = document.documentElement, plate = document.getElementById('plate'), ph = document.getElementById('ph');
+  var A = [243,238,227], B = [22,13,7], FA = [28,20,14], FB = [240,231,213];
+  function mix(a,b,t){ return 'rgb('+a.map(function(v,i){ return Math.round(v+(b[i]-v)*t); }).join(',')+')'; }
+  function clamp(v,a,b){ return Math.max(a,Math.min(b,v)); }
+  function ease(t){ return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2; }
+  function frame(){
+    var vh = innerHeight, sp = innerWidth <= 820;
+    var r = plate.getBoundingClientRect();
+    var p = clamp((vh - r.top)/(vh*0.95), 0, 1);
+    var e = ease(p);
+    var w0 = sp ? 86 : 70, w1 = 100;
+    var gw = sp ? 36 : 0;
+    plate.style.width = 'calc('+(w0+(w1-w0)*e)+'% - '+(gw*e)+'px)';
+    plate.style.borderRadius = (sp?10:14)*(1-e*.4)+'px';
+    ph.style.transform = 'translateY('+((r.top/vh)*-6)+'%)';
+    var c = clamp((scrollY - vh*0.35)/(vh*0.7), 0, 1);
+    root.style.setProperty('--bg', mix(A,B,c));
+    root.style.setProperty('--fg', mix(FA,FB,c));
+  }
+  if (!reduce) { addEventListener('scroll', function(){ requestAnimationFrame(frame); }, {passive:true}); addEventListener('resize', frame); }
+  frame();
+  (document.fonts ? document.fonts.ready : Promise.resolve()).then(function(){
+    document.querySelectorAll('.fv h1 .w').forEach(function(w,i){ w.style.transitionDelay = (0.15+i*0.18)+'s'; });
+    requestAnimationFrame(function(){ document.getElementById('fv').classList.add('in'); });
+  });
+  var io = new IntersectionObserver(function(es){ es.forEach(function(e){ if (e.isIntersecting) e.target.classList.add('in'); }); },{threshold:.15});
+  document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
+  var io2 = new IntersectionObserver(function(es){ es.forEach(function(e){ e.target.classList.toggle('on', e.isIntersecting); }); },{rootMargin:'-35% 0px -35% 0px'});
+  document.querySelectorAll('.ent').forEach(function(el){ io2.observe(el); });
+})();
+</script>
+</body>
+</html>

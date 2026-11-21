@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="ja">
+<head><meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SAMURAI STYLE — 02 Terminal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;800&family=M+PLUS+1+Code:wght@400;500;700&family=Silkscreen:wght@400;700&family=DotGothic16&display=swap" rel="stylesheet">
+<style>
+:root{--r:#ff2b1c;--r2:#c71d12;--rd:#3a0806;--rb:#1c0403;--bg:#050303;--g:clamp(14px,1.2vw,18px);--mono:"JetBrains Mono","M PLUS 1 Code",monospace;--jp:"M PLUS 1 Code","JetBrains Mono",monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg);-webkit-text-size-adjust:100%;scrollbar-width:none}
+html::-webkit-scrollbar{display:none}
+body{background:var(--bg);color:var(--r);font-family:var(--mono);font-size:13px;letter-spacing:.02em;overflow-x:hidden;text-transform:uppercase}
+a{color:inherit;text-decoration:none}
+.nb{white-space:nowrap}
+::selection{background:var(--r);color:#000}
+.tag{display:inline-block;background:var(--rb);padding:4px 8px;line-height:1.2;white-space:nowrap;transition:background .15s,color .15s}
+a.tag:hover{background:var(--r);color:#000}
+header{position:fixed;inset:0 0 auto 0;z-index:40;height:34px;padding:6px var(--g);display:flex;align-items:center;justify-content:space-between;gap:8px}
+header::before{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:var(--rd);z-index:-1}
+header .grp{display:flex;gap:6px}
+.glyph{font-family:var(--mono);letter-spacing:0;color:var(--r)}
+.menu{display:none}
+.bar{position:fixed;right:0;top:0;width:3px;height:100vh;z-index:41;background:transparent}
+.bar i{display:block;width:3px;height:8vh;background:var(--r);transform:translateY(0)}
+.fv{position:relative;height:100vh;height:100svh;min-height:620px;padding:64px var(--g) 46px;display:flex;flex-direction:column;justify-content:center;overflow:hidden}
+.scan{position:fixed;inset:0;pointer-events:none;z-index:60;background:repeating-linear-gradient(to bottom,rgba(0,0,0,0) 0 2px,rgba(0,0,0,.22) 2px 3px);mix-blend-mode:multiply}
+.vign{position:fixed;inset:0;pointer-events:none;z-index:59;background:radial-gradient(120% 90% at 50% 50%,rgba(0,0,0,0) 60%,rgba(0,0,0,.55))}
+.prompt{font-size:12px;color:var(--r2);margin-bottom:18px;display:flex;gap:18px;flex-wrap:wrap}
+.prompt b{color:var(--r);font-weight:500}
+#hl{display:block;width:100%;height:auto}
+.rule{height:1px;background:var(--rd);margin:22px 0 18px}
+.info{display:grid;grid-template-columns:repeat(12,1fr);gap:16px;align-items:start}
+.info .a{grid-column:1/3;font-size:11px}
+.info .b{grid-column:3/6;font-size:11px;line-height:1.55}
+.info .b ol{list-style:none;counter-reset:n}
+.info .b li{counter-increment:n;display:grid;grid-template-columns:22px 1fr;margin-bottom:6px;font-family:var(--jp);text-transform:none}
+.info .b li::before{content:counter(n)"."}
+.info .c{grid-column:7/11;font-family:var(--jp);font-size:15px;line-height:1.6;text-transform:none;letter-spacing:.04em}
+.info .d{grid-column:11/13;justify-self:stretch}
+.btn{display:flex;justify-content:space-between;align-items:center;background:var(--r);color:#000;padding:7px 10px;font-weight:500;transition:background .2s,color .2s}
+.btn:hover{background:#000;color:var(--r);outline:1px solid var(--r)}
+.foot{position:absolute;left:var(--g);right:var(--g);bottom:10px;display:flex;justify-content:space-between;align-items:flex-end;font-size:11px}
+.foot::before{content:"";position:absolute;left:0;right:0;bottom:11px;height:1px;background:var(--rd);z-index:-1}
+#osc{display:block;width:320px;height:64px;background:#0b0202}
+.cur{display:inline-block;width:.6em;height:1em;background:var(--r);vertical-align:-2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+
+.svc{position:relative;padding:120px var(--g) 140px;border-top:1px solid var(--rd)}
+.svc h2{font-family:"Silkscreen","DotGothic16",monospace;font-weight:700;font-size:clamp(40px,7.6vw,118px);line-height:.9;letter-spacing:-.02em;margin:22px 0 10px}
+.svc .lead{display:flex;justify-content:space-between;gap:16px;align-items:flex-end;margin-bottom:46px}
+.svc .lead p{font-family:var(--jp);text-transform:none;max-width:520px;line-height:1.6;font-size:13px}
+.cmd{font-size:13px;color:var(--r)}
+.cmd .typed{display:inline}
+.wrap{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+.list{grid-column:1/9}
+.th{display:grid;grid-template-columns:56px 1fr 150px 70px;gap:12px;font-size:11px;color:var(--r2);padding:0 10px 8px;border-bottom:1px solid var(--rd)}
+.item{display:grid;grid-template-columns:56px 1fr 150px 70px;gap:12px;padding:22px 10px 24px;border-bottom:1px solid var(--rd);cursor:pointer;position:relative;transition:background .12s,color .12s}
+.item .id{font-size:12px;padding-top:8px}
+.item .nm{font-family:"Silkscreen","DotGothic16",monospace;font-size:clamp(26px,2.9vw,44px);line-height:1;text-transform:uppercase;letter-spacing:-.01em}
+.item .ds{grid-column:2/4;font-family:var(--jp);text-transform:none;font-size:14px;line-height:1.7;letter-spacing:.03em;margin-top:12px;max-width:620px;color:#ff6a5e}
+.item .ty{font-size:11px;padding-top:8px}
+.item .ty .jp{font-family:var(--jp)}
+.item .run{grid-row:1;grid-column:4;justify-self:end;font-size:11px;padding-top:8px}
+.item .mini{display:none}
+.item:hover,.item.act{background:var(--r);color:#000}
+.item:hover .ds,.item.act .ds{color:#000}
+.item.typing .nm::after{content:"";display:inline-block;width:.5em;height:.85em;background:currentColor;margin-left:.08em;animation:blink .8s steps(1) infinite;vertical-align:-.04em}
+.view{grid-column:9/13;position:sticky;top:70px;align-self:start;border:1px solid var(--rd);background:#0b0202}
+.view .tb{display:flex;justify-content:space-between;padding:6px 8px;font-size:11px;background:var(--rb)}
+.duo{position:relative;aspect-ratio:900/650;overflow:hidden;background:#000}
+.duo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.35) brightness(.95);opacity:0;transition:opacity .25s steps(4)}
+.duo img.on{opacity:1}
+.duo::before{content:"";position:absolute;inset:0;background:var(--r);mix-blend-mode:multiply;z-index:2}
+.duo::after{content:"";position:absolute;inset:0;z-index:3;background:repeating-linear-gradient(to bottom,rgba(0,0,0,0) 0 2px,rgba(0,0,0,.45) 2px 4px)}
+.view .meta{padding:10px 8px 12px;font-size:11px;line-height:1.7;border-top:1px solid var(--rd)}
+.view .meta span{color:var(--r2)}
+.rv{opacity:0}
+.rv.in{opacity:1;animation:flick .5s steps(5)}
+@keyframes flick{0%{opacity:0}20%{opacity:1}40%{opacity:.2}60%{opacity:1}80%{opacity:.5}100%{opacity:1}}
+
+@media (max-width:820px){
+  header .grp.nav,header .grp.lang{display:none}
+  header .grp.mid{display:none}
+  .menu{display:inline-block}
+  .fv{padding:56px var(--g) 64px;justify-content:center}
+  .prompt{font-size:11px;gap:10px;margin-bottom:14px}
+  .info{grid-template-columns:1fr 1fr;gap:14px}
+  .info .a{grid-column:1/2}
+  .info .b{grid-column:1/3;grid-row:3}
+  .info .c{grid-column:1/3;grid-row:2;font-size:14px}
+  .info .d{grid-column:2/3;grid-row:1}
+  #osc{width:150px;height:40px}
+  .foot .hide{display:none}
+  .svc{padding:80px var(--g) 100px}
+  .svc .lead{flex-direction:column;align-items:flex-start}
+  .list,.view{grid-column:1/13}
+  .view{display:none}
+  .th{display:none}
+  .item{grid-template-columns:40px 1fr auto;padding:20px 6px 22px}
+  .item .ty{grid-column:2/4;grid-row:2;padding-top:6px}
+  .item .ds{grid-column:1/4;max-width:none;font-size:13.5px}
+  .item .mini{display:block;grid-column:1/4;margin-top:14px}
+  .item .id{padding-top:4px}
+  .item .nm{grid-column:2/4;font-size:clamp(18px,5.6vw,30px);white-space:nowrap}
+  .item .ty{grid-column:2/3}
+  .item .run{grid-column:3;grid-row:2;padding-top:6px}
+}
+@media (prefers-reduced-motion:reduce){
+  .cur,.item.typing .nm::after{animation:none}
+  .rv{opacity:1;animation:none}
+}
+</style>
+</head>
+<body>
+<div class="scan"></div><div class="vign"></div>
+<div class="bar"><i id="bari"></i></div>
+<header>
+  <div class="grp"><span class="tag glyph" id="g1">▚▞▙▟▚▞▙▟▚▞</span></div>
+  <div class="grp mid"><a class="tag" href="#">SAMURAI-STYLE.TOKYO</a></div>
+  <nav class="grp nav"><a class="tag" href="#">HOME</a><a class="tag" href="#svc">SERVICE</a><a class="tag" href="#">MEDIA</a><a class="tag" href="#">COMPANY</a><a class="tag" href="#">RECRUIT</a><a class="tag" href="#">CONTACT</a></nav>
+  <div class="grp lang"><span class="tag">ID</span><span class="tag">EN</span><span class="tag" style="background:var(--r);color:#000">JA</span></div>
+  <div class="grp"><span class="tag glyph" id="g2">▟▙▞▚▟▙▞▚▟▙</span></div>
+  <a class="tag menu" href="#">[ MENU ]</a>
+</header>
+
+<section class="fv">
+  <div class="prompt"><span>SAMURAI@STYLE:~$ <b>./find --target=signal</b></span><span id="stat">[ SCANNING ]</span></div>
+  <canvas id="hl" aria-label="FIND THE SIGNAL"></canvas>
+  <div class="rule"></div>
+  <div class="info">
+    <div class="a">[ SAMURAI STYLE ],<br>株式会社サムライスタイル</div>
+    <div class="b"><ol><li>笑顔の総量の最大化</li><li>短期的な個別最適ではなく、長期的な全体最適へ。</li><li>地道に、泥臭く</li></ol></div>
+    <p class="c"><span class="nb">AIで無数の“もっともらしさ”が</span><wbr><span class="nb">生まれ続ける時代に、</span><wbr><span class="nb">何が本質的なシグナルで</span><wbr><span class="nb">何が一時的なノイズなのかを</span><wbr><span class="nb">見極める。</span></p>
+    <div class="d"><a class="btn" href="#svc"><span>SERVICE</span><span>→</span></a></div>
+  </div>
+  <div class="foot">
+    <span class="tag">NOISE <span id="nz">████████</span></span>
+    <canvas id="osc"></canvas>
+    <span class="tag hide">JST <span id="clk">--:--:--</span></span>
+  </div>
+</section>
+
+<section class="svc" id="svc">
+  <div class="cmd rv">SAMURAI@STYLE:~$ <span class="typed" data-t="ls ./services --all"></span><span class="cur"></span></div>
+  <h2 class="rv">SERVICES</h2>
+  <div class="lead rv"><span>[ 04 ITEMS ]</span><span>STRATEGY / TOOL / PRODUCTION</span></div>
+  <div class="wrap">
+    <div class="list">
+      <div class="th"><span>ID</span><span>NAME</span><span>TYPE</span><span style="text-align:right">EXEC</span></div>
+      <a class="item rv act" href="#" data-img="0">
+        <span class="id">[01]</span><span class="nm">Strategy2Action</span><span class="ty">STRATEGY</span><span class="run">RUN →</span>
+        <p class="ds">事業理解に基づいて戦略を考え、実行まで伴走し、ダッシュボード作成による経営層・上長への可視化まで対応。</p>
+        <div class="mini duo"><img class="on" src="strategy2action_pc.jpg" alt=""></div>
+      </a>
+      <a class="item rv" href="#" data-img="1">
+        <span class="id">[02]</span><span class="nm">HookHack</span><span class="ty"><span class="jp">動画広告の制作ツール</span></span><span class="run">RUN →</span>
+        <p class="ds">売れる動画広告をLPから5分で制作。検証から成果改善まで、動画広告のPDCAに必要な機能を1ツールで網羅します。</p>
+        <div class="mini duo"><img class="on" src="hookhack_pc.jpg" alt=""></div>
+      </a>
+      <a class="item rv" href="#" data-img="2">
+        <span class="id">[03]</span><span class="nm">HookHacker</span><span class="ty"><span class="jp">LP・サイト制作の代行</span></span><span class="run">RUN →</span>
+        <p class="ds">自社開発AIツール「HookHack」×インドネシアオフショアチーム×日本人ディレクターでLP・サイト制作を代行。</p>
+        <div class="mini duo"><img class="on" src="hookhacker_pc.jpg" alt=""></div>
+      </a>
+      <a class="item rv" href="#" data-img="3">
+        <span class="id">[04]</span><span class="nm">動画制作</span><span class="ty">VIDEO</span><span class="run">RUN →</span>
+        <p class="ds">貴社の顧客理解に基づき、動画を企画・撮影・編集までワンストップで制作します。</p>
+        <div class="mini duo"><img class="on" src="video-production-poster.webp" alt=""></div>
+      </a>
+    </div>
+    <aside class="view">
+      <div class="tb"><span>[ PREVIEW ]</span><span id="vname">01 / 04</span></div>
+      <div class="duo" id="duo">
+        <img class="on" src="strategy2action_pc.jpg" alt="">
+        <img src="hookhack_pc.jpg" alt="">
+        <img src="hookhacker_pc.jpg" alt="">
+        <img src="video-production-poster.webp" alt="">
+      </div>
+      <div class="meta"><span>SIGNAL</span> ▮▮▮▮▮▮▮▮▮▮▮▮<br><span>NOISE&nbsp;</span> ▯▯▯▯▯▯▯▯▯▯▯▯</div>
+    </aside>
+  </div>
+</section>
+
+<script>
+(function(){
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var RED = [255,43,28];
+  var cv = document.getElementById('hl'), ctx = cv.getContext('2d');
+  var dots = [], cols = 0, rows = 0, cell = 9, lines, charW, lineH, t0 = 0, typeStart = 900, perChar = 75, totalChars = 0, lastChar = {x:0,y:0,h:0};
+  var mouse = {x:-1e4,y:-1e4};
+
+  function build(){
+    var sp = innerWidth <= 820;
+    lines = sp ? ['FIND','THE','SIGNAL'] : ['FIND THE','SIGNAL'];
+    var W = Math.floor(cv.parentNode.clientWidth - parseFloat(getComputedStyle(cv.parentNode).paddingLeft)*2);
+    cell = sp ? 6 : Math.max(8, Math.round(W/170));
+    var maxLen = Math.max.apply(null, lines.map(function(l){return l.length+1;}));
+    charW = Math.floor(W/maxLen/cell)*cell;
+    var fs = charW/0.6;
+    lineH = Math.round(fs*0.78/cell)*cell;
+    var H = lineH*lines.length;
+    var dpr = Math.min(devicePixelRatio||1, 2);
+    cv.width = W*dpr; cv.height = H*dpr; cv.style.height = H+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    var off = document.createElement('canvas'); off.width = W; off.height = H;
+    var o = off.getContext('2d');
+    o.fillStyle = '#fff'; o.textBaseline = 'alphabetic';
+    o.font = '800 '+fs+'px "JetBrains Mono", monospace';
+    var idx = 0, starts = [];
+    lines.forEach(function(l,i){
+      var y = lineH*(i+1) - lineH*0.1;
+      for (var k=0;k<l.length;k++){ o.fillText(l[k], k*charW, y); }
+      starts.push(idx); idx += l.length;
+    });
+    totalChars = idx;
+    var data = o.getImageData(0,0,W,H).data;
+    cols = Math.floor(W/cell); rows = Math.floor(H/cell); dots = [];
+    for (var r=0;r<rows;r++){
+      for (var c=0;c<cols;c++){
+        var px = c*cell + cell/2|0, py = r*cell + cell/2|0;
+        var a = data[(py*W+px)*4+3];
+        var li = Math.min(lines.length-1, Math.floor(r*cell/lineH));
+        var ci = Math.floor(c*cell/charW);
+        var order = ci < lines[li].length ? starts[li]+ci : -1;
+        dots.push({x:c*cell,y:r*cell,on:a>110,order:order,n:Math.random()});
+      }
+    }
+    var lastLine = lines.length-1;
+    lastChar = {x:lines[lastLine].length*charW + cell, y:lineH*lastLine + lineH*0.14, h:lineH*0.7};
+  }
+
+  var last = 0, fps = 1000/24;
+  function draw(t){
+    if (!t0) t0 = t;
+    var el = reduce ? 1e9 : t - t0;
+    if (t - last < (el < 4000 ? fps : 100)) { requestAnimationFrame(draw); return; }
+    last = t;
+    var W = cols*cell, H = rows*cell;
+    ctx.clearRect(0,0,cv.width,cv.height);
+    var typed = Math.floor((el - typeStart)/perChar);
+    var noise = el < typeStart ? 0.16 : Math.max(0.012, 0.16*Math.exp(-(el-typeStart)/700));
+    var s = cell*0.78;
+    var rect = cv.getBoundingClientRect();
+    var mx = mouse.x - rect.left, my = mouse.y - rect.top;
+    for (var i=0;i<dots.length;i++){
+      var d = dots[i];
+      var lit = d.on && d.order >= 0 && d.order < typed;
+      var dx = d.x - mx, dy = d.y - my, near = dx*dx+dy*dy < 9000;
+      if (lit && near && Math.random() < .55) lit = false;
+      if (lit) { ctx.fillStyle = 'rgb(255,43,28)'; ctx.fillRect(d.x, d.y, s, s); }
+      else if (Math.random() < noise || (near && Math.random() < .25)) { ctx.fillStyle = 'rgba(255,43,28,'+(0.25+Math.random()*.5)+')'; ctx.fillRect(d.x, d.y, s, s); }
+      else { ctx.fillStyle = 'rgba(255,43,28,.07)'; ctx.fillRect(d.x, d.y, s, s); }
+    }
+    if (typed >= totalChars && Math.floor(el/500)%2===0) {
+      ctx.fillStyle = 'rgb(255,43,28)';
+      ctx.fillRect(Math.min(lastChar.x, W - charW*0.8), lastChar.y + lastChar.h*0.15, charW*0.62, lastChar.h*0.92);
+    }
+    var st = document.getElementById('stat');
+    st.textContent = typed < 0 ? '[ SCANNING ]' : (typed < totalChars ? '[ DECODING '+Math.min(99,Math.round(typed/totalChars*100))+'% ]' : '[ SIGNAL FOUND ]');
+    if (!reduce) requestAnimationFrame(draw);
+  }
+
+  var oc = document.getElementById('osc'), ox = oc.getContext('2d'), ot = 0;
+  function osc(){
+    var w = oc.clientWidth, h = oc.clientHeight, dpr = Math.min(devicePixelRatio||1,2);
+    if (oc.width !== w*dpr) { oc.width = w*dpr; oc.height = h*dpr; }
+    ox.setTransform(dpr,0,0,dpr,0,0);
+    ox.clearRect(0,0,w,h);
+    ox.strokeStyle = 'rgba(255,43,28,.14)'; ox.lineWidth = 1;
+    for (var gx=0; gx<w; gx+=16){ ox.beginPath(); ox.moveTo(gx+.5,0); ox.lineTo(gx+.5,h); ox.stroke(); }
+    ox.beginPath(); ox.moveTo(0,h/2+.5); ox.lineTo(w,h/2+.5); ox.stroke();
+    var k = (Math.sin(ot*0.6)+1)/2;
+    ox.strokeStyle = '#ff2b1c'; ox.lineWidth = 1.5; ox.beginPath();
+    for (var x=0;x<=w;x+=2){
+      var y = h/2 + Math.sin(x/w*Math.PI*6 + ot*3)*h*0.3 + (Math.random()-.5)*h*0.7*(1-k);
+      x ? ox.lineTo(x,y) : ox.moveTo(x,y);
+    }
+    ox.stroke();
+    var nz = Math.round((1-k)*8);
+    document.getElementById('nz').textContent = '█'.repeat(nz) + '░'.repeat(8-nz);
+    ot += 0.05;
+    if (!reduce) setTimeout(function(){ requestAnimationFrame(osc); }, 60);
+  }
+
+  var gl = '▚▞▙▟▛▜▖▗▘▝░▒';
+  function glyphs(){
+    ['g1','g2'].forEach(function(id){ var s=''; for (var i=0;i<10;i++) s += gl[Math.random()*gl.length|0]; document.getElementById(id).textContent = s; });
+    var d = new Date(Date.now() + (9*60 + new Date().getTimezoneOffset())*60000);
+    document.getElementById('clk').textContent = [d.getHours(),d.getMinutes(),d.getSeconds()].map(function(n){return (n<10?'0':'')+n;}).join(':');
+    if (!reduce) setTimeout(glyphs, 400);
+  }
+
+  function typeIt(el){
+    var s = el.getAttribute('data-t'), i = 0;
+    if (reduce) { el.textContent = s; return; }
+    (function step(){ el.textContent = s.slice(0, ++i); if (i < s.length) setTimeout(step, 45 + Math.random()*60); })();
+  }
+  function scramble(el){
+    var fin = el.textContent, len = fin.length, f = 0, ch = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&*';
+    if (reduce || /[^\x00-\x7F]/.test(fin)) return;
+    (function step(){
+      var out = ''; for (var i=0;i<len;i++){ out += i < f/2 ? fin[i] : ch[Math.random()*ch.length|0]; }
+      el.textContent = out; f++;
+      if (f/2 <= len) setTimeout(step, 28); else el.textContent = fin;
+    })();
+  }
+
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if (!e.isIntersecting) return;
+      var el = e.target; io.unobserve(el);
+      setTimeout(function(){
+        el.classList.add('in');
+        var ty = el.querySelector('.typed'); if (ty) typeIt(ty);
+        var nm = el.querySelector('.nm'); if (nm) scramble(nm);
+      }, (el.dataset.d||0));
+    });
+  },{threshold:.2});
+  document.querySelectorAll('.rv').forEach(function(el,i){ io.observe(el); });
+
+  var imgs = document.querySelectorAll('#duo img'), items = document.querySelectorAll('.item');
+  items.forEach(function(it){
+    it.addEventListener('mouseenter', function(){
+      items.forEach(function(x){ x.classList.remove('act'); }); it.classList.add('act');
+      var n = +it.dataset.img; imgs.forEach(function(im,j){ im.classList.toggle('on', j===n); });
+      document.getElementById('vname').textContent = '0'+(n+1)+' / 04';
+    });
+  });
+
+  var bari = document.getElementById('bari');
+  addEventListener('scroll', function(){
+    var p = scrollY/Math.max(1,(document.documentElement.scrollHeight - innerHeight));
+    bari.style.transform = 'translateY('+(p*92)+'vh)';
+  },{passive:true});
+  addEventListener('pointermove', function(e){ mouse.x = e.clientX; mouse.y = e.clientY; });
+  addEventListener('pointerleave', function(){ mouse.x = mouse.y = -1e4; });
+
+  (document.fonts ? Promise.all([document.fonts.ready, document.fonts.load('800 100px "JetBrains Mono"')]) : Promise.resolve()).then(function(){
+    build(); requestAnimationFrame(draw); osc(); glyphs();
+  });
+  var rt; addEventListener('resize', function(){ clearTimeout(rt); rt = setTimeout(function(){ build(); if (reduce) requestAnimationFrame(draw); }, 150); });
+})();
+</script>
+</body>
+</html>

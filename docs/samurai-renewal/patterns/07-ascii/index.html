@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="ja">
+<head><meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SAMURAI STYLE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+JP:wght@400;500;600&family=Shippori+Mincho+B1:wght@800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f2f1ec;--ink:#121212;--mute:#8a8a84;--red:#e5371b}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg);-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans JP",sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.nb{white-space:nowrap}
+.mono{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.04em;text-transform:uppercase}
+
+.hd{position:absolute;inset:0 0 auto 0;z-index:5;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:16px 16px}
+.hd span,.hd a{background:var(--bg);padding:2px 0}
+.hd nav{display:flex;gap:0}
+.hd nav a{padding:2px 9px;transition:background .2s,color .2s}
+.hd nav a:hover{background:var(--ink);color:var(--bg)}
+.hd .r{justify-self:end;display:flex;gap:20px}
+.hd .r i{font-style:normal;color:var(--mute);background:var(--bg)}
+.hd .menu{display:none}
+
+.fv{position:relative;height:100vh;height:100svh;min-height:560px;overflow:hidden}
+#art{position:absolute;inset:0;width:100%;height:100%;display:block}
+.fv-foot{position:absolute;left:16px;right:16px;bottom:14px;z-index:4}
+.bars{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
+.bars i{display:block;height:10px;background:#b9b8b2;position:relative;overflow:hidden}
+.bars i:last-child{background:#d9d8d2}
+.bars i b{position:absolute;inset:0;background:var(--ink);transform-origin:left;transform:scaleX(var(--p,0))}
+.labels{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.labels span{background:var(--bg);justify-self:start;padding:1px 0}
+.labels .rt{display:flex;justify-content:space-between}
+.hint{color:var(--mute)}
+
+.intro{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:6px;padding:clamp(72px,8vw,120px) 16px clamp(80px,10vw,150px)}
+.intro .mono{grid-column:1/4;color:var(--mute);padding-top:.7em}
+.intro h2{grid-column:4/12;font-weight:500;font-size:clamp(24px,2.55vw,40px);line-height:1.5;letter-spacing:-.01em}
+.intro h2 em{font-style:normal;background:linear-gradient(var(--ink),var(--ink)) no-repeat 0 100%/0 100%;color:var(--ink);transition:background-size 1.4s cubic-bezier(.7,0,.2,1) .4s,color .3s 1s}
+.intro.on h2 em{background-size:100% 100%;color:var(--bg)}
+.intro p{grid-column:4/10;margin-top:28px;font-size:15px;line-height:2;color:#3d3d3a}
+
+.sv{padding:0 16px clamp(80px,10vw,160px)}
+.sv-bar{display:flex;justify-content:space-between;border-top:1px solid var(--ink);padding-top:8px;margin-bottom:clamp(40px,5vw,80px)}
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:6px;row-gap:clamp(60px,8vw,130px)}
+.card{position:relative;display:block}
+.card .fig{position:relative;overflow:hidden;background:#e3e2dc}
+.card img{display:block;width:100%;height:100%;object-fit:cover;transition:transform 1.2s cubic-bezier(.2,.7,.1,1)}
+.card:hover img{transform:scale(1.04)}
+.card canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.cap{display:flex;gap:14px;margin-top:10px}
+.cap .id{color:var(--mute)}
+.card h3{font-weight:600;font-size:clamp(22px,2vw,30px);letter-spacing:-.01em;margin-top:14px;line-height:1.2}
+.card p{font-size:14px;line-height:1.95;color:#3d3d3a;margin-top:10px;max-width:520px}
+.c1{grid-column:1/8}.c1 .fig{aspect-ratio:4/3.2}
+.c2{grid-column:10/13;margin-top:0}.c2 .fig{aspect-ratio:900/700}
+.c3{grid-column:2/7}.c3 .fig{aspect-ratio:1/.9}
+.c4{grid-column:7/13;margin-top:clamp(80px,14vw,240px)}.c4 .fig{aspect-ratio:16/10}
+
+@media (max-width:820px){
+  .hd{grid-template-columns:1fr auto;padding:14px 12px}
+  .hd nav,.hd .r{display:none}
+  .hd .menu{display:block;justify-self:end}
+  .fv-foot{left:12px;right:12px}
+  .labels .rt .hint{display:none}
+  .intro{grid-template-columns:1fr;padding:64px 12px 80px}
+  .intro .mono,.intro h2,.intro p{grid-column:1}
+  .intro h2{font-size:22px;margin-top:14px}
+  .intro p{font-size:14px}
+  .sv{padding:0 12px 90px}
+  .grid{grid-template-columns:1fr;row-gap:56px}
+  .c1,.c2,.c3,.c4{grid-column:1;margin-top:0}
+  .c2{width:78%;justify-self:end}
+  .c3{width:86%}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition-duration:.01ms!important;animation:none!important}
+}
+</style>
+</head>
+<body>
+<header class="hd mono">
+  <span>Samurai Style</span>
+  <nav><a href="#">Home</a><a href="#sv">Service</a><a href="#">Media</a><a href="#">Company</a><a href="#">Recruit</a></nav>
+  <div class="r"><i>ID</i><i>EN</i><span>JA</span><a href="#">Contact</a></div>
+  <span class="menu">Menu</span>
+</header>
+
+<section class="fv" aria-label="Find the signal">
+  <canvas id="art" aria-hidden="true"></canvas>
+  <div class="fv-foot mono">
+    <div class="bars"><i><b id="pb"></b></i><i></i></div>
+    <div class="labels">
+      <span>S001 Find the signal</span>
+      <div class="rt"><span>S002 Samurai Style</span><span class="hint">Move to disturb ↗</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="intro" id="intro">
+  <div class="mono">(Signal / Noise)</div>
+  <h2><span class="nb">AIで無数の</span><span class="nb">“もっともらしさ”が</span><wbr><span class="nb">生まれ続ける</span><span class="nb">時代に、</span><wbr><span class="nb">何が本質的な</span><span class="nb"><em>シグナル</em>で</span><wbr><span class="nb">何が一時的な</span><span class="nb">ノイズなのかを</span><wbr><span class="nb">見極める。</span></h2>
+  <p>短期的な個別最適ではなく、長期的な全体最適へ。地道に、泥臭くをコアバリューとして事業を運営。</p>
+</section>
+
+<section class="sv" id="sv">
+  <div class="sv-bar mono"><span>Services</span><span>(04)</span></div>
+  <div class="grid">
+    <a class="card c1" href="#">
+      <div class="fig"><img src="strategy2action_pc.jpg" alt="Strategy2Action"><canvas></canvas></div>
+      <div class="cap mono"><span class="id">A001</span><span>Strategy2Action</span></div>
+      <h3>Strategy2Action</h3>
+      <p>事業理解に基づいて戦略を考え、実行まで伴走し、ダッシュボード作成による経営層・上長への可視化まで対応。</p>
+    </a>
+    <a class="card c2" href="#">
+      <div class="fig"><img src="hookhack_pc.jpg" alt="HookHack"><canvas></canvas></div>
+      <div class="cap mono"><span class="id">A002</span><span>HookHack</span></div>
+      <h3>HookHack<br><span style="font-size:.55em;font-weight:500">動画広告の制作ツール</span></h3>
+      <p>売れる動画広告をLPから5分で制作。検証から成果改善まで、動画広告のPDCAに必要な機能を1ツールで網羅します。</p>
+    </a>
+    <a class="card c3" href="#">
+      <div class="fig"><img src="hookhacker_pc.jpg" alt="HookHacker"><canvas></canvas></div>
+      <div class="cap mono"><span class="id">A003</span><span>HookHacker</span></div>
+      <h3>HookHacker<br><span style="font-size:.55em;font-weight:500">LP・サイト制作の代行</span></h3>
+      <p>自社開発AIツール「HookHack」×インドネシアオフショアチーム×日本人ディレクターでLP・サイト制作を代行。</p>
+    </a>
+    <a class="card c4" href="#">
+      <div class="fig"><img src="video-production-poster.webp" alt="動画制作"><canvas></canvas></div>
+      <div class="cap mono"><span class="id">A004</span><span>Video Production</span></div>
+      <h3>動画制作</h3>
+      <p>貴社の顧客理解に基づき、動画を企画・撮影・編集までワンストップで制作します。</p>
+    </a>
+  </div>
+</section>
+
+<script>
+(()=>{
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const RAMP=' .-:/+=<!?3I25469AON';
+const NOISE='-:/+=<!?3I25469AON.';
+const cv=document.getElementById('art'),ctx=cv.getContext('2d');
+const off=document.createElement('canvas'),oc=off.getContext('2d',{willReadFrequently:true});
+let W,H,fs,cw,lh,cols,rows,G=null,seeds,dpr;
+let mx=-999,my=-999,tmx=-999,tmy=-999,vis=true,usr=false,t0=performance.now();
+const pb=document.getElementById('pb');
+function measure(){
+  dpr=Math.min(devicePixelRatio||1,2);
+  W=cv.clientWidth;H=cv.clientHeight;
+  cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);
+  fs=W<600?9:13;
+  ctx.font=`${fs}px "IBM Plex Mono", monospace`;
+  cw=ctx.measureText('M').width;lh=Math.round(fs*1.24);
+  cols=Math.ceil(W/cw)+1;rows=Math.ceil(H/lh)+1;
+  off.width=cols;off.height=rows;
+  oc.clearRect(0,0,cols,rows);
+  oc.save();
+  const gh=Math.min(rows*(W<600?.6:.78),(cols*(W<600?.95:.62))*(cw/lh));
+  oc.translate(cols/2,rows*0.47);
+  oc.scale(lh/cw*0.5,0.5);
+  oc.fillStyle='#000';oc.textAlign='center';oc.textBaseline='middle';
+  oc.font=`800 ${gh*2*1.05}px "Shippori Mincho B1", serif`;
+  oc.fillText('侍',0,0);
+  oc.restore();
+  const d=oc.getImageData(0,0,cols,rows).data;
+  G=new Float32Array(cols*rows);
+  for(let i=0;i<cols*rows;i++)G[i]=d[i*4+3]/255;
+  seeds=new Float32Array(cols*rows);
+  for(let i=0;i<seeds.length;i++)seeds[i]=Math.random();
+}
+function g(c,r){c=Math.round(c);r=Math.round(r);if(c<0||r<0||c>=cols||r>=rows)return 0;return G[r*cols+c]}
+function frame(now){
+  const t=(now-t0)/1000;
+  const p=reduce?1:Math.min(1,Math.max(0,(t-.2)/1.8));
+  pb.style.setProperty('--p',p.toFixed(3));
+  let ax=tmx,ay=tmy;if(!usr&&!reduce){ax=W*(.5+.32*Math.sin(t*.45));ay=H*(.47+.22*Math.sin(t*.7+1))}
+  if(mx<-900){mx=ax;my=ay}
+  mx+=(ax-mx)*.18;my+=(ay-my)*.18;
+  ctx.fillStyle='#f2f1ec';ctx.fillRect(0,0,W,H);
+  ctx.font=`${fs}px "IBM Plex Mono", monospace`;ctx.textBaseline='top';
+  const mc=mx/cw,mr=my/lh,R=W<600?9:14;
+  const scan=(t*9)%(rows+20)-10;
+  const midR=rows*0.47;
+  let red=[];
+  for(let r=0;r<rows;r++){
+    let s='',rs='',hasRed=false;
+    for(let c=0;c<cols;c++){
+      const i=r*cols+c;
+      let dc=c-mc,dr=(r-mr)*(lh/cw),d=Math.sqrt(dc*dc+dr*dr);
+      let sc=c,sr=r;
+      if(d<R){const f=(1-d/R);sc=c-dc*f*.55+Math.sin(t*8+r)*f*2;sr=r-dr*f*.35*(cw/lh)}
+      const wob=reduce?0:Math.sin(r*.21+t*1.6)*1.1+Math.sin(r*.05-t*.7)*.8;
+      let v=g(sc+wob,sr);
+      if(v>0){const st=Math.sin((c*cw*.8+r*lh*.55)/26-t*2.4)*.5+.5;v*=.5+.5*Math.pow(st,1.4)}
+      const x=c/cols;
+      const env=Math.pow(Math.sin(Math.PI*x),.6);
+      const wy=midR+Math.sin(c*.075-t*1.8)*rows*.10*env+Math.sin(c*.021+t*.6)*rows*.06;
+      const wd=Math.abs(r-wy);
+      if(wd<1.6)v=Math.max(v,.42*(1-wd/1.6)+.18);
+      const wy2=midR+Math.sin(c*.11+t*1.1+2)*rows*.05*env;
+      if(Math.abs(r-wy2)<.7)v=Math.max(v,.22);
+      if(v<.04&&seeds[i]>.985)v=.08;
+      let ch;
+      if(seeds[i]>p+.0001&&!reduce){ch=NOISE[(Math.random()*NOISE.length)|0];if(Math.random()<.5)ch=' '}
+      else if(d<R*.55&&v>.05&&Math.random()<.35){ch=NOISE[(Math.random()*NOISE.length)|0]}
+      else{ch=RAMP[Math.min(RAMP.length-1,Math.floor(v*(RAMP.length-1)+.35))]}
+      const isRed=!reduce&&Math.abs(r-scan)<.6&&v>.3;
+      if(isRed){rs+=ch;s+=' ';hasRed=true}else{rs+=' ';s+=ch}
+    }
+    ctx.fillStyle='#121212';ctx.fillText(s,0,r*lh);
+    if(hasRed)red.push([rs,r]);
+  }
+  ctx.fillStyle='#e5371b';
+  for(const [rs,r] of red)ctx.fillText(rs,0,r*lh);
+}
+let last=0;
+function loop(now){requestAnimationFrame(loop);if(!vis||now-last<40)return;last=now;frame(now)}
+addEventListener('pointermove',e=>{if(e.pointerType==='touch')return;usr=true;const b=cv.getBoundingClientRect();tmx=e.clientX-b.left;tmy=e.clientY-b.top});
+document.addEventListener('mouseleave',()=>{usr=false});
+new IntersectionObserver(e=>{vis=e[0].isIntersecting}).observe(cv);
+let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{measure();frame(performance.now())},120)});
+Promise.all([document.fonts.load('800 100px "Shippori Mincho B1"','侍'),document.fonts.load('13px "IBM Plex Mono"')]).catch(()=>{}).then(()=>{
+  measure();t0=performance.now();frame(t0);
+  if(!reduce)requestAnimationFrame(loop);
+});
+
+const intro=document.getElementById('intro');
+new IntersectionObserver((e,o)=>{if(e[0].isIntersecting){intro.classList.add('on');o.disconnect()}},{threshold:.4}).observe(intro);
+
+document.querySelectorAll('.card').forEach(card=>{
+  const c=card.querySelector('canvas'),x=c.getContext('2d');
+  let cells=[],cs,ccols,crows,state='hidden',start=0,hoverT=-1;
+  function setup(){
+    const r=c.getBoundingClientRect();const d=Math.min(devicePixelRatio||1,2);
+    c.width=r.width*d;c.height=r.height*d;x.setTransform(d,0,0,d,0,0);
+    cs=r.width<400?9:11;ccols=Math.ceil(r.width/(cs*.62));crows=Math.ceil(r.height/(cs*1.25));
+    cells=[];for(let i=0;i<ccols*crows;i++)cells.push(Math.random());
+    return r;
+  }
+  function draw(now){
+    const r=c.getBoundingClientRect();
+    x.clearRect(0,0,r.width,r.height);
+    x.font=`${cs}px "IBM Plex Mono", monospace`;x.textBaseline='top';
+    const cwc=cs*.62,lhc=cs*1.25;
+    let alive=false;
+    if(state==='reveal'){
+      const p=(now-start)/1300;
+      for(let j=0;j<crows;j++)for(let i=0;i<ccols;i++){
+        const k=j*ccols+i,th=cells[k]*.7+(j/crows)*.3;
+        if(th>p){alive=true;x.fillStyle='#f2f1ec';x.fillRect(i*cwc,j*lhc,cwc+.5,lhc+.5);x.fillStyle=th-p<.08?'#e5371b':'#121212';x.fillText(NOISE[(Math.random()*NOISE.length)|0],i*cwc,j*lhc)}
+      }
+      if(!alive)state='done';
+    }
+    if(hoverT>=0){
+      const p=(now-hoverT)/700;const band=p*(crows+8)-4;
+      x.fillStyle='#f2f1ec';
+      for(let j=0;j<crows;j++){if(Math.abs(j-band)>2.5)continue;for(let i=0;i<ccols;i++){if(Math.random()<.55)x.fillText(NOISE[(Math.random()*NOISE.length)|0],i*cwc,j*lhc)}}
+      if(p<1)alive=true;else hoverT=-1;
+    }
+    if(alive)requestAnimationFrame(draw);
+  }
+  if(reduce)return;
+  setup();
+  x.fillStyle='#f2f1ec';const rr=c.getBoundingClientRect();x.fillRect(0,0,rr.width,rr.height);
+  new IntersectionObserver((e,o)=>{if(e[0].isIntersecting){o.disconnect();setup();state='reveal';start=performance.now();requestAnimationFrame(draw)}},{threshold:.25}).observe(card);
+  card.addEventListener('mouseenter',()=>{if(state!=='done')return;hoverT=performance.now();requestAnimationFrame(draw)});
+});
+})();
+</script>
+</body>
+</html>

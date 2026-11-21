@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="ja">
+<head><meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SAMURAI STYLE — Swiss Poster</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Noto+Sans+JP:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#f1eee6;--ink:#111;--red:#ff3b1f;--blue:#2443ff;--yel:#ffd000;--pad:clamp(16px,2.4vw,36px)}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:"Archivo","Noto Sans JP",sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+.jp{font-family:"Noto Sans JP",sans-serif}
+.band{position:absolute;top:0;left:0;right:0;height:98px;display:grid;grid-template-columns:repeat(12,1fr);column-gap:var(--pad);padding:22px var(--pad) 18px;border-bottom:2px solid var(--ink);font-size:13px;line-height:1.35;font-weight:700;z-index:5;background:var(--paper)}
+.band .b1{grid-column:1/4;display:flex;flex-direction:column;gap:4px}
+.band .b1 strong{font-size:17px;font-weight:900;font-stretch:125%;letter-spacing:-.01em}
+.band .b1 span{font-weight:500;font-size:12px}
+.band nav{grid-column:5/8;display:grid;grid-template-columns:1fr 1fr;gap:2px 20px}
+.band nav a{position:relative;width:max-content}
+.band nav a::before{content:"";position:absolute;left:-14px;top:50%;width:8px;height:8px;margin-top:-4px;border-radius:50%;background:var(--red);transform:scale(0);transition:transform .3s cubic-bezier(.3,1.6,.5,1)}
+.band nav a:hover::before{transform:scale(1)}
+.band .b3{grid-column:9/12;font-weight:700;font-size:13px}
+.band .b4{grid-column:12/13;justify-self:end;display:flex;gap:10px;font-weight:500}
+.band .b4 b{font-weight:900;text-decoration:underline;text-underline-offset:3px}
+.menu{display:none;background:var(--ink);color:var(--paper);border:0;font:900 13px/1 "Archivo";font-stretch:125%;padding:12px 16px;cursor:pointer}
+.ov{position:fixed;inset:0;z-index:20;background:var(--blue);color:#fff;display:flex;flex-direction:column;justify-content:flex-end;padding:24px 16px 40px;font:900 44px/1 "Archivo";font-stretch:125%;text-transform:uppercase;transform:translateX(100%);transition:transform .55s cubic-bezier(.8,0,.2,1)}
+.ov .lng{font-size:14px;margin-top:20px;display:flex;gap:14px}
+body.mopen .ov{transform:none}
+
+.fv{position:relative;height:100vh;height:100svh;min-height:640px;display:flex;flex-direction:column;overflow:hidden;padding-top:98px}
+.type{position:relative;z-index:2;padding:1.4vh var(--pad) 0;text-transform:uppercase;font-weight:900;font-stretch:125%;letter-spacing:-.035em;line-height:.8;margin:0}
+.fit{display:block;white-space:nowrap;width:max-content;max-width:none;font-size:100px}
+.fit .ch{display:inline-block;animation:drop .9s cubic-bezier(.2,1.3,.4,1) both;animation-delay:calc(var(--i) * 45ms + .1s)}
+@keyframes drop{from{transform:translateY(-60%);opacity:0}}
+.foot{margin-top:auto;position:relative;z-index:4;display:grid;grid-template-columns:repeat(12,1fr);column-gap:var(--pad);padding:16px var(--pad) 22px;border-top:2px solid var(--ink);background:var(--paper);font-size:13px;font-weight:700;line-height:1.45}
+.foot .f1{grid-column:1/4}
+.foot .f1 ol{margin:6px 0 0;padding:0;list-style:none;columns:2;column-gap:14px;font-weight:500}
+.foot .f1 ol li span{font-weight:900;margin-right:6px}
+.foot .f2{grid-column:5/9;font-size:16px;font-weight:900;line-height:1.55;letter-spacing:.01em}
+.foot .f3{grid-column:11/13;justify-self:end;align-self:end;display:flex;align-items:center;gap:12px;font-weight:900;font-stretch:125%;text-transform:uppercase}
+.foot .f3 i{display:grid;place-items:center;width:46px;height:46px;border-radius:50%;background:var(--ink);color:var(--paper);font-style:normal;font-size:20px;animation:bob 1.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(5px)}}
+.shapes{position:absolute;inset:98px 0 0;z-index:3;pointer-events:none;mix-blend-mode:multiply}
+.sh{position:absolute;will-change:transform}
+.sh i{display:block;width:100%;height:100%;animation:pop 1.1s cubic-bezier(.3,1.5,.4,1) both}
+@keyframes pop{from{transform:scale(0)}}
+.s-circ{width:min(46vh,34vw);aspect-ratio:1;right:9vw;top:34vh}
+.s-circ i{background:var(--red);border-radius:50%;animation-delay:.35s}
+.s-rect{width:min(9vw,120px);height:58vh;left:22vw;top:12vh}
+.s-rect i{background:var(--blue);animation-delay:.5s;transform-origin:top}
+.s-quar{width:min(34vh,26vw);aspect-ratio:1;left:0;bottom:84px}
+.s-quar i{background:var(--yel);border-radius:0 100% 0 0;transform-origin:0 100%;animation-delay:.65s}
+.s-sq{width:min(7vh,56px);aspect-ratio:1;right:calc(9vw + min(46vh,34vw) - 30px);top:30vh}
+.s-sq i{background:var(--ink);animation-delay:.8s}
+
+.sv{position:relative;padding:0 var(--pad) 120px;border-top:2px solid var(--ink)}
+.sv-top{display:grid;grid-template-columns:repeat(12,1fr);column-gap:var(--pad);padding:22px 0 10px;font-size:13px;font-weight:700}
+.sv-top span:first-child{grid-column:1/4}
+.sv-top span:nth-child(2){grid-column:5/9}
+.sv-top span:last-child{grid-column:12/13;justify-self:end}
+.sv h2{margin:0 0 22px;text-transform:uppercase;font-weight:900;font-stretch:125%;letter-spacing:-.04em;line-height:.8}
+.posters{display:grid;grid-template-columns:1fr 1fr;gap:var(--pad)}
+.pst{position:relative;aspect-ratio:1/1.02;overflow:hidden;color:#fff;background:var(--bg);padding:clamp(18px,2.4vw,34px);display:flex;flex-direction:column;cursor:pointer;isolation:isolate}
+.pst.y{color:var(--ink)}
+.pst .no{font-weight:900;font-stretch:125%;font-size:clamp(90px,13vw,200px);line-height:.75;letter-spacing:-.06em}
+.pst .tag{position:absolute;bottom:clamp(18px,2.4vw,34px);right:clamp(18px,2.4vw,34px);z-index:3;font-size:12px;font-weight:900;font-stretch:125%;text-transform:uppercase;border:2px solid currentColor;border-radius:99px;padding:6px 12px}
+.pst .tx{margin-top:auto;position:relative;z-index:2;max-width:min(400px,62%)}
+.pst h3{margin:0 0 10px;font-size:clamp(32px,3.4vw,54px);font-weight:900;font-stretch:100%;letter-spacing:-.035em;line-height:.95}
+.pst .lb{display:inline-block;font:900 13px/1 "Noto Sans JP";padding:7px 10px;background:currentColor;margin-bottom:12px}
+.pst .lb span{color:var(--bg)}
+.pst.y .lb span{color:var(--yel)}
+.pst p{margin:0;font:500 15px/1.85 "Noto Sans JP",sans-serif}
+.mot{position:absolute;right:4%;top:7%;width:50%;aspect-ratio:1;z-index:1;pointer-events:none}
+.mot svg{width:100%;height:100%;overflow:visible}
+.mot svg *{transform-box:fill-box;transform-origin:center;transition:transform .9s cubic-bezier(.3,1.4,.4,1)}
+.pst:hover .m1{transform:translateY(-12%)}
+.pst:hover .m2{transform:rotate(90deg)}
+.pst:hover .m3{transform:scale(1.25)}
+.pst:hover .m4{transform:translateX(-18%)}
+.pst:hover .m5{transform:rotate(-45deg)}
+
+@media (max-width:820px){
+  .band{grid-template-columns:1fr auto;padding:14px 16px;align-items:center;height:66px}
+  .fv{padding-top:66px}
+  .shapes{inset:66px 0 0}
+  .type{font-stretch:68%;letter-spacing:-.02em;line-height:.84}
+  .band nav,.band .b3,.band .b4{display:none}
+  .band .b1{grid-column:auto}
+  .menu{display:block}
+  .type{padding:10px 16px 0}
+  .foot{grid-template-columns:1fr 1fr;row-gap:14px;padding:14px 16px 18px}
+  .foot .f1{grid-column:1/3}
+  .foot .f2{grid-column:1/3;font-size:14px}
+  .foot .f3{grid-column:2/3}
+  .s-circ{width:62vw;right:-12vw;top:auto;bottom:250px}
+  .s-rect{width:18vw;height:40vh;left:auto;right:30vw;top:22vh}
+  .s-quar{width:46vw;bottom:200px}
+  .s-sq{width:40px;right:46vw;top:auto;bottom:430px}
+  .sv{padding:0 16px 80px}
+  .sv-top{grid-template-columns:1fr auto}
+  .sv-top span:first-child,.sv-top span:last-child{grid-column:auto}
+  .sv-top span:nth-child(2){display:none}
+  .posters{grid-template-columns:1fr;gap:12px}
+  .pst{aspect-ratio:auto;min-height:560px}
+  .pst .tx{max-width:none}
+  .mot{width:62%;right:4%;top:17%}
+  .pst .tag{bottom:auto;top:18px;right:18px}
+  .pst p{font-size:14px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<header class="band">
+  <div class="b1"><strong>SAMURAI STYLE</strong><span class="jp">株式会社サムライスタイル</span></div>
+  <nav><a href="#">HOME</a><a href="#">COMPANY</a><a href="#service">SERVICE</a><a href="#">RECRUIT</a><a href="#">MEDIA</a><a href="#">CONTACT</a></nav>
+  <div class="b3 jp">短期的な個別最適ではなく、<br>長期的な全体最適へ。</div>
+  <div class="b4"><span>ID</span><span>EN</span><b>JA</b></div>
+  <button class="menu">MENU</button>
+</header>
+<div class="ov"><a href="#">Home</a><a href="#service">Service</a><a href="#">Media</a><a href="#">Company</a><a href="#">Recruit</a><a href="#">Contact</a><div class="lng"><span>ID</span><span>EN</span><b>JA</b></div></div>
+
+<main>
+<section class="fv">
+  <h1 class="type"><span class="fit" data-w="1">Find the</span><span class="fit" data-w="1">Signal</span></h1>
+  <div class="shapes" aria-hidden="true">
+    <div class="sh s-rect" data-k="rect"><i></i></div>
+    <div class="sh s-quar" data-k="quar"><i></i></div>
+    <div class="sh s-circ" data-k="circ"><i></i></div>
+    <div class="sh s-sq" data-k="sq"><i></i></div>
+  </div>
+  <div class="foot">
+    <div class="f1">Services (04)<ol><li><span>01</span>Strategy2Action</li><li><span>02</span>HookHack</li><li><span>03</span>HookHacker</li><li><span>04</span><span class="jp" style="font-weight:500;margin:0">動画制作</span></li></ol></div>
+    <div class="f2 jp">創業時に掲げた「笑顔の総量の最大化」を軸に置く。<br>地道に、泥臭くをコアバリューとして事業を運営。</div>
+    <a class="f3" href="#service">Scroll <i>↓</i></a>
+  </div>
+</section>
+
+<section class="sv" id="service">
+  <div class="sv-top"><span>SAMURAI STYLE</span><span class="jp">AIで無数の“もっともらしさ”が生まれ続ける時代に、何が本質的なシグナルで何が一時的なノイズなのかを見極める。</span><span>(04)</span></div>
+  <h2><span class="fit" data-w="1">Services</span></h2>
+  <div class="posters">
+    <article class="pst" style="--bg:var(--red)">
+      <div class="no">01</div><span class="tag">Strategy</span>
+      <div class="mot"><svg viewBox="0 0 200 200"><rect class="m1" x="10" y="130" width="40" height="60" fill="#111"/><rect class="m1" x="58" y="96" width="40" height="94" fill="#fff" style="transition-delay:.05s"/><rect class="m1" x="106" y="62" width="40" height="128" fill="#111" style="transition-delay:.1s"/><circle class="m3" cx="168" cy="36" r="24" fill="#ffd000"/></svg></div>
+      <div class="tx"><h3>Strategy2Action</h3><p>事業理解に基づいて戦略を考え、実行まで伴走し、ダッシュボード作成による経営層・上長への可視化まで対応。</p></div>
+    </article>
+    <article class="pst" style="--bg:var(--blue)">
+      <div class="no">02</div><span class="tag">Tool</span>
+      <div class="mot"><svg viewBox="0 0 200 200"><circle class="m3" cx="100" cy="100" r="88" fill="none" stroke="#fff" stroke-width="14"/><polygon class="m2" points="78,52 150,100 78,148" fill="#ffd000"/><rect class="m4" x="10" y="176" width="70" height="14" fill="#111"/></svg></div>
+      <div class="tx"><h3>HookHack</h3><span class="lb"><span>動画広告の制作ツール</span></span><p>売れる動画広告をLPから5分で制作。検証から成果改善まで、動画広告のPDCAに必要な機能を1ツールで網羅します。</p></div>
+    </article>
+    <article class="pst y" style="--bg:var(--yel)">
+      <div class="no">03</div><span class="tag">Production</span>
+      <div class="mot"><svg viewBox="0 0 200 200"><circle class="m3" cx="44" cy="52" r="34" fill="#ff3b1f"/><rect class="m5" x="118" y="18" width="66" height="66" fill="#2443ff"/><polygon class="m2" points="100,118 160,186 40,186" fill="#111"/><rect class="m5" x="86" y="52" width="28" height="8" fill="#111"/><rect class="m5" x="96" y="42" width="8" height="28" fill="#111" style="transform:rotate(45deg)"/></svg></div>
+      <div class="tx"><h3>HookHacker</h3><span class="lb"><span>LP・サイト制作の代行</span></span><p>自社開発AIツール「HookHack」×インドネシアオフショアチーム×日本人ディレクターでLP・サイト制作を代行。</p></div>
+    </article>
+    <article class="pst" style="--bg:#111">
+      <div class="no">04</div><span class="tag">Film</span>
+      <div class="mot"><svg viewBox="0 0 200 200"><rect class="m4" x="10" y="70" width="180" height="76" fill="#f1eee6"/><g class="m4"><rect x="22" y="80" width="14" height="10" fill="#111"/><rect x="50" y="80" width="14" height="10" fill="#111"/><rect x="78" y="80" width="14" height="10" fill="#111"/><rect x="106" y="80" width="14" height="10" fill="#111"/><rect x="134" y="80" width="14" height="10" fill="#111"/><rect x="162" y="80" width="14" height="10" fill="#111"/></g><circle class="m3" cx="132" cy="40" r="32" fill="#ff3b1f"/><circle class="m3" cx="60" cy="176" r="18" fill="#2443ff"/></svg></div>
+      <div class="tx"><h3 class="jp" style="letter-spacing:-.02em">動画制作</h3><p>貴社の顧客理解に基づき、動画を企画・撮影・編集までワンストップで制作します。</p></div>
+    </article>
+  </div>
+</section>
+</main>
+
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let n = 0;
+  document.querySelectorAll('.type .fit').forEach(el => {
+    const t = el.textContent; el.textContent = '';
+    for (const ch of t) { const s = document.createElement('span'); s.className = 'ch'; s.style.setProperty('--i', n++); s.textContent = ch === ' ' ? ' ' : ch; el.appendChild(s); }
+  });
+  const fit = () => {
+    document.querySelectorAll('.fit').forEach(el => {
+      const box = el.parentElement; const cs = getComputedStyle(box);
+      const target = box.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+      el.style.fontSize = '100px';
+      const w = el.getBoundingClientRect().width;
+      el.style.fontSize = (100 * target / w * 0.995) + 'px';
+    });
+  };
+  fit();
+  document.fonts && document.fonts.ready.then(fit);
+  addEventListener('load', fit);
+  addEventListener('resize', fit);
+  const btn = document.querySelector('.menu');
+  btn.addEventListener('click', () => { const o = document.body.classList.toggle('mopen'); btn.textContent = o ? 'CLOSE' : 'MENU'; });
+  document.querySelectorAll('.ov a').forEach(a => a.addEventListener('click', () => btn.click()));
+  if (reduce) return;
+  const sh = {}; document.querySelectorAll('.sh').forEach(s => sh[s.dataset.k] = s);
+  let mx = 0, my = 0, tk = false;
+  const upd = () => {
+    const y = Math.min(scrollY, innerHeight * 1.2) / innerHeight;
+    sh.circ.style.transform = `translate(${mx * 30 + y * 120}px,${my * 24 + y * 200}px)`;
+    sh.rect.style.transform = `translate(${mx * -20}px,${y * -120}px) rotate(${y * 38}deg)`;
+    sh.quar.style.transform = `translate(${mx * 14}px,0) rotate(${y * -90}deg)`;
+    sh.quar.style.transformOrigin = '0 100%';
+    sh.sq.style.transform = `translate(${mx * -40 + y * -260}px,${my * -30 + y * 140}px) rotate(${y * 180}deg)`;
+    document.querySelectorAll('.pst').forEach(p => {
+      const r = p.getBoundingClientRect(); const k = Math.max(-1, Math.min(1, (r.top + r.height / 2 - innerHeight / 2) / innerHeight));
+      p.querySelector('.mot').style.transform = `translateY(${k * 8}%) rotate(${k * -8}deg)`;
+    });
+    tk = false;
+  };
+  const req = () => { if (!tk) { tk = true; requestAnimationFrame(upd); } };
+  addEventListener('scroll', req, { passive: true });
+  addEventListener('mousemove', e => { mx = e.clientX / innerWidth - .5; my = e.clientY / innerHeight - .5; req(); });
+  upd();
+})();
+</script>
+</body>
+</html>

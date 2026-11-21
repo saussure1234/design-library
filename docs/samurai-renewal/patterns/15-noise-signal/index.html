@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="ja">
+<head><meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SAMURAI STYLE — Noise to Signal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;800&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#edeef6;--ink:#14151b;--mute:#6b6d7a;--stage:#0c0d13;--blue:#2433ff;--pad:72px}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{overflow-x:clip}
+body{background:var(--bg);color:var(--ink);font-family:Manrope,"Noto Sans JP",sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.nw{white-space:nowrap}
+.up{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+
+.fv{height:100vh;height:100svh;min-height:640px;display:flex;flex-direction:column;padding:0 var(--pad)}
+header{display:grid;grid-template-columns:1fr 2fr auto;align-items:start;gap:40px;padding:40px 0 30px}
+.logo{font-weight:800;font-size:22px;letter-spacing:.06em;padding-top:6px}
+.lead{font-family:"Noto Sans JP",sans-serif;font-weight:500;font-size:clamp(15px,1.45vw,21px);line-height:1.6;letter-spacing:.01em;max-width:30em}
+.lead .c{display:inline-block;opacity:0;transform:translateY(8px);transition:opacity .7s,transform .8s cubic-bezier(.2,.8,.2,1)}
+.on .lead .c{opacity:1;transform:none}
+.pills{display:flex;gap:10px;align-items:center}
+.pill{height:44px;border-radius:44px;display:inline-flex;align-items:center;gap:12px;padding:0 20px;background:#dfe1ec;transition:background .3s,color .3s}
+.pill:hover{background:var(--ink);color:#fff}
+.pill.dark{background:var(--ink);color:#fff}
+.pill.dark:hover{background:var(--blue)}
+.pill i{display:block;width:5px;height:5px;border-radius:50%;background:currentColor}
+.pill.round{width:44px;padding:0;justify-content:center}
+.pill.round i{width:14px;height:2px;border-radius:0}
+.navrow{display:flex;gap:22px;margin-top:14px;justify-content:flex-end}
+.navrow a{opacity:.75}
+.navrow a:hover{opacity:1;color:var(--blue)}
+.navrow .lang{display:flex;gap:8px;color:var(--mute)}
+.navrow .lang b{color:var(--ink)}
+
+.stage{position:relative;flex:1;border-radius:22px;background:var(--stage);overflow:hidden;min-height:300px;opacity:0;transform:scale(.98);transition:opacity 1s .2s,transform 1.4s .2s cubic-bezier(.2,.8,.2,1)}
+.on .stage{opacity:1;transform:none}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.stage .hud{position:absolute;color:#c9cad6;pointer-events:none}
+.hud.tl{left:24px;top:22px}.hud.tr{right:24px;top:22px;text-align:right}
+.hud.bl{left:24px;bottom:20px}.hud.br{right:24px;bottom:20px}
+.meter{display:flex;align-items:center;gap:10px}
+.meter span{display:block;width:120px;height:2px;background:rgba(255,255,255,.15);position:relative;overflow:hidden}
+.meter span i{position:absolute;inset:0;background:#fff;transform-origin:left;transform:scaleX(0)}
+.marks{display:flex;justify-content:space-between;align-items:center;padding:16px 0 22px}
+.marks b{font-weight:400;font-size:22px;line-height:1;width:14px;text-align:center}
+
+.svc{padding:16vh var(--pad) 18vh}
+.svc-head{display:grid;grid-template-columns:1fr auto;align-items:end;gap:40px;margin-bottom:70px}
+.svc-head h2{font-weight:500;font-size:clamp(56px,9.6vw,150px);line-height:.95;letter-spacing:-.05em}
+.svc-head h2 .ind{padding-left:1.6em}
+.svc-head h2 em{font-style:normal;color:var(--blue)}
+.svc-head p{font-family:"Noto Sans JP",sans-serif;font-size:15px;line-height:1.9;max-width:24em;padding-bottom:12px;font-weight:500}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.card{background:#fff;border-radius:20px;padding:12px 12px 24px;display:flex;flex-direction:column;opacity:0;transform:translateY(50px);transition:opacity .9s,transform 1.1s cubic-bezier(.2,.8,.2,1),box-shadow .5s}
+.card.vis{opacity:1;transform:none}
+.card:nth-child(2){margin-top:60px}.card:nth-child(3){margin-top:120px}.card:nth-child(4){margin-top:180px}
+.card:hover{box-shadow:0 30px 60px -30px rgba(20,22,60,.35)}
+.ht{position:relative;border-radius:12px;overflow:hidden;aspect-ratio:4/5;background:var(--stage)}
+.ht img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.5) brightness(1.1);transform:scale(1.15);transition:filter .9s,transform 1.2s cubic-bezier(.2,.8,.2,1)}
+.ht::after{content:"";position:absolute;inset:0;background:radial-gradient(circle,transparent 0 var(--d),var(--stage) calc(var(--d) + .6px)) 0 0/7px 7px;--d:1.7px;transition:opacity .9s}
+.ht .lbl{position:absolute;left:12px;top:12px;z-index:2;color:#fff;background:rgba(12,13,19,.6);backdrop-filter:blur(6px);border-radius:20px;padding:5px 10px;font-size:11px;transition:background .5s}
+.card:hover .ht img,.card.sig .ht img{filter:none;transform:scale(1)}
+.card:hover .ht::after,.card.sig .ht::after{opacity:0}
+.card:hover .ht .lbl,.card.sig .ht .lbl{background:var(--blue)}
+.card .body{padding:22px 10px 0;display:flex;flex-direction:column;gap:12px;flex:1}
+.card .no{color:var(--mute)}
+.card h3{font-weight:600;font-size:clamp(24px,2vw,30px);letter-spacing:-.03em;line-height:1.1}
+.card h3 .jp{font-family:"Noto Sans JP",sans-serif;font-weight:700;letter-spacing:0}
+.card .tag{font-family:"Noto Sans JP",sans-serif;font-size:12px;color:var(--blue);font-weight:500}
+.card p{font-family:"Noto Sans JP",sans-serif;font-size:13.5px;line-height:1.9;color:#3c3e48}
+.card .plus{margin-top:auto;align-self:flex-end;width:40px;height:40px;border-radius:50%;background:var(--bg);display:grid;place-items:center;font-size:20px;transition:transform .5s cubic-bezier(.7,0,.2,1),background .3s,color .3s}
+.card:hover .plus{transform:rotate(90deg);background:var(--ink);color:#fff}
+
+@media (max-width:1100px){.cards{grid-template-columns:repeat(2,1fr)}.card:nth-child(n){margin-top:0}.card:nth-child(even){margin-top:60px}}
+@media (max-width:900px){
+  :root{--pad:16px}
+  header{grid-template-columns:1fr auto;gap:14px 10px;padding:18px 0 16px}
+  .logo{font-size:18px;padding-top:10px}
+  .lead{grid-column:1/3;grid-row:2;font-size:14px}
+  .pills .pill:not(.menu){display:none}
+  .navrow{display:none}
+  .stage{border-radius:16px}
+  .hud.tr{display:none}
+  .marks{padding:12px 0 14px}
+  .marks b:nth-child(2),.marks b:nth-child(4){display:none}
+  .svc{padding:12vh var(--pad)}
+  .svc-head{grid-template-columns:1fr;gap:20px;margin-bottom:40px}
+  .svc-head h2 .ind{padding-left:.8em}
+  .cards{grid-template-columns:1fr;gap:14px}
+  .card:nth-child(n){margin-top:0}
+  .ht{aspect-ratio:900/650}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .lead .c,.stage,.card{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+<main>
+<section class="fv" id="fv">
+  <header>
+    <a class="logo" href="#">SAMURAI STYLE</a>
+    <p class="lead"><span class="c nw">AIで無数の</span><wbr><span class="c nw">“もっともらしさ”が</span><wbr><span class="c nw">生まれ続ける</span><wbr><span class="c nw">時代に、</span><wbr><span class="c nw">何が本質的な</span><wbr><span class="c nw">シグナルで</span><wbr><span class="c nw">何が一時的な</span><wbr><span class="c nw">ノイズなのかを</span><wbr><span class="c nw">見極める。</span></p>
+    <div>
+      <div class="pills"><span class="pill round"><i></i></span><a class="pill dark up" href="#">Contact <i></i></a><a class="pill up menu" href="#">Menu <i></i></a></div>
+      <div class="navrow up"><a href="#">Home</a><a href="#svc">Service</a><a href="#">Media</a><a href="#">Company</a><a href="#">Recruit</a><span class="lang"><span>ID</span><span>EN</span><b>JA</b></span></div>
+    </div>
+  </header>
+  <div class="stage" id="stage">
+    <canvas id="cv"></canvas>
+    <div class="hud tl up">Noise → Signal</div>
+    <div class="hud tr up">Move to disturb<br>Click to reset</div>
+    <div class="hud bl up meter">Signal <span><i id="mbar"></i></span></div>
+    <div class="hud br up">Find the signal</div>
+  </div>
+  <div class="marks up"><b>+</b><b>+</b><span>Scroll to explore</span><b>+</b><b>+</b></div>
+</section>
+
+<section class="svc" id="svc">
+  <div class="svc-head">
+    <h2>Find<br><span class="ind">the <em>signal</em>.</span></h2>
+    <p>短期的な個別最適ではなく、<br>長期的な全体最適へ。</p>
+  </div>
+  <div class="cards">
+    <article class="card">
+      <div class="ht"><img src="strategy2action_pc.jpg" alt=""><span class="lbl up">01</span></div>
+      <div class="body"><span class="no up">Service 01</span><h3>Strategy2Action</h3>
+        <p>事業理解に基づいて戦略を考え、実行まで伴走し、ダッシュボード作成による経営層・上長への可視化まで対応。</p><span class="plus">+</span></div>
+    </article>
+    <article class="card">
+      <div class="ht"><img src="hookhack_pc.jpg" alt=""><span class="lbl up">02</span></div>
+      <div class="body"><span class="no up">Service 02</span><h3>HookHack</h3><span class="tag">動画広告の制作ツール</span>
+        <p>売れる動画広告をLPから5分で制作。検証から成果改善まで、動画広告のPDCAに必要な機能を1ツールで網羅します。</p><span class="plus">+</span></div>
+    </article>
+    <article class="card">
+      <div class="ht"><img src="hookhacker_pc.jpg" alt=""><span class="lbl up">03</span></div>
+      <div class="body"><span class="no up">Service 03</span><h3>HookHacker</h3><span class="tag">LP・サイト制作の代行</span>
+        <p>自社開発AIツール「HookHack」×インドネシアオフショアチーム×日本人ディレクターでLP・サイト制作を代行。</p><span class="plus">+</span></div>
+    </article>
+    <article class="card">
+      <div class="ht"><img src="video-production-poster.webp" alt=""><span class="lbl up">04</span></div>
+      <div class="body"><span class="no up">Service 04</span><h3><span class="jp">動画制作</span></h3>
+        <p>貴社の顧客理解に基づき、動画を企画・撮影・編集までワンストップで制作します。</p><span class="plus">+</span></div>
+    </article>
+  </div>
+</section>
+</main>
+
+<script>
+const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+const fv=document.getElementById("fv");
+document.querySelectorAll(".lead .c").forEach((c,i)=>c.style.transitionDelay=(.1+i*.06)+"s");
+requestAnimationFrame(()=>requestAnimationFrame(()=>fv.classList.add("on")));
+const touch=matchMedia("(hover:none)").matches;
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("vis");if(touch)setTimeout(()=>e.target.classList.add("sig"),900)}}),{threshold:.25});
+document.querySelectorAll(".card").forEach((c,i)=>{c.style.transitionDelay=(i*.08)+"s, "+(i*.08)+"s, 0s";io.observe(c)});
+
+const stage=document.getElementById("stage"),cv=document.getElementById("cv"),cx=cv.getContext("2d"),mbar=document.getElementById("mbar");
+let W,H,DPR,P=[],mx=-9999,my=-9999,t0=0,scatter=0;
+function targets(){
+  const o=document.createElement("canvas"),ox=o.getContext("2d");
+  o.width=W;o.height=H;
+  const two=H>W*1.15,lines=two?["SIG","NAL"]:["SIGNAL"];
+  let fs=two?Math.min(H*.3,W*.5):Math.min(H*.42,W*.25);ox.font="800 "+fs+"px Manrope";
+  const tw=Math.max(...lines.map(l=>ox.measureText(l).width));fs=fs*Math.min(1,(W*(two?.86:.82))/tw);
+  ox.font="800 "+fs+"px Manrope";ox.textAlign="center";ox.textBaseline="middle";ox.fillStyle="#fff";
+  lines.forEach((l,i)=>ox.fillText(l,W/2,H/2+fs*.04+(i-(lines.length-1)/2)*fs*.92));
+  const d=ox.getImageData(0,0,W,H).data,step=Math.max(3,Math.round(Math.sqrt(W*H/26000)));
+  const pts=[];for(let y=0;y<H;y+=step)for(let x=0;x<W;x+=step){if(d[(y*W+x)*4+3]>128)pts.push([x,y])}
+  for(let i=pts.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[pts[i],pts[j]]=[pts[j],pts[i]]}
+  return{pts,step};
+}
+function build(){
+  DPR=Math.min(devicePixelRatio,2);W=cv.width=Math.round(stage.clientWidth*DPR);H=cv.height=Math.round(stage.clientHeight*DPR);
+  const {pts,step}=targets();const noise=Math.round(pts.length*.22);P=[];
+  for(const [x,y] of pts){P.push({x:reduce?x:Math.random()*W,y:reduce?y:Math.random()*H,tx:x,ty:y,vx:0,vy:0,s:step*.62,b:Math.random()<.1,d:Math.random()*.9+.3})}
+  for(let i=0;i<noise;i++)P.push({x:Math.random()*W,y:Math.random()*H,tx:null,vx:(Math.random()-.5)*.6,vy:(Math.random()-.5)*.6,s:step*.5,d:Math.random()})
+  t0=performance.now();
+}
+function frame(now){
+  const t=(now-t0)/1000;
+  const g=reduce?1:Math.max(0,Math.min(1,(t-.6)/2.2));
+  const pull=.012+g*g*.11,jit=(1-g)*2.4*DPR+scatter*6*DPR+.15*DPR;
+  cx.fillStyle="rgba(12,13,19,.42)";cx.fillRect(0,0,W,H);
+  let settled=0,tot=0;const R=110*DPR,R2=R*R;
+  for(const p of P){
+    if(p.tx!==null){
+      tot++;
+      const dx=p.tx-p.x,dy=p.ty-p.y;
+      p.vx+=dx*pull*(1-scatter);p.vy+=dy*pull*(1-scatter);
+      p.vx+=(Math.random()-.5)*jit;p.vy+=(Math.random()-.5)*jit;
+      const ex=p.x-mx,ey=p.y-my,e2=ex*ex+ey*ey;
+      if(e2<R2){const f=(1-e2/R2)*7*DPR/Math.sqrt(e2+1);p.vx+=ex*f;p.vy+=ey*f}
+      p.vx*=.78;p.vy*=.78;p.x+=p.vx;p.y+=p.vy;
+      const dd=dx*dx+dy*dy;if(dd<16*DPR*DPR)settled++;
+      cx.fillStyle=p.b?"#4a57ff":"rgba(255,255,255,"+(.55+.45*Math.min(1,g*1.4)*(dd<400*DPR?1:.5))+")";
+      cx.fillRect(p.x,p.y,p.s,p.s);
+    }else{
+      p.vx+=(Math.random()-.5)*.25*DPR;p.vy+=(Math.random()-.5)*.25*DPR;p.vx*=.96;p.vy*=.96;
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0)p.x+=W;if(p.x>W)p.x-=W;if(p.y<0)p.y+=H;if(p.y>H)p.y-=H;
+      cx.fillStyle="rgba(170,174,200,"+(.18+p.d*.25)+")";cx.fillRect(p.x,p.y,p.s,p.s);
+    }
+  }
+  scatter*=.94;
+  mbar.style.transform="scaleX("+(settled/Math.max(1,tot)).toFixed(3)+")";
+  if(!reduce)requestAnimationFrame(frame);
+}
+const start=()=>{build();cx.fillStyle="#0c0d13";cx.fillRect(0,0,W,H);requestAnimationFrame(frame)};
+(document.fonts?document.fonts.load("800 100px Manrope").then(start,start):start());
+let rt;addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(build,200)});
+stage.addEventListener("pointermove",e=>{const r=stage.getBoundingClientRect();mx=(e.clientX-r.left)*DPR;my=(e.clientY-r.top)*DPR});
+stage.addEventListener("pointerleave",()=>{mx=my=-9999});
+stage.addEventListener("click",()=>{scatter=1;for(const p of P){p.vx+=(Math.random()-.5)*60*DPR;p.vy+=(Math.random()-.5)*60*DPR}});
+</script>
+</body>
+</html>

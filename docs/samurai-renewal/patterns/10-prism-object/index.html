@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="ja">
+<head><meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SAMURAI STYLE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400&family=Space+Mono&family=Noto+Sans+JP:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#050505;--ink:#f2f2f2;--grey:#8d8d8d;--acc:#ffd60a}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg);-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font-family:"Noto Sans JP",sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.nb{white-space:nowrap}
+.mono{font-family:"Space Mono",monospace;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase}
+
+.hd{position:fixed;inset:0 0 auto 0;z-index:20;display:flex;align-items:center;gap:clamp(30px,4vw,60px);padding:26px 30px;background:linear-gradient(rgba(5,5,5,.75),rgba(5,5,5,0))}
+.logo{font-family:"Barlow Condensed";font-weight:400;font-size:24px;letter-spacing:.02em;color:var(--acc);text-transform:uppercase;line-height:1}
+.hd nav{display:flex;gap:clamp(18px,2.5vw,36px)}
+.hd nav a{color:#cfcfcf;transition:color .25s}
+.hd nav a:hover{color:var(--acc)}
+.hd nav a::before{content:"[";opacity:0;margin-right:2px;transition:opacity .2s}
+.hd nav a::after{content:"]";opacity:0;margin-left:2px;transition:opacity .2s}
+.hd nav a:hover::before,.hd nav a:hover::after{opacity:1}
+.hd .lang{margin-left:auto;display:flex;gap:12px;color:#777}
+.hd .lang b{font-weight:400;color:var(--ink)}
+.menu{display:none;margin-left:auto}
+
+.fv{position:relative;height:100vh;height:100svh;min-height:560px;overflow:hidden}
+#gl{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity 1.6s ease .2s}
+#gl.ready{opacity:1}
+.fallback{position:absolute;inset:-20%;display:none;background:
+ linear-gradient(150deg,transparent 40%,rgba(255,40,90,.85) 44%,rgba(120,40,255,.9) 47%,rgba(40,60,255,.7) 50%,transparent 54%),
+ linear-gradient(150deg,transparent 56%,rgba(255,80,140,.6) 58%,rgba(70,90,255,.6) 60%,transparent 62%)}
+.nogl .fallback{display:block}
+.fv::after{content:"";position:absolute;inset:auto 0 0 0;height:40%;background:linear-gradient(rgba(5,5,5,0),rgba(5,5,5,.82));pointer-events:none}
+.fv-txt{position:absolute;z-index:2;left:30px;right:30px;bottom:26px;display:flex;justify-content:space-between;align-items:flex-end;gap:30px}
+.big{font-family:"Barlow Condensed";font-weight:300;font-size:clamp(54px,5.3vw,92px);line-height:.98;letter-spacing:-.01em}
+.big .l{display:block;overflow:hidden}
+.big .l span{display:block;transform:translateY(105%);animation:up 1.3s cubic-bezier(.16,.84,.2,1) forwards}
+.big .l:nth-child(1) span{animation-delay:.6s}
+.big .l:nth-child(2) span{animation-delay:.75s;color:var(--grey)}
+.side{max-width:380px;display:flex;flex-direction:column;gap:18px;align-items:flex-end;text-align:right;opacity:0;animation:fade 1s 1.3s forwards}
+.side p{font-size:13px;line-height:1.9;color:#c9c9c9}
+.side .mono{color:#7d7d7d}
+@keyframes up{to{transform:none}}
+@keyframes fade{to{opacity:1}}
+
+.sv{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.55fr);gap:clamp(30px,4vw,70px);padding:clamp(110px,12vw,200px) 30px clamp(90px,10vw,160px)}
+.sv-l{position:sticky;top:120px;align-self:start}
+.sv-l .mono{color:#7d7d7d;display:flex;gap:12px;border-top:1px solid #222;padding-top:12px}
+.sv-l h2{font-family:"Barlow Condensed";font-weight:300;font-size:clamp(56px,6vw,104px);line-height:.95;margin:26px 0 34px}
+.sv-l h2 span{color:var(--grey);display:block;font-family:"Noto Sans JP";font-weight:300;font-size:max(15px,.22em);letter-spacing:.12em;margin-top:18px}
+.idx{list-style:none;font-family:"Barlow Condensed";font-size:clamp(22px,1.8vw,30px);line-height:1.35;color:#4a4a4a}
+.idx li{display:flex;gap:14px;align-items:baseline;transition:color .4s,transform .5s cubic-bezier(.2,.8,.1,1)}
+.idx li i{font-style:normal;font-family:"Space Mono";font-size:11px;width:24px}
+.idx li.on{color:var(--ink);transform:translateX(12px)}
+.idx li.on i{color:var(--acc)}
+.cards{display:flex;flex-direction:column;gap:clamp(18px,1.6vw,24px)}
+.card{position:relative;display:block;border-radius:6px;padding:1px;background:#1b1b1b;isolation:isolate;opacity:0;transform:translateY(60px);transition:opacity 1s,transform 1.2s cubic-bezier(.2,.8,.1,1)}
+.card.in{opacity:1;transform:none}
+.card::before{content:"";position:absolute;inset:0;border-radius:inherit;z-index:-1;background:conic-gradient(from var(--a,0deg),#ff2a5f,#ffd60a,#2bffd2,#3b3bff,#c22bff,#ff2a5f);opacity:0;transition:opacity .5s}
+.card:hover::before{opacity:1}
+.card-in{position:relative;border-radius:5px;overflow:hidden;background:#0d0d0d}
+.media{position:relative;aspect-ratio:16/9.6;overflow:hidden}
+.media img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.04);filter:brightness(.5) saturate(.8);transition:transform 1.2s cubic-bezier(.2,.8,.1,1),filter .6s}
+.card:hover .media img{transform:scale(1.1);filter:brightness(.9) saturate(1)}
+.media::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.18) 45%,rgba(120,140,255,.12) 50%,transparent 62%);transform:translateX(-100%);transition:transform 1.1s cubic-bezier(.7,0,.2,1)}
+.card:hover .media::after{transform:translateX(100%)}
+.media .nm{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-family:"Barlow Condensed";font-weight:400;font-size:clamp(40px,4.6vw,80px);letter-spacing:-.005em;white-space:nowrap;text-shadow:0 4px 40px rgba(0,0,0,.5)}
+.meta{display:grid;grid-template-columns:120px minmax(0,1fr) auto;gap:20px;padding:18px 20px 20px;align-items:start}
+.meta .mono{color:#7d7d7d;padding-top:3px}
+.meta p{font-size:14px;line-height:1.9;color:#cfcfcf}
+.meta .cat{font-size:12px;color:#9a9a9a;white-space:nowrap;padding-top:3px}
+
+@media (max-width:860px){
+  .hd{padding:18px 16px}
+  .hd nav,.hd .lang{display:none}
+  .menu{display:block}
+  .fv-txt{left:16px;right:16px;bottom:20px;flex-direction:column;align-items:flex-start}
+  .side{align-items:flex-start;text-align:left}
+  .big{font-size:clamp(48px,14vw,64px)}
+  .sv{grid-template-columns:1fr;padding:90px 16px 90px}
+  .sv-l{position:static}
+  .idx{display:none}
+  .sv-l h2{margin:18px 0 10px}
+  .media .nm{font-size:clamp(34px,10vw,48px)}
+  .meta{grid-template-columns:1fr;gap:8px;padding:16px}
+  .meta .cat{white-space:normal}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}
+  .card{opacity:1;transform:none}
+}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
+</head>
+<body>
+<header class="hd">
+  <a class="logo" href="#">Samurai Style</a>
+  <nav class="mono"><a href="#">Home</a><a href="#sv">Service</a><a href="#">Media</a><a href="#">Company</a><a href="#">Recruit</a><a href="#">Contact</a></nav>
+  <div class="lang mono"><span>ID</span><span>EN</span><b>JA</b></div>
+  <span class="menu mono">Menu ::</span>
+</header>
+
+<section class="fv" id="fv">
+  <div class="fallback"></div>
+  <canvas id="gl" aria-hidden="true"></canvas>
+  <div class="fv-txt">
+    <h1 class="big"><span class="l"><span>Find the signal</span></span><span class="l"><span>Samurai Style</span></span></h1>
+    <div class="side">
+      <p><span class="nb">AIで無数の</span><span class="nb">“もっともらしさ”が</span><wbr><span class="nb">生まれ続ける</span><span class="nb">時代に、</span><wbr><span class="nb">何が本質的な</span><span class="nb">シグナルで</span><wbr><span class="nb">何が一時的な</span><span class="nb">ノイズなのかを</span><wbr><span class="nb">見極める。</span></p>
+      <span class="mono">[ Scroll ]</span>
+    </div>
+  </div>
+</section>
+
+<section class="sv" id="sv">
+  <div class="sv-l">
+    <div class="mono"><span>Services</span><span>[04]</span></div>
+    <h2>What we do<span>株式会社サムライスタイル</span></h2>
+    <ol class="idx">
+      <li class="on"><i>01</i>Strategy2Action</li>
+      <li><i>02</i>HookHack</li>
+      <li><i>03</i>HookHacker</li>
+      <li><i>04</i>動画制作</li>
+    </ol>
+  </div>
+  <div class="cards">
+    <a class="card" href="#" data-i="0"><div class="card-in">
+      <div class="media"><img src="strategy2action_pc.jpg" alt=""><span class="nm">Strategy2Action</span></div>
+      <div class="meta"><span class="mono">01 / 04</span><p>事業理解に基づいて戦略を考え、実行まで伴走し、ダッシュボード作成による経営層・上長への可視化まで対応。</p><span class="cat mono">Strategy → Action</span></div>
+    </div></a>
+    <a class="card" href="#" data-i="1"><div class="card-in">
+      <div class="media"><img src="hookhack_pc.jpg" alt=""><span class="nm">HookHack</span></div>
+      <div class="meta"><span class="mono">02 / 04</span><p>売れる動画広告をLPから5分で制作。検証から成果改善まで、動画広告のPDCAに必要な機能を1ツールで網羅します。</p><span class="cat">動画広告の制作ツール</span></div>
+    </div></a>
+    <a class="card" href="#" data-i="2"><div class="card-in">
+      <div class="media"><img src="hookhacker_pc.jpg" alt=""><span class="nm">HookHacker</span></div>
+      <div class="meta"><span class="mono">03 / 04</span><p>自社開発AIツール「HookHack」×インドネシアオフショアチーム×日本人ディレクターでLP・サイト制作を代行。</p><span class="cat">LP・サイト制作の代行</span></div>
+    </div></a>
+    <a class="card" href="#" data-i="3"><div class="card-in">
+      <div class="media"><img src="video-production-poster.webp" alt=""><span class="nm">動画制作</span></div>
+      <div class="meta"><span class="mono">04 / 04</span><p>貴社の顧客理解に基づき、動画を企画・撮影・編集までワンストップで制作します。</p><span class="cat mono">Video Production</span></div>
+    </div></a>
+  </div>
+</section>
+
+<script>
+(()=>{
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const cards=[...document.querySelectorAll('.card')],lis=[...document.querySelectorAll('.idx li')];
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in')}}),{threshold:.12});
+cards.forEach(c=>io.observe(c));
+const act=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const i=+e.target.dataset.i;lis.forEach((l,k)=>l.classList.toggle('on',k===i))}}),{rootMargin:'-45% 0px -45% 0px'});
+cards.forEach(c=>act.observe(c));
+setTimeout(()=>{if(!document.getElementById('gl').classList.contains('ready'))document.getElementById('fv').classList.add('nogl')},5000);
+if(!reduce){let a=0;(function spin(){a=(a+1.2)%360;cards.forEach(c=>c.style.setProperty('--a',a+'deg'));requestAnimationFrame(spin)})()}
+})();
+</script>
+<script type="module">
+import * as THREE from 'three';
+import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const fv=document.getElementById('fv'),cv=document.getElementById('gl');
+let renderer;
+try{renderer=new THREE.WebGLRenderer({canvas:cv,antialias:true,powerPreference:'low-power',preserveDrawingBuffer:true})}catch(e){fv.classList.add('nogl')}
+if(renderer){
+renderer.setPixelRatio(Math.min(devicePixelRatio||1,1.5));
+renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.15;
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x050505);
+const pm=new THREE.PMREMGenerator(renderer);
+const envS=new RoomEnvironment();
+[['#ff1e56',[-6,2,-3],[.3,6]],['#2a3bff',[6,-1,-2],[.3,7]],['#b21cff',[0,6,-4],[8,.3]],['#00c8ff',[-3,-5,3],[6,.3]],['#ffffff',[4,4,5],[2,.25]]].forEach(([c,pos,sz])=>{const m=new THREE.Mesh(new THREE.PlaneGeometry(sz[0],sz[1]),new THREE.MeshBasicMaterial({color:new THREE.Color(c).multiplyScalar(6),side:THREE.DoubleSide}));m.position.set(...pos);m.lookAt(0,0,0);envS.add(m)});
+scene.environment=pm.fromScene(envS,.02).texture;
+scene.environmentIntensity=.5;
+const cam=new THREE.PerspectiveCamera(32,1,.1,100);
+const rig=new THREE.Group();scene.add(rig);
+
+const barMat=(c1,c2,sp)=>new THREE.ShaderMaterial({transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,
+  uniforms:{T:{value:0},A:{value:new THREE.Color(c1)},B:{value:new THREE.Color(c2)},S:{value:sp}},
+  vertexShader:'varying vec2 v;void main(){v=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+  fragmentShader:'uniform float T;uniform vec3 A;uniform vec3 B;uniform float S;varying vec2 v;void main(){float k=sin(v.x*7.-T*S)*.5+.5;float w=pow(1.-abs(v.y-.5)*2.,1.6);float e=smoothstep(0.,.2,v.x)*smoothstep(1.,.75,v.x);float p=.6+.4*sin(v.x*23.+T*S*1.7);vec3 c=mix(A,B,k)*w*e*p*3.4;gl_FragColor=vec4(c,1.);}'});
+const bars=[];
+[[-.55,1.1,'#ff1e56','#7a1cff',1.0,-2.6],[.55,.8,'#2a3bff','#00c8ff',1.4,-2.9],[2.6,.45,'#ff4fd8','#3d2bff',.8,-3.4],[-2.2,.45,'#5a2bff','#ff3a3a',1.2,-3.2],[.05,.35,'#ffffff','#9fb4ff',2.0,-2.2]].forEach(([y,h,a,b,s,z])=>{
+  const m=new THREE.Mesh(new THREE.PlaneGeometry(34,h,1,1),barMat(a,b,s));m.position.set(0,y,z);rig.add(m);bars.push(m)});
+
+const glass=new THREE.MeshPhysicalMaterial({color:0xffffff,metalness:0,roughness:.03,transmission:1,thickness:3,ior:1.7,dispersion:9,attenuationColor:new THREE.Color('#9fb4ff'),attenuationDistance:6,iridescence:.35,iridescenceIOR:1.3,iridescenceThicknessRange:[200,420],clearcoat:1,clearcoatRoughness:.04,specularIntensity:1});
+const g1=new THREE.CylinderGeometry(1.15,1.15,30,3,1);g1.rotateZ(Math.PI/2);
+const p1=new THREE.Mesh(g1,glass);rig.add(p1);
+const g2=new THREE.CylinderGeometry(.55,.55,30,3,1);g2.rotateZ(Math.PI/2);
+const p2=new THREE.Mesh(g2,glass);p2.position.set(0,2.55,-.9);rig.add(p2);
+const g3=new THREE.CylinderGeometry(.32,.32,30,3,1);g3.rotateZ(Math.PI/2);
+const p3=new THREE.Mesh(g3,glass);p3.position.set(0,-2.3,.6);rig.add(p3);
+const key=new THREE.DirectionalLight(0xffffff,2.2);key.position.set(-4,6,6);scene.add(key);
+const rim=new THREE.PointLight(0x6a5bff,40,30);rim.position.set(4,-2,3);scene.add(rim);
+const rim2=new THREE.PointLight(0xff2a6a,30,30);rim2.position.set(-5,3,2);scene.add(rim2);
+
+let mx=0,my=0,tx=0,ty=0,vis=true,narrow=false;
+function size(){const w=fv.clientWidth,h=fv.clientHeight;renderer.setSize(w,h,false);cam.aspect=w/h;narrow=w<h;cam.position.set(0,0,narrow?24:13.5);cam.updateProjectionMatrix();rig.rotation.z=narrow?.95:.52;rig.position.y=narrow?.8:.35}
+size();addEventListener('resize',size);
+addEventListener('pointermove',e=>{tx=e.clientX/innerWidth-.5;ty=e.clientY/innerHeight-.5});
+new IntersectionObserver(e=>{vis=e[0].isIntersecting}).observe(cv);
+const t0=performance.now();let last=0;
+function draw(now){
+  const t=reduce?2:(now-t0)/1000+2;
+  mx+=(tx-mx)*.05;my+=(ty-my)*.05;
+  const s=Math.min(1,scrollY/innerHeight);
+  p1.rotation.x=t*.22+s*1.2;p2.rotation.x=-t*.3-s*.8;p3.rotation.x=t*.4;
+  rig.rotation.y=mx*.35;rig.rotation.x=my*.25-s*.15;
+  rig.position.x=Math.sin(t*.15)*.6;
+  bars.forEach(b=>b.material.uniforms.T.value=t);
+  renderer.render(scene,cam);
+}
+draw(t0);cv.classList.add('ready');
+if(!reduce){const loop=n=>{requestAnimationFrame(loop);if(!vis||n-last<33)return;last=n;draw(n)};requestAnimationFrame(loop)}
+}
+</script>
+</body>
+</html>
