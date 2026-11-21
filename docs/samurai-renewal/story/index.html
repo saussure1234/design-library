@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>ストーリー 見せ方8案</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f5f4f0;--ink:#0d0d0d;--mute:#9b9890;--pad:clamp(18px,3.4vw,52px)}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Noto Sans JP",sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.top{padding:36px var(--pad) 20px}
+.top h1{margin:0 0 8px;font-size:22px}
+.top p{margin:0;font-size:13px;color:#77756f;line-height:1.9}
+.top nav{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.top nav a{font-size:13px;padding:8px 14px;border:1px solid rgba(0,0,0,.15);border-radius:99px;color:inherit;text-decoration:none}
+.lab{position:sticky;top:0;z-index:20;display:flex;gap:14px;align-items:baseline;padding:12px var(--pad);background:#0d0d0d;color:#fff;font-size:13px}
+.lab b{font:600 20px "Inter Tight";color:#ff8a5c}
+.lab span{color:#bbb}
+.sh{display:flex;align-items:baseline;gap:18px;margin:0 0 clamp(28px,5vh,56px)}
+.sh h2{margin:0;font:500 clamp(44px,6vw,96px)/.9 "Inter Tight";letter-spacing:-.05em}
+.sh small{font-size:15px;color:var(--mute);font-weight:500}
+.sec{padding:clamp(70px,12vh,140px) var(--pad)}
+.nb{white-space:nowrap}
+
+/* 1 */
+#s1 .p{margin:0 0 1.4em;font-size:clamp(22px,2.6vw,40px);line-height:1.65;font-weight:500;letter-spacing:.01em;max-width:1200px}
+#s1 .c{color:#d3d0c8;transition:color .25s}
+#s1 .c.on{color:var(--ink)}
+
+/* 2 */
+#s2{position:relative;background:#0d0d0d;color:#f3f1ec}
+#s2 .stg{position:sticky;top:44px;height:calc(100vh - 44px);display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,2fr);align-items:center;gap:clamp(24px,5vw,90px);padding:0 var(--pad);overflow:hidden}
+#s2 .no{font:500 clamp(120px,22vw,340px)/.8 "Inter Tight";letter-spacing:-.06em;color:#2b2a27;transition:color .6s}
+#s2 .no b{color:#f3f1ec;font-weight:500}
+#s2 .tx{position:relative;min-height:50vh}
+#s2 .tx p{position:absolute;inset:0;margin:0;display:flex;align-items:center;font-size:clamp(19px,2.1vw,32px);line-height:1.8;font-weight:500;opacity:0;transform:translateY(30px);transition:opacity .7s,transform .9s cubic-bezier(.2,.8,.1,1)}
+#s2 .tx p.on{opacity:1;transform:none}
+#s2 .bar{position:absolute;left:var(--pad);right:var(--pad);bottom:34px;display:flex;gap:6px}
+#s2 .bar i{flex:1;height:2px;background:#333}
+#s2 .bar i.on{background:#f3f1ec}
+#s2 .hd{position:absolute;top:28px;left:var(--pad);font:500 15px "Inter Tight";letter-spacing:.1em;color:#77756f}
+
+/* 3 */
+#s3 .w{max-width:820px;margin:0 auto}
+#s3 p{font-family:"Noto Serif JP",serif;font-size:clamp(17px,1.5vw,22px);line-height:2.25;margin:0 0 2em;letter-spacing:.03em}
+#s3 mark{background:linear-gradient(transparent 62%,#bfe3ff 62%) no-repeat 0 0/0% 100%;color:inherit;transition:background-size 1.4s cubic-bezier(.2,.8,.1,1)}
+#s3 mark.on{background-size:100% 100%}
+#s3 p.q{font-size:clamp(24px,2.6vw,38px);line-height:1.7;font-weight:600;text-align:center;margin:2.4em 0}
+
+/* 4 */
+#s4 .g{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:clamp(24px,5vw,90px)}
+#s4 .big{position:sticky;top:90px;align-self:start;font-family:"Noto Serif JP",serif;font-weight:600;font-size:clamp(34px,4.4vw,68px);line-height:1.45;letter-spacing:.01em}
+#s4 .big em{font-style:normal;color:#2b6cff}
+#s4 .sm p{margin:0 0 2.2em;font-size:15px;line-height:2.1;font-weight:500;color:#3a3936}
+#s4 .sm p b{display:block;font:600 12px "Inter Tight";letter-spacing:.12em;color:var(--mute);margin-bottom:8px}
+
+/* 5 */
+#s5{background:#050607;color:#d8ffe6;font-family:"JetBrains Mono","Noto Sans JP",monospace}
+#s5 .sh h2{font-family:"JetBrains Mono";color:#5dff9a;letter-spacing:-.03em}
+#s5 .sh small{color:#4c6b57}
+#s5 .ln{display:grid;grid-template-columns:70px minmax(0,1fr);gap:18px;margin:0 0 2.2em;max-width:1100px}
+#s5 .ln span{color:#2f8a52;font-size:13px;padding-top:.4em}
+#s5 .ln p{margin:0;font-size:clamp(15px,1.4vw,20px);line-height:2;font-family:"Noto Sans JP",sans-serif;font-weight:400}
+#s5 .ln p .x{color:#3a6b4a}
+
+/* 6 */
+#s6 .p{margin:0 auto 22vh;max-width:1000px;text-align:center;font-size:clamp(22px,2.6vw,40px);line-height:1.7;font-weight:500;will-change:filter,opacity}
+#s6 .p:last-child{margin-bottom:10vh}
+
+/* 7 */
+#s7{position:relative;padding:0}
+#s7 .stg{position:sticky;top:44px;height:calc(100vh - 44px);overflow:hidden;display:flex;flex-direction:column;justify-content:center;gap:30px}
+#s7 .sh{padding:0 var(--pad);margin:0}
+#s7 .tr{display:flex;gap:20px;padding:0 var(--pad);will-change:transform}
+#s7 .cd{flex:none;width:min(44vw,640px);min-height:54vh;background:#fff;border-radius:28px;padding:clamp(24px,3vw,44px);display:flex;flex-direction:column;justify-content:space-between}
+#s7 .cd b{font:500 clamp(48px,6vw,96px)/1 "Inter Tight";letter-spacing:-.05em;color:#e3e0d8}
+#s7 .cd p{margin:0;font-size:clamp(16px,1.35vw,20px);line-height:1.95;font-weight:500}
+#s7 .cd.dk{background:#0d0d0d;color:#f3f1ec}
+#s7 .cd.dk b{color:#2b2a27}
+
+/* 8 */
+#s8{padding-left:0;padding-right:0;overflow:hidden}
+#s8 .sh{padding:0 var(--pad)}
+#s8 .mq{white-space:nowrap;font-weight:700;font-size:clamp(56px,9vw,150px);line-height:1.15;letter-spacing:-.02em}
+#s8 .mq div{display:inline-block;will-change:transform}
+#s8 .mq.o{-webkit-text-stroke:1.5px var(--ink);color:transparent}
+#s8 .cols{column-count:2;column-gap:clamp(24px,4vw,64px);padding:clamp(40px,7vh,80px) var(--pad) 0;max-width:1300px}
+#s8 .cols p{margin:0 0 1.6em;font-size:15.5px;line-height:2.05;font-weight:500;break-inside:avoid}
+#s8 .cols p:first-child::first-letter{font-size:3.2em;float:left;line-height:1;margin:.05em .12em 0 0;font-weight:700}
+
+@media (max-width:820px){
+  #s2 .stg{grid-template-columns:1fr;align-content:center;gap:10px}
+  #s2 .no{font-size:30vw}
+  #s2 .tx{min-height:58vh}
+  #s4 .g{grid-template-columns:1fr}
+  #s4 .big{position:relative;top:0}
+  #s5 .ln{grid-template-columns:1fr;gap:4px}
+  #s7 .cd{width:80vw;min-height:58vh}
+  #s8 .cols{column-count:1}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>ストーリー：見せ方8案（文章は本番のまま）</h1>
+  <p>スクロールして各案の動きを見てください。黒い帯が案の区切りです。</p>
+  <nav><a href="#s1">1 文字が塗られる</a><a href="#s2">2 章で切り替え</a><a href="#s3">3 言葉に線</a><a href="#s4">4 問いを固定</a><a href="#s5">5 ノイズから文字へ</a><a href="#s6">6 ピントが合う</a><a href="#s7">7 横に流れる</a><a href="#s8">8 帯と2段組</a></nav>
+</header>
+
+<div class="lab"><b>1</b>スクロールに合わせて文字が塗られていく<span>参考：rejouice・14islands</span></div>
+<section class="sec" id="s1"><div class="sh"><h2>STORY</h2><small>ストーリー</small></div><div class="body"></div></section>
+
+<div class="lab"><b>2</b>7段落を章として1枚ずつ切り替える<span>参考：immersive garden・Collins</span></div>
+<section id="s2"><div class="stg"><div class="hd">STORY — ストーリー</div><div class="no"><b>01</b></div><div class="tx"></div><div class="bar"></div></div></section>
+
+<div class="lab"><b>3</b>明朝の本文に、大事な言葉だけ線が引かれる<span>参考：Wolff Olins</span></div>
+<section class="sec" id="s3"><div class="w"><div class="sh"><h2>STORY</h2><small>ストーリー</small></div><div class="body"></div></div></section>
+
+<div class="lab"><b>4</b>問いの一文を特大で固定し、横で本文が流れる<span>参考：Instrument</span></div>
+<section class="sec" id="s4"><div class="sh"><h2>STORY</h2><small>ストーリー</small></div><div class="g"><div class="big"></div><div class="sm"></div></div></section>
+
+<div class="lab"><b>5</b>乱れた記号（ノイズ）から、読める文字（シグナル）へ<span>参考：darkroom</span></div>
+<section class="sec" id="s5"><div class="sh"><h2>STORY</h2><small>ストーリー</small></div><div class="body"></div></section>
+
+<div class="lab"><b>6</b>ぼやけた段落が、画面の中央に来るとくっきりする<span>参考：独自（ピントが合う＝シグナル）</span></div>
+<section class="sec" id="s6"><div class="sh" style="justify-content:center"><h2>STORY</h2><small>ストーリー</small></div><div class="body" style="padding-top:20vh"></div></section>
+
+<div class="lab"><b>7</b>段落のカードが横に流れる<span>参考：cuberto・17 横レール</span></div>
+<section id="s7"><div class="stg"><div class="sh"><h2>STORY</h2><small>ストーリー</small></div><div class="tr"></div></div></section>
+
+<div class="lab"><b>8</b>本文中の一文を巨大な帯にして流し、下に2段組<span>参考：Instrument・rejouice</span></div>
+<section class="sec" id="s8"><div class="sh"><h2>STORY</h2><small>ストーリー</small></div><div class="mq"><div></div></div><div class="mq o"><div></div></div><div class="cols"></div></section>
+
+<script>
+(() => {
+const P = [
+"「誰かの役に立つ」という営みの中で、これまで人間が担ってきた“考えること”や“実行すること”の一部が、いま急速にAIへと置き換わりつつあります。変化の激しさが増し続けるこの時代において、マクロな視点では人間らしさを、ミクロな視点では自分らしさを保ちながら、どう生き残っていくべきか。私たちはその問いを日々考え続けています。",
+"AIは高い合理性をもって答えを返しますが、一方、その合理性は、前提となるプロンプトや、使う人それぞれの立場や経験、価値観に大きく左右される構造にあります。つまり、ひとつの正解に収束するのではなく、無数の“もっともらしさ”が生まれ続け、エントロピー増大の法則が文字通り起きている時代に入ったと捉えています。",
+"Web上でも、AIによって膨大な情報やコンテンツが生成される時代になりました。そうした環境のなかで重要になるのは、何が本質的なシグナルで、何が一時的なノイズなのかを見極める力だと考えています。",
+"では、シグナルとノイズを見極める要素はどこに存在するのでしょうか。",
+"年収・地位・資産など上下の相対比較で幸福度を測るゼロサムゲームと、成長・信頼・創造など一緒に何かに取り組むことで幸福が生まれるプラスサムゲームとの視点から様々な事象を捉えた際、創業時に掲げた「笑顔の総量の最大化」を軸に置くと判断基準は明確になると考えています。",
+"短期的な個別最適ではなく、長期的な全体最適へ。利己を求めることと、利他に生きることがタイムラグを経て同義になるという仮説を検証すべく、今後も地道に、泥臭くをコアバリューとして事業を運営してまいります。",
+"ご興味をお持ちいただけた方はぜひご一報いただければ幸いです。"];
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const $ = (q, r = document) => r.querySelector(q);
+const pad = n => String(n).padStart(2, '0');
+
+// 1
+const b1 = $('#s1 .body');
+P.forEach(t => { const p = document.createElement('p'); p.className = 'p'; p.innerHTML = [...t].map(c => `<span class="c">${esc(c)}</span>`).join(''); b1.appendChild(p); });
+const c1 = [...b1.querySelectorAll('.c')];
+
+// 2
+const tx2 = $('#s2 .tx'), bar2 = $('#s2 .bar'), no2 = $('#s2 .no b'), s2 = $('#s2');
+P.forEach((t, i) => { const p = document.createElement('p'); p.textContent = t; if (!i) p.className = 'on'; tx2.appendChild(p); const k = document.createElement('i'); if (!i) k.className = 'on'; bar2.appendChild(k); });
+s2.style.height = (P.length * 85 + 40) + 'vh';
+
+// 3
+const KEY = ["何が本質的なシグナルで、何が一時的なノイズなのかを見極める力", "「笑顔の総量の最大化」", "短期的な個別最適ではなく、長期的な全体最適へ。", "地道に、泥臭く", "無数の“もっともらしさ”", "人間らしさ", "自分らしさ"];
+const b3 = $('#s3 .body');
+P.forEach((t, i) => { let h = esc(t); KEY.forEach(k => { h = h.replace(esc(k), `<mark>${esc(k)}</mark>`); }); const p = document.createElement('p'); if (i === 3) p.className = 'q'; p.innerHTML = h; b3.appendChild(p); });
+
+// 4
+$('#s4 .big').innerHTML = esc(P[3]).replace('シグナル', '<em>シグナル</em>').replace('ノイズ', '<em>ノイズ</em>');
+const sm = $('#s4 .sm');
+P.forEach((t, i) => { if (i === 3) return; const p = document.createElement('p'); p.innerHTML = `<b>${pad(i + 1)}</b>${esc(t)}`; sm.appendChild(p); });
+
+// 5
+const b5 = $('#s5 .body'), GL = '▓▒░#%&*+=<>/\\|01ノイズ∴∵≠';
+P.forEach((t, i) => { const d = document.createElement('div'); d.className = 'ln'; d.innerHTML = `<span>&gt; ${pad(i + 1)}</span><p data-t="${esc(t)}"></p>`; b5.appendChild(d); });
+const p5 = [...b5.querySelectorAll('p')];
+const noise = t => [...t].map(c => /\s/.test(c) ? c : GL[Math.random() * GL.length | 0]).join('');
+p5.forEach(p => { p.innerHTML = `<span class="x">${esc(noise(p.dataset.t))}</span>`; });
+const run5 = p => { if (p.dataset.done) return; p.dataset.done = 1; const t = p.dataset.t, n = t.length, t0 = performance.now(), D = reduce ? 0 : 1400;
+  const step = now => { const k = D ? Math.min(1, (now - t0) / D) : 1, m = Math.floor(n * k);
+    p.innerHTML = esc(t.slice(0, m)) + `<span class="x">${esc(noise(t.slice(m)))}</span>`; if (k < 1) requestAnimationFrame(step); };
+  requestAnimationFrame(step); };
+const io5 = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) run5(e.target); }), { threshold: .3 });
+p5.forEach(p => io5.observe(p));
+
+// 6
+const b6 = $('#s6 .body');
+P.forEach(t => { const p = document.createElement('p'); p.className = 'p'; p.textContent = t; b6.appendChild(p); });
+const p6 = [...b6.querySelectorAll('.p')];
+
+// 7
+const tr7 = $('#s7 .tr'), s7 = $('#s7');
+P.forEach((t, i) => { const d = document.createElement('div'); d.className = 'cd' + (i === 3 ? ' dk' : ''); d.innerHTML = `<b>${pad(i + 1)}</b><p>${esc(t)}</p>`; tr7.appendChild(d); });
+
+// 8
+const L1 = P[5].split('。')[0] + '。', L2 = P[3];
+$('#s8 .mq div').textContent = (L1 + '　').repeat(4);
+$('#s8 .mq.o div').textContent = (L2 + '　').repeat(4);
+const cols = $('#s8 .cols');
+P.forEach(t => { const p = document.createElement('p'); p.textContent = t; cols.appendChild(p); });
+const mq = [...document.querySelectorAll('#s8 .mq div')], s8 = $('#s8');
+
+// 3 の線
+const io3 = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); io3.unobserve(e.target); } }), { threshold: 1 });
+document.querySelectorAll('#s3 mark').forEach(m => io3.observe(m));
+
+const mob = matchMedia('(max-width: 820px)');
+const upd = () => {
+  const vh = innerHeight;
+  // 1
+  for (const c of c1) { const r = c.getBoundingClientRect(); c.classList.toggle('on', r.top < vh * .62); }
+  // 2
+  { const r = s2.getBoundingClientRect(), tot = s2.offsetHeight - vh, p = Math.min(.999, Math.max(0, -r.top / Math.max(1, tot))), i = Math.floor(p * P.length);
+    [...tx2.children].forEach((e, k) => e.classList.toggle('on', k === i)); [...bar2.children].forEach((e, k) => e.classList.toggle('on', k <= i)); no2.textContent = pad(i + 1); }
+  // 6
+  for (const p of p6) { const r = p.getBoundingClientRect(), d = Math.abs(r.top + r.height / 2 - vh / 2) / (vh / 2), k = Math.min(1, d);
+    p.style.filter = reduce ? '' : `blur(${(k * k * 9).toFixed(1)}px)`; p.style.opacity = (1 - k * .75).toFixed(2); }
+  // 7
+  { const dist = Math.max(0, tr7.scrollWidth - innerWidth); s7.style.height = (vh + dist) + 'px';
+    const r = s7.getBoundingClientRect(), p = Math.min(1, Math.max(0, -r.top / Math.max(1, dist))); tr7.style.transform = `translate3d(${-p * dist}px,0,0)`; }
+  // 8
+  { const r = s8.getBoundingClientRect(), k = (vh - r.top); mq[0].style.transform = `translate3d(${-k * .35}px,0,0)`; mq[1].style.transform = `translate3d(${k * .35 - 2000}px,0,0)`; }
+};
+let tk = false;
+addEventListener('scroll', () => { if (!tk) { tk = true; requestAnimationFrame(() => { upd(); tk = false; }); } }, { passive: true });
+addEventListener('resize', upd);
+(document.fonts ? document.fonts.ready : Promise.resolve()).then(upd);
+upd();
+})();
+</script>
+</body>
+</html>
