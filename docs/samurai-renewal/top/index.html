@@ -433,7 +433,7 @@ body.mopen .hd .logo img{filter:invert(1)}
         const sx = cx + q.x / q.z * f + (Math.random() - .5) * jit, sy = cy + q.y / q.z * f + (Math.random() - .5) * jit;
         if (sx < -20 || sy < -20 || sx > W + 20 || sy > H + 20) { spawn(q, true); continue; }
         const near = 1 - q.z, tw = nz > .3 ? 1 : .6 + .4 * Math.sin(t * .0018 * q.s + q.tw);
-        const al = Math.min(.75, (.08 + .62 * near * near) * tw);
+        const al = Math.min(.75, (.08 + .62 * near * near) * tw) * (.45 + .55 * nz);
         const [r, gg, b] = q.c, col = `rgba(${r},${gg},${b},${al})`;
         const sz = (.5 + 1.9 * near * near) * q.s;
         if (q.px !== null && nz > .08) {
@@ -445,8 +445,23 @@ body.mopen .hd .logo img{filter:invert(1)}
         q.px = cx + (sx - cx) * (1 - .06 * k); q.py = cy + (sy - cy) * (1 - .06 * k);
       }
     };
-    if (reduce) { NOISE = 0; nz = 0; draw(16); return; }
-    const loop = now => { requestAnimationFrame(loop); if (!vis) { last = now; return; } const dt = Math.min(50, now - (last || now)); if (now - last < 30) return; last = now; draw(dt || 16); };
+    let RG = [], lastR = -9999;
+    const drawRings = () => {
+      const S = 1 - nz; if (S < .02) { RG = []; return; }
+      if (t - lastR > 1500) { lastR = t; RG.push({ r: 0 }); }
+      const rx = W * .5, ry = H * .42, M = Math.hypot(W, H) * .6, n = W < 820 ? 110 : 160;
+      ctx.globalCompositeOperation = 'lighter';
+      RG = RG.filter(g => { g.r += 2.2; const a = (1 - g.r / M) * .7 * S; if (a <= 0) return false;
+        for (let i = 0; i < n; i++) { const th = i / n * 6.283, jr = g.r + (Math.random() - .5) * 26 * nz * nz;
+          ctx.fillStyle = i % 7 ? `rgba(160,205,255,${a})` : `rgba(214,198,255,${a})`;
+          ctx.fillRect(rx + Math.cos(th) * jr, ry + Math.sin(th) * jr * .62, 2, 2); }
+        return true; });
+      ctx.globalCompositeOperation = 'source-over';
+    };
+    const draw0 = draw;
+    const drawAll = dt => { draw0(dt); drawRings(); };
+    if (reduce) { NOISE = 0; nz = 0; drawAll(16); return; }
+    const loop = now => { requestAnimationFrame(loop); if (!vis) { last = now; return; } const dt = Math.min(50, now - (last || now)); if (now - last < 30) return; last = now; drawAll(dt || 16); };
     requestAnimationFrame(loop);
   })();
   const stage = document.getElementById('stage'), scene = document.getElementById('scene'), hint = document.getElementById('hint');
