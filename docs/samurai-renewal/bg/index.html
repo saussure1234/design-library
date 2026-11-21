@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>FV背景 比較</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..600&family=Noto+Sans+JP:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#0b0c12;color:#e9e8f3;font-family:"Noto Sans JP",sans-serif}
+header{padding:28px clamp(16px,3vw,40px) 6px}
+h1{margin:0 0 6px;font-size:20px;font-weight:600}
+header p{margin:0;font-size:13px;color:#9a99ab;line-height:1.8}
+.g{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;padding:20px clamp(16px,3vw,40px) 60px}
+figure{margin:0}
+.st{position:relative;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:#02030a}
+.st canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.tx{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
+.tx b{font-family:"Bricolage Grotesque",sans-serif;font-weight:250;font-variation-settings:"opsz" 96,"wdth" 92;font-size:clamp(34px,5.4vw,76px);letter-spacing:-.045em;line-height:1;color:#f3f1ff}
+.tx b i{font-style:normal;color:#8fdcff;text-shadow:0 0 .35em rgba(120,200,255,.35)}
+.tx span{margin-top:12px;font-size:clamp(10px,.95vw,13px);font-weight:300;letter-spacing:.1em;transition:opacity .8s}
+.mt{position:absolute;left:12px;bottom:10px;display:flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.08em;color:rgba(233,232,243,.7)}
+.mt i{display:block;width:70px;height:3px;border-radius:3px;background:rgba(255,255,255,.15);overflow:hidden}
+.mt i em{display:block;height:100%;background:#8fdcff;width:50%}
+figcaption{padding:12px 2px 0;font-size:14px;line-height:1.7}
+figcaption b{font-size:16px;margin-right:8px;color:#ff8a5c}
+figcaption small{display:block;color:#9a99ab;font-size:12.5px}
+@media(max-width:860px){.g{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><h1>FV背景：6案の比較（渦以外）</h1><p>各枠は「ノイズ → シグナル」を約10秒で自動で行き来します（左下のバーが今の状態。右に行くほどシグナル）。実際のページでは、この変化がスクロールに連動します。</p></header>
+<div class="g" id="g"></div>
+<script>
+(() => {
+const PAL=[[255,255,255],[255,255,255],[205,224,255],[160,200,255],[188,170,255],[214,198,255],[255,150,214],[255,214,160]],W8=[5,3,4,3,3,2,1,1];
+const pick=()=>{let t=Math.random()*20;for(let i=0;i<PAL.length;i++){t-=W8[i];if(t<=0)return PAL[i]}return PAL[0]};
+const rgba=(c,a)=>`rgba(${c[0]},${c[1]},${c[2]},${a})`;
+const R=Math.random;
+
+const PATS=[
+{k:"A",name:"飛んでくる星（今の案）",d:"ノイズ＝粒が奥から手前へ速く飛んで光の線になる／シグナル＝ゆっくり漂う星",
+ init(s){s.P=Array.from({length:s.W<700?420:700},()=>this.sp({},0))},
+ sp(q,far){q.x=(R()-.5)*2.4;q.y=(R()-.5)*2.4;q.z=far?.6+R()*.4:.05+R()*.95;q.px=null;q.c=pick();q.tw=R()*6.3;q.s=R()*.9+.6;return q},
+ draw(s,c,dt,t,N){c.fillStyle='#02030a';c.fillRect(0,0,s.W,s.H);c.globalCompositeOperation='lighter';
+  const cx=s.W/2,cy=s.H/2,f=Math.min(s.W,s.H)*.55,v=(.00004+.00085*N*N)*dt;
+  for(const q of s.P){q.z-=v;if(q.z<.03){this.sp(q,1);continue}
+   const x=cx+q.x/q.z*f,y=cy+q.y/q.z*f;if(x<-20||y<-20||x>s.W+20||y>s.H+20){this.sp(q,1);continue}
+   const n=1-q.z,tw=N>.3?1:.6+.4*Math.sin(t*.0018*q.s+q.tw),a=Math.min(.75,(.08+.62*n*n)*tw),sz=(.5+1.9*n*n)*q.s;
+   if(q.px!==null&&N>.08){c.strokeStyle=rgba(q.c,a);c.lineWidth=sz;c.lineCap='round';c.beginPath();c.moveTo(q.px,q.py);c.lineTo(x,y);c.stroke()}
+   else{c.fillStyle=rgba(q.c,a);c.beginPath();c.arc(x,y,sz*.6,0,6.283);c.fill()}
+   const k=.35+2.6*N;q.px=cx+(x-cx)*(1-.06*k);q.py=cy+(y-cy)*(1-.06*k)}
+  c.globalCompositeOperation='source-over'}},
+
+{k:"B",name:"横に流れる星屑",d:"ノイズ＝粒がばらばらの向きにブレて動く／シグナル＝奥行きのある3層が、静かに同じ向きへ流れる",
+ init(s){s.P=Array.from({length:s.W<700?500:900},()=>({x:R()*s.W,y:R()*s.H,z:.15+R()*.85,vx:0,vy:0,c:pick(),tw:R()*6.3}))},
+ draw(s,c,dt,t,N){c.fillStyle=`rgba(2,3,10,${.35+.65*(1-N)})`;c.fillRect(0,0,s.W,s.H);c.globalCompositeOperation='lighter';
+  for(const q of s.P){q.vx+=(R()-.5)*.9*N;q.vy+=(R()-.5)*.9*N;q.vx*=.9;q.vy*=.9;
+   const fx=-(.02+.09*q.z)*dt*(1-N)*.6;q.x+=fx+q.vx*N*dt*.06;q.y+=q.vy*N*dt*.06;
+   if(q.x<-4)q.x=s.W+4;if(q.x>s.W+4)q.x=-4;if(q.y<-4)q.y=s.H+4;if(q.y>s.H+4)q.y=-4;
+   const a=(.1+.5*q.z*q.z)*(N>.3?1:.65+.35*Math.sin(t*.002+q.tw));c.fillStyle=rgba(q.c,a);const z=.6+1.6*q.z*q.z;c.fillRect(q.x,q.y,z*(1+(1-N)*q.z*2.2),z)}
+  c.globalCompositeOperation='source-over'}},
+
+{k:"C",name:"星座",d:"ノイズ＝星がちらついて位置が定まらない／シグナル＝星が落ち着き、近い星どうしが細い線でつながる",
+ init(s){const n=s.W<700?55:90;s.P=Array.from({length:n},()=>({hx:R()*s.W,hy:R()*s.H,x:0,y:0,ph:R()*6.3,c:pick(),s:1+R()*1.6}));s.D=Array.from({length:s.W<700?250:450},()=>({x:R()*s.W,y:R()*s.H,a:.05+R()*.2}))},
+ draw(s,c,dt,t,N){c.fillStyle='#02030a';c.fillRect(0,0,s.W,s.H);
+  for(const d of s.D){c.fillStyle=`rgba(220,225,255,${d.a})`;c.fillRect(d.x,d.y,1,1)}
+  const L=Math.min(s.W,s.H)*.22;
+  for(const q of s.P){q.x=q.hx+Math.sin(t*.0004+q.ph)*8+(R()-.5)*26*N*N;q.y=q.hy+Math.cos(t*.00035+q.ph)*8+(R()-.5)*26*N*N}
+  c.lineWidth=.7;
+  for(let i=0;i<s.P.length;i++)for(let j=i+1;j<s.P.length;j++){const a=s.P[i],b=s.P[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.hypot(dx,dy);if(d<L){const al=(1-d/L)*.38*(1-N)**1.5;if(al<.01)continue;c.strokeStyle=`rgba(160,200,255,${al})`;c.beginPath();c.moveTo(a.x,a.y);c.lineTo(b.x,b.y);c.stroke()}}
+  c.globalCompositeOperation='lighter';
+  for(const q of s.P){const a=N>.3?(R()<.5?.15:.75):.55+.3*Math.sin(t*.002+q.ph);c.fillStyle=rgba(q.c,a);c.beginPath();c.arc(q.x,q.y,q.s,0,6.283);c.fill()}
+  c.globalCompositeOperation='source-over'}},
+
+{k:"D",name:"波（シグナルそのもの）",d:"ノイズ＝粒が画面中に散らばってちらつく／シグナル＝粒が1本のなめらかな波に並んで流れる",
+ init(s){const n=s.W<700?380:650;s.P=Array.from({length:n},(_,i)=>({u:i/n,nx:R()*s.W,ny:R()*s.H,c:R()<.75?[150,205,255]:pick(),o:(R()-.5)*1}));s.S=Array.from({length:s.W<700?120:220},()=>({x:R()*s.W,y:R()*s.H,a:.05+R()*.18}))},
+ draw(s,c,dt,t,N){c.fillStyle='rgba(2,3,10,.45)';c.fillRect(0,0,s.W,s.H);
+  for(const d of s.S){c.fillStyle=`rgba(220,225,255,${d.a})`;c.fillRect(d.x,d.y,1,1)}
+  c.globalCompositeOperation='lighter';const cy=s.H*.74,A=s.H*.08;
+  for(const q of s.P){if(R()<.04*N){q.nx=R()*s.W;q.ny=R()*s.H}
+   const tx=q.u*s.W,ty=cy+Math.sin(q.u*9.4-t*.0012)*A*(1+.25*Math.sin(t*.0005))+q.o*2,e=N*N*(3-2*N);
+   const x=tx+(q.nx-tx)*e,y=ty+(q.ny-ty)*e;c.fillStyle=rgba(q.c,.25+.4*(1-N));c.fillRect(x,y,1.6,1.6)}
+  c.globalCompositeOperation='source-over'}},
+
+{k:"E",name:"星雲と流れ星",d:"ノイズ＝画面がザラつき、流れ星が乱れ飛ぶ／シグナル＝薄い星雲がゆっくり漂い、ときどき流れ星が1本",
+ init(s){s.S=Array.from({length:s.W<700?260:480},()=>({x:R()*s.W,y:R()*s.H,a:.08+R()*.35,ph:R()*6.3,c:pick()}));s.M=[];s.B=[{c:[110,80,200],x:.3,y:.35,r:.55,sp:.00005},{c:[50,90,200],x:.72,y:.62,r:.6,sp:-.00004},{c:[180,70,160],x:.55,y:.25,r:.4,sp:.00003}]},
+ draw(s,c,dt,t,N){c.fillStyle='#02030a';c.fillRect(0,0,s.W,s.H);c.globalCompositeOperation='lighter';
+  for(const b of s.B){const x=s.W*(b.x+Math.sin(t*b.sp*10)*.06),y=s.H*(b.y+Math.cos(t*b.sp*8)*.05),r=Math.max(s.W,s.H)*b.r,g=c.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,rgba(b.c,.09));g.addColorStop(1,'rgba(0,0,0,0)');c.fillStyle=g;c.fillRect(0,0,s.W,s.H)}
+  for(const d of s.S){c.fillStyle=rgba(d.c,d.a*(.6+.4*Math.sin(t*.0016+d.ph)));c.fillRect(d.x,d.y,1.2,1.2)}
+  if(R()<(.006+.12*N*N)*dt/16){const a=-.5-R()*.5;s.M.push({x:R()*s.W*1.2,y:-10+R()*s.H*.3,vx:Math.cos(a)*(.5+R()*.5),vy:-Math.sin(a)*(.5+R()*.5),l:1})}
+  c.lineCap='round';
+  s.M=s.M.filter(m=>{m.x+=m.vx*dt*(.4+.8*N);m.y+=m.vy*dt*(.4+.8*N);m.l-=.012*dt/16;const g=c.createLinearGradient(m.x,m.y,m.x-m.vx*90,m.y-m.vy*90);g.addColorStop(0,`rgba(230,235,255,${.55*m.l})`);g.addColorStop(1,'rgba(230,235,255,0)');c.strokeStyle=g;c.lineWidth=1.2;c.beginPath();c.moveTo(m.x,m.y);c.lineTo(m.x-m.vx*90,m.y-m.vy*90);c.stroke();return m.l>0});
+  c.globalCompositeOperation='source-over';
+  if(N>.02){const n=Math.floor(s.W*s.H/900*N);for(let i=0;i<n;i++){c.fillStyle=`rgba(200,200,230,${.08+R()*.12})`;c.fillRect(R()*s.W,R()*s.H,1,1)}}}},
+
+{k:"F",name:"波紋（電波）",d:"ノイズ＝輪が乱れて火花が散る／シグナル＝中心から、きれいな光の輪が一定のリズムで広がる",
+ init(s){s.Rg=[];s.last=0;s.S=Array.from({length:s.W<700?150:280},()=>({x:R()*s.W,y:R()*s.H,a:.05+R()*.2}))},
+ draw(s,c,dt,t,N){c.fillStyle='rgba(2,3,10,.5)';c.fillRect(0,0,s.W,s.H);
+  for(const d of s.S){c.fillStyle=`rgba(220,225,255,${d.a})`;c.fillRect(d.x,d.y,1,1)}
+  if(t-s.last>1300){s.last=t;s.Rg.push({r:0})}
+  const cx=s.W/2,cy=s.H/2,M=Math.hypot(s.W,s.H)*.55;c.globalCompositeOperation='lighter';
+  s.Rg=s.Rg.filter(g=>{g.r+=dt*.06;const a=(1-g.r/M)*.5;if(a<=0)return false;const n=140;
+   for(let i=0;i<n;i++){const th=i/n*6.283,j=(R()-.5)*30*N*N,rr=g.r+j;c.fillStyle=i%7==0?`rgba(214,198,255,${a})`:`rgba(160,205,255,${a})`;c.fillRect(cx+Math.cos(th)*rr,cy+Math.sin(th)*rr*.62,1.6,1.6)}return true});
+  if(N>.05){for(let i=0;i<40*N;i++){const th=R()*6.283,rr=R()*M;c.fillStyle=rgba(pick(),.5*N);c.fillRect(cx+Math.cos(th)*rr,cy+Math.sin(th)*rr*.62,2,2)}}
+  c.globalCompositeOperation='source-over'}}
+];
+
+const g=document.getElementById('g');
+const stages=PATS.map(p=>{
+  const f=document.createElement('figure');
+  f.innerHTML=`<div class="st"><canvas></canvas><div class="tx"><b>find the <i>signal.</i></b><span>何が本質的なシグナルで何が一時的なノイズなのかを見極める。</span></div><div class="mt">NOISE<i><em></em></i>SIGNAL</div></div><figcaption><b>${p.k}</b>${p.name}<small>${p.d}</small></figcaption>`;
+  g.appendChild(f);
+  const cv=f.querySelector('canvas'),c=cv.getContext('2d'),s={p,cv,c,vis:true,bar:f.querySelector('.mt em'),sub:f.querySelector('.tx span')};
+  const fit=()=>{const D=Math.min(1.5,devicePixelRatio||1);s.W=cv.clientWidth;s.H=cv.clientHeight;cv.width=Math.round(s.W*D);cv.height=Math.round(s.H*D);c.setTransform(D,0,0,D,0,0);p.init(s)};
+  fit();addEventListener('resize',fit);
+  new IntersectionObserver(es=>{s.vis=es[0].isIntersecting}).observe(cv);
+  return s;
+});
+const Nat=t=>{const u=(t%10000)/10000;if(u<.28)return 1;if(u<.52)return 1-(u-.28)/.24;if(u<.82)return 0;return (u-.82)/.18};
+let last=0;const t0=performance.now();
+const loop=now=>{requestAnimationFrame(loop);const dt=Math.min(50,now-(last||now));if(now-last<30)return;last=now;
+  const t=now-t0,N=Nat(t),e=N*N*(3-2*N);
+  for(const s of stages){if(!s.vis)continue;s.p.draw(s,s.c,dt,t,e);s.bar.style.width=((1-N)*100)+'%';s.sub.style.opacity=N<.25?1:0}};
+requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
