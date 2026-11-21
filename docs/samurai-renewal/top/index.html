@@ -55,13 +55,19 @@ body.ondark:not(.mopen) .burger i{background:var(--ink)}
 body.mopen .hd .logo img{filter:invert(1)}
 
 .scene{position:relative;height:210vh}
-.stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:#03040c;color:#f3f1ff}
+.stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:#02030a;color:#f3f1ff}
 .sw{position:absolute;inset:0;width:100%;height:100%;display:block}
 .wd{position:absolute;left:0;top:0;font-family:"Bricolage Grotesque","Inter Tight",sans-serif;font-weight:250;font-variation-settings:"opsz" 96,"wdth" 92;line-height:1;letter-spacing:-.045em;white-space:nowrap;transform-origin:0 0;will-change:transform}
 .wd .ch{display:inline-block;transform:translateY(.6em);opacity:0;transition:transform 1.3s cubic-bezier(.16,1,.3,1),opacity 1s}
 .ready .wd .ch{transform:none;opacity:1}
 .wd{color:#f3f1ff}
 .wd.sig{color:#8fdcff;text-shadow:0 0 .35em rgba(120,200,255,.35)}
+.fvnote{position:absolute;left:0;top:0;font-size:13px;font-weight:400;letter-spacing:.06em;white-space:nowrap;padding-bottom:3px;opacity:0;transition:opacity 1s 1.2s;will-change:transform;color:#f3f1ff}
+.fvnote::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform 1.2s 1.5s cubic-bezier(.65,0,.35,1)}
+.ready .fvnote{opacity:1}
+.ready .fvnote::after{transform:scaleX(1)}
+.settled .fvnote{transition:none}
+.sum{position:absolute;left:0;right:0;margin:0;text-align:center;font-weight:300;font-size:clamp(14px,1.25vw,18px);letter-spacing:.1em;line-height:1.9;opacity:0;padding:0 var(--pad);color:#f3f1ff}
 .dots{position:absolute;left:var(--pad);top:62%;display:flex;gap:5px}
 .dots i{width:7px;height:7px;border-radius:50%;background:#f3f1ff}
 .dots i:last-child{background:rgba(243,241,255,.4)}
@@ -220,6 +226,7 @@ body.mopen .hd .logo img{filter:invert(1)}
   .hd{padding:12px 16px}
   .logo{height:32px}
   .dots{top:auto;bottom:32px}
+  .fvnote{font-size:11.5px}
   .reel{padding:0 16px;margin-top:-30vh}
   .reel-in{height:64vh;border-radius:22px}
   .sec{padding:80px 16px 0}
@@ -270,10 +277,13 @@ body.mopen .hd .logo img{filter:invert(1)}
 <section class="scene" id="scene">
   <div class="stage" id="stage">
     <canvas class="sw" id="sw" aria-hidden="true"></canvas>
-    <h1 class="sr">Find the signal</h1>
-    <span class="wd" aria-hidden="true">Find</span>
+    <h1 class="sr">find the signal.</h1>
+    <span class="wd" aria-hidden="true">find</span>
     <span class="wd" aria-hidden="true">the</span>
-    <span class="wd sig" aria-hidden="true">signal</span>
+    <span class="wd sig" aria-hidden="true">signal.</span>
+    <span class="fvnote jp">笑顔の総量の最大化</span>
+    <span class="fvnote jp">地道に、泥臭く</span>
+    <p class="sum jp" id="sum"><span class="nb">何が本質的なシグナルで</span><wbr><span class="nb">何が一時的なノイズなのかを</span><wbr><span class="nb">見極める。</span></p>
     <div class="dots"><i></i><i></i><i></i></div>
     <span class="hint" id="hint">scroll to align ↓</span>
   </div>
@@ -393,56 +403,64 @@ body.mopen .hd .logo img{filter:invert(1)}
   document.querySelectorAll('.ov a').forEach(a => a.addEventListener('click', () => document.body.classList.remove('mopen')));
   let NOISE = 1;
   (() => {
-    const cv = document.getElementById('sw'), gl = cv.getContext('webgl', { antialias: false, powerPreference: 'low-power' });
-    if (!gl) return;
-    const vs = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
-    const fs = `precision highp float;
-uniform vec2 R;uniform float T;uniform vec2 M;uniform float N;
-float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
-float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
-float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<5;i++){v+=a*n(p);p=p*2.03+vec2(1.7,9.2);a*=.5;}return v;}
-void main(){
-  vec2 uv=(gl_FragCoord.xy-.5*R)/min(R.x,R.y);
-  uv-=(M-.5)*vec2(.22,-.22)*N;
-  float r=length(uv),a=atan(uv.y,uv.x);
-  float a2=a+(1.2+N*4.2)/(r+.22)-T*(.06+.30*N);
-  vec2 q=vec2(cos(a2),sin(a2))*r;
-  float w=fbm(q*1.35+vec2(T*.06,-T*.045));
-  float v=sin(a2*2.+w*3.6*(.35+.65*N)+r*2.4-T*.2)*.5+.5;
-  vec3 c0=vec3(.008,.010,.035),c1=vec3(.10,.11,.42),c2=vec3(.46,.20,.78),c3=vec3(.20,.72,.98);
-  vec3 col=mix(c0,c1,smoothstep(.10,.45,v));
-  col=mix(col,c2,smoothstep(.46,.66,v));
-  col=mix(col,c3,smoothstep(.72,.92,v));
-  col+=vec3(.75,.85,1.)*smoothstep(.05,.0,abs(v-.46))*.45*N;
-  col*=smoothstep(.05,.34,r+(w-.5)*.22);
-  col*=1.-smoothstep(.75,1.6,r)*.7;
-  col*=.10+.90*N;
-  col+=(h(gl_FragCoord.xy+fract(T)*61.)-.5)*(.015+.17*N);
-  vec2 g=gl_FragCoord.xy/min(R.x,R.y)*55.;vec2 id=floor(g);float st=h(id);vec2 f=fract(g)-.5-(vec2(h(id+3.),h(id+7.))-.5)*.5;
-  float star=step(.982,st)*smoothstep(.16,.0,length(f))*(.55+.45*sin(T*1.6+st*60.));
-  col+=vec3(.86,.92,1.)*star*(.45+.55*(1.-N));
-  gl_FragColor=vec4(col,1.);
-}`;
-    const sh = (t, src) => { const o = gl.createShader(t); gl.shaderSource(o, src); gl.compileShader(o); return o; };
-    const pr = gl.createProgram(); gl.attachShader(pr, sh(gl.VERTEX_SHADER, vs)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, fs)); gl.linkProgram(pr); gl.useProgram(pr);
-    const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
-    const loc = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-    const uR = gl.getUniformLocation(pr, 'R'), uT = gl.getUniformLocation(pr, 'T'), uM = gl.getUniformLocation(pr, 'M'), uN = gl.getUniformLocation(pr, 'N');
-    const Q = .5, fit = () => { cv.width = Math.max(2, Math.round(cv.clientWidth * Q)); cv.height = Math.max(2, Math.round(cv.clientHeight * Q)); gl.viewport(0, 0, cv.width, cv.height); };
+    const cv = document.getElementById('sw'), ctx = cv.getContext('2d');
+    if (!ctx) return;
+    const PAL = [[255,255,255],[255,255,255],[200,222,255],[158,201,255],[185,166,255],[214,196,255],[255,138,214],[255,214,158]];
+    const W8 = [5,3,4,3,3,2,1,1];
+    const pick = () => { let t = Math.random() * W8.reduce((x, y) => x + y, 0); for (let i = 0; i < PAL.length; i++) { t -= W8[i]; if (t <= 0) return PAL[i]; } return PAL[0]; };
+    let W = 0, H = 0, D = 1, P = [];
+    const fit = () => {
+      D = Math.min(1.5, devicePixelRatio || 1); W = cv.clientWidth; H = cv.clientHeight;
+      cv.width = Math.round(W * D); cv.height = Math.round(H * D); ctx.setTransform(D, 0, 0, D, 0, 0);
+      const n = W < 820 ? 1800 : 3400, R = Math.hypot(W, H) * .55;
+      P = Array.from({ length: n }, () => {
+        const arm = Math.floor(Math.random() * 3), core = Math.random() < .12;
+        const r = core ? Math.pow(Math.random(), 1.8) * R * .18 : Math.pow(Math.random(), .75) * R;
+        const sc = (1 - Math.min(1, r / R)) * .9 + .25;
+        return { r, a: arm * 2.094 + r / R * 7.2 + (Math.random() - .5) * (core ? 6.3 : .22 + .45 * r / R) * (Math.random() < .25 ? 3 : 1),
+                 c: pick(), s: Math.random() * 1.3 + .4, tw: Math.random() * 6.3, j: Math.random() * 6.3, sc, w: (core ? 1.6 : 1) };
+      });
+    };
     fit(); addEventListener('resize', fit);
-    let gx = .5, gy = .5, tx = .5, ty = .5, vis = true, last = 0, nz = 1; const t0 = performance.now();
+    let vis = true, last = 0, nz = 1, t = 0, gx = .5, gy = .5, tx = .5, ty = .5;
     addEventListener('pointermove', e => { tx = e.clientX / innerWidth; ty = e.clientY / innerHeight; });
     new IntersectionObserver(es => { vis = es[0].isIntersecting; }).observe(cv);
-    const draw = now => { gx += (tx - gx) * .04; gy += (ty - gy) * .04; nz += (NOISE - nz) * .12;
-      gl.uniform2f(uR, cv.width, cv.height); gl.uniform1f(uT, reduce ? 4 : (now - t0) / 1000 + 4); gl.uniform2f(uM, gx, gy); gl.uniform1f(uN, nz); gl.drawArrays(gl.TRIANGLES, 0, 3); };
-    draw(t0); if (reduce) return;
-    const loop = now => { requestAnimationFrame(loop); if (!vis || now - last < 33) return; last = now; draw(now); };
+    const draw = dt => {
+      nz += (NOISE - nz) * .08; gx += (tx - gx) * .04; gy += (ty - gy) * .04;
+      const cx = W * (.5 + (gx - .5) * .08 * nz), cy = H * (.48 + (gy - .5) * .08 * nz), R = Math.hypot(W, H) * .55;
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.fillStyle = `rgba(2,3,10,${.07 + .93 * (1 - nz) ** 2})`;
+      ctx.fillRect(0, 0, W, H);
+      const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.min(W, H) * (.22 + .1 * nz));
+      g.addColorStop(0, `rgba(190,170,255,${.05 + .05 * nz})`); g.addColorStop(.5, `rgba(90,70,180,${.05 + .05 * nz})`); g.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+      ctx.globalCompositeOperation = 'lighter';
+      t += dt;
+      const spin = .00012 + .0016 * nz, tight = .25 + .75 * nz, spread = 1 + .55 * (1 - nz);
+      for (const q of P) {
+        q.a += spin * dt * q.w * (R / (q.r + R * .08)) * .35;
+        const ang = q.a * 1 + (q.r / R) * 2.2 * (tight - 1);
+        const jit = nz * nz * 9;
+        const rr = q.r * spread;
+        const x = cx + Math.cos(ang) * rr + Math.sin(q.j + t * .02) * jit;
+        const y = cy + Math.sin(ang) * rr * .62 + Math.cos(q.j * 1.7 + t * .023) * jit;
+        if (x < -4 || y < -4 || x > W + 4 || y > H + 4) continue;
+        const tw = .55 + .45 * Math.sin(t * .002 * q.s + q.tw);
+        const al = Math.min(1, (.35 + .65 * q.sc) * (nz > .3 ? 1 : tw));
+        const [r, gg, b] = q.c;
+        ctx.fillStyle = `rgba(${r},${gg},${b},${al})`;
+        const z = q.s * (q.r < R * .2 ? 1.1 : 1);
+        ctx.fillRect(x, y, z, z);
+      }
+    };
+    if (reduce) { NOISE = 0; nz = 0; draw(16); return; }
+    const loop = now => { requestAnimationFrame(loop); if (!vis) { last = now; return; } const dt = Math.min(50, now - (last || now)); if (now - last < 30) return; last = now; draw(dt || 16); };
     requestAnimationFrame(loop);
   })();
   const stage = document.getElementById('stage'), scene = document.getElementById('scene'), hint = document.getElementById('hint');
-  const words = [...document.querySelectorAll('.wd')];
+  const words = [...document.querySelectorAll('.wd')], notes = [...document.querySelectorAll('.fvnote')], sum = document.getElementById('sum');
   words.forEach(w => { const t = w.textContent; w.textContent = ''; [...t].forEach(c => { const sp = document.createElement('span'); sp.className = 'ch'; sp.textContent = c; w.appendChild(sp); }); });
-  let A = [], B = [], F = 100, mx = 0, my = 0, cx = 0, cy = 0;
+  let NA = [], A = [], B = [], F = 100, mx = 0, my = 0, cx = 0, cy = 0;
   const layout = () => {
     const W = stage.clientWidth, H = stage.clientHeight, sp = W <= 820;
     words.forEach(w => { w.style.fontSize = '100px'; w.style.transform = 'none'; });
@@ -453,6 +471,9 @@ void main(){
     B = [{ x: x0, y: yB, s: 1 }, { x: x0 + wsF[0] + gF, y: yB, s: 1 }, { x: x0 + wsF[0] + wsF[1] + gF * 2, y: yB, s: 1 }];
     A = sp ? [{ x: W * .05, y: H * .13, s: 2.0 }, { x: W * .95 - wsF[1] * 1.55, y: H * .36, s: 1.55 }, { x: W * .04, y: H * .55, s: 2.05 }]
            : [{ x: W * .16, y: H * .17, s: 1.15 }, { x: W * .36, y: H * .39, s: 1.15 }, { x: W * .84 - wsF[2] * 1.15, y: H * .6, s: 1.15 }];
+    NA = sp ? [{ x: W * .95, y: H * .13 + F * 2.0 * .62, r: 1 }, { x: W * .95, y: H * .55 + F * 2.05 * 1.16, r: 1 }]
+            : [{ x: W * .16 + wsF[0] * 1.15 + 40, y: H * .17 + F * 1.15 * .52 }, { x: W * .84 - wsF[2] * 1.15 - 40, y: H * .6 + F * 1.15 * .52, r: 1 }];
+    sum.style.top = (yB + F * 1.25) + 'px';
   };
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -463,6 +484,10 @@ void main(){
     words.forEach((w, i) => { const a = A[i], b = B[i], d = [26, 48, 18][i] * (1 - e);
       w.style.transform = `translate3d(${a.x + (b.x - a.x) * e - cx * d}px,${a.y + (b.y - a.y) * e - cy * d}px,0) scale(${a.s + (b.s - a.s) * e})`; });
     hint.style.opacity = 1 - clamp(p / .2, 0, 1);
+    notes.forEach((n, i) => { const a = NA[i]; if (!a) return; const x = a.r ? a.x - n.offsetWidth : a.x;
+      n.style.transform = `translate3d(${x - cx * 20 * (1 - e)}px,${a.y - cy * 20 * (1 - e)}px,0)`;
+      n.style.opacity = document.body.classList.contains('ready') ? 1 - clamp(p / .35, 0, 1) : ''; });
+    const sv = clamp((p - .7) / .25, 0, 1); sum.style.opacity = sv; sum.style.transform = `translateY(${(1 - sv) * 14}px)`;
     NOISE = 1 - e;
     document.body.classList.toggle('ondark', scene.getBoundingClientRect().bottom > 70);
     if (!reduce) requestAnimationFrame(frame);
@@ -472,7 +497,7 @@ void main(){
   (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => {
     layout();
     words.forEach((w, i) => w.querySelectorAll('.ch').forEach((c, j) => { c.style.transitionDelay = (0.2 + i * 0.22 + j * 0.045) + 's'; }));
-    frame(); requestAnimationFrame(() => document.body.classList.add('ready'));
+    frame(); requestAnimationFrame(() => document.body.classList.add('ready')); setTimeout(() => document.body.classList.add('settled'), 3000);
   });
   document.getElementById('form').addEventListener('submit', e => { e.preventDefault(); alert('プレビュー版のため送信しません'); });
 
