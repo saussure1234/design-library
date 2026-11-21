@@ -93,7 +93,7 @@ body.mopen .hd .logo img{filter:invert(1)}
 .sx figure img{width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(calc(var(--k)*.85)) blur(calc(var(--k)*var(--k)*2px)) brightness(calc(1 - var(--k)*.15));transform:scale(calc(1.06 - (1 - var(--k))*.06));transition:filter .25s linear}
 .sx .tc{display:flex;flex-direction:column;gap:18px}
 .sx .no{font:600 13px/1 "Inter Tight";letter-spacing:.08em;color:var(--mute)}
-.sx .t{margin:0;font-size:clamp(17px,1.45vw,22px);line-height:2.05;font-weight:500;letter-spacing:.02em;filter:blur(calc(var(--k)*var(--k)*2.4px));opacity:calc(1 - var(--k)*.45)}
+.sx .t{--kt:0;margin:0;font-size:clamp(17px,1.45vw,22px);line-height:2.05;font-weight:500;letter-spacing:.02em;filter:blur(calc(var(--kt)*var(--kt)*2px));opacity:calc(1 - var(--kt)*.4)}
 .sx.tx{grid-template-columns:minmax(0,1fr);max-width:900px;margin:0 auto}
 .sx.tx .t{font-size:clamp(20px,2vw,30px);line-height:1.9}
 .echo{position:relative;display:inline-block;white-space:nowrap}
@@ -143,7 +143,8 @@ body.mopen .hd .logo img{filter:invert(1)}
 .repl .lyr img{display:block;width:100%;height:auto}
 .repl .ra{position:absolute;inset:0;z-index:1;clip-path:inset(0 0 0 100%);transition:opacity .9s}
 .repl .eg{position:absolute;transform:translate(-50%,-50%);font-family:"Cinzel",serif;font-weight:600;letter-spacing:.22em;white-space:nowrap;color:rgba(70,62,70,.62);text-shadow:0 .05em 0 rgba(255,244,230,.55),0 -.035em 0 rgba(0,0,0,.28);mix-blend-mode:multiply;pointer-events:none}
-@media (prefers-reduced-motion:reduce){.repl .ra{animation:none;clip-path:inset(0 0 0 17.5%)}.rv{opacity:0;transform:translateY(28px);transition:opacity 1s cubic-bezier(.2,.8,.1,1),transform 1s cubic-bezier(.2,.8,.1,1)}
+@media (prefers-reduced-motion:reduce){.repl .ra{animation:none;clip-path:inset(0 0 0 17.5%)}}
+.rv{opacity:0;transform:translateY(28px);transition:opacity 1s cubic-bezier(.2,.8,.1,1),transform 1s cubic-bezier(.2,.8,.1,1)}
 .rv.in{opacity:1;transform:none}
 
 #benefit{background:#04060d;color:#eef0f8;margin-top:clamp(90px,14vh,170px);padding-bottom:clamp(90px,14vh,170px);position:relative;overflow:hidden}
@@ -284,6 +285,11 @@ body.mopen .hd .logo img{filter:invert(1)}
   .sec{padding:80px 16px 0}
   .sh{flex-direction:column;align-items:flex-start;gap:12px}
   .sx{grid-template-columns:1fr;gap:18px}
+  .srs{gap:64px}
+  .sx.fin{min-height:34vh}
+  #benefit{margin-top:64px;padding-bottom:72px}
+  .sx .t{filter:none;opacity:calc(1 - var(--kt)*.25);font-size:17px;line-height:1.95}
+  .sx.tx .t{font-size:19px}
   .sx.r figure{order:0}
   .sx.q{min-height:70vh;margin:0 -16px}
   .echo{white-space:normal}
@@ -559,7 +565,8 @@ body.mopen .hd .logo img{filter:invert(1)}
     frame(); requestAnimationFrame(() => document.body.classList.add('ready')); setTimeout(() => document.body.classList.add('settled'), 3000);
   });
   const frows = [...document.querySelectorAll('[data-f]')];
-  const focus = () => { const vh = innerHeight; for (const r of frows) { const b = r.getBoundingClientRect(); const k = Math.min(1, Math.abs(b.top + b.height / 2 - vh / 2) / (vh * .55)); r.style.setProperty('--k', reduce ? 0 : k.toFixed(3)); } };
+  const kOf = el => { const vh = innerHeight, b = el.getBoundingClientRect(); return Math.max(0, Math.min(1, (Math.abs(b.top + b.height / 2 - vh / 2) - vh * .3) / (vh * .4))); };
+  const focus = () => { for (const r of frows) { r.style.setProperty('--k', reduce ? 0 : kOf(r).toFixed(3)); const t = r.querySelector('.t'); if (t) t.style.setProperty('--kt', reduce ? 0 : kOf(t).toFixed(3)); } };
   addEventListener('scroll', () => requestAnimationFrame(focus), { passive: true }); addEventListener('resize', focus); focus();
   (() => { const cv = document.querySelector('.sx.fin .rings'); if (!cv) return; const c = cv.getContext('2d'); let W, H, R = [], last = -9999;
     const fit = () => { const D = Math.min(1.5, devicePixelRatio || 1); W = cv.clientWidth; H = cv.clientHeight; cv.width = W * D; cv.height = H * D; c.setTransform(D, 0, 0, D, 0, 0); }; fit(); addEventListener('resize', fit);
