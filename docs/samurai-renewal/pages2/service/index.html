@@ -1,0 +1,684 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>/service（サービス一覧）節ごとの候補</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..600&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0d0d0d;--cream:#f5f4f0;--mute:#77756f;--line:rgba(13,13,13,.12);--sig:#8fdcff;--space:#02030a;--navy:#04060d;--blue:#0d0d0d;--pad:clamp(16px,3.4vw,52px);--mono:"JetBrains Mono",ui-monospace,monospace}
+*{box-sizing:border-box}
+html,body{margin:0}
+html{overflow-x:hidden;overflow-x:clip}
+body{font-family:"Inter Tight","Noto Sans JP",sans-serif;background:#111;color:#eee;-webkit-font-smoothing:antialiased;overflow-x:hidden;overflow-x:clip}
+a{color:inherit;text-decoration:none}
+img,video{display:block}
+.nb{white-space:nowrap}
+.mono{font-family:var(--mono),"Noto Sans JP",monospace}
+.top{padding:32px var(--pad) 22px;background:#111}
+.top h1{margin:0 0 8px;font:700 21px/1.5 "Noto Sans JP",sans-serif}
+.top p{margin:0;font-size:13px;color:#aaa;line-height:1.85;max-width:1100px}
+.top p b{color:#eee}
+.toc{display:grid;gap:8px;margin-top:16px}
+.toc div{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.toc span{font-size:12px;color:#888;min-width:9em}
+.toc a{font-size:12px;padding:6px 12px;border:1px solid #333;border-radius:99px;color:#ddd}
+.toc a.c{border-color:#5a4a20;color:#8fdcff}
+.grp{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:baseline;padding:34px var(--pad) 18px;background:#0a0a0a;border-top:1px solid #2a2a2a}
+.grp b{font:600 30px/1 "Inter Tight";color:#fff;letter-spacing:-.02em}
+.grp em{font-style:normal;font:700 17px/1.4 "Noto Sans JP";color:#fff}
+.grp span{font-size:13px;color:#9a9a9a;line-height:1.8}
+.grp span.c{color:#8fdcff}
+.lab{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;padding:12px var(--pad);background:#000;color:#fff;font:500 14px/1.6 "Noto Sans JP",sans-serif;border-top:1px solid #222}
+.lab b{font:600 18px "Inter Tight";color:#8fdcff}
+.lab span{color:#999;font-size:13px}
+.ref{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:22px;align-items:center;padding:22px var(--pad);background:#191919;font-size:13px;color:#bbb;line-height:1.85}
+.ref .ims{display:grid;gap:12px}
+.ref .ims.n2{grid-template-columns:1fr 1fr;align-items:start}
+.ref figure{margin:0}
+.ref img{width:100%;border-radius:8px;border:1px solid #333}
+.ref figcaption{font-size:11px;color:#888;margin-top:6px}
+.ref .rt b{color:#eee;font-weight:600}
+.ref .rt code{font-family:var(--mono);font-size:12px;color:#8fdcff}
+.v{position:relative;overflow:hidden;font-family:"Noto Sans JP",sans-serif}
+.lt{background:var(--cream);color:var(--ink)}
+.dk{background:var(--navy);color:#eef0f8}
+.rv{opacity:0;transform:translateY(26px);transition:opacity 1s cubic-bezier(.2,.8,.1,1),transform 1s cubic-bezier(.2,.8,.1,1)}
+.rv.in{opacity:1;transform:none}
+.sh2{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:clamp(36px,6vh,72px)}
+.sh2 h2{margin:0;font:500 clamp(44px,6vw,96px)/.9 "Inter Tight",sans-serif;letter-spacing:-.05em}
+.sh2 p{margin:0;font-size:15px;font-weight:500;color:var(--mute)}
+.dk .sh2 p{color:#8c90a6}
+.sec2{padding:clamp(90px,14vh,160px) var(--pad)}
+.btn{display:inline-flex;align-items:center;gap:12px;padding:16px 28px;border-radius:99px;background:var(--ink);color:#fff;font:600 15px "Noto Sans JP",sans-serif;transition:gap .4s}
+.btn::after{content:"→"}
+.btn:hover{gap:20px}
+.dk .btn,.btn.w{background:#f3f1ff;color:var(--ink)}
+.go{display:inline-flex;align-items:center;gap:10px;font-weight:600;font-size:15px;border-bottom:1px solid currentColor;padding-bottom:4px;transition:gap .4s}
+.go::after{content:"→"}
+.go:hover{gap:18px}
+.shd{position:absolute;top:0;left:0;right:0;z-index:6;display:flex;align-items:center;justify-content:space-between;padding:16px var(--pad);font:500 15px "Inter Tight",sans-serif}
+.shd .lg{height:40px}
+.shd .lg img{height:100%;width:auto}
+.shd nav{display:flex;align-items:center;gap:6px}
+.shd nav a{padding:10px 14px;border-radius:99px}
+.shd nav a.on{text-decoration:underline;text-underline-offset:6px}
+.shd nav .cta{background:var(--ink);color:#fff;padding:12px 22px;margin-left:8px}
+.shd .lang{display:flex;gap:4px;margin-left:14px;padding:4px;border-radius:99px;background:rgba(13,13,13,.06);font-size:12px}
+.shd .lang span{padding:6px 9px;color:var(--mute)}
+.shd .lang b{padding:6px 9px;border-radius:99px;background:#fff;font-weight:600}
+.shd .bg{display:none;width:52px;height:52px;border-radius:50%;background:var(--ink);position:relative}
+.shd .bg i{position:absolute;left:16px;right:16px;height:2px;background:#fff}
+.shd .bg i:first-child{top:21px}.shd .bg i:last-child{top:29px}
+.shd.w{color:#fff}
+.shd.w .lg img{filter:invert(1)}
+.shd.w nav .cta{background:#fff;color:var(--ink)}
+.shd.w .lang{background:rgba(255,255,255,.12)}
+.shd.w .lang span{color:rgba(255,255,255,.6)}
+.shd.w .lang b{background:#fff;color:var(--ink)}
+.shd.w .bg{background:#fff}.shd.w .bg i{background:var(--ink)}
+.crumb{font:400 12px/1.6 var(--mono);letter-spacing:.02em;color:var(--mute);margin:0}
+.crumb::before{content:"~/";opacity:.6}
+.dk .crumb,.fvd .crumb{color:#7f86a6}
+.fva{min-height:100vh;min-height:100svh;background:var(--space);color:#f3f1ff;display:flex;flex-direction:column;justify-content:flex-end;padding:120px var(--pad) 40px}
+.fva canvas{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+.fva .map{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:84% 50%;filter:grayscale(1) brightness(.75) contrast(1.15);opacity:.42;z-index:0}
+.fva-in{position:relative;z-index:2;max-width:1180px}
+.fva-en{margin:18px 0 26px;font-family:"Bricolage Grotesque","Inter Tight",sans-serif;font-weight:250;font-variation-settings:"opsz" 96,"wdth" 92;font-size:clamp(58px,10.5vw,176px);line-height:.92;letter-spacing:-.045em;color:#f3f1ff}
+.fva-en span{display:block}
+.fva-en .s{color:#fff1c4;text-shadow:0 0 .2em #fff1c4,0 0 .6em rgba(143,220,255,.6),0 0 1.4em rgba(143,220,255,.3)}
+.fva-h{margin:0;font-size:clamp(24px,2.6vw,40px);font-weight:700;letter-spacing:.06em;line-height:1.4}
+.fva-sub{margin:14px 0 0;font-size:clamp(15px,1.3vw,19px);font-weight:400;letter-spacing:.08em;line-height:1.9;color:#b9bccd;max-width:760px}
+.fva-st{position:relative;z-index:2;display:flex;justify-content:space-between;gap:18px;margin-top:56px;padding-top:16px;border-top:1px solid rgba(243,241,255,.14);font:400 12px var(--mono);color:rgba(243,241,255,.55)}
+.fva-st i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--sig);margin-right:8px;box-shadow:0 0 10px var(--sig);animation:blink 1.6s infinite}
+@keyframes blink{50%{opacity:.25}}
+.fva .ttl{position:absolute;z-index:3;font:500 11px var(--mono);letter-spacing:.1em;color:var(--sig);transform:translate(-50%,-160%);white-space:nowrap;pointer-events:none}
+.fvb{padding:130px var(--pad) clamp(60px,9vh,110px)}
+.fvb-g{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,7fr);gap:clamp(24px,4vw,72px);align-items:end}
+.fvb-h{margin:22px 0 0;font-size:clamp(34px,3.7vw,64px);font-weight:700;letter-spacing:.01em;line-height:1.22}
+.fvb-sub{margin:22px 0 0;font-size:clamp(15px,1.3vw,19px);line-height:1.95;font-weight:500;color:#3a3936}
+.fvb .lbl{display:flex;align-items:center;gap:12px;font:500 13px "Inter Tight";color:var(--mute);margin-top:34px}
+.fvb .lbl i{width:46px;height:1px;background:var(--ink)}
+.ph{position:relative;margin:0;border-radius:22px;overflow:hidden;aspect-ratio:3/2;background:#0e1424}
+.ph>img{width:100%;height:100%;object-fit:cover}
+.ph::after{content:"";position:absolute;inset:-50%;z-index:3;pointer-events:none;background-image:var(--grain);opacity:.09;mix-blend-mode:overlay;animation:grain .9s steps(6) infinite}
+@keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(-4%,3%)}40%{transform:translate(3%,-2%)}60%{transform:translate(-2%,-4%)}80%{transform:translate(4%,2%)}100%{transform:translate(0,0)}}
+.spot{position:absolute;z-index:2;left:var(--x);top:var(--y);width:var(--w,8%);aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;pointer-events:none;mix-blend-mode:screen;background:radial-gradient(closest-side,var(--c,rgba(181,232,255,.95)),var(--c2,rgba(255,170,90,.35)) 40%,transparent 72%)}
+.spot.flick{animation:flick 3.2s infinite}
+.spot.blink{animation:sblink 2.4s infinite}
+.spot.flash{animation:sflash 5s infinite}
+@keyframes flick{0%,100%{opacity:.95;transform:translate(-50%,-50%) scale(1)}8%{opacity:.6}10%{opacity:1}35%{opacity:.8;transform:translate(-50%,-50%) scale(1.06)}52%{opacity:.98}58%{opacity:.55}60%{opacity:.95}80%{opacity:.85;transform:translate(-50%,-50%) scale(.96)}}
+@keyframes sblink{0%,40%{opacity:0}48%,70%{opacity:1}80%,100%{opacity:0}}
+@keyframes sflash{0%,70%{opacity:0;transform:translate(-50%,-50%) scale(.6)}78%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.5)}}
+.fvc{padding:150px var(--pad) clamp(70px,10vh,120px);min-height:92vh;display:flex;flex-direction:column;justify-content:flex-end}
+.fvc .lbl{display:flex;align-items:center;gap:14px;font:500 13px "Inter Tight";letter-spacing:.02em;margin:0 0 4vh}
+.fvc .lbl i{display:block;width:60px;height:1px;background:var(--ink)}
+.fvc-t{margin:0;font-size:clamp(16px,1.4vw,20px);font-weight:700;letter-spacing:.08em}
+.fvc-big{margin:2.4vh 0 0;font-size:clamp(40px,6.6vw,118px);font-weight:700;line-height:1.18;letter-spacing:-.01em;max-width:1400px}
+.fvc-big .dim{color:#b3b0a8}
+.fvc-big .ec{position:relative;display:inline-block;white-space:nowrap}
+.fvc-big .ec .g{position:absolute;left:0;top:0;color:#a3a09a;filter:blur(2px);opacity:0;pointer-events:none;transition:transform 1.8s cubic-bezier(.2,.8,.1,1),opacity 1.8s}
+.fvc-big .ec .g1{transform:translate(-.25em,-.35em)}.fvc-big .ec .g2{transform:translate(.3em,.25em)}.fvc-big .ec .g3{transform:translate(.12em,-.5em)}
+.fvc.in0 .fvc-big .ec .g{opacity:.45}
+.fvc.in .fvc-big .ec .g{transform:none;opacity:0}
+.fvc .ul{background:linear-gradient(var(--sig),var(--sig)) no-repeat 0 92%/0% .14em;transition:background-size 1.6s cubic-bezier(.2,.8,.1,1) .9s}
+.fvc.in .ul{background-size:100% .14em}
+.fvc-foot{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-top:7vh;padding-top:18px;border-top:1px solid var(--line)}
+.fvc-foot p{margin:0;max-width:620px;font-size:15px;line-height:2;font-weight:500;color:#3a3936}
+.fvc-foot .co{font:400 12px/1.9 var(--mono);color:var(--mute);text-align:right;white-space:nowrap}
+.fvd{background:#05070f;color:#e8eaf6;padding:120px var(--pad) 48px;min-height:100vh;display:flex;flex-direction:column;justify-content:center}
+.term{position:relative;border:1px solid rgba(143,220,255,.16);border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.01));box-shadow:0 30px 80px rgba(0,0,0,.45);overflow:hidden}
+.term-bar{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.07);font:400 12px var(--mono);color:#6d7390}
+.term-bar i{width:11px;height:11px;border-radius:50%;background:#2a2f44}
+.term-bar span{margin-left:10px}
+.term-b{padding:clamp(20px,3vw,44px);font:400 14px/2 var(--mono),"Noto Sans JP";color:#aab0cc}
+.term .ln{display:block;opacity:0;transform:translateY(6px);transition:opacity .5s,transform .5s}
+.term.in .ln{opacity:1;transform:none}
+.term .pr{color:#8a90ad}
+.term .ok{color:#8fdcff}
+.term .sg{color:var(--sig)}
+.term .cmt{color:#5c6280}
+.caret::after{content:"";display:inline-block;width:.6em;height:1.1em;margin-left:4px;vertical-align:-.2em;background:var(--sig);animation:blink 1s steps(1) infinite}
+.fvd-h{margin:18px 0 8px;font:700 clamp(34px,5vw,84px)/1.2 "Noto Sans JP",sans-serif;color:#fff;letter-spacing:.02em}
+.fvd-sub{margin:0;font:400 clamp(15px,1.3vw,19px)/1.95 "Noto Sans JP",sans-serif;color:#b9bccd;max-width:880px}
+.fvd-st{display:flex;justify-content:space-between;gap:16px;margin-top:20px;font:400 12px var(--mono);color:#5f6584}
+.fvd-st i{display:inline-block;width:7px;height:7px;border-radius:50%;background:#8fdcff;margin-right:8px;animation:blink 1.6s infinite}
+.fta-row{display:grid;grid-template-columns:120px minmax(0,1fr) minmax(0,1.1fr);gap:clamp(18px,3vw,56px);padding:clamp(28px,4vh,44px) 0;border-top:1px solid var(--line);align-items:start}
+.fta-row:last-child{border-bottom:1px solid var(--line)}
+.fta-n{font:300 clamp(40px,4vw,64px)/1 "Bricolage Grotesque","Inter Tight";letter-spacing:-.04em;color:#c9c6bd;transition:color .8s}
+.fta-row h3{margin:0;font-size:clamp(22px,2vw,32px);font-weight:700;line-height:1.45;color:#b9b6ae;transition:color .8s;position:relative}
+.fta-row h3::before{content:"";position:absolute;left:-22px;top:.62em;width:8px;height:8px;border-radius:50%;background:var(--sig);box-shadow:0 0 0 0 rgba(143,220,255,.6);opacity:0;transition:opacity .6s}
+.fta-row p{margin:0;font-size:15px;line-height:2.05;font-weight:500;color:#9a978f;transition:color .8s}
+.fta-row.on h3,.fta-row.on p{color:var(--ink)}
+.fta-row.on .fta-n{color:var(--blue)}
+.fta-row.on h3::before{opacity:1;animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(143,220,255,.7)}100%{box-shadow:0 0 0 14px rgba(143,220,255,0)}}
+.ftb{background:#04060d}
+.ftb::before,.stars-bg::before{content:"";position:absolute;inset:0;background:radial-gradient(1px 1px at 12% 18%,rgba(220,230,255,.5) 50%,transparent 51%),radial-gradient(1px 1px at 72% 12%,rgba(220,230,255,.4) 50%,transparent 51%),radial-gradient(1px 1px at 38% 64%,rgba(220,230,255,.35) 50%,transparent 51%),radial-gradient(1px 1px at 88% 58%,rgba(220,230,255,.45) 50%,transparent 51%),radial-gradient(1px 1px at 56% 88%,rgba(220,230,255,.3) 50%,transparent 51%),radial-gradient(1px 1px at 22% 78%,rgba(220,230,255,.35) 50%,transparent 51%),radial-gradient(ellipse 60% 50% at 50% 0%,rgba(70,80,170,.18),transparent 70%);pointer-events:none}
+.ftb-g{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(12px,1.4vw,22px)}
+.ftb-c{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015));border:1px solid rgba(143,220,255,.12);border-radius:26px;padding:clamp(18px,2vw,30px);transition:transform .6s cubic-bezier(.2,.8,.1,1),border-color .6s}
+.ftb-c:hover{transform:translateY(-4px);border-color:rgba(143,220,255,.35)}
+.ftb-c .art{background:radial-gradient(ellipse 70% 70% at 50% 55%,rgba(90,110,200,.16),transparent 70%),#070a15;border-radius:18px;aspect-ratio:16/10;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.ftb-c .art svg{width:100%;height:100%}
+.ftb-c .n{font:600 13px/1 "Inter Tight";color:var(--sig);letter-spacing:.08em;margin:22px 0 0}
+.ftb-c h3{margin:10px 0 0;font-size:clamp(20px,1.7vw,26px);font-weight:700;line-height:1.45;color:#f3f4fb}
+.ftb-c p{margin:12px 0 0;font-size:14.5px;line-height:1.95;font-weight:500;color:#b9bccd}
+.ftc{padding:clamp(90px,14vh,160px) var(--pad)}
+.ftc-g{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(24px,5vw,96px)}
+.ftc-l{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;justify-content:center}
+.ftc-num{position:relative;height:1em;overflow:hidden;font:200 clamp(150px,20vw,330px)/1 "Bricolage Grotesque","Inter Tight";font-variation-settings:"opsz" 96;letter-spacing:-.06em;color:transparent;-webkit-text-stroke:1.5px var(--ink)}
+.ftc-num .st{display:flex;flex-direction:column;transition:transform 1s cubic-bezier(.7,0,.2,1)}
+.ftc-num .st span{display:block;height:1em}
+.ftc-num .st span.on{color:var(--ink);-webkit-text-stroke:0}
+.ftc-l .sh2{margin:0 0 3vh}
+.ftc-it{min-height:78vh;display:flex;flex-direction:column;justify-content:center;border-top:1px solid var(--line)}
+.ftc-it h3{margin:0;font-size:clamp(26px,2.6vw,42px);font-weight:700;line-height:1.4}
+.ftc-it p{margin:22px 0 0;font-size:16px;line-height:2.05;font-weight:500;color:#3a3936}
+.ftc-it .n2{display:block;font:400 13px var(--mono);color:var(--mute);margin-bottom:10px;letter-spacing:.06em}
+.pra-lead{max-width:880px;margin:0 0 6vh;font-size:16px;line-height:2.05;font-weight:500;color:#3a3936}
+.pra-track{position:relative;display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:clamp(14px,2vw,36px);padding-top:46px}
+.pra-line{position:absolute;left:0;right:0;top:12px;height:1px;background:var(--line)}
+.pra-line i{position:absolute;inset:0;background:var(--ink);transform-origin:left;transform:scaleX(0);transition:transform 2.4s cubic-bezier(.65,0,.35,1)}
+.pra-line b{position:absolute;top:-3px;left:0;width:90px;height:7px;border-radius:4px;background:radial-gradient(closest-side,var(--sig),transparent);opacity:0}
+.pra.in .pra-line i{transform:none}
+.pra.in .pra-line b{opacity:1;animation:run 4.2s 2.4s cubic-bezier(.45,0,.2,1) infinite}
+@keyframes run{0%{left:-90px;opacity:0}10%{opacity:1}90%{opacity:1}100%{left:100%;opacity:0}}
+.pra-st{position:relative}
+.pra-st::before{content:"";position:absolute;top:-41px;left:0;width:13px;height:13px;border-radius:50%;background:var(--cream);border:1px solid var(--ink);transition:background .5s,box-shadow .5s;transition-delay:var(--d)}
+.pra.in .pra-st::before{background:var(--ink);box-shadow:0 0 0 5px rgba(143,220,255,.45)}
+.pra-st .n{display:block;font:500 13px var(--mono);color:var(--blue);letter-spacing:.06em}
+.pra-st h3{margin:10px 0 0;font-size:clamp(19px,1.7vw,26px);font-weight:700;line-height:1.45}
+.pra-st p{margin:14px 0 0;font-size:14.5px;line-height:2;font-weight:500;color:#3a3936}
+.pra.n7 .pra-st h3{font-size:clamp(15px,1.25vw,19px)}
+.pra-price{margin:clamp(48px,8vh,90px) 0 0;font-size:clamp(22px,2.4vw,38px);font-weight:700;line-height:1.6;max-width:1100px}
+.pra-price .ul{background:linear-gradient(transparent 62%,rgba(143,220,255,.55) 62%)}
+.prb{background:#05070f;color:#e8eaf6}
+.prb .term-b{font-size:14px}
+.prb-st{margin:0 0 26px}
+.prb-st .hd{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px}
+.prb-st .k{color:var(--sig)}
+.prb-st h3{display:inline;margin:0;font:700 clamp(18px,1.6vw,24px)/1.5 "Noto Sans JP",sans-serif;color:#fff}
+.prb-st .dn{margin-left:auto;font-size:12px;color:#8fdcff}
+.prb-st .dn::before{content:"✓ done"}
+.prb-st p{margin:8px 0 0;padding-left:clamp(0px,3.2vw,46px);font:400 14px/1.95 "Noto Sans JP",sans-serif;color:#a4aac4}
+.prb .cm{display:block;color:#7d84a3;font:400 14px/1.95 "Noto Sans JP",sans-serif;margin-bottom:22px}
+.prb .cm::before{content:"# ";font-family:var(--mono);color:#4d5372}
+.prb .bar{display:block;color:#8a90ad;letter-spacing:.06em}
+.prb .bar::before{content:"[████████████████████] 100%  "}
+.prb .pz{display:block;margin-top:8px;font:700 clamp(18px,1.8vw,26px)/1.7 "Noto Sans JP",sans-serif;color:#fff}
+.prb .pz::before{content:"> ";font-family:var(--mono);color:var(--sig)}
+.prb-g7{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 40px}
+.prb-g7 .prb-st{margin:0 0 12px}
+.prc-g{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,7fr);gap:clamp(24px,5vw,96px)}
+.prc-l{position:sticky;top:clamp(80px,14vh,140px);align-self:start}
+.prc-l .sh2,.ftc-l .sh2{flex-direction:column;align-items:flex-start;gap:12px}
+.prc-l p{margin:24px 0 0;font-size:15px;line-height:2.05;font-weight:500;color:#3a3936}
+.prc-row{display:grid;grid-template-columns:minmax(90px,170px) minmax(0,1fr);gap:clamp(16px,3vw,48px);padding:clamp(26px,4vh,46px) 0;border-top:1px solid var(--line)}
+.prc-row:last-child{border-bottom:1px solid var(--line)}
+.prc-row .n{font:200 clamp(64px,7vw,124px)/.85 "Bricolage Grotesque","Inter Tight";font-variation-settings:"opsz" 96;letter-spacing:-.05em;color:#c6c3ba;transition:color .8s}
+.prc-row.on .n{color:var(--ink)}
+.prc-row h3{margin:6px 0 0;font-size:clamp(22px,2.1vw,34px);font-weight:700;line-height:1.4}
+.prc-row p{margin:16px 0 0;font-size:15px;line-height:2.05;font-weight:500;color:#3a3936}
+.prc.n7 .prc-row{padding:clamp(14px,2.2vh,22px) 0;align-items:center}
+.prc.n7 .prc-row .n{font-size:clamp(44px,4.6vw,76px)}
+.prc.n7 .prc-row h3{margin:0}
+.prc-price{margin:clamp(40px,6vh,70px) 0 0;font-size:clamp(20px,2vw,30px);font-weight:700;line-height:1.7}
+.prc-price .ul{background:linear-gradient(transparent 62%,rgba(143,220,255,.55) 62%)}
+.cta-a{min-height:84vh;display:grid;place-items:center;text-align:center;padding:clamp(90px,14vh,160px) var(--pad);background:radial-gradient(ellipse 80% 70% at 50% 50%,#0b1226 0%,#04060d 70%);color:#f3f4fb}
+.cta-a canvas{position:absolute;inset:0;width:100%;height:100%}
+.cta-a .in{position:relative;z-index:1;max-width:1100px}
+.cta-a .l1{margin:0;font-size:clamp(26px,3.6vw,58px);font-weight:700;line-height:1.5;letter-spacing:.01em}
+.cta-a .l2{margin:22px 0 40px;font-size:clamp(15px,1.4vw,20px);line-height:1.9;color:#b9bccd;font-weight:500}
+.cta-a .l1 .sg{color:#fff1c4;text-shadow:0 0 .2em #fff1c4,0 0 .7em rgba(143,220,255,.55)}
+.cta-b{padding:clamp(90px,14vh,160px) var(--pad)}
+.cta-b .ls{font:400 13px var(--mono);color:var(--mute);margin:0 0 28px}
+.cta-b .l1{margin:0;font-size:clamp(28px,4.2vw,70px);font-weight:700;line-height:1.35;letter-spacing:-.005em;max-width:1300px}
+.cta-b .l2{margin:22px 0 0;font-size:clamp(16px,1.5vw,22px);line-height:1.9;font-weight:500;color:#3a3936}
+.cta-b .pmt{display:flex;align-items:center;gap:14px;margin-top:clamp(36px,6vh,64px);padding:20px 24px;border:1px solid var(--ink);border-radius:14px;max-width:560px;background:#fff;font:500 17px var(--mono),"Noto Sans JP";transition:background .3s,color .3s}
+.cta-b .pmt::before{content:">";color:var(--blue)}
+.cta-b .pmt:hover{background:var(--ink);color:#fff}
+.cta-b .pmt span::after{content:"";display:inline-block;width:.55em;height:1.1em;margin-left:6px;vertical-align:-.2em;background:currentColor;animation:blink 1s steps(1) infinite}
+.cta-b .pmt::after{content:"↵";margin-left:auto;opacity:.5}
+.cta-c{min-height:88vh;display:flex;align-items:center;padding:clamp(90px,14vh,160px) var(--pad);color:#f3f4fb;background:#03050c}
+.cta-c .bgph{position:absolute;inset:0;border-radius:0;aspect-ratio:auto}
+.cta-c .bgph>img{object-position:70% 60%}
+.cta-c .bgph::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(3,5,12,.82),rgba(3,5,12,.25) 55%,rgba(3,5,12,0))}
+.cta-c .in{position:relative;z-index:4;max-width:680px}
+.cta-c .l1{margin:0;font-size:clamp(26px,3.2vw,50px);font-weight:700;line-height:1.5}
+.cta-c .l2{margin:20px 0 38px;font-size:clamp(15px,1.3vw,19px);line-height:1.9;color:#c9ccdc;font-weight:500}
+.cta-c .bx{position:absolute;z-index:2;left:var(--x);top:var(--y);width:var(--bw);height:var(--bh);transform:translate(-50%,-50%);background:radial-gradient(ellipse 60% 55% at 50% 50%,rgba(255,226,170,.55),rgba(155,224,255,.18) 60%,transparent 80%);mix-blend-mode:screen;animation:booth 6s infinite}
+@keyframes booth{0%,30%{opacity:1}31%{opacity:.25}33%{opacity:1}36%{opacity:.4}38%,100%{opacity:1}}
+.mba-g{margin-top:clamp(28px,5vh,56px)}
+.mba-gl{display:flex;align-items:center;gap:14px;margin:0 0 18px;font-size:14px;font-weight:700;letter-spacing:.06em}
+.mba-gl::after{content:"";flex:1;height:1px;background:var(--line)}
+.mba-cs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(12px,1.4vw,22px)}
+.mba-c{background:#fff;border-radius:24px;overflow:hidden;display:flex;flex-direction:column}
+.mba-c .im{aspect-ratio:1/1;overflow:hidden;background:#e9e7e1}
+.mba-c .im img{width:100%;height:100%;object-fit:cover;filter:grayscale(1);transition:filter .6s,transform 1.2s cubic-bezier(.2,.8,.1,1)}
+.mba-c:hover .im img{filter:none;transform:scale(1.04)}
+.mba-c .tx{padding:clamp(18px,1.8vw,26px)}
+.nmline{margin:0}
+.nmline .nm{display:block;font-size:clamp(20px,1.7vw,26px);font-weight:700;letter-spacing:.02em;line-height:1.35}
+.nmline .sp{font:500 13px var(--mono);color:var(--blue)}
+.nmline .rl{font-size:13px;font-weight:500;color:var(--mute);letter-spacing:.04em}
+.bio{overflow-wrap:anywhere;margin:12px 0 0;font-size:13.5px;line-height:1.9;font-weight:500;color:#3a3936}
+.mbb{background:#030409;color:#e9ebf5}
+.mbb-g{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(24px,4vw,72px)}
+.mbb-gl{margin:28px 0 0;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.16);font:500 12px "Noto Sans JP";letter-spacing:.14em;color:#6d7186}
+.mbb-gl:first-child{margin-top:0}
+.mbb-r{display:grid;grid-template-columns:42px minmax(0,1fr);gap:0 14px;padding:20px 0;border-bottom:1px solid rgba(255,255,255,.1);cursor:pointer;color:#6f7388;transition:color .4s}
+.mbb-r .no{font:400 12px var(--mono);padding-top:6px}
+.mbb-r .nmline .nm{font-size:clamp(20px,1.7vw,26px)}
+.mbb-r .nmline .sp{color:#4d5268}
+.mbb-r .nmline .rl{color:inherit}
+.mbb-r .bio{color:#5f6378;transition:color .4s}
+.mbb-r.on{color:#f3f1ff}
+.mbb-r.on .bio{color:#b9bccd}
+.mbb-r.on .nmline .sp{color:var(--sig)}
+.mbb-mon{position:sticky;top:12vh;align-self:start}
+.mbb-scr{position:relative;aspect-ratio:4/5;border-radius:20px;overflow:hidden;background:#090c18;border:1px solid rgba(143,220,255,.14)}
+.mbb-scr img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.05) brightness(.92);opacity:0;transition:opacity .5s}
+.mbb-scr img.on{opacity:1}
+.mbb-scr canvas{position:absolute;inset:0;width:100%;height:100%;opacity:0;mix-blend-mode:screen}
+.mbb-scr canvas.on{opacity:.8}
+.mbb-scr::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,.18) 0 1px,transparent 1px 3px);pointer-events:none}
+.mbb-cap{display:flex;justify-content:space-between;margin-top:12px;font:400 12px var(--mono);color:#6d7186}
+.mbb-cap b{color:var(--sig);font-weight:400}
+.mbc-g{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:clamp(24px,4vw,72px)}
+.mbc-col{border-top:1px solid var(--ink);padding-top:18px}
+.mbc-clk{display:flex;align-items:baseline;justify-content:space-between;gap:14px;margin-bottom:26px}
+.mbc-clk b{font:500 clamp(40px,4.6vw,76px)/1 "Inter Tight";letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.mbc-clk span{font:400 12px/1.6 var(--mono);color:var(--mute);text-align:right}
+.mbc-clk span i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--blue);margin-right:6px;animation:blink 1.6s infinite}
+.mbc-gl{margin:0 0 14px;font-size:14px;font-weight:700;letter-spacing:.06em}
+.mbc-p{display:grid;grid-template-columns:72px minmax(0,1fr);gap:18px;padding:18px 0;border-top:1px solid var(--line)}
+.mbc-p img{width:72px;height:72px;border-radius:50%;object-fit:cover;filter:grayscale(1);transition:filter .5s}
+.mbc-p:hover img{filter:none}
+.mbc-p .bio{margin-top:8px}
+.sta-row{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,9fr);gap:clamp(18px,3vw,56px);padding:clamp(24px,3.6vh,40px) 0;border-top:1px solid var(--line)}
+.sta-row:last-child{border-bottom:1px solid var(--line)}
+.sta-row h3{margin:0;font-size:clamp(18px,1.5vw,22px);font-weight:700}
+.sta-row h3::before{content:attr(data-k);display:block;font:400 12px var(--mono);color:var(--mute);margin-bottom:8px}
+.sta-it{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px 24px}
+.sta-it span{display:flex;align-items:center;gap:12px;font:500 15px "Inter Tight";padding:10px 0;border-bottom:1px dashed var(--line);transition:padding .4s}
+.sta-it span:hover{padding-left:6px}
+.sta-it img,.stc-tr img,.stb img{width:24px;height:24px;flex:none}
+.stb{background:#05070f;color:#e8eaf6}
+.stb .term-b{display:grid;gap:4px}
+.stb .k{color:#d9dbe8}
+.stb .k::before,.stb .k::after{content:'"';color:#5c6280}
+.stb .cat::after{content:": [";color:#5c6280}
+.stb .ar{display:flex;flex-wrap:wrap;gap:8px 10px;padding:6px 0 10px 2.4em}
+.stb .ar span{display:inline-flex;align-items:center;gap:8px;padding:6px 10px 6px 8px;border:1px solid rgba(143,220,255,.14);border-radius:8px;color:#c9ccdc;background:rgba(255,255,255,.02);transition:border-color .3s,background .3s}
+.stb .ar span:hover{border-color:var(--sig);background:rgba(143,220,255,.06)}
+.stb .ar img{width:18px;height:18px;background:#fff;border-radius:4px;padding:2px}
+.stb .cl{color:#5c6280}
+.stc{background:#04060d;color:#eef0f8;padding:clamp(90px,14vh,160px) 0}
+.stc .sh2{padding:0 var(--pad)}
+.stc-r{display:grid;grid-template-columns:220px minmax(0,1fr);align-items:center;border-top:1px solid rgba(255,255,255,.1)}
+.stc-r:last-child{border-bottom:1px solid rgba(255,255,255,.1)}
+.stc-r h3{margin:0;padding:0 16px 0 var(--pad);font-size:14px;font-weight:700;letter-spacing:.06em;color:var(--sig)}
+.stc-tw{overflow:hidden;padding:26px 0;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.stc-tr{display:flex;gap:14px;width:max-content;animation:mq var(--t,40s) linear infinite}
+.stc-r:nth-child(odd) .stc-tr{animation-direction:reverse}
+.stc-tr span{display:inline-flex;align-items:center;gap:12px;padding:14px 22px 14px 16px;border:1px solid rgba(143,220,255,.14);border-radius:99px;font:500 clamp(18px,1.6vw,24px) "Inter Tight";white-space:nowrap;background:rgba(255,255,255,.02)}
+.stc-tr img{background:#fff;border-radius:6px;padding:3px;width:30px;height:30px}
+@keyframes mq{to{transform:translateX(-50%)}}
+.csa-c{margin-top:clamp(26px,4vh,40px)}
+.csa-bar{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,9fr);gap:24px;align-items:center;padding:14px 18px;background:#e9e7e1;border-radius:8px;font-size:13px;font-weight:500}
+.csa-bar .tg{font:500 12px var(--mono);color:var(--mute)}
+.csa-bar h3{margin:0;font-size:clamp(17px,1.5vw,22px);font-weight:700}
+.csa-b{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,4fr) minmax(0,5fr);gap:clamp(18px,3vw,48px);padding:26px 18px 10px;align-items:start}
+.csa-b .im{border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:#0f3b40;display:grid;place-items:center}
+.csa-b .im img{width:100%;height:100%;object-fit:cover}
+.csa-b .im.ic img{width:34%;height:auto;object-fit:contain}
+.csa-b p{margin:0;font-size:15px;line-height:2;font-weight:500}
+.tech{margin:0;font:400 13px/1.9 var(--mono),"Noto Sans JP";color:var(--mute)}
+.tech .tl{color:var(--blue)}
+.csb{background:#05070f;color:#e8eaf6}
+.csb-g{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(14px,2vw,30px)}
+.csb-c{border:1px solid rgba(143,220,255,.12);border-radius:26px;overflow:hidden;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.01));transition:border-color .5s}
+.csb-c:hover{border-color:rgba(143,220,255,.35)}
+.csb-st{position:relative;aspect-ratio:16/10;display:grid;place-items:center;background:radial-gradient(ellipse 70% 70% at 50% 60%,rgba(90,110,200,.22),transparent 70%),#070a15;overflow:hidden}
+.brw{width:78%;border-radius:10px;overflow:hidden;background:#10131f;box-shadow:0 24px 60px rgba(0,0,0,.5);transform:translateY(6%);transition:transform 1s cubic-bezier(.2,.8,.1,1)}
+.csb-c:hover .brw,.csb-c:hover .phn{transform:translateY(2%)}
+.brw .bb{display:flex;gap:6px;padding:9px 12px;background:#181c2c}
+.brw .bb i{width:8px;height:8px;border-radius:50%;background:#333a55}
+.brw img{width:100%;aspect-ratio:4/3;object-fit:cover}
+.phn{width:30%;aspect-ratio:9/18;border-radius:26px;border:6px solid #1b2033;background:linear-gradient(160deg,#06c755 0%,#044b2a 100%);display:grid;place-items:center;transform:translateY(12%);transition:transform 1s cubic-bezier(.2,.8,.1,1);box-shadow:0 24px 60px rgba(0,0,0,.5)}
+.phn img{width:46%;height:auto}
+.csb-tx{padding:clamp(20px,2.4vw,34px)}
+.csb-tx .tg{display:inline-block;font:400 12px var(--mono);color:var(--sig);padding:5px 10px;border:1px solid rgba(143,220,255,.3);border-radius:99px}
+.csb-tx h3{margin:16px 0 0;font-size:clamp(21px,1.9vw,30px);font-weight:700;line-height:1.45;color:#fff}
+.csb-tx p{margin:12px 0 18px;font-size:14.5px;line-height:1.95;color:#b9bccd;font-weight:500}
+.csb .tech{color:#8a90ad}
+.csb .tech .tl{color:var(--sig)}
+.csc{background:#05070f;color:#e8eaf6}
+.csc-g{display:grid;gap:clamp(14px,2vw,26px)}
+.csc .term-b{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,300px);gap:24px;align-items:start}
+.csc h3{margin:0 0 10px;font:700 clamp(20px,1.9vw,28px)/1.5 "Noto Sans JP",sans-serif;color:#fff}
+.csc h3::before{content:"## ";font-family:var(--mono);color:#4d5372}
+.csc .tg{display:block;color:#7d84a3}
+.csc .tg::before{content:"type: ";color:#4d5372}
+.csc p{margin:6px 0 14px;font:400 14.5px/1.95 "Noto Sans JP",sans-serif;color:#b9bccd}
+.csc .tech{color:#c9ccdc}
+.csc .tech .tl{color:#d9dbe8}
+.csc .th{border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,.08);aspect-ratio:4/3;background:#0f3b40;display:grid;place-items:center}
+.csc .th img{width:100%;height:100%;object-fit:cover}
+.csc .th.ic{background:linear-gradient(160deg,#06c755,#044b2a)}
+.csc .th.ic img{width:34%;height:auto}
+.ofa-g{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,6fr);gap:clamp(24px,4vw,72px)}
+.ofa-it{padding:clamp(24px,4vh,40px) 0;border-top:1px solid var(--line);color:#a3a09a;transition:color .6s}
+.ofa-it:last-child{border-bottom:1px solid var(--line)}
+.ofa-it.on{color:var(--ink)}
+.ofa-it .n{font:300 14px var(--mono);color:inherit}
+.ofa-it h3{margin:8px 0 0;font-size:clamp(22px,2.2vw,34px);font-weight:700;line-height:1.4}
+.ofa-it .bd{margin:14px 0 0;font-size:14.5px;line-height:2;font-weight:500}
+.ofa-it .nt{margin:12px 0 0;font-size:12.5px;line-height:1.8;color:var(--mute)}
+.ofa-it .mim{display:none}
+.ofa-it .mim.tbd{font-size:80px}
+.ofa-r{position:sticky;top:12vh;align-self:start}
+.ofa-fr{position:relative;aspect-ratio:4/3;border-radius:22px;overflow:hidden;background:#0a0d18}
+.ofa-fr>*{position:absolute;inset:0;width:100%;height:100%;opacity:0;transition:opacity .6s}
+.ofa-fr>.on{opacity:1}
+.ofa-fr img{object-fit:contain;background:#0a0d18;padding:4%}
+.ofa-fr img.cv{object-fit:cover;padding:0}
+.tbd{display:grid;place-items:center;font:200 clamp(80px,10vw,170px)/1 "Bricolage Grotesque","Inter Tight";letter-spacing:-.04em;color:transparent;-webkit-text-stroke:1.2px rgba(143,220,255,.7);background:radial-gradient(ellipse 60% 60% at 50% 50%,rgba(70,80,170,.25),transparent 70%),#05070f}
+.ofa-cap{display:flex;justify-content:space-between;margin-top:12px;font:400 12px var(--mono);color:var(--mute)}
+.ofb-row{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(24px,4vw,72px);align-items:center;padding:clamp(40px,7vh,80px) 0;border-top:1px solid var(--line)}
+.ofb-row:nth-child(even) .ofb-im{order:-1}
+.ofb-row .n{font:200 clamp(56px,6vw,100px)/.9 "Bricolage Grotesque","Inter Tight";letter-spacing:-.05em;color:var(--blue)}
+.ofb-row h3{margin:14px 0 0;font-size:clamp(24px,2.4vw,38px);font-weight:700;line-height:1.35}
+.ofb-row .bd{margin:16px 0 0;font-size:15px;line-height:2.05;font-weight:500;color:#3a3936}
+.ofb-im{margin:0}
+.ofb-im .fr{border-radius:20px;overflow:hidden;background:#0a0d18;aspect-ratio:16/10;display:grid;place-items:center}
+.ofb-im .fr img{width:100%;height:100%;object-fit:contain}
+.ofb-im .fr img.cv{object-fit:cover}
+.ofb-im .fr.tbd{aspect-ratio:16/10}
+.ofb-im figcaption{margin-top:10px;font-size:12.5px;color:var(--mute);line-height:1.8}
+.ofc{background:#05070f;color:#e8eaf6}
+.ofc-row{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:24px;padding:18px 0;border-top:1px dashed rgba(255,255,255,.1)}
+.term .ofc-row.ln{display:grid}
+.ofc-row:first-of-type{border-top:0}
+.ofc-row .pm{color:#4d5372}
+.ofc-row .pm::before{content:"drwxr-xr-x  so  "}
+.ofc-row .k{color:var(--sig);margin-right:10px}
+.ofc-row h3{display:inline;margin:0;font:700 clamp(18px,1.6vw,24px)/1.6 "Noto Sans JP",sans-serif;color:#fff}
+.ofc-row .bd{margin:8px 0 0;font:400 14px/1.95 "Noto Sans JP",sans-serif;color:#a4aac4}
+.ofc-row .nt{margin:6px 0 0;font:400 12.5px/1.8 "Noto Sans JP",sans-serif;color:#6d7390}
+.ofc-row .th{border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,.08);aspect-ratio:16/10;background:#0a0d18;display:grid;place-items:center}
+.ofc-row .th img{width:100%;height:100%;object-fit:contain}
+.ofc-row .th img.cv{object-fit:cover}
+.ofc-row .th.tbd{font-size:56px}
+.sva{min-height:92vh;background:var(--space);color:#f3f1ff;display:flex;flex-direction:column;justify-content:flex-end;padding:120px var(--pad) 40px}
+.sva canvas{position:absolute;inset:0;width:100%;height:100%}
+.sva-h{position:relative;z-index:2;margin:0;font-family:"Bricolage Grotesque","Inter Tight",sans-serif;font-weight:250;font-variation-settings:"opsz" 96,"wdth" 92;font-size:clamp(76px,17vw,300px);line-height:.85;letter-spacing:-.05em}
+.sva-h::after{content:".";color:#fff1c4;text-shadow:0 0 .2em #fff1c4,0 0 .6em rgba(143,220,255,.6)}
+.sva-r{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-top:28px;padding-top:16px;border-top:1px solid rgba(243,241,255,.14)}
+.sva-r p{margin:0;font-size:clamp(16px,1.4vw,20px);font-weight:500;letter-spacing:.1em}
+.sva-r span{font:400 12px var(--mono);color:rgba(243,241,255,.55)}
+.svb{padding:130px var(--pad) clamp(60px,9vh,100px)}
+.svb-t{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-top:28px}
+.svb-t h1{margin:0;font:500 clamp(64px,10vw,170px)/.86 "Inter Tight",sans-serif;letter-spacing:-.06em}
+.svb-t p{margin:0;font-size:16px;font-weight:500;color:var(--mute)}
+.svb-st{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(8px,1vw,16px);margin-top:clamp(30px,6vh,60px)}
+.svb-st .ph{aspect-ratio:3/4;border-radius:16px;transition:transform .8s cubic-bezier(.2,.8,.1,1)}
+.svb-st .ph:nth-child(even){transform:translateY(10%)}
+.svb-st .ph:hover{transform:translateY(-3%)}
+.svb-st .ph:nth-child(even):hover{transform:translateY(7%)}
+.svb-st .ph small{position:absolute;z-index:4;left:14px;top:12px;font:400 11px var(--mono);color:rgba(255,255,255,.8)}
+.svc-o{margin-top:8px}
+.svc-o .ls{display:flex;flex-wrap:wrap;gap:8px 28px;color:#9aa0bb}
+.svc-o h1{margin:18px 0 0;font:500 clamp(64px,10vw,170px)/.9 "Inter Tight",sans-serif;letter-spacing:-.06em;color:#fff}
+.svc-o p{margin:12px 0 0;font:500 16px "Noto Sans JP";color:#b9bccd;letter-spacing:.08em}
+.la-row{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(24px,4.5vw,80px);align-items:center;padding:clamp(48px,9vh,100px) 0;border-top:1px solid var(--line)}
+.la-row .no{font:500 12px var(--mono);color:var(--mute)}
+.la-row .lb{display:inline-block;margin-top:18px;font-size:13px;font-weight:500;padding:6px 12px;border-radius:99px;border:1px solid var(--line)}
+.la-row h2{margin:14px 0 0;font:500 clamp(40px,4.4vw,72px)/1 "Inter Tight","Noto Sans JP",sans-serif;letter-spacing:-.045em}
+.la-row h2.jpn{letter-spacing:-.02em;font-weight:700}
+.la-row p{margin:22px 0 26px;font-size:15.5px;line-height:2.05;font-weight:500;color:#3a3936}
+.la-row .ph{aspect-ratio:3/2}
+.la-row .ph video,.lb-v video{position:absolute;z-index:4;right:4%;bottom:6%;width:34%;aspect-ratio:9/16;object-fit:cover;border-radius:12px;border:1px solid rgba(255,255,255,.2);filter:grayscale(.9) brightness(.85);transition:filter .6s;box-shadow:0 20px 40px rgba(0,0,0,.4)}
+.la-row:hover .ph video{filter:none}
+.lbx{background:#0b1226;color:#eef0f8}
+.lb-row{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(24px,4vw,72px);padding:clamp(56px,10vh,110px) 0;border-top:1px solid rgba(255,255,255,.1)}
+.lb-row h2{margin:0;font:400 clamp(44px,5.2vw,86px)/1 "Inter Tight","Noto Sans JP",sans-serif;letter-spacing:-.045em}
+.lb-row h2.jpn{font-weight:700;letter-spacing:-.02em}
+.lb-row .lbl{display:block;margin-top:16px;font:500 13px "Noto Sans JP";color:#9a9fb5}
+.lb-row p{margin:22px 0 28px;font-size:15.5px;line-height:2;font-weight:500;color:#c9ccdc;max-width:520px}
+.lb-row .go{color:#fff}
+.lb-m{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,4fr);gap:14px;align-items:start}
+.lb-v{position:relative;border-radius:20px;overflow:hidden;aspect-ratio:4/5;background:#141a2e}
+.lb-v video{position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:0;filter:none;box-shadow:none;right:auto;bottom:auto}
+.lb-m .ph{aspect-ratio:3/4;border-radius:16px;margin-top:30%}
+.lb-m small{display:block;margin-top:10px;font:400 12px var(--mono);color:#8a90ad}
+.lc-it{padding:clamp(60px,11vh,120px) 0 0;text-align:center}
+.lc-it .k{font:400 12px var(--mono);color:var(--mute)}
+.lc-it h2{margin:16px 0 0;font:400 clamp(48px,10vw,170px)/.9 "Inter Tight","Noto Sans JP",sans-serif;letter-spacing:-.06em;white-space:nowrap}
+.lc-it h2.jpn{font-weight:700;letter-spacing:-.04em}
+.lc-it .d{margin:26px auto 0;max-width:760px;font-size:clamp(16px,1.5vw,22px);line-height:1.8;font-weight:500}
+.lc-tb{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,5fr) minmax(0,4fr);gap:24px;align-items:center;margin-top:clamp(30px,5vh,56px);padding:14px 18px;border-radius:10px;background:#e9e7e1;text-align:left}
+.lc-tb .lb{font-size:13px;font-weight:600}
+.lc-tb .lb:empty::before{content:"—";color:var(--mute)}
+.lc-tb video{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:8px;filter:grayscale(1);transition:filter .5s}
+.lc-tb:hover video{filter:none}
+.lc-tb .go{justify-self:end}
+.ld{background:#05070f;color:#e8eaf6}
+.ld-g{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(24px,4vw,72px)}
+.ld-hd{font:400 13px var(--mono);color:#7d84a3;margin:0 0 18px}
+.ld-hd b{color:var(--sig);font-weight:400}
+.ld-r{display:block;padding:22px 0;border-top:1px dashed rgba(255,255,255,.1);color:#5f6378;transition:color .4s}
+.ld-r .pm{font:400 12px var(--mono);color:#3f445c}
+.ld-r .pm::before{content:"drwxr-xr-x  so  4.0K  "}
+.ld-r .k{font:400 12px var(--mono);color:inherit}
+.ld-r .lb{display:block;margin-top:8px;font-size:13px;font-weight:500}
+.ld-r h2{margin:4px 0 0;font:500 clamp(34px,3.8vw,62px)/1.02 "Inter Tight","Noto Sans JP",sans-serif;letter-spacing:-.045em}
+.ld-r h2.jpn{font-weight:700;letter-spacing:-.02em}
+.ld-r p{margin:12px 0 14px;font-size:14.5px;line-height:1.95;font-weight:500;max-width:600px}
+.ld-r .go{font-size:14px;font-family:var(--mono),"Noto Sans JP"}
+.ld-r .go::before{content:"> ";}
+.ld-r .go::after{content:""}
+.ld-r.on{color:#f3f1ff}
+.ld-r.on .k{color:var(--sig)}
+.ld-mon{position:sticky;top:14vh;align-self:start}
+.ld-scr{position:relative;aspect-ratio:9/14;max-height:72vh;margin-left:auto;border-radius:22px;overflow:hidden;border:1px solid rgba(143,220,255,.16);background:#090c18}
+.ld-scr video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .4s;filter:saturate(.7) brightness(.9)}
+.ld-scr video.on{opacity:1}
+.ld-scr canvas{position:absolute;inset:0;width:100%;height:100%;opacity:0}
+.ld-scr canvas.on{opacity:.85}
+.ld-cap{display:flex;justify-content:space-between;margin-top:12px;font:400 12px var(--mono);color:#6d7186}
+.ld-cap b{color:var(--sig);font-weight:400}
+.ft{background:var(--ink);color:#fff;border-radius:32px 32px 0 0;padding:clamp(40px,6vw,90px) var(--pad) 28px;font-family:"Inter Tight","Noto Sans JP",sans-serif}
+.ft .big{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;padding-bottom:clamp(40px,6vw,80px);border-bottom:1px solid rgba(255,255,255,.15)}
+.ft .big b{display:block;font-size:clamp(56px,10vw,170px);font-weight:500;letter-spacing:-.055em;line-height:.88}
+.ft .big span{display:block;font-size:15px;font-weight:500;margin-top:16px;color:rgba(255,255,255,.7)}
+.ft .arr{color:var(--ink);width:clamp(64px,8vw,120px);height:clamp(64px,8vw,120px);border-radius:50%;background:#8fdcff;display:grid;place-items:center;flex:none;transition:transform .6s cubic-bezier(.2,.8,.1,1)}
+.ft .big .arr{display:grid;margin:0;color:var(--ink);line-height:1}
+.ft .arr::after{content:"→";font-size:clamp(24px,3vw,44px)}
+.ft .big:hover .arr{transform:rotate(-45deg)}
+.ft .low{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;padding-top:26px;font-size:13px;color:rgba(255,255,255,.7)}
+.ft .low nav{display:flex;gap:20px;flex-wrap:wrap}
+.ft .low .lgf{display:flex;align-items:center;gap:12px}
+.ft .low .lgf img{height:34px;filter:invert(1)}
+.ftwrap{background:var(--cream);padding-top:40px}
+@media (max-width:1100px){.mba-cs{grid-template-columns:repeat(2,minmax(0,1fr))}.ftb-g{grid-template-columns:1fr 1fr}}
+@media (max-width:820px){
+  .ref{grid-template-columns:1fr}.ref .ims.n2{grid-template-columns:1fr}
+  .grp{padding:26px 16px 14px}.grp b{font-size:24px}
+  .shd{padding:12px 16px}.shd .lg{height:32px}.shd nav{display:none}.shd .bg{display:block}
+  .sh2{flex-direction:column;align-items:flex-start;gap:12px}
+  .sec2{padding:80px 16px}
+  .fva,.sva{padding:100px 16px 28px}
+  .fva-st{flex-direction:column;gap:6px;margin-top:36px}
+  .fvb{padding:96px 16px 56px}.fvb-g{grid-template-columns:1fr;gap:28px}
+  .fvc{padding:110px 16px 56px;min-height:auto}.fvc-foot{flex-direction:column;align-items:flex-start}.fvc-foot .co{text-align:left}
+  .fvd{padding:96px 16px 36px;min-height:auto}.term-b{font-size:12.5px;padding:18px 16px}.fvd-st{flex-direction:column;gap:4px}
+  .fta-row{grid-template-columns:1fr;gap:10px}.fta-row h3::before{left:auto;right:0}
+  .ftb-g{grid-template-columns:1fr}
+  .ftc{padding:80px 16px}.ftc-g{grid-template-columns:1fr}.ftc-l{position:static;height:auto}.ftc-num{display:none}
+  .ftc-it{min-height:auto;padding:30px 0}.ftc-it .n2{font:200 72px/1 "Bricolage Grotesque","Inter Tight";letter-spacing:-.05em;color:var(--ink);margin-bottom:10px}
+  .pra-track{grid-template-columns:1fr;padding:0 0 0 34px;gap:34px}
+  .pra-line{left:6px;right:auto;top:0;bottom:0;width:1px;height:auto}
+  .pra-line i{transform-origin:top;transform:scaleY(0)}
+  .pra-line b{display:none}
+  .pra-st::before{top:4px;left:-34px}
+  .prb-g7{grid-template-columns:1fr}
+  .prb-st p{padding-left:0}
+  .prc-g{grid-template-columns:1fr}.prc-l{position:static}
+  .prc-row{grid-template-columns:72px minmax(0,1fr);gap:14px}.prc-row .n{font-size:56px}
+  .prc.n7 .prc-row .n{font-size:40px}
+  .cta-a{min-height:70vh;padding:90px 16px}
+  .cta-b{padding:80px 16px}
+  .cta-c{min-height:84vh;padding:80px 16px;align-items:flex-end}
+  .cta-c .bgph::before{background:linear-gradient(0deg,rgba(3,5,12,.9),rgba(3,5,12,.35) 60%,rgba(3,5,12,.1))}
+  .mba-cs{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;margin:0 -16px;padding:0 16px;scrollbar-width:none}
+  .mba-cs::-webkit-scrollbar{display:none}
+  .mba-c{flex:none;width:78vw;scroll-snap-align:center}
+  .mbb-g{grid-template-columns:1fr}.mbb-mon{position:sticky;top:8px;order:-1;z-index:3;width:46%}
+  .mbc-g{grid-template-columns:1fr}
+  .sta-row{grid-template-columns:1fr}.sta-it{grid-template-columns:1fr 1fr}
+  .stc-r{grid-template-columns:1fr}.stc-r h3{padding:18px 16px 0}.stc-tw{padding:16px 0 22px}
+  .csa-bar{grid-template-columns:1fr;gap:6px}.csa-b{grid-template-columns:1fr;padding:20px 4px 6px}
+  .csb-g{grid-template-columns:1fr}
+  .csc .term-b{grid-template-columns:1fr}
+  .ofa-g{grid-template-columns:1fr}.ofa-r{display:none}.ofa-it{color:var(--ink)}.ofa-it .mim{display:block;margin-top:16px;border-radius:14px;overflow:hidden;background:#0a0d18;aspect-ratio:4/3}
+  .ofa-it .mim img{width:100%;height:100%;object-fit:contain}.ofa-it .mim img.cv{object-fit:cover}.ofa-it .mim.tbd{font-size:80px}
+  .ofb-row{grid-template-columns:1fr;gap:22px}.ofb-row:nth-child(even) .ofb-im{order:0}
+  .ofc-row{grid-template-columns:1fr}
+  .ofc-row .pm::before{content:"drwxr-xr-x  "}
+  .svb{padding:96px 16px 56px}.svb-t{flex-direction:column;align-items:flex-start}.svb-st{grid-template-columns:1fr 1fr}
+  .la-row{grid-template-columns:1fr;gap:24px}
+  .lb-row{grid-template-columns:1fr;gap:26px}.lb-m{grid-template-columns:3fr 2fr}
+  .lc-tb{grid-template-columns:1fr;gap:12px}.lc-tb .go{justify-self:start}
+  .ld-g{grid-template-columns:1fr}.ld-mon{position:sticky;top:8px;order:-1;z-index:3;width:38%;margin-left:auto}
+  .ld-r .pm::before{content:"drwxr-xr-x  "}
+  .ft{border-radius:24px 24px 0 0;padding:44px 16px 24px}.ft .big{flex-direction:column;align-items:flex-start}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .rv{opacity:1;transform:none}
+  .term .ln{opacity:1;transform:none}
+  .pra-line i{transform:none}
+  .stc-tr{flex-wrap:wrap;width:auto}
+  .fvc .ul{background-size:100% .14em}
+}
+.dg-pulse{transform-box:fill-box;transform-origin:center;animation:dgp 2.4s infinite}
+@keyframes dgp{0%{transform:scale(.6);opacity:1}100%{transform:scale(2.4);opacity:0}}
+.dg-draw{stroke-dasharray:420;stroke-dashoffset:420;animation:dgd 4s cubic-bezier(.45,0,.2,1) infinite}
+@keyframes dgd{70%,100%{stroke-dashoffset:0}}
+.dg-spin{animation:dgs 7s linear infinite}
+@keyframes dgs{to{transform:rotate(360deg)}}
+.dg-seq{opacity:0;animation:dgq 2.4s infinite}
+@keyframes dgq{0%,100%{opacity:0}15%,35%{opacity:1}50%{opacity:0}}
+.dg-pie{stroke-dasharray:0 176;animation:dgpie 5s cubic-bezier(.45,0,.2,1) infinite}
+@keyframes dgpie{0%{stroke-dasharray:0 176}60%,100%{stroke-dasharray:176 176}}
+.dg-grow{animation:dgg 5s cubic-bezier(.45,0,.2,1) infinite}
+@keyframes dgg{0%{transform:scale(.8);opacity:.3}60%,100%{transform:scale(1.05);opacity:1}}
+@media (prefers-reduced-motion:reduce){.dg-draw{stroke-dashoffset:0}.dg-seq{opacity:1}.dg-pie{stroke-dasharray:176 176}}
+</style>
+</head>
+<body>
+<header class="top" id="preview-top"><h1>/service（サービス一覧）節ごとの候補</h1><p>本番 /service の節の順に候補。<b>本番の文は一字も変えていません</b>。一覧はトップの SERVICE 節の候補（sections2/service）と同じ4サービス・同じ写真の当て方・同じ録画で、トップでどの型を選んでもこのページで同じ型を広げられるようにしてある。写真はトップ用に依頼済みの4枚の仮置き。色は夜の紺・生成り・灰色＋強調は電球の黄色1色。</p><nav class="toc"><div><span>01 FV（ページの入口）</span><a href="#sfv-1">1</a><a href="#sfv-2">2</a><a href="#sfv-3">3</a></div><div><span>02 サービス一覧（4つ）</span><a href="#ls-1">1</a><a href="#ls-2">2</a><a href="#ls-3">3</a><a href="#ls-4">4</a><a class=c>共通部品</a></div></nav></header>
+<div class="grp" id="sfv"><b>01</b><em>FV（ページの入口）</em></div><div class="lab" id="sfv-1"><b>1</b>宇宙色の地に特大の「SERVICE」。最後の点が光り、波紋が出る<span>参考：14islands Services のFV</span></div><div class="ref"><div class="ims n1"><figure><img src="ref/14islands_fv.jpg" alt="14islands Services のFV の参考" loading="lazy"><figcaption>14islands Services のFV</figcaption></figure></div><div class="rt">14islands：黒地に大きな「Services & Solutions」と小さな写真。<br>→ トップの FV と同じ宇宙色と星。特大の SERVICE の後ろの点（飾り）だけ電球の黄色で光り、そこから波紋。<code>[04]</code> の件数を等幅で。</div></div><section class="v sva" data-v="fv-1"><div class="shd w"><a class="lg" href="#preview-top" aria-label="SAMURAI STYLE"><img src="img/logo.svg" alt="SAMURAI STYLE"></a><nav><a href="#preview-top">HOME</a><a class="on" href="#preview-top">SERVICE</a><a href="#preview-top">MEDIA</a><a href="#preview-top">COMPANY</a><a href="#preview-top">RECRUIT</a><a class="cta" href="#ft">CONTACT</a><span class="lang"><span>ID</span><span>EN</span><b>JA</b></span></nav><span class="bg" aria-hidden="true"><i></i><i></i></span></div><canvas data-stars aria-hidden="true"></canvas><p class="crumb" style="position:relative;z-index:2;margin-bottom:24px">samurai-style/service</p><h1 class="sva-h" data-src>SERVICE</h1><div class="sva-r"><p>サービス一覧</p><span>[04] strategy / hook / build / film</span></div></section><div class="lab" id="sfv-2"><b>2</b>生成りの地に見出し、下に4つのサービスの「止まった映像」を並べる<span>参考：Instrument Services のFV</span></div><div class="ref"><div class="ims n1"><figure><img src="ref/instrument_hero.jpg" alt="Instrument Services のFV の参考" loading="lazy"><figcaption>Instrument Services のFV</figcaption></figure></div><div class="rt">Instrument：見出しの下に作品のカードを横に並べる。<br>→ トップの SERVICE の作り直し案と同じ4枚の写真（いまは仮置き：鏡・ランタン・焚き火・テレビの壁）を縦長で並べ、それぞれの中の1か所だけ動く。新しい写真はトップ用に依頼済みの4枚を使う。</div></div><section class="v svb lt" data-v="fv-2"><div class="shd"><a class="lg" href="#preview-top" aria-label="SAMURAI STYLE"><img src="img/logo.svg" alt="SAMURAI STYLE"></a><nav><a href="#preview-top">HOME</a><a class="on" href="#preview-top">SERVICE</a><a href="#preview-top">MEDIA</a><a href="#preview-top">COMPANY</a><a href="#preview-top">RECRUIT</a><a class="cta" href="#ft">CONTACT</a><span class="lang"><span>ID</span><span>EN</span><b>JA</b></span></nav><span class="bg" aria-hidden="true"><i></i><i></i></span></div><p class="crumb">samurai-style/service</p><div class="svb-t"><h1>SERVICE</h1><p>サービス一覧</p></div><div class="svb-st"><figure class="ph rv"><img src="img/mirrors.webp" alt="砂漠に並ぶ鏡が順に光を返す" loading="lazy"><i class="spot flash" style="--x:58.5%;--y:66%;--w:14%;--c:rgba(255,236,200,.95)"></i><small>01 strategy/</small></figure><figure class="ph rv"><img src="img/lantern.webp" alt="霧の水辺でランタンを掲げる人" loading="lazy"><i class="spot flick" style="--x:53.6%;--y:42%;--w:16%"></i><small>02 hook/</small></figure><figure class="ph rv"><img src="img/fire.webp" alt="焚き火を囲む人たち" loading="lazy"><i class="spot flick" style="--x:39.5%;--y:74%;--w:12%"></i><small>03 build/</small></figure><figure class="ph rv"><img src="img/tvwall.webp" alt="砂嵐のテレビの壁と、1台だけ光るモニター" loading="lazy"><i class="spot blink" style="--x:50.5%;--y:35.5%;--w:9%;--c:rgba(143,220,255,.95);--c2:rgba(143,220,255,.3)"></i><small>04 film/</small></figure></div></section><div class="lab" id="sfv-3"><b>3</b>Terminal：ls ./services の出力として見出しが出る<span>参考：Warp のFV</span></div><div class="ref"><div class="ims n1"><figure><img src="ref/warp_fv.jpg" alt="Warp のFV の参考" loading="lazy"><figcaption>Warp のFV</figcaption></figure></div><div class="rt">Warp：等幅の大きな見出し。<br>→ トップの SERVICE 案4と同じ <code>strategy/ hook/ build/ film/</code> の名前で、一覧ページの入口をそろえる。</div></div><section class="v fvd" data-v="fv-3"><div class="shd w"><a class="lg" href="#preview-top" aria-label="SAMURAI STYLE"><img src="img/logo.svg" alt="SAMURAI STYLE"></a><nav><a href="#preview-top">HOME</a><a class="on" href="#preview-top">SERVICE</a><a href="#preview-top">MEDIA</a><a href="#preview-top">COMPANY</a><a href="#preview-top">RECRUIT</a><a class="cta" href="#ft">CONTACT</a><span class="lang"><span>ID</span><span>EN</span><b>JA</b></span></nav><span class="bg" aria-hidden="true"><i></i><i></i></span></div><div class="term rv"><div class="term-bar"><i></i><i></i><i></i><span>zsh — samurai-style</span></div><div class="term-b"><span class="ln"><span class="pr">~/samurai-style</span> $ ls ./services</span><span class="ln svc-o"><span class="ls"><span>strategy/</span><span>hook/</span><span>build/</span><span>film/</span></span></span><span class="ln cmt">[04] items — signal: 4 / noise: 0</span><span class="ln svc-o"><h1>SERVICE</h1><p>サービス一覧</p></span><span class="ln"><span class="pr">~/samurai-style</span> $ <span class="caret"></span></span></div></div><div class="fvd-st"><span><i></i>online · 4 services</span><span>samurai-style/service</span></div></section><div class="grp" id="ls"><b>02</b><em>サービス一覧（4つ）</em><span class="c">トップの SERVICE 候補と同じ4つ・同じ順・同じ文・同じリンク。案1〜4はトップの案2・案3・（新）・案1+4に対応</span></div><div class="lab" id="ls-1"><b>1</b>AREA 17 型：1サービス1行。名前と説明の横に「止まった映像」＋録画<span>参考：AREA 17 Capabilities の行</span></div><div class="ref"><div class="ims n1"><figure><img src="ref/area17_cap.jpg" alt="AREA 17 Capabilities の行 の参考" loading="lazy"><figcaption>AREA 17 Capabilities の行</figcaption></figure></div><div class="rt">AREA 17：左に名前と説明、右に大きな写真。<br>→ トップの SERVICE 案2を一覧ページの大きさに広げたもの。写真の中の1か所だけ動き、右下に画面録画を小さく（白黒、ホバーで色）。</div></div><section class="v lt sec2 la" data-v="ls-1"><div class="la-rows"><div class="la-row rv"><div><span class="no">01 — strategy/</span><br><h2>Strategy2Action</h2><p><span class="nb">事業理解に</span><wbr><span class="nb">基づいて</span><wbr><span class="nb">戦略を</span><wbr><span class="nb">考え、</span><wbr><span class="nb">実行まで</span><wbr><span class="nb">伴走し、</span><wbr><span class="nb">ダッシュボード作成に</span><wbr><span class="nb">よる</span><wbr><span class="nb">経営層・上長への</span><wbr><span class="nb">可視化まで</span><wbr><span class="nb">対応。</span><wbr></p><a class="go" href="https://samurai-style.tokyo/strategy2action">詳しく見る</a></div><figure class="ph"><img src="img/mirrors.webp" alt="砂漠に並ぶ鏡が順に光を返す" loading="lazy"><i class="spot flash" style="--x:58.5%;--y:66%;--w:14%;--c:rgba(255,236,200,.95)"></i><video data-src="video/s2a.mp4" muted loop playsinline aria-hidden="true"></video></figure></div><div class="la-row rv"><div><span class="no">02 — hook/</span><br><span class="lb">動画広告の制作ツール</span><h2>HookHack</h2><p><span class="nb">売れる</span><wbr><span class="nb">動画</span><wbr><span class="nb">広告を</span><wbr><span class="nb">LPから</span><wbr><span class="nb">5分で</span><wbr><span class="nb">制作。</span><wbr><br><span class="nb">検証から</span><wbr><span class="nb">成果改善まで、</span><wbr><span class="nb">動画</span><wbr><span class="nb">広告の</span><wbr><span class="nb">PDCAに</span><wbr><span class="nb">必要な</span><wbr><span class="nb">機能を</span><wbr><span class="nb">1ツールで</span><wbr><span class="nb">網羅します。</span><wbr></p><a class="go" href="https://www.hook-hack.com/">詳しく見る</a></div><figure class="ph"><img src="img/lantern.webp" alt="霧の水辺でランタンを掲げる人" loading="lazy"><i class="spot flick" style="--x:53.6%;--y:42%;--w:16%"></i><video data-src="video/hh.mp4" muted loop playsinline aria-hidden="true"></video></figure></div><div class="la-row rv"><div><span class="no">03 — build/</span><br><span class="lb">LP・サイト制作の代行</span><h2>HookHacker</h2><p><span class="nb">自社開発AIツール</span><wbr><span class="nb">「HookHack」</span><wbr><span class="nb">×</span><wbr><span class="nb">インドネシアオフショアチーム×</span><wbr><span class="nb">日本人ディレクターで</span><wbr><span class="nb">LP・サイト制作を</span><wbr><span class="nb">代行。</span><wbr></p><a class="go" href="https://www.hook-hack.com/hookhacker">詳しく見る</a></div><figure class="ph"><img src="img/fire.webp" alt="焚き火を囲む人たち" loading="lazy"><i class="spot flick" style="--x:39.5%;--y:74%;--w:12%"></i><video data-src="video/hhr.mp4" muted loop playsinline aria-hidden="true"></video></figure></div><div class="la-row rv"><div><span class="no">04 — film/</span><br><h2 class="jpn">動画制作</h2><p><span class="nb">貴社の</span><wbr><span class="nb">顧客理解に</span><wbr><span class="nb">基づき、</span><wbr><span class="nb">動画を</span><wbr><span class="nb">企画・撮影・編集まで</span><wbr><span class="nb">ワンストップで</span><wbr><span class="nb">制作します。</span><wbr></p><a class="go" href="https://samurai-style.tokyo/video-production">詳しく見る</a></div><figure class="ph"><img src="img/tvwall.webp" alt="砂嵐のテレビの壁と、1台だけ光るモニター" loading="lazy"><i class="spot blink" style="--x:50.5%;--y:35.5%;--w:9%;--c:rgba(143,220,255,.95);--c2:rgba(143,220,255,.3)"></i><video data-src="video/vp.mp4" muted loop playsinline aria-hidden="true"></video></figure></div></div></section><div class="lab" id="ls-2"><b>2</b>Instrument 型：紺の地。左に大きな名前、右に録画と写真を2枚組<span>参考：Instrument Services の行</span></div><div class="ref"><div class="ims n1"><figure><img src="ref/instrument_rows.jpg" alt="Instrument Services の行 の参考" loading="lazy"><figcaption>Instrument Services の行</figcaption></figure></div><div class="rt">Instrument：紫の地に、左に分野名、右に作品の画像を大小2枚。<br>→ 紫は使わず夜の紺に。録画は大きく、写真は小さくずらして置く。トップの案3（端末に録画をはめる）と同じ素材を使う。</div></div><section class="v sec2 lbx" data-v="ls-2"><div class="lb-row rv"><div><h2>Strategy2Action</h2><p><span class="nb">事業理解に</span><wbr><span class="nb">基づいて</span><wbr><span class="nb">戦略を</span><wbr><span class="nb">考え、</span><wbr><span class="nb">実行まで</span><wbr><span class="nb">伴走し、</span><wbr><span class="nb">ダッシュボード作成に</span><wbr><span class="nb">よる</span><wbr><span class="nb">経営層・上長への</span><wbr><span class="nb">可視化まで</span><wbr><span class="nb">対応。</span><wbr></p><a class="go" href="https://samurai-style.tokyo/strategy2action">詳しく見る</a></div><div class="lb-m"><div><div class="lb-v"><video data-src="video/s2a.mp4" muted loop playsinline aria-hidden="true"></video></div><small>strategy/ — screen</small></div><figure class="ph"><img src="img/mirrors.webp" alt="砂漠に並ぶ鏡が順に光を返す" loading="lazy"><i class="spot flash" style="--x:58.5%;--y:66%;--w:14%;--c:rgba(255,236,200,.95)"></i></figure></div></div><div class="lb-row rv"><div><h2>HookHack</h2><span class="lbl">動画広告の制作ツール</span><p><span class="nb">売れる</span><wbr><span class="nb">動画</span><wbr><span class="nb">広告を</span><wbr><span class="nb">LPから</span><wbr><span class="nb">5分で</span><wbr><span class="nb">制作。</span><wbr><br><span class="nb">検証から</span><wbr><span class="nb">成果改善まで、</span><wbr><span class="nb">動画</span><wbr><span class="nb">広告の</span><wbr><span class="nb">PDCAに</span><wbr><span class="nb">必要な</span><wbr><span class="nb">機能を</span><wbr><span class="nb">1ツールで</span><wbr><span class="nb">網羅します。</span><wbr></p><a class="go" href="https://www.hook-hack.com/">詳しく見る</a></div><div class="lb-m"><div><div class="lb-v"><video data-src="video/hh.mp4" muted loop playsinline aria-hidden="true"></video></div><small>hook/ — screen</small></div><figure class="ph"><img src="img/lantern.webp" alt="霧の水辺でランタンを掲げる人" loading="lazy"><i class="spot flick" style="--x:53.6%;--y:42%;--w:16%"></i></figure></div></div><div class="lb-row rv"><div><h2>HookHacker</h2><span class="lbl">LP・サイト制作の代行</span><p><span class="nb">自社開発AIツール</span><wbr><span class="nb">「HookHack」</span><wbr><span class="nb">×</span><wbr><span class="nb">インドネシアオフショアチーム×</span><wbr><span class="nb">日本人ディレクターで</span><wbr><span class="nb">LP・サイト制作を</span><wbr><span class="nb">代行。</span><wbr></p><a class="go" href="https://www.hook-hack.com/hookhacker">詳しく見る</a></div><div class="lb-m"><div><div class="lb-v"><video data-src="video/hhr.mp4" muted loop playsinline aria-hidden="true"></video></div><small>build/ — screen</small></div><figure class="ph"><img src="img/fire.webp" alt="焚き火を囲む人たち" loading="lazy"><i class="spot flick" style="--x:39.5%;--y:74%;--w:12%"></i></figure></div></div><div class="lb-row rv"><div><h2 class="jpn">動画制作</h2><p><span class="nb">貴社の</span><wbr><span class="nb">顧客理解に</span><wbr><span class="nb">基づき、</span><wbr><span class="nb">動画を</span><wbr><span class="nb">企画・撮影・編集まで</span><wbr><span class="nb">ワンストップで</span><wbr><span class="nb">制作します。</span><wbr></p><a class="go" href="https://samurai-style.tokyo/video-production">詳しく見る</a></div><div class="lb-m"><div><div class="lb-v"><video data-src="video/vp.mp4" muted loop playsinline aria-hidden="true"></video></div><small>film/ — screen</small></div><figure class="ph"><img src="img/tvwall.webp" alt="砂嵐のテレビの壁と、1台だけ光るモニター" loading="lazy"><i class="spot blink" style="--x:50.5%;--y:35.5%;--w:9%;--c:rgba(143,220,255,.95);--c2:rgba(143,220,255,.3)"></i></figure></div></div></section><div class="lab" id="ls-3"><b>3</b>Rejouice 型：生成りの地に特大の名前。下に一文と表の帯<span>参考：Rejouice Services「Classic」</span></div><div class="ref"><div class="ims n1"><figure><img src="ref/rejouice_classic.jpg" alt="Rejouice Services「Classic」 の参考" loading="lazy"><figcaption>Rejouice Services「Classic」</figcaption></figure></div><div class="rt">Rejouice：画面いっぱいの「Classic」、その下に一文、さらに表。<br>→ サービス名を画面いっぱいに置き、説明を中央に、帯の中に肩書き・録画の縮小・「詳しく見る」。写真なし。</div></div><section class="v lt sec2 lc" data-v="ls-3"><div class="lc-it rv"><span class="k">(01) strategy/</span><h2>Strategy2Action</h2><p class="d"><span class="nb">事業理解に</span><wbr><span class="nb">基づいて</span><wbr><span class="nb">戦略を</span><wbr><span class="nb">考え、</span><wbr><span class="nb">実行まで</span><wbr><span class="nb">伴走し、</span><wbr><span class="nb">ダッシュボード作成に</span><wbr><span class="nb">よる</span><wbr><span class="nb">経営層・上長への</span><wbr><span class="nb">可視化まで</span><wbr><span class="nb">対応。</span><wbr></p><div class="lc-tb"><span class="lb"></span><video data-src="video/s2a.mp4" muted loop playsinline aria-hidden="true"></video><a class="go" href="https://samurai-style.tokyo/strategy2action">詳しく見る</a></div></div><div class="lc-it rv"><span class="k">(02) hook/</span><h2>HookHack</h2><p class="d"><span class="nb">売れる</span><wbr><span class="nb">動画</span><wbr><span class="nb">広告を</span><wbr><span class="nb">LPから</span><wbr><span class="nb">5分で</span><wbr><span class="nb">制作。</span><wbr><br><span class="nb">検証から</span><wbr><span class="nb">成果改善まで、</span><wbr><span class="nb">動画</span><wbr><span class="nb">広告の</span><wbr><span class="nb">PDCAに</span><wbr><span class="nb">必要な</span><wbr><span class="nb">機能を</span><wbr><span class="nb">1ツールで</span><wbr><span class="nb">網羅します。</span><wbr></p><div class="lc-tb"><span class="lb">動画広告の制作ツール</span><video data-src="video/hh.mp4" muted loop playsinline aria-hidden="true"></video><a class="go" href="https://www.hook-hack.com/">詳しく見る</a></div></div><div class="lc-it rv"><span class="k">(03) build/</span><h2>HookHacker</h2><p class="d"><span class="nb">自社開発AIツール</span><wbr><span class="nb">「HookHack」</span><wbr><span class="nb">×</span><wbr><span class="nb">インドネシアオフショアチーム×</span><wbr><span class="nb">日本人ディレクターで</span><wbr><span class="nb">LP・サイト制作を</span><wbr><span class="nb">代行。</span><wbr></p><div class="lc-tb"><span class="lb">LP・サイト制作の代行</span><video data-src="video/hhr.mp4" muted loop playsinline aria-hidden="true"></video><a class="go" href="https://www.hook-hack.com/hookhacker">詳しく見る</a></div></div><div class="lc-it rv"><span class="k">(04) film/</span><h2 class="jpn">動画制作</h2><p class="d"><span class="nb">貴社の</span><wbr><span class="nb">顧客理解に</span><wbr><span class="nb">基づき、</span><wbr><span class="nb">動画を</span><wbr><span class="nb">企画・撮影・編集まで</span><wbr><span class="nb">ワンストップで</span><wbr><span class="nb">制作します。</span><wbr></p><div class="lc-tb"><span class="lb"></span><video data-src="video/vp.mp4" muted loop playsinline aria-hidden="true"></video><a class="go" href="https://samurai-style.tokyo/video-production">詳しく見る</a></div></div></section><div class="lab" id="ls-4"><b>4</b>Terminal＋モニター：名簿の行が灰→点灯し、右のモニターに録画<span>参考：Dogstudio の名前の一覧 ／ basement.studio Services の見出し</span></div><div class="ref"><div class="ims n2"><figure><img src="ref/dogstudio.jpg" alt="Dogstudio の名前の一覧 の参考" loading="lazy"><figcaption>Dogstudio の名前の一覧</figcaption></figure><figure><img src="ref/basement_sv.jpg" alt="basement.studio Services の見出し の参考" loading="lazy"><figcaption>basement.studio Services の見出し</figcaption></figure></div><div class="rt">Dogstudio：灰色の名前の一覧。basement：暗い地に区切り線。<br>→ トップの SERVICE 案1・案4を合わせた形。<code>ls -l ./services</code> の行として並び、読んでいる行だけ点灯、右のモニターに砂嵐を挟んでその録画が映る。</div></div><section class="v sec2 ld" data-v="ls-4" data-focus=".ld-r"><div class="ld-g"><div><p class="ld-hd"><b>~/samurai-style</b> $ ls -l ./services <b>[04]</b></p><div class="ld-r on"><span class="pm">strategy/</span> <span class="k">[01]</span><h2>Strategy2Action</h2><p><span class="nb">事業理解に</span><wbr><span class="nb">基づいて</span><wbr><span class="nb">戦略を</span><wbr><span class="nb">考え、</span><wbr><span class="nb">実行まで</span><wbr><span class="nb">伴走し、</span><wbr><span class="nb">ダッシュボード作成に</span><wbr><span class="nb">よる</span><wbr><span class="nb">経営層・上長への</span><wbr><span class="nb">可視化まで</span><wbr><span class="nb">対応。</span><wbr></p><a class="go" href="https://samurai-style.tokyo/strategy2action">詳しく見る</a></div><div class="ld-r"><span class="pm">hook/</span> <span class="k">[02]</span><span class="lb">動画広告の制作ツール</span><h2>HookHack</h2><p><span class="nb">売れる</span><wbr><span class="nb">動画</span><wbr><span class="nb">広告を</span><wbr><span class="nb">LPから</span><wbr><span class="nb">5分で</span><wbr><span class="nb">制作。</span><wbr><br><span class="nb">検証から</span><wbr><span class="nb">成果改善まで、</span><wbr><span class="nb">動画</span><wbr><span class="nb">広告の</span><wbr><span class="nb">PDCAに</span><wbr><span class="nb">必要な</span><wbr><span class="nb">機能を</span><wbr><span class="nb">1ツールで</span><wbr><span class="nb">網羅します。</span><wbr></p><a class="go" href="https://www.hook-hack.com/">詳しく見る</a></div><div class="ld-r"><span class="pm">build/</span> <span class="k">[03]</span><span class="lb">LP・サイト制作の代行</span><h2>HookHacker</h2><p><span class="nb">自社開発AIツール</span><wbr><span class="nb">「HookHack」</span><wbr><span class="nb">×</span><wbr><span class="nb">インドネシアオフショアチーム×</span><wbr><span class="nb">日本人ディレクターで</span><wbr><span class="nb">LP・サイト制作を</span><wbr><span class="nb">代行。</span><wbr></p><a class="go" href="https://www.hook-hack.com/hookhacker">詳しく見る</a></div><div class="ld-r"><span class="pm">film/</span> <span class="k">[04]</span><h2 class="jpn">動画制作</h2><p><span class="nb">貴社の</span><wbr><span class="nb">顧客理解に</span><wbr><span class="nb">基づき、</span><wbr><span class="nb">動画を</span><wbr><span class="nb">企画・撮影・編集まで</span><wbr><span class="nb">ワンストップで</span><wbr><span class="nb">制作します。</span><wbr></p><a class="go" href="https://samurai-style.tokyo/video-production">詳しく見る</a></div></div><div class="ld-mon"><div class="ld-scr"><video class="on" data-src="video/s2a.mp4" muted loop playsinline aria-hidden="true"></video><video class="" data-src="video/hh.mp4" muted loop playsinline aria-hidden="true"></video><video class="" data-src="video/hhr.mp4" muted loop playsinline aria-hidden="true"></video><video class="" data-src="video/vp.mp4" muted loop playsinline aria-hidden="true"></video><canvas aria-hidden="true"></canvas></div><div class="ld-cap"><span>CH <b>01</b> / 04</span><span>● rec</span></div></div></div></section><div class="grp" id="foot"><b>03</b><em>フッター</em><span class="c">全ページ共通・トップと同じ</span></div><div class="ftwrap" data-v="ft"><footer class="ft" id="ft"><a class="big" href="#ft"><div><b>CONTACT</b><span>お問い合わせはこちらから</span></div><span class="arr" aria-hidden="true"></span></a><div class="low"><span class="lgf"><img src="img/logo.svg" alt=""><span>Samurai-Style</span></span><nav><a href="#ft">プライバシーポリシー</a><a href="#ft">特定商取引法に基づく表記</a></nav><span>© 2024- samurai-style All Right Reserved.</span></div></footer></div>
+<script>
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const mob = matchMedia('(max-width: 820px)');
+  if (reduce) document.querySelectorAll('animateMotion').forEach(m => m.remove());
+  const seen = (el, cb, th = .15) => { const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { cb(e.target); io.unobserve(e.target); } }), { threshold: el.offsetHeight > innerHeight * 1.2 ? .01 : th }); io.observe(el); };
+  document.querySelectorAll('.rv').forEach(el => seen(el, t => t.classList.add('in')));
+  document.querySelectorAll('.term').forEach(el => { el.querySelectorAll('.ln').forEach((l, i) => l.style.transitionDelay = (i * .22) + 's'); seen(el, t => t.classList.add('in'), .01); });
+  document.querySelectorAll('.pra').forEach(el => { el.querySelectorAll('.pra-st').forEach((s, i, a) => s.style.setProperty('--d', (.3 + i * 2.2 / a.length) + 's')); seen(el, t => t.classList.add('in'), .3); });
+  document.querySelectorAll('.fvc').forEach(el => { el.classList.add('in0'); setTimeout(() => el.classList.add('in'), reduce ? 0 : 700); });
+  document.querySelectorAll('a[href="#preview"]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); alert('プレビュー版のため送信しません'); }));
+  (() => {
+    const gc = document.createElement('canvas'); gc.width = gc.height = 160; const gx = gc.getContext('2d'), gi = gx.createImageData(160, 160);
+    for (let i = 0; i < gi.data.length; i += 4) { const v = Math.random() * 255 | 0; gi.data[i] = gi.data[i + 1] = gi.data[i + 2] = v; gi.data[i + 3] = 255; }
+    gx.putImageData(gi, 0, 0); document.documentElement.style.setProperty('--grain', `url(${gc.toDataURL()})`);
+  })();
+  const fitCv = cv => { const D = Math.min(1.5, devicePixelRatio || 1), W = cv.clientWidth, H = cv.clientHeight; cv.width = W * D; cv.height = H * D; const c = cv.getContext('2d'); c.setTransform(D, 0, 0, D, 0, 0); return [c, W, H]; };
+  const onVis = (el, f) => new IntersectionObserver(e => f(e[0].isIntersecting)).observe(el);
+  document.querySelectorAll('canvas[data-stars]').forEach(cv => {
+    const host = cv.parentElement, src = host.querySelector('[data-src]');
+    let c, W, H, P = [], R = [], vis = false, t = 0, last = 0, lastR = -9999;
+    const fit = () => { [c, W, H] = fitCv(cv); P = Array.from({ length: W < 820 ? 380 : 760 }, () => sp({}, false)); };
+    const sp = (q, far) => { q.x = (Math.random() - .5) * 2.4; q.y = (Math.random() - .5) * 2.4; q.z = far ? .6 + Math.random() * .4 : .05 + Math.random() * .95; q.px = null; q.s = Math.random() * .9 + .6; q.c = Math.random() < .2 ? [255, 236, 200] : Math.random() < .3 ? [225, 228, 238] : [235, 240, 255]; return q; };
+    fit(); addEventListener('resize', fit); onVis(cv, v => vis = v);
+    const center = () => { if (!src) return [W * .5, H * .45]; const a = src.getBoundingClientRect(), b = cv.getBoundingClientRect(); return [a.left - b.left + a.width / 2, a.top - b.top + a.height / 2]; };
+    const draw = dt => {
+      t += dt; c.globalCompositeOperation = 'source-over'; c.fillStyle = '#02030a'; c.fillRect(0, 0, W, H);
+      const g = c.createRadialGradient(W * .5, H * .5, 0, W * .5, H * .5, Math.max(W, H) * .6); g.addColorStop(0, 'rgba(70,60,150,.08)'); g.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = g; c.fillRect(0, 0, W, H);
+      c.globalCompositeOperation = 'lighter'; const f = Math.min(W, H) * .55, cx = W * .5, cy = H * .5, v = .00016 * dt;
+      for (const q of P) { q.z -= v; if (q.z < .03) { sp(q, true); continue; } const sx = cx + q.x / q.z * f, sy = cy + q.y / q.z * f; if (sx < -20 || sy < -20 || sx > W + 20 || sy > H + 20) { sp(q, true); continue; }
+        const near = 1 - q.z, al = Math.min(.7, .08 + .62 * near * near), [r, gg, b] = q.c; c.fillStyle = `rgba(${r},${gg},${b},${al})`; c.beginPath(); c.arc(sx, sy, (.4 + 1.5 * near * near) * q.s, 0, 6.283); c.fill(); }
+      const [rx, ry] = center();
+      if (t - lastR > 2600) { lastR = t; R.push(0); }
+      R = R.filter(r => r < Math.hypot(W, H) * .6); c.setLineDash([2, 6]); c.lineWidth = 1;
+      R = R.map(r => r + .045 * dt); for (const r of R) { const a = (1 - r / (Math.hypot(W, H) * .6)) * .45; c.strokeStyle = `rgba(143,220,255,${a})`; c.beginPath(); c.ellipse(rx, ry, r, r * .62, 0, 0, 6.283); c.stroke(); }
+      c.setLineDash([]);
+    };
+    if (reduce) { requestAnimationFrame(() => draw(16)); return; }
+    const loop = now => { requestAnimationFrame(loop); if (!vis) { last = now; return; } const dt = Math.min(50, now - (last || now)); if (now - last < 30) return; last = now; draw(dt || 16); };
+    requestAnimationFrame(loop);
+  });
+  document.querySelectorAll('canvas[data-arc]').forEach(cv => {
+    const host = cv.parentElement, img = host.querySelector('.map'), tk = host.querySelector('.ttl.tk'), jk = host.querySelector('.ttl.jk');
+    const A = [2415 / 2816, 572 / 1536], B = [2215 / 2816, 921 / 1536];
+    let c, W, H, vis = false, t0 = 0;
+    const fit = () => { [c, W, H] = fitCv(cv); };
+    fit(); addEventListener('resize', fit); onVis(cv, v => vis = v);
+    const pos = p => { const s = Math.max(W / 2816, H / 1536), ox = (W - 2816 * s) * .84, oy = (H - 1536 * s) * .5; return [ox + p[0] * 2816 * s, oy + p[1] * 1536 * s]; };
+    const draw = now => {
+      c.clearRect(0, 0, W, H); const [ax, ay] = pos(A), [bx, by] = pos(B), mx = (ax + bx) / 2 + 80, my = (ay + by) / 2 - 40;
+      if (tk) { tk.style.left = ax + 'px'; tk.style.top = ay + 'px'; } if (jk) { jk.style.left = bx + 'px'; jk.style.top = by + 'px'; }
+      const T = reduce ? 1.3 : ((now - t0) % 4200) / 4200 * 1.6;
+      c.strokeStyle = 'rgba(143,220,255,.28)'; c.lineWidth = 1; c.setLineDash([3, 5]); c.beginPath(); c.moveTo(ax, ay); c.quadraticCurveTo(mx, my, bx, by); c.stroke(); c.setLineDash([]);
+      const q = Math.min(1, T); const pt = u => [(1 - u) * (1 - u) * ax + 2 * (1 - u) * u * mx + u * u * bx, (1 - u) * (1 - u) * ay + 2 * (1 - u) * u * my + u * u * by];
+      c.lineCap = 'round'; for (let i = 0; i < 18; i++) { const u0 = Math.max(0, q - .25 + i * .25 / 18), u1 = Math.max(0, q - .25 + (i + 1) * .25 / 18); const [x0, y0] = pt(u0), [x1, y1] = pt(u1); c.strokeStyle = `rgba(143,220,255,${(i / 18) * .9})`; c.lineWidth = 2; c.beginPath(); c.moveTo(x0, y0); c.lineTo(x1, y1); c.stroke(); }
+      const [hx, hy] = pt(q); const g = c.createRadialGradient(hx, hy, 0, hx, hy, 14); g.addColorStop(0, 'rgba(255,255,255,.95)'); g.addColorStop(1, 'rgba(143,220,255,0)'); c.fillStyle = g; c.fillRect(hx - 14, hy - 14, 28, 28);
+      [[ax, ay], [bx, by]].forEach(([x, y]) => { c.fillStyle = '#f3f1ff'; c.beginPath(); c.arc(x, y, 3, 0, 6.283); c.fill(); });
+      if (T > 1) { const k = (T - 1) / .6; for (let j = 0; j < 2; j++) { const r = (k + j * .5) % 1 * 70; c.strokeStyle = `rgba(143,220,255,${(1 - r / 70) * .7})`; c.beginPath(); c.ellipse(bx, by, r, r * .62, 0, 0, 6.283); c.stroke(); } }
+    };
+    if (reduce) { requestAnimationFrame(() => draw(0)); addEventListener('resize', () => draw(0)); return; }
+    const loop = now => { requestAnimationFrame(loop); if (!vis) return; if (!t0) t0 = now; draw(now); };
+    requestAnimationFrame(loop);
+  });
+  document.querySelectorAll('canvas[data-rings]').forEach(cv => {
+    let c, W, H, vis = false, R = [], last = -9999, lt = 0;
+    const fit = () => { [c, W, H] = fitCv(cv); }; fit(); addEventListener('resize', fit); onVis(cv, v => vis = v);
+    const dust = Array.from({ length: 70 }, () => ({ x: Math.random(), y: Math.random(), r: Math.random() * 1.2 + .3, a: Math.random() * 6.28 }));
+    const draw = t => { c.clearRect(0, 0, W, H); for (const d of dust) { d.a += .02; c.fillStyle = `rgba(232,232,240,${.1 + .2 * (.5 + .5 * Math.sin(d.a))})`; c.beginPath(); c.arc(d.x * W, d.y * H, d.r, 0, 6.283); c.fill(); }
+      if (t - last > 2200) { last = t; R.push(0); } const M = Math.hypot(W, H) * .55; R = R.filter(r => r < M).map(r => r + 1.1);
+      c.setLineDash([2, 6]); for (const r of R) { c.strokeStyle = `rgba(143,220,255,${(1 - r / M) * .4})`; c.beginPath(); c.ellipse(W / 2, H / 2, r, r * .62, 0, 0, 6.283); c.stroke(); } c.setLineDash([]); };
+    if (reduce) { requestAnimationFrame(() => draw(0)); return; }
+    const loop = t => { requestAnimationFrame(loop); if (!vis || t - lt < 30) return; lt = t; draw(t); }; requestAnimationFrame(loop);
+  });
+  document.querySelectorAll('[data-focus]').forEach(sec => {
+    const rows = [...sec.querySelectorAll(sec.dataset.focus)];
+    const upd = () => { const c = innerHeight * .5; let best = -1, bd = 1e9; rows.forEach((r, k) => { const b = r.getBoundingClientRect(); if (b.bottom < 0 || b.top > innerHeight) return; const d = Math.abs(b.top + b.height / 2 - c); if (d < bd) { bd = d; best = k; } });
+      if (best < 0) return; rows.forEach((r, k) => r.classList.toggle('on', reduce ? true : k === best)); sec.dispatchEvent(new CustomEvent('focus', { detail: best })); };
+    addEventListener('scroll', () => requestAnimationFrame(upd), { passive: true }); addEventListener('resize', upd); upd();
+    rows.forEach((r, k) => r.addEventListener('mouseenter', () => { if (mob.matches) return; rows.forEach((x, j) => x.classList.toggle('on', j === k)); sec.dispatchEvent(new CustomEvent('focus', { detail: k })); }));
+  });
+  document.querySelectorAll('.ftc').forEach(sec => { const st = sec.querySelector('.ftc-num .st'), ns = [...st.children];
+    sec.addEventListener('focus', e => { st.style.transform = `translateY(${-e.detail}em)`; ns.forEach((n, k) => n.classList.toggle('on', k === e.detail)); }); });
+  document.querySelectorAll('.ofa').forEach(sec => { const fs = [...sec.querySelectorAll('.ofa-fr>*')], cap = sec.querySelector('.ofa-cap b');
+    sec.addEventListener('focus', e => { fs.forEach((f, k) => f.classList.toggle('on', k === e.detail)); if (cap) cap.textContent = String(e.detail + 1).padStart(2, '0'); }); });
+  const noise = cv => { const x = cv.getContext('2d'); cv.width = 120; cv.height = 150; return () => { const d = x.createImageData(120, 150); for (let i = 0; i < d.data.length; i += 4) { const v = Math.random() * 255 | 0; d.data[i] = v; d.data[i + 1] = v * .97; d.data[i + 2] = v * .92; d.data[i + 3] = 255; } x.putImageData(d, 0, 0); }; };
+  const flashTo = (cv, fn) => { if (reduce) { fn(); return; } const nz = noise(cv); cv.classList.add('on'); let n = 0; const tick = () => { nz(); if (++n === 3) fn(); if (n < 6) setTimeout(tick, 45); else cv.classList.remove('on'); }; tick(); };
+  document.querySelectorAll('.mbb').forEach(sec => { const ims = [...sec.querySelectorAll('.mbb-scr img')], cv = sec.querySelector('.mbb-scr canvas'), cap = sec.querySelector('.mbb-cap b'); let cur = 0;
+    sec.addEventListener('focus', e => { if (e.detail === cur) return; cur = e.detail; flashTo(cv, () => { ims.forEach((m, k) => m.classList.toggle('on', k === cur)); if (cap) cap.textContent = String(cur + 1).padStart(2, '0'); }); }); });
+  document.querySelectorAll('.ld').forEach(sec => { const vs = [...sec.querySelectorAll('.ld-scr video')], cv = sec.querySelector('.ld-scr canvas'), cap = sec.querySelector('.ld-cap b'); let cur = 0;
+    sec.addEventListener('focus', e => { if (e.detail === cur) return; cur = e.detail; flashTo(cv, () => { vs.forEach((v, k) => { const on = k === cur; v.classList.toggle('on', on); if (on) { if (!v.src) v.src = v.dataset.src; if (!reduce) v.play().catch(() => {}); } else v.pause(); }); if (cap) cap.textContent = String(cur + 1).padStart(2, '0'); }); }); });
+  const vio = new IntersectionObserver(es => es.forEach(e => { const v = e.target; if (e.isIntersecting) { if (!v.src && v.dataset.src) v.src = v.dataset.src; if (!reduce && (!v.closest('.ld-scr') || v.classList.contains('on'))) v.play().catch(() => {}); } else v.pause(); }), { rootMargin: '200px 0px' });
+  document.querySelectorAll('video[data-src]').forEach(v => vio.observe(v));
+  const clocks = [...document.querySelectorAll('[data-tz]')];
+  const tick = () => clocks.forEach(el => { el.textContent = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: el.dataset.tz }).format(new Date()); });
+  if (clocks.length) { tick(); setInterval(tick, 10000); }
+})();
+</script>
+</body>
+</html>
