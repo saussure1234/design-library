@@ -279,13 +279,6 @@ body.mopen .hd .logo img{filter:invert(1)}
   </div>
 </section>
 
-<section class="reel">
-  <div class="reel-in" data-cur="Signal">
-    <video src="video/home-hero.mp4" poster="img/home-hero-poster.webp" autoplay muted loop playsinline aria-hidden="true"></video>
-    <small><i></i>Find the signal</small>
-  </div>
-</section>
-
 <section class="sec" id="story">
   <div class="story">
     <div class="side"><h2>STORY</h2><p>ストーリー</p></div>
@@ -493,7 +486,6 @@ void main(){
 
   const hd = document.getElementById('hd');
   const rail = document.querySelector('.rail'), track = document.getElementById('track');
-  const reel = document.querySelector('.reel-in'), reelV = reel.querySelector('video');
   const cn = document.getElementById('cn'), pb = document.getElementById('pb');
   const cards = [...track.querySelectorAll('.card')];
   let dist = 0;
@@ -505,9 +497,6 @@ void main(){
   const upd = () => {
     const vh = innerHeight;
     hd.classList.toggle('solid', scrollY > vh * .6);
-    const r = reel.getBoundingClientRect();
-    const k = Math.min(1, Math.max(0, 1 - r.top / vh));
-    if (!reduce) { reel.style.transform = `scale(${0.9 + k * 0.1})`; reelV.style.transform = `translateY(${(k - .5) * -6}%) scale(${1.1 - k * .1})`; }
     if (mob.matches) {
       const p = track.scrollLeft / Math.max(1, track.scrollWidth - track.clientWidth);
       pb.style.transform = `scaleX(${.25 + p * .75})`;
