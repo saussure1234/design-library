@@ -7,7 +7,7 @@
 <title>サムライスタイル | Find the signal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..600&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Cinzel:wght@500;600&family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..600&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#f5f4f0;--ink:#0d0d0d;--mute:#77756f;--line:rgba(13,13,13,.12);--pad:clamp(18px,3.4vw,52px);--acc:#ff5534}
 *{box-sizing:border-box}
@@ -126,6 +126,7 @@ body.mopen .hd .logo img{filter:invert(1)}
 .spot .sp-l{background:radial-gradient(ellipse 17% 34% at 36% 50%,rgba(255,244,225,.18) 0%,transparent 60%),radial-gradient(ellipse 22% 42% at 36% 52%,transparent 0%,rgba(2,4,12,.72) 75%)}
 .spot .sp-r{background:radial-gradient(ellipse 17% 34% at 63% 50%,rgba(205,230,255,.2) 0%,transparent 60%),radial-gradient(ellipse 22% 42% at 63% 52%,transparent 0%,rgba(2,4,12,.72) 75%);animation-delay:-3.5s}
 @keyframes spot{0%,42%{opacity:1}50%,92%{opacity:0}100%{opacity:1}}
+.trails .st{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none}
 .tvw .tv{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none}
 @media (prefers-reduced-motion:reduce){.sx figure::after,.spot .sp{animation:none}}
 .mist img{animation:push 22s ease-in-out infinite alternate}
@@ -148,8 +149,11 @@ body.mopen .hd .logo img{filter:invert(1)}
 @keyframes flick{0%{opacity:.75;transform:scale(1)}20%{opacity:.95;transform:scale(1.04)}35%{opacity:.6;transform:scale(.97)}50%{opacity:.9;transform:scale(1.02)}70%{opacity:.7}85%{opacity:1;transform:scale(1.05)}100%{opacity:.75;transform:scale(1)}}
 .sx.q .qfog{position:absolute;left:-30%;width:160%;top:40%;height:50%;z-index:2;pointer-events:none;background:radial-gradient(ellipse 50% 50% at 50% 50%,rgba(170,190,220,.22),transparent 70%);filter:blur(14px);animation:fog 30s linear infinite alternate}
 @media (prefers-reduced-motion:reduce){.sx.q .qbg,.sx.q .fl,.sx.q .qfog{animation:none}}
-.repl .rb{display:block}
+.repl{container-type:inline-size}
+.repl .lyr{position:relative}
+.repl .lyr img{display:block;width:100%;height:auto}
 .repl .ra{position:absolute;inset:0;z-index:1;clip-path:inset(0 0 0 100%);animation:repl 7.5s infinite}
+.repl .eg{position:absolute;transform:translate(-50%,-50%);font-family:"Cinzel",serif;font-weight:600;letter-spacing:.22em;white-space:nowrap;color:rgba(70,62,70,.62);text-shadow:0 .05em 0 rgba(255,244,230,.55),0 -.035em 0 rgba(0,0,0,.28);mix-blend-mode:multiply;pointer-events:none}
 .repl .scan{position:absolute;top:0;bottom:0;z-index:2;width:2px;left:100%;background:linear-gradient(180deg,transparent,rgba(190,230,255,.95) 30%,rgba(190,230,255,.95) 70%,transparent);box-shadow:0 0 18px 6px rgba(143,220,255,.45);opacity:0;animation:scan 7.5s infinite}
 @keyframes repl{0%,14%{clip-path:inset(0 0 0 100%);opacity:1;animation-timing-function:cubic-bezier(.55,0,.9,.4)}40%,80%{clip-path:inset(0 0 0 17.5%);opacity:1}92%{clip-path:inset(0 0 0 17.5%);opacity:0}100%{clip-path:inset(0 0 0 100%);opacity:0}}
 @keyframes scan{0%,14%{left:100%;opacity:0;animation-timing-function:cubic-bezier(.55,0,.9,.4)}16%{opacity:1}38%{left:17.5%;opacity:1}46%,100%{left:17.5%;opacity:0}}
@@ -355,12 +359,12 @@ body.mopen .hd .logo img{filter:invert(1)}
 <section class="sec" id="story">
   <div class="sh"><h2>STORY</h2><p class="jp">ストーリー</p></div>
   <div class="srs jp">
-      <div class="sx l" data-f><figure class="repl"><img class="rb" src="img/story/s1b.webp" alt="白い展示室で、奥まで並ぶ手の彫刻が石膏からクロームへ置き換わっていく" loading="lazy"><img class="ra" src="img/story/s1a.webp" alt="" aria-hidden="true" loading="lazy"><i class="scan" aria-hidden="true"></i></figure><div class="tc"><p class="t">「誰かの役に立つ」という営みの中で、これまで人間が担ってきた“考えること”や“実行すること”の一部が、いま急速にAIへと置き換わりつつあります。変化の激しさが増し続けるこの時代において、マクロな視点では人間らしさを、ミクロな視点では自分らしさを保ちながら、どう生き残っていくべきか。私たちはその問いを日々考え続けています。</p></div></div>
+      <div class="sx l" data-f><figure class="repl"><div class="lyr rb"><img src="img/story/s1b.webp" alt="白い展示室で、奥まで並ぶ手の彫刻が石膏からクロームへ置き換わっていく。台座にはHUMANとAIの文字が彫られている" loading="lazy"><b class="eg" style="left:17.2%;top:80.5%;font-size:2.3cqw">HUMAN</b><b class="eg" style="left:40.1%;top:72%;font-size:1.45cqw">HUMAN</b><b class="eg" style="left:52.1%;top:66%;font-size:0.82cqw">HUMAN</b><b class="eg" style="left:60.0%;top:61.5%;font-size:0.62cqw">HUMAN</b></div><div class="lyr ra" aria-hidden="true"><img src="img/story/s1a.webp" alt="" loading="lazy"><b class="eg" style="left:17.2%;top:80.5%;font-size:2.3cqw">HUMAN</b><b class="eg" style="left:40.1%;top:72%;font-size:1.45cqw">AI</b><b class="eg" style="left:52.1%;top:66%;font-size:0.82cqw">AI</b><b class="eg" style="left:60.0%;top:61.5%;font-size:0.62cqw">AI</b></div><i class="scan" aria-hidden="true"></i></figure><div class="tc"><p class="t">「誰かの役に立つ」という営みの中で、これまで人間が担ってきた“考えること”や“実行すること”の一部が、いま急速にAIへと置き換わりつつあります。変化の激しさが増し続けるこの時代において、マクロな視点では人間らしさを、ミクロな視点では自分らしさを保ちながら、どう生き残っていくべきか。私たちはその問いを日々考え続けています。</p></div></div>
       <div class="sx tx" data-f><div class="tc"><p class="t">AIは高い合理性をもって答えを返しますが、一方、その合理性は、前提となるプロンプトや、使う人それぞれの立場や経験、価値観に大きく左右される構造にあります。つまり、ひとつの正解に収束するのではなく、<span class="echo"><span class="gh g1" aria-hidden="true">無数の“もっともらしさ”</span><span class="gh g2" aria-hidden="true">無数の“もっともらしさ”</span><span class="gh g3" aria-hidden="true">無数の“もっともらしさ”</span><span class="gh g4" aria-hidden="true">無数の“もっともらしさ”</span><span class="gh g5" aria-hidden="true">無数の“もっともらしさ”</span><span class="ew">無数の“もっともらしさ”</span></span>が生まれ続け、エントロピー増大の法則が文字通り起きている時代に入ったと捉えています。</p></div></div>
       <div class="sx r" data-f><figure class="tvw"><canvas class="tv" aria-hidden="true"></canvas><img src="img/story/s3.webp" alt="砂嵐を映すテレビが壁一面に積まれ、1台だけが光る線を映している" loading="lazy"></figure><div class="tc"><p class="t">Web上でも、AIによって膨大な情報やコンテンツが生成される時代になりました。そうした環境のなかで重要になるのは、何が本質的なシグナルで、何が一時的なノイズなのかを見極める力だと考えています。</p></div></div>
       <div class="sx q" data-f data-dark><img class="qbg" src="img/story/s4.webp" alt="霧の塩湖で、ランタンを掲げて何かを探す人の後ろ姿" loading="lazy"><i class="fl f-lamp" aria-hidden="true"></i><i class="fl f-ref" aria-hidden="true"></i><i class="qfog" aria-hidden="true"></i><p class="t">では、<em class="sig">シグナル</em>と<em class="nz"><i>ノ</i><i>イ</i><i>ズ</i></em>を見極める要素はどこに存在するのでしょうか。</p></div>
       <div class="sx tx" data-f><div class="tc"><p class="t">年収・地位・資産など上下の相対比較で幸福度を測る<span class="zs">ゼロサムゲーム</span>と、成長・信頼・創造など一緒に何かに取り組むことで幸福が生まれる<span class="ps">プラスサムゲーム</span>との視点から様々な事象を捉えた際、創業時に掲げた<span class="sm">「笑顔の総量の最大化」</span>を軸に置くと判断基準は明確になると考えています。</p></div></div>
-      <div class="sx l" data-f><figure class="mist"><i class="fg f1" aria-hidden="true"></i><i class="fg f2" aria-hidden="true"></i><i class="dawn" aria-hidden="true"></i><img src="img/story/s6.webp" alt="霧の野原で苗木を植える人と、遠くに立つ大きな古い木" loading="lazy"></figure><div class="tc"><p class="t"><span class="lead">短期的な個別最適ではなく、長期的な全体最適へ。</span>利己を求めることと、利他に生きることがタイムラグを経て同義になるという仮説を検証すべく、今後も地道に、泥臭くをコアバリューとして事業を運営してまいります。</p></div></div>
+      <div class="sx l" data-f><figure class="trails"><img src="img/story/s6.webp" alt="夜の丘の木の下で空を見上げる人と、北極星のまわりを回る星の軌跡" loading="lazy"><canvas class="st" aria-hidden="true"></canvas></figure><div class="tc"><p class="t"><span class="lead">短期的な個別最適ではなく、長期的な全体最適へ。</span>利己を求めることと、利他に生きることがタイムラグを経て同義になるという仮説を検証すべく、今後も地道に、泥臭くをコアバリューとして事業を運営してまいります。</p></div></div>
       <div class="sx fin" data-f><canvas class="rings" aria-hidden="true"></canvas><p class="t">ご興味をお持ちいただけた方はぜひご一報いただければ幸いです。</p><a class="tocontact" href="#contact">CONTACT <span>→</span></a></div>
   </div>
 </section>
@@ -604,6 +608,25 @@ body.mopen .hd .logo img{filter:invert(1)}
       const sx = SIG[0] * W, sy = SIG[1] * H, gl = c.createRadialGradient(sx, sy, 0, sx, sy, W * .06); gl.addColorStop(0, `rgba(143,220,255,${.18 + .1 * Math.sin(now / 400)})`); gl.addColorStop(1, 'rgba(0,0,0,0)'); c.fillStyle = gl; c.fillRect(sx - W * .06, sy - W * .06, W * .12, W * .12);
     };
     requestAnimationFrame(loop);
+  })();
+  (() => {
+    const cv = document.querySelector('.trails .st'); if (!cv) return; const c = cv.getContext('2d');
+    let W = 0, H = 0, vis = false, t0 = 0; const PX = .72, PY = .07, CYC = 14000;
+    const S = Array.from({ length: 320 }, () => ({ r: Math.pow(Math.random(), .8), a: Math.random() * 6.283, w: .5 + Math.random() * 1.1, b: .25 + Math.random() * .75, h: Math.random() < .12 ? 1 : 0 }));
+    const fit = () => { const D = Math.min(1.5, devicePixelRatio || 1); W = cv.clientWidth; H = cv.clientHeight; cv.width = W * D; cv.height = H * D; c.setTransform(D, 0, 0, D, 0, 0); };
+    fit(); addEventListener('resize', fit);
+    new IntersectionObserver(e => { vis = e[0].isIntersecting; if (vis && !t0) t0 = performance.now(); }).observe(cv);
+    const draw = now => { requestAnimationFrame(draw); if (!vis) return; c.clearRect(0, 0, W, H);
+      const u = reduce ? .55 : ((now - t0) % CYC) / CYC, grow = Math.min(1, u / .7), len = (grow * grow * (3 - 2 * grow)) * 1.5 * Math.PI, fade = u > .86 ? 1 - (u - .86) / .14 : 1;
+      const px = PX * W, py = PY * H, R = Math.hypot(W, H) * 1.05;
+      c.lineCap = 'round';
+      for (const s of S) { const r = s.r * R; if (r < 3) continue; const a0 = s.a - len;
+        c.strokeStyle = s.h ? `rgba(255,224,190,${.65 * s.b * fade})` : `rgba(205,225,255,${.55 * s.b * fade})`; c.lineWidth = s.w;
+        c.beginPath(); if (len < .004) { c.arc(px + Math.cos(s.a) * r, py + Math.sin(s.a) * r, s.w * .7, 0, 6.283); c.fillStyle = c.strokeStyle; c.fill(); } else { c.arc(px, py, r, a0, s.a); c.stroke(); } }
+      c.globalCompositeOperation = 'destination-in';
+      const g = c.createLinearGradient(0, 0, 0, H); g.addColorStop(0, '#000'); g.addColorStop(.44, '#000'); g.addColorStop(.57, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,0)');
+      c.fillStyle = g; c.fillRect(0, 0, W, H); c.globalCompositeOperation = 'source-over'; };
+    requestAnimationFrame(draw);
   })();
   document.getElementById('form').addEventListener('submit', e => { e.preventDefault(); alert('プレビュー版のため送信しません'); });
 
