@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>サービス一覧 4案</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=Noto+Sans+JP:wght@400;500;700&family=Shippori+Mincho+B1:wght@500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:"Noto Sans JP",sans-serif;background:#111;color:#eee;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+.top{padding:32px clamp(16px,3vw,48px) 20px;background:#111}
+.top h1{margin:0 0 8px;font-size:21px}
+.top p{margin:0;font-size:13px;color:#aaa;line-height:1.8;overflow-wrap:anywhere}
+.top nav{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.top nav a{font-size:13px;padding:8px 14px;border:1px solid #333;border-radius:99px;color:#ddd;text-decoration:none}
+.part{padding:56px clamp(16px,3vw,48px) 28px;background:#111;border-top:1px solid #2a2a2a}
+.part h2{margin:0;font-size:24px;font-weight:700;color:#fff}
+.part p{margin:8px 0 0;font-size:13px;color:#999;line-height:1.8}
+.part nav{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.part nav a{font-size:12px;padding:6px 12px;border:1px solid #333;border-radius:99px;color:#ccc;text-decoration:none}
+.lab{position:sticky;top:0;z-index:30;display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center;min-height:42px;padding:9px clamp(16px,3vw,48px);background:#000;color:#fff;font-size:13px;border-top:1px solid #222}
+.lab b{font:600 17px "Inter Tight";color:#8fdcff}
+.lab span{color:#999}
+.ref{display:grid;grid-template-columns:minmax(0,380px) 1fr;gap:20px;align-items:center;padding:22px clamp(16px,3vw,48px);background:#191919;font-size:13px;color:#bbb;line-height:1.8}
+.ref img{width:100%;border-radius:6px;display:block;border:1px solid #333}
+.ref em{font-style:normal;color:#eee}
+.nb{white-space:nowrap}
+
+.v{--ink:#1b1a18;--sub:#6d6a64;--line:#dcd9d2;--ac:#8fdcff;--bg:#f5f4f0;--g:clamp(16px,5vw,80px);position:relative;color:var(--ink);padding:clamp(88px,10vw,150px) var(--g);font-size:15px;line-height:1.9;letter-spacing:.02em}
+.v h2,.v h3,.v h4,.v p,.v ul,.v dl,.v dd,.v ol{margin:0;padding:0}
+.v ul,.v ol{list-style:none}
+.v h2,.v h3,.v h4{font-weight:500}
+.bgw{background:#fff}.bgc{background:var(--bg)}
+.en{display:flex;align-items:center;gap:10px;font:500 12px/1 "Inter Tight";letter-spacing:.18em;color:var(--sub);text-transform:uppercase}
+.en i{display:block;width:6px;height:6px;border-radius:50%;background:var(--ac)}
+.sh h2{margin-top:16px;font-size:clamp(28px,3.2vw,46px);line-height:1.4;letter-spacing:.04em}
+.sub{color:var(--sub)}
+.d{color:#4a4843}
+.more{display:inline-flex;align-items:center;gap:10px;font-size:14px;color:var(--ink);text-decoration:none;padding-bottom:4px;background:linear-gradient(var(--ac),var(--ac)) no-repeat 0 100%/28px 2px;transition:background-size .5s cubic-bezier(.2,.8,.1,1)}
+.more::after{content:"\2192";font-family:"Inter Tight";transition:transform .4s}
+.more:hover{background-size:100% 2px}
+.more:hover::after{transform:translateX(4px)}
+.btn{display:inline-flex;align-items:center;gap:12px;padding:17px 26px;background:var(--ink);color:#fff;text-decoration:none;font-size:15px;font-weight:500;letter-spacing:.04em;border:0;cursor:pointer;font-family:inherit;transition:background .3s}
+.btn::after{content:"\2192";font-family:"Inter Tight";transition:transform .4s}
+.btn:hover{background:#3a3835}
+.btn:hover::after{transform:translateX(4px)}
+.btn .tag{font-size:11px;line-height:1;padding:4px 6px;border:1px solid rgba(255,255,255,.6);letter-spacing:.06em}
+.cta{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px 40px;align-items:center;padding:28px 32px;background:#fff;border-left:2px solid var(--ac)}
+.bgw .cta{background:var(--bg)}
+.cta p{font-size:14px;line-height:1.95;color:#4a4843}
+.ph{position:relative;overflow:hidden;background:#e9e6df}
+.ph svg{display:block;width:100%;height:100%}
+.ph.wait{display:flex;align-items:center;justify-content:center;background:#ebe8e1;background-image:linear-gradient(135deg,transparent 49.6%,#dcd8cf 49.6%,#dcd8cf 50.4%,transparent 50.4%),linear-gradient(45deg,transparent 49.6%,#dcd8cf 49.6%,#dcd8cf 50.4%,transparent 50.4%)}
+.ph.wait span{font-size:12px;color:#8b877f;background:#ebe8e1;padding:6px 10px;letter-spacing:.04em}
+.m1{fill:none;stroke:#6a6a6c;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;opacity:.92;animation:m1 7.5s cubic-bezier(.45,.05,.4,1) infinite}
+@keyframes m1{0%,10%{stroke-dashoffset:1;opacity:.92}52%{stroke-dashoffset:0;opacity:.92}86%{stroke-dashoffset:0;opacity:.92}95%{stroke-dashoffset:0;opacity:0}100%{stroke-dashoffset:1;opacity:0}}
+.m2{transform-box:view-box;transform-origin:600px 0;animation:m2 6.5s ease-in-out infinite alternate}
+@keyframes m2{from{transform:translate(-7px,-2px) rotate(-.35deg)}to{transform:translate(9px,3px) rotate(.45deg)}}
+.m3{opacity:0;transform-box:fill-box;transform-origin:center}
+.m3.a{animation:m3a 9s cubic-bezier(.2,.8,.2,1) infinite}
+.m3.b{animation:m3b 9s cubic-bezier(.2,.8,.2,1) infinite}
+@keyframes m3a{0%,10%{opacity:0;transform:translate(-16px,-26px) scale(1.07)}16%{opacity:1;transform:none}84%{opacity:1;transform:none}92%,100%{opacity:0;transform:none}}
+@keyframes m3b{0%,30%{opacity:0;transform:translate(-16px,-26px) scale(1.07)}36%{opacity:1;transform:none}84%{opacity:1;transform:none}92%,100%{opacity:0;transform:none}}
+.m4d{opacity:0;animation:m4d 8s ease-in-out infinite}
+.m4f{opacity:0;animation:m4f 8s linear infinite}
+.m4g{opacity:0;mix-blend-mode:screen;transform-box:fill-box;transform-origin:center;animation:m4g 8s cubic-bezier(.2,.7,.2,1) infinite}
+@keyframes m4d{0%,14%{opacity:.12}20%{opacity:0}84%{opacity:0}96%,100%{opacity:.12}}
+@keyframes m4f{0%,13%{opacity:.62}14%{opacity:.25}15.2%{opacity:.5}17.5%{opacity:0}84%{opacity:0}96%,100%{opacity:.62}}
+@keyframes m4g{0%,16%{opacity:0;transform:scale(.45)}38%{opacity:.55;transform:scale(1)}84%{opacity:.55;transform:scale(1)}95%,100%{opacity:0;transform:scale(1)}}
+.ph:not(.play) *{animation-play-state:paused!important}
+.rv{opacity:0;transform:translateY(24px);transition:opacity 1s cubic-bezier(.2,.8,.1,1),transform 1s cubic-bezier(.2,.8,.1,1)}
+.rv.on{opacity:1;transform:none}
+@media(max-width:820px){
+ .ref{grid-template-columns:1fr}
+ .v{padding:72px 16px;--g:16px}
+ .cta{grid-template-columns:1fr;padding:22px 20px}
+ .btn{padding:16px 20px}
+}
+@media(prefers-reduced-motion:reduce){
+ *,*::before,*::after{transition:none!important;animation:none!important}
+ .rv{opacity:1;transform:none}
+ .m1{stroke-dashoffset:0}
+}
+
+.cat{display:flex;gap:12px;align-items:center;min-height:21px;font-size:13px;color:var(--sub);letter-spacing:.04em;line-height:1.6}
+.cat b{font:500 12px "Inter Tight";color:var(--ink);letter-spacing:.06em}
+.s1 .sh{margin-bottom:clamp(40px,6vw,88px)}
+.s1 .rows{border-top:1px solid var(--ink)}
+.s1 .row{border-bottom:1px solid var(--line);padding:clamp(28px,3.4vw,52px) 0 clamp(30px,3.4vw,48px)}
+.s1 .nm{display:flex;align-items:flex-start;gap:clamp(14px,2vw,28px);text-decoration:none;color:var(--ink)}
+.s1 .no{font:500 13px "Inter Tight";color:var(--sub);letter-spacing:.06em;padding-top:1.2em;min-width:2em;position:relative}
+.s1 .no::after{content:"";position:absolute;left:0;top:calc(1.2em + 22px);height:2px;width:0;background:var(--ac);transition:width .6s cubic-bezier(.2,.8,.1,1)}
+.s1 .row:hover .no::after{width:24px}
+.s1 h3{font:400 clamp(52px,9.4vw,144px)/.98 "Inter Tight",sans-serif;letter-spacing:-.035em;transition:transform .7s cubic-bezier(.2,.8,.1,1)}
+.s1 h3.ja{font:500 clamp(46px,8vw,124px)/1.05 "Noto Sans JP",sans-serif;letter-spacing:.02em}
+.s1 .row:hover h3{transform:translateX(12px)}
+.s1 .tx{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,520px);gap:16px 40px;margin-top:clamp(18px,2vw,28px);padding-left:calc(2em + clamp(14px,2vw,28px))}
+.s1 .ct{font-size:13px;color:var(--sub);letter-spacing:.06em}
+.s1 .d{font-size:15px;line-height:2}
+.s1 .more{margin-top:14px}
+
+.s2{padding:0}
+.s2 .intro{padding:clamp(88px,10vw,150px) var(--g) clamp(48px,6vw,80px)}
+.s2 .pan{position:sticky;top:42px;height:calc(100vh - 42px);min-height:560px;overflow:hidden;background:#e9e6df}
+.s2 .pan .ph{position:absolute;inset:0}
+.s2 .plate{position:absolute;left:var(--g);bottom:clamp(24px,5vh,56px);width:min(500px,calc(100% - 32px));background:#fff;padding:clamp(24px,2.6vw,40px)}
+.s2 .cnt{font:500 12px "Inter Tight";color:var(--sub);letter-spacing:.12em;margin-bottom:18px}
+.s2 .cnt b{color:var(--ink);font-weight:500}
+.s2 .ct{font-size:13px;color:var(--sub);letter-spacing:.04em}
+.s2 h3{font:500 clamp(30px,3vw,44px)/1.2 "Inter Tight","Noto Sans JP",sans-serif;letter-spacing:-.01em;margin:6px 0 14px}
+.s2 h3.ja{letter-spacing:.04em}
+.s2 .d{font-size:14px;line-height:1.95}
+.s2 .more{margin-top:18px}
+
+.s3 .sh{margin-bottom:clamp(40px,5vw,72px)}
+.s3 .list{border-top:1px solid var(--ink)}
+.s3 .acc{border-bottom:1px solid var(--line)}
+.s3 .hd{all:unset;box-sizing:border-box;width:100%;display:grid;grid-template-columns:56px minmax(0,1fr) auto 28px;gap:16px;align-items:center;padding:clamp(22px,2.4vw,34px) 0;cursor:pointer}
+.s3 .hd:focus-visible{outline:2px solid var(--ac);outline-offset:4px}
+.s3 .no{font:500 13px "Inter Tight";color:var(--sub);letter-spacing:.06em}
+.s3 h3{font:500 clamp(26px,2.8vw,40px)/1.2 "Inter Tight","Noto Sans JP",sans-serif;letter-spacing:-.01em;color:var(--ink)}
+.s3 h3.ja{letter-spacing:.04em}
+.s3 .ct{font-size:13px;color:var(--sub);letter-spacing:.04em;text-align:right}
+.s3 .pm{position:relative;width:28px;height:28px}
+.s3 .pm::before,.s3 .pm::after{content:"";position:absolute;left:6px;right:6px;top:50%;height:1.5px;background:var(--ink);transition:transform .5s cubic-bezier(.2,.8,.1,1)}
+.s3 .pm::after{transform:rotate(90deg)}
+.s3 .open .pm::after{transform:rotate(0)}
+.s3 .open .pm::before{background:var(--ink)}
+.s3 .open .no{color:var(--ink)}
+.s3 .open .no::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--ac);margin-right:8px;vertical-align:2px}
+.s3 .bd{display:grid;grid-template-rows:0fr;transition:grid-template-rows .7s cubic-bezier(.2,.8,.1,1)}
+.s3 .open .bd{grid-template-rows:1fr}
+.s3 .in{overflow:hidden}
+.s3 .grid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(24px,4vw,64px);padding:0 0 clamp(32px,4vw,56px) 72px;align-items:end}
+.s3 .ph{aspect-ratio:3/2}
+.s3 .d{font-size:15px;line-height:2}
+.s3 .more{margin-top:18px}
+
+.s4 .hd4{margin-bottom:clamp(40px,5vw,64px)}
+.s4 .cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(16px,1.8vw,28px)}
+.s4 .card{display:flex;flex-direction:column}
+.s4 .card:nth-child(2){transition-delay:.08s}.s4 .card:nth-child(3){transition-delay:.16s}.s4 .card:nth-child(4){transition-delay:.24s}
+.s4 .pic{display:block;margin-bottom:18px}
+.s4 .ph{aspect-ratio:4/5}
+.s4 .ph svg{transition:transform 1.2s cubic-bezier(.2,.8,.1,1)}
+.s4 .card:hover .ph svg{transform:scale(1.03)}
+.s4 h3{font:500 clamp(22px,1.8vw,27px)/1.25 "Inter Tight","Noto Sans JP",sans-serif;margin:8px 0 10px;letter-spacing:-.005em}
+.s4 h3.ja{letter-spacing:.04em}
+.s4 .d{font-size:14px;line-height:1.95;flex:1}
+.s4 .more{margin-top:16px;align-self:flex-start}
+@media(max-width:1100px){.s4 .cards{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:48px}}
+@media(max-width:820px){
+ .s1 h3{font-size:11vw}
+ .s1 h3.ja{font-size:11vw}
+ .s1 .no{padding-top:.6em}
+ .s1 .tx{grid-template-columns:1fr;padding-left:0}
+ .s2 .intro{padding:72px 16px 40px}
+ .s2 .pan{height:auto;min-height:0;position:relative;top:auto;background:var(--bg);padding-bottom:40px}
+ .s2 .pan .ph{position:relative;aspect-ratio:4/5}
+ .s2 .plate{position:relative;left:auto;bottom:auto;margin:-64px 16px 0;width:auto}
+ .s3 .hd{grid-template-columns:36px minmax(0,1fr) 24px;gap:10px}
+ .s3 .ct{grid-column:2;grid-row:2;text-align:left;margin-top:-6px}
+ .s3 .pm{grid-column:3;grid-row:1}
+ .s3 .grid{grid-template-columns:1fr;padding-left:0;gap:20px}
+ .s4 .cards{grid-template-columns:1fr;row-gap:56px}
+ .s4 .ph{aspect-ratio:3/2}
+}
+</style>
+</head>
+<body>
+<header class="top"><h1>/service サービス一覧：4案</h1><p>形をはっきり分けた4案です（文字だけの目次／1サービス＝1画面の写真／開閉式の行／4枚を1画面に並べるカード）。地は生成りか白、水色は小さな印と下線だけ。文は本番のまま。</p><nav><a href="#c1">1 文字だけの目次</a><a href="#c2">2 1サービス＝1画面</a><a href="#c3">3 開閉式の行</a><a href="#c4">4 4枚を1画面に</a></nav></header><div class="lab" id="c1"><b>1</b>写真なし・名前を特大にした目次<span>参考：Locomotive「Positions」</span></div><div class="ref"><img src="ref/locomotive_positions.jpg" alt="Locomotive の参考" loading="lazy"><div>名前だけを特大のセリフで縦に積み、細い罫線と左の小さな番号で区切る一覧。写真は使わない。<br>→ <em>名前を画面幅いっぱいの大きさで積み、その下に分類・説明・詳しく見るを小さく置く。写真は一切なし。乗せると名前が少し右へ動き、番号の下に水色の短い線。</em></div></div><section class="v bgc s1" data-sec="svc"><div class="sh "><p class="en"><i></i>SERVICE</p><h2><span class="nb">サービス一覧</span></h2></div><div class="rows"><article class="row rv"><a class="nm" href="/strategy2action"><span class="no">01</span><h3>Strategy2Action</h3></a><div class="tx"><p class="ct"></p><div><p class="d"><span class="nb">事業理解に</span><wbr><span class="nb">基づいて</span><wbr><span class="nb">戦略を</span><wbr><span class="nb">考え、</span><wbr><span class="nb">実行まで</span><wbr><span class="nb">伴走し、</span><wbr><span class="nb">ダッシュボード作成に</span><wbr><span class="nb">よる</span><wbr><span class="nb">経営層・上長への</span><wbr><span class="nb">可視化まで</span><wbr><span class="nb">対応。</span></p><a class="more" href="/strategy2action">詳しく見る</a></div></div></article><article class="row rv"><a class="nm" href="https://www.hook-hack.com/"><span class="no">02</span><h3>HookHack</h3></a><div class="tx"><p class="ct"><span class="nb">動画</span><wbr><span class="nb">広告の</span><wbr><span class="nb">制作ツール</span></p><div><p class="d"><span class="nb">売れる</span><wbr><span class="nb">動画</span><wbr><span class="nb">広告を</span><wbr><span class="nb">LPから</span><wbr><span class="nb">5分で</span><wbr><span class="nb">制作。</span><br><span class="nb">検証から</span><wbr><span class="nb">成果改善まで、</span><wbr><span class="nb">動画</span><wbr><span class="nb">広告の</span><wbr><span class="nb">PDCAに</span><wbr><span class="nb">必要な</span><wbr><span class="nb">機能を</span><wbr><span class="nb">1ツールで</span><wbr><span class="nb">網羅します。</span></p><a class="more" href="https://www.hook-hack.com/">詳しく見る</a></div></div></article><article class="row rv"><a class="nm" href="https://www.hook-hack.com/hookhacker"><span class="no">03</span><h3>HookHacker</h3></a><div class="tx"><p class="ct"><span class="nb">LP・サイト制作の</span><wbr><span class="nb">代行</span></p><div><p class="d"><span class="nb">自社開発AIツール</span><wbr><span class="nb">「HookHack」</span><wbr><span class="nb">×</span><wbr><span class="nb">インドネシアオフショアチーム×</span><wbr><span class="nb">日本人ディレクターで</span><wbr><span class="nb">LP・サイト制作を</span><wbr><span class="nb">代行。</span></p><a class="more" href="https://www.hook-hack.com/hookhacker">詳しく見る</a></div></div></article><article class="row rv"><a class="nm" href="/video-production"><span class="no">04</span><h3 class="ja"><span class="nb">動画制作</span></h3></a><div class="tx"><p class="ct"></p><div><p class="d"><span class="nb">貴社の</span><wbr><span class="nb">顧客理解に</span><wbr><span class="nb">基づき、</span><wbr><span class="nb">動画を</span><wbr><span class="nb">企画・撮影・編集まで</span><wbr><span class="nb">ワンストップで</span><wbr><span class="nb">制作します。</span></p><a class="more" href="/video-production">詳しく見る</a></div></div></article></div></section><div class="lab" id="c2"><b>2</b>1サービス＝1画面の全面写真に、短い文を重ねる<span>参考：Exo Ape のファーストビュー</span></div><div class="ref"><img src="ref/exoape_fv.jpg" alt="Exo Ape の参考" loading="lazy"><div>画面いっぱいの自然光の写真に、大きな文字を直接重ねる。<br>→ <em>1サービスに1画面を使い、写真を全面に。文は左下の白い札にまとめる。スクロールすると次の写真が上から重なって入れ替わる。スマホは写真の下に札を少し重ねて縦に並べる。</em></div></div><section class="v bgc s2" data-sec="svc"><div class="intro"><div class="sh "><p class="en"><i></i>SERVICE</p><h2><span class="nb">サービス一覧</span></h2></div></div><div class="stack"><article class="pan"><div class="ph ph1 "><svg viewBox="0 0 1536 1024" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><image href="img/n1.webp" width="1536" height="1024"/><path class="m1" pathLength="1" d="M749,676 L751,674.6 L755,673.3 L759,671.3 L763,668.9 L767,666.3 L771,663.7 L775,660.8 L779,657.6 L783,654.4 L787,651.2 L791,648.1 L795,645.2 L799,642.6 L803,640.3 L807,638.0 L811,635.8 L815,633.9 L819,632.2 L823,630.6 L827,629.1 L831,627.6 L835,626.3 L839,625.3 L843,624.2 L847,623.0 L851,621.9 L855,621.0 L859,620.1 L863,619.2 L867,618.2 L871,617.2 L875,616.3 L879,615.4 L883,614.4 L887,613.4 L891,612.2 L895,611.0 L899,609.6 L903,608.0 L907,606.3 L911,604.6 L915,602.8 L919,600.8 L923,598.6 L927,596.2 L931,593.7 L935,590.9 L939,588.0 L943,585.3 L947,582.6 L951,579.7 L955,576.9 L959,574.4 L963,572.2 L967,570.3 L971,568.6 L975,566.9 L979,565.3 L983,564.0 L987,562.9 L991,562.0 L998,561.5"/></svg></div><div class="plate rv"><p class="cnt"><b>01</b> / 04</p><h3>Strategy2Action</h3><p class="d"><span class="nb">事業理解に</span><wbr><span class="nb">基づいて</span><wbr><span class="nb">戦略を</span><wbr><span class="nb">考え、</span><wbr><span class="nb">実行まで</span><wbr><span class="nb">伴走し、</span><wbr><span class="nb">ダッシュボード作成に</span><wbr><span class="nb">よる</span><wbr><span class="nb">経営層・上長への</span><wbr><span class="nb">可視化まで</span><wbr><span class="nb">対応。</span></p><a class="more" href="/strategy2action">詳しく見る</a></div></article><article class="pan"><div class="ph ph2 "><svg viewBox="0 0 1536 1024" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><filter id="fu2" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="14"/></filter><mask id="ku2" maskUnits="userSpaceOnUse" x="0" y="0" width="1536" height="1024"><polygon fill="#fff" filter="url(#fu2)" points="380,0 884,0 884,580 808,580 808,232 368,232 368,570 276,564 276,170 380,150"/></mask></defs><image href="img/n2.webp" width="1536" height="1024"/><g mask="url(#ku2)"><image class="m2" href="img/n2.webp" width="1536" height="1024"/></g></svg></div><div class="plate rv"><p class="cnt"><b>02</b> / 04</p><p class="ct"><span class="nb">動画</span><wbr><span class="nb">広告の</span><wbr><span class="nb">制作ツール</span></p><h3>HookHack</h3><p class="d"><span class="nb">売れる</span><wbr><span class="nb">動画</span><wbr><span class="nb">広告を</span><wbr><span class="nb">LPから</span><wbr><span class="nb">5分で</span><wbr><span class="nb">制作。</span><br><span class="nb">検証から</span><wbr><span class="nb">成果改善まで、</span><wbr><span class="nb">動画</span><wbr><span class="nb">広告の</span><wbr><span class="nb">PDCAに</span><wbr><span class="nb">必要な</span><wbr><span class="nb">機能を</span><wbr><span class="nb">1ツールで</span><wbr><span class="nb">網羅します。</span></p><a class="more" href="https://www.hook-hack.com/">詳しく見る</a></div></article><article class="pan"><div class="ph ph3 "><svg viewBox="0 0 1536 1024" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="gu3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0e8c6"/><stop offset="1" stop-color="#e6dcb3"/></linearGradient><filter id="su3" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="2" dy="4" stdDeviation="3.5" flood-color="#5d4a2c" flood-opacity=".22"/></filter></defs><image href="img/n3.webp" width="1536" height="1024"/><g transform="translate(1150 318) rotate(-16)"><g class="m3 a"><rect x="-68" y="-50" width="136" height="100" rx="2" fill="url(#gu3)" filter="url(#su3)"/></g></g><g transform="translate(1085 688) rotate(-11)"><g class="m3 b"><rect x="-68" y="-50" width="136" height="100" rx="2" fill="url(#gu3)" filter="url(#su3)"/></g></g></svg></div><div class="plate rv"><p class="cnt"><b>03</b> / 04</p><p class="ct"><span class="nb">LP・サイト制作の</span><wbr><span class="nb">代行</span></p><h3>HookHacker</h3><p class="d"><span class="nb">自社開発AIツール</span><wbr><span class="nb">「HookHack」</span><wbr><span class="nb">×</span><wbr><span class="nb">インドネシアオフショアチーム×</span><wbr><span class="nb">日本人ディレクターで</span><wbr><span class="nb">LP・サイト制作を</span><wbr><span class="nb">代行。</span></p><a class="more" href="https://www.hook-hack.com/hookhacker">詳しく見る</a></div></article><article class="pan"><div class="ph ph4 "><svg viewBox="0 0 1536 1024" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><radialGradient id="ru4"><stop offset="0" stop-color="#fff" stop-opacity=".95"/><stop offset=".55" stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs><image href="img/n4.webp" width="1536" height="1024"/><rect class="m4d" width="1536" height="1024" fill="#3b3732"/><polygon class="m4f" points="1064,175 1226,151 1312,368 1146,381" fill="#b3b0aa"/><ellipse class="m4g" cx="900" cy="792" rx="520" ry="150" fill="url(#ru4)"/></svg></div><div class="plate rv"><p class="cnt"><b>04</b> / 04</p><h3 class="ja"><span class="nb">動画制作</span></h3><p class="d"><span class="nb">貴社の</span><wbr><span class="nb">顧客理解に</span><wbr><span class="nb">基づき、</span><wbr><span class="nb">動画を</span><wbr><span class="nb">企画・撮影・編集まで</span><wbr><span class="nb">ワンストップで</span><wbr><span class="nb">制作します。</span></p><a class="more" href="/video-production">詳しく見る</a></div></article></div></section><div class="lab" id="c3"><b>3</b>開閉式の行（開くと写真と説明）<span>参考：Cuberto「Services」</span></div><div class="ref"><img src="ref/cuberto.jpg" alt="Cuberto の参考" loading="lazy"><div>サービス名の行を並べ、1つだけ開いた状態で中身を見せる。ほかは閉じたまま。<br>→ <em>名前の行を4本並べ、押すと開いて写真と説明が出る（最初は01だけ開く）。ほかを開くと前の行は閉じる。右端の＋が−に変わる。</em></div></div><section class="v bgw s3" data-sec="svc"><div class="sh "><p class="en"><i></i>SERVICE</p><h2><span class="nb">サービス一覧</span></h2></div><div class="list"><article class="acc open"><button class="hd" type="button" aria-expanded="true"><span class="no">01</span><h3>Strategy2Action</h3><span class="ct"></span><i class="pm" aria-hidden="true"></i></button><div class="bd"><div class="in"><div class="grid"><div class="ph ph1 "><svg viewBox="0 0 1536 1024" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><image href="img/n1.webp" width="1536" height="1024"/><path class="m1" pathLength="1" d="M749,676 L751,674.6 L755,673.3 L759,671.3 L763,668.9 L767,666.3 L771,663.7 L775,660.8 L779,657.6 L783,654.4 L787,651.2 L791,648.1 L795,645.2 L799,642.6 L803,640.3 L807,638.0 L811,635.8 L815,633.9 L819,632.2 L823,630.6 L827,629.1 L831,627.6 L835,626.3 L839,625.3 L843,624.2 L847,623.0 L851,621.9 L855,621.0 L859,620.1 L863,619.2 L867,618.2 L871,617.2 L875,616.3 L879,615.4 L883,614.4 L887,613.4 L891,612.2 L895,611.0 L899,609.6 L903,608.0 L907,606.3 L911,604.6 L915,602.8 L919,600.8 L923,598.6 L927,596.2 L931,593.7 L935,590.9 L939,588.0 L943,585.3 L947,582.6 L951,579.7 L955,576.9 L959,574.4 L963,572.2 L967,570.3 L971,568.6 L975,566.9 L979,565.3 L983,564.0 L987,562.9 L991,562.0 L998,561.5"/></svg></div><div class="tx"><p class="d"><span class="nb">事業理解に</span><wbr><span class="nb">基づいて</span><wbr><span class="nb">戦略を</span><wbr><span class="nb">考え、</span><wbr><span class="nb">実行まで</span><wbr><span class="nb">伴走し、</span><wbr><span class="nb">ダッシュボード作成に</span><wbr><span class="nb">よる</span><wbr><span class="nb">経営層・上長への</span><wbr><span class="nb">可視化まで</span><wbr><span class="nb">対応。</span></p><a class="more" href="/strategy2action">詳しく見る</a></div></div></div></div></article><article class="acc"><button class="hd" type="button" aria-expanded="false"><span class="no">02</span><h3>HookHack</h3><span class="ct"><span class="nb">動画</span><wbr><span class="nb">広告の</span><wbr><span class="nb">制作ツール</span></span><i class="pm" aria-hidden="true"></i></button><div class="bd"><div class="in"><div class="grid"><div class="ph ph2 "><svg viewBox="0 0 1536 1024" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><filter id="fu6" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="14"/></filter><mask id="ku6" maskUnits="userSpaceOnUse" x="0" y="0" width="1536" height="1024"><polygon fill="#fff" filter="url(#fu6)" points="380,0 884,0 884,580 808,580 808,232 368,232 368,570 276,564 276,170 380,150"/></mask></defs><image href="img/n2.webp" width="1536" height="1024"/><g mask="url(#ku6)"><image class="m2" href="img/n2.webp" width="1536" height="1024"/></g></svg></div><div class="tx"><p class="d"><span class="nb">売れる</span><wbr><span class="nb">動画</span><wbr><span class="nb">広告を</span><wbr><span class="nb">LPから</span><wbr><span class="nb">5分で</span><wbr><span class="nb">制作。</span><br><span class="nb">検証から</span><wbr><span class="nb">成果改善まで、</span><wbr><span class="nb">動画</span><wbr><span class="nb">広告の</span><wbr><span class="nb">PDCAに</span><wbr><span class="nb">必要な</span><wbr><span class="nb">機能を</span><wbr><span class="nb">1ツールで</span><wbr><span class="nb">網羅します。</span></p><a class="more" href="https://www.hook-hack.com/">詳しく見る</a></div></div></div></div></article><article class="acc"><button class="hd" type="button" aria-expanded="false"><span class="no">03</span><h3>HookHacker</h3><span class="ct"><span class="nb">LP・サイト制作の</span><wbr><span class="nb">代行</span></span><i class="pm" aria-hidden="true"></i></button><div class="bd"><div class="in"><div class="grid"><div class="ph ph3 "><svg viewBox="0 0 1536 1024" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="gu7" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0e8c6"/><stop offset="1" stop-color="#e6dcb3"/></linearGradient><filter id="su7" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="2" dy="4" stdDeviation="3.5" flood-color="#5d4a2c" flood-opacity=".22"/></filter></defs><image href="img/n3.webp" width="1536" height="1024"/><g transform="translate(1150 318) rotate(-16)"><g class="m3 a"><rect x="-68" y="-50" width="136" height="100" rx="2" fill="url(#gu7)" filter="url(#su7)"/></g></g><g transform="translate(1085 688) rotate(-11)"><g class="m3 b"><rect x="-68" y="-50" width="136" height="100" rx="2" fill="url(#gu7)" filter="url(#su7)"/></g></g></svg></div><div class="tx"><p class="d"><span class="nb">自社開発AIツール</span><wbr><span class="nb">「HookHack」</span><wbr><span class="nb">×</span><wbr><span class="nb">インドネシアオフショアチーム×</span><wbr><span class="nb">日本人ディレクターで</span><wbr><span class="nb">LP・サイト制作を</span><wbr><span class="nb">代行。</span></p><a class="more" href="https://www.hook-hack.com/hookhacker">詳しく見る</a></div></div></div></div></article><article class="acc"><button class="hd" type="button" aria-expanded="false"><span class="no">04</span><h3 class="ja"><span class="nb">動画制作</span></h3><span class="ct"></span><i class="pm" aria-hidden="true"></i></button><div class="bd"><div class="in"><div class="grid"><div class="ph ph4 "><svg viewBox="0 0 1536 1024" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><radialGradient id="ru8"><stop offset="0" stop-color="#fff" stop-opacity=".95"/><stop offset=".55" stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs><image href="img/n4.webp" width="1536" height="1024"/><rect class="m4d" width="1536" height="1024" fill="#3b3732"/><polygon class="m4f" points="1064,175 1226,151 1312,368 1146,381" fill="#b3b0aa"/><ellipse class="m4g" cx="900" cy="792" rx="520" ry="150" fill="url(#ru8)"/></svg></div><div class="tx"><p class="d"><span class="nb">貴社の</span><wbr><span class="nb">顧客理解に</span><wbr><span class="nb">基づき、</span><wbr><span class="nb">動画を</span><wbr><span class="nb">企画・撮影・編集まで</span><wbr><span class="nb">ワンストップで</span><wbr><span class="nb">制作します。</span></p><a class="more" href="/video-production">詳しく見る</a></div></div></div></div></article></div></section><div class="lab" id="c4"><b>4</b>4枚を1画面に並べるカード<span>参考：Anthropic のトップ「Latest」</span></div><div class="ref"><img src="ref/anthropic.jpg" alt="Anthropic の参考" loading="lazy"><div>縦長の絵を4枚、横一列にそろえ、下に短い題と説明。<br>→ <em>写真を縦長（4:5）に切って4枚を1画面に並べ、4つを一度に見比べられるようにする。幅が狭いと2×2、スマホは1列。</em></div></div><section class="v bgc s4" data-sec="svc"><div class="hd4"><div class="sh "><p class="en"><i></i>SERVICE</p><h2><span class="nb">サービス一覧</span></h2></div></div><div class="cards"><article class="card rv"><a class="pic" href="/strategy2action" tabindex="-1" aria-hidden="true"><div class="ph ph1 "><svg viewBox="0 0 1536 1024" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><image href="img/n1.webp" width="1536" height="1024"/><path class="m1" pathLength="1" d="M749,676 L751,674.6 L755,673.3 L759,671.3 L763,668.9 L767,666.3 L771,663.7 L775,660.8 L779,657.6 L783,654.4 L787,651.2 L791,648.1 L795,645.2 L799,642.6 L803,640.3 L807,638.0 L811,635.8 L815,633.9 L819,632.2 L823,630.6 L827,629.1 L831,627.6 L835,626.3 L839,625.3 L843,624.2 L847,623.0 L851,621.9 L855,621.0 L859,620.1 L863,619.2 L867,618.2 L871,617.2 L875,616.3 L879,615.4 L883,614.4 L887,613.4 L891,612.2 L895,611.0 L899,609.6 L903,608.0 L907,606.3 L911,604.6 L915,602.8 L919,600.8 L923,598.6 L927,596.2 L931,593.7 L935,590.9 L939,588.0 L943,585.3 L947,582.6 L951,579.7 L955,576.9 L959,574.4 L963,572.2 L967,570.3 L971,568.6 L975,566.9 L979,565.3 L983,564.0 L987,562.9 L991,562.0 L998,561.5"/></svg></div></a><p class="cat"><b>01</b><span></span></p><h3>Strategy2Action</h3><p class="d"><span class="nb">事業理解に</span><wbr><span class="nb">基づいて</span><wbr><span class="nb">戦略を</span><wbr><span class="nb">考え、</span><wbr><span class="nb">実行まで</span><wbr><span class="nb">伴走し、</span><wbr><span class="nb">ダッシュボード作成に</span><wbr><span class="nb">よる</span><wbr><span class="nb">経営層・上長への</span><wbr><span class="nb">可視化まで</span><wbr><span class="nb">対応。</span></p><a class="more" href="/strategy2action">詳しく見る</a></article><article class="card rv"><a class="pic" href="https://www.hook-hack.com/" tabindex="-1" aria-hidden="true"><div class="ph ph2 "><svg viewBox="0 0 1536 1024" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><filter id="fu10" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="14"/></filter><mask id="ku10" maskUnits="userSpaceOnUse" x="0" y="0" width="1536" height="1024"><polygon fill="#fff" filter="url(#fu10)" points="380,0 884,0 884,580 808,580 808,232 368,232 368,570 276,564 276,170 380,150"/></mask></defs><image href="img/n2.webp" width="1536" height="1024"/><g mask="url(#ku10)"><image class="m2" href="img/n2.webp" width="1536" height="1024"/></g></svg></div></a><p class="cat"><b>02</b><span><span class="nb">動画</span><wbr><span class="nb">広告の</span><wbr><span class="nb">制作ツール</span></span></p><h3>HookHack</h3><p class="d"><span class="nb">売れる</span><wbr><span class="nb">動画</span><wbr><span class="nb">広告を</span><wbr><span class="nb">LPから</span><wbr><span class="nb">5分で</span><wbr><span class="nb">制作。</span><br><span class="nb">検証から</span><wbr><span class="nb">成果改善まで、</span><wbr><span class="nb">動画</span><wbr><span class="nb">広告の</span><wbr><span class="nb">PDCAに</span><wbr><span class="nb">必要な</span><wbr><span class="nb">機能を</span><wbr><span class="nb">1ツールで</span><wbr><span class="nb">網羅します。</span></p><a class="more" href="https://www.hook-hack.com/">詳しく見る</a></article><article class="card rv"><a class="pic" href="https://www.hook-hack.com/hookhacker" tabindex="-1" aria-hidden="true"><div class="ph ph3 "><svg viewBox="0 0 1536 1024" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="gu11" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0e8c6"/><stop offset="1" stop-color="#e6dcb3"/></linearGradient><filter id="su11" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="2" dy="4" stdDeviation="3.5" flood-color="#5d4a2c" flood-opacity=".22"/></filter></defs><image href="img/n3.webp" width="1536" height="1024"/><g transform="translate(1150 318) rotate(-16)"><g class="m3 a"><rect x="-68" y="-50" width="136" height="100" rx="2" fill="url(#gu11)" filter="url(#su11)"/></g></g><g transform="translate(1085 688) rotate(-11)"><g class="m3 b"><rect x="-68" y="-50" width="136" height="100" rx="2" fill="url(#gu11)" filter="url(#su11)"/></g></g></svg></div></a><p class="cat"><b>03</b><span><span class="nb">LP・サイト制作の</span><wbr><span class="nb">代行</span></span></p><h3>HookHacker</h3><p class="d"><span class="nb">自社開発AIツール</span><wbr><span class="nb">「HookHack」</span><wbr><span class="nb">×</span><wbr><span class="nb">インドネシアオフショアチーム×</span><wbr><span class="nb">日本人ディレクターで</span><wbr><span class="nb">LP・サイト制作を</span><wbr><span class="nb">代行。</span></p><a class="more" href="https://www.hook-hack.com/hookhacker">詳しく見る</a></article><article class="card rv"><a class="pic" href="/video-production" tabindex="-1" aria-hidden="true"><div class="ph ph4 "><svg viewBox="0 0 1536 1024" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><radialGradient id="ru12"><stop offset="0" stop-color="#fff" stop-opacity=".95"/><stop offset=".55" stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs><image href="img/n4.webp" width="1536" height="1024"/><rect class="m4d" width="1536" height="1024" fill="#3b3732"/><polygon class="m4f" points="1064,175 1226,151 1312,368 1146,381" fill="#b3b0aa"/><ellipse class="m4g" cx="900" cy="792" rx="520" ry="150" fill="url(#ru12)"/></svg></div></a><p class="cat"><b>04</b><span></span></p><h3 class="ja"><span class="nb">動画制作</span></h3><p class="d"><span class="nb">貴社の</span><wbr><span class="nb">顧客理解に</span><wbr><span class="nb">基づき、</span><wbr><span class="nb">動画を</span><wbr><span class="nb">企画・撮影・編集まで</span><wbr><span class="nb">ワンストップで</span><wbr><span class="nb">制作します。</span></p><a class="more" href="/video-production">詳しく見る</a></article></div></section>
+<script>
+(function(){
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}})},{rootMargin:'0px 0px -8% 0px'});
+document.querySelectorAll('.rv').forEach(function(el){io.observe(el)});
+var po=new IntersectionObserver(function(es){es.forEach(function(e){e.target.classList.toggle('play',e.isIntersecting)})});
+document.querySelectorAll('.ph').forEach(function(el){po.observe(el)});
+document.querySelectorAll('form').forEach(function(f){f.addEventListener('submit',function(e){e.preventDefault()})});
+})();
+
+document.querySelectorAll('.s3 .acc').forEach(function(a,i,all){
+ a.querySelector('.hd').addEventListener('click',function(){
+  var on=!a.classList.contains('open');
+  all.forEach(function(b){b.classList.remove('open');b.querySelector('.hd').setAttribute('aria-expanded','false')});
+  if(on){a.classList.add('open');a.querySelector('.hd').setAttribute('aria-expanded','true')}
+ });
+});
+</script>
+</body>
+</html>
