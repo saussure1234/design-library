@@ -97,6 +97,12 @@ body.mopen .hd .logo img{filter:invert(1)}
 .strip figure{margin:0 14px 0 0;height:clamp(230px,40vh,430px);border-radius:22px;overflow:hidden;flex:none;background:#e6e3dc}
 .strip img{width:100%;height:100%;object-fit:cover}
 @keyframes mq{to{transform:translateX(-50%)}}
+.stage{position:relative;margin-top:clamp(22px,3.6vh,44px)}
+.stage .vw{position:relative;height:max(300px,calc(100svh - 560px));overflow:hidden;background:#cfd6d8}
+.stage .bgv{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 62%}
+.stage .strip{position:relative;margin:-96px 0 0;z-index:2}
+.stage .strip figure{height:clamp(160px,22vh,230px);border-radius:16px;box-shadow:0 18px 40px -16px rgba(0,0,0,.4)}
+
 @media (prefers-reduced-motion:reduce){.strip{overflow-x:auto}}
 
 .ab{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:clamp(28px,5vw,96px);align-items:center}
@@ -169,6 +175,9 @@ body.mopen .hd .logo img{filter:invert(1)}
   .fv-top a{padding:7px 12px}
   .fv h1{padding:0 16px;font-size:clamp(40px,11.4vw,64px);line-height:1.04}
   .strip figure{margin-right:10px;border-radius:16px;height:250px}
+  .stage .vw{height:300px}
+  .stage .strip{margin-top:-70px}
+  .stage .strip figure{height:150px;border-radius:12px}
   .ab,.ab2,.cv-tx,.jy{grid-template-columns:1fr}
   .ab{gap:24px}
   .ab figure{aspect-ratio:4/3}
@@ -210,7 +219,7 @@ body.mopen .hd .logo img{filter:invert(1)}
 <section class="fv" id="fv">
   <div class="fv-top"><span class="lab"><i></i>RECRUIT SITE</span><a href="#job">JOB TYPE <span>↓</span></a></div>
   <h1>aiming to build <span class="pin"><img src="img/team_bath.webp" alt="足湯で笑うメンバー"></span> the most <span class="pin"><img src="img/g5.webp" alt="テニスをするメンバー"></span> <span class="fl">fun-loving</span> <span class="pin"><img src="img/g1.webp" alt="ビリヤードをするメンバー"></span> team</h1>
-  <div class="strip"><div class="tr"><figure style="aspect-ratio:1800/1013"><img src="img/team_bath.webp" alt="足湯で笑う4人のメンバー" width="1800" height="1013"></figure><figure style="aspect-ratio:900/1200"><img src="img/g4.webp" alt="並んで歩くメンバー" width="900" height="1200"></figure><figure style="aspect-ratio:900/1573"><img src="img/g1.webp" alt="ビリヤードをするメンバー" width="900" height="1573"></figure><figure style="aspect-ratio:1800/2096"><img src="img/team_sofa.webp" alt="ソファでくつろぐ3人" width="1800" height="2096"></figure><figure style="aspect-ratio:900/1572"><img src="img/g2.webp" alt="海の見えるカフェでPC作業をするメンバー" width="900" height="1572"></figure><figure style="aspect-ratio:900/1200"><img src="img/g5.webp" alt="テニスをするメンバー" width="900" height="1200"></figure><figure style="aspect-ratio:900/1200"><img src="img/g8.webp" alt="廊下で写真を撮り合うメンバー" width="900" height="1200"></figure><figure style="aspect-ratio:1800/2400"><img src="img/pool.webp" alt="プールからPCで作業するメンバー" width="1800" height="2400"></figure><figure style="aspect-ratio:1800/1013" aria-hidden="true"><img src="img/team_bath.webp" alt="" width="1800" height="1013"></figure><figure style="aspect-ratio:900/1200" aria-hidden="true"><img src="img/g4.webp" alt="" width="900" height="1200"></figure><figure style="aspect-ratio:900/1573" aria-hidden="true"><img src="img/g1.webp" alt="" width="900" height="1573"></figure><figure style="aspect-ratio:1800/2096" aria-hidden="true"><img src="img/team_sofa.webp" alt="" width="1800" height="2096"></figure><figure style="aspect-ratio:900/1572" aria-hidden="true"><img src="img/g2.webp" alt="" width="900" height="1572"></figure><figure style="aspect-ratio:900/1200" aria-hidden="true"><img src="img/g5.webp" alt="" width="900" height="1200"></figure><figure style="aspect-ratio:900/1200" aria-hidden="true"><img src="img/g8.webp" alt="" width="900" height="1200"></figure><figure style="aspect-ratio:1800/2400" aria-hidden="true"><img src="img/pool.webp" alt="" width="1800" height="2400"></figure></div></div>
+  <div class="stage"><div class="vw"><video class="bgv" src="img/recruit-hero.mp4" poster="img/recruit-hero-poster.webp" autoplay muted loop playsinline aria-hidden="true"></video></div><div class="strip"><div class="tr"><figure style="aspect-ratio:1800/1013"><img src="img/team_bath.webp" alt="足湯で笑う4人のメンバー" width="1800" height="1013"></figure><figure style="aspect-ratio:900/1200"><img src="img/g4.webp" alt="並んで歩くメンバー" width="900" height="1200"></figure><figure style="aspect-ratio:900/1573"><img src="img/g1.webp" alt="ビリヤードをするメンバー" width="900" height="1573"></figure><figure style="aspect-ratio:1800/2096"><img src="img/team_sofa.webp" alt="ソファでくつろぐ3人" width="1800" height="2096"></figure><figure style="aspect-ratio:900/1572"><img src="img/g2.webp" alt="海の見えるカフェでPC作業をするメンバー" width="900" height="1572"></figure><figure style="aspect-ratio:900/1200"><img src="img/g5.webp" alt="テニスをするメンバー" width="900" height="1200"></figure><figure style="aspect-ratio:900/1200"><img src="img/g8.webp" alt="廊下で写真を撮り合うメンバー" width="900" height="1200"></figure><figure style="aspect-ratio:1800/2400"><img src="img/pool.webp" alt="プールからPCで作業するメンバー" width="1800" height="2400"></figure><figure style="aspect-ratio:1800/1013" aria-hidden="true"><img src="img/team_bath.webp" alt="" width="1800" height="1013"></figure><figure style="aspect-ratio:900/1200" aria-hidden="true"><img src="img/g4.webp" alt="" width="900" height="1200"></figure><figure style="aspect-ratio:900/1573" aria-hidden="true"><img src="img/g1.webp" alt="" width="900" height="1573"></figure><figure style="aspect-ratio:1800/2096" aria-hidden="true"><img src="img/team_sofa.webp" alt="" width="1800" height="2096"></figure><figure style="aspect-ratio:900/1572" aria-hidden="true"><img src="img/g2.webp" alt="" width="900" height="1572"></figure><figure style="aspect-ratio:900/1200" aria-hidden="true"><img src="img/g5.webp" alt="" width="900" height="1200"></figure><figure style="aspect-ratio:900/1200" aria-hidden="true"><img src="img/g8.webp" alt="" width="900" height="1200"></figure><figure style="aspect-ratio:1800/2400" aria-hidden="true"><img src="img/pool.webp" alt="" width="1800" height="2400"></figure></div></div></div>
 </section>
 <section class="sec" id="about">
   <div class="ab jp">

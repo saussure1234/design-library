@@ -97,6 +97,12 @@ body.mopen .hd .logo img{filter:invert(1)}
 .strip figure{margin:0 14px 0 0;height:clamp(230px,40vh,430px);border-radius:22px;overflow:hidden;flex:none;background:#e6e3dc}
 .strip img{width:100%;height:100%;object-fit:cover}
 @keyframes mq{to{transform:translateX(-50%)}}
+.stage{position:relative;margin-top:clamp(22px,3.6vh,44px)}
+.stage .vw{position:relative;height:max(300px,calc(100svh - 560px));overflow:hidden;background:#cfd6d8}
+.stage .bgv{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 62%}
+.stage .strip{position:relative;margin:-96px 0 0;z-index:2}
+.stage .strip figure{height:clamp(160px,22vh,230px);border-radius:16px;box-shadow:0 18px 40px -16px rgba(0,0,0,.4)}
+
 @media (prefers-reduced-motion:reduce){.strip{overflow-x:auto}}
 
 .ab{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:clamp(28px,5vw,96px);align-items:center}
@@ -169,6 +175,9 @@ body.mopen .hd .logo img{filter:invert(1)}
   .fv-top a{padding:7px 12px}
   .fv h1{padding:0 16px;font-size:clamp(40px,11.4vw,64px);line-height:1.04}
   .strip figure{margin-right:10px;border-radius:16px;height:250px}
+  .stage .vw{height:300px}
+  .stage .strip{margin-top:-70px}
+  .stage .strip figure{height:150px;border-radius:12px}
   .ab,.ab2,.cv-tx,.jy{grid-template-columns:1fr}
   .ab{gap:24px}
   .ab figure{aspect-ratio:4/3}
@@ -197,6 +206,33 @@ body.mopen .hd .logo img{filter:invert(1)}
   .job .in{padding:28px 22px}
   .job figure{min-height:0;aspect-ratio:16/10;order:-1}
 }
+
+.fva{position:relative;height:clamp(460px,78vh,820px);overflow:hidden;border-radius:18px;background:#cfd6d8}
+.fva .bgv,.fva .cuts img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.fva .cuts img{opacity:0;transition:opacity .5s ease}
+.fva .cuts img.on{opacity:1}
+.fva::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 50%,rgba(0,0,0,.42));pointer-events:none;z-index:2}
+.fva .cap{position:absolute;left:clamp(20px,3vw,48px);right:clamp(20px,3vw,48px);bottom:clamp(22px,4vh,48px);z-index:3;color:#fff}
+.fva .cap small{display:block;font:600 12px "Inter Tight";letter-spacing:.14em;margin-bottom:12px}
+.fva h1{margin:0;font-family:"Bricolage Grotesque","Inter Tight",sans-serif;font-weight:460;font-size:clamp(36px,5.6vw,92px);line-height:1.02;letter-spacing:-.03em;max-width:12em}
+.fva .num{position:absolute;right:clamp(20px,3vw,48px);top:clamp(18px,3vh,32px);z-index:3;display:flex;gap:14px;margin:0;padding:0;list-style:none;font:500 13px "Inter Tight";color:rgba(255,255,255,.55)}
+.fva .num li.on{color:#fff;text-decoration:underline;text-decoration-color:var(--sig);text-underline-offset:.4em;text-decoration-thickness:2px}
+.fvb small{display:block;font:600 12px "Inter Tight";letter-spacing:.14em;margin-bottom:14px}
+.fvb h1{margin:0 0 clamp(22px,4vh,40px);font-family:"Bricolage Grotesque","Inter Tight",sans-serif;font-weight:460;font-size:clamp(38px,6.4vw,108px);line-height:1;letter-spacing:-.032em}
+.fvb .row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(8px,1vw,14px)}
+.fvb figure{margin:0;aspect-ratio:3/4;border-radius:14px;overflow:hidden;position:relative;background:#e6e3dc}
+.fvb img,.fvb .bgv{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.fvc .h{display:flex;flex-direction:column;margin:0 0 clamp(22px,4vh,44px);font-family:"Bricolage Grotesque","Inter Tight",sans-serif;font-weight:400;font-size:clamp(36px,6vw,100px);line-height:1.02;letter-spacing:-.03em}
+.fvc .h .r{align-self:flex-end;text-align:right}
+.fvc .h em{font-style:normal;text-decoration:underline;text-decoration-color:var(--sig);text-decoration-thickness:.07em;text-underline-offset:.12em}
+.fvc .g{display:grid;grid-template-columns:1fr 2.4fr 1fr;grid-template-rows:auto auto;gap:clamp(8px,1vw,14px);align-items:start}
+.fvc figure{margin:0;border-radius:14px;overflow:hidden;position:relative;background:#e6e3dc}
+.fvc img,.fvc .bgv{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.fvc .a{aspect-ratio:3/4;margin-top:18%}
+.fvc .v{aspect-ratio:16/9}
+.fvc .b{aspect-ratio:4/3;margin-top:42%}
+.fvc .c{grid-column:2;aspect-ratio:21/6;width:56%;justify-self:end}
+@media(max-width:820px){.fvb .row{grid-template-columns:1fr 1fr}.fvc .g{grid-template-columns:1fr 1fr}.fvc .v{grid-column:1/-1;grid-row:1}.fvc .a,.fvc .b{margin-top:0}.fvc .c{grid-column:1/-1;width:100%;aspect-ratio:16/7}.fva .num{gap:10px;font-size:12px}}
 
 .top{padding:40px var(--pad) 32px;border-bottom:1px solid var(--line)}
 .top h1{margin:0;font:700 26px/1.4 "Noto Sans JP",sans-serif}
@@ -330,11 +366,11 @@ body.mopen .hd .logo img{filter:invert(1)}
 <header class="top jp"><h1>/recruit 別案（本命と違う見せ方）</h1><p>本命は index.html。ここは FV 3案と、行動指針・MEMBER・JOB TYPE の各2案です。文は公開中のサイトのまま。各案の上に参考にした実在サイトの切り抜きを置いています。</p>
 <nav><a href="index.html">本命を見る</a><a href="#FV-A">FV 3案</a><a href="#VALUE-A">行動指針 2案</a><a href="#MEMBER-A">MEMBER 2案</a><a href="#JOB-A">JOB TYPE 2案</a></nav></header>
 <main>
-<section class="grp"><h2>FV</h2><p class="jp">本命＝見出しの中に写真を差し込み、下で写真の帯がゆっくり流れる。</p>
-<div class="opt" id="FV-A"><div class="oh"><b>FV-A　見出し＋大きな1枚</b><span>中央の見出しの下に、足湯の4人を横長で大きく。応募ボタンも1画面目に。</span></div><figure class="ref"><img src="ref/fv_instrument.jpg" alt="Instrument（Careers） の参考" loading="lazy"><figcaption>参考：Instrument（Careers）<small>短い見出し＋ボタン＋その下に大きな写真1枚の構成</small></figcaption></figure><div class="demo"><div class="fa"><div class="lab">RECRUIT SITE</div><h1>aiming to build the most <span class="nb">fun-loving</span> team</h1><a class="go" href="https://samurai-style.tokyo/#contact">CONTACT <span>→</span></a><figure><img src="img/team_bath.webp" alt="足湯で笑う4人のメンバー"></figure></div></div></div>
-<div class="opt" id="FV-B"><div class="oh"><b>FV-B　割った見出し＋大小の写真</b><span>見出しを左右に割り、大きさの違う写真4枚をずらして置く。</span></div><figure class="ref"><img src="ref/fv_14islands.jpg" alt="14islands（Careers） の参考" loading="lazy"><figcaption>参考：14islands（Careers）<small>見出しを左右に割り、写真を不揃いに並べる構成</small></figcaption></figure><div class="demo"><div class="fb"><div class="note">RECRUIT SITE</div><p class="h"><span>aiming to build</span><span class="r"><em>the most</em> fun-loving team</span></p>
-<div class="g"><figure class="a"><img src="img/team_bath.webp" alt="足湯で笑うメンバー"></figure><figure class="b"><img src="img/g4.webp" alt="並んで歩くメンバー"></figure><figure class="c"><img src="img/g1.webp" alt="ビリヤードをするメンバー"></figure><figure class="d"><img src="img/team_sofa.webp" alt="ソファでくつろぐ3人"></figure></div></div></div></div>
-<div class="opt" id="FV-C"><div class="oh"><b>FV-C　写真の壁</b><span>日常の写真10枚で1画面を埋め、真ん中に見出し。色は自然なまま。</span></div><figure class="ref"><img src="ref/fv_basement.jpg" alt="basement.studio（People） の参考" loading="lazy"><figcaption>参考：basement.studio（People）<small>人の写真を格子で敷き詰める構成（先方は白黒、こちらはカラー）</small></figcaption></figure><div class="demo"><div class="fc2"><figure><img src="img/team_bath.webp" alt="" loading="lazy"></figure><figure><img src="img/g4.webp" alt="" loading="lazy"></figure><figure><img src="img/g1.webp" alt="" loading="lazy"></figure><figure><img src="img/team_sofa.webp" alt="" loading="lazy"></figure><figure><img src="img/g2.webp" alt="" loading="lazy"></figure><div class="t"><small>RECRUIT SITE</small><b>aiming to build the most <span class="nb">fun-loving</span> team</b></div><figure><img src="img/g5.webp" alt="" loading="lazy"></figure><figure><img src="img/g8.webp" alt="" loading="lazy"></figure><figure><img src="img/pool.webp" alt="" loading="lazy"></figure><figure><img src="img/g6.webp" alt="" loading="lazy"></figure><figure><img src="img/g7.webp" alt="" loading="lazy"></figure></div></div></div>
+<section class="grp"><h2>FV</h2><p class="jp">本命＝見出しの中に写真を差し込み、その下で環境の動画を大きく流し、動画の上をチームの写真の帯がゆっくり横切る。</p>
+<div class="opt" id="FV-A"><div class="oh"><b>FV-A　映像と写真を交互に切り替える</b><span>全面の動画（海・夕日・棚田）の合間に、チームの写真が1枚ずつ差し込まれる。右下の番号で今のカット。見出しは白で左下。</span></div><figure class="ref"><img src="ref/fv_iconoclast.jpg" alt="Iconoclast（トップ） の参考" loading="lazy"><figcaption>参考：Iconoclast（トップ）<small>全面の映像が作品ごとに切り替わり、番号で今の位置を示す構成</small></figcaption></figure><div class="demo"><div class="fva"><video class="bgv" src="img/recruit-hero.mp4" poster="img/recruit-hero-poster.webp" autoplay muted loop playsinline aria-hidden="true"></video><div class="cuts"><img src="img/team_bath.webp" alt="足湯で笑う4人のメンバー" loading="lazy"><img src="img/g1.webp" alt="ビリヤードをするメンバー" loading="lazy"><img src="img/g5.webp" alt="テニスをするメンバー" loading="lazy"><img src="img/team_sofa.webp" alt="ソファでくつろぐ3人" loading="lazy"><img src="img/g4.webp" alt="並んで歩くメンバー" loading="lazy"></div><div class="cap"><small>RECRUIT SITE</small><h1>aiming to build the most <span class="nb">fun-loving</span> team</h1></div><ol class="num"><li>1</li><li>2</li><li>3</li><li>4</li><li>5</li><li>6</li></ol></div></div>
+<script>(()=>{const r=document.querySelector('.fva'),im=[...r.querySelectorAll('.cuts img')],nb=[...r.querySelectorAll('.num li')];let k=0;const seq=[];im.forEach((_, i)=>{seq.push(-1,i)});const go=()=>{const c=seq[k%seq.length];im.forEach((m,i)=>m.classList.toggle('on',i===c));nb.forEach((n,i)=>n.classList.toggle('on',c===-1?i===0:i===c+1));k++;};go();if(!matchMedia('(prefers-reduced-motion: reduce)').matches)setInterval(go,2600);})();</script></div>
+<div class="opt" id="FV-B"><div class="oh"><b>FV-B　見出しの下に、動画1本＋写真3枚を縦長で並べる</b><span>大きな見出しの下に、縦長の枠を4つ。1つ目が環境の動画、残りがチームの写真。</span></div><figure class="ref"><img src="ref/fv_socialshepherd.jpg" alt="Social Shepherd（トップ） の参考" loading="lazy"><figcaption>参考：Social Shepherd（トップ）<small>大きな見出しの下に縦長の映像を横一列に並べる構成</small></figcaption></figure><div class="demo"><div class="fvb"><small>RECRUIT SITE</small><h1>aiming to build the most <span class="nb">fun-loving</span> team</h1><div class="row"><figure class="v"><video class="bgv" src="img/recruit-hero.mp4" poster="img/recruit-hero-poster.webp" autoplay muted loop playsinline aria-hidden="true"></video></figure><figure><img src="img/team_bath.webp" alt="足湯で笑う4人のメンバー" loading="lazy"></figure><figure><img src="img/g1.webp" alt="ビリヤードをするメンバー" loading="lazy"></figure><figure><img src="img/g5.webp" alt="テニスをするメンバー" loading="lazy"></figure></div></div></div></div>
+<div class="opt" id="FV-C"><div class="oh"><b>FV-C　割った見出し＋真ん中に動画、周りに写真</b><span>見出しを左右に割り、真ん中に横長の動画、左右と下に大きさの違う写真を不揃いに置く。</span></div><figure class="ref"><img src="ref/fv_islands.jpg" alt="14islands（Team &amp; Culture） の参考" loading="lazy"><figcaption>参考：14islands（Team &amp; Culture）<small>見出しを左右に割り、下に写真を不揃いに並べる構成</small></figcaption></figure><div class="demo"><div class="fvc"><p class="h"><span>aiming to build</span><span class="r">the most <em>fun-loving</em> team</span></p><div class="g"><figure class="a"><img src="img/g4.webp" alt="並んで歩くメンバー" loading="lazy"></figure><figure class="v"><video class="bgv" src="img/recruit-hero.mp4" poster="img/recruit-hero-poster.webp" autoplay muted loop playsinline aria-hidden="true"></video></figure><figure class="b"><img src="img/team_bath.webp" alt="足湯で笑う4人のメンバー" loading="lazy"></figure><figure class="c"><img src="img/g1.webp" alt="ビリヤードをするメンバー" loading="lazy"></figure></div></div></div></div>
 </section>
 <section class="grp"><h2>+VALUE</h2><p class="jp">本命＝1行1指針。英語を大きく、右に写真。</p>
 <div class="opt" id="VALUE-A"><div class="oh"><b>VALUE-A　文字だけの3列</b><span>線で区切った3列に、番号・英語・日本語。写真なしで静かに読ませる。</span></div><figure class="ref"><img src="ref/val_hellomonday.jpg" alt="Hello Monday（About） の参考" loading="lazy"><figcaption>参考：Hello Monday（About）<small>行動規範を細い線の上に格子で並べる構成</small></figcaption></figure><div class="demo w"><div class="va"><div class="lead"><h3>+VALUE</h3><p class="jp">行動指針</p></div><div><span class="n">1</span><span class="w">Fun</span><p class="jp"><span class="nb">世界一楽しく</span><wbr><span class="nb">働く</span><wbr><span class="nb">会社を</span><wbr><span class="nb">目指す</span><wbr></p></div><div><span class="n">2</span><span class="w">Free</span><p class="jp"><span class="nb">各自の</span><wbr><span class="nb">責任感の</span><wbr><span class="nb">下、</span><wbr><span class="nb">場所や</span><wbr><span class="nb">時間に</span><wbr><span class="nb">捉われず</span><wbr><span class="nb">自由に</span><wbr><span class="nb">裁量を</span><wbr><span class="nb">持って働く</span><wbr></p></div><div><span class="n">3</span><span class="w">Flat</span><p class="jp"><span class="nb">年齢や</span><wbr><span class="nb">役職などの</span><wbr><span class="nb">上下関係なく</span><wbr><span class="nb">接する</span><wbr></p></div><div><span class="n">4</span><span class="w">Open</span><p class="jp"><span class="nb">チーム内では</span><wbr><span class="nb">本音で</span><wbr><span class="nb">向き合い、</span><wbr><span class="nb">人格は</span><wbr><span class="nb">否定しない</span><wbr></p></div><div><span class="n">5</span><span class="w">Optimization</span><p class="jp"><span class="nb">全体</span><wbr><span class="nb">最適視点で</span><wbr><span class="nb">判断する</span><wbr></p></div></div></div></div>
