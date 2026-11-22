@@ -501,23 +501,24 @@ body.mopen .hd .logo img{filter:invert(1)}
       g.addColorStop(0, `rgba(70,60,150,${.05 + .05 * nz})`); g.addColorStop(1, 'rgba(0,0,0,0)');
       ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
       ctx.globalCompositeOperation = 'lighter';
-      const v = (.00004 + .00085 * nz * nz) * dt, jit = nz * nz * 1.6;
+      const v = (.00003 + .0004 * nz * nz) * dt, jit = nz * nz * .5;
       for (const q of P) {
         q.z -= v;
         if (q.z < .03) { spawn(q, true); continue; }
         const sx = cx + q.x / q.z * f + (Math.random() - .5) * jit, sy = cy + q.y / q.z * f + (Math.random() - .5) * jit;
         if (sx < -20 || sy < -20 || sx > W + 20 || sy > H + 20) { spawn(q, true); continue; }
-        const near = 1 - q.z, tw = nz > .3 ? 1 : .6 + .4 * Math.sin(t * .0018 * q.s + q.tw);
-        const al = Math.min(.75, (.08 + .62 * near * near) * tw) * (.45 + .55 * nz);
+        const near = 1 - q.z, tw = .55 + .45 * Math.sin(t * .0022 * q.s + q.tw);
+        const al = Math.min(.9, (.3 + .65 * near * near) * tw) * (.6 + .4 * nz);
         const [r, gg, b] = q.c, col = `rgba(${r},${gg},${b},${al})`;
         const sz = (.5 + 1.9 * near * near) * q.s;
-        if (q.px !== null && nz > .08) {
-          ctx.strokeStyle = col; ctx.lineWidth = sz; ctx.lineCap = 'round';
+        if (q.px !== null && nz > .08 && near > .7) {
+          ctx.strokeStyle = `rgba(${r},${gg},${b},${al * .35})`; ctx.lineWidth = sz * .7; ctx.lineCap = 'round';
           ctx.beginPath(); ctx.moveTo(q.px, q.py); ctx.lineTo(sx, sy); ctx.stroke();
-        } else { ctx.fillStyle = col; ctx.beginPath(); ctx.arc(sx, sy, sz * .6, 0, 6.283); ctx.fill(); }
+        }
+        ctx.fillStyle = col; ctx.beginPath(); ctx.arc(sx, sy, Math.max(.75, sz * .8), 0, 6.283); ctx.fill();
         const k = .35 + 2.6 * nz;
         q.px = sx - (sx - cx) * .0 + (q.px === null ? 0 : 0); q.py = sy;
-        q.px = cx + (sx - cx) * (1 - .06 * k); q.py = cy + (sy - cy) * (1 - .06 * k);
+        q.px = cx + (sx - cx) * (1 - .007 * k); q.py = cy + (sy - cy) * (1 - .007 * k);
       }
     };
     let RG = [], lastR = -9999;
