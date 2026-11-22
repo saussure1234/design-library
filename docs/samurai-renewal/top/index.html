@@ -719,7 +719,7 @@ body.mopen .hd .logo img{filter:invert(1)}
   const vio = new IntersectionObserver(es => es.forEach(e => { const v = e.target; if (e.isIntersecting) { v.play().catch(() => {}); } else { v.pause(); } }), { threshold: .2 });
   vids.forEach(v => vio.observe(v));
 
-  const rio = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); rio.unobserve(e.target); } }), { threshold: .15 });
+  const rio = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); rio.unobserve(e.target); } }), { threshold: .05 });
   document.querySelectorAll('.rv').forEach(el => rio.observe(el));
 
   const hd = document.getElementById('hd');
