@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+JP:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;700&family=Roboto+Flex:opsz,slnt,wdth,wght@8..144,-10..0,25..151,100..1000&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_paper.css">
+<title>会社概要 | サムライスタイル</title>
+<style>
+/* MEMBER */
+.mem-lead{margin:0 0 64px;max-width:46em;font-size:17px;line-height:2.05;color:var(--ink2)}
+.mg{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.mc{outline:none;cursor:pointer}
+.mc-pic{aspect-ratio:1/1;overflow:hidden}
+.mc-pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.08);transition:opacity .9s,filter .6s}
+.mc-pic canvas{z-index:1;transition:opacity .9s}
+.mc:not(.fin) .mc-pic img{opacity:0}
+.mc.fin .mc-pic canvas{opacity:0}
+.mc:hover .mc-pic img,.mc:focus-visible .mc-pic img,.mc.on .mc-pic img{opacity:1;filter:none}
+.mc:hover .mc-pic canvas,.mc.on .mc-pic canvas{opacity:0}
+.mc .no{display:block;margin:18px 0 8px}
+.mc h3{margin:0;font-size:20px;font-weight:500;line-height:1.5}
+.mc .role{margin:2px 0 12px;font-size:13px;color:var(--sig);font-weight:500}
+.mc .bio{margin:0;font-size:14px;line-height:1.9;color:var(--ink2)}
+
+@media (max-width:1080px){
+  .mg{grid-template-columns:1fr 1fr;gap:28px 14px}
+}
+@media (max-width:760px){
+  .mem-lead{font-size:15.5px;margin-bottom:40px}
+  .mc h3{font-size:17px}
+  .mc .bio{font-size:13px}
+}
+
+/* MEMBER：プロフィールへのリンク（原文の橋本のカードにあるもの） */
+.mc{position:relative}
+.mc .prof{position:absolute;z-index:3;top:10px;right:10px;width:34px;height:34px;display:grid;place-items:center;background:var(--card);border:1px solid var(--line);color:var(--ink);transition:color .2s,border-color .2s}
+.mc .prof svg{width:16px;height:16px}
+.mc .prof:hover,.mc .prof:focus-visible{color:var(--sig);border-color:var(--sig)}
+/* OUR MISSION */
+.ms{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(32px,6vw,96px);align-items:end}
+.ms-c{margin:0;font:500 clamp(34px,4.6vw,64px)/1.3 var(--jp);letter-spacing:.04em}
+.ms-c .pi{color:var(--sig)}
+.ms-p{margin:0;font-size:17px;line-height:2.05;color:var(--ink2)}
+/* VALUES */
+.vl{list-style:none;border-bottom:1px solid var(--line)}
+.vl li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,4fr) minmax(0,6fr);gap:16px 24px;align-items:baseline;padding:26px 0;border-top:1px solid var(--line)}
+.vl h3{margin:0;font:500 clamp(24px,2.3vw,32px)/1.3 var(--disp);letter-spacing:0}
+.vl p{margin:0;font-size:16px;line-height:1.9;color:var(--ink2)}
+/* ABOUT */
+.ab{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,4fr);gap:clamp(32px,5vw,80px);align-items:start}
+.ab dl{margin:0;border-bottom:1px solid var(--line)}
+.ab .row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,3.4fr);gap:8px 24px;padding:20px 0;border-top:1px solid var(--line)}
+.ab dt{font-size:14px;color:var(--mute);line-height:1.9}
+.ab dd{margin:0;font-size:15.5px;line-height:1.9;color:var(--ink)}
+.ab dd a{text-decoration:underline;text-underline-offset:3px}
+.ab dd a:hover{color:var(--sig)}
+.ab-pic{aspect-ratio:2/3;overflow:hidden}
+.ab-pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+@media (max-width:1080px){
+  .ms{grid-template-columns:1fr;align-items:start}
+  .ab{grid-template-columns:1fr}
+  .ab-pic{aspect-ratio:16/9;max-width:none}
+}
+@media (max-width:760px){
+  .ms-p{font-size:15.5px}
+  .vl li{grid-template-columns:minmax(0,1fr);gap:8px;padding:22px 0}
+  .vl p{font-size:15px}
+  .ab .row{grid-template-columns:minmax(0,1fr);gap:2px;padding:16px 0}
+  .ab dd{font-size:15px}
+}
+
+</style>
+</head>
+<body>
+<header class="ghd">
+  <a class="logo" href="../c-3d-b2.html" aria-label="SAMURAI STYLE"><img src="../img/logo.svg" alt="SAMURAI STYLE"></a>
+  <nav class="nav"><a href="../c-3d-b2.html">HOME</a><a href="service.html">SERVICE</a><a href="media.html">MEDIA</a><a href="company.html" aria-current="page">COMPANY</a><a href="recruit.html">RECRUIT</a><a class="cta" href="../c-3d-b2.html#contact">CONTACT</a><div class="lang"><span>ID</span><span>EN</span><b>JA</b></div></nav>
+  <button class="burger" type="button" aria-label="Menu" aria-expanded="false"><i></i><i></i></button>
+</header>
+<div class="gov"><a href="../c-3d-b2.html">HOME</a><a href="service.html">SERVICE</a><a href="media.html">MEDIA</a><a href="company.html">COMPANY</a><a href="recruit.html">RECRUIT</a><a href="../c-3d-b2.html#contact">CONTACT</a><div class="lang"><span>ID</span><span>EN</span><b>JA</b></div></div>
+
+<main id="top">
+<section class="sec first" id="company"><div class="wrap">
+  <div class="sh"><div class="lbl"><span></span><p class="jp2">会社概要</p><span class="end"></span></div><h1 class="giant" data-wd>COMPANY</h1></div>
+</div></section>
+
+<section class="sec" id="mission"><div class="wrap">
+  <div class="sh"><div class="lbl"><span>01</span><span></span><span class="end"></span></div><h2 class="giant" data-wd data-fit-text="OUR MISSION">OUR MISSION</h2></div>
+  <div class="ms">
+    <p class="ms-c">世界の<span class="pi">『π』</span><br>を最大化</p>
+    <p class="ms-p">個々の利益を追いかけるとチームのパイ（利益）は最大化せず、結果的に個人のパイも減ってしまい、何よりチームで働く楽しさを逸してしまう。ビジョンを持った個人同士が国や会社の垣根を越えて協働してパイを最大化することにより、楽しみながら世界の笑顔（π）の総量を最大化するチームを目指します。</p>
+  </div>
+</div></section>
+
+<section class="sec" id="values"><div class="wrap">
+  <div class="sh"><div class="lbl"><span>02</span><p class="jp2">サムライスタイルの5つの行動指針</p><span class="end">01—05</span></div><h2 class="giant" data-wd>VALUES</h2></div>
+  <ul class="vl">
+    <li><span class="no">01 / 05</span><h3>FUN (PLAY)</h3><p>世界で1番楽しそうに働くチームを目指す</p></li>
+    <li><span class="no">02 / 05</span><h3>Free</h3><p>各自の責任感の下、場所や時間に捉われず自由に裁量を持って働く</p></li>
+    <li><span class="no">03 / 05</span><h3>Flat</h3><p>年齢や役職などの上下関係なく接する</p></li>
+    <li><span class="no">04 / 05</span><h3>Open</h3><p>チーム内では本音で向き合い、人格は否定しない</p></li>
+    <li><span class="no">05 / 05</span><h3>Optimization</h3><p>全体最適視点で判断する</p></li>
+  </ul>
+</div></section>
+
+<section class="sec" id="member"><div class="wrap">
+  <div class="sh"><div class="lbl"><span>03</span><p class="jp2">メンバー</p><span class="end">01—04</span></div><h2 class="giant" data-wd>MEMBER</h2></div>
+  <p class="mem-lead">私たちのチームは、多様な世代やバックグラウンドを持つメンバーで構成されており、それぞれが自分の得意分野を生かして、常にお客様のニーズに応える最適なソリューションを提供することに尽力しています。少数精鋭のため、お客様と密接な関係を築くことを重視しており、信頼に基づく長期的なパートナーシップの構築を目指しています。お客様の世界進出への挑戦をサポートし、成功への道を共に歩んでいけることを願っています。</p>
+  <div class="mg">
+    <article class="mc" tabindex="0"><div class="pan mc-pic"><img src="../img/m_hashimoto.webp" alt="橋本　圭司" style="object-position:44.2% 50%"><canvas aria-hidden="true"></canvas></div><a class="prof" href="https://samurai-style.tokyo/hashimoto" target="_blank" rel="noopener" aria-label="橋本　圭司のプロフィール"><svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"></path></svg></a><span class="no">01</span><h3><span class="nb">橋本　圭司</span></h3><p class="role"><span class="nb">代表取締役</span></p><p class="bio">大手通信会社の営業、事業企画、およびWebコンサル会社での経験を生かし、様々な業種・規模の企業でBizDev・マーケティングのコンサルとして事業を推進。</p></article>
+    <article class="mc" tabindex="0"><div class="pan mc-pic"><img src="../img/m_hayashi.webp" alt="林　壮" style="object-position:44.8% 50%"><canvas aria-hidden="true"></canvas></div><span class="no">02</span><h3><span class="nb">林　壮</span></h3><p class="role"><span class="nb">プロジェクトマネージャー</span></p><p class="bio">東京生まれ、イギリス・シンガポール育ち。<br>映像ディレクターの経験を持ち、現在は弊社のオフショア開発事業と動画制作事業に加え、採用担当も務める。</p></article>
+    <article class="mc" tabindex="0"><div class="pan mc-pic"><img src="../img/m_satrio.webp" alt="Satrio Buwono" style="object-position:48% 50%"><canvas aria-hidden="true"></canvas></div><span class="no">03</span><h3><span class="nb">Satrio Buwono</span></h3><p class="role"><span class="nb">インドネシア事業開発</span></p><p class="bio">インドネシア生まれ、グラズゴー大学卒業<br>SaaSを専門に構築を行い、複数のITベンチャーを立ち上げ。オフショア開発事業のエンジニア統括を担う。</p></article>
+    <article class="mc" tabindex="0"><div class="pan mc-pic"><img src="../img/m_lura.webp" alt="Lura Naito" style="object-position:50% 50%"><canvas aria-hidden="true"></canvas></div><span class="no">04</span><h3><span class="nb">Lura Naito</span></h3><p class="role"><span class="nb">人事・マーケティング担当</span></p><p class="bio">愛知生まれ、南米・東南アジア各国を放浪。<br>サムライスタイルでは人事全般・マーケティングを担当。ぶれない明るさが持ち味。</p></article>
+  </div>
+</div></section>
+
+<section class="sec" id="about"><div class="wrap">
+  <div class="sh"><div class="lbl"><span>04</span><p class="jp2">会社概要</p><span class="end"></span></div><h2 class="giant" data-wd>ABOUT</h2></div>
+  <div class="ab">
+    <dl>
+      <div class="row"><dt>名称</dt><dd>サムライスタイル株式会社<br>(Samurai Style Co., Ltd.)</dd></div>
+      <div class="row"><dt>代表取締役</dt><dd>橋本 圭司 (<a href="https://samurai-style.tokyo/hashimoto">プロフィール</a>)</dd></div>
+      <div class="row"><dt>住所</dt><dd>〒150-0043<br>東京都渋谷区道玄坂1-10-8 渋谷道玄坂東急ビル2F</dd></div>
+      <div class="row"><dt>電話番号</dt><dd>090-5589-8442</dd></div>
+      <div class="row"><dt>設立</dt><dd>2024年6月</dd></div>
+      <div class="row"><dt>資本金</dt><dd>500万円</dd></div>
+      <div class="row"><dt>事業内容</dt><dd>海外進出支援事業、マーケティングコンサルタント事業、映像制作およびWEB制作/運用事業</dd></div>
+      <div class="row"><dt>顧問弁護士</dt><dd>大谷龍生弁護士（日比谷見附法律事務所）<br>当社は、生成AIを活用したサービスの提供にあたり、関連法令への適切な準拠を重視しており、顧問弁護士の助言を受けながら事業運営を行っています。</dd></div>
+    </dl>
+    <div class="pan ab-pic"><img src="https://samurai-style.tokyo/images/unsplash-1554469384-e58fac16e23a.jpg" alt="" loading="lazy"></div>
+  </div>
+</div></section>
+<div class="page-end"></div>
+</main>
+<footer class="ft"><div class="wrap">
+  <a class="big" href="../c-3d-b2.html#contact"><div class="bw"><b>CONTACT</b><canvas id="ftc" aria-hidden="true"></canvas></div><div class="bl"><span class="jp">お問い合わせはこちらから</span><span class="arr">→</span></div></a>
+  <div class="low">
+    <a class="lg" href="../c-3d-b2.html" aria-label="Samurai-Style"><img src="../img/logo.svg" alt="Samurai-Style"></a>
+    <nav><a href="https://samurai-style.tokyo/privacy-policy">プライバシーポリシー</a><a href="https://samurai-style.tokyo/commercial-transactions">特定商取引法に基づく表記</a></nav>
+    <span>© 2024- samurai-style All Right Reserved.</span>
+  </div>
+</div></footer>
+<span id="meas" aria-hidden="true"></span>
+<script src="_paper.js"></script>
+
+</body>
+</html>

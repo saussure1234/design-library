@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+JP:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;700&family=Roboto+Flex:opsz,slnt,wdth,wght@8..144,-10..0,25..151,100..1000&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_paper.css">
+<title>サービス一覧 | サムライスタイル</title>
+<style>
+/* SERVICE（c-svc4-1：FEATURES と同じ札。製図の枠に実物の画面・映像。S2A は 3C → 戦略 → 実行・伴走 → 画面） */
+#service .sv-g{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+#service .sv-c{background:var(--card);border:1px solid var(--line);display:flex;flex-direction:column;min-width:0}
+#service .sv-c>.fig{border-bottom:1px solid var(--line2)}
+#service .sv-tx,#service .sv-otx{display:flex;flex-direction:column;align-items:flex-start;flex:1}
+#service .sv-tx{padding:26px 32px 36px}
+#service h3{margin:16px 0 14px;font-weight:500}
+#service h3 small{display:block;min-height:1.6em;font-size:14px;line-height:1.6;color:var(--mute);font-weight:400}
+#service h3 .w{display:block;font:500 clamp(24px,2.3vw,32px)/1.35 var(--disp);letter-spacing:0}
+#service h3 .w.ja{font-family:var(--jp);letter-spacing:.02em}
+#service .d{margin:0 0 24px;font-size:15px;line-height:1.95;color:var(--ink2)}
+#service .more{margin-top:auto;font:500 14px/1 var(--jp);text-decoration:none;display:inline-flex;gap:10px;align-items:center;padding-bottom:6px;border-bottom:1px solid var(--ink)}
+#service .more::after{content:"\2192";font-family:var(--mono)}
+#service .more:hover{color:var(--sig);border-color:var(--sig)}
+#service .fig{position:relative;display:block;aspect-ratio:var(--far);background-color:var(--card);
+  background-image:linear-gradient(rgba(21,21,19,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(21,21,19,.06) 1px,transparent 1px),
+  linear-gradient(rgba(21,21,19,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(21,21,19,.03) 1px,transparent 1px);
+  background-size:80px 80px,80px 80px,16px 16px,16px 16px;background-position:-1px -1px}
+#service .fig>canvas.pen{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3}
+#service .scr{position:absolute;left:calc(var(--x)*1%);top:calc(var(--y)*1%);width:calc(var(--w)*1%);aspect-ratio:var(--ar);overflow:hidden;background:#eceae3;z-index:2;
+  clip-path:inset(0 0 100% 0);transition:clip-path 1.1s cubic-bezier(.6,.05,.2,1)}
+#service .scr.on{clip-path:inset(0 0 0 0)}
+#service .scr video,#service .scr .po{position:absolute;max-width:none;display:block;object-fit:fill;
+  width:calc(var(--vw) / var(--cw) * 100%);height:calc(var(--vh) / var(--ch) * 100%);
+  left:calc(var(--cx) / var(--cw) * -100%);top:calc(var(--cy) / var(--ch) * -100%)}
+#service .scr video{transition:opacity .35s}
+#service .scr video.wait{opacity:0}
+#service .s2f{position:absolute;inset:0;z-index:4;pointer-events:none}
+#service .c3l,#service .s2l{position:absolute;left:0;top:0;padding:3px 5px;background:var(--card);font:400 11px/1 var(--mono);letter-spacing:.04em;color:var(--ink);white-space:nowrap;opacity:0;transition:opacity .5s}
+#service .s2l{font:500 12px/1.2 var(--jp);letter-spacing:.08em;padding:3px 6px}
+#service .c3l.on,#service .s2l.on{opacity:1}
+
+@media (max-width:760px){
+  #service .sv-g{grid-template-columns:1fr;gap:16px}
+  #service .sv-tx{padding:22px 22px 28px}
+  #service .fig{aspect-ratio:var(--fars);background-size:64px 64px,64px 64px,16px 16px,16px 16px}
+  #service .scr{left:calc(var(--xs)*1%);top:calc(var(--ys)*1%);width:calc(var(--ws)*1%)}
+  #service .c3l{font-size:10px;padding:2px 4px}
+  #service .s2l{font-size:11px;padding:2px 5px}
+  #service .d{font-size:14.5px}
+}
+@media (prefers-reduced-motion:reduce){
+  #service .scr{transition:none}
+}
+
+</style>
+</head>
+<body>
+<header class="ghd">
+  <a class="logo" href="../c-3d-b2.html" aria-label="SAMURAI STYLE"><img src="../img/logo.svg" alt="SAMURAI STYLE"></a>
+  <nav class="nav"><a href="../c-3d-b2.html">HOME</a><a href="service.html" aria-current="page">SERVICE</a><a href="media.html">MEDIA</a><a href="company.html">COMPANY</a><a href="recruit.html">RECRUIT</a><a class="cta" href="../c-3d-b2.html#contact">CONTACT</a><div class="lang"><span>ID</span><span>EN</span><b>JA</b></div></nav>
+  <button class="burger" type="button" aria-label="Menu" aria-expanded="false"><i></i><i></i></button>
+</header>
+<div class="gov"><a href="../c-3d-b2.html">HOME</a><a href="service.html">SERVICE</a><a href="media.html">MEDIA</a><a href="company.html">COMPANY</a><a href="recruit.html">RECRUIT</a><a href="../c-3d-b2.html#contact">CONTACT</a><div class="lang"><span>ID</span><span>EN</span><b>JA</b></div></div>
+
+<main id="top">
+<section class="sec first" id="service"><div class="wrap">
+  <div class="sh"><div class="lbl"><span></span><p class="jp2">サービス一覧</p><span class="end">01—04</span></div><h1 class="giant" data-wd>SERVICE</h1></div>
+  <div class="sv-g">
+    <article class="sv-c"><a class="fig" href="https://samurai-style.tokyo/strategy2action" tabindex="-1" aria-hidden="true" style="--far:3/2;--fars:3/4"><div class="s2f" data-to="0" data-n0="3,8,31,28" data-n1="40,8,20,28" data-n2="66,8,22,28" data-n0-sp="16,3,68,24" data-n1-sp="6,40,38,11" data-n2-sp="56,40,38,11"><span class="c3l" data-k="0">Customer</span><span class="c3l" data-k="2">Competitor</span><span class="c3l" data-k="1">Company</span><span class="s2l" data-k="0">事業理解</span><span class="s2l" data-k="1">戦略</span><span class="s2l" data-k="2">実行・伴走</span><span class="s2l" data-k="3">可視化</span></div><div class="scr" data-dev="monitor" data-dim="x" data-dim-sp="x" data-lead="" data-lead-sp="" style="--x:33;--y:56;--w:37;--xs:12;--ys:69;--ws:50;--vw:1600;--vh:1000;--cx:0;--cy:40;--cw:1600;--ch:960;--ar:1600/960"><img class="po" src="../img/p_s2a_dash.jpg" alt="" loading="lazy"><video data-src="../video/s2a_dash.mp4" data-t0="1.0" poster="../img/p_s2a_dash.jpg" muted playsinline preload="none"></video></div><div class="scr" data-dev="tablet" data-dim="x" data-dim-sp="x" data-lead="" data-lead-sp="" style="--x:76;--y:62;--w:10;--xs:70;--ys:72;--ws:18;--vw:1080;--vh:1350;--cx:0;--cy:56;--cw:1080;--ch:1294;--ar:1080/1294"><img class="po" src="../img/p_s2a_dash2.jpg" alt="" loading="lazy"><video data-src="../video/s2a_dash2_sp.mp4" data-t0="1.2" poster="../img/p_s2a_dash2.jpg" muted playsinline preload="none"></video></div></a><div class="sv-tx"><div class="no">01 / 04</div><h3><small></small><span class="w">Strategy2Action</span></h3><p class="d">事業理解に基づいて戦略を考え、実行まで伴走し、ダッシュボード作成による経営層・上長への可視化まで対応。</p><a class="more" href="https://samurai-style.tokyo/strategy2action">詳しく見る</a></div></article>
+    <article class="sv-c"><a class="fig" href="https://www.hook-hack.com/" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true" style="--far:3/2;--fars:4/3"><div class="scr" data-dev="laptop" data-dim="b" data-dim-sp="b" data-lead="" data-lead-sp="" style="--x:17;--y:15;--w:66;--xs:14;--ys:14;--ws:72;--vw:960;--vh:540;--cx:0;--cy:0;--cw:960;--ch:540;--ar:960/540"><img class="po" src="../img/p_hookhack.jpg" alt="" loading="lazy"><video data-src="../video/hookhack_sp.mp4" data-t0="0.5" poster="../img/p_hookhack.jpg" muted playsinline preload="none"></video></div></a><div class="sv-tx"><div class="no">02 / 04</div><h3><small>動画広告の制作ツール</small><span class="w">HookHack</span></h3><p class="d">売れる動画広告をLPから5分で制作。<br>検証から成果改善まで、動画広告のPDCAに必要な機能を1ツールで網羅します。</p><a class="more" href="https://www.hook-hack.com/" target="_blank" rel="noopener">詳しく見る</a></div></article>
+    <article class="sv-c"><a class="fig" href="https://www.hook-hack.com/hookhacker" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true" style="--far:3/2;--fars:4/3"><div class="scr" data-dev="browser" data-dim="b" data-dim-sp="b" data-lead="" data-lead-sp="" style="--x:16;--y:18;--w:66;--xs:12;--ys:20;--ws:76;--vw:960;--vh:540;--cx:68;--cy:57;--cw:823;--ch:483;--ar:823/483"><img class="po" src="../img/p_hookhacker.jpg" alt="" loading="lazy"><video data-src="../video/hookhacker_sp.mp4" data-t0="2.0" poster="../img/p_hookhacker.jpg" muted playsinline preload="none"></video></div></a><div class="sv-tx"><div class="no">03 / 04</div><h3><small>LP・サイト制作の代行</small><span class="w">HookHacker</span></h3><p class="d">自社開発AIツール「HookHack」×インドネシアオフショアチーム×日本人ディレクターでLP・サイト制作を代行。</p><a class="more" href="https://www.hook-hack.com/hookhacker" target="_blank" rel="noopener">詳しく見る</a></div></article>
+    <article class="sv-c"><a class="fig" href="https://samurai-style.tokyo/video-production" tabindex="-1" aria-hidden="true" style="--far:3/2;--fars:4/3"><div class="scr" data-dev="film" data-dim="r" data-dim-sp="x" data-lead="" data-lead-sp="" style="--x:10;--y:17;--w:72;--xs:6;--ys:16;--ws:88;--vw:768;--vh:432;--cx:0;--cy:0;--cw:768;--ch:432;--ar:768/432"><img class="po" src="../img/video-production-poster.webp" alt="" loading="lazy"><video data-src="../video/video-production.mp4" data-t0="0" poster="../img/video-production-poster.webp" muted playsinline preload="none"></video></div></a><div class="sv-tx"><div class="no">04 / 04</div><h3><small></small><span class="w ja">動画制作</span></h3><p class="d">貴社の顧客理解に基づき、動画を企画・撮影・編集までワンストップで制作します。</p><a class="more" href="https://samurai-style.tokyo/video-production">詳しく見る</a></div></article>
+  </div>
+</div></section>
+<div class="page-end"></div>
+</main>
+<footer class="ft"><div class="wrap">
+  <a class="big" href="../c-3d-b2.html#contact"><div class="bw"><b>CONTACT</b><canvas id="ftc" aria-hidden="true"></canvas></div><div class="bl"><span class="jp">お問い合わせはこちらから</span><span class="arr">→</span></div></a>
+  <div class="low">
+    <a class="lg" href="../c-3d-b2.html" aria-label="Samurai-Style"><img src="../img/logo.svg" alt="Samurai-Style"></a>
+    <nav><a href="https://samurai-style.tokyo/privacy-policy">プライバシーポリシー</a><a href="https://samurai-style.tokyo/commercial-transactions">特定商取引法に基づく表記</a></nav>
+    <span>© 2024- samurai-style All Right Reserved.</span>
+  </div>
+</div></footer>
+<span id="meas" aria-hidden="true"></span>
+<script src="_paper.js"></script>
+<script src="../js/svc-real.js"></script>
+<script>
+(() => {
+  if (!window.SvcReal) return;
+  const SPQ = matchMedia('(max-width:760px)');
+  const spSwap = () => document.querySelectorAll('#service .scr').forEach(s => {
+    if (s.dataset.leadPc == null) { s.dataset.leadPc = s.dataset.lead; s.dataset.dimPc = s.dataset.dim; }
+    s.dataset.lead = SPQ.matches ? s.dataset.leadSp : s.dataset.leadPc; s.dataset.dim = SPQ.matches ? s.dataset.dimSp : s.dataset.dimPc; });
+  spSwap(); SPQ.addEventListener('change', spSwap);
+  document.querySelectorAll('#service .fig').forEach(f => SvcReal.fig(f, { auto: true }));
+  SvcReal.videos(document.getElementById('service'));
+})();
+</script>
+</body>
+</html>
