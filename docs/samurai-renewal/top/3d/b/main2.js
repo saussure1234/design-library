@@ -432,9 +432,14 @@ const hands = [];
     const hg = new THREE.Group(); hg.add(h1, h2);
     hg.scale.setScalar(1.3); hg.position.set(x, 0.4 + 0.54 * 1.3, z); hg.rotation.set(0, 0.95, 0);
     group.add(hg);
-    hands.push({ u, j, g: hg, baseY: hg.position.y, ph: rnd() * 6 });
+    const fl = mkGlow(1.6, 0xcfe0ff, 0); fl.position.set(x, hg.position.y + 0.9, z); scene.add(fl);
+    hands.push({ u, j, g: hg, baseY: hg.position.y, ph: rnd() * 6, flash: fl, lit: false });
   }
 }
+
+const H1SEQ = [400, 750, 1050, 1300, 1500, 1670, 1810, 1930, 2030, 2120, 2200, 2550];
+let h1T0 = -1, h1Idx = 0, h1Cyc = -1;
+const h1vp = mkGlow(9, 0xdfe8ff, 0); h1vp.position.set(6 - 1.9, 1.6, -58 - (SP ? 12 : 16) * 2.9 - 2); scene.add(h1vp);
 
 // ---------- 場面2：無数に枝分かれする光の線の森（青灰の線） ----------
 const forestU = { uTime: U.time, uGrow: { value: 0 }, uFogC: U.fogCol, uFogD: U.fogD };
@@ -509,75 +514,106 @@ const tvs = { list: [], parts: [], scrU: null };
     if (variants.length) used.tv = true;
   }
   if (!variants.length) variants.push({ b: OLD.TV || new THREE.BoxGeometry(1.2, 0.9, 1), s: ensureUV(OLD.Screen || new THREE.PlaneGeometry(0.98, 0.7).translate(0, 0, 0.5)) });
-  const n = Q.tvs;
-  // 置き場
-  let i = 0, tries = 0;
-  while (i < n && tries < 6000) {
-    tries++;
-    let p, s, rot;
-    if (i === 0) { p = T[3].clone(); s = 2.3; rot = new THREE.Euler(0, 0, 0); }
-    else {
-      p = T[3].clone().add(V(rr(-26, 26), rr(-12, 12), rr(-26, 16)));
-      if (distToPath(p) < 3.4 || p.distanceTo(T[3]) < 3.6) continue;
-      s = rr(1.0, 2.1); rot = new THREE.Euler(rr(-.35, .35), rr(-.6, .6), rr(-.3, .3));
-    }
-    tvs.list.push({ p, s, q: new THREE.Quaternion().setFromEuler(rot), ax: randDir(), sp: i === 0 ? 0 : rr(-.07, .07), ph: rnd() * 6, v: i % variants.length, k: 0 });
-    i++;
-  }
+  // 置き場：本線（今のトップ）のテレビの壁と同じ並び。画像上の位置を、場面3でカメラに正対する壁へ写す
+  const WALL = [[0.4445, 0.0108, 0.0355, 0.0361], [0.2259, 0.0162, 0.0183, 0.0185], [0.8083, 0.0303, 0.0533, 0.0479], [0.6185, 0.0411, 0.0481, 0.0487], [0.4937, 0.0443, 0.051, 0.0521], [0.1491, 0.0429, 0.0189, 0.0235], [0.7281, 0.0463, 0.0413, 0.0412], [0.3911, 0.0482, 0.0264, 0.0277], [0.3364, 0.0597, 0.0355, 0.0378], [0.5767, 0.0639, 0.0178, 0.0176], [0.105, 0.0692, 0.0212, 0.0227], [0.436, 0.0795, 0.0252, 0.0286], [0.2707, 0.0822, 0.0367, 0.0378], [0.3912, 0.1058, 0.0275, 0.0286], [0.7366, 0.1126, 0.0607, 0.0638], [0.6469, 0.1188, 0.0544, 0.0554], [0.8262, 0.127, 0.0476, 0.0487], [0.3211, 0.1284, 0.0498, 0.0537], [0.4878, 0.1322, 0.0504, 0.0521], [0.5612, 0.1444, 0.0573, 0.0588], [0.4261, 0.1452, 0.0338, 0.0328], [0.1963, 0.1572, 0.0332, 0.0361], [0.0377, 0.1584, 0.0367, 0.0386], [0.0819, 0.1936, 0.0361, 0.0386], [0.3969, 0.1972, 0.0539, 0.0588], [0.8458, 0.2061, 0.0487, 0.0487], [0.922, 0.2054, 0.0407, 0.0403], [0.4722, 0.2143, 0.0504, 0.0537], [0.767, 0.2158, 0.0481, 0.0479], [0.6933, 0.2178, 0.0476, 0.0487], [0.3249, 0.2238, 0.0481, 0.0496], [0.2583, 0.2296, 0.0453, 0.0487], [0.1367, 0.234, 0.0481, 0.0554], [0.2137, 0.2329, 0.0212, 0.0185], [0.546, 0.243, 0.0355, 0.0344], [0.616, 0.2602, 0.0401, 0.0412], [0.0804, 0.2734, 0.0327, 0.0361], [0.0269, 0.2808, 0.0321, 0.0302], [0.9273, 0.2808, 0.0413, 0.0302], [0.2116, 0.2834, 0.0195, 0.0143], [0.3717, 0.3019, 0.0573, 0.0621], [0.7436, 0.3028, 0.059, 0.0605], [0.8352, 0.3018, 0.0367, 0.0361], [0.6779, 0.3051, 0.0407, 0.0412], [0.5562, 0.307, 0.0413, 0.0403], [0.1292, 0.325, 0.043, 0.0454], [0.2523, 0.3249, 0.043, 0.0445], [0.1929, 0.3259, 0.0407, 0.0445], [0.6594, 0.3672, 0.0556, 0.0605], [0.8293, 0.3727, 0.055, 0.0554], [0.5605, 0.375, 0.0665, 0.0714], [0.3908, 0.4009, 0.0498, 0.0537], [0.3102, 0.4059, 0.0521, 0.0554], [0.2444, 0.4215, 0.0424, 0.0437], [0.4652, 0.4271, 0.0624, 0.0638], [0.1653, 0.4384, 0.0561, 0.0588], [0.6617, 0.4775, 0.0699, 0.0714], [0.0979, 0.4919, 0.0418, 0.0445], [0.7811, 0.4957, 0.0544, 0.0546], [0.582, 0.499, 0.0573, 0.0596], [0.2448, 0.5001, 0.0567, 0.0613], [0.3296, 0.5073, 0.0504, 0.0537], [0.5014, 0.5282, 0.0493, 0.0462], [0.8714, 0.5373, 0.071, 0.0739], [0.4164, 0.5376, 0.0624, 0.0655], [0.1572, 0.5494, 0.0516, 0.0546], [0.0821, 0.5757, 0.0487, 0.0546], [0.7754, 0.5966, 0.0676, 0.0714], [0.0158, 0.5952, 0.0401, 0.042], [0.3293, 0.5994, 0.0556, 0.0579], [0.2415, 0.6024, 0.0573, 0.0579], [0.5995, 0.6051, 0.0653, 0.0672], [0.5027, 0.6208, 0.0682, 0.0689], [0.4134, 0.6475, 0.047, 0.0479], [0.8818, 0.6564, 0.0619, 0.0613], [0.1338, 0.6577, 0.0619, 0.0663], [0.0361, 0.6757, 0.0521, 0.0588], [0.6927, 0.6843, 0.0567, 0.0571], [0.2299, 0.702, 0.0579, 0.0579], [0.5919, 0.7051, 0.0584, 0.0605], [0.3215, 0.7084, 0.0372, 0.0403], [0.8028, 0.7141, 0.0493, 0.0504], [0.5195, 0.722, 0.0372, 0.0395], [0.8821, 0.773, 0.0756, 0.0789], [0.0942, 0.7786, 0.0539, 0.0638], [0.358, 0.7852, 0.0665, 0.0731], [0.0047, 0.7888, 0.0493, 0.0571], [0.5249, 0.7898, 0.0596, 0.0689], [0.6992, 0.7909, 0.0567, 0.0588], [0.2812, 0.799, 0.0464, 0.0496], [0.1815, 0.8024, 0.0647, 0.068], [0.7887, 0.8028, 0.0613, 0.0605], [0.6093, 0.8113, 0.0556, 0.0571]];
+  const SIG = [0.5052, 0.3545];
+  const eye = camCurve.getPoint(3 / 6), dW = eye.distanceTo(T[3]);
+  const wq = new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().lookAt(eye, T[3], V(0, 1, 0)));
+  const R = V(1, 0, 0).applyQuaternion(wq), Up = V(0, 1, 0).applyQuaternion(wq), N = V(0, 0, 1).applyQuaternion(wq);
+  const Wd = dW * 1.62, tvW = 1.18;
+  tvs.wall = { R, Up, N };
+  const place = (x, y, w, h, hero) => {
+    const p = T[3].clone().addScaledVector(R, (x + w / 2 - SIG[0]) * Wd).addScaledVector(Up, -(y + h / 2 - SIG[1]) * Wd / 1.5);
+    if (!hero) p.addScaledVector(N, rr(-0.5, 0.25) * w * Wd);
+    const rot = hero ? new THREE.Euler(0, 0, 0) : new THREE.Euler(rr(-.06, .06), rr(-.12, .12), rr(-.05, .05));
+    const q = wq.clone().multiply(new THREE.Quaternion().setFromEuler(rot));
+    const off = p.clone().sub(T[3]); off.addScaledVector(N, -off.dot(N));
+    const d = Math.hypot(x + w / 2 - SIG[0], (y + h / 2 - SIG[1]) * 0.66);
+    tvs.list.push({ p, s: Math.max(w, h * 1.1) * Wd / tvW * 0.96, q, out: off.lengthSq() > 1e-4 ? off.normalize() : V(0, 1, 0), outD: rr(14, 34), ax: randDir(), ph: rnd() * 6, v: tvs.list.length % variants.length, k: 0, d,
+      st: { k: hero ? 0 : (rnd() < 0.85 ? 0 : -1), until: 0, tr: 0, trT: 0, next: 0, wave: 0 } });
+  };
+  place(SIG[0] - 0.04, SIG[1] - 0.034, 0.08, 0.07, true);
+  WALL.forEach(([x, y, w, h]) => place(x, y, w, h, false));
   const scrU = { uTime: U.time, uOn: { value: 0 }, uFogC: U.fogCol, uFogD: U.fogD };
   tvs.scrU = scrU;
   const bodyM = new THREE.MeshStandardMaterial({ color: 0x2b3343, roughness: 0.42, metalness: 0.25, envMap: envTex, envMapIntensity: 0.8 });
   const glassM = new THREE.MeshStandardMaterial({ color: 0x000000, roughness: 0.05, metalness: 0, envMap: envTex, envMapIntensity: 3.2, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 });
   const scrM = new THREE.ShaderMaterial({
     uniforms: scrU,
-    vertexShader: `attribute float aSeed; attribute float aSp; varying vec2 vUv; varying float vS; varying float vP; varying float vD; varying vec3 vN; varying vec3 vV;
-      void main(){ vUv=uv; vS=aSeed; vP=aSp; vec4 mv=modelViewMatrix*instanceMatrix*vec4(position,1.); vD=-mv.z; vV=-mv.xyz; vN=normalize(normalMatrix*mat3(instanceMatrix)*normal); gl_Position=projectionMatrix*mv; }`,
-    fragmentShader: `varying vec2 vUv; varying float vS; varying float vP; varying float vD; varying vec3 vN; varying vec3 vV; uniform float uTime, uOn; ${fogGLSL}
+    vertexShader: `attribute float aSeed; attribute float aSp; attribute vec4 aSt; varying vec2 vUv; varying float vS; varying float vP; varying vec4 vSt; varying float vD; varying vec3 vN; varying vec3 vV;
+      void main(){ vUv=uv; vS=aSeed; vP=aSp; vSt=aSt; vec4 mv=modelViewMatrix*instanceMatrix*vec4(position,1.); vD=-mv.z; vV=-mv.xyz; vN=normalize(normalMatrix*mat3(instanceMatrix)*normal); gl_Position=projectionMatrix*mv; }`,
+    fragmentShader: `varying vec2 vUv; varying float vS; varying float vP; varying vec4 vSt; varying float vD; varying vec3 vN; varying vec3 vV; uniform float uTime, uOn; ${fogGLSL}
       float h(vec2 p){ return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453); }
+      vec3 snow(vec2 uv,float k){ float t=floor(uTime*15.+vS*7.); float n=h(floor(uv*vec2(96.,72.))+t*1.37+vS*91.);
+        return vec3(.9,.95,1.)*(60.+n*195.)/255.*k; }
       void main(){
-        vec2 uv=vUv; float t=floor(uTime*20.+vS*7.);
-        float n=h(floor(uv*vec2(150.,110.))+t*1.37+vS*91.);
-        float roll=smoothstep(.0,.04,abs(fract(uv.y-uTime*.25-vS)-.5));
-        vec3 c=vec3(n*.85+.05)*(.75+.25*sin(uv.y*520.))*(.82+.18*roll);
-        c*=vec3(.70,.80,.98);
+        vec2 uv=vUv; float kind=vSt.x, tr=vSt.y, e=vSt.z, wave=vSt.w;
+        vec3 c;
+        if(kind<.5) c=snow(uv,.5+h(vec2(floor(uTime*15.),vS))*.25);
+        else if(kind<1.5){ c=vec3(3.,5.,10.)/255.*.95+vec3(120.,140.,170.)/255.*.1*smoothstep(.5,0.,(uv.x+1.-uv.y)*.5); }
+        else if(kind<2.5){ c=snow(uv,.55); float by=fract(uTime*.11+vS)*1.4-.2; float yy=1.-uv.y; c*=1.-.55*step(by,yy)*step(yy,by+.18); c+=.18*step(by-.04,yy)*step(yy,by); }
+        else if(kind<3.5){ c=vec3(8.,12.,22.)/255.*.92+vec3(150.,170.,210.)/255.*(.08+h(vec2(floor(uTime*15.),vS))*.1)*step(.66,fract((1.-uv.y)*24.)); }
+        else if(kind<4.5){ float b=floor(uv.x*7.); vec3 bc=b<1.?vec3(.75):b<2.?vec3(.75,.75,0.):b<3.?vec3(0.,.75,.75):b<4.?vec3(0.,.75,0.):b<5.?vec3(.75,0.,.75):b<6.?vec3(.75,0.,0.):vec3(0.,0.,.75);
+          c=(1.-uv.y)<.72?bc*.38:vec3(16.,16.,24.)/255.; }
+        else c=vec3(18.,38.,120.)/255.*(.55+h(vec2(floor(uTime*15.),vS))*.06);
+        if(tr>.5&&tr<1.5){ c=vec3(2.,3.,8.)/255.; float lh=max(.02,1.-min(1.,e*1.6)), lw=e<.6?1.:1.-(e-.6)/.4;
+          if(abs(uv.y-.5)<lh*.5&&abs(uv.x-.5)<lw*.5) c=vec3(.92,.95,1.); }
+        else if(tr>1.5&&tr<2.5) c=mix(c,vec3(.94,.96,1.),.95-e*.5);
+        else if(tr>2.5) c=mix(c,vec3(.9,.92,1.),.5);
+        if(wave>.5){ float y=uv.y-.5-sin(uv.x*6.283*1.2+uTime*3.85)*.16; c=vec3(2.,4.,10.)/255.+vec3(1.,.42,.18)*(exp(-pow(y*40.,2.))*1.6+exp(-pow(y*8.,2.))*.35); }
         if(vP>.5){ float y=uv.y-.5-.03*sin(uv.x*14.+uTime*2.2)*smoothstep(.0,.5,uv.x)*smoothstep(1.,.5,uv.x);
           float l=exp(-pow(y*70.,2.))*2.6+exp(-pow(y*14.,2.))*.5;
-          c=mix(c*.14,vec3(1.,.35,.12)*l*3.+c*.04,uOn); }
-        float vg=smoothstep(.78,.3,length((uv-.5)*vec2(1.,1.25)));
-        float lum=vP>.5?1.:.36;
-        c*=vg*(.35+.65*uOn)*lum;
-        // ガラスの映り込み：斜めの帯と縁のフレネル
+          c=mix(snow(uv,.5)*.14,vec3(1.,.35,.12)*l*3.+snow(uv,.5)*.04,uOn); }
+        float vg=smoothstep(.85,.35,length((uv-.5)*vec2(1.,1.2)));
+        c*=(.55+.45*vg)*(.35+.65*uOn)*(vP>.5?1.:.8);
         float fr=pow(1.-clamp(abs(dot(normalize(vN),normalize(vV))),0.,1.),3.);
         float band=smoothstep(.06,.0,abs(uv.x*.7+uv.y-1.05))*.5+smoothstep(.2,.0,abs(uv.x*.7+uv.y-1.3))*.15;
-        c+=vec3(.55,.65,.85)*(band*.22+fr*.35);
+        c+=vec3(.55,.65,.85)*(band*.16+fr*.3);
         gl_FragColor=vec4(c*(1.-fogF(vD)),1.);
       }`,
   });
   variants.forEach((vt, vi) => {
     const items = tvs.list.filter((x) => x.v === vi); const cnt = Math.max(1, items.length);
     const sg = vt.s.clone();
-    const sd = new Float32Array(cnt), spc = new Float32Array(cnt);
+    const sd = new Float32Array(cnt), spc = new Float32Array(cnt), sst = new Float32Array(cnt * 4);
     items.forEach((it, k) => { it.k = k; sd[k] = rnd(); spc[k] = it === tvs.list[0] ? 1 : 0; });
     sg.setAttribute('aSeed', new THREE.InstancedBufferAttribute(sd, 1)); sg.setAttribute('aSp', new THREE.InstancedBufferAttribute(spc, 1));
+    const aSt = new THREE.InstancedBufferAttribute(sst, 4); aSt.setUsage(THREE.DynamicDrawUsage); sg.setAttribute('aSt', aSt);
     let bm = bodyM;
     if (vt.src && (vt.src.normalMap || vt.src.roughnessMap)) { bm = bodyM.clone(); bm.normalMap = vt.src.normalMap || null; bm.roughnessMap = vt.src.roughnessMap || null; }
     const body = new THREE.InstancedMesh(vt.b, bm, cnt), scr = new THREE.InstancedMesh(sg, scrM, cnt), gl = new THREE.InstancedMesh(vt.s, glassM, cnt);
     body.count = scr.count = gl.count = items.length;
     body.frustumCulled = scr.frustumCulled = gl.frustumCulled = false;
     scene.add(body, scr, gl);
-    tvs.parts.push({ items, meshes: [body, scr, gl] });
+    tvs.parts.push({ items, meshes: [body, scr, gl], aSt });
   });
 }
 const tmpQ = new THREE.Quaternion(), tmpM = new THREE.Matrix4(), tmpS = new THREE.Vector3(), tmpP = new THREE.Vector3();
-function updateTVs(t) {
+const TV_KINDS = [...Array(23).fill(0), 1, 1, 1, 1, 2, 2, 3, 3, 4, 5];
+const tvPick = () => TV_KINDS[(Math.random() * TV_KINDS.length) | 0];
+tvs.list.forEach((v, i) => { if (i && v.st.k < 0) v.st.k = tvPick(); });
+let tvLast = 0, tvRipple = 0;
+function updateTVs(t, Ps = 3) {
+  const out = sstep(3.58, 3.98, Ps) + (1 - sstep(2.1, 2.6, Ps));   // 来る前と抜けた後は散っている
+  const now = t * 1000, doSt = now - tvLast > 66; if (doSt) tvLast = now;
+  if (doSt && now > tvRipple) { tvRipple = now + 6000; tvs.list.forEach((v) => { v.st.wave = now + 200 + v.d * 2600; }); SND.wave(); }
   for (const part of tvs.parts) {
     for (const v of part.items) {
-      tmpQ.setFromAxisAngle(v.ax, Math.sin(t * 0.3 + v.ph) * 0.12 + t * v.sp).premultiply(v.q);
-      tmpP.copy(v.p); tmpP.y += Math.sin(t * 0.4 + v.ph) * (v.sp ? 0.25 : 0.06);
+      const o = Math.pow(clamp(out), 1.6);
+      tmpQ.setFromAxisAngle(v.ax, Math.sin(t * 0.3 + v.ph) * 0.02 + o * 2.2).premultiply(v.q);
+      tmpP.copy(v.p).addScaledVector(v.out, o * v.outD); tmpP.y += Math.sin(t * 0.4 + v.ph) * 0.03;
       tmpM.compose(tmpP, tmpQ, tmpS.setScalar(v.s));
       for (const m of part.meshes) m.setMatrixAt(v.k, tmpM);
+      if (doSt) {
+        const s = v.st, hero = v === tvs.list[0];
+        if (!hero && !s.tr && now > s.until && Math.random() < 0.03) { const nk = tvPick(); if (nk !== s.k) { s.tr = nk === 1 ? 1 : (s.k === 1 ? 2 : 3); s.trT = now; s.next = nk; } s.until = now + 1200 + Math.random() * 3800; }
+        let e = 0; if (s.tr) { e = (now - s.trT) / 320; if (e >= 1) { s.k = s.next; s.tr = 0; e = 0; } }
+        const w = s.wave && now > s.wave && now < s.wave + 1100 ? 1 : 0;
+        part.aSt.array.set([s.k, s.tr, Math.min(1, e), w], v.k * 4);
+      }
     }
     for (const m of part.meshes) m.instanceMatrix.needsUpdate = true;
+    if (doSt) part.aSt.needsUpdate = true;
   }
 }
 updateTVs(0);
@@ -1011,7 +1047,7 @@ function frame() {
   const hidden = Ps > 7.8;
   canvas.style.visibility = hidden ? 'hidden' : 'visible';
   hud.style.opacity = 1 - sstep(0.05, 0.5, dawn);
-  if (hidden) { SND.update({ noise: 0, travel: 0, vel: 0, dawn: 1, fv: 0, day: 1 }); return; }
+  if (hidden) { SND.update({ noise: 0, travel: 0, vel: 0, dawn: 1, fv: 0, day: 1, tv: 0 }); return; }
 
   // カメラ
   const s = camS(Ps); const sf = s - Math.floor(s); const travel = Math.sin(Math.PI * clamp(sf)) * (s < 6 ? 1 : 0);
@@ -1053,17 +1089,29 @@ function frame() {
   // もや：近すぎ・遠すぎは消す
   for (const hz of hazes) { const d = hz.s.position.distanceTo(camera.position); hz.s.material.opacity = hz.base * sstep(6, 26, d) * (1 - sstep(150, 230, d)) * (1 - dawn); }
 
-  // 場面1：手の置き換え
-  const l1 = Ps - 1;
+  // 場面1：手の置き換え（本線と同じ周期：奥の手から1本ずつ AI に置き換わり、全部が人の手へ戻る を繰り返す）
+  const on1 = Math.abs(Ps - 1) < 0.62;
+  if (on1 && h1T0 < 0) { h1T0 = t; h1Idx = 0; h1Cyc = -1; }
+  if (!on1) h1T0 = -1;
+  const hc = on1 ? (t - h1T0) * 1000 : 0, cyc = Math.floor(hc / 5400), ht = hc % 5400;
+  if (on1 && cyc !== h1Cyc) { h1Cyc = cyc; h1Idx = 0; }
   hands.forEach((h) => {
-    const jj = hands.length - 1 - h.j; const target = sstep(0.05 + jj * 0.032, 0.2 + jj * 0.032, l1);
-    h.u.value += (target - h.u.value) * 0.08;
+    const order = hands.length - 1 - h.j;            // 0＝一番奥
+    const at = H1SEQ[Math.min(H1SEQ.length - 1, Math.round(order / Math.max(1, hands.length - 1) * (H1SEQ.length - 1)))] + order * 3;
+    const tgt = on1 && ht >= at && ht < 4300 ? 1 : 0;
+    if (on1 && tgt && !h.lit) { h.lit = true; h.fl = t; SND.swap(order / hands.length); }
+    if (!tgt) h.lit = false;
+    h.u.value += (tgt - h.u.value) * (tgt ? 0.32 : 0.06);
     h.g.position.y = h.baseY + Math.sin(t * 0.5 + h.ph) * 0.05;
+    const fe = (t - (h.fl ?? -9)) / 0.7;
+    h.flash.material.opacity = fe < 1 ? (fe < 0.25 ? fe / 0.25 : 1 - (fe - 0.25) / 0.75) * 0.9 : 0;
+    h.flash.scale.setScalar(1.2 + 2.2 * clamp(fe));
   });
+  h1vp.material.opacity = on1 ? (ht < 400 ? ht / 400 : ht < 3200 ? 0.9 : Math.max(0, 1 - (ht - 3200) / 1100)) * 0.85 : 0;
   // 場面2：枝が伸びる
   forestU.uGrow.value = sstep(-0.45, 0.62, Ps - 2) * 1.02;
   // 場面3：テレビ
-  if (Math.abs(Ps - 3) < 1.6) updateTVs(t);
+  if (Math.abs(Ps - 3) < 1.6) updateTVs(t, Ps);
   tvs.scrU.uOn.value = 0.25 + 0.75 * sstep(-0.4, 0.3, Ps - 3);
   // 場面4：収束
   const conv = sstep(0.05, 0.72, Ps - 4);
@@ -1124,7 +1172,7 @@ function frame() {
 
   // FV（粒・文字・輪）
   fvFrame(dt, t, Ps);
-  SND.update({ noise: FV.nz, travel, vel, dawn, fv: 1 - sstep(0.62, 0.9, Ps), day: 0 });
+  SND.update({ noise: FV.nz, travel, vel, dawn, fv: 1 - sstep(0.62, 0.9, Ps), day: 0, tv: 1 - sstep(0.35, 0.7, Math.abs(Ps - 3)) });
   panels.forEach((p) => {
     const v = sstep(p.i + 0.2, 0.34 + p.i, Ps) * (1 - sstep(p.i + 0.84, p.i + 0.97, Ps));
     p.el.style.opacity = v;

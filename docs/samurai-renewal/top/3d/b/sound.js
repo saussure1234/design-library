@@ -16,8 +16,8 @@ const CHORDS = [
 const PENTA = [62, 64, 65, 69, 72, 74, 76, 77, 81];
 
 export const SND = (() => {
-  let ctx = null, on = false, want = false, master, music, sfx, verb, padF, voices = [], sub, wind, windF, whoosh, whooshF, sig, sigG, nbuf;
-  let chord = -1, lastTick = 0, nextPing = 0, st = { noise: 1, travel: 0, vel: 0, dawn: 0, fv: 1, day: 0 };
+  let ctx = null, on = false, want = false, hiss, master, music, sfx, verb, padF, voices = [], sub, wind, windF, whoosh, whooshF, sig, sigG, nbuf;
+  let chord = -1, lastTick = 0, nextPing = 0, st = { noise: 1, travel: 0, vel: 0, dawn: 0, fv: 1, day: 0, tv: 0 };
   const btn = document.getElementById('snd');
   const lab = btn && btn.querySelector('.st');
   const store = (v) => { try { localStorage.setItem(KEY, v ? '1' : '0'); } catch (e) { /* 保存できない環境は無視 */ } };
@@ -63,6 +63,7 @@ export const SND = (() => {
     wind = loopNoise(0, 'bandpass', 420, 0.7); wind.g.connect(music); windF = wind.fl;
     const wl = ctx.createOscillator(), wlg = ctx.createGain(); wl.frequency.value = 0.07; wlg.gain.value = 260; wl.connect(wlg); wlg.connect(windF.frequency); wl.start();
     // 移動の風切り（速さに連動）
+    hiss = loopNoise(0, 'highpass', 3200, 0.5); hiss.g.connect(sfx);
     whoosh = loopNoise(0, 'bandpass', 900, 0.9); whoosh.g.connect(sfx); whooshF = whoosh.fl;
     // シグナルの音（文字がそろうと鳴る細い正弦波＋やまびこ）
     sig = ctx.createOscillator(); sig.type = 'sine'; sig.frequency.value = mtof(81);
@@ -97,6 +98,10 @@ export const SND = (() => {
     tick() { if (!on) return; const n = performance.now(); if (n - lastTick < 28) return; lastTick = n; burst(0.05, 0.012, 'highpass', 4000 + Math.random() * 3000, 1.2); },
     lock() { if (!on) return; tone(mtof(81), 'sine', 0.09, 0.005, 2.4, music); setTimeout(() => on && tone(mtof(88), 'sine', 0.05, 0.005, 2.8, music), 140); },
     hover() { if (!on) return; tone(1320, 'sine', 0.025, 0.003, 0.08); },
+    // 手が1本 AI に置き換わる：奥から手前へ音程が上がる
+    swap(k) { if (!on) return; tone(mtof(69 + Math.round(k * 12)), 'triangle', 0.03, 0.003, 0.35, music); burst(0.025, 0.05, 'highpass', 5000, 1); },
+    // テレビの壁を光の波が走る
+    wave() { if (!on || st.tv < 0.3) return; tone(220, 'sine', 0.05, 0.25, 1.4, music, 440); burst(0.04, 0.9, 'bandpass', 1200, 0.6); },
     scene(i) { if (ctx) setChord(i); },
     update(s) {
       Object.assign(st, s);
@@ -105,6 +110,7 @@ export const SND = (() => {
       wind.g.gain.setTargetAtTime(0.02 + 0.16 * st.noise * st.fv, t, 0.25);
       whoosh.g.gain.setTargetAtTime(Math.min(0.22, Math.abs(st.vel) * 0.35 + st.travel * 0.1) * (1 - st.day), t, 0.12);
       whooshF.frequency.setTargetAtTime(600 + Math.min(2200, Math.abs(st.vel) * 2600), t, 0.15);
+      hiss.g.gain.setTargetAtTime(0.05 * st.tv, t, 0.3);
       sigG.gain.setTargetAtTime(0.018 * (1 - st.noise) * st.fv, t, 0.4);
       padF.frequency.setTargetAtTime(620 + 1600 * st.dawn, t, 0.5);
       music.gain.setTargetAtTime(0.9 - 0.45 * st.day, t, 0.8);
