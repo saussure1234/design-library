@@ -234,11 +234,11 @@ html.lock{overflow:hidden}
 </div></section>
 
 <div class="tabs-w"><div class="wrap"><div class="tabs" role="tablist" aria-label="メディア">
-  <button type="button" role="tab" id="tb-list" aria-controls="pn-list" aria-selected="true">メディア一覧</button>
-  <button type="button" role="tab" id="tb-up" aria-controls="upstream" aria-selected="false" tabindex="-1">“マーケティングの上流”について考察</button>
+  <button type="button" role="tab" id="tb-up" aria-controls="upstream" aria-selected="true">“マーケティングの上流”について考察</button>
+  <button type="button" role="tab" id="tb-list" aria-controls="pn-list" aria-selected="false" tabindex="-1">メディア一覧</button>
 </div></div></div>
 
-<section class="sec pn" id="pn-list" role="tabpanel" aria-labelledby="tb-list"><div class="wrap">
+<section class="sec pn" id="pn-list" role="tabpanel" aria-labelledby="tb-list" hidden><div class="wrap">
   <div class="chips" id="chips" role="group" aria-label="分類で絞り込む"></div>
   <ul class="pl" id="pl">
     <li data-slug="decision-misalignment"><article class="ps"><a class="ps-th" href="https://samurai-style.tokyo/media/decision-misalignment" tabindex="-1" aria-hidden="true"><img src="https://images.ctfassets.net/4pab4ccjvs20/3mqlwLX4sGYVWqr4vsgbs7/95ff2fde07bb1e308c88c0515c6d9e95/decision-misalignment-cover-motion.webp?w=960" alt="会議で議論が噛み合わないとき、原因は3つに分けられるー目的・手段・判断軸で見る意思決定のずれー" loading="lazy" decoding="async"></a>
@@ -258,7 +258,7 @@ html.lock{overflow:hidden}
   </ul>
 </div></section>
 
-<section class="sec pn" id="upstream" role="tabpanel" aria-labelledby="tb-up" hidden><div class="wrap">
+<section class="sec pn" id="upstream" role="tabpanel" aria-labelledby="tb-up"><div class="wrap">
   <header class="md-h">
     <h2 class="md-t">“マーケティングの上流”について考察</h2>
     <p class="md-lead">日々のマーケティングの業務においては、広告管理画面を見たり、クリエイティブやLPを改修したり、<br>SEOやメルマガの記事コンテンツを制作したりといった施策と数値を見て分析・改善を繰り返します。<br>一方、上流とは、その実務の前段で考えることが必要な論点で、どの施策においても、事業におけるターゲットは同一であり、<br>「誰に」「何を」提供するかの共通認識がなければ、<br>ユーザーから見た際に一貫性を欠き、投下したリソース（お金と時間）に対して期待するリターンが効率的に得られません。<br>このページでは、上流から実務までに必要な論点をレイヤーごとに記事と動画でまとめたので、ぜひ日々の業務にお役立ていただければ幸いです。</p>
@@ -373,14 +373,14 @@ const V={mark,toggle:(b,k,items)=>open(b,k,items),close};
 </script>
 <script>
 (()=>{
-/* タブ：メディア一覧（既定）／“マーケティングの上流”について考察。#upstream・#open=… は考察側で開く */
+/* タブ：左＝“マーケティングの上流”について考察（既定）／右＝メディア一覧（#list で開く）（So 11/24） */
 const tabs=[...document.querySelectorAll('[role=tab]')],wrap=document.querySelector('.tabs-w');
 function show(id,push){tabs.forEach(t=>{const on=t.getAttribute('aria-controls')===id;t.setAttribute('aria-selected',on);t.tabIndex=on?0:-1;document.getElementById(t.getAttribute('aria-controls')).hidden=!on});
-  if(push){history.replaceState(null,'',id==='upstream'?'#upstream':location.pathname+location.search);
+  if(push){history.replaceState(null,'',id==='pn-list'?'#list':location.pathname+location.search);
     const y=wrap.getBoundingClientRect().top+scrollY-(parseFloat(getComputedStyle(wrap).top)||0);if(scrollY>y)scrollTo({top:y})}}
 tabs.forEach((t,i)=>{t.addEventListener('click',()=>show(t.getAttribute('aria-controls'),true));
   t.addEventListener('keydown',e=>{if(e.key!=='ArrowRight'&&e.key!=='ArrowLeft')return;e.preventDefault();const n=tabs[(i+(e.key==='ArrowRight'?1:tabs.length-1))%tabs.length];n.focus();n.click()})});
-if(location.hash==='#upstream'||location.hash.startsWith('#open='))show('upstream',false);
+if(location.hash==='#list')show('pn-list',false);
 /* 絞り込み：図の箱（data.json の割り当て）。記事の無い分類は出さない */
 const cards=[...document.querySelectorAll('#pl>li')],chips=document.getElementById('chips');
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
