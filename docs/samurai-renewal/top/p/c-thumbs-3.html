@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+JP:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;700&family=Roboto+Flex:opsz,slnt,wdth,wght@8..144,-10..0,25..151,100..1000&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_paper.css">
+<title>記事サムネイル案3：生成りの地に朱1点の幾何 | サムライスタイル</title>
+<style>
+/* 記事一覧（原文の7本：サムネイル・題名・抜粋・筆者） */
+.pl{list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.ps{height:100%;display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);transition:border-color .2s}
+.ps:hover{border-color:var(--ink)}
+.ps-th{display:block;aspect-ratio:16/9;overflow:hidden;background:#e9e5db;border-bottom:1px solid var(--line2)}
+.ps-th img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.2,.6,.2,1)}
+.ps:hover .ps-th img{transform:scale(1.03)}
+.ps-tx{display:flex;flex-direction:column;flex:1;padding:22px 24px 24px}
+.ps h3{margin:0 0 12px;font-size:17px;line-height:1.7;font-weight:500;letter-spacing:.02em}
+.ps h3 a::after{content:"";position:absolute;inset:0}
+.ps{position:relative}
+.ps h3 a:focus-visible{outline:none}
+.ps:focus-within{outline:2px solid var(--sig);outline-offset:3px}
+.ps .ex{margin:0 0 20px;font-size:13.5px;line-height:1.9;color:var(--mute);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.ps .by{margin:auto 0 0;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink2)}
+.ps .by img{width:24px;height:24px;border-radius:50%;object-fit:cover}
+@media (max-width:1080px){.pl{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.pl{grid-template-columns:1fr;gap:16px}.ps-tx{padding:18px 18px 20px}.ps h3{font-size:16px}}
+
+
+/* ===== 候補ページの枠 ===== */
+.cn{max-width:860px;margin:0 0 clamp(40px,6vh,64px);font-size:14.5px;line-height:2;color:var(--ink2)}
+.cn b{font-weight:500;color:var(--ink)}
+.sub{display:flex;align-items:baseline;gap:14px;margin:0 0 22px;padding-top:10px;border-top:1px solid var(--ink);font:400 11.5px/1.5 var(--mono);letter-spacing:.08em}
+.sub .jp2{font-family:var(--jp);font-size:12.5px;letter-spacing:.1em}
+.sub .end{margin-left:auto;color:var(--mute)}
+.ps-th{position:relative}
+.art{position:absolute;inset:0;display:block;overflow:hidden;transition:transform .6s cubic-bezier(.2,.6,.2,1)}
+.ps:hover .art{transform:scale(1.03)}
+.art svg{display:block;width:100%;height:100%}
+/* 7枚を大きく */
+.bgg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 20px}
+.bg{margin:0}
+.bg-th{position:relative;display:block;aspect-ratio:16/9;overflow:hidden;border:1px solid var(--line);background:#e9e5db}
+.bg-th:hover{border-color:var(--ink)}
+.bg-th:focus-visible{outline:2px solid var(--sig);outline-offset:3px}
+.bg figcaption{display:flex;gap:14px;align-items:baseline;margin-top:12px;font-size:13px;line-height:1.7;color:var(--ink2)}
+.bg figcaption .no{flex:none}
+@media (max-width:760px){.bgg{grid-template-columns:1fr;gap:24px}.sub .end{display:none}}
+
+/* ===== 案3：生成りの地に朱1点の幾何（面だけ。ゆっくり動く） ===== */
+.art{background:#efebe1}
+.art svg{overflow:hidden}
+.art .k{fill:#151513}
+.art .g1{fill:#d7d1c2}
+.art .g2{fill:#c4bcaa}
+.art .g0{fill:#e4dfd3}
+.art .sg{fill:#ff5a24}
+.art .hl{fill:none;stroke:#151513;stroke-width:1;opacity:.35}
+.art .ix{font:400 13px "JetBrains Mono",ui-monospace,monospace;fill:#6f6d69;letter-spacing:.1em}
+.art .in{opacity:0;transition:opacity 1.4s var(--d,0s)}
+.art.drawn .in{opacity:1}
+.art .lp{animation-play-state:paused!important}
+.art.vis.go .lp{animation-play-state:running!important}
+html.rm .art .lp{animation:none!important}
+html.rm .art .in{transition:none}
+/* 01 3段の帯がずれて、揃う */
+.b1-1{animation:b1-1 16s ease-in-out infinite}
+.b1-2{animation:b1-2 16s ease-in-out infinite}
+@keyframes b1-1{0%,12%{transform:translateX(0)}40%,60%{transform:translateX(-64px)}88%,100%{transform:translateX(0)}}
+@keyframes b1-2{0%,12%{transform:translateX(0)}40%,60%{transform:translateX(44px)}88%,100%{transform:translateX(0)}}
+/* 02 分子の丸だけが膨らんだり縮んだり */
+.b2-c{transform-origin:320px 200px;animation:b2-c 18s cubic-bezier(.45,0,.3,1) infinite}
+@keyframes b2-c{0%,6%{transform:scale(1)}30%,38%{transform:scale(.52)}60%,66%{transform:scale(.84)}86%,92%{transform:scale(.38)}100%{transform:scale(1)}}
+/* 03 箱の中は下へ流れ、外の朱はゆっくり昇る */
+.b3-f{animation:b3-f 6s linear infinite}
+@keyframes b3-f{to{stroke-dashoffset:-48}}
+.b3-q{animation:b3-q 14s ease-in-out infinite}
+@keyframes b3-q{0%,100%{transform:translate(0,0)}50%{transform:translate(18px,-34px)}}
+/* 04 十字の4つの区画を丸が渡る */
+.b4-a{animation:b4-a 20s ease-in-out infinite}
+.b4-b{animation:b4-b 20s ease-in-out infinite}
+.b4-c{animation:b4-c 20s ease-in-out infinite}
+.b4-s{animation:b4-s 20s ease-in-out infinite}
+@keyframes b4-a{0%,100%{transform:translate(0,0)}33%{transform:translate(150px,30px)}66%{transform:translate(60px,-60px)}}
+@keyframes b4-b{0%,100%{transform:translate(0,0)}33%{transform:translate(-120px,-40px)}66%{transform:translate(-40px,60px)}}
+@keyframes b4-c{0%,100%{transform:translate(0,0)}33%{transform:translate(40px,-70px)}66%{transform:translate(-110px,-20px)}}
+@keyframes b4-s{0%,100%{transform:translate(0,0)}33%{transform:translate(-60px,24px)}66%{transform:translate(30px,40px)}}
+/* 05 外の輪から内へ、波が寄っていく */
+.b5{transform-origin:452px 214px;animation:b5 9s ease-in-out infinite}
+@keyframes b5{0%,100%{transform:scale(1)}50%{transform:scale(.93)}}
+/* 06 陽が渡り、影が回る */
+.b6-s{animation:b6-s 24s ease-in-out infinite alternate}
+@keyframes b6-s{0%{transform:translate(0,0)}25%{transform:translate(95px,-60px)}50%{transform:translate(190px,-82px)}75%{transform:translate(285px,-60px)}100%{transform:translate(380px,0)}}
+.b6-h{transform-origin:340px 262px;animation:b6-h 24s ease-in-out infinite alternate}
+@keyframes b6-h{0%{transform:scaleX(1)}50%{transform:scaleX(.06)}100%{transform:scaleX(-1)}}
+
+</style>
+</head>
+<body>
+<header class="ghd">
+  <a class="logo" href="../c-3d-b2.html" aria-label="SAMURAI STYLE"><img src="../img/logo.svg" alt="SAMURAI STYLE"></a>
+  <nav class="nav"><a href="../c-3d-b2.html">HOME</a><a href="service.html">SERVICE</a><a href="media.html" aria-current="page">MEDIA</a><a href="company.html">COMPANY</a><a href="recruit.html">RECRUIT</a><a class="cta" href="../c-3d-b2.html#contact">CONTACT</a><div class="lang"><span>ID</span><span>EN</span><b>JA</b></div></nav>
+  <button class="burger" type="button" aria-label="Menu" aria-expanded="false"><i></i><i></i></button>
+</header>
+<div class="gov"><a href="../c-3d-b2.html">HOME</a><a href="service.html">SERVICE</a><a href="media.html">MEDIA</a><a href="company.html">COMPANY</a><a href="recruit.html">RECRUIT</a><a href="../c-3d-b2.html#contact">CONTACT</a><div class="lang"><span>ID</span><span>EN</span><b>JA</b></div></div>
+
+
+<main id="top">
+<section class="sec first" id="media"><div class="wrap">
+  <div class="sh" style="margin-bottom:clamp(28px,4vh,44px)"><div class="lbl"><span>案3 / 3</span><p class="jp2">記事サムネイルの候補　生成りの地に朱1点の幾何</p><span class="end">c-thumbs-3</span></div><h1 class="giant" data-wd>MEDIA</h1></div>
+  <p class="cn">文字も線画の説明も無しに、記事の構造を面（墨・灰・生成り）の大きな幾何形に置き換える。形は画面の端で切れ、朱の丸が1つだけ。どれもゆっくり（14〜24秒の周期で）動き続ける。</p>
+  <div class="sub"><span>A</span><p class="jp2">一覧に入れた時（MEDIA ページの記事カード）</p><span class="end">01—07</span></div>
+  <ul class="pl" id="pl">
+    <li data-slug="decision-misalignment"><article class="ps"><a class="ps-th" href="https://samurai-style.tokyo/media/decision-misalignment" tabindex="-1" aria-hidden="true"><span class="art" data-i="0"></span></a>
+      <div class="ps-tx"><h3><a href="https://samurai-style.tokyo/media/decision-misalignment">会議で議論が噛み合わないとき、原因は3つに分けられるー目的・手段・判断軸で見る意思決定のずれー</a></h3><p class="ex">このような方に向けて書いています 次のいずれかに心当たりがあれば、この記事はお役に立てるかもしれません。 定例の会議で、同じ論点が毎回平行線のまま終わる 議論の後に、どうして伝わらないのだろうと感じる...</p><p class="by"><img src="https://images.ctfassets.net/4pab4ccjvs20/2hQHA7JDfzl1LwGwW4BfU6/5b4eff8bd0bba4b3e06522a85e1088ed/hashimoto.png?w=96" alt="橋本　圭司" width="24" height="24"><span>橋本　圭司</span></p></div></article></li>
+    <li data-slug="marketing-sales-consensus"><article class="ps"><a class="ps-th" href="https://samurai-style.tokyo/media/marketing-sales-consensus" tabindex="-1" aria-hidden="true"><span class="art" data-i="1"></span></a>
+      <div class="ps-tx"><h3><a href="https://samurai-style.tokyo/media/marketing-sales-consensus">なぜマーケティングの意思決定が営業部門と円滑に進まないのかーROIの不確実性から考える部門間の合意形成が難しい構造ー</a></h3><p class="ex">このような方に向けて書いています 次のどちらかに心当たりがあれば、この記事はお役に立てるかもしれません。 マーケティング施策を提案しても、営業部門の賛成を得られないことが多い 施策の成果を事前に示せず...</p><p class="by"><img src="https://images.ctfassets.net/4pab4ccjvs20/2hQHA7JDfzl1LwGwW4BfU6/5b4eff8bd0bba4b3e06522a85e1088ed/hashimoto.png?w=96" alt="橋本　圭司" width="24" height="24"><span>橋本　圭司</span></p></div></article></li>
+    <li data-slug="human-roles"><article class="ps"><a class="ps-th" href="https://samurai-style.tokyo/media/human-roles" tabindex="-1" aria-hidden="true"><span class="art" data-i="2"></span></a>
+      <div class="ps-tx"><h3><a href="https://samurai-style.tokyo/media/human-roles">なぜAI時代でも問いが人に残るのかー2026年現在地点での考察ー</a></h3><p class="ex">答えは機械が出す、では何が人に残るのか もう3年前になりますが、課題解決は機械（AI）が行い、人は感情解放に向き合う時代へ向かっているのではないかという記事を書きました。その延長線に昨今多くの人が感じ...</p><p class="by"><img src="https://images.ctfassets.net/4pab4ccjvs20/2hQHA7JDfzl1LwGwW4BfU6/5b4eff8bd0bba4b3e06522a85e1088ed/hashimoto.png?w=96" alt="橋本　圭司" width="24" height="24"><span>橋本　圭司</span></p></div></article></li>
+    <li data-slug="initiative-priority"><article class="ps"><a class="ps-th" href="https://samurai-style.tokyo/media/initiative-priority" tabindex="-1" aria-hidden="true"><span class="art" data-i="3"></span></a>
+      <div class="ps-tx"><h3><a href="https://samurai-style.tokyo/media/initiative-priority">施策の優先順位はどう決まるのかー定量と定性、2つの軸で考える判断構造ー</a></h3><p class="ex">やれることは無限にあり、リソースは有限であるという当たり前 Webマーケティングの現場で戦略立案から施策実行までに携わっていると、やるべきことは無数にあるのに、時間もお金も有限だという当たり前の事実に...</p><p class="by"><img src="https://images.ctfassets.net/4pab4ccjvs20/2hQHA7JDfzl1LwGwW4BfU6/5b4eff8bd0bba4b3e06522a85e1088ed/hashimoto.png?w=96" alt="橋本　圭司" width="24" height="24"><span>橋本　圭司</span></p></div></article></li>
+    <li data-slug="lp-appeal-axis"><article class="ps"><a class="ps-th" href="https://samurai-style.tokyo/media/lp-appeal-axis" tabindex="-1" aria-hidden="true"><span class="art" data-i="4"></span></a>
+      <div class="ps-tx"><h3><a href="https://samurai-style.tokyo/media/lp-appeal-axis">LP改修で訴求軸をどう整理するかー機能は同じでも全部違う、を掘り下げる方法ー</a></h3><p class="ex">このような方に向けて書いています 次のいずれかに心当たりがあれば、この記事はお役に立てるかもしれません。 LPの訴求が競合と似ていて、差別化できていないと感じている 何を訴求の軸にすべきか、根拠を持っ...</p><p class="by"><img src="https://images.ctfassets.net/4pab4ccjvs20/2hQHA7JDfzl1LwGwW4BfU6/5b4eff8bd0bba4b3e06522a85e1088ed/hashimoto.png?w=96" alt="橋本　圭司" width="24" height="24"><span>橋本　圭司</span></p></div></article></li>
+    <li data-slug="dream-time"><article class="ps"><a class="ps-th" href="https://samurai-style.tokyo/media/dream-time" tabindex="-1" aria-hidden="true"><span class="art" data-i="5"></span></a>
+      <div class="ps-tx"><h3><a href="https://samurai-style.tokyo/media/dream-time">ドリームタイム　絵を通じて夢のような時間を届ける</a></h3><p class="ex">2023年4月中旬、仕事と現地の方々との縁が繋がり、ドバイへの旅に出ました。 常夏の国らしく日中は日差しが強く気温も30度を超える暑さでしたが、その酷暑の中でブルジュハリファやパームジュメイラといった...</p><p class="by"><img src="https://images.ctfassets.net/4pab4ccjvs20/2hQHA7JDfzl1LwGwW4BfU6/5b4eff8bd0bba4b3e06522a85e1088ed/hashimoto.png?w=96" alt="橋本　圭司" width="24" height="24"><span>橋本　圭司</span></p></div></article></li>
+    <li data-slug="art-mind"><article class="ps"><a class="ps-th" href="https://samurai-style.tokyo/media/art-mind" tabindex="-1" aria-hidden="true"><span class="art" data-i="6"></span></a>
+      <div class="ps-tx"><h3><a href="https://samurai-style.tokyo/media/art-mind">アート思考の時代　課題解決は機械が行い、人は感情解放に向き合う時代へ</a></h3><p class="ex">今年の春、天気の良い朝にふと思い立ち箱根に向かいました。初日は仕事を終えてから20時過ぎに箱根湯本の駅へ向かったところ、すでに大半の店が閉まっていたため、仕方なくデイリーヤマザキでカップラーメンを購入...</p><p class="by"><img src="https://images.ctfassets.net/4pab4ccjvs20/2hQHA7JDfzl1LwGwW4BfU6/5b4eff8bd0bba4b3e06522a85e1088ed/hashimoto.png?w=96" alt="橋本　圭司" width="24" height="24"><span>橋本　圭司</span></p></div></article></li>
+  </ul>
+</div></section>
+<section class="sec" id="large" style="padding-top:clamp(72px,10vh,110px)"><div class="wrap">
+  <div class="sub"><span>B</span><p class="jp2">7枚を大きく（16:9）</p><span class="end">01—07</span></div>
+  <div class="bgg"><figure class="bg"><a class="bg-th" href="https://samurai-style.tokyo/media/decision-misalignment" target="_blank" rel="noopener" aria-label="会議で議論が噛み合わないとき、原因は3つに分けられるー目的・手段・判断軸で見る意思決定のずれー"><span class="art" data-i="0"></span></a><figcaption><span class="no">01 / 07</span><span class="bt">会議で議論が噛み合わないとき、原因は3つに分けられるー目的・手段・判断軸で見る意思決定のずれー</span></figcaption></figure><figure class="bg"><a class="bg-th" href="https://samurai-style.tokyo/media/marketing-sales-consensus" target="_blank" rel="noopener" aria-label="なぜマーケティングの意思決定が営業部門と円滑に進まないのかーROIの不確実性から考える部門間の合意形成が難しい構造ー"><span class="art" data-i="1"></span></a><figcaption><span class="no">02 / 07</span><span class="bt">なぜマーケティングの意思決定が営業部門と円滑に進まないのかーROIの不確実性から考える部門間の合意形成が難しい構造ー</span></figcaption></figure><figure class="bg"><a class="bg-th" href="https://samurai-style.tokyo/media/human-roles" target="_blank" rel="noopener" aria-label="なぜAI時代でも問いが人に残るのかー2026年現在地点での考察ー"><span class="art" data-i="2"></span></a><figcaption><span class="no">03 / 07</span><span class="bt">なぜAI時代でも問いが人に残るのかー2026年現在地点での考察ー</span></figcaption></figure><figure class="bg"><a class="bg-th" href="https://samurai-style.tokyo/media/initiative-priority" target="_blank" rel="noopener" aria-label="施策の優先順位はどう決まるのかー定量と定性、2つの軸で考える判断構造ー"><span class="art" data-i="3"></span></a><figcaption><span class="no">04 / 07</span><span class="bt">施策の優先順位はどう決まるのかー定量と定性、2つの軸で考える判断構造ー</span></figcaption></figure><figure class="bg"><a class="bg-th" href="https://samurai-style.tokyo/media/lp-appeal-axis" target="_blank" rel="noopener" aria-label="LP改修で訴求軸をどう整理するかー機能は同じでも全部違う、を掘り下げる方法ー"><span class="art" data-i="4"></span></a><figcaption><span class="no">05 / 07</span><span class="bt">LP改修で訴求軸をどう整理するかー機能は同じでも全部違う、を掘り下げる方法ー</span></figcaption></figure><figure class="bg"><a class="bg-th" href="https://samurai-style.tokyo/media/dream-time" target="_blank" rel="noopener" aria-label="ドリームタイム　絵を通じて夢のような時間を届ける"><span class="art" data-i="5"></span></a><figcaption><span class="no">06 / 07</span><span class="bt">ドリームタイム　絵を通じて夢のような時間を届ける</span></figcaption></figure><figure class="bg"><a class="bg-th" href="https://samurai-style.tokyo/media/art-mind" target="_blank" rel="noopener" aria-label="アート思考の時代　課題解決は機械が行い、人は感情解放に向き合う時代へ"><span class="art" data-i="6"></span></a><figcaption><span class="no">07 / 07</span><span class="bt">アート思考の時代　課題解決は機械が行い、人は感情解放に向き合う時代へ</span></figcaption></figure></div>
+</div></section>
+<div class="page-end"></div>
+</main>
+<footer class="ft"><div class="wrap">
+  <a class="big" href="../c-3d-b2.html#contact"><div class="bw"><b>CONTACT</b><canvas id="ftc" aria-hidden="true"></canvas></div><div class="bl"><span class="jp">お問い合わせはこちらから</span><span class="arr">→</span></div></a>
+  <div class="low">
+    <a class="lg" href="../c-3d-b2.html" aria-label="Samurai-Style"><img src="../img/logo.svg" alt="Samurai-Style"></a>
+    <nav><a href="https://samurai-style.tokyo/privacy-policy">プライバシーポリシー</a><a href="https://samurai-style.tokyo/commercial-transactions">特定商取引法に基づく表記</a></nav>
+    <span>© 2024- samurai-style All Right Reserved.</span>
+  </div>
+</div></footer>
+<span id="meas" aria-hidden="true"></span>
+<script src="_paper.js"></script>
+<script>
+/* 案3：面だけの幾何（viewBox 640×360）。墨・灰・生成りの面に朱の丸が1つ。形は端で切れる */
+const IX=i=>`<text class="ix in" x="24" y="340" style="--d:.6s">${String(i+1).padStart(2,'0')}</text>`;
+const S=(i,inner)=>`<svg viewBox="0 0 640 360" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">${inner}${IX(i)}</svg>`;
+window.ART_GO=400;window.ART_REST=4;
+const ART=[
+/* 01 目的・手段・判断軸：3段の帯（上ほど短い）。上の2段だけがずれて、また揃う。朱は頂の丸 */
+i=>S(i,`<path class="hl in" d="M320 0V360"/>
+ <g class="in" style="--d:.1s"><rect class="k" x="70" y="244" width="500" height="64"/></g>
+ <g class="lp b1-2"><g class="in" style="--d:.3s"><rect class="g2" x="150" y="166" width="340" height="64"/></g></g>
+ <g class="lp b1-1"><g class="in" style="--d:.5s"><rect class="k" x="230" y="88" width="180" height="64"/><circle class="sg" cx="320" cy="56" r="17"/></g></g>`),
+/* 02 ROI：太い分数の線。分母の四角は動かず、分子の丸（Return）だけが大きさを変え続ける */
+i=>S(i,`<g class="lp b2-c"><g class="in" style="--d:.2s"><circle class="g1" cx="320" cy="62" r="138"/><circle class="sg" cx="320" cy="130" r="14"/></g></g>
+ <g class="in" style="--d:.1s"><rect class="k" x="40" y="200" width="560" height="14"/><rect class="k" x="250" y="236" width="140" height="140"/></g>`),
+/* 03 問いは人に残る：大きな墨の箱の中を線が下へ流れ（縦に降りる）、朱の丸が箱の外で昇る */
+i=>S(i,`<g class="in" style="--d:.1s"><rect class="k" x="60" y="96" width="300" height="300"/></g>
+ <g class="in" style="--d:.4s">${[100,150,210,260,310].map((x,k)=>`<path class="lp b3-f" d="M${x} 96V360" stroke="#efebe1" stroke-width="${k===2?3:1.4}" stroke-dasharray="${k===2?'30 18':'8 16'}" fill="none"/>`).join('')}</g>
+ <g class="in" style="--d:.6s"><rect class="g1" x="386" y="96" width="194" height="12"/></g>
+ <g class="lp b3-q"><g class="in" style="--d:.8s"><circle class="sg" cx="470" cy="48" r="24"/></g></g>`),
+/* 04 定量×定性：太い十字。丸（施策）が区画をゆっくり渡り、朱の丸が右上にいる時間が長い */
+i=>S(i,`<g class="in" style="--d:.1s"><rect class="k" x="196" y="0" width="8" height="360"/><rect class="k" x="0" y="226" width="640" height="8"/></g>
+ <g class="lp b4-a"><g class="in" style="--d:.3s"><circle class="g1" cx="110" cy="120" r="56"/></g></g>
+ <g class="lp b4-b"><g class="in" style="--d:.4s"><circle class="k" cx="420" cy="300" r="22"/></g></g>
+ <g class="lp b4-c"><g class="in" style="--d:.5s"><circle class="g2" cx="330" cy="300" r="40"/></g></g>
+ <g class="in" style="--d:.55s"><circle cx="300" cy="120" r="30" fill="none" stroke="#151513" stroke-width="2"/></g>
+ <g class="lp b4-s"><g class="in" style="--d:.7s"><circle class="sg" cx="500" cy="110" r="20"/></g></g>`),
+/* 05 マクロからミクロへ：同心の輪が外から内へ寄り、芯に朱 */
+i=>S(i,[[330,'g0'],[262,'g1'],[196,'g2'],[134,'g1'],[78,'k']].map(([r,c],k)=>`<g class="lp b5" style="animation-delay:${k*.45}s"><g class="in" style="--d:${.1+k*.12}s"><circle class="${c}" cx="452" cy="214" r="${r}"/></g></g>`).join('')+
+ `<g class="lp b5" style="animation-delay:2.3s"><g class="in" style="--d:.8s"><circle class="sg" cx="452" cy="214" r="15"/></g></g>`),
+/* 06 強い光と濃い影：細く高い塔と街の面。朱の陽が渡り、塔の影が地面で回る */
+i=>S(i,`<g class="lp b6-s"><g class="in" style="--d:.6s"><circle class="sg" cx="150" cy="190" r="30"/></g></g>
+ <g class="in" style="--d:.1s"><rect class="g1" x="0" y="262" width="640" height="98"/>
+ <rect class="g2" x="120" y="196" width="60" height="66"/><rect class="g2" x="188" y="150" width="44" height="112"/><rect class="g2" x="420" y="170" width="56" height="92"/><rect class="g2" x="484" y="214" width="70" height="48"/>
+ <path class="k" d="M328 262L336 -10H344L352 262Z"/><rect class="k" x="262" y="214" width="48" height="48"/><rect class="k" x="370" y="128" width="36" height="134"/></g>
+ <g class="lp b6-h"><g class="in" style="--d:.5s"><path d="M328 262H352L560 300H520Z" fill="rgba(21,21,19,.28)"/></g></g>`),
+/* 07 V字：太い墨のV。朱の丸が子どもの側から谷（大人）へ降り、反対の側（感情解放）へ上る */
+i=>S(i,`<g class="in" style="--d:.1s"><rect class="g1" x="0" y="300" width="640" height="60"/>
+ <path d="M120 20L320 300L520 20" fill="none" stroke="#151513" stroke-width="30" stroke-linejoin="miter"/></g>
+ <g class="in" style="--d:.6s"><circle class="sg" r="22" cx="0" cy="0"><animateMotion dur="16s" repeatCount="indefinite" path="M120 -8L320 272L520 -8" keyPoints="0;1;1;0;0" keyTimes="0;.45;.5;.95;1" calcMode="linear"/></circle></g>`),
+];
+
+/* 共通：.art に絵を入れる。画面に入ったら drawn（以後そのまま）、見えている間だけ vis（ループの動きはこの間だけ）。
+   prefers-reduced-motion では最初から描き終わった姿で止める */
+(()=>{
+const REDUCE=matchMedia('(prefers-reduced-motion: reduce)').matches;
+if(REDUCE)document.documentElement.classList.add('rm');
+const els=[...document.querySelectorAll('.art[data-i]')];
+els.forEach(el=>{const i=+el.dataset.i;el.innerHTML=ART[i](i);const sv=el.querySelector('svg');
+  if(sv&&sv.pauseAnimations){sv.pauseAnimations();if(REDUCE&&sv.setCurrentTime)sv.setCurrentTime(window.ART_REST||3)}
+  if(REDUCE)el.classList.add('drawn')});
+if(REDUCE)return;
+const sync=el=>{const sv=el.querySelector('svg');if(!sv||!sv.pauseAnimations)return;
+  const run=el.classList.contains('vis')&&el.classList.contains('go');run?sv.unpauseAnimations():sv.pauseAnimations()};
+const io=new IntersectionObserver(es=>{for(const e of es){const el=e.target;
+  if(e.isIntersecting){el.classList.add('vis');if(!el.classList.contains('drawn')){el.classList.add('drawn');setTimeout(()=>{el.classList.add('go');sync(el)},window.ART_GO||2000)}}
+  else el.classList.remove('vis');sync(el)}},{threshold:.35});
+els.forEach(el=>io.observe(el));
+})();
+
+</script>
+</body>
+</html>

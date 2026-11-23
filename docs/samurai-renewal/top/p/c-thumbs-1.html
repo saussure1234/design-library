@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+JP:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;700&family=Roboto+Flex:opsz,slnt,wdth,wght@8..144,-10..0,25..151,100..1000&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_paper.css">
+<title>記事サムネイル案1：製図の線画で描く図解 | サムライスタイル</title>
+<style>
+/* 記事一覧（原文の7本：サムネイル・題名・抜粋・筆者） */
+.pl{list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.ps{height:100%;display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);transition:border-color .2s}
+.ps:hover{border-color:var(--ink)}
+.ps-th{display:block;aspect-ratio:16/9;overflow:hidden;background:#e9e5db;border-bottom:1px solid var(--line2)}
+.ps-th img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.2,.6,.2,1)}
+.ps:hover .ps-th img{transform:scale(1.03)}
+.ps-tx{display:flex;flex-direction:column;flex:1;padding:22px 24px 24px}
+.ps h3{margin:0 0 12px;font-size:17px;line-height:1.7;font-weight:500;letter-spacing:.02em}
+.ps h3 a::after{content:"";position:absolute;inset:0}
+.ps{position:relative}
+.ps h3 a:focus-visible{outline:none}
+.ps:focus-within{outline:2px solid var(--sig);outline-offset:3px}
+.ps .ex{margin:0 0 20px;font-size:13.5px;line-height:1.9;color:var(--mute);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.ps .by{margin:auto 0 0;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink2)}
+.ps .by img{width:24px;height:24px;border-radius:50%;object-fit:cover}
+@media (max-width:1080px){.pl{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.pl{grid-template-columns:1fr;gap:16px}.ps-tx{padding:18px 18px 20px}.ps h3{font-size:16px}}
+
+
+/* ===== 候補ページの枠 ===== */
+.cn{max-width:860px;margin:0 0 clamp(40px,6vh,64px);font-size:14.5px;line-height:2;color:var(--ink2)}
+.cn b{font-weight:500;color:var(--ink)}
+.sub{display:flex;align-items:baseline;gap:14px;margin:0 0 22px;padding-top:10px;border-top:1px solid var(--ink);font:400 11.5px/1.5 var(--mono);letter-spacing:.08em}
+.sub .jp2{font-family:var(--jp);font-size:12.5px;letter-spacing:.1em}
+.sub .end{margin-left:auto;color:var(--mute)}
+.ps-th{position:relative}
+.art{position:absolute;inset:0;display:block;overflow:hidden;transition:transform .6s cubic-bezier(.2,.6,.2,1)}
+.ps:hover .art{transform:scale(1.03)}
+.art svg{display:block;width:100%;height:100%}
+/* 7枚を大きく */
+.bgg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 20px}
+.bg{margin:0}
+.bg-th{position:relative;display:block;aspect-ratio:16/9;overflow:hidden;border:1px solid var(--line);background:#e9e5db}
+.bg-th:hover{border-color:var(--ink)}
+.bg-th:focus-visible{outline:2px solid var(--sig);outline-offset:3px}
+.bg figcaption{display:flex;gap:14px;align-items:baseline;margin-top:12px;font-size:13px;line-height:1.7;color:var(--ink2)}
+.bg figcaption .no{flex:none}
+@media (max-width:760px){.bgg{grid-template-columns:1fr;gap:24px}.sub .end{display:none}}
+
+/* ===== 案1：製図の線画（方眼の地・墨の細線・朱1点） ===== */
+.art{background-color:#f3f0e7;background-image:linear-gradient(rgba(21,21,19,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(21,21,19,.055) 1px,transparent 1px);background-size:5% 8.8889%;background-position:-1px -1px}
+.art svg{overflow:hidden}
+.art .d{fill:none;stroke:#151513;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1 1;stroke-dashoffset:1;transition:stroke-dashoffset 1.5s cubic-bezier(.55,.1,.25,1) var(--d,0s)}
+.art .d.th{stroke-width:2.6}
+.art .d.lt{stroke-width:1;stroke:rgba(21,21,19,.55)}
+.art.drawn .d{stroke-dashoffset:0}
+.art .f{fill:none;stroke:rgba(21,21,19,.45);stroke-width:1;stroke-dasharray:4 5;opacity:0;transition:opacity .9s var(--d,0s)}
+.art .f.so{stroke-dasharray:none}
+.art .fl{opacity:0;transition:opacity 1.2s var(--d,1.2s)}
+.art .t{opacity:0;transition:opacity .8s var(--d,0s)}
+.art.drawn .f,.art.drawn .fl,.art.drawn .t{opacity:1}
+.art text{font-family:"IBM Plex Sans JP","Hiragino Sans",sans-serif;font-size:19px;font-weight:500;fill:#151513;letter-spacing:.06em}
+.art text.mn{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:13px;font-weight:400;fill:#6f6d69;letter-spacing:.08em}
+.art text.sm{font-size:15px}
+.art text.xs{font-size:13.5px;letter-spacing:.02em}
+.art text.lg{font-family:"Space Grotesk",sans-serif;font-size:50px;font-weight:500;letter-spacing:-.01em}
+.art text.en{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:16px;font-weight:400;fill:#3b3a36;letter-spacing:.04em}
+.art .sg{fill:#ff5a24}
+.art .nd{fill:#fbfaf6;stroke:#151513;stroke-width:1.2}
+.art .ink{fill:#151513}
+/* 描き終わってからのループ（見えている間だけ） */
+.art .lp{animation-play-state:paused!important}
+.art.vis.go .lp{animation-play-state:running!important}
+.a1-t1{animation:a1-t1 9s ease-in-out infinite}
+.a1-t2{animation:a1-t2 9s ease-in-out infinite}
+@keyframes a1-t1{0%,18%{transform:translateX(0)}34%,58%{transform:translateX(-24px)}74%,100%{transform:translateX(0)}}
+@keyframes a1-t2{0%,24%{transform:translateX(0)}40%,58%{transform:translateX(18px)}74%,100%{transform:translateX(0)}}
+.a2-r{transform-origin:405px 182px;animation:a2-r 10s cubic-bezier(.45,0,.3,1) infinite}
+.a2-m{animation:a2-m 10s cubic-bezier(.45,0,.3,1) infinite}
+@keyframes a2-r{0%,8%{transform:scaleY(1)}28%,36%{transform:scaleY(.42)}56%,62%{transform:scaleY(.78)}80%,88%{transform:scaleY(.26)}100%{transform:scaleY(1)}}
+@keyframes a2-m{0%,8%{transform:translateY(0)}28%,36%{transform:translateY(75.4px)}56%,62%{transform:translateY(28.6px)}80%,88%{transform:translateY(96.2px)}100%{transform:translateY(0)}}
+.a3-q{animation:a3-q 5s ease-in-out infinite}
+@keyframes a3-q{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+.a4-u{animation:a4-u 12s cubic-bezier(.6,0,.3,1) infinite}
+@keyframes a4-u{0%,28%{transform:translateX(0)}33%,61%{transform:translateX(56px)}66%,95%{transform:translateX(112px)}100%{transform:translateX(0)}}
+.a5-a{animation:a5-a 8s ease-in-out infinite}
+.a5-b{animation:a5-b 8s ease-in-out infinite}
+@keyframes a5-a{0%,100%{transform:translateX(-10px)}50%{transform:translateX(4px)}}
+@keyframes a5-b{0%,100%{transform:translateX(10px)}50%{transform:translateX(-4px)}}
+.a5-s{transform-origin:508px 180px;animation:a5-s 8s ease-in-out infinite}
+@keyframes a5-s{0%,100%{transform:scale(.55)}50%{transform:scale(1.15)}}
+.a5-r{transform-origin:200px 185px;animation:a5-r 40s linear infinite}
+@keyframes a5-r{to{transform:rotate(360deg)}}
+.a6-s{animation:a6-s 22s ease-in-out infinite alternate}
+@keyframes a6-s{0%{transform:translate(0,0)}25%{transform:translate(90px,-52px)}50%{transform:translate(180px,-70px)}75%{transform:translate(270px,-52px)}100%{transform:translate(360px,0)}}
+.a6-h{transform-origin:320px 280px;animation:a6-h 22s ease-in-out infinite alternate}
+@keyframes a6-h{0%{transform:scaleX(1)}25%{transform:scaleX(.45)}50%{transform:scaleX(.08)}75%{transform:scaleX(-.45)}100%{transform:scaleX(-1)}}
+html.rm .art .lp{animation:none!important}
+html.rm .art *{transition:none!important}
+
+</style>
+</head>
+<body>
+<header class="ghd">
+  <a class="logo" href="../c-3d-b2.html" aria-label="SAMURAI STYLE"><img src="../img/logo.svg" alt="SAMURAI STYLE"></a>
+  <nav class="nav"><a href="../c-3d-b2.html">HOME</a><a href="service.html">SERVICE</a><a href="media.html" aria-current="page">MEDIA</a><a href="company.html">COMPANY</a><a href="recruit.html">RECRUIT</a><a class="cta" href="../c-3d-b2.html#contact">CONTACT</a><div class="lang"><span>ID</span><span>EN</span><b>JA</b></div></nav>
+  <button class="burger" type="button" aria-label="Menu" aria-expanded="false"><i></i><i></i></button>
+</header>
+<div class="gov"><a href="../c-3d-b2.html">HOME</a><a href="service.html">SERVICE</a><a href="media.html">MEDIA</a><a href="company.html">COMPANY</a><a href="recruit.html">RECRUIT</a><a href="../c-3d-b2.html#contact">CONTACT</a><div class="lang"><span>ID</span><span>EN</span><b>JA</b></div></div>
+
+
+<main id="top">
+<section class="sec first" id="media"><div class="wrap">
+  <div class="sh" style="margin-bottom:clamp(28px,4vh,44px)"><div class="lbl"><span>案1 / 3</span><p class="jp2">記事サムネイルの候補　製図の線画で描く図解</p><span class="end">c-thumbs-1</span></div><h1 class="giant" data-wd>MEDIA</h1></div>
+  <p class="cn">記事の中心の考え方を、製図の細い線で1枚の図にする。画面に入ると線が引かれていき、描き終わると図の一部だけがゆっくり動く（ずれる・揺れる・移る）。地は方眼、朱は各図に1点だけ。FEATURES の「描かれていく線」と同じ言葉づかい。</p>
+  <div class="sub"><span>A</span><p class="jp2">一覧に入れた時（MEDIA ページの記事カード）</p><span class="end">01—07</span></div>
+  <ul class="pl" id="pl">
+    <li data-slug="decision-misalignment"><article class="ps"><a class="ps-th" href="https://samurai-style.tokyo/media/decision-misalignment" tabindex="-1" aria-hidden="true"><span class="art" data-i="0"></span></a>
+      <div class="ps-tx"><h3><a href="https://samurai-style.tokyo/media/decision-misalignment">会議で議論が噛み合わないとき、原因は3つに分けられるー目的・手段・判断軸で見る意思決定のずれー</a></h3><p class="ex">このような方に向けて書いています 次のいずれかに心当たりがあれば、この記事はお役に立てるかもしれません。 定例の会議で、同じ論点が毎回平行線のまま終わる 議論の後に、どうして伝わらないのだろうと感じる...</p><p class="by"><img src="https://images.ctfassets.net/4pab4ccjvs20/2hQHA7JDfzl1LwGwW4BfU6/5b4eff8bd0bba4b3e06522a85e1088ed/hashimoto.png?w=96" alt="橋本　圭司" width="24" height="24"><span>橋本　圭司</span></p></div></article></li>
+    <li data-slug="marketing-sales-consensus"><article class="ps"><a class="ps-th" href="https://samurai-style.tokyo/media/marketing-sales-consensus" tabindex="-1" aria-hidden="true"><span class="art" data-i="1"></span></a>
+      <div class="ps-tx"><h3><a href="https://samurai-style.tokyo/media/marketing-sales-consensus">なぜマーケティングの意思決定が営業部門と円滑に進まないのかーROIの不確実性から考える部門間の合意形成が難しい構造ー</a></h3><p class="ex">このような方に向けて書いています 次のどちらかに心当たりがあれば、この記事はお役に立てるかもしれません。 マーケティング施策を提案しても、営業部門の賛成を得られないことが多い 施策の成果を事前に示せず...</p><p class="by"><img src="https://images.ctfassets.net/4pab4ccjvs20/2hQHA7JDfzl1LwGwW4BfU6/5b4eff8bd0bba4b3e06522a85e1088ed/hashimoto.png?w=96" alt="橋本　圭司" width="24" height="24"><span>橋本　圭司</span></p></div></article></li>
+    <li data-slug="human-roles"><article class="ps"><a class="ps-th" href="https://samurai-style.tokyo/media/human-roles" tabindex="-1" aria-hidden="true"><span class="art" data-i="2"></span></a>
+      <div class="ps-tx"><h3><a href="https://samurai-style.tokyo/media/human-roles">なぜAI時代でも問いが人に残るのかー2026年現在地点での考察ー</a></h3><p class="ex">答えは機械が出す、では何が人に残るのか もう3年前になりますが、課題解決は機械（AI）が行い、人は感情解放に向き合う時代へ向かっているのではないかという記事を書きました。その延長線に昨今多くの人が感じ...</p><p class="by"><img src="https://images.ctfassets.net/4pab4ccjvs20/2hQHA7JDfzl1LwGwW4BfU6/5b4eff8bd0bba4b3e06522a85e1088ed/hashimoto.png?w=96" alt="橋本　圭司" width="24" height="24"><span>橋本　圭司</span></p></div></article></li>
+    <li data-slug="initiative-priority"><article class="ps"><a class="ps-th" href="https://samurai-style.tokyo/media/initiative-priority" tabindex="-1" aria-hidden="true"><span class="art" data-i="3"></span></a>
+      <div class="ps-tx"><h3><a href="https://samurai-style.tokyo/media/initiative-priority">施策の優先順位はどう決まるのかー定量と定性、2つの軸で考える判断構造ー</a></h3><p class="ex">やれることは無限にあり、リソースは有限であるという当たり前 Webマーケティングの現場で戦略立案から施策実行までに携わっていると、やるべきことは無数にあるのに、時間もお金も有限だという当たり前の事実に...</p><p class="by"><img src="https://images.ctfassets.net/4pab4ccjvs20/2hQHA7JDfzl1LwGwW4BfU6/5b4eff8bd0bba4b3e06522a85e1088ed/hashimoto.png?w=96" alt="橋本　圭司" width="24" height="24"><span>橋本　圭司</span></p></div></article></li>
+    <li data-slug="lp-appeal-axis"><article class="ps"><a class="ps-th" href="https://samurai-style.tokyo/media/lp-appeal-axis" tabindex="-1" aria-hidden="true"><span class="art" data-i="4"></span></a>
+      <div class="ps-tx"><h3><a href="https://samurai-style.tokyo/media/lp-appeal-axis">LP改修で訴求軸をどう整理するかー機能は同じでも全部違う、を掘り下げる方法ー</a></h3><p class="ex">このような方に向けて書いています 次のいずれかに心当たりがあれば、この記事はお役に立てるかもしれません。 LPの訴求が競合と似ていて、差別化できていないと感じている 何を訴求の軸にすべきか、根拠を持っ...</p><p class="by"><img src="https://images.ctfassets.net/4pab4ccjvs20/2hQHA7JDfzl1LwGwW4BfU6/5b4eff8bd0bba4b3e06522a85e1088ed/hashimoto.png?w=96" alt="橋本　圭司" width="24" height="24"><span>橋本　圭司</span></p></div></article></li>
+    <li data-slug="dream-time"><article class="ps"><a class="ps-th" href="https://samurai-style.tokyo/media/dream-time" tabindex="-1" aria-hidden="true"><span class="art" data-i="5"></span></a>
+      <div class="ps-tx"><h3><a href="https://samurai-style.tokyo/media/dream-time">ドリームタイム　絵を通じて夢のような時間を届ける</a></h3><p class="ex">2023年4月中旬、仕事と現地の方々との縁が繋がり、ドバイへの旅に出ました。 常夏の国らしく日中は日差しが強く気温も30度を超える暑さでしたが、その酷暑の中でブルジュハリファやパームジュメイラといった...</p><p class="by"><img src="https://images.ctfassets.net/4pab4ccjvs20/2hQHA7JDfzl1LwGwW4BfU6/5b4eff8bd0bba4b3e06522a85e1088ed/hashimoto.png?w=96" alt="橋本　圭司" width="24" height="24"><span>橋本　圭司</span></p></div></article></li>
+    <li data-slug="art-mind"><article class="ps"><a class="ps-th" href="https://samurai-style.tokyo/media/art-mind" tabindex="-1" aria-hidden="true"><span class="art" data-i="6"></span></a>
+      <div class="ps-tx"><h3><a href="https://samurai-style.tokyo/media/art-mind">アート思考の時代　課題解決は機械が行い、人は感情解放に向き合う時代へ</a></h3><p class="ex">今年の春、天気の良い朝にふと思い立ち箱根に向かいました。初日は仕事を終えてから20時過ぎに箱根湯本の駅へ向かったところ、すでに大半の店が閉まっていたため、仕方なくデイリーヤマザキでカップラーメンを購入...</p><p class="by"><img src="https://images.ctfassets.net/4pab4ccjvs20/2hQHA7JDfzl1LwGwW4BfU6/5b4eff8bd0bba4b3e06522a85e1088ed/hashimoto.png?w=96" alt="橋本　圭司" width="24" height="24"><span>橋本　圭司</span></p></div></article></li>
+  </ul>
+</div></section>
+<section class="sec" id="large" style="padding-top:clamp(72px,10vh,110px)"><div class="wrap">
+  <div class="sub"><span>B</span><p class="jp2">7枚を大きく（16:9）</p><span class="end">01—07</span></div>
+  <div class="bgg"><figure class="bg"><a class="bg-th" href="https://samurai-style.tokyo/media/decision-misalignment" target="_blank" rel="noopener" aria-label="会議で議論が噛み合わないとき、原因は3つに分けられるー目的・手段・判断軸で見る意思決定のずれー"><span class="art" data-i="0"></span></a><figcaption><span class="no">01 / 07</span><span class="bt">会議で議論が噛み合わないとき、原因は3つに分けられるー目的・手段・判断軸で見る意思決定のずれー</span></figcaption></figure><figure class="bg"><a class="bg-th" href="https://samurai-style.tokyo/media/marketing-sales-consensus" target="_blank" rel="noopener" aria-label="なぜマーケティングの意思決定が営業部門と円滑に進まないのかーROIの不確実性から考える部門間の合意形成が難しい構造ー"><span class="art" data-i="1"></span></a><figcaption><span class="no">02 / 07</span><span class="bt">なぜマーケティングの意思決定が営業部門と円滑に進まないのかーROIの不確実性から考える部門間の合意形成が難しい構造ー</span></figcaption></figure><figure class="bg"><a class="bg-th" href="https://samurai-style.tokyo/media/human-roles" target="_blank" rel="noopener" aria-label="なぜAI時代でも問いが人に残るのかー2026年現在地点での考察ー"><span class="art" data-i="2"></span></a><figcaption><span class="no">03 / 07</span><span class="bt">なぜAI時代でも問いが人に残るのかー2026年現在地点での考察ー</span></figcaption></figure><figure class="bg"><a class="bg-th" href="https://samurai-style.tokyo/media/initiative-priority" target="_blank" rel="noopener" aria-label="施策の優先順位はどう決まるのかー定量と定性、2つの軸で考える判断構造ー"><span class="art" data-i="3"></span></a><figcaption><span class="no">04 / 07</span><span class="bt">施策の優先順位はどう決まるのかー定量と定性、2つの軸で考える判断構造ー</span></figcaption></figure><figure class="bg"><a class="bg-th" href="https://samurai-style.tokyo/media/lp-appeal-axis" target="_blank" rel="noopener" aria-label="LP改修で訴求軸をどう整理するかー機能は同じでも全部違う、を掘り下げる方法ー"><span class="art" data-i="4"></span></a><figcaption><span class="no">05 / 07</span><span class="bt">LP改修で訴求軸をどう整理するかー機能は同じでも全部違う、を掘り下げる方法ー</span></figcaption></figure><figure class="bg"><a class="bg-th" href="https://samurai-style.tokyo/media/dream-time" target="_blank" rel="noopener" aria-label="ドリームタイム　絵を通じて夢のような時間を届ける"><span class="art" data-i="5"></span></a><figcaption><span class="no">06 / 07</span><span class="bt">ドリームタイム　絵を通じて夢のような時間を届ける</span></figcaption></figure><figure class="bg"><a class="bg-th" href="https://samurai-style.tokyo/media/art-mind" target="_blank" rel="noopener" aria-label="アート思考の時代　課題解決は機械が行い、人は感情解放に向き合う時代へ"><span class="art" data-i="6"></span></a><figcaption><span class="no">07 / 07</span><span class="bt">アート思考の時代　課題解決は機械が行い、人は感情解放に向き合う時代へ</span></figcaption></figure></div>
+</div></section>
+<div class="page-end"></div>
+</main>
+<footer class="ft"><div class="wrap">
+  <a class="big" href="../c-3d-b2.html#contact"><div class="bw"><b>CONTACT</b><canvas id="ftc" aria-hidden="true"></canvas></div><div class="bl"><span class="jp">お問い合わせはこちらから</span><span class="arr">→</span></div></a>
+  <div class="low">
+    <a class="lg" href="../c-3d-b2.html" aria-label="Samurai-Style"><img src="../img/logo.svg" alt="Samurai-Style"></a>
+    <nav><a href="https://samurai-style.tokyo/privacy-policy">プライバシーポリシー</a><a href="https://samurai-style.tokyo/commercial-transactions">特定商取引法に基づく表記</a></nav>
+    <span>© 2024- samurai-style All Right Reserved.</span>
+  </div>
+</div></footer>
+<span id="meas" aria-hidden="true"></span>
+<script src="_paper.js"></script>
+<script>
+/* 案1：製図の線画。1記事＝1枚の図（viewBox 640×360）。
+   .d＝引かれていく線（pathLength=1）、.f＝点線（ふっと出る）、.t＝文字、.fl＝面、.sg＝朱（各図に1点）。.lp＝描き終わってからの動き */
+const SLUG=['decision-misalignment','marketing-sales-consensus','human-roles','initiative-priority','lp-appeal-axis','dream-time','art-mind'];
+const P=(d,dl,c='')=>`<path class="d ${c}" pathLength="1" d="${d}" style="--d:${dl}s"/>`;
+const F=(d,dl,c='')=>`<path class="f ${c}" d="${d}" style="--d:${dl}s"/>`;
+const T=(x,y,s,dl,c='',a='start')=>`<text class="t ${c}" x="${x}" y="${y}" text-anchor="${a}" style="--d:${dl}s">${s}</text>`;
+const SQ=(x,y,s,dl,c='nd')=>`<rect class="t ${c}" x="${x-s/2}" y="${y-s/2}" width="${s}" height="${s}" style="--d:${dl}s"/>`;
+const svg=(i,inner)=>`<svg viewBox="0 0 640 360" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">`+
+  F('M14 22H30M22 14V30M610 22H626M618 14V30M14 338H30M22 330V346M610 338H626M618 330V346',.05,'so')+
+  T(38,44,'FIG.'+String(i+1).padStart(2,'0'),.15,'mn')+T(602,341,SLUG[i],.3,'mn','end')+inner+`</svg>`;
+/* 図4の点（施策）：短期・中期・中長期の3つの並び。最後の1つが朱 */
+const A4=[[[250,250],[430,130],[200,120]],[[300,140],[200,260],[470,240]],[[180,200],[280,110],[300,270]],[[420,250],[360,280],[260,190]],[[220,110],[500,210],[380,150]],[[380,200],[240,180],[160,250]],[[490,96],[458,118],[505,84]]];
+(()=>{let css='';A4.forEach((s,k)=>{css+=`@keyframes a4-p${k}{0%,26%{transform:translate(${s[0][0]}px,${s[0][1]}px)}33%,59%{transform:translate(${s[1][0]}px,${s[1][1]}px)}66%,93%{transform:translate(${s[2][0]}px,${s[2][1]}px)}100%{transform:translate(${s[0][0]}px,${s[0][1]}px)}}.a4-p${k}{transform:translate(${s[0][0]}px,${s[0][1]}px);animation:a4-p${k} 12s cubic-bezier(.6,0,.3,1) infinite}`});
+  const st=document.createElement('style');st.textContent=css;document.head.appendChild(st)})();
+window.ART_REST=2.2;
+const ART=[
+/* 01 目的・手段・判断軸のピラミッド。上の2段がずれて、また揃う */
+i=>svg(i,
+  F('M320 22V330',.9)+
+  P('M106 40V300M100 40H112M100 127H112M100 213H112M100 300H112',.1,'lt')+
+  `<g class="lp a1-t3">`+`<polygon class="fl" points="189.9,218 450.1,218 510,300 130,300" fill="#d7d1c2" style="--d:1.4s"/>`+P('M189.9 218H450.1L510 300H130Z',.2)+`</g>`+
+  `<g class="lp a1-t2">`+`<polygon class="fl" points="252.8,132 387.2,132 442.8,208 197.2,208" fill="#e2ddd0" style="--d:1.5s"/>`+P('M252.8 132H387.2L442.8 208H197.2Z',.45)+`</g>`+
+  `<g class="lp a1-t1">`+`<polygon class="fl" points="320,40 379.9,122 260.1,122" fill="#ece8de" style="--d:1.6s"/>`+P('M320 40L379.9 122H260.1Z',.7)+SQ(320,40,13,1.7,'sg')+`</g>`+
+  F('M364 82H520M424 170H520M488 259H520',1.1)+
+  T(530,89,'目的',1.3)+T(530,177,'手段',1.4)+T(530,266,'判断軸',1.5)),
+/* 02 ROI＝Return／Investment。分母は決まっていて、分子（Return）の高さだけが定まらない */
+i=>svg(i,
+  T(62,205,'ROI',.3,'lg')+T(176,203,'=',.5,'lg')+
+  F('M296 52H526M296 100H526M296 140H526',1)+
+  `<g class="lp a2-r"><path class="d" pathLength="1" vector-effect="non-scaling-stroke" d="M300 182V52H510V182" style="--d:.5s"/></g>`+
+  `<g class="lp a2-m">`+SQ(405,52,13,1.6,'sg')+`</g>`+
+  P('M236 190H580',.2,'th')+
+  `<rect class="fl" x="300" y="200" width="210" height="58" fill="#e2ddd0" style="--d:1.3s"/>`+P('M300 200H510V258H300Z',.7)+
+  T(286,122,'Return',1.1,'en','end')+T(286,236,'Investment',1.2,'en','end')+T(540,92,'?',1.4,'lg')),
+/* 03 箱の中を縦に降りる探索（墨の点）と、箱の外へ縦に上がる問い（朱） */
+i=>svg(i,
+  P('M170 96H470V318H170Z',.1)+
+  P('M320 130L230 190M320 130L320 190M320 130L410 190M230 190L200 262M230 190L260 262M320 190L300 262M320 190L340 262M410 190L380 262M410 190L440 262',.4,'lt')+
+  P('M320 130L230 190L260 262',1,'th')+
+  [[320,130],[230,190],[320,190],[410,190],[200,262],[260,262],[300,262],[340,262],[380,262],[440,262]].map((q,k)=>SQ(q[0],q[1],8,.9+k*.05)).join('')+
+  `<circle class="t ink" r="5" cx="0" cy="0" style="--d:1.6s"><animateMotion dur="2.6s" repeatCount="indefinite" path="M320 130L230 190L260 262" keyPoints="0;1;1" keyTimes="0;.75;1" calcMode="linear"/></circle>`+
+  F('M320 124V60',1.2)+P('M313 70L320 58L327 70',1.3)+
+  `<g class="lp a3-q">`+SQ(320,40,14,1.6,'sg')+`</g>`+
+  F('M162 226H243',1.3)+T(156,233,'縦に降りる',1.4,'','end')+T(340,74,'縦に上がる',1.5)),
+/* 04 定量×定性の2軸。時間軸（短期・中期・中長期）で点の並びが入れ替わる */
+i=>svg(i,
+  P('M120 310V52M120 310H572',.1)+P('M113 64L120 50L127 64M560 303L574 310L560 317',.9)+
+  F('M346 60V310M120 185H560',1)+
+  T(134,66,'定性',1.2)+T(566,294,'定量',1.3,'','end')+
+  T(400,40,'短期',1.4)+T(456,40,'中期',1.45)+T(512,40,'中長期',1.5)+
+  `<g class="lp a4-u"><path class="d th" pathLength="1" d="M400 50H438" style="--d:1.6s"/></g>`+
+  A4.map((s,k)=>`<g class="lp a4-p${k}"><rect class="t ${k===6?'sg':'nd'}" x="-7" y="-7" width="14" height="14" style="--d:${1.1+k*.08}s"/></g>`).join('')),
+/* 05 マクロ（4つの軸）からミクロ（提供価値と顧客ニーズの接点）へ */
+i=>svg(i,
+  P('M200 90A95 95 0 1 1 199.9 90',.1)+
+  P('M200 90V80M132.8 117.8L125 110M132.8 252.2L125 260M267.2 252.2L275 260',.9,'lt')+
+  P('M226 126H254V154H226Z',.6)+
+  F('M254 126L410 70M254 154L410 290',1)+
+  P('M410 70H612V290H410Z',.5)+
+  `<g class="lp a5-a">`+P('M478 126A54 54 0 1 1 477.9 126',.9)+T(458,185,'提供価値',1.4,'xs','middle')+`</g>`+
+  `<g class="lp a5-b">`+P('M538 126A54 54 0 1 1 537.9 126',1)+T(560,185,'顧客ニーズ',1.5,'xs','middle')+`</g>`+
+  `<g class="lp a5-s">`+SQ(508,180,11,1.7,'sg')+`</g>`+
+  T(200,72,'制度',1.2,'sm','middle')+T(118,274,'テクノロジー',1.25,'sm','end')+T(280,280,'人口動態',1.3,'sm')+T(118,114,'価値観',1.35,'sm','end')+
+  T(200,334,'マクロ',1.5,'mn','middle')+T(511,314,'ミクロ',1.55,'mn','middle')),
+/* 06 強い光と濃い影：塔の街に朱の陽が渡り、影が回る */
+i=>svg(i,
+  `<g class="lp a6-s"><circle class="t sg" cx="140" cy="190" r="15" style="--d:1.5s"/></g>`+
+  `<g class="lp a6-h"><polygon class="fl" points="306,280 334,280 470,300 452,300" fill="rgba(21,21,19,.16)" style="--d:1.6s"/></g>`+
+  `<path class="fl" fill="#f3f0e7" style="--d:.2s" d="M140 280V200H176V280ZM184 280V160H214V280ZM222 280V222H262V280ZM362 280V176H396V280ZM404 280V138H440V280ZM448 280V214H484V280ZM492 280V240H520V280ZM300 280L302 200H308L310 140H314L316 90H318L320 36L322 90H324L326 140H330L332 200H338L340 280Z"/>`+
+  P('M24 280H616',.1)+
+  P('M300 280L302 200H308L310 140H314L316 90H318L320 36L322 90H324L326 140H330L332 200H338L340 280',.3,'th')+
+  P('M140 280V200H176V280M184 280V160H214V280M222 280V222H262V280M362 280V176H396V280M404 280V138H440V280M448 280V214H484V280M492 280V240H520V280',.6)+
+  F('M60 292H580M96 304H544M140 318H500M190 336H450',1.1,'so')+
+  ''),
+/* 07 V字：子どもから、常識と社会性を身につけて大人へ、そこから感情解放へ */
+i=>svg(i,
+  P('M108 54H532V312H108Z',.1,'lt')+
+  F('M140 270H500',.8)+
+  P('M150 92C210 205 262 270 320 270C378 270 430 205 490 92',.4,'th')+
+  T(150,80,'子ども',1.2,'','middle')+T(320,298,'大人',1.3,'','middle')+T(490,80,'感情解放',1.4,'','middle')+
+  T(194,214,'常識',1.5,'mn','end')+T(194,232,'社会性',1.55,'mn','end')+
+  `<rect class="t sg" x="-7" y="-7" width="14" height="14" style="--d:1.7s"><animateMotion dur="9s" repeatCount="indefinite" path="M150 92C210 205 262 270 320 270C378 270 430 205 490 92" keyPoints="0;1;1;0;0" keyTimes="0;.42;.5;.92;1" calcMode="linear"/></rect>`),
+];
+
+/* 共通：.art に絵を入れる。画面に入ったら drawn（以後そのまま）、見えている間だけ vis（ループの動きはこの間だけ）。
+   prefers-reduced-motion では最初から描き終わった姿で止める */
+(()=>{
+const REDUCE=matchMedia('(prefers-reduced-motion: reduce)').matches;
+if(REDUCE)document.documentElement.classList.add('rm');
+const els=[...document.querySelectorAll('.art[data-i]')];
+els.forEach(el=>{const i=+el.dataset.i;el.innerHTML=ART[i](i);const sv=el.querySelector('svg');
+  if(sv&&sv.pauseAnimations){sv.pauseAnimations();if(REDUCE&&sv.setCurrentTime)sv.setCurrentTime(window.ART_REST||3)}
+  if(REDUCE)el.classList.add('drawn')});
+if(REDUCE)return;
+const sync=el=>{const sv=el.querySelector('svg');if(!sv||!sv.pauseAnimations)return;
+  const run=el.classList.contains('vis')&&el.classList.contains('go');run?sv.unpauseAnimations():sv.pauseAnimations()};
+const io=new IntersectionObserver(es=>{for(const e of es){const el=e.target;
+  if(e.isIntersecting){el.classList.add('vis');if(!el.classList.contains('drawn')){el.classList.add('drawn');setTimeout(()=>{el.classList.add('go');sync(el)},window.ART_GO||2000)}}
+  else el.classList.remove('vis');sync(el)}},{threshold:.35});
+els.forEach(el=>io.observe(el));
+})();
+
+</script>
+</body>
+</html>
