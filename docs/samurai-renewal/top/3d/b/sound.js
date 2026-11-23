@@ -99,29 +99,53 @@ export const SND = (() => {
     if (f2) o.frequency.exponentialRampToValueAtTime(f2, ctx.currentTime + a + d);
     o.connect(g); g.connect(to || sfx); env(g, a, peak, d); o.start(); o.stop(ctx.currentTime + a + d + 0.05);
   }
+  // 話し声：人＝母音が次々に変わる「わちゃわちゃ」（抑揚・間あり）、AI＝抑揚のない機械の「ボソボソ」
+  const VOW = [[730, 1090, 2440], [270, 2290, 3010], [300, 870, 2240], [530, 1840, 2480], [570, 840, 2410]];   // ア イ ウ エ オ
   function buildPeople(n) {
     peopleBus = ctx.createGain(); peopleBus.gain.value = 0; peopleBus.connect(music);
-    const ring = ctx.createOscillator(); ring.frequency.value = 57; ring.start();      // ロボットの声のうなり（リング変調）
-    const notes = [50, 53, 57, 62, 45, 57, 60, 65, 52, 55, 59, 64, 48, 62, 69, 57];
+    const ring = ctx.createOscillator(); ring.frequency.value = 38; ring.start();
+    const crush = ctx.createWaveShaper(); { const c = new Float32Array(256); for (let i = 0; i < 256; i++) { const x = i / 127.5 - 1; c[i] = Math.round(x * 6) / 6; } crush.curve = c; }
+    crush.connect(peopleBus);
     peopleV = [];
     for (let k = 0; k < n; k++) {
-      const f0 = mtof(notes[k % notes.length]), fem = f0 > 300 ? 1.15 : 1;
-      // 人：鋸波＋揺れ（ビブラート）→ 3つのフォルマント（ア）
-      const o = ctx.createOscillator(); o.type = 'sawtooth'; o.frequency.value = f0;
-      const vib = ctx.createOscillator(), vg = ctx.createGain(); vib.frequency.value = 4.8 + Math.random() * 1.2; vg.gain.value = f0 * 0.012; vib.connect(vg); vg.connect(o.frequency); vib.start();
-      const hg = ctx.createGain(); hg.gain.value = 1;
-      const sw = ctx.createGain(); sw.gain.value = 0.02;                                 // 息を吸って吐くようなうねり
-      const sl = ctx.createOscillator(), slg = ctx.createGain(); sl.frequency.value = 0.12 + Math.random() * 0.1; slg.gain.value = 0.014; sl.connect(slg); slg.connect(sw.gain); sl.start();
-      [[730, 6, 1], [1090, 9, 0.5], [2440, 12, 0.25]].forEach(([f, q, a]) => { const b = ctx.createBiquadFilter(); b.type = 'bandpass'; b.frequency.value = f * fem; b.Q.value = q; const g = ctx.createGain(); g.gain.value = a; o.connect(b); b.connect(g); g.connect(sw); });
-      sw.connect(hg); hg.connect(peopleBus); o.start();
-      // ロボット：矩形波・揺れなし → リング変調 → 2つのフォルマント（オ）
-      const ro = ctx.createOscillator(); ro.type = 'square'; ro.frequency.value = f0;
-      const rm = ctx.createGain(); rm.gain.value = 0; ring.connect(rm.gain); ro.connect(rm);
-      const rg = ctx.createGain(); rg.gain.value = 0;
-      [[500, 8, 1], [900, 10, 0.6]].forEach(([f, q, a]) => { const b = ctx.createBiquadFilter(); b.type = 'bandpass'; b.frequency.value = f; b.Q.value = q; const g = ctx.createGain(); g.gain.value = a * 0.03; rm.connect(b); b.connect(g); g.connect(rg); });
-      rg.connect(peopleBus); ro.start();
-      peopleV.push({ hg, rg, robot: false });
+      const female = k % 3 === 1, f0 = female ? 200 + Math.random() * 40 : 105 + Math.random() * 30;
+      const v = { f0, female, mode: 'quiet', next: 0, pan: ctx.createStereoPanner ? ctx.createStereoPanner() : null };
+      v.o = ctx.createOscillator(); v.o.type = 'sawtooth'; v.o.frequency.value = f0;
+      v.fs = VOW[0].map((f, j) => { const b = ctx.createBiquadFilter(); b.type = 'bandpass'; b.frequency.value = f; b.Q.value = [5, 8, 11][j]; return b; });
+      v.hg = ctx.createGain(); v.hg.gain.value = 0;
+      v.fs.forEach((b, j) => { const g = ctx.createGain(); g.gain.value = [1, 0.55, 0.25][j]; v.o.connect(b); b.connect(g); g.connect(v.hg); });
+      v.ro = ctx.createOscillator(); v.ro.type = 'square'; v.ro.frequency.value = female ? 180 : 96;
+      const rm = ctx.createGain(); rm.gain.value = 0; ring.connect(rm.gain); v.ro.connect(rm);
+      v.rf = [ctx.createBiquadFilter(), ctx.createBiquadFilter()]; v.rf.forEach((b, j) => { b.type = 'bandpass'; b.Q.value = 9; b.frequency.value = [500, 1100][j]; rm.connect(b); });
+      v.rg = ctx.createGain(); v.rg.gain.value = 0; v.rf.forEach((b) => b.connect(v.rg));
+      const out = v.pan || peopleBus;
+      if (v.pan) { v.pan.pan.value = (k % 2 ? 0.35 : -0.35) * (0.4 + Math.random() * 0.6); v.pan.connect(peopleBus); }
+      v.hg.connect(out); v.rg.connect(crush);
+      v.o.start(); v.ro.start();
+      peopleV.push(v);
     }
+  }
+  function speak(v, t) {
+    if (v.mode === 'human') {
+      const nsyl = 3 + (Math.random() * 7 | 0); let at = t;
+      for (let i = 0; i < nsyl; i++) {
+        const vw = VOW[(Math.random() * 5) | 0], d = 0.07 + Math.random() * 0.12, f = v.f0 * (1.12 - 0.22 * i / nsyl + (Math.random() - 0.5) * 0.12);
+        v.o.frequency.setTargetAtTime(f, at, 0.02);
+        v.fs.forEach((b, j) => b.frequency.setTargetAtTime(vw[j] * (v.female ? 1.15 : 1), at, 0.015));
+        v.hg.gain.setTargetAtTime(0.05 + Math.random() * 0.03, at, 0.012); v.hg.gain.setTargetAtTime(0.004, at + d, 0.02);
+        at += d + 0.03 + Math.random() * 0.05;
+      }
+      v.next = at + 0.25 + Math.random() * 1.1;
+    } else if (v.mode === 'ai') {
+      const nsyl = 6 + (Math.random() * 6 | 0); let at = t;
+      for (let i = 0; i < nsyl; i++) {
+        const vw = VOW[(Math.random() * 5) | 0];
+        v.rf.forEach((b, j) => b.frequency.setValueAtTime(vw[j] * 0.9, at));
+        v.rg.gain.setValueAtTime(0.06, at); v.rg.gain.setValueAtTime(0.0, at + 0.13);
+        at += 0.19;
+      }
+      v.next = at + 0.5 + Math.random() * 0.6;
+    } else { v.hg.gain.setTargetAtTime(0, t, 0.2); v.rg.gain.setTargetAtTime(0, t, 0.2); v.next = t + 0.3; }
   }
   function bird() {
     const at = ctx.currentTime, n = 2 + (Math.random() * 4 | 0), base = 2600 + Math.random() * 1600;
@@ -160,14 +184,15 @@ export const SND = (() => {
     hover() { if (!on) return; tone(1320, 'sine', 0.025, 0.003, 0.08); },
     // 手が1本 AI に置き換わる：奥から手前へ音程が上がる
     swap(k) { if (!on) return; tone(mtof(69 + Math.round(k * 12)), 'triangle', 0.03, 0.003, 0.35, music); burst(0.025, 0.05, 'highpass', 5000, 1); },
-    // 場面1：人の声（息まじりの合唱の「アー」）→ ロボットの声（抑揚のない電子音声）。1体変わるごとに1声ずつ入れ替わる
-    person(i, n, robot, lvl) {
+    // 場面1：話し声。list = [{ mode: 'human'|'ai'|'quiet' }, …]、lvl＝場面の近さ
+    people(list, lvl) {
       if (!ctx || !on) return;
-      if (!peopleV) buildPeople(n);
-      const t = ctx.currentTime, v = peopleV[i % peopleV.length];
-      peopleBus.gain.setTargetAtTime(0.55 * lvl, t, 0.3);
-      if (v.robot !== robot) { v.robot = robot;
-        v.hg.gain.setTargetAtTime(robot ? 0 : 1, t, 0.06); v.rg.gain.setTargetAtTime(robot ? 1 : 0, t, 0.06); }
+      if (!peopleV) buildPeople(list.length);
+      const t = ctx.currentTime;
+      peopleBus.gain.setTargetAtTime(0.9 * lvl, t, 0.3);
+      list.forEach((it, i) => { const v = peopleV[i]; if (!v) return;
+        if (v.mode !== it.mode) { v.mode = it.mode; v.next = t; if (it.mode !== 'human') v.hg.gain.setTargetAtTime(0, t, 0.08); if (it.mode !== 'ai') v.rg.gain.setTargetAtTime(0, t, 0.08); }
+        if (lvl > 0.05 && t > v.next) speak(v, t + 0.02); });
     },
     // 場面4：ラジオの同調（目盛りの位置で帯域を絞った雑音 → 合うと澄んだ正弦波）
     radio(r) {

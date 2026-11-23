@@ -239,28 +239,69 @@ document.querySelectorAll('.ov a').forEach(a=>a.addEventListener('click',()=>doc
 
 const ticks=[];
 /* ===== この案 ===== */
-/* 案3-1：プロッターが清書する
-   左の板は、紙の上を門形のアームが動くペンプロッター。入力した文字を、ペンが縦の細線（ハッチング）で1本ずつ引いて清書する。
-   入力中の項目へアームが移動し（ペンを上げて）、着いたらペンを下ろして描く。6つそろうと紙の四隅にトンボ（位置合わせの印）を朱で入れ、
-   送信を押すと清書した紙が上へ送り出される。
-   音：アームの移動はステッピングモーターのうなり（速さで音程が上下）、ペンの上げ下ろしは小さなカチッ、描いている間は紙をこする音。
-   1項目そろうごとに和音の1音（D の五音音階）、トンボがそろうと高い2音、送信は紙送りのローラー音。 */
+/* ===== CONTACT：プロッターが清書する（c-ct3-1） =====
+   左の板は、紙の上を門形のアームが動くプリンター（プロッター）。入力した文字を、ヘッドが縦の細線（ハッチング）で1列ずつ往復しながら印字する。
+   入力中の項目へヘッドが移動し、着いたら印字。行が変わると紙が1行ぶん送られる。6つそろうと紙の四隅にトンボを朱で入れ、送信で紙が上へ排出される。
+   音（3D版の window.SND が音オンの時だけ。外部の音源なし）：ヘッドの移動はキャリッジのモーター音、印字中はドットインパクトの細かい連打と本体のうなり、
+   行が変わると紙送りの「ガコッ」、1項目そろうと小さな「ピッ」、トンボがそろうと準備完了の2音、送信はローラーで紙が排出される音。 */
+{
+const form=document.getElementById('form'),sendB=form.querySelector('.send');
+const FLD=[form.company,form.name,form.email,form.tel,null,form.body];
+const kindEl=()=>form.querySelector('input[name=kind]:checked');
+const vals=()=>{const em=FLD[2].value.trim(),tl=FLD[3].value.replace(/\D/g,''),k=kindEl();
+  const ok=[FLD[0].value.trim().length>0,FLD[1].value.trim().length>0,/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em),tl.length>=10,!!k,FLD[5].value.trim().length>0];
+  return {ok,n:ok.filter(Boolean).length,ready:ok.every(Boolean),raw:[FLD[0].value,FLD[1].value,FLD[2].value,FLD[3].value,k?k.nextElementSibling.textContent:'',FLD[5].value]}};
+const fieldIndex=el=>!el?-1:el.name==='kind'?4:FLD.indexOf(el);
+const PAPER=[246,244,238];
+/* 音の道具：音オンの時だけ SND.out() が { ctx, sfx, music, verb, nbuf } を返す */
+const mtof=m=>440*Math.pow(2,(m-69)/12);
+const AU=()=>{const s=window.SND;return s&&typeof s.out==='function'?s.out():null};
+const snd=fn=>{const o=AU();if(!o)return;try{fn(o)}catch(e){console.warn(e)}};
+const sx={
+  tone(o,{f=880,f2=0,type='sine',pk=.04,a=.004,d=.3,at=0,to='sfx',lp=0}){const c=o.ctx,t=c.currentTime+.005+at,os=c.createOscillator(),g=c.createGain();os.type=type;os.frequency.setValueAtTime(f,t);if(f2)os.frequency.exponentialRampToValueAtTime(f2,t+a+d);
+    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(pk,t+a);g.gain.exponentialRampToValueAtTime(.0001,t+a+d);let n=os;if(lp){const fl=c.createBiquadFilter();fl.type='lowpass';fl.frequency.value=lp;os.connect(fl);n=fl}n.connect(g);g.connect(o[to]);os.start(t);os.stop(t+a+d+.05)},
+  noise(o,{f=3000,f2=0,type='bandpass',q=1,pk=.04,a=.002,d=.05,at=0,to='sfx'}){const c=o.ctx,t=c.currentTime+.005+at,s=c.createBufferSource();s.buffer=o.nbuf;
+    const fl=c.createBiquadFilter();fl.type=type;fl.frequency.setValueAtTime(f,t);if(f2)fl.frequency.exponentialRampToValueAtTime(f2,t+a+d);fl.Q.value=q;const g=c.createGain();
+    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(pk,t+a);g.gain.exponentialRampToValueAtTime(.0001,t+a+d);s.connect(fl);fl.connect(g);g.connect(o[to]);s.start(t,Math.random()*1.5);s.stop(t+a+d+.05)}
+};
+const lineFeed=()=>snd(o=>{sx.tone(o,{f:130,f2:55,pk:.09,a:.002,d:.08,lp:650});sx.noise(o,{type:'lowpass',f:900,pk:.07,d:.05});
+  sx.noise(o,{type:'bandpass',f:2300,q:3,pk:.035,d:.012,at:.045});sx.tone(o,{f:100,f2:60,pk:.05,a:.002,d:.06,at:.05,lp:500})});
+const strike=()=>snd(o=>{sx.noise(o,{type:'highpass',f:3000,pk:.05,d:.012});sx.tone(o,{f:190,f2:120,pk:.03,d:.04})});
+const lift=()=>snd(o=>sx.noise(o,{type:'highpass',f:5200,pk:.02,d:.008}));
+const beep=i=>snd(o=>sx.tone(o,{f:2349+i*90,type:'square',pk:.012,a:.002,d:.05,lp:3200}));
+const errBeep=()=>snd(o=>{[0,.16].forEach(at=>sx.tone(o,{f:1760,type:'square',pk:.018,a:.002,d:.08,at,lp:2600}));sx.tone(o,{f:110,type:'triangle',pk:.04,d:.1,lp:500})});
+const eject=()=>snd(o=>{sx.tone(o,{type:'sawtooth',f:68,f2:92,pk:.03,a:.08,d:1.3,lp:480});sx.noise(o,{type:'lowpass',f:300,f2:1100,q:.7,pk:.08,a:.1,d:1.25});
+  for(let k=0;k<18;k++)sx.noise(o,{type:'bandpass',f:1700,q:4,pk:.028,d:.008,at:.05+k*.066});
+  sx.noise(o,{type:'highpass',f:2500,f2:6500,pk:.06,a:.05,d:.45,at:1.05});sx.tone(o,{f:130,f2:55,pk:.08,a:.002,d:.08,at:1.45,lp:650});
+  sx.tone(o,{f:mtof(74),pk:.025,d:1.8,at:1.6,to:'music'})});
+/* 続けて鳴る音：キャリッジのモーター・ドットの連打・本体のうなり（音オンになってから作る） */
+let M=null;
+function motor(spd,printing,dens){const o=AU();if(!o){if(M){const t=M.ctx.currentTime;[M.g,M.dg,M.hg].forEach(g=>g.gain.setTargetAtTime(0,t,.03))}return}
+  if(!M||M.ctx!==o.ctx){const c=o.ctx,os=c.createOscillator();os.type='square';os.frequency.value=90;const bp=c.createBiquadFilter();bp.type='bandpass';bp.frequency.value=700;bp.Q.value=3;
+    const lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=2200;const g=c.createGain();g.gain.value=0;os.connect(bp);bp.connect(lp);lp.connect(g);g.connect(o.sfx);os.start();
+    /* ドットインパクト：ごく短い打撃音を不規則な間隔で並べた0.6秒の輪 */
+    const sr=c.sampleRate,len=Math.floor(sr*.6),b=c.createBuffer(1,len,sr),d=b.getChannelData(0);let p=0;
+    while(p<len){const amp=.45+Math.random()*.55,L=Math.floor(sr*.0018);for(let i=0;i<L&&p+i<len;i++){const e=Math.exp(-i/(sr*.00032));d[p+i]+=((Math.random()*2-1)*.7+Math.sin(i*TAU*3300/sr)*.6)*e*amp}
+      p+=Math.floor(sr/560*(.6+Math.random()*1.1))*(Math.random()<.1?3:1)}
+    const ds=c.createBufferSource();ds.buffer=b;ds.loop=true;const df=c.createBiquadFilter();df.type='bandpass';df.frequency.value=2800;df.Q.value=.8;const dg=c.createGain();dg.gain.value=0;ds.connect(df);df.connect(dg);dg.connect(o.sfx);ds.start();
+    const hm=c.createOscillator();hm.type='sawtooth';hm.frequency.value=118;const hf=c.createBiquadFilter();hf.type='lowpass';hf.frequency.value=360;const hg=c.createGain();hg.gain.value=0;hm.connect(hf);hf.connect(hg);hg.connect(o.sfx);hm.start();
+    M={ctx:c,os,bp,g,ds,dg,hg}}
+  const t=M.ctx.currentTime,v=clamp(spd/800);M.os.frequency.setTargetAtTime(60+v*240,t,.04);M.bp.frequency.setTargetAtTime(420+v*1500,t,.05);
+  M.g.gain.setTargetAtTime(v>.03&&!printing?.007+.02*v:printing?.004:0,t,.035);
+  M.dg.gain.setTargetAtTime(printing?.05+.07*dens:0,t,.02);M.ds.playbackRate.setTargetAtTime(.85+dens*.45,t,.05);M.hg.gain.setTargetAtTime(printing?.014:0,t,.05)}
+
 const LBL=['会社名','担当者名','メールアドレス','電話番号','お問い合わせ内容','本文'];
-const NOTE=[74,76,78,81,83,86];
-let S=vals(),focusI=-1,sent=false,missT=-9,missMask=[0,0,0,0,0,0],feed=0,feedGo=0;
-const sendB=form.querySelector('.send');
+let S=vals(),focusI=-1,sent=false,missT=-9,missMask=[0,0,0,0,0,0],feed=0,feedGo=0,lastRow=-1,lfT=-9;
 form.addEventListener('focusin',e=>{const i=fieldIndex(e.target);if(i>=0)focusI=i});
 form.addEventListener('focusout',()=>setTimeout(()=>{if(!form.contains(document.activeElement))focusI=-1},0));
-function onChange(){const was=S.ok.slice();S=vals();if(sent){sent=false;rows.forEach(r=>{r.px=0})}
-  S.ok.forEach((v,i)=>{if(v&&!was[i])snd(o=>sx.tone(o,{f:mtof(NOTE[i]),pk:.024,a:.004,d:1.8,to:'music'}))});
-  sendB.classList.toggle('rdy',S.ready);rows.forEach((r,i)=>setText(r,rowText(i)))}
+function onChange(){const was=S.ok.slice();S=vals();if(sent){sent=false;lastRow=-1;rows.forEach(r=>{r.px=0})}
+  S.ok.forEach((v,i)=>{if(v&&!was[i])beep(i)});sendB.classList.toggle('rdy',S.ready);rows.forEach((r,i)=>setText(r,rowText(i)))}
 form.addEventListener('input',onChange);form.addEventListener('change',onChange);
-form.addEventListener('submit',()=>{if(S.ready&&!feedGo&&!sent){feedGo=1;feed=0;
-    snd(o=>{sx.noise(o,{type:'lowpass',f:260,f2:900,q:.7,pk:.11,a:.12,d:1.1});[0,.18,.36,.54,.72].forEach(at=>sx.noise(o,{type:'highpass',f:3800,pk:.03,d:.012,at}));sx.tone(o,{f:mtof(69),pk:.03,d:1.6,at:.9,to:'music'});sx.tone(o,{f:mtof(74),pk:.03,d:2,at:1.05,to:'music'})})}
-  else if(!S.ready){missT=T;missMask=S.ok.map(v=>v?0:1);snd(o=>{sx.tone(o,{f:150,type:'triangle',pk:.05,d:.09,lp:900});sx.tone(o,{f:150,type:'triangle',pk:.05,d:.09,at:.13,lp:900})})}});
+form.addEventListener('submit',e=>{e.preventDefault();if(S.ready&&!feedGo&&!sent){feedGo=1;feed=0;eject()}
+  else if(!S.ready){missT=T;missMask=S.ok.map(v=>v?0:1);errBeep()}});
 function rowText(i){const v=S.raw[i]||'';return i===5?v.replace(/\s+/g,' ').trim():v.trim()}
 
-/* --- 行：文字を画像にして、縦の細線（列ごとの線分）に分解する --- */
+/* 行：文字を画像にして、縦の細線（列ごとの線分）に分解する */
 const rows=LBL.map((l,i)=>({i,text:'',px:0,cols:[],end:0}));
 function cutTo(oc,s,W){if(oc.measureText(s).width<=W)return s;while(s.length&&oc.measureText(s).width>W)s=s.slice(0,-1);return s}
 function wrap2(oc,s,W){const out=[];let cur='';for(const ch of s){if(oc.measureText(cur+ch).width>W){out.push(cur);cur=ch;if(out.length===2)return out}else cur+=ch}if(cur&&out.length<2)out.push(cur);return out}
@@ -271,35 +312,26 @@ function raster(r,text){const W=Math.max(1,Math.floor(r.tw)),H=Math.max(1,Math.c
   for(let c=0;c*r.step<W;c++){const x=Math.floor(c*r.step),segs=[];let s=-1;for(let y=0;y<=H;y++){const on=y<H&&d[(y*W+x)*4+3]>90;if(on&&s<0)s=y;if(!on&&s>=0){segs.push([s,y]);s=-1}}cols.push(segs);if(segs.length)end=c+1}
   r.cols=cols;r.end=end*r.step;r.oc=oc}
 function setText(r,text){if(text===r.text||!r.tw)return;const old=r.text||'';r.text=text;raster(r,text);
-  if(!text.startsWith(old)){let k=0;while(k<old.length&&k<text.length&&old[k]===text[k])k++;const pw=k?Math.min(r.oc.measureText(text.slice(0,k)).width,r.tw):0;r.px=Math.min(r.px,r.multi&&k<text.length?Math.min(pw,0):pw)}
+  if(!text.startsWith(old)){let k=0;while(k<old.length&&k<text.length&&old[k]===text[k])k++;const pw=k?Math.min(r.oc.measureText(text.slice(0,k)).width,r.tw):0;r.px=Math.min(r.px,r.multi&&k<text.length?0:pw)}
   r.px=Math.min(r.px,r.end)}
+const colY=(r,px)=>{const c=Math.min(r.cols.length-1,Math.floor(px/r.step)),f=(px/r.step)-c,segs=r.cols[c]||[];let y0=r.th*.5,y1=y0;if(segs.length){y0=segs[0][0];y1=segs[segs.length-1][1]}
+  return [r.ty+(c%2?mix(y1,y0,f):mix(y0,y1,f)),Math.min(1,segs.length/3)]};
 
-/* --- 音：モーターと紙こすり（音オンの間だけ作る） --- */
-let M=null;
-function motor(spd,down,scr){const o=AU();if(!o){if(M){const t=M.ctx.currentTime;M.g.gain.setTargetAtTime(0,t,.03);M.ng.gain.setTargetAtTime(0,t,.03)}return}
-  if(!M||M.ctx!==o.ctx){const c=o.ctx,os=c.createOscillator();os.type='square';os.frequency.value=90;const bp=c.createBiquadFilter();bp.type='bandpass';bp.frequency.value=700;bp.Q.value=3;
-    const lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=2200;const g=c.createGain();g.gain.value=0;os.connect(bp);bp.connect(lp);lp.connect(g);g.connect(o.sfx);os.start();
-    const ns=c.createBufferSource();ns.buffer=o.nbuf;ns.loop=true;const nf=c.createBiquadFilter();nf.type='bandpass';nf.frequency.value=2600;nf.Q.value=1.1;const ng=c.createGain();ng.gain.value=0;ns.connect(nf);nf.connect(ng);ng.connect(o.sfx);ns.start();
-    M={ctx:c,os,bp,g,ng,nf}}
-  const t=M.ctx.currentTime,v=clamp(spd/800);M.os.frequency.setTargetAtTime(60+v*240,t,.04);M.bp.frequency.setTargetAtTime(420+v*1500,t,.05);
-  M.g.gain.setTargetAtTime(v>.03?.007+.02*v:0,t,.035);M.ng.gain.setTargetAtTime(down?.016*scr:0,t,.025);M.nf.frequency.setTargetAtTime(1900+scr*1500,t,.03)}
-const penDown=()=>snd(o=>{sx.noise(o,{type:'highpass',f:3200,pk:.05,d:.014});sx.tone(o,{f:170,pk:.03,d:.05})});
-const penUp=()=>snd(o=>sx.noise(o,{type:'highpass',f:5200,pk:.022,d:.009}));
-
-const P=piece(document.getElementById('plc'),{pen:{x:-1,y:-1,down:false},mk:[0,0,0,0],mkK:0,mkA:0,
+const P=piece(document.getElementById('plc'),{anyResize:true,pen:{x:-1,y:-1,down:false},mk:[0,0,0,0],mkK:0,mkA:0,
  init(p){const {w,h}=p,sp=h<400;p.sp=sp;
   const px0=sp?w*.05:w*.085,py0=sp?h*.09:h*.075,pw=w-2*px0,ph=h-2*py0;p.paper=[px0,py0,pw,ph];
   const top=py0+(sp?8:34),rh=sp?(ph-14)/6:(ph-60)/7;
   rows.forEach((r,i)=>{r.y=top+i*rh;r.h=(!sp&&i===5)?rh*2:rh;r.multi=!sp&&i===5;
     r.tx=px0+(sp?34:44);r.tw=pw-(sp?44:64);
-    const fs=sp?Math.min(13,rh*.56):Math.min(21,(rh-30)*.62);r.fs=fs;r.lh=fs*1.45;
+    const fs=sp?Math.min(13,rh*.56):Math.min(21,(rh-30)*.62);r.lh=fs*1.45;
     r.font=`500 ${fs}px ${(i===2||i===3)?'"JetBrains Mono",':''}"IBM Plex Sans JP",sans-serif`;
     r.ty=r.y+(sp?2:18);r.th=r.multi?r.h-24:r.h-(sp?4:24);r.base=fs*1.02;r.step=sp?1.25:1.6;
     r.text=null;r.cols=[];setText(r,rowText(i));r.px=r.end});
   if(p.pen.x<0){p.pen.x=w-px0*.5;p.pen.y=py0*.5}},
- draw(p,t,dt){const {ctx,w,h,sp}=p,[px0,py0,pw,ph]=p.paper;ctx.clearRect(0,0,w,h);
-  /* 紙送り（送信） */
+ draw(p,t,dt){const {ctx,w,h,sp}=p,[px0,py0,pw,ph]=p.paper;ctx.clearRect(0,0,w,h);dt=dt||.016;
+  /* 排出（送信）と1行送り */
   let oy=0;if(feedGo){feed=Math.min(1,feed+dt/1.5);oy=-ease3(feed)*(h+10);if(feed>=1){feedGo=0;feed=0;sent=true;p.mk=[0,0,0,0];p.mkK=0;p.mkA=0;oy=0}}
+  const lfk=clamp(1-(t-lfT)*7);oy-=(sp?1.5:2.5)*Math.sin(lfk*Math.PI);
   const sheet=(dy,blank)=>{ctx.save();ctx.translate(0,dy);
     ctx.fillStyle=rgba(C.card,1);ctx.fillRect(px0,py0,pw,ph);ctx.strokeStyle=rgba(C.ink,.16);ctx.lineWidth=1;ctx.strokeRect(px0+.5,py0+.5,pw-1,ph-1);
     ctx.font=`400 ${sp?9:10}px "JetBrains Mono",monospace`;ctx.textBaseline='alphabetic';
@@ -307,51 +339,49 @@ const P=piece(document.getElementById('plc'),{pen:{x:-1,y:-1,down:false},mk:[0,0
       ctx.strokeStyle=rgba(C.ink,.14);ctx.setLineDash([2,3]);ctx.beginPath();ctx.moveTo(r.tx,bl+.5);ctx.lineTo(r.tx+r.tw,bl+.5);ctx.stroke();ctx.setLineDash([]);
       const miss=missMask[i]&&t-missT<1.4&&((t-missT)*6|0)%2===0;
       const ok=!blank&&S.ok[i];ctx.fillStyle=miss?rgba(C.sig,1):rgba(ok?C.sig:C.mute,ok?1:.85);
-      const nx=px0+(sp?10:16),ny=r.y+(sp?r.h*.62:30);ctx.fillText(String(i+1).padStart(2,'0'),nx,ny);
+      ctx.fillText(String(i+1).padStart(2,'0'),px0+(sp?10:16),r.y+(sp?r.h*.62:30));
       if(!sp){ctx.fillStyle=rgba(C.mute,.9);ctx.font='400 10px "IBM Plex Sans JP",sans-serif';ctx.fillText(LBL[i],r.tx,r.y+10);ctx.font='400 10px "JetBrains Mono",monospace'}
       if(blank)return;
-      /* 清書された部分 */
       const n=Math.floor(r.px/r.step);ctx.strokeStyle=rgba(C.ink,.92);ctx.lineWidth=sp?.85:1.05;ctx.beginPath();
       for(let c=0;c<n&&c<r.cols.length;c++){const x=r.tx+c*r.step+.5;for(const s of r.cols[c]){ctx.moveTo(x,r.ty+s[0]);ctx.lineTo(x,r.ty+s[1])}}ctx.stroke()});
-    /* トンボ */
     if(!blank&&p.mkA>0){ctx.strokeStyle=rgba(C.sig,p.mkA);ctx.lineWidth=1;const L=sp?10:16,g=sp?3:5;
-      [[px0,py0,-1,-1],[px0+pw,py0,1,-1],[px0+pw,py0+ph,1,1],[px0,py0+ph,-1,1]].forEach(([x,y,sx_,sy],k)=>{const e=ease3(p.mk[k]);if(e<=0)return;ctx.beginPath();
-        ctx.moveTo(x+sx_*g,y);ctx.lineTo(x+sx_*(g+L*e),y);ctx.moveTo(x,y+sy*g);ctx.lineTo(x,y+sy*(g+L*e));ctx.stroke();
-        if(!sp&&e>.6){const q=ss(.6,1,e),cx=x+sx_*(g+L+9),cy=y+sy*(g+L+9),rr=5*q;ctx.beginPath();ctx.arc(cx,cy,rr,0,TAU);ctx.moveTo(cx-rr-3,cy);ctx.lineTo(cx+rr+3,cy);ctx.moveTo(cx,cy-rr-3);ctx.lineTo(cx,cy+rr+3);ctx.stroke()}})}
+      [[px0,py0,-1,-1],[px0+pw,py0,1,-1],[px0+pw,py0+ph,1,1],[px0,py0+ph,-1,1]].forEach(([x,y,ax,ay],k)=>{const e=ease3(p.mk[k]);if(e<=0)return;ctx.beginPath();
+        ctx.moveTo(x+ax*g,y);ctx.lineTo(x+ax*(g+L*e),y);ctx.moveTo(x,y+ay*g);ctx.lineTo(x,y+ay*(g+L*e));ctx.stroke();
+        if(!sp&&e>.6){const q=ss(.6,1,e),cx=x+ax*(g+L+9),cy=y+ay*(g+L+9),rr=5*q;ctx.beginPath();ctx.arc(cx,cy,rr,0,TAU);ctx.moveTo(cx-rr-3,cy);ctx.lineTo(cx+rr+3,cy);ctx.moveTo(cx,cy-rr-3);ctx.lineTo(cx,cy+rr+3);ctx.stroke()}})}
     ctx.restore()};
-  /* 板の地：レール */
   ctx.strokeStyle=rgba(C.ink,.22);ctx.lineWidth=1;ctx.beginPath();[6,10,w-10,w-6].forEach(x=>{ctx.moveTo(x+.5,0);ctx.lineTo(x+.5,h)});ctx.stroke();
   sheet(oy,sent&&!feedGo);if(feedGo)sheet(oy+h+10,true);
-  /* 仕事：清書の残り → 無ければトンボ → 無ければ待機 */
+  /* 仕事：印字の残り → 無ければトンボ → 無ければ待機 */
   const pen=p.pen;let tgt=null,work=null;
   if(!feedGo&&!sent){const cand=(focusI>=0&&rows[focusI].px<rows[focusI].end)?rows[focusI]:rows.find(r=>r.px<r.end);
-    if(cand){const c=Math.min(cand.cols.length-1,Math.floor(cand.px/cand.step)),f=(cand.px/cand.step)-c,segs=cand.cols[c]||[];
-      let y0=cand.th*.5,y1=y0;if(segs.length){y0=segs[0][0];y1=segs[segs.length-1][1]}
-      tgt=[cand.tx+cand.px,cand.ty+(c%2?mix(y1,y0,f):mix(y0,y1,f))];work=cand}
-    else if(S.ready&&p.mkK<4){const k=p.mkK,cs=[[px0,py0],[px0+pw,py0],[px0+pw,py0+ph],[px0,py0+ph]];tgt=cs[k];work='mk'}}
+    if(cand){tgt=[cand.tx+cand.px,colY(cand,cand.px)[0]];work=cand}
+    else if(S.ready&&p.mkK<4){tgt=[[px0,py0],[px0+pw,py0],[px0+pw,py0+ph],[px0,py0+ph]][p.mkK];work='mk'}}
   if(!S.ready&&p.mkA>0){p.mkA=Math.max(0,p.mkA-dt*2);if(p.mkA===0){p.mk=[0,0,0,0];p.mkK=0}}
   if(!tgt){if(focusI>=0&&!feedGo){const r=rows[focusI];tgt=[r.tx+Math.min(r.px,r.tw),r.ty+r.th*.5]}else tgt=[w-px0*.5,py0*.5]}
-  const dx=tgt[0]-pen.x,dy=tgt[1]-pen.y,dd=Math.hypot(dx,dy);let spd=0;
+  const dx=tgt[0]-pen.x,dy=tgt[1]-pen.y,dd=Math.hypot(dx,dy);let spd=0,dens=0;
   const wasDown=pen.down;
-  if(work&&dd<2.5){pen.down=true;
+  if(work&&dd<2.5){
+    if(work!=='mk'&&work.i!==lastRow){lastRow=work.i;lfT=t;lineFeed()}
+    pen.down=true;
     if(work==='mk'){const k=p.mkK;p.mkA=1;p.mk[k]=Math.min(1,p.mk[k]+dt*3.2);if(p.mk[k]>=1){p.mkK++;pen.down=false;if(p.mkK===4)snd(o=>{sx.tone(o,{f:mtof(81),pk:.06,d:2.2,to:'music'});sx.tone(o,{f:mtof(88),pk:.035,d:2.6,at:.14,to:'music'})})}}
     else{const back=work.end-work.px,v=(sp?150:230)+back*1.4;work.px=Math.min(work.end,work.px+v*dt);
-      const c=Math.min(work.cols.length-1,Math.floor(work.px/work.step)),f=(work.px/work.step)-c,segs=work.cols[c]||[];let y0=work.th*.5,y1=y0;if(segs.length){y0=segs[0][0];y1=segs[segs.length-1][1]}
-      const nx=work.tx+work.px,ny=work.ty+(c%2?mix(y1,y0,f):mix(y0,y1,f));spd=Math.hypot(nx-pen.x,ny-pen.y)/Math.max(dt,.001);pen.x=nx;pen.y=ny}}
-  else{pen.down=false;const k=Math.min(1,dt*7),step=Math.min(dd*k,1100*dt);if(dd>.01){pen.x+=dx/dd*step;pen.y+=dy/dd*step}spd=step/Math.max(dt,.001)}
-  if(pen.down&&!wasDown)penDown();if(!pen.down&&wasDown)penUp();
-  motor(pen.down?Math.min(spd,120)*.6:spd,pen.down&&work!=='mk',work&&work!=='mk'?clamp(spd/400):.5);
-  /* アーム（門形）とキャリッジ・ペン */
-  const ay=pen.y-(sp?20:30),aw=sp?6:9;ctx.fillStyle=rgba(C.paper,.72);ctx.fillRect(0,ay-aw,w,aw);ctx.strokeStyle=rgba(C.ink,.55);ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,ay-aw+.5);ctx.lineTo(w,ay-aw+.5);ctx.moveTo(0,ay+.5);ctx.lineTo(w,ay+.5);ctx.stroke();
+      const cy=colY(work,work.px);dens=cy[1];pen.x=work.tx+work.px;pen.y=cy[0];spd=v}}
+  else{pen.down=false;const k=Math.min(1,dt*7),step=Math.min(dd*k,1100*dt);if(dd>.01){pen.x+=dx/dd*step;pen.y+=dy/dd*step}spd=step/dt}
+  if(pen.down&&!wasDown)strike();if(!pen.down&&wasDown)lift();
+  const printing=pen.down&&work&&work!=='mk';
+  motor(spd,printing,dens);
+  /* アーム・ヘッド（印字中は細かく震える） */
+  const jx=printing?(Math.random()-.5)*1.2:0,jy=printing?(Math.random()-.5)*.6:0,hx=pen.x+jx;
+  const ay=pen.y-(sp?20:30)+jy,aw=sp?6:9;ctx.fillStyle=rgba(PAPER,.72);ctx.fillRect(0,ay-aw,w,aw);ctx.strokeStyle=rgba(C.ink,.55);ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,ay-aw+.5);ctx.lineTo(w,ay-aw+.5);ctx.moveTo(0,ay+.5);ctx.lineTo(w,ay+.5);ctx.stroke();
   ctx.fillStyle=rgba(C.ink,.85);[3,w-13].forEach(x=>ctx.fillRect(x,ay-aw-3,10,aw+6));
-  const cw=sp?12:18,ch=sp?14:22,cx=pen.x-cw/2,cy=ay-aw-4;ctx.fillStyle=rgba(C.card,.95);ctx.fillRect(cx,cy,cw,ch);ctx.strokeStyle=rgba(C.ink,.85);ctx.strokeRect(cx+.5,cy+.5,cw-1,ch-1);
-  const lift=pen.down?0:(sp?3:5);ctx.beginPath();ctx.moveTo(pen.x+.5,cy+ch);ctx.lineTo(pen.x+.5,pen.y-lift-2);ctx.lineWidth=sp?1.5:2;ctx.stroke();ctx.lineWidth=1;
+  const cw=sp?12:18,ch=sp?14:22,cx=hx-cw/2,cy=ay-aw-4;ctx.fillStyle=rgba(C.card,.95);ctx.fillRect(cx,cy,cw,ch);ctx.strokeStyle=rgba(C.ink,.85);ctx.strokeRect(cx+.5,cy+.5,cw-1,ch-1);
+  const lf=pen.down?0:(sp?3:5);ctx.beginPath();ctx.moveTo(hx+.5,cy+ch);ctx.lineTo(hx+.5,pen.y-lf-2);ctx.lineWidth=sp?1.5:2;ctx.stroke();ctx.lineWidth=1;
   if(!pen.down){ctx.fillStyle=rgba(C.ink,.12);ctx.beginPath();ctx.ellipse(pen.x+3,pen.y+2,3,1.6,0,0,TAU);ctx.fill()}
-  ctx.beginPath();ctx.arc(pen.x,pen.y-lift,sp?2:2.6,0,TAU);if(pen.down){ctx.fillStyle=rgba(C.sig,1);ctx.fill()}else{ctx.fillStyle=rgba(C.card,1);ctx.fill();ctx.strokeStyle=rgba(C.ink,.9);ctx.stroke()}
-  /* 完了数 */
+  ctx.beginPath();ctx.arc(hx,pen.y-lf,sp?2:2.6,0,TAU);if(pen.down){ctx.fillStyle=rgba(C.sig,1);ctx.fill()}else{ctx.fillStyle=rgba(C.card,1);ctx.fill();ctx.strokeStyle=rgba(C.ink,.9);ctx.stroke()}
   ctx.font=`500 ${sp?10:11}px "JetBrains Mono",monospace`;ctx.textBaseline='alphabetic';ctx.fillStyle=rgba(C.ink,1);const ct=String(sent?0:S.n).padStart(2,'0');ctx.fillText(ct,px0,h-(sp?5:py0*.35));const cwid=ctx.measureText(ct).width;ctx.fillStyle=rgba(C.mute,1);ctx.fillText(' / 06',px0+cwid,h-(sp?5:py0*.35));
  }});
-ticks.push(()=>{if(!P.vis)motor(0,false,0)});
+setInterval(()=>{if(!P.vis)motor(0,false,0)},250);
+}
 
 /* ===== loop ===== */
 let T=0,prev=performance.now();

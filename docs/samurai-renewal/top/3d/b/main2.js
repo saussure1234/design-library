@@ -7,6 +7,7 @@ import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { SND } from './sound.js';
 import { createTVShow } from './tvshow.js';
+import { createScene5 } from './sc5.js';
 
 const root = document.documentElement;
 const ld = document.getElementById('ld'), ldt = document.getElementById('ldt');
@@ -425,28 +426,45 @@ const hands = [];
     if (h && r) PV.push({ h, r, gl });
   }
   if (PV.length) used.people = true;
+  // 人（作り手）とクライアントが向かい合って話す組が、奥から手前まで並ぶ。作り手が1人ずつ AI に置き換わる（So 11/24）
   const group = new THREE.Group(); scene.add(group);
-  const rows = SP ? 11 : 14;
-  for (let j = 0; j < rows; j++) {
-    const x = 6 - 1.9 + (j % 2 ? 0.35 : -0.35), z = -58 - j * 3.1;
+  const PAIRS = SP ? 4 : 7;
+  const SKIN = [0xc99a7a, 0xb98566, 0xd8b095, 0xa8765a], HAIR = [0x1c1714, 0x2b211b, 0x3a2c22];
+  const SHIRT_W = [0xd9dde3, 0x9fb3c9, 0xc7b79e, 0xe6e1d6], SUIT_C = [0x2b3240, 0x3a3f4a, 0x4a3f38];
+  const humanMat = (u, shirt, pants) => {
+    const m = new THREE.MeshStandardMaterial({ roughness: 0.78, metalness: 0, envMap: envTex, envMapIntensity: 0.35 });
+    const cols = { uSkin: { value: new THREE.Color(SKIN[(rnd() * SKIN.length) | 0]) }, uHair: { value: new THREE.Color(HAIR[(rnd() * HAIR.length) | 0]) }, uShirt: { value: new THREE.Color(shirt) }, uPants: { value: new THREE.Color(pants) } };
+    m.onBeforeCompile = (sh) => {
+      Object.assign(sh.uniforms, cols);
+      sh.fragmentShader = 'uniform vec3 uSkin, uHair, uShirt, uPants;\n' + sh.fragmentShader.replace('#include <color_fragment>', `#include <color_fragment>
+        { float y=vOP.y; vec3 c = y>1.66 ? uHair : y>1.50 ? uSkin : y>0.92 ? uShirt : y>0.07 ? uPants : vec3(.08);
+          diffuseColor.rgb = c; }`);
+    };
+    dissolve(m, u, false);
+    return m;
+  };
+  for (let j = 0; j < PAIRS * 2; j++) {
+    const pair = j >> 1, isWorker = (j & 1) === 0;
+    const z = -58 - pair * 4.4, cxp = 4.1, x = cxp + (isWorker ? -0.62 : 0.62);
     const u = { value: 0 };
-    const pl = plaster(); pl.emissive = new THREE.Color(0); dissolve(pl, u, false);
-    const rb = new THREE.MeshStandardMaterial({ color: 0x6b7586, roughness: 0.26, metalness: 0.9, envMap: envTex, envMapIntensity: 3.2, vertexColors: true }); rb.emissive = new THREE.Color(0); dissolve(rb, u, true);
+    const pl = humanMat(u, isWorker ? SHIRT_W[pair % SHIRT_W.length] : SUIT_C[pair % SUIT_C.length], isWorker ? 0x3a3d45 : SUIT_C[pair % SUIT_C.length]);
+    const rb = new THREE.MeshStandardMaterial({ color: 0xaab4c4, roughness: 0.16, metalness: 0.96, envMap: envTex, envMapIntensity: 3.6, vertexColors: true }); rb.emissive = new THREE.Color(0); dissolve(rb, u, true);
     const hg = new THREE.Group(); let glow = null;
     if (PV.length) {
       const v = PV[j % PV.length];
-      hg.add(new THREE.Mesh(v.h, pl), new THREE.Mesh(v.r, rb));
-      if (v.gl) { glow = new THREE.Mesh(v.gl, new THREE.MeshBasicMaterial({ color: new THREE.Color(0xbfe6ff).multiplyScalar(2.4), toneMapped: false, transparent: true, opacity: 0 })); fx(glow); hg.add(glow); }
-      hg.scale.setScalar(1.3); hg.position.set(x, -1.35, z); hg.rotation.set(0, 0.55 + (j % 3 - 1) * 0.12, 0);
-    } else {
-      hg.add(new THREE.Mesh(handG, pl), new THREE.Mesh(handG, rb));
-      hg.scale.setScalar(1.3); hg.position.set(x, 0.4 + 0.54 * 1.3, z); hg.rotation.set(0, 0.95, 0);
+      hg.add(new THREE.Mesh(v.h, pl));
+      if (isWorker) { hg.add(new THREE.Mesh(v.r, rb)); if (v.gl) { glow = new THREE.Mesh(v.gl, new THREE.MeshBasicMaterial({ color: new THREE.Color(0x8fe4ff).multiplyScalar(3), toneMapped: false, transparent: true, opacity: 0 })); fx(glow); hg.add(glow); } }
+      hg.scale.setScalar(1.3); hg.position.set(x, -1.35, z);
+      hg.rotation.set(0, isWorker ? Math.PI / 2 - 0.25 : -Math.PI / 2 + 0.25, 0);   // 向かい合う（少しカメラ側へ開く）
     }
     group.add(hg);
-    const fl = mkGlow(1.6, 0xcfe0ff, 0); fl.position.set(x, hg.position.y + (PV.length ? 1.55 * 1.3 : 0.9), z); scene.add(fl);
-    hands.push({ u, j, g: hg, baseY: hg.position.y, ph: rnd() * 6, flash: fl, lit: false, glow });
+    const fl = mkGlow(1.8, 0x9fe6ff, 0); fl.position.set(x, hg.position.y + 1.55 * 1.3, z); scene.add(fl);
+    hands.push({ u, j, pair, isWorker, g: hg, baseY: hg.position.y, baseRY: hg.rotation.y, ph: rnd() * 6, flash: fl, lit: false, glow });
   }
+  // 人の肌と服が見えるだけの、あたたかい明かり（場面1のあたりだけに届く）
+  const warm = new THREE.PointLight(0xffc9a0, 38, 34, 1.6); warm.position.set(7.5, 3.2, -66); scene.add(warm);
 }
+
 
 
 const H1SEQ = [600, 1150, 1650, 2100, 2500, 2850, 3150, 3420, 3660, 3880, 4080, 4260, 4420, 4560];   // 奥から順に。だんだん速く
@@ -541,7 +559,8 @@ const tvs = { list: [], parts: [], scrU: null };
   };
   push(T[3].clone(), dW * 0.24 / tvW, wq.clone(), true);
   // 番組を流すテレビ：主役＋4台を無造作に（So 11/24「5台ぐらい、それぞれ違う番組」）
-  const SHOWN = [[-0.58, -0.2, -2.5, 0.16, 0.55, 0.1], [0.36, 0.34, -7, 0.15, -0.4, -0.12], [-0.42, 0.33, -11, 0.13, 0.25, 0.18], [0.5, -0.36, -4, 0.15, -0.6, -0.05]];
+  // はっきり見える2台（主役と同じ奥行き）・すぐ手前でぼける1台・奥でぼける1台（So 11/24「無造作感」）
+  const SHOWN = [[0.3, 0.3, -0.8, 0.15, -0.35, -0.08], [-0.3, -0.36, -1.0, 0.15, 0.4, 0.07], [0.52, -0.5, 6.0, 0.2, -0.7, -0.2], [-0.2, 0.24, -16, 0.22, 0.3, 0.15]];
   for (const [x, y, z, w, ry, rz] of SHOWN) {
     const p = T[3].clone().addScaledVector(R, x * dW * (SP ? 0.7 : 1)).addScaledVector(Up, y * dW).addScaledVector(N, z);
     push(p, w * dW / tvW, wq.clone().multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(rr(-.12, .12), ry, rz))), false);
@@ -765,6 +784,7 @@ float fade(float u){ return smoothstep(0.,uR*.18,u)*(1.-smoothstep(uR*.86,uR,u))
 
 // ---------- 場面5：ゼロサム（決まった円を奪い合う）とプラスサム（輪そのものが育つ） ----------
 const s5 = {};
+const _n5 = scene.children.length;   // 旧案（下の塊）は隠し、「人の山」（sc5.js）に差し替え（So 11/24）
 {
   const C5 = T[5];
   // ゼロサム：10切れの円盤。境目が行き来し、取られた切れが反対側へ滑る。円の大きさは変わらない
@@ -794,6 +814,10 @@ const s5 = {};
   if (SP) { zs.scale.setScalar(0.78); ps.scale.setScalar(0.78); zs.position.x += 1.2; ps.position.x -= 1.0; zs.position.y += 1.4; ps.position.y -= 0.4; }
   Object.assign(s5, { zs, wedges, pl, ch, ps, orbs, lineG, lineM, trail, center, bound, phi: Math.PI });
 }
+
+s5.old = scene.children.slice(_n5); s5.old.forEach((o) => { o.visible = false; });
+let sc5 = null, s5T = 0;
+createScene5({ THREE, scene, center: V(T[5].x, T[5].y - 3.7, T[5].z - 1), quality: SP ? 'sp' : 'pc', renderer }).then((o) => { sc5 = o; sc5.setCamera?.(camera); sc5.group.visible = false; }).catch((e) => console.warn('sc5', e));
 
 // ---------- 場面6：ばらばらの短い板（個別最適）が、1本の長い橋（全体最適）に揃い、遠い光へ ----------
 const s6 = { planks: null, items: [] };
@@ -1257,27 +1281,37 @@ function frame() {
   // もや：近すぎ・遠すぎは消す
   for (const hz of hazes) { const d = hz.s.position.distanceTo(camera.position); hz.s.material.opacity = hz.base * sstep(6, 26, d) * (1 - sstep(150, 230, d)) * (1 - dawn); }
 
-  // 場面1：手の置き換え（本線と同じ周期：奥の手から1本ずつ AI に置き換わり、全部が人の手へ戻る を繰り返す）
-  const on1 = Math.abs(Ps - 1) < 0.62;
-  if (on1 && h1T0 < 0) { h1T0 = t; h1Idx = 0; h1Cyc = -1; }
+  // 場面1：話す組。奥の組から作り手が1人ずつ AI に置き換わる → 人は黙り、AI だけがボソボソ話す（怖い）→ しばらくして戻る
+  const on1 = Math.abs(Ps - 1) < 0.75;
+  if (on1 && h1T0 < 0) h1T0 = t;
   if (!on1) h1T0 = -1;
-  const CYC1 = 9000, BACK1 = 6800, hc = on1 ? (t - h1T0) * 1000 : 0, cyc = Math.floor(hc / CYC1), ht = hc % CYC1;
-  if (on1 && cyc !== h1Cyc) { h1Cyc = cyc; h1Idx = 0; }
+  const CYC1 = 17000, hc = on1 ? (t - h1T0) * 1000 : 0, ht = hc % CYC1, reset = ht > 15800;
+  const vlist = [];
   hands.forEach((h) => {
-    const order = hands.length - 1 - h.j;            // 0＝一番奥
-    const at = H1SEQ[Math.min(H1SEQ.length - 1, Math.round(order / Math.max(1, hands.length - 1) * (H1SEQ.length - 1)))];
-    const tgt = on1 && ht >= at && ht < BACK1 ? 1 : 0;
-    if (on1 && tgt && !h.lit) { h.lit = true; h.fl = t; SND.swap(order / hands.length); }
-    if (!tgt && h.lit) { h.lit = false; }
-    SND.person(h.j, hands.length, h.u.value > 0.5, on1 ? 1 - sstep(0.25, 0.6, Math.abs(Ps - 1.55)) : 0);
-    if (h.glow) h.glow.material.opacity = sstep(0.6, 1, h.u.value) * (0.8 + 0.2 * Math.sin(t * 9 + h.j));
-    h.u.value += (tgt - h.u.value) * (tgt ? 0.32 : 0.06);
-    h.g.position.y = h.baseY + Math.sin(t * 0.5 + h.ph) * 0.05;
+    const order = (SP ? 4 : 7) - 1 - h.pair;                         // 0＝一番奥の組
+    const at = 1500 + order * 1500;                                    // 1.5秒ごとに1組
+    const conv = h.isWorker && on1 && ht >= at && !reset;
+    if (h.isWorker) {
+      if (conv && !h.lit) { h.lit = true; h.fl = t; SND.swap(order / 7); }
+      if (!conv) h.lit = false;
+      h.u.value += ((conv ? 1 : 0) - h.u.value) * (conv ? 0.25 : 0.05);
+    }
+    const partnerAI = hands[h.pair * 2].u.value > 0.5;
+    const ai = h.isWorker && h.u.value > 0.5;
+    // 動き：人は身ぶりを交えて話す／AI は固く、ときどきピクッと／相手が AI になった人は止まって黙る
+    const talk = !ai && !partnerAI;
+    const sway = talk ? Math.sin(t * 2.6 + h.ph) * 0.07 + Math.sin(t * 6.1 + h.ph * 2) * 0.025 : 0;
+    const twitch = ai ? (Math.sin(t * 0.9 + h.ph) > 0.97 ? 0.08 : 0) : 0;
+    h.g.rotation.y = h.baseRY + sway + twitch;
+    h.g.position.y = h.baseY + (talk ? Math.abs(Math.sin(t * 3.2 + h.ph)) * 0.025 : 0);
     const fe = (t - (h.fl ?? -9)) / 0.7;
     h.flash.material.opacity = fe < 1 ? (fe < 0.25 ? fe / 0.25 : 1 - (fe - 0.25) / 0.75) * 0.9 : 0;
-    h.flash.scale.setScalar(1.2 + 2.2 * clamp(fe));
+    h.flash.scale.setScalar(1.4 + 2.4 * clamp(fe));
+    if (h.glow) h.glow.material.opacity = sstep(0.6, 1, h.u.value) * (0.75 + 0.25 * Math.sin(t * 7 + h.j));
+    vlist.push({ mode: ai ? 'ai' : (talk ? 'human' : 'quiet') });
   });
-  h1vp.material.opacity = on1 ? (ht < 400 ? ht / 400 : ht < 5600 ? 0.9 : Math.max(0, 1 - (ht - 5600) / 1100)) * 0.6 : 0;
+  SND.people(vlist, on1 ? 1 - sstep(0.25, 0.65, Math.abs(Ps - 1.55)) : 0);
+  h1vp.material.opacity = 0;
   // 場面2：枝が伸びる
   { const in2 = Math.abs(Ps - 2) < 0.75; const base = sstep(-0.45, 0.4, Ps - 2) * 0.32;   // ×2.2 で初期の木（世代8/11≒0.7）まで
     if (in2) fGrowT += dt / 80;                       // 着いた時は初期の木の大きさ、そこから約80秒で画面が埋まる
@@ -1319,7 +1353,16 @@ function frame() {
   coreW.scale.setScalar(0.2 + conv * 1.6); coreW.material.opacity = conv;
   const gv = Math.abs(Ps - 4.5) < 0.5 ? 1 : 0; gauge.style.opacity = gv;
   if (gv) { const pct = Math.round(conv * 100); pc.textContent = String(pct).padStart(3, '0'); tk.style.left = pct * 1.4 * (innerWidth < 820 ? 80 / 140 : 1) + 'px'; }
-  // 場面5
+  // 場面5（人の山）：着いてから時間で進む（約16秒）
+  if (sc5) {
+    const d5 = Math.abs(Ps - 5.55), at5 = d5 < 0.32;
+    sc5.group.visible = Math.abs(Ps - 5.2) < 1.3;
+    if (at5) s5T = Math.min(1, s5T + dt / 16); else if (d5 > 0.95) s5T = 0;
+    if (sc5.group.visible) sc5.update(t, dt, Math.max(s5T, 0.02));
+    sc5.audio(SND.out(), sc5.group.visible ? 1 - sstep(0.25, 0.6, d5) : 0);
+  }
+  s5.old.forEach((o) => { o.visible = false; });
+  // 場面5（旧）
   if (Math.abs(Ps - 5) < 1.6) {
     const l5 = sstep(-0.1, 0.7, Ps - 5);
     s5.phi = Math.PI + Math.sin(t * 0.55) * 1.9;

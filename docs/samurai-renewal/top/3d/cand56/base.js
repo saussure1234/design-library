@@ -115,7 +115,8 @@ export async function run(C) {
       try {
       if (!built) { built = true; C.sound?.init(S, o); }
       SND.scene(C.chordAt ? C.chordAt(S) : (C.chord ?? 5));
-      SND.update({ noise: 0, travel: 0, vel: 0, dawn: 0, fv: 0, day: C.duck ? C.duck(S) : 0, tv: 0 });
+      SND.update({ noise: 0, travel: 0, vel: 0, dawn: 0, fv: 0, day: 0, tv: 0 });
+      if (C.duck) o.music.gain.setTargetAtTime(0.9 - 0.5 * C.duck(S), o.ctx.currentTime, 0.8);   // 土台の和音を下げる（day は使わない＝昼の音が混ざるため）
       C.sound?.update(S, o);
       } catch (e) { console.error(e); }
     } else if (built && C.sound?.mute) C.sound.mute(S);
