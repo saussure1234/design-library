@@ -2,44 +2,47 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <title>インドネシア市場パイ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#f6f4ef; --panel:#ffffff; --ink:#1d1d1b; --muted:#6b6a65; --line:#d9d5cc; --edge:#b9b3a6;
-  --paid:#1f8a5b; --free:#6fa8dc; --none:#ebe7de; --none-stroke:#cfc9bc; --other:#b3b0a8;
-  --accent:#e0701f; --chip:#f1eee7; --hatch:rgba(0,0,0,.28);
+  --bg:#f4f2ec; --dot:#dcd7cb; --panel:#ffffff; --ink:#1d1d1b; --muted:#6b6a65; --line:#d9d5cc; --edge:#b3ac9e;
+  --paid:#1f8a5b; --free:#6fa8dc; --none:#e6e1d6; --none-stroke:#c9c2b3; --other:#aeaaa1;
+  --accent:#e0701f; --chip:#f1eee7; --hatch:rgba(0,0,0,.28); --halo:#f4f2ec; --sel:#1d1d1b;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#151513; --panel:#1e1e1b; --ink:#eeece6; --muted:#a3a097; --line:#3a3934; --edge:#57544c;
-    --paid:#34b37a; --free:#5d93c7; --none:#2b2a26; --none-stroke:#45433c; --other:#6d6a62;
-    --accent:#f08a3a; --chip:#2a2925; --hatch:rgba(255,255,255,.3);
+    --bg:#141412; --dot:#2a2925; --panel:#1e1e1b; --ink:#eeece6; --muted:#a3a097; --line:#3a3934; --edge:#5f5b52;
+    --paid:#34b37a; --free:#5d93c7; --none:#3b3934; --none-stroke:#57544b; --other:#77736a;
+    --accent:#f08a3a; --chip:#2a2925; --hatch:rgba(255,255,255,.32); --halo:#141412; --sel:#ffffff;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#151513; --panel:#1e1e1b; --ink:#eeece6; --muted:#a3a097; --line:#3a3934; --edge:#57544c;
-  --paid:#34b37a; --free:#5d93c7; --none:#2b2a26; --none-stroke:#45433c; --other:#6d6a62;
-  --accent:#f08a3a; --chip:#2a2925; --hatch:rgba(255,255,255,.3);
+  --bg:#141412; --dot:#2a2925; --panel:#1e1e1b; --ink:#eeece6; --muted:#a3a097; --line:#3a3934; --edge:#5f5b52;
+  --paid:#34b37a; --free:#5d93c7; --none:#3b3934; --none-stroke:#57544b; --other:#77736a;
+  --accent:#f08a3a; --chip:#2a2925; --hatch:rgba(255,255,255,.32); --halo:#141412; --sel:#ffffff;
 }
 *{box-sizing:border-box}
-html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:"Noto Sans JP",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:"Noto Sans JP",system-ui,sans-serif;-webkit-font-smoothing:antialiased;overscroll-behavior:none}
 body{display:flex;flex-direction:column;overflow:hidden}
-header{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;padding:10px 16px;border-bottom:1px solid var(--line);background:var(--panel)}
+header{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;padding:10px 16px;border-bottom:1px solid var(--line);background:var(--panel);z-index:2}
 header h1{font-size:16px;margin:0;font-weight:700;letter-spacing:.02em}
 header .sub{font-size:12px;color:var(--muted)}
 .btns{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
-button{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--chip);color:var(--ink);border-radius:999px;padding:6px 12px;cursor:pointer}
+button{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--chip);color:var(--ink);border-radius:999px;padding:6px 12px;cursor:pointer;touch-action:manipulation}
 button:hover{border-color:var(--ink)}
 button.accent{border-color:var(--accent);color:var(--accent);font-weight:700}
 main{flex:1;display:flex;min-height:0;position:relative}
-#stage{flex:1;min-width:0;position:relative}
-svg{width:100%;height:100%;display:block;touch-action:none;cursor:grab}
-svg:active{cursor:grabbing}
-aside{width:380px;max-width:42vw;border-left:1px solid var(--line);background:var(--panel);overflow:auto;padding:16px 18px 28px}
+#stage{flex:1;min-width:0;position:relative;overflow:hidden;background-color:var(--bg);background-image:radial-gradient(var(--dot) 1.2px, transparent 1.2px)}
+svg{width:100%;height:100%;display:block;touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none}
+svg.panning{cursor:grabbing}
+.n{cursor:pointer}
+.n text{paint-order:stroke;stroke:var(--halo);stroke-width:3.5px;stroke-linejoin:round}
+.e text{paint-order:stroke;stroke:var(--halo);stroke-width:4px;stroke-linejoin:round}
+aside{width:380px;max-width:42vw;border-left:1px solid var(--line);background:var(--panel);overflow:auto;padding:16px 18px 28px;z-index:2}
 .crumbs{font-size:12px;color:var(--muted);margin-bottom:8px;line-height:1.8}
 .crumbs a{color:var(--muted);cursor:pointer;text-decoration:underline;text-underline-offset:2px}
 aside h2{font-size:18px;margin:0 0 4px;line-height:1.4}
@@ -51,10 +54,9 @@ aside h2{font-size:18px;margin:0 0 4px;line-height:1.4}
 .jp{font-size:12.5px;line-height:1.7;background:var(--chip);border-radius:8px;padding:8px 10px;margin:8px 0 12px}
 table{width:100%;border-collapse:collapse;font-size:13px}
 td{padding:7px 4px;border-top:1px solid var(--line);vertical-align:top;line-height:1.5}
-tr.row{cursor:default}
-tr.row.go{cursor:pointer}
-tr.row.go:hover td{background:var(--chip)}
-tr.row.hl td{background:var(--chip)}
+tr.go{cursor:pointer}
+tr.go:hover td{background:var(--chip)}
+tr.hl td{background:var(--chip)}
 .sw{width:12px;height:12px;border-radius:3px;display:inline-block;vertical-align:-1px}
 .num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
 .pct{color:var(--muted);font-size:12px}
@@ -62,14 +64,20 @@ tr.row.hl td{background:var(--chip)}
 .go-tag{font-size:11px;color:var(--accent);white-space:nowrap}
 .src{font-size:11.5px;word-break:break-all;color:var(--muted)}
 .src a{color:var(--muted)}
-.legend{position:absolute;left:12px;bottom:12px;font-size:11.5px !important;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:12px;line-height:1.9;max-width:calc(100% - 24px)}
+.legend{position:absolute;left:12px;bottom:12px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:11.5px;line-height:1.9;max-width:min(560px,calc(100% - 200px))}
 .legend span{display:inline-flex;align-items:center;gap:5px;margin-right:10px;white-space:nowrap}
-.legend .foot{color:var(--muted);font-size:11px;line-height:1.5;white-space:normal}
-.tip{position:absolute;pointer-events:none;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px 9px;font-size:12.5px;box-shadow:0 4px 14px rgba(0,0,0,.12);display:none;max-width:260px;line-height:1.5}
-.hint{position:absolute;top:10px;left:12px;font-size:12px;color:var(--muted);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:4px 10px}
+.legend .foot{color:var(--muted);font-size:11px;line-height:1.5}
+.legend.min > :not(.lg-t){display:none}
+.lg-t{float:right;padding:0 8px;font-size:11px;margin-left:8px}
+.zoomctl{position:absolute;right:12px;bottom:12px;display:flex;align-items:center;gap:2px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,.08)}
+.zoomctl button{border:0;background:transparent;border-radius:7px;padding:5px 9px;font-size:15px;line-height:1}
+.zoomctl button:hover{background:var(--chip)}
+.zoomctl .pc{font-size:12px;min-width:46px;text-align:center;color:var(--muted);font-variant-numeric:tabular-nums}
+.tip{position:absolute;pointer-events:none;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px 9px;font-size:12.5px;box-shadow:0 4px 14px rgba(0,0,0,.12);display:none;max-width:260px;line-height:1.5;z-index:3}
+.hint{position:absolute;top:10px;left:12px;font-size:12px;color:var(--muted);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:4px 10px;transition:opacity .4s}
 @media (max-width:760px){
   main{flex-direction:column}
-  aside{width:100%;max-width:none;border-left:0;border-top:1px solid var(--line);max-height:44vh;padding:12px 16px 20px}
+  aside{width:100%;max-width:none;border-left:0;border-top:1px solid var(--line);max-height:42vh;padding:12px 16px 20px}
   .legend{display:none}
   header h1{font-size:15px}
   .btns{margin-left:0}
@@ -92,14 +100,17 @@ tr.row.hl td{background:var(--chip)}
 <main>
   <div id="stage">
     <svg id="svg" role="img" aria-label="インドネシアの市場をパイで分けた図"></svg>
-    <div class="hint">パイや切れを押すと、その先のパイへ。ドラッグで移動、ホイール・2本指で拡大縮小</div>
-    <div class="legend" id="legend"><button id="lg-x" style="float:right;padding:0 8px;font-size:11px;margin-left:8px">閉じる</button>
+    <div class="hint" id="hint">ドラッグ・2本指スクロールで移動　ピンチ・ホイールで拡大縮小　押すと右に中身　ダブルクリックでそのパイへ</div>
+    <div class="legend" id="legend"><button class="lg-t" id="lg-t">たたむ</button>
       <span><i class="sw" style="background:var(--paid)"></i>有料のソフトを使う</span>
       <span><i class="sw" style="background:var(--free)"></i>無料の道具だけ</span>
       <span><i class="sw" style="background:var(--none);border:1px solid var(--none-stroke)"></i>使っていない（白地）</span>
       <span><svg width="14" height="14"><rect width="14" height="14" fill="var(--other)"/><rect width="14" height="14" fill="url(#hatch)"/></svg>斜線＝仮の数字</span>
       <span><i class="sw" style="border:2px dashed var(--accent)"></i>Satu Inbox の狙い</span>
       <div class="foot">パイの大きさは数の桁（対数）で決めています。細すぎる切れは見やすく少し太くしています。各社の客の数は多くが自称です。</div>
+    </div>
+    <div class="zoomctl">
+      <button id="z-out" aria-label="縮小">−</button><span class="pc" id="z-pc">100%</span><button id="z-in" aria-label="拡大">＋</button><button id="z-fit" aria-label="全体" title="全体（キー 0）">⤢</button>
     </div>
     <div class="tip" id="tip"></div>
   </div>
@@ -115,21 +126,27 @@ const nodes = DATA.nodes;
 const byId = new Map(nodes.map(n => [n.id, n]));
 nodes.forEach(n => { if (n.id !== 'root' && !byId.has(n.parent_node)) n.parent_node = 'root'; });
 const H = d3.stratify().id(d => d.id).parentId(d => d.id === 'root' ? null : d.parent_node)(nodes);
+const ALL = H.descendants();
 const SATU = new Set(DATA.satu_ids || []);
-
-// ---- layout (radial) ----
-const RING = 340;
-const tree = d3.tree().size([2 * Math.PI, 1]).separation((a, b) => (a.parent === b.parent ? 1 : 1.6) / Math.max(1, a.depth * 0.8));
-tree(H);
 const rOf = v => 18 + 20 * Math.log10(Math.max(v || 1, 1000) / 1000);
-H.each(d => {
-  const rad = d.depth * RING;
-  d.px = rad * Math.cos(d.x - Math.PI / 2);
-  d.py = rad * Math.sin(d.x - Math.PI / 2);
-  d.r = rOf(d.data.total);
-});
+ALL.forEach(d => { d.r = rOf(d.data.total); });
 
-// ---- colors ----
+// ---- 配置：放射状に置いてから、重ならないように押し広げる（マインドマップ風） ----
+d3.tree().size([2 * Math.PI, 1]).separation((a, b) => (a.parent === b.parent ? 1 : 1.5) / Math.max(1, a.depth))(H);
+const RING = 300;
+ALL.forEach(d => { const rad = d.depth * RING; d.x0 = rad * Math.cos(d.x - Math.PI / 2); d.y0 = rad * Math.sin(d.x - Math.PI / 2); d.x = d.x0; d.y = d.y0; });
+H.fx = 0; H.fy = 0;
+const sim = d3.forceSimulation(ALL)
+  .force('link', d3.forceLink(H.links()).distance(l => l.source.r + l.target.r + 150).strength(0.9))
+  .force('collide', d3.forceCollide(d => d.r + 78).strength(1).iterations(4))
+  .force('charge', d3.forceManyBody().strength(-260).distanceMax(900))
+  .force('x', d3.forceX(d => d.x0).strength(0.04))
+  .force('y', d3.forceY(d => d.y0).strength(0.04))
+  .stop();
+for (let i = 0; i < 700; i++) sim.tick();
+ALL.forEach(d => { d.px = d.x; d.py = d.y; });
+
+// ---- 色 ----
 const css = getComputedStyle(document.documentElement);
 const cv = n => css.getPropertyValue(n).trim();
 const CAT = ['#2f6f8f', '#c98a2b', '#8a5a9e', '#3f8f6a', '#b5525a', '#5b7bb8', '#8c7a4b', '#4f9aa0', '#a86a3d', '#6d7f3b', '#7c6bc4', '#9b4f7a'];
@@ -141,73 +158,80 @@ function sliceColor(node, s, i) {
   if (s.kind === '有料' && !multiPaid) return cv('--paid');
   return CAT[i % CAT.length];
 }
+const short = v => {
+  if (v == null) return '?';
+  if (v >= 1e8) return (v / 1e8).toFixed(1).replace(/\.0$/, '') + '億';
+  if (v >= 1e4) { const m = v / 1e4; return (m >= 100 ? Math.round(m).toLocaleString() : m.toFixed(1).replace(/\.0$/, '')) + '万'; }
+  return Math.round(v).toLocaleString();
+};
+const fmtPct = p => p >= 10 ? p.toFixed(0) + '%' : p >= 1 ? p.toFixed(1) + '%' : p >= 0.1 ? p.toFixed(2) + '%' : '0.1%未満';
+const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
 // ---- svg ----
 const svg = d3.select('#svg');
 const defs = svg.append('defs');
-const pat = defs.append('pattern').attr('id', 'hatch').attr('width', 6).attr('height', 6).attr('patternUnits', 'userSpaceOnUse').attr('patternTransform', 'rotate(45)');
-pat.append('rect').attr('width', 2).attr('height', 6).attr('fill', cv('--hatch'));
-// legend's tiny svg uses #hatch too (same document)
+defs.append('pattern').attr('id', 'hatch').attr('width', 6).attr('height', 6).attr('patternUnits', 'userSpaceOnUse').attr('patternTransform', 'rotate(45)')
+  .append('rect').attr('width', 2).attr('height', 6).attr('fill', cv('--hatch'));
 const world = svg.append('g');
 const gEdges = world.append('g');
 const gNodes = world.append('g');
-const zoom = d3.zoom().scaleExtent([0.08, 6]).on('zoom', e => world.attr('transform', e.transform));
-svg.call(zoom).on('dblclick.zoom', null);
 
 const pie = d3.pie().sort(null).value(d => d._vis).startAngle(Math.PI / 2).endAngle(Math.PI * 2.5);
-function arcsFor(d) {
+ALL.forEach(d => {
   const tot = d3.sum(d.data.slices, s => Math.max(0, s.value)) || 1;
   d.data.slices.forEach(s => { s._vis = s.value > 0 ? Math.max(s.value, tot * 0.004) : 0; s._pct = s.value / (d.data.total || tot) * 100; });
-  return pie(d.data.slices);
-}
-
-// edges
+  d._arcs = pie(d.data.slices);
+});
 const childOfSlice = new Map();
-H.descendants().forEach(d => { if (d.parent && d.data.parent_slice) childOfSlice.set(d.parent.id + '|' + d.data.parent_slice, d); });
-H.descendants().forEach(d => { d._arcs = arcsFor(d); });
-function anchor(d) {
-  const p = d.parent; if (!p) return null;
-  const a = p._arcs.find(x => x.data.id === d.data.parent_slice);
-  if (!a) return [p.px, p.py, null];
-  const ang = (a.startAngle + a.endAngle) / 2 - Math.PI / 2;
-  return [p.px + Math.cos(ang) * p.r, p.py + Math.sin(ang) * p.r, ang];
-}
-const links = H.descendants().filter(d => d.parent);
-const edge = gEdges.selectAll('g').data(links).join('g');
-edge.append('path').attr('fill', 'none').attr('stroke', cv('--edge')).attr('stroke-width', 1.6)
-  .attr('stroke-dasharray', d => d.data.parent_slice ? null : '5 5')
-  .attr('d', d => {
-    const [ax, ay, ang] = anchor(d);
-    const dx = d.px - ax, dy = d.py - ay, L = Math.hypot(dx, dy) || 1;
-    const ex = d.px - dx / L * d.r, ey = d.py - dy / L * d.r;
-    const c1x = ang === null ? ax : ax + Math.cos(ang) * L * 0.35, c1y = ang === null ? ay : ay + Math.sin(ang) * L * 0.35;
-    return `M${ax},${ay} Q${c1x},${c1y} ${ex},${ey}`;
-  });
-edge.append('text').attr('font-size', 13).attr('fill', cv('--muted')).attr('text-anchor', 'middle')
-  .attr('x', d => { const [ax] = anchor(d); return (ax + d.px) / 2; })
-  .attr('y', d => { const [, ay] = anchor(d); return (ay + d.py) / 2 - 6; })
-  .text(d => d.data.edge_label_ja || '');
+ALL.forEach(d => { if (d.parent && d.data.parent_slice) childOfSlice.set(d.parent.id + '|' + d.data.parent_slice, d); });
 
-// nodes
-const g = gNodes.selectAll('g.n').data(H.descendants()).join('g').attr('class', 'n')
-  .attr('transform', d => `translate(${d.px},${d.py})`).style('cursor', 'pointer');
-g.filter(d => SATU.has(d.id)).append('circle').attr('r', d => d.r + 9).attr('fill', 'none')
+// 線：親の切れ（無ければ親のパイの縁）から子のパイへ
+function edgePath(d) {
+  const p = d.parent;
+  const a = d.data.parent_slice ? p._arcs.find(x => x.data.id === d.data.parent_slice) : null;
+  let ax, ay, ang;
+  if (a) { ang = (a.startAngle + a.endAngle) / 2 - Math.PI / 2; ax = p.px + Math.cos(ang) * p.r; ay = p.py + Math.sin(ang) * p.r; }
+  else { ang = Math.atan2(d.py - p.py, d.px - p.px); ax = p.px + Math.cos(ang) * p.r; ay = p.py + Math.sin(ang) * p.r; }
+  const dx = d.px - ax, dy = d.py - ay, L = Math.hypot(dx, dy) || 1;
+  const ex = d.px - dx / L * (d.r + 6), ey = d.py - dy / L * (d.r + 6);
+  const c1x = ax + Math.cos(ang) * L * 0.33, c1y = ay + Math.sin(ang) * L * 0.33;
+  d._mid = [(ax + 2 * c1x + ex) / 4, (ay + 2 * c1y + ey) / 4];
+  return `M${ax},${ay} Q${c1x},${c1y} ${ex},${ey}`;
+}
+const links = ALL.filter(d => d.parent);
+const edge = gEdges.selectAll('g').data(links).join('g').attr('class', 'e');
+edge.append('path').attr('fill', 'none').attr('stroke', cv('--edge')).attr('stroke-width', 1.8)
+  .attr('stroke-dasharray', d => d.data.parent_slice ? null : '6 5').attr('d', edgePath);
+edge.append('text').attr('font-size', 13).attr('fill', cv('--muted')).attr('text-anchor', 'middle')
+  .attr('x', d => d._mid[0]).attr('y', d => d._mid[1] - 4).text(d => d.data.edge_label_ja || '');
+
+// パイ
+const g = gNodes.selectAll('g.n').data(ALL).join('g').attr('class', 'n').attr('transform', d => `translate(${d.px},${d.py})`);
+g.append('circle').attr('class', 'selring').attr('r', d => d.r + 5).attr('fill', 'none').attr('stroke', cv('--sel')).attr('stroke-width', 3).attr('opacity', 0);
+g.filter(d => SATU.has(d.id)).append('circle').attr('r', d => d.r + 11).attr('fill', 'none')
   .attr('stroke', cv('--accent')).attr('stroke-width', 2.5).attr('stroke-dasharray', '7 5');
 g.each(function (d) {
   const sel = d3.select(this);
   const arc = d3.arc().innerRadius(d.r * 0.52).outerRadius(d.r).padAngle(0.006).cornerRadius(2);
-  const gs = sel.append('g').selectAll('g').data(d._arcs).join('g').attr('class', 'sl');
+  const gs = sel.append('g').selectAll('g').data(d._arcs).join('g');
   gs.append('path').attr('d', arc).attr('fill', (a, i) => sliceColor(d.data, a.data, i))
     .attr('stroke', a => a.data.kind === '使っていない' ? cv('--none-stroke') : cv('--panel')).attr('stroke-width', 1);
   gs.filter(a => a.data.basis === '仮').append('path').attr('d', arc).attr('fill', 'url(#hatch)').attr('pointer-events', 'none');
-  gs.on('mousemove', (e, a) => showTip(e, d, a.data)).on('mouseleave', hideTip)
-    .on('click', (e, a) => { e.stopPropagation(); const c = childOfSlice.get(d.id + '|' + a.data.id); focus(c || d, c ? null : a.data.id); });
+  gs.on('pointermove', (e, a) => showTip(e, d, a.data)).on('pointerleave', hideTip)
+    .on('click', (e, a) => { e.stopPropagation(); select(d, a.data.id); })
+    .on('dblclick', (e, a) => { e.stopPropagation(); const c = childOfSlice.get(d.id + '|' + a.data.id); flyTo(c || d); select(c || d); });
+  sel.append('circle').attr('r', d.r * 0.5).attr('fill', cv('--panel'))
+    .on('click', e => { e.stopPropagation(); select(d); })
+    .on('dblclick', e => { e.stopPropagation(); flyTo(d); select(d); });
+  sel.append('text').attr('text-anchor', 'middle').attr('dy', '0.35em').attr('font-weight', 700)
+    .attr('font-size', Math.max(11, d.r * 0.24)).attr('fill', cv('--ink')).attr('pointer-events', 'none').style('stroke-width', '0px')
+    .text(short(d.data.total));
   const fsz = Math.max(10, d.r * 0.12);
   const lab = d._arcs.filter(a => a.value > 0 && a.data._pct < 55).sort((a, b) => b.data.value - a.data.value).slice(0, 7).map(a => {
     const m = ((a.startAngle + a.endAngle) / 2) % (2 * Math.PI), t = m - Math.PI / 2;
     return { a, side: m < Math.PI ? 1 : -1, x: Math.cos(t) * (d.r + 8), y: Math.sin(t) * (d.r + 8) };
   });
-  [1, -1].forEach(side => {           // 同じ側のラベルは重ならないよう縦にずらす
+  [1, -1].forEach(side => {
     const L = lab.filter(o => o.side === side).sort((p, q) => p.y - q.y);
     for (let i = 1; i < L.length; i++) if (L[i].y < L[i - 1].y + fsz * 1.25) L[i].y = L[i - 1].y + fsz * 1.25;
   });
@@ -215,10 +239,6 @@ g.each(function (d) {
     .attr('x', o => o.x + o.side * 2).attr('y', o => o.y).attr('text-anchor', o => o.side > 0 ? 'start' : 'end')
     .attr('dy', '0.35em').attr('font-size', fsz).attr('fill', cv('--muted')).attr('pointer-events', 'none')
     .text(o => o.a.data.label_ja + ' ' + fmtPct(o.a.data._pct));
-  sel.append('circle').attr('r', d.r * 0.5).attr('fill', cv('--panel')).on('click', e => { e.stopPropagation(); focus(d); });
-  sel.append('text').attr('text-anchor', 'middle').attr('dy', '0.35em').attr('font-weight', 700)
-    .attr('font-size', Math.max(11, d.r * 0.24)).attr('fill', cv('--ink')).attr('pointer-events', 'none')
-    .text(short(d.data.total));
   const below = lab.filter(o => Math.abs(o.x) < d.r * 0.95 && o.y > 0).map(o => o.y);
   const ty = Math.max(d.r + 20, below.length ? d3.max(below) + fsz + 12 : 0);
   const t = sel.append('text').attr('text-anchor', 'middle').attr('y', ty).attr('pointer-events', 'none');
@@ -227,87 +247,146 @@ g.each(function (d) {
     .text(d.data.total_display_ja + (d.data.basis === '仮' ? '（仮）' : ''));
 });
 
-function short(v) {
-  if (v == null) return '?';
-  if (v >= 1e8) return (v / 1e8).toFixed(1).replace(/\.0$/, '') + '億';
-  if (v >= 1e4) { const m = v / 1e4; return (m >= 100 ? Math.round(m).toLocaleString() : m.toFixed(1).replace(/\.0$/, '')) + '万'; }
-  return Math.round(v).toLocaleString();
+// ---- 動かし方（Miro 風） ----
+const K_MIN = 0.06, K_MAX = 5;
+const zoom = d3.zoom().scaleExtent([K_MIN, K_MAX])
+  .filter(e => e.type !== 'wheel' && e.type !== 'dblclick' && !e.button)
+  .on('start', e => { if (e.sourceEvent && e.sourceEvent.type !== 'wheel') svg.classed('panning', true); hideTip(); })
+  .on('zoom', e => { world.attr('transform', e.transform); pc.textContent = Math.round(e.transform.k * 100) + '%'; })
+  .on('end', () => svg.classed('panning', false));
+svg.call(zoom).on('dblclick.zoom', null);
+const pc = document.getElementById('z-pc');
+const clampK = k => Math.max(K_MIN, Math.min(K_MAX, k));
+let lastWheel = 0, wheelKind = null;
+svg.node().addEventListener('wheel', e => {
+  e.preventDefault();
+  hideTip();
+  const t = d3.zoomTransform(svg.node());
+  const [mx, my] = d3.pointer(e, svg.node());
+  const now = performance.now();
+  // マウスのホイール＝拡大縮小、トラックパッドの2本指＝移動、ピンチ（ctrl）＝拡大縮小
+  if (now - lastWheel > 220) wheelKind = (e.deltaMode === 1 || (e.deltaX === 0 && Math.abs(e.deltaY) >= 50 && Number.isInteger(e.deltaY))) ? 'mouse' : 'pad';
+  lastWheel = now;
+  if (e.ctrlKey || e.metaKey || wheelKind === 'mouse') {
+    const dy = e.deltaMode === 1 ? e.deltaY * 20 : e.deltaY;
+    const k = clampK(t.k * Math.pow(2, -dy * (e.ctrlKey ? 0.012 : 0.0025)));
+    svg.call(zoom.transform, d3.zoomIdentity.translate(mx - (mx - t.x) * k / t.k, my - (my - t.y) * k / t.k).scale(k));
+  } else {
+    svg.call(zoom.transform, d3.zoomIdentity.translate(t.x - e.deltaX, t.y - e.deltaY).scale(t.k));
+  }
+}, { passive: false });
+svg.on('click', () => select(null));
+function size() { const r = svg.node().getBoundingClientRect(); return [r.width, r.height]; }
+function flyTo(d, k) {
+  const [w, h] = size();
+  k = k || clampK(Math.min(w, h) / (d.r * 2 + 340));
+  svg.transition().duration(750).ease(d3.easeCubicInOut).call(zoom.transform, d3.zoomIdentity.translate(w / 2 - d.px * k, h / 2 - d.py * k).scale(k));
 }
-function fmtPct(p) { return p >= 10 ? p.toFixed(0) + '%' : p >= 1 ? p.toFixed(1) + '%' : p >= 0.1 ? p.toFixed(2) + '%' : '0.1%未満'; }
+function fitAll(dur) {
+  const [w, h] = size();
+  const x0 = d3.min(ALL, d => d.px - d.r - 120), x1 = d3.max(ALL, d => d.px + d.r + 120);
+  const y0 = d3.min(ALL, d => d.py - d.r - 60), y1 = d3.max(ALL, d => d.py + d.r + 90);
+  const k = clampK(Math.min(w / (x1 - x0), h / (y1 - y0)) * 0.96);
+  const T = d3.zoomIdentity.translate(w / 2 - (x0 + x1) / 2 * k, h / 2 - (y0 + y1) / 2 * k).scale(k);
+  (dur === 0 ? svg : svg.transition().duration(750).ease(d3.easeCubicInOut)).call(zoom.transform, T);
+}
+function zoomBy(f) {
+  const [w, h] = size(), t = d3.zoomTransform(svg.node()), k = clampK(t.k * f);
+  svg.transition().duration(250).call(zoom.transform, d3.zoomIdentity.translate(w / 2 - (w / 2 - t.x) * k / t.k, h / 2 - (h / 2 - t.y) * k / t.k).scale(k));
+}
+document.getElementById('z-in').onclick = () => zoomBy(1.4);
+document.getElementById('z-out').onclick = () => zoomBy(1 / 1.4);
+document.getElementById('z-fit').onclick = () => fitAll();
+document.getElementById('b-all').onclick = () => fitAll();
+document.getElementById('b-root').onclick = () => { flyTo(H, rootK()); select(H); };
+document.getElementById('b-target').onclick = () => { const d = ALL.find(x => x.id === (DATA.target_id || 'target')) || H; flyTo(d); select(d); };
+document.getElementById('lg-t').onclick = () => { const L = document.getElementById('legend'); L.classList.toggle('min'); document.getElementById('lg-t').textContent = L.classList.contains('min') ? '凡例' : 'たたむ'; };
+window.addEventListener('keydown', e => {
+  if (e.target.closest('input,textarea')) return;
+  const t = d3.zoomTransform(svg.node()), step = 80;
+  const pan = (dx, dy) => svg.transition().duration(150).call(zoom.transform, d3.zoomIdentity.translate(t.x + dx, t.y + dy).scale(t.k));
+  if (e.key === '+' || e.key === '=') zoomBy(1.4);
+  else if (e.key === '-') zoomBy(1 / 1.4);
+  else if (e.key === '0') fitAll();
+  else if (e.key === 'ArrowLeft') pan(step, 0);
+  else if (e.key === 'ArrowRight') pan(-step, 0);
+  else if (e.key === 'ArrowUp') pan(0, step);
+  else if (e.key === 'ArrowDown') pan(0, -step);
+  else return;
+  e.preventDefault();
+});
+// 画面の大きさが変わっても、見ている真ん中は動かさない
+let lastSize = size();
+new ResizeObserver(() => {
+  const [w, h] = size(), [w0, h0] = lastSize; lastSize = [w, h];
+  const t = d3.zoomTransform(svg.node());
+  svg.call(zoom.transform, d3.zoomIdentity.translate(t.x + (w - w0) / 2, t.y + (h - h0) / 2).scale(t.k));
+}).observe(svg.node());
 
-// tooltip
+// ---- 選ぶ（カメラは動かさない） ----
+let current = null;
+function select(d, hlSlice) {
+  current = d;
+  g.select('.selring').attr('opacity', x => x === d ? 1 : 0);
+  edge.select('path').attr('stroke', x => d && (x === d || x.parent === d) ? cv('--sel') : cv('--edge'))
+    .attr('stroke-width', x => d && (x === d || x.parent === d) ? 2.6 : 1.8);
+  render(d || H, hlSlice);
+}
+
+// ---- ツールチップ ----
 const tip = document.getElementById('tip');
 function showTip(e, d, s) {
+  if (e.pointerType === 'touch' || svg.classed('panning')) return;
   const box = document.getElementById('stage').getBoundingClientRect();
+  const c = childOfSlice.get(d.id + '|' + s.id);
   tip.innerHTML = `<b>${esc(s.label_ja)}</b><br>${esc(s.display_ja)}　<span class="pct">${fmtPct(s._pct)}</span>${s.basis === '仮' ? ' <span class="badge kari">仮</span>' : ''}`
-    + (childOfSlice.get(d.id + '|' + s.id) ? '<br><span class="go-tag">押すと中を見る →</span>' : '');
+    + (c ? '<br><span class="go-tag">ダブルクリックで中のパイへ →</span>' : '');
   tip.style.display = 'block';
   tip.style.left = Math.min(e.clientX - box.left + 14, box.width - 270) + 'px';
-  tip.style.top = (e.clientY - box.top + 14) + 'px';
+  tip.style.top = Math.min(e.clientY - box.top + 14, box.height - 80) + 'px';
 }
 function hideTip() { tip.style.display = 'none'; }
-function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
 
-// panel
+// ---- 右の説明 ----
 const panel = document.getElementById('panel');
+function linkify(s) { return esc(s).replace(/(https?:\/\/[^\s、，,）)]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>'); }
 function render(d, hlSlice) {
   const n = d.data;
-  const crumbs = d.ancestors().reverse().map((a, i, arr) => i === arr.length - 1 ? `<b>${esc(a.data.title_ja)}</b>` : `<a data-id="${a.id}">${esc(a.data.title_ja)}</a>`).join(' › ');
+  const crumbs = d.ancestors().reverse().map((a, i, arr) => i === arr.length - 1 ? `<b>${esc(a.data.title_ja)}</b>` : `<a data-go="${a.id}">${esc(a.data.title_ja)}</a>`).join(' › ');
   const kids = (d.children || []).filter(c => !c.data.parent_slice);
-  let rows = d._arcs.map((a, i) => {
+  const rows = d._arcs.map((a, i) => {
     const s = a.data, c = childOfSlice.get(d.id + '|' + s.id);
-    return `<tr class="row ${c ? 'go' : ''} ${hlSlice === s.id ? 'hl' : ''}" ${c ? `data-id="${c.id}"` : ''}>
+    return `<tr class="${c ? 'go' : ''} ${hlSlice === s.id ? 'hl' : ''}" ${c ? `data-go="${c.id}"` : ''}>
       <td style="width:18px"><i class="sw" style="background:${sliceColor(n, s, i)}"></i></td>
       <td>${esc(s.label_ja)}${s.basis === '仮' ? '<span class="badge kari">仮</span>' : s.basis === '推計' ? '<span class="badge">推計</span>' : ''}
         ${c ? '<span class="go-tag">　中を見る →</span>' : ''}
         ${s.note_ja ? `<div class="small">${esc(s.note_ja)}</div>` : ''}</td>
       <td class="num">${esc(s.display_ja)}<div class="pct">${fmtPct(s._pct)}</div></td></tr>`;
   }).join('');
-  const more = kids.length ? `<div class="meta" style="margin-top:14px">ここから分かれるパイ：</div>` + kids.map(c => `<button data-id="${c.id}" style="margin:0 6px 6px 0">${esc(c.data.title_ja)} →</button>`).join('') : '';
+  const more = kids.length ? `<div class="meta" style="margin-top:14px">ここから分かれるパイ：</div>` + kids.map(c => `<button data-go="${c.id}" style="margin:0 6px 6px 0">${esc(c.data.title_ja)} →</button>`).join('') : '';
   panel.innerHTML = `<div class="crumbs">${crumbs}</div>
     <h2>${esc(n.title_ja)}${SATU.has(d.id) ? '<span class="badge kari">Satu Inbox の狙い</span>' : ''}</h2>
     <div class="total">${esc(n.total_display_ja)}</div>
-    <div class="meta">${esc(n.year)}<span class="badge ${n.basis === '仮' ? 'kari' : ''}">${esc(n.basis)}</span></div>
+    <div class="meta">${esc(n.year)}<span class="badge ${n.basis === '仮' ? 'kari' : ''}">${esc(n.basis)}</span>　<a href="#" data-fly="${d.id}" style="color:var(--accent)">図でこのパイへ</a></div>
     ${n.note_ja ? `<div class="note">${esc(n.note_ja)}</div>` : ''}
     ${n.jp_note_ja ? `<div class="jp"><b>日本だと：</b>${esc(n.jp_note_ja)}</div>` : ''}
     <table>${rows}</table>${more}
     ${n.source ? `<div class="src" style="margin-top:14px">出典：${linkify(n.source)}</div>` : ''}`;
-  panel.querySelectorAll('[data-id]').forEach(el => el.addEventListener('click', () => focus(H.find(x => x.id === el.dataset.id))));
+  panel.querySelectorAll('[data-go]').forEach(el => el.addEventListener('click', () => { const t = ALL.find(x => x.id === el.dataset.go); flyTo(t); select(t); }));
+  panel.querySelectorAll('[data-fly]').forEach(el => el.addEventListener('click', ev => { ev.preventDefault(); flyTo(d); }));
   panel.scrollTop = 0;
 }
-function linkify(s) { return esc(s).replace(/(https?:\/\/[^\s、，,）)]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>'); }
 
-// focus / zoom
-function size() { const r = svg.node().getBoundingClientRect(); return [r.width, r.height]; }
-function focus(d, hlSlice) {
-  if (!d) return;
-  render(d, hlSlice);
+// ---- 最初：真ん中のパイと、そのまわりのパイ ----
+function rootK() {
   const [w, h] = size();
-  const near = [d].concat(d.children || []).concat(d.parent ? [d.parent] : []);
-  const bx = near.map(x => [x.px - x.r - 90, x.px + x.r + 90, x.py - x.r - 50, x.py + x.r + 80]);
-  const x0 = Math.min(d3.min(bx, v => v[0]), d.px - d.r - 140), x1 = Math.max(d3.max(bx, v => v[1]), d.px + d.r + 140);
-  const y0 = Math.min(d3.min(bx, v => v[2]), d.py - d.r - 100), y1 = Math.max(d3.max(bx, v => v[3]), d.py + d.r + 120);
-  const k = Math.min(2.6, Math.min(w / (x1 - x0), h / (y1 - y0)));
-  const cx = d.px * 0.6 + (x0 + x1) / 2 * 0.4, cy = d.py * 0.6 + (y0 + y1) / 2 * 0.4;
-  svg.transition().duration(700).call(zoom.transform, d3.zoomIdentity.translate(w / 2 - cx * k, h / 2 - cy * k).scale(k));
-  g.attr('opacity', x => x === d || x.parent === d || d.parent === x ? 1 : 0.55);
+  const R = d3.max(H.children || [], c => Math.hypot(c.px, c.py) + c.r + 120) || 500;
+  return clampK(Math.min(w, h) / (2 * R));
 }
-function fitAll() {
-  const [w, h] = size();
-  const xs = H.descendants().map(d => [d.px - d.r - 60, d.px + d.r + 60, d.py - d.r - 40, d.py + d.r + 70]);
-  const x0 = d3.min(xs, v => v[0]), x1 = d3.max(xs, v => v[1]), y0 = d3.min(xs, v => v[2]), y1 = d3.max(xs, v => v[3]);
-  const k = Math.min(w / (x1 - x0), h / (y1 - y0)) * 0.95;
-  svg.transition().duration(650).call(zoom.transform, d3.zoomIdentity.translate(w / 2 - (x0 + x1) / 2 * k, h / 2 - (y0 + y1) / 2 * k).scale(k));
-  g.attr('opacity', 1);
-  render(H);
-}
-document.getElementById('b-all').onclick = fitAll;
-document.getElementById('lg-x').onclick = () => document.getElementById('legend').style.display = 'none';
-document.getElementById('b-root').onclick = () => focus(H);
-document.getElementById('b-target').onclick = () => focus(H.find(x => x.id === (DATA.target_id || 'target')));
-svg.on('click', () => {});
-focus(H);
-window.addEventListener('resize', () => {});
+const [w0, h0] = size(), k0 = rootK();
+svg.call(zoom.transform, d3.zoomIdentity.translate(w0 / 2, h0 / 2).scale(k0));
+select(H);
+setTimeout(() => { const h = document.getElementById('hint'); h.style.opacity = '0'; setTimeout(() => h.remove(), 500); }, 7000);
 })();
 </script>
 </body>

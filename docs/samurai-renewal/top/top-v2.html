@@ -83,14 +83,14 @@ body.mopen .hd .logo img{filter:invert(1)}
 .lbl{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,4fr) minmax(0,1fr);gap:16px;border-top:1px solid currentColor;padding:10px 0 0;font:400 11.5px/1.5 var(--mono);letter-spacing:.08em}
 .lbl .jp2{margin:0;font-family:var(--jp);letter-spacing:.12em;font-size:12px}
 .lbl .end{text-align:right}
-.giant{display:block;margin:28px 0 0;font-family:var(--rf);font-weight:400;font-size:18vw;line-height:.8;letter-spacing:-.02em;white-space:nowrap;font-variation-settings:"wdth" 25,"wght" 100,"opsz" 144;padding-top:.02em}
+.giant{display:block;margin:28px 0 0;font-family:var(--rf);font-weight:400;font-size:clamp(40px,6.6vw,96px);line-height:.86;letter-spacing:-.02em;white-space:nowrap;font-variation-settings:"wdth" 25,"wght" 100,"opsz" 144;padding-top:.02em}
 
 /* ===== STORY ===== */
 .st-sec{position:relative;color:var(--cream)}
 .st-head{padding-top:clamp(110px,16vh,170px)}
 .st-head .sh{margin-bottom:clamp(56px,10vh,110px)}
 .st-head .lbl{border-color:rgba(239,232,216,.5)}
-.st-run{position:relative;height:760vh}
+.st-run{position:relative;height:660vh}
 .st-stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:#070b18;color:var(--cream);container-type:size}
 .ly{position:absolute;inset:0;opacity:0;transition:opacity 1.1s ease;pointer-events:none}
 .ly.on{opacity:1}
@@ -100,7 +100,7 @@ body.mopen .hd .logo img{filter:invert(1)}
 .cov figure{margin:0;position:absolute;inset:0;overflow:hidden}
 .cov figure::after{content:"";position:absolute;inset:-50%;z-index:3;pointer-events:none;background-image:var(--grain);opacity:.08;mix-blend-mode:overlay;animation:grain .9s steps(6) infinite}
 @keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(-4%,3%)}40%{transform:translate(3%,-2%)}60%{transform:translate(-2%,-4%)}80%{transform:translate(4%,2%)}100%{transform:translate(0,0)}}
-.ly .shade{position:absolute;inset:0;z-index:4;pointer-events:none;background:linear-gradient(90deg,rgba(4,6,14,0) 52%,rgba(4,6,14,.5) 100%),linear-gradient(180deg,rgba(4,6,14,.35) 0%,rgba(4,6,14,0) 22%,rgba(4,6,14,0) 78%,rgba(4,6,14,.55) 100%)}
+.ly .shade{position:absolute;inset:0;z-index:4;pointer-events:none;background:linear-gradient(90deg,rgba(4,6,14,0) 46%,rgba(4,6,14,.35) 100%),linear-gradient(180deg,rgba(4,6,14,.35) 0%,rgba(4,6,14,0) 22%,rgba(4,6,14,0) 78%,rgba(4,6,14,.55) 100%)}
 /* 場面1：手の彫刻（今のトップの .repl をそのまま） */
 .repl{container-type:inline-size}
 .repl .lyr{position:relative}
@@ -112,15 +112,16 @@ body.mopen .hd .logo img{filter:invert(1)}
 .tvw img{width:100%;height:100%;object-fit:cover;display:block}
 .tvw .tv{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none}
 
-/* 縦書きの本文パネル */
-.tx{position:absolute;z-index:6;right:clamp(16px,3.2vw,52px);top:50%;transform:translateY(calc(-50% + 16px));opacity:0;transition:opacity .7s,transform .9s cubic-bezier(.2,.7,.1,1);pointer-events:none;
-  display:flex;flex-direction:column;align-items:flex-end;gap:16px;padding:26px 26px 26px;background:rgba(6,10,24,.76);-webkit-backdrop-filter:blur(14px) saturate(1.1);backdrop-filter:blur(14px) saturate(1.1);border:1px solid rgba(239,232,216,.16)}
+/* 本文（横書き・箱なし。読ませるのは文字の影と、絵の側を暗くするグラデ） */
+.veil{position:absolute;inset:0;z-index:5;pointer-events:none;background:linear-gradient(90deg,rgba(4,6,14,0) 38%,rgba(4,6,14,.56) 60%,rgba(4,6,14,.84) 100%);transition:opacity 1s}
+.st-stage[data-cur="3"] .veil{opacity:0}
+.tx{position:absolute;z-index:6;right:clamp(24px,4.4vw,72px);top:50%;width:min(470px,34vw);transform:translateY(calc(-50% + 16px));opacity:0;transition:opacity .7s,transform .9s cubic-bezier(.2,.7,.1,1);pointer-events:none;
+  display:flex;flex-direction:column;align-items:flex-start;gap:18px;text-shadow:0 1px 2px rgba(2,3,10,.9),0 0 14px rgba(2,3,10,.85),0 0 32px rgba(2,3,10,.6)}
 .tx.on{opacity:1;transform:translateY(-50%);pointer-events:auto;transition-delay:.25s}
-.tx::before,.tx::after{content:"+";position:absolute;font:300 14px/1 var(--mono);color:rgba(239,232,216,.6);pointer-events:none}
-.tx::before{left:-5px;top:-8px}.tx::after{right:-5px;bottom:-9px}
-.tx .no{align-self:stretch;display:flex;justify-content:space-between;gap:14px;font:400 11px/1 var(--mono);letter-spacing:.08em;color:rgba(239,232,216,.55);border-bottom:1px solid rgba(239,232,216,.16);padding-bottom:10px}
+.tx .no{align-self:stretch;display:flex;justify-content:space-between;gap:14px;font:400 11px/1 var(--mono);letter-spacing:.08em;color:rgba(239,232,216,.7);border-bottom:1px solid rgba(239,232,216,.28);padding-bottom:10px}
 .tx .no b{font-weight:500;color:var(--cream)}
-.tx .t{margin:0;writing-mode:vertical-rl;-webkit-writing-mode:vertical-rl;height:min(70vh,640px);font-family:var(--min);font-size:17px;line-height:2.1;letter-spacing:.1em;font-weight:400;color:var(--cream);line-break:strict}
+.tx .t{margin:0;font-family:var(--min);font-size:17px;line-height:2.15;letter-spacing:.06em;font-weight:500;color:#f6f0e2;line-break:strict;text-align:justify}
+.tx .t2{margin:0;font-family:var(--min);font-size:clamp(17px,1.35vw,20px);line-height:1.9;letter-spacing:.06em;font-weight:600;color:#fff;line-break:strict}
 .tcy{text-combine-upright:all;-webkit-text-combine:horizontal}
 .tx em{font-style:normal}
 .echo{animation:echo 2.6s steps(6) infinite;font-weight:700}
@@ -134,16 +135,14 @@ body.mopen .hd .logo img{filter:invert(1)}
 .ps{font-weight:700;-webkit-text-emphasis:filled sesame #ff5a2c;text-emphasis:filled sesame #ff5a2c}
 .sm{font-weight:700;color:#ff8a66}
 .lead{display:block;font-size:1.3em;font-weight:700;line-height:1.75;letter-spacing:.08em;margin-block-end:.9em}
-.tx.fin .t{font-size:clamp(19px,1.6vw,23px);line-height:2;height:auto;max-height:min(62vh,560px)}
-.tocontact{display:inline-flex;align-items:center;gap:14px;font:500 13px/1 var(--mono);letter-spacing:.08em;color:var(--ink);background:var(--cream);padding:15px 20px;transition:background .3s,gap .3s}
+.tocontact{display:inline-flex;align-items:center;gap:14px;font:500 13px/1 var(--mono);letter-spacing:.08em;color:var(--ink);background:var(--cream);padding:15px 20px;transition:background .3s,gap .3s;text-shadow:none}
 .tocontact:hover{background:#fff;gap:20px}
 /* 場面4：Noise → Signal */
-.tx.q{left:50%;right:auto;transform:translate(-50%,calc(-50% + 16px));background:radial-gradient(closest-side,rgba(7,11,24,.86),rgba(7,11,24,.55) 70%,rgba(7,11,24,0));border:0;-webkit-backdrop-filter:none;backdrop-filter:none;padding:44px 70px;align-items:center}
+.tx.q{left:50%;right:auto;width:min(900px,calc(100% - 48px));transform:translate(-50%,calc(-50% + 16px));align-items:center}
 .tx.q.on{transform:translate(-50%,-50%)}
-.tx.q::before,.tx.q::after{display:none}
-.tx.q .no{border:0;justify-content:center;padding:0}
+.tx.q .no{border:0;justify-content:center;gap:10px;padding:0;align-self:center}
 .tx.q{top:46%}
-.tx.q .t{font-size:clamp(30px,3.1vw,46px);line-height:1.8;letter-spacing:.06em;font-weight:600;height:min(54vh,520px)}
+.tx.q .t{font-size:clamp(30px,3.1vw,46px);line-height:1.7;letter-spacing:.04em;font-weight:600;text-align:center}
 .tx.q .t i.c{font-style:normal;display:inline-block}
 .tx.q .sig,.tx.q .nz{font-family:var(--rf);letter-spacing:0;transition:color .5s}
 .tx.q.locked .sig{color:#ff5a2c}
@@ -298,14 +297,14 @@ body.mopen .hd .logo img{filter:invert(1)}
   .lbl{grid-template-columns:minmax(0,1fr) minmax(0,2fr) minmax(0,1fr)}
   .giant{margin-top:18px}
   .sec{padding-top:96px}
-  .tx{right:12px;top:84px;transform:translateY(14px);padding:18px 14px 16px;gap:12px}
+  .veil{background:linear-gradient(180deg,rgba(4,6,14,0) 30%,rgba(4,6,14,.62) 52%,rgba(4,6,14,.86) 100%)}
+  .tx{left:18px;right:18px;width:auto;top:auto;bottom:78px;transform:translateY(14px);gap:12px}
   .tx.on{transform:none}
-  .tx .t{height:calc(100svh - 84px - 200px);max-height:520px;font-size:14.5px;line-height:1.85;letter-spacing:.06em}
-  .tx.fin .t{font-size:17px;max-height:46svh}
-  .tx[data-i="4"] .t,.tx[data-i="5"] .t{height:min(44svh,380px)}
-  .tx.q{top:44%;padding:28px 34px}
+  .tx .t{font-size:14.5px;line-height:1.95;letter-spacing:.04em}
+  .tx .t2{font-size:16px}
+  .tx.q{top:44%;bottom:auto;left:50%;right:auto;width:calc(100% - 32px)}
   .tx.q.on{transform:translate(-50%,-50%)}
-  .tx.q .t{font-size:clamp(26px,7.6vw,32px);height:min(58svh,470px);max-height:none}
+  .tx.q .t{font-size:clamp(24px,7vw,30px)}
   .gauge{bottom:78px;gap:10px;font-size:10.5px}
   .st-idx{left:14px;bottom:22px;gap:12px}
   .st-idx button{font-size:14px}
@@ -363,7 +362,7 @@ body.mopen .hd .logo img{filter:invert(1)}
 
 <!-- ===== STORY（画面固定で場面が入れ替わる・縦書き） ===== -->
 <section class="st-sec" id="story">
-  <div class="wrap st-head"><div class="sh"><div class="lbl"><span>01</span><p class="jp2">ストーリー</p><span class="end">01—07</span></div><h2 class="giant" data-wd>STORY</h2></div></div>
+  <div class="wrap st-head"><div class="sh"><div class="lbl"><span>01</span><p class="jp2">ストーリー</p><span class="end">01—06</span></div><h2 class="giant" data-wd>STORY</h2></div></div>
   <div class="st-run" id="strun">
     <div class="st-stage" id="ststage">
       <div class="ly" data-i="0"><div class="cov"><figure class="repl"><div class="lyr rb"><img src="img/story/s1b.webp" alt="白い展示室で、奥まで並ぶ手の彫刻が石膏からクロームへ置き換わっていく。奥から差す光とともに"></div><div class="lyr hms" aria-hidden="true"><img src="img/story/s1c.webp?v=2" alt="" style="-webkit-mask-image:url(img/story/m/m0.png);mask-image:url(img/story/m/m0.png)"><img src="img/story/s1c.webp?v=2" alt="" style="-webkit-mask-image:url(img/story/m/m1.png);mask-image:url(img/story/m/m1.png)"><img src="img/story/s1c.webp?v=2" alt="" style="-webkit-mask-image:url(img/story/m/m2.png);mask-image:url(img/story/m/m2.png)"><img src="img/story/s1c.webp?v=2" alt="" style="-webkit-mask-image:url(img/story/m/m3.png);mask-image:url(img/story/m/m3.png)"><img src="img/story/s1c.webp?v=2" alt="" style="-webkit-mask-image:url(img/story/m/m4.png);mask-image:url(img/story/m/m4.png)"><img src="img/story/s1c.webp?v=2" alt="" style="-webkit-mask-image:url(img/story/m/m5.png);mask-image:url(img/story/m/m5.png)"><img src="img/story/s1c.webp?v=2" alt="" style="-webkit-mask-image:url(img/story/m/m6.png);mask-image:url(img/story/m/m6.png)"><img src="img/story/s1c.webp?v=2" alt="" style="-webkit-mask-image:url(img/story/m/m7.png);mask-image:url(img/story/m/m7.png)"><img src="img/story/s1c.webp?v=2" alt="" style="-webkit-mask-image:url(img/story/m/m8.png);mask-image:url(img/story/m/m8.png)"><img src="img/story/s1c.webp?v=2" alt="" style="-webkit-mask-image:url(img/story/m/m9.png);mask-image:url(img/story/m/m9.png)"><img src="img/story/s1c.webp?v=2" alt="" style="-webkit-mask-image:url(img/story/m/m10.png);mask-image:url(img/story/m/m10.png)"><img src="img/story/s1c.webp?v=2" alt="" style="-webkit-mask-image:url(img/story/m/m11.png?v=2);mask-image:url(img/story/m/m11.png?v=2)"></div><i class="vp" aria-hidden="true"></i></figure></div><i class="shade" aria-hidden="true"></i></div>
@@ -372,17 +371,16 @@ body.mopen .hd .logo img{filter:invert(1)}
       <div class="ly" data-i="3"><canvas data-sc="3" aria-hidden="true"></canvas><div class="gauge" id="gauge" aria-hidden="true"><span class="n">Noise</span><span class="tk" id="tk"></span><span class="s">Signal</span><span class="pc" id="pc">000</span></div></div>
       <div class="ly" data-i="4"><canvas data-sc="4" aria-hidden="true"></canvas></div>
       <div class="ly" data-i="5"><canvas data-sc="5" aria-hidden="true"></canvas></div>
-      <div class="ly" data-i="6"><canvas data-sc="6" aria-hidden="true"></canvas></div>
+      <i class="veil" aria-hidden="true"></i>
 
-      <div class="tx" data-i="0"><span class="no"><b>01</b><span>/ 07</span></span><p class="t">「誰かの役に立つ」という営みの中で、これまで人間が担ってきた“考えること”や“実行すること”の一部が、いま急速に<span class="tcy">AI</span>へと置き換わりつつあります。変化の激しさが増し続けるこの時代において、マクロな視点では人間らしさを、ミクロな視点では自分らしさを保ちながら、どう生き残っていくべきか。私たちはその問いを日々考え続けています。</p></div>
-      <div class="tx" data-i="1"><span class="no"><b>02</b><span>/ 07</span></span><p class="t"><span class="tcy">AI</span>は高い合理性をもって答えを返しますが、一方、その合理性は、前提となるプロンプトや、使う人それぞれの立場や経験、価値観に大きく左右される構造にあります。つまり、ひとつの正解に収束するのではなく、<span class="echo">無数の“もっともらしさ”</span>が生まれ続け、エントロピー増大の法則が文字通り起きている時代に入ったと捉えています。</p></div>
-      <div class="tx" data-i="2"><span class="no"><b>03</b><span>/ 07</span></span><p class="t">Web上でも、<span class="tcy">AI</span>によって膨大な情報やコンテンツが生成される時代になりました。そうした環境のなかで重要になるのは、何が本質的なシグナルで、何が一時的なノイズなのかを見極める力だと考えています。</p></div>
-      <div class="tx q" data-i="3"><span class="no"><b>04</b><span>/ 07</span></span><p class="t" id="qt"><span class="nb">では、</span><wbr><span class="nb"><em class="sig">Signal</em>と</span><wbr><span class="nb"><em class="nz"><i>N</i><i>o</i><i>i</i><i>s</i><i>e</i></em>を</span><wbr><span class="nb">見極める要素は</span><wbr><span class="nb">どこに</span><wbr><span class="nb">存在するのでしょうか。</span><wbr></p></div>
-      <div class="tx" data-i="4"><span class="no"><b>05</b><span>/ 07</span></span><p class="t">年収・地位・資産など上下の相対比較で幸福度を測る<span class="zs">ゼロサムゲーム</span>と、成長・信頼・創造など一緒に何かに取り組むことで幸福が生まれる<span class="ps">プラスサムゲーム</span>との視点から様々な事象を捉えた際、創業時に掲げた<span class="sm">「笑顔の総量の最大化」</span>を軸に置くと判断基準は明確になると考えています。</p></div>
-      <div class="tx" data-i="5"><span class="no"><b>06</b><span>/ 07</span></span><p class="t"><span class="lead">短期的な個別最適ではなく、長期的な全体最適へ。</span>利己を求めることと、利他に生きることがタイムラグを経て同義になるという仮説を検証すべく、今後も地道に、泥臭くをコアバリューとして事業を運営してまいります。</p></div>
-      <div class="tx fin" data-i="6"><span class="no"><b>07</b><span>/ 07</span></span><p class="t">ご興味をお持ちいただけた方はぜひご一報いただければ幸いです。</p><a class="tocontact" href="#contact">CONTACT <span>→</span></a></div>
+      <div class="tx" data-i="0"><span class="no"><b>01</b><span>/ 06</span></span><p class="t">「誰かの役に立つ」という営みの中で、これまで人間が担ってきた“考えること”や“実行すること”の一部が、いま急速に<span class="tcy">AI</span>へと置き換わりつつあります。変化の激しさが増し続けるこの時代において、マクロな視点では人間らしさを、ミクロな視点では自分らしさを保ちながら、どう生き残っていくべきか。私たちはその問いを日々考え続けています。</p></div>
+      <div class="tx" data-i="1"><span class="no"><b>02</b><span>/ 06</span></span><p class="t"><span class="tcy">AI</span>は高い合理性をもって答えを返しますが、一方、その合理性は、前提となるプロンプトや、使う人それぞれの立場や経験、価値観に大きく左右される構造にあります。つまり、ひとつの正解に収束するのではなく、<span class="echo">無数の“もっともらしさ”</span>が生まれ続け、エントロピー増大の法則が文字通り起きている時代に入ったと捉えています。</p></div>
+      <div class="tx" data-i="2"><span class="no"><b>03</b><span>/ 06</span></span><p class="t">Web上でも、<span class="tcy">AI</span>によって膨大な情報やコンテンツが生成される時代になりました。そうした環境のなかで重要になるのは、何が本質的なシグナルで、何が一時的なノイズなのかを見極める力だと考えています。</p></div>
+      <div class="tx q" data-i="3"><span class="no"><b>04</b><span>/ 06</span></span><p class="t" id="qt"><span class="nb">では、</span><wbr><span class="nb"><em class="sig">Signal</em>と</span><wbr><span class="nb"><em class="nz"><i>N</i><i>o</i><i>i</i><i>s</i><i>e</i></em>を</span><wbr><span class="nb">見極める要素は</span><wbr><span class="nb">どこに</span><wbr><span class="nb">存在するのでしょうか。</span><wbr></p></div>
+      <div class="tx" data-i="4"><span class="no"><b>05</b><span>/ 06</span></span><p class="t">年収・地位・資産など上下の相対比較で幸福度を測る<span class="zs">ゼロサムゲーム</span>と、成長・信頼・創造など一緒に何かに取り組むことで幸福が生まれる<span class="ps">プラスサムゲーム</span>との視点から様々な事象を捉えた際、創業時に掲げた<span class="sm">「笑顔の総量の最大化」</span>を軸に置くと判断基準は明確になると考えています。</p></div>
+      <div class="tx" data-i="5"><span class="no"><b>06</b><span>/ 06</span></span><p class="t"><span class="lead">短期的な個別最適ではなく、長期的な全体最適へ。</span>利己を求めることと、利他に生きることがタイムラグを経て同義になるという仮説を検証すべく、今後も地道に、泥臭くをコアバリューとして事業を運営してまいります。</p><p class="t2">ご興味をお持ちいただけた方はぜひご一報いただければ幸いです。</p><a class="tocontact" href="#contact">CONTACT <span>→</span></a></div>
 
-      <nav class="st-idx" aria-label="場面"><button type="button" data-i="0"><span>1</span><i></i></button><button type="button" data-i="1"><span>2</span><i></i></button><button type="button" data-i="2"><span>3</span><i></i></button><button type="button" data-i="3"><span>4</span><i></i></button><button type="button" data-i="4"><span>5</span><i></i></button><button type="button" data-i="5"><span>6</span><i></i></button><button type="button" data-i="6"><span>7</span><i></i></button></nav>
+      <nav class="st-idx" aria-label="場面"><button type="button" data-i="0"><span>1</span><i></i></button><button type="button" data-i="1"><span>2</span><i></i></button><button type="button" data-i="2"><span>3</span><i></i></button><button type="button" data-i="3"><span>4</span><i></i></button><button type="button" data-i="4"><span>5</span><i></i></button><button type="button" data-i="5"><span>6</span><i></i></button></nav>
     </div>
   </div>
 </section>
@@ -471,11 +469,19 @@ body.mopen .hd .logo img{filter:invert(1)}
     const W8 = [5,3,4,3,3,2,1,1];
     const pick = () => { let t = Math.random() * W8.reduce((x, y) => x + y, 0); for (let i = 0; i < PAL.length; i++) { t -= W8[i]; if (t <= 0) return PAL[i]; } return PAL[0]; };
     let W = 0, H = 0, D = 1, P = [];
-    const spawn = (q, far) => { q.x = (Math.random() - .5) * 2.4; q.y = (Math.random() - .5) * 2.4; q.z = far ? .6 + Math.random() * .4 : .05 + Math.random() * .95; q.px = null; q.c = pick(); q.tw = Math.random() * 6.3; q.s = Math.random() * .9 + .6; return q; };
+    /* 粒：本番FV（home-hero.mp4、512x288→1440幅で約2.8倍・中心から放射状に手前へ）の
+       「中心から外へ、手前に来るほど大きく・尾を引く」来方に合わせ、粒は大きめ・数は少なめ・速さはゆっくり */
+    const SPR = (() => { const o = document.createElement('canvas'); o.width = o.height = 64; const g = o.getContext('2d');
+      const r = g.createRadialGradient(32, 32, 0, 32, 32, 32); r.addColorStop(0, 'rgba(255,255,255,1)'); r.addColorStop(.28, 'rgba(255,255,255,.9)'); r.addColorStop(.55, 'rgba(255,255,255,.22)'); r.addColorStop(1, 'rgba(255,255,255,0)');
+      g.fillStyle = r; g.fillRect(0, 0, 64, 64); return o; })();
+    const tint = new Map();
+    const sprite = c => { const k = c.join(','); if (tint.has(k)) return tint.get(k); const o = document.createElement('canvas'); o.width = o.height = 64; const g = o.getContext('2d');
+      g.drawImage(SPR, 0, 0); g.globalCompositeOperation = 'source-in'; g.fillStyle = `rgb(${k})`; g.fillRect(0, 0, 64, 64); tint.set(k, o); return o; };
+    const spawn = (q, far) => { const a = Math.random() * 6.283, r = .03 + Math.pow(Math.random(), .85) * 1.1; q.x = Math.cos(a) * r; q.y = Math.sin(a) * r; q.z = far ? .7 + Math.random() * .3 : .06 + Math.random() * .94; q.px = null; q.c = pick(); q.tw = Math.random() * 6.3; q.s = Math.random() * .6 + .7; return q; };
     const fit = () => {
       D = Math.min(1.5, devicePixelRatio || 1); W = cv.clientWidth; H = cv.clientHeight;
       cv.width = Math.round(W * D); cv.height = Math.round(H * D); ctx.setTransform(D, 0, 0, D, 0, 0);
-      const n = W < 820 ? 700 : 1300; P = Array.from({ length: n }, () => spawn({}, false));
+      const n = W < 820 ? 170 : 330; P = Array.from({ length: n }, () => spawn({}, false));
     };
     fit(); addEventListener('resize', fit);
     let vis = true, last = 0, nz = 1, t = 0, gx = .5, gy = .5, tx = .5, ty = .5;
@@ -485,28 +491,29 @@ body.mopen .hd .logo img{filter:invert(1)}
       nz += (NOISE - nz) * .08; gx += (tx - gx) * .04; gy += (ty - gy) * .04; t += dt;
       ctx.globalCompositeOperation = 'source-over';
       ctx.fillStyle = '#02030a'; ctx.fillRect(0, 0, W, H);
-      const cx = W * (.5 + (gx - .5) * .12), cy = H * (.5 + (gy - .5) * .12), f = Math.min(W, H) * .55;
+      const cx = W * (.5 + (gx - .5) * .12), cy = H * (.5 + (gy - .5) * .12), f = Math.min(W, H) * .55, sp = W < 820, big = sp ? .78 : 1;
       const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(W, H) * .6);
       g.addColorStop(0, `rgba(70,60,150,${.05 + .05 * nz})`); g.addColorStop(1, 'rgba(0,0,0,0)');
       ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
       ctx.globalCompositeOperation = 'lighter';
-      const v = (.00003 + .0004 * nz * nz) * dt, jit = nz * nz * .5;
+            const v = (.00012 + .00014 * nz) * dt, TR = 300 + 200 * nz;
       for (const q of P) {
         q.z -= v;
-        if (q.z < .03) { spawn(q, true); continue; }
-        const sx = cx + q.x / q.z * f + (Math.random() - .5) * jit, sy = cy + q.y / q.z * f + (Math.random() - .5) * jit;
-        if (sx < -20 || sy < -20 || sx > W + 20 || sy > H + 20) { spawn(q, true); continue; }
-        const near = 1 - q.z, tw = .55 + .45 * Math.sin(t * .0022 * q.s + q.tw);
-        const al = Math.min(.9, (.3 + .65 * near * near) * tw) * (.6 + .4 * nz);
-        const [r, gg, b] = q.c, col = `rgba(${r},${gg},${b},${al})`;
-        const sz = (.5 + 1.9 * near * near) * q.s;
-        if (q.px !== null && nz > .08 && near > .7) {
-          ctx.strokeStyle = `rgba(${r},${gg},${b},${al * .35})`; ctx.lineWidth = sz * .7; ctx.lineCap = 'round';
-          ctx.beginPath(); ctx.moveTo(q.px, q.py); ctx.lineTo(sx, sy); ctx.stroke();
+        if (q.z < .05) { spawn(q, true); continue; }
+        const sx = cx + q.x / q.z * f, sy = cy + q.y / q.z * f;
+        if (sx < -60 || sy < -60 || sx > W + 60 || sy > H + 60) { spawn(q, true); continue; }
+        const near = 1 - q.z, tw = .7 + .3 * Math.sin(t * .0016 * q.s + q.tw);
+        const al = Math.min(.95, (.22 + .78 * near * near) * tw);
+        const [r, gg, b] = q.c;
+        const rad = (.8 + 6.2 * Math.pow(near, 1.7)) * q.s * big;
+        /* 尾：少し前（TR ms）にいた位置まで。手前ほど速く見えるので自然に長くなる */
+        const zb = Math.min(1.2, q.z + v / dt * TR), bx = cx + q.x / zb * f, by = cy + q.y / zb * f;
+        if (near > .35) {
+          const lg = ctx.createLinearGradient(bx, by, sx, sy); lg.addColorStop(0, `rgba(${r},${gg},${b},0)`); lg.addColorStop(1, `rgba(${r},${gg},${b},${al * .5})`);
+          ctx.strokeStyle = lg; ctx.lineWidth = rad * 1.1; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(sx, sy); ctx.stroke();
         }
-        ctx.fillStyle = col; ctx.beginPath(); ctx.arc(sx, sy, Math.max(.75, sz * .8), 0, 6.283); ctx.fill();
-        const k = .35 + 2.6 * nz;
-        q.px = cx + (sx - cx) * (1 - .007 * k); q.py = cy + (sy - cy) * (1 - .007 * k);
+        if (rad < 1.4) { ctx.fillStyle = `rgba(${r},${gg},${b},${al})`; ctx.fillRect(sx - rad * .7, sy - rad * .7, rad * 1.4, rad * 1.4); }
+        else { ctx.globalAlpha = al; const d = rad * 3.2; ctx.drawImage(sprite(q.c), sx - d / 2, sy - d / 2, d, d); ctx.globalAlpha = 1; }
       }
     };
     let RG = [], lastR = -9999;
@@ -665,7 +672,10 @@ const meas=document.getElementById('meas');
 const natural=(text,fvs,ls)=>{meas.style.fontVariationSettings=fvs;meas.style.letterSpacing=ls;meas.textContent=text;return meas.getBoundingClientRect().width};
 const giants=[...document.querySelectorAll('[data-wd]')];
 const GFIN='"wdth" 151,"wght" 900,"opsz" 144';
-function fitGiants(){giants.forEach(g=>{const W=g.parentElement.clientWidth;const t=g.dataset.fitText||g.textContent.trim();g.style.fontSize=(100*W/natural(t,GFIN,'-0.02em')*.99).toFixed(2)+'px'})}
+/* 大きさ：PCは96px、全部の見出しで同じ大きさ。画面幅いっぱいにはしない（伸び切っても幅の6割、スマホは8割まで） */
+function fitGiants(){if(!giants.length)return;const W=giants[0].parentElement.clientWidth,ratio=innerWidth<820?.8:.6;let fs=96;
+  giants.forEach(g=>{const t=g.dataset.fitText||g.textContent.trim();fs=Math.min(fs,100*W*ratio/natural(t,GFIN,'-0.02em'))});
+  giants.forEach(g=>g.style.fontSize=fs.toFixed(2)+'px')}
 function drawGiants(){const vh=innerHeight;giants.forEach(g=>{const r=g.getBoundingClientRect();const t=REDUCE?1:clamp((vh-r.top)/(vh*.62));g._p=Math.max(g._p||0,t);const e=ease3(g._p);
   if(g._e===e)return;g._e=e;g.style.fontVariationSettings=`"wdth" ${(25+126*e).toFixed(1)},"wght" ${(100+800*e).toFixed(0)},"opsz" 144`})}
 
@@ -673,12 +683,12 @@ function drawGiants(){const vh=innerHeight;giants.forEach(g=>{const r=g.getBound
 const stRun=document.getElementById('strun'),stage=document.getElementById('ststage');
 const LY=[...stage.querySelectorAll('.ly')],TX=[...stage.querySelectorAll('.tx')],IB=[...stage.querySelectorAll('.st-idx button')];
 const skip=document.getElementById('skip');
-const NS=7;let sCur=-1,sF=0,stVis=false;const sStart=new Array(NS).fill(0),sOff=new Array(NS).fill(-1e9);
+const NS=6;let sCur=-1,sF=0,stVis=false;const sStart=new Array(NS).fill(0),sOff=new Array(NS).fill(-1e9);
 const sOn=i=>stVis&&(sCur===i||performance.now()-sOff[i]<1400);
 function stUpd(){const r=stRun.getBoundingClientRect(),vh=innerHeight,span=Math.max(1,stRun.offsetHeight-vh);
   const p=clamp(-r.top/span,0,.9999),k=Math.floor(p*NS);sF=p*NS-k;const now=performance.now();
   const v=r.top<vh&&r.bottom>0;if(v&&!stVis)sStart[Math.max(0,k)]=now;stVis=v;
-  if(k!==sCur){if(sCur>=0)sOff[sCur]=now;sCur=k;sStart[k]=now;[LY,TX,IB].forEach(a=>a.forEach((e,i)=>e.classList.toggle('on',i===k)))}
+  if(k!==sCur){if(sCur>=0)sOff[sCur]=now;sCur=k;sStart[k]=now;stage.dataset.cur=k;[LY,TX,IB].forEach(a=>a.forEach((e,i)=>e.classList.toggle('on',i===k)))}
   IB[k].style.setProperty('--p',sF.toFixed(3));
   skip.classList.toggle('show',r.top<vh*.35&&r.bottom>vh*.65)}
 IB.forEach((b,i)=>b.addEventListener('click',()=>{const span=stRun.offsetHeight-innerHeight;scrollTo({top:stRun.getBoundingClientRect().top+scrollY+span*(i+.2)/NS,behavior:'smooth'})}));
@@ -753,15 +763,11 @@ function makeGround(W,H,D){const o=document.createElement('canvas');o.width=Math
   g.fillStyle='rgba(239,232,216,.28)';for(let x=(W%s)/2,i=0;x<W;x+=s/2,i++){const l=i%8===0?9:i%2===0?5:3;g.fillRect(Math.round(x),H-l,1,l);g.fillRect(Math.round(x),0,1,l)}
   for(let y=(H%s)/2,i=0;y<H;y+=s/2,i++){const l=i%8===0?9:i%2===0?5:3;g.fillRect(0,Math.round(y),l,1);g.fillRect(W-l,Math.round(y),l,1)}
   return o}
-/* 文字パネルを避けた絵の置き場 */
+/* 文字を避けた絵の置き場（PC＝文字の左、スマホ＝文字の上） */
 function artBox(i,mode){const W=stage.clientWidth,H=stage.clientHeight,sp=W<820,sr=stage.getBoundingClientRect(),r=TX[i].getBoundingClientRect();
-  const px=r.left-sr.left,pb=r.bottom-sr.top,top=sp?88:104,bot=sp?86:100;
-  const left={x:sp?14:Math.max(32,W*.045),y:top,w:0,h:H-top-bot};left.w=Math.max(60,px-(sp?18:56)-left.x);
-  const below={x:16,y:pb+20,w:W-32,h:H-bot-(pb+20)};
-  if(below.h<140)return left;
-  if(mode==='wide')return below.w>left.w*1.3?below:left;
-  if(mode==='min')return Math.min(below.w,below.h)>Math.min(left.w,left.h)?below:left;
-  return below.w*below.h>left.w*left.h*1.05?below:left}
+  const top=sp?84:104,bot=sp?86:100;
+  if(sp){const ab=r.top-sr.top-(TX[i].classList.contains('on')?0:14);return{x:14,y:top,w:W-28,h:Math.max(120,ab-28-top)}}
+  const px=r.left-sr.left,x=Math.max(32,W*.045);return{x,y:top,w:Math.max(60,px-64-x),h:H-top-bot}}
 
 const SC={};
 function scSize(){const W=stage.clientWidth,H=stage.clientHeight,D=Math.min(1.5,DPR);if(!W||!H)return;ground=makeGround(W,H,D);
@@ -873,60 +879,144 @@ scene(5,(s,t)=>{const {ctx,w,h}=s;ctx.drawImage(ground,0,0,w,h);const A=artBox(5
   const tv=ss(10.4,13.6,lt);if(tv>0&&tv<1||lt>10.4&&lt<14.2){const x=mix(L0,L1,tv),y=deck-7;const lg=ctx.createLinearGradient(x-90,0,x,0);lg.addColorStop(0,sg(0));lg.addColorStop(1,sg(.9));ctx.strokeStyle=lg;ctx.lineWidth=1.6;ctx.beginPath();ctx.moveTo(Math.max(L0,x-90),y);ctx.lineTo(x,y);ctx.stroke();ctx.fillStyle=sg(1);ctx.fillRect(x-4,y-4,8,8)}
   ctx.globalAlpha=1});
 
-/* 場面7：製図の輪（中心から広がる点線の輪） */
-scene(6,(s,t)=>{const {ctx,w,h}=s;ctx.drawImage(ground,0,0,w,h);const A=artBox(6,'min');
-  const cx=A.x+A.w*.5,cy=A.y+A.h*.5,Rm=Math.hypot(w,h)*.55,RN=9;ctx.lineWidth=1;ctx.setLineDash([2,6]);
-  for(let r=0;r<RN;r++){const rr=Math.max(0,((r+(REDUCE?.5:t*.3))%RN)/RN*Rm);ctx.strokeStyle=cr(.42*(1-rr/Rm));ctx.beginPath();ctx.ellipse(cx,cy,rr,rr*.62,0,0,TAU);ctx.stroke()}
-  ctx.setLineDash([]);ctx.fillStyle=cr(.55);for(let r=0;r<RN;r++){const rr=((r+t*.3)%RN)/RN*Rm;for(let k=0;k<10;k++){const q=k/10*TAU+r*1.7;ctx.fillRect(cx+Math.cos(q)*rr-1,cy+Math.sin(q)*rr*.62-1,2,2)}}
-  const pu=(t*.5)%1;ctx.strokeStyle=sg(1-pu);ctx.beginPath();ctx.arc(cx,cy,8+pu*46,0,TAU);ctx.stroke();ctx.fillStyle=sg(1);ctx.fillRect(cx-6,cy-6,12,12)});
-
 function storyDraw(now){
   for(const k in SC){const i=+k,s=SC[k];if(!sOn(i)||!s.w)continue;try{s.fn(s,Math.max(0,(now-sStart[i])/1000))}catch(e){console.warn(e)}}
   if(sOn(3)){const pr=sCur===3?sF:(sCur>3?1:0);drawQ(REDUCE?1:clamp((pr-.04)/.66))}}
 
-/* ===== FEATURES：4つの模様（差し替えやすいよう1つずつ独立した関数） ===== */
-/* 01 コミットメント：1つの種から枝が育つ */
-function drawFeature1(p,t){const {ctx,w,h}=p;
-  if(!p.f1){const r=rng(5),segs=[];const grow=(x,y,a,len,d,b)=>{if(d>8||len<4)return;const x2=x+Math.cos(a)*len,y2=y+Math.sin(a)*len;segs.push([x,y,x2,y2,b,d]);
-      const n=d<2?2:(r()<.82?2:3);for(let k=0;k<n;k++)grow(x2,y2,a+(r()-.5)*1.25+(k-(n-1)/2)*.38,len*(.7+r()*.16),d+1,b+(.09+r()*.04))};
-    grow(w*.5,h*.97,-Math.PI/2,h*.185,0,0);p.f1={segs,max:Math.max(...segs.map(s=>s[4]))+.1}}
-  ctx.clearRect(0,0,w,h);const cyc=8,g=(t%cyc)/cyc,grow=ss(0,.42,g)*p.f1.max,fade=1-ss(.88,1,g);
-  ctx.lineCap='round';const tips=[];ctx.beginPath();ctx.strokeStyle=rgba(C.ink,.55*fade);ctx.lineWidth=1;
-  for(const s of p.f1.segs){const k=clamp((grow-s[4])/.12);if(k<=0)continue;const sw=Math.sin(t*.9+s[5])*s[5]*.6;
-    const x2=s[0]+(s[2]-s[0])*k+sw,y2=s[1]+(s[3]-s[1])*k;ctx.moveTo(s[0],s[1]);ctx.lineTo(x2,y2);if(k<1)tips.push([x2,y2])}
-  ctx.stroke();ctx.fillStyle=rgba(C.sig,fade);for(const q of tips)ctx.fillRect(q[0]-2,q[1]-2,4,4);
+/* ===== FEATURES：画面に入るとペンで描かれ、描き終わったら乗せる（スマホはタップ）と反応する =====
+   1つの絵＝1つの関数 drawFeatureN(p,t,D,H)。D＝描き進み 0→1、H＝反応の強さ 0→1（乗せている間 1）、p.mx/p.my＝指している位置 */
+const PEN_DUR={1:3.0,2:3.2,3:5.6,4:2.8};
+const penIO=new IntersectionObserver(es=>{for(const e of es){const p=e.target.__p;if(p&&e.isIntersecting&&p.d0==null){p.d0=T;penIO.unobserve(e.target)}}},{threshold:.4});
+function nib(ctx,x,y){ctx.save();ctx.lineCap='round';ctx.strokeStyle=rgba(C.ink,.5);ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(x+3,y-3);ctx.lineTo(x+18,y-18);ctx.stroke();
+  ctx.fillStyle=rgba(C.sig,1);ctx.fillRect(x-2.5,y-2.5,5,5);ctx.restore()}
+function cumLen(pts){if(pts._L)return pts._L;const L=[0];for(let i=1;i<pts.length;i++)L.push(L[i-1]+Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]));pts._L=L;return L}
+/* 折れ線を長さの割合 k まで描く（ペンの先の位置を返す） */
+function polyPart(ctx,pts,k,L){if(k<=0||pts.length<2)return null;L=L||cumLen(pts);const tot=L[L.length-1],d=tot*Math.min(1,k);ctx.moveTo(pts[0][0],pts[0][1]);
+  for(let i=1;i<pts.length;i++){if(L[i]<=d){ctx.lineTo(pts[i][0],pts[i][1]);continue}const f=(d-L[i-1])/((L[i]-L[i-1])||1),x=mix(pts[i-1][0],pts[i][0],f),y=mix(pts[i-1][1],pts[i][1],f);ctx.lineTo(x,y);return[x,y]}
+  const q=pts[pts.length-1];return[q[0],q[1]]}
+function resample(pts,M){const L=[0];for(let i=1;i<pts.length;i++)L.push(L[i-1]+Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]));
+  const tot=L[L.length-1],out=[];let k=1;
+  for(let j=0;j<M;j++){const d=tot*j/(M-1);while(k<pts.length-1&&L[k]<d)k++;const a=pts[k-1],b=pts[k],f=clamp((d-L[k-1])/((L[k]-L[k-1])||1));out.push([a[0]+(b[0]-a[0])*f,a[1]+(b[1]-a[1])*f])}
+  return out}
+
+/* 01 コミットメント：1つの種から枝が育つ。乗せると枝がカーソルの方へ揺れ、先が伸びて朱の芽が付く */
+function drawFeature1(p,t,D,H){const {ctx,w,h}=p;
+  if(!p.f1){const r=rng(5);let id=0,maxB=0;const mk=(rel,len,d,b)=>{const n={rel,len,d,b,id:id++,kids:[]};maxB=Math.max(maxB,b);if(d<8&&len>=4){const k=d<2?2:(r()<.82?2:3);
+        for(let i=0;i<k;i++)n.kids.push(mk((r()-.5)*1.25+(i-(k-1)/2)*.38,len*(.7+r()*.16),d+1,b+(.09+r()*.04)))}return n};
+    p.f1={root:mk(0,h*.185,0,0),max:0};p.f1.max=maxB+.1}
+  ctx.clearRect(0,0,w,h);const G=p.f1,grow=D*G.max,lean=p.mx>=0?(p.mx/w-.5)*.5:0,segs=[],tips=[],buds=[];
+  const walk=(n,x,y,pa)=>{const sw=Math.sin(t*.9+n.d*.7+n.id*.13)*.025*n.d+H*(lean*n.d/8+Math.sin(t*3.4+n.id*.9)*.055*n.d/8);
+    const a=pa+n.rel+sw,len=n.len*(1+(n.kids.length?0:.35*H)+(n.d>=5?.1*H:0)),k=clamp((grow-n.b)/.12);if(k<=0)return;
+    const x2=x+Math.cos(a)*len*k,y2=y+Math.sin(a)*len*k;segs.push(x,y,x2,y2);if(k<1){tips.push([x2,y2]);return}
+    if(!n.kids.length&&n.id%7===0)buds.push([x2,y2]);for(const c of n.kids)walk(c,x2,y2,a)};
+  walk(G.root,w*.5,h*.97,-Math.PI/2);
+  ctx.lineCap='round';ctx.strokeStyle=rgba(C.ink,.55+.15*H);ctx.lineWidth=1;ctx.beginPath();for(let i=0;i<segs.length;i+=4){ctx.moveTo(segs[i],segs[i+1]);ctx.lineTo(segs[i+2],segs[i+3])}ctx.stroke();
+  if(D<1){ctx.fillStyle=rgba(C.ink,.8);for(const q of tips)ctx.fillRect(q[0]-1.2,q[1]-1.2,2.4,2.4);const st=Math.max(1,Math.ceil(tips.length/3));tips.forEach((q,i)=>{if(i%st===0)nib(ctx,q[0],q[1])})}
+  if(H>.02){ctx.fillStyle=rgba(C.sig,.9*H);for(const q of buds)ctx.fillRect(q[0]-1.6,q[1]-1.6,3.2,3.2)}
   ctx.fillStyle=rgba(C.sig,1);ctx.fillRect(w*.5-4,h*.97-4,8,8)}
-/* 02 多言語対応：3つの波紋が重なる */
-function drawFeature2(p,t){const {ctx,w,h}=p;ctx.clearRect(0,0,w,h);const S=[[.28+.05*Math.sin(t*.3),.42],[.72,.36+.06*Math.cos(t*.27)],[.5+.06*Math.cos(t*.22),.85]];
-  const gap=11,Rm=Math.hypot(w,h),ph=(t*9)%gap;ctx.lineWidth=.8;
-  S.forEach(s=>{const cx=s[0]*w,cy=s[1]*h;ctx.strokeStyle=rgba(C.ink,.3);ctx.beginPath();for(let r=ph+2;r<Rm*.75;r+=gap){ctx.moveTo(cx+r,cy);ctx.arc(cx,cy,r,0,TAU)}ctx.stroke()});
+
+/* 02 多言語対応：3つの波紋。乗せると近くの波紋が揺れ、カーソルの位置から新しい朱の波が広がる */
+function drawFeature2(p,t,D,H){const {ctx,w,h}=p;ctx.clearRect(0,0,w,h);
+  const S=[[.28+.05*Math.sin(t*.3),.42],[.72,.36+.06*Math.cos(t*.27)],[.5+.06*Math.cos(t*.22),.85]];
+  const gap=11,Rm=Math.hypot(w,h)*.75,ph=D<1?0:((t-p.dDone)*9)%gap,K=Math.ceil(Rm/gap);
+  if(!p.waves)p.waves=[];if(H>.3&&p.mx>=0&&t-(p.lastWave||0)>.6){p.waves.push({x:p.mx,y:p.my,t0:t});p.lastWave=t}
+  if(p.tapAt&&p.tapAt!==p.tapSeen){p.tapSeen=p.tapAt;for(let i=0;i<3;i++)p.waves.push({x:p.mx,y:p.my,t0:t+i*.18})}
+  p.waves=p.waves.filter(v=>t-v.t0<3.2);
+  const wob=(x,y)=>{let o=0;if(H>.01&&p.mx>=0){const d=Math.hypot(x-p.mx,y-p.my);o+=H*Math.exp(-d*d/5200)*Math.sin(d*.18-t*7)*4.5}
+    for(const v of p.waves){const R=(t-v.t0)*120;if(R<0)continue;const d=Math.hypot(x-v.x,y-v.y)-R;o+=Math.exp(-d*d/180)*3.5*(1-(t-v.t0)/3.2)}return o};
+  ctx.lineWidth=.8;ctx.strokeStyle=rgba(C.ink,.3);const nibs=[];
+  S.forEach((s,j)=>{const cx=s[0]*w,cy=s[1]*h,Kj=Math.max(Math.hypot(cx,cy),Math.hypot(w-cx,cy),Math.hypot(cx,h-cy),Math.hypot(w-cx,h-cy))/gap;ctx.beginPath();
+    for(let k=0;k<K;k++){const r=ph+2+k*gap;if(r>Rm)break;const kk=D>=1?1:clamp((D*1.4-j*.12-k/Kj*1.15)/.22);if(kk<=0)continue;
+      const a0=-Math.PI/2+j*2.1,n=Math.max(24,Math.min(96,r*.5|0)),m=Math.ceil(n*kk);
+      for(let i=0;i<=m;i++){const th=a0+TAU*Math.min(kk,i/n),x0=cx+Math.cos(th)*r,y0=cy+Math.sin(th)*r,o=wob(x0,y0),x=cx+Math.cos(th)*(r+o),y=cy+Math.sin(th)*(r+o);i?ctx.lineTo(x,y):ctx.moveTo(x,y)}
+      if(kk<1&&k%3===0&&x0in(cx,cy,r,a0+TAU*kk,w,h))nibs.push([cx+Math.cos(a0+TAU*kk)*r,cy+Math.sin(a0+TAU*kk)*r])}
+    ctx.stroke()});
+  for(const v of p.waves){const e=t-v.t0;if(e<0)continue;const a=1-e/3.2;ctx.strokeStyle=rgba(C.sig,.85*a);ctx.lineWidth=1.2;ctx.beginPath();
+    for(let q=0;q<3;q++){const R=e*120-q*12;if(R>2){ctx.moveTo(v.x+R,v.y);ctx.arc(v.x,v.y,R,0,TAU)}}ctx.stroke()}
+  if(D<1)nibs.slice(0,4).forEach(q=>nib(ctx,q[0],q[1]));
   ctx.fillStyle=rgba(C.sig,1);S.forEach(s=>ctx.fillRect(s[0]*w-4,s[1]*h-4,8,8))}
-/* 03 構造理解力：等高線（※別の担当が候補を作成中。差し替えはこの関数だけ） */
-function drawFeature3(p,t){p.fc=(p.fc||0)+1;if(p.fc%2&&p.path)return;const {ctx,w,h}=p;ctx.clearRect(0,0,w,h);
-  const cs=w<500?9:10,cols=Math.ceil(w/cs)+1,rows=Math.ceil(h/cs)+1,F=new Float32Array(cols*rows),z=t*.04;
-  for(let j=0;j<rows;j++)for(let i=0;i<cols;i++)F[j*cols+i]=N3(i*cs*.0055,j*cs*.0055,z)+.5*N3(i*cs*.012,j*cs*.012,z+5);
-  const L=11,path=new Path2D(),hot=[];
-  for(let l=0;l<L;l++){const lv=-.75+l*.14;let cnt=0;
-    for(let j=0;j<rows-1;j++)for(let i=0;i<cols-1;i++){const a=F[j*cols+i],b=F[j*cols+i+1],c=F[(j+1)*cols+i+1],d=F[(j+1)*cols+i];
-      const idx=(a>lv?8:0)|(b>lv?4:0)|(c>lv?2:0)|(d>lv?1:0);if(idx===0||idx===15)continue;
-      const x=i*cs,y=j*cs,T=[x+cs*(lv-a)/(b-a),y],R=[x+cs,y+cs*(lv-b)/(c-b)],Bm=[x+cs*(lv-d)/(c-d),y+cs],Lf=[x,y+cs*(lv-a)/(d-a)];
-      const seg=(P1,P2)=>{path.moveTo(P1[0],P1[1]);path.lineTo(P2[0],P2[1]);if(l===6&&(++cnt%37===0))hot.push(P1)};
-      switch(idx){case 1:case 14:seg(Lf,Bm);break;case 2:case 13:seg(Bm,R);break;case 3:case 12:seg(Lf,R);break;case 4:case 11:seg(T,R);break;
-        case 5:seg(Lf,T);seg(Bm,R);break;case 6:case 9:seg(T,Bm);break;case 7:case 8:seg(Lf,T);break;case 10:seg(T,R);seg(Lf,Bm);break}}}
-  p.path=path;ctx.strokeStyle=rgba(C.ink,.38);ctx.lineWidth=.9;ctx.stroke(path);
-  ctx.fillStyle=rgba(C.sig,1);hot.slice(0,6).forEach(q=>ctx.fillRect(q[0]-3.5,q[1]-3.5,7,7))}
-/* 04 スピード感：遅い流れの中を少数が速く抜ける（※別の担当が候補を作成中。差し替えはこの関数だけ） */
-function drawFeature4(p,t){const {ctx,w,h}=p;
-  if(!p.f4){const r=rng(9);p.f4={bg:[],tr:[[],[],[],[]]};for(let i=0;i<70;i++)p.f4.bg.push([r()*w,r()*h,12+r()*40,.3+r()*.6])}
-  ctx.clearRect(0,0,w,h);ctx.lineWidth=1;ctx.strokeStyle=rgba(C.ink,.22);ctx.beginPath();
-  for(const b of p.f4.bg){b[0]-=b[3];if(b[0]+b[2]<0)b[0]=w+Math.random()*40;ctx.moveTo(b[0],b[1]);ctx.lineTo(b[0]+b[2],b[1])}ctx.stroke();
-  const sp=w*.3;
-  for(let k=0;k<4;k++){const x=((t*sp+k*18)%(w+160))-80,y=h*.5+Math.sin(t*1.7+x*.01)*h*.16+(k-1.5)*11;const tr=p.f4.tr[k];tr.push([x,y]);if(tr.length>80)tr.shift();
-    ctx.beginPath();for(let i=1;i<tr.length;i++){if(tr[i][0]<tr[i-1][0]){ctx.moveTo(tr[i][0],tr[i][1]);continue}if(i===1)ctx.moveTo(tr[0][0],tr[0][1]);ctx.lineTo(tr[i][0],tr[i][1])}
-    ctx.strokeStyle=k===0?rgba(C.sig,.95):rgba(C.ink,.7);ctx.lineWidth=k===0?1.6:1;ctx.stroke();
-    ctx.fillStyle=k===0?rgba(C.sig,1):rgba(C.ink,.9);ctx.fillRect(x-3,y-3,6,6)}}
+const x0in=(cx,cy,r,th,w,h)=>{const x=cx+Math.cos(th)*r,y=cy+Math.sin(th)*r;return x>8&&x<w-8&&y>8&&y<h-8};
+
+/* 03 構造理解力：絡まった線の塊がほどけて系統図になる（c-feat-gen-alt.html の案A）。
+   乗せると系統図の枝がしなり、カーソルに近い枝が朱になる */
+function geoStructure(w,h){
+  const nL=8,M=96,r=rng(31);
+  const lx=i=>w*(.09+.82*i/(nL-1));
+  const yR=h*.13,yA=h*.27,yG=h*.44,yB=h*.6,yL=h*.8;
+  const gx=[(lx(0)+lx(4))/2,(lx(5)+lx(7))/2];
+  const root=[w*.5,yR],cx=w*.5,cy=h*.55,rx=Math.min(w*.17,h*.5),ry=h*.25,P0=[cx,cy-ry*1.12];
+  const S=[];
+  for(let i=0;i<nL;i++){const gi=i<5?0:1;
+    const tgt=resample([root,[root[0],yA],[gx[gi],yA],[gx[gi],yG],[gx[gi],yB],[lx(i),yB],[lx(i),yL]],M);
+    const f1=1.7+r()*1.6,f2=2+r()*3,p1=r()*TAU,p2=r()*TAU,p3=r()*TAU,dir=r()<.5?-1:1,tan=[];
+    for(let j=0;j<M;j++){const s=j/(M-1),a=dir*TAU*f1*s+p1,b=TAU*f2*s+p2;
+      const x=cx+rx*(.74*Math.sin(a)+.26*Math.sin(2.7*b)),y=cy+ry*(.74*Math.cos(a*1.06+p3)+.26*Math.cos(2.1*b));
+      const e=ss(0,.14,s);tan.push([mix(P0[0],x,e),mix(P0[1],y,e)])}
+    let jG=0,bd=1e9;tgt.forEach((q,j)=>{const d=Math.hypot(q[0]-gx[gi],q[1]-yG);if(d<bd){bd=d;jG=j}});
+    S.push({tgt,tan,d:0,ph:r()*9,gi,jG})}
+  [3,6,0,5,1,7,2,4].forEach((i,n)=>S[i].d=n*.045);
+  return {S,root,P0,gx,lx,yR,yA,yG,yB,yL,nL,M}}
+function drawFeature3(p,t,D,H){const {ctx,w,h}=p;
+  if(!p.g3)p.g3=geoStructure(w,h);const G=p.g3;ctx.clearRect(0,0,w,h);
+  const pen=clamp(D/.42),g=mix(.9,5.5,clamp((D-.42)/.58));
+  const mv=ss(.9,2,g),rx=mix(G.P0[0],G.root[0],mv),ry=mix(G.P0[1],G.root[1],mv),ox=rx-G.P0[0],oy=ry-G.P0[1];
+  const u=clamp((g-1.5)/3.5),done=ss(4.7,5.5,g);
+  /* 選んだ枝：カーソル（スマホはタップ）に一番近い葉 */
+  let sel=-1;if(H>.05&&p.mx>=0){let bd=1e9;for(let i=0;i<G.nL;i++){const d=Math.abs(G.lx(i)-p.mx);if(d<bd){bd=d;sel=i}}}
+  /* しなり：同じ親を持つ区間は同じだけ動かす（線が割れないように）。親の区間＝yA→yB、枝の区間＝yB→yL */
+  const gB=[0,1].map(gi=>Math.sin(t*2.2+gi*1.7)*6+(p.mx>=0?(p.mx-G.gx[gi])*.07:0));
+  const bend=(s,i,j)=>{if(H<.005)return 0;const y=s.tgt[j][1],wG=ss(G.yA,G.yB,y),wL=ss(G.yB,G.yL,y);
+    return H*(gB[s.gi]*wG+(Math.sin(t*2.8+i*.8)*7+(p.mx>=0?(p.mx-G.lx(i))*.12:0)+(i===sel?Math.sin(t*5.5)*4:0))*wL)};
+  if(done>0){ctx.save();ctx.setLineDash([2,4]);ctx.strokeStyle=rgba(C.ink,.22*done);ctx.lineWidth=.8;ctx.beginPath();
+    for(const y of [G.yR,G.yG,G.yL]){ctx.moveTo(w*.03,y);ctx.lineTo(w*.97,y)}ctx.stroke();ctx.restore()}
+  ctx.lineWidth=1;ctx.lineJoin='round';ctx.lineCap='round';const nibs=[],paths=[];
+  G.S.forEach((s,i)=>{const ki=ss(s.d,s.d+.62,u),pts=[];
+    for(let j=0;j<G.M;j++){const q=j/(G.M-1),k=ss(0,1,ki*1.4-q*.4),wo=1-ss(0,.35,q),n=(1-k)*2.4*ss(0,.1,q);
+      const tx=s.tan[j][0]+ox*wo+Math.sin(t*1.3+j*.37+s.ph)*n,ty=s.tan[j][1]+oy*wo+Math.cos(t*1.1+j*.29+s.ph)*n;
+      pts.push([mix(tx,s.tgt[j][0],k)+bend(s,i,j)*k,mix(ty,s.tgt[j][1],k)])}
+    paths.push(pts)});
+  ctx.strokeStyle=rgba(C.ink,.52);ctx.beginPath();
+  paths.forEach((pts,i)=>{if(i===sel&&done>.5)return;const k=pen>=1?1:clamp((pen-i*.07)/.5);const tip=polyPart(ctx,pts,k,cumLen(pts.slice()));if(k<1&&tip)nibs.push(tip)});
+  ctx.stroke();
+  if(sel>=0&&done>.5){ctx.strokeStyle=rgbMix(C.ink,C.sig,H,.95);ctx.lineWidth=1+.8*H;ctx.beginPath();polyPart(ctx,paths[sel],1,cumLen(paths[sel].slice()));ctx.stroke();ctx.lineWidth=1}
+  if(done>0){const a=done;ctx.lineWidth=1;
+    G.gx.forEach((x,gi)=>{const s=G.S.findIndex(s=>s.gi===gi),q=paths[s][G.S[s].jG];const on=sel>=0&&G.S[sel].gi===gi&&H>.05;ctx.fillStyle=on?rgba(C.sig,a):rgba(C.card,a);ctx.strokeStyle=rgba(on?C.sig:C.ink,.75*a);ctx.fillRect(q[0]-4.5,G.yG-4.5,9,9);ctx.strokeRect(q[0]-4.5,G.yG-4.5,9,9)});
+    for(let i=0;i<G.nL;i++){const q=paths[i][G.M-1],on=i===sel&&H>.05;ctx.fillStyle=on?rgba(C.sig,a):rgba(C.card,a);ctx.strokeStyle=rgba(on?C.sig:C.ink,.75*a);ctx.fillRect(q[0]-3.5,q[1]-3.5,7,7);ctx.strokeRect(q[0]-3.5,q[1]-3.5,7,7)}}
+  nibs.forEach(q=>nib(ctx,q[0],q[1]));
+  ctx.fillStyle=rgba(C.sig,1);ctx.fillRect(rx-4,ry-4,8,8)}
+
+/* 04 スピード感：4本の筋をペンが左から引き、描き終わると点が筋を走る。乗せると筋がぴんと張り、点が速く走る */
+function drawFeature4(p,t,D,H){const {ctx,w,h}=p;
+  if(!p.f4){const r=rng(9);p.f4={bg:[]};for(let i=0;i<70;i++)p.f4.bg.push([r()*w,r()*h,12+r()*40,.3+r()*.6])}
+  ctx.clearRect(0,0,w,h);const amp=1-.85*H,lane=(k,x)=>h*(.26+.16*k)+Math.sin(x*.012+k*1.3+t*.35)*h*.08*amp;
+  /* 遅い流れ（背景） */
+  const bga=ss(.25,.8,D);if(bga>0){ctx.lineWidth=1;ctx.strokeStyle=rgba(C.ink,.2*bga);ctx.beginPath();
+    for(const b of p.f4.bg){if(D>=1)b[0]-=b[3]*(1+H*.6);if(b[0]+b[2]<0)b[0]=w+Math.random()*40;const L=b[2]*(1+1.2*H);ctx.moveTo(b[0],b[1]);ctx.lineTo(b[0]+L,b[1])}ctx.stroke()}
+  if(!p.run){p.run={x:[0,0,0,0],extra:[]}}
+  const dt=Math.min(.05,t-(p.lt||t));p.lt=t;
+  for(let k=0;k<4;k++){const kk=D>=1?1:clamp((D*1.3-k*.1)/.75),xe=-10+(w+20)*kk;if(kk<=0)continue;
+    ctx.beginPath();ctx.strokeStyle=rgba(C.ink,k===0?.5:.32);ctx.lineWidth=1;for(let x=-10;x<=xe;x+=6){const y=lane(k,x);x===-10?ctx.moveTo(x,y):ctx.lineTo(x,y)}ctx.stroke();
+    if(kk<1)nib(ctx,xe,lane(k,xe));
+    if(D>=1){const sp=(k===0?w*.34:w*.17+k*w*.03)*(1+2.4*H);p.run.x[k]=(p.run.x[k]+sp*dt)%(w+160);const x=p.run.x[k]-80,y=lane(k,x),tl=40+120*H+(k===0?30:0);
+      for(let i=0;i<10;i++){const xa=x-tl*(1-i/10),xb=x-tl*(1-(i+1)/10);ctx.strokeStyle=k===0?rgba(C.sig,.95*(i+1)/10):rgba(C.ink,.75*(i+1)/10);ctx.lineWidth=k===0?1.8:1.2;ctx.beginPath();ctx.moveTo(xa,lane(k,xa));ctx.lineTo(xb,lane(k,xb));ctx.stroke()}
+      ctx.fillStyle=k===0?rgba(C.sig,1):rgba(C.ink,.9);ctx.fillRect(x-3,y-3,6,6)}}
+  /* 乗せている間だけ増える朱の点 */
+  if(D>=1&&H>.2&&Math.random()<dt*6*H)p.run.extra.push({k:Math.random()*4|0,x:-20});
+  p.run.extra=p.run.extra.filter(e=>{e.x+=w*1.1*dt;const y=lane(e.k,e.x);ctx.strokeStyle=rgba(C.sig,.7);ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(e.x-60,lane(e.k,e.x-60));ctx.lineTo(e.x,y);ctx.stroke();ctx.fillStyle=rgba(C.sig,1);ctx.fillRect(e.x-2.5,y-2.5,5,5);return e.x<w+20})}
+
 const FEATURE_ART={1:drawFeature1,2:drawFeature2,3:drawFeature3,4:drawFeature4};
-document.querySelectorAll('canvas[data-feat]').forEach(c=>{const fn=FEATURE_ART[c.dataset.feat];piece(c,{anyResize:true,init(p){p.f1=p.f4=p.path=null},draw:fn})});
+document.querySelectorAll('canvas[data-feat]').forEach(c=>{const n=+c.dataset.feat,fn=FEATURE_ART[n],card=c.closest('.fc');
+  const p=piece(c,{anyResize:true,mx:-1,my:-1,hov:0,H:0,tapUntil:-1,d0:null,
+    init(p){p.f1=p.g3=p.f4=p.run=null},
+    draw(p,t,dt){const D=REDUCE?1:(p.d0==null?0:clamp((t-p.d0)/PEN_DUR[n]));if(D>=1&&p.dDone==null)p.dDone=t;
+      const tgt=D>=1&&(p.hov||t<p.tapUntil)?1:0;p.H+=(tgt-p.H)*Math.min(1,(dt||.016)*(tgt?5:2.5));if(p.H<.002)p.H=0;fn(p,t,D,p.H)}});
+  penIO.observe(c);
+  const at=e=>{const r=c.getBoundingClientRect();p.mx=e.clientX-r.left;p.my=clamp(e.clientY-r.top,0,r.height)};
+  card.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse'){p.hov=1;at(e)}});
+  card.addEventListener('pointermove',e=>{if(e.pointerType==='mouse')at(e)});
+  card.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse'){p.hov=0}});
+  c.parentElement.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse'){at(e);p.tapUntil=T+3.2;p.tapAt=T}})});
+window.__feat=()=>[...document.querySelectorAll('canvas[data-feat]')].map(c=>{const p=c.__p;return{d0:p.d0,dDone:p.dDone,H:+p.H.toFixed(2)}});
 
 /* ===== MEMBER：点の網目から人が組み上がり、最後はくっきりした白黒の写真に ===== */
 const mcs=[...document.querySelectorAll('.mc')];

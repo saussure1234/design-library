@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>MEMBER — 索引（s-mem-1）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=Noto+Sans+JP:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&family=Inter+Tight:wght@500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}html,body{margin:0}html{overflow-x:hidden;overflow-x:clip}
+body{overflow-x:hidden;overflow-x:clip;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}img{display:block;max-width:100%}.nb{white-space:nowrap}
+
+.hd{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:18px var(--pad);color:#f3ece2;mix-blend-mode:normal;pointer-events:none}
+.hd>*{pointer-events:auto}
+.hd .lg{display:flex;align-items:center;gap:14px}
+.hd .lg img{height:30px;width:auto;filter:invert(1)}
+.hd .lg span{font:500 10px/1 "JetBrains Mono",monospace;letter-spacing:.18em;opacity:.6;padding-left:14px;border-left:1px solid rgba(243,236,226,.25)}
+.hd nav{display:flex;align-items:center;gap:26px;font:500 11px/1 "JetBrains Mono",monospace;letter-spacing:.14em}
+.hd nav a{opacity:.62;transition:opacity .3s}.hd nav a:hover,.hd nav a[aria-current]{opacity:1}
+.hd nav .cta{opacity:1;border:1px solid rgba(243,236,226,.4);border-radius:99px;padding:10px 16px}
+@media(max-width:760px){.hd{padding:14px 16px}.hd nav a:not(.cta){display:none}.hd .lg span{display:none}.hd .lg img{height:26px}}
+
+
+:root{--pad:clamp(16px,3.4vw,52px);--bg:#070914;--ink:#f3ece2;--dim:rgba(243,236,226,.34);--line:rgba(243,236,226,.14);--or:#ff8a4c}
+body{background:var(--bg);color:var(--ink);font-family:"Inter Tight","Noto Sans JP",sans-serif}
+.mono{font-family:"JetBrains Mono",monospace}
+.mem{position:relative;padding:clamp(120px,16vh,180px) var(--pad) clamp(100px,14vh,160px);background:linear-gradient(180deg,#0b0f22 0%,#070914 40%,#070914 100%)}
+.mem:before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(243,236,226,.08) 1px,transparent 1.2px);background-size:24px 24px;mask-image:linear-gradient(180deg,#000,transparent 70%);-webkit-mask-image:linear-gradient(180deg,#000,transparent 70%);pointer-events:none}
+.top{position:relative;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;padding-bottom:28px;border-bottom:1px solid var(--line)}
+.top h2{margin:0;font:500 clamp(64px,6.7vw,96px)/.87 "Inter Tight",sans-serif;letter-spacing:-.034em}
+.top .meta{display:flex;gap:40px;font:400 11px/1.6 "JetBrains Mono",monospace;letter-spacing:.12em;color:var(--dim);text-transform:uppercase;text-align:right}
+.top .meta b{display:block;color:var(--ink);font-weight:500;font-size:13px}
+.grid{position:relative;display:grid;grid-template-columns:5fr 7fr;gap:clamp(28px,4vw,72px);margin-top:0}
+.stage{position:sticky;top:96px;height:calc(100vh - 140px);max-height:760px;margin-top:40px;border-radius:2px;overflow:hidden;background:radial-gradient(120% 70% at 50% 108%,#ff9a52 0%,#e2603a 22%,#6b2a44 46%,#1a1636 70%,#0b0f22 100%)}
+.stage .hz{position:absolute;left:0;right:0;top:64%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,214,170,.5),transparent)}
+.stage .big{position:absolute;right:18px;bottom:14px;font:500 clamp(80px,9vw,140px)/.8 "Inter Tight",sans-serif;letter-spacing:-.05em;color:transparent;-webkit-text-stroke:1px rgba(255,226,196,.55);z-index:2}
+.stage .pic{position:absolute;left:50%;bottom:0;width:118%;max-width:none;transform:translate(-50%,3%) scale(1.02);opacity:0;transition:opacity .7s cubic-bezier(.2,.7,.1,1),transform 1.2s cubic-bezier(.2,.7,.1,1);filter:drop-shadow(0 -2px 18px rgba(255,150,80,.22))}
+.stage .pic.on{opacity:1;transform:translate(-50%,0) scale(1)}
+.stage .cap{position:absolute;left:20px;right:20px;top:18px;display:flex;justify-content:space-between;font:500 11px/1.4 "JetBrains Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,236,214,.86)}
+.stage .cap i{font-style:normal;opacity:.6}
+.list{list-style:none;margin:0;padding:0}
+.head{display:grid;grid-template-columns:56px 1fr 180px;gap:18px;padding:18px 0 12px;border-bottom:1px solid var(--line);font:400 10.5px/1 "JetBrains Mono",monospace;letter-spacing:.14em;color:var(--dim);text-transform:uppercase}
+.row{display:grid;grid-template-columns:56px 1fr 180px;grid-template-areas:"no nm rl" ". bio bio";gap:10px 18px;padding:30px 0 34px;border-bottom:1px solid var(--line);cursor:default;transition:color .5s}
+.row .no{grid-area:no;font:400 12px/42px "JetBrains Mono",monospace;color:var(--dim);transition:color .5s}
+.row .mini{display:none}
+.row .nm{grid-area:nm;margin:0;font:500 clamp(30px,2.9vw,42px)/1 "Inter Tight",sans-serif;letter-spacing:-.011em;color:var(--dim);transition:color .5s,transform .6s cubic-bezier(.2,.7,.1,1)}
+.row .rl{grid-area:rl;font:400 11px/42px "JetBrains Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);text-align:right;transition:color .5s}
+.row .bio{grid-area:bio;margin:6px 0 0;max-width:38em;font:400 13.5px/2 "Noto Sans JP",sans-serif;letter-spacing:.02em;color:rgba(243,236,226,.24);transition:color .5s}
+.row.on .nm{color:var(--ink);transform:translateX(6px)}
+.row.on .no,.row.on .rl{color:var(--or)}
+.row.on .bio{color:rgba(243,236,226,.78)}
+@media(max-width:860px){
+ .top h2{font-size:56px}.top .meta{gap:18px}
+ .grid{grid-template-columns:1fr}
+ .stage{display:none}
+ .head{display:none}
+ .row{grid-template-columns:84px 1fr;grid-template-areas:"mini no" "mini nm" "mini rl" "bio bio";gap:4px 16px;padding:24px 0 26px}
+ .row .mini{display:block;grid-area:mini;width:84px;height:104px;object-fit:cover;object-position:50% 20%;border-radius:2px;background:radial-gradient(120% 70% at 50% 110%,#ff9a52 0%,#c9533c 30%,#2a1a3c 62%,#0b0f22 100%)}
+ .row .no,.row .rl{line-height:1.6;text-align:left}
+ .row .nm{font-size:28px}
+ .row .bio{font-size:13px;margin-top:12px;color:rgba(243,236,226,.6)}
+ .row .nm{color:rgba(243,236,226,.7)}
+}
+
+</style>
+</head>
+<body>
+<header class="hd"><a class="lg" href="https://samurai-style.tokyo/" aria-label="Samurai-Style"><img src="img/logo.svg" alt="Samurai-Style"><span>RECRUIT</span></a><nav><a href="https://samurai-style.tokyo/">HOME</a><a href="https://samurai-style.tokyo/#service">SERVICE</a><a href="https://samurai-style.tokyo/media">MEDIA</a><a href="https://samurai-style.tokyo/company">COMPANY</a><a href="https://samurai-style.tokyo/recruit" aria-current="page">RECRUIT</a><a class="cta" href="https://samurai-style.tokyo/#contact">CONTACT</a></nav></header>
+<section class="mem" id="member">
+  <div class="top"><h2>MEMBER</h2><div class="meta mono"><span>Members<b>07</b></span></div></div>
+  <div class="grid">
+    <div class="stage" aria-hidden="true"><div class="hz"></div><div class="big mono" id="capi">01</div><img class="pic on" data-k="hashimoto" src="img/sx_duo_hashimoto.webp" alt=""><img class="pic" data-k="hayashi" src="img/sx_duo_hayashi.webp" alt=""><img class="pic" data-k="lura" src="img/sx_duo_lura.webp" alt=""><img class="pic" data-k="kamizuru" src="img/sx_duo_kamizuru.webp" alt=""><img class="pic" data-k="satrio" src="img/sx_duo_satrio.webp" alt=""><img class="pic" data-k="ahmad" src="img/sx_duo_ahmad.webp" alt=""><img class="pic" data-k="jibran" src="img/sx_duo_jibran.webp" alt=""><div class="cap"><span id="capn">Keiji Hashimoto</span><i id="capr">CEO</i></div></div>
+    <div><div class="head"><span>No.</span><span>Name</span><span style="text-align:right">Role</span></div><ol class="list"><li class="row" data-k="hashimoto" data-i="0">
+  <span class="no">01</span>
+  <img class="mini" src="img/sx_duo_hashimoto.webp" alt="Keiji Hashimoto">
+  <h3 class="nm">Keiji Hashimoto</h3>
+  <span class="rl">CEO</span>
+  <p class="bio"><span class="nb">大手通信会社の</span><wbr><span class="nb">営業、</span><wbr><span class="nb">事業企画を</span><wbr><span class="nb">経験後、</span><wbr><span class="nb">Webコンサル会社へ</span><wbr><span class="nb">転職。</span><wbr><span class="nb">2018年に</span><wbr><span class="nb">イラスト世界チャンピオンとともに</span><wbr><span class="nb">DT合同会社を</span><wbr><span class="nb">設立し、</span><wbr><span class="nb">CMO着任。</span><wbr><span class="nb">並行して</span><wbr><span class="nb">事業会社・</span><wbr><span class="nb">ベンダー双方での</span><wbr><span class="nb">経験を</span><wbr><span class="nb">生かし、</span><wbr><span class="nb">様々な</span><wbr><span class="nb">業種・</span><wbr><span class="nb">規模の</span><wbr><span class="nb">企業で</span><wbr><span class="nb">事業企画・</span><wbr><span class="nb">マーケティング・</span><wbr><span class="nb">セールスまでの</span><wbr><span class="nb">コンサルと</span><wbr><span class="nb">して</span><wbr><span class="nb">事業を</span><wbr><span class="nb">推進。</span><wbr><span class="nb">2024年に</span><wbr><span class="nb">サムライスタイル株式会社を</span><wbr><span class="nb">設立。</span><wbr></p>
+</li><li class="row" data-k="hayashi" data-i="1">
+  <span class="no">02</span>
+  <img class="mini" src="img/sx_duo_hayashi.webp" alt="So Hayashi">
+  <h3 class="nm">So Hayashi</h3>
+  <span class="rl">PM/Art Director</span>
+  <p class="bio"><span class="nb">東京生まれ、</span><wbr><span class="nb">イギリス・</span><wbr><span class="nb">シンガポール育ち。</span><wbr><span class="nb">映像ディレクターの</span><wbr><span class="nb">経験を</span><wbr><span class="nb">持ち、</span><wbr><span class="nb">企画・</span><wbr><span class="nb">撮影・</span><wbr><span class="nb">編集を</span><wbr><span class="nb">一貫して</span><wbr><span class="nb">対応。</span><wbr><span class="nb">現在は</span><wbr><span class="nb">弊社の</span><wbr><span class="nb">オフショア開発事業と</span><wbr><span class="nb">動画制作事業に</span><wbr><span class="nb">加え、</span><wbr><span class="nb">採用担当も</span><wbr><span class="nb">務める。</span><wbr></p>
+</li><li class="row" data-k="lura" data-i="2">
+  <span class="no">03</span>
+  <img class="mini" src="img/sx_duo_lura.webp" alt="Lura Naito">
+  <h3 class="nm">Lura Naito</h3>
+  <span class="rl">Human Resource</span>
+  <p class="bio"><span class="nb">愛知生まれ、</span><wbr><span class="nb">南米・</span><wbr><span class="nb">東南アジア各国を</span><wbr><span class="nb">放浪。</span><wbr><br><span class="nb">サムライスタイルでは</span><wbr><span class="nb">人事全般・</span><wbr><span class="nb">マーケティングを</span><wbr><span class="nb">担当。</span><wbr><span class="nb">ぶれない</span><wbr><span class="nb">明るさが</span><wbr><span class="nb">持ち味。</span><wbr></p>
+</li><li class="row" data-k="kamizuru" data-i="3">
+  <span class="no">04</span>
+  <img class="mini" src="img/sx_duo_kamizuru.webp" alt="Kamizuru san">
+  <h3 class="nm">Kamizuru san</h3>
+  <span class="rl">Project Manager</span>
+  <p class="bio"><span class="nb">福岡在住。</span><wbr><span class="nb">Web開発会社の</span><wbr><span class="nb">経営と</span><wbr><span class="nb">並行して、</span><wbr><span class="nb">現役の</span><wbr><span class="nb">フルスタックエンジニアと</span><wbr><span class="nb">しても</span><wbr><span class="nb">活動。</span><wbr><span class="nb">小規模から</span><wbr><span class="nb">中規模まで、</span><wbr><span class="nb">事業フェーズに</span><wbr><span class="nb">応じた</span><wbr><span class="nb">柔軟な</span><wbr><span class="nb">システム設計を</span><wbr><span class="nb">得意と</span><wbr><span class="nb">する。</span><wbr><span class="nb">技術と</span><wbr><span class="nb">対話を</span><wbr><span class="nb">通じて</span><wbr><span class="nb">事業の</span><wbr><span class="nb">課題解決に</span><wbr><span class="nb">取り</span><wbr><span class="nb">組んでいる。</span><wbr></p>
+</li><li class="row" data-k="satrio" data-i="4">
+  <span class="no">05</span>
+  <img class="mini" src="img/sx_duo_satrio.webp" alt="Satrio Buwono">
+  <h3 class="nm">Satrio Buwono</h3>
+  <span class="rl">Engineer Manager</span>
+  <p class="bio"><span class="nb">インドネシア生まれ、</span><wbr><span class="nb">グラズゴー大学卒業。</span><wbr><span class="nb">11カ国を</span><wbr><span class="nb">旅する。</span><wbr><span class="nb">SaaSを</span><wbr><span class="nb">専門に</span><wbr><span class="nb">構築を</span><wbr><span class="nb">行い、</span><wbr><span class="nb">複数の</span><wbr><span class="nb">ITベンチャーを</span><wbr><span class="nb">立ち上げ。</span><wbr><span class="nb">オフショア開発事業の</span><wbr><span class="nb">エンジニア統括を</span><wbr><span class="nb">担う。</span><wbr></p>
+</li><li class="row" data-k="ahmad" data-i="5">
+  <span class="no">06</span>
+  <img class="mini" src="img/sx_duo_ahmad.webp" alt="Ahmad">
+  <h3 class="nm">Ahmad</h3>
+  <span class="rl">Engineer</span>
+  <p class="bio"><span class="nb">インドネシア出身。</span><wbr><span class="nb">サウジアラビアの</span><wbr><span class="nb">ハイル大学在学中。</span><wbr><span class="nb">JavaScript</span><wbr><span class="nb">開発環境に</span><wbr><span class="nb">深く</span><wbr><span class="nb">精通し、</span><wbr><span class="nb">フルスタック</span><wbr><span class="nb">Web</span><wbr><span class="nb">アプリケーション開発に</span><wbr><span class="nb">おいて</span><wbr><span class="nb">豊富な</span><wbr><span class="nb">実績を</span><wbr><span class="nb">持つ。</span><wbr></p>
+</li><li class="row" data-k="jibran" data-i="6">
+  <span class="no">07</span>
+  <img class="mini" src="img/sx_duo_jibran.webp" alt="Jibran">
+  <h3 class="nm">Jibran</h3>
+  <span class="rl">Engineer</span>
+  <p class="bio"><span class="nb">インドネシア出身。</span><wbr><span class="nb">現役大学生。</span><wbr><span class="nb">システムアーキテクチャおよび</span><wbr><span class="nb">バックエンドエンジニアリングに</span><wbr><span class="nb">精通。</span><wbr><span class="nb">Pythonと</span><wbr><span class="nb">Goを</span><wbr><span class="nb">主軸とし、</span><wbr><span class="nb">複雑な</span><wbr><span class="nb">システムの</span><wbr><span class="nb">最適化を</span><wbr><span class="nb">実現する</span><wbr><span class="nb">自動化ワークフローの</span><wbr><span class="nb">構築に</span><wbr><span class="nb">おいて</span><wbr><span class="nb">豊富な</span><wbr><span class="nb">経験を</span><wbr><span class="nb">持つ。</span><wbr></p>
+</li></ol></div>
+  </div>
+</section>
+<script>
+(() => {
+  const rows = [...document.querySelectorAll('.row')], pics = [...document.querySelectorAll('.pic')];
+  const capn = document.getElementById('capn'), capr = document.getElementById('capr');
+  let cur = -1, hover = false;
+  const set = i => { if (i === cur) return; cur = i;
+    rows.forEach((r, j) => r.classList.toggle('on', j === i));
+    pics.forEach((p, j) => p.classList.toggle('on', j === i));
+    capn.textContent = rows[i].querySelector('.nm').textContent; capr.textContent = rows[i].querySelector('.rl').textContent; document.getElementById('capi').textContent = String(i + 1).padStart(2, '0'); };
+  const pick = () => { if (hover) return; const mid = innerHeight * .48; let best = 0, bd = 1e9;
+    rows.forEach((r, j) => { const b = r.getBoundingClientRect(); const d = Math.abs((b.top + Math.min(b.height, 120) / 2) - mid); if (d < bd) { bd = d; best = j; } }); set(best); };
+  rows.forEach((r, j) => { r.addEventListener('mouseenter', () => { hover = true; set(j); }); r.addEventListener('mouseleave', () => { hover = false; }); });
+  addEventListener('scroll', pick, { passive: true }); pick();
+})();
+</script>
+</body>
+</html>

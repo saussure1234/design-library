@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>+VALUE 候補3｜5つの星をつなぐ星座</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--night:#04060d;--navy:#0b1230;--dusk:#ff6a2b;--amber:#ffb26b;--sig:#8fdcff;--ink:#f3f1ec;--mute:rgba(243,241,236,.56);--line:rgba(243,241,236,.16);--pad:clamp(16px,3.4vw,50px)}
+*{box-sizing:border-box}
+html,body{margin:0}
+html{overflow-x:hidden;overflow-x:clip}
+body{background:var(--night);color:var(--ink);font-family:"Geist","Noto Sans JP",sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;overflow-x:clip}
+a{color:inherit;text-decoration:none}
+img,video{display:block;max-width:100%}
+.jp{font-family:"Noto Sans JP",sans-serif}
+.mono{font-family:"Geist Mono",monospace}
+.nb{white-space:nowrap}
+.hd{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:18px var(--pad);font-size:13px;font-weight:500;letter-spacing:.02em}
+.hd .lg{display:flex;align-items:center;gap:18px}
+.hd .lg img{height:30px;width:auto;filter:brightness(0) invert(1)}
+.hd .lg small{font-family:"Geist Mono",monospace;font-size:11px;letter-spacing:.08em;color:var(--mute);padding-left:18px;border-left:1px solid var(--line)}
+.hd nav{display:flex;align-items:center;gap:26px}
+.hd nav a{opacity:.78;transition:opacity .2s}
+.hd nav a:hover,.hd nav a[aria-current]{opacity:1}
+.hd nav .ct{opacity:1;border:1px solid rgba(243,241,236,.5);border-radius:999px;padding:9px 18px}
+.hd .mn{display:none;font-family:"Geist Mono",monospace;font-size:12px;letter-spacing:.08em}
+.next{height:60vh;display:grid;place-items:center;color:var(--mute);font-family:"Geist Mono",monospace;font-size:12px;letter-spacing:.12em;border-top:1px solid var(--line)}
+@media (max-width:820px){.hd nav{display:none}.hd .mn{display:block}.hd .lg img{height:26px}.hd .lg small{display:none}.hd{padding:14px 16px}}
+
+.v3{position:relative;height:420vh;background:var(--night)}
+.stg{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:radial-gradient(160% 120% at 50% 135%,#7a3a2a 0%,#3b1d33 22%,#141433 40%,#070a1a 62%,#04060d 80%)}
+canvas.sky{position:absolute;inset:0;width:100%;height:100%}
+svg.ln{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+svg.ln line{stroke:rgba(190,215,255,.55);stroke-width:1}
+svg.ln circle.rg{fill:none;stroke:rgba(190,215,255,.08);stroke-width:1}
+svg.ln path.hz{fill:#020308;stroke:rgba(255,150,90,.7);stroke-width:1}
+svg.ln path.gw{fill:none;stroke:#ff6a2b;stroke-width:60;opacity:.45;filter:url(#bl)}
+.gl{position:absolute;font-family:"Geist Mono",monospace;font-size:10px;letter-spacing:.12em;color:rgba(190,215,255,.32)}
+.st{position:absolute;left:calc(var(--x)*1%);top:calc(var(--y)*1%);width:0;height:0}
+.st .dot{position:absolute;left:calc(var(--s)*-1px);top:calc(var(--s)*-1px);width:calc(var(--s)*2px);height:calc(var(--s)*2px);border-radius:50%;background:#fff;box-shadow:0 0 calc(var(--s)*2px) calc(var(--s)*.6px) var(--c),0 0 calc(var(--s)*7px) calc(var(--s)*1.2px) color-mix(in srgb,var(--c) 40%,transparent);transform:scale(0);transition:transform .9s cubic-bezier(.2,.9,.2,1.3)}
+.st .dot:after{content:"";position:absolute;left:50%;top:50%;width:calc(var(--s)*9px);height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.7),transparent);transform:translate(-50%,-50%)}
+.st .dot:before{content:"";position:absolute;left:50%;top:50%;width:1px;height:calc(var(--s)*9px);background:linear-gradient(180deg,transparent,rgba(255,255,255,.7),transparent);transform:translate(-50%,-50%)}
+.st.on .dot{transform:scale(1)}
+.st .lb{position:absolute;top:-14px;width:min(230px,21vw);opacity:0;transform:translateY(10px);transition:opacity .7s .2s,transform .9s cubic-bezier(.2,.7,.1,1) .2s}
+.st.r .lb{left:calc(var(--s)*1px + 22px)}
+.st.l .lb{right:calc(var(--s)*1px + 22px);text-align:right}
+.st.on .lb{opacity:1;transform:none}
+.lb{text-shadow:0 0 4px #05081a,0 0 10px #05081a,0 0 18px #05081a}
+.lb .n{display:block;font-family:"Geist Mono",monospace;font-size:11px;letter-spacing:.16em;color:var(--c)}
+.lb h3{margin:6px 0 10px;font-weight:500;font-size:clamp(28px,2.7vw,42px);letter-spacing:-.04em;line-height:.95}
+.lb p{margin:0;font-size:14px;line-height:1.75;color:rgba(243,241,236,.82)}
+.ttl{position:absolute;left:var(--pad);top:100px}
+.ttl h2{margin:0;font-weight:500;font-size:clamp(44px,5.4vw,84px);letter-spacing:-.05em;line-height:.9}
+.ttl p{margin:12px 0 0;font-size:14px;letter-spacing:.3em;color:var(--mute)}
+.ttl small{display:block;margin-top:22px;font-family:"Geist Mono",monospace;font-size:11px;letter-spacing:.14em;color:rgba(190,215,255,.5)}
+.cnt{position:absolute;right:var(--pad);top:104px;font-family:"Geist Mono",monospace;font-size:12px;letter-spacing:.12em;color:rgba(243,241,236,.7)}
+.cnt b{color:var(--ink);font-weight:500}
+@media (max-width:820px){
+ .v3{height:400vh}
+ .ttl{top:72px;left:18px}
+ .ttl h2{font-size:44px}
+ .ttl p{font-size:12px;margin-top:8px}
+ .ttl small{display:none}
+ .cnt{top:78px;right:18px;font-size:11px}
+ .st .lb{width:min(170px,44vw);top:-10px}
+ .st.r .lb{left:calc(var(--s)*1px + 14px)}
+ .st.l .lb{right:calc(var(--s)*1px + 14px)}
+ .lb h3{font-size:26px;margin:4px 0 6px}
+ .lb p{font-size:12.5px;line-height:1.65}
+ .gl{display:none}
+ svg.ln .rgs{display:none}
+}
+</style>
+</head>
+<body>
+<header class="hd"><a class="lg" href="https://samurai-style.tokyo/"><img src="img/logo.svg" alt="SAMURAI STYLE"><small>RECRUIT</small></a><nav><a href="https://samurai-style.tokyo/">HOME</a><a href="https://samurai-style.tokyo/#service">SERVICE</a><a href="https://samurai-style.tokyo/media">MEDIA</a><a href="https://samurai-style.tokyo/company">COMPANY</a><a href="https://samurai-style.tokyo/recruit" aria-current="page">RECRUIT</a><a class="ct" href="https://samurai-style.tokyo/#contact">CONTACT</a></nav><span class="mn">MENU</span></header>
+
+<main>
+<section class="v3" id="v3" aria-label="+VALUE">
+ <div class="stg">
+  <canvas class="sky"></canvas>
+  <svg class="ln" aria-hidden="true"><defs><filter id="bl" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="28"/></filter></defs><g class="rgs"></g><path class="gw"></path><g class="lns"></g><path class="hz"></path></svg>
+  <div class="ttl"><h2>+VALUE</h2><p class="jp">行動指針</p><small>5 STARS ／ 1 CONSTELLATION</small></div>
+  <div class="cnt"><b class="k">0</b> / 5</div>
+  <div class="st" data-i="0" style="--c:#ff8a4c;--s:4.5"><span class="dot"></span><div class="lb"><span class="n">VALUE 01</span><h3>Fun</h3><p class="jp"><span class="nb">世界一楽しく</span><wbr><span class="nb">働く</span><wbr><span class="nb">会社を</span><wbr><span class="nb">目指す</span><wbr></p></div></div><div class="st" data-i="1" style="--c:#ffb07a;--s:3.0"><span class="dot"></span><div class="lb"><span class="n">VALUE 02</span><h3>Free</h3><p class="jp"><span class="nb">各自の</span><wbr><span class="nb">責任感の</span><wbr><span class="nb">下、</span><wbr><span class="nb">場所や</span><wbr><span class="nb">時間に</span><wbr><span class="nb">捉われず</span><wbr><span class="nb">自由に</span><wbr><span class="nb">裁量を</span><wbr><span class="nb">持って働く</span><wbr></p></div></div><div class="st" data-i="2" style="--c:#f3d2b0;--s:3.5"><span class="dot"></span><div class="lb"><span class="n">VALUE 03</span><h3>Flat</h3><p class="jp"><span class="nb">年齢や</span><wbr><span class="nb">役職などの</span><wbr><span class="nb">上下関係なく</span><wbr><span class="nb">接する</span><wbr></p></div></div><div class="st" data-i="3" style="--c:#c9d0ff;--s:3.0"><span class="dot"></span><div class="lb"><span class="n">VALUE 04</span><h3>Open</h3><p class="jp"><span class="nb">チーム内では</span><wbr><span class="nb">本音で</span><wbr><span class="nb">向き合い、</span><wbr><span class="nb">人格は</span><wbr><span class="nb">否定しない</span><wbr></p></div></div><div class="st" data-i="4" style="--c:#a9e4ff;--s:5.5"><span class="dot"></span><div class="lb"><span class="n">VALUE 05</span><h3>Optimization</h3><p class="jp"><span class="nb">全体</span><wbr><span class="nb">最適視点で</span><wbr><span class="nb">判断する</span><wbr></p></div></div>
+ </div>
+</section>
+</main>
+
+<div class="next">NEXT SECTION</div>
+<script>
+(()=>{
+const s=document.getElementById('v3'),stg=s.querySelector('.stg'),cv=s.querySelector('canvas'),svg=s.querySelector('svg'),lns=svg.querySelector('.lns'),rgs=svg.querySelector('.rgs'),hz=svg.querySelector('.hz'),gw=svg.querySelector('.gw'),
+ sts=[...s.querySelectorAll('.st')],k=s.querySelector('.k');
+const POS={pc:[[12, 60, "r"], [28, 32, "r"], [47, 54, "r"], [63, 25, "r"], [78, 47, "r"]],sp:[[12, 30, "r"], [84, 41, "l"], [14, 53, "r"], [84, 64, "l"], [14, 76, "r"]]};
+const NS='http://www.w3.org/2000/svg',cl=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+let W,H,stars=[],L=[],segs=[];
+function lay(){
+ W=stg.clientWidth;H=stg.clientHeight;const m=innerWidth<=820?'sp':'pc';
+ sts.forEach((st,i)=>{const [x,y,side]=POS[m][i];st.style.setProperty('--x',x);st.style.setProperty('--y',y);st.classList.toggle('l',side==='l');st.classList.toggle('r',side==='r')});
+ svg.setAttribute('viewBox','0 0 '+W+' '+H);
+ /* planisphere grid + curved horizon, centred below the screen */
+ const cx=W/2,low=H*(m==='sp'?.95:.93),drop=H*(m==='sp'?.07:.17),R=(cx*cx+drop*drop)/(2*drop),cy=low-R,ye=low-drop;
+ rgs.innerHTML='';[.2,.42,.64,.86].forEach(f=>{if(R-H*f<=0)return;const c=document.createElementNS(NS,'circle');c.setAttribute('class','rg');c.setAttribute('cx',cx);c.setAttribute('cy',cy);c.setAttribute('r',R-H*f);rgs.appendChild(c)});
+ const arc='M0 '+ye+' A'+R+' '+R+' 0 0 0 '+W+' '+ye;
+ hz.setAttribute('d','M0 '+(H+2)+' L'+arc.slice(1)+' L'+W+' '+(H+2)+' Z');gw.setAttribute('d',arc);
+ const pts=sts.map(st=>{const r=st.getBoundingClientRect(),g=stg.getBoundingClientRect();return [r.left-g.left,r.top-g.top]});
+ lns.innerHTML='';segs=[];
+ for(let i=0;i<4;i++){const l=document.createElementNS(NS,'line');const [a,b]=[pts[i],pts[i+1]];l.setAttribute('x1',a[0]);l.setAttribute('y1',a[1]);l.setAttribute('x2',a[0]);l.setAttribute('y2',a[1]);lns.appendChild(l);segs.push([l,a,b])}
+ const d=Math.min(2,devicePixelRatio||1);cv.width=W*d;cv.height=H*d;let sd=11;const rnd=()=>(sd=(sd*16807)%2147483647)/2147483647;
+ stars=[];for(let i=0;i<Math.round(W*H/2600);i++)stars.push([rnd()*W*d,rnd()*H*.86*d,(rnd()<.06?1.8:rnd()*1+.4)*d,rnd()*6.28,rnd()]);
+}
+function tick(now){
+ const r=s.getBoundingClientRect(),p=cl(-r.top/(s.offsetHeight-innerHeight)),x=p*5.6+.15;
+ let n=0;
+ sts.forEach((st,i)=>{const on=x>i;st.classList.toggle('on',on);if(on)n=i+1});
+ segs.forEach(([l,a,b],i)=>{const t=cl((x-(i+1))/.6);l.setAttribute('x2',a[0]+(b[0]-a[0])*t);l.setAttribute('y2',a[1]+(b[1]-a[1])*t)});
+ k.textContent=n;
+ const c=cv.getContext('2d');c.clearRect(0,0,cv.width,cv.height);
+ for(const q of stars){c.globalAlpha=(.25+.45*q[4])*(.6+.4*Math.sin(now/1100+q[3]));c.fillStyle=q[4]>.85?'#ffd9b8':'#dde8ff';c.fillRect(q[0],q[1],q[2],q[2])}
+ requestAnimationFrame(tick);
+}
+(document.fonts?document.fonts.ready:Promise.resolve()).then(lay);
+addEventListener('resize',lay);lay();requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>

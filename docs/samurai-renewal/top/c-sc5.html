@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>STORY 場面5 候補</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Roboto+Flex:opsz,slnt,wdth,wght@8..144,-10..0,25..151,100..1000&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+JP:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--pad:clamp(16px,3.4vw,52px);--cream:#efe8d8;--ink:#151513;--sig:#ff5a2c;
+  --min:"Noto Serif JP","Hiragino Mincho ProN","Yu Mincho",serif;--mono:"JetBrains Mono",ui-monospace,Menlo,monospace;--rf:"Roboto Flex",system-ui,sans-serif;--jp:"IBM Plex Sans JP","Hiragino Sans",sans-serif}
+*{box-sizing:border-box}
+html,body{margin:0;background:#02030a;color:var(--cream);overflow-x:hidden;overflow-x:clip;-webkit-text-size-adjust:100%}
+.nb{white-space:nowrap}
+a{color:inherit}
+/* ページの見出し（比較用の札） */
+.pg{padding:26px var(--pad) 22px;font:400 12px/1.7 var(--mono);letter-spacing:.04em;color:rgba(239,232,216,.7);display:flex;flex-wrap:wrap;gap:8px 28px;align-items:baseline;justify-content:space-between;border-bottom:1px solid rgba(239,232,216,.14)}
+.pg h1{margin:0;font:500 15px/1.5 var(--jp);letter-spacing:.06em;color:var(--cream)}
+.pg nav{display:flex;gap:16px}
+.pg nav a{text-decoration:none;opacity:.6}.pg nav a.on,.pg nav a:hover{opacity:1;text-decoration:underline}
+/* 場面1つ＝画面いっぱい */
+.blk{position:relative;height:100vh;height:100svh;min-height:560px;overflow:hidden;border-top:1px solid rgba(239,232,216,.16);background:#070b18}
+.blk>canvas.art{position:absolute;inset:0;width:100%;height:100%;display:block}
+.tag{text-shadow:0 0 6px rgba(3,5,12,.95),0 0 14px rgba(3,5,12,.8);position:absolute;z-index:9;left:var(--pad);top:18px;right:var(--pad);display:flex;flex-wrap:wrap;gap:4px 14px;align-items:baseline;font:400 11.5px/1.6 var(--mono);letter-spacing:.04em;color:rgba(239,232,216,.62);pointer-events:none}
+.tag b{font:500 13px/1.6 var(--jp);color:var(--cream);letter-spacing:.08em}
+.tag span{font-family:var(--jp);letter-spacing:.04em;color:rgba(239,232,216,.78)}
+.tag i{font-style:normal;color:rgba(239,232,216,.45)}
+/* 本文：横書き・後ろに箱を置かず、影で読ませる */
+.tx{position:absolute;z-index:6;margin:0;font-family:var(--min);color:var(--cream);font-weight:400;font-size:clamp(15px,1.2vw,17.5px);line-height:2.05;letter-spacing:.06em;
+  text-shadow:0 0 2px rgba(3,5,12,.95),0 0 10px rgba(3,5,12,.9),0 0 26px rgba(3,5,12,.85);line-break:strict;overflow-wrap:anywhere}
+.tx .no{display:block;font:400 11px/1 var(--mono);letter-spacing:.1em;color:rgba(239,232,216,.55);margin-bottom:18px}
+.tx .no b{color:var(--cream);font-weight:500}
+.zs{color:rgba(239,232,216,.6);text-decoration:line-through;text-decoration-thickness:1px}
+.ps{font-weight:700;-webkit-text-emphasis:filled sesame #ff5a2c;text-emphasis:filled sesame #ff5a2c;-webkit-text-emphasis-position:over right;text-emphasis-position:over right}
+.sm{font-weight:700;color:#ff8a66}
+.lead{display:block;font-size:1.42em;font-weight:700;line-height:1.7;letter-spacing:.06em;margin-bottom:.8em}
+.inv{display:block;margin-top:1.4em}
+.tocontact{display:inline-flex;align-items:center;gap:14px;font:500 13px/1 var(--mono);letter-spacing:.08em;color:var(--ink);background:var(--cream);padding:15px 20px;text-decoration:none;text-shadow:none;transition:background .3s,gap .3s}
+.tocontact:hover{background:#fff;gap:20px}
+/* 場面4の問い：Noise → Signal（c-all-type の文字の表現） */
+.q{font-family:var(--min);font-weight:600;font-size:clamp(26px,3.3vw,50px);line-height:1.62;letter-spacing:.05em;
+  text-shadow:0 0 3px rgba(3,5,12,.95),0 0 18px rgba(3,5,12,.9),0 0 44px rgba(3,5,12,.7)}
+.q i.c{font-style:normal;display:inline-block}
+.q .sig,.q .nz{font-family:var(--rf);font-style:normal;letter-spacing:0;transition:color .5s}
+.locked .q .sig{color:#ff5a2c}
+.q .nz{color:rgba(239,232,216,.72)}
+.q .nz i{font-style:normal;display:inline-block;width:.62em;text-align:center;animation:nzv 2.2s steps(7) infinite,jit 1.7s steps(5) infinite}
+.q .nz i:nth-child(1){width:.78em;animation-duration:2.6s,1.5s;animation-delay:-.3s,-.2s}
+.q .nz i:nth-child(2){animation-duration:1.9s,2.1s;animation-delay:-1.1s,-.7s}
+.q .nz i:nth-child(3){width:.34em;animation-duration:2.4s,1.3s;animation-delay:-.6s,-1s}
+.q .nz i:nth-child(4){width:.56em;animation-duration:1.7s,1.9s;animation-delay:-1.5s,-.4s}
+.q .nz i:nth-child(5){animation-duration:2.9s,1.6s;animation-delay:-.8s,-1.2s}
+@keyframes jit{0%{transform:translate(0,0) rotate(0);filter:blur(0);opacity:1}20%{transform:translate(.08em,-.14em) rotate(7deg);filter:blur(1.4px);opacity:.75}40%{transform:translate(-.06em,.1em) rotate(-5deg);filter:blur(.4px);opacity:.9}60%{transform:translate(.04em,.16em) rotate(3deg);filter:blur(1.8px);opacity:.62}80%{transform:translate(-.1em,-.05em) rotate(-8deg);filter:blur(.8px);opacity:.8}100%{transform:translate(0,0) rotate(0);filter:blur(0);opacity:1}}
+@keyframes nzv{0%{font-variation-settings:"wdth" 25,"wght" 900,"slnt" 0,"opsz" 144}25%{font-variation-settings:"wdth" 140,"wght" 140,"slnt" -10,"opsz" 144}50%{font-variation-settings:"wdth" 60,"wght" 1000,"slnt" -4,"opsz" 144}75%{font-variation-settings:"wdth" 120,"wght" 300,"slnt" -10,"opsz" 144}100%{font-variation-settings:"wdth" 25,"wght" 900,"slnt" 0,"opsz" 144}}
+@media (prefers-reduced-motion:reduce){.q .nz i{animation:none}}
+/* 本線の場面4のゲージ（今の本線をそのまま） */
+.gauge{position:absolute;z-index:6;left:50%;bottom:clamp(40px,8vh,90px);transform:translateX(-50%);width:min(460px,calc(100% - 32px));display:flex;align-items:center;gap:14px;font:400 11.5px/1 var(--mono);letter-spacing:.08em;color:rgba(239,232,216,.7);padding:10px 0;border-top:1px solid rgba(239,232,216,.18);border-bottom:1px solid rgba(239,232,216,.18)}
+.gauge .tk{flex:1;display:flex;gap:3px;height:10px}
+.gauge .tk i{flex:1;background:rgba(239,232,216,.14)}
+.gauge .tk i.f{background:var(--cream)}
+.locked .gauge .tk i.f:last-child{background:#ff5a2c}
+.gauge .pc{min-width:4ch;text-align:right}
+.locked .gauge .s{color:#ff5a2c}
+
+#b0 .tx{right:var(--pad);top:50%;transform:translateY(-50%);width:min(28em,34vw)}
+#bA{background:#080d1d}
+#bA .tx{left:var(--pad);top:50%;transform:translateY(-50%);width:min(27em,37vw)}
+#bB{background:#06050f}
+#bB .tx{left:var(--pad);bottom:max(48px,9vh);width:min(31em,42vw)}
+#bC{background:#070b18}
+#bC .tx{left:var(--pad);top:max(96px,14vh);width:min(29em,40vw)}
+@media (max-width:820px){
+  .blk .tx{left:16px!important;right:16px!important;width:auto!important;transform:none!important;top:auto!important;bottom:28px!important;font-size:15px;line-height:1.95}
+  #bC .tx{top:124px!important;bottom:auto!important}
+}
+
+</style>
+</head>
+<body>
+<header class="pg"><h1>STORY 場面5「ゼロサム／プラスサム」の表現 3案</h1><p style="margin:0">上から 今の本線 → 案A → 案B → 案C。各1画面。前半がゼロサム、後半がプラスサム（16〜18秒で繰り返す）</p><nav><a href="c-sc4.html">場面4</a><a href="c-sc5.html" class="on">場面5</a><a href="c-sc6.html">場面6</a></nav></header>
+
+<section class="blk" id="b0"><canvas class="art" aria-hidden="true"></canvas>
+  <div class="tag"><b>今の本線</b><span>限られた円を奪い合う → 一緒に取り組むと円そのものが大きくなる</span><i>top-v2.html 場面5</i></div>
+  <p class="tx"><span class="no"><b>05</b> / 06</span>年収・地位・資産など上下の相対比較で幸福度を測る<span class="zs">ゼロサムゲーム</span>と、成長・信頼・創造など一緒に何かに取り組むことで幸福が生まれる<span class="ps">プラスサムゲーム</span>との視点から様々な事象を捉えた際、創業時に掲げた<span class="sm">「笑顔の総量の最大化」</span>を軸に置くと判断基準は明確になると考えています。</p>
+</section>
+<section class="blk" id="bA"><canvas class="art" aria-hidden="true"></canvas>
+  <div class="tag"><b>案A　100%の帯グラフ</b><span>帯は常に100%で、誰かが伸びれば誰かが縮む。やがて100%の壁が外れ、全員の帯が伸びて目盛りが引いていく</span><i>参考：Hex（100%積み上げ横棒）</i></div>
+  <p class="tx"><span class="no"><b>05</b> / 06</span>年収・地位・資産など上下の相対比較で幸福度を測る<span class="zs">ゼロサムゲーム</span>と、成長・信頼・創造など一緒に何かに取り組むことで幸福が生まれる<span class="ps">プラスサムゲーム</span>との視点から様々な事象を捉えた際、創業時に掲げた<span class="sm">「笑顔の総量の最大化」</span>を軸に置くと判断基準は明確になると考えています。</p>
+</section>
+<section class="blk" id="bB"><canvas class="art" aria-hidden="true"></canvas>
+  <div class="tag"><b>案B　点の雲と総数</b><span>3つの点の雲が点を奪い合い、Σは900のまま。やがて雲が寄り合い、重なった所から点が生まれてΣが増えていく</span><i>参考：Exa（点の雲と大きな数字）</i></div>
+  <p class="tx"><span class="no"><b>05</b> / 06</span>年収・地位・資産など上下の相対比較で幸福度を測る<span class="zs">ゼロサムゲーム</span>と、成長・信頼・創造など一緒に何かに取り組むことで幸福が生まれる<span class="ps">プラスサムゲーム</span>との視点から様々な事象を捉えた際、創業時に掲げた<span class="sm">「笑顔の総量の最大化」</span>を軸に置くと判断基準は明確になると考えています。</p>
+</section>
+<section class="blk" id="bC"><canvas class="art" aria-hidden="true"></canvas>
+  <div class="tag"><b>案C　掘って盛る地形</b><span>陰影だけの起伏の面。どこかを盛ればどこかが掘れて平均は動かない。やがて土地全体が持ち上がり、水面が引いていく</span><i>参考：Varda（2色の陰影の地形）</i></div>
+  <p class="tx"><span class="no"><b>05</b> / 06</span>年収・地位・資産など上下の相対比較で幸福度を測る<span class="zs">ゼロサムゲーム</span>と、成長・信頼・創造など一緒に何かに取り組むことで幸福が生まれる<span class="ps">プラスサムゲーム</span>との視点から様々な事象を捉えた際、創業時に掲げた<span class="sm">「笑顔の総量の最大化」</span>を軸に置くと判断基準は明確になると考えています。</p>
+</section>
+
+<script>
+(()=>{
+'use strict';
+
+const TAU=Math.PI*2,DPR=Math.min(1.5,window.devicePixelRatio||1);
+const REDUCE=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const clamp=(v,a=0,b=1)=>v<a?a:v>b?b:v,mix=(a,b,t)=>a+(b-a)*t;
+const ss=(a,b,v)=>{const t=clamp((v-a)/(b-a));return t*t*(3-2*t)};
+const ease3=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+function rng(seed){let s=seed%2147483647;if(s<=0)s+=2147483646;return()=>(s=s*16807%2147483647)/2147483647}
+const hs=(i,f)=>{let x=(Math.imul(i,374761393)+Math.imul(f,668265263))|0;x=Math.imul(x^(x>>>13),1274126177);return((x^(x>>>16))>>>0)/4294967296};
+const P=new Uint8Array(512);{const r=rng(1977),a=[...Array(256).keys()];for(let i=255;i>0;i--){const j=(r()*(i+1))|0;[a[i],a[j]]=[a[j],a[i]]}for(let i=0;i<512;i++)P[i]=a[i&255]}
+const fd=t=>t*t*t*(t*(t*6-15)+10),lp=(t,a,b)=>a+t*(b-a);
+const gr=(h,x,y,z)=>{h&=15;const u=h<8?x:y,v=h<4?y:(h===12||h===14)?x:z;return((h&1)?-u:u)+((h&2)?-v:v)};
+function N3(x,y,z){let X=Math.floor(x),Y=Math.floor(y),Z=Math.floor(z);x-=X;y-=Y;z-=Z;X&=255;Y&=255;Z&=255;
+  const u=fd(x),v=fd(y),w=fd(z),A=P[X]+Y,AA=P[A]+Z,AB=P[A+1]+Z,B=P[X+1]+Y,BA=P[B]+Z,BB=P[B+1]+Z;
+  return lp(w,lp(v,lp(u,gr(P[AA],x,y,z),gr(P[BA],x-1,y,z)),lp(u,gr(P[AB],x,y-1,z),gr(P[BB],x-1,y-1,z))),
+             lp(v,lp(u,gr(P[AA+1],x,y,z-1),gr(P[BA+1],x-1,y,z-1)),lp(u,gr(P[AB+1],x,y-1,z-1),gr(P[BB+1],x-1,y-1,z-1))));}
+const CR=[239,232,216],SGN=[255,90,44];
+const cr=a=>`rgba(239,232,216,${a})`,sg=a=>`rgba(255,90,44,${a})`;
+const rgbMix=(a,b,t,al)=>`rgba(${Math.round(mix(a[0],b[0],t))},${Math.round(mix(a[1],b[1],t))},${Math.round(mix(a[2],b[2],t))},${al})`;
+/* 文字のまわりだけ地を暗くする（箱ではなく楕円のグラデ） */
+function veil(ctx,R,k=.7,sx=.75,sy=.9){if(!R||!R.w)return;const cx=R.x+R.w/2,cy=R.y+R.h/2,rx=R.w*sx+40,ry=R.h*sy+40;
+  ctx.save();ctx.translate(cx,cy);ctx.scale(1,ry/rx);const g=ctx.createRadialGradient(0,0,0,0,0,rx);g.addColorStop(0,`rgba(3,5,12,${k})`);g.addColorStop(.55,`rgba(3,5,12,${k*.6})`);g.addColorStop(1,'rgba(3,5,12,0)');
+  ctx.fillStyle=g;ctx.fillRect(-rx,-rx,rx*2,rx*2);ctx.restore()}
+
+/* 場面4の文字：Noise（崩れ・ずれ・にじみ）→ Signal（揃う）。本線 top-v2 の drawQ と同じ中身 */
+function makeQ(qel,box,onP){const r=(()=>{let seed=11;return()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}})();
+  const ch=[];const walk=n=>{if(n.nodeType===3){const fr=document.createDocumentFragment();for(const c of n.textContent){const i=document.createElement('i');i.className='c';i.textContent=c;fr.appendChild(i);
+        const lat=/[A-Za-z]/.test(c);ch.push({el:i,lat,dx:(r()-.5)*.5,dy:(r()-.5)*.4,rot:(r()-.5)*28,wg:100+r()*900,wd:25+r()*126,sl:-r()*10,bl:r()<.55?r()*6:0,op:.3+r()*.55,gx:(r()-.5)*.22,gy:(r()-.5)*.14,d:0})}
+      n.parentNode.replaceChild(fr,n);return}
+    if(n.nodeType===1&&!n.classList.contains('nz'))[...n.childNodes].forEach(walk)};
+  [...qel.childNodes].forEach(walk);
+  const ord=ch.map((c,i)=>i).sort(()=>r()-.5);ord.forEach((ci,j)=>ch[ci].d=j/(ch.length-1)*.42);
+  let last=-1;
+  return p=>{if(Math.abs(p-last)<.0005)return;last=p;
+    for(const c of ch){const e=ease3(clamp((p-c.d)/.55)),q=1-e,s=c.el.style;
+      s.transform=q?`translate(${(c.dx*q).toFixed(3)}em,${(c.dy*q).toFixed(3)}em) rotate(${(c.rot*q).toFixed(2)}deg)`:'none';
+      if(c.lat)s.fontVariationSettings=`"wght" ${(c.wg+(800-c.wg)*e).toFixed(0)},"wdth" ${(c.wd+(100-c.wd)*e).toFixed(1)},"slnt" ${(c.sl*q).toFixed(2)},"opsz" 144`;
+      s.filter=c.bl*q>.05?`blur(${(c.bl*q).toFixed(2)}px)`:'none';
+      s.opacity=(c.op+(1-c.op)*e).toFixed(3);
+      s.textShadow=q>.01?`${(c.gx*q).toFixed(3)}em 0 ${(6*q).toFixed(1)}px rgba(239,232,216,${(.42*q).toFixed(2)}),${(-c.gx*1.6*q).toFixed(3)}em ${(c.gy*q).toFixed(3)}em 0 rgba(239,232,216,${(.2*q).toFixed(2)}),0 0 18px rgba(3,5,12,.9)`:''}
+    box.classList.toggle('locked',p>.985);onP&&onP(p)}}
+
+/* ===== 回す仕組み：見えている場面だけ 60fps で描く ===== */
+const BL=[];
+const io=new IntersectionObserver(es=>{for(const e of es){const s=e.target.__s;if(!s)continue;const v=e.isIntersecting;if(v&&!s.vis){s.t0=performance.now();if(!s.w)fit(s)}s.vis=v}},{rootMargin:'0px'});
+function fit(s){const r=s.el.getBoundingClientRect();if(!r.width||!r.height)return;s.w=r.width;s.h=r.height;s.c.width=Math.round(s.w*DPR);s.c.height=Math.round(s.h*DPR);s.ctx.setTransform(DPR,0,0,DPR,0,0);s.st=null;s.rc={}}
+function block(id,fn,o={}){const el=document.getElementById(id),c=el.querySelector('canvas.art');
+  const s=Object.assign({el,c,ctx:c.getContext('2d'),fn,w:0,h:0,st:null,vis:false,t0:0},o);
+  /* 文字の位置は場面の中で動かないので、大きさが変わった時だけ測る（毎フレーム測ると強制レイアウトで重くなる） */
+  s.rc={};s.rect=q=>{if(s.rc[q]!==undefined)return s.rc[q];const n=el.querySelector(q);let v=null;if(n){const a=n.getBoundingClientRect(),b=el.getBoundingClientRect();v={x:a.left-b.left,y:a.top-b.top,w:a.width,h:a.height}}return s.rc[q]=v};
+  const qe=el.querySelector('[data-q]');if(qe)s.q=makeQ(qe,el,o.onP);
+  el.__s=s;BL.push(s);io.observe(el);return s}
+/* 場面4の進み具合：本線ではスクロール（sF）。ここでは時間で 崩れ→揃う→保つ→崩れ を繰り返す（撮影用に __P で固定可） */
+const qProg=t=>{if(window.__P!=null)return window.__P;if(REDUCE)return 1;const lt=t%11;return ss(1.4,5.4,lt)*(1-ss(9.6,10.9,lt))};
+function loop(now){requestAnimationFrame(loop);
+  for(const s of BL){if(!s.vis||!s.w)continue;const t=window.__T!=null?window.__T:REDUCE?8:Math.max(0,(now-s.t0)/1000);const p=qProg(t);
+    if(s.q)s.q(p);const a=performance.now();try{s.fn(s,t,p)}catch(e){console.error(e)}
+    if(window.__prof){(window.__prof[s.el.id]=window.__prof[s.el.id]||[]).push(performance.now()-a)}}}
+let rz;addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>BL.forEach(fit),150)});
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>BL.forEach(s=>{if(s.w)fit(s)}));
+
+/* --- 本線の製図の地（暗い紺＋細い格子・点）: top-v2 の makeGround をそのまま --- */
+function makeGround(W,H,D){const o=document.createElement('canvas');o.width=Math.round(W*D);o.height=Math.round(H*D);const g=o.getContext('2d');g.setTransform(D,0,0,D,0,0);
+  const gd=g.createRadialGradient(W*.42,H*.46,0,W*.42,H*.46,Math.hypot(W,H)*.72);gd.addColorStop(0,'#121c3b');gd.addColorStop(.5,'#0b1229');gd.addColorStop(1,'#04070f');g.fillStyle=gd;g.fillRect(0,0,W,H);
+  const s=W<820?28:40;g.strokeStyle='rgba(239,232,216,.042)';g.lineWidth=1;g.beginPath();
+  for(let x=(W%s)/2;x<W;x+=s){g.moveTo(Math.round(x)+.5,0);g.lineTo(Math.round(x)+.5,H)}for(let y=(H%s)/2;y<H;y+=s){g.moveTo(0,Math.round(y)+.5);g.lineTo(W,Math.round(y)+.5)}g.stroke();
+  g.fillStyle='rgba(239,232,216,.2)';for(let x=(W%s)/2;x<W;x+=s*4)for(let y=(H%s)/2;y<H;y+=s*4)g.fillRect(Math.round(x)-1,Math.round(y)-1,2,2);
+  g.fillStyle='rgba(239,232,216,.28)';for(let x=(W%s)/2,i=0;x<W;x+=s/2,i++){const l=i%8===0?9:i%2===0?5:3;g.fillRect(Math.round(x),H-l,1,l);g.fillRect(Math.round(x),0,1,l)}
+  for(let y=(H%s)/2,i=0;y<H;y+=s/2,i++){const l=i%8===0?9:i%2===0?5:3;g.fillRect(0,Math.round(y),l,1);g.fillRect(W-l,Math.round(y),l,1)}
+  return o}
+const groundOf=s=>{if(!s.gd||s.gd.w!==s.w||s.gd.h!==s.h){s.gd={w:s.w,h:s.h,c:makeGround(s.w,s.h,DPR)}}return s.gd.c};
+/* 文字を避けた絵の置き場（本線の artBox と同じ考え。文字が右の列なら左、下にあれば上） */
+function artBox(s,mode){const W=s.w,H=s.h,sp=W<820,r=s.rect('.tx');const top=sp?70:96,bot=sp?40:70;
+  const left={x:sp?14:Math.max(32,W*.045),y:top,w:Math.max(60,r.x-(sp?18:56)-(sp?14:Math.max(32,W*.045))),h:H-top-bot};
+  const above={x:16,y:top,w:W-32,h:Math.max(60,r.y-24-top)};
+  if(sp||left.w<240)return above;
+  if(mode==='wide')return above.w*0+left.w>above.w*.5?left:above;
+  return left}
+
+/* ---- 今の本線：top-v2 の scene(4) をそのまま ---- */
+function drawSc5Main(s,t){const {ctx,w,h}=s;ctx.drawImage(groundOf(s),0,0,w,h);const A=artBox(s,'min');
+  const cx=A.x+A.w*.5,cy=A.y+A.h*.46,R0=Math.min(A.w*.5,A.h*.42)*.52,n=6,cyc=14,lt=REDUCE?11:t%cyc;
+  const z=1-ss(5.2,6.6,lt),gr=ss(6.6,10.8,lt),fade=ss(0,.5,lt)*(1-ss(13.3,14,lt)),R=R0*(1+.8*gr);
+  const v=[];let sum=0;for(let i=0;i<n;i++){const x=Math.max(.12,1+1.05*Math.sin(t*1.05+i*2.3));v.push(x);sum+=x}
+  const sh=v.map(x=>(x/sum)*z+(1/n)*(1-z));let win=0;for(let i=1;i<n;i++)if(sh[i]>sh[win])win=i;
+  ctx.globalAlpha=fade;ctx.lineWidth=1;
+  ctx.setLineDash([3,6]);ctx.strokeStyle=cr(.34);ctx.beginPath();ctx.arc(cx,cy,R0,0,TAU);ctx.stroke();
+  for(let k=1;k<=4;k++)if(gr*5>=k){ctx.strokeStyle=cr(.13);ctx.beginPath();ctx.arc(cx,cy,R0*(1+.8*k/5),0,TAU);ctx.stroke()}
+  ctx.setLineDash([]);
+  let a=-Math.PI/2+t*.035;const mids=[];
+  for(let i=0;i<n;i++){const a1=a+sh[i]*TAU;
+    if(i===win&&z>.04){ctx.save();ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,R,a,a1);ctx.closePath();ctx.clip();ctx.strokeStyle=cr(.42*z);ctx.lineWidth=.8;ctx.beginPath();for(let d=-R*2.2;d<R*2.2;d+=6){ctx.moveTo(cx+d-R,cy-R);ctx.lineTo(cx+d+R,cy+R)}ctx.stroke();ctx.restore()}
+    ctx.strokeStyle=cr(.55);ctx.lineWidth=.9;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(a)*R,cy+Math.sin(a)*R);ctx.stroke();
+    mids.push((a+a1)/2);a=a1}
+  ctx.strokeStyle=rgbMix(CR,SGN,gr,.9);ctx.lineWidth=1.2+.8*gr;ctx.beginPath();ctx.arc(cx,cy,R,0,TAU);ctx.stroke();
+  const pos=mids.map(m=>{const d=R*(1.45*z+1.0*(1-z));return[cx+Math.cos(m)*d,cy+Math.sin(m)*d]});
+  if(z<.98){ctx.strokeStyle=cr(.3*(1-z));ctx.lineWidth=.8;ctx.beginPath();for(let i=0;i<n;i++)for(let j=i+1;j<n;j++){ctx.moveTo(pos[i][0],pos[i][1]);ctx.lineTo(pos[j][0],pos[j][1])}ctx.stroke()}
+  if(z>.02){ctx.strokeStyle=cr(.34*z);ctx.lineWidth=.8;ctx.beginPath();pos.forEach((p,i)=>{ctx.moveTo(p[0],p[1]);ctx.lineTo(cx+Math.cos(mids[i])*R*.62,cy+Math.sin(mids[i])*R*.62)});ctx.stroke()}
+  ctx.fillStyle=cr(.95);pos.forEach(p=>ctx.fillRect(p[0]-3.5,p[1]-3.5,7,7));
+  const dy=cy+Math.max(R,R0*1.45)+24;ctx.strokeStyle=cr(.5);ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(cx-R,dy);ctx.lineTo(cx+R,dy);ctx.moveTo(cx-R,dy-6);ctx.lineTo(cx-R,dy+6);ctx.moveTo(cx+R,dy-6);ctx.lineTo(cx+R,dy+6);ctx.stroke();
+  ctx.setLineDash([2,4]);ctx.strokeStyle=cr(.2);ctx.beginPath();ctx.moveTo(cx-R,cy);ctx.lineTo(cx-R,dy+7);ctx.moveTo(cx+R,cy);ctx.lineTo(cx+R,dy+7);ctx.stroke();ctx.setLineDash([]);
+  ctx.fillStyle=cr(.8);ctx.fillRect(cx-2,cy-2,4,4);ctx.globalAlpha=1}
+
+/* ---- 案A：100%の帯グラフ（参考 Hex の100%積み上げ横棒）----
+   行は時間。上から新しい行が押し出される。前半は各行の合計が必ず100%で、取り分だけが入れ替わる（ゼロサム）。
+   後半は100%の壁（実線）が点線に変わり、目盛りが引いて全員の取り分が同時に伸びる（プラスサム）。 */
+function drawSc5A(s,t){const {ctx,w,h}=s,sp=w<820,R=s.rect('.tx');
+  ctx.fillStyle='#080d1d';ctx.fillRect(0,0,w,h);
+  const vg=ctx.createLinearGradient(0,0,0,h);vg.addColorStop(0,'rgba(20,30,64,.5)');vg.addColorStop(1,'rgba(3,5,12,.6)');ctx.fillStyle=vg;ctx.fillRect(0,0,w,h);
+  const x0=sp?22:Math.max(R.x+R.w+70,w*.46),x1=sp?w-18:w-Math.max(40,w*.05),y0=sp?128:h*.2,y1=sp?Math.max(y0+180,R.y-54):h*.8;
+  const cyc=17,lt=REDUCE?14:t%cyc,step=.85,K=5,NR=sp?8:10,rowH=(y1-y0)/NR,fade=ss(0,.5,lt)*(1-ss(16.2,17,lt));
+  const G=T=>1+1.5*ss(7.2,13.2,T),zoom=mix(1,2.55,ss(7.4,13.4,lt)),sc=(x1-x0)/zoom;
+  const share=T=>{const pl=ss(7.2,11,T),v=[];let sum=0;for(let i=0;i<K;i++){const x=Math.exp(mix(1.9,.5,pl)*N3(i*1.71,T*.62,3.3)+(i===0?.25:0));v.push(x);sum+=x}return v.map(x=>x/sum)};
+  ctx.globalAlpha=fade;ctx.font=`400 ${sp?10:11}px "JetBrains Mono",monospace`;ctx.textBaseline='top';
+  /* 目盛り：0, 50, 100 …（引いていく） */
+  for(let k=0;k<=6;k++){const v=k*.5,x=x0+v*sc;if(x>x1+1)break;const major=k%2===0;
+    ctx.strokeStyle=cr(major?.14:.07);ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(Math.round(x)+.5,y0-10);ctx.lineTo(Math.round(x)+.5,y1+6);ctx.stroke();
+    if(major||!sp){ctx.fillStyle=cr(.5);ctx.fillText(`${Math.round(v*100)}%`,x-(k?12:0),y1+14)}}
+  /* 100%の壁 */
+  const X100=x0+sc,wall=ss(7.2,8.6,lt);
+  if(wall<1){ctx.strokeStyle=cr(.85*(1-wall));ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(X100,y0-16);ctx.lineTo(X100,y1+8);ctx.stroke()}
+  if(wall>0){ctx.setLineDash([3,5]);ctx.strokeStyle=cr(.55*wall);ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(X100,y0-16);ctx.lineTo(X100,y1+8);ctx.stroke();ctx.setLineDash([])}
+  /* 行（新しい行が上から入り、下へ押し出される） */
+  const u=lt/step,base=Math.floor(u),fr=ease3(clamp((u-base)/.45));
+  const AL=[.86,.6,.42,.28,.16];
+  for(let k=0;k<=NR;k++){const T=(base-k)*step;if(T<0)break;const y=y0+(k-1+fr)*rowH;if(y>y1-rowH*.3)continue;
+    const ra=(k===0?fr:1)*(1-ss(y1-rowH*1.6,y1-rowH*.3,y));if(ra<=0)continue;
+    const sh=share(T),tot=G(T),bh=Math.max(6,rowH*.58);let x=x0;
+    for(let i=0;i<K;i++){const ww=sh[i]*tot*sc;ctx.fillStyle=cr(AL[i]*ra);ctx.fillRect(x,y,Math.max(0,ww-2),bh);x+=ww}
+    /* 100%を超えた分は斜線で（増えた分） */
+    if(tot>1.005){ctx.save();ctx.beginPath();ctx.rect(X100,y,x-X100,bh);ctx.clip();ctx.strokeStyle=`rgba(8,13,29,${.55*ra})`;ctx.lineWidth=1.2;ctx.beginPath();for(let d=X100-bh;d<x;d+=5){ctx.moveTo(d,y+bh);ctx.lineTo(d+bh,y)}ctx.stroke();ctx.restore()}
+    if(k===0||k===1&&fr<.5){const lab=`${Math.round(tot*100)}%`;ctx.fillStyle=cr(.85*ra);ctx.fillText(lab,Math.min(x+10,x1-ctx.measureText(lab).width),y+bh/2-6);
+      if(tot>1.005){ctx.fillStyle=sg(ra);ctx.fillRect(x-1,y-4,2,bh+8)}}}
+  ctx.globalAlpha=1}
+
+/* ---- 案B：点の雲と総数（参考 Exa の点の雲＋大きな等幅数字）----
+   3つの雲（A・B・C）が点を取り合う。飛んでいく点の数だけ相手が減り、Σは900のまま（ゼロサム）。
+   後半は雲が寄り合い、重なった所で新しい点が生まれ、Σが増えていく（プラスサム）。 */
+function drawSc5B(s,t){const {ctx,w,h}=s,sp=w<820,R=s.rect('.tx');
+  const cyc=18,lt=REDUCE?14:t%cyc,cy=Math.floor(t/cyc);
+  if(!s.st||s.st.cy!==cy||lt<s.st.lt-.5){const r=rng(77+cy),MX=2700,o={cy,n:900,MX,lx:new Float32Array(MX),ly:new Float32Array(MX),lz:new Float32Array(MX),id:new Uint8Array(MX),bt:new Float32Array(MX),ft:new Float32Array(MX).fill(-9),fx:new Float32Array(MX),fy:new Float32Array(MX),nextX:1.2,born:0,r};
+    const gauss=()=>{let u=0,v=0;while(!u)u=r();while(!v)v=r();return Math.sqrt(-2*Math.log(u))*Math.cos(TAU*v)};
+    o.g=gauss;for(let i=0;i<MX;i++){const a=gauss(),b=gauss(),c=gauss(),m=Math.pow(r(),.33)/Math.hypot(a,b,c);o.lx[i]=a*m;o.ly[i]=b*m;o.lz[i]=c*m;o.id[i]=i%3;o.bt[i]=-9}
+    s.st=o}
+  const S=s.st,fade=ss(0,.6,lt)*(1-ss(17.2,18,lt)),pl=ss(7.5,11,lt);S.lt=lt;
+  ctx.fillStyle='#06050f';ctx.fillRect(0,0,w,h);
+  /* 雲の置き場 */
+  const ax=sp?16:Math.min(w*.36,R.x+R.w+40),ay=sp?96+40:90,aw=sp?w-32:w-ax-Math.max(40,w*.05),ah=sp?Math.max(160,R.y-ay-30):h-ay-150;
+  const C0={x:ax+aw*.5,y:ay+ah*.52},rad=Math.min(aw,ah)*.3;
+  const base=[[-.95,.35],[.95,.45],[0,-.75]].map(([a,b])=>({x:C0.x+a*rad*(sp?.95:1.15),y:C0.y+b*rad}));
+  const cnt=[0,0,0];for(let i=0;i<S.n;i++)cnt[S.id[i]]++;
+  const ctr=base.map((b,k)=>({x:mix(b.x,C0.x+(k-1)*rad*.2,pl*.85),y:mix(b.y,C0.y,pl*.85),r:rad*(sp?.42:.55)*Math.sqrt(cnt[k]/300)}));
+  /* ゼロサム：一定間隔で、ある雲から別の雲へ点がまとめて移る */
+  if(pl<.2&&lt>S.nextX&&lt<7){S.nextX=lt+1.5;const a=(S.r()*3)|0,b=(a+1+((S.r()*2)|0))%3;let moved=0;for(let i=0;i<S.n&&moved<46;i++)if(S.id[i]===a&&S.ft[i]<lt-1.3){const R0=ctr[a];S.fx[i]=R0.x+S.lx[i]*R0.r;S.fy[i]=R0.y+S.ly[i]*R0.r;S.id[i]=b;S.ft[i]=lt;moved++}}
+  /* プラスサム：重なった所から点が生まれる */
+  const goal=Math.min(S.MX,Math.round(900+1800*ss(8.4,14.2,lt)));while(S.n<goal){const i=S.n++;S.id[i]=(S.r()*3)|0;S.bt[i]=lt-(goal-S.n)/240;S.ft[i]=-9}
+  const rot=t*.16,co=Math.cos(rot),si=Math.sin(rot);
+  const L=[new Path2D(),new Path2D(),new Path2D(),new Path2D()],red=new Path2D(),fly=new Path2D();
+  for(let i=0;i<S.n;i++){const c=ctr[S.id[i]];const X=S.lx[i]*co-S.lz[i]*si,Z=S.lx[i]*si+S.lz[i]*co;
+    let x=c.x+X*c.r,y=c.y+S.ly[i]*c.r;const df=(lt-S.ft[i])/1.2;
+    if(df>=0&&df<1){const e=ease3(df),mx=(S.fx[i]+x)/2,my=Math.min(S.fy[i],y)-rad*.35;const u=1-e;x=u*u*S.fx[i]+2*u*e*mx+e*e*x;y=u*u*S.fy[i]+2*u*e*my+e*e*y;fly.rect(x-1,y-1,2,2);continue}
+    const ba=lt-S.bt[i];if(ba>=0&&ba<1.1){const j=(1-ba)*c.r*.35;red.rect(x-1.3+(S.lx[i]*j),y-1.3,2.6,2.6);continue}
+    const lv=Math.min(3,Math.max(0,Math.floor((Z+1)*2)));L[lv].rect(x-.8,y-.8,1.6,1.6)}
+  ctx.globalAlpha=fade;[.2,.38,.6,.85].forEach((a,k)=>{ctx.fillStyle=cr(a);ctx.fill(L[k])});ctx.fillStyle=cr(.95);ctx.fill(fly);ctx.fillStyle=cr(1);ctx.fill(red);
+  /* 札（箱なし）：A/B/C の数 */
+  ctx.font=`400 ${sp?10.5:11.5}px "JetBrains Mono",monospace`;ctx.textBaseline='middle';
+  ['A','B','C'].forEach((nm,k)=>{const c=ctr[k],dir=k===0?-1:1,x0=c.x+dir*c.r*.95,yy=c.y-c.r*.95,x1=x0+dir*28;
+    if(pl>.95)return;ctx.strokeStyle=cr(.4*(1-pl));ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x0,yy);ctx.lineTo(x1,yy);ctx.stroke();
+    ctx.fillStyle=cr(.8*(1-pl));const lab=`${nm} ${String(cnt[k]).padStart(4,' ')}`;ctx.fillText(lab,dir<0?x1-ctx.measureText(lab).width-6:x1+6,yy)});
+  /* 大きな Σ */
+  const big=sp?34:Math.min(68,w*.05);ctx.font=`400 ${big}px "JetBrains Mono",monospace`;ctx.textBaseline='alphabetic';
+  const lab=`Σ ${S.n.toLocaleString('en-US')}`,lw=ctx.measureText(lab).width,bx=sp?w-16-lw:ax+aw-lw,by=sp?ay+big:h-Math.max(64,h*.09)-18;
+  ctx.fillStyle=cr(.92);ctx.fillText(lab,bx,by);
+  ctx.font=`400 ${sp?10:11}px "JetBrains Mono",monospace`;ctx.fillStyle=cr(.5);const sub=pl<.3?'= '+cnt.join(' + '):`+${(S.n-900).toLocaleString('en-US')}`;ctx.fillText(sub,bx,by+18);
+  if(pl>.3){ctx.fillStyle=sg(1);ctx.fillRect(bx-14,by-big*.42,7,7)}
+  ctx.globalAlpha=1}
+
+/* ---- 案C：掘って盛る地形（参考 Varda の2色の陰影の地形）----
+   地形を低い解像度で計算し、斜面の陰影を紺と生成りの2色に置き換えて引き伸ばす。水面より下は平らな紺。
+   前半は盛り土の隣が必ず掘れる（平均の高さは動かない＝ゼロサム）。後半は掘れずに全体が持ち上がり、水面が引く。 */
+function drawSc5C(s,t){const {ctx,w,h}=s,sp=w<820,R=s.rect('.tx');
+  if(!s.st){const cs=sp?4:3,gw=Math.ceil(w/cs)+2,gh=Math.ceil(h/cs)+2,B=new Float32Array(gw*gh);
+    for(let j=0;j<gh;j++)for(let i=0;i<gw;i++){const x=i*cs,y=j*cs;let v=0,a=.6,f=.0026;for(let o=0;o<4;o++){v+=a*(o<2?N3(x*f,y*f,o*7.1):.5-Math.abs(N3(x*f,y*f,o*7.1)));a*=.45;f*=2.1}B[j*gw+i]=v*.95}
+    const o=document.createElement('canvas');o.width=gw;o.height=gh;const ox=o.getContext('2d');
+    const r=rng(5),pr=[];for(let k=0;k<(sp?4:6);k++)pr.push({x:.15+r()*.75,y:.2+r()*.65,a:r()*TAU,ph:r()*TAU,sp:.5+r()*.5});
+    s.st={cs,gw,gh,B,H:new Float32Array(gw*gh),o,ox,img:ox.createImageData(gw,gh),pr}}
+  const S=s.st,{cs,gw,gh,B,H,pr}=S,cyc=16,lt=REDUCE?13:t%cyc,up=ss(7.5,12.5,lt),fade=ss(0,.5,lt)*(1-ss(15.3,16,lt));
+  H.set(B);
+  /* 盛り土と掘り跡の対（rad=半径） */
+  const rad=Math.round((sp?70:110)/cs),sg2=rad*rad*.18;
+  for(const q of pr){const amp=.42*Math.sin(t*q.sp+q.ph),dx=Math.cos(q.a+t*.1)*rad*.9,dy=Math.sin(q.a+t*.1)*rad*.9,cx=q.x*gw,cy=q.y*gh;
+    const pairs=[[cx+dx,cy+dy,Math.abs(amp)*(1+up*.6)],[cx-dx,cy-dy,-Math.abs(amp)*(1-up)]];
+    for(const [px,py,a] of pairs){if(Math.abs(a)<.002)continue;const i0=Math.max(1,(px-rad)|0),i1=Math.min(gw-2,(px+rad)|0),j0=Math.max(1,(py-rad)|0),j1=Math.min(gh-2,(py+rad)|0);
+      for(let j=j0;j<=j1;j++)for(let i=i0;i<=i1;i++){const d2=(i-px)*(i-px)+(j-py)*(j-py);H[j*gw+i]+=a*Math.exp(-d2/sg2)}}}
+  const lift=up*.55,sea=0,D=S.img.data;let sum=0;
+  const n1=[14,22,58],n2=[150,146,136],wat=[6,9,22];
+  for(let j=0;j<gh;j++)for(let i=0;i<gw;i++){const k=j*gw+i,v=H[k]+lift;sum+=v;let r,g,b;
+    if(v<=sea){const f=(-v*14)%1;const ln=f<.08?.09:0;r=wat[0]+ln*200;g=wat[1]+ln*200;b=wat[2]+ln*190}
+    else{const hx=(H[k+1]||0)-(H[k-1]||0),hy=(H[k+gw]||0)-(H[k-gw]||0);let sh=clamp(.5+(-hx*.8-hy*.6)*24);sh=Math.pow(sh,1.25)*(.75+.25*clamp(v*1.6));
+      if(v<.018){sh=Math.max(sh,.85)}r=mix(n1[0],n2[0],sh);g=mix(n1[1],n2[1],sh);b=mix(n1[2],n2[2],sh)}
+    const q=k*4;D[q]=r;D[q+1]=g;D[q+2]=b;D[q+3]=255}
+  S.ox.putImageData(S.img,0,0);ctx.fillStyle='#070b18';ctx.fillRect(0,0,w,h);ctx.globalAlpha=fade;ctx.imageSmoothingEnabled=true;ctx.drawImage(S.o,0,0,w/cs,h/cs,0,0,w,h);ctx.globalAlpha=1;
+  /* 文字の側を沈める（左上からのグラデ） */
+  const g=sp?ctx.createLinearGradient(0,0,0,R.y+R.h+90):ctx.createLinearGradient(0,0,R.x+R.w+260,0);g.addColorStop(0,'rgba(5,8,18,.9)');g.addColorStop(.6,'rgba(5,8,18,.7)');g.addColorStop(1,'rgba(5,8,18,0)');ctx.fillStyle=g;ctx.fillRect(0,0,w,sp?R.y+R.h+90:h);
+  /* 右端の高さの目盛り：平均の高さ（朱の1点） */
+  const mean=sum/(gw*gh),gx=w-(sp?22:Math.max(36,w*.035)),gy0=sp?R.y+R.h+60:h*.18,gy1=sp?h-50:h*.82;
+  ctx.strokeStyle=cr(.5);ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(gx,gy0);ctx.lineTo(gx,gy1);for(let k=0;k<=10;k++){const y=mix(gy1,gy0,k/10);ctx.moveTo(gx-(k%5?4:9),y);ctx.lineTo(gx,y)}ctx.stroke();
+  const my=mix(gy1,gy0,clamp(.35+mean*.9));ctx.fillStyle=sg(1);ctx.fillRect(gx-12,my-3,9,6);
+  ctx.font='400 11px "JetBrains Mono",monospace';ctx.textBaseline='middle';ctx.fillStyle=cr(.8);const lab=(mean-0.0>=0?'+':'')+mean.toFixed(2);ctx.fillText(lab,gx-18-ctx.measureText(lab).width,my)}
+
+block('b0',drawSc5Main);block('bA',drawSc5A);block('bB',drawSc5B);block('bC',drawSc5C);
+requestAnimationFrame(loop);
+
+})();
+</script>
+</body>
+</html>

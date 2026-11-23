@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>採用情報 | サムライスタイル</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..600&family=Noto+Sans+JP:wght@100..900&family=Roboto+Flex:opsz,slnt,wdth,wght@8..144,-10..0,25..151,100..1000&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+JP:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pad:clamp(18px,3.4vw,52px);--m:48px;
+  --night:#070b18;--cream:#efe8d8;--c2:rgba(239,232,216,.74);--mute:rgba(239,232,216,.5);--line:rgba(239,232,216,.16);--line2:rgba(239,232,216,.09);
+  --sig:#ff5a2c;--amber:#f2a65a;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;--jp:"IBM Plex Sans JP","Hiragino Sans",sans-serif;--rf:"Roboto Flex",system-ui,sans-serif;
+}
+@media (max-width:820px){:root{--m:18px}}
+*{box-sizing:border-box}
+html,body{margin:0}
+html{scroll-behavior:smooth;overflow-x:hidden;overflow-x:clip;background:var(--night);-webkit-text-size-adjust:100%}
+body{background:transparent;color:var(--cream);font-family:var(--jp);font-size:16px;line-height:1.95;-webkit-font-smoothing:antialiased;overflow-x:hidden;overflow-x:clip;line-break:strict}
+a{color:inherit;text-decoration:none}
+img,video,canvas{display:block}
+.nb{white-space:nowrap}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.wrap{padding:0 var(--m);position:relative}
+#meas{position:absolute;left:-9999px;top:0;visibility:hidden;white-space:nowrap;font-family:var(--rf);font-size:100px;line-height:1;pointer-events:none}
+
+/* header（トップと同じ・夜の色） */
+.hd{position:fixed;top:0;left:0;right:0;z-index:30;display:flex;align-items:center;justify-content:space-between;padding:16px var(--pad);font-family:"Inter Tight","Noto Sans JP",sans-serif;font-size:15px;font-weight:500;line-height:1.4;transition:background .4s,backdrop-filter .4s}
+.hd.solid{background:rgba(7,11,24,.55);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.logo{display:block;height:40px}
+.logo img{height:100%;width:auto;display:block;filter:invert(1)}
+.nav{display:flex;align-items:center;gap:6px}
+.nav a{padding:10px 14px;border-radius:99px;transition:background .3s;color:#fff}
+.nav a:hover,.nav a[aria-current]{background:rgba(255,255,255,.12)}
+.nav .cta{background:#fff;color:#151513;padding:12px 22px;margin-left:8px}
+.nav .cta:hover{background:var(--cream)}
+.lang{display:flex;gap:4px;margin-left:14px;padding:4px;border-radius:99px;background:rgba(255,255,255,.12);font-size:12px}
+.lang span{padding:6px 9px;border-radius:99px;color:rgba(255,255,255,.6)}
+.lang b{padding:6px 9px;border-radius:99px;background:#fff;color:#151513;font-weight:600}
+.burger{display:none;width:52px;height:52px;border-radius:50%;border:0;background:#fff;cursor:pointer;position:relative}
+.burger i{position:absolute;left:16px;right:16px;height:2px;background:#151513;transition:transform .4s}
+.burger i:first-child{top:21px}.burger i:last-child{top:29px}
+body.mopen .burger{background:var(--sig)}
+body.mopen .burger i{background:#fff}
+body.mopen .burger i:first-child{transform:translateY(4px) rotate(45deg)}
+body.mopen .burger i:last-child{transform:translateY(-4px) rotate(-45deg)}
+.ov{position:fixed;inset:0;z-index:29;background:#04060d;color:#fff;padding:120px 24px 40px;display:flex;flex-direction:column;gap:8px;font:500 40px/1.3 "Inter Tight",sans-serif;letter-spacing:-.03em;clip-path:circle(0 at calc(100% - 44px) 44px);transition:clip-path .7s cubic-bezier(.7,0,.2,1)}
+body.mopen .ov{clip-path:circle(150% at calc(100% - 44px) 44px)}
+.ov .lang{margin:24px 0 0;align-self:flex-start;font-size:13px;letter-spacing:0}
+body.mopen .hd{background:transparent;backdrop-filter:none}
+
+/* 夕方→夜の地（固定のキャンバス）と時刻の目盛り */
+#sky{position:fixed;inset:0;width:100%;height:100%;z-index:-2;pointer-events:none}
+.clk{position:fixed;z-index:20;right:6px;top:120px;bottom:80px;width:40px;pointer-events:none;font:400 9.5px/1 var(--mono);color:var(--mute);letter-spacing:.04em;opacity:0;transition:opacity .6s}
+.clk.on{opacity:1}
+.clk .tk{position:absolute;right:0;height:1px;background:rgba(239,232,216,.3)}
+.clk .tk.h{width:10px;background:rgba(239,232,216,.55)}
+.clk .tk.q{width:4px}
+.clk .mk{position:absolute;right:0;width:16px;height:1px;background:var(--sig);box-shadow:0 0 10px rgba(255,90,44,.8)}
+.clk .now{position:absolute;right:0;transform:translateY(-140%);white-space:nowrap;color:var(--cream);display:flex;align-items:center;gap:5px}
+.clk .now i{display:block;width:5px;height:5px;background:var(--sig);box-shadow:0 0 8px rgba(255,90,44,.9)}
+
+/* ===== FV ===== */
+.fv{position:relative;height:100vh;height:100svh;min-height:560px;overflow:hidden;color:#fff;background:#120f22}
+.fv-v{position:absolute;inset:0}
+.fv-v video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(.9) contrast(1.06) brightness(.92)}
+.fv-v .g1{position:absolute;inset:0;mix-blend-mode:multiply;background:linear-gradient(180deg,#ffc08c 0%,#f29a6e 28%,#b9727a 52%,#4d4673 78%,#1d2246 100%)}
+.fv-v .g2{position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,11,24,.42) 0%,rgba(7,11,24,0) 22%,rgba(7,11,24,0) 48%,rgba(12,12,32,.55) 78%,rgba(18,15,38,.96) 100%)}
+.fv-v .g3{position:absolute;inset:0;mix-blend-mode:screen;background:radial-gradient(ellipse 60% 40% at 70% 62%,rgba(255,140,70,.28),rgba(255,140,70,0) 70%)}
+#fvc{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none}
+.fv-meta{position:absolute;z-index:3;left:var(--m);right:var(--m);top:96px;display:flex;justify-content:space-between;gap:16px;font:400 11.5px/1.5 var(--mono);letter-spacing:.08em;color:rgba(255,255,255,.78);border-top:1px solid rgba(255,255,255,.4);padding-top:10px}
+.fv-meta b{font-weight:500;color:#fff}
+.fv-meta .r{text-align:right}
+.fvh{position:absolute;z-index:3;left:var(--m);right:var(--m);bottom:clamp(70px,11vh,120px);margin:0;font-family:"Bricolage Grotesque","Inter Tight",sans-serif;font-weight:250;font-variation-settings:"opsz" 96,"wdth" 92;font-size:clamp(52px,7.6vw,136px);line-height:1;letter-spacing:-.045em;color:#fbf6ee}
+.fvh .ln{display:block;white-space:nowrap}
+.fvh .spb{display:none}
+.fvh .ch{display:inline-block;transform:translateY(.55em);opacity:0;transition:transform 1.3s cubic-bezier(.16,1,.3,1),opacity 1s}
+.ready .fvh .ch{transform:none;opacity:1}
+.fvh .fl{color:#ffd9b8}
+.fvh .hp{display:inline-block;will-change:transform}
+.fv-low{position:absolute;z-index:3;left:var(--m);right:var(--m);bottom:24px;display:flex;justify-content:space-between;align-items:center;font:400 11.5px/1 var(--mono);letter-spacing:.08em;color:rgba(255,255,255,.7)}
+.fv-low .lamp2{display:inline-flex;align-items:center;gap:8px}
+.fv-low .lamp2 i{width:7px;height:7px;background:var(--sig);box-shadow:0 0 10px rgba(255,90,44,.9)}
+
+/* ===== 節の見出し（トップと同じ：細く縮んだ字 → 広く太く） ===== */
+.sec{position:relative;padding:clamp(110px,17vh,190px) 0 0}
+.sh{margin:0 0 clamp(48px,8vh,88px)}
+.lbl{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,4fr) minmax(0,1fr);gap:16px;border-top:1px solid rgba(239,232,216,.45);padding:10px 0 0;font:400 11.5px/1.5 var(--mono);letter-spacing:.08em;color:var(--c2)}
+.lbl .jp2{margin:0;font-family:var(--jp);letter-spacing:.12em;font-size:12px}
+.lbl .end{text-align:right}
+.lamp{display:inline-flex;align-items:center;gap:10px}
+.lamp i{width:8px;height:8px;border:1px solid rgba(239,232,216,.6);transition:background .2s,border-color .2s,box-shadow .6s}
+.lamp.lit i{animation:flick .9s steps(1) both;background:var(--sig);border-color:var(--sig);box-shadow:0 0 12px rgba(255,90,44,.95),0 0 28px rgba(255,90,44,.4)}
+@keyframes flick{0%{opacity:1}10%{opacity:.15}18%{opacity:1}26%{opacity:.3}34%{opacity:1}58%{opacity:.55}64%,100%{opacity:1}}
+.giant{display:block;margin:28px 0 0;font-family:var(--rf);font-weight:400;font-size:18vw;line-height:.82;letter-spacing:-.02em;white-space:nowrap;font-variation-settings:"wdth" 25,"wght" 100,"opsz" 144;padding-top:.02em;color:var(--cream)}
+.giant.two{line-height:.86}
+.giant.jpg{font-family:"Noto Sans JP",sans-serif;font-variation-settings:normal;font-weight:100;letter-spacing:.02em;line-height:1.05}
+
+/* 図のパネル（製図の枠と＋の見当） */
+.pan{position:relative;border:1px solid var(--line);background:rgba(7,11,24,.32)}
+.pan>canvas{position:absolute;inset:0;width:100%;height:100%}
+.pan::before,.pan::after{content:"+";position:absolute;font:300 14px/1 var(--mono);color:var(--mute);pointer-events:none;z-index:2}
+.pan::before{left:-5px;top:-8px}.pan::after{right:-5px;bottom:-9px}
+.figc{display:flex;justify-content:space-between;gap:12px;margin-top:10px;font:400 11px/1.5 var(--mono);letter-spacing:.08em;color:var(--mute)}
+.figc b{font-weight:500;color:var(--c2)}
+
+.sm{font-weight:700;color:#fff;text-decoration:underline;text-decoration-color:var(--sig);text-decoration-thickness:2px;text-underline-offset:.36em;text-decoration-skip-ink:none}
+.rv{opacity:0;transform:translateY(28px);transition:opacity 1s cubic-bezier(.2,.8,.1,1),transform 1s cubic-bezier(.2,.8,.1,1)}
+.rv.in{opacity:1;transform:none}
+
+/* 私たちは */
+.ab{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(28px,4vw,64px);align-items:start}
+.ab-lead{margin:0;font-size:clamp(20px,2vw,28px);line-height:1.85;font-weight:500;letter-spacing:.03em}
+.ab-map{aspect-ratio:5/4}
+.ab-cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(24px,3vw,48px);margin-top:clamp(56px,9vh,100px);border-top:1px solid var(--line2);padding-top:28px}
+.ab-cols p{margin:0;font-size:15.5px;color:var(--c2)}
+.ab-cols .n{display:block;font:400 11px/1 var(--mono);letter-spacing:.08em;color:var(--mute);margin-bottom:14px}
+
+/* CORE VALUE */
+.cv-lead{margin:0 0 clamp(48px,8vh,80px);max-width:30em;font-size:clamp(21px,2.2vw,31px);line-height:1.8;font-weight:500;letter-spacing:.03em}
+.cv{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(28px,4vw,64px);align-items:end}
+.cv-fig{aspect-ratio:16/11}
+.cv-tx p{margin:0 0 1.6em;font-size:15.5px;color:var(--c2)}
+.cv-tx p:last-child{margin:0}
+
+/* +VALUE（Oxide の採用ページ Hiring Process：左に固定の線図、右に段） */
+.vl{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(28px,4vw,72px)}
+.vl-fig{position:sticky;top:96px;height:calc(100vh - 140px);height:calc(100svh - 140px);min-height:520px}
+.vl-fig canvas{position:absolute;inset:0;width:100%;height:100%}
+.vi{padding:0 0 clamp(80px,14vh,140px)}
+.vi:last-child{padding-bottom:0}
+.vi-h{display:flex;align-items:flex-end;gap:18px;border-top:1px solid var(--line);padding-top:12px}
+.vi-h .n{font:400 13px/1 var(--mono);letter-spacing:.06em;color:var(--amber);padding-bottom:.9em}
+.vi.on .vi-h .n{color:var(--sig)}
+.vi-h .w{font-family:var(--rf);font-size:clamp(60px,7.4vw,124px);line-height:.9;letter-spacing:-.02em;font-variation-settings:"wdth" 25,"wght" 120,"opsz" 144;transition:font-variation-settings 1.1s cubic-bezier(.2,.8,.1,1)}
+.vi.on .vi-h .w{font-variation-settings:"wdth" 118,"wght" 760,"opsz" 144}
+.vi-h .w.long{font-size:clamp(48px,4.8vw,84px)}
+.vi-h canvas.gl{display:none}
+.vi .d{margin:18px 0 26px;font-size:clamp(17px,1.5vw,21px);line-height:1.8;font-weight:500;letter-spacing:.03em}
+.ph{position:relative;aspect-ratio:3/2;overflow:hidden;cursor:pointer;outline:none}
+.ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .8s,transform 1.4s cubic-bezier(.2,.8,.1,1);transform:scale(1.04)}
+.ph canvas{z-index:1;transition:opacity .8s}
+.ph:hover img,.ph:focus-visible img,.ph.on img{opacity:1;transform:none}
+.ph:hover canvas,.ph:focus-visible canvas,.ph.on canvas{opacity:0}
+.ph .hint{position:absolute;z-index:2;right:10px;bottom:9px;font:400 10.5px/1 var(--mono);letter-spacing:.08em;color:rgba(239,232,216,.7);transition:opacity .4s}
+.ph:hover .hint,.ph.on .hint{opacity:0}
+
+/* 楽しく働くことの意義 */
+.jy-cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(24px,4vw,64px);margin-bottom:clamp(48px,8vh,80px)}
+.jy-cols p{margin:0;font-size:15.5px;color:var(--c2)}
+.jy-fig{aspect-ratio:1344/420}
+.jy-end{margin:clamp(56px,9vh,100px) auto 0;max-width:34em;text-align:center;font-size:clamp(20px,2.1vw,29px);line-height:1.85;font-weight:500;letter-spacing:.03em}
+
+/* 求める人間像（teenage engineering の番号つき一覧） */
+.wl{list-style:none;margin:0;padding:0;border-bottom:1px solid var(--line)}
+.wl li{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,5fr);gap:16px;padding:clamp(22px,3.4vh,36px) 0;border-top:1px solid var(--line);font-size:clamp(20px,2.3vw,32px);line-height:1.6;font-weight:500;letter-spacing:.03em}
+.wl li::after{content:"";position:absolute;left:0;top:-1px;height:1px;width:100%;background:var(--amber);transform:scaleX(0);transform-origin:left;transition:transform .9s cubic-bezier(.2,.8,.1,1)}
+.wl li:hover::after{transform:none}
+.wl .n{font:400 clamp(14px,1.2vw,17px)/2.3 var(--mono);color:var(--sig);letter-spacing:.04em}
+
+/* MEMBER */
+.mm-fig{aspect-ratio:1344/360;margin-bottom:clamp(40px,7vh,72px)}
+.mg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(24px,2.6vw,40px) clamp(16px,1.6vw,24px)}
+.mc{outline:none;cursor:pointer}
+.mc-pic{aspect-ratio:1/1;overflow:hidden;background:#0d1226;border:1px solid var(--line);transition:background .5s}
+.mc.lit .mc-pic{background:#f0e2c8;animation:flick .9s steps(1) both}
+.mc-pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) sepia(.3) contrast(1.06) brightness(.94);opacity:0;transition:opacity .9s,filter .6s}
+.mc-pic canvas{z-index:1;transition:opacity .9s}
+.mc.fin .mc-pic img{opacity:1}
+.mc.fin .mc-pic canvas{opacity:0}
+.mc:hover .mc-pic img,.mc:focus-visible .mc-pic img,.mc.on .mc-pic img{opacity:1;filter:none}
+.mc:hover .mc-pic canvas,.mc.on .mc-pic canvas{opacity:0}
+.mc .no{display:flex;justify-content:space-between;margin:16px 0 8px;font:400 11.5px/1 var(--mono);letter-spacing:.06em;color:var(--mute)}
+.mc .no i{width:7px;height:7px;border:1px solid rgba(239,232,216,.5)}
+.mc.lit .no i,.mc:hover .no i{background:var(--sig);border-color:var(--sig);box-shadow:0 0 10px rgba(255,90,44,.9)}
+.mc h3{margin:0;font:500 20px/1.35 "Inter Tight",sans-serif;letter-spacing:-.005em}
+.mc .role{margin:4px 0 12px;font:400 12px/1.5 var(--mono);letter-spacing:.04em;color:var(--amber)}
+.mc .bio{margin:0;font-size:13.5px;line-height:1.9;color:var(--c2)}
+
+/* JOB TYPE（Oxide の Open Positions の行） */
+.jt{border:1px solid var(--line);background:rgba(7,11,24,.35)}
+.jt a{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,5fr) 64px;gap:24px;align-items:center;padding:clamp(24px,3.4vw,40px) clamp(20px,2vw,28px);transition:background .4s}
+.jt a:hover{background:rgba(239,232,216,.05)}
+.jt h3{margin:0;font-size:clamp(22px,2.3vw,32px);line-height:1.5;font-weight:500;letter-spacing:.03em}
+.jt .c{font-size:15px;color:var(--c2)}
+.jt .arr{justify-self:end;width:56px;height:56px;display:grid;place-items:center;border:1px solid var(--line);font:400 20px/1 var(--mono);transition:background .3s,color .3s,transform .4s}
+.jt a:hover .arr{background:var(--sig);border-color:var(--sig);color:#fff;transform:translateX(4px)}
+.jt-note{display:flex;justify-content:space-between;margin-top:10px;font:400 11px/1.5 var(--mono);letter-spacing:.08em;color:var(--mute)}
+
+/* footer（トップと同じ：CONTACT を横線の束で、乗せると揃う） */
+.ft{padding:clamp(120px,18vh,200px) 0 36px}
+.big{display:block;border-top:1px solid rgba(239,232,216,.45);padding-top:28px;position:relative}
+.big .bw{position:relative}
+.big b{display:block;font:700 clamp(64px,15.2vw,232px)/.86 "Space Grotesk",sans-serif;letter-spacing:-.05em;color:transparent;user-select:text}
+.big canvas{position:absolute;inset:0;width:100%;height:100%}
+.big .bl{display:flex;justify-content:space-between;align-items:center;margin-top:18px;font-size:15px;font-weight:500}
+.big .arr{font:400 28px/1 var(--mono);transition:transform .3s,color .3s}
+.big:hover .arr{transform:translateX(8px);color:var(--sig)}
+.low{display:flex;flex-wrap:wrap;align-items:center;gap:16px 40px;margin-top:72px;padding-top:24px;border-top:1px solid var(--line);font-size:12px;color:var(--mute)}
+.low .lg img{width:96px;filter:invert(1)}
+.low nav{display:flex;flex-wrap:wrap;gap:8px 24px}
+.low nav a:hover{color:var(--cream)}
+.low>span{margin-left:auto;font-family:var(--mono)}
+
+@media (max-width:1100px){
+  .mg{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .ab{grid-template-columns:1fr}
+  .ab-map{aspect-ratio:16/10}
+}
+@media (max-width:820px){
+  .nav a:not(.cta),.nav .lang,.nav .cta{display:none}
+  .burger{display:block}
+  .hd{padding:12px 16px}
+  .logo{height:32px}
+  .clk{display:none}
+  .fv-meta{top:80px;font-size:10px}
+  .fv-meta .hide-sp{display:none}
+  .fvh{font-size:clamp(40px,12.6vw,64px);line-height:1.02;bottom:76px}
+  .fvh .spb{display:inline}.fvh .pcs{display:none}
+  .fv-low{bottom:22px;font-size:10.5px}
+  .lbl{grid-template-columns:minmax(0,1.2fr) minmax(0,2fr) minmax(0,1fr)}
+  .giant{margin-top:18px}
+  .sec{padding-top:100px}
+  .sh{margin-bottom:40px}
+  .ab-cols{grid-template-columns:1fr;gap:22px;margin-top:44px}
+  .cv{grid-template-columns:1fr}
+  .cv-fig{aspect-ratio:1/1}
+  .vl{grid-template-columns:1fr}
+  .vl-fig{display:none}
+  .vi{padding-bottom:72px}
+  .vi-h{flex-wrap:wrap;justify-content:flex-start}
+  .vi-h canvas.gl{display:block;order:-1;width:100%;height:64px;flex:none;margin:6px 0 12px}
+  .vi-h .w{font-size:clamp(44px,13vw,64px)}
+  .vi-h .w.long{font-size:clamp(32px,9.2vw,46px)}
+  .jy-cols{grid-template-columns:1fr;gap:22px}
+  .jy-fig{aspect-ratio:354/300}
+  .jy-end{text-align:left}
+  .wl li{grid-template-columns:44px minmax(0,1fr);gap:8px}
+  .mm-fig{aspect-ratio:354/300}
+  .mg{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .mc h3{font-size:16px}
+  .mc .bio{font-size:12.5px}
+  .jt a{grid-template-columns:minmax(0,1fr) 48px;gap:14px 16px}
+  .jt h3{grid-column:1/2}
+  .jt .c{grid-column:1/2;grid-row:2}
+  .jt .arr{grid-column:2;grid-row:1/3;width:48px;height:48px}
+  .low>span{margin-left:0}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .rv{opacity:1;transform:none}
+  .lamp.lit i,.mc.lit .mc-pic{animation:none}
+}
+</style>
+</head>
+<body>
+<canvas id="sky" aria-hidden="true"></canvas>
+<header class="hd" id="hd">
+  <a class="logo" href="https://samurai-style.tokyo/" aria-label="SAMURAI STYLE"><img src="img/logo.svg" alt="SAMURAI STYLE"></a>
+  <nav class="nav"><a href="https://samurai-style.tokyo/">HOME</a><a href="https://samurai-style.tokyo/#service">SERVICE</a><a href="https://samurai-style.tokyo/media">MEDIA</a><a href="https://samurai-style.tokyo/company">COMPANY</a><a href="https://samurai-style.tokyo/recruit" aria-current="page">RECRUIT</a><a class="cta" href="https://samurai-style.tokyo/#contact">CONTACT</a><div class="lang"><span>ID</span><span>EN</span><b>JA</b></div></nav>
+  <button class="burger" aria-label="Menu"><i></i><i></i></button>
+</header>
+<div class="ov"><a href="https://samurai-style.tokyo/">HOME</a><a href="https://samurai-style.tokyo/#service">SERVICE</a><a href="https://samurai-style.tokyo/media">MEDIA</a><a href="https://samurai-style.tokyo/company">COMPANY</a><a href="https://samurai-style.tokyo/recruit">RECRUIT</a><a href="https://samurai-style.tokyo/#contact">CONTACT</a><div class="lang"><span>ID</span><span>EN</span><b>JA</b></div></div>
+<div class="clk" id="clk" aria-hidden="true"><i class="tk h" style="top:0.000%"></i><i class="tk q" style="top:3.571%"></i><i class="tk q" style="top:7.143%"></i><i class="tk q" style="top:10.714%"></i><i class="tk h" style="top:14.286%"></i><i class="tk q" style="top:17.857%"></i><i class="tk q" style="top:21.429%"></i><i class="tk q" style="top:25.000%"></i><i class="tk h" style="top:28.571%"></i><i class="tk q" style="top:32.143%"></i><i class="tk q" style="top:35.714%"></i><i class="tk q" style="top:39.286%"></i><i class="tk h" style="top:42.857%"></i><i class="tk q" style="top:46.429%"></i><i class="tk q" style="top:50.000%"></i><i class="tk q" style="top:53.571%"></i><i class="tk h" style="top:57.143%"></i><i class="tk q" style="top:60.714%"></i><i class="tk q" style="top:64.286%"></i><i class="tk q" style="top:67.857%"></i><i class="tk h" style="top:71.429%"></i><i class="tk q" style="top:75.000%"></i><i class="tk q" style="top:78.571%"></i><i class="tk q" style="top:82.143%"></i><i class="tk h" style="top:85.714%"></i><i class="tk q" style="top:89.286%"></i><i class="tk q" style="top:92.857%"></i><i class="tk q" style="top:96.429%"></i><i class="tk h" style="top:100.000%"></i><i class="mk" id="clkm"></i><span class="now" id="clkn"><i></i>17:00</span></div>
+<main id="top">
+<section class="fv" id="fv">
+  <div class="fv-v"><video id="fvv" src="img/recruit-hero.mp4" poster="img/recruit-hero-poster.webp" autoplay muted loop playsinline aria-hidden="true"></video><i class="g1"></i><i class="g3"></i><i class="g2"></i></div>
+  <canvas id="fvc" aria-hidden="true"></canvas>
+  <div class="fv-meta" aria-hidden="true"><span><b>RECRUIT SITE</b></span><span class="hide-sp">CUT <b id="cut">01</b> / 03</span><span class="r">TC <b id="tc">00:00:00:00</b></span></div>
+  <h1 class="fvh"><span class="sr">aiming to build the most fun-loving team</span><span class="ln" aria-hidden="true"><span class="ch">a</span><span class="ch">i</span><span class="ch">m</span><span class="ch">i</span><span class="ch">n</span><span class="ch">g</span><span class="ch">&nbsp;</span><span class="ch">t</span><span class="ch">o</span><span class="ch">&nbsp;</span><span class="ch">b</span><span class="ch">u</span><span class="ch">i</span><span class="ch">l</span><span class="ch">d</span><br class="spb"><span class="pcs"><span class="ch">&nbsp;</span></span><span class="ch">t</span><span class="ch">h</span><span class="ch">e</span><span class="ch">&nbsp;</span><span class="ch">m</span><span class="ch">o</span><span class="ch">s</span><span class="ch">t</span></span><span class="ln" aria-hidden="true"><span class="fl" id="fl"><span class="ch"><span class="hp">f</span></span><span class="ch"><span class="hp">u</span></span><span class="ch"><span class="hp">n</span></span><span class="ch"><span class="hp">-</span></span><span class="ch"><span class="hp">l</span></span><span class="ch"><span class="hp">o</span></span><span class="ch"><span class="hp">v</span></span><span class="ch"><span class="hp">i</span></span><span class="ch"><span class="hp">n</span></span><span class="ch"><span class="hp">g</span></span></span><span class="ch">&nbsp;</span><span class="ch">t</span><span class="ch">e</span><span class="ch">a</span><span class="ch">m</span></span></h1>
+  <div class="fv-low" aria-hidden="true"><span>scroll ↓</span><span class="lamp2"><i></i><span id="fvt">17:00</span></span></div>
+</section>
+<section class="sec" id="about"><div class="wrap">
+  <div class="sh"><div class="lbl"><span class="lamp"><i></i>01</span><p class="jp2"></p><span class="end">17:30</span></div><h2 class="giant jpg" data-wd data-kind="jp">私たちは</h2></div>
+  <div class="ab">
+    <p class="ab-lead"><span class="nb">大手から</span><wbr><span class="nb">スタートアップまで、</span><wbr><span class="nb">事業会社様の</span><wbr><span class="nb">事業企画・</span><wbr><span class="nb">マーケティング業務の</span><wbr><span class="nb">受託を</span><wbr><span class="nb">行う他、</span><wbr><span class="nb">語学堪能な</span><wbr><span class="nb">メンバー数名を</span><wbr><span class="nb">軸に</span><wbr><span class="nb">インドネシア拠点を</span><wbr><span class="nb">開拓し、</span><wbr><span class="nb">オフショアでの</span><wbr><span class="nb">受託開発も</span><wbr><span class="nb">行っています。</span><wbr></p>
+    <figure style="margin:0"><div class="pan ab-map"><canvas data-fig="map" aria-hidden="true"></canvas></div><figcaption class="figc"><span><b>FIG.01</b></span><span>JP — ID</span></figcaption></figure>
+  </div>
+  <div class="ab-cols"><p><span class="n">02</span><span class="nb">既存の</span><wbr><span class="nb">マーケティング業務の</span><wbr><span class="nb">クライアント様からの</span><wbr><span class="nb">ご要望も</span><wbr><span class="nb">あり、</span><wbr><span class="nb">新たに</span><wbr><span class="nb">動画広告・</span><wbr><span class="nb">LP制作ツール</span><wbr><span class="nb">「HookHack」を</span><wbr><span class="nb">リリースした</span><wbr><span class="nb">ため、</span><wbr></p><p><span class="n">03</span><span class="nb">主に</span><wbr><span class="nb">ツールの</span><wbr><span class="nb">展開と</span><wbr><span class="nb">デリバリー領域に</span><wbr><span class="nb">おいて、</span><wbr><strong class="sm"><span class="nb">力を</span><wbr><span class="nb">貸してくださる</span><wbr><span class="nb">方を</span><wbr><span class="nb">募集しています。</span><wbr></strong></p><p><span class="n">04</span><span class="nb">事業展開と</span><wbr><span class="nb">して、</span><wbr><span class="nb">国内市場に</span><wbr><span class="nb">おいて</span><wbr><span class="nb">動画</span><wbr><span class="nb">広告を</span><wbr><span class="nb">通じた売上拡大の</span><wbr><span class="nb">再現性を</span><wbr><span class="nb">チーム内で</span><wbr><span class="nb">蓄積した上で、</span><wbr><span class="nb">エンジニアチームの</span><wbr><span class="nb">拠点が</span><wbr><span class="nb">あり、</span><wbr><span class="nb">人口3億人・</span><wbr><span class="nb">平均年齢20代の</span><wbr><span class="nb">インドネシアの</span><wbr><span class="nb">BtoC市場への</span><wbr><span class="nb">進出を</span><wbr><span class="nb">目指していきます。</span><wbr></p></div>
+</div></section>
+<section class="sec" id="core"><div class="wrap">
+  <div class="sh"><div class="lbl"><span class="lamp"><i></i>02</span><p class="jp2">大切にする価値観</p><span class="end">18:30</span></div><h2 class="giant " data-wd>CORE VALUE</h2></div>
+  <p class="cv-lead"><span class="nb">会社の</span><wbr><span class="nb">価値観の</span><wbr><span class="nb">根幹には、</span><wbr><span class="nb">代表の</span><wbr><span class="nb">橋本が</span><wbr><span class="nb">大学時代に</span><wbr><span class="nb">友人が</span><wbr><span class="nb">起こした</span><wbr><span class="nb">会社を</span><wbr><span class="nb">見ながら</span><wbr><span class="nb">感じていた</span><wbr><strong class="sm"><span class="nb">「仲間同士で</span><wbr><span class="nb">楽しみながら、</span><wbr><span class="nb">同じ</span><wbr><span class="nb">目的に</span><wbr><span class="nb">向かって</span><wbr><span class="nb">働きたい」</span><wbr></strong><span class="nb">と</span><wbr><span class="nb">いう</span><wbr><span class="nb">思いが</span><wbr><span class="nb">あります。</span><wbr></p>
+  <div class="cv">
+    <figure style="margin:0"><div class="pan cv-fig"><canvas data-fig="pie" aria-hidden="true"></canvas></div><figcaption class="figc"><span><b>FIG.02</b></span><span>ゼロサム → プラスサム</span></figcaption></figure>
+    <div class="cv-tx"><p><span class="nb">労働の</span><wbr><span class="nb">対価とは</span><wbr><span class="nb">金銭だけでなく、</span><wbr><span class="nb">誰かの</span><wbr><span class="nb">役に</span><wbr><span class="nb">立つことで</span><wbr><span class="nb">受け取る</span><wbr><span class="nb">「ありがとう」と</span><wbr><span class="nb">いった</span><wbr><span class="nb">言葉や、</span><wbr><span class="nb">そこに</span><wbr><span class="nb">向かって</span><wbr><span class="nb">仲間とともに</span><wbr><span class="nb">価値を</span><wbr><span class="nb">作る</span><wbr><span class="nb">過程での</span><wbr><span class="nb">高揚感が</span><wbr><span class="nb">あると</span><wbr><span class="nb">考えています。</span><wbr></p><p><span class="nb">会社の</span><wbr><span class="nb">ミッションと</span><wbr><span class="nb">して</span><wbr><span class="nb">掲げている</span><wbr><span class="nb">「パイの</span><wbr><span class="nb">最大化」も、</span><wbr><span class="nb">パイの</span><wbr><span class="nb">定義を</span><wbr><span class="nb">金銭と</span><wbr><span class="nb">すると</span><wbr><span class="nb">目の前の</span><wbr><span class="nb">パイを</span><wbr><span class="nb">奪い合う</span><wbr><span class="nb">ゼロサムの</span><wbr><span class="nb">世界観に</span><wbr><span class="nb">なりますが、</span><wbr><span class="nb">感謝や</span><wbr><span class="nb">高揚感、</span><wbr><span class="nb">そして笑顔が</span><wbr><span class="nb">加わる</span><wbr><span class="nb">ことで</span><wbr><span class="nb">プラスサムに</span><wbr><span class="nb">なり、</span><wbr><span class="nb">この</span><wbr><span class="nb">プラスサムの</span><wbr><span class="nb">世界観が</span><wbr><span class="nb">広がる</span><wbr><span class="nb">ことを</span><wbr><span class="nb">目指しています。</span><wbr></p></div>
+  </div>
+</div></section>
+<section class="sec" id="value"><div class="wrap">
+  <div class="sh"><div class="lbl"><span class="lamp"><i></i>03</span><p class="jp2">行動指針</p><span class="end">19:30</span></div><h2 class="giant " data-wd>+VALUE</h2></div>
+  <div class="vl">
+    <div class="vl-fig"><canvas id="vlc" aria-hidden="true"></canvas></div>
+    <div class="vl-list"><article class="vi" data-i="0"><div class="vi-h"><span class="n">[1]</span><span class="w">Fun</span><canvas class="gl" data-g="0" aria-hidden="true"></canvas></div><p class="d"><span class="nb">世界一楽しく</span><wbr><span class="nb">働く</span><wbr><span class="nb">会社を</span><wbr><span class="nb">目指す</span><wbr></p><div class="pan ph" tabindex="0"><img src="img/g1.webp" alt="ビリヤード台を囲むメンバー" loading="lazy"><canvas class="ht" aria-hidden="true"></canvas><span class="hint" aria-hidden="true">HOVER → COLOR</span></div></article><article class="vi" data-i="1"><div class="vi-h"><span class="n">[2]</span><span class="w">Free</span><canvas class="gl" data-g="1" aria-hidden="true"></canvas></div><p class="d"><span class="nb">各自の</span><wbr><span class="nb">責任感の</span><wbr><span class="nb">下、</span><wbr><span class="nb">場所や</span><wbr><span class="nb">時間に</span><wbr><span class="nb">捉われず</span><wbr><span class="nb">自由に</span><wbr><span class="nb">裁量を</span><wbr><span class="nb">持って働く</span><wbr></p><div class="pan ph" tabindex="0"><img src="img/pool.webp" alt="プールの中からPCで作業するメンバー" loading="lazy"><canvas class="ht" aria-hidden="true"></canvas><span class="hint" aria-hidden="true">HOVER → COLOR</span></div></article><article class="vi" data-i="2"><div class="vi-h"><span class="n">[3]</span><span class="w">Flat</span><canvas class="gl" data-g="2" aria-hidden="true"></canvas></div><p class="d"><span class="nb">年齢や</span><wbr><span class="nb">役職などの</span><wbr><span class="nb">上下関係なく</span><wbr><span class="nb">接する</span><wbr></p><div class="pan ph" tabindex="0"><img src="img/team_sofa.webp" alt="ソファでくつろぐ3人のメンバー" loading="lazy"><canvas class="ht" aria-hidden="true"></canvas><span class="hint" aria-hidden="true">HOVER → COLOR</span></div></article><article class="vi" data-i="3"><div class="vi-h"><span class="n">[4]</span><span class="w">Open</span><canvas class="gl" data-g="3" aria-hidden="true"></canvas></div><p class="d"><span class="nb">チーム内では</span><wbr><span class="nb">本音で</span><wbr><span class="nb">向き合い、</span><wbr><span class="nb">人格は</span><wbr><span class="nb">否定しない</span><wbr></p><div class="pan ph" tabindex="0"><img src="img/g6.webp" alt="足湯を囲んで話すメンバー" loading="lazy"><canvas class="ht" aria-hidden="true"></canvas><span class="hint" aria-hidden="true">HOVER → COLOR</span></div></article><article class="vi" data-i="4"><div class="vi-h"><span class="n">[5]</span><span class="w long">Optimization</span><canvas class="gl" data-g="4" aria-hidden="true"></canvas></div><p class="d"><span class="nb">全体</span><wbr><span class="nb">最適視点で</span><wbr><span class="nb">判断する</span><wbr></p><div class="pan ph" tabindex="0"><img src="img/g4.webp" alt="並んで歩くメンバー" loading="lazy"><canvas class="ht" aria-hidden="true"></canvas><span class="hint" aria-hidden="true">HOVER → COLOR</span></div></article></div>
+  </div>
+</div></section>
+<section class="sec" id="joy"><div class="wrap">
+  <div class="sh"><div class="lbl"><span class="lamp"><i></i>04</span><p class="jp2">楽しく働くことの意義</p><span class="end">21:00</span></div><h2 class="giant two" data-wd data-fit-text="The significance of">The significance of<br>working joyfully</h2></div>
+  <div class="jy-cols"><p><span class="nb">今後、</span><wbr><span class="nb">外部</span><wbr><span class="nb">環境の</span><wbr><span class="nb">変化が</span><wbr><span class="nb">より</span><wbr><span class="nb">激しくなっていく</span><wbr><span class="nb">中で</span><wbr><span class="nb">生き残る</span><wbr><span class="nb">ためには、</span><wbr><span class="nb">能力や</span><wbr><span class="nb">成果を</span><wbr><span class="nb">高め続ける</span><wbr><span class="nb">必要が</span><wbr><span class="nb">あり、</span><wbr><span class="nb">その</span><wbr><span class="nb">土台には、</span><wbr><span class="nb">日々の</span><wbr><span class="nb">地道な</span><wbr><span class="nb">取り組みの</span><wbr><span class="nb">積み重ねが</span><wbr><span class="nb">あると</span><wbr><span class="nb">考えています。</span><wbr></p><p><span class="nb">その</span><wbr><span class="nb">ため、</span><wbr><span class="nb">楽しく</span><wbr><span class="nb">働く</span><wbr><span class="nb">ことは、</span><wbr><span class="nb">各メンバーの</span><wbr><span class="nb">幸福度に</span><wbr><span class="nb">直結するだけでなく、</span><wbr><span class="nb">日々の</span><wbr><span class="nb">生産性を</span><wbr><span class="nb">高める</span><wbr><span class="nb">ことに</span><wbr><span class="nb">よる</span><wbr><span class="nb">会社と</span><wbr><span class="nb">しての</span><wbr><span class="nb">生存戦略、</span><wbr><span class="nb">そして、</span><wbr><span class="nb">個人・</span><wbr><span class="nb">会社が</span><wbr><span class="nb">成長して</span><wbr><span class="nb">社会に</span><wbr><span class="nb">還元していく</span><wbr><span class="nb">ことにまで</span><wbr><span class="nb">繋がっていきます。</span><wbr></p></div>
+  <figure style="margin:0"><div class="pan jy-fig"><canvas data-fig="joy" aria-hidden="true"></canvas></div><figcaption class="figc"><span><b>FIG.04</b></span><span>利他 / 利己</span></figcaption></figure>
+  <p class="jy-end"><strong class="sm"><span class="nb">「パイ</span><wbr><span class="nb">（笑</span><wbr><span class="nb">顔の</span><wbr><span class="nb">総量）の</span><wbr><span class="nb">最大化」</span><wbr></strong><span class="nb">（利他）を</span><wbr><span class="nb">追求する</span><wbr><span class="nb">ことと、</span><wbr><span class="nb">個人の</span><wbr><span class="nb">　</span><wbr><span class="nb">幸福度</span><wbr><span class="nb">（利己）も</span><wbr><span class="nb">本質的には</span><wbr><span class="nb">繋がっているのではないかと</span><wbr><span class="nb">感じています。</span><wbr></p>
+</div></section>
+<section class="sec" id="want"><div class="wrap">
+  <div class="sh"><div class="lbl"><span class="lamp"><i></i>05</span><p class="jp2">チームに求める人間像</p><span class="end">22:00</span></div><h2 class="giant two" data-wd data-fit-text="What we’re">What we’re<br>looking for</h2></div>
+  <ul class="wl"><li><span class="n">01</span><span><span class="nb">会社の</span><wbr><span class="nb">バリューを</span><wbr><span class="nb">見て</span><wbr><span class="nb">共感していただける</span><wbr><span class="nb">方</span><wbr></span></li><li><span class="n">02</span><span><span class="nb">主体性を</span><wbr><span class="nb">持って仕事に</span><wbr><span class="nb">取り組みたい方</span><wbr></span></li><li><span class="n">03</span><span><span class="nb">常識にとらわれず、</span><wbr><span class="nb">短期的に</span><wbr><span class="nb">ネガティブな</span><wbr><span class="nb">ことも</span><wbr><span class="nb">長期的な</span><wbr><span class="nb">視点で</span><wbr><span class="nb">ポジティブに</span><wbr><span class="nb">変換する</span><wbr><span class="nb">視座と</span><wbr><span class="nb">柔軟性の</span><wbr><span class="nb">ある</span><wbr><span class="nb">方</span><wbr></span></li></ul>
+</div></section>
+<section class="sec" id="member"><div class="wrap">
+  <div class="sh"><div class="lbl"><span class="lamp"><i></i>06</span><p class="jp2"></p><span class="end">23:00</span></div><h2 class="giant " data-wd>MEMBER</h2></div>
+  <figure style="margin:0"><div class="pan mm-fig"><canvas data-fig="team" aria-hidden="true"></canvas></div></figure>
+  <div class="mg"><article class="mc" tabindex="0" data-k="0"><div class="pan mc-pic"><img src="img/p_hashimoto.webp" alt="Keiji Hashimoto" loading="lazy"><canvas aria-hidden="true"></canvas></div><span class="no"><span>01 / 07</span><i></i></span><h3>Keiji Hashimoto</h3><p class="role">CEO</p><p class="bio"><span class="nb">大手通信会社の</span><wbr><span class="nb">営業、</span><wbr><span class="nb">事業企画を</span><wbr><span class="nb">経験後、</span><wbr><span class="nb">Webコンサル会社へ</span><wbr><span class="nb">転職。</span><wbr><span class="nb">2018年に</span><wbr><span class="nb">イラスト世界チャンピオンとともに</span><wbr><span class="nb">DT合同会社を</span><wbr><span class="nb">設立し、</span><wbr><span class="nb">CMO着任。</span><wbr><span class="nb">並行して</span><wbr><span class="nb">事業会社・</span><wbr><span class="nb">ベンダー双方での</span><wbr><span class="nb">経験を</span><wbr><span class="nb">生かし、</span><wbr><span class="nb">様々な</span><wbr><span class="nb">業種・</span><wbr><span class="nb">規模の</span><wbr><span class="nb">企業で</span><wbr><span class="nb">事業企画・</span><wbr><span class="nb">マーケティング・</span><wbr><span class="nb">セールスまでの</span><wbr><span class="nb">コンサルと</span><wbr><span class="nb">して</span><wbr><span class="nb">事業を</span><wbr><span class="nb">推進。</span><wbr><span class="nb">2024年に</span><wbr><span class="nb">サムライスタイル株式会社を</span><wbr><span class="nb">設立。</span><wbr></p></article><article class="mc" tabindex="0" data-k="1"><div class="pan mc-pic"><img src="img/p_hayashi.webp" alt="So Hayashi" loading="lazy"><canvas aria-hidden="true"></canvas></div><span class="no"><span>02 / 07</span><i></i></span><h3>So Hayashi</h3><p class="role">PM/Art Director</p><p class="bio"><span class="nb">東京生まれ、</span><wbr><span class="nb">イギリス・</span><wbr><span class="nb">シンガポール育ち。</span><wbr><span class="nb">映像ディレクターの</span><wbr><span class="nb">経験を</span><wbr><span class="nb">持ち、</span><wbr><span class="nb">企画・</span><wbr><span class="nb">撮影・</span><wbr><span class="nb">編集を</span><wbr><span class="nb">一貫して</span><wbr><span class="nb">対応。</span><wbr><span class="nb">現在は</span><wbr><span class="nb">弊社の</span><wbr><span class="nb">オフショア開発事業と</span><wbr><span class="nb">動画制作事業に</span><wbr><span class="nb">加え、</span><wbr><span class="nb">採用担当も</span><wbr><span class="nb">務める。</span><wbr></p></article><article class="mc" tabindex="0" data-k="2"><div class="pan mc-pic"><img src="img/p_lura.webp" alt="Lura Naito" loading="lazy"><canvas aria-hidden="true"></canvas></div><span class="no"><span>03 / 07</span><i></i></span><h3>Lura Naito</h3><p class="role">Human Resource</p><p class="bio"><span class="nb">愛知生まれ、</span><wbr><span class="nb">南米・</span><wbr><span class="nb">東南アジア各国を</span><wbr><span class="nb">放浪。</span><wbr><br><span class="nb">サムライスタイルでは</span><wbr><span class="nb">人事全般・</span><wbr><span class="nb">マーケティングを</span><wbr><span class="nb">担当。</span><wbr><span class="nb">ぶれない</span><wbr><span class="nb">明るさが</span><wbr><span class="nb">持ち味。</span><wbr></p></article><article class="mc" tabindex="0" data-k="3"><div class="pan mc-pic"><img src="img/p_kamizuru.webp" alt="Kamizuru san" loading="lazy"><canvas aria-hidden="true"></canvas></div><span class="no"><span>04 / 07</span><i></i></span><h3>Kamizuru san</h3><p class="role">Project Manager</p><p class="bio"><span class="nb">福岡在住。</span><wbr><span class="nb">Web開発会社の</span><wbr><span class="nb">経営と</span><wbr><span class="nb">並行して、</span><wbr><span class="nb">現役の</span><wbr><span class="nb">フルスタックエンジニアと</span><wbr><span class="nb">しても</span><wbr><span class="nb">活動。</span><wbr><span class="nb">小規模から</span><wbr><span class="nb">中規模まで、</span><wbr><span class="nb">事業フェーズに</span><wbr><span class="nb">応じた</span><wbr><span class="nb">柔軟な</span><wbr><span class="nb">システム設計を</span><wbr><span class="nb">得意と</span><wbr><span class="nb">する。</span><wbr><span class="nb">技術と</span><wbr><span class="nb">対話を</span><wbr><span class="nb">通じて</span><wbr><span class="nb">事業の</span><wbr><span class="nb">課題解決に</span><wbr><span class="nb">取り</span><wbr><span class="nb">組んでいる。</span><wbr></p></article><article class="mc" tabindex="0" data-k="4"><div class="pan mc-pic"><img src="img/p_satrio.webp" alt="Satrio Buwono" loading="lazy"><canvas aria-hidden="true"></canvas></div><span class="no"><span>05 / 07</span><i></i></span><h3>Satrio Buwono</h3><p class="role">Engineer Manager</p><p class="bio"><span class="nb">インドネシア生まれ、</span><wbr><span class="nb">グラズゴー大学卒業。</span><wbr><span class="nb">11カ国を</span><wbr><span class="nb">旅する。</span><wbr><span class="nb">SaaSを</span><wbr><span class="nb">専門に</span><wbr><span class="nb">構築を</span><wbr><span class="nb">行い、</span><wbr><span class="nb">複数の</span><wbr><span class="nb">ITベンチャーを</span><wbr><span class="nb">立ち上げ。</span><wbr><span class="nb">オフショア開発事業の</span><wbr><span class="nb">エンジニア統括を</span><wbr><span class="nb">担う。</span><wbr></p></article><article class="mc" tabindex="0" data-k="5"><div class="pan mc-pic"><img src="img/p_ahmad.webp" alt="Ahmad" loading="lazy"><canvas aria-hidden="true"></canvas></div><span class="no"><span>06 / 07</span><i></i></span><h3>Ahmad</h3><p class="role">Engineer</p><p class="bio"><span class="nb">インドネシア出身。</span><wbr><span class="nb">サウジアラビアの</span><wbr><span class="nb">ハイル大学在学中。</span><wbr><span class="nb">JavaScript</span><wbr><span class="nb">開発環境に</span><wbr><span class="nb">深く</span><wbr><span class="nb">精通し、</span><wbr><span class="nb">フルスタック</span><wbr><span class="nb">Web</span><wbr><span class="nb">アプリケーション開発に</span><wbr><span class="nb">おいて</span><wbr><span class="nb">豊富な</span><wbr><span class="nb">実績を</span><wbr><span class="nb">持つ。</span><wbr></p></article><article class="mc" tabindex="0" data-k="6"><div class="pan mc-pic"><img src="img/p_jibran.webp" alt="Jibran" loading="lazy"><canvas aria-hidden="true"></canvas></div><span class="no"><span>07 / 07</span><i></i></span><h3>Jibran</h3><p class="role">Engineer</p><p class="bio"><span class="nb">インドネシア出身。</span><wbr><span class="nb">現役大学生。</span><wbr><span class="nb">システムアーキテクチャおよび</span><wbr><span class="nb">バックエンドエンジニアリングに</span><wbr><span class="nb">精通。</span><wbr><span class="nb">Pythonと</span><wbr><span class="nb">Goを</span><wbr><span class="nb">主軸とし、</span><wbr><span class="nb">複雑な</span><wbr><span class="nb">システムの</span><wbr><span class="nb">最適化を</span><wbr><span class="nb">実現する</span><wbr><span class="nb">自動化ワークフローの</span><wbr><span class="nb">構築に</span><wbr><span class="nb">おいて</span><wbr><span class="nb">豊富な</span><wbr><span class="nb">経験を</span><wbr><span class="nb">持つ。</span><wbr></p></article></div>
+</div></section>
+<section class="sec" id="job"><div class="wrap">
+  <div class="sh"><div class="lbl"><span class="lamp"><i></i>07</span><p class="jp2"></p><span class="end">23:30</span></div><h2 class="giant " data-wd>JOB TYPE</h2></div>
+  <div class="jt"><a href="https://samurai-style.tokyo/#contact"><h3><span class="nb">コンテンツディレクター</span><wbr><span class="nb">（編集者）</span><wbr></h3><span class="c"><span class="nb">業務委託 </span><wbr><span class="nb">・</span><wbr><span class="nb"> </span><wbr><span class="nb">基本リモート</span><wbr><span class="nb">（月1回程度 </span><wbr><span class="nb">都内近郊で</span><wbr><span class="nb">対面）</span><wbr></span><span class="arr" aria-hidden="true">→</span></a></div>
+  <div class="jt-note" aria-hidden="true"><span>01 / 01</span><span>→ CONTACT</span></div>
+</div></section>
+</main>
+<footer class="ft"><div class="wrap">
+  <a class="big" href="https://samurai-style.tokyo/#contact"><div class="bw"><b>CONTACT</b><canvas id="ftc" aria-hidden="true"></canvas></div><div class="bl"><span>お問い合わせはこちらから</span><span class="arr">→</span></div></a>
+  <div class="low">
+    <a class="lg" href="https://samurai-style.tokyo/" aria-label="Samurai-Style"><img src="img/logo.svg" alt="Samurai-Style"></a>
+    <nav><a href="https://samurai-style.tokyo/privacy-policy">プライバシーポリシー</a><a href="https://samurai-style.tokyo/commercial-transactions">特定商取引法に基づく表記</a></nav>
+    <span>© 2024- samurai-style All Right Reserved.</span>
+  </div>
+</div></footer>
+<span id="meas" aria-hidden="true"></span>
+<script>
+(()=>{
+'use strict';
+const TAU=Math.PI*2,DPR=Math.min(2,window.devicePixelRatio||1);
+const REDUCE=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const clamp=(v,a=0,b=1)=>v<a?a:v>b?b:v,mix=(a,b,t)=>a+(b-a)*t;
+const ss=(a,b,v)=>{const t=clamp((v-a)/(b-a));return t*t*(3-2*t)};
+const ease3=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+function rng(seed){let s=seed%2147483647;if(s<=0)s+=2147483646;return()=>(s=s*16807%2147483647)/2147483647}
+const PP=new Uint8Array(512);{const r=rng(1977),a=[...Array(256).keys()];for(let i=255;i>0;i--){const j=(r()*(i+1))|0;[a[i],a[j]]=[a[j],a[i]]}for(let i=0;i<512;i++)PP[i]=a[i&255]}
+const fd=t=>t*t*t*(t*(t*6-15)+10),lp=(t,a,b)=>a+t*(b-a);
+const gr=(h,x,y,z)=>{h&=15;const u=h<8?x:y,v=h<4?y:(h===12||h===14)?x:z;return((h&1)?-u:u)+((h&2)?-v:v)};
+function N3(x,y,z){let X=Math.floor(x),Y=Math.floor(y),Z=Math.floor(z);x-=X;y-=Y;z-=Z;X&=255;Y&=255;Z&=255;
+  const u=fd(x),v=fd(y),w=fd(z),A=PP[X]+Y,AA=PP[A]+Z,AB=PP[A+1]+Z,B=PP[X+1]+Y,BA=PP[B]+Z,BB=PP[B+1]+Z;
+  return lp(w,lp(v,lp(u,gr(PP[AA],x,y,z),gr(PP[BA],x-1,y,z)),lp(u,gr(PP[AB],x,y-1,z),gr(PP[BB],x-1,y-1,z))),
+             lp(v,lp(u,gr(PP[AA+1],x,y,z-1),gr(PP[BA+1],x-1,y,z-1)),lp(u,gr(PP[AB+1],x,y-1,z-1),gr(PP[BB+1],x-1,y-1,z-1))))}
+const CR=[239,232,216],SGN=[255,90,44],AMB=[242,166,90],INK=[21,21,19];
+const cr=a=>`rgba(239,232,216,${a})`,sg=a=>`rgba(255,90,44,${a})`,am=a=>`rgba(242,166,90,${a})`;
+const rgbMix=(a,b,t,al)=>`rgba(${Math.round(mix(a[0],b[0],t))},${Math.round(mix(a[1],b[1],t))},${Math.round(mix(a[2],b[2],t))},${al})`;
+const MONO='"JetBrains Mono",monospace',JPF='"IBM Plex Sans JP",sans-serif';
+const BEAT=.6;
+
+/* header */
+const hd=document.getElementById('hd');
+document.querySelector('.burger').addEventListener('click',()=>document.body.classList.toggle('mopen'));
+document.querySelectorAll('.ov a').forEach(a=>a.addEventListener('click',()=>document.body.classList.remove('mopen')));
+
+/* 見えているキャンバスだけ描く */
+const pieces=[];
+const io=new IntersectionObserver(es=>{for(const e of es){const p=e.target.__p;if(!p)continue;p.vis=e.isIntersecting;if(p.vis&&!p.ready)size(p)}},{rootMargin:'120px 0px'});
+function piece(c,o){const p=Object.assign({c,ctx:c.getContext('2d'),vis:false,ready:false,w:0,h:0},o);c.__p=p;pieces.push(p);io.observe(c);return p}
+function size(p){const r=p.c.getBoundingClientRect();if(!r.width||!r.height)return;const d=p.dpr||DPR;p.w=r.width;p.h=r.height;p.c.width=Math.round(r.width*d);p.c.height=Math.round(r.height*d);p.ctx.setTransform(d,0,0,d,0,0);p.ready=true;p.init&&p.init(p)}
+let lastW=innerWidth,rz;
+addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{const wc=innerWidth!==lastW;lastW=innerWidth;for(const p of pieces){if(wc||p.anyResize){p.ready=false;if(p.vis)size(p)}}},150)});
+
+/* 進み具合（夕方 17:00 → 夜 24:00） */
+let SP=0;
+const docMax=()=>Math.max(1,document.documentElement.scrollHeight-innerHeight);
+const hm=p=>{const m=Math.round(clamp(p)*420),h=17+Math.floor(m/60);return String(h).padStart(2,'0')+':'+String(m%60).padStart(2,'0')};
+const clkm=document.getElementById('clkm'),clkn=document.getElementById('clkn'),fvt=document.getElementById('fvt');
+let lastHM='';
+const clkEl=document.getElementById('clk');
+function clockUpd(){clkEl.classList.toggle('on',scrollY>innerHeight*.7);clkm.style.top=(SP*100).toFixed(2)+'%';clkn.style.top=(SP*100).toFixed(2)+'%';const s=hm(SP);if(s!==lastHM){lastHM=s;clkn.lastChild.nodeValue=s;fvt.textContent=s}}
+function endTimes(){const M=docMax();document.querySelectorAll('.sh').forEach(sh=>{const e=sh.querySelector('.end');if(!e)return;const y=sh.getBoundingClientRect().top+scrollY-innerHeight*.5;e.textContent=hm(y/M)})}
+
+/* 空：夕方の橙 → 夜の紺。格子は紙と一緒に流れ、星は夜が深まるほど出る */
+const sky=document.getElementById('sky'),sx=sky.getContext('2d');let SW=0,SH=0,STARS=[];
+function skyFit(){const d=Math.min(1.5,DPR);SW=innerWidth;SH=innerHeight;sky.width=Math.round(SW*d);sky.height=Math.round(SH*d);sx.setTransform(d,0,0,d,0,0);
+  const r=rng(9),n=SW<820?90:190;STARS=Array.from({length:n},()=>({x:r()*SW,y:r()*SH*2,s:.45+r()*1.1,tw:r()*TAU,sp:.5+r()*1.5,w:r()<.14,pf:.03+r()*.08}))}
+const KEYS=[[0,[46,30,62],[214,112,72]],[.14,[33,26,60],[150,70,74]],[.36,[20,22,52],[66,44,78]],[.66,[10,16,40],[24,26,58]],[1,[5,7,15],[10,15,38]]];
+function keyAt(p){for(let i=1;i<KEYS.length;i++)if(p<=KEYS[i][0]){const a=KEYS[i-1],b=KEYS[i],t=(p-a[0])/(b[0]-a[0]);return[a[1].map((v,k)=>mix(v,b[1][k],t)),a[2].map((v,k)=>mix(v,b[2][k],t))]}return[KEYS[4][1],KEYS[4][2]]}
+const rgb=(c,a=1)=>`rgba(${c[0]|0},${c[1]|0},${c[2]|0},${a})`;
+function drawSky(t){if(!SW)return;const p=SP,[top,bot]=keyAt(p);
+  const g=sx.createLinearGradient(0,0,0,SH);g.addColorStop(0,rgb(top));g.addColorStop(.6,rgb(top.map((v,k)=>mix(v,bot[k],.3))));g.addColorStop(1,rgb(bot));sx.fillStyle=g;sx.fillRect(0,0,SW,SH);
+  const gl=sx.createRadialGradient(SW*.5,SH*1.1,0,SW*.5,SH*1.1,Math.max(SW,SH)*.7);gl.addColorStop(0,rgb(bot,.5*(1-p)));gl.addColorStop(1,rgb(bot,0));sx.fillStyle=gl;sx.fillRect(0,0,SW,SH);
+  const s=SW<820?28:40,oy=-(scrollY%s);sx.strokeStyle='rgba(239,232,216,.035)';sx.lineWidth=1;sx.beginPath();
+  for(let x=(SW%s)/2;x<SW;x+=s){sx.moveTo(Math.round(x)+.5,0);sx.lineTo(Math.round(x)+.5,SH)}for(let y=oy;y<SH;y+=s){sx.moveTo(0,Math.round(y)+.5);sx.lineTo(SW,Math.round(y)+.5)}sx.stroke();
+  sx.fillStyle='rgba(239,232,216,.15)';const s4=s*4,oy4=-(scrollY%s4);for(let x=(SW%s)/2;x<SW;x+=s4)for(let y=oy4;y<SH;y+=s4)sx.fillRect(Math.round(x)-1,Math.round(y)-1,2,2);
+  const sa=ss(.03,.5,p);if(sa>0)for(const q of STARS){let y=(q.y-scrollY*q.pf)%(SH*2);if(y<0)y+=SH*2;if(y>SH)continue;
+    const a=sa*(.35+.65*(.5+.5*Math.sin(t*1.6*q.sp+q.tw)));sx.fillStyle=q.w?`rgba(255,214,170,${a*.9})`:`rgba(235,240,255,${a*.75})`;sx.beginPath();sx.arc(q.x,y,q.s,0,TAU);sx.fill()}}
+
+/* ===== FV：環境の動画に製図の線（地平線・消失点・パース）を重ねる。線は拍に合わせて跳ねる ===== */
+const fvS=document.getElementById('fv'),fvc=document.getElementById('fvc'),fx=fvc.getContext('2d'),vid=document.getElementById('fvv'),flEl=document.getElementById('fl');
+const hps=[...flEl.querySelectorAll('.hp')],tcEl=document.getElementById('tc'),cutEl=document.getElementById('cut');
+const HZ=[.53,.81,.29];let FW=0,FH=0,hzY=null,lastTC='';
+function fvFit(){const d=Math.min(1.5,DPR);FW=fvS.clientWidth;FH=fvS.clientHeight;fvc.width=Math.round(FW*d);fvc.height=Math.round(FH*d);fx.setTransform(d,0,0,d,0,0)}
+function bump(x,t,cx,spd,amp){let y=0;const k=Math.floor(t/BEAT);
+  for(let j=0;j<4;j++){const n=k-j,age=t-n*BEAT;if(age<0)continue;const acc=(n%4===0)?1:.42,r=age*spd,d=Math.abs(x-cx)-r;y-=Math.exp(-d*d/(2*26*26))*Math.exp(-age*1.5)*acc*amp}
+  return y}
+function drawFV(t){if(!FW)return;const sp=FW<820;fx.clearRect(0,0,FW,FH);
+  let cut=0;if(vid&&vid.duration){const ct=vid.currentTime;cut=Math.min(2,Math.floor(ct/(vid.duration/3)));
+    const f=Math.floor(ct*24),s=Math.floor(ct),tc=`00:00:${String(s).padStart(2,'0')}:${String(f%24).padStart(2,'0')}`;if(tc!==lastTC){lastTC=tc;tcEl.textContent=tc;cutEl.textContent='0'+(cut+1)}}
+  const tgt=FH*HZ[cut];hzY=hzY==null?tgt:mix(hzY,tgt,.07);
+  /* 縁の目盛り */
+  fx.fillStyle='rgba(255,255,255,.42)';const st=sp?14:20;
+  for(let x=0,i=0;x<FW;x+=st,i++){const l=i%10===0?12:i%2===0?6:3;fx.fillRect(Math.round(x),FH-l,1,l)}
+  for(let y=0,i=0;y<FH;y+=st,i++){const l=i%10===0?12:i%2===0?6:3;fx.fillRect(0,Math.round(y),l,1);fx.fillRect(FW-l,Math.round(y),l,1)}
+  /* 消失点からのパース（地平線より下） */
+  const vx=FW*(sp?.62:.66),hy=hzY;fx.lineWidth=1;fx.strokeStyle='rgba(255,236,220,.12)';fx.beginPath();
+  for(let i=-10;i<=10;i++){fx.moveTo(vx,hy);fx.lineTo(vx+i*FW*.16,FH)}
+  for(let k=1;k<=7;k++){const u=Math.pow(k/7,2.1),y=hy+(FH-hy)*u;fx.moveTo(0,y);fx.lineTo(FW,y)}fx.stroke();
+  /* 基準の地平線（点線）と、拍で跳ねる地平線 */
+  fx.setLineDash([2,6]);fx.strokeStyle='rgba(255,255,255,.4)';fx.beginPath();fx.moveTo(0,hy);fx.lineTo(FW,hy);fx.stroke();fx.setLineDash([]);
+  const amp=sp?10:16,spd=FW*.5;fx.beginPath();for(let x=0;x<=FW;x+=3){const y=hy+(REDUCE?0:bump(x,t,vx,spd,amp)*(1+.35*Math.sin(x*.13)));x?fx.lineTo(x,y):fx.moveTo(x,y)}
+  fx.strokeStyle='rgba(255,240,226,.85)';fx.lineWidth=1.1;fx.stroke();
+  /* 消失点：拍の頭で朱が点る */
+  const ph=(t%(BEAT*4))/(BEAT*4),fl=REDUCE?1:Math.max(.25,1-ph*2.4);
+  fx.strokeStyle='rgba(255,255,255,.7)';fx.lineWidth=1;fx.beginPath();fx.moveTo(vx-16,hy);fx.lineTo(vx+16,hy);fx.moveTo(vx,hy-16);fx.lineTo(vx,hy+16);fx.stroke();
+  fx.beginPath();fx.arc(vx,hy,9+(1-fl)*10,0,TAU);fx.strokeStyle=sg(.35*fl);fx.stroke();
+  fx.fillStyle=sg(fl);fx.shadowColor='rgba(255,90,44,.9)';fx.shadowBlur=14*fl;fx.fillRect(vx-4,hy-4,8,8);fx.shadowBlur=0;
+  fx.font=`400 ${sp?9.5:10.5}px ${MONO}`;fx.fillStyle='rgba(255,255,255,.75)';
+  fx.fillText(`HORIZON  y=${(hy/FH).toFixed(2)}`,sp?18:48,hy-9);fx.fillText('VP',vx+12,hy-10);
+  /* fun-loving の下線：同じ拍で左から右へ跳ねる */
+  const fr=fvS.getBoundingClientRect(),r=flEl.getBoundingClientRect(),x0=r.left-fr.left,x1=r.right-fr.left,y0=r.bottom-fr.top-r.height*.04;
+  const bt=t%(BEAT*4);fx.beginPath();for(let x=x0;x<=x1;x+=2){const u=(x-x0)/(x1-x0),d=u-(bt/(BEAT*4))*1.6+.1,b=REDUCE?0:Math.exp(-d*d/.004)*(sp?7:12);const y=y0-b;x===x0?fx.moveTo(x,y):fx.lineTo(x,y)}
+  const lg=fx.createLinearGradient(x0,0,x1,0);lg.addColorStop(0,'rgba(242,166,90,.95)');lg.addColorStop(1,'rgba(255,90,44,1)');fx.strokeStyle=lg;fx.lineWidth=sp?1.6:2.2;fx.stroke();
+  /* 文字も拍の頭で1つずつ跳ねる */
+  hps.forEach((h,i)=>{const u=REDUCE?-1:(t%(BEAT*4))-.05-i*.055;let y=0,wg=250;if(u>0&&u<.42){const s=Math.sin(u/.42*Math.PI);y=-s*.13;wg=250+s*330}
+    h.style.transform=`translateY(${y.toFixed(3)}em)`;h.style.fontVariationSettings=`"opsz" 96,"wdth" 92,"wght" ${wg.toFixed(0)}`})}
+
+/* ===== 節の見出し：細く縮んだ字 → 広く太く（トップと同じ） ===== */
+const meas=document.getElementById('meas');
+const natural=(text,fvs,ls,ff,fw)=>{meas.style.fontFamily=ff||'';meas.style.fontWeight=fw||'';meas.style.fontVariationSettings=fvs;meas.style.letterSpacing=ls;meas.textContent=text;return meas.getBoundingClientRect().width};
+const giants=[...document.querySelectorAll('[data-wd]')];
+const GFIN='"wdth" 151,"wght" 900,"opsz" 144';
+function fitGiants(){giants.forEach(g=>{const W=g.parentElement.clientWidth,t=g.dataset.fitText||g.textContent.trim();
+  if(g.dataset.kind==='jp'){const nw=natural(t,'normal','.02em','"Noto Sans JP",sans-serif','900');g.style.fontSize=(100*W*(W<700?.98:.6)/nw).toFixed(2)+'px'}
+  else g.style.fontSize=(100*W/natural(t,GFIN,'-0.02em')*.99).toFixed(2)+'px'})}
+function drawGiants(){const vh=innerHeight;giants.forEach(g=>{const r=g.getBoundingClientRect(),t=REDUCE?1:clamp((vh-r.top)/(vh*.62));g._p=Math.max(g._p||0,t);const e=ease3(g._p);
+  if(g._e===e)return;g._e=e;if(g.dataset.kind==='jp')g.style.fontWeight=Math.round(100+800*e);else g.style.fontVariationSettings=`"wdth" ${(25+126*e).toFixed(1)},"wght" ${(100+800*e).toFixed(0)},"opsz" 144`})}
+
+/* 灯り：見出しが入ると朱が点る */
+const lio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('lit');lio.unobserve(e.target)}}),{rootMargin:'0px 0px -18% 0px'});
+document.querySelectorAll('.lamp').forEach(l=>lio.observe(l));
+
+/* ===== 図の共通：細い格子 ===== */
+function fine(ctx,w,h,s=20,a=.05){ctx.strokeStyle=cr(a);ctx.lineWidth=1;ctx.beginPath();for(let x=s;x<w;x+=s){ctx.moveTo(Math.round(x)+.5,0);ctx.lineTo(Math.round(x)+.5,h)}for(let y=s;y<h;y+=s){ctx.moveTo(0,Math.round(y)+.5);ctx.lineTo(w,Math.round(y)+.5)}ctx.stroke()}
+const prog=(c,a=.9,b=.3)=>{const r=c.getBoundingClientRect(),vh=innerHeight;return REDUCE?1:clamp((vh*a-r.top)/(r.height*a+vh*b))};
+
+/* FIG.01 私たちは：日本とインドネシアをつなぐ弧 */
+const mapC=document.querySelector('[data-fig="map"]');
+piece(mapC,{anyResize:true,draw(p,t){const {ctx,w,h}=p;ctx.clearRect(0,0,w,h);if(p.t0==null)p.t0=t;const lt=t-p.t0,g=REDUCE?1:ease3(clamp((lt-.3)/2.2));
+  fine(ctx,w,h);
+  const A={x:w*.25,y:h*.32},B={x:w*.74,y:h*.7},C={x:w*.66,y:h*.06};
+  const q=u=>{const v=1-u;return[v*v*A.x+2*v*u*C.x+u*u*B.x,v*v*A.y+2*v*u*C.y+u*u*B.y]};
+  ctx.setLineDash([3,5]);ctx.strokeStyle=cr(.6);ctx.lineWidth=1;ctx.beginPath();const M=80;for(let i=0;i<=M*g;i++){const pt=q(i/M);i?ctx.lineTo(pt[0],pt[1]):ctx.moveTo(pt[0],pt[1])}ctx.stroke();ctx.setLineDash([]);
+  const node=(P,n,lab,dx,dy)=>{const Rm=Math.min(w,h)*.2;for(let k=0;k<2;k++){const rr=REDUCE?Rm*.5:((t*.3+k*.5)%1)*Rm;ctx.strokeStyle=cr(.32*(1-rr/Rm));ctx.beginPath();ctx.arc(P.x,P.y,rr,0,TAU);ctx.stroke()}
+    ctx.strokeStyle=cr(.35);ctx.beginPath();ctx.moveTo(P.x-Rm*.6,P.y);ctx.lineTo(P.x+Rm*.6,P.y);ctx.moveTo(P.x,P.y-Rm*.6);ctx.lineTo(P.x,P.y+Rm*.6);ctx.stroke();
+    for(let i=0;i<n;i++){const a=i/n*TAU+t*.25,rr=13;const on=.55+.45*Math.sin(t*2.2+i*1.7);ctx.fillStyle=cr(.5+.5*on);ctx.fillRect(P.x+Math.cos(a)*rr-3.5,P.y+Math.sin(a)*rr-3.5,7,7)}
+    ctx.font=`500 12px ${MONO}`;ctx.fillStyle=cr(.9);ctx.fillText(lab,P.x+dx,P.y+dy)};
+  node(A,4,'JP',-34,-20);node(B,3,'ID',22,30);
+  if(g>=1){for(let k=0;k<4;k++){let u=((t*.16+k/4)%1);if(k%2)u=1-u;const pt=q(u);ctx.fillStyle=cr(.9);ctx.fillRect(pt[0]-2,pt[1]-2,4,4)}
+    const u=(t*.11)%1,pt=q(u);ctx.fillStyle=sg(1);ctx.shadowColor='rgba(255,90,44,.9)';ctx.shadowBlur=10;ctx.fillRect(pt[0]-3.5,pt[1]-3.5,7,7);ctx.shadowBlur=0}
+  ctx.font=`400 10px ${MONO}`;ctx.fillStyle=cr(.45);const mid=q(.5);ctx.fillText('d',mid[0]+8,mid[1]-6)}});
+
+/* FIG.02 CORE VALUE：奪い合うパイ → 感謝・高揚感・笑顔が加わって円そのものが大きくなる（スクロールで進む） */
+const pieC=document.querySelector('[data-fig="pie"]');
+piece(pieC,{anyResize:true,draw(p,t){const {ctx,w,h}=p;ctx.clearRect(0,0,w,h);fine(ctx,w,h,24,.045);
+  const q=prog(p.c,.95,.35),sp=w<500;
+  const cx=w*(sp?.46:.42),cy=h*.5,R0=Math.min(w,h)*(sp?.17:.19),n=6;
+  const z=1-ss(.22,.38,q),rg=[ss(.36,.52,q),ss(.52,.68,q),ss(.68,.84,q)],L=['感謝','高揚感','笑顔'];
+  const R=R0*(1+.32*(rg[0]+rg[1]+rg[2]));
+  const v=[];let sum=0;for(let i=0;i<n;i++){const x=Math.max(.12,1+1.05*Math.sin(t*1.05+i*2.3));v.push(x);sum+=x}
+  const sh=v.map(x=>(x/sum)*z+(1/n)*(1-z));let win=0;for(let i=1;i<n;i++)if(sh[i]>sh[win])win=i;
+  ctx.lineWidth=1;ctx.setLineDash([3,6]);ctx.strokeStyle=cr(.34);ctx.beginPath();ctx.arc(cx,cy,R0,0,TAU);ctx.stroke();ctx.setLineDash([]);
+  let a=-Math.PI/2+t*.035;const mids=[];
+  for(let i=0;i<n;i++){const a1=a+sh[i]*TAU;
+    if(i===win&&z>.04){ctx.save();ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,R,a,a1);ctx.closePath();ctx.clip();ctx.strokeStyle=cr(.42*z);ctx.lineWidth=.8;ctx.beginPath();for(let d=-R*2.2;d<R*2.2;d+=6){ctx.moveTo(cx+d-R,cy-R);ctx.lineTo(cx+d+R,cy+R)}ctx.stroke();ctx.restore()}
+    ctx.strokeStyle=cr(.55);ctx.lineWidth=.9;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(a)*R,cy+Math.sin(a)*R);ctx.stroke();mids.push((a+a1)/2);a=a1}
+  /* 加わった輪：感謝・高揚感・笑顔 */
+  ctx.font=`500 ${sp?11:12.5}px ${JPF}`;
+  for(let k=0;k<3;k++){if(rg[k]<=0)continue;const rr=R0*(1+.32*(k+1))*mix(.92,1,rg[k]),an=-.5+k*.32;
+    ctx.strokeStyle=am(.55*rg[k]);ctx.lineWidth=1;ctx.beginPath();ctx.arc(cx,cy,rr,-Math.PI/2,-Math.PI/2+TAU*rg[k]);ctx.stroke();
+    const px=cx+Math.cos(an)*rr,py=cy+Math.sin(an)*rr,lx=w-(sp?60:92);ctx.strokeStyle=cr(.4*rg[k]);ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(lx-8,py);ctx.stroke();
+    ctx.fillStyle=am(rg[k]);ctx.fillRect(px-2.5,py-2.5,5,5);ctx.fillStyle=cr(.9*rg[k]);ctx.fillText(L[k],lx,py+4)}
+  ctx.strokeStyle=rgbMix(CR,SGN,rg[2],.9);ctx.lineWidth=1.2+.8*rg[2];ctx.beginPath();ctx.arc(cx,cy,R,0,TAU);ctx.stroke();
+  const pos=mids.map(m=>{const d=R*(1.45*z+1.0*(1-z));return[cx+Math.cos(m)*d,cy+Math.sin(m)*d]});
+  if(z<.98){ctx.strokeStyle=cr(.28*(1-z));ctx.lineWidth=.8;ctx.beginPath();for(let i=0;i<n;i++)for(let j=i+1;j<n;j++){ctx.moveTo(pos[i][0],pos[i][1]);ctx.lineTo(pos[j][0],pos[j][1])}ctx.stroke()}
+  if(z>.02){ctx.strokeStyle=cr(.34*z);ctx.lineWidth=.8;ctx.beginPath();pos.forEach((pp,i)=>{ctx.moveTo(pp[0],pp[1]);ctx.lineTo(cx+Math.cos(mids[i])*R*.62,cy+Math.sin(mids[i])*R*.62)});ctx.stroke()}
+  ctx.fillStyle=cr(.95);pos.forEach(pp=>ctx.fillRect(pp[0]-3.5,pp[1]-3.5,7,7));
+  /* 寸法線：円の大きさ（100 → 196） */
+  const dy=Math.min(h-26,cy+Math.max(R,R0*1.45)+22);ctx.strokeStyle=cr(.5);ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(cx-R,dy);ctx.lineTo(cx+R,dy);ctx.moveTo(cx-R,dy-6);ctx.lineTo(cx-R,dy+6);ctx.moveTo(cx+R,dy-6);ctx.lineTo(cx+R,dy+6);ctx.stroke();
+  ctx.font=`400 10.5px ${MONO}`;ctx.fillStyle=cr(.7);const lab=`Ø ${Math.round(R/R0*100)}`;ctx.fillText(lab,cx-ctx.measureText(lab).width/2,dy+16);
+  ctx.font=`500 ${sp?11:12.5}px ${JPF}`;ctx.fillStyle=cr(.85*z);ctx.fillText('ゼロサム',18,26);ctx.fillStyle=sg(1-z);ctx.fillText('プラスサム',18,26);
+  ctx.fillStyle=cr(.8);ctx.fillRect(cx-2,cy-2,4,4)}});
+
+/* ===== +VALUE：左に固定の線図（Oxide の Hiring Process の作り）。今読んでいる指針の図形だけ動いて朱が点る ===== */
+const GLY=[
+ (ctx,x,y,w,h,t,a)=>{const al=.3+.7*a,base=y+h-5,n=6;ctx.strokeStyle=cr(al*.6);ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x,base+.5);ctx.lineTo(x+w,base+.5);ctx.stroke();
+   for(let k=0;k<n;k++){const cx=x+(k+.5)*w/n,ph=(((t/(BEAT*2))-k*.1)%1+1)%1,hop=Math.pow(Math.sin(ph*Math.PI),.8)*(h-14)*(.1+.9*a),sq=(ph<.05||ph>.95)?1:0,r=3.6;
+     ctx.fillStyle=k===2?rgbMix(CR,SGN,a,1):cr(al);ctx.beginPath();ctx.ellipse(cx,base-r-1-hop,r*(1+sq*.35),r*(1-sq*.3),0,0,TAU);ctx.fill();
+     ctx.fillStyle=cr(al*.3*(1-hop/h));ctx.fillRect(cx-4,base+3,8,1.5)}},
+ (ctx,x,y,w,h,t,a)=>{const al=.3+.7*a,ox=x+4,oy=y+h/2,n=9,L=w*(.5+.5*a);ctx.lineWidth=1;
+   for(let k=0;k<n;k++){ctx.strokeStyle=cr(al*.65);ctx.beginPath();let px=ox,py=oy;ctx.moveTo(px,py);const M=20;
+     for(let j=1;j<=M;j++){const u=j/M;px=ox+u*L;py=clamp(oy+((k/(n-1))-.5)*h*.85*u+N3(k*.7,u*2,t*.35*(.3+a))*h*.55*u,y,y+h);ctx.lineTo(px,py)}ctx.stroke();
+     ctx.fillStyle=k===6?rgbMix(CR,SGN,a,1):cr(al);ctx.fillRect(px-2.5,py-2.5,5,5)}
+   ctx.fillStyle=cr(al);ctx.fillRect(ox-3.5,oy-3.5,7,7)},
+ (ctx,x,y,w,h,t,a)=>{const al=.3+.7*a,n=7,base=y+h-6,e=ease3(a),pts=[];
+   for(let k=0;k<n;k++){const cx=x+(k+.5)*w/n,d=(3-Math.abs(k-3))/3;pts.push([cx,base-d*(h-14)*(1-e)+Math.sin(t*2+k)*1.2*(1-e)])}
+   if(e<.98){ctx.strokeStyle=cr(al*.4*(1-e));ctx.lineWidth=1;ctx.beginPath();for(let k=0;k<n;k++)if(k!==3){ctx.moveTo(pts[3][0],pts[3][1]);ctx.lineTo(pts[k][0],pts[k][1])}ctx.stroke()}
+   ctx.strokeStyle=cr(al*.75*e);ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x,base);ctx.lineTo(x+w,base);ctx.stroke();
+   pts.forEach((q,k)=>{ctx.fillStyle=k===3?rgbMix(CR,SGN,e,1):cr(al);ctx.fillRect(q[0]-4,q[1]-4,8,8)})},
+ (ctx,x,y,w,h,t,a)=>{const al=.3+.7*a,cy=y+h/2,ax=x+w*.16,bx=x+w*.84,e=ease3(a),o=9+e*14,bh=h*.34;ctx.lineWidth=1;ctx.strokeStyle=cr(al*.7);
+   const br=cx=>{ctx.beginPath();ctx.moveTo(cx-o+5,cy-bh);ctx.lineTo(cx-o,cy-bh);ctx.lineTo(cx-o,cy+bh);ctx.lineTo(cx-o+5,cy+bh);ctx.moveTo(cx+o-5,cy-bh);ctx.lineTo(cx+o,cy-bh);ctx.lineTo(cx+o,cy+bh);ctx.lineTo(cx+o-5,cy+bh);ctx.stroke()};
+   br(ax);br(bx);ctx.setLineDash(e>.5?[]:[2,4]);ctx.strokeStyle=cr(al*(.25+.4*e));ctx.beginPath();ctx.moveTo(ax+o+4,cy);ctx.lineTo(bx-o-4,cy);ctx.stroke();ctx.setLineDash([]);
+   ctx.fillStyle=cr(al);ctx.fillRect(ax-5,cy-5,10,10);ctx.fillRect(bx-5,cy-5,10,10);
+   if(e>.05)for(let k=0;k<3;k++){const u=(t*.5+k/3)%1;ctx.fillStyle=cr(e);ctx.fillRect(mix(ax+o,bx-o,u)-1.5,cy-7.5,3,3);ctx.fillStyle=k===0?sg(e):cr(e);ctx.fillRect(mix(bx-o,ax+o,u)-1.5,cy+4.5,3,3)}},
+ (ctx,x,y,w,h,t,a)=>{const al=.3+.7*a,n=8,cy=y+h/2,seg=w/n,r=rng(21);ctx.lineWidth=1.6;ctx.lineCap='round';
+   for(let k=0;k<n;k++){const rx=r(),ry=r(),ra=(r()-.5)*1.6,e=ease3(clamp((a-k*.05)/.6)),
+     x0=x+rx*w*.9+Math.sin(t+k)*3,y0=y+4+ry*(h-8)+Math.cos(t*.8+k)*3,xm=mix(x0,x+(k+.5)*seg,e),ym=mix(y0,cy,e),an=ra*(1-e),len=mix(seg*.6,seg-2,e),dx=Math.cos(an)*len/2,dy=Math.sin(an)*len/2;
+     ctx.strokeStyle=cr(al);ctx.beginPath();ctx.moveTo(xm-dx,ym-dy);ctx.lineTo(xm+dx,ym+dy);ctx.stroke()}
+   ctx.lineCap='butt';if(a>.9){const u=(t*.35)%1;ctx.fillStyle=sg((a-.9)*10);ctx.fillRect(x+u*w-3,cy-10,6,6)}}];
+const VI=[...document.querySelectorAll('.vi')],NAMES=VI.map(v=>v.querySelector('.w').textContent.toUpperCase());
+let VA=0,VAf=0;const vst=[0,0,0,0,0];
+function valUpd(){const vh=innerHeight;let best=0,bd=1e9;VI.forEach((v,i)=>{const r=v.getBoundingClientRect(),d=Math.abs((r.top+Math.min(r.height,vh*.6)*.5)-vh*.45);if(d<bd){bd=d;best=i}});
+  if(best!==VA){VA=best}VI.forEach((v,i)=>v.classList.toggle('on',i===VA))}
+piece(document.getElementById('vlc'),{anyResize:true,draw(p,t){const {ctx,w,h}=p;ctx.clearRect(0,0,w,h);VAf=mix(VAf,VA,.08);
+  const top=24,bot=h-24,n=5,step=(bot-top)/n,s0=8,gx=30,gw=Math.min(230,w*.46),gh=Math.min(88,step*.6);
+  const y0=top+step*.5-gh*.5,y1=top+step*4.5+gh*.5;
+  ctx.lineWidth=1;ctx.strokeStyle=cr(.32);ctx.setLineDash([2,4]);ctx.beginPath();ctx.moveTo(s0,0);ctx.lineTo(s0,y0);ctx.moveTo(s0,y1);ctx.lineTo(s0,h);ctx.stroke();ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(s0,y0);ctx.lineTo(s0,y1);ctx.stroke();
+  const py=top+step*(VAf+.5);ctx.strokeStyle=am(.95);ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(s0,y0);ctx.lineTo(s0,py);ctx.stroke();
+  for(let i=0;i<n;i++){vst[i]=mix(vst[i],i===VA?1:0,REDUCE?1:.06);const cy=top+step*(i+.5),a=vst[i];
+    ctx.strokeStyle=cr(.3+.4*a);ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(s0,cy);ctx.lineTo(gx-8,cy);ctx.stroke();
+    GLY[i](ctx,gx,cy-gh/2,gw,gh,t,a);
+    const ax0=gx+gw+18,ax1=w-44;if(ax1-ax0>30){const col=rgbMix(AMB,SGN,a,.4+.6*a);ctx.strokeStyle=col;ctx.fillStyle=col;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(ax0,cy);ctx.lineTo(ax1,cy);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(ax0,cy);ctx.lineTo(ax0+7,cy-3.5);ctx.lineTo(ax0+7,cy+3.5);ctx.closePath();ctx.fill();
+      ctx.font=`400 11px ${MONO}`;ctx.fillText(`[${i+1}]`,ax1+6,cy+4);ctx.fillStyle=cr(.35+.55*a);ctx.font=`400 10px ${MONO}`;ctx.fillText(NAMES[i],ax0+14,cy-8)}}
+  ctx.fillStyle=sg(1);ctx.shadowColor='rgba(255,90,44,.9)';ctx.shadowBlur=12;ctx.fillRect(s0-4,py-4,8,8);ctx.shadowBlur=0}});
+document.querySelectorAll('canvas.gl').forEach(c=>{const i=+c.dataset.g,v=VI[i];let a=0;piece(c,{anyResize:true,draw(p,t){const {ctx,w,h}=p;ctx.clearRect(0,0,w,h);a=mix(a,v.classList.contains('on')?1:.35,.06);GLY[i](ctx,4,4,w-8,h-8,t,a)}})});
+
+/* ===== 写真：網点から組み上がる（夜の節は明るさで点の大きさ・メンバーは紙に墨の点）。触ると色 ===== */
+function halftone(holder,img,c,mode,seed,onFin){
+  piece(c,{anyResize:true,init(p){p.dots=null;p.st=-1;p.done=false;
+    const go=()=>{try{const pitch=p.w<240?4.2:p.w<520?5:6,cols=Math.floor(p.w/pitch),rows=Math.floor(p.h/pitch);const o=document.createElement('canvas');o.width=cols;o.height=rows;const oc=o.getContext('2d');
+        const iw=img.naturalWidth,ih=img.naturalHeight,s=Math.max(cols/iw,rows/ih),dw=iw*s,dh=ih*s,pos=(img.dataset.pos||'.5,.5').split(',').map(Number);oc.drawImage(img,(cols-dw)*pos[0],(rows-dh)*pos[1],dw,dh);
+        const d=oc.getImageData(0,0,cols,rows).data,r=rng(seed),dots=[],L=new Float32Array(cols*rows);let mn=1,mx=0;
+        for(let q=0;q<cols*rows;q++){L[q]=(d[q*4]*.3+d[q*4+1]*.59+d[q*4+2]*.11)/255;mn=Math.min(mn,L[q]);mx=Math.max(mx,L[q])}
+        if(mode==='light'){for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){const l=clamp((L[j*cols+i]-mn)/Math.max(.2,mx-mn));const rr=Math.pow(l,1.3)*pitch*.48;if(rr<.38)continue;dots.push([i*pitch+pitch/2,j*pitch+pitch/2,rr,r()*p.w,r()*p.h,r()*.5])}}
+        else{let bgL=0,bn=0;for(let j=0;j<4;j++)for(let i=0;i<cols;i++){bgL+=L[j*cols+i];bn++}bgL=bgL/bn-.03;
+          for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){const l=L[j*cols+i],dk=clamp((bgL-l)/Math.max(.2,bgL-mn));if(dk<.07)continue;dots.push([i*pitch+pitch/2,j*pitch+pitch/2,Math.pow(dk,.62)*pitch*.5,r()*p.w,r()*p.h,r()*.5])}}
+        p.dots=dots}catch(e){p.dots=null;img.style.opacity=1}};
+    if(img.complete&&img.naturalWidth)go();else img.addEventListener('load',go,{once:true})},
+   draw(p,t){if(!p.dots||p.done)return;if(p.st<0)p.st=t+(mode==='ink'?.55:0);const {ctx,w,h}=p,k=REDUCE?2:(t-p.st)/1.8;if(k<0)return;ctx.clearRect(0,0,w,h);ctx.beginPath();
+    for(const d of p.dots){const e=ss(d[5],d[5]+.5,k),x=mix(d[3],d[0],e),y=mix(d[4],d[1],e),r=mix(.7,d[2],e);ctx.moveTo(x+r,y);ctx.arc(x,y,r,0,TAU)}
+    ctx.fillStyle=mode==='light'?'rgba(239,232,216,.94)':'rgba(44,30,22,.9)';ctx.fill();if(k>1.12){p.done=true;onFin&&onFin()}}})}
+const POS={'g1.webp':'.5,.62','pool.webp':'.5,.7','team_sofa.webp':'.5,.62','g6.webp':'.5,.5','g4.webp':'.5,.6'};
+document.querySelectorAll('.ph').forEach((ph,i)=>{const img=ph.querySelector('img'),f=img.getAttribute('src').split('/').pop();img.dataset.pos=POS[f]||'.5,.5';const xy=img.dataset.pos.split(',');img.style.objectPosition=`${xy[0]*100}% ${xy[1]*100}%`;
+  img.loading='eager';halftone(ph,img,ph.querySelector('canvas'),'light',40+i);
+  ph.addEventListener('click',()=>ph.classList.toggle('on'));ph.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();ph.classList.toggle('on')}})});
+const mcs=[...document.querySelectorAll('.mc')];let HOV=-1;
+const mio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('lit');mio.unobserve(e.target)}}),{rootMargin:'0px 0px -12% 0px'});
+mcs.forEach((card,ci)=>{const img=card.querySelector('img');img.loading='eager';mio.observe(card);
+  halftone(card,img,card.querySelector('canvas'),'ink',31+ci,()=>card.classList.add('fin'));
+  card.addEventListener('click',()=>{const on=!card.classList.contains('on');mcs.forEach(m=>m.classList.remove('on'));if(on)card.classList.add('on')});
+  card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();card.click()}});
+  card.addEventListener('mouseenter',()=>HOV=ci);card.addEventListener('mouseleave',()=>HOV=-1);card.addEventListener('focus',()=>HOV=ci)});
+/* 網点は「灯り」が点ってから組み上がる */
+pieces.forEach(p=>{const card=p.c.closest('.mc');if(!card)return;const d0=p.draw;p.draw=(pp,t)=>{if(!card.classList.contains('lit'))return;d0(pp,t)}});
+
+/* FIG.04 楽しく働くことの意義：夕方→夜の時間の軸。日々の積み重ねが伸び、利他と利己の線が揃っていく */
+const joyC=document.querySelector('[data-fig="joy"]');
+piece(joyC,{anyResize:true,draw(p,t){const {ctx,w,h}=p;ctx.clearRect(0,0,w,h);fine(ctx,w,h,24,.04);const sp=w<600,q=prog(p.c,.92,.3);
+  const L=sp?40:w*.07,R=w-(sp?16:w*.04),ay=h*(sp?.8:.8),base=h*(sp?.4:.42),qx=L+(R-L)*q;
+  ctx.strokeStyle=cr(.5);ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(L,ay);ctx.lineTo(R,ay);ctx.stroke();
+  const bar=ctx.createLinearGradient(L,0,R,0);bar.addColorStop(0,'rgba(242,140,80,.9)');bar.addColorStop(.5,'rgba(150,80,110,.7)');bar.addColorStop(1,'rgba(60,70,140,.6)');ctx.fillStyle=bar;ctx.fillRect(L,ay+1,R-L,2);
+  ctx.font=`400 ${sp?9.5:10.5}px ${MONO}`;for(let k=0;k<=7;k++){const x=L+(R-L)*k/7;ctx.fillStyle=cr(.55);ctx.fillRect(Math.round(x),ay-6,1,12);if(!sp||k%2===0){ctx.fillStyle=cr(.6);ctx.fillText(`${17+k}:00`,x-(k===7?30:12),ay+22)}
+    if(k<7)for(let m=1;m<4;m++){ctx.fillStyle=cr(.3);ctx.fillRect(Math.round(x+(R-L)/7*m/4),ay-3,1,6)}}
+  const N=sp?35:70;for(let k=0;k<N;k++){const u=(k+.5)/N,x=L+(R-L)*u;if(x>qx)break;const hh=3+Math.pow(u,1.5)*(ay-base)*.55;ctx.fillStyle=cr(.14+.1*u);ctx.fillRect(Math.round(x)-1,ay-6-hh,sp?2:3,hh)}
+  const amp=h*(sp?.05:.055),sep=h*(sp?.15:.17);const Y=(u,which)=>{const sv=(1-ss(.1,.82,u))*sep,ph=which?Math.PI*(1-ss(.05,.78,u)):0;return base+(which?sv:-sv)+Math.sin(u*(sp?10:16)+t*.9+ph)*amp*(1-u*.45)};
+  [[0,cr(.9)],[1,am(.95)]].forEach(([wch,col])=>{ctx.strokeStyle=col;ctx.lineWidth=1.3;ctx.beginPath();for(let x=L;x<=qx;x+=2){const y=Y((x-L)/(R-L),wch);x===L?ctx.moveTo(x,y):ctx.lineTo(x,y)}ctx.stroke();
+    if(q>0){const yq=Y((qx-L)/(R-L),wch);ctx.fillStyle=col;ctx.fillRect(qx-3,yq-3,6,6)}});
+  ctx.font=`500 ${sp?11:12.5}px ${JPF}`;ctx.fillStyle=cr(.9);ctx.fillText('利他',sp?4:L-44,Y(0,0)+4);ctx.fillStyle=am(1);ctx.fillText('利己',sp?4:L-44,Y(0,1)+4);
+  const mu=.86;if(q>mu){const x=L+(R-L)*mu,y=Y(mu,0),pu=(t*.6)%1,e=ss(mu,mu+.06,q);ctx.strokeStyle=sg((1-pu)*e);ctx.beginPath();ctx.arc(x,y,6+pu*26,0,TAU);ctx.stroke();ctx.fillStyle=sg(e);ctx.shadowColor='rgba(255,90,44,.9)';ctx.shadowBlur=12;ctx.fillRect(x-4.5,y-4.5,9,9);ctx.shadowBlur=0;
+    ctx.setLineDash([2,4]);ctx.strokeStyle=cr(.35*e);ctx.beginPath();ctx.moveTo(x,y+10);ctx.lineTo(x,ay-6);ctx.stroke();ctx.setLineDash([])}}});
+
+/* FIG.05 MEMBER：7人の星座。全員が全員と線でつながる（上下のない関係） */
+const teamC=document.querySelector('[data-fig="team"]'),MN=mcs.map(m=>m.querySelector('h3').textContent);
+const SPC=[[.1,.36],[.2,.7],[.3,.26],[.38,.58],[.62,.4],[.75,.72],[.88,.34]],SPS=[[.08,.16],[.3,.38],[.06,.58],[.34,.76],[.6,.22],[.62,.52],[.66,.86]];
+piece(teamC,{anyResize:true,init(p){p.t0=null},draw(p,t){const {ctx,w,h}=p;ctx.clearRect(0,0,w,h);fine(ctx,w,h,24,.035);if(p.t0==null)p.t0=t;const g=REDUCE?1:ease3(clamp((t-p.t0-.2)/2.4)),sp=w<600;
+  const S=(sp?SPS:SPC).map(([x,y],i)=>[x*w+Math.sin(t*.4+i*2)*2,y*h+Math.cos(t*.33+i)*2]);
+  ctx.lineWidth=1;for(let i=0;i<7;i++)for(let j=i+1;j<7;j++){const hl=HOV===i||HOV===j,u=clamp(g*1.4-(i+j)/14*.4);if(u<=0)continue;
+    ctx.strokeStyle=hl?sg(.75):cr(.13);ctx.beginPath();ctx.moveTo(S[i][0],S[i][1]);ctx.lineTo(mix(S[i][0],S[j][0],u),mix(S[i][1],S[j][1],u));ctx.stroke()}
+  ctx.font=`400 ${sp?9.5:10.5}px ${MONO}`;
+  S.forEach(([x,y],i)=>{const hl=HOV===i,tw=.6+.4*Math.sin(t*1.7+i*1.9),r=hl?10:5+2*tw;
+    ctx.strokeStyle=hl?sg(.9):cr(.5*tw);ctx.beginPath();ctx.moveTo(x-r,y);ctx.lineTo(x+r,y);ctx.moveTo(x,y-r);ctx.lineTo(x,y+r);ctx.stroke();
+    ctx.fillStyle=hl?sg(1):cr(.95);if(hl){ctx.shadowColor='rgba(255,90,44,.9)';ctx.shadowBlur=14}ctx.fillRect(x-3,y-3,6,6);ctx.shadowBlur=0;
+    ctx.fillStyle=hl?cr(1):cr(.62);const lab=`${String(i+1).padStart(2,'0')} ${MN[i]}`,lw=ctx.measureText(lab).width;ctx.fillText(lab,Math.min(w-lw-8,x+10),y-10)})}});
+teamC.addEventListener('pointermove',e=>{const r=teamC.getBoundingClientRect(),sp=r.width<600,S=(sp?SPS:SPC);let b=-1,bd=40*40;S.forEach(([x,y],i)=>{const d=(x*r.width-(e.clientX-r.left))**2+(y*r.height-(e.clientY-r.top))**2;if(d<bd){bd=d;b=i}});HOV=b});
+teamC.addEventListener('pointerleave',()=>HOV=-1);
+
+/* ===== フッター：CONTACT を横線の束で描き、乗せると揃って朱に（トップと同じ） ===== */
+const big=document.querySelector('.big'),bigB=big.querySelector('b');let bigHov=0;
+big.addEventListener('mouseenter',()=>bigHov=1);big.addEventListener('mouseleave',()=>bigHov=0);
+piece(document.getElementById('ftc'),{anyResize:true,
+ init(p){p.runs=null;const build=()=>{const cs=getComputedStyle(bigB),fs=parseFloat(cs.fontSize);const o=document.createElement('canvas');o.width=Math.ceil(p.w);o.height=Math.ceil(p.h);const oc=o.getContext('2d');
+    oc.font=`700 ${fs}px "Space Grotesk"`;oc.letterSpacing=cs.letterSpacing;oc.textBaseline='alphabetic';oc.fillStyle='#000';
+    const m=oc.measureText('CONTACT'),asc=m.actualBoundingBoxAscent||fs*.7,desc=m.actualBoundingBoxDescent||0;oc.fillText('CONTACT',0,(p.h+asc-desc)/2);
+    const d=oc.getImageData(0,0,o.width,o.height).data,gap=p.w<600?4:6,runs=[];
+    for(let y=Math.floor(gap/2);y<o.height;y+=gap){let s=-1;for(let x=0;x<=o.width;x++){const on=x<o.width&&d[(y*o.width+x)*4+3]>110;if(on&&s<0)s=x;if(!on&&s>=0){runs.push([s,x,y]);s=-1}}}
+    p.runs=runs;p.al=0};
+  (document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(build)},
+ draw(p,t){if(!p.runs)return;const {ctx,w,h}=p;ctx.clearRect(0,0,w,h);p.al=mix(p.al,bigHov?1:0,.08);const J=(1-p.al)*(w<600?5:9);
+  ctx.lineWidth=w<600?2:2.6;ctx.strokeStyle=rgbMix(CR,SGN,p.al,1);ctx.beginPath();
+  for(const r of p.runs){const n=N3(r[2]*.02,t*.45,r[0]*.0015),dx=n*J;ctx.moveTo(r[0]+dx,r[2]);ctx.lineTo(r[1]+dx,r[2])}ctx.stroke()}});
+
+/* ===== 回す ===== */
+let T=0,prev=performance.now(),fvVis=true;
+new IntersectionObserver(es=>{fvVis=es[0].isIntersecting}).observe(fvS);
+function frame(now){requestAnimationFrame(frame);const dt=Math.max(0,Math.min(.05,(now-prev)/1000));prev=now;if(!REDUCE)T+=dt;
+  SP=clamp(scrollY/docMax());hd.classList.toggle('solid',scrollY>40);
+  drawSky(T);clockUpd();if(fvVis)drawFV(T);drawGiants();valUpd();
+  for(const p of pieces)if(p.vis&&p.ready){try{p.draw(p,T)}catch(e){console.warn(e)}}}
+document.querySelectorAll('.fvh .ln').forEach((ln,i)=>ln.querySelectorAll('.ch').forEach((c,j)=>{c.style.transitionDelay=(0.25+i*0.22+j*0.035)+'s'}));
+const start=()=>{skyFit();fvFit();fitGiants();giants.forEach(g=>g._e=-1);drawGiants();endTimes()};
+start();requestAnimationFrame(frame);
+(document.fonts?document.fonts.ready:Promise.resolve()).then(()=>{start();requestAnimationFrame(()=>document.body.classList.add('ready'))});
+addEventListener('load',start);
+let rt2;addEventListener('resize',()=>{clearTimeout(rt2);rt2=setTimeout(start,150)});
+})();
+
+</script>
+</body>
+</html>
