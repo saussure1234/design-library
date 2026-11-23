@@ -28,7 +28,7 @@ const MOODS = [
 ];
 
 export const SND = (() => {
-  let ctx = null, on = false, want = false, peopleV = null, peopleBus = null, hiss, radioN = null, radioO = null, radioG = null, master, music, sfx, verb, padF, voices = [], sub, wind, windF, whoosh, whooshF, sig, sigG, nbuf;
+  let ctx = null, on = false, want = false, nature = null, nextBird = 0, peopleV = null, peopleBus = null, hiss, radioN = null, radioO = null, radioG = null, master, music, sfx, verb, padF, voices = [], sub, wind, windF, whoosh, whooshF, sig, sigG, nbuf;
   let chord = -1, mood = MOODS[0], nextBeat = 0, beat = 0, padG, lastTick = 0, nextPing = 0, st = { noise: 1, travel: 0, vel: 0, dawn: 0, fv: 1, day: 0, tv: 0 };
   const btn = document.getElementById('snd');
   const lab = btn && btn.querySelector('.st');
@@ -123,6 +123,17 @@ export const SND = (() => {
       peopleV.push({ hg, rg, robot: false });
     }
   }
+  function bird() {
+    const at = ctx.currentTime, n = 2 + (Math.random() * 4 | 0), base = 2600 + Math.random() * 1600;
+    for (let i = 0; i < n; i++) {
+      const o = ctx.createOscillator(), g = ctx.createGain(), p = ctx.createStereoPanner ? ctx.createStereoPanner() : null; o.type = 'sine';
+      const t0 = at + i * (0.11 + Math.random() * 0.06), f = base * (0.9 + Math.random() * 0.3);
+      o.frequency.setValueAtTime(f, t0); o.frequency.exponentialRampToValueAtTime(f * (1.25 + Math.random() * 0.4), t0 + 0.05); o.frequency.exponentialRampToValueAtTime(f * 0.85, t0 + 0.09);
+      g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(0.03, t0 + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.1);
+      if (p) { p.pan.value = Math.random() * 1.6 - 0.8; o.connect(g); g.connect(p); p.connect(nature); } else { o.connect(g); g.connect(nature); }
+      o.start(t0); o.stop(t0 + 0.12);
+    }
+  }
   function kick(at, peak) {
     const o = ctx.createOscillator(), g = ctx.createGain(); o.type = 'sine';
     o.frequency.setValueAtTime(92, at); o.frequency.exponentialRampToValueAtTime(38, at + 0.22);
@@ -173,6 +184,10 @@ export const SND = (() => {
       radioG.gain.setTargetAtTime(0.06 * Math.max(near * 0.5 * (1 - lock), lock) * v, t, 0.15);
       if (v > 0.3 && Math.random() < 0.3 * (1 - lock)) burst(0.02 + Math.random() * 0.04, 0.008, 'highpass', 2500 + Math.random() * 4000, 1);
     },
+    // テレビが乱れる「プシュッ」：短い雑音が下へ落ちる
+    psh(k = 1) { if (!on) return; const s = ctx.createBufferSource(); s.buffer = nbuf; s.playbackRate.setValueAtTime(1.6, ctx.currentTime); s.playbackRate.exponentialRampToValueAtTime(0.35, ctx.currentTime + 0.22);
+      const fl = ctx.createBiquadFilter(); fl.type = 'bandpass'; fl.Q.value = 1.4; fl.frequency.setValueAtTime(3200, ctx.currentTime); fl.frequency.exponentialRampToValueAtTime(500, ctx.currentTime + 0.25);
+      const g = ctx.createGain(); s.connect(fl); fl.connect(g); g.connect(sfx); env(g, 0.004, 0.09 * k, 0.26); s.start(ctx.currentTime, Math.random()); s.stop(ctx.currentTime + 0.35); },
     // テレビの壁を光の波が走る
     wave() { if (!on || st.tv < 0.3) return; tone(220, 'sine', 0.05, 0.25, 1.4, music, 440); burst(0.04, 0.9, 'bandpass', 1200, 0.6); },
     scene(i) { if (ctx) setChord(i); },
@@ -186,7 +201,20 @@ export const SND = (() => {
       hiss.g.gain.setTargetAtTime(0.05 * st.tv, t, 0.3);
       sigG.gain.setTargetAtTime(0.018 * (1 - st.noise) * st.fv, t, 0.4);
       padF.frequency.setTargetAtTime(mood.f + 1400 * st.dawn, t, 0.8);
-      music.gain.setTargetAtTime(0.9 - 0.45 * st.day, t, 0.8);
+      music.gain.setTargetAtTime(0.9 - 0.78 * st.day, t, 0.8);   // 紙の節では宇宙の音を下げる
+      // 紙の節（特徴から下）：地球の音＝風・小川・ときどき鳥（かすかに）
+      if (st.day > 0.02 && !nature) {
+        nature = ctx.createGain(); nature.gain.value = 0; nature.connect(master);
+        const wnd = loopNoise(0.5, 'lowpass', 420, 0.4); wnd.g.connect(nature);
+        const wl = ctx.createOscillator(), wg = ctx.createGain(); wl.frequency.value = 0.08; wg.gain.value = 0.35; wl.connect(wg); wg.connect(wnd.g.gain); wl.start();
+        const brk = loopNoise(0.18, 'bandpass', 2400, 1.6); brk.g.connect(nature);
+        const bl = ctx.createOscillator(), bg = ctx.createGain(); bl.type = 'triangle'; bl.frequency.value = 7.3; bg.gain.value = 0.08; bl.connect(bg); bg.connect(brk.g.gain); bl.start();
+        const bl2 = ctx.createOscillator(), bg2 = ctx.createGain(); bl2.frequency.value = 0.9; bg2.gain.value = 900; bl2.connect(bg2); bg2.connect(brk.fl.frequency); bl2.start();
+      }
+      if (nature) {
+        nature.gain.setTargetAtTime(0.11 * st.day, t, 1.2);
+        if (st.day > 0.5 && t > nextBird) { nextBird = t + 3 + Math.random() * 7; bird(); }
+      }
       // ときどき鳴る小さな音（和音の上の五音音階）
       // 刻み：鼓動と分散和音（少し先まで予約）
       if (mood.bpm && st.day < 0.5) {

@@ -453,7 +453,7 @@ let h1T0 = -1, h1Idx = 0, h1Cyc = -1;
 const h1vp = mkGlow(9, 0xdfe8ff, 0); h1vp.position.set(6 - 1.9, 1.2, -58 - (SP ? 11 : 14) * 3.1 - 2); scene.add(h1vp);
 
 // ---------- 場面2：無数に枝分かれする光の線の森（青灰の線） ----------
-const forestU = { uTime: U.time, uGrow: { value: 0 }, uFogC: U.fogCol, uFogD: U.fogD };
+const forestU = { uTime: U.time, uGrow: { value: 0 }, uVis: { value: 1 }, uFogC: U.fogCol, uFogD: U.fogD };
 let fGrowT = 0;
 {
   // 枝分かれは止まらない：初期の木（線の途中から生える・離れて見る構図）のまま、世代を重ねて膨らみ続ける（So 11/24）
@@ -485,21 +485,21 @@ let fGrowT = 0;
     transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, uniforms: forestU,
     vertexShader: `attribute float aOrd; attribute float aHi; varying float vO; varying float vH; varying float vD;
       void main(){ vO=aOrd; vH=aHi; vec4 mv=modelViewMatrix*vec4(position,1.); vD=-mv.z; gl_Position=projectionMatrix*mv; }`,
-    fragmentShader: `varying float vO; varying float vH; varying float vD; uniform float uGrow, uTime; ${fogGLSL}
+    fragmentShader: `varying float vO; varying float vH; varying float vD; uniform float uGrow, uTime, uVis; ${fogGLSL}
       void main(){ if(vO>uGrow) discard;
         float tip=smoothstep(uGrow-.12,uGrow,vO);
         float pulse=pow(max(0.,sin(vO*34.-uTime*3.)),18.);
         vec3 c=mix(vec3(.40,.52,.74),vec3(.86,.92,1.),vH);
         float a=(.30+.45*(1.-vO))*(1.+tip*2.2+pulse*1.6)*(.65+vH*1.2)*.85;
-        gl_FragColor=vec4(c*a*(1.-fogF(vD)),1.); }`,
+        gl_FragColor=vec4(c*a*(1.-fogF(vD))*uVis,1.); }`,
   });
   const ls = new THREE.LineSegments(g, m); ls.frustumCulled = false; scene.add(fx(ls));
   const tg = new THREE.BufferGeometry(); const tp = new Float32Array(tips.length * 3); tips.forEach((p, i) => tp.set([p.x, p.y, p.z], i * 3));
   tg.setAttribute('position', new THREE.BufferAttribute(tp, 3)); tg.setAttribute('aOrd', new THREE.Float32BufferAttribute(tipOrd, 1));
   const tm = new THREE.ShaderMaterial({
     transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, uniforms: { ...forestU, uPx: U.px },
-    vertexShader: `attribute float aOrd; uniform float uGrow, uPx; varying float vA; varying float vD; void main(){ vec4 mv=modelViewMatrix*vec4(position,1.); gl_Position=projectionMatrix*mv; vD=-mv.z;
-      vA=smoothstep(uGrow-.02,uGrow-.1,aOrd); gl_PointSize=max(1.,uPx*.05/vD); }`,
+    vertexShader: `attribute float aOrd; uniform float uGrow, uPx, uVis; varying float vA; varying float vD; void main(){ vec4 mv=modelViewMatrix*vec4(position,1.); gl_Position=projectionMatrix*mv; vD=-mv.z;
+      vA=smoothstep(uGrow-.02,uGrow-.1,aOrd)*uVis; gl_PointSize=max(1.,uPx*.05/vD); }`,
     fragmentShader: `varying float vA; varying float vD; ${fogGLSL} void main(){ float r=length(gl_PointCoord-.5); gl_FragColor=vec4(vec3(.68,.78,.95)*smoothstep(.5,0.,r)*vA*1.4*(1.-fogF(vD)),1.); }`,
   });
   const tpt = new THREE.Points(tg, tm); tpt.frustumCulled = false; scene.add(fx(tpt));
@@ -538,10 +538,19 @@ const tvs = { list: [], parts: [], scrU: null };
     tvs.list.push({ p, s, q, out: off.lengthSq() > 1e-4 ? off.normalize() : randDir(), outD: rr(14, 34), ax: randDir(), sp: hero ? 0 : rr(-0.06, 0.06), ph: rnd() * 6, v: tvs.list.length % variants.length, k: 0,
       d: Math.hypot(sd.x, sd.y * 0.66), st: { k: hero ? 0 : (rnd() < 0.85 ? 0 : -1), until: 0, tr: 0, trT: 0, next: 0, wave: 0 } });
   };
-  push(T[3].clone(), dW * 0.27 / tvW, wq.clone(), true);
-  const cnt = SP ? 46 : 78; let tries = 0;
-  while (tvs.list.length < cnt + 1 && tries++ < 5000) {
-    const z = rr(-34, 3);                                   // 正面のテレビの面からの奥行き（＋が手前）
+  push(T[3].clone(), dW * 0.24 / tvW, wq.clone(), true);
+  // 番組を流すテレビ：主役＋4台を無造作に（So 11/24「5台ぐらい、それぞれ違う番組」）
+  const SHOWN = [[-0.58, -0.2, -2.5, 0.16, 0.55, 0.1], [0.36, 0.34, -7, 0.15, -0.4, -0.12], [-0.42, 0.33, -11, 0.13, 0.25, 0.18], [0.5, -0.36, -4, 0.15, -0.6, -0.05]];
+  for (const [x, y, z, w, ry, rz] of SHOWN) {
+    const p = T[3].clone().addScaledVector(R, x * dW * (SP ? 0.7 : 1)).addScaledVector(Up, y * dW).addScaledVector(N, z);
+    push(p, w * dW / tvW, wq.clone().multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(rr(-.12, .12), ry, rz))), false);
+    tvs.list[tvs.list.length - 1].show = true; tvs.list[tvs.list.length - 1].sp = rr(-0.015, 0.015);
+  }
+  tvs.list[0].show = true;
+  // 奥にまばらに散る砂嵐のテレビ（奥行きのため）
+  const cnt = SP ? 12 : 18; let tries = 0;
+  while (tvs.list.length < cnt + 5 && tries++ < 5000) {
+    const z = rr(-36, -16);                                 // 正面のテレビの面からの奥行き（＋が手前）
     const spread = 7 + Math.max(0, -z) * 0.75;
     const x = rr(-spread, spread) * 1.25, y = rr(-spread, spread) * 0.72;
     if (z > -4 && Math.abs(x) < dW * 0.6 && Math.abs(y) < dW * 0.42) continue;   // 主役の前をふさがない
@@ -603,14 +612,24 @@ const tvs = { list: [], parts: [], scrU: null };
     body.frustumCulled = scr.frustumCulled = gl.frustumCulled = false;
     scene.add(body, scr, gl);
     tvs.parts.push({ items, meshes: [body, scr, gl], aSt });
-    if (items.includes(tvs.list[0])) tvs.heroScr = vt.s;
+    tvs.scrGeo = tvs.scrGeo || []; tvs.scrGeo[vi] = vt.s;
   });
 }
 // 主役のテレビの画面：昔のカートゥーン調の番組を次々に流す（絵と音は tvshow.js）
-const tvShow = createTVShow({ width: 640, height: 480 });
-const tvTex = new THREE.CanvasTexture(tvShow.canvas); tvTex.colorSpace = THREE.SRGBColorSpace; tvTex.anisotropy = 4; tvTex.flipY = false;   // 画面の UV が上下逆なので戻す
-const tvShowMesh = new THREE.Mesh(tvs.heroScr, new THREE.MeshBasicMaterial({ map: tvTex, toneMapped: false, fog: false, polygonOffset: true, polygonOffsetFactor: -4, polygonOffsetUnits: -4 }));
-tvShowMesh.matrixAutoUpdate = false; tvShowMesh.frustumCulled = false; scene.add(tvShowMesh);
+// 番組を流す5台：それぞれ別の番組。ときどき画面が乱れて「プシュッ」
+const noiseTex = (() => { const c = document.createElement('canvas'); c.width = 160; c.height = 120; const x = c.getContext('2d'); const d = x.createImageData(160, 120);
+  for (let i = 0; i < d.data.length; i += 4) { const v = 40 + Math.random() * 215 | 0; d.data[i] = v * .9; d.data[i + 1] = v * .95; d.data[i + 2] = v; d.data[i + 3] = 255; } x.putImageData(d, 0, 0);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.wrapS = t.wrapT = THREE.RepeatWrapping; return t; })();
+const shows = tvs.list.filter((v) => v.show).map((v, i) => {
+  const hero = v === tvs.list[0];
+  const show = createTVShow(hero ? { width: 640, height: 480 } : { width: 320, height: 240 });
+  const tex = new THREE.CanvasTexture(show.canvas); tex.colorSpace = THREE.SRGBColorSpace; tex.flipY = false;   // 画面の UV が上下逆なので戻す
+  const mat = new THREE.MeshBasicMaterial({ map: tex, toneMapped: false, fog: false, polygonOffset: true, polygonOffsetFactor: -4, polygonOffsetUnits: -4 });
+  const mesh = new THREE.Mesh(tvs.scrGeo[v.v], mat); mesh.matrixAutoUpdate = false; mesh.frustumCulled = false; scene.add(mesh);
+  v.showMesh = mesh;
+  return { v, show, tex, mat, mesh, hero, gl: 0, next: 1 + Math.random() * 3, lvl: hero ? 1 : 0.38 };
+});
+const tvShowMesh = shows[0].mesh;
 const tmpQ = new THREE.Quaternion(), tmpM = new THREE.Matrix4(), tmpS = new THREE.Vector3(), tmpP = new THREE.Vector3();
 const TV_KINDS = [...Array(23).fill(0), 1, 1, 1, 1, 2, 2, 3, 3, 4, 5];
 const tvPick = () => TV_KINDS[(Math.random() * TV_KINDS.length) | 0];
@@ -627,7 +646,7 @@ function updateTVs(t, Ps = 3) {
       tmpP.copy(v.p).addScaledVector(v.out, o * v.outD); tmpP.y += Math.sin(t * 0.4 + v.ph) * (v.sp ? 0.25 : 0.03);
       tmpM.compose(tmpP, tmpQ, tmpS.setScalar(v.s));
       for (const m of part.meshes) m.setMatrixAt(v.k, tmpM);
-      if (v === tvs.list[0]) { tvShowMesh.matrix.copy(tmpM); tvShowMesh.matrixWorldNeedsUpdate = true; }
+      if (v.showMesh) { v.showMesh.matrix.copy(tmpM); v.showMesh.matrixWorldNeedsUpdate = true; }
       if (doSt) {
         const s = v.st, hero = v === tvs.list[0];
         if (!hero && !s.tr && now > s.until && Math.random() < 0.03) { const nk = tvPick(); if (nk !== s.k) { s.tr = nk === 1 ? 1 : (s.k === 1 ? 2 : 3); s.trT = now; s.next = nk; } s.until = now + 1200 + Math.random() * 3800; }
@@ -1250,12 +1269,20 @@ function frame() {
   // 場面2：枝が伸びる
   { const in2 = Math.abs(Ps - 2) < 0.75; const base = sstep(-0.45, 0.4, Ps - 2) * 0.32;   // ×2.2 で初期の木（世代8/11≒0.7）まで
     if (in2) fGrowT += dt / 80;                       // 着いた時は初期の木の大きさ、そこから約80秒で画面が埋まる
-    forestU.uGrow.value = Math.min(1.02, base * 2.2 + fGrowT * 0.32) * (Ps > 1.2 ? 1 : 0); }
+    forestU.uGrow.value = Math.min(1.02, base * 2.2 + fGrowT * 0.32) * (Ps > 1.2 ? 1 : 0); forestU.uVis.value = 1 - sstep(0.75, 1.05, Math.abs(Ps - 2.3)); }
   // 場面3：テレビ
   if (Math.abs(Ps - 3) < 1.6) updateTVs(t, Ps);
-  { const near3 = Math.abs(Ps - 3) < 1.2; tvShowMesh.visible = near3;
-    const d3 = Math.abs(Ps - 3.55); tvShow.setLevel(near3 ? Math.max(1 - sstep(0.12, 0.4, d3), 0.06 * (1 - sstep(0.6, 1.1, d3))) : 0);
-    if (near3) { tvShow.update(t, dt); tvTex.needsUpdate = true; } }
+  { const near3 = Math.abs(Ps - 3) < 1.2, d3 = Math.abs(Ps - 3.55), lv = near3 ? Math.max(1 - sstep(0.12, 0.4, d3), 0.06 * (1 - sstep(0.6, 1.1, d3))) : 0;
+    for (const sh of shows) {
+      sh.mesh.visible = near3; sh.show.setLevel(lv * sh.lvl);
+      if (!near3) continue;
+      sh.acc = (sh.acc || 0) + dt; if (!sh.hero && sh.acc < (SP ? 1 / 12 : 1 / 24)) continue;   // 小さい画面は描き直しを間引く
+      sh.show.update(t + sh.v.ph * 7, sh.acc); sh.acc = 0; sh.tex.needsUpdate = true;
+      // ときどき乱れる：砂嵐に切り替わり、横にずれ、「プシュッ」
+      sh.next -= dt; if (sh.next < 0) { sh.next = 1.5 + Math.random() * 4.5; sh.gl = 0.12 + Math.random() * 0.25; if (lv > 0.3) SND.psh(sh.hero ? 1 : 0.5); }
+      if (sh.gl > 0) { sh.gl -= dt; sh.mat.map = noiseTex; noiseTex.offset.set(Math.random(), Math.random()); sh.mat.color.setScalar(0.55 + Math.random() * 0.4); }
+      else { sh.mat.map = sh.tex; sh.mat.color.setScalar(1); }
+    } }
   tvs.scrU.uOn.value = 0.25 + 0.75 * sstep(-0.4, 0.3, Ps - 3);
   // 場面4（案B）：着いたら時間で目盛りが探り、約4.5秒で合う
   { const at4 = Math.abs(Ps - 4.55) < 0.32; const vis4 = 1 - sstep(0.55, 0.95, Math.abs(Ps - 4.5));
