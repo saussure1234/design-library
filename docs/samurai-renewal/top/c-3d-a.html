@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="data:,">
+<title>サムライスタイル | Find the signal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..600&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+JP:wght@400;500;600&family=Noto+Serif+JP:wght@500;600&display=swap" rel="stylesheet">
+<script type="importmap">
+{"imports":{
+  "three":"https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js",
+  "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/"
+}}
+</script>
+<style>
+:root{
+  --pad:clamp(18px,3.4vw,52px);
+  --ink:#151513;--navy:#0a1126;--deep:#04060e;--sig:#ef4519;--core:#c8efff;
+  --fg:#eef1fb;--fg2:rgba(238,241,251,.62);--line:rgba(200,239,255,.22);
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --jp:"IBM Plex Sans JP","Hiragino Sans",sans-serif;
+  --min:"Noto Serif JP","Hiragino Mincho ProN","Yu Mincho",serif;
+  --disp:"Bricolage Grotesque","Inter Tight",sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:auto}
+body{margin:0;background:var(--deep);color:var(--fg);font-family:var(--jp);font-size:16px;line-height:1.9;-webkit-font-smoothing:antialiased;overflow-x:hidden;overflow-x:clip;line-break:strict}
+a{color:inherit;text-decoration:none}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.nb{display:inline-block}
+
+/* ===== 3D の画面 ===== */
+#gl{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0;outline:none}
+.fallback{position:fixed;inset:0;z-index:0;display:none;background:
+  radial-gradient(60% 50% at 70% 40%,rgba(80,110,200,.22),transparent 70%),
+  radial-gradient(40% 40% at 25% 70%,rgba(239,69,25,.08),transparent 70%),
+  linear-gradient(180deg,#05070f,#0a1126 60%,#04060e)}
+.fallback i{position:absolute;inset:0;background-image:radial-gradient(1px 1px at 20% 30%,#fff,transparent),radial-gradient(1px 1px at 70% 20%,#cfe,transparent),radial-gradient(1.5px 1.5px at 40% 80%,#fff,transparent),radial-gradient(1px 1px at 85% 65%,#fff,transparent),radial-gradient(1px 1px at 10% 90%,#dff,transparent),radial-gradient(1px 1px at 55% 45%,#fff,transparent);background-size:340px 340px;opacity:.7}
+html.nogl .fallback{display:block}
+html.nogl #gl,html.nogl #loader{display:none}
+html.nogl .card,html.nogl #sthead .sh{opacity:1}
+html.nogl #fv h1.sr{position:absolute;left:50%;top:34%;transform:translate(-50%,-50%);width:auto;height:auto;clip:auto;overflow:visible;margin:0;font:200 clamp(56px,9vw,150px)/1 var(--disp);font-variation-settings:"opsz" 96,"wdth" 85;letter-spacing:-.03em;color:#fff;white-space:nowrap}
+html.nogl .hud{display:none}
+
+/* ===== 読み込み ===== */
+#loader{position:fixed;inset:0;z-index:50;background:var(--deep);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;font:500 12px/1 var(--mono);letter-spacing:.2em;color:var(--fg2);transition:opacity 1.2s ease}
+#loader b{font-weight:500;color:var(--fg);letter-spacing:.32em}
+#loader.done{opacity:0;pointer-events:none}
+
+/* ===== ヘッダー（本線と同じ項目） ===== */
+.hd{position:fixed;top:0;left:0;right:0;z-index:30;display:flex;align-items:center;justify-content:space-between;padding:16px var(--pad);font-family:"Inter Tight","Noto Sans JP",sans-serif;font-size:15px;font-weight:500;line-height:1.4}
+.logo{display:block;height:40px}
+.logo img{height:100%;width:auto;display:block;filter:invert(1)}
+.nav{display:flex;align-items:center;gap:6px}
+.nav a{padding:10px 14px;border-radius:99px;transition:background .3s;color:#fff}
+.nav a:hover{background:rgba(255,255,255,.1)}
+.nav .cta{background:#fff;color:var(--ink);padding:12px 22px;margin-left:8px}
+.lang{display:flex;gap:4px;margin-left:14px;padding:4px;border-radius:99px;background:rgba(255,255,255,.1);font-size:12px}
+.lang span{padding:6px 9px;border-radius:99px;color:rgba(255,255,255,.6)}
+.lang b{padding:6px 9px;border-radius:99px;background:#fff;color:var(--ink);font-weight:600}
+.burger{display:none;width:52px;height:52px;border-radius:50%;border:0;background:#fff;cursor:pointer;position:relative}
+.burger i{position:absolute;left:16px;right:16px;height:2px;background:var(--ink);transition:transform .4s}
+.burger i:first-child{top:21px}.burger i:last-child{top:29px}
+body.mopen .burger{background:var(--ink)}
+body.mopen .burger i{background:#fff}
+body.mopen .burger i:first-child{transform:translateY(4px) rotate(45deg)}
+body.mopen .burger i:last-child{transform:translateY(-4px) rotate(-45deg)}
+.ov{position:fixed;inset:0;z-index:29;background:#05070f;color:#fff;padding:120px 24px 40px;display:flex;flex-direction:column;gap:8px;font:500 40px/1.3 "Inter Tight",sans-serif;letter-spacing:-.03em;clip-path:circle(0 at calc(100% - 44px) 44px);transition:clip-path .7s cubic-bezier(.7,0,.2,1)}
+body.mopen .ov{clip-path:circle(150% at calc(100% - 44px) 44px)}
+.ov .lang{margin:24px 0 0;align-self:flex-start;font-size:13px;letter-spacing:0}
+@media (max-width:1040px){.nav{display:none}.burger{display:block}}
+
+/* ===== 画面の端の等幅の表示 ===== */
+.hud{position:fixed;z-index:20;font:500 11px/1.5 var(--mono);letter-spacing:.14em;color:var(--fg2);pointer-events:none;text-transform:uppercase}
+.hud.bl{left:var(--pad);bottom:24px}
+.hud.br{right:var(--pad);bottom:24px;text-align:right}
+.hud .bar{display:block;width:120px;height:1px;background:var(--line);margin-top:8px;position:relative;overflow:hidden}
+.hud .bar i{position:absolute;left:0;top:0;bottom:0;width:100%;background:var(--core);transform-origin:0 0;transform:scaleX(0)}
+.hud.br .bar{margin-left:auto}
+
+/* ===== 流れ（スクロールの長さ） ===== */
+main{position:relative;z-index:10}
+.run{position:relative}
+.pin{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+
+/* FV */
+#fv{height:190vh}
+#fv .sum{position:absolute;left:50%;bottom:16vh;transform:translateX(-50%);margin:0;width:min(92vw,720px);text-align:center;font:500 clamp(14px,1.25vw,17px)/2 var(--jp);letter-spacing:.14em;color:var(--fg);transition:opacity .6s}
+#fv .hint{position:absolute;left:50%;transform:translateX(-50%);bottom:28px;font:500 11px/1 var(--mono);letter-spacing:.16em;color:var(--fg2)}
+#fv .tag{position:absolute;left:var(--pad);top:96px;font:500 11px/1.7 var(--mono);letter-spacing:.14em;color:var(--fg2)}
+
+/* STORY の見出し（結晶を通り抜けるところ） */
+#sthead{height:130vh}
+#sthead .sh{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;opacity:0}
+#sthead .lbl{display:flex;gap:28px;font:500 12px/1 var(--mono);letter-spacing:.2em;color:var(--fg2)}
+#sthead .lbl p{margin:0;font-family:var(--jp);letter-spacing:.2em}
+#sthead .giant{margin:0;font:200 clamp(72px,15vw,240px)/.9 var(--disp);font-variation-settings:"opsz" 96,"wdth" 80;letter-spacing:-.02em;color:#fff}
+
+/* STORY 各場面 */
+.scn{height:240vh}
+.card{position:absolute;left:var(--pad);top:50%;width:min(40vw,560px);transform:translateY(-50%);opacity:0;will-change:opacity,transform}
+.card::before{content:"";position:absolute;inset:-18vh -14vw -18vh -30vw;background:radial-gradient(closest-side,rgba(4,6,14,.78),rgba(4,6,14,.5) 55%,transparent);z-index:-1;pointer-events:none}
+.card .no{display:flex;align-items:baseline;gap:10px;font:500 12px/1 var(--mono);letter-spacing:.16em;color:var(--fg2);margin-bottom:26px}
+.card .no b{font-weight:500;font-size:13px;color:var(--core)}
+.card .no::after{content:"";flex:0 0 64px;height:1px;background:var(--line);align-self:center;margin-left:6px}
+.card .t{margin:0;font:500 17px/2.15 var(--min);letter-spacing:.06em;color:#f4f6ff;text-align:justify}
+.card .tcy{font-family:var(--disp);font-weight:400;letter-spacing:.02em}
+.card .echo{color:#fff;text-shadow:0 0 18px rgba(200,239,255,.55)}
+
+/* 場面2の破片の番号 */
+#tags{position:fixed;inset:0;z-index:5;pointer-events:none;opacity:0}
+#tags svg{position:absolute;inset:0;width:100%;height:100%}
+#tags span{position:absolute;font:500 10px/1 var(--mono);letter-spacing:.12em;color:var(--core);white-space:nowrap}
+
+/* FEATURES（ここから先は本線の続き） */
+#benefit{position:relative;z-index:10;padding:22vh var(--pad) 18vh;background:linear-gradient(180deg,rgba(4,6,14,0),rgba(4,6,14,.86) 22vh,#04060e 60vh)}
+#benefit .sh{max-width:1280px;margin:0 auto 64px}
+#benefit .lbl{display:flex;gap:28px;font:500 12px/1 var(--mono);letter-spacing:.2em;color:var(--fg2)}
+#benefit .lbl p{margin:0;font-family:var(--jp)}
+#benefit .giant{display:block;margin:22px 0 0;font:200 clamp(56px,9vw,140px)/.9 var(--disp);font-variation-settings:"opsz" 96,"wdth" 80;letter-spacing:-.02em;color:#fff}
+.fg{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+.fc{background:rgba(6,9,20,.92);padding:34px 28px 40px}
+.fc .no{font:500 11px/1 var(--mono);letter-spacing:.16em;color:var(--core);margin-bottom:28px}
+.fc h3{margin:0 0 18px;font-weight:600;line-height:1.5}
+.fc h3 small{display:block;font-size:13px;font-weight:500;color:var(--fg2);letter-spacing:.06em}
+.fc h3 .w{display:block;font-size:24px;letter-spacing:.04em;color:#fff}
+.fc p{margin:0;font-size:14px;line-height:2;color:rgba(238,241,251,.82);text-align:justify}
+@media (max-width:1100px){.fg{grid-template-columns:repeat(2,1fr)}}
+
+/* スマホ */
+@media (max-width:760px){
+  .logo{height:34px}
+  #fv .sum{bottom:20vh;letter-spacing:.08em;font-size:14px}
+  #fv .tag{display:none}
+  #fv .hint{bottom:66px}
+  .card{left:18px;right:18px;width:auto;top:auto;bottom:7vh;transform:none}
+  .card::before{inset:-12vh -18px -8vh -18px;background:linear-gradient(180deg,transparent,rgba(4,6,14,.82) 30%,rgba(4,6,14,.9))}
+  .card .t{font-size:15px;line-height:2}
+  .card .no{margin-bottom:16px}
+  .fg{grid-template-columns:1fr}
+  .hud.br{display:none}
+  #benefit .lbl{gap:16px}
+}
+@media (prefers-reduced-motion:reduce){#loader{transition:none}}
+</style>
+</head>
+<body>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div class="fallback" aria-hidden="true"><i></i></div>
+<div id="loader" aria-hidden="true"><b id="ldbar">----------</b><span id="ldpc">000</span></div>
+
+<header class="hd" id="hd">
+  <a class="logo" href="#top" aria-label="SAMURAI STYLE"><img src="img/logo.svg" alt="SAMURAI STYLE"></a>
+  <nav class="nav"><a href="#top">HOME</a><a href="#service">SERVICE</a><a href="https://samurai-style.tokyo/media">MEDIA</a><a href="https://samurai-style.tokyo/company">COMPANY</a><a href="https://samurai-style.tokyo/recruit">RECRUIT</a><a class="cta" href="#contact">CONTACT</a><div class="lang"><span>ID</span><span>EN</span><b>JA</b></div></nav>
+  <button class="burger" aria-label="Menu"><i></i><i></i></button>
+</header>
+<div class="ov"><a href="#top">HOME</a><a href="#service">SERVICE</a><a href="https://samurai-style.tokyo/media">MEDIA</a><a href="https://samurai-style.tokyo/company">COMPANY</a><a href="https://samurai-style.tokyo/recruit">RECRUIT</a><a href="#contact">CONTACT</a><div class="lang"><span>ID</span><span>EN</span><b>JA</b></div></div>
+
+<div class="hud bl" aria-hidden="true"><span id="hudsec" data-scr>FIND THE SIGNAL.</span><span class="bar"><i id="hudbar"></i></span></div>
+<div class="hud br" aria-hidden="true"><span id="hudpc">000</span></div>
+<div id="tags" aria-hidden="true"><svg id="tagsvg"></svg></div>
+
+<main id="top">
+  <section class="run" id="fv">
+    <div class="pin">
+      <h1 class="sr">find the signal.</h1>
+      <p class="sum" id="sum"><span class="nb">何が本質的なシグナルで</span><wbr><span class="nb">何が一時的なノイズなのかを</span><wbr><span class="nb">見極める。</span></p>
+      <span class="hint" id="hint" data-scr>scroll to align ↓</span>
+    </div>
+  </section>
+
+  <section class="run" id="sthead">
+    <div class="pin"><div class="sh" id="shd"><div class="lbl"><span data-scr>01</span><p>ストーリー</p><span data-scr>01—06</span></div><h2 class="giant">STORY</h2></div></div>
+  </section>
+
+  <section class="run scn" id="s1" data-i="0">
+    <div class="pin"><div class="card"><span class="no"><b data-scr>01</b><span data-scr>/ 06</span></span><p class="t">「誰かの役に立つ」という営みの中で、これまで人間が担ってきた“考えること”や“実行すること”の一部が、いま急速に<span class="tcy">AI</span>へと置き換わりつつあります。変化の激しさが増し続けるこの時代において、マクロな視点では人間らしさを、ミクロな視点では自分らしさを保ちながら、どう生き残っていくべきか。私たちはその問いを日々考え続けています。</p></div></div>
+  </section>
+  <section class="run scn" id="s2" data-i="1">
+    <div class="pin"><div class="card"><span class="no"><b data-scr>02</b><span data-scr>/ 06</span></span><p class="t"><span class="tcy">AI</span>は高い合理性をもって答えを返しますが、一方、その合理性は、前提となるプロンプトや、使う人それぞれの立場や経験、価値観に大きく左右される構造にあります。つまり、ひとつの正解に収束するのではなく、<span class="echo">無数の“もっともらしさ”</span>が生まれ続け、エントロピー増大の法則が文字通り起きている時代に入ったと捉えています。</p></div></div>
+  </section>
+  <section class="run scn" id="s3" data-i="2">
+    <div class="pin"><div class="card"><span class="no"><b data-scr>03</b><span data-scr>/ 06</span></span><p class="t">Web上でも、<span class="tcy">AI</span>によって膨大な情報やコンテンツが生成される時代になりました。そうした環境のなかで重要になるのは、何が本質的なシグナルで、何が一時的なノイズなのかを見極める力だと考えています。</p></div></div>
+  </section>
+  <section class="run" id="outro" style="height:90vh"></section>
+
+  <section id="benefit">
+    <div class="sh"><div class="lbl"><span>02</span><p>４つの特徴</p><span>01—04</span></div><h2 class="giant">FEATURES</h2></div>
+    <div class="fg">
+      <article class="fc"><div class="no">01 / 04</div><h3><small>新規事業立ち上げ経験に基づく</small><span class="w">コミットメント</span></h3><p>所属メンバーは新規事業における立て付けから立ち上げまでの経験を保有。企画フェーズにおける顧客とプロダクトの仮説設計から開発、マーケティング施策立案から各種クリエイティブ制作までを高品質かつワンストップで支援が可能です。</p></article>
+      <article class="fc"><div class="no">02 / 04</div><h3><small>海外経験に基づく</small><span class="w">多言語対応</span></h3><p>海外生活経験が長く、英語・インドネシア語堪能なメンバーが複数在籍。顧客獲得のための各種クリエイティブ制作の他、営業資料作成から商談までを一貫して多言語で対応可能です。</p></article>
+      <article class="fc"><div class="no">03 / 04</div><h3><small>多業種経験に基づく</small><span class="w">構造理解力</span></h3><p>医療・半導体・エネルギー・通信・SaaSなどのBtoB、教育・転職・ECなどのBtoCと、幅広い業種での事業企画・マーケティング支援の経験から、複雑な構造においても的確に理解・整理し、成果につながる戦略を立案します。</p></article>
+      <article class="fc"><div class="no">04 / 04</div><h3><small>少数精鋭だから実現できる</small><span class="w">スピード感</span></h3><p>少数精鋭だから実現できるスピード感。幅広いケイパビリティを持つメンバーが少数でチームを運営。コミュニケーションコストが低く、タスクの所在を明確にしてスピーディーにプロジェクトを推進します。</p></article>
+    </div>
+  </section>
+</main>
+
+<script>
+/* WebGL が無い時は静止の背景に切り替える（本文はそのまま読める） */
+(function(){try{var c=document.createElement('canvas');if(!(c.getContext('webgl2')||c.getContext('webgl')))throw 0}catch(e){document.documentElement.classList.add('nogl')}})();
+document.querySelector('.burger').addEventListener('click',function(){document.body.classList.toggle('mopen')});
+document.querySelectorAll('.ov a').forEach(function(a){a.addEventListener('click',function(){document.body.classList.remove('mopen')})});
+</script>
+<script type="module" src="3d/a/main.js"></script>
+</body>
+</html>
