@@ -1108,17 +1108,17 @@ function snapDir(dir) {
   const p = P;
   if (dir > 0) {
     if (p < STOPS[0] - 0.02) return false;               // FV の文字がそろうまでは普通にスクロール
-    if (p >= STOPS[STOPS.length - 1] - 0.02) { if (p < 6.95) { snapTo(7.14); return true; } return false; }
+    if (p >= STOPS[STOPS.length - 1] - 0.02) { if (p < 7.98) { snapTo(8.0); return true; } return false; }   // 場面6から1回で FEATURES（紙の節の頭）へ（So 11/24）
     const nx = STOPS.find((q) => q > p + 0.03); snapTo(nx); return true;
   } else {
     if (p <= STOPS[0] + 0.03) return false;
-    if (p > 6.95) return false;                           // 夜明け以降は普通に戻る
+    if (p > 8.03) return false;                           // 紙の節の中は普通にスクロール
     const pv = [...STOPS].reverse().find((q) => q < p - 0.03); snapTo(pv ?? 0); return true;
   }
 }
 addEventListener('wheel', (e) => {
   if (!gateDone) return;
-  const inStory = P > STOPS[0] - 0.02 && P < 6.95;
+  const inStory = P > STOPS[0] - 0.02 && P < 8.03;
   if (!inStory && !snapBusy) return;
   e.preventDefault();
   const now = performance.now();
@@ -1128,15 +1128,15 @@ addEventListener('wheel', (e) => {
 }, { passive: false });
 let tY = null;
 addEventListener('touchstart', (e) => { tY = e.touches[0].clientY; }, { passive: true });
-addEventListener('touchmove', (e) => { if (gateDone && (snapBusy || (P > STOPS[0] - 0.02 && P < 6.95))) e.preventDefault(); }, { passive: false });
+addEventListener('touchmove', (e) => { if (gateDone && (snapBusy || (P > STOPS[0] - 0.02 && P < 7.98))) e.preventDefault(); }, { passive: false });
 addEventListener('touchend', (e) => {
   if (tY == null || snapBusy) return; const dy = tY - (e.changedTouches[0]?.clientY ?? tY); tY = null;
-  if (P > STOPS[0] - 0.02 && P < 6.95 && Math.abs(dy) > 30) snapDir(Math.sign(dy));
+  if (P > STOPS[0] - 0.02 && P < 8.03 && Math.abs(dy) > 30) snapDir(Math.sign(dy));
 }, { passive: true });
 addEventListener('keydown', (e) => {
   if (!gateDone || snapBusy && /Arrow|Page|Space/.test(e.code)) { if (snapBusy) e.preventDefault(); return; }
   const d = ['ArrowDown', 'PageDown', 'Space'].includes(e.code) ? 1 : ['ArrowUp', 'PageUp'].includes(e.code) ? -1 : 0;
-  if (d && P > STOPS[0] - 0.02 && P < 6.95 && snapDir(d)) e.preventDefault();
+  if (d && P > STOPS[0] - 0.02 && P < 8.03 && snapDir(d)) e.preventDefault();
 });
 // ---------- STORY をスキップ ----------
 const skip3 = document.getElementById('skip3');
