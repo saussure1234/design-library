@@ -10,7 +10,8 @@ export default {
     const { scene, renderer, SP } = S;
     scene.fog = new THREE.FogExp2(0x020203, 0.03);
     S.bloom.strength = 0.55; S.bloom.threshold = 0.85;
-    s.c = await createScene5({ THREE, scene, center: new THREE.Vector3(0, 0, 0), quality: SP ? 'sp' : 'pc', renderer });
+    // 本線の線の向き（T4→T5 付近の向き）。単体では線を薄く描いて見せる
+    s.c = await createScene5({ THREE, scene, center: new THREE.Vector3(0, 0, 0), quality: SP ? 'sp' : 'pc', renderer, lineDir: new THREE.Vector3(0.13, 0.05, -0.99), drawLine: true });
     s.c.setCamera(S.camera);
     if (!SP) { S.camera.fov = 46; S.camera.updateProjectionMatrix(); }   // 本線と同じ画角
     s.look = new THREE.Vector3();

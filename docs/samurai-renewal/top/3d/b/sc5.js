@@ -5,7 +5,10 @@
 // 使い方：
 //   const sc5 = await createScene5({ THREE, scene, center, quality: 'pc' | 'sp', renderer? });
 //   毎フレーム const v = sc5.update(t, dt, p)   … p＝場面の進み 0〜1。戻り値 v＝カメラの目安 { lookY, camHeight }（center からの高さ）
-//       0〜0.2 塔に群がる・登る・落ちる／0.2〜0.42 頂上の人が喜ぶ／0.42〜0.6 塔が崩れる／0.6〜0.82 起き上がって輪へ／0.74〜1 中心の朱が育つ
+//       0〜0.2 塔に群がる・登る・落ちる／0.2〜0.32 頂上の人が喜ぶ／0.30〜0.35 本線の朱い線に沿って光が走り、塔の芯を貫く（0.325）
+//       0.33〜0.45 貫いた点から朱の亀裂が広がり塔が震える／0.45〜0.63 崩れる／0.63〜0.85 起き上がって輪へ／0.76〜0.9 中心に朱が灯る
+//       0.84〜0.98 中心の朱が立ち上がり、線の向きへ曲がってつながる
+//   引数 lineDir＝線の進む向き（無ければ -Z）、linePoint＝group 内で線が通る点（無ければ (0, 5.2, 1)）、drawLine＝単体確認用に線を薄く描く
 //   毎フレーム sc5.audio(SND.out(), level) … 音オフの時は out=null。level＝この場面の音量 0〜1
 //       輪の段（p 0.5〜0.78）で lookY 5→0.8・camHeight 3→9.5 に下がる/上がる。これに合わせると輪が画面の中ほどに来る
 //   sc5.setCamera(camera) は互換のため残してある（呼ばなくてよい）／片付け sc5.dispose()
@@ -14,7 +17,7 @@
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 
-export async function createScene5({ THREE, scene, center, quality = 'pc', renderer = null }) {
+export async function createScene5({ THREE, scene, center, quality = 'pc', renderer = null, lineDir = null, linePoint = null, drawLine = false }) {
   const SP = quality === 'sp';
   const TAU = Math.PI * 2;
   const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
@@ -101,16 +104,38 @@ export async function createScene5({ THREE, scene, center, quality = 'pc', rende
   }
   // 濡れた石膏（粘りの照り）。頂点を4つの姿勢の間で混ぜる
   const geos = [], mats = [];
+  // 亀裂：貫いた点から朱の筋が広がる（世界座標で計算・全部の体と芯で共有）
+  const crackU = { uCrackC: { value: new THREE.Vector3() }, uCrackR: { value: 0 }, uCrackA: { value: 0 }, uCrackT: { value: 0 } };
+  function addCrack(sh) {
+    Object.assign(sh.uniforms, crackU);
+    sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vCW;')
+      .replace('#include <project_vertex>', '#include <project_vertex>\nvec4 cw_ = vec4(transformed, 1.0);\n#ifdef USE_INSTANCING\ncw_ = instanceMatrix * cw_;\n#endif\nvCW = (modelMatrix * cw_).xyz;');
+    sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nvarying vec3 vCW;\nuniform vec3 uCrackC; uniform float uCrackR, uCrackA, uCrackT;')
+      .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
+      if (uCrackA > 0.001) {
+        float d = distance(vCW, uCrackC);
+        float reach = smoothstep(uCrackR, uCrackR - 1.2, d);
+        vec3 q = vCW * 2.3;
+        float n = sin(q.x * 1.7 + sin(q.y * 1.3)) * sin(q.y * 2.1 + sin(q.z * 1.9)) * sin(q.z * 1.6 + sin(q.x * 2.2));
+        float vein = 1.0 - smoothstep(0.0, 0.09, abs(n));
+        float edge = exp(-pow((d - uCrackR) * 1.6, 2.0));
+        float core = exp(-d * d * 0.9);
+        totalEmissiveRadiance += vec3(1.0, 0.33, 0.12) * uCrackA * (vein * reach * (1.3 + 0.4 * sin(uCrackT * 20.0 + d * 3.0)) + edge * vein * 2.0 + core * 1.5);
+      }`);
+  }
   function wetMat(color, morph) {
     const m = new THREE.MeshPhysicalMaterial({ color, roughness: 0.42, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.08, sheen: 0.4, sheenColor: new THREE.Color(0x9aa3b4), envMapIntensity: 0.6 });
+    m.onBeforeCompile = (sh) => { addCrack(sh); };
+    m.customProgramCacheKey = () => 'sc5-crack';
     if (morph) {
       m.onBeforeCompile = (sh) => {
+        addCrack(sh);
         sh.vertexShader = sh.vertexShader
           .replace('#include <common>', '#include <common>\nattribute vec3 p1, p2, p3, n1, n2, n3;\nattribute vec4 aW;')
           .replace('#include <beginnormal_vertex>', 'vec3 objectNormal = normalize(normal * aW.x + n1 * aW.y + n2 * aW.z + n3 * aW.w);\n#ifdef USE_TANGENT\nvec3 objectTangent = vec3( tangent.xyz );\n#endif')
           .replace('#include <begin_vertex>', 'vec3 transformed = position * aW.x + p1 * aW.y + p2 * aW.z + p3 * aW.w;');
       };
-      m.customProgramCacheKey = () => 'sc5-morph';
+      m.customProgramCacheKey = () => 'sc5-morph-crack';
     }
     mats.push(m); return m;
   }
@@ -167,6 +192,7 @@ export async function createScene5({ THREE, scene, center, quality = 'pc', rende
     g.computeVertexNormals(); geos.push(g); return g;
   })();
   const core = new THREE.Mesh(coreG, new THREE.MeshPhysicalMaterial({ color: 0x0c0d10, roughness: 0.35, clearcoat: 1, clearcoatRoughness: 0.1, envMapIntensity: 0.3 })); mats.push(core.material);
+  core.material.onBeforeCompile = (sh) => addCrack(sh); core.material.customProgramCacheKey = () => 'sc5-core-crack';
   group.add(core);
   // 床（中は不透明＝沈んだ物を隠す・外へ向かって闇に溶ける）
   {
@@ -240,7 +266,43 @@ export async function createScene5({ THREE, scene, center, quality = 'pc', rende
   floorGlow.rotation.x = -Math.PI / 2; floorGlow.position.y = 0.02; group.add(floorGlow);
   if (envTex) mats.forEach((m) => { if (m.isMeshStandardMaterial) m.envMap = envTex; });
 
-  // ---------- 動き ----------
+  // ---------- 線：本線の朱い線が塔の芯を貫く／輪の中心から朱が立ち上がって線へつながる ----------
+  const LD = (lineDir ? lineDir.clone() : new THREE.Vector3(0, 0, -1)).normalize();
+  const LP = linePoint ? linePoint.clone() : new THREE.Vector3(0, 5.2, 1);   // group 内で線が通る点
+  const beamMat = (w) => new THREE.ShaderMaterial({ transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide,
+    uniforms: { uHead: { value: -99 }, uTail: { value: 6 }, uBase: { value: 0 }, uA: { value: 1 } },
+    vertexShader: 'varying float vS;varying vec2 vU;void main(){vS=position.y;vU=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+    fragmentShader: 'uniform float uHead,uTail,uBase,uA;varying float vS;varying vec2 vU;void main(){float d=vS-uHead;float head=exp(-d*d*' + w + ');float tail=d<0.?exp(d/uTail):0.;float r=abs(vU.x-.5)*2.;float g=(head*3.+tail*.9+uBase)*uA;gl_FragColor=vec4(vec3(1.,.36,.13)*g,1.);}' });
+  const BL = 70;
+  const beamG = new THREE.CylinderGeometry(0.05, 0.05, BL, 8, 64, true); geos.push(beamG);
+  const beamG2 = new THREE.CylinderGeometry(0.22, 0.22, BL, 12, 64, true); geos.push(beamG2);
+  const beam = new THREE.Group(); group.add(beam);
+  const beamCore = new THREE.Mesh(beamG, beamMat('2.')), beamHalo = new THREE.Mesh(beamG2, beamMat('.6')); mats.push(beamCore.material, beamHalo.material);
+  beamHalo.material.uniforms.uA.value = 0.22;
+  beam.add(beamCore, beamHalo); beam.position.copy(LP); beam.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), LD);
+  beam.visible = drawLine;
+  // 貫いた瞬間の光
+  const flash = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), glowMat('10.')); geos.push(flash.geometry); mats.push(flash.material); flash.position.copy(LP); group.add(flash);
+  const flashL = new THREE.PointLight(SIG, 0, 16, 1.5); flashL.position.copy(LP); group.add(flashL);
+  // 芯の中を上下に走る朱（貫いた後、塔の内側が燃える）
+  const coreBeamG = new THREE.CylinderGeometry(0.12, 0.12, H, 12, 32, true); coreBeamG.translate(0, H / 2, 0); geos.push(coreBeamG);
+  const coreBeam = new THREE.Mesh(coreBeamG, new THREE.ShaderMaterial({ transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, uniforms: { uR: { value: 0 }, uY: { value: LP.y }, uA: { value: 0 } },
+    vertexShader: 'varying float vY;void main(){vY=position.y;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+    fragmentShader: 'uniform float uR,uY,uA;varying float vY;void main(){float d=abs(vY-uY);float g=smoothstep(uR,uR-.8,d)*(1.+exp(-pow(d-uR,2.)*4.)*2.);gl_FragColor=vec4(vec3(1.,.36,.13)*g*uA,1.);}' }));
+  mats.push(coreBeam.material); group.add(coreBeam);
+  // 輪の中心から立ち上がり、線の向きへ曲がってつながる朱
+  const riseCurve = new THREE.CatmullRomCurve3([
+    new THREE.Vector3(0, 0.15, 0), new THREE.Vector3(0, LP.y * 0.45, 0), new THREE.Vector3(0, LP.y * 0.85, 0).addScaledVector(LD, 0.6),
+    LP.clone().addScaledVector(LD, 3), LP.clone().addScaledVector(LD, 10), LP.clone().addScaledVector(LD, 30),
+  ], false, 'catmullrom', 0.5);
+  const riseG = new THREE.TubeGeometry(riseCurve, 220, 0.07, 10, false), riseG2 = new THREE.TubeGeometry(riseCurve, 220, 0.3, 12, false); geos.push(riseG, riseG2);
+  const riseMat = (a) => new THREE.ShaderMaterial({ transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, uniforms: { uG: { value: 0 }, uA: { value: a } },
+    vertexShader: 'varying vec2 vU;void main(){vU=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+    fragmentShader: 'uniform float uG,uA;varying vec2 vU;void main(){float on=smoothstep(uG,uG-.015,vU.x);float head=exp(-pow((vU.x-uG)*60.,2.))*3.;gl_FragColor=vec4(vec3(1.,.36,.13)*(on*(1.-vU.x*.5)+head*step(.001,uG))*uA,1.);}' });
+  const rise = new THREE.Mesh(riseG, riseMat(1.6)), rise2 = new THREE.Mesh(riseG2, riseMat(0.35)); mats.push(rise.material, rise2.material); group.add(rise, rise2);
+  const flashV = new THREE.Vector3();
+
+
   const ev = [];
   const st = { p: 0, c: 0, jn: 0, falling: 0, fallsRecent: 0, cheer: false, collapsed: false, landed: 0 };
   const tq = new THREE.Quaternion(), tp = new THREE.Vector3(), tsc = new THREE.Vector3(1, 1, 1), qSpin = new THREE.Quaternion(), tmp = new THREE.Vector3(), tmpB = new THREE.Vector3();
@@ -267,14 +329,39 @@ export async function createScene5({ THREE, scene, center, quality = 'pc', rende
     st.p = p;
     if (ev.length > 24) ev.length = 0;
     const cheer = sstep(0.2, 0.27, p);            // 頂上の人が喜ぶ
-    st.c = clamp((p - 0.42) / 0.18);              // 塔が崩れる（0.42〜0.60）
+    const strike = clamp((p - 0.3) / 0.05);       // 朱い光が線に沿って走り、塔の芯を貫く（0.30〜0.35・貫くのは 0.325）
+    const hit = sstep(0.32, 0.33, p);
+    const crack = sstep(0.33, 0.45, p);           // 貫いた点から亀裂が広がる
+    st.c = clamp((p - 0.45) / 0.18);              // 塔が崩れる（0.45〜0.63）
     const c = st.c;
-    const k = sstep(0.42, 0.8, p);
-    const sinkD = sstep(0.6, 0.74, p);            // 崩れた人は床へ沈む
-    const live = 1 - sstep(0.4, 0.43, p);
+    const k = sstep(0.45, 0.82, p);
+    const sinkD = sstep(0.63, 0.76, p);           // 崩れた人は床へ沈む
+    const live = 1 - sstep(0.32, 0.34, p);        // 貫かれた瞬間に群れが止まる
     if (cheer > 0.9 && !st.cheer) { st.cheer = true; ev.push({ e: 'cheer' }); } if (cheer < 0.5) st.cheer = false;
+    if (hit > 0.5 && !st.hit) { st.hit = true; ev.push({ e: 'strike' }); } if (hit < 0.2) st.hit = false;
     if (c > 0.02 && !st.collapsed) { st.collapsed = true; ev.push({ e: 'collapse' }); } if (c <= 0) st.collapsed = false;
     core.scale.set(1 + c * 0.6, Math.max(0.001, 1 - c), 1 + c * 0.6); core.visible = c < 0.999;
+    // 貫く光：線に沿って頭が走り抜ける（尾を引く）。貫いた後も細く残る
+    const head = lerp(-BL / 2, BL / 2, strike);
+    [beamCore, beamHalo].forEach((m) => { m.material.uniforms.uHead.value = strike > 0 && strike < 1 ? head : -99; m.material.uniforms.uBase.value = drawLine ? 0.12 : 0.0; });
+    beam.visible = drawLine || (strike > 0 && strike < 1);
+    if (!drawLine && strike > 0 && strike < 1) { beamCore.material.uniforms.uBase.value = 0; }
+    flashV.copy(LP).add(group.position);
+    crackU.uCrackC.value.copy(flashV);
+    crackU.uCrackR.value = lerp(0, 11, crack);
+    crackU.uCrackA.value = hit * (1 - sstep(0.5, 0.66, p)) * (0.8 + 0.2 * Math.sin(t * 13));
+    crackU.uCrackT.value = t;
+    const fl = hit * Math.exp(-Math.max(0, p - 0.33) * 60);
+    flash.material.uniforms.uA.value = fl * 3 + crack * (1 - c) * 0.5; flash.scale.setScalar(2 + fl * 9 + crack * 2);
+    const cam = scene.userData.__cam; if (cam) flash.quaternion.copy(cam.quaternion);
+    flashL.intensity = (fl * 300 + crack * (1 - c) * 40) * (1 - sinkD);
+    coreBeam.material.uniforms.uR.value = lerp(0, H, crack); coreBeam.material.uniforms.uA.value = hit * (1 - c) * 1.2;
+    coreBeam.scale.y = Math.max(0.001, 1 - c);
+    const quake = crack * (1 - c) * 0.07;       // ひびが入るほど塔が震える
+    // 輪の中心から朱が立ち上がり、線の向きへつながる
+    const rg = sstep(0.84, 0.98, p);
+    rise.material.uniforms.uG.value = rg; rise2.material.uniforms.uG.value = rg;
+
     // 塔の面の人：うごめく → 崩落でばたつきながら落ち、着地で崩れる
     const hw = heap.geometry.attributes.aW.array;
     let landed = 0;
@@ -284,6 +371,7 @@ export async function createScene5({ THREE, scene, center, quality = 'pc', rende
         const m = 0.5 + 0.5 * Math.sin(t * heapSp[i] * live + heapPh[i]);
         W[0] = 1 - m; W[1] = m; W[2] = W[3] = 0; putW(hw, i, W, 0, 0);
         tp.copy(C.p0); tq.copy(C.q0);
+        if (quake > 0) { tp.x += Math.sin(t * 37 + i) * quake; tp.z += Math.cos(t * 41 + i * 1.3) * quake; }
       } else {
         const s = collapseAt(C, tp, tq);
         const f = 0.5 + 0.5 * Math.sin(t * 9 + heapPh[i]);
@@ -355,7 +443,7 @@ export async function createScene5({ THREE, scene, center, quality = 'pc', rende
     if (Math.floor(t * 2) !== Math.floor(lastT * 2)) st.fallsRecent = 0;
     lastT = t;
     // 頂上の人：手足を交互に掛けて最後のひと登り → 立ち上がる → 沈んでは跳ね、両手を突き上げる
-    const wc = sstep(0.04, 0.18, p), stand = sstep(0.17, 0.22, p);
+    const wc = sstep(0.04, 0.18, p), stand = sstep(0.17, 0.22, p), joyAmt = cheer * (1 - sstep(0.32, 0.36, p));
     const wPos = tmpB, wQ = tq;
     let wDrop = 0;
     if (stand < 0.01) {
@@ -366,23 +454,23 @@ export async function createScene5({ THREE, scene, center, quality = 'pc', rende
       pose(win, CL[k0], CL[(k0 + 1) % 4], sm(u % 1));
     } else {
       wPos.copy(winTop);
-      wQ.setFromAxisAngle(_ax.set(0, 1, 0), 0.25 + Math.sin(t * 0.9) * 0.15 * cheer);
-      const u = (t * 1.5) % 1;
+      wQ.setFromAxisAngle(_ax.set(0, 1, 0), 0.25 + Math.sin(t * 0.9) * 0.15 * joyAmt);
+      const u = joyAmt > 0.02 ? (t * 1.5) % 1 : 0.5;
       const up = sstep(0.2, 0.42, u) * (1 - sstep(0.72, 0.95, u));    // 0=沈む 1=伸び上がる
       const jump = u > 0.38 && u < 0.78 ? Math.sin((u - 0.38) / 0.4 * Math.PI) * 0.32 : 0;
       const Pj = mixP(P.JOYD, P.JOY, up);
-      if (stand < 1) pose(win, P.CROUCH, Pj, stand); else pose(win, mixP(P.JOY, Pj, cheer), null, 0);
-      wDrop = -0.28 * (1 - up) * cheer - 0.3 * (1 - stand);
-      wPos.y += (jump * cheer) + wDrop;
+      if (stand < 1) pose(win, P.CROUCH, Pj, stand); else pose(win, mixP(P.JOY, Pj, joyAmt), null, 0);
+      wDrop = -0.28 * (1 - up) * joyAmt - 0.3 * (1 - stand);
+      wPos.y += (jump * joyAmt) + wDrop + quake * Math.sin(t * 43);
     }
     winC.p0.copy(winTop); winC.q0.copy(_qa.setFromAxisAngle(_ax.set(0, 1, 0), 0.25));
-    top.intensity = 240 * (1 - sstep(0.42, 0.55, p));
+    top.intensity = 240 * (1 - sstep(0.45, 0.58, p));
     cone.material.uniforms.uA.value = 0.12 * (1 - sstep(0.42, 0.55, p));
     // 輪：崩れて倒れた所から起き上がり、歩いて集まり、向き直って手をつなぐ
     let joined = 0;
     members.forEach((b, i) => {
       const isWin = b === win;
-      const ki = clamp((p - (0.6 + (i / NRR) * 0.1)) / 0.12);
+      const ki = clamp((p - (0.63 + (i / NRR) * 0.09)) / 0.11);
       const ra = (i / NRR) * TAU + t * 0.02 * k;
       const rp = tmp.set(Math.cos(ra) * RR, 0, Math.sin(ra) * RR);
       if (c <= 0) {
@@ -421,10 +509,11 @@ export async function createScene5({ THREE, scene, center, quality = 'pc', rende
       if (ki < 0.5) b.joined = false;
     });
     st.jn = joined / NRR;
-    const gw = sstep(0.74, 1, p) * (0.3 + 0.7 * st.jn);
+    if (rg > 0.02 && !st.rose) { st.rose = true; ev.push({ e: 'rise' }); } if (rg <= 0) st.rose = false;
+    const gw = sstep(0.76, 0.9, p) * (0.3 + 0.7 * st.jn);
     warm.intensity = gw * 140; floorGlow.material.uniforms.uA.value = gw * 1.1; floorGlow.scale.setScalar(1 + gw * RR * 0.9);
     // カメラの目安（center からの高さ）：塔の段＝塔の中ほど、輪の段＝輪が画面の中ほどに来る高さ
-    const kv = sstep(0.5, 0.78, p);
+    const kv = sstep(0.53, 0.8, p);
     view.lookY = lerp(5, 0.8, kv); view.camHeight = lerp(3, 9.5, kv);
     return view;
   }
@@ -490,8 +579,8 @@ export async function createScene5({ THREE, scene, center, quality = 'pc', rende
     const t = au.ctx.currentTime, p = st.p;
     au.master.gain.setTargetAtTime(level, t, 0.2);
     // 群衆：塔の間はうめき・ざわめき。崩落で叫びが増え、倒れたあとは静まる
-    const crowdLv = 1 - sstep(0.62, 0.72, p);
-    const panic = sstep(0.42, 0.46, p) * (1 - sstep(0.58, 0.66, p));
+    const crowdLv = 1 - sstep(0.65, 0.75, p);
+    const panic = sstep(0.33, 0.37, p) * (1 - sstep(0.61, 0.69, p));
     au.crowd.gain.setTargetAtTime(crowdLv, t, 0.2);
     au.mur.g.gain.setTargetAtTime(0.07 * (0.6 + st.falling) + 0.12 * panic, t, 0.3); au.mur.f.frequency.setTargetAtTime(700 + Math.sin(t * 3.1) * 300 + panic * 500, t, 0.05);
     au.voices.forEach((v) => {
@@ -518,16 +607,31 @@ export async function createScene5({ THREE, scene, center, quality = 'pc', rende
     }
     if (panic > 0.2 && t > (au.nextScream || 0)) { au.nextScream = t + rr(0.15, 0.45); const f0 = rr(420, 700); shout(t, f0, f0 * rr(0.4, 0.6), rr(0.6, 1.0), 0.09, rnd() < 0.7 ? 'a' : 'e'); }
     ev.forEach((e) => {
-      if (e.e === 'fall' && p < 0.42) {   // 叫びながら落ちる＋周りのどよめき
+      if (e.e === 'fall' && p < 0.32) {   // 叫びながら落ちる＋周りのどよめき
         const f0 = rr(380, 620);
         shout(t, f0, f0 * 0.42, rr(0.7, 1.1), 0.13, rnd() < 0.6 ? 'a' : 'o');
         shout(t + 0.05, rr(150, 220), rr(110, 160), 1.2, 0.05, 'o');
         noiseHit(t, 0.08, 0.25, 0.6, 'bandpass', 500, 2, 2200, au.crowd);
-      } else if (e.e === 'thud' && p < 0.42) {
+      } else if (e.e === 'thud' && p < 0.32) {
         tone(t, 70, 'sine', 0.3, 0.004, 0.45, au.crowd, 32); noiseHit(t, 0.14, 0.003, 0.16, 'lowpass', 320, 1, null, au.crowd);
       } else if (e.e === 'cheer') {      // 頂上の人の勝ちどき（ひとりの声が上がる）＋下のざわめきが沸く
         shout(t, 180, 330, 1.4, 0.16, 'o'); shout(t + 0.9, 220, 380, 1.2, 0.13, 'a'); shout(t + 1.9, 240, 400, 1.6, 0.12, 'a');
         noiseHit(t + 0.3, 0.1, 0.8, 1.8, 'bandpass', 900, 0.8, 2400, au.crowd);
+      } else if (e.e === 'strike') {     // 鋭い光の一撃：高い掃引＋割れる音＋低い衝撃。続けて亀裂が走る音
+        tone(t, 3200, 'sine', 0.16, 0.002, 0.5, null, 420);
+        tone(t, mtof(93), 'sine', 0.06, 0.002, 2.4);
+        noiseHit(t, 0.4, 0.001, 0.12, 'highpass', 2500, 0.7);
+        tone(t, 90, 'sine', 0.5, 0.003, 1.1, null, 28);
+        noiseHit(t, 0.3, 0.005, 0.9, 'lowpass', 600, 1, 80);
+        for (let j = 0; j < 14; j++) noiseHit(t + 0.15 + j * rr(0.05, 0.16), rr(0.06, 0.16), 0.001, rr(0.02, 0.06), 'bandpass', rr(1500, 4500), 8);
+        const fl = au.ctx.createBiquadFilter(); fl.type = 'bandpass'; fl.frequency.value = 520; fl.Q.value = 7; fl.connect(au.master);
+        tone(t + 0.3, 24, 'sawtooth', 0.28, 0.2, 1.6, fl, 44);
+        noiseHit(t + 0.05, 0.12, 0.08, 1.2, 'bandpass', 900, 1.2, 2600, au.crowd);
+      } else if (e.e === 'rise') {       // 中心から朱が立ち上がる：静かに上がっていく音＋線につながる鈴
+        tone(t, mtof(62), 'sine', 0.06, 1.2, 3.0, au.plus, mtof(74));
+        tone(t, mtof(69), 'triangle', 0.03, 1.4, 2.6, au.plus, mtof(81));
+        noiseHit(t, 0.05, 1.2, 1.6, 'bandpass', 1500, 2, 5000, au.plus);
+        tone(t + 1.8, mtof(81), 'sine', 0.07, 0.005, 3.2, au.plus); tone(t + 1.94, mtof(88), 'sine', 0.045, 0.005, 3.2, au.plus);
       } else if (e.e === 'collapse') {   // 崩落：低い地鳴り＋軋み＋割れる音＋どよめき
         noiseHit(t, 0.5, 0.3, 3.2, 'lowpass', 180, 2, 60);
         tone(t, 46, 'sawtooth', 0.12, 0.4, 2.8, null, 28);
@@ -542,9 +646,9 @@ export async function createScene5({ THREE, scene, center, quality = 'pc', rende
     });
     ev.length = 0;
     // 崩れたあとの静けさ（低いうなり）
-    const after = sstep(0.58, 0.64, p) * (1 - sstep(0.7, 0.8, p));
+    const after = sstep(0.62, 0.68, p) * (1 - sstep(0.76, 0.84, p));
     au.sub.g.gain.setTargetAtTime(0.08 * after, t, 0.6); au.hum.g.gain.setTargetAtTime(0, t, 0.3);
-    const k = sstep(0.7, 0.92, p);
+    const k = sstep(0.74, 0.94, p);
     au.plus.gain.setTargetAtTime(1, t, 0.3);
     au.warmV.forEach((v, i) => v.g.gain.setTargetAtTime(0.022 * k * (i === 0 ? 1.3 : 1) * (0.4 + 0.6 * st.jn), t, 0.8));
   }
