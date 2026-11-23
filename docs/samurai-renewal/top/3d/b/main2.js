@@ -59,7 +59,7 @@ const onBridge = (p) => p.z < -405 && Math.abs(p.x) < 6 && p.y > 3 && p.y < 17;
 const nearHero = (p) => { if (inHall(p) || onBridge(p)) return true; for (let k = 0; k < 7; k++) if (p.distanceTo(T[k]) < heroClear[k]) return true; return false; };
 
 // ---------- 色（紺〜青灰の1系統＋朱は信号だけ） ----------
-const FOG0 = new THREE.Color().setRGB(0.010, 0.019, 0.042);   // 霧＝紺（線形）
+const FOG0 = new THREE.Color().setRGB(0.0016, 0.0022, 0.0042);   // 霧＝ほぼ黒（光がかすかに見える程度・So 11/24）
 const CREAM = new THREE.Color().setRGB(0.92, 0.905, 0.85);    // 生成り（線形）
 const SIG = new THREE.Color().setRGB(1, 0.30, 0.10);
 const PALE = new THREE.Color().setRGB(0.62, 0.71, 0.86);      // 青灰の光
@@ -74,7 +74,7 @@ let DPR = Math.min(devicePixelRatio || 1, TIERS[tier].dpr);
 renderer.setPixelRatio(DPR);
 renderer.setSize(innerWidth, innerHeight, false);
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.0;
+renderer.toneMappingExposure = 0.78;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.autoClear = false;
 
@@ -178,9 +178,9 @@ const skyU = { uTime: U.time, uDawn: U.dawn, uBright: { value: 1 }, uFog: U.fogC
 }
 
 // 光（冷たい白と青だけ。朱は信号の点光源のみ）
-scene.add(new THREE.HemisphereLight(0x46608f, 0x05070d, 0.85));
-const key = new THREE.DirectionalLight(0xe8eef8, 2.5); key.position.set(-1, 1.3, 0.7); scene.add(key);
-const rim = new THREE.DirectionalLight(0x8fb0e6, 2.3); rim.position.set(0.6, 0.4, -1); scene.add(rim);
+scene.add(new THREE.HemisphereLight(0x46608f, 0x05070d, 0.16));
+const key = new THREE.DirectionalLight(0xe8eef8, 0.75); key.position.set(-1, 1.3, 0.7); scene.add(key);
+const rim = new THREE.DirectionalLight(0x8fb0e6, 1.25); rim.position.set(0.6, 0.4, -1); scene.add(rim);
 const sigLight = new THREE.PointLight(0xff5a24, 26, 15, 1.8); scene.add(sigLight);
 
 // 環境マップ：宇宙の星雲を PMREM で（クロームとガラスに映す）
@@ -313,7 +313,7 @@ for (let i = 0; i < Q.haze; i++) {
   const u = (i + rnd()) / Q.haze;
   const p = camCurve.getPoint(u).add(V(rr(-24, 24), rr(-9, 7), rr(-30, -8)));
   const m = new THREE.SpriteMaterial({ map: hazeTex, color: new THREE.Color().setRGB(.16, .25, .45), transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending, rotation: rr(0, 6.3), fog: false });
-  const s = new THREE.Sprite(m); s.position.copy(p); s.scale.setScalar(rr(38, 90)); fx(s); scene.add(s); hazes.push({ s, base: rr(.07, .15) });
+  const s = new THREE.Sprite(m); s.position.copy(p); s.scale.setScalar(rr(38, 90)); fx(s); scene.add(s); hazes.push({ s, base: rr(.07, .15) * 0.22 });
 }
 const DUST_VS = `attribute float aSize; attribute float aSeed; uniform float uTime, uBox, uFocus, uAp, uCoc, uPx, uFogD, uAlpha, uFogK; uniform vec3 uCam;
   varying float vA; varying float vB;
@@ -348,9 +348,9 @@ function dustLayer(n, box, sMin, sMax, alpha, coc, fogK, col) {
   });
   const p = new THREE.Points(g, m); p.frustumCulled = false; fx(p); scene.add(p); dustLayers.push(m); return m;
 }
-dustLayer(Q.dustN, 18, 0.018, 0.05, 0.9, 46, 1, new THREE.Color().setRGB(.62, .72, .9));   // 手前：大きくぼけた粒
-dustLayer(Q.dustM, 70, 0.022, 0.07, 0.95, 18, 1, new THREE.Color().setRGB(.7, .77, .92));  // 中：ピントの合う塵
-dustLayer(Q.dustF, 230, 0.12, 0.42, 0.75, 6, 0.32, new THREE.Color().setRGB(.55, .63, .8)); // 奥：霧の向こうの星屑
+dustLayer(Q.dustN, 18, 0.018, 0.05, 0.32, 46, 1, new THREE.Color().setRGB(.62, .72, .9));   // 手前：大きくぼけた粒
+dustLayer(Q.dustM, 70, 0.022, 0.07, 0.4, 18, 1, new THREE.Color().setRGB(.7, .77, .92));  // 中：ピントの合う塵
+dustLayer(Q.dustF, 230, 0.12, 0.42, 0.3, 6, 0.32, new THREE.Color().setRGB(.55, .63, .8)); // 奥：霧の向こうの星屑
 
 // ---------- 1本の信号（朱の光の線）＝ 画面の中の朱はこれだけ ----------
 const fogGLSL = `uniform vec3 uFogC; uniform float uFogD; float fogF(float d){ return 1.-exp(-pow(d*uFogD,2.)); }`;
@@ -514,26 +514,33 @@ const tvs = { list: [], parts: [], scrU: null };
     if (variants.length) used.tv = true;
   }
   if (!variants.length) variants.push({ b: OLD.TV || new THREE.BoxGeometry(1.2, 0.9, 1), s: ensureUV(OLD.Screen || new THREE.PlaneGeometry(0.98, 0.7).translate(0, 0, 0.5)) });
-  // 置き場：本線（今のトップ）のテレビの壁と同じ並び。画像上の位置を、場面3でカメラに正対する壁へ写す
-  const WALL = [[0.4445, 0.0108, 0.0355, 0.0361], [0.2259, 0.0162, 0.0183, 0.0185], [0.8083, 0.0303, 0.0533, 0.0479], [0.6185, 0.0411, 0.0481, 0.0487], [0.4937, 0.0443, 0.051, 0.0521], [0.1491, 0.0429, 0.0189, 0.0235], [0.7281, 0.0463, 0.0413, 0.0412], [0.3911, 0.0482, 0.0264, 0.0277], [0.3364, 0.0597, 0.0355, 0.0378], [0.5767, 0.0639, 0.0178, 0.0176], [0.105, 0.0692, 0.0212, 0.0227], [0.436, 0.0795, 0.0252, 0.0286], [0.2707, 0.0822, 0.0367, 0.0378], [0.3912, 0.1058, 0.0275, 0.0286], [0.7366, 0.1126, 0.0607, 0.0638], [0.6469, 0.1188, 0.0544, 0.0554], [0.8262, 0.127, 0.0476, 0.0487], [0.3211, 0.1284, 0.0498, 0.0537], [0.4878, 0.1322, 0.0504, 0.0521], [0.5612, 0.1444, 0.0573, 0.0588], [0.4261, 0.1452, 0.0338, 0.0328], [0.1963, 0.1572, 0.0332, 0.0361], [0.0377, 0.1584, 0.0367, 0.0386], [0.0819, 0.1936, 0.0361, 0.0386], [0.3969, 0.1972, 0.0539, 0.0588], [0.8458, 0.2061, 0.0487, 0.0487], [0.922, 0.2054, 0.0407, 0.0403], [0.4722, 0.2143, 0.0504, 0.0537], [0.767, 0.2158, 0.0481, 0.0479], [0.6933, 0.2178, 0.0476, 0.0487], [0.3249, 0.2238, 0.0481, 0.0496], [0.2583, 0.2296, 0.0453, 0.0487], [0.1367, 0.234, 0.0481, 0.0554], [0.2137, 0.2329, 0.0212, 0.0185], [0.546, 0.243, 0.0355, 0.0344], [0.616, 0.2602, 0.0401, 0.0412], [0.0804, 0.2734, 0.0327, 0.0361], [0.0269, 0.2808, 0.0321, 0.0302], [0.9273, 0.2808, 0.0413, 0.0302], [0.2116, 0.2834, 0.0195, 0.0143], [0.3717, 0.3019, 0.0573, 0.0621], [0.7436, 0.3028, 0.059, 0.0605], [0.8352, 0.3018, 0.0367, 0.0361], [0.6779, 0.3051, 0.0407, 0.0412], [0.5562, 0.307, 0.0413, 0.0403], [0.1292, 0.325, 0.043, 0.0454], [0.2523, 0.3249, 0.043, 0.0445], [0.1929, 0.3259, 0.0407, 0.0445], [0.6594, 0.3672, 0.0556, 0.0605], [0.8293, 0.3727, 0.055, 0.0554], [0.5605, 0.375, 0.0665, 0.0714], [0.3908, 0.4009, 0.0498, 0.0537], [0.3102, 0.4059, 0.0521, 0.0554], [0.2444, 0.4215, 0.0424, 0.0437], [0.4652, 0.4271, 0.0624, 0.0638], [0.1653, 0.4384, 0.0561, 0.0588], [0.6617, 0.4775, 0.0699, 0.0714], [0.0979, 0.4919, 0.0418, 0.0445], [0.7811, 0.4957, 0.0544, 0.0546], [0.582, 0.499, 0.0573, 0.0596], [0.2448, 0.5001, 0.0567, 0.0613], [0.3296, 0.5073, 0.0504, 0.0537], [0.5014, 0.5282, 0.0493, 0.0462], [0.8714, 0.5373, 0.071, 0.0739], [0.4164, 0.5376, 0.0624, 0.0655], [0.1572, 0.5494, 0.0516, 0.0546], [0.0821, 0.5757, 0.0487, 0.0546], [0.7754, 0.5966, 0.0676, 0.0714], [0.0158, 0.5952, 0.0401, 0.042], [0.3293, 0.5994, 0.0556, 0.0579], [0.2415, 0.6024, 0.0573, 0.0579], [0.5995, 0.6051, 0.0653, 0.0672], [0.5027, 0.6208, 0.0682, 0.0689], [0.4134, 0.6475, 0.047, 0.0479], [0.8818, 0.6564, 0.0619, 0.0613], [0.1338, 0.6577, 0.0619, 0.0663], [0.0361, 0.6757, 0.0521, 0.0588], [0.6927, 0.6843, 0.0567, 0.0571], [0.2299, 0.702, 0.0579, 0.0579], [0.5919, 0.7051, 0.0584, 0.0605], [0.3215, 0.7084, 0.0372, 0.0403], [0.8028, 0.7141, 0.0493, 0.0504], [0.5195, 0.722, 0.0372, 0.0395], [0.8821, 0.773, 0.0756, 0.0789], [0.0942, 0.7786, 0.0539, 0.0638], [0.358, 0.7852, 0.0665, 0.0731], [0.0047, 0.7888, 0.0493, 0.0571], [0.5249, 0.7898, 0.0596, 0.0689], [0.6992, 0.7909, 0.0567, 0.0588], [0.2812, 0.799, 0.0464, 0.0496], [0.1815, 0.8024, 0.0647, 0.068], [0.7887, 0.8028, 0.0613, 0.0605], [0.6093, 0.8113, 0.0556, 0.0571]];
-  const SIG = [0.5052, 0.3545];
-  const eye = camCurve.getPoint(3 / 6), dW = eye.distanceTo(T[3]);
+  // 置き場：1台を大きく正面に（番組を流す主役）。ほかは手前から奥まで立体的にごちゃごちゃ散らばる
+  const eye = camCurve.getPoint(3 / 6);
   const wq = new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().lookAt(eye, T[3], V(0, 1, 0)));
   const R = V(1, 0, 0).applyQuaternion(wq), Up = V(0, 1, 0).applyQuaternion(wq), N = V(0, 0, 1).applyQuaternion(wq);
-  const Wd = dW * 1.62, tvW = 1.18;
+  const dW = eye.distanceTo(T[3]), tvW = 1.18;
   tvs.wall = { R, Up, N };
-  const place = (x, y, w, h, hero) => {
-    const p = T[3].clone().addScaledVector(R, (x + w / 2 - SIG[0]) * Wd).addScaledVector(Up, -(y + h / 2 - SIG[1]) * Wd / 1.5);
-    if (!hero) p.addScaledVector(N, rr(-0.5, 0.25) * w * Wd);
-    const rot = hero ? new THREE.Euler(0, 0, 0) : new THREE.Euler(rr(-.06, .06), rr(-.12, .12), rr(-.05, .05));
-    const q = wq.clone().multiply(new THREE.Quaternion().setFromEuler(rot));
+  const bb = variants[0].b.boundingBox || (variants[0].b.computeBoundingBox(), variants[0].b.boundingBox); const cy0 = (bb.min.y + bb.max.y) / 2;
+  const push = (p, s, q, hero) => {
+    p = p.clone().addScaledVector(V(0, 1, 0).applyQuaternion(q), -cy0 * s);   // 箱の中心を置き場に合わせる
     const off = p.clone().sub(T[3]); off.addScaledVector(N, -off.dot(N));
-    const d = Math.hypot(x + w / 2 - SIG[0], (y + h / 2 - SIG[1]) * 0.66);
-    tvs.list.push({ p, s: Math.max(w, h * 1.1) * Wd / tvW * 0.96, q, out: off.lengthSq() > 1e-4 ? off.normalize() : V(0, 1, 0), outD: rr(14, 34), ax: randDir(), ph: rnd() * 6, v: tvs.list.length % variants.length, k: 0, d,
-      st: { k: hero ? 0 : (rnd() < 0.85 ? 0 : -1), until: 0, tr: 0, trT: 0, next: 0, wave: 0 } });
+    const sd = V(off.dot(R) / dW, -off.dot(Up) / dW, 0);
+    tvs.list.push({ p, s, q, out: off.lengthSq() > 1e-4 ? off.normalize() : randDir(), outD: rr(14, 34), ax: randDir(), sp: hero ? 0 : rr(-0.06, 0.06), ph: rnd() * 6, v: tvs.list.length % variants.length, k: 0,
+      d: Math.hypot(sd.x, sd.y * 0.66), st: { k: hero ? 0 : (rnd() < 0.85 ? 0 : -1), until: 0, tr: 0, trT: 0, next: 0, wave: 0 } });
   };
-  place(SIG[0] - 0.04, SIG[1] - 0.034, 0.08, 0.07, true);
-  WALL.forEach(([x, y, w, h]) => place(x, y, w, h, false));
+  push(T[3].clone(), dW * 0.27 / tvW, wq.clone(), true);
+  const cnt = SP ? 46 : 78; let tries = 0;
+  while (tvs.list.length < cnt + 1 && tries++ < 5000) {
+    const z = rr(-34, 3);                                   // 正面のテレビの面からの奥行き（＋が手前）
+    const spread = 7 + Math.max(0, -z) * 0.75;
+    const x = rr(-spread, spread) * 1.25, y = rr(-spread, spread) * 0.72;
+    if (z > -4 && Math.abs(x) < dW * 0.6 && Math.abs(y) < dW * 0.42) continue;   // 主役の前をふさがない
+    const p = T[3].clone().addScaledVector(R, x).addScaledVector(Up, y).addScaledVector(N, z);
+    if (p.distanceTo(eye) < 5) continue;
+    if (tvs.list.some((o) => o.p.distanceTo(p) < (o.s + 1.6) * 0.75)) continue;
+    const q = wq.clone().multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(rr(-.5, .5), rr(-.8, .8), rr(-.45, .45))));
+    push(p, rr(0.9, 2.6), q, false);
+  }
   const scrU = { uTime: U.time, uOn: { value: 0 }, uFogC: U.fogCol, uFogD: U.fogD };
   tvs.scrU = scrU;
   const bodyM = new THREE.MeshStandardMaterial({ color: 0x2b3343, roughness: 0.42, metalness: 0.25, envMap: envTex, envMapIntensity: 0.8 });
@@ -600,8 +607,8 @@ function updateTVs(t, Ps = 3) {
   for (const part of tvs.parts) {
     for (const v of part.items) {
       const o = Math.pow(clamp(out), 1.6);
-      tmpQ.setFromAxisAngle(v.ax, Math.sin(t * 0.3 + v.ph) * 0.02 + o * 2.2).premultiply(v.q);
-      tmpP.copy(v.p).addScaledVector(v.out, o * v.outD); tmpP.y += Math.sin(t * 0.4 + v.ph) * 0.03;
+      tmpQ.setFromAxisAngle(v.ax, Math.sin(t * 0.3 + v.ph) * (v.sp ? 0.1 : 0.015) + t * v.sp + o * 2.2).premultiply(v.q);
+      tmpP.copy(v.p).addScaledVector(v.out, o * v.outD); tmpP.y += Math.sin(t * 0.4 + v.ph) * (v.sp ? 0.25 : 0.03);
       tmpM.compose(tmpP, tmpQ, tmpS.setScalar(v.s));
       for (const m of part.meshes) m.setMatrixAt(v.k, tmpM);
       if (doSt) {
@@ -728,51 +735,12 @@ function updatePlanks(l6, t) {
 }
 updatePlanks(0, 0);
 
-// ---------- FV：本番のトップと同じ来方（中心から放射状に手前へ・手前ほど大きく尾を引く） ----------
-// 2D の計算は本線 top-v2 の FV と同じ。描画だけ WebGL に移し、ブルームと合成に乗せる。立体の岩も少し混ぜる
-const fvx = document.getElementById('fvx'), fvSum = document.getElementById('fsum');
+// ---------- FV：今のサイトの映像（home-hero.mp4）をそのまま。真っ黒に白い粒が飛ぶ → 文字がそろう → 宇宙へ ----------
+const fvx = document.getElementById('fvx'), fvSum = document.getElementById('fsum'), fvv = document.getElementById('fvv'), fvVideo = fvv.querySelector('video');
 const fvWords = [...fvx.querySelectorAll('.wd')];
 fvWords.forEach((w) => { const tx = w.textContent; w.textContent = ''; [...tx].forEach((c) => { const sp = document.createElement('span'); sp.className = 'ch'; sp.textContent = c; w.appendChild(sp); }); });
-const FV = { n: SP ? 170 : 330, P: [], nz: 1, NOISE: 1, gx: 0.5, gy: 0.5, tx: 0.5, ty: 0.5, rings: [], lastR: -99, A: [], B: [], F: 100, mx: 0, my: 0, cx: 0, cy: 0, locked: false };
-const FPAL = [[255, 255, 255], [255, 255, 255], [214, 228, 255], [170, 200, 245], [196, 210, 240], [228, 236, 255], [255, 128, 80], [236, 240, 255]];
-const FW8 = [5, 3, 4, 3, 3, 2, 1, 2];
-const fpick = () => { let r = Math.random() * FW8.reduce((x, y) => x + y, 0); for (let i = 0; i < FPAL.length; i++) { r -= FW8[i]; if (r <= 0) return FPAL[i]; } return FPAL[0]; };
-const fspawn = (q, far) => { const a = Math.random() * 6.283, r = 0.03 + Math.pow(Math.random(), 0.85) * 1.1; q.x = Math.cos(a) * r; q.y = Math.sin(a) * r; q.z = far ? 0.7 + Math.random() * 0.3 : 0.06 + Math.random() * 0.94; q.c = fpick(); q.tw = Math.random() * 6.3; q.s = Math.random() * 0.6 + 0.7; return q; };
-for (let i = 0; i < FV.n; i++) FV.P.push(fspawn({}, false));
-addEventListener('pointermove', (e) => { FV.tx = e.clientX / innerWidth; FV.ty = e.clientY / innerHeight; FV.mx = FV.tx - 0.5; FV.my = FV.ty - 0.5; }, { passive: true });
-// 画面座標（px）をそのまま描く層：頭の光（点）と尾（帯）と輪（点）
-const RING_N = SP ? 110 : 160, RING_MAX = 6;
-const NPT = FV.n + RING_N * RING_MAX;
-const fvPtPos = new Float32Array(NPT * 2), fvPtCol = new Float32Array(NPT * 4), fvPtSize = new Float32Array(NPT);
-const fvPtG = new THREE.BufferGeometry();
-fvPtG.setAttribute('position', new THREE.BufferAttribute(fvPtPos, 2)); fvPtG.setAttribute('aCol', new THREE.BufferAttribute(fvPtCol, 4)); fvPtG.setAttribute('aSize', new THREE.BufferAttribute(fvPtSize, 1));
-const fvRes = { value: new THREE.Vector2(1, 1) };
-const fvPts = new THREE.Points(fvPtG, new THREE.ShaderMaterial({
-  transparent: true, depthWrite: false, depthTest: false, blending: THREE.AdditiveBlending, uniforms: { uRes: fvRes, uDpr: U.dpr },
-  vertexShader: `attribute vec4 aCol; attribute float aSize; uniform vec2 uRes; uniform float uDpr; varying vec4 vC; varying float vSq;
-    void main(){ vC=aCol; vSq=step(aSize,0.); gl_Position=vec4(position.x/uRes.x*2.-1.,1.-position.y/uRes.y*2.,0.,1.); gl_PointSize=max(abs(aSize),1.)*uDpr; }`,
-  fragmentShader: `varying vec4 vC; varying float vSq; void main(){ float r=length(gl_PointCoord-.5)*2.;
-    float k=vSq>.5?1.:(r<.28?mix(1.,.9,r/.28):r<.55?mix(.9,.22,(r-.28)/.27):mix(.22,0.,clamp((r-.55)/.45,0.,1.)));
-    gl_FragColor=vec4(vC.rgb*vC.a*k,1.); }`,
-}));
-const fvTrPos = new Float32Array(FV.n * 4 * 2), fvTrCol = new Float32Array(FV.n * 4 * 4), fvTrIdx = [];
-for (let i = 0; i < FV.n; i++) { const b = i * 4; fvTrIdx.push(b, b + 1, b + 2, b, b + 2, b + 3); }
-const fvTrG = new THREE.BufferGeometry();
-fvTrG.setAttribute('position', new THREE.BufferAttribute(fvTrPos, 2)); fvTrG.setAttribute('aCol', new THREE.BufferAttribute(fvTrCol, 4)); fvTrG.setIndex(fvTrIdx);
-const fvTr = new THREE.Mesh(fvTrG, new THREE.ShaderMaterial({
-  transparent: true, depthWrite: false, depthTest: false, blending: THREE.AdditiveBlending, uniforms: { uRes: fvRes },
-  vertexShader: `attribute vec4 aCol; uniform vec2 uRes; varying vec4 vC; void main(){ vC=aCol; gl_Position=vec4(position.x/uRes.x*2.-1.,1.-position.y/uRes.y*2.,0.,1.); }`,
-  fragmentShader: `varying vec4 vC; void main(){ gl_FragColor=vec4(vC.rgb*vC.a,1.); }`,
-}));
-[fvPtG, fvTrG].forEach((g) => { g.boundingSphere = new THREE.Sphere(new THREE.Vector3(), 1e6); });
-[fvPts, fvTr].forEach((o) => { o.frustumCulled = false; o.renderOrder = 20; fx(o); camera.add(o); });
-// 立体の岩：奥から手前へ流れてくる（霧と被写界深度がかかる）
-const FR = { n: SP ? 14 : 28, q: [] };
-const frG = rockGeos[0].clone(); addRot(frG, FR.n, 0.9);
-const frM = new THREE.InstancedMesh(frG, rockMat, FR.n); frM.frustumCulled = false; camera.add(frM);
-const frSpawn = (q, far) => { const a = Math.random() * 6.283, r = 0.08 + Math.pow(Math.random(), 0.7) * 0.95; q.x = Math.cos(a) * r; q.y = Math.sin(a) * r; q.z = far ? 0.75 + Math.random() * 0.25 : 0.12 + Math.random() * 0.88; q.s = 0.25 + Math.random() * 0.9; return q; };
-for (let i = 0; i < FR.n; i++) FR.q.push(frSpawn({}, false));
-const frMat = new THREE.Matrix4(), frQ = new THREE.Quaternion(), frS = new THREE.Vector3(), frP = new THREE.Vector3();
+const FV = { nz: 1, A: [], B: [], F: 100, mx: 0, my: 0, cx: 0, cy: 0, locked: false };
+addEventListener('pointermove', (e) => { FV.mx = e.clientX / innerWidth - 0.5; FV.my = e.clientY / innerHeight - 0.5; }, { passive: true });
 function fvLayout() {
   const W = innerWidth, H = innerHeight, sp = W <= 820;
   fvWords.forEach((w) => { w.style.fontSize = '100px'; w.style.transform = 'none'; });
@@ -785,11 +753,8 @@ function fvLayout() {
     : [{ x: W * 0.16, y: H * 0.17, s: 1.15 }, { x: W * 0.36, y: H * 0.39, s: 1.15 }, { x: W * 0.84 - wsF[2] * 1.15, y: H * 0.6, s: 1.15 }];
   fvSum.style.top = (yB + FV.F * 1.25) + 'px';
 }
-// 1コマ分：文字の整列（スクロール）と粒（時間）
 function fvFrame(dt, t, Ps) {
-  const W = innerWidth, H = innerHeight;
-  fvRes.value.set(W, H);
-  // 文字：散らばった3語がスクロールで1列にそろう → 副題 → 次の場面へ
+  // 文字：散らばった3語がスクロールで1列にそろう → 副題
   const p = RM ? 1 : clamp(Ps / 0.45), e = ease(p);
   FV.cx += (FV.mx - FV.cx) * 0.05; FV.cy += (FV.my - FV.cy) * 0.05;
   if (FV.A.length) fvWords.forEach((w, i) => { const a = FV.A[i], b = FV.B[i], d = [26, 48, 18][i] * (1 - e);
@@ -798,66 +763,72 @@ function fvFrame(dt, t, Ps) {
   const out = 1 - sstep(0.62, 0.8, Ps);
   fvx.style.opacity = out; fvx.style.visibility = out < 0.01 ? 'hidden' : 'visible';
   hint.style.opacity = 1 - clamp(p / 0.2);
-  FV.NOISE = 1 - e;
+  FV.nz = 1 - e;
   if (!FV.locked && e > 0.985) { FV.locked = true; SND.lock(); } else if (FV.locked && e < 0.6) FV.locked = false;
-  const vis = 1 - sstep(0.7, 0.95, Ps);
-  fvPts.visible = fvTr.visible = frM.visible = vis > 0.01;
-  if (vis <= 0.01) return;
-  // 粒
-  const ms = dt * 1000; FV.nz += (FV.NOISE - FV.nz) * (1 - Math.pow(0.92, ms / 33));
-  FV.gx += (FV.tx - FV.gx) * 0.04; FV.gy += (FV.ty - FV.gy) * 0.04;
-  const nz = FV.nz, cx = W * (0.5 + (FV.gx - 0.5) * 0.12), cy = H * (0.5 + (FV.gy - 0.5) * 0.12), f = Math.min(W, H) * 0.55, big = W < 820 ? 0.78 : 1;
-  const v = (0.00012 + 0.00014 * nz) * ms, TR = 300 + 200 * nz;
-  let np = 0;
-  for (let i = 0; i < FV.n; i++) {
-    const q = FV.P[i];
-    q.z -= v;
-    let sx = cx + q.x / q.z * f, sy = cy + q.y / q.z * f;
-    if (q.z < 0.05 || sx < -60 || sy < -60 || sx > W + 60 || sy > H + 60) { fspawn(q, true); sx = cx + q.x / q.z * f; sy = cy + q.y / q.z * f; }
-    const near = 1 - q.z, tw = 0.7 + 0.3 * Math.sin(t * 1000 * 0.0016 * q.s + q.tw);
-    const al = Math.min(0.95, (0.22 + 0.78 * near * near) * tw) * vis;
-    const rad = (0.8 + 6.2 * Math.pow(near, 1.7)) * q.s * big;
-    const [r, g, b] = q.c;
-    fvPtPos[np * 2] = sx; fvPtPos[np * 2 + 1] = sy;
-    fvPtCol.set([r / 255, g / 255, b / 255, al], np * 4);
-    fvPtSize[np] = rad < 1.4 ? -rad * 1.4 : rad * 3.2; np++;
-    // 尾：少し前（TR ms）にいた位置まで
-    const zb = Math.min(1.2, q.z + v / Math.max(ms, 1) * TR), bx = cx + q.x / zb * f, by = cy + q.y / zb * f;
-    const ta = near > 0.35 ? al * 0.5 : 0, hw = rad * 0.55;
-    let dx = sx - bx, dy = sy - by; const L = Math.hypot(dx, dy) || 1; dx /= L; dy /= L; const nx = -dy * hw, ny = dx * hw;
-    const o = i * 8;
-    fvTrPos[o] = bx + nx; fvTrPos[o + 1] = by + ny; fvTrPos[o + 2] = sx + nx; fvTrPos[o + 3] = sy + ny;
-    fvTrPos[o + 4] = sx - nx; fvTrPos[o + 5] = sy - ny; fvTrPos[o + 6] = bx - nx; fvTrPos[o + 7] = by - ny;
-    const c4 = i * 16, R = r / 255, G = g / 255, B = b / 255;
-    fvTrCol.set([R, G, B, 0, R, G, B, ta, R, G, B, ta, R, G, B, 0], c4);
-  }
-  // 輪：文字がそろうと中心から広がる（ノイズが消えた合図）
-  const S = 1 - nz;
-  if (S < 0.02) FV.rings = [];
-  else { if (t - FV.lastR > 1.5) { FV.lastR = t; FV.rings.push({ r: 0 }); if (FV.rings.length > RING_MAX) FV.rings.shift(); } }
-  const rx = W * 0.5, ry = H * 0.42, M = Math.hypot(W, H) * 0.6;
-  FV.rings = FV.rings.filter((g) => { g.r += 66 * dt; return (1 - g.r / M) > 0; });
-  for (const g of FV.rings) {
-    const a = (1 - g.r / M) * 0.7 * S * vis;
-    for (let i = 0; i < RING_N; i++) { const th = i / RING_N * 6.283, jr = g.r + (Math.random() - 0.5) * 26 * nz * nz;
-      fvPtPos[np * 2] = rx + Math.cos(th) * jr; fvPtPos[np * 2 + 1] = ry + Math.sin(th) * jr * 0.62;
-      fvPtCol.set(i % 7 ? [167 / 255, 228 / 255, 1, a] : [214 / 255, 243 / 255, 1, a], np * 4); fvPtSize[np] = -2; np++; }
-  }
-  fvPtG.setDrawRange(0, np);
-  fvPtG.attributes.position.needsUpdate = fvPtG.attributes.aCol.needsUpdate = fvPtG.attributes.aSize.needsUpdate = true;
-  fvTrG.attributes.position.needsUpdate = fvTrG.attributes.aCol.needsUpdate = true;
-  // 立体の岩（カメラの前の筒の中を手前へ）
-  const DZ = 70, th = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
-  for (let i = 0; i < FR.n; i++) {
-    const q = FR.q[i]; q.z -= v * 0.9;
-    if (q.z < 0.04) frSpawn(q, true);
-    const Z = q.z * DZ, u = Z * th / (H * 0.5);   // 画面の px → この奥行きでの長さ
-    frP.set(((cx - W / 2) + q.x / q.z * f) * u, -((cy - H / 2) + q.y / q.z * f) * u, -Z);
-    const sc = q.s * (0.6 + 0.4 * vis) * Math.min(1, (1 - q.z) * 4);
-    frS.setScalar(sc); frQ.identity(); frMat.compose(frP, frQ, frS); frM.setMatrixAt(i, frMat);
-  }
-  frM.instanceMatrix.needsUpdate = true;
+  // 映像：そろった後、宇宙へ抜けるところで消える
+  const vo = 1 - sstep(0.58, 0.86, Ps);
+  fvv.style.opacity = vo; fvv.style.visibility = vo < 0.01 ? 'hidden' : 'visible';
+  if (vo < 0.01 && !fvVideo.paused) fvVideo.pause(); else if (vo > 0.01 && fvVideo.paused && gateDone) fvVideo.play().catch(() => {});
 }
+// ---------- 入口の画面：音あり／音なしを選んでから始まる ----------
+const gate = document.getElementById('gate');
+let gateDone = false;
+root.style.overflow = 'hidden';
+function enter(withSound) {
+  if (gateDone) return; gateDone = true;
+  SND.set(withSound);
+  gate.classList.add('out'); root.style.overflow = '';
+  fvVideo.play().catch(() => {});
+  setTimeout(() => fvx.classList.add('ready'), 250);
+}
+gate.querySelectorAll('button').forEach((b) => b.addEventListener('click', () => enter(b.dataset.s === '1')));
+// ---------- STORY：1回のスクロールで次の場面まで進む（途中で止まらない） ----------
+const STOPS = [0.5, 1.55, 2.55, 3.55, 4.55, 5.55, 6.55];
+let snapBusy = false, snapRaf = 0, wheelAcc = 0, wheelT = 0, lastSnap = 0;
+function snapTo(pT) {
+  const y0 = scrollY, y1 = toY(pT), t0 = performance.now(), dur = 1250;
+  snapBusy = true; lastSnap = t0; cancelAnimationFrame(snapRaf);
+  const step = (now) => { const k = Math.min(1, (now - t0) / dur), e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+    scrollTo(0, y0 + (y1 - y0) * e); if (k < 1) snapRaf = requestAnimationFrame(step); else setTimeout(() => { snapBusy = false; }, 120); };
+  snapRaf = requestAnimationFrame(step);
+}
+function snapDir(dir) {
+  const p = P;
+  if (dir > 0) {
+    if (p < STOPS[0] - 0.02) return false;               // FV の文字がそろうまでは普通にスクロール
+    if (p >= STOPS[STOPS.length - 1] - 0.02) { if (p < 7) { snapTo(7.02); return true; } return false; }
+    const nx = STOPS.find((q) => q > p + 0.03); snapTo(nx); return true;
+  } else {
+    if (p <= STOPS[0] + 0.03) return false;
+    if (p > 7.05) return false;                           // 夜明け以降は普通に戻る
+    const pv = [...STOPS].reverse().find((q) => q < p - 0.03); snapTo(pv ?? 0); return true;
+  }
+}
+addEventListener('wheel', (e) => {
+  if (!gateDone) return;
+  const inStory = P > STOPS[0] - 0.02 && P < 7.05;
+  if (!inStory && !snapBusy) return;
+  e.preventDefault();
+  const now = performance.now();
+  if (snapBusy || now - lastSnap < 1500 && now - wheelT < 220) { wheelT = now; return; }  // 慣性の続きは捨てる
+  wheelT = now; wheelAcc += e.deltaY;
+  if (Math.abs(wheelAcc) > 18) { const d = Math.sign(wheelAcc); wheelAcc = 0; if (!snapDir(d)) { scrollBy(0, d * 60); } }
+}, { passive: false });
+let tY = null;
+addEventListener('touchstart', (e) => { tY = e.touches[0].clientY; }, { passive: true });
+addEventListener('touchmove', (e) => { if (gateDone && (snapBusy || (P > STOPS[0] - 0.02 && P < 7.05))) e.preventDefault(); }, { passive: false });
+addEventListener('touchend', (e) => {
+  if (tY == null || snapBusy) return; const dy = tY - (e.changedTouches[0]?.clientY ?? tY); tY = null;
+  if (P > STOPS[0] - 0.02 && P < 7.05 && Math.abs(dy) > 30) snapDir(Math.sign(dy));
+}, { passive: true });
+addEventListener('keydown', (e) => {
+  if (!gateDone || snapBusy && /Arrow|Page|Space/.test(e.code)) { if (snapBusy) e.preventDefault(); return; }
+  const d = ['ArrowDown', 'PageDown', 'Space'].includes(e.code) ? 1 : ['ArrowUp', 'PageUp'].includes(e.code) ? -1 : 0;
+  if (d && P > STOPS[0] - 0.02 && P < 7.05 && snapDir(d)) e.preventDefault();
+});
+// ---------- STORY をスキップ ----------
+const skip3 = document.getElementById('skip3');
+skip3.addEventListener('click', (e) => { e.preventDefault(); cancelAnimationFrame(snapRaf); snapBusy = false; const el = document.getElementById('paper'); scrollTo(0, el.getBoundingClientRect().top + scrollY); });
 
 // ---------- 仕上げ：自前の被写界深度＋光の層の合成 → ブルーム → 色調 → 壊して繋ぐ ----------
 const mkRT = () => new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, depthBuffer: true });
@@ -1167,11 +1138,12 @@ function frame() {
   U.dawn.value = sstep(0.1, 0.9, dawn);
   scene.fog.color.copy(FOG0).lerp(CREAM, sstep(0.0, 0.85, dawn));
   U.fogD.value = scene.fog.density = FOGD * (1 + dawn * 2.2);
-  renderer.toneMappingExposure = 1.0 + dawn * 1.4;
-  skyU.uBright.value = 1 - dawn * 0.6;
+  renderer.toneMappingExposure = 0.78 + dawn * 1.62;
+  skyU.uBright.value = 0.28 + dawn * 0.12;
 
-  // FV（粒・文字・輪）
+  // FV（映像・文字）
   fvFrame(dt, t, Ps);
+  skip3.classList.toggle('show', P > 0.6 && P < 6.95);
   SND.update({ noise: FV.nz, travel, vel, dawn, fv: 1 - sstep(0.62, 0.9, Ps), day: 0, tv: 1 - sstep(0.35, 0.7, Math.abs(Ps - 3)) });
   panels.forEach((p) => {
     const v = sstep(p.i + 0.2, 0.34 + p.i, Ps) * (1 - sstep(p.i + 0.84, p.i + 0.97, Ps));
@@ -1209,7 +1181,7 @@ function frame() {
   finalPass.uniforms.uCA.value = RM ? 0.001 : 0.002 + Math.min(Math.abs(vel) * 0.008, 0.012) + travel * 0.004;
   finalPass.uniforms.uWarp.value = RM ? 0 : travel * 1.0 + Math.min(Math.abs(vel) * 0.6, 1.0);
   finalPass.uniforms.uDawn.value = sstep(0.55, 1, dawn);
-  finalPass.uniforms.uVig.value = 0.6 * (1 - dawn);
+  finalPass.uniforms.uVig.value = 0.9 * (1 - dawn);
   finalPass.uniforms.uGrain.value = 0.05 * (1 - dawn * 0.7);
   bloom.strength = 0.72 + travel * 0.3 + dawn * 0.8;
 
@@ -1233,7 +1205,7 @@ fvWords.forEach((w, i) => w.querySelectorAll('.ch').forEach((c, j) => { c.style.
 requestAnimationFrame(frame);
 setTimeout(() => {
   ld.classList.add('out');
-  fvx.classList.add('ready');
+  if (RM) enter(false);
 }, 250);
 window.__b = {
   get P() { return Ps; }, setP(v) { P = v; Ps = v; lastPs = v; }, toY, measure, renderer, used,

@@ -14,10 +14,22 @@ const CHORDS = [
   [38, 50, 54, 57, 64],   // D（夜明けで明るく）
 ];
 const PENTA = [62, 64, 65, 69, 72, 74, 76, 77, 81];
+// 場面ごとの曲の表情（土台の和音はそのまま、音色・刻み・明るさを変える）
+// bpm=刻みの速さ / pulse=低い鼓動 / arp=分散和音の密度（0〜1）/ oct=分散和音の高さ / f=パッドの明るさ / ping=きらめきの間隔(秒) / pad=パッドの量
+const MOODS = [
+  { bpm: 0,  pulse: 0, arp: 0,    oct: 12, f: 520,  ping: 3.6, pad: 1 },    // FV：静か
+  { bpm: 84, pulse: 1, arp: 0.25, oct: 12, f: 680,  ping: 4.5, pad: 1 },    // 1 人とAI：鼓動
+  { bpm: 112, pulse: 0, arp: 0.85, oct: 24, f: 980, ping: 1.2, pad: 0.8 },  // 2 エントロピー：細かく散らばる
+  { bpm: 0,  pulse: 0, arp: 0,    oct: 12, f: 420,  ping: 9,   pad: 0.45 }, // 3 テレビ：番組の音に譲る
+  { bpm: 60, pulse: 1, arp: 0,    oct: 24, f: 360,  ping: 2.4, pad: 1.1 },  // 4 見極め：張りつめる
+  { bpm: 96, pulse: 1, arp: 0.5,  oct: 12, f: 760,  ping: 3.2, pad: 0.9 },  // 5 ゼロサム→プラスサム
+  { bpm: 76, pulse: 1, arp: 0.6,  oct: 12, f: 1250, ping: 2.6, pad: 1 },    // 6 全体最適：あたたかく上る
+  { bpm: 72, pulse: 0, arp: 0.4,  oct: 24, f: 2000, ping: 2.0, pad: 1 },    // 夜明け
+];
 
 export const SND = (() => {
   let ctx = null, on = false, want = false, hiss, master, music, sfx, verb, padF, voices = [], sub, wind, windF, whoosh, whooshF, sig, sigG, nbuf;
-  let chord = -1, lastTick = 0, nextPing = 0, st = { noise: 1, travel: 0, vel: 0, dawn: 0, fv: 1, day: 0, tv: 0 };
+  let chord = -1, mood = MOODS[0], nextBeat = 0, beat = 0, padG, lastTick = 0, nextPing = 0, st = { noise: 1, travel: 0, vel: 0, dawn: 0, fv: 1, day: 0, tv: 0 };
   const btn = document.getElementById('snd');
   const lab = btn && btn.querySelector('.st');
   const store = (v) => { try { localStorage.setItem(KEY, v ? '1' : '0'); } catch (e) { /* 保存できない環境は無視 */ } };
@@ -51,7 +63,7 @@ export const SND = (() => {
     // パッド：1音につき少しずらした鋸波2本 → ローパス（ゆっくり開閉）
     padF = ctx.createBiquadFilter(); padF.type = 'lowpass'; padF.frequency.value = 620; padF.Q.value = 0.6;
     const lfo = ctx.createOscillator(), lg = ctx.createGain(); lfo.frequency.value = 0.045; lg.gain.value = 220; lfo.connect(lg); lg.connect(padF.frequency); lfo.start();
-    const padG = ctx.createGain(); padG.gain.value = 0.05; padF.connect(padG); padG.connect(music);
+    padG = ctx.createGain(); padG.gain.value = 0.05; padF.connect(padG); padG.connect(music);
     for (let i = 1; i < 5; i++) {
       const g = ctx.createGain(); g.gain.value = i === 4 ? 0.55 : 1; g.connect(padF);
       const o = [-6, 6].map((dt) => { const x = ctx.createOscillator(); x.type = 'sawtooth'; x.detune.value = dt; x.connect(g); x.start(); return x; });
@@ -74,7 +86,8 @@ export const SND = (() => {
   }
   function setChord(i, now) {
     i = Math.max(0, Math.min(CHORDS.length - 1, i));
-    if (i === chord) return; chord = i;
+    if (i === chord) return; chord = i; mood = MOODS[i];
+    padG.gain.setTargetAtTime(0.05 * mood.pad, ctx.currentTime, 1.2);
     const c = CHORDS[i], t = ctx.currentTime, tc = now ? 0.01 : 0.9;
     sub.frequency.setTargetAtTime(mtof(c[0]), t, tc);
     voices.forEach((o, k) => o.forEach((x) => x.frequency.setTargetAtTime(mtof(c[k + 1]), t, tc)));
@@ -85,6 +98,18 @@ export const SND = (() => {
     const o = ctx.createOscillator(), g = ctx.createGain(); o.type = type; o.frequency.value = f;
     if (f2) o.frequency.exponentialRampToValueAtTime(f2, ctx.currentTime + a + d);
     o.connect(g); g.connect(to || sfx); env(g, a, peak, d); o.start(); o.stop(ctx.currentTime + a + d + 0.05);
+  }
+  function kick(at, peak) {
+    const o = ctx.createOscillator(), g = ctx.createGain(); o.type = 'sine';
+    o.frequency.setValueAtTime(92, at); o.frequency.exponentialRampToValueAtTime(38, at + 0.22);
+    g.gain.setValueAtTime(0, at); g.gain.linearRampToValueAtTime(peak, at + 0.006); g.gain.exponentialRampToValueAtTime(0.0001, at + 0.5);
+    o.connect(g); g.connect(music); o.start(at); o.stop(at + 0.55);
+  }
+  function note(f, at, peak, d) {
+    const o = ctx.createOscillator(), g = ctx.createGain(), fl = ctx.createBiquadFilter(); o.type = 'triangle'; o.frequency.value = f;
+    fl.type = 'lowpass'; fl.frequency.value = 2600;
+    g.gain.setValueAtTime(0, at); g.gain.linearRampToValueAtTime(peak, at + 0.008); g.gain.exponentialRampToValueAtTime(0.0001, at + d);
+    o.connect(fl); fl.connect(g); g.connect(music); o.start(at); o.stop(at + d + 0.05);
   }
   function burst(peak, dur, type, f, q) {
     const s = ctx.createBufferSource(); s.buffer = nbuf; s.playbackRate.value = 0.25 + Math.random() * 0.5;
@@ -112,11 +137,22 @@ export const SND = (() => {
       whooshF.frequency.setTargetAtTime(600 + Math.min(2200, Math.abs(st.vel) * 2600), t, 0.15);
       hiss.g.gain.setTargetAtTime(0.05 * st.tv, t, 0.3);
       sigG.gain.setTargetAtTime(0.018 * (1 - st.noise) * st.fv, t, 0.4);
-      padF.frequency.setTargetAtTime(620 + 1600 * st.dawn, t, 0.5);
+      padF.frequency.setTargetAtTime(mood.f + 1400 * st.dawn, t, 0.8);
       music.gain.setTargetAtTime(0.9 - 0.45 * st.day, t, 0.8);
       // ときどき鳴る小さな音（和音の上の五音音階）
+      // 刻み：鼓動と分散和音（少し先まで予約）
+      if (mood.bpm && st.day < 0.5) {
+        const spb = 60 / mood.bpm / 2;   // 8分
+        if (nextBeat < t) nextBeat = t + 0.05;
+        while (nextBeat < t + 0.2) {
+          const c = CHORDS[chord];
+          if (mood.pulse && beat % 4 === 0) kick(nextBeat, beat % 8 === 0 ? 0.11 : 0.07);
+          if (mood.arp && Math.random() < mood.arp) { const n = c[1 + (beat % 4)] + mood.oct + (Math.random() < mood.arp * 0.4 ? 12 : 0); note(mtof(n), nextBeat, 0.022 + 0.01 * Math.random(), 0.35 + 0.4 * (1 - mood.arp)); }
+          nextBeat += spb; beat++;
+        }
+      }
       if (t > nextPing && st.day < 0.5) {
-        nextPing = t + 2.2 + Math.random() * 3.2;
+        nextPing = t + mood.ping * (0.6 + Math.random() * 0.9);
         tone(mtof(PENTA[(Math.random() * PENTA.length) | 0]), 'sine', 0.028, 0.01, 2.2, music);
       }
     },
@@ -140,18 +176,14 @@ export const SND = (() => {
   if (btn) {
     btn.addEventListener('click', () => setOn(!on));
     paint();
-    // 前回 ON にしていた人は、最初の操作で鳴らし始める（ブラウザは操作なしでは音を出せない）
-    if (stored()) {
-      btn.classList.add('wait');
-      const first = (e) => {
-        removeEventListener('pointerdown', first, true); removeEventListener('keydown', first, true); btn.classList.remove('wait');
-        if (e.type === 'pointerdown' && btn.contains(e.target)) return;   // ボタン自体を押した時はボタンの処理に任せる
-        if (!on) setOn(true);
-      };
-      addEventListener('pointerdown', first, true); addEventListener('keydown', first, true);
-    }
-  }
+    // 音のあり・なしは入口の画面で選ぶ（前回の選択で勝手に鳴らさない）
+      }
   document.addEventListener('visibilitychange', () => { if (!ctx) return; if (document.hidden) ctx.suspend(); else if (on) ctx.resume(); });
   if (matchMedia('(hover:hover)').matches) document.querySelectorAll('a, button:not(#snd)').forEach((el) => el.addEventListener('pointerenter', () => api.hover()));
+  // ほかの部品（紙の節など）から効果音を足すための口。鳴らしてよい時だけ { ctx, sfx, music, verb, nbuf } を返す
+  api.set = (v) => setOn(!!v);
+  api.out = () => (on && ctx ? { ctx, sfx, music, verb, nbuf } : null);
+  window.SND = api;
+  window.dispatchEvent(new Event('snd-ready'));
   return api;
 })();

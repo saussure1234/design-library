@@ -14,7 +14,8 @@
   const clamp = (v, a = 0, b = 1) => v < a ? a : v > b ? b : v;
   const mix = (a, b, t) => a + (b - a) * t;
   const eio = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-  const cs0 = getComputedStyle(document.documentElement);
+  /* 色は紙の節（.paper）があればそこから読む（3D版はページ全体の --ink が白なので） */
+  const cs0 = getComputedStyle(document.querySelector('.paper') || document.documentElement);
   const hex = (n, d) => { let h = ((cs0.getPropertyValue(n) || '').trim() || d).replace('#', ''); if (h.length === 3) h = h.split('').map(c => c + c).join(''); return [0, 2, 4].map(i => parseInt(h.slice(i, i + 2), 16)).join(','); };
   const COL = { ink: hex('--ink', '#151513'), sig: hex('--sig', '#ef4519') };
   const ST = {
@@ -105,6 +106,48 @@
     return B;
   }
 
+  /* ---------- 3C の図：Customer／Competitor／Company の3つの円 → 矢印で画面へ ----------
+     <div class="c3" data-to="0" data-flow="e" data-flow-sp="s"> の中に <span class="c3l" data-k="0|1|2">ラベル</span>。
+     k=0 上の円・1 左下・2 右下。ラベルは引出線を描き終えたら出す（class "on"）。data-to＝矢印の先の .scr の番号 */
+  const SPQ = matchMedia('(max-width:760px)');
+  function venn(P, c, fr, Bs) {
+    const rc = c.getBoundingClientRect();
+    const bx = rc.left - fr.left, by = rc.top - fr.top, s = rc.width;
+    const r = s * .25, d = s * .15, cx = bx + s * .5, cy = by + s * .55;
+    const C = [[cx, cy - d], [cx - d * .866, cy + d * .5], [cx + d * .866, cy + d * .5]];
+    const a0 = [-Math.PI / 2, Math.PI * .75, Math.PI * .25];
+    C.forEach(([x, y], k) => { const pts = []; for (let i = 0; i <= 64; i++) { const a = a0[k] + i / 64 * TAU; pts.push([x + Math.cos(a) * r, y + Math.sin(a) * r]); } P.pl(pts, 'ink'); });
+    const lab = k => c.querySelector('.c3l[data-k="' + k + '"]');
+    const put = (k, x, y, tf) => { const e = lab(k); if (!e) return null; e.style.left = (x - bx).toFixed(1) + 'px'; e.style.top = (y - by).toFixed(1) + 'px'; e.style.transform = tf; return e; };
+    /* 引出線：上は真上へ、左下・右下は斜めに出して棚を付ける */
+    { const x = C[0][0], y = C[0][1] - r, L = 14; P.dot(x, y, 2.2, 'ink'); P.ln(x, y, x, y - L, 'ink', { done: put(0, x, y - L - 5, 'translate(-50%,-100%)') }); }
+    /* 下の2つ：diag＝斜めに出して棚（横に余裕がある時）／down＝真下に下ろしてラベルを中央に（右に画面がある時） */
+    const mode = (SPQ.matches && c.dataset.labSp) || c.dataset.lab || 'diag';
+    [[1, -1], [2, 1]].forEach(([k, sg]) => {
+      if (mode === 'down') {
+        const a = Math.PI / 2 - sg * Math.PI / 6, x = C[k][0] + Math.cos(a) * r, y = C[k][1] + Math.sin(a) * r, L = 18;
+        P.dot(x, y, 2.2, 'ink'); P.ln(x, y, x, y + L, 'ink', { done: put(k, x, y + L + 5, 'translate(-50%,0)') });
+        return;
+      }
+      const a = Math.PI / 2 - sg * Math.PI / 4, x = C[k][0] + Math.cos(a) * r, y = C[k][1] + Math.sin(a) * r, q = 13, sh = 14;
+      P.dot(x, y, 2.2, 'ink'); P.ln(x, y, x + sg * q, y + q, 'ink');
+      P.ln(x + sg * q, y + q, x + sg * (q + sh), y + q, 'ink', { done: put(k, x + sg * (q + sh + 5), y + q, sg < 0 ? 'translate(-100%,-50%)' : 'translate(0,-50%)') });
+    });
+    P.dot(cx, cy, 3.2, 'sig', true);
+    /* 矢印：3C → 画面 */
+    const B = Bs[+(c.dataset.to || 0)]; if (!B) return;
+    const flow = (SPQ.matches && c.dataset.flowSp) || c.dataset.flow || 'e', h = 6;
+    if (flow === 's') {
+      const x0 = cx, y0 = C[1][1] + r * .86 + 8, x1 = clamp(cx, B.x + 10, B.x + B.w - 10), y1 = B.y - 12;
+      P.pl(Math.abs(x1 - x0) < 1 ? [[x0, y0], [x1, y1]] : [[x0, y0], [x0, (y0 + y1) / 2], [x1, (y0 + y1) / 2], [x1, y1]], 'ink');
+      P.pl([[x1 - h * .7, y1 - h], [x1, y1], [x1 + h * .7, y1 - h]], 'ink');
+    } else {
+      const x0 = C[2][0] + r + 8, y0 = cy, x1 = B.x - 12, y1 = clamp(cy, B.y + 10, B.y + B.h - 10);
+      P.pl(Math.abs(y1 - y0) < 1 ? [[x0, y0], [x1, y1]] : [[x0, y0], [(x0 + x1) / 2, y0], [(x0 + x1) / 2, y1], [x1, y1]], 'ink');
+      P.pl([[x1 - h, y1 - h * .7], [x1, y1], [x1 - h, y1 + h * .7]], 'ink');
+    }
+  }
+
   /* ---------- 1つの図：計測 → 線の列 → 時間で描き進む ---------- */
   const figs = [];
   function fig(el, o = {}) {
@@ -118,11 +161,11 @@
       cv.width = Math.round(S.w * DPR); cv.height = Math.round(S.h * DPR);
       const P = Plan();
       if (el.dataset.reg !== 'no') { const m = 14; [[m, m], [S.w - m, m], [m, S.h - m], [S.w - m, S.h - m]].forEach(([a, b]) => P.target(a, b, 4)); }
-      const leads = [];
+      const leads = [], n0 = P.L.length, Bs = [];
       scrs.forEach(sc => {
         const r = sc.getBoundingClientRect();
         const s = { x: r.left - fr.left, y: r.top - fr.top, w: r.width, h: r.height };
-        const B = device(P, s, sc.dataset.dev || 'frame', sc);
+        const B = device(P, s, sc.dataset.dev || 'frame', sc); Bs.push(B);
         P.cmark(B, 18);
         const dim = (sc.dataset.dim || 'b').split(',');
         const bot = B.foot || (B.y + B.h);
@@ -148,6 +191,9 @@
         if (sh) P.ln(ex, ey, ex + sh, ey, st);
         P.circ(ex + sh + Math.sign(sh || 0) * 3.5, ey, 3.5, st);
       });
+      /* 3C の図（.c3）：先に描く（事業理解 → 画面の順に読めるように） */
+      const c3s = [...el.querySelectorAll('.c3')];
+      if (c3s.length) { const Q = Plan(); c3s.forEach(c => venn(Q, c, fr, Bs)); P.L.splice(n0, 0, ...Q.L); }
       let tot = 0;
       P.L.forEach(it => {
         let l = 0; for (let i = 1; i < it.pts.length; i++) l += Math.hypot(it.pts[i][0] - it.pts[i - 1][0], it.pts[i][1] - it.pts[i - 1][1]);
