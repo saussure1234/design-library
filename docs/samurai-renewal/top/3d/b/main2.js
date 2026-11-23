@@ -430,7 +430,7 @@ const hands = [];
   const group = new THREE.Group(); scene.add(group);
   const PAIRS = SP ? 4 : 7;
   const SKIN = [0xc99a7a, 0xb98566, 0xd8b095, 0xa8765a], HAIR = [0x1c1714, 0x2b211b, 0x3a2c22];
-  const SHIRT_W = [0xd9dde3, 0x9fb3c9, 0xc7b79e, 0xe6e1d6], SUIT_C = [0x2b3240, 0x3a3f4a, 0x4a3f38];
+  const SHIRT_W = [0xd9dde3, 0x9fb3c9, 0xc7b79e, 0xe6e1d6], SUIT_C = [0x8a919e, 0xa08f7a, 0x7d8aa0];
   const humanMat = (u, shirt, pants) => {
     const m = new THREE.MeshStandardMaterial({ roughness: 0.78, metalness: 0, envMap: envTex, envMapIntensity: 0.35 });
     const cols = { uSkin: { value: new THREE.Color(SKIN[(rnd() * SKIN.length) | 0]) }, uHair: { value: new THREE.Color(HAIR[(rnd() * HAIR.length) | 0]) }, uShirt: { value: new THREE.Color(shirt) }, uPants: { value: new THREE.Color(pants) } };
@@ -445,7 +445,7 @@ const hands = [];
   };
   for (let j = 0; j < PAIRS * 2; j++) {
     const pair = j >> 1, isWorker = (j & 1) === 0;
-    const z = -58 - pair * 4.4, cxp = 4.1, x = cxp + (isWorker ? -0.62 : 0.62);
+    const z = -60 - pair * 4.6, x = 6 + (isWorker ? -1.05 : 1.05);   // オレンジの線（x=6）をはさんで向かい合う
     const u = { value: 0 };
     const pl = humanMat(u, isWorker ? SHIRT_W[pair % SHIRT_W.length] : SUIT_C[pair % SUIT_C.length], isWorker ? 0x3a3d45 : SUIT_C[pair % SUIT_C.length]);
     const rb = new THREE.MeshStandardMaterial({ color: 0xaab4c4, roughness: 0.16, metalness: 0.96, envMap: envTex, envMapIntensity: 3.6, vertexColors: true }); rb.emissive = new THREE.Color(0); dissolve(rb, u, true);
@@ -454,19 +454,59 @@ const hands = [];
       const v = PV[j % PV.length];
       hg.add(new THREE.Mesh(v.h, pl));
       if (isWorker) { hg.add(new THREE.Mesh(v.r, rb)); if (v.gl) { glow = new THREE.Mesh(v.gl, new THREE.MeshBasicMaterial({ color: new THREE.Color(0x8fe4ff).multiplyScalar(3), toneMapped: false, transparent: true, opacity: 0 })); fx(glow); hg.add(glow); } }
-      hg.scale.setScalar(1.3); hg.position.set(x, -1.35, z);
-      hg.rotation.set(0, isWorker ? Math.PI / 2 - 0.25 : -Math.PI / 2 + 0.25, 0);   // 向かい合う（少しカメラ側へ開く）
+      hg.scale.setScalar(1.3); hg.position.set(x, -2.1, z);
+      hg.rotation.set(0, isWorker ? Math.PI / 2 - 0.32 : -Math.PI / 2 + 0.32, 0);   // 線をはさんで向かい合う（少しカメラ側へ開く）
     }
     group.add(hg);
     const fl = mkGlow(1.8, 0x9fe6ff, 0); fl.position.set(x, hg.position.y + 1.55 * 1.3, z); scene.add(fl);
     hands.push({ u, j, pair, isWorker, g: hg, baseY: hg.position.y, baseRY: hg.rotation.y, ph: rnd() * 6, flash: fl, lit: false, glow });
   }
   // 人の肌と服が見えるだけの、あたたかい明かり（場面1のあたりだけに届く）
-  const warm = new THREE.PointLight(0xffc9a0, 38, 34, 1.6); warm.position.set(7.5, 3.2, -66); scene.add(warm);
+  const warm = new THREE.PointLight(0xffc9a0, 70, 40, 1.5); warm.position.set(8.8, 2.8, -66); scene.add(warm);
+  const warm2 = new THREE.PointLight(0xffd6b0, 40, 30, 1.6); warm2.position.set(9.5, 1.5, -80); scene.add(warm2);
 }
 
 
 
+// 場面1の会話（ブラウザの読み上げ）。音オンの時だけ。人の台詞は仲良く、AI の台詞は平板に
+const talk1 = (() => {
+  const S = window.speechSynthesis; if (!S) return { update() {}, stop() {} };
+  const HW = ['この前の件、どうでした？', 'なるほど、そこが気になってたんですね', '一回、現場を見に行ってもいいですか', 'それ、いいですね。やってみましょう', 'お客さんの声、もう少し聞いてみたいです', 'じゃあ来週、また話しましょう'];
+  const HC = ['実はまだ迷ってて', '続けられるかどうかが心配なんです', 'ありがとうございます、助かります', 'うちの強みって何だと思います？', 'ははは、たしかに', 'それ、社内でも話してみます'];
+  const AI = ['最適な回答を生成しました', '推奨案を提示します', '処理を続行します', '入力を確認しました', '問題は検出されませんでした', '次の手順に進みます', '感情は考慮対象外です'];
+  let voices = [], busy = false, next = 0, lastPair = -1;
+  const load = () => { voices = S.getVoices().filter((v) => /^ja/i.test(v.lang)); };
+  load(); S.addEventListener?.('voiceschanged', load);
+  const pick = (a) => a[(Math.random() * a.length) | 0];
+  function say(text, pitch, rate, vol, vi) {
+    const u = new SpeechSynthesisUtterance(text); u.lang = 'ja-JP';
+    if (voices.length) u.voice = voices[vi % voices.length];
+    u.pitch = pitch; u.rate = rate; u.volume = vol;
+    busy = true; u.onend = u.onerror = () => { busy = false; };
+    S.speak(u);
+  }
+  return {
+    stop() { if (busy || S.speaking) S.cancel(); busy = false; next = 0; },
+    update(t, lv, hands, robot) {
+      if (!SND.on || lv < 0.2) { if (S.speaking) S.cancel(); busy = false; return; }
+      if (busy || S.speaking || t < next) return;
+      // 話す人を選ぶ：まだ人どうしの組なら作り手かクライアント、AI になった組は AI だけ
+      const pairs = [...new Set(hands.map((h) => h.pair))];
+      const human = pairs.filter((p) => hands[p * 2].mode !== 'ai'), ai = pairs.filter((p) => hands[p * 2].mode === 'ai');
+      const useAI = ai.length && (human.length === 0 || Math.random() < robot * 0.9 + 0.1);
+      if (useAI) {
+        const p = pick(ai);
+        say(pick(AI), Math.max(0.05, 0.35 - robot * 0.3), 0.9, lv * 0.55, 1 + p);   // 低く平板・小さく（ボソボソ）
+        next = t + 0.6 + Math.random() * 0.8;
+      } else if (human.length) {
+        let p = pick(human); if (p === lastPair && human.length > 1) p = pick(human); lastPair = p;
+        const worker = Math.random() < 0.5;
+        say(pick(worker ? HW : HC), (worker ? 1.15 : 0.9) * (1 - robot * 0.5) + Math.random() * 0.15, 1.05 + Math.random() * 0.15 - robot * 0.1, lv * 0.85, worker ? p : p + 3);
+        next = t + 0.15 + Math.random() * 0.5;
+      }
+    },
+  };
+})();
 const H1SEQ = [600, 1150, 1650, 2100, 2500, 2850, 3150, 3420, 3660, 3880, 4080, 4260, 4420, 4560];   // 奥から順に。だんだん速く
 let h1T0 = -1, h1Idx = 0, h1Cyc = -1;
 const h1vp = mkGlow(9, 0xdfe8ff, 0); h1vp.position.set(6 - 1.9, 1.2, -58 - (SP ? 11 : 14) * 3.1 - 2); scene.add(h1vp);
@@ -560,7 +600,7 @@ const tvs = { list: [], parts: [], scrU: null };
   push(T[3].clone(), dW * 0.24 / tvW, wq.clone(), true);
   // 番組を流すテレビ：主役＋4台を無造作に（So 11/24「5台ぐらい、それぞれ違う番組」）
   // はっきり見える2台（主役と同じ奥行き）・すぐ手前でぼける1台・奥でぼける1台（So 11/24「無造作感」）
-  const SHOWN = [[0.3, 0.3, -0.8, 0.15, -0.35, -0.08], [-0.3, -0.36, -1.0, 0.15, 0.4, 0.07], [0.52, -0.5, 6.0, 0.2, -0.7, -0.2], [-0.2, 0.24, -16, 0.22, 0.3, 0.15]];
+  const SHOWN = [[0.33, 0.27, -0.8, 0.21, -0.3, -0.06], [-0.34, -0.34, -1.0, 0.21, 0.35, 0.05], [0.52, -0.5, 6.0, 0.2, -0.7, -0.2], [-0.2, 0.24, -16, 0.22, 0.3, 0.15]];
   for (const [x, y, z, w, ry, rz] of SHOWN) {
     const p = T[3].clone().addScaledVector(R, x * dW * (SP ? 0.7 : 1)).addScaledVector(Up, y * dW).addScaledVector(N, z);
     push(p, w * dW / tvW, wq.clone().multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(rr(-.12, .12), ry, rz))), false);
@@ -817,7 +857,7 @@ const _n5 = scene.children.length;   // 旧案（下の塊）は隠し、「人�
 
 s5.old = scene.children.slice(_n5); s5.old.forEach((o) => { o.visible = false; });
 let sc5 = null, s5T = 0;
-createScene5({ THREE, scene, center: V(T[5].x, T[5].y - 3.7, T[5].z - 1), quality: SP ? 'sp' : 'pc', renderer }).then((o) => { sc5 = o; sc5.setCamera?.(camera); sc5.group.visible = false; }).catch((e) => console.warn('sc5', e));
+createScene5({ THREE, scene, center: V(T[5].x, T[5].y - 5.2, T[5].z - 1), quality: SP ? 'sp' : 'pc', renderer }).then((o) => { sc5 = o; sc5.setCamera?.(camera); sc5.group.visible = false; }).catch((e) => console.warn('sc5', e));
 
 // ---------- 場面6：ばらばらの短い板（個別最適）が、1本の長い橋（全体最適）に揃い、遠い光へ ----------
 const s6 = { planks: null, items: [] };
@@ -1185,7 +1225,7 @@ function camS(P) {
   return Math.min(s, 6);
 }
 const tmpV = new THREE.Vector3(), look = new THREE.Vector3(), lookS = new THREE.Vector3().copy(T[0]);
-const sideOf = [0, 1, -1, 1, -1, -1, -1, 0];
+const sideOf = [0, 0.4, -1, 1, -1, -1, -1, 0];   // 場面1は中央寄り（So 11/24）
 const spOff = [0, .12, -.04, .12, .1, .12, .14, 0];
 const DAWN_POS = V(0, 10.6, -468);
 let viewShift = 0;
@@ -1281,36 +1321,44 @@ function frame() {
   // もや：近すぎ・遠すぎは消す
   for (const hz of hazes) { const d = hz.s.position.distanceTo(camera.position); hz.s.material.opacity = hz.base * sstep(6, 26, d) * (1 - sstep(150, 230, d)) * (1 - dawn); }
 
-  // 場面1：話す組。奥の組から作り手が1人ずつ AI に置き換わる → 人は黙り、AI だけがボソボソ話す（怖い）→ しばらくして戻る
-  const on1 = Math.abs(Ps - 1) < 0.75;
+  // 場面1：話す組。奥の組から作り手が1人ずつ AI に → 相手の人は動きが止まって黙り、AI だけがボソボソ話す
+  //   進みは一方通行（場面にいる間は戻らない）。場面から十分離れた時だけ最初に戻す（So 11/24）
+  const vis1 = Ps > 0.35 && Ps < 2.7;
+  if (!vis1) { h1T0 = -1; hands.forEach((h) => { h.u.value = 0; h.lit = false; h.cT = -1; }); talk1.stop(); }
+  const on1 = Math.abs(Ps - 1.55) < 0.45;
   if (on1 && h1T0 < 0) h1T0 = t;
-  if (!on1) h1T0 = -1;
-  const CYC1 = 17000, hc = on1 ? (t - h1T0) * 1000 : 0, ht = hc % CYC1, reset = ht > 15800;
-  const vlist = [];
+  const e1 = h1T0 < 0 ? 0 : t - h1T0;
+  const NP = SP ? 4 : 7;
+  let nConv = 0;
   hands.forEach((h) => {
-    const order = (SP ? 4 : 7) - 1 - h.pair;                         // 0＝一番奥の組
-    const at = 1500 + order * 1500;                                    // 1.5秒ごとに1組
-    const conv = h.isWorker && on1 && ht >= at && !reset;
-    if (h.isWorker) {
-      if (conv && !h.lit) { h.lit = true; h.fl = t; SND.swap(order / 7); }
-      if (!conv) h.lit = false;
-      h.u.value += ((conv ? 1 : 0) - h.u.value) * (conv ? 0.25 : 0.05);
-    }
-    const partnerAI = hands[h.pair * 2].u.value > 0.5;
-    const ai = h.isWorker && h.u.value > 0.5;
-    // 動き：人は身ぶりを交えて話す／AI は固く、ときどきピクッと／相手が AI になった人は止まって黙る
-    const talk = !ai && !partnerAI;
-    const sway = talk ? Math.sin(t * 2.6 + h.ph) * 0.07 + Math.sin(t * 6.1 + h.ph * 2) * 0.025 : 0;
-    const twitch = ai ? (Math.sin(t * 0.9 + h.ph) > 0.97 ? 0.08 : 0) : 0;
-    h.g.rotation.y = h.baseRY + sway + twitch;
-    h.g.position.y = h.baseY + (talk ? Math.abs(Math.sin(t * 3.2 + h.ph)) * 0.025 : 0);
+    const order = NP - 1 - h.pair;                                     // 0＝一番奥の組
+    const at = 4 + order * 2.3;                                        // 4秒は皆で話し、そこから2.3秒ごとに1組
+    if (h.isWorker && h1T0 >= 0 && e1 >= at && h.u.value < 0.5 && !h.lit) { h.lit = true; h.fl = t; h.cT = t; SND.swap(order / 7); }
+    if (h.isWorker) h.u.value += ((h.lit ? 1 : 0) - h.u.value) * (h.lit ? 0.2 : 0.05);
+    if (h.isWorker && h.lit) nConv++;
+  });
+  hands.forEach((h) => {
+    const w = hands[h.pair * 2], ai = h.isWorker && h.u.value > 0.5;
+    const since = w.lit ? t - w.cT : -1;                               // 相手（作り手）が AI になってからの時間
+    const live = h.isWorker ? (ai ? 0 : 1) : (since < 0 ? 1 : Math.max(0, 1 - since / 2.5));   // 身ぶりの大きさ
+    const dir = h.isWorker ? 1 : -1;                                   // 相手の方向（x）
+    // 人：うなずき・身を乗り出す・笑って揺れる。相手が AI になると、だんだん固まり、少しうつむく
+    h.laugh = (h.laugh || 0) - dt; if (live > 0.5 && h.laugh < -2 && Math.random() < dt * 0.25) h.laugh = 0.7;
+    const lg = h.laugh > 0 ? Math.sin((0.7 - h.laugh) / 0.7 * Math.PI) : 0;
+    h.g.rotation.y = h.baseRY + live * (Math.sin(t * 1.3 + h.ph) * 0.16 + Math.sin(t * 3.1 + h.ph * 2) * 0.04)
+      + (ai ? (Math.sin(t * 0.8 + h.ph) > 0.985 ? 0.12 : 0) : 0);
+    h.g.rotation.z = live * (lg * 0.1 + Math.sin(t * 2.2 + h.ph) * 0.03) + (h.isWorker ? 0 : (1 - live) * (since > 0 ? -0.06 : 0));
+    h.g.position.x = (6 + (h.isWorker ? -1.05 : 1.05)) + dir * live * (0.1 + 0.08 * Math.sin(t * 1.7 + h.ph));
+    h.g.position.y = h.baseY + live * (Math.abs(Math.sin(t * 3.4 + h.ph)) * 0.035 + lg * 0.09);
     const fe = (t - (h.fl ?? -9)) / 0.7;
     h.flash.material.opacity = fe < 1 ? (fe < 0.25 ? fe / 0.25 : 1 - (fe - 0.25) / 0.75) * 0.9 : 0;
     h.flash.scale.setScalar(1.4 + 2.4 * clamp(fe));
     if (h.glow) h.glow.material.opacity = sstep(0.6, 1, h.u.value) * (0.75 + 0.25 * Math.sin(t * 7 + h.j));
-    vlist.push({ mode: ai ? 'ai' : (talk ? 'human' : 'quiet') });
+    h.mode = ai ? 'ai' : (live > 0.3 ? 'human' : 'quiet');
   });
-  SND.people(vlist, on1 ? 1 - sstep(0.25, 0.65, Math.abs(Ps - 1.55)) : 0);
+  const lv1 = vis1 ? 1 - sstep(0.25, 0.7, Math.abs(Ps - 1.55)) : 0;
+  SND.people(hands.map((h) => ({ mode: h.mode === 'human' ? 'human' : h.mode })), lv1 * 0.45);   // わちゃわちゃの下地（小さめ）
+  talk1.update(t, lv1, hands, nConv / NP);                                                       // 言葉の会話
   h1vp.material.opacity = 0;
   // 場面2：枝が伸びる
   { const in2 = Math.abs(Ps - 2) < 0.75; const base = sstep(-0.45, 0.4, Ps - 2) * 0.32;   // ×2.2 で初期の木（世代8/11≒0.7）まで
@@ -1325,7 +1373,7 @@ function frame() {
       sh.acc = (sh.acc || 0) + dt; if (!sh.hero && sh.acc < (SP ? 1 / 12 : 1 / 24)) continue;   // 小さい画面は描き直しを間引く
       sh.show.update(t + sh.v.ph * 7, sh.acc); sh.acc = 0; sh.tex.needsUpdate = true;
       // ときどき乱れる：砂嵐に切り替わり、横にずれ、「プシュッ」
-      sh.next -= dt; if (sh.next < 0) { sh.next = 1.5 + Math.random() * 4.5; sh.gl = 0.12 + Math.random() * 0.25; if (lv > 0.3) SND.psh(sh.hero ? 1 : 0.5); }
+      sh.next -= dt; if (sh.next < 0) { sh.next = 4 + Math.random() * 7; sh.gl = 0.1 + Math.random() * 0.18; if (lv > 0.3) SND.psh(sh.hero ? 1 : 0.5); }
       if (sh.gl > 0) { sh.gl -= dt; sh.mat.map = noiseTex; noiseTex.offset.set(Math.random(), Math.random()); sh.mat.color.setScalar(0.55 + Math.random() * 0.4); }
       else { sh.mat.map = sh.tex; sh.mat.color.setScalar(1); }
     } }
