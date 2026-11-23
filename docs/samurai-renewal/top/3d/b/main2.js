@@ -109,8 +109,8 @@ const loadGLB = (url, key) => new Promise((res) => {
 const fontsP = (document.fonts ? Promise.all([
   document.fonts.load('500 100px "Space Grotesk"'), document.fonts.load('400 12px "JetBrains Mono"'),
 ]).catch(() => {}) : Promise.resolve()).then(() => { prog.e = 1; });
-const [gOld, gHand, gTV, gRock] = await Promise.all([
-  loadGLB('3d/b/assets_b.glb', 'a'), loadGLB('3d/b/v2/hand.glb', 'b'), loadGLB('3d/b/v2/tv.glb', 'c'), loadGLB('3d/b/v2/rocks.glb', 'd'), fontsP,
+const [gOld, gHand, gTV, gRock, , gPeople] = await Promise.all([
+  loadGLB('3d/b/assets_b.glb', 'a'), loadGLB('3d/b/v2/hand.glb', 'b'), loadGLB('3d/b/v2/tv.glb', 'c'), loadGLB('3d/b/v2/rocks.glb', 'd'), fontsP, loadGLB('3d/b/v2/people.glb', 'e'),
 ]);
 
 // ---------- 形の取り出し（v2 があれば v2、無ければ今の assets_b） ----------
@@ -417,59 +417,63 @@ const hands = [];
     };
     mat.customProgramCacheKey = () => (isChrome ? 'dchrome' : 'dplaster');
   };
-  const pedMat = rockMaterial(new THREE.Color(0.03, 0.05, 0.1), 0x3b4352, null, 'ped');
+  // 人の立ち姿（石膏）とロボット（暗い金属）。同じ姿勢・同じ原点で、1体ずつ置き換わる（So 11/24）
+  const PV = [];
+  if (gPeople) for (const k of ['A', 'B', 'C']) {
+    const ro = findObj(gPeople, 'Robot_' + k), h = geoOf(findObj(gPeople, 'Human_' + k)), r = geoOf(ro), gl = geoOf(findObj(gPeople, 'Robot_' + k + '_Glow'), ro);
+    if (h && r) PV.push({ h, r, gl });
+  }
+  if (PV.length) used.people = true;
   const group = new THREE.Group(); scene.add(group);
-  const rows = SP ? 12 : 16;
-  pedG = pedG.clone(); addRot(pedG, rows, 0);
-  const peds = new THREE.InstancedMesh(pedG, pedMat, rows); peds.frustumCulled = false; group.add(peds);
+  const rows = SP ? 11 : 14;
   for (let j = 0; j < rows; j++) {
-    const x = 6 - 1.9, z = -58 - j * 2.9;
-    dummy.position.set(x, -0.3, z); dummy.rotation.set(0, 0, 0); dummy.scale.set(1, 1, 1); dummy.updateMatrix(); peds.setMatrixAt(j, dummy.matrix);
+    const x = 6 - 1.9 + (j % 2 ? 0.35 : -0.35), z = -58 - j * 3.1;
     const u = { value: 0 };
     const pl = plaster(); pl.emissive = new THREE.Color(0); dissolve(pl, u, false);
-    if (handSrc && handSrc.normalMap) { pl.normalMap = handSrc.normalMap; }
-    const ch = chrome(); ch.emissive = new THREE.Color(0); dissolve(ch, u, true);
-    const h1 = new THREE.Mesh(handG, pl), h2 = new THREE.Mesh(handG, ch);
-    const hg = new THREE.Group(); hg.add(h1, h2);
-    hg.scale.setScalar(1.3); hg.position.set(x, 0.4 + 0.54 * 1.3, z); hg.rotation.set(0, 0.95, 0);
+    const rb = new THREE.MeshStandardMaterial({ color: 0x6b7586, roughness: 0.26, metalness: 0.9, envMap: envTex, envMapIntensity: 3.2, vertexColors: true }); rb.emissive = new THREE.Color(0); dissolve(rb, u, true);
+    const hg = new THREE.Group(); let glow = null;
+    if (PV.length) {
+      const v = PV[j % PV.length];
+      hg.add(new THREE.Mesh(v.h, pl), new THREE.Mesh(v.r, rb));
+      if (v.gl) { glow = new THREE.Mesh(v.gl, new THREE.MeshBasicMaterial({ color: new THREE.Color(0xbfe6ff).multiplyScalar(2.4), toneMapped: false, transparent: true, opacity: 0 })); fx(glow); hg.add(glow); }
+      hg.scale.setScalar(1.3); hg.position.set(x, -1.35, z); hg.rotation.set(0, 0.55 + (j % 3 - 1) * 0.12, 0);
+    } else {
+      hg.add(new THREE.Mesh(handG, pl), new THREE.Mesh(handG, rb));
+      hg.scale.setScalar(1.3); hg.position.set(x, 0.4 + 0.54 * 1.3, z); hg.rotation.set(0, 0.95, 0);
+    }
     group.add(hg);
-    const fl = mkGlow(1.6, 0xcfe0ff, 0); fl.position.set(x, hg.position.y + 0.9, z); scene.add(fl);
-    hands.push({ u, j, g: hg, baseY: hg.position.y, ph: rnd() * 6, flash: fl, lit: false });
+    const fl = mkGlow(1.6, 0xcfe0ff, 0); fl.position.set(x, hg.position.y + (PV.length ? 1.55 * 1.3 : 0.9), z); scene.add(fl);
+    hands.push({ u, j, g: hg, baseY: hg.position.y, ph: rnd() * 6, flash: fl, lit: false, glow });
   }
 }
 
-const H1SEQ = [400, 750, 1050, 1300, 1500, 1670, 1810, 1930, 2030, 2120, 2200, 2550];
+
+const H1SEQ = [600, 1150, 1650, 2100, 2500, 2850, 3150, 3420, 3660, 3880, 4080, 4260, 4420, 4560];   // 奥から順に。だんだん速く
 let h1T0 = -1, h1Idx = 0, h1Cyc = -1;
-const h1vp = mkGlow(9, 0xdfe8ff, 0); h1vp.position.set(6 - 1.9, 1.6, -58 - (SP ? 12 : 16) * 2.9 - 2); scene.add(h1vp);
+const h1vp = mkGlow(9, 0xdfe8ff, 0); h1vp.position.set(6 - 1.9, 1.2, -58 - (SP ? 11 : 14) * 3.1 - 2); scene.add(h1vp);
 
 // ---------- 場面2：無数に枝分かれする光の線の森（青灰の線） ----------
 const forestU = { uTime: U.time, uGrow: { value: 0 }, uFogC: U.fogCol, uFogD: U.fogD };
 let fGrowT = 0;
 {
-  // 枝分かれは止まらない：世代を重ねるほど本数が増え、ゆっくり画面の手前まで埋めていく（So 11/24）
+  // 枝分かれは止まらない：初期の木（線の途中から生える・離れて見る構図）のまま、世代を重ねて膨らみ続ける（So 11/24）
   const pos = [], ord = [], hi = [], tips = [], tipOrd = [];
-  const NT = SP ? 12 : 22, DEP = SP ? 9 : 10;
-  const eye2 = camCurve.getPoint(2 / 6);
+  const NT = Q.trees, DEP = Q.depth + 3;
   let maxO = 0; const segsAll = [];
   for (let t = 0; t < NT; t++) {
-    let rootP, d0;
-    if (t < 6) { rootP = lineCurve.getPoint(rr(0.24, 0.42)); const up = t % 2 ? 1 : -1; d0 = V(rr(-0.6, 0.6), up * rr(0.5, 1), rr(-0.6, 0.3)).normalize(); }
-    else {   // 後から芽吹く根：主役の周りから、カメラの方へも伸びる
-      rootP = T[2].clone().add(V(rr(-14, 14), rr(-9, 9), rr(-12, 8)));
-      d0 = eye2.clone().sub(rootP).normalize().add(randDir().multiplyScalar(1.1)).normalize();
-    }
-    const born = t < 6 ? 0 : rr(0.5, 4.5);   // 芽吹く遅れ（世代の単位）
+    const rootP = lineCurve.getPoint(rr(0.24, 0.42)); const up = t % 2 ? 1 : -1;
+    const d0 = V(rr(-0.6, 0.6), up * rr(0.5, 1), rr(-0.6, 0.3)).normalize();
     const grow = (p, d, len, dep, o, h) => {
       const e = p.clone().add(d.clone().multiplyScalar(len));
       segsAll.push([p, e, o, o + 1, h]); maxO = Math.max(maxO, o + 1);
       if (dep >= DEP) { tips.push(e); tipOrd.push(o + 1); return; }
-      const kids = rnd() < 0.3 ? 3 : 2;
+      const kids = rnd() < 0.15 ? 3 : 2;
       for (let c = 0; c < kids; c++) {
-        const nd = d.clone().add(randDir().multiplyScalar(rr(0.45, 0.95))).normalize();
-        grow(e, nd, len * rr(0.78, 0.92), dep + 1, o + 1, h && c === 0);
+        const nd = d.clone().add(randDir().multiplyScalar(rr(0.45, 0.9))).normalize();
+        grow(e, nd, len * (dep < Q.depth ? rr(0.7, 0.86) : rr(0.86, 0.97)), dep + 1, o + 1, h && c === 0);   // 後の世代ほど縮まず外へ広がる
       }
     };
-    grow(rootP, d0, rr(2.4, 3.8), 0, born, t === 1);
+    grow(rootP, d0, rr(2.6, 4), 0, 0, t === 1);
   }
   for (const sg of segsAll) { pos.push(sg[0].x, sg[0].y, sg[0].z, sg[1].x, sg[1].y, sg[1].z); ord.push(sg[2] / maxO, sg[3] / maxO); hi.push(sg[4] ? 1 : 0, sg[4] ? 1 : 0); }
   for (let i = 0; i < tipOrd.length; i++) tipOrd[i] /= maxO;
@@ -665,7 +669,7 @@ const convU = { uTime: U.time, uConv: { value: 0 }, uC: { value: T[4] }, uPx: U.
         vC=mix(vec3(.50,.58,.74),vec3(.92,.95,1.),k); vA=(.42+.58*k)*(1.-fogF(-mv.z)); }`,
     fragmentShader: `varying vec3 vC; varying float vA; void main(){ float r=length(gl_PointCoord-.5); gl_FragColor=vec4(vC*smoothstep(.5,0.,r)*vA,1.); }`,
   });
-  const p = new THREE.Points(g, m); p.frustumCulled = false; p.visible = false; scene.add(fx(p));   // 旧案（チューニング案に差し替え）
+  const p = new THREE.Points(g, m); p.frustumCulled = false; scene.add(fx(p));
 }
 const beam = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 1, 12, 1, true).translate(0, 0.5, 0), new THREE.ShaderMaterial({
   transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, uniforms: { uA: { value: 0 } },
@@ -816,58 +820,76 @@ updatePlanks(0, 0);
 // 見えている粒は1コマ 15〜30 個、短い光の粒と細く長い筋が混ざる。
 const fvx = document.getElementById('fvx'), fvSum = document.getElementById('fsum'), fvv = document.getElementById('fvv');
 const tmpFv = new THREE.Vector3();
+let fvDark = 0;
+const fvFlash = (() => { const d = document.createElement('div'); d.setAttribute('aria-hidden', 'true'); d.style.cssText = 'position:fixed;inset:0;z-index:5;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 50%,rgba(235,248,255,1) 0%,rgba(167,228,255,.55) 30%,rgba(0,0,0,0) 70%)'; document.body.appendChild(d); return d; })();
+// 本線（初期の FV：top-v2）と同じ粒：中心から放射状に手前へ、手前ほど大きく尾を引く。紫〜桃の混ざる色。
+// 文字がそろうと急に遅くなり、水色の波紋が広がる。背景は真っ黒（So 11/24「初期の FV が良かった」）
+const TR = (new URLSearchParams(location.search).get('tr') || 'a').toLowerCase();   // FV→場面1 のつなぎ方の案
 const FVP = (() => {
-  const cv = document.getElementById('fvc'), c = cv.getContext('2d');
-  const K = 0.22;                       // 外へ広がる速さ（1秒あたりの割合・実測）
-  let W = 0, H = 0, D = 1, P = [], rings = [], lastR = -99;
+  const cv = document.getElementById('fvc'), ctx = cv.getContext('2d');
+  const PAL = [[255,255,255],[255,255,255],[205,224,255],[160,200,255],[188,170,255],[214,198,255],[255,150,214],[255,214,160]];
+  const W8 = [5,3,4,3,3,2,1,1];
+  const pick = () => { let t = Math.random() * W8.reduce((x, y) => x + y, 0); for (let i = 0; i < PAL.length; i++) { t -= W8[i]; if (t <= 0) return PAL[i]; } return PAL[0]; };
+  let W = 0, H = 0, D = 1, P = [];
   const SPR = (() => { const o = document.createElement('canvas'); o.width = o.height = 64; const g = o.getContext('2d');
-    const r = g.createRadialGradient(32, 32, 0, 32, 32, 32); r.addColorStop(0, 'rgba(255,255,255,1)'); r.addColorStop(.25, 'rgba(255,255,255,.85)'); r.addColorStop(.55, 'rgba(255,255,255,.18)'); r.addColorStop(1, 'rgba(255,255,255,0)');
+    const r = g.createRadialGradient(32, 32, 0, 32, 32, 32); r.addColorStop(0, 'rgba(255,255,255,1)'); r.addColorStop(.28, 'rgba(255,255,255,.9)'); r.addColorStop(.55, 'rgba(255,255,255,.22)'); r.addColorStop(1, 'rgba(255,255,255,0)');
     g.fillStyle = r; g.fillRect(0, 0, 64, 64); return o; })();
-  const spawn = (q, fresh) => {
-    const a = Math.random() * 6.283; q.ux = Math.cos(a); q.uy = Math.sin(a);
-    q.r = fresh ? Math.pow(Math.random(), 0.7) : 0.02 + Math.random() * 0.06;     // 画面の短辺に対する半径
-    q.streak = Math.random() < 0.55;                                               // 細く長い筋
-    q.b = 0.12 + 0.88 * Math.pow(Math.random(), 2.6);                              // 明るさ（多くは暗く、一部だけ明るい）
-    q.s = 0.7 + Math.random() * 0.8; q.tw = Math.random() * 6.3; return q;
-  };
-  const fit = () => { D = Math.min(1.5, devicePixelRatio || 1); W = innerWidth; H = innerHeight; cv.width = Math.round(W * D); cv.height = Math.round(H * D); c.setTransform(D, 0, 0, D, 0, 0);
-    const n = W < 820 ? 220 : 380; P = Array.from({ length: n }, () => spawn({}, true)); };
+  const tint = new Map();
+  const sprite = c => { const k = c.join(','); if (tint.has(k)) return tint.get(k); const o = document.createElement('canvas'); o.width = o.height = 64; const g = o.getContext('2d');
+    g.drawImage(SPR, 0, 0); g.globalCompositeOperation = 'source-in'; g.fillStyle = `rgb(${k})`; g.fillRect(0, 0, 64, 64); tint.set(k, o); return o; };
+  const spawn = (q, far) => { const a = Math.random() * 6.283, r = .03 + Math.pow(Math.random(), .85) * 1.1; q.x = Math.cos(a) * r; q.y = Math.sin(a) * r; q.z = far ? .7 + Math.random() * .3 : .06 + Math.random() * .94; q.c = pick(); q.tw = Math.random() * 6.3; q.s = Math.random() * .6 + .7; return q; };
+  const fit = () => { D = Math.min(1.5, devicePixelRatio || 1); W = innerWidth; H = innerHeight; cv.width = Math.round(W * D); cv.height = Math.round(H * D); ctx.setTransform(D, 0, 0, D, 0, 0);
+    const n = W < 820 ? 170 : 330; P = Array.from({ length: n }, () => spawn({}, false)); };
   fit(); addEventListener('resize', fit);
-  function draw(dt, t, nz, vis) {
-    if (vis <= 0.01) return;
-    c.globalCompositeOperation = 'source-over'; c.clearRect(0, 0, W, H);
-    c.globalCompositeOperation = 'lighter';
-    const cx = W * (0.5 - FV.cx * 0.06), cy = H * (0.5 - FV.cy * 0.06), S = Math.min(W, H), M = Math.hypot(W, H) * 0.55 / S;
-    const mv = 0.12 + 0.88 * nz, g = Math.exp(K * mv * dt);
+  let nz = 1, tt = 0, gx = .5, gy = .5, RG = [], lastR = -9999;
+  const st = { cx: 0, cy: 0 };
+  function draw(dtS, NOISE, boost, opaque) {
+    const dt = dtS * 1000; nz += (NOISE - nz) * (1 - Math.pow(1 - .08, dt / 33)); tt += dt;
+    gx += (.5 + FV.mx - gx) * .04; gy += (.5 + FV.my - gy) * .04;
+    ctx.globalCompositeOperation = 'source-over';
+    if (opaque) { ctx.fillStyle = '#02030a'; ctx.fillRect(0, 0, W, H); } else ctx.clearRect(0, 0, W, H);
+    const cx = W * (.5 + (gx - .5) * .12), cy = H * (.5 + (gy - .5) * .12), f = Math.min(W, H) * .55, big = W < 820 ? .78 : 1;
+    st.cx = cx; st.cy = cy;
+    const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(W, H) * .6);
+    g.addColorStop(0, `rgba(70,60,150,${(.05 + .05 * nz) * opaque})`); g.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    ctx.globalCompositeOperation = 'lighter';
+    const v = (.00012 + .00014 * nz) * dt * boost, TRL = 300 + 200 * nz + 400 * (boost - 1);
     for (const q of P) {
-      q.r *= g; if (q.r > M) { spawn(q, false); continue; }
-      const sx = cx + q.ux * q.r * S, sy = cy + q.uy * q.r * S;
-      const near = Math.min(1, q.r / 0.9), tw = 0.8 + 0.2 * Math.sin(t * 1.7 * q.s + q.tw);
-      const al = Math.min(1, q.b * (0.35 + 0.9 * near) * tw) * vis;
-      const rad = (1.3 + 6.2 * Math.pow(near, 1.35)) * q.s * (W < 820 ? 0.8 : 1);
-      // 尾：筋は長く、粒は短く（止まると尾も縮む）
-      const tl = (q.streak ? 2.4 : 0.6) * (0.3 + 0.7 * nz), rb = q.r * Math.exp(-K * tl), bx = cx + q.ux * rb * S, by = cy + q.uy * rb * S;
-      const lg = c.createLinearGradient(bx, by, sx, sy); lg.addColorStop(0, 'rgba(255,255,255,0)'); lg.addColorStop(1, `rgba(255,255,255,${al * (q.streak ? 0.55 : 0.4)})`);
-      c.strokeStyle = lg; c.lineWidth = q.streak ? Math.max(1.4, rad * 0.62) : rad * 1.15; c.lineCap = 'round';
-      c.beginPath(); c.moveTo(bx, by); c.lineTo(sx, sy); c.stroke();
-      if (!q.streak ? q.b > 0.25 : q.b > 0.75) { c.globalAlpha = al; const d = rad * 3.4; c.drawImage(SPR, sx - d / 2, sy - d / 2, d, d); c.globalAlpha = 1; }
+      q.z -= v;
+      if (q.z < .05) { spawn(q, true); continue; }
+      const sx = cx + q.x / q.z * f, sy = cy + q.y / q.z * f;
+      if (sx < -60 || sy < -60 || sx > W + 60 || sy > H + 60) { spawn(q, true); continue; }
+      const near = 1 - q.z, tw = .7 + .3 * Math.sin(tt * .0016 * q.s + q.tw);
+      const al = Math.min(.95, (.22 + .78 * near * near) * tw);
+      const [r, gg, b] = q.c;
+      const rad = (.8 + 6.2 * Math.pow(near, 1.7)) * q.s * big;
+      const zb = Math.min(1.2, q.z + v / Math.max(dt, 1) * TRL), bx = cx + q.x / zb * f, by = cy + q.y / zb * f;
+      if (near > .35 || boost > 1.2) {
+        const lg = ctx.createLinearGradient(bx, by, sx, sy); lg.addColorStop(0, `rgba(${r},${gg},${b},0)`); lg.addColorStop(1, `rgba(${r},${gg},${b},${al * .5})`);
+        ctx.strokeStyle = lg; ctx.lineWidth = rad * 1.1; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(sx, sy); ctx.stroke();
+      }
+      if (rad < 1.4) { ctx.fillStyle = `rgba(${r},${gg},${b},${al})`; ctx.fillRect(sx - rad * .7, sy - rad * .7, rad * 1.4, rad * 1.4); }
+      else { ctx.globalAlpha = al; const d = rad * 3.2; ctx.drawImage(sprite(q.c), sx - d / 2, sy - d / 2, d, d); ctx.globalAlpha = 1; }
     }
-    // 波紋：文字がそろうと中心から水の輪が広がる
-    const Sg = 1 - nz;
-    if (Sg < 0.02) rings = [];
-    else if (t - lastR > 1.5) { lastR = t; rings.push({ r: 0 }); }
-    tmpFv.copy(origin.position).project(camera); const rx = (tmpFv.x * 0.5 + 0.5) * W, ry = (-tmpFv.y * 0.5 + 0.5) * H, RM_ = Math.hypot(W, H) * 0.6, n = W < 820 ? 110 : 160;
-    rings = rings.filter((o) => { o.r += 66 * dt; const a = (1 - o.r / RM_) * 0.7 * Sg * vis; if (a <= 0) return false;
-      for (let i = 0; i < n; i++) { const th = i / n * 6.283, jr = o.r + (Math.random() - 0.5) * 26 * nz * nz;
-        c.fillStyle = i % 7 ? `rgba(255,106,54,${a})` : `rgba(255,170,120,${a})`; c.fillRect(rx + Math.cos(th) * jr, ry + Math.sin(th) * jr * 0.62, 2.2, 2.2); }
+    // 水色の波紋（文字がそろった合図）
+    const S = 1 - nz;
+    if (S < .02) RG = [];
+    else if (tt - lastR > 1500) { lastR = tt; RG.push({ r: 0 }); }
+    const rx = W * .5, ry = H * .42, M = Math.hypot(W, H) * .6, n = W < 820 ? 110 : 160;
+    RG = RG.filter(o => { o.r += 2.2 * dt / 33; const a = (1 - o.r / M) * .7 * S; if (a <= 0) return false;
+      for (let i = 0; i < n; i++) { const th = i / n * 6.283, jr = o.r + (Math.random() - .5) * 26 * nz * nz;
+        ctx.fillStyle = i % 7 ? `rgba(167,228,255,${a})` : `rgba(214,243,255,${a})`;
+        ctx.fillRect(rx + Math.cos(th) * jr, ry + Math.sin(th) * jr * .62, 2, 2); }
       return true; });
+    ctx.globalCompositeOperation = 'source-over';
   }
-  return { draw };
+  return { draw, st, get nz() { return nz; } };
 })();
 const fvWords = [...fvx.querySelectorAll('.wd')];
 fvWords.forEach((w) => { const tx = w.textContent; w.textContent = ''; [...tx].forEach((c) => { const sp = document.createElement('span'); sp.className = 'ch'; sp.textContent = c; w.appendChild(sp); }); });
 const FV = { nz: 1, A: [], B: [], F: 100, mx: 0, my: 0, cx: 0, cy: 0, locked: false };
-addEventListener('pointermove', (e) => { FV.mx = e.clientX / innerWidth - 0.5; FV.my = e.clientY / innerHeight - 0.5; }, { passive: true });
+// FV はカーソルで動かさない（So 11/24）
 function fvLayout() {
   const W = innerWidth, H = innerHeight, sp = W <= 820;
   fvWords.forEach((w) => { w.style.fontSize = '100px'; w.style.transform = 'none'; });
@@ -890,12 +912,30 @@ function fvFrame(dt, t, Ps) {
   const out = 1 - sstep(0.62, 0.8, Ps);
   fvx.style.opacity = out; fvx.style.visibility = out < 0.01 ? 'hidden' : 'visible';
   hint.style.opacity = 1 - clamp(p / 0.2);
-  FV.nz = 1 - e;
+  FV.nz = RM ? 0 : FVP.nz;
   if (!FV.locked && e > 0.985) { FV.locked = true; SND.lock(); } else if (FV.locked && e < 0.6) FV.locked = false;
-  // 粒の層：そろうと止まり、宇宙へ抜けるところで消える
-  const vo = 1 - sstep(0.58, 0.86, Ps);
+  // 粒の層と、場面1へのつなぎ（案 a〜d）
+  const k = sstep(0.55, 0.95, Ps);          // つなぎの進み
+  let vo = 1 - k, boost = 1, opaque = 1, mask = '', flash = 0, scale = 1;
+  if (TR === 'a') {          // a 光へ飛び込む：止まっていた粒が再び加速して手前へ流れ、白い光を抜けると宇宙
+    boost = 1 + 7 * sstep(0.55, 0.85, Ps); scale = 1 + 0.5 * k * k; vo = 1 - sstep(0.8, 0.95, Ps); flash = Math.sin(Math.PI * sstep(0.78, 0.98, Ps)) * 0.85;
+  } else if (TR === 'b') {   // b 波紋がひらく：水色の輪が広がり、輪の内側から宇宙が見えてくる
+    const R = Math.hypot(innerWidth, innerHeight) * 0.75 * sstep(0.58, 0.95, Ps);
+    vo = 1; mask = R > 1 ? `radial-gradient(circle at 50% 42%, transparent ${R}px, #000 ${R + 60}px)` : '';
+    if (Ps > 0.97) vo = 0;
+  } else if (TR === 'c') {   // c 粒が星になる：粒はその場で止まって残り、黒い地だけが溶けて宇宙が現れる
+    opaque = 1 - sstep(0.55, 0.85, Ps); vo = 1 - sstep(0.85, 1.05, Ps);
+  } else {                   // d ゆっくり暗転：粒と文字がゆっくり闇に沈み、闇の奥から宇宙が明けてくる
+    vo = 1 - sstep(0.55, 0.78, Ps); opaque = 1;
+  }
   fvv.style.opacity = vo; fvv.style.visibility = vo < 0.01 ? 'hidden' : 'visible';
-  FVP.draw(dt, t, RM ? 0 : FV.nz, Math.max(vo, 1 - sstep(0.7, 1.0, Ps)));
+  fvv.style.transform = scale !== 1 ? `scale(${scale})` : '';
+  fvv.style.webkitMaskImage = fvv.style.maskImage = mask;
+  fvFlash.style.opacity = flash;
+  if (vo > 0.01) FVP.draw(dt, RM ? 0 : 1 - e, boost, opaque);
+  // 3D 側：FV の間は朱を出さない。d は闇から明ける
+  { const oa = sstep(1.0, 1.35, Ps); origin.visible = head.visible = headCore.visible = oa > 0.01; origin.material.opacity = head.material.opacity = headCore.material.opacity = oa; sigLight.intensity = 26 * oa; }
+  fvDark = TR === 'd' ? 1 - sstep(0.72, 1.05, Ps) : 0;
 }
 // ---------- 入口の画面：音あり／音なしを選んでから始まる ----------
 const gate = document.getElementById('gate');
@@ -912,7 +952,7 @@ gate.querySelectorAll('button').forEach((b) => b.addEventListener('click', () =>
 const STOPS = [0.5, 1.55, 2.55, 3.55, 4.55, 5.55, 6.55];
 let snapBusy = false, snapRaf = 0, wheelAcc = 0, wheelT = 0, lastSnap = 0;
 function snapTo(pT) {
-  const y0 = scrollY, y1 = toY(pT), t0 = performance.now(), dur = 2600;
+  const y0 = scrollY, y1 = toY(pT), t0 = performance.now(), dur = 4200;   // 場面の切り替えはゆっくり（So 11/24）
   snapBusy = true; lastSnap = t0; cancelAnimationFrame(snapRaf);
   const step = (now) => { const k = Math.min(1, (now - t0) / dur), e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
     scrollTo(0, y0 + (y1 - y0) * e); if (k < 1) snapRaf = requestAnimationFrame(step); else setTimeout(() => { snapBusy = false; }, 120); };
@@ -936,7 +976,7 @@ addEventListener('wheel', (e) => {
   if (!inStory && !snapBusy) return;
   e.preventDefault();
   const now = performance.now();
-  if (snapBusy || now - lastSnap < 2900 && now - wheelT < 220) { wheelT = now; return; }  // 慣性の続きは捨てる
+  if (snapBusy || now - lastSnap < 4500 && now - wheelT < 220) { wheelT = now; return; }  // 慣性の続きは捨てる
   wheelT = now; wheelAcc += e.deltaY;
   if (Math.abs(wheelAcc) > 18) { const d = Math.sign(wheelAcc); wheelAcc = 0; if (!snapDir(d)) { scrollBy(0, d * 60); } }
 }, { passive: false });
@@ -1190,34 +1230,36 @@ function frame() {
   const on1 = Math.abs(Ps - 1) < 0.62;
   if (on1 && h1T0 < 0) { h1T0 = t; h1Idx = 0; h1Cyc = -1; }
   if (!on1) h1T0 = -1;
-  const hc = on1 ? (t - h1T0) * 1000 : 0, cyc = Math.floor(hc / 5400), ht = hc % 5400;
+  const CYC1 = 9000, BACK1 = 6800, hc = on1 ? (t - h1T0) * 1000 : 0, cyc = Math.floor(hc / CYC1), ht = hc % CYC1;
   if (on1 && cyc !== h1Cyc) { h1Cyc = cyc; h1Idx = 0; }
   hands.forEach((h) => {
     const order = hands.length - 1 - h.j;            // 0＝一番奥
-    const at = H1SEQ[Math.min(H1SEQ.length - 1, Math.round(order / Math.max(1, hands.length - 1) * (H1SEQ.length - 1)))] + order * 3;
-    const tgt = on1 && ht >= at && ht < 4300 ? 1 : 0;
+    const at = H1SEQ[Math.min(H1SEQ.length - 1, Math.round(order / Math.max(1, hands.length - 1) * (H1SEQ.length - 1)))];
+    const tgt = on1 && ht >= at && ht < BACK1 ? 1 : 0;
     if (on1 && tgt && !h.lit) { h.lit = true; h.fl = t; SND.swap(order / hands.length); }
-    if (!tgt) h.lit = false;
+    if (!tgt && h.lit) { h.lit = false; }
+    SND.person(h.j, hands.length, h.u.value > 0.5, on1 ? 1 - sstep(0.25, 0.6, Math.abs(Ps - 1.55)) : 0);
+    if (h.glow) h.glow.material.opacity = sstep(0.6, 1, h.u.value) * (0.8 + 0.2 * Math.sin(t * 9 + h.j));
     h.u.value += (tgt - h.u.value) * (tgt ? 0.32 : 0.06);
     h.g.position.y = h.baseY + Math.sin(t * 0.5 + h.ph) * 0.05;
     const fe = (t - (h.fl ?? -9)) / 0.7;
     h.flash.material.opacity = fe < 1 ? (fe < 0.25 ? fe / 0.25 : 1 - (fe - 0.25) / 0.75) * 0.9 : 0;
     h.flash.scale.setScalar(1.2 + 2.2 * clamp(fe));
   });
-  h1vp.material.opacity = on1 ? (ht < 400 ? ht / 400 : ht < 3200 ? 0.9 : Math.max(0, 1 - (ht - 3200) / 1100)) * 0.85 : 0;
+  h1vp.material.opacity = on1 ? (ht < 400 ? ht / 400 : ht < 5600 ? 0.9 : Math.max(0, 1 - (ht - 5600) / 1100)) * 0.6 : 0;
   // 場面2：枝が伸びる
-  { const in2 = Math.abs(Ps - 2) < 0.75; const base = sstep(-0.45, 0.4, Ps - 2) * 0.32;
-    if (in2) fGrowT += dt / 70;                       // 約70秒で画面が埋まる
-    forestU.uGrow.value = Math.min(1.02, Math.max(base, 0.12) + fGrowT * (in2 || fGrowT > 0 ? 1 : 0)) * (Ps > 1.2 ? 1 : 0); }
+  { const in2 = Math.abs(Ps - 2) < 0.75; const base = sstep(-0.45, 0.4, Ps - 2) * 0.32;   // ×2.2 で初期の木（世代8/11≒0.7）まで
+    if (in2) fGrowT += dt / 80;                       // 着いた時は初期の木の大きさ、そこから約80秒で画面が埋まる
+    forestU.uGrow.value = Math.min(1.02, base * 2.2 + fGrowT * 0.32) * (Ps > 1.2 ? 1 : 0); }
   // 場面3：テレビ
   if (Math.abs(Ps - 3) < 1.6) updateTVs(t, Ps);
   { const near3 = Math.abs(Ps - 3) < 1.2; tvShowMesh.visible = near3;
-    tvShow.setLevel(near3 ? 1 - sstep(0.35, 0.75, Math.abs(Ps - 3)) : 0);
+    const d3 = Math.abs(Ps - 3.55); tvShow.setLevel(near3 ? Math.max(1 - sstep(0.12, 0.4, d3), 0.06 * (1 - sstep(0.6, 1.1, d3))) : 0);
     if (near3) { tvShow.update(t, dt); tvTex.needsUpdate = true; } }
   tvs.scrU.uOn.value = 0.25 + 0.75 * sstep(-0.4, 0.3, Ps - 3);
   // 場面4（案B）：着いたら時間で目盛りが探り、約4.5秒で合う
   { const at4 = Math.abs(Ps - 4.55) < 0.32; const vis4 = 1 - sstep(0.55, 0.95, Math.abs(Ps - 4.5));
-    tune.group.visible = vis4 > 0.01; tuneU.uVis.value = vis4; tuneU.uT.value = t;
+    tune.group.visible = false && vis4 > 0.01;   // 初期の案に戻した（So 11/24） tuneU.uVis.value = vis4; tuneU.uT.value = t;
     if (at4) tune.T = Math.min(1, tune.T + dt / 4.5); else if (Math.abs(Ps - 4.5) > 0.9) tune.T = 0;
     const keys = [-6.2, 3.8, -2.2, tune.X0 + 1.1, tune.X0 - 0.35, tune.X0];
     const uu = clamp(tune.T / 0.74) * (keys.length - 1), ki = Math.min(keys.length - 2, Math.floor(uu)), kf = uu - ki, ke = kf * kf * (3 - 2 * kf);
@@ -1226,17 +1268,18 @@ function frame() {
     tuneU.uXc.value = xc; tuneU.uLock.value = lock; tuneU.uNear.value = Math.exp(-Math.pow((xc - tune.X0) / 0.9, 2)); tuneU.uBw.value = 0.9 + (0.45 - 0.9) * lock;
     tune.cur.position.x = tune.curV.position.x = xc;
     tune.cur.material.opacity = 0.55 * (1 - lock * 0.7) * vis4; tune.curV.material.opacity = 0.3 * (1 - lock) * vis4;
-    if (!tune.locked && lock > 0.6) { tune.locked = true; SND.lock(); } else if (tune.locked && lock < 0.2) tune.locked = false;
-    SND.radio({ on: vis4 * (at4 ? 1 : 0.4), x: (xc + tune.XW) / (2 * tune.XW), lock, near: tuneU.uNear.value, t }); }
+    if (false && !tune.locked && lock > 0.6) { tune.locked = true; SND.lock(); } else if (tune.locked && lock < 0.2) tune.locked = false;
+    SND.radio({ on: 0 * vis4 * (at4 ? 1 : 0.4), x: (xc + tune.XW) / (2 * tune.XW), lock, near: tuneU.uNear.value, t }); }
   // 場面4：収束（旧案は隠す）
-  const conv = 0;
+  // 止まる位置に着いてから時間で集まり、打ち上がる（約4.5秒）
+  const conv = Math.max(sstep(0.0, 0.7, tune.T), sstep(-0.3, 0.5, Ps - 4) * 0.35);
   convU.uConv.value = conv;
-  const rise = sstep(0.72, 0.95, Ps - 4);
+  const rise = sstep(0.72, 0.95, tune.T);
   beam.scale.y = 0.001 + rise * 60; beam.material.uniforms.uA.value = rise;
   core.scale.setScalar(0.4 + conv * 4.2 + Math.sin(t * 8) * 0.2 * conv); core.material.opacity = conv;
   coreW.scale.setScalar(0.2 + conv * 1.6); coreW.material.opacity = conv;
   const gv = Math.abs(Ps - 4.5) < 0.5 ? 1 : 0; gauge.style.opacity = gv;
-  if (gv) { const pct = Math.round(Math.max(tuneU.uNear.value * 0.7 * (1 - tuneU.uLock.value), tuneU.uLock.value) * 100); pc.textContent = String(pct).padStart(3, '0'); tk.style.left = pct * 1.4 * (innerWidth < 820 ? 80 / 140 : 1) + 'px'; }
+  if (gv) { const pct = Math.round(conv * 100); pc.textContent = String(pct).padStart(3, '0'); tk.style.left = pct * 1.4 * (innerWidth < 820 ? 80 / 140 : 1) + 'px'; }
   // 場面5
   if (Math.abs(Ps - 5) < 1.6) {
     const l5 = sstep(-0.1, 0.7, Ps - 5);
@@ -1322,6 +1365,7 @@ function frame() {
   dofPass.uniforms.uAp.value = 1.15 * (1 - dawn);
   finalPass.uniforms.uTime.value = t;
   finalPass.uniforms.uGl.value = RM ? 0 : gl;
+  finalPass.uniforms.uFade.value = Math.max(finalPass.uniforms.uFade.value * 0, fvDark);
   finalPass.uniforms.uCA.value = RM ? 0.001 : 0.002 + Math.min(Math.abs(vel) * 0.008, 0.012) + travel * 0.004;
   finalPass.uniforms.uWarp.value = RM ? 0 : travel * 1.0 + Math.min(Math.abs(vel) * 0.6, 1.0);
   finalPass.uniforms.uDawn.value = sstep(0.55, 1, dawn);

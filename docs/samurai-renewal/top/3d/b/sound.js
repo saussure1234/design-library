@@ -28,7 +28,7 @@ const MOODS = [
 ];
 
 export const SND = (() => {
-  let ctx = null, on = false, want = false, hiss, radioN = null, radioO = null, radioG = null, master, music, sfx, verb, padF, voices = [], sub, wind, windF, whoosh, whooshF, sig, sigG, nbuf;
+  let ctx = null, on = false, want = false, peopleV = null, peopleBus = null, hiss, radioN = null, radioO = null, radioG = null, master, music, sfx, verb, padF, voices = [], sub, wind, windF, whoosh, whooshF, sig, sigG, nbuf;
   let chord = -1, mood = MOODS[0], nextBeat = 0, beat = 0, padG, lastTick = 0, nextPing = 0, st = { noise: 1, travel: 0, vel: 0, dawn: 0, fv: 1, day: 0, tv: 0 };
   const btn = document.getElementById('snd');
   const lab = btn && btn.querySelector('.st');
@@ -99,6 +99,30 @@ export const SND = (() => {
     if (f2) o.frequency.exponentialRampToValueAtTime(f2, ctx.currentTime + a + d);
     o.connect(g); g.connect(to || sfx); env(g, a, peak, d); o.start(); o.stop(ctx.currentTime + a + d + 0.05);
   }
+  function buildPeople(n) {
+    peopleBus = ctx.createGain(); peopleBus.gain.value = 0; peopleBus.connect(music);
+    const ring = ctx.createOscillator(); ring.frequency.value = 57; ring.start();      // ロボットの声のうなり（リング変調）
+    const notes = [50, 53, 57, 62, 45, 57, 60, 65, 52, 55, 59, 64, 48, 62, 69, 57];
+    peopleV = [];
+    for (let k = 0; k < n; k++) {
+      const f0 = mtof(notes[k % notes.length]), fem = f0 > 300 ? 1.15 : 1;
+      // 人：鋸波＋揺れ（ビブラート）→ 3つのフォルマント（ア）
+      const o = ctx.createOscillator(); o.type = 'sawtooth'; o.frequency.value = f0;
+      const vib = ctx.createOscillator(), vg = ctx.createGain(); vib.frequency.value = 4.8 + Math.random() * 1.2; vg.gain.value = f0 * 0.012; vib.connect(vg); vg.connect(o.frequency); vib.start();
+      const hg = ctx.createGain(); hg.gain.value = 1;
+      const sw = ctx.createGain(); sw.gain.value = 0.02;                                 // 息を吸って吐くようなうねり
+      const sl = ctx.createOscillator(), slg = ctx.createGain(); sl.frequency.value = 0.12 + Math.random() * 0.1; slg.gain.value = 0.014; sl.connect(slg); slg.connect(sw.gain); sl.start();
+      [[730, 6, 1], [1090, 9, 0.5], [2440, 12, 0.25]].forEach(([f, q, a]) => { const b = ctx.createBiquadFilter(); b.type = 'bandpass'; b.frequency.value = f * fem; b.Q.value = q; const g = ctx.createGain(); g.gain.value = a; o.connect(b); b.connect(g); g.connect(sw); });
+      sw.connect(hg); hg.connect(peopleBus); o.start();
+      // ロボット：矩形波・揺れなし → リング変調 → 2つのフォルマント（オ）
+      const ro = ctx.createOscillator(); ro.type = 'square'; ro.frequency.value = f0;
+      const rm = ctx.createGain(); rm.gain.value = 0; ring.connect(rm.gain); ro.connect(rm);
+      const rg = ctx.createGain(); rg.gain.value = 0;
+      [[500, 8, 1], [900, 10, 0.6]].forEach(([f, q, a]) => { const b = ctx.createBiquadFilter(); b.type = 'bandpass'; b.frequency.value = f; b.Q.value = q; const g = ctx.createGain(); g.gain.value = a * 0.03; rm.connect(b); b.connect(g); g.connect(rg); });
+      rg.connect(peopleBus); ro.start();
+      peopleV.push({ hg, rg, robot: false });
+    }
+  }
   function kick(at, peak) {
     const o = ctx.createOscillator(), g = ctx.createGain(); o.type = 'sine';
     o.frequency.setValueAtTime(92, at); o.frequency.exponentialRampToValueAtTime(38, at + 0.22);
@@ -125,6 +149,15 @@ export const SND = (() => {
     hover() { if (!on) return; tone(1320, 'sine', 0.025, 0.003, 0.08); },
     // 手が1本 AI に置き換わる：奥から手前へ音程が上がる
     swap(k) { if (!on) return; tone(mtof(69 + Math.round(k * 12)), 'triangle', 0.03, 0.003, 0.35, music); burst(0.025, 0.05, 'highpass', 5000, 1); },
+    // 場面1：人の声（息まじりの合唱の「アー」）→ ロボットの声（抑揚のない電子音声）。1体変わるごとに1声ずつ入れ替わる
+    person(i, n, robot, lvl) {
+      if (!ctx || !on) return;
+      if (!peopleV) buildPeople(n);
+      const t = ctx.currentTime, v = peopleV[i % peopleV.length];
+      peopleBus.gain.setTargetAtTime(0.55 * lvl, t, 0.3);
+      if (v.robot !== robot) { v.robot = robot;
+        v.hg.gain.setTargetAtTime(robot ? 0 : 1, t, 0.06); v.rg.gain.setTargetAtTime(robot ? 1 : 0, t, 0.06); }
+    },
     // 場面4：ラジオの同調（目盛りの位置で帯域を絞った雑音 → 合うと澄んだ正弦波）
     radio(r) {
       if (!ctx || !on) return;
