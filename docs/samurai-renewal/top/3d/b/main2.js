@@ -108,9 +108,9 @@ const U = {
 const prog = { a: 0, b: 0, c: 0, d: 0, e: 0 };
 let shownPct = 0;
 const ldTick = () => {
-  const p = (prog.a + prog.b + prog.c + prog.d + prog.e) / 5;
+  const p = Math.min(1, ((prog.a || 0) + (prog.b || 0) + (prog.c || 0) + (prog.d || 0) + (prog.e || 0)) / 5);
   shownPct += (p - shownPct) * 0.2;
-  const n = 22, f = Math.round(shownPct * n);
+  const n = 22, f = Math.max(0, Math.min(n, Math.round((shownPct || 0) * n)));   // 進みが1を超えても崩れないように
   if (ldt) ldt.textContent = `[${'/'.repeat(f)}${'·'.repeat(n - f)}] ${String(Math.round(shownPct * 100)).padStart(3, '0')}`;
   if (!ld.classList.contains('out')) requestAnimationFrame(ldTick);
 };
