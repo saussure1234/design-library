@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>SERVICE 案2-4 大きな名前の目次</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+JP:wght@400;500;600&family=Noto+Sans+JP:wght@100..900&family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f4ee;--card:#fbfaf6;--ink:#151513;--ink2:#3b3a36;--mute:#6f6d69;
+  --line:#dcd8cd;--line2:#e9e5db;--sig:#ef4519;
+  --rail:220px;--pad:40px;--hd:0px;
+  --disp:"Space Grotesk",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --jp:"IBM Plex Sans JP","Hiragino Sans",sans-serif;
+  --rf:"Roboto Flex",system-ui,sans-serif;
+  --jpv:"Noto Sans JP","Hiragino Sans",sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--jp);font-size:16px;line-height:1.9;overflow-x:clip;-webkit-font-smoothing:antialiased;line-break:strict}
+a{color:inherit}
+img,canvas{display:block}
+.nb{display:inline-block}
+/* ヘッダー（c-all-gen と同じ左の縦レール） */
+.hd{position:fixed;left:0;top:0;bottom:0;width:var(--rail);padding:34px 0 30px var(--pad);display:flex;flex-direction:column;z-index:50}
+.logo img{width:112px;height:auto}
+.nav{display:flex;flex-direction:column;align-items:flex-start;gap:4px;margin-top:44px;font:400 13px/1.7 var(--mono);letter-spacing:.02em}
+.nav a{text-decoration:none;color:var(--ink);position:relative;padding-left:16px}
+.nav a::before{content:"";position:absolute;left:0;top:50%;width:6px;height:6px;margin-top:-3px;background:var(--sig);transform:scale(0);transition:transform .25s}
+.nav a:hover::before,.nav a.on::before{transform:scale(1)}
+.nav a.cta{color:var(--sig)}
+.lang{display:flex;gap:12px;font:400 12px/1 var(--mono);color:var(--mute)}
+.lang b{color:var(--ink);font-weight:500}
+.hd .lang{margin-top:auto}
+.burger{display:none}
+.ov{display:none}
+main{margin-left:var(--rail);padding-right:var(--pad)}
+.pre{height:24vh}
+.post{height:60vh}
+/* 節の頭：細く縮んだ字 → 広く太く */
+.sh2{margin:0 0 56px}
+.lbl{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--ink);padding-top:10px;font:400 12px/1.5 var(--mono);color:var(--mute)}
+.lbl .jp{font-family:var(--jp);letter-spacing:.14em;color:var(--ink);font-size:13px;display:flex;align-items:center;gap:10px}
+.lbl .jp::before{content:"";width:8px;height:8px;background:var(--sig)}
+.giant{display:block;margin:22px 0 0;font-family:var(--rf);font-weight:400;font-size:15vw;line-height:.8;letter-spacing:-.02em;white-space:nowrap;font-variation-settings:"wdth" 25,"wght" 100,"opsz" 144}
+/* 共通の部品 */
+.cat{margin:0;display:flex;gap:14px;font:400 12px/1.6 var(--mono);color:var(--mute);min-height:1.6em}
+.cat b{color:var(--sig);font-weight:500}
+.cat span{font-family:var(--jp)}
+.more{font:500 14px/1 var(--jp);text-decoration:none;display:inline-flex;gap:10px;align-items:center;padding-bottom:6px;border-bottom:1px solid var(--ink)}
+.more::after{content:"→";font-family:var(--mono)}
+.more:hover{color:var(--sig);border-color:var(--sig)}
+.pan{position:relative;background:var(--card);border:1px solid var(--line)}
+.pan>canvas{position:absolute;inset:0;width:100%;height:100%}
+.pan::before,.pan::after{content:"+";position:absolute;font:300 14px/1 var(--mono);color:var(--mute);pointer-events:none;z-index:2}
+.pan::before{left:-5px;top:-8px}
+.pan::after{right:-5px;bottom:-9px}
+.cap{font:400 11px/1 var(--mono);letter-spacing:.06em;color:var(--mute)}
+@media (max-width:1080px){
+  :root{--rail:0px;--pad:20px;--hd:58px}
+  .hd{bottom:auto;right:0;width:auto;height:58px;padding:0 var(--pad);flex-direction:row;align-items:center;justify-content:space-between;background:rgba(246,244,238,.92);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid var(--line2)}
+  .logo img{width:92px}
+  .hd .nav,.hd .lang{display:none}
+  .burger{display:block;width:40px;height:40px;border:0;background:none;position:relative;cursor:pointer;padding:0}
+  .burger i{position:absolute;left:9px;right:9px;height:1.5px;background:var(--ink);transition:transform .3s}
+  .burger i:first-child{top:15px}.burger i:last-child{top:23px}
+  body.menu .burger i:first-child{transform:translateY(4px) rotate(45deg)}
+  body.menu .burger i:last-child{transform:translateY(-4px) rotate(-45deg)}
+  .ov{display:flex;position:fixed;inset:58px 0 0 0;z-index:49;background:var(--bg);flex-direction:column;padding:32px var(--pad);gap:6px;font:400 22px/1.7 var(--mono);opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
+  .ov a{text-decoration:none}
+  .ov .lang{margin-top:24px;font-size:14px}
+  body.menu .ov{opacity:1;visibility:visible}
+  main{padding-left:var(--pad)}
+  .pre{height:18vh}
+  .sh2{margin-bottom:36px}
+}
+
+.ix{border-bottom:1px solid var(--ink)}
+.row{border-top:1px solid var(--ink);display:grid;grid-template-columns:150px minmax(0,1fr) minmax(0,34%);grid-template-areas:"no nm fig" "no tx fig";gap:0 36px;padding:26px 0 34px;position:relative}
+.row .no{grid-area:no;display:flex;flex-direction:column;gap:8px}
+.row .no .n{font:300 54px/.8 var(--rf);font-variation-settings:"wdth" 151,"wght" 200,"opsz" 144;color:var(--ink)}
+.row .no .cat{flex-direction:column;gap:6px}
+.row .no .cat b{display:none}
+.row h3{grid-area:nm;margin:0;align-self:start;font-family:var(--rf);font-weight:400;line-height:.86;letter-spacing:-.02em;white-space:nowrap;font-variation-settings:"wdth" 25,"wght" 100,"opsz" 144;transform-origin:left center}
+.row h3.ja{font-family:var(--jpv);letter-spacing:.0em;line-height:1}
+.row .tx{grid-area:tx;align-self:end;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px 36px;align-items:end;padding-top:24px}
+.row .d{margin:0;font-size:15px;line-height:1.9;color:var(--ink2);max-width:36em}
+.row .fig{grid-area:fig;aspect-ratio:3/2;align-self:center}
+.row:hover .more{color:var(--sig);border-color:var(--sig)}
+@media (max-width:1080px){
+  .row{grid-template-columns:minmax(0,1fr);grid-template-areas:"no" "nm" "fig" "tx";padding:18px 0 26px;gap:0}
+  .row .no{flex-direction:row;align-items:baseline;gap:14px;margin-bottom:14px}
+  .row .no .n{font-size:34px}
+  .row .no .cat{flex-direction:row}
+  .row .fig{margin-top:18px}
+  .row .tx{grid-template-columns:1fr;gap:14px;padding-top:18px}
+  .row .d{font-size:14.5px}
+}
+
+</style>
+</head>
+<body>
+<header class="hd" id="hd">
+  <a class="logo" href="#top" aria-label="SAMURAI STYLE"><img src="img/logo.svg" alt="SAMURAI STYLE"></a>
+  <nav class="nav"><a href="#top">HOME</a><a class="on" href="#service">SERVICE</a><a href="https://samurai-style.tokyo/media">MEDIA</a><a href="https://samurai-style.tokyo/company">COMPANY</a><a href="https://samurai-style.tokyo/recruit">RECRUIT</a><a class="cta" href="#contact">CONTACT</a></nav>
+  <div class="lang"><span>ID</span><span>EN</span><b>JA</b></div>
+  <button class="burger" aria-label="Menu"><i></i><i></i></button>
+</header>
+<div class="ov"><a href="#top">HOME</a><a href="#service">SERVICE</a><a href="https://samurai-style.tokyo/media">MEDIA</a><a href="https://samurai-style.tokyo/company">COMPANY</a><a href="https://samurai-style.tokyo/recruit">RECRUIT</a><a href="#contact">CONTACT</a><div class="lang"><span>ID</span><span>EN</span><b>JA</b></div></div>
+<main id="top">
+<div class="pre" aria-hidden="true"></div>
+<section class="sec" id="service">
+  <div class="sh2"><div class="lbl"><span class="jp">事業内容</span></div><h2 class="giant" data-stretch>SERVICE</h2></div>
+  <div class="ix">
+    <article class="row"><div class="no"><span class="n" aria-hidden="true">01</span><p class="cat"><b>01</b><span></span></p></div><h3 class="" data-row>Strategy2Action</h3><a class="fig pan" href="https://samurai-style.tokyo/strategy2action" tabindex="-1" aria-hidden="true"><canvas data-draw="s2a" data-off="0.0"></canvas></a><div class="tx"><p class="d">事業理解に基づいて戦略を考え、実行まで伴走し、ダッシュボード作成による経営層・上長への可視化まで対応。</p><a class="more" href="https://samurai-style.tokyo/strategy2action">詳しく見る</a></div></article>
+    <article class="row"><div class="no"><span class="n" aria-hidden="true">02</span><p class="cat"><b>02</b><span>動画広告の制作ツール</span></p></div><h3 class="" data-row>HookHack</h3><a class="fig pan" href="https://www.hook-hack.com/" tabindex="-1" aria-hidden="true"><canvas data-draw="hh" data-off="1.7"></canvas></a><div class="tx"><p class="d">売れる動画広告をLPから5分で制作。<br>検証から成果改善まで、動画広告のPDCAに必要な機能を1ツールで網羅します。</p><a class="more" href="https://www.hook-hack.com/">詳しく見る</a></div></article>
+    <article class="row"><div class="no"><span class="n" aria-hidden="true">03</span><p class="cat"><b>03</b><span>LP・サイト制作の代行</span></p></div><h3 class="" data-row>HookHacker</h3><a class="fig pan" href="https://www.hook-hack.com/hookhacker" tabindex="-1" aria-hidden="true"><canvas data-draw="hhr" data-off="3.4"></canvas></a><div class="tx"><p class="d">自社開発AIツール「HookHack」×インドネシアオフショアチーム×日本人ディレクターでLP・サイト制作を代行。</p><a class="more" href="https://www.hook-hack.com/hookhacker">詳しく見る</a></div></article>
+    <article class="row"><div class="no"><span class="n" aria-hidden="true">04</span><p class="cat"><b>04</b><span></span></p></div><h3 class="ja" data-row data-jp="1">動画制作</h3><a class="fig pan" href="https://samurai-style.tokyo/video-production" tabindex="-1" aria-hidden="true"><canvas data-draw="vp" data-off="5.1"></canvas></a><div class="tx"><p class="d">貴社の顧客理解に基づき、動画を企画・撮影・編集までワンストップで制作します。</p><a class="more" href="https://samurai-style.tokyo/video-production">詳しく見る</a></div></article>
+  </div>
+</section>
+<div class="post" aria-hidden="true"></div>
+</main>
+<script src="js/svc-draw.js"></script>
+<script>
+(()=>{
+'use strict';
+document.querySelector('.burger').addEventListener('click',()=>document.body.classList.toggle('menu'));
+document.querySelectorAll('.ov a').forEach(a=>a.addEventListener('click',()=>document.body.classList.remove('menu')));
+SvcDraw.stretch(document.querySelectorAll('[data-stretch]'));
+document.querySelectorAll('canvas[data-draw]').forEach(c=>{const ctl=SvcDraw.mount(c,c.dataset.draw,{offset:+c.dataset.off,grid:true,pad:.04});
+  c.closest('.row').addEventListener('mouseenter',()=>ctl.restart());});
+/* 事業名も「細く縮んだ字 → 広く太く」。英字は Roboto Flex の幅軸、和文は Noto Sans JP の太さ＋横の伸び */
+const nms=[...document.querySelectorAll('h3[data-row]')];
+const meas=document.createElement('span');meas.style.cssText='position:absolute;left:-9999px;top:0;white-space:nowrap;visibility:hidden;font-size:100px;line-height:1';document.body.appendChild(meas);
+function fit(){nms.forEach(h=>{const cs=getComputedStyle(h);meas.style.fontFamily=cs.fontFamily;meas.style.letterSpacing=h.dataset.jp?'0em':cs.letterSpacing;
+  meas.style.fontVariationSettings=h.dataset.jp?'"wght" 800':'"wdth" 151,"wght" 900,"opsz" 144';meas.textContent=h.textContent;
+  const box=h.getBoundingClientRect().width||h.parentElement.clientWidth;const W=h.clientWidth;h.style.fontSize=Math.min(innerWidth<=1080?150:220,100*W/meas.getBoundingClientRect().width*.98).toFixed(1)+'px'})}
+const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+let lt=0;function upd(){const vh=innerHeight,now=performance.now(),dt=lt?Math.min(.05,(now-lt)/1000):0;lt=now;nms.forEach(h=>{const r=h.getBoundingClientRect();const p=Math.max(0,Math.min(1,(vh*.92-r.top)/(vh*.42)));h._g=Math.max(h._g||0,p);h._p=h._p==null?0:h._p;h._p=Math.min(h._g,h._p+dt/1.5);if(h._p<h._g)more=true;const e=ease(h._p);
+  if(h.dataset.jp){h.style.fontVariationSettings=`"wght" ${(100+700*e).toFixed(0)}`;h.style.transform=`scaleX(${(.42+.58*e).toFixed(3)})`;h.style.letterSpacing=(-.08+.08*e).toFixed(3)+'em'}
+  else h.style.fontVariationSettings=`"wdth" ${(25+126*e).toFixed(1)},"wght" ${(100+800*e).toFixed(0)},"opsz" 144`});if(more)req()}
+let q=0,more=false;const req=()=>{if(!q)q=requestAnimationFrame(()=>{q=0;more=false;upd()})};addEventListener('scroll',req,{passive:true});
+let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{fit();req()},120)});
+(document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(()=>{fit();req()});fit();req();
+})();
+</script>
+</body>
+</html>

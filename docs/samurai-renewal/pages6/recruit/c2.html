@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>採用情報 | サムライスタイル</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700;900&family=Caveat:wght@600;700&family=Bagel+Fat+One&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#fff8ec;--ink:#2b1626;--mute:#6d5560;--amber:#ffc760;--tang:#ff9a52;--coral:#ff7466;--rose:#ff6f9c;--vio:#a88bff;--night:#191538;--pad:clamp(16px,4vw,64px)}
+*{box-sizing:border-box}
+html,body{margin:0}
+html{overflow-x:hidden;overflow-x:clip}
+body{color:var(--ink);font-family:"Zen Maru Gothic",sans-serif;font-weight:500;-webkit-font-smoothing:antialiased;overflow-x:hidden;overflow-x:clip;
+  background:linear-gradient(180deg,#ffcf94 0%,#ffae74 12%,#ff8d72 24%,#f0707f 36%,#c75985 48%,#8e4385 60%,#5a3078 72%,#2f2160 84%,#191538 94%,#191538 100%)}
+body:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:50;opacity:.18;mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .35 0 0 0 0 .3 0 0 0 .7 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+.nb{white-space:nowrap}
+.hand{font-family:"Caveat",cursive;font-weight:700}
+.bagel{font-family:"Bagel Fat One","Zen Maru Gothic",sans-serif;font-weight:400}
+
+.hd{position:fixed;top:14px;left:var(--pad);right:var(--pad);z-index:30;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 12px 10px 22px;background:var(--paper);border:2.5px solid var(--ink);border-radius:99px;box-shadow:4px 4px 0 var(--ink);font-size:14px;font-weight:700}
+.hd .logo img{height:30px;width:auto}
+.nav{display:flex;align-items:center;gap:4px}
+.nav a{padding:8px 13px;border-radius:99px;transition:background .25s}
+.nav a:hover{background:#ffe3c4}
+.nav a[aria-current]{background:var(--amber)}
+.nav .cta{background:var(--coral);color:#fff;margin-left:6px;border:2px solid var(--ink)}
+.lang{display:flex;gap:5px;align-items:center;margin-left:12px;font-size:12px;color:var(--mute)}
+.lang i{font-style:normal;opacity:.5}
+.lang b{color:var(--ink)}
+.burger{display:none;width:42px;height:42px;border:2px solid var(--ink);border-radius:50%;background:var(--amber);position:relative;cursor:pointer}
+.burger i{position:absolute;left:11px;right:11px;height:2px;background:var(--ink);transition:transform .4s}
+.burger i:first-child{top:15px}.burger i:last-child{top:22px}
+body.mopen .burger i:first-child{transform:translateY(3.5px) rotate(45deg)}
+body.mopen .burger i:last-child{transform:translateY(-3.5px) rotate(-45deg)}
+.ov{position:fixed;inset:0;z-index:29;background:#ffae74;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:12px;font:400 34px/1.2 "Bagel Fat One",sans-serif;transform:translateY(-100%);transition:transform .6s cubic-bezier(.7,0,.2,1)}
+body.mopen .ov{transform:none}
+.ov .lang{font:700 14px "Zen Maru Gothic";margin:16px 0 0}
+
+/* FV : 写真のモザイク（Kayac）＋傾いた動画カード（Spotify）＋枠の箱 */
+.fv{position:relative;min-height:max(680px,100vh);overflow:hidden;display:grid;place-items:center;padding:110px var(--pad) 70px}
+.mosaic{position:absolute;inset:-2px;display:grid;grid-template-columns:repeat(8,1fr);grid-auto-rows:calc((100% + 4px)/4);gap:0}
+.mosaic span{position:relative;overflow:hidden;perspective:600px}
+.mosaic img{width:100%;height:100%;object-fit:cover;transition:transform .45s ease,opacity .45s;filter:saturate(1.1) sepia(.25)}
+.mosaic img.flip{transform:rotateY(90deg);opacity:.3}
+.mosaic:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,150,80,.55),rgba(190,70,110,.6));mix-blend-mode:multiply}
+.mosaic:before{content:"";position:absolute;inset:0;z-index:1;background:rgba(40,15,30,.28)}
+.card{position:relative;z-index:2;width:min(980px,78vw);transform:rotate(-3deg);background:var(--paper);padding:14px 14px 64px;box-shadow:0 30px 60px -20px rgba(40,10,30,.6);border-radius:6px}
+.card .vw{position:relative}
+.card .vw:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,150,70,.35),rgba(255,90,110,.18) 60%,rgba(90,40,110,.25));mix-blend-mode:soft-light;pointer-events:none}
+.card video{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:2px;background:#e8a070}
+.tape{position:absolute;width:130px;height:34px;background:rgba(255,236,190,.78);box-shadow:0 1px 3px rgba(0,0,0,.12);z-index:3}
+.card .tape.t1{top:-14px;left:-30px;transform:rotate(-28deg)}
+.card .tape.t2{top:-14px;right:-30px;transform:rotate(24deg)}
+.fbox{position:absolute;z-index:4;left:-4%;bottom:-34px;transform:rotate(4deg);background:#fff;border:3px solid var(--ink);padding:20px 30px 24px;box-shadow:8px 8px 0 var(--ink);max-width:min(640px,72vw)}
+.fbox .lab{display:inline-block;font:700 12px/1 "Zen Maru Gothic";letter-spacing:.16em;background:var(--ink);color:var(--paper);padding:6px 10px;border-radius:99px;margin-bottom:12px}
+.fbox h1{margin:0;font:400 clamp(34px,4.6vw,72px)/1.02 "Bagel Fat One",sans-serif;letter-spacing:-.01em}
+.fbox h1 .hl{white-space:nowrap;background:linear-gradient(transparent 52%,var(--amber) 52%,var(--amber) 92%,transparent 92%);padding:0 .08em}
+.fv .doodle{position:absolute;z-index:3}
+
+/* 共通 */
+.sec{position:relative;padding:clamp(110px,15vh,170px) var(--pad) 0;max-width:1320px;margin:0 auto}
+.ttl{display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap;margin:0 0 clamp(40px,6vh,64px)}
+.ttl h2{margin:0;font:400 clamp(52px,7.4vw,112px)/.95 "Bagel Fat One","Zen Maru Gothic",sans-serif;color:var(--paper);text-shadow:4px 5px 0 var(--ink);letter-spacing:.005em}
+.ttl h2.jp{font-family:"Zen Maru Gothic";font-weight:900;letter-spacing:.04em;line-height:1.15}
+.ttl .sub{font-weight:900;font-size:clamp(16px,1.5vw,20px);background:var(--paper);border:2px solid var(--ink);border-radius:99px;padding:6px 16px;transform:rotate(-3deg);margin-bottom:12px}
+.pol{position:relative;background:var(--paper);padding:10px 10px 40px;box-shadow:0 18px 34px -14px rgba(40,10,30,.55);border-radius:3px;transition:transform .5s cubic-bezier(.2,.8,.2,1),box-shadow .5s}
+.pol img{width:100%;height:100%;object-fit:cover;aspect-ratio:4/5;border-radius:1px}
+.pol .tape{width:96px;height:26px;top:-12px;left:50%;margin-left:-48px;transform:rotate(-4deg)}
+.drag{cursor:grab;touch-action:none}
+.drag:active{cursor:grabbing}
+.drag.up{z-index:20!important;box-shadow:0 30px 50px -14px rgba(40,10,30,.7)}
+
+/* ABOUT：罫線ノート＋写真の束 */
+.ab{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(20px,4vw,60px);align-items:start}
+.note{position:relative;background:var(--paper);border-radius:4px;padding:clamp(28px,3.6vw,52px) clamp(24px,3.6vw,52px) clamp(28px,3.6vw,52px) clamp(44px,5vw,76px);transform:rotate(-1.2deg);box-shadow:0 22px 40px -18px rgba(60,20,30,.5);
+  background-image:linear-gradient(90deg,transparent calc(clamp(30px,3.4vw,52px)),rgba(255,110,110,.5) calc(clamp(30px,3.4vw,52px)),rgba(255,110,110,.5) calc(clamp(30px,3.4vw,52px) + 2px),transparent calc(clamp(30px,3.4vw,52px) + 2px)),repeating-linear-gradient(180deg,transparent 0,transparent 35px,rgba(80,120,200,.22) 35px,rgba(80,120,200,.22) 36px)}
+.note p{margin:0 0 36px;font-size:clamp(15.5px,1.3vw,18px);line-height:36px}
+.note p:last-child{margin-bottom:0}
+.note .tape{top:-14px;left:40%;transform:rotate(3deg)}
+.mk{background:linear-gradient(transparent 55%,rgba(255,199,96,.85) 55%);font-weight:900}
+.bunch{position:relative;height:clamp(520px,48vw,640px)}
+.bunch .pol{position:absolute;width:62%}
+.bunch .p1{top:0;right:2%;transform:rotate(6deg);z-index:2}
+.bunch .p2{top:30%;left:0;transform:rotate(-7deg);z-index:3}
+.bunch .p3{top:56%;right:6%;transform:rotate(3deg);width:54%;z-index:4}
+.bunch .pol img{aspect-ratio:1}
+
+/* CORE：大きな1枚＋手紙 */
+.core{position:relative;display:flex;flex-direction:column;align-items:center}
+.core .big{width:min(1040px,100%);transform:rotate(1.6deg);padding:14px 14px 54px}
+.core .big img{aspect-ratio:16/9}
+.letter{position:relative;z-index:3;margin-top:-120px;width:min(820px,94%);background:#fffdf6;border:2.5px solid var(--ink);border-radius:18px;box-shadow:8px 8px 0 var(--ink);padding:clamp(26px,3.6vw,50px);transform:rotate(-1.4deg)}
+.letter p{margin:0 0 1.2em;font-size:clamp(15.5px,1.3vw,18px);line-height:2}
+.letter p:last-child{margin:0}
+
+/* VALUE：色の札（Figma Community Groups）＋留めた写真 */
+.vals{display:flex;flex-wrap:wrap;justify-content:center;gap:clamp(34px,4vw,56px) clamp(22px,3vw,40px)}
+.vt{position:relative;width:min(356px,100%);min-height:330px;border:2.5px solid var(--ink);border-radius:30px;padding:30px 28px 30px;box-shadow:6px 6px 0 var(--ink);transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.vt:nth-child(1){background:var(--amber);transform:rotate(-2.5deg)}
+.vt:nth-child(2){background:var(--tang);transform:rotate(1.8deg);margin-top:40px}
+.vt:nth-child(3){background:var(--coral);transform:rotate(-1.2deg)}
+.vt:nth-child(4){background:var(--rose);transform:rotate(2.2deg)}
+.vt:nth-child(5){background:var(--vio);transform:rotate(-1.8deg);margin-top:40px}
+.vt:hover{transform:rotate(0) translateY(-6px)}
+.vt .ic{width:86px;height:86px;border-radius:50%;background:var(--paper);border:2.5px solid var(--ink);display:grid;place-items:center}
+.vt .ic svg{width:56px;height:56px;fill:none;stroke:var(--ink);stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+.vt .n{position:absolute;top:26px;left:122px;font:700 34px/1 "Caveat",cursive}
+.vt h3{margin:22px 0 10px;font:400 clamp(38px,3.4vw,50px)/1 "Bagel Fat One",sans-serif;word-break:break-word}
+.vt p{margin:0;font-size:16.5px;line-height:1.85;font-weight:700;max-width:15em}
+.vt .pol{position:absolute;right:-18px;top:-30px;width:132px;padding:6px 6px 22px;transform:rotate(8deg)}
+.vt .pol img{aspect-ratio:1}
+
+/* JOY：付箋 */
+.joy{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(22px,3vw,44px);align-items:start}
+.sticky{position:relative;padding:34px 28px 38px;box-shadow:0 22px 30px -16px rgba(30,10,40,.6);font-size:clamp(15px,1.2vw,17px);line-height:1.95}
+.sticky:before{content:"";position:absolute;top:-10px;left:50%;width:88px;height:24px;margin-left:-44px;background:rgba(255,255,255,.5);transform:rotate(-3deg)}
+.sticky p{margin:0}
+.s1{background:#ffe27a;transform:rotate(-2.4deg)}
+.s2{background:#ffc29a;transform:rotate(1.6deg);margin-top:70px}
+.s3{background:#ffb2cc;transform:rotate(-1deg);margin-top:20px}
+.joyph{display:flex;justify-content:center;gap:clamp(20px,6vw,90px);margin-top:clamp(40px,6vh,70px)}
+.joyph .pol{width:min(280px,42vw)}
+.joyph .pol:first-child{transform:rotate(-5deg)}
+.joyph .pol:last-child{transform:rotate(4deg);margin-top:40px}
+
+/* WANT：チェックリスト */
+.want{position:relative;max-width:900px;margin:0 auto;background:var(--paper);padding:clamp(30px,4vw,56px);border-radius:6px;transform:rotate(-.8deg);box-shadow:0 24px 40px -18px rgba(20,10,40,.7);
+  clip-path:polygon(0 1.5%,4% 0,9% 1.2%,15% 0,22% 1%,30% 0,38% 1.4%,46% .2%,55% 1.2%,63% 0,71% 1.1%,80% 0,88% 1.3%,95% 0,100% 1%,100% 100%,0 100%)}
+.want ul{list-style:none;margin:0;padding:0}
+.want li{display:grid;grid-template-columns:44px 1fr;gap:16px;align-items:start;padding:16px 0;border-bottom:2px dashed rgba(43,22,38,.2);font-size:clamp(16px,1.45vw,20px);line-height:1.8;font-weight:700}
+.want li:last-child{border:0}
+.want svg{width:40px;height:40px;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.want svg rect{stroke:var(--ink);stroke-width:2.5}
+.want svg path{stroke:var(--coral);stroke-width:4.5;stroke-dasharray:60;stroke-dashoffset:60;transition:stroke-dashoffset .8s cubic-bezier(.6,0,.2,1)}
+.want li.in svg path{stroke-dashoffset:0}
+
+/* MEMBER：ポラロイドの壁 */
+.mems{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(30px,3.4vw,50px) clamp(20px,2.4vw,34px)}
+.mc{background:var(--paper);padding:12px 12px 22px;box-shadow:0 22px 34px -16px rgba(10,5,30,.7);border-radius:3px;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.mc:nth-child(4n+1){--r:-2.2deg}
+.mc:nth-child(4n+2){--r:1.6deg;margin-top:26px}
+.mc:nth-child(4n+3){--r:-1deg}
+.mc:nth-child(4n){--r:2.4deg;margin-top:20px}
+.mc .ph{position:relative;aspect-ratio:1;overflow:hidden;background:#f1e6d8}
+.mc .ph img{width:100%;height:100%;object-fit:cover}
+.mc .role{position:absolute;left:10px;bottom:10px;background:var(--ink);color:var(--paper);font-size:12px;font-weight:700;letter-spacing:.06em;padding:5px 10px;border-radius:99px}
+.mc h3{margin:12px 4px 6px;font:700 clamp(28px,2.4vw,34px)/1.05 "Caveat",cursive}
+.mc p{margin:0 4px;font-size:13.5px;line-height:1.85;color:#4a3340}
+.mems .last{grid-column:span 1}
+
+/* JOB：チケット */
+.ticket{display:grid;grid-template-columns:minmax(0,1fr) 260px;max-width:1040px;margin:0 auto;filter:drop-shadow(0 24px 30px rgba(0,0,0,.45));transform:rotate(-1.2deg)}
+.ticket .main,.ticket .stub{background:var(--paper);position:relative}
+.ticket .main{padding:clamp(30px,4vw,56px);border-radius:22px 0 0 22px;-webkit-mask:radial-gradient(circle 16px at 100% 0,transparent 15px,#000 16px) top right/100% 51% no-repeat,radial-gradient(circle 16px at 100% 100%,transparent 15px,#000 16px) bottom right/100% 51% no-repeat;mask:radial-gradient(circle 16px at 100% 0,transparent 15px,#000 16px) top right/100% 51% no-repeat,radial-gradient(circle 16px at 100% 100%,transparent 15px,#000 16px) bottom right/100% 51% no-repeat}
+.ticket .stub{border-radius:0 22px 22px 0;border-left:3px dashed rgba(43,22,38,.35);display:grid;place-items:center;padding:30px;background:var(--amber)}
+.ticket h3{margin:16px 0 14px;font:900 clamp(26px,3vw,44px)/1.4 "Zen Maru Gothic",sans-serif}
+.ticket .cond{margin:0;font-size:clamp(15px,1.3vw,18px);font-weight:700;color:var(--mute)}
+.ticket .lab{font:400 clamp(26px,2.6vw,36px)/1 "Bagel Fat One",sans-serif;color:var(--coral)}
+.stamp{width:170px;height:170px;border-radius:50%;background:var(--coral);color:#fff;border:3px solid var(--ink);box-shadow:5px 5px 0 var(--ink);display:grid;place-items:center;font:400 22px/1.1 "Bagel Fat One",sans-serif;text-align:center;transform:rotate(-10deg);transition:transform .4s}
+.stamp:hover{transform:rotate(0) scale(1.05)}
+
+.ft{position:relative;margin-top:clamp(110px,15vh,170px);padding:64px var(--pad) 34px;color:rgba(255,248,236,.78);font-size:13px;display:flex;flex-wrap:wrap;gap:22px 40px;align-items:center;justify-content:space-between;border-top:2px dashed rgba(255,248,236,.25)}
+.ft .lg img{height:30px;filter:brightness(0) invert(1)}
+.ft nav{display:flex;gap:20px;flex-wrap:wrap}
+.ft a:hover{color:#fff}
+
+.rv{opacity:0;transform:translateY(34px) rotate(var(--r,0deg));transition:opacity .9s cubic-bezier(.2,.8,.1,1),transform .9s cubic-bezier(.2,.8,.1,1)}
+.rv.in{opacity:1;transform:rotate(var(--r,0deg))}
+.mc.rv.in:hover{transform:rotate(0) translateY(-8px)}
+.dd{position:absolute;pointer-events:none;fill:none;stroke:var(--paper);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+
+@media (max-width:1100px){.mems{grid-template-columns:repeat(3,minmax(0,1fr))}.nav a{padding:8px 9px}}
+@media (max-width:860px){
+  .nav{display:none}.burger{display:block}
+  .hd{top:10px;left:12px;right:12px;padding:6px 6px 6px 16px}
+  .hd .logo img{height:26px}
+  .fv{min-height:auto;padding:100px 16px 90px}
+  .mosaic{grid-template-columns:repeat(4,1fr);grid-auto-rows:calc((100% + 4px)/6)}
+  .card{width:100%;padding:8px 8px 34px;transform:rotate(-2.5deg)}
+  .card .tape{width:90px;height:26px}
+  .fbox{position:relative;left:auto;bottom:auto;margin:-26px 0 0 4px;padding:14px 18px 18px;max-width:none;box-shadow:5px 5px 0 var(--ink)}
+  .fbox h1{font-size:clamp(30px,9vw,40px)}
+  .sec{padding:90px 16px 0}
+  .ttl h2{text-shadow:3px 4px 0 var(--ink)}
+  .ab{grid-template-columns:1fr}
+  .note{padding:26px 18px 26px 40px;background-image:linear-gradient(90deg,transparent 26px,rgba(255,110,110,.5) 26px,rgba(255,110,110,.5) 28px,transparent 28px),repeating-linear-gradient(180deg,transparent 0,transparent 31px,rgba(80,120,200,.22) 31px,rgba(80,120,200,.22) 32px)}
+  .note p{font-size:15px;line-height:32px;margin-bottom:32px}
+  .bunch{height:420px;margin-top:10px}
+  .bunch .pol{width:56%}
+  .letter{margin-top:-50px;padding:24px 20px;box-shadow:5px 5px 0 var(--ink)}
+  .letter p{font-size:15px}
+  .vt{min-height:0}
+  .vt:nth-child(2),.vt:nth-child(5){margin-top:0}
+  .vt .pol{width:104px;right:-6px}
+  .joy{grid-template-columns:1fr}
+  .s2,.s3{margin-top:0}
+  .mems{grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 14px}
+  .mc{padding:8px 8px 14px}
+  .mc .role{font-size:10px;padding:4px 7px;left:6px;bottom:6px}
+  .mc h3{font-size:24px;margin:8px 2px 4px}
+  .mc p{font-size:12px;line-height:1.75;margin:0 2px}
+  .ticket{grid-template-columns:1fr;transform:rotate(-1deg)}
+  .ticket .main{border-radius:22px 22px 0 0;-webkit-mask:none;mask:none}
+  .ticket .stub{border-radius:0 0 22px 22px;border-left:0;border-top:3px dashed rgba(43,22,38,.35);padding:26px}
+  .stamp{width:140px;height:140px;font-size:19px}
+  .ft{flex-direction:column;align-items:flex-start}
+}
+@media (max-width:420px){.mems{grid-template-columns:1fr}.mc{max-width:330px;margin:0 auto;width:100%}.mc p{font-size:13px}.mc .ph{aspect-ratio:4/3}.mc .ph img{object-position:50% 25%}#member .dd{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}.rv{opacity:1}}
+</style>
+</head>
+<body>
+<header class="hd">
+  <a class="logo" href="https://samurai-style.tokyo/" aria-label="SAMURAI STYLE"><img src="img/logo.svg" alt="SAMURAI STYLE"></a>
+  <nav class="nav"><a href="https://samurai-style.tokyo/">HOME</a><a href="https://samurai-style.tokyo/#service">SERVICE</a><a href="https://samurai-style.tokyo/media">MEDIA</a><a href="https://samurai-style.tokyo/company">COMPANY</a><a href="https://samurai-style.tokyo/recruit" aria-current="page">RECRUIT</a><a class="cta" href="https://samurai-style.tokyo/#contact">CONTACT</a><div class="lang"><span>ID</span><i>/</i><span>EN</span><i>/</i><b>JA</b></div></nav>
+  <button class="burger" aria-label="メニュー"><i></i><i></i></button>
+</header>
+<div class="ov"><a href="https://samurai-style.tokyo/">HOME</a><a href="https://samurai-style.tokyo/#service">SERVICE</a><a href="https://samurai-style.tokyo/media">MEDIA</a><a href="https://samurai-style.tokyo/company">COMPANY</a><a href="https://samurai-style.tokyo/recruit" aria-current="page">RECRUIT</a><a class="" href="https://samurai-style.tokyo/#contact">CONTACT</a><div class="lang"><span>ID</span><i>/</i><span>EN</span><i>/</i><b>JA</b></div></div>
+<main id="top">
+<section class="fv" id="fv">
+  <div class="mosaic" aria-hidden="true"><span><img src="img/g1.webp" alt="" loading="eager"></span><span><img src="img/g8.webp" alt="" loading="eager"></span><span><img src="img/g7.webp" alt="" loading="eager"></span><span><img src="img/pool.webp" alt="" loading="eager"></span><span><img src="img/g9.webp" alt="" loading="eager"></span><span><img src="img/g2.webp" alt="" loading="eager"></span><span><img src="img/g6.webp" alt="" loading="eager"></span><span><img src="img/g5.webp" alt="" loading="eager"></span><span><img src="img/g6.webp" alt="" loading="eager"></span><span><img src="img/g5.webp" alt="" loading="eager"></span><span><img src="img/g4.webp" alt="" loading="eager"></span><span><img src="img/team_bath.webp" alt="" loading="eager"></span><span><img src="img/team_sofa.webp" alt="" loading="eager"></span><span><img src="img/g1.webp" alt="" loading="eager"></span><span><img src="img/g8.webp" alt="" loading="eager"></span><span><img src="img/g7.webp" alt="" loading="eager"></span><span><img src="img/g8.webp" alt="" loading="eager"></span><span><img src="img/g7.webp" alt="" loading="eager"></span><span><img src="img/pool.webp" alt="" loading="eager"></span><span><img src="img/g9.webp" alt="" loading="eager"></span><span><img src="img/g2.webp" alt="" loading="eager"></span><span><img src="img/g6.webp" alt="" loading="eager"></span><span><img src="img/g5.webp" alt="" loading="eager"></span><span><img src="img/g4.webp" alt="" loading="eager"></span><span><img src="img/g5.webp" alt="" loading="eager"></span><span><img src="img/g4.webp" alt="" loading="eager"></span><span><img src="img/team_bath.webp" alt="" loading="eager"></span><span><img src="img/team_sofa.webp" alt="" loading="eager"></span><span><img src="img/g1.webp" alt="" loading="eager"></span><span><img src="img/g8.webp" alt="" loading="eager"></span><span><img src="img/g7.webp" alt="" loading="eager"></span><span><img src="img/pool.webp" alt="" loading="eager"></span></div>
+  <svg class="dd" viewBox="0 0 120 120" style="width:120px;left:6%;top:16%;z-index:3"><circle cx="60" cy="60" r="22"/><path d="M60 14v14M60 92v14M14 60h14M92 60h14M28 28l9 9M83 83l9 9M28 92l9-9M83 37l9-9"/></svg>
+  <svg class="dd" viewBox="0 0 60 60" style="width:54px;right:9%;top:20%;z-index:3"><path d="M30 6l6 17 18 1-14 11 5 18-15-10-15 10 5-18L6 24l18-1z"/></svg>
+  <svg class="dd" viewBox="0 0 200 40" style="width:200px;right:7%;bottom:12%;z-index:3"><path d="M4 20c16-20 28 20 44 0s28 20 44 0 28 20 44 0 28 20 44 0"/></svg>
+  <div class="card">
+    <i class="tape t1"></i><i class="tape t2"></i>
+    <div class="vw"><video src="img/recruit-hero.mp4" poster="img/recruit-hero-poster.webp" autoplay muted loop playsinline aria-hidden="true"></video></div>
+    <div class="fbox"><span class="lab">RECRUIT SITE</span><h1>aiming to build the most <span class="hl">fun-loving</span> team</h1></div>
+  </div>
+</section>
+<section class="sec" id="about">
+  <div class="ttl rv"><h2 class="jp"><span class="nb">私たちは</span><wbr></h2></div>
+  <div class="ab">
+    <div class="note rv" style="--r:-1.2deg"><i class="tape"></i><p><span class="nb">大手から</span><wbr><span class="nb">スタートアップまで、</span><wbr><span class="nb">事業会社様の</span><wbr><span class="nb">事業企画・</span><wbr><span class="nb">マーケティング業務の</span><wbr><span class="nb">受託を</span><wbr><span class="nb">行う他、</span><wbr><span class="nb">語学堪能な</span><wbr><span class="nb">メンバー数名を</span><wbr><span class="nb">軸に</span><wbr><span class="nb">インドネシア拠点を</span><wbr><span class="nb">開拓し、</span><wbr><span class="nb">オフショアでの</span><wbr><span class="nb">受託開発も</span><wbr><span class="nb">行っています。</span><wbr></p><p><span class="nb">既存の</span><wbr><span class="nb">マーケティング業務の</span><wbr><span class="nb">クライアント様からの</span><wbr><span class="nb">ご要望も</span><wbr><span class="nb">あり、</span><wbr><span class="nb">新たに</span><wbr><span class="nb">動画広告・</span><wbr><span class="nb">LP制作ツール</span><wbr><span class="nb">「HookHack」を</span><wbr><span class="nb">リリースした</span><wbr><span class="nb">ため、</span><wbr></p><p><span class="nb">主に</span><wbr><span class="nb">ツールの</span><wbr><span class="nb">展開と</span><wbr><span class="nb">デリバリー領域に</span><wbr><span class="nb">おいて、</span><wbr><strong class="mk"><span class="nb">力を</span><wbr><span class="nb">貸してくださる</span><wbr><span class="nb">方を</span><wbr><span class="nb">募集しています。</span><wbr></strong></p><p><span class="nb">事業展開と</span><wbr><span class="nb">して、</span><wbr><span class="nb">国内市場に</span><wbr><span class="nb">おいて</span><wbr><span class="nb">動画</span><wbr><span class="nb">広告を</span><wbr><span class="nb">通じた売上拡大の</span><wbr><span class="nb">再現性を</span><wbr><span class="nb">チーム内で</span><wbr><span class="nb">蓄積した上で、</span><wbr><span class="nb">エンジニアチームの</span><wbr><span class="nb">拠点が</span><wbr><span class="nb">あり、</span><wbr><span class="nb">人口3億人・</span><wbr><span class="nb">平均年齢20代の</span><wbr><span class="nb">インドネシアの</span><wbr><span class="nb">BtoC市場への</span><wbr><span class="nb">進出を</span><wbr><span class="nb">目指していきます。</span><wbr></p></div>
+    <div class="bunch">
+      <figure class="pol drag p1" style="margin:0"><i class="tape"></i><img src="img/g2.webp" alt="海の見えるカフェでPC作業をするメンバー" loading="lazy"></figure>
+      <figure class="pol drag p2" style="margin:0"><i class="tape"></i><img src="img/pool.webp" alt="プールからPCで作業するメンバー" loading="lazy"></figure>
+      <figure class="pol drag p3" style="margin:0"><i class="tape"></i><img src="img/g9.webp" alt="プールサイドに置かれたノートPC" loading="lazy"></figure>
+      <svg class="dd" viewBox="0 0 60 60" style="width:58px;left:4%;top:4%"><path d="M30 50S8 36 8 22a11 11 0 0 1 22-3 11 11 0 0 1 22 3c0 14-22 28-22 28z"/></svg>
+    </div>
+  </div>
+</section>
+<section class="sec" id="core">
+  <div class="ttl rv"><h2>CORE VALUE</h2><span class="sub"><span class="nb">大切に</span><wbr><span class="nb">する</span><wbr><span class="nb">価値観</span><wbr></span></div>
+  <div class="core">
+    <figure class="pol big rv" style="margin:0;--r:1.6deg"><i class="tape"></i><img src="img/team_bath.webp" alt="足湯を囲んで笑う4人のメンバー" loading="lazy"></figure>
+    <div class="letter rv" style="--r:-1.4deg"><p><span class="nb">会社の</span><wbr><span class="nb">価値観の</span><wbr><span class="nb">根幹には、</span><wbr><span class="nb">代表の</span><wbr><span class="nb">橋本が</span><wbr><span class="nb">大学時代に</span><wbr><span class="nb">友人が</span><wbr><span class="nb">起こした</span><wbr><span class="nb">会社を</span><wbr><span class="nb">見ながら</span><wbr><span class="nb">感じていた</span><wbr><strong class="mk"><span class="nb">「仲間同士で</span><wbr><span class="nb">楽しみながら、</span><wbr><span class="nb">同じ</span><wbr><span class="nb">目的に</span><wbr><span class="nb">向かって</span><wbr><span class="nb">働きたい」</span><wbr></strong><span class="nb">と</span><wbr><span class="nb">いう</span><wbr><span class="nb">思いが</span><wbr><span class="nb">あります。</span><wbr></p><p><span class="nb">労働の</span><wbr><span class="nb">対価とは</span><wbr><span class="nb">金銭だけでなく、</span><wbr><span class="nb">誰かの</span><wbr><span class="nb">役に</span><wbr><span class="nb">立つことで</span><wbr><span class="nb">受け取る</span><wbr><span class="nb">「ありがとう」と</span><wbr><span class="nb">いった</span><wbr><span class="nb">言葉や、</span><wbr><span class="nb">そこに</span><wbr><span class="nb">向かって</span><wbr><span class="nb">仲間とともに</span><wbr><span class="nb">価値を</span><wbr><span class="nb">作る</span><wbr><span class="nb">過程での</span><wbr><span class="nb">高揚感が</span><wbr><span class="nb">あると</span><wbr><span class="nb">考えています。</span><wbr></p><p><span class="nb">会社の</span><wbr><span class="nb">ミッションと</span><wbr><span class="nb">して</span><wbr><span class="nb">掲げている</span><wbr><span class="nb">「パイの</span><wbr><span class="nb">最大化」も、</span><wbr><span class="nb">パイの</span><wbr><span class="nb">定義を</span><wbr><span class="nb">金銭と</span><wbr><span class="nb">すると</span><wbr><span class="nb">目の前の</span><wbr><span class="nb">パイを</span><wbr><span class="nb">奪い合う</span><wbr><span class="nb">ゼロサムの</span><wbr><span class="nb">世界観に</span><wbr><span class="nb">なりますが、</span><wbr><span class="nb">感謝や</span><wbr><span class="nb">高揚感、</span><wbr><span class="nb">そして笑顔が</span><wbr><span class="nb">加わる</span><wbr><span class="nb">ことで</span><wbr><span class="nb">プラスサムに</span><wbr><span class="nb">なり、</span><wbr><span class="nb">この</span><wbr><span class="nb">プラスサムの</span><wbr><span class="nb">世界観が</span><wbr><span class="nb">広がる</span><wbr><span class="nb">ことを</span><wbr><span class="nb">目指しています。</span><wbr></p></div>
+    <svg class="dd" viewBox="0 0 60 60" style="width:60px;right:3%;top:-30px"><path d="M30 6l6 17 18 1-14 11 5 18-15-10-15 10 5-18L6 24l18-1z"/></svg>
+  </div>
+</section>
+<section class="sec" id="value">
+  <div class="ttl rv"><h2>+VALUE</h2><span class="sub">行動指針</span></div>
+  <div class="vals"><article class="vt"><div class="ic"><svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="24"/><path d="M22 27v1M42 27v1M20 37c4 8 20 8 24 0"/></svg></div><span class="n">1</span><h3>Fun</h3><p><span class="nb">世界一楽しく</span><wbr><span class="nb">働く</span><wbr><span class="nb">会社を</span><wbr><span class="nb">目指す</span><wbr></p><figure class="pol" style="margin:0"><img src="img/g1.webp" alt="ビリヤード台を囲むメンバー" loading="lazy"></figure></article><article class="vt"><div class="ic"><svg viewBox="0 0 64 64"><circle cx="40" cy="20" r="8"/><path d="M40 4v3M53 20h3M50 10l2-2M6 42c6-6 10-6 16 0s10 6 16 0 10-6 16 0M6 54c6-6 10-6 16 0s10 6 16 0 10-6 16 0"/></svg></div><span class="n">2</span><h3>Free</h3><p><span class="nb">各自の</span><wbr><span class="nb">責任感の</span><wbr><span class="nb">下、</span><wbr><span class="nb">場所や</span><wbr><span class="nb">時間に</span><wbr><span class="nb">捉われず</span><wbr><span class="nb">自由に</span><wbr><span class="nb">裁量を</span><wbr><span class="nb">持って働く</span><wbr></p><figure class="pol" style="margin:0"><img src="img/pool.webp" alt="プールの中からPCで作業するメンバー" loading="lazy"></figure></article><article class="vt"><div class="ic"><svg viewBox="0 0 64 64"><circle cx="16" cy="24" r="6"/><circle cx="32" cy="24" r="6"/><circle cx="48" cy="24" r="6"/><path d="M6 44h52M10 44c0-6 3-10 6-10s6 4 6 10M26 44c0-6 3-10 6-10s6 4 6 10M42 44c0-6 3-10 6-10s6 4 6 10"/></svg></div><span class="n">3</span><h3>Flat</h3><p><span class="nb">年齢や</span><wbr><span class="nb">役職などの</span><wbr><span class="nb">上下関係なく</span><wbr><span class="nb">接する</span><wbr></p><figure class="pol" style="margin:0"><img src="img/team_sofa.webp" alt="ソファでくつろぐ3人のメンバー" loading="lazy"></figure></article><article class="vt"><div class="ic"><svg viewBox="0 0 64 64"><path d="M8 14h30v20H20l-8 7v-7H8z"/><path d="M44 24h12v20h-4v7l-8-7H30v-6"/></svg></div><span class="n">4</span><h3>Open</h3><p><span class="nb">チーム内では</span><wbr><span class="nb">本音で</span><wbr><span class="nb">向き合い、</span><wbr><span class="nb">人格は</span><wbr><span class="nb">否定しない</span><wbr></p><figure class="pol" style="margin:0"><img src="img/g6.webp" alt="足湯を囲んで話すメンバー" loading="lazy"></figure></article><article class="vt"><div class="ic"><svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="24"/><circle cx="32" cy="32" r="14"/><circle cx="32" cy="32" r="4"/><path d="M32 4v8M32 52v8M4 32h8M52 32h8"/></svg></div><span class="n">5</span><h3>Optimization</h3><p><span class="nb">全体</span><wbr><span class="nb">最適視点で</span><wbr><span class="nb">判断する</span><wbr></p><figure class="pol" style="margin:0"><img src="img/g4.webp" alt="並んで歩くメンバー" loading="lazy"></figure></article></div>
+</section>
+<section class="sec" id="joy">
+  <div class="ttl rv"><h2 class="jp"><span class="nb">楽しく</span><wbr><span class="nb">働く</span><wbr><span class="nb">ことの</span><wbr><span class="nb">意義</span><wbr></h2><span class="sub">The significance of working joyfully</span></div>
+  <div class="joy">
+    <div class="sticky s1 rv" style="--r:-2.4deg"><p><span class="nb">今後、</span><wbr><span class="nb">外部</span><wbr><span class="nb">環境の</span><wbr><span class="nb">変化が</span><wbr><span class="nb">より</span><wbr><span class="nb">激しくなっていく</span><wbr><span class="nb">中で</span><wbr><span class="nb">生き残る</span><wbr><span class="nb">ためには、</span><wbr><span class="nb">能力や</span><wbr><span class="nb">成果を</span><wbr><span class="nb">高め続ける</span><wbr><span class="nb">必要が</span><wbr><span class="nb">あり、</span><wbr><span class="nb">その</span><wbr><span class="nb">土台には、</span><wbr><span class="nb">日々の</span><wbr><span class="nb">地道な</span><wbr><span class="nb">取り組みの</span><wbr><span class="nb">積み重ねが</span><wbr><span class="nb">あると</span><wbr><span class="nb">考えています。</span><wbr></p></div>
+    <div class="sticky s2 rv" style="--r:1.6deg"><p><span class="nb">その</span><wbr><span class="nb">ため、</span><wbr><span class="nb">楽しく</span><wbr><span class="nb">働く</span><wbr><span class="nb">ことは、</span><wbr><span class="nb">各メンバーの</span><wbr><span class="nb">幸福度に</span><wbr><span class="nb">直結するだけでなく、</span><wbr><span class="nb">日々の</span><wbr><span class="nb">生産性を</span><wbr><span class="nb">高める</span><wbr><span class="nb">ことに</span><wbr><span class="nb">よる</span><wbr><span class="nb">会社と</span><wbr><span class="nb">しての</span><wbr><span class="nb">生存戦略、</span><wbr><span class="nb">そして、</span><wbr><span class="nb">個人・</span><wbr><span class="nb">会社が</span><wbr><span class="nb">成長して</span><wbr><span class="nb">社会に</span><wbr><span class="nb">還元していく</span><wbr><span class="nb">ことにまで</span><wbr><span class="nb">繋がっていきます。</span><wbr></p></div>
+    <div class="sticky s3 rv" style="--r:-1deg"><p><strong class="mk"><span class="nb">「パイ</span><wbr><span class="nb">（笑</span><wbr><span class="nb">顔の</span><wbr><span class="nb">総量）の</span><wbr><span class="nb">最大化」</span><wbr></strong><span class="nb">（利他）を</span><wbr><span class="nb">追求する</span><wbr><span class="nb">ことと、</span><wbr><span class="nb">個人の</span><wbr><span class="nb">　</span><wbr><span class="nb">幸福度</span><wbr><span class="nb">（利己）も</span><wbr><span class="nb">本質的には</span><wbr><span class="nb">繋がっているのではないかと</span><wbr><span class="nb">感じています。</span><wbr></p></div>
+  </div>
+  <div class="joyph">
+    <figure class="pol drag" style="margin:0"><i class="tape"></i><img src="img/g5.webp" alt="テニスをするメンバー" loading="lazy"></figure>
+    <figure class="pol drag" style="margin:0"><i class="tape"></i><img src="img/g8.webp" alt="廊下で写真を撮り合うメンバー" loading="lazy"></figure>
+  </div>
+</section>
+<section class="sec" id="want">
+  <div class="ttl rv"><h2>What we’re looking for</h2><span class="sub"><span class="nb">チームに</span><wbr><span class="nb">求める</span><wbr><span class="nb">人間像</span><wbr></span></div>
+  <div class="want rv" style="--r:-.8deg"><ul><li><svg viewBox="0 0 40 40" aria-hidden="true"><rect x="4" y="6" width="30" height="30" rx="6"/><path d="M10 20l8 9L36 4"/></svg><span><span class="nb">会社の</span><wbr><span class="nb">バリューを</span><wbr><span class="nb">見て</span><wbr><span class="nb">共感していただける</span><wbr><span class="nb">方</span><wbr></span></li><li><svg viewBox="0 0 40 40" aria-hidden="true"><rect x="4" y="6" width="30" height="30" rx="6"/><path d="M10 20l8 9L36 4"/></svg><span><span class="nb">主体性を</span><wbr><span class="nb">持って仕事に</span><wbr><span class="nb">取り組みたい方</span><wbr></span></li><li><svg viewBox="0 0 40 40" aria-hidden="true"><rect x="4" y="6" width="30" height="30" rx="6"/><path d="M10 20l8 9L36 4"/></svg><span><span class="nb">常識にとらわれず、</span><wbr><span class="nb">短期的に</span><wbr><span class="nb">ネガティブな</span><wbr><span class="nb">ことも</span><wbr><span class="nb">長期的な</span><wbr><span class="nb">視点で</span><wbr><span class="nb">ポジティブに</span><wbr><span class="nb">変換する</span><wbr><span class="nb">視座と</span><wbr><span class="nb">柔軟性の</span><wbr><span class="nb">ある</span><wbr><span class="nb">方</span><wbr></span></li></ul></div>
+</section>
+<section class="sec" id="member">
+  <div class="ttl rv"><h2>MEMBER</h2></div>
+  <div class="mems"><article class="mc rv"><div class="ph"><img src="img/p_hashimoto.webp" alt="Keiji Hashimoto" loading="lazy"><span class="role">CEO</span></div><h3>Keiji Hashimoto</h3><p><span class="nb">大手通信会社の</span><wbr><span class="nb">営業、</span><wbr><span class="nb">事業企画を</span><wbr><span class="nb">経験後、</span><wbr><span class="nb">Webコンサル会社へ</span><wbr><span class="nb">転職。</span><wbr><span class="nb">2018年に</span><wbr><span class="nb">イラスト世界チャンピオンとともに</span><wbr><span class="nb">DT合同会社を</span><wbr><span class="nb">設立し、</span><wbr><span class="nb">CMO着任。</span><wbr><span class="nb">並行して</span><wbr><span class="nb">事業会社・</span><wbr><span class="nb">ベンダー双方での</span><wbr><span class="nb">経験を</span><wbr><span class="nb">生かし、</span><wbr><span class="nb">様々な</span><wbr><span class="nb">業種・</span><wbr><span class="nb">規模の</span><wbr><span class="nb">企業で</span><wbr><span class="nb">事業企画・</span><wbr><span class="nb">マーケティング・</span><wbr><span class="nb">セールスまでの</span><wbr><span class="nb">コンサルと</span><wbr><span class="nb">して</span><wbr><span class="nb">事業を</span><wbr><span class="nb">推進。</span><wbr><span class="nb">2024年に</span><wbr><span class="nb">サムライスタイル株式会社を</span><wbr><span class="nb">設立。</span><wbr></p></article><article class="mc rv"><div class="ph"><img src="img/p_hayashi.webp" alt="So Hayashi" loading="lazy"><span class="role">PM/Art Director</span></div><h3>So Hayashi</h3><p><span class="nb">東京生まれ、</span><wbr><span class="nb">イギリス・</span><wbr><span class="nb">シンガポール育ち。</span><wbr><span class="nb">映像ディレクターの</span><wbr><span class="nb">経験を</span><wbr><span class="nb">持ち、</span><wbr><span class="nb">企画・</span><wbr><span class="nb">撮影・</span><wbr><span class="nb">編集を</span><wbr><span class="nb">一貫して</span><wbr><span class="nb">対応。</span><wbr><span class="nb">現在は</span><wbr><span class="nb">弊社の</span><wbr><span class="nb">オフショア開発事業と</span><wbr><span class="nb">動画制作事業に</span><wbr><span class="nb">加え、</span><wbr><span class="nb">採用担当も</span><wbr><span class="nb">務める。</span><wbr></p></article><article class="mc rv"><div class="ph"><img src="img/p_lura.webp" alt="Lura Naito" loading="lazy"><span class="role">Human Resource</span></div><h3>Lura Naito</h3><p><span class="nb">愛知生まれ、</span><wbr><span class="nb">南米・</span><wbr><span class="nb">東南アジア各国を</span><wbr><span class="nb">放浪。</span><wbr><br><span class="nb">サムライスタイルでは</span><wbr><span class="nb">人事全般・</span><wbr><span class="nb">マーケティングを</span><wbr><span class="nb">担当。</span><wbr><span class="nb">ぶれない</span><wbr><span class="nb">明るさが</span><wbr><span class="nb">持ち味。</span><wbr></p></article><article class="mc rv"><div class="ph"><img src="img/p_kamizuru.webp" alt="Kamizuru san" loading="lazy"><span class="role">Project Manager</span></div><h3>Kamizuru san</h3><p><span class="nb">福岡在住。</span><wbr><span class="nb">Web開発会社の</span><wbr><span class="nb">経営と</span><wbr><span class="nb">並行して、</span><wbr><span class="nb">現役の</span><wbr><span class="nb">フルスタックエンジニアと</span><wbr><span class="nb">しても</span><wbr><span class="nb">活動。</span><wbr><span class="nb">小規模から</span><wbr><span class="nb">中規模まで、</span><wbr><span class="nb">事業フェーズに</span><wbr><span class="nb">応じた</span><wbr><span class="nb">柔軟な</span><wbr><span class="nb">システム設計を</span><wbr><span class="nb">得意と</span><wbr><span class="nb">する。</span><wbr><span class="nb">技術と</span><wbr><span class="nb">対話を</span><wbr><span class="nb">通じて</span><wbr><span class="nb">事業の</span><wbr><span class="nb">課題解決に</span><wbr><span class="nb">取り</span><wbr><span class="nb">組んでいる。</span><wbr></p></article><article class="mc rv"><div class="ph"><img src="img/p_satrio.webp" alt="Satrio Buwono" loading="lazy"><span class="role">Engineer Manager</span></div><h3>Satrio Buwono</h3><p><span class="nb">インドネシア生まれ、</span><wbr><span class="nb">グラズゴー大学卒業。</span><wbr><span class="nb">11カ国を</span><wbr><span class="nb">旅する。</span><wbr><span class="nb">SaaSを</span><wbr><span class="nb">専門に</span><wbr><span class="nb">構築を</span><wbr><span class="nb">行い、</span><wbr><span class="nb">複数の</span><wbr><span class="nb">ITベンチャーを</span><wbr><span class="nb">立ち上げ。</span><wbr><span class="nb">オフショア開発事業の</span><wbr><span class="nb">エンジニア統括を</span><wbr><span class="nb">担う。</span><wbr></p></article><article class="mc rv"><div class="ph"><img src="img/p_ahmad.webp" alt="Ahmad" loading="lazy"><span class="role">Engineer</span></div><h3>Ahmad</h3><p><span class="nb">インドネシア出身。</span><wbr><span class="nb">サウジアラビアの</span><wbr><span class="nb">ハイル大学在学中。</span><wbr><span class="nb">JavaScript</span><wbr><span class="nb">開発環境に</span><wbr><span class="nb">深く</span><wbr><span class="nb">精通し、</span><wbr><span class="nb">フルスタック</span><wbr><span class="nb">Web</span><wbr><span class="nb">アプリケーション開発に</span><wbr><span class="nb">おいて</span><wbr><span class="nb">豊富な</span><wbr><span class="nb">実績を</span><wbr><span class="nb">持つ。</span><wbr></p></article><article class="mc rv"><div class="ph"><img src="img/p_jibran.webp" alt="Jibran" loading="lazy"><span class="role">Engineer</span></div><h3>Jibran</h3><p><span class="nb">インドネシア出身。</span><wbr><span class="nb">現役大学生。</span><wbr><span class="nb">システムアーキテクチャおよび</span><wbr><span class="nb">バックエンドエンジニアリングに</span><wbr><span class="nb">精通。</span><wbr><span class="nb">Pythonと</span><wbr><span class="nb">Goを</span><wbr><span class="nb">主軸とし、</span><wbr><span class="nb">複雑な</span><wbr><span class="nb">システムの</span><wbr><span class="nb">最適化を</span><wbr><span class="nb">実現する</span><wbr><span class="nb">自動化ワークフローの</span><wbr><span class="nb">構築に</span><wbr><span class="nb">おいて</span><wbr><span class="nb">豊富な</span><wbr><span class="nb">経験を</span><wbr><span class="nb">持つ。</span><wbr></p></article></div>
+  <svg class="dd" viewBox="0 0 60 60" style="width:44px;left:46%;top:120px"><path d="M30 6l6 17 18 1-14 11 5 18-15-10-15 10 5-18L6 24l18-1z"/></svg><svg class="dd" viewBox="0 0 60 60" style="width:30px;right:12%;top:80px"><path d="M30 6l6 17 18 1-14 11 5 18-15-10-15 10 5-18L6 24l18-1z"/></svg>
+</section>
+<section class="sec" id="job">
+  <div class="ttl rv"><h2>JOB TYPE</h2></div>
+  <div class="ticket rv" style="--r:-1.2deg">
+    <div class="main"><span class="lab">JOB TYPE</span><h3><span class="nb">コンテンツディレクター</span><wbr><span class="nb">（編集者）</span><wbr></h3><p class="cond"><span class="nb">業務委託 </span><wbr><span class="nb">・</span><wbr><span class="nb"> </span><wbr><span class="nb">基本リモート</span><wbr><span class="nb">（月1回程度 </span><wbr><span class="nb">都内近郊で</span><wbr><span class="nb">対面）</span><wbr></p></div>
+    <div class="stub"><a class="stamp" href="https://samurai-style.tokyo/#contact">CONTACT<br>→</a></div>
+  </div>
+</section>
+</main>
+<footer class="ft"><a class="lg" href="https://samurai-style.tokyo/" aria-label="SAMURAI STYLE"><img src="img/logo.svg" alt="SAMURAI STYLE"></a>
+<nav><a href="https://samurai-style.tokyo/">HOME</a><a href="https://samurai-style.tokyo/#service">SERVICE</a><a href="https://samurai-style.tokyo/media">MEDIA</a><a href="https://samurai-style.tokyo/company">COMPANY</a><a href="https://samurai-style.tokyo/recruit">RECRUIT</a><a href="https://samurai-style.tokyo/#contact">CONTACT</a></nav>
+<nav><a href="https://samurai-style.tokyo/privacy-policy">プライバシーポリシー</a><a href="https://samurai-style.tokyo/commercial-transactions">特定商取引法に基づく表記</a></nav>
+<svg class="dd" viewBox="0 0 60 60" style="width:34px;left:30%;top:-60px"><path d="M30 6l6 17 18 1-14 11 5 18-15-10-15 10 5-18L6 24l18-1z"/></svg><svg class="dd" viewBox="0 0 60 60" style="width:22px;left:64%;top:-110px"><path d="M30 6l6 17 18 1-14 11 5 18-15-10-15 10 5-18L6 24l18-1z"/></svg></footer>
+<script>
+(()=>{
+const B=document.body;const V=document.querySelector('.card video');const st=()=>{try{V.currentTime=9.3}catch(e){}};V.readyState>0?st():V.addEventListener('loadedmetadata',st,{once:true});
+document.querySelector('.burger').onclick=()=>B.classList.toggle('mopen');
+document.querySelectorAll('.ov a').forEach(a=>a.onclick=()=>B.classList.remove('mopen'));
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{rootMargin:'0px 0px -8% 0px'});
+document.querySelectorAll('.rv,.want li').forEach(e=>io.observe(e));
+/* モザイクの写真がときどき入れ替わる */
+const tiles=[...document.querySelectorAll('.mosaic img')],src=[...new Set(tiles.map(t=>t.getAttribute('src')))];
+if(!matchMedia('(prefers-reduced-motion:reduce)').matches)setInterval(()=>{const t=tiles[Math.random()*tiles.length|0];t.classList.add('flip');setTimeout(()=>{t.src=src[Math.random()*src.length|0];t.classList.remove('flip')},450)},900);
+/* 写真はつまんで動かせる */
+let z=10;document.querySelectorAll('.drag').forEach(el=>{let sx,sy,ox=0,oy=0,base=getComputedStyle(el).transform;base=base==='none'?'':base;
+  el.addEventListener('pointerdown',e=>{if(e.pointerType==='touch')return;el.setPointerCapture(e.pointerId);sx=e.clientX-ox;sy=e.clientY-oy;el.classList.add('up');el.style.zIndex=++z;
+    const mv=e=>{ox=e.clientX-sx;oy=e.clientY-sy;el.style.transform=`translate(${ox}px,${oy}px) ${base}`};
+    const up=()=>{el.classList.remove('up');el.removeEventListener('pointermove',mv);el.removeEventListener('pointerup',up)};
+    el.addEventListener('pointermove',mv);el.addEventListener('pointerup',up)})});
+})();
+</script>
+</body>
+</html>

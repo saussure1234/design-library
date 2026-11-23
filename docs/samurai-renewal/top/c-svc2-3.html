@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>SERVICE 案2-3 横に長い設計図</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+JP:wght@400;500;600&family=Noto+Sans+JP:wght@100..900&family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f4ee;--card:#fbfaf6;--ink:#151513;--ink2:#3b3a36;--mute:#6f6d69;
+  --line:#dcd8cd;--line2:#e9e5db;--sig:#ef4519;
+  --rail:220px;--pad:40px;--hd:0px;
+  --disp:"Space Grotesk",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --jp:"IBM Plex Sans JP","Hiragino Sans",sans-serif;
+  --rf:"Roboto Flex",system-ui,sans-serif;
+  --jpv:"Noto Sans JP","Hiragino Sans",sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--jp);font-size:16px;line-height:1.9;overflow-x:clip;-webkit-font-smoothing:antialiased;line-break:strict}
+a{color:inherit}
+img,canvas{display:block}
+.nb{display:inline-block}
+/* ヘッダー（c-all-gen と同じ左の縦レール） */
+.hd{position:fixed;left:0;top:0;bottom:0;width:var(--rail);padding:34px 0 30px var(--pad);display:flex;flex-direction:column;z-index:50}
+.logo img{width:112px;height:auto}
+.nav{display:flex;flex-direction:column;align-items:flex-start;gap:4px;margin-top:44px;font:400 13px/1.7 var(--mono);letter-spacing:.02em}
+.nav a{text-decoration:none;color:var(--ink);position:relative;padding-left:16px}
+.nav a::before{content:"";position:absolute;left:0;top:50%;width:6px;height:6px;margin-top:-3px;background:var(--sig);transform:scale(0);transition:transform .25s}
+.nav a:hover::before,.nav a.on::before{transform:scale(1)}
+.nav a.cta{color:var(--sig)}
+.lang{display:flex;gap:12px;font:400 12px/1 var(--mono);color:var(--mute)}
+.lang b{color:var(--ink);font-weight:500}
+.hd .lang{margin-top:auto}
+.burger{display:none}
+.ov{display:none}
+main{margin-left:var(--rail);padding-right:var(--pad)}
+.pre{height:24vh}
+.post{height:60vh}
+/* 節の頭：細く縮んだ字 → 広く太く */
+.sh2{margin:0 0 56px}
+.lbl{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--ink);padding-top:10px;font:400 12px/1.5 var(--mono);color:var(--mute)}
+.lbl .jp{font-family:var(--jp);letter-spacing:.14em;color:var(--ink);font-size:13px;display:flex;align-items:center;gap:10px}
+.lbl .jp::before{content:"";width:8px;height:8px;background:var(--sig)}
+.giant{display:block;margin:22px 0 0;font-family:var(--rf);font-weight:400;font-size:15vw;line-height:.8;letter-spacing:-.02em;white-space:nowrap;font-variation-settings:"wdth" 25,"wght" 100,"opsz" 144}
+/* 共通の部品 */
+.cat{margin:0;display:flex;gap:14px;font:400 12px/1.6 var(--mono);color:var(--mute);min-height:1.6em}
+.cat b{color:var(--sig);font-weight:500}
+.cat span{font-family:var(--jp)}
+.more{font:500 14px/1 var(--jp);text-decoration:none;display:inline-flex;gap:10px;align-items:center;padding-bottom:6px;border-bottom:1px solid var(--ink)}
+.more::after{content:"→";font-family:var(--mono)}
+.more:hover{color:var(--sig);border-color:var(--sig)}
+.pan{position:relative;background:var(--card);border:1px solid var(--line)}
+.pan>canvas{position:absolute;inset:0;width:100%;height:100%}
+.pan::before,.pan::after{content:"+";position:absolute;font:300 14px/1 var(--mono);color:var(--mute);pointer-events:none;z-index:2}
+.pan::before{left:-5px;top:-8px}
+.pan::after{right:-5px;bottom:-9px}
+.cap{font:400 11px/1 var(--mono);letter-spacing:.06em;color:var(--mute)}
+@media (max-width:1080px){
+  :root{--rail:0px;--pad:20px;--hd:58px}
+  .hd{bottom:auto;right:0;width:auto;height:58px;padding:0 var(--pad);flex-direction:row;align-items:center;justify-content:space-between;background:rgba(246,244,238,.92);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid var(--line2)}
+  .logo img{width:92px}
+  .hd .nav,.hd .lang{display:none}
+  .burger{display:block;width:40px;height:40px;border:0;background:none;position:relative;cursor:pointer;padding:0}
+  .burger i{position:absolute;left:9px;right:9px;height:1.5px;background:var(--ink);transition:transform .3s}
+  .burger i:first-child{top:15px}.burger i:last-child{top:23px}
+  body.menu .burger i:first-child{transform:translateY(4px) rotate(45deg)}
+  body.menu .burger i:last-child{transform:translateY(-4px) rotate(-45deg)}
+  .ov{display:flex;position:fixed;inset:58px 0 0 0;z-index:49;background:var(--bg);flex-direction:column;padding:32px var(--pad);gap:6px;font:400 22px/1.7 var(--mono);opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
+  .ov a{text-decoration:none}
+  .ov .lang{margin-top:24px;font-size:14px}
+  body.menu .ov{opacity:1;visibility:visible}
+  main{padding-left:var(--pad)}
+  .pre{height:18vh}
+  .sh2{margin-bottom:36px}
+}
+
+.hz{position:relative}
+.hz-st{position:sticky;top:var(--hd);height:calc(100vh - var(--hd));height:calc(100svh - var(--hd));overflow:hidden;display:flex;flex-direction:column;justify-content:center}
+.hz-tr{display:flex;align-items:stretch;will-change:transform;position:relative;padding:0 0 0 0}
+.rul{position:absolute;left:0;top:0;height:30px;pointer-events:none}
+.rul canvas{width:100%;height:100%}
+.hp{flex:0 0 auto;width:var(--pw);padding:52px 48px 0 0;position:relative;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto}
+.hp .fig{position:relative;height:min(52vh,520px)}
+.hp .fig canvas{position:absolute;inset:0;width:100%;height:100%}
+.hp .lab{position:absolute;left:0;top:-22px;display:flex;gap:16px;align-items:center}
+.hp .tx{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.3fr);gap:8px 32px;padding-top:26px;align-items:start}
+.hp h3{margin:0;font:500 clamp(30px,2.8vw,44px)/1.05 var(--disp);letter-spacing:-.025em}
+.hp h3.ja{font-family:var(--jp);letter-spacing:.02em}
+.hp .d{margin:0 0 16px;font-size:15px;line-height:1.9;color:var(--ink2)}
+.hp .cat{grid-column:1/-1}
+.hp .jn{position:absolute;right:-1px;top:52px;height:min(52vh,520px);width:48px;display:flex;align-items:center;justify-content:center}
+.hp .jn::before{content:"";position:absolute;left:6px;right:6px;top:50%;border-top:1px dashed var(--ink);opacity:.55}
+.hp .jn::after{content:"";position:absolute;right:6px;top:50%;width:7px;height:7px;border-top:1px solid var(--ink);border-right:1px solid var(--ink);transform:translate(0,-50%) rotate(45deg);transform-origin:center;margin-top:0}
+.hp:last-child .jn{display:none}
+.hz-ft{display:flex;justify-content:space-between;align-items:center;margin-top:26px;font:400 12px/1 var(--mono);color:var(--mute)}
+.hz-ft .tr{flex:1;height:1px;background:var(--line);margin:0 18px;position:relative}
+.hz-ft .tr b{position:absolute;left:0;top:-3px;width:7px;height:7px;background:var(--sig);transform:translateX(calc(var(--p,0) * (var(--tw,0px) - 7px)))}
+@media (max-width:1080px){
+  .hp{padding:46px 28px 0 0}
+  .hp .fig{height:min(36svh,300px)}
+  .hp .jn{top:46px;height:min(36svh,300px);width:28px}
+  .hp .tx{grid-template-columns:1fr;padding-top:18px;gap:6px}
+  .hp h3{font-size:30px}
+  .hp .d{font-size:14px;line-height:1.85;margin-bottom:12px}
+  .hz-ft{margin-top:16px}
+}
+
+</style>
+</head>
+<body>
+<header class="hd" id="hd">
+  <a class="logo" href="#top" aria-label="SAMURAI STYLE"><img src="img/logo.svg" alt="SAMURAI STYLE"></a>
+  <nav class="nav"><a href="#top">HOME</a><a class="on" href="#service">SERVICE</a><a href="https://samurai-style.tokyo/media">MEDIA</a><a href="https://samurai-style.tokyo/company">COMPANY</a><a href="https://samurai-style.tokyo/recruit">RECRUIT</a><a class="cta" href="#contact">CONTACT</a></nav>
+  <div class="lang"><span>ID</span><span>EN</span><b>JA</b></div>
+  <button class="burger" aria-label="Menu"><i></i><i></i></button>
+</header>
+<div class="ov"><a href="#top">HOME</a><a href="#service">SERVICE</a><a href="https://samurai-style.tokyo/media">MEDIA</a><a href="https://samurai-style.tokyo/company">COMPANY</a><a href="https://samurai-style.tokyo/recruit">RECRUIT</a><a href="#contact">CONTACT</a><div class="lang"><span>ID</span><span>EN</span><b>JA</b></div></div>
+<main id="top">
+<div class="pre" aria-hidden="true"></div>
+<section class="sec" id="service">
+  <div class="sh2"><div class="lbl"><span class="jp">事業内容</span></div><h2 class="giant" data-stretch>SERVICE</h2></div>
+  <div class="hz" id="hz"><div class="hz-st">
+    <div class="hz-tr" id="tr"><div class="rul" aria-hidden="true"><canvas id="rul"></canvas></div>
+      <article class="hp"><div class="fig pan"><canvas data-draw="s2a"></canvas><div class="lab"><span class="cap">FIG. 01</span></div></div><span class="jn" aria-hidden="true"></span><div class="tx"><p class="cat"><b>01</b><span></span></p><h3>Strategy2Action</h3><div><p class="d">事業理解に基づいて戦略を考え、実行まで伴走し、ダッシュボード作成による経営層・上長への可視化まで対応。</p><a class="more" href="https://samurai-style.tokyo/strategy2action">詳しく見る</a></div></div></article>
+      <article class="hp"><div class="fig pan"><canvas data-draw="hh"></canvas><div class="lab"><span class="cap">FIG. 02</span></div></div><span class="jn" aria-hidden="true"></span><div class="tx"><p class="cat"><b>02</b><span>動画広告の制作ツール</span></p><h3>HookHack</h3><div><p class="d">売れる動画広告をLPから5分で制作。<br>検証から成果改善まで、動画広告のPDCAに必要な機能を1ツールで網羅します。</p><a class="more" href="https://www.hook-hack.com/">詳しく見る</a></div></div></article>
+      <article class="hp"><div class="fig pan"><canvas data-draw="hhr"></canvas><div class="lab"><span class="cap">FIG. 03</span></div></div><span class="jn" aria-hidden="true"></span><div class="tx"><p class="cat"><b>03</b><span>LP・サイト制作の代行</span></p><h3>HookHacker</h3><div><p class="d">自社開発AIツール「HookHack」×インドネシアオフショアチーム×日本人ディレクターでLP・サイト制作を代行。</p><a class="more" href="https://www.hook-hack.com/hookhacker">詳しく見る</a></div></div></article>
+      <article class="hp"><div class="fig pan"><canvas data-draw="vp"></canvas><div class="lab"><span class="cap">FIG. 04</span></div></div><span class="jn" aria-hidden="true"></span><div class="tx"><p class="cat"><b>04</b><span></span></p><h3 class="ja">動画制作</h3><div><p class="d">貴社の顧客理解に基づき、動画を企画・撮影・編集までワンストップで制作します。</p><a class="more" href="https://samurai-style.tokyo/video-production">詳しく見る</a></div></div></article>
+    </div>
+    <div class="hz-ft" aria-hidden="true"><span>01</span><span class="tr" id="trk"><b></b></span><span>04</span></div>
+  </div></div>
+</section>
+<div class="post" aria-hidden="true"></div>
+</main>
+<script src="js/svc-draw.js"></script>
+<script>
+(()=>{
+'use strict';
+document.querySelector('.burger').addEventListener('click',()=>document.body.classList.toggle('menu'));
+document.querySelectorAll('.ov a').forEach(a=>a.addEventListener('click',()=>document.body.classList.remove('menu')));
+SvcDraw.stretch(document.querySelectorAll('[data-stretch]'));
+const hz=document.getElementById('hz'),tr=document.getElementById('tr'),hps=[...tr.querySelectorAll('.hp')],trk=document.getElementById('trk'),rc=document.getElementById('rul');
+const ctl=hps.map(h=>{const c=h.querySelector('canvas');return SvcDraw.mount(c,c.dataset.draw,{mode:'scrub',grid:true,pad:.05})});
+let TW=0,VW=0;
+function layout(){VW=hz.clientWidth;const pw=innerWidth<=1080?Math.round(VW*.86):Math.round(VW*.64);tr.style.setProperty('--pw',pw+'px');
+  TW=tr.scrollWidth;hz.style.height=(innerHeight+Math.max(0,TW-VW)+innerHeight*.2)+'px';trk.style.setProperty('--tw',trk.clientWidth+'px');
+  const rul=tr.querySelector('.rul');rul.style.width=TW+'px';const d=Math.min(2,devicePixelRatio||1);rc.width=TW*d;rc.height=30*d;const x=rc.getContext('2d');x.setTransform(d,0,0,d,0,0);x.clearRect(0,0,TW,30);
+  x.strokeStyle='rgba(21,21,19,.55)';x.lineWidth=1;x.beginPath();x.moveTo(0,29.5);x.lineTo(TW,29.5);for(let i=0,px=0;px<=TW;i++,px+=12){const h=i%10===0?12:i%5===0?7:4;x.moveTo(px+.5,29.5);x.lineTo(px+.5,29.5-h)}x.stroke();
+  x.fillStyle='rgba(111,109,105,.9)';x.font='400 9px "JetBrains Mono",monospace';x.textBaseline='top';for(let i=0,px=0;px<=TW-20;i+=10,px+=120)x.fillText(String(i*10),px+3,2);
+  onScroll()}
+function onScroll(){const r=hz.getBoundingClientRect(),vh=innerHeight,span=Math.max(1,r.height-vh-vh*.2);const p=Math.max(0,Math.min(1,(-r.top)/span));
+  const X=-(TW-VW)*p;tr.style.transform=`translate3d(${X}px,0,0)`;trk.style.setProperty('--p',p);
+  hps.forEach((h,k)=>{const L=h.offsetLeft+X;ctl[k].set(Math.max(0,Math.min(1,(VW*.92-L)/(VW*.62))))});}
+addEventListener('scroll',onScroll,{passive:true});let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(layout,120)});
+(document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(layout);layout();
+})();
+</script>
+</body>
+</html>

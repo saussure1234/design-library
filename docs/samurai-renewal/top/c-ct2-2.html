@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>CONTACT 案2 図面が描き足される | サムライスタイル</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+JP:wght@400;500;600&family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f4ee;--card:#fbfaf6;--ink:#151513;--ink2:#3b3a36;--mute:#6f6d69;
+  --line:#dcd8cd;--line2:#e9e5db;--sig:#ef4519;
+  --rail:220px;--pad:40px;
+  --disp:"Space Grotesk",system-ui,sans-serif;
+  --rf:"Roboto Flex","Space Grotesk",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --jp:"IBM Plex Sans JP","Hiragino Sans",sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--jp);font-size:16px;line-height:1.9;overflow-x:clip;-webkit-font-smoothing:antialiased;line-break:strict}
+a{color:inherit}
+img,video,canvas{display:block}
+.nb{display:inline-block}
+#meas{position:absolute;left:-9999px;top:0;visibility:hidden;white-space:nowrap;font-family:var(--rf);font-size:100px;line-height:1}
+
+/* rail */
+.hd{position:fixed;left:0;top:0;bottom:0;width:var(--rail);padding:34px 0 30px var(--pad);display:flex;flex-direction:column;z-index:50}
+.logo img{width:112px;height:auto}
+.nav{display:flex;flex-direction:column;align-items:flex-start;gap:4px;margin-top:44px;font:400 13px/1.7 var(--mono);letter-spacing:.02em}
+.nav a{text-decoration:none;color:var(--ink);position:relative;padding-left:16px}
+.nav a::before{content:"";position:absolute;left:0;top:50%;width:6px;height:6px;margin-top:-3px;background:var(--sig);transform:scale(0);transition:transform .25s}
+.nav a:hover::before,.nav a.on::before{transform:scale(1)}
+.nav a.cta{color:var(--sig)}
+.lang{display:flex;gap:12px;font:400 12px/1 var(--mono);color:var(--mute)}
+.lang b{color:var(--ink);font-weight:500}
+.hd .lang{margin-top:auto}
+.burger{display:none}
+.ov{display:none}
+main,.ft{margin-left:var(--rail);padding-right:var(--pad)}
+
+/* panels */
+.pan{position:relative;background:var(--card);border:1px solid var(--line)}
+.pan>canvas{position:absolute;inset:0;width:100%;height:100%}
+.pan::before,.pan::after{content:"+";position:absolute;font:300 14px/1 var(--mono);color:var(--mute);pointer-events:none;z-index:2}
+.pan::before{left:-5px;top:-8px}
+.pan::after{right:-5px;bottom:-9px}
+
+/* heading : narrow & thin -> wide & heavy */
+.gh{margin:0;font-family:var(--rf);font-weight:400;font-size:min(90px,14vw);line-height:.86;letter-spacing:-.02em;white-space:nowrap;font-variation-settings:"wdth" 25,"wght" 100,"opsz" 144;padding-top:.04em}
+.gh span{display:block}
+.gh .l2{color:transparent;-webkit-text-stroke:1.2px var(--ink)}
+
+/* contact */
+.sec{padding:96px 0 0}
+#contact{padding-bottom:150px}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:28px 28px;position:relative}
+.form>label,.form .full>label{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--mute)}
+.form .full{grid-column:1/-1}
+.form input[type=text],.form input[type=email],.form input[type=tel],.form textarea{font:400 16px/1.6 var(--jp);color:var(--ink);background:transparent;border:0;border-bottom:1px solid var(--line);padding:8px 0;border-radius:0;outline:none;transition:border-color .2s}
+.form input:focus,.form textarea:focus{border-color:var(--ink)}
+.form textarea{min-height:150px;resize:vertical;border:1px solid var(--line);padding:12px;background:var(--card)}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.opts label{position:relative;cursor:pointer}
+.opts input{position:absolute;opacity:0}
+.opts span{display:block;padding:11px 14px 11px 36px;border:1px solid var(--line);background:var(--card);font-size:14px;line-height:1.5;color:var(--ink);position:relative;transition:border-color .2s}
+.opts span::before{content:"";position:absolute;left:13px;top:50%;width:10px;height:10px;margin-top:-5px;border:1px solid var(--mute)}
+.opts input:checked+span{border-color:var(--ink)}
+.opts input:checked+span::before{background:var(--sig);border-color:var(--sig)}
+.opts input:focus-visible+span{outline:2px solid var(--sig);outline-offset:2px}
+.sendrow{grid-column:1/-1;display:flex;align-items:center;gap:22px;position:relative}
+.send{display:inline-flex;gap:16px;align-items:center;font:500 15px/1 var(--jp);color:var(--card);background:var(--ink);border:0;padding:19px 34px;cursor:pointer;transition:background .4s}
+.send:hover{background:var(--sig)}
+.send span{font-family:var(--mono)}
+.note{grid-column:1/-1;margin:0;font-size:12px;line-height:1.9;color:var(--mute)}
+
+/* footer */
+.ft{padding-bottom:36px}
+.big{display:block;text-decoration:none;border-top:1px solid var(--ink);padding-top:28px;position:relative}
+.big .bw{position:relative}
+.big b{display:block;font:700 clamp(64px,15.2vw,232px)/.86 var(--disp);letter-spacing:-.05em;color:transparent;user-select:text}
+.big canvas{position:absolute;inset:0;width:100%;height:100%}
+.big .bl{display:flex;justify-content:space-between;align-items:center;margin-top:18px;font-size:15px;font-weight:500}
+.big .arr{font:400 28px/1 var(--mono);transition:transform .3s,color .3s}
+.big:hover .arr{transform:translateX(8px);color:var(--sig)}
+.low{display:flex;flex-wrap:wrap;align-items:center;gap:16px 40px;margin-top:72px;padding-top:24px;border-top:1px solid var(--line);font-size:12px;color:var(--mute)}
+.low .lg img{width:96px}
+.low nav{display:flex;flex-wrap:wrap;gap:8px 24px}
+.low nav a{text-decoration:none}
+.low nav a:hover{color:var(--ink)}
+.low>span{margin-left:auto;font-family:var(--mono)}
+
+@media (max-width:1080px){
+  :root{--rail:0px;--pad:20px}
+  .hd{bottom:auto;right:0;width:auto;height:58px;padding:0 var(--pad);flex-direction:row;align-items:center;justify-content:space-between;background:rgba(246,244,238,.92);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid var(--line2)}
+  .logo img{width:92px}
+  .hd .nav,.hd .lang{display:none}
+  .burger{display:block;width:40px;height:40px;border:0;background:none;position:relative;cursor:pointer;padding:0}
+  .burger i{position:absolute;left:9px;right:9px;height:1.5px;background:var(--ink);transition:transform .3s}
+  .burger i:first-child{top:15px}.burger i:last-child{top:23px}
+  body.menu .burger i:first-child{transform:translateY(4px) rotate(45deg)}
+  body.menu .burger i:last-child{transform:translateY(-4px) rotate(-45deg)}
+  .ov{display:flex;position:fixed;inset:58px 0 0 0;z-index:49;background:var(--bg);flex-direction:column;padding:32px var(--pad);gap:6px;font:400 22px/1.7 var(--mono);opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
+  .ov a{text-decoration:none}
+  .ov .lang{margin-top:24px;font-size:14px}
+  body.menu .ov{opacity:1;visibility:visible}
+  main,.ft{padding-left:var(--pad)}
+  .sec{padding-top:96px}
+}
+@media (max-width:760px){
+  body{font-size:15px}
+  .sec{padding-top:88px}
+  .form{grid-template-columns:1fr;gap:22px}
+  .opts{grid-template-columns:1fr}
+  #contact{padding-bottom:100px}
+  .low>span{margin-left:0}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+/* ===== variant ===== */
+.ct{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:64px;align-items:start}
+.side{position:sticky;top:40px}
+.gh{margin-bottom:30px}
+.sheet{aspect-ratio:1/1.02;max-height:calc(100vh - 260px);width:100%}
+@media (max-width:1080px){
+  .ct{grid-template-columns:minmax(0,1fr);gap:0}
+  .side{display:contents}
+  .gh{order:0;margin-bottom:26px}
+  .sheet{order:1;position:sticky;top:58px;z-index:5;aspect-ratio:auto;width:auto;height:230px;max-height:none;margin:0 calc(var(--pad)*-1) 34px;border-left:0;border-right:0}
+  .sheet::before,.sheet::after{display:none}
+  .form{order:2}
+}
+</style>
+</head>
+<body>
+<header class="hd" id="hd">
+  <a class="logo" href="#top" aria-label="SAMURAI STYLE"><img src="img/logo.svg" alt="SAMURAI STYLE"></a>
+  <nav class="nav"><a href="#top">HOME</a><a href="#service">SERVICE</a><a href="https://samurai-style.tokyo/media">MEDIA</a><a href="https://samurai-style.tokyo/company">COMPANY</a><a href="https://samurai-style.tokyo/recruit">RECRUIT</a><a class="cta on" href="#contact">CONTACT</a></nav>
+  <div class="lang"><span>ID</span><span>EN</span><b>JA</b></div>
+  <button class="burger" aria-label="Menu"><i></i><i></i></button>
+</header>
+<div class="ov"><a href="#top">HOME</a><a href="#service">SERVICE</a><a href="https://samurai-style.tokyo/media">MEDIA</a><a href="https://samurai-style.tokyo/company">COMPANY</a><a href="https://samurai-style.tokyo/recruit">RECRUIT</a><a href="#contact">CONTACT</a><div class="lang"><span>ID</span><span>EN</span><b>JA</b></div></div>
+
+<main id="top">
+<section class="sec" id="contact">
+  <div class="ct">
+    <div class="side"><h2 class="gh"><span class="l1">CONTACT</span><span class="l2">US</span></h2>
+      <div class="pan sheet"><canvas id="shc" aria-hidden="true"></canvas></div></div>
+    <form class="form" id="form" novalidate>
+      
+      <label>会社名 (必須)<input type="text" name="company" required></label>
+      <label>担当者名 (必須)<input type="text" name="name" required></label>
+      <label>メールアドレス (必須)<input type="email" name="email" required></label>
+      <label>電話番号（必須）<input type="tel" name="tel" required></label>
+      <div class="full"><label style="margin-bottom:10px">お問い合わせ内容（必須）</label>
+        <div class="opts">
+          <label><input type="radio" name="kind" value="1"><span>戦略立案・実行支援（Strategy2Action）</span></label>
+          <label><input type="radio" name="kind" value="2"><span>動画広告ツール（HookHack）</span></label>
+          <label><input type="radio" name="kind" value="3"><span>LP・サイト制作（HookHacker）</span></label>
+          <label><input type="radio" name="kind" value="4"><span>動画制作（企画・撮影・編集）</span></label>
+          <label><input type="radio" name="kind" value="5"><span>取材・メディア関係</span></label>
+          <label><input type="radio" name="kind" value="6"><span>その他のお問い合わせ</span></label>
+        </div>
+      </div>
+      <label class="full">本文（必須）<textarea name="body" required></textarea></label>
+      <div class="sendrow"><button class="send" type="submit">送信 <span>→</span></button></div>
+      <p class="note">上記ボタンを押すことで、当社の提供するサービス等に関する情報を提供する目的で、サムライスタイル株式会社が上記から送信された個人情報を保管・処理することに同意したものとみなされます。お客様はこれらの情報提供をいつでも停止できます。</p>
+      <p class="note">個人情報の開示や削除依頼等のお問い合わせ先、およびお客様の個人情報を尊重して保護するための弊社の取り組みについては、弊社の<a href="https://samurai-style.tokyo/privacy-policy">プライバシーポリシー</a>をご覧ください。</p>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer class="ft">
+  <a class="big" href="#contact"><div class="bw"><b>CONTACT</b><canvas id="ftc" aria-hidden="true"></canvas></div><div class="bl"><span class="jp">お問い合わせはこちらから</span><span class="arr">→</span></div></a>
+  <div class="low">
+    <a class="lg" href="#top" aria-label="Samurai-Style"><img src="img/logo.svg" alt="Samurai-Style"></a>
+    <nav><a href="https://samurai-style.tokyo/privacy-policy">プライバシーポリシー</a><a href="https://samurai-style.tokyo/commercial-transactions">特定商取引法に基づく表記</a></nav>
+    <span>© 2024- samurai-style All Right Reserved.</span>
+  </div>
+</footer>
+<span id="meas" aria-hidden="true"></span>
+
+<script>
+(()=>{
+'use strict';
+const TAU=Math.PI*2, DPR=Math.min(2,window.devicePixelRatio||1);
+const REDUCE=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const clamp=(v,a=0,b=1)=>v<a?a:v>b?b:v, mix=(a,b,t)=>a+(b-a)*t;
+const ss=(a,b,v)=>{const t=clamp((v-a)/(b-a));return t*t*(3-2*t)};
+const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const hex=h=>{h=h.replace('#','');return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]};
+const C={ink:hex(css('--ink')),sig:hex(css('--sig')),card:hex(css('--card')),line:hex(css('--line')),mute:hex(css('--mute')),bg:hex(css('--bg'))};
+const rgba=(c,a)=>`rgba(${c[0]},${c[1]},${c[2]},${a})`;
+const rgbMix=(a,b,t,al)=>`rgba(${Math.round(mix(a[0],b[0],t))},${Math.round(mix(a[1],b[1],t))},${Math.round(mix(a[2],b[2],t))},${al})`;
+function rng(seed){let s=seed%2147483647;if(s<=0)s+=2147483646;return()=>(s=s*16807%2147483647)/2147483647}
+const P=new Uint8Array(512);{const r=rng(1977),a=[...Array(256).keys()];for(let i=255;i>0;i--){const j=(r()*(i+1))|0;[a[i],a[j]]=[a[j],a[i]]}for(let i=0;i<512;i++)P[i]=a[i&255]}
+const fd=t=>t*t*t*(t*(t*6-15)+10), lp=(t,a,b)=>a+t*(b-a);
+const gr=(h,x,y,z)=>{h&=15;const u=h<8?x:y,v=h<4?y:(h===12||h===14)?x:z;return((h&1)?-u:u)+((h&2)?-v:v)};
+function N3(x,y,z){let X=Math.floor(x),Y=Math.floor(y),Z=Math.floor(z);x-=X;y-=Y;z-=Z;X&=255;Y&=255;Z&=255;
+  const u=fd(x),v=fd(y),w=fd(z),A=P[X]+Y,AA=P[A]+Z,AB=P[A+1]+Z,B=P[X+1]+Y,BA=P[B]+Z,BB=P[B+1]+Z;
+  return lp(w,lp(v,lp(u,gr(P[AA],x,y,z),gr(P[BA],x-1,y,z)),lp(u,gr(P[AB],x,y-1,z),gr(P[BB],x-1,y-1,z))),
+             lp(v,lp(u,gr(P[AA+1],x,y,z-1),gr(P[BA+1],x-1,y,z-1)),lp(u,gr(P[AB+1],x,y-1,z-1),gr(P[BB+1],x-1,y-1,z-1))));}
+
+/* canvas pieces: only visible ones draw */
+const pieces=[];
+const io=new IntersectionObserver(es=>{for(const e of es){const p=e.target.__p;if(!p)continue;p.vis=e.isIntersecting;if(p.vis&&!p.ready)size(p)}},{rootMargin:'160px 0px'});
+function piece(c,o){const p=Object.assign({c,ctx:c.getContext('2d'),vis:false,ready:false,w:0,h:0},o);c.__p=p;pieces.push(p);io.observe(c);return p}
+function size(p){const r=p.c.getBoundingClientRect();if(!r.width||!r.height)return;const d=p.dpr||DPR;p.w=r.width;p.h=r.height;p.c.width=Math.round(r.width*d);p.c.height=Math.round(r.height*d);p.ctx.setTransform(d,0,0,d,0,0);p.ready=true;p.init&&p.init(p)}
+let lastW=innerWidth,rz;
+addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{lastW=innerWidth;for(const p of pieces){p.ready=false;if(p.vis)size(p)}fitGh()},150)});
+
+/* heading CONTACT : narrow & thin -> wide & heavy (c-all-type) */
+const gh=document.querySelector('.gh'),meas=document.getElementById('meas');
+const GFIN='"wdth" 151,"wght" 900,"opsz" 144';
+function fitGh(){let W=gh.parentElement.clientWidth;if(!W)W=gh.closest('.ct').clientWidth;meas.style.fontVariationSettings=GFIN;meas.style.letterSpacing='-0.02em';meas.textContent='CONTACT';
+  const n=meas.getBoundingClientRect().width;if(n>0)gh.style.fontSize=(100*W/n*.985).toFixed(2)+'px'}
+let ghT=0,ghQ=0;
+function stepGh(dt){const vh=innerHeight,r=gh.getBoundingClientRect();
+  ghT=Math.max(ghT,REDUCE?1:clamp((vh-r.top)/(vh*.55)));
+  ghQ=REDUCE?ghT:Math.min(ghT,ghQ+dt*.75);const e=ease(ghQ);
+  gh.style.fontVariationSettings=`"wdth" ${(25+126*e).toFixed(1)},"wght" ${(100+800*e).toFixed(0)},"opsz" 144`}
+(document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(()=>{fitGh();for(const p of pieces){if(p.vis){p.ready=false;size(p)}}});
+fitGh();
+
+/* form state : 6 required items in order */
+const form=document.getElementById('form');
+const FLD=[form.company,form.name,form.email,form.tel,null,form.body];
+function kindVal(){const k=form.querySelector('input[name=kind]:checked');return k?+k.value:0}
+function vals(){
+  const tx=FLD[0].value.trim(),nm=FLD[1].value.trim(),em=FLD[2].value.trim(),tl=FLD[3].value.replace(/\D/g,''),bd=FLD[5].value.trim();
+  const ok=[tx.length>0,nm.length>0,/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em),tl.length>=10,kindVal()>0,bd.length>0];
+  const part=[ok[0]?1:0,ok[1]?1:0,ok[2]?1:em.includes('@')?.55:em.length?.25:0,ok[3]?1:Math.min(.9,tl.length/10),ok[4]?1:0,bd.length?Math.min(1,.4+bd.length/40):0];
+  return {ok,part,n:ok.filter(Boolean).length,ready:ok.every(Boolean),tx,nm,em,tl,bd,kind:kindVal()}}
+form.addEventListener('submit',e=>e.preventDefault());
+
+/* footer : CONTACT as bundle of horizontal lines (runs) */
+const big=document.querySelector('.big'),bigB=big.querySelector('b');let bigHov=0;
+big.addEventListener('mouseenter',()=>bigHov=1);big.addEventListener('mouseleave',()=>bigHov=0);
+function buildRuns(p){const cs=getComputedStyle(bigB),fs=parseFloat(cs.fontSize);const o=document.createElement('canvas');o.width=Math.ceil(p.w);o.height=Math.ceil(p.h);const oc=o.getContext('2d');
+  oc.font=`700 ${fs}px "Space Grotesk"`;oc.letterSpacing=cs.letterSpacing;oc.textBaseline='alphabetic';oc.fillStyle='#000';
+  const m=oc.measureText('CONTACT'),asc=m.actualBoundingBoxAscent||fs*.7,desc=m.actualBoundingBoxDescent||0;oc.fillText('CONTACT',0,(p.h+asc-desc)/2);
+  const d=oc.getImageData(0,0,o.width,o.height).data,gap=p.w<600?4:6,runs=[];let x0=1e9,x1=0,y0=1e9,y1=0;
+  for(let y=Math.floor(gap/2);y<o.height;y+=gap){let s=-1;for(let x=0;x<=o.width;x++){const on=x<o.width&&d[(y*o.width+x)*4+3]>110;if(on&&s<0)s=x;if(!on&&s>=0){runs.push([s,x,y]);x0=Math.min(x0,s);x1=Math.max(x1,x);y0=Math.min(y0,y);y1=Math.max(y1,y);s=-1}}}
+  p.runs=runs;p.bb=[x0,y0,x1,y1]}
+function whenFonts(f){(document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(f)}
+
+const ticks=[];
+/* menu */
+document.querySelector('.burger').addEventListener('click',()=>document.body.classList.toggle('menu'));
+document.querySelectorAll('.ov a').forEach(a=>a.addEventListener('click',()=>document.body.classList.remove('menu')));
+/* ===== variant ===== */
+/* ===== CONTACT : a drawing sheet. The chosen inquiry draws its isometric line drawing,
+   e-mail / tel add dimension lines, the body adds a hatched detail, name & company fill the title block ===== */
+let S=vals();
+function upd(){S=vals()}
+form.addEventListener('input',upd);form.addEventListener('change',upd);
+
+/* --- isometric figures (unit cube space), back edges dashed like hidden lines --- */
+const box=(x0,x1,y0,y1,z0,z1)=>{const v=(i)=>[i&1?x1:x0,i&2?y1:y0,i&4?z1:z0];const E=[[0,1],[2,3],[4,5],[6,7],[0,2],[1,3],[4,6],[5,7],[0,4],[1,5],[2,6],[3,7]];
+  return E.map(([a,b])=>({p:[v(a),v(b)],d:(a===0||b===0)}))};
+const pl=(pts,o={})=>[Object.assign({p:pts},o)];
+const circ=(c,r,pl_,n=40,o={})=>{const pts=[];for(let i=0;i<=n;i++){const a=i/n*TAU,u=Math.cos(a)*r,v=Math.sin(a)*r;pts.push(pl_==='xy'?[c[0]+u,c[1]+v,c[2]]:pl_==='xz'?[c[0]+u,c[1],c[2]+v]:[c[0],c[1]+u,c[2]+v])}return [Object.assign({p:pts},o)]};
+const FIG={
+ 1:[...box(-1,1,-.55,.55,0,.38),...box(-.34,1,-.55,.55,.38,.76),...box(.32,1,-.55,.55,.76,1.14),
+    ...pl([[-.9,.55,.3],[-.2,.55,.68],[.45,.55,1.06],[.9,.55,1.6]],{s:1}),...pl([[.62,.55,1.52],[.9,.55,1.6],[.86,.55,1.33]],{s:1})],
+ 2:[...box(-.42,.42,-.07,.07,0,1.6),...pl([[-.34,.07,.16],[.34,.07,.16],[.34,.07,1.44],[-.34,.07,1.44],[-.34,.07,.16]]),
+    ...pl([[-.12,.07,.66],[.18,.07,.82],[-.12,.07,.98],[-.12,.07,.66]],{s:1}),...pl([[-.26,.07,.32],[.26,.07,.32]]),...pl([[-.26,.07,.26],[.04,.07,.26]],{s:1}),
+    ...circ([0,.07,1.52],.03,'xz',10)],
+ 3:[...box(-1.05,1.05,-.04,.04,0,1.36),...pl([[-1.05,.04,1.18],[1.05,.04,1.18]]),...circ([-.94,.04,1.27],.03,'xz',10),...circ([-.84,.04,1.27],.03,'xz',10),...circ([-.74,.04,1.27],.03,'xz',10),
+    ...pl([[-.9,.04,.66],[.9,.04,.66],[.9,.04,1.06],[-.9,.04,1.06],[-.9,.04,.66]]),...pl([[-.6,.04,.92],[.2,.04,.92]]),...pl([[-.6,.04,.82],[.0,.04,.82]]),
+    ...pl([[-.6,.04,.7],[-.25,.04,.7],[-.25,.04,.76],[-.6,.04,.76],[-.6,.04,.7]],{s:1}),
+    ...pl([[-.9,.04,.12],[-.34,.04,.12],[-.34,.04,.52],[-.9,.04,.52],[-.9,.04,.12]]),...pl([[-.28,.04,.12],[.28,.04,.12],[.28,.04,.52],[-.28,.04,.52],[-.28,.04,.12]]),...pl([[.34,.04,.12],[.9,.04,.12],[.9,.04,.52],[.34,.04,.52],[.34,.04,.12]])],
+ 4:[...box(-.55,.45,-.36,.36,.9,1.5),...circ([.45,0,1.2],.2,'yz',36),...circ([.85,0,1.2],.26,'yz',36),...pl([[.45,0,1.4],[.85,0,1.46]]),...pl([[.45,0,1.0],[.85,0,.94]]),...pl([[.45,.2,1.2],[.85,.26,1.2]]),
+    ...box(-.4,-.05,-.18,.18,1.5,1.64),...pl([[-.05,0,.9],[-.05,0,.6]]),...pl([[-.05,0,.6],[-.85,-.4,0]]),...pl([[-.05,0,.6],[.6,-.3,0]]),...pl([[-.05,0,.6],[.1,.85,0]]),
+    ...circ([-.36,.36,1.38],.035,'xz',10,{s:1})],
+ 5:[...circ([0,0,1.7],.3,'xy',40),...circ([0,0,1.5],.3,'xy',40),...circ([0,0,1.3],.3,'xy',40),...pl([[-.3,0,1.3],[-.3,0,1.7]]),...pl([[.3,0,1.3],[.3,0,1.7]]),
+    ...pl([[-.21,-.21,1.3],[-.21,-.21,1.7]],{d:1}),...pl([[.21,.21,1.3],[.21,.21,1.7]]),...circ([0,0,1.3],.12,'xy',24),...circ([0,0,.62],.12,'xy',24),...pl([[-.12,0,1.3],[-.12,0,.62]]),...pl([[.12,0,1.3],[.12,0,.62]]),
+    ...pl([[0,0,.62],[0,0,.06]]),...circ([0,0,0],.55,'xy',48),...circ([0,0,.06],.55,'xy',48),...pl([[.06,.11,1.05],[.06,.11,.9]],{s:1})],
+ 6:[...box(-1,1,-.68,.68,0,.07),...pl([[-1,-.68,.07],[0,0,.07],[1,-.68,.07]]),...pl([[-1,.68,.07],[-.3,.05,.07]]),...pl([[1,.68,.07],[.3,.05,.07]]),
+    ...pl([[-.12,-.06,.071],[.12,-.06,.071],[.12,.12,.071],[-.12,.12,.071],[-.12,-.06,.071]],{s:1})]
+};
+const ISO=(q)=>[(q[0]-q[1])*.866,(q[0]+q[1])*.5-q[2]];
+
+piece(document.getElementById('shc'),{
+ init(p){p.cur=p.cur||0;p.prog=p.prog||0;p.old=p.old||0;p.oldA=p.oldA||0;p.dE=p.dE||0;p.dT=p.dT||0;p.hB=p.hB||0;p.rd=p.rd||0;p.boot=p.boot||0},
+ lay(p,k){/* project figure to screen, fit into drawing area */
+  const {w,h}=p,sp=w<440;const segs=FIG[k];let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;const sg=segs.map(s=>{const pts=s.p.map(ISO);for(const q of pts){x0=Math.min(x0,q[0]);x1=Math.max(x1,q[0]);y0=Math.min(y0,q[1]);y1=Math.max(y1,q[1])}return Object.assign({},s,{pts})});
+  const A=sp?{x:w*.07,y:h*.15,w:w*.4,h:h*.5}:{x:w*.15,y:h*.12,w:w*.66,h:h*.56};
+  const sc=Math.min(A.w/(x1-x0),A.h/(y1-y0)),ox=A.x+(A.w-(x1-x0)*sc)/2-x0*sc,oy=A.y+(A.h-(y1-y0)*sc)/2-y0*sc;let L=0;
+  for(const s of sg){s.pts=s.pts.map(q=>[ox+q[0]*sc,oy+q[1]*sc]);s.l0=L;for(let i=1;i<s.pts.length;i++)L+=Math.hypot(s.pts[i][0]-s.pts[i-1][0],s.pts[i][1]-s.pts[i-1][1]);s.l1=L}
+  return {sg,L,bb:[ox+x0*sc,oy+y0*sc,ox+x1*sc,oy+y1*sc]}},
+ fig(ctx,F,upto,alpha,head){/* draw figure up to length 'upto' */
+  let hp=null;
+  for(const s of F.sg){if(s.l0>=upto)break;ctx.beginPath();ctx.setLineDash(s.d?[4,4]:[]);ctx.strokeStyle=s.s?rgba(C.sig,alpha):rgba(C.ink,alpha*(s.d?.55:.9));ctx.lineWidth=s.s?1.4:1.05;
+   let L=s.l0;ctx.moveTo(s.pts[0][0],s.pts[0][1]);for(let i=1;i<s.pts.length;i++){const a=s.pts[i-1],b=s.pts[i],l=Math.hypot(b[0]-a[0],b[1]-a[1]);if(L+l<=upto){ctx.lineTo(b[0],b[1]);L+=l}else{const u=(upto-L)/l;const q=[mix(a[0],b[0],u),mix(a[1],b[1],u)];ctx.lineTo(q[0],q[1]);hp=q;L=upto;break}}ctx.stroke()}
+  ctx.setLineDash([]);
+  if(head&&hp){ctx.strokeStyle=rgba(C.sig,1);ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(hp[0]-6,hp[1]);ctx.lineTo(hp[0]+6,hp[1]);ctx.moveTo(hp[0],hp[1]-6);ctx.lineTo(hp[0],hp[1]+6);ctx.stroke()}},
+ arrow(ctx,x,y,ang){const s=7;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-Math.cos(ang-.3)*s,y-Math.sin(ang-.3)*s);ctx.lineTo(x-Math.cos(ang+.3)*s,y-Math.sin(ang+.3)*s);ctx.closePath();ctx.fill()},
+ dim(ctx,x0,y0,x1,y1,off,val,e,vert){/* dimension line with extension lines, arrows and value */
+  if(e<=0)return;ctx.save();ctx.globalAlpha=Math.min(1,e*1.5);ctx.strokeStyle=rgba(C.ink,.8);ctx.fillStyle=rgba(C.ink,.85);ctx.lineWidth=.8;
+  if(!vert){const y=y0+off;ctx.beginPath();ctx.moveTo(x0,y0+4);ctx.lineTo(x0,y+5);ctx.moveTo(x1,y1+4);ctx.lineTo(x1,y+5);const xm=(x0+x1)/2,hw=(x1-x0)/2*e;ctx.moveTo(xm-hw,y);ctx.lineTo(xm+hw,y);ctx.stroke();
+   if(e>.98){this.arrow(ctx,x0,y,Math.PI);this.arrow(ctx,x1,y,0);ctx.font='400 11px "JetBrains Mono",monospace';ctx.textAlign='center';ctx.textBaseline='bottom';ctx.fillStyle=rgba(C.sig,1);ctx.fillText(val,xm,y-3)}}
+  else{const x=x0+off;ctx.beginPath();ctx.moveTo(x0+4,y0);ctx.lineTo(x+5,y0);ctx.moveTo(x1+4,y1);ctx.lineTo(x+5,y1);const ym=(y0+y1)/2,hh=(y1-y0)/2*e;ctx.moveTo(x,ym-hh);ctx.lineTo(x,ym+hh);ctx.stroke();
+   if(e>.98){this.arrow(ctx,x,y0,-Math.PI/2);this.arrow(ctx,x,y1,Math.PI/2);ctx.save();ctx.translate(x+4,ym);ctx.rotate(-Math.PI/2);ctx.font='400 11px "JetBrains Mono",monospace';ctx.textAlign='center';ctx.textBaseline='top';ctx.fillStyle=rgba(C.sig,1);ctx.fillText(val,0,0);ctx.restore()}}
+  ctx.restore()},
+ draw(p,t,dt){const {ctx,w,h}=p,sp=w<440,k=REDUCE?1:dt;ctx.clearRect(0,0,w,h);
+  p.boot=Math.min(1,p.boot+k*.9);
+  /* sheet frame : outer + inner border, zone marks, centre marks */
+  const m=sp?10:14,ib=sp?20:26;ctx.lineWidth=1;ctx.strokeStyle=rgba(C.ink,.85);
+  const bL=ease(p.boot);ctx.beginPath();ctx.rect(m+.5,m+.5,(w-2*m)*bL,(h-2*m)*bL);ctx.stroke();
+  ctx.strokeStyle=rgba(C.ink,.35);ctx.beginPath();ctx.rect(ib+.5,ib+.5,w-2*ib-1,h-2*ib-1);ctx.globalAlpha=bL;ctx.stroke();
+  ctx.font=`400 ${sp?8:9}px "JetBrains Mono",monospace`;ctx.fillStyle=rgba(C.mute,.9);ctx.textAlign='center';ctx.textBaseline='middle';
+  const nz=sp?8:6,nr=4;ctx.beginPath();
+  for(let i=1;i<nz;i++){const x=Math.round(ib+(w-2*ib)*i/nz)+.5;ctx.moveTo(x,m);ctx.lineTo(x,ib);ctx.moveTo(x,h-ib);ctx.lineTo(x,h-m)}
+  for(let i=1;i<nr;i++){const y=Math.round(ib+(h-2*ib)*i/nr)+.5;ctx.moveTo(m,y);ctx.lineTo(ib,y);ctx.moveTo(w-ib,y);ctx.lineTo(w-m,y)}ctx.stroke();
+  for(let i=0;i<nz;i++){const x=ib+(w-2*ib)*(i+.5)/nz;ctx.fillText(String(i+1),x,(m+ib)/2);ctx.fillText(String(i+1),x,h-(m+ib)/2)}
+  for(let i=0;i<nr;i++){const y=ib+(h-2*ib)*(i+.5)/nr;ctx.fillText('ABCD'[i],(m+ib)/2,y);ctx.fillText('ABCD'[i],w-(m+ib)/2,y)}
+  ctx.globalAlpha=1;
+  /* title block (bottom-right) : company / name typed into it */
+  const tbW=sp?Math.min(190,w*.5):Math.min(250,w*.52),rh=sp?18:22,tbH=rh*3,tx=w-ib-tbW,ty=h-ib-tbH;
+  ctx.fillStyle=rgba(C.card,1);ctx.fillRect(tx,ty,tbW,tbH);ctx.strokeStyle=rgba(C.ink,.6);ctx.lineWidth=.8;ctx.beginPath();ctx.rect(tx+.5,ty+.5,tbW,tbH);
+  const lc=sp?74:96;for(let r=1;r<3;r++){ctx.moveTo(tx,ty+r*rh+.5);ctx.lineTo(tx+tbW,ty+r*rh+.5)}ctx.moveTo(tx+lc+.5,ty);ctx.lineTo(tx+lc+.5,ty+tbH);ctx.stroke();
+  ctx.font=`400 ${sp?8:10}px "IBM Plex Sans JP",sans-serif`;ctx.textAlign='left';ctx.textBaseline='middle';ctx.fillStyle=rgba(C.mute,1);
+  ctx.fillText('会社名',tx+6,ty+rh*.5);ctx.fillText('担当者名',tx+6,ty+rh*1.5);ctx.fillText('お問い合わせ内容',tx+6,ty+rh*2.5);
+  const fit=(s,mw)=>{if(ctx.measureText(s).width<=mw)return s;while(s.length&&ctx.measureText(s+'…').width>mw)s=s.slice(0,-1);return s+'…'};
+  ctx.font=`500 ${sp?10:12}px "IBM Plex Sans JP",sans-serif`;ctx.fillStyle=rgba(C.ink,1);
+  ctx.fillText(fit(S.tx,tbW-lc-12),tx+lc+6,ty+rh*.5);ctx.fillText(fit(S.nm,tbW-lc-12),tx+lc+6,ty+rh*1.5);
+  const ko=S.kind?form.querySelector('input[name=kind]:checked').nextElementSibling.textContent:'—';ctx.font=`500 ${sp?9:10.5}px "IBM Plex Sans JP",sans-serif`;ctx.fillText(fit(ko,tbW-lc-(p.rd>.99?26:12)),tx+lc+6,ty+rh*2.5);
+  /* figure : erase old (ghost), draw new along its pen path */
+  if(S.kind!==p.cur){if(p.cur){p.old=p.cur;p.oldA=.5}p.cur=S.kind;p.prog=0}
+  p.oldA=Math.max(0,p.oldA-k*.5);
+  if(p.old&&p.oldA>0){const F=this.lay(p,p.old);this.fig(ctx,F,F.L,p.oldA*.6,false)}
+  if(!p.cur){/* empty sheet : centre lines only */
+   const cx=w*.48,cy=h*.42;ctx.setLineDash([14,3,2,3]);ctx.strokeStyle=rgba(C.mute,.55);ctx.lineWidth=.8;ctx.beginPath();ctx.moveTo(cx-w*.3,cy);ctx.lineTo(cx+w*.3,cy);ctx.moveTo(cx,cy-h*.26);ctx.lineTo(cx,cy+h*.26);ctx.stroke();ctx.setLineDash([]);
+   ctx.beginPath();ctx.arc(cx,cy,sp?22:34,0,TAU);ctx.strokeStyle=rgba(C.mute,.4);ctx.stroke();p.dE=Math.max(0,p.dE-k*2);p.dT=Math.max(0,p.dT-k*2);p.hB=0;}
+  else{const F=this.lay(p,p.cur);p.prog=Math.min(1,p.prog+k/(REDUCE?.001:1.8));this.fig(ctx,F,F.L*ease(p.prog),1,p.prog<1);
+   const [x0,y0,x1,y1]=F.bb,done=p.prog>=1;
+   /* e-mail -> width dimension ; tel -> height dimension (value = characters typed) */
+   p.dE=clamp(p.dE+((done&&S.ok[2])?k*2:-k*3));p.dT=clamp(p.dT+((done&&S.ok[3])?k*2:-k*3));
+   this.dim(ctx,x0,y1,x1,y1,sp?14:22,String(S.em.length),ease(p.dE),false);
+   this.dim(ctx,x1,y0,x1,y1,sp?14:24,String(S.tl.length),ease(p.dT),true);
+   /* body -> detail circle with hatching that thickens as the text grows + leader to the figure */
+   const want=done&&S.bd.length?Math.min(1,.25+S.bd.length/60):0;p.hB+=(want-p.hB)*Math.min(1,k*3);
+   if(p.hB>.01){const r=sp?18:30,cx=sp?w-ib-r-18:ib+r+22,cy=sp?ib+r+16:h-ib-r-24;ctx.save();ctx.globalAlpha=Math.min(1,p.hB*3);
+    ctx.strokeStyle=rgba(C.ink,.85);ctx.lineWidth=.9;ctx.beginPath();ctx.arc(cx,cy,r,0,TAU);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(cx+(sp?-r*.7:r*.7),cy+(sp?r*.7:-r*.7));ctx.lineTo(x0+(x1-x0)*(sp?.7:.3),y0+(y1-y0)*(sp?.35:.75));ctx.setLineDash([3,3]);ctx.stroke();ctx.setLineDash([]);
+    ctx.beginPath();ctx.arc(cx,cy,r-1,0,TAU);ctx.clip();const n=Math.round(3+p.hB*(sp?6:9)),st=(2*r)/n;ctx.beginPath();for(let i=-n;i<=n;i++){const o=i*st;ctx.moveTo(cx-r+o,cy+r);ctx.lineTo(cx+r+o,cy-r)}ctx.lineWidth=.7;ctx.stroke();ctx.restore();
+    ctx.font=`500 ${sp?9:10}px "JetBrains Mono",monospace`;ctx.fillStyle=rgba(C.sig,Math.min(1,p.hB*3));ctx.textAlign='center';ctx.textBaseline='bottom';ctx.fillText('A',cx,cy-r-4)}
+  }
+  /* all six filled : the border is retraced in vermilion */
+  p.rd=clamp(p.rd+(S.ready?k*.8:-k*2));
+  if(p.rd>0){const e=ease(p.rd),W=w-2*m,H=h-2*m,per=2*(W+H);let L=per*e;ctx.strokeStyle=rgba(C.sig,1);ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(m+.5,m+.5);
+   const pts=[[m+W,m],[m+W,m+H],[m,m+H],[m,m]];let px=m,py=m;for(const q of pts){const l=Math.hypot(q[0]-px,q[1]-py);if(L>=l){ctx.lineTo(q[0]+.5,q[1]+.5);L-=l;px=q[0];py=q[1]}else{const u=L/l;ctx.lineTo(mix(px,q[0],u)+.5,mix(py,q[1],u)+.5);break}}ctx.stroke();
+   if(e>.99){ctx.fillStyle=rgba(C.sig,1);ctx.fillRect(tx+tbW-12,ty+rh*2+rh/2-4,8,8)}}
+ }});
+
+/* ===== FOOTER : a T-square slides down the word and the hatching lines are ruled as it passes ; then a dimension line ===== */
+piece(document.getElementById('ftc'),{
+ init(p){p.runs=null;p.e=p.e||0;p.go=p.go||0;p.al=0;whenFonts(()=>buildRuns(p))},
+ draw(p,t,dt){if(!p.runs)return;const {ctx,w,h}=p,sp=w<600;ctx.clearRect(0,0,w,h);
+  const r=p.c.getBoundingClientRect();if(r.top<innerHeight*.85)p.go=1;if(p.go)p.e=Math.min(1,p.e+(REDUCE?1:dt/2.6));
+  p.al=mix(p.al,bigHov,.08);const [bx0,by0,bx1,by1]=p.bb,e=p.e;
+  const yR=mix(by0-14,by1+10,ease(Math.min(1,e/.8)));
+  ctx.lineWidth=sp?2:2.6;ctx.lineCap='butt';ctx.strokeStyle=rgbMix(C.ink,C.sig,p.al,1);ctx.beginPath();
+  for(const q of p.runs){if(q[2]>yR)continue;const lag=clamp((yR-q[2])/(sp?30:60));const x1=q[0]+(q[1]-q[0])*ease(lag);ctx.moveTo(q[0],q[2]);ctx.lineTo(x1,q[2])}ctx.stroke();
+  if(e<.8){/* T-square */const a=1-ss(.7,.8,e);ctx.fillStyle=rgba(C.card,.55*a);ctx.fillRect(0,yR,w,sp?10:16);ctx.strokeStyle=rgba(C.ink,.9*a);ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,yR+.5);ctx.lineTo(w,yR+.5);
+   for(let x=0;x<w;x+=sp?8:10){const L=(x/(sp?8:10))%5===0?(sp?7:10):(sp?3:5);ctx.moveTo(x+.5,yR);ctx.lineTo(x+.5,yR+L)}ctx.stroke();ctx.fillStyle=rgba(C.sig,a);ctx.fillRect(bx0-2,yR-2,4,4)}
+  const de=ss(.78,1,e);if(de>0){const y=Math.min(h-4,by1+(sp?10:16));ctx.strokeStyle=rgba(C.mute,de);ctx.lineWidth=1;ctx.beginPath();const xm=(bx0+bx1)/2,hw=(bx1-bx0)/2*de;ctx.moveTo(xm-hw,y+.5);ctx.lineTo(xm+hw,y+.5);ctx.moveTo(bx0+.5,y-5);ctx.lineTo(bx0+.5,y+5);ctx.moveTo(bx1-.5,y-5);ctx.lineTo(bx1-.5,y+5);ctx.stroke()}
+ }});
+/* ===== loop ===== */
+let T=0,prev=performance.now();
+function loop(now){const dt=Math.min(.05,(now-prev)/1000);prev=now;if(!REDUCE)T+=dt;stepGh(dt);for(const f of ticks)f(T,dt);for(const p of pieces)if(p.vis&&p.ready)p.draw(p,T,dt);requestAnimationFrame(loop)}
+requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>FEATURES 製図アニメの候補</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+JP:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f4ee;--card:#fbfaf6;--ink:#151513;--ink2:#3b3a36;--mute:#6f6d69;
+  --line:#dcd8cd;--line2:#e9e5db;--sig:#ef4519;
+  --rail:220px;--pad:40px;
+  --disp:"Space Grotesk",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --jp:"IBM Plex Sans JP","Hiragino Sans",sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--jp);font-size:16px;line-height:1.9;overflow-x:clip;-webkit-font-smoothing:antialiased;line-break:strict}
+a{color:inherit}
+canvas{display:block}
+.nb{display:inline-block}
+
+/* rail (same width as c-all-gen so the panels are the same size) */
+.hd{position:fixed;left:0;top:0;bottom:0;width:var(--rail);padding:34px 0 30px var(--pad);display:flex;flex-direction:column;z-index:50}
+.logo img{width:112px;height:auto;display:block}
+.nav{display:flex;flex-direction:column;align-items:flex-start;gap:4px;margin-top:44px;font:400 13px/1.7 var(--mono);letter-spacing:.02em}
+.nav a{text-decoration:none;color:var(--ink);position:relative;padding-left:16px}
+.nav a::before{content:"";position:absolute;left:0;top:50%;width:6px;height:6px;margin-top:-3px;background:var(--sig);transform:scale(0);transition:transform .25s}
+.nav a:hover::before{transform:scale(1)}
+main{margin-left:var(--rail);padding:0 var(--pad) 140px 0}
+
+.top{padding:46px 0 0}
+.sh{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 .55em;margin:0 0 18px;font:500 clamp(28px,3vw,40px)/1.2 var(--disp);letter-spacing:-.02em}
+.sh h1{margin:0;font:inherit;position:relative;padding-left:22px}
+.sh h1::before{content:"";position:absolute;left:0;top:50%;width:10px;height:10px;margin-top:-4px;background:var(--sig)}
+.sh p{margin:0;font-family:var(--jp);font-weight:400;color:var(--mute);letter-spacing:0;font-size:.72em}
+.lede{margin:0;max-width:46em;font-size:14px;line-height:1.9;color:var(--mute)}
+
+.grp{padding-top:84px}
+.gh{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 16px;margin:0 0 22px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.gh h2{margin:0;font:500 20px/1.4 var(--jp);letter-spacing:.02em}
+.gh h2 b{font:400 13px/1 var(--mono);color:var(--sig);margin-right:12px;letter-spacing:.04em}
+.gh span{font:400 12px/1.6 var(--mono);color:var(--mute)}
+
+/* FEATURES cards : identical to c-all-gen */
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.fc{background:var(--card);border:1px solid var(--line);display:flex;flex-direction:column}
+.fc-art{position:relative;height:300px;border-bottom:1px solid var(--line2)}
+.fc-art canvas{position:absolute;inset:0;width:100%;height:100%}
+.fc-tx{padding:26px 32px 36px}
+.no{font:400 12px/1 var(--mono);color:var(--mute);letter-spacing:.04em}
+.fc h3{margin:16px 0 14px;font-weight:500}
+.fc h3 small{display:block;font-size:14px;line-height:1.6;color:var(--mute);font-weight:400}
+.fc h3 .w{display:block;font-size:clamp(24px,2.3vw,32px);line-height:1.35;letter-spacing:.02em}
+.fc p{margin:0;font-size:15px;line-height:1.95;color:var(--ink2)}
+
+/* candidate cards */
+.tag{position:absolute;left:12px;top:10px;z-index:2;font:500 11px/1 var(--mono);letter-spacing:.06em;color:var(--ink);background:var(--card);border:1px solid var(--line);padding:5px 7px 4px}
+.tag b{color:var(--sig);font-weight:500}
+.cd .fc-tx{padding:20px 28px 26px}
+.cd .what{margin:12px 0 0;font-size:15px;line-height:1.8;color:var(--ink);font-weight:500}
+.cd .how{margin:6px 0 0;font-size:13px;line-height:1.85;color:var(--mute)}
+.cd .fn{display:block;margin-top:14px;font:400 11px/1.4 var(--mono);color:var(--mute);overflow-wrap:anywhere}
+.ref .fc-tx{padding:28px 32px 36px}
+.ref .badge{display:inline-block;font:400 11px/1 var(--mono);color:var(--mute);border:1px solid var(--line);padding:5px 7px 4px;letter-spacing:.04em}
+
+@media (max-width:1080px){
+  :root{--rail:0px;--pad:20px}
+  .hd{bottom:auto;right:0;width:auto;height:58px;padding:0 var(--pad);flex-direction:row;align-items:center;justify-content:space-between;background:rgba(246,244,238,.92);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid var(--line2)}
+  .logo img{width:92px}
+  .nav{flex-direction:row;margin:0;gap:14px;font-size:12px}
+  .nav a{padding-left:0}
+  .nav a::before{display:none}
+  main{padding-left:var(--pad)}
+  .top{padding-top:96px}
+}
+@media (max-width:760px){
+  body{font-size:15px}
+  .nav .x{display:none}
+  .grp{padding-top:64px}
+  .fg{grid-template-columns:1fr}
+  .fc-art{height:220px}
+  .fc-tx{padding:22px 22px 28px}
+  .cd .fc-tx{padding:18px 20px 22px}
+  .ref .fc-tx{padding:22px 22px 28px}
+  .gh h2{font-size:18px}
+}
+</style>
+</head>
+<body>
+<header class="hd">
+  <a class="logo" href="c-all-gen.html#benefit" aria-label="SAMURAI STYLE"><img src="img/logo.svg" alt="SAMURAI STYLE"></a>
+  <nav class="nav"><a class="x" href="#now">今の4つ</a><a href="#structure">構造理解力</a><a href="#speed">スピード感</a></nav>
+</header>
+
+<main id="top">
+<section class="top">
+  <div class="sh"><h1>FEATURES</h1><p class="jp">製図アニメーションの候補</p></div>
+  <p class="lede">上の段は c-all-gen の今の4つ（そのまま）。その下に「構造理解力」と「スピード感」の差し替え候補を3案ずつ、同じ大きさのパネルで並べています。各パネルは画面に入った時点から1周目が始まります（1周 10〜11秒。歯車だけは回り続けます）。</p>
+</section>
+
+<section class="grp" id="now">
+  <div class="gh"><h2><b>NOW</b>今の4つ</h2><span>c-all-gen.html のまま</span></div>
+  <div class="fg">
+    <article class="fc"><div class="fc-art"><canvas data-f="0" aria-hidden="true"></canvas></div><div class="fc-tx"><div class="no">01 / 04</div><h3><small>新規事業立ち上げ経験に基づく</small><span class="w">コミットメント</span></h3><p>所属メンバーは新規事業における立て付けから立ち上げまでの経験を保有。企画フェーズにおける顧客とプロダクトの仮説設計から開発、マーケティング施策立案から各種クリエイティブ制作までを高品質かつワンストップで支援が可能です。</p></div></article>
+    <article class="fc"><div class="fc-art"><canvas data-f="1" aria-hidden="true"></canvas></div><div class="fc-tx"><div class="no">02 / 04</div><h3><small>海外経験に基づく</small><span class="w">多言語対応</span></h3><p>海外生活経験が長く、英語・インドネシア語堪能なメンバーが複数在籍。顧客獲得のための各種クリエイティブ制作の他、営業資料作成から商談までを一貫して多言語で対応可能です。</p></div></article>
+    <article class="fc"><div class="fc-art"><canvas data-f="2" aria-hidden="true"></canvas></div><div class="fc-tx"><div class="no">03 / 04</div><h3><small>多業種経験に基づく</small><span class="w">構造理解力</span></h3><p>医療・半導体・エネルギー・通信・SaaSなどのBtoB、教育・転職・ECなどのBtoCと、幅広い業種での事業企画・マーケティング支援の経験から、複雑な構造においても的確に理解・整理し、成果につながる戦略を立案します。</p></div></article>
+    <article class="fc"><div class="fc-art"><canvas data-f="3" aria-hidden="true"></canvas></div><div class="fc-tx"><div class="no">04 / 04</div><h3><small>少数精鋭だから実現できる</small><span class="w">スピード感</span></h3><p>少数精鋭だから実現できるスピード感。幅広いケイパビリティを持つメンバーが少数でチームを運営。コミュニケーションコストが低く、タスクの所在を明確にしてスピーディーにプロジェクトを推進します。</p></div></article>
+  </div>
+</section>
+
+<section class="grp" id="structure">
+  <div class="gh"><h2><b>03</b>構造理解力 — 3案</h2><span>多業種の複雑な構造を、理解・整理する</span></div>
+  <div class="fg">
+    <article class="fc cd"><div class="fc-art"><span class="tag"><b>案A</b> 構造理解力</span><canvas data-k="drawStructureA" aria-hidden="true"></canvas></div><div class="fc-tx"><div class="no">03 / 案A</div><p class="what">絡まった線の塊が、ほどけて系統図になる</p><p class="how">8本の線が1つの塊に絡まっている → 朱の起点から1本ずつ引き出され、BtoB 5本・BtoC 3本の枝に分かれた系統図に整う。</p><code class="fn">drawStructureA(ctx,t,w,h)</code></div></article>
+    <article class="fc cd"><div class="fc-art"><span class="tag"><b>案B</b> 構造理解力</span><canvas data-k="drawStructureB" aria-hidden="true"></canvas></div><div class="fc-tx"><div class="no">03 / 案B</div><p class="what">ばらばらの部品が、分解図から1つの組立図になる</p><p class="how">6つの部品が一点鎖線の上に散っている → 順に滑り込んで組み上がり、最後に寸法線が入る。等角図・隠れ線は破線。</p><code class="fn">drawStructureB(ctx,t,w,h)</code></div></article>
+    <article class="fc cd"><div class="fc-art"><span class="tag"><b>案C</b> 構造理解力</span><canvas data-k="drawStructureC" aria-hidden="true"></canvas></div><div class="fc-tx"><div class="no">03 / 案C</div><p class="what">入り組んだ迷路に、1本の筋道が引かれる</p><p class="how">迷路の全体を薄い線で一通りたどる → 入口から出口までの1本だけが濃く引かれ、壁は薄く下がる。周ごとに迷路が変わる。</p><code class="fn">drawStructureC(ctx,t,w,h)</code></div></article>
+    <article class="fc ref"><div class="fc-tx"><span class="badge">本文（index.html のまま）</span><h3><small>多業種経験に基づく</small><span class="w">構造理解力</span></h3><p>医療・半導体・エネルギー・通信・SaaSなどのBtoB、教育・転職・ECなどのBtoCと、幅広い業種での事業企画・マーケティング支援の経験から、複雑な構造においても的確に理解・整理し、成果につながる戦略を立案します。</p></div></article>
+  </div>
+</section>
+
+<section class="grp" id="speed">
+  <div class="gh"><h2><b>04</b>スピード感 — 3案</h2><span>少数精鋭・低いコミュニケーションコスト・スピーディーな推進</span></div>
+  <div class="fg">
+    <article class="fc cd"><div class="fc-art"><span class="tag"><b>案A</b> スピード感</span><canvas data-k="drawSpeedA" aria-hidden="true"></canvas></div><div class="fc-tx"><div class="no">04 / 案A</div><p class="what">長い工程表が、短く束ねられる</p><p class="how">受け渡しの矢印と待ちで階段状に伸びた工程表 → 待ちが消えて並行に詰まり、完了点が手前へ。短くなった幅を寸法線で示し、進捗線が一気に走る。</p><code class="fn">drawSpeedA(ctx,t,w,h)</code></div></article>
+    <article class="fc cd"><div class="fc-art"><span class="tag"><b>案B</b> スピード感</span><canvas data-k="drawSpeedB" aria-hidden="true"></canvas></div><div class="fc-tx"><div class="no">04 / 案B</div><p class="what">遠回りの線が、最短の1本に張られる</p><p class="how">中継点だらけの遠回りを墨の点がのろのろ進む → 線がぴんと張って一直線になり、朱の点が何度も速く駆け抜ける。</p><code class="fn">drawSpeedB(ctx,t,w,h)</code></div></article>
+    <article class="fc cd"><div class="fc-art"><span class="tag"><b>案C</b> スピード感</span><canvas data-k="drawSpeedC" aria-hidden="true"></canvas></div><div class="fc-tx"><div class="no">04 / 案C</div><p class="what">小さな歯車が、すばやく噛み合って大きな輪を回す</p><p class="how">朱の点を付けた小さな歯車が速く回り、噛み合った大きな歯車を回す。ピッチ円・中心線は製図の描き方（一点鎖線）。</p><code class="fn">drawSpeedC(ctx,t,w,h)</code></div></article>
+    <article class="fc ref"><div class="fc-tx"><span class="badge">本文（index.html のまま）</span><h3><small>少数精鋭だから実現できる</small><span class="w">スピード感</span></h3><p>少数精鋭だから実現できるスピード感。幅広いケイパビリティを持つメンバーが少数でチームを運営。コミュニケーションコストが低く、タスクの所在を明確にしてスピーディーにプロジェクトを推進します。</p></div></article>
+  </div>
+</section>
+</main>
+
+<script>
+(()=>{
+'use strict';
+/* ===== utilities ===== */
+const TAU=Math.PI*2, DPR=Math.min(2,window.devicePixelRatio||1);
+const REDUCE=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const clamp=(v,a=0,b=1)=>v<a?a:v>b?b:v, mix=(a,b,t)=>a+(b-a)*t;
+const ss=(a,b,v)=>{const t=clamp((v-a)/(b-a));return t*t*(3-2*t)};
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const hex=h=>{h=h.replace('#','');return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]};
+const C={ink:hex(css('--ink')),sig:hex(css('--sig')),card:hex(css('--card')),line:hex(css('--line')),mute:hex(css('--mute'))};
+const rgba=(c,a)=>`rgba(${c[0]},${c[1]},${c[2]},${a})`;
+const rgbMix=(a,b,t,al)=>`rgba(${Math.round(mix(a[0],b[0],t))},${Math.round(mix(a[1],b[1],t))},${Math.round(mix(a[2],b[2],t))},${al})`;
+function rng(seed){let s=seed%2147483647;if(s<=0)s+=2147483646;return()=>(s=s*16807%2147483647)/2147483647}
+/* Perlin noise 3D */
+const P=new Uint8Array(512);{const r=rng(1977),a=[...Array(256).keys()];for(let i=255;i>0;i--){const j=(r()*(i+1))|0;[a[i],a[j]]=[a[j],a[i]]}for(let i=0;i<512;i++)P[i]=a[i&255]}
+const fd=t=>t*t*t*(t*(t*6-15)+10), lp=(t,a,b)=>a+t*(b-a);
+const gr=(h,x,y,z)=>{h&=15;const u=h<8?x:y,v=h<4?y:(h===12||h===14)?x:z;return((h&1)?-u:u)+((h&2)?-v:v)};
+function N3(x,y,z){let X=Math.floor(x),Y=Math.floor(y),Z=Math.floor(z);x-=X;y-=Y;z-=Z;X&=255;Y&=255;Z&=255;
+  const u=fd(x),v=fd(y),w=fd(z),A=P[X]+Y,AA=P[A]+Z,AB=P[A+1]+Z,B=P[X+1]+Y,BA=P[B]+Z,BB=P[B+1]+Z;
+  return lp(w,lp(v,lp(u,gr(P[AA],x,y,z),gr(P[BA],x-1,y,z)),lp(u,gr(P[AB],x,y-1,z),gr(P[BB],x-1,y-1,z))),
+             lp(v,lp(u,gr(P[AA+1],x,y,z-1),gr(P[BA+1],x-1,y,z-1)),lp(u,gr(P[AB+1],x,y-1,z-1),gr(P[BB+1],x-1,y-1,z-1))));}
+
+/* ===== piece runner: only visible canvases draw ===== */
+const pieces=[];
+const io=new IntersectionObserver(es=>{for(const e of es){const p=e.target.__p;if(!p)continue;p.vis=e.isIntersecting;if(p.vis&&!p.ready)size(p)}},{rootMargin:'120px 0px'});
+function piece(c,o){const p=Object.assign({c,ctx:c.getContext('2d'),vis:false,ready:false,w:0,h:0,t0:0},o);c.__p=p;pieces.push(p);io.observe(c);return p}
+function size(p){const r=p.c.getBoundingClientRect();if(!r.width||!r.height)return;const d=p.dpr||DPR;p.w=r.width;p.h=r.height;p.c.width=Math.round(r.width*d);p.c.height=Math.round(r.height*d);p.ctx.setTransform(d,0,0,d,0,0);p.ready=true;p.init&&p.init(p)}
+let lastW=innerWidth,rz;
+addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{const wc=innerWidth!==lastW;lastW=innerWidth;for(const p of pieces){if(wc||p.anyResize){p.ready=false;if(p.vis)size(p)}}},150)});
+
+/* ===== NOW : the four patterns exactly as in c-all-gen ===== */
+/* ===== FEATURES : four distinct patterns ===== */
+const feat=[
+ {/* 01 commitment : a structure grows from one seed */
+  init(p){const r=rng(5),segs=[];const grow=(x,y,a,len,d,b)=>{if(d>8||len<4)return;const x2=x+Math.cos(a)*len,y2=y+Math.sin(a)*len;segs.push([x,y,x2,y2,b,d]);
+      const n=d<2?2:(r()<.82?2:3);for(let k=0;k<n;k++)grow(x2,y2,a+(r()-.5)*1.25+(k-(n-1)/2)*.38,len*(.7+r()*.16),d+1,b+(.09+r()*.04))};
+    grow(p.w*.5,p.h*.97,-Math.PI/2,p.h*.185,0,0);p.segs=segs;p.max=Math.max(...segs.map(s=>s[4]))+.1},
+  draw(p,t){const {ctx,w,h}=p;ctx.clearRect(0,0,w,h);const cyc=8,g=(t%cyc)/cyc,grow=ss(0,.42,g)*p.max,fade=1-ss(.88,1,g);
+    ctx.lineCap='round';const tips=[];ctx.beginPath();ctx.strokeStyle=rgba(C.ink,.55*fade);ctx.lineWidth=1;
+    for(const s of p.segs){const k=clamp((grow-s[4])/.12);if(k<=0)continue;const sw=Math.sin(t*.9+s[5])*s[5]*.6;
+      const x2=s[0]+(s[2]-s[0])*k+sw,y2=s[1]+(s[3]-s[1])*k;ctx.moveTo(s[0],s[1]);ctx.lineTo(x2,y2);if(k<1)tips.push([x2,y2])}
+    ctx.stroke();ctx.fillStyle=rgba(C.sig,fade);for(const q of tips)ctx.fillRect(q[0]-2,q[1]-2,4,4);
+    ctx.fillStyle=rgba(C.sig,1);ctx.fillRect(w*.5-4,h*.97-4,8,8)}},
+ {/* 02 multilingual : three sources interfere (moire) */
+  draw(p,t){const {ctx,w,h}=p;ctx.clearRect(0,0,w,h);const S=[[.28+.05*Math.sin(t*.3),.42],[.72,.36+.06*Math.cos(t*.27)],[.5+.06*Math.cos(t*.22),.85]];
+    const gap=11,Rm=Math.hypot(w,h),ph=(t*9)%gap;ctx.lineWidth=.8;
+    S.forEach((s,si)=>{const cx=s[0]*w,cy=s[1]*h;ctx.strokeStyle=rgba(C.ink,.3);ctx.beginPath();for(let r=ph+2;r<Rm*.75;r+=gap){ctx.moveTo(cx+r,cy);ctx.arc(cx,cy,r,0,TAU)}ctx.stroke()});
+    ctx.fillStyle=rgba(C.sig,1);S.forEach(s=>ctx.fillRect(s[0]*w-4,s[1]*h-4,8,8))}},
+ {/* 03 structure : contour lines of a noise terrain */
+  draw(p,t){p.fc=(p.fc||0)+1;if(p.fc%2&&p.path){return}const {ctx,w,h}=p;ctx.clearRect(0,0,w,h);
+    const cs=w<500?9:10,cols=Math.ceil(w/cs)+1,rows=Math.ceil(h/cs)+1,F=new Float32Array(cols*rows),z=t*.04;
+    for(let j=0;j<rows;j++)for(let i=0;i<cols;i++)F[j*cols+i]=N3(i*cs*.0055,j*cs*.0055,z)+.5*N3(i*cs*.012,j*cs*.012,z+5);
+    const L=11,path=new Path2D(),hot=[];
+    for(let l=0;l<L;l++){const lv=-.75+l*.14;let cnt=0;
+      for(let j=0;j<rows-1;j++)for(let i=0;i<cols-1;i++){const a=F[j*cols+i],b=F[j*cols+i+1],c=F[(j+1)*cols+i+1],d=F[(j+1)*cols+i];
+        const idx=(a>lv?8:0)|(b>lv?4:0)|(c>lv?2:0)|(d>lv?1:0);if(idx===0||idx===15)continue;
+        const x=i*cs,y=j*cs,T=[x+cs*(lv-a)/(b-a),y],R=[x+cs,y+cs*(lv-b)/(c-b)],Bm=[x+cs*(lv-d)/(c-d),y+cs],Lf=[x,y+cs*(lv-a)/(d-a)];
+        const seg=(P1,P2)=>{path.moveTo(P1[0],P1[1]);path.lineTo(P2[0],P2[1]);if(l===6&&(++cnt%37===0))hot.push(P1)};
+        switch(idx){case 1:case 14:seg(Lf,Bm);break;case 2:case 13:seg(Bm,R);break;case 3:case 12:seg(Lf,R);break;case 4:case 11:seg(T,R);break;
+          case 5:seg(Lf,T);seg(Bm,R);break;case 6:case 9:seg(T,Bm);break;case 7:case 8:seg(Lf,T);break;case 10:seg(T,R);seg(Lf,Bm);break}}}
+    p.path=path;ctx.strokeStyle=rgba(C.ink,.38);ctx.lineWidth=.9;ctx.stroke(path);
+    ctx.fillStyle=rgba(C.sig,1);hot.slice(0,6).forEach(q=>ctx.fillRect(q[0]-3.5,q[1]-3.5,7,7))}},
+ {/* 04 speed : a small team streaks through slow traffic */
+  init(p){const r=rng(9);p.bg=[];for(let i=0;i<70;i++)p.bg.push([r()*p.w,r()*p.h,12+r()*40,.3+r()*.6]);p.tr=[[],[],[],[]]},
+  draw(p,t){const {ctx,w,h}=p;ctx.clearRect(0,0,w,h);ctx.lineWidth=1;ctx.strokeStyle=rgba(C.ink,.22);ctx.beginPath();
+    for(const b of p.bg){b[0]-=b[3];if(b[0]+b[2]<0)b[0]=w+Math.random()*40;ctx.moveTo(b[0],b[1]);ctx.lineTo(b[0]+b[2],b[1])}ctx.stroke();
+    const sp=w*.3;
+    for(let k=0;k<4;k++){const x=((t*sp+k*18)%(w+160))-80,y=h*.5+Math.sin(t*1.7+x*.01)*h*.16+(k-1.5)*11;const tr=p.tr[k];tr.push([x,y]);if(tr.length>80)tr.shift();
+      ctx.beginPath();for(let i=1;i<tr.length;i++){if(tr[i][0]<tr[i-1][0]){ctx.moveTo(tr[i][0],tr[i][1]);continue}if(i===1)ctx.moveTo(tr[0][0],tr[0][1]);ctx.lineTo(tr[i][0],tr[i][1])}
+      ctx.strokeStyle=k===0?rgba(C.sig,.95):rgba(C.ink,.7);ctx.lineWidth=k===0?1.6:1;ctx.stroke();
+      ctx.fillStyle=k===0?rgba(C.sig,1):rgba(C.ink,.9);ctx.fillRect(x-3,y-3,6,6)}}}
+];
+document.querySelectorAll('canvas[data-f]').forEach(c=>{const f=feat[+c.dataset.f];piece(c,{anyResize:true,init:f.init,draw:f.draw})});
+
+/* =====================================================================
+   CANDIDATES : each is a standalone draw(ctx,t,w,h)
+   t = seconds since the panel came into view, w/h = CSS px.
+   To move one into another page: copy the helpers block + the function,
+   then call it every frame with the canvas 2D context (already scaled by DPR).
+   ===================================================================== */
+const ALT=window.FEAT_ALT={};
+/* helpers */
+const memo=fn=>{let key=null,val;return(w,h,x='')=>{const k=w+'|'+h+'|'+x;if(k!==key){key=k;val=fn(w,h,x)}return val}};
+function resample(pts,M){const L=[0];for(let i=1;i<pts.length;i++)L.push(L[i-1]+Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]));
+  const tot=L[L.length-1],out=[];let k=1;
+  for(let j=0;j<M;j++){const d=tot*j/(M-1);while(k<pts.length-1&&L[k]<d)k++;const a=pts[k-1],b=pts[k],f=clamp((d-L[k-1])/((L[k]-L[k-1])||1));out.push([a[0]+(b[0]-a[0])*f,a[1]+(b[1]-a[1])*f])}
+  return {pts:out,len:tot,cum:L.map(v=>v/(tot||1))}}
+function arrowHead(ctx,x,y,ang,s){ctx.moveTo(x,y);ctx.lineTo(x-Math.cos(ang-.42)*s,y-Math.sin(ang-.42)*s);ctx.moveTo(x,y);ctx.lineTo(x-Math.cos(ang+.42)*s,y-Math.sin(ang+.42)*s)}
+const CHAIN=[9,3,1.5,3];   /* one-dot chain line (center / assembly lines) */
+
+/* ---------- 構造理解力 A : a tangled knot unravels into a tree diagram ---------- */
+const geoSA=memo((w,h)=>{
+  const nL=8,M=96,r=rng(31),sp=w<500;
+  const lx=i=>w*(.09+.82*i/(nL-1));
+  const yR=h*.13,yA=h*.27,yG=h*.44,yB=h*.6,yL=h*.8;
+  const gx=[(lx(0)+lx(4))/2,(lx(5)+lx(7))/2];
+  const root=[w*.5,yR],cx=w*.5,cy=h*.55,rx=Math.min(w*.17,h*.5),ry=h*.25,P0=[cx,cy-ry*1.12];
+  const S=[];
+  for(let i=0;i<nL;i++){const gi=i<5?0:1;
+    const tgt=resample([root,[root[0],yA],[gx[gi],yA],[gx[gi],yG],[gx[gi],yB],[lx(i),yB],[lx(i),yL]],M).pts;
+    const f1=1.7+r()*1.6,f2=2+r()*3,p1=r()*TAU,p2=r()*TAU,p3=r()*TAU,dir=r()<.5?-1:1,tan=[];
+    for(let j=0;j<M;j++){const s=j/(M-1),a=dir*TAU*f1*s+p1,b=TAU*f2*s+p2;
+      const x=cx+rx*(.74*Math.sin(a)+.26*Math.sin(2.7*b)),y=cy+ry*(.74*Math.cos(a*1.06+p3)+.26*Math.cos(2.1*b));
+      const e=ss(0,.14,s);tan.push([mix(P0[0],x,e),mix(P0[1],y,e)])}
+    S.push({tgt,tan,d:0,ph:r()*9})}
+  [3,6,0,5,1,7,2,4].forEach((i,n)=>S[i].d=n*.045);
+  return {S,root,P0,gx,lx,yR,yG,yL,nL,M,sp};
+});
+ALT.drawStructureA=function(ctx,t,w,h){
+  const G=geoSA(w,h),g=t%10;ctx.clearRect(0,0,w,h);
+  const fade=ss(0,.5,g)*(1-ss(9,9.8,g));
+  const mv=ss(.9,2,g),rx=mix(G.P0[0],G.root[0],mv),ry=mix(G.P0[1],G.root[1],mv),ox=rx-G.P0[0],oy=ry-G.P0[1];
+  const u=clamp((g-1.5)/3.5),done=ss(4.7,5.5,g);
+  if(done>0){ctx.save();ctx.setLineDash([2,4]);ctx.strokeStyle=rgba(C.ink,.22*done*fade);ctx.lineWidth=.8;ctx.beginPath();
+    for(const y of [G.yR,G.yG,G.yL]){ctx.moveTo(w*.03,y);ctx.lineTo(w*.97,y)}ctx.stroke();ctx.restore()}
+  ctx.lineWidth=1;ctx.lineJoin='round';ctx.lineCap='round';ctx.strokeStyle=rgba(C.ink,.52*fade);ctx.beginPath();
+  for(const s of G.S){const ki=ss(s.d,s.d+.62,u);
+    for(let j=0;j<G.M;j++){const q=j/(G.M-1),k=ss(0,1,ki*1.4-q*.4),wo=1-ss(0,.35,q),n=(1-k)*2.4*ss(0,.1,q);
+      const tx=s.tan[j][0]+ox*wo+Math.sin(t*1.3+j*.37+s.ph)*n,ty=s.tan[j][1]+oy*wo+Math.cos(t*1.1+j*.29+s.ph)*n;
+      const x=mix(tx,s.tgt[j][0],k),y=mix(ty,s.tgt[j][1],k);j?ctx.lineTo(x,y):ctx.moveTo(x,y)}}
+  ctx.stroke();
+  if(done>0){const a=done*fade;ctx.fillStyle=rgba(C.card,a);ctx.strokeStyle=rgba(C.ink,.75*a);ctx.lineWidth=1;
+    for(const x of G.gx){ctx.fillRect(x-4.5,G.yG-4.5,9,9);ctx.strokeRect(x-4.5,G.yG-4.5,9,9)}
+    for(let i=0;i<G.nL;i++){const x=G.lx(i);ctx.fillRect(x-3.5,G.yL-3.5,7,7);ctx.strokeRect(x-3.5,G.yL-3.5,7,7)}}
+  ctx.fillStyle=rgba(C.sig,fade);ctx.fillRect(rx-4,ry-4,8,8);
+};
+ALT.drawStructureA.still=7;
+
+/* ---------- 構造理解力 B : exploded view -> assembly drawing (isometric, hidden lines dashed) ---------- */
+const PARTS=[/* x,y,z, dx,dy,dz, explode ex,ey,ez  (assembly order) */
+ [0,0,0,   4,4,.45,   0,0,-2.7],
+ [0,0,.45, 4,1.5,1.2, 0,-3.4,.3],
+ [0,1.5,.45,1.8,2.5,1.2,-3.4,0,.3],
+ [1.8,1.5,.45,2.2,2.5,1.2, 3.6,-.4,.9],
+ [0,0,1.65,4,4,.35,  0,0,2.5],
+ [1,1,2,   2,2,.7,    0,0,4.3]];
+const isoP=(x,y,z)=>[(x-y)*.866,(x+y)*.5-z];
+const geoSB=memo((w,h)=>{let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;
+  for(const P of PARTS)for(const e of [0,1])for(const c of [[0,0,0],[1,0,0],[0,1,0],[1,1,0],[0,0,1],[1,0,1],[0,1,1],[1,1,1]]){
+    const q=isoP(P[0]+P[3]*c[0]+P[6]*e,P[1]+P[4]*c[1]+P[7]*e,P[2]+P[5]*c[2]+P[8]*e);x0=Math.min(x0,q[0]);x1=Math.max(x1,q[0]);y0=Math.min(y0,q[1]);y1=Math.max(y1,q[1])}
+  const u=Math.min(w*.84/(x1-x0),h*.86/(y1-y0));
+  /* assembled-only frame (incl. the dimension line) for the closing zoom */
+  let a0=1e9,a1=-1e9,b0=1e9,b1=-1e9;for(const q of [[0,0,0],[4,0,0],[0,5.2,0],[4,5.2,0],[0,0,2.7],[4,0,2.7],[0,4,2.7],[4,4,2.7]].map(c=>isoP(...c))){a0=Math.min(a0,q[0]);a1=Math.max(a1,q[0]);b0=Math.min(b0,q[1]);b1=Math.max(b1,q[1])}
+  const v=Math.min(w*.6/(a1-a0),h*.7/(b1-b0),u*1.9);
+  return {u,ox:w/2-(x0+x1)/2*u,oy:h/2-(y0+y1)/2*u,v,vx:w/2-(a0+a1)/2*v,vy:h/2-(b0+b1)/2*v}});
+ALT.drawStructureB=function(ctx,t,w,h){
+  const G=geoSB(w,h),g=t%11,zm=ss(5.9,6.9,g),U=mix(G.u,G.v,zm),OX=mix(G.ox,G.vx,zm),OY=mix(G.oy,G.vy,zm),P=(x,y,z)=>{const q=isoP(x,y,z);return[OX+q[0]*U,OY+q[1]*U]};
+  ctx.clearRect(0,0,w,h);const fade=ss(0,.5,g)*(1-ss(10.1,10.9,g));
+  const K=PARTS.map((_,i)=>{const s=1.5+i*.72;return ss(s,s+.62,g)});
+  const cur=PARTS.map((p,i)=>{const e=1-K[i];return [p[0]+p[6]*e,p[1]+p[7]*e,p[2]+p[8]*e,p[3],p[4],p[5]]});
+  ctx.lineCap='round';ctx.lineJoin='round';
+  /* assembly (chain) lines from each loose part to its seat */
+  ctx.save();ctx.setLineDash(CHAIN);ctx.lineWidth=.8;ctx.strokeStyle=rgba(C.ink,.34*fade);ctx.beginPath();
+  PARTS.forEach((p,i)=>{if(K[i]>=1)return;const c=cur[i],a=P(c[0]+c[3]/2,c[1]+c[4]/2,c[2]+c[5]/2),b=P(p[0]+p[3]/2,p[1]+p[4]/2,p[2]+p[5]/2);ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1])});
+  ctx.stroke();ctx.restore();
+  /* boxes back-to-front */
+  const ord=cur.map((c,i)=>[c[0]+c[3]/2+c[1]+c[4]/2+(c[2]+c[5]/2)*.8,i]).sort((a,b)=>a[0]-b[0]);
+  for(const [,i] of ord){const [x,y,z,dx,dy,dz]=cur[i],X=x+dx,Y=y+dy,Z=z+dz,mov=K[i]>0&&K[i]<1;
+    const hex=[P(x,y,Z),P(X,y,Z),P(X,y,z),P(X,Y,z),P(x,Y,z),P(x,Y,Z)];
+    ctx.beginPath();hex.forEach((q,n)=>n?ctx.lineTo(q[0],q[1]):ctx.moveTo(q[0],q[1]));ctx.closePath();ctx.fillStyle=rgba(C.card,.93*fade);ctx.fill();
+    /* light pencil hatching on the left-front face */
+    const f0=P(x,Y,Z),f1=P(X,Y,Z),f2=P(X,Y,z),f3=P(x,Y,z),nh=Math.max(3,Math.round(dx*3));ctx.beginPath();
+    for(let n=1;n<nh;n++){const s=n/nh;ctx.moveTo(mix(f0[0],f1[0],s),mix(f0[1],f1[1],s));ctx.lineTo(mix(f3[0],f2[0],s),mix(f3[1],f2[1],s))}
+    ctx.strokeStyle=rgba(C.ink,.1*fade);ctx.lineWidth=.7;ctx.stroke();
+    /* hidden edges */
+    const b=P(x,y,z),hx=P(X,y,z),hy=P(x,Y,z),hz=P(x,y,Z);ctx.save();ctx.setLineDash([2.5,3]);ctx.beginPath();
+    ctx.moveTo(b[0],b[1]);ctx.lineTo(hx[0],hx[1]);ctx.moveTo(b[0],b[1]);ctx.lineTo(hy[0],hy[1]);ctx.moveTo(b[0],b[1]);ctx.lineTo(hz[0],hz[1]);
+    ctx.strokeStyle=rgba(C.ink,.26*fade);ctx.lineWidth=.8;ctx.stroke();ctx.restore();
+    /* visible edges */
+    ctx.beginPath();hex.forEach((q,n)=>n?ctx.lineTo(q[0],q[1]):ctx.moveTo(q[0],q[1]));ctx.closePath();
+    const fc=P(X,Y,Z),e1=P(x,Y,Z),e2=P(X,y,Z),e3=P(X,Y,z);ctx.moveTo(fc[0],fc[1]);ctx.lineTo(e1[0],e1[1]);ctx.moveTo(fc[0],fc[1]);ctx.lineTo(e2[0],e2[1]);ctx.moveTo(fc[0],fc[1]);ctx.lineTo(e3[0],e3[1]);
+    ctx.strokeStyle=rgba(C.ink,(mov?.85:.62)*fade);ctx.lineWidth=mov?1.2:1;ctx.stroke()}
+  /* dimension line once assembled */
+  const dk=ss(6.8,7.4,g)*fade;
+  if(dk>0){const off=.95,a0=P(0,4,0),a1=P(4,4,0),d0=P(0,4+off,0),d1=P(4,4+off,0),e0=P(0,4+off+.25,0),e1=P(4,4+off+.25,0);
+    ctx.beginPath();ctx.moveTo(a0[0],a0[1]);ctx.lineTo(e0[0],e0[1]);ctx.moveTo(a1[0],a1[1]);ctx.lineTo(e1[0],e1[1]);
+    ctx.moveTo(d0[0],d0[1]);ctx.lineTo(d1[0],d1[1]);const an=Math.atan2(d1[1]-d0[1],d1[0]-d0[0]);arrowHead(ctx,d1[0],d1[1],an,6);arrowHead(ctx,d0[0],d0[1],an+Math.PI,6);
+    ctx.strokeStyle=rgba(C.ink,.5*dk);ctx.lineWidth=.8;ctx.stroke();
+    /* centre mark on the cap */
+    const c0=P(2,.4,2.7),c1=P(2,3.6,2.7),c2=P(.4,2,2.7),c3=P(3.6,2,2.7);ctx.save();ctx.setLineDash(CHAIN);ctx.beginPath();ctx.moveTo(c0[0],c0[1]);ctx.lineTo(c1[0],c1[1]);ctx.moveTo(c2[0],c2[1]);ctx.lineTo(c3[0],c3[1]);ctx.strokeStyle=rgba(C.ink,.4*dk);ctx.stroke();ctx.restore()}
+  /* one vermilion point: the seat the next part goes to */
+  let ai=K.findIndex(k=>k<1);if(ai<0)ai=PARTS.length-1;const p=PARTS[ai],m=P(p[0]+p[3]/2,p[1]+p[4]/2,p[2]+p[5]);
+  ctx.fillStyle=rgba(C.sig,fade);ctx.fillRect(m[0]-4,m[1]-4,8,8);
+};
+ALT.drawStructureB.still=8;
+
+/* ---------- 構造理解力 C : a maze is explored, then one clear route is drawn ---------- */
+const geoSC=memo((w,h,seed)=>{
+  const cell=w<500?18:21,top=34,cols=Math.max(6,Math.floor((w-44)/cell)),rows=Math.max(5,Math.floor((h-top-14)/cell)),x0=(w-cols*cell)/2,y0=top+(h-top-14-rows*cell)/2,r=rng(seed*7919+13);
+  const N=cols*rows,open=new Uint8Array(N)/*bit0 right, bit1 down*/,seen=new Uint8Array(N),st=[0];seen[0]=1;
+  while(st.length){const c=st[st.length-1],cx=c%cols,cy=(c/cols)|0,nb=[];
+    if(cx>0&&!seen[c-1])nb.push(c-1);if(cx<cols-1&&!seen[c+1])nb.push(c+1);if(cy>0&&!seen[c-cols])nb.push(c-cols);if(cy<rows-1&&!seen[c+cols])nb.push(c+cols);
+    if(!nb.length){st.pop();continue}const n=nb[(r()*nb.length)|0];
+    if(n===c+1)open[c]|=1;else if(n===c-1)open[n]|=1;else if(n===c+cols)open[c]|=2;else open[n]|=2;seen[n]=1;st.push(n)}
+  const ent=((rows*(.2+r()*.6))|0)*cols,ext=((rows*(.2+r()*.6))|0)*cols+cols-1;
+  const walls=new Path2D();walls.moveTo(x0,y0);walls.lineTo(x0+cols*cell,y0);walls.moveTo(x0,y0+rows*cell);walls.lineTo(x0+cols*cell,y0+rows*cell);
+  const ey=(ent/cols)|0,xy=(ext/cols)|0;
+  walls.moveTo(x0,y0);walls.lineTo(x0,y0+ey*cell);walls.moveTo(x0,y0+(ey+1)*cell);walls.lineTo(x0,y0+rows*cell);
+  walls.moveTo(x0+cols*cell,y0);walls.lineTo(x0+cols*cell,y0+xy*cell);walls.moveTo(x0+cols*cell,y0+(xy+1)*cell);walls.lineTo(x0+cols*cell,y0+rows*cell);
+  for(let c=0;c<N;c++){const cx=c%cols,cy=(c/cols)|0,X=x0+(cx+1)*cell,Y=y0+(cy+1)*cell;
+    if(cx<cols-1&&!(open[c]&1)){walls.moveTo(X,Y-cell);walls.lineTo(X,Y)}
+    if(cy<rows-1&&!(open[c]&2)){walls.moveTo(X-cell,Y);walls.lineTo(X,Y)}}
+  const dist=new Int32Array(N).fill(-1),par=new Int32Array(N).fill(-1),q=[ent];dist[ent]=0;
+  for(let i=0;i<q.length;i++){const c=q[i],cx=c%cols,cy=(c/cols)|0;
+    const tryN=(n,ok)=>{if(ok&&dist[n]<0){dist[n]=dist[c]+1;par[n]=c;q.push(n)}};
+    tryN(c+1,cx<cols-1&&(open[c]&1));tryN(c-1,cx>0&&(open[c-1]&1));tryN(c+cols,cy<rows-1&&(open[c]&2));tryN(c-cols,cy>0&&(open[c-cols]&2))}
+  const ctr=c=>[x0+(c%cols+.5)*cell,y0+(((c/cols)|0)+.5)*cell];
+  const exp=q.slice(1).map(c=>[dist[c],ctr(par[c]),ctr(c)]);let maxD=0;for(const e of exp)maxD=Math.max(maxD,e[0]);
+  const route=[];for(let c=ext;c>=0;c=par[c]){route.push(ctr(c));if(c===ent)break}route.reverse();
+  route.unshift([x0-12,route[0][1]]);route.push([x0+cols*cell+12,route[route.length-1][1]]);
+  return {walls,exp,maxD,route:resample(route,Math.max(60,route.length*6)),cell};
+});
+ALT.drawStructureC=function(ctx,t,w,h){
+  const cyc=10,g=t%cyc,G=geoSC(w,h,Math.floor(t/cyc)+1);ctx.clearRect(0,0,w,h);
+  const fade=ss(0,.6,g)*(1-ss(9.2,9.9,g)),f=clamp((g-.9)/3.3)*G.maxD,ef=1-.6*ss(4.4,5.2,g),pq=ss(4.3,6.6,g),sett=ss(6.6,7.4,g);
+  ctx.lineCap='square';ctx.lineWidth=1;ctx.strokeStyle=rgba(C.ink,mix(.4,.18,sett)*fade);ctx.stroke(G.walls);
+  /* exploration: the whole structure is traced first */
+  ctx.lineCap='round';ctx.save();ctx.setLineDash([1.2,3]);ctx.lineWidth=1;ctx.strokeStyle=rgba(C.ink,.34*ef*fade);ctx.beginPath();
+  for(const e of G.exp){if(e[0]>f)continue;ctx.moveTo(e[1][0],e[1][1]);ctx.lineTo(e[2][0],e[2][1])}ctx.stroke();ctx.restore();
+  /* the one route */
+  const R=G.route.pts,n=R.length,m=Math.floor(pq*(n-1));
+  if(pq>0){ctx.beginPath();ctx.moveTo(R[0][0],R[0][1]);for(let i=1;i<=m;i++)ctx.lineTo(R[i][0],R[i][1]);ctx.strokeStyle=rgba(C.ink,.88*fade);ctx.lineWidth=2;ctx.lineJoin='round';ctx.stroke()}
+  ctx.fillStyle=rgba(C.ink,fade);ctx.fillRect(R[0][0]-3,R[0][1]-3,6,6);
+  const hd=R[Math.max(0,m)];ctx.fillStyle=rgba(C.sig,fade*(pq>0?1:0));ctx.fillRect(hd[0]-4,hd[1]-4,8,8);
+};
+ALT.drawStructureC.still=8;
+
+/* ---------- スピード感 A : a long sequential schedule is compressed into a short parallel one ---------- */
+const SPA_D=[.13,.1,.14,.09,.12,.1],SPA_GAP=.04,SPA_B=[],SPA_A=[0,.06,.1,.17,.22,.28];
+{let s=0;for(const d of SPA_D){SPA_B.push(s);s+=d+SPA_GAP}}
+const SPA_TB=SPA_B[5]+SPA_D[5],SPA_TA=Math.max(...SPA_A.map((a,i)=>a+SPA_D[i]));
+ALT.drawSpeedA=function(ctx,t,w,h){
+  const g=t%11;ctx.clearRect(0,0,w,h);const fade=ss(0,.6,g)*(1-ss(10.2,10.9,g));
+  const x0=w*.07,x1=w*.93,X=v=>x0+v/SPA_TB*(x1-x0),yAx=h*.24,yDim=h*.12,top=h*.36,step=h*.52/5,bh=Math.max(6,Math.min(11,h*.04));
+  const u=clamp((g-2)/2.6),K=SPA_D.map((_,i)=>ss(i*.07,.62+i*.07,u)),gk=ss(2,2.6,g);
+  const endB=X(SPA_TB),endA=X(SPA_TA),endX=mix(endB,endA,ss(.1,.95,u)),sw=clamp((g-5.5)/1.35),cur=mix(x0,endA,sw),fin=sw>=1;
+  ctx.lineCap='butt';
+  /* time axis */
+  ctx.strokeStyle=rgba(C.ink,.5*fade);ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x0,yAx);ctx.lineTo(x1,yAx);
+  for(let i=0;i<=22;i++){const x=x0+(x1-x0)*i/22,l=i%5?3:6;ctx.moveTo(x,yAx);ctx.lineTo(x,yAx+l)}ctx.stroke();
+  /* ghost of the old schedule */
+  if(gk>0){ctx.save();ctx.setLineDash([2.5,3]);ctx.strokeStyle=rgba(C.ink,.24*gk*fade);ctx.lineWidth=.8;ctx.beginPath();
+    SPA_B.forEach((b,i)=>{const y=top+i*step;ctx.rect(X(b),y-bh/2,X(b+SPA_D[i])-X(b),bh)});ctx.stroke();ctx.restore()}
+  /* bars */
+  const bars=SPA_B.map((b,i)=>{const s=mix(b,SPA_A[i],K[i]);return [X(s),X(s+SPA_D[i]),top+i*step]});
+  /* hand-off arrows (fade as waiting disappears) */
+  ctx.strokeStyle=rgba(C.ink,.55*fade);ctx.lineWidth=.9;
+  for(let i=0;i<5;i++){const a=1-ss(0,.45,Math.max(K[i],K[i+1]));if(a<=0)continue;const [,e,y]=bars[i],[s2,,y2]=bars[i+1],xm=e+Math.max(3,(s2-e)*.5);
+    ctx.globalAlpha=a;ctx.beginPath();ctx.moveTo(e,y);ctx.lineTo(xm,y);ctx.lineTo(xm,y2);ctx.lineTo(s2-1,y2);arrowHead(ctx,s2-1,y2,0,5);ctx.stroke()}
+  ctx.globalAlpha=1;
+  for(const [s,e,y] of bars){ctx.fillStyle=rgba(C.card,fade);ctx.fillRect(s,y-bh/2,e-s,bh);
+    const fx=Math.min(e,cur);if(sw>0&&fx>s){ctx.save();ctx.beginPath();ctx.rect(s,y-bh/2,fx-s,bh);ctx.clip();ctx.beginPath();for(let x=s-bh;x<fx;x+=3.2){ctx.moveTo(x,y+bh/2);ctx.lineTo(x+bh,y-bh/2)}ctx.strokeStyle=rgba(C.ink,.55*fade);ctx.lineWidth=.8;ctx.stroke();ctx.restore()}
+    ctx.strokeStyle=rgba(C.ink,.72*fade);ctx.lineWidth=1;ctx.strokeRect(s,y-bh/2,e-s,bh)}
+  /* progress cursor */
+  if(sw>0&&sw<1){ctx.save();ctx.setLineDash([3,3]);ctx.strokeStyle=rgba(C.ink,.5*fade);ctx.beginPath();ctx.moveTo(cur,yAx);ctx.lineTo(cur,top+5*step+bh);ctx.stroke();ctx.restore()}
+  /* old finish (ghost) */
+  if(gk>0){ctx.save();ctx.setLineDash([2,2.5]);ctx.strokeStyle=rgba(C.ink,.35*gk*fade);ctx.beginPath();ctx.moveTo(endB,yAx-6);ctx.lineTo(endB+6,yAx);ctx.lineTo(endB,yAx+6);ctx.lineTo(endB-6,yAx);ctx.closePath();ctx.stroke();ctx.restore()}
+  /* dimension line: how much shorter */
+  const dk=ss(4.7,5.2,g)*fade;
+  if(dk>0){ctx.strokeStyle=rgba(C.ink,.55*dk);ctx.lineWidth=.8;ctx.beginPath();
+    ctx.moveTo(endA,yDim-5);ctx.lineTo(endA,yAx-8);ctx.moveTo(endB,yDim-5);ctx.lineTo(endB,yAx-8);
+    ctx.moveTo(endA,yDim);ctx.lineTo(endB,yDim);arrowHead(ctx,endA,yDim,Math.PI,6);arrowHead(ctx,endB,yDim,0,6);ctx.stroke()}
+  /* finish marker : turns vermilion when the work is done */
+  ctx.beginPath();ctx.moveTo(endX,yAx-6);ctx.lineTo(endX+6,yAx);ctx.lineTo(endX,yAx+6);ctx.lineTo(endX-6,yAx);ctx.closePath();
+  ctx.fillStyle=fin?rgba(C.sig,fade):rgba(C.card,fade);ctx.fill();ctx.strokeStyle=fin?rgba(C.sig,fade):rgba(C.ink,.8*fade);ctx.lineWidth=1;ctx.stroke();
+};
+ALT.drawSpeedA.still=8;
+
+/* ---------- スピード感 B : a detour through many relays is pulled taut into one straight line ---------- */
+const SPB_W=[[.08,.74],[.17,.26],[.3,.17],[.37,.6],[.25,.86],[.49,.85],[.59,.46],[.47,.25],[.69,.14],[.79,.58],[.65,.83],[.86,.8],[.92,.3]];
+const geoSB2=memo((w,h)=>{const pts=SPB_W.map(p=>[p[0]*w,p[1]*h]),R=resample(pts,220),A=pts[0],B=pts[pts.length-1];
+  const L=[0];for(let i=1;i<pts.length;i++)L.push(L[i-1]+Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]));const nodeS=L.map(v=>v/L[L.length-1]);
+  const line=R.pts.map((_,j)=>{const s=j/(R.pts.length-1);return[mix(A[0],B[0],s),mix(A[1],B[1],s)]});
+  return {pts,R:R.pts,line,nodeS,A,B}});
+ALT.drawSpeedB=function(ctx,t,w,h){
+  const G=geoSB2(w,h),g=t%10;ctx.clearRect(0,0,w,h);const fade=ss(0,.5,g)*(1-ss(9.2,9.9,g));
+  const u=ss(2.9,4.3,g),k=u+Math.sin(u*Math.PI)*.06,gk=ss(2.9,3.5,g),n=G.R.length;
+  const at=(s)=>{const f=s*(n-1),i=Math.min(n-2,Math.floor(f)),r=f-i,p=G.R[i],q=G.R[i+1],a=G.line[i],b=G.line[i+1];
+    return [mix(mix(p[0],q[0],r),mix(a[0],b[0],r),k),mix(mix(p[1],q[1],r),mix(a[1],b[1],r),k)]};
+  ctx.lineCap='round';ctx.lineJoin='round';
+  if(gk>0){ctx.save();ctx.setLineDash([2.5,3.5]);ctx.strokeStyle=rgba(C.ink,.2*gk*fade);ctx.lineWidth=.8;ctx.beginPath();G.pts.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.stroke();ctx.restore()}
+  ctx.beginPath();for(let j=0;j<n;j++){const s=j/(n-1),p=at(s);j?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1])}
+  ctx.strokeStyle=rgba(C.ink,.6*fade);ctx.lineWidth=1;ctx.stroke();
+  /* relay nodes shrink away */
+  const rr=4*(1-u);if(rr>.3){ctx.fillStyle=rgba(C.card,fade);ctx.strokeStyle=rgba(C.ink,.7*fade);ctx.lineWidth=1;
+    for(let i=1;i<G.nodeS.length-1;i++){const p=at(G.nodeS[i]);ctx.beginPath();ctx.arc(p[0],p[1],rr,0,TAU);ctx.fill();ctx.stroke()}}
+  /* ruler ticks along the straight line */
+  const tk=ss(4.3,4.8,g)*fade;if(tk>0){const dx=G.B[0]-G.A[0],dy=G.B[1]-G.A[1],L=Math.hypot(dx,dy),nx=-dy/L,ny=dx/L;ctx.beginPath();
+    for(let i=1;i<20;i++){const s=i/20,x=G.A[0]+dx*s,y=G.A[1]+dy*s,l=i%5?3:6;ctx.moveTo(x-nx*l,y-ny*l);ctx.lineTo(x+nx*l,y+ny*l)}ctx.strokeStyle=rgba(C.ink,.4*tk);ctx.lineWidth=.8;ctx.stroke()}
+  /* before: a slow ink dot crawls along the detour */
+  const sl=(1-ss(2.6,3,g))*ss(.4,.8,g);if(sl>0){const p=at(clamp((g-.6)/2.4)*.3);ctx.fillStyle=rgba(C.ink,sl*fade);ctx.fillRect(p[0]-3,p[1]-3,6,6)}
+  /* after: vermilion runs through, again and again */
+  if(g>4.6&&g<8.9){const ph=((g-4.6)%.72)/.42;if(ph<=1){const e=ph*ph*(3-2*ph),s0=Math.max(0,e-.16),a=at(s0),b=at(e);
+    ctx.strokeStyle=rgba(C.sig,fade);ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1]);ctx.stroke();ctx.fillStyle=rgba(C.sig,fade);ctx.fillRect(b[0]-3.5,b[1]-3.5,7,7)}}
+  ctx.fillStyle=rgba(C.ink,fade);ctx.fillRect(G.A[0]-3.5,G.A[1]-3.5,7,7);
+  ctx.fillStyle=rgba(C.card,fade);ctx.strokeStyle=rgba(C.ink,fade);ctx.lineWidth=1;ctx.fillRect(G.B[0]-4.5,G.B[1]-4.5,9,9);ctx.strokeRect(G.B[0]-4.5,G.B[1]-4.5,9,9);
+};
+ALT.drawSpeedB.still=5.2;
+
+/* ---------- スピード感 C : a small gear spins fast and turns a large wheel ---------- */
+function gearPath(cx,cy,z,m,ang){const r=m*z/2,ra=r+m,rr=r-1.25*m,ph=TAU/z,pth=new Path2D();
+  for(let k=0;k<z;k++){const c=ang+k*ph,pts=[[rr,c-.5*ph],[rr,c-.27*ph],[ra,c-.13*ph],[ra,c+.13*ph],[rr,c+.27*ph]];
+    pts.forEach(([R,a],n)=>{const x=cx+Math.cos(a)*R,y=cy+Math.sin(a)*R;(k||n)?pth.lineTo(x,y):pth.moveTo(x,y)})}
+  pth.closePath();return pth}
+ALT.drawSpeedC=function(ctx,t,w,h){
+  ctx.clearRect(0,0,w,h);const z1=10,z2=28,m=Math.min(w*.8/(z1+z2+2),h*.72/(z2+2)),r1=m*z1/2,r2=m*z2/2,d=r1+r2;
+  const tot=(z1/2+1)*m+d+(z2/2+1)*m,c1x=w/2-tot/2+(z1/2+1)*m,c2x=c1x+d,cy=h*.54,fade=ss(0,.5,t);
+  const A1=t<1.6?5.6*t*t/3.2:5.6*(t-.8),A2=Math.PI-Math.PI/z2-A1*z1/z2;   /* spins up in 1.6s, then ~0.9 turns/s */
+  ctx.lineJoin='round';ctx.lineCap='round';
+  /* centre lines + pitch circles (one-dot chain) */
+  ctx.save();ctx.setLineDash(CHAIN);ctx.strokeStyle=rgba(C.ink,.3*fade);ctx.lineWidth=.8;ctx.beginPath();
+  ctx.moveTo(c1x-r1-m*2.2,cy);ctx.lineTo(c2x+r2+m*2.2,cy);ctx.moveTo(c1x,cy-r1-m*2.2);ctx.lineTo(c1x,cy+r1+m*2.2);ctx.moveTo(c2x,cy-r2-m*1.6);ctx.lineTo(c2x,cy+r2+m*1.6);
+  ctx.moveTo(c1x+r1,cy);ctx.arc(c1x,cy,r1,0,TAU);ctx.moveTo(c2x+r2,cy);ctx.arc(c2x,cy,r2,0,TAU);ctx.stroke();ctx.restore();
+  /* dial ticks around the large wheel (fixed) */
+  ctx.beginPath();for(let i=0;i<48;i++){const a=i/48*TAU,R0=r2+m*1.55,R1=R0+(i%4?3:6);ctx.moveTo(c2x+Math.cos(a)*R0,cy+Math.sin(a)*R0);ctx.lineTo(c2x+Math.cos(a)*R1,cy+Math.sin(a)*R1)}
+  ctx.strokeStyle=rgba(C.ink,.28*fade);ctx.lineWidth=.8;ctx.stroke();
+  /* gears */
+  ctx.fillStyle=rgba(C.card,fade);ctx.strokeStyle=rgba(C.ink,.66*fade);ctx.lineWidth=1;
+  const g2=gearPath(c2x,cy,z2,m,A2),g1=gearPath(c1x,cy,z1,m,A1);ctx.fill(g2);ctx.stroke(g2);ctx.fill(g1);ctx.stroke(g1);
+  /* large wheel: hub, rim, spokes */
+  const rim=r2-2.6*m,hub=r2*.2;ctx.beginPath();ctx.moveTo(c2x+rim,cy);ctx.arc(c2x,cy,rim,0,TAU);ctx.moveTo(c2x+hub,cy);ctx.arc(c2x,cy,hub,0,TAU);
+  for(let i=0;i<5;i++){const a=A2+i*TAU/5;for(const o of [-.2,.2]){ctx.moveTo(c2x+Math.cos(a+o)*hub,cy+Math.sin(a+o)*hub);ctx.lineTo(c2x+Math.cos(a+o*hub/rim*1.5)*rim,cy+Math.sin(a+o*hub/rim*1.5)*rim)}}
+  ctx.moveTo(c2x+hub*.35,cy);ctx.arc(c2x,cy,hub*.35,0,TAU);ctx.stroke();
+  /* index mark on the large wheel */
+  const ia=A2+TAU/10;ctx.beginPath();ctx.moveTo(c2x+Math.cos(ia)*(rim-2),cy+Math.sin(ia)*(rim-2));ctx.lineTo(c2x+Math.cos(ia)*(hub+4),cy+Math.sin(ia)*(hub+4));ctx.strokeStyle=rgba(C.ink,.8*fade);ctx.lineWidth=1.4;ctx.stroke();
+  /* small gear: hub + keyway */
+  ctx.lineWidth=1;ctx.strokeStyle=rgba(C.ink,.66*fade);const hb=r1*.42;ctx.beginPath();ctx.moveTo(c1x+hb,cy);ctx.arc(c1x,cy,hb,0,TAU);ctx.stroke();
+  /* speed trails behind the small gear's marked tooth */
+  const ra1=r1+m,spd=ss(0,1.6,t);for(let j=0;j<3;j++){const R=ra1+4+j*4,len=spd*1.5*(1-j*.28);ctx.beginPath();ctx.arc(c1x,cy,R,A1-len,A1-.08);ctx.strokeStyle=rgba(C.ink,(.34-j*.09)*fade);ctx.lineWidth=.9;ctx.stroke()}
+  /* the one vermilion point: tip of the small gear's marked tooth */
+  const tx=c1x+Math.cos(A1)*(ra1-m*.45),ty=cy+Math.sin(A1)*(ra1-m*.45);ctx.fillStyle=rgba(C.sig,fade);ctx.fillRect(tx-3.5,ty-3.5,7,7);
+  ctx.fillStyle=rgba(C.ink,.8*fade);ctx.fillRect(c1x-2,cy-2,4,4);ctx.fillRect(c2x-2,cy-2,4,4);
+};
+ALT.drawSpeedC.still=3;
+
+/* runner : local clock starts when the panel enters the view, stops off-screen */
+document.querySelectorAll('canvas[data-k]').forEach(c=>{const fn=ALT[c.dataset.k];
+  piece(c,{anyResize:true,local:true,draw(p,t){if(p.st==null)p.st=t;fn(p.ctx,REDUCE?fn.still:t-p.st,p.w,p.h)}})});
+const io2=new IntersectionObserver(es=>{for(const e of es){const p=e.target.__p;if(p&&p.local&&!e.isIntersecting)p.st=null}},{rootMargin:'0px'});
+document.querySelectorAll('canvas[data-k]').forEach(c=>io2.observe(c));
+
+/* loop */
+let T=0,prev=performance.now();
+function loop(now){const dt=Math.max(0,Math.min(.05,(now-prev)/1000));prev=now;T+=dt;   /* rAF stamp can precede performance.now() on the 1st frame */
+  for(const p of pieces)if(p.vis&&p.ready)p.draw(p,REDUCE&&!p.local?0:T,dt);requestAnimationFrame(loop)}
+requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
