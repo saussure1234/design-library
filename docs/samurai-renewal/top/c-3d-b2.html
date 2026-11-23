@@ -65,13 +65,13 @@ html.day body:not(.mopen) .burger i{background:#151513}
 .hd{transition:background .4s}
 /* FV */
 .fvx{position:fixed;inset:0;z-index:6;pointer-events:none}
-.fvv{position:fixed;inset:0;z-index:4;background:#000;pointer-events:none}
+.fvv{position:fixed;inset:0;z-index:4;background:transparent;pointer-events:none}
 .fvv canvas{width:100%;height:100%;display:block}
-.gate{position:fixed;inset:0;z-index:45;display:grid;place-items:center;background:#000;transition:opacity .9s ease,visibility .9s}
+.gate{position:fixed;inset:0;z-index:45;display:grid;place-items:center;background:rgba(0,0,0,.58);-webkit-backdrop-filter:blur(1.5px);backdrop-filter:blur(1.5px);transition:opacity .9s ease,visibility .9s}
 .gate.out{opacity:0;visibility:hidden}
 .gate .gin{display:flex;flex-direction:column;align-items:center;gap:34px}
 .gate .gin img{height:26px;opacity:.9}
-.gate .gb{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
+.gate .gb{display:flex;flex-direction:column;gap:12px;align-items:stretch;min-width:min(320px,80vw)}
 .gate button{background:none;border:1px solid rgba(255,255,255,.32);border-radius:999px;color:#fff;padding:15px 26px;font:500 12px/1 var(--mono);letter-spacing:.14em;cursor:pointer;transition:border-color .3s,color .3s,background .3s}
 .gate button:hover{border-color:#ff5a24;color:#ff5a24}
 .gate button.main{background:#fff;color:#000;border-color:#fff}
@@ -379,7 +379,7 @@ html.nogl .gate,html.nogl .fvv,html.nogl .skip3{display:none}
 <div class="ov"><a href="#top">HOME</a><a href="#service">SERVICE</a><a href="https://samurai-style.tokyo/media">MEDIA</a><a href="https://samurai-style.tokyo/company">COMPANY</a><a href="https://samurai-style.tokyo/recruit">RECRUIT</a><a href="#contact">CONTACT</a><div class="lang"><span>ID</span><span>EN</span><b>JA</b></div></div>
 
 <canvas id="gl" aria-hidden="true"></canvas>
-<div class="gate" id="gate"><div class="gin"><img src="img/logo.svg" alt="SAMURAI STYLE" style="filter:brightness(0) invert(1)"><div class="gb"><button class="main" type="button" data-s="1">ENTER WITH SOUND（音あり）</button><button type="button" data-s="0">ENTER WITHOUT SOUND（音なし）</button></div></div></div>
+<div class="gate" id="gate"><div class="gin"><div class="gb"><button class="main" type="button" data-s="1">ENTER WITH SOUND（音あり）</button><button type="button" data-s="0">ENTER WITHOUT SOUND（音なし）</button></div></div></div>
 <a class="skip3" id="skip3" href="#paper"><span>STORYをスキップ</span><i aria-hidden="true"></i></a>
 <div class="ld" id="ld"><p id="ldt">[······················] 000</p></div>
 

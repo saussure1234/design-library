@@ -444,30 +444,35 @@ const h1vp = mkGlow(9, 0xdfe8ff, 0); h1vp.position.set(6 - 1.9, 1.6, -58 - (SP ?
 
 // ---------- 場面2：無数に枝分かれする光の線の森（青灰の線） ----------
 const forestU = { uTime: U.time, uGrow: { value: 0 }, uFogC: U.fogCol, uFogD: U.fogD };
+let fGrowT = 0;
 {
+  // 枝分かれは止まらない：世代を重ねるほど本数が増え、ゆっくり画面の手前まで埋めていく（So 11/24）
   const pos = [], ord = [], hi = [], tips = [], tipOrd = [];
-  for (let t = 0; t < Q.trees; t++) {
-    const u = rr(0.24, 0.42);
-    const rootP = lineCurve.getPoint(u);
-    const segs = [];
+  const NT = SP ? 12 : 22, DEP = SP ? 9 : 10;
+  const eye2 = camCurve.getPoint(2 / 6);
+  let maxO = 0; const segsAll = [];
+  for (let t = 0; t < NT; t++) {
+    let rootP, d0;
+    if (t < 6) { rootP = lineCurve.getPoint(rr(0.24, 0.42)); const up = t % 2 ? 1 : -1; d0 = V(rr(-0.6, 0.6), up * rr(0.5, 1), rr(-0.6, 0.3)).normalize(); }
+    else {   // 後から芽吹く根：主役の周りから、カメラの方へも伸びる
+      rootP = T[2].clone().add(V(rr(-14, 14), rr(-9, 9), rr(-12, 8)));
+      d0 = eye2.clone().sub(rootP).normalize().add(randDir().multiplyScalar(1.1)).normalize();
+    }
+    const born = t < 6 ? 0 : rr(0.5, 4.5);   // 芽吹く遅れ（世代の単位）
     const grow = (p, d, len, dep, o, h) => {
       const e = p.clone().add(d.clone().multiplyScalar(len));
-      segs.push([p, e, o, o + len, h]);
-      if (dep >= Q.depth) { tips.push(e); tipOrd.push(o + len); return; }
-      const kids = rnd() < 0.28 ? 3 : 2;
+      segsAll.push([p, e, o, o + 1, h]); maxO = Math.max(maxO, o + 1);
+      if (dep >= DEP) { tips.push(e); tipOrd.push(o + 1); return; }
+      const kids = rnd() < 0.3 ? 3 : 2;
       for (let c = 0; c < kids; c++) {
-        const nd = d.clone().add(randDir().multiplyScalar(rr(0.45, 0.9))).normalize();
-        grow(e, nd, len * rr(0.7, 0.86), dep + 1, o + len, h && c === 0);
+        const nd = d.clone().add(randDir().multiplyScalar(rr(0.45, 0.95))).normalize();
+        grow(e, nd, len * rr(0.78, 0.92), dep + 1, o + 1, h && c === 0);
       }
     };
-    const up = t % 2 ? 1 : -1;
-    const d0 = V(rr(-0.6, 0.6), up * rr(0.5, 1), rr(-0.6, 0.3)).normalize();
-    const start = tips.length;
-    grow(rootP, d0, rr(2.6, 4), 0, 0, t === 1);
-    let mx = 0; for (const s of segs) mx = Math.max(mx, s[3]);
-    for (let i = start; i < tipOrd.length; i++) tipOrd[i] /= mx;
-    for (const s of segs) { pos.push(s[0].x, s[0].y, s[0].z, s[1].x, s[1].y, s[1].z); ord.push(s[2] / mx, s[3] / mx); hi.push(s[4] ? 1 : 0, s[4] ? 1 : 0); }
+    grow(rootP, d0, rr(2.4, 3.8), 0, born, t === 1);
   }
+  for (const sg of segsAll) { pos.push(sg[0].x, sg[0].y, sg[0].z, sg[1].x, sg[1].y, sg[1].z); ord.push(sg[2] / maxO, sg[3] / maxO); hi.push(sg[4] ? 1 : 0, sg[4] ? 1 : 0); }
+  for (let i = 0; i < tipOrd.length; i++) tipOrd[i] /= maxO;
   const g = new THREE.BufferGeometry();
   g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
   g.setAttribute('aOrd', new THREE.Float32BufferAttribute(ord, 1));
@@ -481,7 +486,7 @@ const forestU = { uTime: U.time, uGrow: { value: 0 }, uFogC: U.fogCol, uFogD: U.
         float tip=smoothstep(uGrow-.12,uGrow,vO);
         float pulse=pow(max(0.,sin(vO*34.-uTime*3.)),18.);
         vec3 c=mix(vec3(.40,.52,.74),vec3(.86,.92,1.),vH);
-        float a=(.36+.5*(1.-vO))*(1.+tip*2.2+pulse*1.6)*(.65+vH*1.2);
+        float a=(.30+.45*(1.-vO))*(1.+tip*2.2+pulse*1.6)*(.65+vH*1.2)*.85;
         gl_FragColor=vec4(c*a*(1.-fogF(vD)),1.); }`,
   });
   const ls = new THREE.LineSegments(g, m); ls.frustumCulled = false; scene.add(fx(ls));
@@ -747,6 +752,7 @@ updatePlanks(0, 0);
 // 速さ・数・形は今のサイトの映像（home-hero.mp4）を実測して合わせた：中心から外へ半径に比例して広がる（毎秒 約22%）、
 // 見えている粒は1コマ 15〜30 個、短い光の粒と細く長い筋が混ざる。
 const fvx = document.getElementById('fvx'), fvSum = document.getElementById('fsum'), fvv = document.getElementById('fvv');
+const tmpFv = new THREE.Vector3();
 const FVP = (() => {
   const cv = document.getElementById('fvc'), c = cv.getContext('2d');
   const K = 0.22;                       // 外へ広がる速さ（1秒あたりの割合・実測）
@@ -766,20 +772,20 @@ const FVP = (() => {
   fit(); addEventListener('resize', fit);
   function draw(dt, t, nz, vis) {
     if (vis <= 0.01) return;
-    c.globalCompositeOperation = 'source-over'; c.fillStyle = '#000'; c.fillRect(0, 0, W, H);
+    c.globalCompositeOperation = 'source-over'; c.clearRect(0, 0, W, H);
     c.globalCompositeOperation = 'lighter';
     const cx = W * (0.5 - FV.cx * 0.06), cy = H * (0.5 - FV.cy * 0.06), S = Math.min(W, H), M = Math.hypot(W, H) * 0.55 / S;
-    const g = Math.exp(K * nz * dt);
+    const mv = 0.12 + 0.88 * nz, g = Math.exp(K * mv * dt);
     for (const q of P) {
       q.r *= g; if (q.r > M) { spawn(q, false); continue; }
       const sx = cx + q.ux * q.r * S, sy = cy + q.uy * q.r * S;
       const near = Math.min(1, q.r / 0.9), tw = 0.8 + 0.2 * Math.sin(t * 1.7 * q.s + q.tw);
       const al = Math.min(1, q.b * (0.35 + 0.9 * near) * tw) * vis;
-      const rad = (0.7 + 3.6 * Math.pow(near, 1.4)) * q.s * (W < 820 ? 0.8 : 1);
+      const rad = (1.3 + 6.2 * Math.pow(near, 1.35)) * q.s * (W < 820 ? 0.8 : 1);
       // 尾：筋は長く、粒は短く（止まると尾も縮む）
-      const tl = (q.streak ? 2.4 : 0.55) * (0.25 + 0.75 * nz), rb = q.r * Math.exp(-K * tl), bx = cx + q.ux * rb * S, by = cy + q.uy * rb * S;
+      const tl = (q.streak ? 2.4 : 0.6) * (0.3 + 0.7 * nz), rb = q.r * Math.exp(-K * tl), bx = cx + q.ux * rb * S, by = cy + q.uy * rb * S;
       const lg = c.createLinearGradient(bx, by, sx, sy); lg.addColorStop(0, 'rgba(255,255,255,0)'); lg.addColorStop(1, `rgba(255,255,255,${al * (q.streak ? 0.55 : 0.4)})`);
-      c.strokeStyle = lg; c.lineWidth = q.streak ? Math.max(0.6, rad * 0.35) : rad * 0.9; c.lineCap = 'round';
+      c.strokeStyle = lg; c.lineWidth = q.streak ? Math.max(1.4, rad * 0.62) : rad * 1.15; c.lineCap = 'round';
       c.beginPath(); c.moveTo(bx, by); c.lineTo(sx, sy); c.stroke();
       if (!q.streak ? q.b > 0.25 : q.b > 0.75) { c.globalAlpha = al; const d = rad * 3.4; c.drawImage(SPR, sx - d / 2, sy - d / 2, d, d); c.globalAlpha = 1; }
     }
@@ -787,10 +793,10 @@ const FVP = (() => {
     const Sg = 1 - nz;
     if (Sg < 0.02) rings = [];
     else if (t - lastR > 1.5) { lastR = t; rings.push({ r: 0 }); }
-    const rx = W * 0.5, ry = H * 0.42, RM_ = Math.hypot(W, H) * 0.6, n = W < 820 ? 110 : 160;
+    tmpFv.copy(origin.position).project(camera); const rx = (tmpFv.x * 0.5 + 0.5) * W, ry = (-tmpFv.y * 0.5 + 0.5) * H, RM_ = Math.hypot(W, H) * 0.6, n = W < 820 ? 110 : 160;
     rings = rings.filter((o) => { o.r += 66 * dt; const a = (1 - o.r / RM_) * 0.7 * Sg * vis; if (a <= 0) return false;
       for (let i = 0; i < n; i++) { const th = i / n * 6.283, jr = o.r + (Math.random() - 0.5) * 26 * nz * nz;
-        c.fillStyle = i % 7 ? `rgba(167,228,255,${a})` : `rgba(214,243,255,${a})`; c.fillRect(rx + Math.cos(th) * jr, ry + Math.sin(th) * jr * 0.62, 2, 2); }
+        c.fillStyle = i % 7 ? `rgba(255,106,54,${a})` : `rgba(255,170,120,${a})`; c.fillRect(rx + Math.cos(th) * jr, ry + Math.sin(th) * jr * 0.62, 2.2, 2.2); }
       return true; });
   }
   return { draw };
@@ -826,7 +832,7 @@ function fvFrame(dt, t, Ps) {
   // 粒の層：そろうと止まり、宇宙へ抜けるところで消える
   const vo = 1 - sstep(0.58, 0.86, Ps);
   fvv.style.opacity = vo; fvv.style.visibility = vo < 0.01 ? 'hidden' : 'visible';
-  FVP.draw(dt, t, RM ? 0 : FV.nz, vo);
+  FVP.draw(dt, t, RM ? 0 : FV.nz, Math.max(vo, 1 - sstep(0.7, 1.0, Ps)));
 }
 // ---------- 入口の画面：音あり／音なしを選んでから始まる ----------
 const gate = document.getElementById('gate');
@@ -1137,7 +1143,9 @@ function frame() {
   });
   h1vp.material.opacity = on1 ? (ht < 400 ? ht / 400 : ht < 3200 ? 0.9 : Math.max(0, 1 - (ht - 3200) / 1100)) * 0.85 : 0;
   // 場面2：枝が伸びる
-  forestU.uGrow.value = sstep(-0.45, 0.62, Ps - 2) * 1.02;
+  { const in2 = Math.abs(Ps - 2) < 0.75; const base = sstep(-0.45, 0.4, Ps - 2) * 0.32;
+    if (in2) fGrowT += dt / 70;                       // 約70秒で画面が埋まる
+    forestU.uGrow.value = Math.min(1.02, Math.max(base, 0.12) + fGrowT * (in2 || fGrowT > 0 ? 1 : 0)) * (Ps > 1.2 ? 1 : 0); }
   // 場面3：テレビ
   if (Math.abs(Ps - 3) < 1.6) updateTVs(t, Ps);
   { const near3 = Math.abs(Ps - 3) < 1.2; tvShowMesh.visible = near3;
@@ -1269,5 +1277,5 @@ setTimeout(() => {
 }, 250);
 window.__b = {
   get P() { return Ps; }, setP(v) { P = v; Ps = v; lastPs = v; }, toY, measure, renderer, used,
-  get tier() { return tier; }, setTier(n) { tier = n; applyTier(); }, fps: fpsLog,
+  get tier() { return tier; }, setTier(n) { tier = n; applyTier(); }, fps: fpsLog, setGrow(v) { fGrowT = v; },
 };
