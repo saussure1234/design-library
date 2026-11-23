@@ -429,7 +429,9 @@ const hands = [];
   if (PV.length) used.people = true;
   // 人（作り手）とクライアントが向かい合って話す組が、奥から手前まで並ぶ。作り手が1人ずつ AI に置き換わる（So 11/24）
   const group = new THREE.Group(); scene.add(group);
-  const PAIRS = SP ? 4 : 7;
+  const PAIRS = SP ? 3 : 4;
+  const eye1 = camCurve.getPoint(1 / 6), f1 = T[1].clone().sub(eye1).setY(0).normalize(), r1 = V(-f1.z, 0, f1.x);   // 場面1のカメラの前・右
+  const SPOT = SP ? [[-0.6, 6.2], [-1.6, 9.5], [0.4, 12.5]] : [[-1.7, 5.6], [-3.4, 8.8], [-0.7, 10.6], [-2.6, 13.4]];   // [横（右＋）, 奥行き]
   const SKIN = [0xc99a7a, 0xb98566, 0xd8b095, 0xa8765a], HAIR = [0x1c1714, 0x2b211b, 0x3a2c22];
   const SHIRT_W = [0xd9dde3, 0x9fb3c9, 0xc7b79e, 0xe6e1d6], SUIT_C = [0x8a919e, 0xa08f7a, 0x7d8aa0];
   const humanMat = (u, shirt, pants) => {
@@ -446,7 +448,8 @@ const hands = [];
   };
   for (let j = 0; j < PAIRS * 2; j++) {
     const pair = j >> 1, isWorker = (j & 1) === 0;
-    const z = -60 - pair * 4.6, x = 6 + (isWorker ? -1.05 : 1.05);   // オレンジの線（x=6）をはさんで向かい合う
+    const [sx, sd] = SPOT[pair], c0 = eye1.clone().addScaledVector(f1, sd).addScaledVector(r1, sx); c0.y = -0.65;
+    const side = isWorker ? -1 : 1, base = c0.clone().addScaledVector(r1, side * 0.55), x = base.x, z = base.z;   // 向かい合う2人
     const u = { value: 0 };
     const pl = humanMat(u, isWorker ? SHIRT_W[pair % SHIRT_W.length] : SUIT_C[pair % SUIT_C.length], isWorker ? 0x3a3d45 : SUIT_C[pair % SUIT_C.length]);
     const rb = new THREE.MeshStandardMaterial({ color: 0xaab4c4, roughness: 0.16, metalness: 0.96, envMap: envTex, envMapIntensity: 3.6, vertexColors: true }); rb.emissive = new THREE.Color(0); dissolve(rb, u, true);
@@ -455,16 +458,16 @@ const hands = [];
       const v = PV[j % PV.length];
       hg.add(new THREE.Mesh(v.h, pl));
       if (isWorker) { hg.add(new THREE.Mesh(v.r, rb)); if (v.gl) { glow = new THREE.Mesh(v.gl, new THREE.MeshBasicMaterial({ color: new THREE.Color(0x8fe4ff).multiplyScalar(3), toneMapped: false, transparent: true, opacity: 0 })); fx(glow); hg.add(glow); } }
-      hg.scale.setScalar(1.3); hg.position.set(x, -2.1, z);
-      hg.rotation.set(0, isWorker ? Math.PI / 2 - 0.32 : -Math.PI / 2 + 0.32, 0);   // 線をはさんで向かい合う（少しカメラ側へ開く）
+      hg.scale.setScalar(1.3); hg.position.copy(base);
+      const faceR = Math.atan2(r1.x, r1.z); hg.rotation.set(0, isWorker ? faceR - 0.42 : faceR + Math.PI + 0.42, 0);   // 向かい合い、少しカメラ側へ開く
     }
     group.add(hg);
     const fl = mkGlow(1.8, 0x9fe6ff, 0); fl.position.set(x, hg.position.y + 1.55 * 1.3, z); scene.add(fl);
-    hands.push({ u, j, pair, isWorker, g: hg, baseY: hg.position.y, baseRY: hg.rotation.y, ph: rnd() * 6, flash: fl, lit: false, glow });
+    hands.push({ u, j, pair, isWorker, g: hg, base: base.clone(), toward: r1.clone().multiplyScalar(-side), baseY: hg.position.y, baseRY: hg.rotation.y, ph: rnd() * 6, flash: fl, lit: false, glow });
   }
   // 人の肌と服が見えるだけの、あたたかい明かり（場面1のあたりだけに届く）
-  const warm = new THREE.PointLight(0xffc9a0, 70, 40, 1.5); warm.position.set(8.8, 2.8, -66); scene.add(warm);
-  const warm2 = new THREE.PointLight(0xffd6b0, 40, 30, 1.6); warm2.position.set(9.5, 1.5, -80); scene.add(warm2);
+  const warm = new THREE.PointLight(0xffc9a0, 60, 30, 1.5); warm.position.copy(eye1).addScaledVector(f1, 6).addScaledVector(r1, 1.5).setY(3.2); scene.add(warm);
+  const warm2 = new THREE.PointLight(0xffd6b0, 34, 26, 1.6); warm2.position.copy(eye1).addScaledVector(f1, 12).addScaledVector(r1, -4).setY(2.4); scene.add(warm2);
 }
 
 
@@ -509,7 +512,7 @@ const talk1 = (() => {
       const useAI = ai.length && (human.length === 0 || Math.random() < robot * 0.9 + 0.1);
       if (useAI) {
         const p = pick(ai);
-        say(pick(AI), Math.max(0.05, 0.35 - robot * 0.3), 0.9, lv * 0.55, 1 + p);   // 低く平板・小さく（ボソボソ）
+        say(pick(AI), 0.85, 1.02, lv * 0.6, 1 + p);   // 普通の機械音声（低く沈めない）
         next = t + 0.6 + Math.random() * 0.8;
       } else if (human.length) {
         const out = SND.out(); if (!out) return;
@@ -615,7 +618,8 @@ const tvs = { list: [], parts: [], scrU: null };
   push(T[3].clone(), dW * 0.24 / tvW, wq.clone(), true);
   // 番組を流すテレビ：主役＋4台を無造作に（So 11/24「5台ぐらい、それぞれ違う番組」）
   // はっきり見える2台（主役と同じ奥行き）・すぐ手前でぼける1台・奥でぼける1台（So 11/24「無造作感」）
-  const SHOWN = [[0.27, 0.13, 4.2, 0.24, -0.45, -0.08], [-0.34, -0.34, -1.0, 0.21, 0.35, 0.05], [0.52, -0.5, 6.0, 0.2, -0.7, -0.2], [-0.2, 0.24, -16, 0.22, 0.3, 0.15]];
+  const SHOWN = [[0.27, 0.13, 4.2, 0.24, -0.45, -0.08], [-0.34, -0.34, -1.0, 0.21, 0.35, 0.05], [0.52, -0.5, 6.0, 0.2, -0.7, -0.2], [-0.2, 0.24, -16, 0.22, 0.3, 0.15],
+    [-0.62, 0.3, -6, 0.17, 0.55, 0.16], [0.66, 0.02, -9, 0.16, -0.65, -0.1]];   // 番組を流す台を増やして無造作に（So 11/24）
   for (const [x, y, z, w, ry, rz] of SHOWN) {
     const p = T[3].clone().addScaledVector(R, x * dW * (SP ? 0.7 : 1)).addScaledVector(Up, y * dW).addScaledVector(N, z);
     push(p, w * dW / tvW, wq.clone().multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(rr(-.12, .12), ry, rz))), false);
@@ -623,9 +627,9 @@ const tvs = { list: [], parts: [], scrU: null };
   }
   tvs.list[0].show = true;
   // 奥にまばらに散る砂嵐のテレビ（奥行きのため）
-  const cnt = SP ? 12 : 18; let tries = 0;
-  while (tvs.list.length < cnt + 5 && tries++ < 5000) {
-    const z = rr(-36, -16);                                 // 正面のテレビの面からの奥行き（＋が手前）
+  const cnt = SP ? 20 : 34; let tries = 0;
+  while (tvs.list.length < cnt + 7 && tries++ < 6000) {
+    const z = rr(-34, -5);                                 // 正面のテレビの面からの奥行き（＋が手前）
     const spread = 7 + Math.max(0, -z) * 0.75;
     const x = rr(-spread, spread) * 1.25, y = rr(-spread, spread) * 0.72;
     if (z > -4 && Math.abs(x) < dW * 0.6 && Math.abs(y) < dW * 0.42) continue;   // 主役の前をふさがない
@@ -1243,7 +1247,7 @@ function camS(P) {
   return Math.min(s, 6);
 }
 const tmpV = new THREE.Vector3(), look = new THREE.Vector3(), lookS = new THREE.Vector3().copy(T[0]);
-const sideOf = [0, 0.75, -1, 1, -1, -1, -1, 0];
+const sideOf = [0, 0.4, -1, 1, -1, -1, -1, 0];
 const pcOffY = [0, 0.11, 0, 0, 0, 0.04, 0, 0];   // PC で絵を上へ寄せる量（画面の高さに対する割合）
 const spOff = [0, .12, -.04, .12, .1, .12, .14, 0];
 const DAWN_POS = V(0, 10.6, -468);
@@ -1350,11 +1354,11 @@ function frame() {
   const on1 = Math.abs(Ps - 1.55) < 0.45;
   if (on1 && h1T0 < 0) h1T0 = t;
   const e1 = h1T0 < 0 ? 0 : t - h1T0;
-  const NP = SP ? 4 : 7;
+  const NP = SP ? 3 : 4;
   let nConv = 0;
   hands.forEach((h) => {
     const order = NP - 1 - h.pair;                                     // 0＝一番奥の組
-    const at = 4 + order * 2.3;                                        // 4秒は皆で話し、そこから2.3秒ごとに1組
+    const at = 2.5 + order * 1.1;                                      // 2.5秒は皆で話し、そこから約1秒ごとに1組
     if (h.isWorker && h1T0 >= 0 && e1 >= at && h.u.value < 0.5 && !h.lit) { h.lit = true; h.fl = t; h.cT = t; SND.swap(order / 7); }
     if (h.isWorker) h.u.value += ((h.lit ? 1 : 0) - h.u.value) * (h.lit ? 0.2 : 0.05);
     if (h.isWorker && h.lit) nConv++;
@@ -1370,7 +1374,7 @@ function frame() {
     h.g.rotation.y = h.baseRY + live * (Math.sin(t * 1.3 + h.ph) * 0.16 + Math.sin(t * 3.1 + h.ph * 2) * 0.04)
       + (ai ? (Math.sin(t * 0.8 + h.ph) > 0.985 ? 0.12 : 0) : 0);
     h.g.rotation.z = live * (lg * 0.1 + Math.sin(t * 2.2 + h.ph) * 0.03) + (h.isWorker ? 0 : (1 - live) * (since > 0 ? -0.06 : 0));
-    h.g.position.x = (6 + (h.isWorker ? -1.05 : 1.05)) + dir * live * (0.1 + 0.08 * Math.sin(t * 1.7 + h.ph));
+    h.g.position.copy(h.base).addScaledVector(h.toward, live * (0.1 + 0.08 * Math.sin(t * 1.7 + h.ph)));
     h.g.position.y = h.baseY + live * (Math.abs(Math.sin(t * 3.4 + h.ph)) * 0.035 + lg * 0.09);
     const fe = (t - (h.fl ?? -9)) / 0.7;
     h.flash.material.opacity = fe < 1 ? (fe < 0.25 ? fe / 0.25 : 1 - (fe - 0.25) / 0.75) * 0.9 : 0;
@@ -1379,7 +1383,7 @@ function frame() {
     h.mode = ai ? 'ai' : (live > 0.3 ? 'human' : 'quiet');
   });
   const lv1 = vis1 ? 1 - sstep(0.25, 0.7, Math.abs(Ps - 1.55)) : 0;
-  SND.people(hands.map((h) => ({ mode: h.mode === "human" ? "human" : h.mode })), lv1 * 0.22);   // わちゃわちゃの下地（小さめ）
+  // 合成のざわめきはやめた（不気味すぎるため・So 11/24）
   talk1.update(t, lv1, hands, nConv / NP);                                                       // 言葉の会話
   h1vp.material.opacity = 0;
   // 場面2：枝が伸びる

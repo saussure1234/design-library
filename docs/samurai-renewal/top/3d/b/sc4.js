@@ -119,8 +119,9 @@ export function createScene4({ THREE, scene, center, camera, quality = 'pc', roo
   const css = document.createElement('style');
   css.textContent = `
 .s4{position:absolute;inset:0;pointer-events:none}
-.s4-q{position:absolute;left:50%;top:${SP ? 36 : 40}%;width:min(88vw,15.5em);font-size:${SP ? '24px' : 'clamp(24px,2.5vw,38px)'};transform:translate(-50%,-50%);text-align:center;pointer-events:none}
+.s4-q{position:absolute;left:50%;top:${SP ? 36 : 40}%;width:max-content;max-width:96vw;font-size:${SP ? '17px' : 'clamp(24px,2.4vw,36px)'};transform:translate(-50%,-50%);text-align:center;pointer-events:none}
 .s4-q::before{content:"";position:absolute;inset:-50px -70px;background:radial-gradient(closest-side,rgba(0,0,0,.6),rgba(0,0,0,0));z-index:-1}
+.s4-q .ln{display:block;white-space:nowrap}
 .s4-q .t{margin:0;font-weight:500;line-height:1.75;letter-spacing:.05em;color:rgba(238,240,244,.95)}
 .s4-q .nb{white-space:nowrap}
 .s4-q em{font-style:normal}
@@ -138,14 +139,15 @@ export function createScene4({ THREE, scene, center, camera, quality = 'pc', roo
 @keyframes s4nzv{0%{font-variation-settings:"wdth" 25,"wght" 900,"slnt" 0,"opsz" 144}25%{font-variation-settings:"wdth" 140,"wght" 140,"slnt" -10,"opsz" 144}50%{font-variation-settings:"wdth" 60,"wght" 1000,"slnt" -4,"opsz" 144}75%{font-variation-settings:"wdth" 120,"wght" 300,"slnt" -10,"opsz" 144}100%{font-variation-settings:"wdth" 25,"wght" 900,"slnt" 0,"opsz" 144}}
 @media (prefers-reduced-motion:reduce){.s4-q .nz i{animation:none}}
 .s4-btn{position:absolute;left:0;top:0;display:grid;place-items:center;width:84px;height:84px;margin:-42px 0 0 -42px;padding:0;border:0;border-radius:50%;background:none;cursor:pointer;color:#fff;pointer-events:auto;-webkit-tap-highlight-color:transparent;transition:opacity .5s}
-.s4-btn .rg{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(255,255,255,.3);transition:transform .5s cubic-bezier(.2,.8,.2,1),border-color .4s,opacity .4s}
+.s4-btn .rg{position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(255,255,255,.6);transition:transform .5s cubic-bezier(.2,.8,.2,1),border-color .4s,opacity .4s}
 .s4-btn .rg2{position:absolute;inset:-14px;border-radius:50%;border:1px solid rgba(255,90,36,0);animation:s4breathe 2.6s ease-in-out infinite}
 @keyframes s4breathe{0%,100%{transform:scale(.92);border-color:rgba(255,90,36,0)}50%{transform:scale(1.04);border-color:rgba(255,90,36,.35)}}
-.s4-btn .dt{width:9px;height:9px;border-radius:50%;background:#ff5a24;box-shadow:0 0 14px 3px rgba(255,90,36,.75);transition:transform .35s}
-.s4-btn .lb{position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:16px;white-space:nowrap;font:500 11px/1 "Space Grotesk","JetBrains Mono",system-ui,sans-serif;letter-spacing:.32em;padding-left:.32em;color:rgba(255,255,255,.8);transition:color .3s,opacity .3s}
+.s4-btn .dt{width:13px;height:13px;border-radius:50%;background:#ff5a24;box-shadow:0 0 14px 3px rgba(255,90,36,.75);transition:transform .35s}
+.s4-btn .lb{position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:18px;white-space:nowrap;font:600 15px/1 "Space Grotesk","JetBrains Mono",system-ui,sans-serif;letter-spacing:.34em;padding:13px 22px 13px calc(22px + .34em);border:1px solid rgba(255,255,255,.75);border-radius:999px;background:rgba(255,90,36,.14);color:#fff;box-shadow:0 0 22px rgba(255,90,36,.35);animation:s4lb 2.2s ease-in-out infinite;transition:color .3s,opacity .3s,background .3s,border-color .3s}
+@keyframes s4lb{0%,100%{box-shadow:0 0 14px rgba(255,90,36,.25)}50%{box-shadow:0 0 30px rgba(255,90,36,.6)}}
 .s4-btn:hover .rg,.s4-btn.hov .rg,.s4-btn:focus-visible .rg{transform:scale(.62);border-color:rgba(255,90,36,.85)}
 .s4-btn:hover .dt,.s4-btn.hov .dt{transform:scale(1.5)}
-.s4-btn:hover .lb,.s4-btn.hov .lb{color:#fff}
+.s4-btn:hover .lb,.s4-btn.hov .lb{background:#ff5a24;border-color:#ff5a24}
 .s4-btn:focus{outline:none}.s4-btn:focus-visible .rg2{border-color:rgba(255,255,255,.5)}
 .s4.pressed .s4-btn{pointer-events:none}
 .s4.pressed .s4-btn .rg{transform:scale(.08);opacity:0;transition-duration:1.1s}
@@ -155,7 +157,7 @@ export function createScene4({ THREE, scene, center, camera, quality = 'pc', roo
 `;
   document.head.appendChild(css);
   const box = document.createElement('div'); box.className = 's4';
-  box.innerHTML = '<div class="s4-q"><p class="t"><span class="nb">では、</span><wbr><span class="nb"><em class="sig">Signal</em>と</span><wbr><span class="nb"><em class="nz"><i>N</i><i>o</i><i>i</i><i>s</i><i>e</i></em>を</span><wbr><span class="nb">見極める要素は</span><wbr><span class="nb">どこに</span><wbr><span class="nb">存在するのでしょうか。</span></p></div>'
+  box.innerHTML = '<div class="s4-q"><p class="t"><span class="ln">では、<em class="sig">Signal</em>と<em class="nz"><i>N</i><i>o</i><i>i</i><i>s</i><i>e</i></em>を見極める要素は</span><span class="ln">どこに存在するのでしょうか。</span></p></div>'
     + '<button class="s4-btn" type="button" aria-label="PRESS（次の場面へ進む）"><span class="rg2"></span><span class="rg"></span><span class="dt"></span><span class="lb">PRESS</span></button>';
   root.appendChild(box);
   const qEl = box.querySelector('.s4-q'), btn = box.querySelector('.s4-btn'), dot = btn.querySelector('.dt');

@@ -234,9 +234,9 @@ export const SND = (() => {
       hiss.g.gain.setTargetAtTime(0.05 * st.tv, t, 0.3);
       sigG.gain.setTargetAtTime(0.018 * (1 - st.noise) * st.fv, t, 0.4);
       padF.frequency.setTargetAtTime(mood.f + 1400 * st.dawn, t, 0.8);
-      music.gain.setTargetAtTime(0.9 - 0.78 * st.day, t, 0.8);   // 紙の節では宇宙の音を下げる
+      music.gain.setTargetAtTime(0.9 - 0.8 * st.day, t, 0.8);   // 紙の節では宇宙の音楽を小さく（自然の音はやめた・So 11/24）
       // 紙の節（特徴から下）：地球の音＝風・小川・ときどき鳥（かすかに）
-      if (st.day > 0.02 && !nature) {
+      if (false && st.day > 0.02 && !nature) {
         nature = ctx.createGain(); nature.gain.value = 0; nature.connect(master);
         const wnd = loopNoise(0.5, 'lowpass', 420, 0.4); wnd.g.connect(nature);
         const wl = ctx.createOscillator(), wg = ctx.createGain(); wl.frequency.value = 0.08; wg.gain.value = 0.35; wl.connect(wg); wg.connect(wnd.g.gain); wl.start();
@@ -246,7 +246,7 @@ export const SND = (() => {
         const bl = ctx.createOscillator(), bg = ctx.createGain(); bl.type = 'triangle'; bl.frequency.value = 7.3; bg.gain.value = 0.08; bl.connect(bg); bg.connect(brk.g.gain); bl.start();
         const bl2 = ctx.createOscillator(), bg2 = ctx.createGain(); bl2.frequency.value = 0.9; bg2.gain.value = 900; bl2.connect(bg2); bg2.connect(brk.fl.frequency); bl2.start();
       }
-      if (nature) {
+      if (false && nature) {
         nature.gain.setTargetAtTime(0.34 * st.day, t, 1.2);   // 森の音（風・葉ずれ・小川・鳥）
         if (st.day > 0.5 && t > nextBird) { nextBird = t + 1.8 + Math.random() * 5; bird(); }
       }
