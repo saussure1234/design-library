@@ -241,12 +241,14 @@ export const SND = (() => {
         const wnd = loopNoise(0.5, 'lowpass', 420, 0.4); wnd.g.connect(nature);
         const wl = ctx.createOscillator(), wg = ctx.createGain(); wl.frequency.value = 0.08; wg.gain.value = 0.35; wl.connect(wg); wg.connect(wnd.g.gain); wl.start();
         const brk = loopNoise(0.18, 'bandpass', 2400, 1.6); brk.g.connect(nature);
+        const lv = loopNoise(0.0, 'highpass', 5200, 0.7); lv.g.connect(nature);   // 葉ずれ：風に合わせてざわめく
+        const ll = ctx.createOscillator(), lg2 = ctx.createGain(); ll.frequency.value = 0.13; lg2.gain.value = 0.16; ll.connect(lg2); lg2.connect(lv.g.gain); ll.start();
         const bl = ctx.createOscillator(), bg = ctx.createGain(); bl.type = 'triangle'; bl.frequency.value = 7.3; bg.gain.value = 0.08; bl.connect(bg); bg.connect(brk.g.gain); bl.start();
         const bl2 = ctx.createOscillator(), bg2 = ctx.createGain(); bl2.frequency.value = 0.9; bg2.gain.value = 900; bl2.connect(bg2); bg2.connect(brk.fl.frequency); bl2.start();
       }
       if (nature) {
-        nature.gain.setTargetAtTime(0.11 * st.day, t, 1.2);
-        if (st.day > 0.5 && t > nextBird) { nextBird = t + 3 + Math.random() * 7; bird(); }
+        nature.gain.setTargetAtTime(0.34 * st.day, t, 1.2);   // 森の音（風・葉ずれ・小川・鳥）
+        if (st.day > 0.5 && t > nextBird) { nextBird = t + 1.8 + Math.random() * 5; bird(); }
       }
       // ときどき鳴る小さな音（和音の上の五音音階）
       // 刻み：鼓動と分散和音（少し先まで予約）

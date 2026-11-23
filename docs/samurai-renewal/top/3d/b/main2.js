@@ -471,8 +471,20 @@ const hands = [];
 // 場面1の会話（ブラウザの読み上げ）。音オンの時だけ。人の台詞は仲良く、AI の台詞は平板に
 const talk1 = (() => {
   const S = window.speechSynthesis; if (!S) return { update() {}, stop() {} };
-  const HW = ['この前の件、どうでした？', 'なるほど、そこが気になってたんですね', '一回、現場を見に行ってもいいですか', 'それ、いいですね。やってみましょう', 'お客さんの声、もう少し聞いてみたいです', 'じゃあ来週、また話しましょう'];
-  const HC = ['実はまだ迷ってて', '続けられるかどうかが心配なんです', 'ありがとうございます、助かります', 'うちの強みって何だと思います？', 'ははは、たしかに', 'それ、社内でも話してみます'];
+  // 人の声は録音（audio/talk/w1〜6＝作り手、c1〜6＝クライアント）。AI の声は読み上げの平板な声のまま
+  const CLIPS = { w: ['w1', 'w2', 'w3', 'w4', 'w5', 'w6'], c: ['c1', 'c2', 'c3', 'c4', 'c5', 'c6'] }, BUF = {};
+  let loading = false;
+  async function loadClips(ac) {
+    if (loading) return; loading = true;
+    await Promise.all([...CLIPS.w, ...CLIPS.c].map(async (n) => { try { const r = await fetch(`audio/talk/${n}.mp3`); BUF[n] = await ac.decodeAudioData(await r.arrayBuffer()); } catch (e) { /* 読めない時は鳴らさない */ } }));
+  }
+  function playClip(out, name, gain, pan) {
+    const b = BUF[name]; if (!b) return 0;
+    const ac = out.ctx, src = ac.createBufferSource(), g = ac.createGain(), p = ac.createStereoPanner ? ac.createStereoPanner() : null;
+    src.buffer = b; g.gain.value = gain;
+    src.connect(g); if (p) { p.pan.value = pan; g.connect(p); p.connect(out.music); } else g.connect(out.music);
+    src.start(); return b.duration;
+  }
   const AI = ['最適な回答を生成しました', '推奨案を提示します', '処理を続行します', '入力を確認しました', '問題は検出されませんでした', '次の手順に進みます', '感情は考慮対象外です'];
   let voices = [], busy = false, next = 0, lastPair = -1;
   const load = () => { voices = S.getVoices().filter((v) => /^ja/i.test(v.lang)); };
@@ -499,10 +511,12 @@ const talk1 = (() => {
         say(pick(AI), Math.max(0.05, 0.35 - robot * 0.3), 0.9, lv * 0.55, 1 + p);   // 低く平板・小さく（ボソボソ）
         next = t + 0.6 + Math.random() * 0.8;
       } else if (human.length) {
+        const out = SND.out(); if (!out) return;
+        if (!loading) loadClips(out.ctx);
         let p = pick(human); if (p === lastPair && human.length > 1) p = pick(human); lastPair = p;
         const worker = Math.random() < 0.5;
-        say(pick(worker ? HW : HC), (worker ? 1.15 : 0.9) * (1 - robot * 0.5) + Math.random() * 0.15, 1.05 + Math.random() * 0.15 - robot * 0.1, lv * 0.85, worker ? p : p + 3);
-        next = t + 0.15 + Math.random() * 0.5;
+        const dur = playClip(out, pick(worker ? CLIPS.w : CLIPS.c), 1.6 * lv, worker ? -0.3 : 0.3);
+        next = t + (dur || 0.5) + 0.1 + Math.random() * 0.45;
       }
     },
   };
@@ -546,10 +560,10 @@ let fGrowT = 0;
       void main(){ vO=aOrd; vH=aHi; vec4 mv=modelViewMatrix*vec4(position,1.); vD=-mv.z; gl_Position=projectionMatrix*mv; }`,
     fragmentShader: `varying float vO; varying float vH; varying float vD; uniform float uGrow, uTime, uVis; ${fogGLSL}
       void main(){ if(vO>uGrow) discard;
-        float tip=smoothstep(uGrow-.12,uGrow,vO);
+        float tip=smoothstep(uGrow-.05,uGrow,vO);
         float pulse=pow(max(0.,sin(vO*34.-uTime*3.)),18.);
         vec3 c=mix(vec3(.40,.52,.74),vec3(.86,.92,1.),vH);
-        float a=(.30+.45*(1.-vO))*(1.+tip*2.2+pulse*1.6)*(.65+vH*1.2)*.85;
+        float a=(.30+.45*(1.-vO))*(1.+tip*4.5+pulse*1.6)*(.65+vH*1.2)*.85;
         gl_FragColor=vec4(c*a*(1.-fogF(vD))*uVis,1.); }`,
   });
   const ls = new THREE.LineSegments(g, m); ls.frustumCulled = false; scene.add(fx(ls));
@@ -600,7 +614,7 @@ const tvs = { list: [], parts: [], scrU: null };
   push(T[3].clone(), dW * 0.24 / tvW, wq.clone(), true);
   // 番組を流すテレビ：主役＋4台を無造作に（So 11/24「5台ぐらい、それぞれ違う番組」）
   // はっきり見える2台（主役と同じ奥行き）・すぐ手前でぼける1台・奥でぼける1台（So 11/24「無造作感」）
-  const SHOWN = [[0.33, 0.27, -0.8, 0.21, -0.3, -0.06], [-0.34, -0.34, -1.0, 0.21, 0.35, 0.05], [0.52, -0.5, 6.0, 0.2, -0.7, -0.2], [-0.2, 0.24, -16, 0.22, 0.3, 0.15]];
+  const SHOWN = [[0.27, 0.13, 4.2, 0.24, -0.45, -0.08], [-0.34, -0.34, -1.0, 0.21, 0.35, 0.05], [0.52, -0.5, 6.0, 0.2, -0.7, -0.2], [-0.2, 0.24, -16, 0.22, 0.3, 0.15]];
   for (const [x, y, z, w, ry, rz] of SHOWN) {
     const p = T[3].clone().addScaledVector(R, x * dW * (SP ? 0.7 : 1)).addScaledVector(Up, y * dW).addScaledVector(N, z);
     push(p, w * dW / tvW, wq.clone().multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(rr(-.12, .12), ry, rz))), false);
@@ -1057,17 +1071,17 @@ function snapDir(dir) {
   const p = P;
   if (dir > 0) {
     if (p < STOPS[0] - 0.02) return false;               // FV の文字がそろうまでは普通にスクロール
-    if (p >= STOPS[STOPS.length - 1] - 0.02) { if (p < 7) { snapTo(7.02); return true; } return false; }
+    if (p >= STOPS[STOPS.length - 1] - 0.02) { if (p < 6.95) { snapTo(7.14); return true; } return false; }
     const nx = STOPS.find((q) => q > p + 0.03); snapTo(nx); return true;
   } else {
     if (p <= STOPS[0] + 0.03) return false;
-    if (p > 7.05) return false;                           // 夜明け以降は普通に戻る
+    if (p > 6.95) return false;                           // 夜明け以降は普通に戻る
     const pv = [...STOPS].reverse().find((q) => q < p - 0.03); snapTo(pv ?? 0); return true;
   }
 }
 addEventListener('wheel', (e) => {
   if (!gateDone) return;
-  const inStory = P > STOPS[0] - 0.02 && P < 7.05;
+  const inStory = P > STOPS[0] - 0.02 && P < 6.95;
   if (!inStory && !snapBusy) return;
   e.preventDefault();
   const now = performance.now();
@@ -1077,15 +1091,15 @@ addEventListener('wheel', (e) => {
 }, { passive: false });
 let tY = null;
 addEventListener('touchstart', (e) => { tY = e.touches[0].clientY; }, { passive: true });
-addEventListener('touchmove', (e) => { if (gateDone && (snapBusy || (P > STOPS[0] - 0.02 && P < 7.05))) e.preventDefault(); }, { passive: false });
+addEventListener('touchmove', (e) => { if (gateDone && (snapBusy || (P > STOPS[0] - 0.02 && P < 6.95))) e.preventDefault(); }, { passive: false });
 addEventListener('touchend', (e) => {
   if (tY == null || snapBusy) return; const dy = tY - (e.changedTouches[0]?.clientY ?? tY); tY = null;
-  if (P > STOPS[0] - 0.02 && P < 7.05 && Math.abs(dy) > 30) snapDir(Math.sign(dy));
+  if (P > STOPS[0] - 0.02 && P < 6.95 && Math.abs(dy) > 30) snapDir(Math.sign(dy));
 }, { passive: true });
 addEventListener('keydown', (e) => {
   if (!gateDone || snapBusy && /Arrow|Page|Space/.test(e.code)) { if (snapBusy) e.preventDefault(); return; }
   const d = ['ArrowDown', 'PageDown', 'Space'].includes(e.code) ? 1 : ['ArrowUp', 'PageUp'].includes(e.code) ? -1 : 0;
-  if (d && P > STOPS[0] - 0.02 && P < 7.05 && snapDir(d)) e.preventDefault();
+  if (d && P > STOPS[0] - 0.02 && P < 6.95 && snapDir(d)) e.preventDefault();
 });
 // ---------- STORY をスキップ ----------
 const skip3 = document.getElementById('skip3');
@@ -1225,7 +1239,8 @@ function camS(P) {
   return Math.min(s, 6);
 }
 const tmpV = new THREE.Vector3(), look = new THREE.Vector3(), lookS = new THREE.Vector3().copy(T[0]);
-const sideOf = [0, 0.4, -1, 1, -1, -1, -1, 0];   // 場面1は中央寄り（So 11/24）
+const sideOf = [0, 0.75, -1, 1, -1, -1, -1, 0];
+const pcOffY = [0, 0.11, 0, 0, 0, 0.04, 0, 0];   // PC で絵を上へ寄せる量（画面の高さに対する割合）
 const spOff = [0, .12, -.04, .12, .1, .12, .14, 0];
 const DAWN_POS = V(0, 10.6, -468);
 let viewShift = 0;
@@ -1279,7 +1294,7 @@ function frame() {
   const hidden = Ps > 7.8;
   canvas.style.visibility = hidden ? 'hidden' : 'visible';
   hud.style.opacity = 1 - sstep(0.05, 0.5, dawn);
-  if (hidden) { SND.update({ noise: 0, travel: 0, vel: 0, dawn: 1, fv: 0, day: 1, tv: 0 }); return; }
+  if (hidden) { SND.update({ noise: 0, travel: 0, vel: 0, dawn: 1, fv: 0, day: 1, tv: 0 }); shows.forEach((sh) => sh.show.setLevel(0)); talk1.stop(); SND.people(hands.map(() => ({ mode: 'quiet' })), 0); if (sc5) sc5.audio(SND.out(), 0); return; }
 
   // カメラ
   const s = camS(Ps); const sf = s - Math.floor(s); const travel = Math.sin(Math.PI * clamp(sf)) * (s < 6 ? 1 : 0);
@@ -1299,7 +1314,7 @@ function frame() {
   const sideT = (innerWidth < 820) ? 0 : sideOf[k] * (1 - travel) * sstep(0.1, 0.4, x) * (1 - dawn);
   viewShift += (sideT - viewShift) * 0.06;
   if (innerWidth < 820) camera.setViewOffset(innerWidth, innerHeight, 0, innerHeight * spOff[k] * (1 - travel) * (1 - dawn), innerWidth, innerHeight);
-  else camera.setViewOffset(innerWidth, innerHeight, viewShift * innerWidth * 0.15, 0, innerWidth, innerHeight);
+  else camera.setViewOffset(innerWidth, innerHeight, viewShift * innerWidth * 0.15, innerHeight * pcOffY[k] * (1 - travel) * (1 - dawn), innerWidth, innerHeight);
   U.camPos.value.copy(camera.position);
 
   // 場面の切り替え＝壊して繋ぐ（短く・強く）
@@ -1357,12 +1372,12 @@ function frame() {
     h.mode = ai ? 'ai' : (live > 0.3 ? 'human' : 'quiet');
   });
   const lv1 = vis1 ? 1 - sstep(0.25, 0.7, Math.abs(Ps - 1.55)) : 0;
-  SND.people(hands.map((h) => ({ mode: h.mode === 'human' ? 'human' : h.mode })), lv1 * 0.45);   // わちゃわちゃの下地（小さめ）
+  SND.people(hands.map((h) => ({ mode: h.mode === "human" ? "human" : h.mode })), lv1 * 0.22);   // わちゃわちゃの下地（小さめ）
   talk1.update(t, lv1, hands, nConv / NP);                                                       // 言葉の会話
   h1vp.material.opacity = 0;
   // 場面2：枝が伸びる
   { const in2 = Math.abs(Ps - 2) < 0.75; const base = sstep(-0.45, 0.4, Ps - 2) * 0.32;   // ×2.2 で初期の木（世代8/11≒0.7）まで
-    if (in2) fGrowT += dt / 80;                       // 着いた時は初期の木の大きさ、そこから約80秒で画面が埋まる
+    if (in2) fGrowT += dt / 48;                       // 着いた時は初期の木の大きさ、そこから約80秒で画面が埋まる
     forestU.uGrow.value = Math.min(1.02, base * 2.2 + fGrowT * 0.32) * (Ps > 1.2 ? 1 : 0); forestU.uVis.value = 1 - sstep(0.75, 1.05, Math.abs(Ps - 2.3)); }
   // 場面3：テレビ
   if (Math.abs(Ps - 3) < 1.6) updateTVs(t, Ps);
