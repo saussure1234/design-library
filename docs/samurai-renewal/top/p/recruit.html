@@ -9,6 +9,32 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..600&family=Roboto+Flex:opsz,slnt,wdth,wght@8..144,-10..0,25..151,100..1000&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+JP:wght@400;500;600&family=Noto+Serif+JP:wght@200..900&display=swap" rel="stylesheet">
 <style>
+/* ===== ヘッダー（トップの紙の節に入った時の版） ===== */
+.ghd{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:22px clamp(18px,3.4vw,52px);background:rgba(246,244,238,.84);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.ghd .logo img{height:26px;width:auto;display:block}
+.nav{margin-left:auto;display:flex;align-items:center;gap:26px;font:500 12px/1 "JetBrains Mono",ui-monospace,Menlo,monospace;letter-spacing:.08em;color:#151513}
+.nav a{opacity:.82;transition:opacity .2s}.nav a:hover{opacity:1}
+.nav .cta{padding:9px 14px;border:1px solid rgba(21,21,19,.4);border-radius:999px}
+.nav .lang{display:flex;gap:9px;color:#6f6d69}.nav .lang b{color:#151513;font-weight:500}
+.burger{display:none;background:none;border:0;width:36px;height:36px;position:relative;cursor:pointer}
+.burger i{position:absolute;left:8px;right:8px;height:1px;background:#151513}.burger i:first-child{top:14px}.burger i:last-child{top:21px}
+body.mopen .burger i{background:#fff}
+.gov{position:fixed;inset:0;z-index:19;background:#070b16;color:#fff;padding:120px 24px 40px;display:flex;flex-direction:column;gap:8px;font:500 40px/1.3 "Space Grotesk",system-ui,sans-serif;letter-spacing:-.03em;clip-path:circle(0 at calc(100% - 34px) 38px);transition:clip-path .7s cubic-bezier(.7,0,.2,1)}
+body.mopen .gov{clip-path:circle(150% at calc(100% - 34px) 38px)}
+body.mopen .ghd{background:transparent;-webkit-backdrop-filter:none;backdrop-filter:none}
+body.mopen .ghd .logo img{filter:brightness(0) invert(1)}
+.gov .lang{display:flex;gap:12px;margin-top:24px;font:400 13px/1 "JetBrains Mono",ui-monospace,Menlo,monospace;color:#8c93a3}.gov .lang b{color:#fff;font-weight:500}
+@media (max-width:820px){
+  .nav{display:none}.burger{display:block}
+  .ghd{padding:16px}
+  .ghd .logo img{height:22px}
+}
+.ghd .logo{display:block;flex:none}
+.ghd .rk{display:flex;align-items:center;height:26px;margin-left:14px;padding-left:14px;border-left:1px solid rgba(21,21,19,.28);font:500 12px/1 "JetBrains Mono",ui-monospace,Menlo,monospace;letter-spacing:.12em;color:#151513;margin-right:auto}
+body.mopen .ghd .rk{color:#fff;border-color:rgba(255,255,255,.35)}
+.ghd .nav,.ghd .nav a,.gov a{text-decoration:none}
+@media (max-width:820px){.ghd .rk{height:22px;margin-left:12px;padding-left:12px;font-size:11px}}
+
 :root{
   --pad:clamp(18px,3.4vw,52px);--m:48px;
   --ink:#151513;--ink2:#3a2e26;--cream:#efe8d8;--sig:#ef4519;--ember:#ff8a52;
@@ -42,38 +68,6 @@ figure{margin:0}
 [data-tone=cream]{color:var(--cream);--sub:rgba(239,232,216,.7);--ln:rgba(239,232,216,.22);--mk:rgba(239,232,216,.5)}
 
 /* ===== header（トップと同じ作り。色だけ空に合わせる） ===== */
-.hd{position:fixed;top:0;left:0;right:0;z-index:30;display:flex;align-items:center;justify-content:space-between;padding:16px var(--pad);font-family:"Inter Tight","Noto Sans JP",sans-serif;font-size:15px;font-weight:500;line-height:1.4;color:var(--ink);transition:background .4s,backdrop-filter .4s,color .4s}
-.hd.solid{background:rgba(246,238,226,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
-.logo{display:block;height:40px}
-.logo img{height:100%;width:auto;display:block;transition:filter .4s}
-.nav{display:flex;align-items:center;gap:6px}
-.nav a{padding:10px 14px;border-radius:99px;transition:background .3s}
-.nav a:hover,.nav a[aria-current]{background:rgba(13,13,13,.07)}
-.nav .cta{background:var(--ink);color:#fff;padding:12px 22px;margin-left:8px}
-.nav .cta:hover{background:#333}
-.lang{display:flex;gap:4px;margin-left:14px;padding:4px;border-radius:99px;background:rgba(13,13,13,.06);font-size:12px}
-.lang span{padding:6px 9px;border-radius:99px;color:#6f6d69}
-.lang b{padding:6px 9px;border-radius:99px;background:#fff;font-weight:600}
-.burger{display:none;width:52px;height:52px;border-radius:50%;border:0;background:var(--ink);cursor:pointer;position:relative}
-.burger i{position:absolute;left:16px;right:16px;height:2px;background:#fff;transition:transform .4s}
-.burger i:first-child{top:21px}.burger i:last-child{top:29px}
-body.mopen .burger i:first-child{transform:translateY(4px) rotate(45deg)}
-body.mopen .burger i:last-child{transform:translateY(-4px) rotate(-45deg)}
-.ov{position:fixed;inset:0;z-index:29;background:#0a1126;color:var(--cream);padding:120px 24px 40px;display:flex;flex-direction:column;gap:8px;font:500 40px/1.3 "Inter Tight",sans-serif;letter-spacing:-.03em;clip-path:circle(0 at calc(100% - 44px) 44px);transition:clip-path .7s cubic-bezier(.7,0,.2,1)}
-body.mopen .ov{clip-path:circle(150% at calc(100% - 44px) 44px)}
-.ov .lang{margin:24px 0 0;align-self:flex-start;background:rgba(255,255,255,.1);font-size:13px;letter-spacing:0}
-.ov .lang b{color:var(--ink)}
-body.mopen .hd{background:transparent;backdrop-filter:none}
-body.ondark .hd{color:#fff}
-body.ondark:not(.mopen) .hd .logo img,body.mopen .hd .logo img{filter:invert(1)}
-body.ondark .hd.solid{background:rgba(10,14,34,.45)}
-body.ondark .nav a:hover,body.ondark .nav a[aria-current]{background:rgba(255,255,255,.12)}
-body.ondark .nav .cta{background:#fff;color:var(--ink)}
-body.ondark .lang{background:rgba(255,255,255,.12)}
-body.ondark .lang span{color:rgba(255,255,255,.6)}
-body.ondark .lang b{background:#fff;color:var(--ink)}
-body.ondark:not(.mopen) .burger{background:#fff}
-body.ondark:not(.mopen) .burger i{background:var(--ink)}
 
 /* ===== FV：今の環境動画をそのまま全面に ===== */
 .fv{position:relative;height:100vh;height:100svh;min-height:560px;overflow:hidden;color:#fff8ee}
@@ -206,10 +200,6 @@ body.ondark:not(.mopen) .burger i{background:var(--ink)}
   .ab{max-width:none}
 }
 @media (max-width:820px){
-  .nav a:not(.cta),.nav .lang,.nav .cta{display:none}
-  .burger{display:block}
-  .hd{padding:12px 16px}
-  .logo{height:32px}
   .lbl{grid-template-columns:minmax(0,1fr) minmax(0,2fr) minmax(0,1fr)}
   .giant{margin-top:18px}
   .sec{padding-top:104px}
@@ -252,15 +242,15 @@ body.ondark:not(.mopen) .burger i{background:var(--ink)}
 
 </style>
 </head>
-<body class="ondark">
+<body>
 <div id="sky" aria-hidden="true"><i class="g"></i><canvas id="stars"></canvas><i class="grid"></i><i class="grain"></i></div>
 
-<header class="hd" id="hd">
-  <a class="logo" href="../c-3d-b2.html" aria-label="SAMURAI STYLE"><img src="../img/logo.svg" alt="SAMURAI STYLE"></a>
+<header class="ghd">
+  <a class="logo" href="../c-3d-b2.html" aria-label="SAMURAI STYLE"><img src="../img/logo.svg" alt="SAMURAI STYLE"></a><span class="rk">RECRUIT</span>
   <nav class="nav"><a href="../c-3d-b2.html">HOME</a><a href="service.html">SERVICE</a><a href="media.html">MEDIA</a><a href="company.html">COMPANY</a><a href="recruit.html" aria-current="page">RECRUIT</a><a class="cta" href="../c-3d-b2.html#contact">CONTACT</a><div class="lang"><span>ID</span><span>EN</span><b>JA</b></div></nav>
-  <button class="burger" aria-label="Menu"><i></i><i></i></button>
+  <button class="burger" type="button" aria-label="Menu" aria-expanded="false"><i></i><i></i></button>
 </header>
-<div class="ov"><a href="../c-3d-b2.html">HOME</a><a href="service.html">SERVICE</a><a href="media.html">MEDIA</a><a href="company.html">COMPANY</a><a href="recruit.html" aria-current="page">RECRUIT</a><a href="../c-3d-b2.html#contact">CONTACT</a><div class="lang"><span>ID</span><span>EN</span><b>JA</b></div></div>
+<div class="gov"><a href="../c-3d-b2.html">HOME</a><a href="service.html">SERVICE</a><a href="media.html">MEDIA</a><a href="company.html">COMPANY</a><a href="recruit.html">RECRUIT</a><a href="../c-3d-b2.html#contact">CONTACT</a><div class="lang"><span>ID</span><span>EN</span><b>JA</b></div></div>
 
 <main id="top">
 <section class="fv" data-sky="fv" data-tone="cream">
@@ -332,6 +322,9 @@ body.ondark:not(.mopen) .burger i{background:var(--ink)}
 </div></footer>
 <span id="meas" aria-hidden="true"></span>
 <script>
+(()=>{const bg=document.querySelector('.ghd .burger');
+if(bg){bg.addEventListener('click',()=>{const o=document.body.classList.toggle('mopen');bg.setAttribute('aria-expanded',o)});
+  document.querySelectorAll('.gov a').forEach(a=>a.addEventListener('click',()=>document.body.classList.remove('mopen')))}})();
 (() => {
 'use strict';
 const TAU=Math.PI*2, DPR=Math.min(2,window.devicePixelRatio||1);
@@ -341,10 +334,6 @@ const ease3=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
 const hex=h=>{h=h.replace('#','');return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]};
 const root=document.documentElement, body=document.body;
 
-/* メニュー */
-document.querySelector('.burger').addEventListener('click',()=>body.classList.toggle('mopen'));
-document.querySelectorAll('.ov a').forEach(a=>a.addEventListener('click',()=>body.classList.remove('mopen')));
-const hd=document.getElementById('hd');
 
 /* ===== FV：見出しを1字ずつ立ち上げる・動画は夕焼けの浜から ===== */
 const h1=document.querySelector('.fv-h');let ci=0;
@@ -393,10 +382,7 @@ function skyUpd(){const s=skyAt(scrollY+innerHeight*.55);
     root.style.setProperty('--ga',s[3].toFixed(3));
     const d=s[5];root.style.setProperty('--gl',`rgba(${Math.round(mix(21,239,d))},${Math.round(mix(21,232,d))},${Math.round(mix(19,216,d))},${mix(.05,.04,d).toFixed(3)})`)}
   starA=s[4];
-  /* ヘッダー：真下の節が夜側なら白 */
-  const y=scrollY+40;let tone='cream';for(const e of secs){const r=e.getBoundingClientRect();if(r.top<=40&&r.bottom>40){tone=e.dataset.tone;break}}
-  body.classList.toggle('ondark',tone==='cream');
-  hd.classList.toggle('solid',scrollY>innerHeight*.6)}
+}
 
 /* 星（夜になるほど見える） */
 const sc=document.getElementById('stars'),sx=sc.getContext('2d');let stars=[],sw=0,sh=0,starsDrawn=-1;
