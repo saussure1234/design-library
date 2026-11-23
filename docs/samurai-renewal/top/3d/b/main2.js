@@ -6,6 +6,7 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { SND } from './sound.js';
+import { createTVShow } from './tvshow.js';
 
 const root = document.documentElement;
 const ld = document.getElementById('ld'), ldt = document.getElementById('ldt');
@@ -593,8 +594,14 @@ const tvs = { list: [], parts: [], scrU: null };
     body.frustumCulled = scr.frustumCulled = gl.frustumCulled = false;
     scene.add(body, scr, gl);
     tvs.parts.push({ items, meshes: [body, scr, gl], aSt });
+    if (items.includes(tvs.list[0])) tvs.heroScr = vt.s;
   });
 }
+// 主役のテレビの画面：昔のカートゥーン調の番組を次々に流す（絵と音は tvshow.js）
+const tvShow = createTVShow({ width: 640, height: 480 });
+const tvTex = new THREE.CanvasTexture(tvShow.canvas); tvTex.colorSpace = THREE.SRGBColorSpace; tvTex.anisotropy = 4; tvTex.flipY = false;   // 画面の UV が上下逆なので戻す
+const tvShowMesh = new THREE.Mesh(tvs.heroScr, new THREE.MeshBasicMaterial({ map: tvTex, toneMapped: false, fog: false, polygonOffset: true, polygonOffsetFactor: -4, polygonOffsetUnits: -4 }));
+tvShowMesh.matrixAutoUpdate = false; tvShowMesh.frustumCulled = false; scene.add(tvShowMesh);
 const tmpQ = new THREE.Quaternion(), tmpM = new THREE.Matrix4(), tmpS = new THREE.Vector3(), tmpP = new THREE.Vector3();
 const TV_KINDS = [...Array(23).fill(0), 1, 1, 1, 1, 2, 2, 3, 3, 4, 5];
 const tvPick = () => TV_KINDS[(Math.random() * TV_KINDS.length) | 0];
@@ -611,6 +618,7 @@ function updateTVs(t, Ps = 3) {
       tmpP.copy(v.p).addScaledVector(v.out, o * v.outD); tmpP.y += Math.sin(t * 0.4 + v.ph) * (v.sp ? 0.25 : 0.03);
       tmpM.compose(tmpP, tmpQ, tmpS.setScalar(v.s));
       for (const m of part.meshes) m.setMatrixAt(v.k, tmpM);
+      if (v === tvs.list[0]) { tvShowMesh.matrix.copy(tmpM); tvShowMesh.matrixWorldNeedsUpdate = true; }
       if (doSt) {
         const s = v.st, hero = v === tvs.list[0];
         if (!hero && !s.tr && now > s.until && Math.random() < 0.03) { const nk = tvPick(); if (nk !== s.k) { s.tr = nk === 1 ? 1 : (s.k === 1 ? 2 : 3); s.trT = now; s.next = nk; } s.until = now + 1200 + Math.random() * 3800; }
@@ -1083,6 +1091,9 @@ function frame() {
   forestU.uGrow.value = sstep(-0.45, 0.62, Ps - 2) * 1.02;
   // 場面3：テレビ
   if (Math.abs(Ps - 3) < 1.6) updateTVs(t, Ps);
+  { const near3 = Math.abs(Ps - 3) < 1.2; tvShowMesh.visible = near3;
+    tvShow.setLevel(near3 ? 1 - sstep(0.35, 0.75, Math.abs(Ps - 3)) : 0);
+    if (near3) { tvShow.update(t, dt); tvTex.needsUpdate = true; } }
   tvs.scrU.uOn.value = 0.25 + 0.75 * sstep(-0.4, 0.3, Ps - 3);
   // 場面4：収束
   const conv = sstep(0.05, 0.72, Ps - 4);
