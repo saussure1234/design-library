@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>CONTACT 案3-4 見出しを製図する | サムライスタイル</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;700&family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+JP:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pad:clamp(18px,3.4vw,52px);--m:48px;
+  --paper:#f6f4ee;--card:#fbfaf6;--ink:#151513;--ink2:#3b3a36;--mute:#6f6d69;--line:#dcd8cd;--line2:#e9e5db;--sig:#ef4519;
+  --disp:"Space Grotesk",system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --jp:"IBM Plex Sans JP","Hiragino Sans",sans-serif;--rf:"Roboto Flex",system-ui,sans-serif;
+}
+@media (max-width:820px){:root{--m:18px}}
+*{box-sizing:border-box}
+html,body{margin:0}
+html{scroll-behavior:smooth;overflow-x:hidden;overflow-x:clip;background:var(--paper);-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--jp);font-size:16px;line-height:1.9;-webkit-font-smoothing:antialiased;overflow-x:hidden;overflow-x:clip;line-break:strict}
+a{color:inherit;text-decoration:none}
+img,video,canvas{display:block}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.wrap{padding:0 var(--m);position:relative}
+#meas{position:absolute;left:-9999px;top:0;visibility:hidden;white-space:nowrap;font-family:var(--rf);font-size:100px;line-height:1;pointer-events:none}
+
+/* header（top-v2 の紙の上の状態） */
+.hd{position:fixed;top:0;left:0;right:0;z-index:30;display:flex;align-items:center;justify-content:space-between;padding:16px var(--pad);font-family:"Inter Tight","Noto Sans JP",sans-serif;font-size:15px;font-weight:500;line-height:1.4;background:rgba(246,244,238,.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.logo{display:block;height:40px}
+.logo img{height:100%;width:auto;display:block}
+.nav{display:flex;align-items:center;gap:6px;margin-left:auto}
+.nav a{padding:10px 14px;border-radius:99px;transition:background .3s}
+.nav a:hover{background:rgba(13,13,13,.07)}
+.nav .cta{background:var(--ink);color:#fff;padding:12px 22px;margin-left:8px}
+.nav .cta:hover{background:#333}
+.lang{display:flex;gap:4px;margin-left:14px;padding:4px;border-radius:99px;background:rgba(13,13,13,.06);font-size:12px}
+.lang span{padding:6px 9px;border-radius:99px;color:var(--mute)}
+.lang b{padding:6px 9px;border-radius:99px;background:#fff;font-weight:600}
+.snd{display:flex;align-items:center;gap:8px;margin-left:24px;background:none;border:0;padding:8px 4px;color:var(--ink);font:500 11px/1 var(--mono);letter-spacing:.1em;cursor:pointer}
+.snd .eq{display:flex;align-items:flex-end;gap:2px;height:11px}
+.snd .eq i{width:2px;height:11px;background:currentColor;transform:scaleY(.22);transform-origin:bottom;transition:transform .3s}
+.snd.on .eq i{animation:eq .9s ease-in-out infinite alternate}
+.snd.on .eq i:nth-child(2){animation-delay:-.3s}.snd.on .eq i:nth-child(3){animation-delay:-.6s}.snd.on .eq i:nth-child(4){animation-delay:-.15s}
+@keyframes eq{0%{transform:scaleY(.2)}100%{transform:scaleY(1)}}
+.snd .st{min-width:3ch;text-align:left;opacity:.7}
+.burger{display:none;width:52px;height:52px;border-radius:50%;border:0;background:var(--ink);cursor:pointer;position:relative}
+.burger i{position:absolute;left:16px;right:16px;height:2px;background:#fff;transition:transform .4s}
+.burger i:first-child{top:21px}.burger i:last-child{top:29px}
+body.mopen .burger i:first-child{transform:translateY(4px) rotate(45deg)}
+body.mopen .burger i:last-child{transform:translateY(-4px) rotate(-45deg)}
+.ov{position:fixed;inset:0;z-index:29;background:var(--ink);color:#fff;padding:120px 24px 40px;display:flex;flex-direction:column;gap:8px;font:500 40px/1.3 "Inter Tight",sans-serif;letter-spacing:-.03em;clip-path:circle(0 at calc(100% - 44px) 44px);transition:clip-path .7s cubic-bezier(.7,0,.2,1)}
+body.mopen .ov{clip-path:circle(150% at calc(100% - 44px) 44px)}
+.ov .lang{margin:24px 0 0;align-self:flex-start;background:rgba(255,255,255,.1);font-size:13px;letter-spacing:0}
+.ov .lang b{color:var(--ink)}
+body.mopen .hd{background:transparent;backdrop-filter:none}
+body.mopen .hd .logo img{filter:invert(1)}
+body.mopen .snd{color:#fff}
+
+/* 節の見出し */
+.sec{padding:clamp(120px,18vh,180px) 0 0;position:relative}
+.sh{margin:0 0 clamp(48px,8vh,88px)}
+.lbl{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,4fr) minmax(0,1fr);gap:16px;border-top:1px solid currentColor;padding:10px 0 0;font:400 11.5px/1.5 var(--mono);letter-spacing:.08em}
+.lbl .end{text-align:right}
+.giant{display:block;margin:28px 0 0;font-family:var(--rf);font-weight:400;font-size:clamp(40px,6.6vw,96px);line-height:.86;letter-spacing:-.02em;white-space:nowrap;font-variation-settings:"wdth" 25,"wght" 100,"opsz" 144;padding-top:.02em}
+.pan{position:relative;background:var(--card);border:1px solid var(--line)}
+.pan>canvas{position:absolute;inset:0;width:100%;height:100%}
+.pan::before,.pan::after{content:"+";position:absolute;font:300 14px/1 var(--mono);color:var(--mute);pointer-events:none;z-index:2}
+.pan::before{left:-5px;top:-8px}
+.pan::after{right:-5px;bottom:-9px}
+
+/* CONTACT（top-v2 のまま） */
+#contact{padding-bottom:150px}
+.ct{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:64px;align-items:start}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:28px 28px;position:relative}
+.form>label,.form .full>label{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--mute)}
+.form .full{grid-column:1/-1}
+.form input[type=text],.form input[type=email],.form input[type=tel],.form textarea{font:400 16px/1.6 var(--jp);color:var(--ink);background:transparent;border:0;border-bottom:1px solid var(--line);padding:8px 0;border-radius:0;outline:none;transition:border-color .2s}
+.form input:focus,.form textarea:focus{border-color:var(--ink)}
+.form textarea{min-height:150px;resize:vertical;border:1px solid var(--line);padding:12px;background:var(--card)}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.opts label{position:relative;cursor:pointer}
+.opts input{position:absolute;opacity:0}
+.opts span{display:block;padding:11px 14px 11px 36px;border:1px solid var(--line);background:var(--card);font-size:14px;line-height:1.5;color:var(--ink);position:relative;transition:border-color .2s}
+.opts span::before{content:"";position:absolute;left:13px;top:50%;width:10px;height:10px;margin-top:-5px;border:1px solid var(--mute)}
+.opts input:checked+span{border-color:var(--ink)}
+.opts input:checked+span::before{background:var(--sig);border-color:var(--sig)}
+.opts input:focus-visible+span{outline:2px solid var(--sig);outline-offset:2px}
+.send{grid-column:1/-1;justify-self:start;display:inline-flex;gap:16px;align-items:center;font:500 15px/1 var(--jp);color:var(--card);background:var(--ink);border:0;padding:19px 34px;cursor:pointer;transition:background .4s}
+.send:hover{background:var(--sig)}
+.send span{font-family:var(--mono)}
+.note{grid-column:1/-1;margin:0;font-size:12px;line-height:1.9;color:var(--mute)}
+.note a{text-decoration:underline}
+
+@media (max-width:1080px){
+  .ct{grid-template-columns:1fr;gap:36px}
+}
+@media (max-width:820px){
+  .nav{display:none}
+  .burger{display:block}
+  .hd{padding:12px 16px}
+  .logo{height:32px}
+  .snd{margin-left:auto;margin-right:10px}
+  .snd .lb{display:none}
+  .lbl{grid-template-columns:minmax(0,1fr) minmax(0,2fr) minmax(0,1fr)}
+  .giant{margin-top:18px}
+  .sec{padding-top:110px}
+}
+@media (max-width:760px){
+  body{font-size:15px}
+  .sh{margin-bottom:44px}
+  .form{grid-template-columns:1fr;gap:22px}
+  .opts{grid-template-columns:1fr}
+  #contact{padding-bottom:100px}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+/* ===== この案 ===== */
+.ct{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.side{position:sticky;top:100px}
+.dr{position:relative;width:100%;aspect-ratio:1/.6}
+.dr canvas{position:absolute;inset:0;width:100%;height:100%}
+.send.rdy{background:var(--sig)}
+#contact .sh{margin-bottom:28px}
+@media (max-width:1080px){
+  .ct{grid-template-columns:minmax(0,1fr);gap:0}
+  .side{position:sticky;top:78px;z-index:5;margin:0 calc(var(--m)*-1) 30px;padding:6px var(--m) 4px;background:rgba(246,244,238,.95);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid var(--line2)}
+  .dr{aspect-ratio:1/.52}
+}
+@media (max-width:820px){.side{top:76px}}
+
+</style>
+</head>
+<body>
+<header class="hd" id="hd">
+  <a class="logo" href="#top" aria-label="SAMURAI STYLE"><img src="img/logo.svg" alt="SAMURAI STYLE"></a>
+  <nav class="nav"><a href="#top">HOME</a><a href="#service">SERVICE</a><a href="https://samurai-style.tokyo/media">MEDIA</a><a href="https://samurai-style.tokyo/company">COMPANY</a><a href="https://samurai-style.tokyo/recruit">RECRUIT</a><a class="cta" href="#contact">CONTACT</a><div class="lang"><span>ID</span><span>EN</span><b>JA</b></div></nav>
+  <button class="snd" id="snd" type="button" aria-pressed="false" aria-label="音のオン・オフ"><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="lb">SOUND</span><span class="st">OFF</span></button>
+  <button class="burger" aria-label="Menu"><i></i><i></i></button>
+</header>
+<div class="ov"><a href="#top">HOME</a><a href="#service">SERVICE</a><a href="https://samurai-style.tokyo/media">MEDIA</a><a href="https://samurai-style.tokyo/company">COMPANY</a><a href="https://samurai-style.tokyo/recruit">RECRUIT</a><a href="#contact">CONTACT</a><div class="lang"><span>ID</span><span>EN</span><b>JA</b></div></div>
+
+<main id="top">
+<!-- ===== CONTACT ===== -->
+<section class="sec" id="contact"><div class="wrap">
+  <div class="sh"><div class="lbl"><span>05</span><span></span><span class="end">→</span></div><h2 class="sr">CONTACT US</h2></div>
+  <div class="ct">
+    <div class="side"><div class="dr"><canvas id="drc" aria-hidden="true"></canvas></div></div>
+    <form class="form" id="form" novalidate>
+      <label>会社名 (必須)<input type="text" name="company" required></label>
+      <label>担当者名 (必須)<input type="text" name="name" required></label>
+      <label>メールアドレス (必須)<input type="email" name="email" required></label>
+      <label>電話番号（必須）<input type="tel" name="tel" required></label>
+      <div class="full"><label style="margin-bottom:10px">お問い合わせ内容（必須）</label>
+        <div class="opts">
+          <label><input type="radio" name="kind" value="1"><span>戦略立案・実行支援（Strategy2Action）</span></label>
+          <label><input type="radio" name="kind" value="2"><span>動画広告ツール（HookHack）</span></label>
+          <label><input type="radio" name="kind" value="3"><span>LP・サイト制作（HookHacker）</span></label>
+          <label><input type="radio" name="kind" value="4"><span>動画制作（企画・撮影・編集）</span></label>
+          <label><input type="radio" name="kind" value="5"><span>取材・メディア関係</span></label>
+          <label><input type="radio" name="kind" value="6"><span>その他のお問い合わせ</span></label>
+        </div>
+      </div>
+      <label class="full">本文（必須）<textarea name="body" required></textarea></label>
+      <button class="send" type="submit">送信 <span>→</span></button>
+      <p class="note">上記ボタンを押すことで、当社の提供するサービス等に関する情報を提供する目的で、サムライスタイル株式会社が上記から送信された個人情報を保管・処理することに同意したものとみなされます。お客様はこれらの情報提供をいつでも停止できます。</p>
+      <p class="note">個人情報の開示や削除依頼等のお問い合わせ先、およびお客様の個人情報を尊重して保護するための弊社の取り組みについては、弊社の<a href="https://samurai-style.tokyo/privacy-policy">プライバシーポリシー</a>をご覧ください。</p>
+    </form>
+  </div>
+</div></section>
+</main>
+<span id="meas" aria-hidden="true"></span>
+
+<script>
+(()=>{
+'use strict';
+const TAU=Math.PI*2,DPR=Math.min(2,window.devicePixelRatio||1);
+const REDUCE=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const clamp=(v,a=0,b=1)=>v<a?a:v>b?b:v,mix=(a,b,t)=>a+(b-a)*t;
+const ss=(a,b,v)=>{const t=clamp((v-a)/(b-a));return t*t*(3-2*t)};
+const ease3=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const hex=h=>{h=h.replace('#','');return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]};
+const C={ink:hex(css('--ink')),sig:hex(css('--sig')),card:hex(css('--card')),line:hex(css('--line')),mute:hex(css('--mute')),paper:hex(css('--paper'))};
+const rgba=(c,a)=>`rgba(${c[0]},${c[1]},${c[2]},${a})`;
+const rgbMix=(a,b,t,al)=>`rgba(${Math.round(mix(a[0],b[0],t))},${Math.round(mix(a[1],b[1],t))},${Math.round(mix(a[2],b[2],t))},${al})`;
+function rng(seed){let s=seed%2147483647;if(s<=0)s+=2147483646;return()=>(s=s*16807%2147483647)/2147483647}
+const whenFonts=f=>(document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(f);
+
+/* 絵の部品：見えている時だけ描く */
+const pieces=[];
+const io=new IntersectionObserver(es=>{for(const e of es){const p=e.target.__p;if(!p)continue;p.vis=e.isIntersecting;if(p.vis&&!p.ready)size(p)}},{rootMargin:'160px 0px'});
+function piece(c,o){const p=Object.assign({c,ctx:c.getContext('2d'),vis:false,ready:false,w:0,h:0},o);c.__p=p;pieces.push(p);io.observe(c);return p}
+function size(p){const r=p.c.getBoundingClientRect();if(!r.width||!r.height)return;const d=DPR;p.w=r.width;p.h=r.height;p.c.width=Math.round(r.width*d);p.c.height=Math.round(r.height*d);p.ctx.setTransform(d,0,0,d,0,0);p.ready=true;p.init&&p.init(p)}
+let rz;addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{for(const p of pieces){p.ready=false;if(p.vis)size(p)}fitGiants();onResize.forEach(f=>f())},150)});
+const onResize=[];
+
+/* 見出し：細く縮んだ字 → 広く太く（top-v2 と同じ） */
+const meas=document.getElementById('meas');
+const natural=(text,fvs,ls)=>{meas.style.fontVariationSettings=fvs;meas.style.letterSpacing=ls;meas.textContent=text;return meas.getBoundingClientRect().width};
+const giants=[...document.querySelectorAll('[data-wd]')];
+const GFIN='"wdth" 151,"wght" 900,"opsz" 144';
+function fitGiants(){if(!giants.length)return;const W=giants[0].parentElement.clientWidth,ratio=innerWidth<820?.8:.6;let fs=96;
+  giants.forEach(g=>{const t=g.dataset.fitText||g.textContent.trim();fs=Math.min(fs,100*W*ratio/natural(t,GFIN,'-0.02em'))});
+  giants.forEach(g=>g.style.fontSize=fs.toFixed(2)+'px')}
+function drawGiants(){const vh=innerHeight;giants.forEach(g=>{const r=g.getBoundingClientRect();const t=REDUCE?1:clamp((vh-r.top)/(vh*.62));g._p=Math.max(g._p||0,t);const e=ease3(g._p);
+  if(g._e===e)return;g._e=e;g.style.fontVariationSettings=`"wdth" ${(25+126*e).toFixed(1)},"wght" ${(100+800*e).toFixed(0)},"opsz" 144`})}
+whenFonts(()=>{fitGiants();for(const p of pieces){if(p.vis){p.ready=false;size(p)}}});fitGiants();
+
+/* フォームの状態：必須6項目（会社名・担当者名・メール・電話・内容・本文） */
+const form=document.getElementById('form');
+const FLD=[form.company,form.name,form.email,form.tel,null,form.body];
+const kindEl=()=>form.querySelector('input[name=kind]:checked');
+const kindVal=()=>{const k=kindEl();return k?+k.value:0};
+function vals(){
+  const tx=FLD[0].value.trim(),nm=FLD[1].value.trim(),em=FLD[2].value.trim(),tl=FLD[3].value.replace(/\D/g,''),bd=FLD[5].value.trim();
+  const ok=[tx.length>0,nm.length>0,/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em),tl.length>=10,kindVal()>0,bd.length>0];
+  return {ok,n:ok.filter(Boolean).length,ready:ok.every(Boolean),tx,nm,em,tl,bd,kind:kindVal(),raw:[FLD[0].value,FLD[1].value,FLD[2].value,FLD[3].value,kindVal()?kindEl().nextElementSibling.textContent:'',FLD[5].value]}}
+/* どの項目か（0〜5） */
+const fieldIndex=el=>{if(!el)return -1;if(el.name==='kind')return 4;return FLD.indexOf(el)};
+form.addEventListener('submit',e=>e.preventDefault());
+
+/* ===== 音：3D版の sound.js（window.SND）に効果音を足す。音オンの時だけ SND.out() が { ctx, sfx, music, verb, nbuf } を返す ===== */
+const mtof=m=>440*Math.pow(2,(m-69)/12);
+const AU=()=>{const S=window.SND;return S&&typeof S.out==='function'?S.out():null};
+const snd=fn=>{const o=AU();if(!o)return;try{fn(o)}catch(e){console.warn(e)}};
+const route=(o,node,pan,to)=>{let n=node;if(pan&&o.ctx.createStereoPanner){const p=o.ctx.createStereoPanner();p.pan.value=clamp(pan,-1,1);node.connect(p);n=p}n.connect(o[to||'sfx'])};
+const sx={
+  tone(o,{f=880,f2=0,type='sine',pk=.04,a=.004,d=.3,at=0,pan=0,to='sfx',det=0,lp=0}){const c=o.ctx,t=c.currentTime+.005+at,os=c.createOscillator(),g=c.createGain();os.type=type;os.frequency.setValueAtTime(f,t);if(f2)os.frequency.exponentialRampToValueAtTime(f2,t+a+d);os.detune.value=det;
+    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(pk,t+a);g.gain.exponentialRampToValueAtTime(.0001,t+a+d);let n=os;if(lp){const fl=c.createBiquadFilter();fl.type='lowpass';fl.frequency.value=lp;os.connect(fl);n=fl}n.connect(g);route(o,g,pan,to);os.start(t);os.stop(t+a+d+.05)},
+  noise(o,{f=3000,f2=0,type='bandpass',q=1,pk=.04,a=.002,d=.05,at=0,pan=0,to='sfx',rate=1}){const c=o.ctx,t=c.currentTime+.005+at,s=c.createBufferSource();s.buffer=o.nbuf;s.playbackRate.value=rate;
+    const fl=c.createBiquadFilter();fl.type=type;fl.frequency.setValueAtTime(f,t);if(f2)fl.frequency.exponentialRampToValueAtTime(f2,t+a+d);fl.Q.value=q;const g=c.createGain();
+    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(pk,t+a);g.gain.exponentialRampToValueAtTime(.0001,t+a+d);s.connect(fl);fl.connect(g);route(o,g,pan,to);s.start(t,Math.random()*1.5);s.stop(t+a+d+.05)}
+};
+/* 紙の節に入った時の 3D版と同じ状態（夜明けの和音・刻みなし）にそろえる */
+document.getElementById('snd').addEventListener('click',()=>setTimeout(()=>{const S=window.SND;if(S&&S.on){S.scene(7);S.update({noise:0,travel:0,vel:0,dawn:1,fv:0,day:1,tv:0})}},0));
+
+/* menu */
+document.querySelector('.burger').addEventListener('click',()=>document.body.classList.toggle('mopen'));
+document.querySelectorAll('.ov a').forEach(a=>a.addEventListener('click',()=>document.body.classList.remove('mopen')));
+
+const ticks=[];
+/* ===== この案 ===== */
+/* 案3-4：見出しを製図する
+   見出しの CONTACT US を、文字そのものの設計図として左に置く。最初は基準線・文字の枠・骨組みの細線・コンパスの円だけ。
+   項目が埋まるほど、太い墨のペンが骨組みをなぞって1文字ずつ清書していく（丸い字はコンパスの腕が回る）。
+   6つそろうと補助線が消えて完成した字だけが残り、US の下に朱の線が引かれる。送信を押すと上から下へ焼き付けの光が走る。
+   音：直線は定規に沿って引く低めのこすれ、丸はコンパスの高めのこすれ（左右の位置も字の場所に合わせて動く）、
+   1文字書き上がるごとに木を打つ小さな音（D の音階で上がる）、項目を選ぶと鉛筆で紙を軽く叩く音、6つで補助線が消える息の音と高い2音、送信は掃く音と和音。 */
+let S=vals(),focusI=-1,missT=-9,missMask=[0,0,0,0,0,0],readyT=-9,sendT=-9;
+const sendB=form.querySelector('.send');
+form.addEventListener('focusin',e=>{const i=fieldIndex(e.target);if(i>=0&&i!==focusI){focusI=i;snd(o=>{sx.noise(o,{type:'bandpass',f:2400,q:2,pk:.03,d:.012});sx.tone(o,{f:420,pk:.015,d:.03})})}});
+form.addEventListener('focusout',()=>setTimeout(()=>{if(!form.contains(document.activeElement))focusI=-1},0));
+const upd=()=>{const was=S.ready;S=vals();sendB.classList.toggle('rdy',S.ready);
+  if(S.ready&&!was){readyT=T;snd(o=>{sx.noise(o,{type:'highpass',f:2500,f2:7000,pk:.035,a:.25,d:1.1});sx.tone(o,{f:mtof(81),pk:.05,d:2.2,at:.5,to:'music'});sx.tone(o,{f:mtof(88),pk:.03,d:2.6,at:.64,to:'music'})})}};
+form.addEventListener('input',upd);form.addEventListener('change',upd);
+form.addEventListener('submit',()=>{if(S.ready){sendT=T;snd(o=>{sx.noise(o,{type:'bandpass',f:400,f2:4000,q:1.2,pk:.06,a:.3,d:.9});[62,66,69,74,78].forEach((n,k)=>sx.tone(o,{f:mtof(n),pk:.026,a:.01,d:2.4,at:.15+k*.04,to:'music'}))})}
+  else{missT=T;missMask=S.ok.map(v=>v?0:1);snd(o=>{sx.tone(o,{f:150,type:'triangle',pk:.05,d:.09,lp:900});sx.tone(o,{f:150,type:'triangle',pk:.05,d:.09,at:.13,lp:900})})}});
+/* 進み具合：そろった項目は1、書きかけは0.4 */
+function target(){let s=0;for(let i=0;i<6;i++){s+=S.ok[i]?1:((S.raw[i]||'').trim().length?.4:0)}return s/6}
+
+/* --- 字の骨組み（単位＝字の高さ Hc、原点＝字の左下、上が負） --- */
+const WD={C:.92,O:1,N:.86,T:.82,A:.98,U:.86,S:.78};
+function glyph(ch,Hc,sw){const w=WD[ch]*Hc,P=[],R=(Hc-sw)/2,cy=-Hc/2;const arc=(cx,cy,rx,ry,a0,a1,n=48)=>{const o=[];for(let k=0;k<=n;k++){const a=a0+(a1-a0)*k/n;o.push([cx+Math.cos(a)*rx,cy+Math.sin(a)*ry])}return o};
+  const C=[];/* 補助：コンパスの中心と半径 */
+  if(ch==='C'){P.push(arc(w/2,cy,w/2-sw/2,R,-.26*Math.PI,-1.74*Math.PI));C.push([w/2,cy,w/2-sw/2,R])}
+  if(ch==='O'){P.push(arc(w/2,cy,w/2-sw/2,R,-Math.PI/2,1.56*Math.PI,66));C.push([w/2,cy,w/2-sw/2,R])}
+  if(ch==='N'){P.push([[sw/2,0],[sw/2,-Hc-sw],[w-sw/2,sw],[w-sw/2,-Hc]])}
+  if(ch==='T'){P.push([[0,-Hc+sw/2],[w,-Hc+sw/2]]);P.push([[w/2,-Hc+sw/2],[w/2,0]])}
+  if(ch==='A'){P.push([[sw*.35,0],[w/2,-Hc-sw*.9],[w-sw*.35,0]]);P.push([[w*.27,-Hc*.3],[w*.73,-Hc*.3]])}
+  if(ch==='U'){const r=w/2-sw/2,c=-sw/2-r;P.push([[sw/2,-Hc],[sw/2,c],...arc(w/2,c,r,r,Math.PI,0,32).slice(1),[w-sw/2,-Hc]]);C.push([w/2,c,r,r])}
+  if(ch==='S'){const ry=(Hc-sw)/4,rx=w/2-sw/2,ct=-Hc+sw/2+ry,cb=-sw/2-ry;P.push([...arc(w/2,ct,rx,ry,-.1*Math.PI,-1.5*Math.PI,36),...arc(w/2,cb,rx,ry,-.5*Math.PI,.9*Math.PI,36).slice(1)]);C.push([w/2,ct,rx,ry]);C.push([w/2,cb,rx,ry])}
+  return {w,P,C}}
+let G=null,ink=0,lastLetter=-1;
+function layout(w,h,sp){const m=sp?2:4,gap=.1,word1='CONTACT',word2='US';let tw=0;for(const ch of word1)tw+=WD[ch];tw+=gap*(word1.length-1);
+  const Hc=Math.min((w-2*m)/tw,(h-(sp?30:70))/2.5),sw=Hc*.22,L=[];let x=m;const y1=(sp?10:30)+Hc,y2=y1+Hc*1.32;
+  let pv='';for(const ch of word1){if(pv==='C')x-=.05*Hc;const g=glyph(ch,Hc,sw);L.push(Object.assign(g,{ch,x,y:y1}));x+=g.w+gap*Hc;pv=ch}
+  x=m;for(const ch of word2){const g=glyph(ch,Hc,sw);L.push(Object.assign(g,{ch,x,y:y2}));x+=g.w+gap*Hc}
+  for(const g of L){let len=0;g.seg=g.P.map(pl=>{const pts=pl.map(q=>[g.x+q[0],g.y+q[1]]);const l0=len;for(let k=1;k<pts.length;k++)len+=Math.hypot(pts[k][0]-pts[k-1][0],pts[k][1]-pts[k-1][1]);return {pts,l0,l1:len}});g.len=len}
+  return {L,Hc,sw,y1,y2,m}}
+/* こすれの音（直線＝定規・丸＝コンパス） */
+let SC=null;
+function scratch(on,round,pan,spd){const o=AU();if(!o)return;
+  if(!SC||SC.ctx!==o.ctx){const c=o.ctx,s=c.createBufferSource();s.buffer=o.nbuf;s.loop=true;const f=c.createBiquadFilter();f.type='bandpass';f.frequency.value=1500;f.Q.value=1.2;const g=c.createGain();g.gain.value=0;s.connect(f);f.connect(g);
+    let n=g;if(c.createStereoPanner){const p=c.createStereoPanner();g.connect(p);n=p;SC={p}}else SC={};n.connect(o.sfx);s.start();Object.assign(SC,{ctx:c,f,g})}
+  const t=SC.ctx.currentTime;SC.g.gain.setTargetAtTime(on?.02+.025*clamp(spd):0,t,.03);SC.f.frequency.setTargetAtTime(round?2600+Math.sin(t*23)*500:1300,t,.02);SC.f.Q.setTargetAtTime(round?2.2:1,t,.05);if(SC.p)SC.p.pan.setTargetAtTime(pan,t,.05)}
+const DSC=[62,64,66,69,71,74,76,78,81];
+
+const P=piece(document.getElementById('drc'),{
+ init(p){p.sp=p.w<520;G=layout(p.w,p.h,p.sp)},
+ draw(p,t,dt){const {ctx,w,h,sp}=p,{L,Hc,sw,y1,y2}=G;ctx.clearRect(0,0,w,h);
+  const total=L.length,goal=target()*total,prevInk=ink;ink+=clamp(goal-ink,-dt*4,dt*(goal-ink>2?2.2:1.25));
+  const gone=S.ready?ss(.2,1.4,t-readyT):0,ga=1-gone;
+  /* 補助線：基準線・字高線・文字の枠・骨組み・コンパスの円 */
+  if(ga>0){ctx.lineWidth=1;ctx.strokeStyle=rgba(C.mute,.45*ga);ctx.beginPath();[y1,y1-Hc,y2,y2-Hc].forEach(y=>{ctx.moveTo(0,Math.round(y)+.5);ctx.lineTo(w,Math.round(y)+.5)});ctx.stroke();
+    ctx.font=`400 ${sp?8:9}px "JetBrains Mono",monospace`;ctx.fillStyle=rgba(C.mute,.8*ga);ctx.textAlign='right';ctx.textBaseline='bottom';
+    if(!sp){ctx.fillText('0',w,y1-2);ctx.fillText('H',w,y1-Hc-2);ctx.fillText('0',w,y2-2);ctx.fillText('H',w,y2-Hc-2)}
+    ctx.setLineDash([3,3]);ctx.strokeStyle=rgba(C.mute,.35*ga);ctx.beginPath();for(const g of L){ctx.rect(Math.round(g.x)+.5,Math.round(g.y-Hc)+.5,Math.round(g.w),Math.round(Hc))}ctx.stroke();ctx.setLineDash([]);
+    ctx.strokeStyle=rgba(C.ink,.38*ga);for(const g of L){ctx.save();ctx.beginPath();ctx.rect(g.x-sw,g.y-Hc,g.w+2*sw,Hc);ctx.clip();ctx.beginPath();for(const s of g.seg){ctx.moveTo(s.pts[0][0],s.pts[0][1]);for(const q of s.pts)ctx.lineTo(q[0],q[1])}ctx.stroke();ctx.restore()}
+    ctx.strokeStyle=rgba(C.mute,.4*ga);ctx.setLineDash([10,3,2,3]);ctx.beginPath();for(const g of L)for(const c of g.C){ctx.moveTo(g.x+c[0]+c[2]+sw/2,g.y+c[1]);ctx.ellipse(g.x+c[0],g.y+c[1],c[2]+sw/2,c[3]+sw/2,0,0,TAU)}ctx.stroke();ctx.setLineDash([]);
+    ctx.strokeStyle=rgba(C.sig,.7*ga);ctx.beginPath();for(const g of L)for(const c of g.C){const x=g.x+c[0],y=g.y+c[1];ctx.moveTo(x-4,y);ctx.lineTo(x+4,y);ctx.moveTo(x,y-4);ctx.lineTo(x,y+4)}ctx.stroke();
+    /* 1行目の幅の寸法線 */
+    if(!sp){const a=L[0].x,b=L[6].x+L[6].w,y=y1-Hc-14;ctx.strokeStyle=rgba(C.ink,.5*ga);ctx.beginPath();ctx.moveTo(a+.5,y-5);ctx.lineTo(a+.5,y+5);ctx.moveTo(b-.5,y-5);ctx.lineTo(b-.5,y+5);ctx.moveTo(a,y+.5);ctx.lineTo(b,y+.5);ctx.stroke()}}
+  /* 墨：ink 文字ぶんだけ骨組みをなぞる */
+  ctx.lineWidth=sw;ctx.lineCap='butt';ctx.lineJoin='miter';ctx.miterLimit=10;let head=null,headRound=false,headC=null;
+  for(let k=0;k<total;k++){const g=L[k],u=clamp(ink-k);if(u<=0)break;const upto=g.len*u;
+    ctx.save();ctx.beginPath();ctx.rect(g.x-sw,g.y-Hc,g.w+2*sw,Hc);ctx.clip();ctx.strokeStyle=rgba(C.ink,1);
+    for(const s of g.seg){if(s.l0>=upto)break;ctx.beginPath();let Lc=s.l0;ctx.moveTo(s.pts[0][0],s.pts[0][1]);
+      for(let i=1;i<s.pts.length;i++){const a=s.pts[i-1],b=s.pts[i],l=Math.hypot(b[0]-a[0],b[1]-a[1]);if(Lc+l<=upto){ctx.lineTo(b[0],b[1]);Lc+=l}else{const q=(upto-Lc)/l,pt=[mix(a[0],b[0],q),mix(a[1],b[1],q)];ctx.lineTo(pt[0],pt[1]);head=pt;headRound=g.C.length>0&&!(g.ch==='U'&&(i<2||i>s.pts.length-2));headC=g.C.length?g.C[g.ch==='S'&&pt[1]>g.y-Hc/2?1:0]:null;if(headC)headC=[g.x+headC[0],g.y+headC[1]];break}}ctx.stroke()}
+    ctx.restore()}
+  /* 書き上がった字の音 */
+  const done=Math.floor(ink+1e-4);if(done!==lastLetter){if(done>lastLetter&&lastLetter>=0&&done<=total)snd(o=>{sx.tone(o,{f:mtof(DSC[(done-1)%9]),f2:mtof(DSC[(done-1)%9])*.8,pk:.045,a:.002,d:.07});sx.noise(o,{type:'lowpass',f:1400,pk:.04,d:.03})});lastLetter=done}
+  /* 道具：ペン先（朱）とコンパスの腕 */
+  const moving=Math.abs(ink-prevInk)>1e-4&&head;
+  scratch(moving&&P.vis,headRound,head?(head[0]/w)*1.4-.7:0,Math.abs(ink-prevInk)/dt);
+  if(head&&ink<total-1e-3){if(headRound&&headC){ctx.strokeStyle=rgba(C.ink,.75);ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(headC[0],headC[1]);ctx.lineTo(head[0],head[1]);ctx.stroke();ctx.fillStyle=rgba(C.ink,1);ctx.beginPath();ctx.arc(headC[0],headC[1],2.5,0,TAU);ctx.fill()}
+    ctx.fillStyle=rgba(C.sig,1);ctx.beginPath();ctx.arc(head[0],head[1],sp?3:4.5,0,TAU);ctx.fill();ctx.strokeStyle=rgba(C.sig,1);ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(head[0],head[1]);ctx.lineTo(head[0]+(sp?10:18),head[1]-(sp?16:30));ctx.stroke()}
+  /* 完成：US の下に朱の線 */
+  if(gone>0){const a=L[7].x,b=L[8].x+L[8].w,y=y2+(sp?7:12),e=ease3(clamp((t-readyT-.6)/.9));ctx.fillStyle=rgba(C.sig,1);ctx.fillRect(a,y,(b-a)*e,sp?3:5)}
+  /* 焼き付けの光（送信） */
+  if(t-sendT<1.2){const q=clamp((t-sendT)/1.2),y=q*h;const gr=ctx.createLinearGradient(0,y-40,0,y);gr.addColorStop(0,rgba(C.sig,0));gr.addColorStop(1,rgba(C.sig,.22));ctx.fillStyle=gr;ctx.fillRect(0,y-40,w,40);ctx.fillStyle=rgba(C.sig,.9);ctx.fillRect(0,y,w,1.5)}
+  /* 完了数・足りない項目の点滅 */
+  ctx.font=`500 ${sp?10:11}px "JetBrains Mono",monospace`;ctx.textAlign='left';ctx.textBaseline='bottom';const ct=String(S.n).padStart(2,'0');const yb=h-2;
+  const blink=t-missT<1.4&&((t-missT)*6|0)%2===0;ctx.fillStyle=blink?rgba(C.sig,1):rgba(C.ink,1);ctx.fillText(ct,G.m,yb);const cw=ctx.measureText(ct).width;ctx.fillStyle=rgba(C.mute,1);ctx.fillText(' / 06',G.m+cw,yb);
+  if(!sp){let x=G.m+cw+ctx.measureText(' / 06').width+16;for(let i=0;i<6;i++){ctx.fillStyle=S.ok[i]?rgba(C.sig,1):(blink&&missMask[i])?rgba(C.sig,.5):rgba(C.line,1);ctx.fillRect(x+i*12,yb-9,8,8)}}
+ }});
+ticks.push(()=>{if(!P.vis)scratch(false,false,0,0)});
+
+/* ===== loop ===== */
+let T=0,prev=performance.now();
+function loop(now){const dt=Math.min(.05,(now-prev)/1000);prev=now;T+=dt;drawGiants();for(const f of ticks)f(T,dt);for(const p of pieces)if(p.vis&&p.ready)p.draw(p,T,dt);requestAnimationFrame(loop)}
+requestAnimationFrame(loop);
+})();
+</script>
+<script type="module" src="3d/b/sound.js"></script>
+</body>
+</html>
