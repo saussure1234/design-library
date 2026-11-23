@@ -23,13 +23,21 @@ const Q = SP
   ? { rocks: 150, shards: 600, dustN: 160, dustM: 2600, dustF: 4000, conv: 4200, tvs: 36, trees: 7, depth: 7, planks: 70, haze: 10, warpTaps: 4, intro: 3200 }
   : { rocks: 380, shards: 1700, dustN: 420, dustM: 7600, dustF: 12000, conv: 14000, tvs: 84, trees: 14, depth: 8, planks: 130, haze: 22, warpTaps: 8, intro: 9000 };
 // 性能の段（重い順）。測って遅ければ1段ずつ下げる
-const TIERS = [
+// スマホはぼかしを使わず、画素数を上げてくっきり描く（So 11/24「スマホで荒く・ピントが合っていないように見える」）
+const TIERS_SP = [
+  { dpr: 2, taps: 1, dof: 0 },
+  { dpr: 1.6, taps: 1, dof: 0 },
+  { dpr: 1.3, taps: 1, dof: 0 },
+  { dpr: 1, taps: 1, dof: 0 },
+];
+const TIERS_PC = [
   { dpr: 1.5, taps: 24, dof: 1 },
   { dpr: 1.25, taps: 16, dof: 1 },
   { dpr: 1, taps: 10, dof: 1 },
   { dpr: 0.85, taps: 1, dof: 0 },
 ];
-let tier = QLOCK >= 0 ? Math.min(3, QLOCK) : (SP ? 2 : 0);
+const TIERS = SP ? TIERS_SP : TIERS_PC;
+let tier = QLOCK >= 0 ? Math.min(3, QLOCK) : 0;
 
 // ---------- 乱数・道具 ----------
 let seed = 20261123;
@@ -950,7 +958,7 @@ const FVP = (() => {
   const sprite = c => { const k = c.join(','); if (tint.has(k)) return tint.get(k); const o = document.createElement('canvas'); o.width = o.height = 64; const g = o.getContext('2d');
     g.drawImage(SPR, 0, 0); g.globalCompositeOperation = 'source-in'; g.fillStyle = `rgb(${k})`; g.fillRect(0, 0, 64, 64); tint.set(k, o); return o; };
   const spawn = (q, far) => { const a = Math.random() * 6.283, r = .03 + Math.pow(Math.random(), .85) * 1.1; q.x = Math.cos(a) * r; q.y = Math.sin(a) * r; q.z = far ? .7 + Math.random() * .3 : .06 + Math.random() * .94; q.c = pick(); q.tw = Math.random() * 6.3; q.s = Math.random() * .6 + .7; return q; };
-  const fit = () => { D = Math.min(1.5, devicePixelRatio || 1); W = innerWidth; H = innerHeight; cv.width = Math.round(W * D); cv.height = Math.round(H * D); ctx.setTransform(D, 0, 0, D, 0, 0);
+  const fit = () => { D = Math.min(SP ? 2 : 1.5, devicePixelRatio || 1); W = innerWidth; H = innerHeight; cv.width = Math.round(W * D); cv.height = Math.round(H * D); ctx.setTransform(D, 0, 0, D, 0, 0);
     const n = W < 820 ? 170 : 330; P = Array.from({ length: n }, () => spawn({}, false)); };
   fit(); addEventListener('resize', fit);
   let nz = 1, tt = 0, gx = .5, gy = .5, RG = [], lastR = -9999;
