@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>STORY 案2 画面固定で入れ替わる | サムライスタイル 候補</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+html,body{margin:0}
+html{overflow-x:hidden;overflow-x:clip}
+body{background:#000;-webkit-font-smoothing:antialiased;overflow-x:hidden;overflow-x:clip}
+a{color:inherit;text-decoration:none}
+.nb{white-space:nowrap}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.hd{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;justify-content:space-between;padding:16px clamp(16px,2.8vw,40px);font:500 13px/1 "Inter Tight","Noto Sans JP",sans-serif;letter-spacing:.02em;color:var(--hd,#0d0d0d);pointer-events:none}
+.hd>*{pointer-events:auto}
+.hd .logo{display:block;height:34px}.hd .logo img{height:100%;width:auto;display:block}
+.hd.dk{--hd:#fff}.hd.dk .logo img{filter:invert(1)}
+.hd .nav{display:flex;align-items:center;gap:2px}
+.hd .nav a{padding:9px 12px;border-radius:99px;transition:opacity .3s}
+.hd .nav a:hover{opacity:.6}
+.hd .nav a.cta{border:1px solid currentColor;margin-left:6px;padding:9px 16px}
+.hd .lang{display:flex;gap:2px;margin-left:12px;font-size:11px}
+.hd .lang span{padding:6px 7px;opacity:.5}.hd .lang b{padding:6px 7px;font-weight:600;border-bottom:1px solid currentColor}
+.hd .mb{display:none;background:none;border:1px solid currentColor;color:inherit;font:500 12px/1 "Inter Tight",sans-serif;letter-spacing:.08em;padding:10px 14px;border-radius:99px;cursor:pointer}
+.mov{position:fixed;inset:0;z-index:59;background:#0d0d0d;color:#fff;padding:96px 20px 32px;display:none;flex-direction:column;gap:6px;font:500 34px/1.15 "Inter Tight",sans-serif;letter-spacing:-.02em}
+.mov a{padding:4px 0}
+body.mopen .mov{display:flex}
+@media(max-width:960px){.hd .nav{display:none}.hd .mb{display:block}.hd .logo{height:30px}}
+
+
+body{background:#000;color:#fff;font-family:"Noto Sans JP",sans-serif}
+.st{position:relative;height:700vh}
+.stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:#000}
+.ly{position:absolute;inset:0;opacity:0;transition:opacity 1.1s ease}
+.ly.on{opacity:1}
+.ly img,.ly canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.1);transition:transform 9s cubic-bezier(.2,.6,.2,1)}
+.ly.on img,.ly.on canvas{transform:scale(1)}
+.ly .dawn{position:absolute;inset:0;background:radial-gradient(140% 62% at 50% 100%,#ffd3a1 0%,#e79a7b 14%,#8a5f86 30%,#33365f 50%,#0d1330 74%,#04060d 100%)}
+.ly .dawn::after{content:"";position:absolute;left:0;right:0;top:72%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,230,200,.9) 30%,rgba(255,230,200,.9) 70%,transparent);box-shadow:0 0 24px 4px rgba(255,200,150,.45)}
+.stage::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.45) 0%,rgba(0,0,0,0) 22%,rgba(0,0,0,0) 45%,rgba(0,0,0,.78) 100%)}
+.lab{position:absolute;z-index:3;left:clamp(16px,2.8vw,40px);top:96px;display:flex;align-items:baseline;gap:14px}
+.lab h2{margin:0;font:600 15px/1 "Inter Tight",sans-serif;letter-spacing:.14em}
+.lab p{margin:0;font-size:12px;opacity:.7;letter-spacing:.1em}
+.tx{position:absolute;z-index:3;right:clamp(16px,2.8vw,40px);bottom:clamp(28px,5vh,56px);width:min(540px,44vw);opacity:0;transform:translateY(18px);transition:opacity .7s,transform .9s cubic-bezier(.2,.7,.1,1);pointer-events:none}
+.tx.on{opacity:1;transform:none;pointer-events:auto;transition-delay:.25s}
+.tx .t{margin:0;font-size:16px;line-height:2.05;letter-spacing:.04em;text-shadow:0 1px 18px rgba(0,0,0,.55)}
+.tx.q .t{font-size:clamp(26px,2.6vw,38px);line-height:1.5;font-weight:700;letter-spacing:.02em}
+.t em{font-style:normal}
+.t .ew{border-bottom:1px solid rgba(255,255,255,.6)}
+.t .sig{font-family:"Inter Tight",sans-serif;color:#ffd9a0}
+.t .nz{font-family:"Inter Tight",sans-serif;opacity:.45}
+.t .zs{opacity:.6}.t .ps,.t .sm{color:#ffd9a0}
+.t .lead{display:block;font-size:22px;font-weight:700;line-height:1.6;margin-bottom:10px}
+.tocontact{display:inline-flex;gap:12px;margin-top:22px;font:600 14px/1 "Inter Tight",sans-serif;letter-spacing:.12em;border:1px solid #fff;padding:14px 20px}
+.idx{position:absolute;z-index:3;left:clamp(16px,2.8vw,40px);bottom:clamp(28px,5vh,56px);display:flex;gap:clamp(18px,3.2vw,46px)}
+.idx button{background:none;border:0;color:#fff;cursor:pointer;padding:6px 0;font:500 20px/1 "Inter Tight",sans-serif;opacity:.45;position:relative;transition:opacity .4s}
+.idx button.on{opacity:1}
+.idx button i{position:absolute;left:0;right:0;bottom:-6px;height:2px;background:#fff;transform:scaleX(0);transform-origin:left}
+.idx button.on i{transform:scaleX(var(--p,0))}
+@media(max-width:760px){
+  .lab{top:80px}
+  .tx{left:16px;right:16px;width:auto;bottom:74px}
+  .tx .t{font-size:14px;line-height:1.9}
+  .tx.q .t{font-size:24px}
+  .t .lead{font-size:17px}
+  .idx{left:16px;right:16px;bottom:24px;justify-content:space-between}
+  .idx button{font-size:17px}
+  .ly[data-i="5"] img{object-position:30% 50%}
+  .ly[data-i="3"] img{object-position:54% 50%}
+  .stage::after{background:linear-gradient(180deg,rgba(0,0,0,.45) 0%,rgba(0,0,0,0) 18%,rgba(0,0,0,.2) 38%,rgba(0,0,0,.86) 72%,rgba(0,0,0,.92) 100%)}
+}
+
+</style>
+</head>
+<body>
+<header class="hd dk" id="hd">
+  <a class="logo" href="#top" aria-label="SAMURAI STYLE"><img src="img/logo.svg" alt="SAMURAI STYLE"></a>
+  <nav class="nav"><a href="#top">HOME</a><a href="#service">SERVICE</a><a href="https://samurai-style.tokyo/media">MEDIA</a><a href="https://samurai-style.tokyo/company">COMPANY</a><a href="https://samurai-style.tokyo/recruit">RECRUIT</a><a class="cta" href="#contact">CONTACT</a><div class="lang"><span>ID</span><span>EN</span><b>JA</b></div></nav>
+  <button class="mb" type="button" onclick="document.body.classList.toggle('mopen')">MENU</button>
+</header>
+<div class="mov" onclick="document.body.classList.remove('mopen')"><a href="#top">HOME</a><a href="#service">SERVICE</a><a href="https://samurai-style.tokyo/media">MEDIA</a><a href="https://samurai-style.tokyo/company">COMPANY</a><a href="https://samurai-style.tokyo/recruit">RECRUIT</a><a href="#contact">CONTACT</a></div>
+<main id="top">
+<section class="st" id="story">
+  <div class="stage">
+    <div class="ly" data-i="0"><img src="img/story/s1b.webp" alt="白い展示室で、奥まで並ぶ手の彫刻が石膏からクロームへ置き換わっていく" loading="eager"></div><div class="ly" data-i="1"><img src="img/story/s1c.webp" alt="" loading="eager"></div><div class="ly" data-i="2"><img src="img/story/s3.webp" alt="砂嵐を映すテレビが壁一面に積まれ、1台だけが光る線を映している" loading="eager"></div><div class="ly" data-i="3"><img src="img/story/s4.webp" alt="霧の立ちこめる水面で、ひとりがランタンを高く掲げている" loading="eager"></div><div class="ly" data-i="4"><canvas class="sum" aria-hidden="true"></canvas></div><div class="ly" data-i="5"><img src="img/story/s6.webp" alt="夜空の下、丘の上の一本の木" loading="eager"></div><div class="ly" data-i="6"><i class="dawn" aria-hidden="true"></i></div>
+    <div class="lab"><h2>STORY</h2><p class="jp">ストーリー</p></div>
+    <div class="tx" data-i="0"><p class="t">「誰かの役に立つ」という営みの中で、これまで人間が担ってきた“考えること”や“実行すること”の一部が、いま急速にAIへと置き換わりつつあります。変化の激しさが増し続けるこの時代において、マクロな視点では人間らしさを、ミクロな視点では自分らしさを保ちながら、どう生き残っていくべきか。私たちはその問いを日々考え続けています。</p></div><div class="tx" data-i="1"><p class="t">AIは高い合理性をもって答えを返しますが、一方、その合理性は、前提となるプロンプトや、使う人それぞれの立場や経験、価値観に大きく左右される構造にあります。つまり、ひとつの正解に収束するのではなく、<em class="ew">無数の“もっともらしさ”</em>が生まれ続け、エントロピー増大の法則が文字通り起きている時代に入ったと捉えています。</p></div><div class="tx" data-i="2"><p class="t">Web上でも、AIによって膨大な情報やコンテンツが生成される時代になりました。そうした環境のなかで重要になるのは、何が本質的なシグナルで、何が一時的なノイズなのかを見極める力だと考えています。</p></div><div class="tx q" data-i="3"><p class="t"><span class="nb">では、</span><wbr><span class="nb"><em class="sig">Signal</em>と</span><wbr><span class="nb"><em class="nz">Noise</em>を</span><wbr><span class="nb">見極める要素は</span><wbr><span class="nb">どこに</span><wbr><span class="nb">存在するのでしょうか。</span><wbr></p></div><div class="tx" data-i="4"><p class="t">年収・地位・資産など上下の相対比較で幸福度を測る<span class="zs">ゼロサムゲーム</span>と、成長・信頼・創造など一緒に何かに取り組むことで幸福が生まれる<span class="ps">プラスサムゲーム</span>との視点から様々な事象を捉えた際、創業時に掲げた<span class="sm">「笑顔の総量の最大化」</span>を軸に置くと判断基準は明確になると考えています。</p></div><div class="tx" data-i="5"><p class="t"><span class="lead">短期的な個別最適ではなく、長期的な全体最適へ。</span>利己を求めることと、利他に生きることがタイムラグを経て同義になるという仮説を検証すべく、今後も地道に、泥臭くをコアバリューとして事業を運営してまいります。</p></div><div class="tx" data-i="6"><p class="t">ご興味をお持ちいただけた方はぜひご一報いただければ幸いです。</p><a class="tocontact" href="#contact">CONTACT <span>→</span></a></div>
+    <nav class="idx" aria-label="場面"><button type="button" data-i="0"><span>1</span><i></i></button><button type="button" data-i="1"><span>2</span><i></i></button><button type="button" data-i="2"><span>3</span><i></i></button><button type="button" data-i="3"><span>4</span><i></i></button><button type="button" data-i="4"><span>5</span><i></i></button><button type="button" data-i="5"><span>6</span><i></i></button><button type="button" data-i="6"><span>7</span><i></i></button></nav>
+  </div>
+</section>
+</main>
+<script>
+
+const st=document.getElementById('story'),L=[...st.querySelectorAll('.ly')],T=[...st.querySelectorAll('.tx')],B=[...st.querySelectorAll('.idx button')];
+let cur=-1;
+function upd(){const r=st.getBoundingClientRect(),span=st.offsetHeight-innerHeight;const p=Math.min(.9999,Math.max(0,-r.top/span));
+  const k=Math.floor(p*7),f=p*7-k;
+  if(k!==cur){cur=k;[L,T,B].forEach(a=>a.forEach((e,i)=>e.classList.toggle('on',i===k)))}
+  B[k].style.setProperty('--p',f.toFixed(3));}
+addEventListener('scroll',upd,{passive:true});addEventListener('resize',upd);upd();
+B.forEach((b,i)=>b.onclick=()=>{const span=st.offsetHeight-innerHeight;scrollTo({top:st.offsetTop+span*(i+.15)/7,behavior:'smooth'})});
+window.__frames=()=>{const span=st.offsetHeight-innerHeight;return Array.from({length:7},(_,i)=>Math.round(st.offsetTop+span*(i+.5)/7))};
+// 5場面目：小さな円が重なり合って明るさが増えていく（プラスサム）
+const cv=st.querySelector('canvas.sum'),cx=cv.getContext('2d');let P=[];
+function rs(){const d=Math.min(2,devicePixelRatio||1);cv.width=innerWidth*d;cv.height=innerHeight*d;cx.setTransform(d,0,0,d,0,0);
+  P=Array.from({length:46},(_,i)=>({x:Math.random()*innerWidth,y:innerHeight*(.25+Math.random()*.6),r:30+Math.random()*120,s:.2+Math.random()*.5,a:Math.random()*6.28}))}
+rs();addEventListener('resize',rs);
+(function dr(t){if(cur===4){cx.globalCompositeOperation='source-over';cx.fillStyle='#120b06';cx.fillRect(0,0,innerWidth,innerHeight);cx.globalCompositeOperation='lighter';
+  P.forEach(p=>{p.a+=.004*p.s;const x=p.x+Math.cos(p.a)*40,y=p.y+Math.sin(p.a*1.3)*26;const g=cx.createRadialGradient(x,y,0,x,y,p.r);g.addColorStop(0,'rgba(255,170,90,.16)');g.addColorStop(1,'rgba(255,120,60,0)');cx.fillStyle=g;cx.beginPath();cx.arc(x,y,p.r,0,6.283);cx.fill()})}
+  requestAnimationFrame(dr)})();
+
+</script>
+</body>
+</html>

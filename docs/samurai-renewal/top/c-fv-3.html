@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>FV 案3 ノイズが晴れる | サムライスタイル 候補</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter+Tight:wght@500&family=Noto+Sans+JP:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+html,body{margin:0}
+html{overflow-x:hidden;overflow-x:clip}
+body{background:#0a3fd6;-webkit-font-smoothing:antialiased;overflow-x:hidden;overflow-x:clip}
+a{color:inherit;text-decoration:none}
+.nb{white-space:nowrap}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.hd{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;justify-content:space-between;padding:16px clamp(16px,2.8vw,40px);font:500 13px/1 "Inter Tight","Noto Sans JP",sans-serif;letter-spacing:.02em;color:var(--hd,#0d0d0d);pointer-events:none}
+.hd>*{pointer-events:auto}
+.hd .logo{display:block;height:34px}.hd .logo img{height:100%;width:auto;display:block}
+.hd.dk{--hd:#fff}.hd.dk .logo img{filter:invert(1)}
+.hd .nav{display:flex;align-items:center;gap:2px}
+.hd .nav a{padding:9px 12px;border-radius:99px;transition:opacity .3s}
+.hd .nav a:hover{opacity:.6}
+.hd .nav a.cta{border:1px solid currentColor;margin-left:6px;padding:9px 16px}
+.hd .lang{display:flex;gap:2px;margin-left:12px;font-size:11px}
+.hd .lang span{padding:6px 7px;opacity:.5}.hd .lang b{padding:6px 7px;font-weight:600;border-bottom:1px solid currentColor}
+.hd .mb{display:none;background:none;border:1px solid currentColor;color:inherit;font:500 12px/1 "Inter Tight",sans-serif;letter-spacing:.08em;padding:10px 14px;border-radius:99px;cursor:pointer}
+.mov{position:fixed;inset:0;z-index:59;background:#0d0d0d;color:#fff;padding:96px 20px 32px;display:none;flex-direction:column;gap:6px;font:500 34px/1.15 "Inter Tight",sans-serif;letter-spacing:-.02em}
+.mov a{padding:4px 0}
+body.mopen .mov{display:flex}
+@media(max-width:960px){.hd .nav{display:none}.hd .mb{display:block}.hd .logo{height:30px}}
+
+
+body{background:#0a3fd6;color:#f3e4c4;font-family:"Instrument Serif","Noto Sans JP",serif}
+.fv{position:relative;height:100vh;height:100svh;min-height:560px;overflow:hidden;cursor:crosshair}
+#cv{position:absolute;inset:0;width:100%;height:100%;display:block}
+.ttl{position:absolute;left:clamp(14px,2.4vw,36px);right:clamp(14px,2.4vw,36px);bottom:clamp(10px,2vw,26px);margin:0;font-weight:400;line-height:.9;letter-spacing:-.025em;white-space:nowrap;color:#f3e4c4;pointer-events:none}
+.sub{position:absolute;left:clamp(16px,2.8vw,40px);top:108px;margin:0;font-family:"Noto Sans JP",sans-serif;font-size:15px;line-height:1.9;letter-spacing:.06em;color:#f3e4c4;max-width:420px;pointer-events:none}
+.sub{display:flex;flex-direction:column}
+.hint{position:absolute;right:clamp(16px,2.8vw,40px);top:112px;font:400 20px/1 "Instrument Serif",serif;letter-spacing:.01em;color:#f3e4c4;pointer-events:none}
+@media(max-width:700px){
+  .sub{top:84px;left:16px;right:16px;font-size:13px}
+  .hint{top:auto;bottom:calc(16vw + 34px);right:16px;font-size:16px}
+}
+
+</style>
+</head>
+<body>
+<header class="hd dk" id="hd">
+  <a class="logo" href="#top" aria-label="SAMURAI STYLE"><img src="img/logo.svg" alt="SAMURAI STYLE"></a>
+  <nav class="nav"><a href="#top">HOME</a><a href="#service">SERVICE</a><a href="https://samurai-style.tokyo/media">MEDIA</a><a href="https://samurai-style.tokyo/company">COMPANY</a><a href="https://samurai-style.tokyo/recruit">RECRUIT</a><a class="cta" href="#contact">CONTACT</a><div class="lang"><span>ID</span><span>EN</span><b>JA</b></div></nav>
+  <button class="mb" type="button" onclick="document.body.classList.toggle('mopen')">MENU</button>
+</header>
+<div class="mov" onclick="document.body.classList.remove('mopen')"><a href="#top">HOME</a><a href="#service">SERVICE</a><a href="https://samurai-style.tokyo/media">MEDIA</a><a href="https://samurai-style.tokyo/company">COMPANY</a><a href="https://samurai-style.tokyo/recruit">RECRUIT</a><a href="#contact">CONTACT</a></div>
+<main id="top">
+<section class="fv" id="fv">
+  <canvas id="cv" aria-hidden="true"></canvas>
+  <p class="sub"><span class="nb">何が本質的なシグナルで</span><wbr><span class="nb">何が一時的なノイズなのかを</span><wbr><span class="nb">見極める。</span></p>
+  <span class="hint">scroll to align ↓</span>
+  <h1 class="ttl" id="ttl">find the signal.</h1>
+</section>
+</main>
+<script>
+
+const cv=document.getElementById('cv'),cx=cv.getContext('2d'),fv=document.getElementById('fv'),ttl=document.getElementById('ttl');
+const src=new Image();src.src='img/story/s3.webp';
+let W,H,dpr,cell,cols,rows,clar,duo,mos,ox,oy,dw,dh;
+const C0=[3,10,58],C1=[10,63,214],C2=[118,182,255],C3=[236,244,255];
+function lut(t){ // 影→紺→電気的な青→白みの青
+  const st=[[0,C0],[.42,C1],[.8,C2],[1,C3]];for(let i=1;i<st.length;i++){if(t<=st[i][0]){const a=st[i-1],b=st[i],k=(t-a[0])/(b[0]-a[0]);return a[1].map((v,j)=>v+(b[1][j]-v)*k)}}return C3}
+function fitTitle(){ttl.style.fontSize='100px';const r=document.createRange();r.selectNodeContents(ttl);const w=r.getBoundingClientRect().width;ttl.style.fontSize=(100*ttl.clientWidth/w*0.985).toFixed(1)+'px'}
+function build(){
+  dpr=Math.min(2,devicePixelRatio||1);W=fv.clientWidth;H=fv.clientHeight;cv.width=W*dpr;cv.height=H*dpr;cx.setTransform(dpr,0,0,dpr,0,0);
+  cell=W<700?28:44;cols=Math.ceil(W/cell)+1;rows=Math.ceil(H/cell)+1;clar=new Float32Array(cols*rows);
+  const s=Math.max(W/src.width,H/src.height);dw=src.width*s;dh=src.height*s;ox=(W-dw)/2;oy=(H-dh)*.38;
+  // 2色化した原寸
+  duo=document.createElement('canvas');duo.width=Math.round(W);duo.height=Math.round(H);const d=duo.getContext('2d');
+  d.drawImage(src,ox,oy,dw,dh);const id=d.getImageData(0,0,duo.width,duo.height),p=id.data;
+  for(let i=0;i<p.length;i+=4){let y=(p[i]*.3+p[i+1]*.59+p[i+2]*.11)/255;y=Math.min(1,Math.pow(y,.85)*1.25);const c=lut(y);p[i]=c[0];p[i+1]=c[1];p[i+2]=c[2]}
+  d.putImageData(id,0,0);
+  // モザイク（1マス=1画素に縮めた絵）
+  mos=document.createElement('canvas');mos.width=cols;mos.height=rows;const m=mos.getContext('2d');m.imageSmoothingEnabled=true;m.imageSmoothingQuality='high';
+  m.drawImage(duo,0,0,cols*cell,rows*cell,0,0,cols,rows);
+  fitTitle();
+}
+let mx=-1,my=-1,auto=true,t0=performance.now();
+fv.addEventListener('pointermove',e=>{const r=fv.getBoundingClientRect();mx=e.clientX-r.left;my=e.clientY-r.top;auto=false;clearTimeout(fv._t);fv._t=setTimeout(()=>auto=true,2600)});
+function frame(t){
+  if(!duo){requestAnimationFrame(frame);return}
+  let px=mx,py=my;
+  if(auto){const k=(t-t0)/1000;// 1台だけ光る画面（x=.5,y=.355）の周りをゆっくり回る
+    const fx=ox+dw*.5,fy=oy+dh*.355;px=fx+Math.cos(k*.55)*W*.16;py=fy+Math.sin(k*.8)*H*.12}
+  const R=(W<700?3.4:4.6)*cell;
+  for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){const n=j*cols+i;const dx=(i+.5)*cell-px,dy=(j+.5)*cell-py;const dd=Math.hypot(dx,dy);
+    if(dd<R)clar[n]=Math.min(1,clar[n]+.22*(1-dd/R)+.05);else clar[n]=Math.max(0,clar[n]-.005)}
+  cx.imageSmoothingEnabled=false;cx.drawImage(mos,0,0,cols,rows,0,0,cols*cell,rows*cell);
+  // ノイズ（ブロックのちらつき）
+  const fl=Math.floor(t/90);
+  for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){const n=j*cols+i;
+    const c=clar[n];
+    if(c>0.02){cx.globalAlpha=Math.min(1,c*1.35);cx.drawImage(duo,i*cell,j*cell,cell,cell,i*cell,j*cell,cell,cell);cx.globalAlpha=1}
+    else{const h=((i*73856093)^(j*19349663)^(fl*83492791))>>>0;if(h%23===0){cx.fillStyle=h%2?'rgba(3,10,58,.55)':'rgba(140,190,255,.28)';cx.fillRect(i*cell,j*cell,cell,cell)}}
+  }
+  requestAnimationFrame(frame);
+}
+src.onload=()=>document.fonts.ready.then(()=>{build();requestAnimationFrame(frame)});
+addEventListener('resize',()=>{if(src.complete)build()});
+
+</script>
+</body>
+</html>

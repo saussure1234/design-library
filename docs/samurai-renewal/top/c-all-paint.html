@@ -1,0 +1,642 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>サムライスタイル | Find the signal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,400;1,500;1,600&family=Shippori+Mincho:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1c2042;--ink2:#4a4d6a;--paper:#f8f2e5;--paper2:#efe6d3;--gold:#d9b56c;--gold2:#a8844a;
+  --nt:#eee9f7;--nt2:#c9c3e0;--matte:#080b18;--matte-d:#efe7d6;
+  --serif:"Cormorant Garamond",Garamond,serif;--min:"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",serif;
+  --gx:clamp(20px,4.2vw,64px);
+  --grain:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='1 0 0 0 0  1 0 0 0 0  1 0 0 0 0  0 0 0 0 .55'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  --fiber:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><filter id='f'><feTurbulence type='fractalNoise' baseFrequency='.025 .14' numOctaves='3' seed='4' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .55  0 0 0 0 .47  0 0 0 0 .36  0 0 0 -.45 .3'/></filter><rect width='100%' height='100%' filter='url(%23f)'/></svg>");
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{font-family:var(--min);color:var(--nt);background:#0b1130;overflow-x:hidden;font-feature-settings:"palt" 0;-webkit-font-smoothing:antialiased}
+body.nogl{background:linear-gradient(180deg,#070c22 0%,#12204e 18%,#34488e 34%,#f0a48e 46%,#efd9d2 62%,#e3ebf3 100%)}
+a{color:inherit;text-decoration:none}
+img,video{display:block;max-width:100%}
+.nb{display:inline-block}
+#sky{position:fixed;inset:0;width:100vw;height:100vh;height:100lvh;z-index:-2;display:block}
+.grain{position:fixed;inset:0;z-index:60;pointer-events:none;background-image:var(--grain);background-size:240px;mix-blend-mode:soft-light;opacity:.55}
+.svgdefs{position:absolute;width:0;height:0;overflow:hidden}
+
+/* ===== header ===== */
+.hd{position:fixed;top:0;left:0;right:0;height:72px;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:0 32px;color:var(--nt);transition:color .6s,background .6s}
+.hd .logo img{height:24px;width:auto;filter:invert(1) brightness(1.05);transition:filter .6s}
+.nav{display:flex;align-items:center;gap:30px;font-family:var(--serif);font-weight:600;font-size:15px;letter-spacing:.16em}
+.nav a{position:relative;padding:4px 0}
+.nav a::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .4s}
+.nav a:hover::after{transform:scaleX(1)}
+.nav .cta{padding:9px 20px;border:1px solid currentColor;border-radius:999px;font-style:italic;letter-spacing:.12em}
+.nav .cta::after{display:none}
+.lang{display:flex;gap:10px;font-family:var(--serif);font-size:13px;letter-spacing:.12em;opacity:.85}
+.lang span{opacity:.5}.lang b{font-weight:600;border-bottom:1px solid currentColor}
+.hd.day{color:var(--ink)}
+.hd.day .logo img{filter:none}
+.hd.solid{background:rgba(9,12,30,.58);-webkit-backdrop-filter:blur(12px) saturate(1.1);backdrop-filter:blur(12px) saturate(1.1);box-shadow:0 1px 0 rgba(255,255,255,.06)}
+.hd.solid.day{background:rgba(248,242,229,.66);box-shadow:0 1px 0 rgba(28,32,66,.08)}
+.burger{display:none;width:44px;height:44px;border:0;background:none;color:inherit;position:relative;cursor:pointer}
+.burger i{position:absolute;left:11px;right:11px;height:1.5px;background:currentColor;transition:transform .4s}
+.burger i:first-child{top:18px}.burger i:last-child{top:25px}
+.ov{position:fixed;inset:0;z-index:49;background:rgba(8,11,24,.92);backdrop-filter:blur(8px);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:22px;font-family:var(--serif);font-size:26px;letter-spacing:.14em;color:var(--nt);opacity:0;visibility:hidden;transition:opacity .4s,visibility .4s}
+.ov.open{opacity:1;visibility:visible}
+.ov .lang{font-size:15px;margin-top:10px}
+body.menu .burger i:first-child{transform:translateY(3.5px) rotate(20deg)}
+body.menu .burger i:last-child{transform:translateY(-3.5px) rotate(-20deg)}
+
+/* ===== FV : framed painting (Railway inset) ===== */
+.fv{position:relative;height:100vh;height:100svh;min-height:600px;overflow:hidden}
+.fv .frame{position:absolute;top:72px;left:16px;right:16px;bottom:16px;border-radius:18px;box-shadow:0 0 0 120vmax var(--matte),inset 0 0 0 1px rgba(255,255,255,.12),inset 0 0 120px rgba(4,6,20,.55)}
+.fv .ttl{position:absolute;left:0;right:0;top:calc(72px + 15.5%);text-align:center;padding:0 24px}
+.fv h1{font-family:var(--serif);font-style:italic;font-weight:500;font-size:clamp(64px,10.4vw,156px);line-height:.98;letter-spacing:-.005em;color:#f4f0fb;text-shadow:0 2px 40px rgba(6,8,30,.6)}
+.fv h1 .wd{display:inline-block;opacity:0;transform:translateY(.25em);filter:blur(8px);animation:wdin 1.6s cubic-bezier(.2,.7,.2,1) forwards}
+.fv h1 .wd:nth-child(2){animation-delay:.25s}.fv h1 .wd:nth-child(3){animation-delay:.5s}
+@keyframes wdin{to{opacity:1;transform:none;filter:none}}
+.fv .sum{margin-top:clamp(22px,3.2vw,40px);font-size:clamp(15px,1.45vw,20px);letter-spacing:.2em;line-height:2;color:var(--nt2);opacity:0;animation:fade 1.8s 1.1s forwards}
+@keyframes fade{to{opacity:1}}
+.fv .hint{position:absolute;left:50%;bottom:calc(16px + 22%);transform:translateX(-50%);font-family:var(--serif);font-style:italic;font-size:15px;letter-spacing:.18em;color:var(--nt2);opacity:.8;white-space:nowrap}
+.fv .hint::after{content:"";display:block;width:1px;height:46px;margin:12px auto 0;background:linear-gradient(currentColor,transparent);animation:drip 2.6s ease-in-out infinite}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top}45%{transform:scaleY(1);transform-origin:top}55%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+.hills{position:absolute;left:16px;right:16px;bottom:16px;height:24%;border-radius:0 0 18px 18px;overflow:hidden;pointer-events:none}
+.hills svg{position:absolute;left:-2%;bottom:-6%;width:104%;height:112%}
+
+/* ===== common section ===== */
+.sec{position:relative;padding:clamp(110px,14vw,200px) var(--gx)}
+.sh{display:flex;align-items:baseline;gap:22px;margin:0 auto clamp(48px,6vw,90px);max-width:1240px}
+.sh h2{font-family:var(--serif);font-style:italic;font-weight:500;font-size:clamp(52px,7.2vw,108px);line-height:.9;letter-spacing:.005em}
+.sh p{font-size:14px;letter-spacing:.32em;opacity:.8}
+.sh::after{content:"";flex:1;height:1px;background:currentColor;opacity:.3;align-self:center;transform:translateY(-.4em)}
+.rv{opacity:0;transform:translateY(34px);filter:blur(6px);transition:opacity 1.4s cubic-bezier(.2,.7,.2,1),transform 1.4s cubic-bezier(.2,.7,.2,1),filter 1.4s}
+.rv.in{opacity:1;transform:none;filter:none}
+
+/* ===== STORY (night → dawn) ===== */
+#story{color:var(--nt);padding-bottom:40px;overflow-x:clip}
+.srs{max-width:1240px;margin:0 auto}
+.sx{position:relative;min-height:78vh;display:grid;align-items:center;padding:8vh 0}
+.sx .t{font-size:clamp(15.5px,1.22vw,18px);line-height:2.25;letter-spacing:.08em;text-shadow:0 0 22px rgba(6,10,34,.75),0 1px 2px rgba(6,10,34,.5);line-break:strict;text-wrap:pretty}
+.pool{position:relative}
+.pool::before{content:"";position:absolute;inset:-12% -8%;z-index:-1;background:radial-gradient(closest-side,rgba(8,12,38,.5),rgba(8,12,38,.25) 60%,transparent);filter:blur(10px)}
+.sx.l,.sx.r{grid-template-columns:repeat(12,1fr);column-gap:24px}
+.sx.l .art{grid-column:1/8}.sx.l .tc{grid-column:9/13}
+.sx.r .tc{grid-column:1/6;grid-row:1}.sx.r .art{grid-column:7/13;grid-row:1}
+/* frame = gilt line + dark wood + mat */
+.art{position:relative;padding:clamp(12px,1.4vw,20px);background:#ece3cf;background-image:var(--fiber);box-shadow:0 0 0 1px #caa767,0 0 0 9px #1b1a26,0 0 0 10px #8f7444,0 40px 80px -20px rgba(0,0,0,.65),0 20px 40px rgba(0,0,0,.35)}
+.art img{width:100%;aspect-ratio:3/2;object-fit:cover;box-shadow:inset 0 0 0 1px rgba(0,0,0,.2)}
+.art figcaption{margin-top:12px;font-family:var(--serif);font-style:italic;font-size:13px;letter-spacing:.12em;color:#5d5340;display:flex;justify-content:space-between}
+.sx.tx{justify-items:center}
+.sx.tx .tc{max-width:36em;text-align:left}
+.echo{position:relative;white-space:nowrap;color:#fff;font-weight:600;text-shadow:-14px 0 6px rgba(190,170,240,.45),-30px 2px 12px rgba(160,140,220,.28),16px -1px 8px rgba(190,170,240,.35),34px 1px 16px rgba(160,140,220,.22),0 0 22px rgba(6,10,34,.8)}
+.sx.q{min-height:100vh;justify-items:center;text-align:center}
+.sx.q .t{font-size:clamp(24px,3.3vw,46px);line-height:1.75;letter-spacing:.1em;font-weight:500;max-width:16em}
+.sig{font-family:var(--serif);font-style:italic;font-weight:600;font-size:1.28em;color:#ffe6b0;letter-spacing:.02em;text-shadow:0 0 18px rgba(255,214,150,.75),0 0 46px rgba(255,190,120,.45)}
+.nz{font-family:var(--serif);font-style:italic;font-weight:500;font-size:1.22em;letter-spacing:.02em;color:rgba(226,220,246,.9)}
+.nz i{display:inline-block;font-style:italic;filter:blur(.8px)}
+.nz i:nth-child(1){transform:translate(-2px,6px) rotate(-8deg);filter:blur(1.3px)}
+.nz i:nth-child(2){transform:translate(1px,-9px);opacity:.75}
+.nz i:nth-child(3){transform:translate(3px,7px) rotate(10deg);filter:blur(1.6px)}
+.nz i:nth-child(4){transform:translate(-1px,-5px) rotate(-6deg);opacity:.7}
+.nz i:nth-child(5){transform:translate(4px,10px) rotate(7deg);filter:blur(1.2px)}
+.zs{border-bottom:1px dashed rgba(220,215,240,.7);padding-bottom:2px}
+.ps{background:linear-gradient(100deg,transparent 0 2%,rgba(240,160,170,.42) 6% 92%,transparent 98%);background-size:100% 62%;background-position:0 88%;background-repeat:no-repeat;padding:0 .1em}
+.sm{color:#ffe3ae;text-shadow:0 0 18px rgba(255,200,140,.6),0 0 22px rgba(6,10,34,.6);font-weight:600}
+.lead{display:block;font-size:clamp(22px,2.4vw,34px);line-height:1.7;letter-spacing:.1em;font-weight:600;margin-bottom:1.2em;color:#fff4ea}
+.sx.l6 .tc{max-width:34em}
+.sx.fin{min-height:70vh;justify-items:center;text-align:center;align-content:center;gap:40px}
+.sx.fin .t{font-size:clamp(17px,1.5vw,22px);letter-spacing:.14em}
+.sx.fin .pool::before{inset:-60% -6%;background:radial-gradient(closest-side,rgba(40,26,80,.55),rgba(40,26,80,.28) 60%,transparent)}
+.sx.fin .t,.l6 .t{font-weight:500}
+.tocontact{display:inline-flex;align-items:center;gap:16px;padding:16px 34px 16px 38px;border-radius:999px;font-family:var(--serif);font-style:italic;font-weight:600;font-size:20px;letter-spacing:.18em;color:var(--ink);background:var(--paper);background-image:var(--fiber);box-shadow:0 18px 40px -12px rgba(40,20,60,.55),inset 0 0 0 1px rgba(168,132,74,.4);transition:transform .4s}
+.tocontact:hover{transform:translateY(-3px)}
+.tocontact span{font-style:normal}
+
+/* ===== paper sheets ===== */
+.paper{position:relative;isolation:isolate;color:var(--ink)}
+.paper::before{content:"";position:absolute;inset:0;z-index:-1;background-color:var(--paper);background-image:var(--fiber),radial-gradient(120% 90% at 30% 20%,#fffaf0,transparent 60%);filter:url(#deckle) drop-shadow(0 22px 34px rgba(70,46,80,.22)) drop-shadow(0 2px 3px rgba(70,46,80,.18))}
+
+/* ===== FEATURES (sunrise) ===== */
+#benefit{color:var(--ink)}
+.f4{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(18px,2vw,30px);align-items:start}
+.f4 article{padding:34px 28px 38px;min-height:100%}
+.f4 article:nth-child(1){transform:rotate(-1.4deg)}
+.f4 article:nth-child(2){transform:rotate(.9deg) translateY(54px)}
+.f4 article:nth-child(3){transform:rotate(-.6deg) translateY(16px)}
+.f4 article:nth-child(4){transform:rotate(1.3deg) translateY(70px)}
+.f4 .rv.in:nth-child(1){transform:rotate(-1.4deg)}
+.f4 .rv.in:nth-child(2){transform:rotate(.9deg) translateY(54px)}
+.f4 .rv.in:nth-child(3){transform:rotate(-.6deg) translateY(16px)}
+.f4 .rv.in:nth-child(4){transform:rotate(1.3deg) translateY(70px)}
+.sw{width:86px;height:86px;border-radius:50%;margin:0 0 22px -6px;filter:url(#wash);opacity:.92}
+.sw.c1{background:radial-gradient(circle at 42% 40%,#3a4f9a 0 30%,#22306e 58%,#182456 66%,transparent 70%)}
+.sw.c2{background:radial-gradient(circle at 42% 40%,#e7a6b4 0 30%,#c97d93 58%,#b06580 66%,transparent 70%)}
+.sw.c3{background:radial-gradient(circle at 42% 40%,#f8d18a 0 30%,#e9b05e 58%,#d4943e 66%,transparent 70%)}
+.sw.c4{background:radial-gradient(circle at 42% 40%,#b6d2ef 0 30%,#86aedb 58%,#6a95c8 66%,transparent 70%)}
+.f4 .no{font-family:var(--serif);font-style:italic;font-size:15px;letter-spacing:.16em;color:var(--gold2)}
+.f4 h3{margin:14px 0 18px;font-weight:600;line-height:1.5}
+.f4 h3 small{display:block;font-size:13px;font-weight:500;letter-spacing:.1em;color:var(--ink2);margin-bottom:6px}
+.f4 h3 .w{display:block;font-size:clamp(22px,1.85vw,27px);letter-spacing:.08em}
+.f4 p{font-size:14.5px;line-height:2.05;letter-spacing:.05em;color:#33365a;line-break:strict}
+
+/* ===== SERVICE (morning gallery) ===== */
+#service{color:var(--ink);padding-top:clamp(160px,16vw,240px)}
+.svcs{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;column-gap:clamp(40px,7vw,110px);row-gap:clamp(70px,8vw,120px)}
+.svc:nth-child(even){margin-top:clamp(0px,12vw,170px)}
+.svc .pic{display:block;padding:clamp(14px,1.6vw,22px);background:#fbf7ee;background-image:var(--fiber);box-shadow:0 0 0 1px #d9c79e,0 0 0 7px #f4ecdc,0 0 0 8px #b99a62,0 36px 60px -24px rgba(80,50,70,.45),0 14px 24px -10px rgba(80,50,70,.25);transition:transform .6s}
+.svc .pic:hover{transform:translateY(-6px)}
+.svc .pic video{width:100%;aspect-ratio:4/5;object-fit:cover;background:var(--pc,#ddd)}
+.svc .cat{display:flex;gap:14px;align-items:baseline;margin-top:34px;font-size:13px;letter-spacing:.14em;color:var(--ink2)}
+.svc .cat b{font-family:var(--serif);font-style:italic;font-weight:600;font-size:18px;color:var(--gold2)}
+.svc h3{font-family:var(--serif);font-weight:600;font-size:clamp(34px,3.4vw,50px);letter-spacing:.01em;line-height:1.15;margin:6px 0 14px}
+.svc h3.ja{font-family:var(--min);font-weight:600;font-size:clamp(28px,2.8vw,40px);letter-spacing:.12em}
+.svc .d{font-size:15px;line-height:2.05;letter-spacing:.05em;color:#2f3254;max-width:32em}
+.svc .more{display:inline-flex;align-items:center;gap:12px;margin-top:20px;font-size:14px;letter-spacing:.16em;padding-bottom:6px;border-bottom:1px solid currentColor}
+.svc .more::after{content:"→";font-family:var(--serif)}
+
+/* ===== MEMBER ===== */
+#member{color:var(--ink)}
+.mem-lead{max-width:44em;margin:0 auto clamp(60px,7vw,100px);font-size:clamp(15px,1.2vw,17px);line-height:2.25;letter-spacing:.07em;color:#2c2f50;line-break:strict;text-wrap:pretty}
+.mrow{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(20px,2.6vw,40px)}
+.mp .ph{position:relative;padding:12px;background:#fbf7ee;background-image:var(--fiber);border-radius:999px 999px 8px 8px;box-shadow:0 0 0 1px #c9ad74,0 0 0 6px #f6efe0,0 0 0 7px #b99a62,0 30px 50px -22px rgba(80,50,70,.45)}
+.mp .ph img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:999px 999px 4px 4px;filter:saturate(.92) sepia(.06)}
+.mp .no{display:block;margin-top:26px;font-family:var(--serif);font-style:italic;font-size:15px;color:var(--gold2);letter-spacing:.16em}
+.mp h3{font-size:22px;font-weight:600;letter-spacing:.12em;margin-top:6px}
+.mp .role{font-size:13px;letter-spacing:.12em;color:var(--ink2);margin-top:6px}
+.mp .bio{font-size:13.5px;line-height:2;letter-spacing:.04em;color:#36395c;margin-top:14px;line-break:strict}
+
+/* ===== CONTACT (letter) ===== */
+#contact{color:var(--ink)}
+.ct{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:300px 1fr;gap:clamp(30px,5vw,80px);padding:clamp(40px,5vw,72px)}
+.ct .side h2{font-family:var(--serif);font-style:italic;font-weight:500;font-size:clamp(56px,6vw,88px);line-height:.92}
+.ct .side p{margin-top:26px;font-family:var(--serif);font-style:italic;font-size:15px;letter-spacing:.14em;color:var(--gold2)}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:28px 30px}
+.form>label,.form .full>label:first-child{display:flex;flex-direction:column;gap:8px;font-size:13.5px;letter-spacing:.1em;color:#3a3d5e}
+.form input[type=text],.form input[type=email],.form input[type=tel],.form textarea{font:inherit;font-size:16px;color:var(--ink);background:transparent;border:0;border-bottom:1px solid rgba(28,32,66,.35);padding:10px 2px;outline:none;border-radius:0;transition:border-color .3s}
+.form input:focus,.form textarea:focus{border-color:var(--gold2)}
+.form textarea{min-height:150px;resize:vertical;border:1px solid rgba(28,32,66,.28);padding:12px;background:rgba(255,255,255,.35)}
+.full{grid-column:1/-1}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:12px 20px}
+.opts label{display:flex;align-items:center;gap:12px;font-size:14px;letter-spacing:.04em;cursor:pointer;line-height:1.5}
+.opts input{appearance:none;-webkit-appearance:none;flex:none;width:18px;height:18px;border-radius:50%;border:1px solid rgba(28,32,66,.5);display:grid;place-content:center;margin:0}
+.opts input::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--gold2);transform:scale(0);transition:transform .25s}
+.opts input:checked::before{transform:scale(1)}
+.send{grid-column:1/-1;justify-self:start;display:inline-flex;align-items:center;gap:18px;padding:17px 46px;border:0;border-radius:999px;background:var(--ink);color:var(--paper);font-family:var(--min);font-size:16px;letter-spacing:.3em;cursor:pointer;box-shadow:0 16px 30px -12px rgba(28,32,66,.6);transition:transform .3s}
+.send:hover{transform:translateY(-2px)}
+.send span{font-family:var(--serif);letter-spacing:0}
+.note{grid-column:1/-1;font-size:12px;line-height:1.95;letter-spacing:.03em;color:#55587a}
+.note a{text-decoration:underline}
+
+/* ===== footer : framed morning landscape ===== */
+.ft{position:relative;overflow:hidden;color:var(--ink);padding:16px 16px 0}
+.ft .frame2{position:relative;height:clamp(420px,46vw,620px);border-radius:18px;box-shadow:0 0 0 120vmax var(--matte-d),inset 0 0 0 1px rgba(28,32,66,.12);overflow:hidden}
+.ft .hills2{position:absolute;left:0;right:0;bottom:0;height:46%}
+.ft .hills2 svg{position:absolute;left:-2%;bottom:-4%;width:104%;height:108%}
+.ft .big{position:absolute;left:0;right:0;top:16%;display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px}
+.ft .big b{font-family:var(--serif);font-style:italic;font-weight:500;font-size:clamp(64px,11vw,170px);line-height:.9;letter-spacing:.01em;transition:letter-spacing .6s}
+.ft .big:hover b{letter-spacing:.04em}
+.ft .big .jp{font-size:clamp(14px,1.3vw,18px);letter-spacing:.24em}
+.ft .big .arr{font-family:var(--serif);font-size:28px;width:58px;height:58px;border-radius:50%;border:1px solid currentColor;display:grid;place-items:center;margin-top:8px}
+.low{position:relative;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:30px 18px 34px;font-size:12.5px;letter-spacing:.08em;color:#4a4d6a}
+.low .lg img{height:22px;width:auto}
+.low nav{display:flex;gap:28px}
+
+/* ===== responsive ===== */
+@media (max-width:1100px){
+  .nav{gap:20px;font-size:14px}
+  .f4{grid-template-columns:1fr 1fr;row-gap:40px}
+  .f4 article:nth-child(n),.f4 .rv.in:nth-child(n){transform:none}
+  .f4 article:nth-child(odd),.f4 .rv.in:nth-child(odd){transform:rotate(-.8deg)}
+  .f4 article:nth-child(even),.f4 .rv.in:nth-child(even){transform:rotate(.8deg) translateY(30px)}
+  .mrow{grid-template-columns:1fr 1fr;row-gap:60px}
+}
+@media (max-width:900px){
+  .nav{display:none}.burger{display:block}
+  .hd{height:60px;padding:0 10px 0 20px}
+  .fv .frame{top:60px;left:10px;right:10px;bottom:10px;border-radius:14px}
+  .hills{left:10px;right:10px;bottom:10px;height:21%;border-radius:0 0 14px 14px}
+  .fv .ttl{top:calc(60px + 17%)}
+  .fv .hint{bottom:calc(10px + 21%)}
+  .sx.l,.sx.r{grid-template-columns:1fr;row-gap:48px}
+  .sx.l .art,.sx.l .tc,.sx.r .art,.sx.r .tc{grid-column:1;grid-row:auto}
+  .sx.r .art{grid-row:1}
+  .art{margin:0 10px}
+  .ct{grid-template-columns:1fr}
+  .svcs{grid-template-columns:1fr}
+  .svc:nth-child(even){margin-top:0}
+}
+@media (max-width:600px){
+  .sec{padding:96px 20px}
+  .sh{gap:14px;flex-wrap:wrap}
+  .sh::after{display:none}
+  .sh p{font-size:12px;letter-spacing:.26em}
+  .fv h1{font-size:clamp(58px,17vw,84px);line-height:1.02}
+  .fv .sum{font-size:14.5px;letter-spacing:.14em}
+  .sx{min-height:auto;padding:9vh 0}
+  .sx.q{min-height:86vh}
+  .sx.q .t{font-size:23px;letter-spacing:.06em}
+  .sx .t{font-size:15.5px;line-height:2.15;letter-spacing:.05em}
+  .echo{white-space:normal}
+  .lead{font-size:22px}
+  .f4{grid-template-columns:1fr;row-gap:30px}
+  .f4 article:nth-child(n),.f4 .rv.in:nth-child(n){transform:none}
+  .f4 article{padding:30px 24px 32px}
+  .mrow{grid-template-columns:1fr;row-gap:54px}
+  .mp{display:grid;grid-template-columns:132px 1fr;column-gap:20px;align-items:start}
+  .mp .ph{grid-row:1/5;padding:8px;box-shadow:0 0 0 1px #c9ad74,0 0 0 4px #f6efe0,0 0 0 5px #b99a62,0 20px 30px -16px rgba(80,50,70,.45)}
+  .mp .no{margin-top:4px}
+  .mp .bio{grid-column:1/-1;margin-top:20px}
+  .ct{padding:34px 22px 40px}
+  .form{grid-template-columns:1fr;gap:24px}
+  .opts{grid-template-columns:1fr}
+  .send{justify-self:stretch;justify-content:center}
+  .ft{padding:10px 10px 0}
+  .ft .frame2{height:440px;border-radius:14px}
+  .ft .big{top:18%}
+  .low{flex-direction:column;align-items:flex-start;gap:16px;padding:26px 12px 30px}
+  .low nav{flex-direction:column;gap:10px}
+}
+@media (prefers-reduced-motion:reduce){
+  .rv{opacity:1;transform:none;filter:none;transition:none}
+  .fv h1 .wd,.fv .sum{animation:none;opacity:1;transform:none;filter:none}
+}
+</style>
+</head>
+<body>
+<svg class="svgdefs" aria-hidden="true" focusable="false">
+  <defs>
+    <filter id="deckle" x="-4%" y="-4%" width="108%" height="108%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="4" seed="3" result="t"/>
+      <feDisplacementMap in="SourceGraphic" in2="t" scale="7" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="wash" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="3" seed="11" result="t"/>
+      <feDisplacementMap in="SourceGraphic" in2="t" scale="16" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="2" result="g"/>
+      <feColorMatrix in="g" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .5 -.12" result="g2"/>
+      <feComposite in="g2" in2="d" operator="in" result="g3"/>
+      <feMerge><feMergeNode in="d"/><feMergeNode in="g3"/></feMerge>
+    </filter>
+    <filter id="pigment" x="-2%" y="-20%" width="104%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.018 0.03" numOctaves="4" seed="5" result="t"/>
+      <feDisplacementMap in="SourceGraphic" in2="t" scale="12" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.012 0.22" numOctaves="3" seed="9" result="s"/>
+      <feColorMatrix in="s" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .09 -.03" result="s2"/>
+      <feComposite in="s2" in2="d" operator="in" result="s3"/>
+      <feMerge><feMergeNode in="d"/><feMergeNode in="s3"/></feMerge>
+    </filter>
+  </defs>
+</svg>
+
+<canvas id="sky" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="hd" id="hd">
+  <a class="logo" href="#top" aria-label="SAMURAI STYLE"><img src="img/logo.svg" alt="SAMURAI STYLE"></a>
+  <nav class="nav"><a href="#top">HOME</a><a href="#service">SERVICE</a><a href="https://samurai-style.tokyo/media">MEDIA</a><a href="https://samurai-style.tokyo/company">COMPANY</a><a href="https://samurai-style.tokyo/recruit">RECRUIT</a><a class="cta" href="#contact">CONTACT</a><div class="lang"><span>ID</span><span>EN</span><b>JA</b></div></nav>
+  <button class="burger" aria-label="Menu"><i></i><i></i></button>
+</header>
+<div class="ov"><a href="#top">HOME</a><a href="#service">SERVICE</a><a href="https://samurai-style.tokyo/media">MEDIA</a><a href="https://samurai-style.tokyo/company">COMPANY</a><a href="https://samurai-style.tokyo/recruit">RECRUIT</a><a href="#contact">CONTACT</a><div class="lang"><span>ID</span><span>EN</span><b>JA</b></div></div>
+
+<main id="top">
+<section class="fv" id="fv">
+  <div class="frame" aria-hidden="true"></div>
+  <div class="ttl">
+    <h1><span class="wd">find</span> <span class="wd">the</span> <span class="wd" id="fvsig">s<span class="idot">i</span>gnal.</span></h1>
+    <p class="sum"><span class="nb">何が本質的なシグナルで</span><wbr><span class="nb">何が一時的なノイズなのかを</span><wbr><span class="nb">見極める。</span></p>
+  </div>
+  <span class="hint">scroll to align ↓</span>
+  <div class="hills" aria-hidden="true">
+    <svg viewBox="0 0 1440 300" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="hA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b3170"/><stop offset="1" stop-color="#1a1f4c"/></linearGradient>
+        <linearGradient id="hB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c2156"/><stop offset="1" stop-color="#10143a"/></linearGradient>
+        <linearGradient id="hC" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#11153c"/><stop offset="1" stop-color="#080b22"/></linearGradient>
+      </defs>
+      <g filter="url(#pigment)">
+          <path d="M0 114.9 C10 115.7 38 121.2 58 120.0 C77 118.7 96 114.1 115 107.6 C134 101.1 154 87.6 173 80.7 C192 73.8 211 68.2 230 66.4 C250 64.5 269 65.3 288 69.6 C307 74.0 326 85.5 346 92.6 C365 99.7 384 109.4 403 112.1 C422 114.8 442 110.7 461 108.9 C480 107.1 499 102.9 518 101.2 C538 99.4 557 100.4 576 98.4 C595 96.4 614 88.7 634 89.3 C653 89.8 672 99.9 691 101.5 C710 103.1 730 99.9 749 99.2 C768 98.4 787 100.5 806 97.2 C826 93.9 845 87.5 864 79.5 C883 71.6 902 55.1 922 49.7 C941 44.3 960 46.1 979 47.3 C998 48.6 1018 53.4 1037 57.2 C1056 61.1 1075 65.0 1094 70.6 C1114 76.1 1133 86.0 1152 90.7 C1171 95.3 1190 98.8 1210 98.4 C1229 98.0 1248 91.1 1267 88.2 C1286 85.4 1306 79.3 1325 81.1 C1344 82.9 1363 93.5 1382 99.2 C1402 105.0 1430 112.8 1440 115.5 L1440 300 L0 300Z" fill="url(#hA)"/>
+          <path d="M0 114.9 C10 115.7 38 121.2 58 120.0 C77 118.7 96 114.1 115 107.6 C134 101.1 154 87.6 173 80.7 C192 73.8 211 68.2 230 66.4 C250 64.5 269 65.3 288 69.6 C307 74.0 326 85.5 346 92.6 C365 99.7 384 109.4 403 112.1 C422 114.8 442 110.7 461 108.9 C480 107.1 499 102.9 518 101.2 C538 99.4 557 100.4 576 98.4 C595 96.4 614 88.7 634 89.3 C653 89.8 672 99.9 691 101.5 C710 103.1 730 99.9 749 99.2 C768 98.4 787 100.5 806 97.2 C826 93.9 845 87.5 864 79.5 C883 71.6 902 55.1 922 49.7 C941 44.3 960 46.1 979 47.3 C998 48.6 1018 53.4 1037 57.2 C1056 61.1 1075 65.0 1094 70.6 C1114 76.1 1133 86.0 1152 90.7 C1171 95.3 1190 98.8 1210 98.4 C1229 98.0 1248 91.1 1267 88.2 C1286 85.4 1306 79.3 1325 81.1 C1344 82.9 1363 93.5 1382 99.2 C1402 105.0 1430 112.8 1440 115.5" fill="none" stroke="#9a92d4" stroke-width="2.2" opacity="0.75"/>
+          <path d="M0 153.6 C11 153.8 46 153.6 69 154.8 C91 156.1 114 160.2 137 161.3 C160 162.4 183 162.2 206 161.4 C229 160.6 251 160.0 274 156.3 C297 152.6 320 143.7 343 139.3 C366 134.9 389 131.1 411 129.8 C434 128.6 457 128.3 480 131.7 C503 135.1 526 144.5 549 150.0 C571 155.4 594 160.8 617 164.5 C640 168.2 663 171.3 686 172.1 C709 173.0 731 170.1 754 169.6 C777 169.1 800 170.6 823 169.0 C846 167.3 869 163.1 891 159.7 C914 156.4 937 152.7 960 148.7 C983 144.7 1006 139.4 1029 135.5 C1051 131.6 1074 127.3 1097 125.2 C1120 123.2 1143 121.7 1166 123.3 C1189 124.9 1211 130.7 1234 135.0 C1257 139.4 1280 145.3 1303 149.4 C1326 153.5 1349 156.9 1371 159.8 C1394 162.8 1429 165.8 1440 166.9 L1440 300 L0 300Z" fill="url(#hB)"/>
+          <path d="M0 153.6 C11 153.8 46 153.6 69 154.8 C91 156.1 114 160.2 137 161.3 C160 162.4 183 162.2 206 161.4 C229 160.6 251 160.0 274 156.3 C297 152.6 320 143.7 343 139.3 C366 134.9 389 131.1 411 129.8 C434 128.6 457 128.3 480 131.7 C503 135.1 526 144.5 549 150.0 C571 155.4 594 160.8 617 164.5 C640 168.2 663 171.3 686 172.1 C709 173.0 731 170.1 754 169.6 C777 169.1 800 170.6 823 169.0 C846 167.3 869 163.1 891 159.7 C914 156.4 937 152.7 960 148.7 C983 144.7 1006 139.4 1029 135.5 C1051 131.6 1074 127.3 1097 125.2 C1120 123.2 1143 121.7 1166 123.3 C1189 124.9 1211 130.7 1234 135.0 C1257 139.4 1280 145.3 1303 149.4 C1326 153.5 1349 156.9 1371 159.8 C1394 162.8 1429 165.8 1440 166.9" fill="none" stroke="#7f78bd" stroke-width="2" opacity="0.65"/>
+          <path d="M0 237.9 C16 238.3 64 240.2 96 240.3 C128 240.4 160 238.8 192 238.7 C224 238.6 256 240.0 288 239.7 C320 239.5 352 239.4 384 237.3 C416 235.2 448 230.3 480 227.1 C512 223.9 544 219.8 576 217.9 C608 216.1 640 217.6 672 215.9 C704 214.3 736 208.7 768 208.1 C800 207.5 832 209.1 864 212.3 C896 215.5 928 224.2 960 227.4 C992 230.5 1024 229.7 1056 231.4 C1088 233.2 1120 238.3 1152 237.8 C1184 237.2 1216 231.8 1248 228.2 C1280 224.7 1312 218.7 1344 216.6 C1376 214.5 1424 215.7 1440 215.5 L1440 300 L0 300Z" fill="url(#hC)"/>
+        </g>
+    </svg>
+  </div>
+</section>
+
+<section class="sec" id="story">
+  <div class="sh rv"><h2>STORY</h2><p>ストーリー</p></div>
+  <div class="srs">
+    <div class="sx l s1">
+      <figure class="art rv"><img src="img/story/s1b.webp" alt="白い展示室で、奥まで並ぶ手の彫刻が石膏からクロームへ置き換わっていく。奥から差す光とともに" loading="lazy"></figure>
+      <div class="tc pool rv"><p class="t">「誰かの役に立つ」という営みの中で、これまで人間が担ってきた“考えること”や“実行すること”の一部が、いま急速にAIへと置き換わりつつあります。変化の激しさが増し続けるこの時代において、マクロな視点では人間らしさを、ミクロな視点では自分らしさを保ちながら、どう生き残っていくべきか。私たちはその問いを日々考え続けています。</p></div>
+    </div>
+    <div class="sx tx s2">
+      <div class="tc pool rv"><p class="t">AIは高い合理性をもって答えを返しますが、一方、その合理性は、前提となるプロンプトや、使う人それぞれの立場や経験、価値観に大きく左右される構造にあります。つまり、ひとつの正解に収束するのではなく、<span class="echo">無数の“もっともらしさ”</span>が生まれ続け、エントロピー増大の法則が文字通り起きている時代に入ったと捉えています。</p></div>
+    </div>
+    <div class="sx r s3">
+      <figure class="art rv"><img src="img/story/s3.webp" alt="砂嵐を映すテレビが壁一面に積まれ、1台だけが光る線を映している" loading="lazy"></figure>
+      <div class="tc pool rv"><p class="t">Web上でも、AIによって膨大な情報やコンテンツが生成される時代になりました。そうした環境のなかで重要になるのは、何が本質的なシグナルで、何が一時的なノイズなのかを見極める力だと考えています。</p></div>
+    </div>
+    <div class="sx q" id="sq">
+      <p class="t pool rv"><span class="nb">では、</span><wbr><span class="nb"><em class="sig" id="qsig">S<span class="idot">i</span>gnal</em>と</span><wbr><span class="nb"><em class="nz"><i>N</i><i>o</i><i>i</i><i>s</i><i>e</i></em>を</span><wbr><span class="nb">見極める要素は</span><wbr><span class="nb">どこに</span><wbr><span class="nb">存在するのでしょうか。</span></p>
+    </div>
+    <div class="sx tx s5">
+      <div class="tc pool rv"><p class="t">年収・地位・資産など上下の相対比較で幸福度を測る<span class="zs">ゼロサムゲーム</span>と、成長・信頼・創造など一緒に何かに取り組むことで幸福が生まれる<span class="ps">プラスサムゲーム</span>との視点から様々な事象を捉えた際、創業時に掲げた<span class="sm">「笑顔の総量の最大化」</span>を軸に置くと判断基準は明確になると考えています。</p></div>
+    </div>
+    <div class="sx tx l6" id="s6">
+      <div class="tc pool rv"><p class="t"><span class="lead"><span class="nb">短期的な個別最適ではなく、</span><wbr><span class="nb">長期的な全体最適へ。</span></span>利己を求めることと、利他に生きることがタイムラグを経て同義になるという仮説を検証すべく、今後も地道に、泥臭くをコアバリューとして事業を運営してまいります。</p></div>
+    </div>
+    <div class="sx fin" id="s7">
+      <p class="t pool rv">ご興味をお持ちいただけた方はぜひご一報いただければ幸いです。</p>
+      <div class="rv"><a class="tocontact" href="#contact">CONTACT <span>→</span></a></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="benefit">
+  <div class="sh rv"><h2>FEATURES</h2><p>４つの特徴</p></div>
+  <div class="f4">
+    <article class="paper rv"><div class="sw c1" aria-hidden="true"></div><div class="no">01 / 04</div><h3><small>新規事業立ち上げ経験に基づく</small><span class="w">コミットメント</span></h3><p>所属メンバーは新規事業における立て付けから立ち上げまでの経験を保有。企画フェーズにおける顧客とプロダクトの仮説設計から開発、マーケティング施策立案から各種クリエイティブ制作までを高品質かつワンストップで支援が可能です。</p></article>
+    <article class="paper rv"><div class="sw c2" aria-hidden="true"></div><div class="no">02 / 04</div><h3><small>海外経験に基づく</small><span class="w">多言語対応</span></h3><p>海外生活経験が長く、英語・インドネシア語堪能なメンバーが複数在籍。顧客獲得のための各種クリエイティブ制作の他、営業資料作成から商談までを一貫して多言語で対応可能です。</p></article>
+    <article class="paper rv"><div class="sw c3" aria-hidden="true"></div><div class="no">03 / 04</div><h3><small>多業種経験に基づく</small><span class="w">構造理解力</span></h3><p>医療・半導体・エネルギー・通信・SaaSなどのBtoB、教育・転職・ECなどのBtoCと、幅広い業種での事業企画・マーケティング支援の経験から、複雑な構造においても的確に理解・整理し、成果につながる戦略を立案します。</p></article>
+    <article class="paper rv"><div class="sw c4" aria-hidden="true"></div><div class="no">04 / 04</div><h3><small>少数精鋭だから実現できる</small><span class="w">スピード感</span></h3><p>少数精鋭だから実現できるスピード感。幅広いケイパビリティを持つメンバーが少数でチームを運営。コミュニケーションコストが低く、タスクの所在を明確にしてスピーディーにプロジェクトを推進します。</p></article>
+  </div>
+</section>
+
+<section class="sec" id="service">
+  <div class="sh rv"><h2>SERVICE</h2><p>事業内容</p></div>
+  <div class="svcs">
+    <article class="svc rv"><a class="pic" href="https://samurai-style.tokyo/strategy2action" tabindex="-1" aria-hidden="true" style="--pc:#ebe7dd"><video class="vv" data-src="video/v_s2a.mp4" poster="img/v_s2a.jpg" muted loop playsinline></video></a><p class="cat"><b>01</b><span></span></p><h3>Strategy2Action</h3><p class="d">事業理解に基づいて戦略を考え、実行まで伴走し、ダッシュボード作成による経営層・上長への可視化まで対応。</p><a class="more" href="https://samurai-style.tokyo/strategy2action">詳しく見る</a></article>
+    <article class="svc rv"><a class="pic" href="https://www.hook-hack.com/" tabindex="-1" aria-hidden="true" style="--pc:#e2e1dc"><video class="vv" data-src="video/v_hh.mp4" poster="img/v_hh.jpg" muted loop playsinline></video></a><p class="cat"><b>02</b><span>動画広告の制作ツール</span></p><h3>HookHack</h3><p class="d">売れる動画広告をLPから5分で制作。<br>検証から成果改善まで、動画広告のPDCAに必要な機能を1ツールで網羅します。</p><a class="more" href="https://www.hook-hack.com/">詳しく見る</a></article>
+    <article class="svc rv"><a class="pic" href="https://www.hook-hack.com/hookhacker" tabindex="-1" aria-hidden="true" style="--pc:#e6ddcc"><video class="vv" data-src="video/v_hhr.mp4" poster="img/v_hhr.jpg" muted loop playsinline></video></a><p class="cat"><b>03</b><span>LP・サイト制作の代行</span></p><h3>HookHacker</h3><p class="d">自社開発AIツール「HookHack」×インドネシアオフショアチーム×日本人ディレクターでLP・サイト制作を代行。</p><a class="more" href="https://www.hook-hack.com/hookhacker">詳しく見る</a></article>
+    <article class="svc rv"><a class="pic" href="https://samurai-style.tokyo/video-production" tabindex="-1" aria-hidden="true" style="--pc:#d8d7d1"><video class="vv" data-src="video/v_vp.mp4" poster="img/v_vp.jpg" muted loop playsinline></video></a><p class="cat"><b>04</b><span></span></p><h3 class="ja">動画制作</h3><p class="d">貴社の顧客理解に基づき、動画を企画・撮影・編集までワンストップで制作します。</p><a class="more" href="https://samurai-style.tokyo/video-production">詳しく見る</a></article>
+  </div>
+</section>
+
+<section class="sec" id="member">
+  <div class="sh rv"><h2>MEMBER</h2><p>メンバー</p></div>
+  <p class="mem-lead rv">私たちのチームは、多様な世代やバックグラウンドを持つメンバーで構成されており、それぞれが自分の得意分野を生かして、常にお客様のニーズに応える最適なソリューションを提供することに尽力しています。少数精鋭のため、お客様と密接な関係を築くことを重視しており、信頼に基づく長期的なパートナーシップの構築を目指しています。お客様の世界進出への挑戦をサポートし、成功への道を共に歩んでいけることを願っています。</p>
+  <div class="mrow">
+    <article class="mp rv"><div class="ph"><img src="img/m_hashimoto.webp" alt="橋本　圭司" loading="lazy" style="object-position:44.2% 30%"></div><span class="no">01</span><h3><span class="nb">橋本　圭司</span></h3><p class="role"><span class="nb">代表取締役</span></p><p class="bio">大手通信会社の営業、事業企画、およびWebコンサル会社での経験を生かし、様々な業種・規模の企業でBizDev・マーケティングのコンサルとして事業を推進。</p></article>
+    <article class="mp rv"><div class="ph"><img src="img/m_hayashi.webp" alt="林　壮" loading="lazy" style="object-position:44.8% 30%"></div><span class="no">02</span><h3><span class="nb">林　壮</span></h3><p class="role"><span class="nb">プロジェクトマネージャー</span></p><p class="bio">東京生まれ、イギリス・シンガポール育ち。<br>映像ディレクターの経験を持ち、現在は弊社のオフショア開発事業と動画制作事業に加え、採用担当も務める。</p></article>
+    <article class="mp rv"><div class="ph"><img src="img/m_satrio.webp" alt="Satrio Buwono" loading="lazy" style="object-position:48% 30%"></div><span class="no">03</span><h3><span class="nb">Satrio Buwono</span></h3><p class="role"><span class="nb">インドネシア事業開発</span></p><p class="bio">インドネシア生まれ、グラズゴー大学卒業<br>SaaSを専門に構築を行い、複数のITベンチャーを立ち上げ。オフショア開発事業のエンジニア統括を担う。</p></article>
+    <article class="mp rv"><div class="ph"><img src="img/m_lura.webp" alt="Lura Naito" loading="lazy" style="object-position:50% 30%"></div><span class="no">04</span><h3><span class="nb">Lura Naito</span></h3><p class="role"><span class="nb">人事・マーケティング担当</span></p><p class="bio">愛知生まれ、南米・東南アジア各国を放浪。<br>サムライスタイルでは人事全般・マーケティングを担当。ぶれない明るさが持ち味。</p></article>
+  </div>
+</section>
+
+<section class="sec" id="contact">
+  <div class="ct paper rv">
+    <div class="side"><h2>CONTACT<br>US</h2></div>
+    <form class="form" id="form" novalidate>
+      <label>会社名 (必須)<input type="text" name="company" required></label>
+      <label>担当者名 (必須)<input type="text" name="name" required></label>
+      <label>メールアドレス (必須)<input type="email" name="email" required></label>
+      <label>電話番号（必須）<input type="tel" name="tel" required></label>
+      <div class="full"><label style="margin-bottom:14px">お問い合わせ内容（必須）</label>
+        <div class="opts">
+          <label><input type="radio" name="kind" value="1"><span>戦略立案・実行支援（Strategy2Action）</span></label>
+          <label><input type="radio" name="kind" value="2"><span>動画広告ツール（HookHack）</span></label>
+          <label><input type="radio" name="kind" value="3"><span>LP・サイト制作（HookHacker）</span></label>
+          <label><input type="radio" name="kind" value="4"><span>動画制作（企画・撮影・編集）</span></label>
+          <label><input type="radio" name="kind" value="5"><span>取材・メディア関係</span></label>
+          <label><input type="radio" name="kind" value="6"><span>その他のお問い合わせ</span></label>
+        </div>
+      </div>
+      <label class="full" style="display:flex;flex-direction:column;gap:8px;font-size:13.5px;letter-spacing:.1em;color:#3a3d5e">本文（必須）<textarea name="body" required></textarea></label>
+      <button class="send" type="submit">送信 <span>→</span></button>
+      <p class="note">上記ボタンを押すことで、当社の提供するサービス等に関する情報を提供する目的で、サムライスタイル株式会社が上記から送信された個人情報を保管・処理することに同意したものとみなされます。お客様はこれらの情報提供をいつでも停止できます。</p>
+      <p class="note">個人情報の開示や削除依頼等のお問い合わせ先、およびお客様の個人情報を尊重して保護するための弊社の取り組みについては、弊社の<a href="https://samurai-style.tokyo/privacy-policy">プライバシーポリシー</a>をご覧ください。</p>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer class="ft" id="ft">
+  <div class="frame2">
+    <div class="hills2" aria-hidden="true">
+      <svg viewBox="0 0 1440 300" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="gA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b8c6dc"/><stop offset="1" stop-color="#a3b4ce"/></linearGradient>
+          <linearGradient id="gB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9db5a6"/><stop offset="1" stop-color="#7f9c8c"/></linearGradient>
+          <linearGradient id="gC" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7d9a74"/><stop offset="1" stop-color="#5d7a5a"/></linearGradient>
+        </defs>
+        <g filter="url(#pigment)">
+          <path d="M0 114.9 C10 115.7 38 121.2 58 120.0 C77 118.7 96 114.1 115 107.6 C134 101.1 154 87.6 173 80.7 C192 73.8 211 68.2 230 66.4 C250 64.5 269 65.3 288 69.6 C307 74.0 326 85.5 346 92.6 C365 99.7 384 109.4 403 112.1 C422 114.8 442 110.7 461 108.9 C480 107.1 499 102.9 518 101.2 C538 99.4 557 100.4 576 98.4 C595 96.4 614 88.7 634 89.3 C653 89.8 672 99.9 691 101.5 C710 103.1 730 99.9 749 99.2 C768 98.4 787 100.5 806 97.2 C826 93.9 845 87.5 864 79.5 C883 71.6 902 55.1 922 49.7 C941 44.3 960 46.1 979 47.3 C998 48.6 1018 53.4 1037 57.2 C1056 61.1 1075 65.0 1094 70.6 C1114 76.1 1133 86.0 1152 90.7 C1171 95.3 1190 98.8 1210 98.4 C1229 98.0 1248 91.1 1267 88.2 C1286 85.4 1306 79.3 1325 81.1 C1344 82.9 1363 93.5 1382 99.2 C1402 105.0 1430 112.8 1440 115.5 L1440 300 L0 300Z" fill="url(#gA)"/>
+          <path d="M0 114.9 C10 115.7 38 121.2 58 120.0 C77 118.7 96 114.1 115 107.6 C134 101.1 154 87.6 173 80.7 C192 73.8 211 68.2 230 66.4 C250 64.5 269 65.3 288 69.6 C307 74.0 326 85.5 346 92.6 C365 99.7 384 109.4 403 112.1 C422 114.8 442 110.7 461 108.9 C480 107.1 499 102.9 518 101.2 C538 99.4 557 100.4 576 98.4 C595 96.4 614 88.7 634 89.3 C653 89.8 672 99.9 691 101.5 C710 103.1 730 99.9 749 99.2 C768 98.4 787 100.5 806 97.2 C826 93.9 845 87.5 864 79.5 C883 71.6 902 55.1 922 49.7 C941 44.3 960 46.1 979 47.3 C998 48.6 1018 53.4 1037 57.2 C1056 61.1 1075 65.0 1094 70.6 C1114 76.1 1133 86.0 1152 90.7 C1171 95.3 1190 98.8 1210 98.4 C1229 98.0 1248 91.1 1267 88.2 C1286 85.4 1306 79.3 1325 81.1 C1344 82.9 1363 93.5 1382 99.2 C1402 105.0 1430 112.8 1440 115.5" fill="none" stroke="#fff4dc" stroke-width="2.2" opacity="0.75"/>
+          <path d="M0 153.6 C11 153.8 46 153.6 69 154.8 C91 156.1 114 160.2 137 161.3 C160 162.4 183 162.2 206 161.4 C229 160.6 251 160.0 274 156.3 C297 152.6 320 143.7 343 139.3 C366 134.9 389 131.1 411 129.8 C434 128.6 457 128.3 480 131.7 C503 135.1 526 144.5 549 150.0 C571 155.4 594 160.8 617 164.5 C640 168.2 663 171.3 686 172.1 C709 173.0 731 170.1 754 169.6 C777 169.1 800 170.6 823 169.0 C846 167.3 869 163.1 891 159.7 C914 156.4 937 152.7 960 148.7 C983 144.7 1006 139.4 1029 135.5 C1051 131.6 1074 127.3 1097 125.2 C1120 123.2 1143 121.7 1166 123.3 C1189 124.9 1211 130.7 1234 135.0 C1257 139.4 1280 145.3 1303 149.4 C1326 153.5 1349 156.9 1371 159.8 C1394 162.8 1429 165.8 1440 166.9 L1440 300 L0 300Z" fill="url(#gB)"/>
+          <path d="M0 153.6 C11 153.8 46 153.6 69 154.8 C91 156.1 114 160.2 137 161.3 C160 162.4 183 162.2 206 161.4 C229 160.6 251 160.0 274 156.3 C297 152.6 320 143.7 343 139.3 C366 134.9 389 131.1 411 129.8 C434 128.6 457 128.3 480 131.7 C503 135.1 526 144.5 549 150.0 C571 155.4 594 160.8 617 164.5 C640 168.2 663 171.3 686 172.1 C709 173.0 731 170.1 754 169.6 C777 169.1 800 170.6 823 169.0 C846 167.3 869 163.1 891 159.7 C914 156.4 937 152.7 960 148.7 C983 144.7 1006 139.4 1029 135.5 C1051 131.6 1074 127.3 1097 125.2 C1120 123.2 1143 121.7 1166 123.3 C1189 124.9 1211 130.7 1234 135.0 C1257 139.4 1280 145.3 1303 149.4 C1326 153.5 1349 156.9 1371 159.8 C1394 162.8 1429 165.8 1440 166.9" fill="none" stroke="#f6e7bf" stroke-width="2" opacity="0.65"/>
+          <path d="M0 237.9 C16 238.3 64 240.2 96 240.3 C128 240.4 160 238.8 192 238.7 C224 238.6 256 240.0 288 239.7 C320 239.5 352 239.4 384 237.3 C416 235.2 448 230.3 480 227.1 C512 223.9 544 219.8 576 217.9 C608 216.1 640 217.6 672 215.9 C704 214.3 736 208.7 768 208.1 C800 207.5 832 209.1 864 212.3 C896 215.5 928 224.2 960 227.4 C992 230.5 1024 229.7 1056 231.4 C1088 233.2 1120 238.3 1152 237.8 C1184 237.2 1216 231.8 1248 228.2 C1280 224.7 1312 218.7 1344 216.6 C1376 214.5 1424 215.7 1440 215.5 L1440 300 L0 300Z" fill="url(#gC)"/>
+        </g>
+      </svg>
+    </div>
+    <a class="big" href="#contact"><b>CONTACT</b><span class="jp">お問い合わせはこちらから</span><span class="arr">→</span></a>
+  </div>
+  <div class="low">
+    <a class="lg" href="#top" aria-label="Samurai-Style"><img src="img/logo.svg" alt="Samurai-Style"></a>
+    <nav><a href="https://samurai-style.tokyo/privacy-policy">プライバシーポリシー</a><a href="https://samurai-style.tokyo/commercial-transactions">特定商取引法に基づく表記</a></nav>
+    <span>© 2024- samurai-style All Right Reserved.</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+'use strict';
+var $=function(s,r){return (r||document).querySelector(s)},$$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+
+/* ---------- palette keyed to the story (night → dawn → morning) ---------- */
+function hx(h){h=h.replace('#','');return [parseInt(h.substr(0,2),16)/255,parseInt(h.substr(2,2),16)/255,parseInt(h.substr(4,2),16)/255]}
+// top, mid, bottom, cloudLit, cloudShade, sun, star, sunY, sunA, cover
+var K=[
+ ['#060a1c','#0f1940','#1e2a5e','#47457c','#15183a','#ffb98a',1.00,1.90,0.00,.55], // FV night
+ ['#070c22','#12204e','#253470','#4c4982','#181c40','#ffb08a',1.00,1.80,0.06,.54], // story
+ ['#0a1430','#1a2d6a','#4a4685','#8a7cb0','#232a5a','#ff9e88',0.80,1.55,0.30,.545], // Signal?
+ ['#13245a','#34488e','#b87a98','#e2a6b4','#3d3f7c','#ffb08c',0.40,1.32,0.60,.55], // 全体最適へ
+ ['#1f3a7c','#55599f','#f0a48e','#ffd0b0','#6c5e9a','#ffc48e',0.12,1.12,0.90,.555], // fin
+ ['#5a84c4','#e9c2c0','#ffd9a2','#fff3e4','#d8b9c4','#ffd99a',0.00,0.95,1.00,.585], // features
+ ['#7fa8dc','#efd9d2','#ffeccc','#ffffff','#d4d9e8','#ffe6b4',0.00,0.82,0.80,.61], // service
+ ['#94bce8','#e3ebf3','#fff3df','#ffffff','#cfdbeb','#fff0cc',0.00,0.70,0.60,.63]  // contact
+].map(function(k){return {top:hx(k[0]),mid:hx(k[1]),bot:hx(k[2]),lit:hx(k[3]),shd:hx(k[4]),sun:hx(k[5]),star:k[6],sunY:k[7],sunA:k[8],cov:k[9]}});
+var anchorSel=['#fv','#story','#sq','#s6','#s7','#benefit','#service','#contact'];
+var anchors=[];
+function measure(){
+  var vh=innerHeight,sy=scrollY;
+  anchors=anchorSel.map(function(s,i){
+    var el=$(s);if(!el)return 0;var r=el.getBoundingClientRect();
+    if(i===0)return vh*.5;
+    if(s==='#benefit'||s==='#service')return r.top+sy+Math.min(r.height*.5,vh*.6);
+    if(s==='#story')return r.top+sy+vh*.3;
+    return r.top+sy+r.height*.5;
+  });
+}
+function ss(x){return x*x*(3-2*x)}
+function lerp(a,b,t){return a+(b-a)*t}
+function lerp3(a,b,t){return [lerp(a[0],b[0],t),lerp(a[1],b[1],t),lerp(a[2],b[2],t)]}
+var tCur=0,tSm=0;
+function storyT(){
+  var c=scrollY+innerHeight*.5;
+  if(c<=anchors[0])return 0;
+  for(var i=0;i<anchors.length-1;i++){
+    if(c<anchors[i+1]){return i+(c-anchors[i])/Math.max(1,anchors[i+1]-anchors[i])}
+  }
+  return anchors.length-1;
+}
+function pal(t){
+  var i=Math.min(K.length-2,Math.floor(t)),f=ss(Math.min(1,Math.max(0,t-i))),a=K[i],b=K[i+1];
+  return {top:lerp3(a.top,b.top,f),mid:lerp3(a.mid,b.mid,f),bot:lerp3(a.bot,b.bot,f),lit:lerp3(a.lit,b.lit,f),shd:lerp3(a.shd,b.shd,f),sun:lerp3(a.sun,b.sun,f),star:lerp(a.star,b.star,f),sunY:lerp(a.sunY,b.sunY,f),sunA:lerp(a.sunA,b.sunA,f),cov:lerp(a.cov,b.cov,f)};
+}
+
+/* ---------- painted sky (WebGL fragment shader) ---------- */
+var cv=$('#sky'),gl=null;
+try{gl=cv.getContext('webgl',{antialias:false,premultipliedAlpha:false,preserveDrawingBuffer:true})||cv.getContext('experimental-webgl')}catch(e){gl=null}
+var VS='attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
+var FS=[
+'precision highp float;',
+'uniform vec2 R;uniform float T,S,PX;uniform vec3 cTop,cMid,cBot,cLit,cShd,cSun;uniform float uStar,uSunY,uSunA,uCov;uniform vec3 uSig;',
+'float h(vec2 p){p=fract(p*vec2(233.34,851.73));p+=dot(p,p+23.45);return fract(p.x*p.y);}',
+'float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1.,0.)),f.x),mix(h(i+vec2(0.,1.)),h(i+vec2(1.,1.)),f.x),f.y);}',
+'const mat2 M=mat2(1.6,1.2,-1.2,1.6);',
+'float fb(vec2 p){float v=0.,a=.5;for(int i=0;i<5;i++){v+=a*n(p);p=M*p+7.1;a*=.5;}return v;}',
+'float bil(vec2 p){float v=0.,a=.5;for(int i=0;i<4;i++){v+=a*abs(n(p)*2.-1.);p=M*p+5.3;a*=.5;}return v;}',
+'float f3(vec2 p){float v=0.,a=.5;for(int i=0;i<3;i++){v+=a*n(p);p=M*p+3.3;a*=.5;}return v;}',
+'vec4 cloud(vec2 uv,float par,float sc,float cov,vec2 sp,float sd){',
+'  float yy=uv.y+S*par;',
+'  vec2 q=vec2(uv.x*sc*.5+T*.005*sc+sd,yy*sc*1.6);',
+'  vec2 w=vec2(f3(q*.8+sd),f3(q*.8+sd+5.2));',
+'  q+=(w-.5)*.75;',
+'  vec2 sc2=gl_FragCoord.xy/R-.5;float cm=1.-smoothstep(.1,.46,length(sc2*vec2(1.05,1.55)));',
+'  float bias=-cm*.065+(uv.y-.5)*.07;',
+'  float d=fb(q)*.55+bil(q*1.15)*.5+sin(yy*sc*2.3+w.x*3.+sd)*.06+bias;',
+'  float e=cov+(n(uv*PX*.42)-.5)*.03+(n(vec2(uv.x*PX*.05,uv.y*PX*.6))-.5)*.03;',
+'  float a=smoothstep(e,e+.045,d);',
+'  vec2 L=normalize(sp-uv);',
+'  vec2 q2=q+L*vec2(.5,1.6)*.085;float d2=fb(q2)*.55+bil(q2*1.15)*.5+sin((yy+L.y*.053)*sc*2.3+w.x*3.+sd)*.06+bias;',
+'  float l=clamp(.5+(d-d2)*7.5,0.,1.);',
+'  float tone=smoothstep(.40,.47,l)*.55+smoothstep(.60,.67,l)*.45;',
+'  vec3 c=mix(cShd,cLit,tone);',
+'  c=mix(c,cShd*.82,smoothstep(e+.10,e+.30,d)*(1.-tone)*.55);',
+'  float rim=smoothstep(e,e+.008,d)*(1.-smoothstep(e+.008,e+.05,d));',
+'  c*=1.-rim*.28;',
+'  c+=cSun*rim*tone*.22*uSunA;',
+'  vec2 ru=mat2(.87,.5,-.5,.87)*uv;',
+'  float st=n(vec2(ru.x*4.,ru.y*90.)+n(uv*5.)*2.);',
+'  c*=.965+.06*st;',
+'  return vec4(c,a);',
+'}',
+'void main(){',
+'  vec2 fc=gl_FragCoord.xy;float asp=R.x/R.y;',
+'  vec2 uv=vec2(fc.x/R.y,1.-fc.y/R.y);',
+'  float y=uv.y;',
+'  vec3 col=y<.55?mix(cTop,cMid,smoothstep(0.,.55,y)):mix(cMid,cBot,smoothstep(.55,1.,y));',
+'  float w=f3(uv*vec2(1.3,2.2)+vec2(T*.004,S*.12));',
+'  col*=.92+.16*w;',
+'  col=mix(col,cMid,(f3(uv*3.1+9.)-.5)*.25);',
+'  vec2 sp=vec2(asp*.64,uSunY);',
+'  float dd=length((uv-sp)*vec2(.75,1.))+(f3(uv*4.+T*.01)-.5)*.07;',
+'  col=mix(col,cSun,clamp(exp(-dd*2.3)*uSunA*.92,0.,1.));',
+'  col+=cSun*exp(-dd*8.)*.32*uSunA;',
+'  float disc=smoothstep(.075,.06,length(uv-sp)+(n(uv*40.)-.5)*.008);',
+'  col=mix(col,vec3(1.,.97,.9),disc*uSunA);',
+'  vec2 g=(uv+vec2(0.,S*.025))*vec2(170.);vec2 id=floor(g);vec2 f=fract(g)-.5;float r=h(id);float star=0.;',
+'  if(r>.972){float tw=.55+.45*sin(T*(1.+r*3.)+r*60.);vec2 o=(vec2(h(id+1.3),h(id+2.7))-.5)*.5;star=smoothstep(.2,0.,length(f-o))*tw*(r>.995?1.7:.85);}',
+'  vec4 c1=cloud(uv,.14,2.1,uCov,sp,0.);',
+'  vec4 c2=cloud(uv,.30,1.25,uCov+.05,sp,11.);',
+'  col+=vec3(1.,.96,.86)*star*uStar*(1.-c1.a)*(1.-c2.a);',
+'  col=mix(col,c1.rgb,c1.a*.88);',
+'  col=mix(col,c2.rgb,c2.a*.94);',
+'  vec2 dp=vec2(fc.x-uSig.x,(R.y-fc.y)-uSig.y)/PX;',
+'  float pl=.82+.18*sin(T*1.7);',
+'  float sg=exp(-dot(dp,dp)/9.)*1.4+exp(-length(dp)/34.)*.42+(exp(-abs(dp.y)/1.3)*exp(-abs(dp.x)/44.)+exp(-abs(dp.x)/1.3)*exp(-abs(dp.y)/44.))*.9;',
+'  col+=vec3(1.,.9,.72)*sg*uSig.z*pl;',
+'  float bs=n(vec2(uv.x*2.6+n(uv*3.)*2.2,uv.y*110.));',
+'  col*=.978+.04*bs;',
+'  vec2 vv=fc/R-.5;col*=1.-dot(vv,vv)*.42;',
+'  gl_FragColor=vec4(col,1.);',
+'}'].join('\n');
+var U={},prog=null;
+function sh(t,src){var s=gl.createShader(t);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)){console.warn(gl.getShaderInfoLog(s));return null}return s}
+if(gl){
+  var vs=sh(gl.VERTEX_SHADER,VS),fs=sh(gl.FRAGMENT_SHADER,FS);
+  if(vs&&fs){prog=gl.createProgram();gl.attachShader(prog,vs);gl.attachShader(prog,fs);gl.linkProgram(prog);
+    if(!gl.getProgramParameter(prog,gl.LINK_STATUS)){prog=null}}
+  if(prog){
+    gl.useProgram(prog);
+    var b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+    var loc=gl.getAttribLocation(prog,'p');gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+    ['R','T','S','PX','cTop','cMid','cBot','cLit','cShd','cSun','uStar','uSunY','uSunA','uCov','uSig'].forEach(function(k){U[k]=gl.getUniformLocation(prog,k)});
+  }
+}
+if(!prog){document.body.classList.add('nogl');cv.style.display='none'}
+var scale=1;
+function resize(){
+  var w=innerWidth,h=Math.max(innerHeight,document.documentElement.clientHeight);
+  scale=w>900?0.72:Math.min(1.25,devicePixelRatio||1);
+  cv.width=Math.round(w*scale);cv.height=Math.round(h*scale);
+  if(gl&&prog)gl.viewport(0,0,cv.width,cv.height);
+  measure();
+}
+
+/* ---------- the "signal" star rides on the dot of the i ---------- */
+var idots=$$('.idot');
+function sigPos(){
+  var best=null,ba=0,vh=innerHeight;
+  idots.forEach(function(el){
+    var r=el.getBoundingClientRect();if(r.bottom<-40||r.top>vh+40)return;
+    var cy=r.top+r.height*.5,a=1-Math.min(1,Math.abs(cy-vh*.45)/(vh*.75));
+    if(el.closest('.rv')&&!el.closest('.rv').classList.contains('in'))a*=0;
+    if(a>ba){ba=a;best=r}
+  });
+  if(!best)return [0,0,0];
+  return [(best.left+best.width*.62)*scale,(best.top+best.height*.25)*scale,ba];
+}
+var sigS=[0,0,0];
+
+/* ---------- loop ---------- */
+var hd=$('#hd'),t0=performance.now();
+function frame(now){
+  var tt=storyT();tSm+=(tt-tSm)*.12;if(Math.abs(tt-tSm)<.001)tSm=tt;
+  var P=pal(tSm);
+  hd.classList.toggle('day',tSm>4.45);
+  hd.classList.toggle('solid',scrollY>innerHeight*.6);
+  if(gl&&prog){
+    var s=sigPos();
+    sigS[0]=s[0]||sigS[0];sigS[1]=s[1]||sigS[1];sigS[2]+=(s[2]-sigS[2])*.15;
+    gl.uniform2f(U.R,cv.width,cv.height);
+    gl.uniform1f(U.T,(now-t0)/1000);
+    gl.uniform1f(U.S,scrollY/innerHeight);
+    gl.uniform1f(U.PX,cv.height/900);
+    gl.uniform3fv(U.cTop,P.top);gl.uniform3fv(U.cMid,P.mid);gl.uniform3fv(U.cBot,P.bot);
+    gl.uniform3fv(U.cLit,P.lit);gl.uniform3fv(U.cShd,P.shd);gl.uniform3fv(U.cSun,P.sun);
+    gl.uniform1f(U.uStar,P.star);gl.uniform1f(U.uSunY,P.sunY);gl.uniform1f(U.uSunA,P.sunA);gl.uniform1f(U.uCov,P.cov);
+    gl.uniform3f(U.uSig,sigS[0],sigS[1],sigS[2]*(1-Math.min(1,P.sunA*1.1)));
+    gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+  }
+  requestAnimationFrame(frame);
+}
+resize();addEventListener('resize',resize);addEventListener('load',measure);
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(measure);
+requestAnimationFrame(frame);
+
+/* ---------- reveal ---------- */
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{rootMargin:'0px 0px -8% 0px',threshold:.08});
+$$('.rv').forEach(function(el){io.observe(el)});
+
+/* ---------- videos: load & play only when visible ---------- */
+var vio=new IntersectionObserver(function(es){es.forEach(function(e){var v=e.target;
+  if(e.isIntersecting){if(!v.src&&v.dataset.src){v.src=v.dataset.src}var p=v.play();if(p&&p.catch)p.catch(function(){})}else if(!v.paused){v.pause()}})},{rootMargin:'200px 0px'});
+$$('video.vv').forEach(function(v){vio.observe(v)});
+
+/* ---------- menu & form ---------- */
+var ov=$('.ov');
+$('.burger').addEventListener('click',function(){ov.classList.toggle('open');document.body.classList.toggle('menu')});
+$$('.ov a').forEach(function(a){a.addEventListener('click',function(){ov.classList.remove('open');document.body.classList.remove('menu')})});
+$('#form').addEventListener('submit',function(e){e.preventDefault()});
+})();
+</script>
+</body>
+</html>

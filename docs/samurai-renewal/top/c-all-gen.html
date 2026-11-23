@@ -1,0 +1,600 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>サムライスタイル | Find the signal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+JP:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f4ee;--card:#fbfaf6;--ink:#151513;--ink2:#3b3a36;--mute:#6f6d69;
+  --line:#dcd8cd;--line2:#e9e5db;--sig:#ef4519;
+  --rail:220px;--pad:40px;
+  --disp:"Space Grotesk",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --jp:"IBM Plex Sans JP","Hiragino Sans",sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--jp);font-size:16px;line-height:1.9;overflow-x:clip;-webkit-font-smoothing:antialiased;line-break:strict}
+a{color:inherit}
+img,video,canvas{display:block}
+.nb{display:inline-block}
+.mono{font-family:var(--mono)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------- rail (left nav, poolside) ---------- */
+.hd{position:fixed;left:0;top:0;bottom:0;width:var(--rail);padding:34px 0 30px var(--pad);display:flex;flex-direction:column;z-index:50}
+.logo img{width:112px;height:auto}
+.nav{display:flex;flex-direction:column;align-items:flex-start;gap:4px;margin-top:44px;font:400 13px/1.7 var(--mono);letter-spacing:.02em}
+.nav a{text-decoration:none;color:var(--ink);position:relative;padding-left:16px}
+.nav a::before{content:"";position:absolute;left:0;top:50%;width:6px;height:6px;margin-top:-3px;background:var(--sig);transform:scale(0);transition:transform .25s}
+.nav a:hover::before,.nav a.on::before{transform:scale(1)}
+.nav a.cta{color:var(--sig)}
+.lang{display:flex;gap:12px;font:400 12px/1 var(--mono);color:var(--mute)}
+.lang b{color:var(--ink);font-weight:500}
+.hd .lang{margin-top:auto}
+.burger{display:none}
+.ov{display:none}
+main,.ft{margin-left:var(--rail);padding-right:var(--pad)}
+
+/* ---------- panels (thin frame + plotter corner marks) ---------- */
+.pan{position:relative;background:var(--card);border:1px solid var(--line)}
+.pan>canvas{position:absolute;inset:0;width:100%;height:100%}
+.pan::before,.pan::after{content:"+";position:absolute;font:300 14px/1 var(--mono);color:var(--mute);pointer-events:none;z-index:2}
+.pan::before{left:-5px;top:-8px}
+.pan::after{right:-5px;bottom:-9px}
+
+/* ---------- FV ---------- */
+.fv{height:230vh;position:relative}
+.fv-st{position:sticky;top:0;height:100vh;height:100svh;display:flex;flex-direction:column;padding:26px 0 26px}
+.fv-h{margin:0 0 22px;font:500 clamp(50px,8.1vw,128px)/.92 var(--disp);letter-spacing:-.045em}
+.fv-h em{font-style:normal;color:color-mix(in srgb,var(--sig) calc(var(--p,0)*100%),var(--ink))}
+.fv-pan{flex:1;min-height:0}
+.fv-foot{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-top:18px}
+.fv-foot .sum{margin:0;font-size:15px;line-height:1.8;font-weight:500}
+.hint{font:400 12px/1.4 var(--mono);color:var(--mute);white-space:nowrap}
+.hint b{display:inline-block;width:72px;height:1px;background:var(--line);vertical-align:middle;margin-right:10px;position:relative;overflow:hidden}
+.hint b i{position:absolute;inset:0;background:var(--sig);transform-origin:left;transform:scaleX(var(--p,0))}
+
+/* ---------- section ---------- */
+.sec{padding:150px 0 0}
+.sh{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 .55em;margin:0 0 56px;font:500 clamp(28px,3vw,40px)/1.2 var(--disp);letter-spacing:-.02em}
+.sh h2{margin:0;font:inherit;position:relative;padding-left:22px}
+.sh h2::before{content:"";position:absolute;left:0;top:50%;width:10px;height:10px;margin-top:-4px;background:var(--sig)}
+.sh p{margin:0;font-family:var(--jp);font-weight:400;color:var(--mute);letter-spacing:0;font-size:.72em}
+
+/* ---------- STORY ---------- */
+.story{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:72px}
+.st-art{position:sticky;top:10vh;height:80vh;align-self:start}
+.st-ix{position:absolute;left:18px;bottom:16px;display:flex;gap:6px;z-index:2}
+.st-ix i{width:7px;height:7px;border:1px solid var(--mute)}
+.st-ix i.on{background:var(--sig);border-color:var(--sig)}
+.step{min-height:82vh;display:flex;flex-direction:column;justify-content:center}
+.step .t{margin:0;max-width:31em;font-size:17px;line-height:2.05;color:var(--ink2)}
+.step .hl{color:var(--ink);background:linear-gradient(transparent 62%,rgba(239,69,25,.16) 62%)}
+.step.q .t{font-size:clamp(22px,2.1vw,30px);line-height:1.7;font-weight:500;color:var(--ink)}
+.step.q em{font-style:normal;font-family:var(--disp);font-weight:500}
+.step.q em.sig{color:var(--sig)}
+.step.q em.nz i{font-style:normal;display:inline-block;color:var(--mute)}
+.step.q em.nz i:nth-child(1){transform:translateY(-.08em) rotate(-6deg)}
+.step.q em.nz i:nth-child(2){transform:translateY(.06em)}
+.step.q em.nz i:nth-child(3){transform:translateY(-.12em) rotate(8deg)}
+.step.q em.nz i:nth-child(4){transform:translateY(.1em) rotate(-4deg)}
+.step.q em.nz i:nth-child(5){transform:translateY(-.04em) rotate(5deg)}
+.step .zs,.step .ps,.step .sm{color:var(--ink);font-weight:500}
+.step .sm{color:var(--sig)}
+.step .lead{display:block;font-size:clamp(20px,1.8vw,25px);line-height:1.65;color:var(--ink);font-weight:500;margin-bottom:.8em}
+.tocontact{margin-top:28px;align-self:flex-start;display:inline-flex;gap:14px;align-items:center;font:500 14px/1 var(--mono);letter-spacing:.06em;text-decoration:none;color:var(--card);background:var(--ink);padding:16px 22px}
+.tocontact:hover{background:var(--sig)}
+
+/* ---------- FEATURES ---------- */
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.fc{background:var(--card);border:1px solid var(--line);display:flex;flex-direction:column}
+.fc-art{position:relative;height:300px;border-bottom:1px solid var(--line2)}
+.fc-art canvas{position:absolute;inset:0;width:100%;height:100%}
+.fc-tx{padding:26px 32px 36px}
+.no{font:400 12px/1 var(--mono);color:var(--mute);letter-spacing:.04em}
+.fc h3{margin:16px 0 14px;font-weight:500}
+.fc h3 small{display:block;font-size:14px;line-height:1.6;color:var(--mute);font-weight:400}
+.fc h3 .w{display:block;font-size:clamp(24px,2.3vw,32px);line-height:1.35;letter-spacing:.02em}
+.fc p{margin:0;font-size:15px;line-height:1.95;color:var(--ink2)}
+
+/* ---------- SERVICE ---------- */
+.svg{display:grid;grid-template-columns:1fr 1fr;gap:56px 20px}
+.sv-pan{display:block;aspect-ratio:16/11;overflow:hidden}
+.sv-pan video{position:absolute;left:50%;top:50%;height:80%;width:auto;aspect-ratio:4/5;transform:translate(-50%,-50%);object-fit:cover;border:1px solid var(--line);border-radius:8px;background:#fff;box-shadow:0 24px 40px -24px rgba(20,20,18,.35);z-index:1;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.sv:hover .sv-pan video{transform:translate(-50%,-52%)}
+.sv-tx{padding:22px 4px 0}
+.cat{margin:0;display:flex;gap:14px;font:400 12px/1.6 var(--mono);color:var(--mute)}
+.cat b{color:var(--sig);font-weight:500}
+.sv h3{margin:10px 0 10px;font:500 clamp(26px,2.4vw,34px)/1.2 var(--disp);letter-spacing:-.02em}
+.sv h3.ja{font-family:var(--jp);letter-spacing:.02em}
+.sv .d{margin:0 0 18px;font-size:15px;line-height:1.9;color:var(--ink2);max-width:34em}
+.more{font:500 14px/1 var(--jp);text-decoration:none;display:inline-flex;gap:10px;align-items:center;padding-bottom:6px;border-bottom:1px solid var(--ink)}
+.more::after{content:"→";font-family:var(--mono)}
+.more:hover{color:var(--sig);border-color:var(--sig)}
+
+/* ---------- MEMBER ---------- */
+.mem-lead{margin:0 0 64px;max-width:46em;font-size:17px;line-height:2.05;color:var(--ink2)}
+.mg{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.mc{outline:none}
+.mc-pic{aspect-ratio:1/1;overflow:hidden}
+.mc-pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.05);transition:opacity .5s,filter .5s}
+.mc-pic canvas{z-index:1;transition:opacity .5s}
+.mc.ht .mc-pic img{opacity:0}
+.mc.ht:hover .mc-pic img,.mc.ht:focus .mc-pic img{opacity:1;filter:none}
+.mc.ht:hover .mc-pic canvas,.mc.ht:focus .mc-pic canvas{opacity:0}
+.mc .no{display:block;margin:18px 0 8px}
+.mc h3{margin:0;font-size:20px;font-weight:500;line-height:1.5}
+.mc .role{margin:2px 0 12px;font-size:13px;color:var(--sig);font-weight:500}
+.mc .bio{margin:0;font-size:14px;line-height:1.9;color:var(--ink2)}
+
+/* ---------- CONTACT ---------- */
+#contact{padding-bottom:150px}
+.ct{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:64px;align-items:start}
+.ct .side h2{margin:0 0 28px;font:500 clamp(52px,6vw,92px)/.92 var(--disp);letter-spacing:-.045em}
+.osc{height:170px}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:28px 28px}
+.form>label,.form .full>label{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--mute)}
+.form .full{grid-column:1/-1}
+.form input[type=text],.form input[type=email],.form input[type=tel],.form textarea{font:400 16px/1.6 var(--jp);color:var(--ink);background:transparent;border:0;border-bottom:1px solid var(--line);padding:8px 0;border-radius:0;outline:none;transition:border-color .2s}
+.form input:focus,.form textarea:focus{border-color:var(--ink)}
+.form textarea{min-height:150px;resize:vertical;border:1px solid var(--line);padding:12px;background:var(--card)}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.opts label{position:relative;cursor:pointer}
+.opts input{position:absolute;opacity:0}
+.opts span{display:block;padding:11px 14px 11px 36px;border:1px solid var(--line);background:var(--card);font-size:14px;line-height:1.5;color:var(--ink);position:relative;transition:border-color .2s}
+.opts span::before{content:"";position:absolute;left:13px;top:50%;width:10px;height:10px;margin-top:-5px;border:1px solid var(--mute)}
+.opts input:checked+span{border-color:var(--ink)}
+.opts input:checked+span::before{background:var(--sig);border-color:var(--sig)}
+.opts input:focus-visible+span{outline:2px solid var(--sig);outline-offset:2px}
+.send{grid-column:1/-1;justify-self:start;display:inline-flex;gap:16px;align-items:center;font:500 15px/1 var(--jp);color:var(--card);background:var(--ink);border:0;padding:19px 34px;cursor:pointer}
+.send:hover{background:var(--sig)}
+.send span{font-family:var(--mono)}
+.note{grid-column:1/-1;margin:0;font-size:12px;line-height:1.9;color:var(--mute)}
+
+/* ---------- footer ---------- */
+.ft{padding-bottom:36px}
+.big{display:block;text-decoration:none;border-top:1px solid var(--ink);padding-top:28px;position:relative}
+.big .bw{position:relative}
+.big b{display:block;font:700 clamp(64px,15.2vw,232px)/.86 var(--disp);letter-spacing:-.05em;color:transparent;user-select:text}
+.big canvas{position:absolute;inset:0;width:100%;height:100%}
+.big .bl{display:flex;justify-content:space-between;align-items:center;margin-top:18px;font-size:15px;font-weight:500}
+.big .arr{font:400 28px/1 var(--mono);transition:transform .3s}
+.big:hover .arr{transform:translateX(8px);color:var(--sig)}
+.low{display:flex;flex-wrap:wrap;align-items:center;gap:16px 40px;margin-top:72px;padding-top:24px;border-top:1px solid var(--line);font-size:12px;color:var(--mute)}
+.low .lg img{width:96px}
+.low nav{display:flex;flex-wrap:wrap;gap:8px 24px}
+.low nav a{text-decoration:none}
+.low nav a:hover{color:var(--ink)}
+.low>span{margin-left:auto;font-family:var(--mono)}
+
+/* ---------- tablet / phone ---------- */
+@media (max-width:1080px){
+  :root{--rail:0px;--pad:20px}
+  .hd{bottom:auto;right:0;width:auto;height:58px;padding:0 var(--pad);flex-direction:row;align-items:center;justify-content:space-between;background:rgba(246,244,238,.92);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid var(--line2)}
+  .logo img{width:92px}
+  .hd .nav,.hd .lang{display:none}
+  .burger{display:block;width:40px;height:40px;border:0;background:none;position:relative;cursor:pointer;padding:0}
+  .burger i{position:absolute;left:9px;right:9px;height:1.5px;background:var(--ink);transition:transform .3s}
+  .burger i:first-child{top:15px}.burger i:last-child{top:23px}
+  body.menu .burger i:first-child{transform:translateY(4px) rotate(45deg)}
+  body.menu .burger i:last-child{transform:translateY(-4px) rotate(-45deg)}
+  .ov{display:flex;position:fixed;inset:58px 0 0 0;z-index:49;background:var(--bg);flex-direction:column;padding:32px var(--pad);gap:6px;font:400 22px/1.7 var(--mono);opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
+  .ov a{text-decoration:none}
+  .ov .lang{margin-top:24px;font-size:14px}
+  body.menu .ov{opacity:1;visibility:visible}
+  main,.ft{padding-left:var(--pad)}
+  .fv-st{padding-top:78px}
+  .story{grid-template-columns:1fr;gap:0}
+  .st-art{top:58px;height:40vh;height:40svh;z-index:3;margin:0 calc(var(--pad)*-1);border-left:0;border-right:0}
+  .st-art::before,.st-art::after{display:none}
+  .step{min-height:64vh;padding:36px 0}
+  .ct{grid-template-columns:1fr;gap:36px}
+}
+@media (max-width:760px){
+  body{font-size:15px}
+  .sec{padding-top:100px}
+  .sh{margin-bottom:36px}
+  .fv{height:200vh}
+  .fv-h{font-size:clamp(48px,15vw,72px);margin-bottom:18px}
+  .fv-foot{flex-direction:column;align-items:flex-start;gap:12px}
+  .fv-foot .sum{font-size:14px}
+  .step .t{font-size:15.5px;line-height:2}
+  .fg,.svg{grid-template-columns:1fr}
+  .svg{gap:48px}
+  .fc-art{height:220px}
+  .fc-tx{padding:22px 22px 28px}
+  .sv-pan{aspect-ratio:4/3.4}
+  .mem-lead{font-size:15.5px;margin-bottom:40px}
+  .mg{grid-template-columns:1fr 1fr;gap:28px 14px}
+  .mc h3{font-size:17px}
+  .mc .bio{font-size:13px}
+  .form{grid-template-columns:1fr;gap:22px}
+  .opts{grid-template-columns:1fr}
+  #contact{padding-bottom:100px}
+  .osc{height:120px}
+  .low>span{margin-left:0}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header class="hd" id="hd">
+  <a class="logo" href="#top" aria-label="SAMURAI STYLE"><img src="img/logo.svg" alt="SAMURAI STYLE"></a>
+  <nav class="nav"><a class="on" href="#top">HOME</a><a href="#service">SERVICE</a><a href="https://samurai-style.tokyo/media">MEDIA</a><a href="https://samurai-style.tokyo/company">COMPANY</a><a href="https://samurai-style.tokyo/recruit">RECRUIT</a><a class="cta" href="#contact">CONTACT</a></nav>
+  <div class="lang"><span>ID</span><span>EN</span><b>JA</b></div>
+  <button class="burger" aria-label="Menu"><i></i><i></i></button>
+</header>
+<div class="ov"><a href="#top">HOME</a><a href="#service">SERVICE</a><a href="https://samurai-style.tokyo/media">MEDIA</a><a href="https://samurai-style.tokyo/company">COMPANY</a><a href="https://samurai-style.tokyo/recruit">RECRUIT</a><a href="#contact">CONTACT</a><div class="lang"><span>ID</span><span>EN</span><b>JA</b></div></div>
+
+<main id="top">
+<section class="fv" id="fv">
+  <div class="fv-st">
+    <h1 class="fv-h">find the <em>signal.</em></h1>
+    <div class="pan fv-pan"><canvas id="fvc" aria-hidden="true"></canvas></div>
+    <div class="fv-foot">
+      <p class="sum"><span class="nb">何が本質的なシグナルで</span><wbr><span class="nb">何が一時的なノイズなのかを</span><wbr><span class="nb">見極める。</span></p>
+      <span class="hint"><b><i></i></b>scroll to align ↓</span>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="story">
+  <div class="sh"><h2>STORY</h2><p class="jp">ストーリー</p></div>
+  <div class="story">
+    <div class="pan st-art"><canvas id="stc" aria-hidden="true"></canvas><div class="st-ix" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+    <div class="st-steps">
+      <div class="step"><p class="t">「誰かの役に立つ」という営みの中で、これまで人間が担ってきた“考えること”や“実行すること”の一部が、いま急速にAIへと置き換わりつつあります。変化の激しさが増し続けるこの時代において、マクロな視点では人間らしさを、ミクロな視点では自分らしさを保ちながら、どう生き残っていくべきか。私たちはその問いを日々考え続けています。</p></div>
+      <div class="step"><p class="t">AIは高い合理性をもって答えを返しますが、一方、その合理性は、前提となるプロンプトや、使う人それぞれの立場や経験、価値観に大きく左右される構造にあります。つまり、ひとつの正解に収束するのではなく、<span class="hl">無数の“もっともらしさ”</span>が生まれ続け、エントロピー増大の法則が文字通り起きている時代に入ったと捉えています。</p></div>
+      <div class="step"><p class="t">Web上でも、AIによって膨大な情報やコンテンツが生成される時代になりました。そうした環境のなかで重要になるのは、何が本質的なシグナルで、何が一時的なノイズなのかを見極める力だと考えています。</p></div>
+      <div class="step q"><p class="t"><span class="nb">では、</span><wbr><span class="nb"><em class="sig">Signal</em>と</span><wbr><span class="nb"><em class="nz"><i>N</i><i>o</i><i>i</i><i>s</i><i>e</i></em>を</span><wbr><span class="nb">見極める要素は</span><wbr><span class="nb">どこに</span><wbr><span class="nb">存在するのでしょうか。</span></p></div>
+      <div class="step"><p class="t">年収・地位・資産など上下の相対比較で幸福度を測る<span class="zs">ゼロサムゲーム</span>と、成長・信頼・創造など一緒に何かに取り組むことで幸福が生まれる<span class="ps">プラスサムゲーム</span>との視点から様々な事象を捉えた際、創業時に掲げた<span class="sm">「笑顔の総量の最大化」</span>を軸に置くと判断基準は明確になると考えています。</p></div>
+      <div class="step"><p class="t"><span class="lead">短期的な個別最適ではなく、長期的な全体最適へ。</span>利己を求めることと、利他に生きることがタイムラグを経て同義になるという仮説を検証すべく、今後も地道に、泥臭くをコアバリューとして事業を運営してまいります。</p></div>
+      <div class="step"><p class="t">ご興味をお持ちいただけた方はぜひご一報いただければ幸いです。</p><a class="tocontact" href="#contact">CONTACT <span>→</span></a></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="benefit">
+  <div class="sh"><h2>FEATURES</h2><p class="jp">４つの特徴</p></div>
+  <div class="fg">
+    <article class="fc"><div class="fc-art"><canvas data-f="0" aria-hidden="true"></canvas></div><div class="fc-tx"><div class="no">01 / 04</div><h3><small>新規事業立ち上げ経験に基づく</small><span class="w">コミットメント</span></h3><p>所属メンバーは新規事業における立て付けから立ち上げまでの経験を保有。企画フェーズにおける顧客とプロダクトの仮説設計から開発、マーケティング施策立案から各種クリエイティブ制作までを高品質かつワンストップで支援が可能です。</p></div></article>
+    <article class="fc"><div class="fc-art"><canvas data-f="1" aria-hidden="true"></canvas></div><div class="fc-tx"><div class="no">02 / 04</div><h3><small>海外経験に基づく</small><span class="w">多言語対応</span></h3><p>海外生活経験が長く、英語・インドネシア語堪能なメンバーが複数在籍。顧客獲得のための各種クリエイティブ制作の他、営業資料作成から商談までを一貫して多言語で対応可能です。</p></div></article>
+    <article class="fc"><div class="fc-art"><canvas data-f="2" aria-hidden="true"></canvas></div><div class="fc-tx"><div class="no">03 / 04</div><h3><small>多業種経験に基づく</small><span class="w">構造理解力</span></h3><p>医療・半導体・エネルギー・通信・SaaSなどのBtoB、教育・転職・ECなどのBtoCと、幅広い業種での事業企画・マーケティング支援の経験から、複雑な構造においても的確に理解・整理し、成果につながる戦略を立案します。</p></div></article>
+    <article class="fc"><div class="fc-art"><canvas data-f="3" aria-hidden="true"></canvas></div><div class="fc-tx"><div class="no">04 / 04</div><h3><small>少数精鋭だから実現できる</small><span class="w">スピード感</span></h3><p>少数精鋭だから実現できるスピード感。幅広いケイパビリティを持つメンバーが少数でチームを運営。コミュニケーションコストが低く、タスクの所在を明確にしてスピーディーにプロジェクトを推進します。</p></div></article>
+  </div>
+</section>
+
+<section class="sec" id="service">
+  <div class="sh"><h2>SERVICE</h2><p class="jp">事業内容</p></div>
+  <div class="svg">
+    <article class="sv"><a class="pan sv-pan" href="https://samurai-style.tokyo/strategy2action" tabindex="-1" aria-hidden="true"><canvas data-s="0"></canvas><video class="vv" data-src="video/v_s2a.mp4" poster="img/v_s2a.jpg" muted loop playsinline></video></a><div class="sv-tx"><p class="cat"><b>01</b><span></span></p><h3>Strategy2Action</h3><p class="d">事業理解に基づいて戦略を考え、実行まで伴走し、ダッシュボード作成による経営層・上長への可視化まで対応。</p><a class="more" href="https://samurai-style.tokyo/strategy2action">詳しく見る</a></div></article>
+    <article class="sv"><a class="pan sv-pan" href="https://www.hook-hack.com/" tabindex="-1" aria-hidden="true"><canvas data-s="1"></canvas><video class="vv" data-src="video/v_hh.mp4" poster="img/v_hh.jpg" muted loop playsinline></video></a><div class="sv-tx"><p class="cat"><b>02</b><span>動画広告の制作ツール</span></p><h3>HookHack</h3><p class="d">売れる動画広告をLPから5分で制作。<br>検証から成果改善まで、動画広告のPDCAに必要な機能を1ツールで網羅します。</p><a class="more" href="https://www.hook-hack.com/">詳しく見る</a></div></article>
+    <article class="sv"><a class="pan sv-pan" href="https://www.hook-hack.com/hookhacker" tabindex="-1" aria-hidden="true"><canvas data-s="2"></canvas><video class="vv" data-src="video/v_hhr.mp4" poster="img/v_hhr.jpg" muted loop playsinline></video></a><div class="sv-tx"><p class="cat"><b>03</b><span>LP・サイト制作の代行</span></p><h3>HookHacker</h3><p class="d">自社開発AIツール「HookHack」×インドネシアオフショアチーム×日本人ディレクターでLP・サイト制作を代行。</p><a class="more" href="https://www.hook-hack.com/hookhacker">詳しく見る</a></div></article>
+    <article class="sv"><a class="pan sv-pan" href="https://samurai-style.tokyo/video-production" tabindex="-1" aria-hidden="true"><canvas data-s="3"></canvas><video class="vv" data-src="video/v_vp.mp4" poster="img/v_vp.jpg" muted loop playsinline></video></a><div class="sv-tx"><p class="cat"><b>04</b><span></span></p><h3 class="ja">動画制作</h3><p class="d">貴社の顧客理解に基づき、動画を企画・撮影・編集までワンストップで制作します。</p><a class="more" href="https://samurai-style.tokyo/video-production">詳しく見る</a></div></article>
+  </div>
+</section>
+
+<section class="sec" id="member">
+  <div class="sh"><h2>MEMBER</h2><p class="jp">メンバー</p></div>
+  <p class="mem-lead">私たちのチームは、多様な世代やバックグラウンドを持つメンバーで構成されており、それぞれが自分の得意分野を生かして、常にお客様のニーズに応える最適なソリューションを提供することに尽力しています。少数精鋭のため、お客様と密接な関係を築くことを重視しており、信頼に基づく長期的なパートナーシップの構築を目指しています。お客様の世界進出への挑戦をサポートし、成功への道を共に歩んでいけることを願っています。</p>
+  <div class="mg">
+    <article class="mc" tabindex="0"><div class="pan mc-pic"><img src="img/m_hashimoto.webp" alt="橋本　圭司" loading="lazy" style="object-position:44.2% 50%"><canvas aria-hidden="true"></canvas></div><span class="no">01</span><h3><span class="nb">橋本　圭司</span></h3><p class="role"><span class="nb">代表取締役</span></p><p class="bio">大手通信会社の営業、事業企画、およびWebコンサル会社での経験を生かし、様々な業種・規模の企業でBizDev・マーケティングのコンサルとして事業を推進。</p></article>
+    <article class="mc" tabindex="0"><div class="pan mc-pic"><img src="img/m_hayashi.webp" alt="林　壮" loading="lazy" style="object-position:44.8% 50%"><canvas aria-hidden="true"></canvas></div><span class="no">02</span><h3><span class="nb">林　壮</span></h3><p class="role"><span class="nb">プロジェクトマネージャー</span></p><p class="bio">東京生まれ、イギリス・シンガポール育ち。<br>映像ディレクターの経験を持ち、現在は弊社のオフショア開発事業と動画制作事業に加え、採用担当も務める。</p></article>
+    <article class="mc" tabindex="0"><div class="pan mc-pic"><img src="img/m_satrio.webp" alt="Satrio Buwono" loading="lazy" style="object-position:48% 50%"><canvas aria-hidden="true"></canvas></div><span class="no">03</span><h3><span class="nb">Satrio Buwono</span></h3><p class="role"><span class="nb">インドネシア事業開発</span></p><p class="bio">インドネシア生まれ、グラズゴー大学卒業<br>SaaSを専門に構築を行い、複数のITベンチャーを立ち上げ。オフショア開発事業のエンジニア統括を担う。</p></article>
+    <article class="mc" tabindex="0"><div class="pan mc-pic"><img src="img/m_lura.webp" alt="Lura Naito" loading="lazy" style="object-position:50% 50%"><canvas aria-hidden="true"></canvas></div><span class="no">04</span><h3><span class="nb">Lura Naito</span></h3><p class="role"><span class="nb">人事・マーケティング担当</span></p><p class="bio">愛知生まれ、南米・東南アジア各国を放浪。<br>サムライスタイルでは人事全般・マーケティングを担当。ぶれない明るさが持ち味。</p></article>
+  </div>
+</section>
+
+<section class="sec" id="contact">
+  <div class="ct">
+    <div class="side"><h2>CONTACT<br>US</h2><div class="pan osc"><canvas id="osc" aria-hidden="true"></canvas></div></div>
+    <form class="form" id="form" novalidate>
+      <label>会社名 (必須)<input type="text" name="company" required></label>
+      <label>担当者名 (必須)<input type="text" name="name" required></label>
+      <label>メールアドレス (必須)<input type="email" name="email" required></label>
+      <label>電話番号（必須）<input type="tel" name="tel" required></label>
+      <div class="full"><label style="margin-bottom:10px">お問い合わせ内容（必須）</label>
+        <div class="opts">
+          <label><input type="radio" name="kind" value="1"><span>戦略立案・実行支援（Strategy2Action）</span></label>
+          <label><input type="radio" name="kind" value="2"><span>動画広告ツール（HookHack）</span></label>
+          <label><input type="radio" name="kind" value="3"><span>LP・サイト制作（HookHacker）</span></label>
+          <label><input type="radio" name="kind" value="4"><span>動画制作（企画・撮影・編集）</span></label>
+          <label><input type="radio" name="kind" value="5"><span>取材・メディア関係</span></label>
+          <label><input type="radio" name="kind" value="6"><span>その他のお問い合わせ</span></label>
+        </div>
+      </div>
+      <label class="full">本文（必須）<textarea name="body" required></textarea></label>
+      <button class="send" type="submit">送信 <span>→</span></button>
+      <p class="note">上記ボタンを押すことで、当社の提供するサービス等に関する情報を提供する目的で、サムライスタイル株式会社が上記から送信された個人情報を保管・処理することに同意したものとみなされます。お客様はこれらの情報提供をいつでも停止できます。</p>
+      <p class="note">個人情報の開示や削除依頼等のお問い合わせ先、およびお客様の個人情報を尊重して保護するための弊社の取り組みについては、弊社の<a href="https://samurai-style.tokyo/privacy-policy">プライバシーポリシー</a>をご覧ください。</p>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer class="ft">
+  <a class="big" href="#contact"><div class="bw"><b>CONTACT</b><canvas id="ftc" aria-hidden="true"></canvas></div><div class="bl"><span class="jp">お問い合わせはこちらから</span><span class="arr">→</span></div></a>
+  <div class="low">
+    <a class="lg" href="#top" aria-label="Samurai-Style"><img src="img/logo.svg" alt="Samurai-Style"></a>
+    <nav><a href="https://samurai-style.tokyo/privacy-policy">プライバシーポリシー</a><a href="https://samurai-style.tokyo/commercial-transactions">特定商取引法に基づく表記</a></nav>
+    <span>© 2024- samurai-style All Right Reserved.</span>
+  </div>
+</footer>
+
+<script>
+(()=>{
+'use strict';
+/* ===== utilities ===== */
+const TAU=Math.PI*2, DPR=Math.min(2,window.devicePixelRatio||1);
+const REDUCE=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const clamp=(v,a=0,b=1)=>v<a?a:v>b?b:v, mix=(a,b,t)=>a+(b-a)*t;
+const ss=(a,b,v)=>{const t=clamp((v-a)/(b-a));return t*t*(3-2*t)};
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const hex=h=>{h=h.replace('#','');return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]};
+const C={ink:hex(css('--ink')),sig:hex(css('--sig')),card:hex(css('--card')),line:hex(css('--line')),mute:hex(css('--mute'))};
+const rgba=(c,a)=>`rgba(${c[0]},${c[1]},${c[2]},${a})`;
+const rgbMix=(a,b,t,al)=>`rgba(${Math.round(mix(a[0],b[0],t))},${Math.round(mix(a[1],b[1],t))},${Math.round(mix(a[2],b[2],t))},${al})`;
+function rng(seed){let s=seed%2147483647;if(s<=0)s+=2147483646;return()=>(s=s*16807%2147483647)/2147483647}
+/* Perlin noise 3D */
+const P=new Uint8Array(512);{const r=rng(1977),a=[...Array(256).keys()];for(let i=255;i>0;i--){const j=(r()*(i+1))|0;[a[i],a[j]]=[a[j],a[i]]}for(let i=0;i<512;i++)P[i]=a[i&255]}
+const fd=t=>t*t*t*(t*(t*6-15)+10), lp=(t,a,b)=>a+t*(b-a);
+const gr=(h,x,y,z)=>{h&=15;const u=h<8?x:y,v=h<4?y:(h===12||h===14)?x:z;return((h&1)?-u:u)+((h&2)?-v:v)};
+function N3(x,y,z){let X=Math.floor(x),Y=Math.floor(y),Z=Math.floor(z);x-=X;y-=Y;z-=Z;X&=255;Y&=255;Z&=255;
+  const u=fd(x),v=fd(y),w=fd(z),A=P[X]+Y,AA=P[A]+Z,AB=P[A+1]+Z,B=P[X+1]+Y,BA=P[B]+Z,BB=P[B+1]+Z;
+  return lp(w,lp(v,lp(u,gr(P[AA],x,y,z),gr(P[BA],x-1,y,z)),lp(u,gr(P[AB],x,y-1,z),gr(P[BB],x-1,y-1,z))),
+             lp(v,lp(u,gr(P[AA+1],x,y,z-1),gr(P[BA+1],x-1,y,z-1)),lp(u,gr(P[AB+1],x,y-1,z-1),gr(P[BB+1],x-1,y-1,z-1))));}
+
+/* ===== piece runner: only visible canvases draw ===== */
+const pieces=[];
+const io=new IntersectionObserver(es=>{for(const e of es){const p=e.target.__p;if(!p)continue;p.vis=e.isIntersecting;if(p.vis&&!p.ready)size(p)}},{rootMargin:'120px 0px'});
+function piece(c,o){const p=Object.assign({c,ctx:c.getContext('2d'),vis:false,ready:false,w:0,h:0,t0:0},o);c.__p=p;pieces.push(p);io.observe(c);return p}
+function size(p){const r=p.c.getBoundingClientRect();if(!r.width||!r.height)return;const d=p.dpr||DPR;p.w=r.width;p.h=r.height;p.c.width=Math.round(r.width*d);p.c.height=Math.round(r.height*d);p.ctx.setTransform(d,0,0,d,0,0);p.ready=true;p.init&&p.init(p)}
+let lastW=innerWidth,rz;
+addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{const wc=innerWidth!==lastW;lastW=innerWidth;for(const p of pieces){if(wc||p.anyResize){p.ready=false;if(p.vis)size(p)}}},150)});
+
+/* ===== FV : flow field that aligns into one signal line ===== */
+const fvSec=document.getElementById('fv');
+let fvP=0;
+piece(document.getElementById('fvc'),{dpr:Math.min(DPR,1.75),anyResize:false,
+ init(p){const sp=p.w<700;p.N=sp?520:1150;p.H=sp?9:12;const r=rng(11);
+  p.x=new Float32Array(p.N);p.y=new Float32Array(p.N);p.fr=new Uint8Array(p.N);p.age=new Float32Array(p.N);p.life=new Float32Array(p.N);p.d=new Float32Array(p.N);
+  p.hx=new Float32Array(p.N*p.H);p.hy=new Float32Array(p.N*p.H);p.r=r;
+  for(let i=0;i<p.N;i++){this.spawn(p,i,true);p.d[i]=r()}
+ },
+ spawn(p,i,first){const r=p.r;p.x[i]=r()*p.w;p.y[i]=r()*p.h;p.age[i]=first?r()*200:0;p.life[i]=120+r()*220;p.fr[i]=1},
+ draw(p,t){const {ctx,w,h,N,H}=p;ctx.clearRect(0,0,w,h);
+  const pr=fvP, sc=w<700?.0042:.0026, sp=w<700?1.1:1.5, amp=h*.13, cy=h*.5;
+  const B=5, paths=[];for(let b=0;b<B;b++)paths.push(new Path2D());
+  for(let i=0;i<N;i++){
+    let x=p.x[i],y=p.y[i];
+    const a=N3(x*sc,y*sc,t*.07)*TAU*1.4;
+    x+=Math.cos(a)*sp;y+=Math.sin(a)*sp;p.age[i]++;
+    const o=i*H;
+    if(x<-10||x>w+10||y<-10||y>h+10||p.age[i]>p.life[i]){this.spawn(p,i,false);x=p.x[i];y=p.y[i]}
+    p.x[i]=x;p.y[i]=y;
+    const e=ss(0,1,(pr*1.45-p.d[i]*.45)/1.0);
+    const u=((i/N)+t*.004)%1, tx=w*.04+u*w*.92;
+    const env=.35+.65*Math.sin(u*Math.PI);
+    const ty=cy+Math.sin(u*TAU*1.5-t*.7)*amp*env+Math.sin(u*TAU*5.0+t*1.3)*amp*.12*env;
+    const dx=mix(x,tx,e),dy=mix(y,ty,e);
+    if(p.fr[i]){for(let k=0;k<H;k++){p.hx[o+k]=dx;p.hy[o+k]=dy}p.fr[i]=0}
+    else{for(let k=0;k<H-1;k++){p.hx[o+k]=p.hx[o+k+1];p.hy[o+k]=p.hy[o+k+1]}p.hx[o+H-1]=dx;p.hy[o+H-1]=dy}
+    const path=paths[Math.min(B-1,(e*B)|0)];
+    let px=p.hx[o],py=p.hy[o];path.moveTo(px,py);
+    for(let k=1;k<H;k++){const qx=p.hx[o+k],qy=p.hy[o+k];if(Math.abs(qx-px)>40||Math.abs(qy-py)>40)path.moveTo(qx,qy);else path.lineTo(qx,qy);px=qx;py=qy}
+  }
+  ctx.lineCap='round';
+  for(let b=0;b<B;b++){const e=(b+.5)/B;ctx.strokeStyle=rgbMix(C.ink,C.sig,ss(.35,1,e),mix(.34,.9,e));ctx.lineWidth=mix(.8,1.25,e);ctx.stroke(paths[b])}
+  const la=ss(.82,1,pr);if(la>0){ctx.beginPath();for(let x=0;x<=w*.92;x+=3){const u=x/(w*.92),env=.35+.65*Math.sin(u*Math.PI);
+    const y=cy+Math.sin(u*TAU*1.5-t*.7)*amp*env+Math.sin(u*TAU*5.0+t*1.3)*amp*.12*env;x?ctx.lineTo(w*.04+x,y):ctx.moveTo(w*.04,y)}
+    ctx.strokeStyle=rgba(C.sig,la);ctx.lineWidth=1.6;ctx.stroke()}
+  /* baseline ticks (plotter axis) */
+  ctx.fillStyle=rgba(C.mute,.55);for(let x=w*.04;x<=w*.961;x+=w*.92/24)ctx.fillRect(x,h-14,1,6);
+ }});
+
+/* ===== STORY : one particle set, seven formations ===== */
+const steps=[...document.querySelectorAll('.step')], ix=[...document.querySelectorAll('.st-ix i')];
+let stS=0;
+piece(document.getElementById('stc'),{dpr:Math.min(DPR,1.75),anyResize:true,
+ init(p){const sp=p.w<600;p.N=sp?480:760;const r=rng(23);p.rnd=new Float32Array(p.N*4);for(let i=0;i<p.N*4;i++)p.rnd[i]=r();
+  p.X=new Float32Array(p.N);p.Y=new Float32Array(p.N);p.AX=new Float32Array(p.N);p.AY=new Float32Array(p.N);p.BX=new Float32Array(p.N);p.BY=new Float32Array(p.N);},
+ /* formations: write positions into X,Y */
+ form(p,k,t,X,Y){const {w,h,N,rnd}=p, m=Math.min(w,h);
+  if(k===0){/* grid: being replaced */const cols=Math.round(Math.sqrt(N*w/h)),rows=Math.ceil(N/cols),gx=w*.8/(cols-1),gy=h*.76/(rows-1);
+    for(let i=0;i<N;i++){X[i]=w*.1+(i%cols)*gx;Y[i]=h*.12+((i/cols)|0)*gy}}
+  else if(k===1){/* entropy fan */const K=38,M=Math.ceil(N/K),ox=w*.08,oy=h*.5;
+    for(let i=0;i<N;i++){const kk=i%K,j=(i/K)|0,tt=j/(M-1);const a0=(kk/(K-1)-.5)*1.5;
+      const a=a0+N3(kk*.35,tt*2.2,t*.25)*tt*1.6;const r=tt*w*.86;
+      X[i]=ox+Math.cos(a)*r+N3(i*.1,t*.6,3)*tt*tt*24;Y[i]=clamp(oy+Math.sin(a)*r*.9+N3(i*.1,t*.6,9)*tt*tt*24,h*.06,h*.94)}}
+  else if(k===2){/* many noisy channels, one clean */const R=19,M=Math.ceil(N/R);
+    for(let i=0;i<N;i++){const row=(i/M)|0,j=i%M,x=w*.07+j/(M-1)*w*.86,by=h*.12+row*(h*.76/(R-1));
+      X[i]=x;Y[i]=row===11?by+Math.sin(x*.03-t*2.2)*h*.022:by+N3(x*.07,row*3.1,t*2.6)*h*.06}}
+  else if(k===3){/* noise cloud, one point */
+    for(let i=0;i<N;i++){X[i]=w*.06+rnd[i*4]*w*.88+N3(i*.13,t*.5,1)*22;Y[i]=h*.08+rnd[i*4+1]*h*.84+N3(i*.13,t*.5,7)*22}
+    X[0]=w*.5;Y[0]=h*.5}
+  else if(k===4){/* zero-sum bars (left) / plus-sum ring (right) */const Bn=7,half=N>>1;
+    let hs=[],tot=0;for(let b=0;b<Bn;b++){const v=1+.85*Math.sin(t*.9+b*2.1);hs.push(v);tot+=v}
+    const per=Math.ceil(half/Bn/3),bw=w*.38/Bn,base=h*.82,step=(h*.62)/per;
+    for(let i=0;i<half;i++){const b=i%Bn,j=(i/Bn)|0,sub=j%3,lv=(j/3)|0,fill=hs[b]/tot*Bn*.55;
+      X[i]=w*.07+b*bw+bw*.5+(sub-1)*5;Y[i]=base-Math.min(lv,Math.floor(per*fill))*step}
+    const cx=w*.73,cy=h*.47,R0=m*(.2+.03*Math.sin(t*.8));
+    for(let i=half;i<N;i++){const q=(i-half)/(N-half),a=q*TAU+t*.25,rr=R0*(1+.18*Math.sin(q*TAU*6+t*1.4)*.25)+rnd[i*4+2]*m*.035;
+      X[i]=cx+Math.cos(a)*rr;Y[i]=cy+Math.sin(a)*rr}}
+  else if(k===5){/* local arrows -> one global flow */const cols=Math.round(Math.sqrt(N*w/h)),rows=Math.ceil(N/cols),gx=w*.84/(cols-1),gy=h*.78/(rows-1);
+    for(let i=0;i<N;i++){X[i]=w*.08+(i%cols)*gx;Y[i]=h*.11+((i/cols)|0)*gy}}
+  else{/* rings broadcast */const RN=10,cx=w*.5,cy=h*.5,Rm=Math.hypot(w,h)*.5;
+    for(let i=0;i<N;i++){if(i===0){X[0]=cx;Y[0]=cy;continue}const ring=i%RN,q=rnd[i*4+3];const rr=((ring+t*.35)%RN)/RN*Rm;
+      X[i]=cx+Math.cos(q*TAU+ring)*rr;Y[i]=cy+Math.sin(q*TAU+ring)*rr}}
+ },
+ /* style overlays for a formation, drawn on current (morphing) positions */
+ paint(p,k,X,Y,a,t){if(a<.02)return;const {ctx,w,h,N,rnd}=p;ctx.globalAlpha=a;
+  const dot=(i,s)=>ctx.rect(X[i]-s/2,Y[i]-s/2,s,s);
+  if(k===0){const front=(t*.11)%1.35-.15;ctx.beginPath();ctx.fillStyle=rgba(C.ink,.6);const acc=[];
+    for(let i=0;i<N;i++){const v=(X[i]/w*.7+Y[i]/h*.3)+N3(i*.21,0,2)*.18;if(v<front)acc.push(i);else dot(i,2)}ctx.fill();
+    ctx.beginPath();ctx.fillStyle=rgba(C.sig,.95);for(const i of acc)dot(i,4);ctx.fill()}
+  else if(k===1){const K=38;ctx.beginPath();ctx.strokeStyle=rgba(C.ink,.22);ctx.lineWidth=.8;
+    for(let kk=0;kk<K;kk++){ctx.moveTo(X[kk],Y[kk]);for(let i=kk+K;i<N;i+=K)ctx.lineTo(X[i],Y[i])}ctx.stroke();
+    ctx.beginPath();ctx.fillStyle=rgba(C.ink,.7);for(let i=0;i<N;i++)dot(i,2);ctx.fill();
+    ctx.fillStyle=rgba(C.sig,1);ctx.fillRect(X[0]-4,Y[0]-4,8,8)}
+  else if(k===2){const R=19,M=Math.ceil(N/R);for(let row=0;row<R;row++){const s=row*M,e=Math.min(N,s+M);ctx.beginPath();
+      ctx.strokeStyle=row===11?rgba(C.sig,1):rgba(C.ink,.42);ctx.lineWidth=row===11?2:.9;ctx.moveTo(X[s],Y[s]);for(let i=s+1;i<e;i++)ctx.lineTo(X[i],Y[i]);ctx.stroke()}}
+  else if(k===3){ctx.beginPath();ctx.fillStyle=rgba(C.ink,.45);for(let i=1;i<N;i++)dot(i,2);ctx.fill();
+    const pu=(t*.6)%1;ctx.strokeStyle=rgba(C.sig,1-pu);ctx.lineWidth=1;ctx.beginPath();ctx.arc(X[0],Y[0],8+pu*60,0,TAU);ctx.stroke();
+    ctx.fillStyle=rgba(C.sig,1);ctx.fillRect(X[0]-5,Y[0]-5,10,10)}
+  else if(k===4){const half=N>>1;ctx.beginPath();ctx.fillStyle=rgba(C.ink,.55);for(let i=0;i<half;i++)dot(i,2.4);ctx.fill();
+    ctx.beginPath();ctx.fillStyle=rgba(C.sig,.9);for(let i=half;i<N;i++)dot(i,2.6);ctx.fill();
+    ctx.strokeStyle=rgba(C.ink,.25);ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(w*.06,h*.83);ctx.lineTo(w*.47,h*.83);ctx.stroke()}
+  else if(k===5){const al=p.align;const B=4,paths=[];for(let b=0;b<B;b++)paths.push(new Path2D());
+    for(let i=0;i<N;i++){const local=rnd[i*4]*TAU,glob=.45*Math.sin(Y[i]*.012+X[i]*.004+t*.5);
+      let d=glob-local;d=Math.atan2(Math.sin(d),Math.cos(d));const e=clamp(al*1.25-rnd[i*4+1]*.25);const an=local+d*e,L=9;
+      const pa=paths[Math.min(B-1,(e*B)|0)];pa.moveTo(X[i]-Math.cos(an)*L/2,Y[i]-Math.sin(an)*L/2);pa.lineTo(X[i]+Math.cos(an)*L/2,Y[i]+Math.sin(an)*L/2)}
+    ctx.lineWidth=1.2;ctx.lineCap='round';for(let b=0;b<B;b++){const e=(b+.5)/B;ctx.strokeStyle=rgbMix(C.ink,C.sig,ss(.5,1,e),mix(.45,.95,e));ctx.stroke(paths[b])}}
+  else{const RN=10,cx=w*.5,cy=h*.5,Rm=Math.hypot(w,h)*.5;ctx.lineWidth=1;
+    for(let r=0;r<RN;r++){const rr=((r+t*.35)%RN)/RN*Rm;ctx.strokeStyle=rgba(C.ink,.14*(1-rr/Rm));ctx.beginPath();ctx.arc(cx,cy,rr,0,TAU);ctx.stroke()}
+    ctx.beginPath();for(let i=1;i<N;i++){dot(i,2)}ctx.fillStyle=rgba(C.ink,.5);ctx.fill();
+    ctx.fillStyle=rgba(C.sig,1);ctx.fillRect(cx-6,cy-6,12,12)}
+  ctx.globalAlpha=1},
+ draw(p,t){const {ctx,w,h,N}=p;ctx.clearRect(0,0,w,h);
+  const s=clamp(stS,0,6),a=Math.min(5,Math.floor(s)),fr=s-a,f=ss(.3,.75,fr);
+  const b=s>=6?6:a+1, A=s>=6?6:a;
+  this.form(p,A,t,p.AX,p.AY);
+  if(f>0&&b!==A)this.form(p,b,t,p.BX,p.BY);
+  for(let i=0;i<N;i++){p.X[i]=f>0&&b!==A?mix(p.AX[i],p.BX[i],f):p.AX[i];p.Y[i]=f>0&&b!==A?mix(p.AY[i],p.BY[i],f):p.AY[i]}
+  p.align=ss(4.5,4.98,s);
+  this.paint(p,A,p.X,p.Y,b!==A?1-f:1,t);
+  if(b!==A)this.paint(p,b,p.X,p.Y,f,t);
+ }});
+
+/* ===== FEATURES : four distinct patterns ===== */
+const feat=[
+ {/* 01 commitment : a structure grows from one seed */
+  init(p){const r=rng(5),segs=[];const grow=(x,y,a,len,d,b)=>{if(d>8||len<4)return;const x2=x+Math.cos(a)*len,y2=y+Math.sin(a)*len;segs.push([x,y,x2,y2,b,d]);
+      const n=d<2?2:(r()<.82?2:3);for(let k=0;k<n;k++)grow(x2,y2,a+(r()-.5)*1.25+(k-(n-1)/2)*.38,len*(.7+r()*.16),d+1,b+(.09+r()*.04))};
+    grow(p.w*.5,p.h*.97,-Math.PI/2,p.h*.185,0,0);p.segs=segs;p.max=Math.max(...segs.map(s=>s[4]))+.1},
+  draw(p,t){const {ctx,w,h}=p;ctx.clearRect(0,0,w,h);const cyc=8,g=(t%cyc)/cyc,grow=ss(0,.42,g)*p.max,fade=1-ss(.88,1,g);
+    ctx.lineCap='round';const tips=[];ctx.beginPath();ctx.strokeStyle=rgba(C.ink,.55*fade);ctx.lineWidth=1;
+    for(const s of p.segs){const k=clamp((grow-s[4])/.12);if(k<=0)continue;const sw=Math.sin(t*.9+s[5])*s[5]*.6;
+      const x2=s[0]+(s[2]-s[0])*k+sw,y2=s[1]+(s[3]-s[1])*k;ctx.moveTo(s[0],s[1]);ctx.lineTo(x2,y2);if(k<1)tips.push([x2,y2])}
+    ctx.stroke();ctx.fillStyle=rgba(C.sig,fade);for(const q of tips)ctx.fillRect(q[0]-2,q[1]-2,4,4);
+    ctx.fillStyle=rgba(C.sig,1);ctx.fillRect(w*.5-4,h*.97-4,8,8)}},
+ {/* 02 multilingual : three sources interfere (moire) */
+  draw(p,t){const {ctx,w,h}=p;ctx.clearRect(0,0,w,h);const S=[[.28+.05*Math.sin(t*.3),.42],[.72,.36+.06*Math.cos(t*.27)],[.5+.06*Math.cos(t*.22),.85]];
+    const gap=11,Rm=Math.hypot(w,h),ph=(t*9)%gap;ctx.lineWidth=.8;
+    S.forEach((s,si)=>{const cx=s[0]*w,cy=s[1]*h;ctx.strokeStyle=rgba(C.ink,.3);ctx.beginPath();for(let r=ph+2;r<Rm*.75;r+=gap){ctx.moveTo(cx+r,cy);ctx.arc(cx,cy,r,0,TAU)}ctx.stroke()});
+    ctx.fillStyle=rgba(C.sig,1);S.forEach(s=>ctx.fillRect(s[0]*w-4,s[1]*h-4,8,8))}},
+ {/* 03 structure : contour lines of a noise terrain */
+  draw(p,t){p.fc=(p.fc||0)+1;if(p.fc%2&&p.path){return}const {ctx,w,h}=p;ctx.clearRect(0,0,w,h);
+    const cs=w<500?9:10,cols=Math.ceil(w/cs)+1,rows=Math.ceil(h/cs)+1,F=new Float32Array(cols*rows),z=t*.04;
+    for(let j=0;j<rows;j++)for(let i=0;i<cols;i++)F[j*cols+i]=N3(i*cs*.0055,j*cs*.0055,z)+.5*N3(i*cs*.012,j*cs*.012,z+5);
+    const L=11,path=new Path2D(),hot=[];
+    for(let l=0;l<L;l++){const lv=-.75+l*.14;let cnt=0;
+      for(let j=0;j<rows-1;j++)for(let i=0;i<cols-1;i++){const a=F[j*cols+i],b=F[j*cols+i+1],c=F[(j+1)*cols+i+1],d=F[(j+1)*cols+i];
+        const idx=(a>lv?8:0)|(b>lv?4:0)|(c>lv?2:0)|(d>lv?1:0);if(idx===0||idx===15)continue;
+        const x=i*cs,y=j*cs,T=[x+cs*(lv-a)/(b-a),y],R=[x+cs,y+cs*(lv-b)/(c-b)],Bm=[x+cs*(lv-d)/(c-d),y+cs],Lf=[x,y+cs*(lv-a)/(d-a)];
+        const seg=(P1,P2)=>{path.moveTo(P1[0],P1[1]);path.lineTo(P2[0],P2[1]);if(l===6&&(++cnt%37===0))hot.push(P1)};
+        switch(idx){case 1:case 14:seg(Lf,Bm);break;case 2:case 13:seg(Bm,R);break;case 3:case 12:seg(Lf,R);break;case 4:case 11:seg(T,R);break;
+          case 5:seg(Lf,T);seg(Bm,R);break;case 6:case 9:seg(T,Bm);break;case 7:case 8:seg(Lf,T);break;case 10:seg(T,R);seg(Lf,Bm);break}}}
+    p.path=path;ctx.strokeStyle=rgba(C.ink,.38);ctx.lineWidth=.9;ctx.stroke(path);
+    ctx.fillStyle=rgba(C.sig,1);hot.slice(0,6).forEach(q=>ctx.fillRect(q[0]-3.5,q[1]-3.5,7,7))}},
+ {/* 04 speed : a small team streaks through slow traffic */
+  init(p){const r=rng(9);p.bg=[];for(let i=0;i<70;i++)p.bg.push([r()*p.w,r()*p.h,12+r()*40,.3+r()*.6]);p.tr=[[],[],[],[]]},
+  draw(p,t){const {ctx,w,h}=p;ctx.clearRect(0,0,w,h);ctx.lineWidth=1;ctx.strokeStyle=rgba(C.ink,.22);ctx.beginPath();
+    for(const b of p.bg){b[0]-=b[3];if(b[0]+b[2]<0)b[0]=w+Math.random()*40;ctx.moveTo(b[0],b[1]);ctx.lineTo(b[0]+b[2],b[1])}ctx.stroke();
+    const sp=w*.3;
+    for(let k=0;k<4;k++){const x=((t*sp+k*18)%(w+160))-80,y=h*.5+Math.sin(t*1.7+x*.01)*h*.16+(k-1.5)*11;const tr=p.tr[k];tr.push([x,y]);if(tr.length>80)tr.shift();
+      ctx.beginPath();for(let i=1;i<tr.length;i++){if(tr[i][0]<tr[i-1][0]){ctx.moveTo(tr[i][0],tr[i][1]);continue}if(i===1)ctx.moveTo(tr[0][0],tr[0][1]);ctx.lineTo(tr[i][0],tr[i][1])}
+      ctx.strokeStyle=k===0?rgba(C.sig,.95):rgba(C.ink,.7);ctx.lineWidth=k===0?1.6:1;ctx.stroke();
+      ctx.fillStyle=k===0?rgba(C.sig,1):rgba(C.ink,.9);ctx.fillRect(x-3,y-3,6,6)}}}
+];
+document.querySelectorAll('canvas[data-f]').forEach(c=>{const f=feat[+c.dataset.f];piece(c,{anyResize:true,init:f.init,draw:f.draw})});
+
+/* ===== SERVICE : scanline ground, one variation per card ===== */
+const svMod=[
+ (x,y,w,h,t)=>N3(x*.006-t*.05,y*.02+t*.18,1)+(1-y/h)*.35-.15,                       /* 01 rises upward : strategy -> action */
+ (x,y,w,h,t)=>Math.sin(Math.hypot(x-w*.5,y-h*.5)*.045-t*1.6)*.45+N3(x*.01,y*.02,t*.1)*.6,/* 02 hook : rings */
+ (x,y,w,h,t)=>N3(x*.008+t*.12,y*.03,4)*(x<w*.5?1:-1)+ .25*Math.sin(x*.02-t),             /* 03 two teams interlock */
+ (x,y,w,h,t)=>N3(Math.floor(x/38)*.5+t*.35,y*.012,8)+.15                                  /* 04 frames */
+];
+document.querySelectorAll('canvas[data-s]').forEach(c=>{const k=+c.dataset.s;piece(c,{dpr:Math.min(DPR,1.5),anyResize:true,
+ draw(p,t){p.fc=(p.fc||0)+1;if(p.fc%2)return;const {ctx,w,h}=p;ctx.clearRect(0,0,w,h);const f=svMod[k],gap=w<500?5:6,stp=3;
+  const path=new Path2D(),hot=new Path2D();
+  for(let y=gap;y<h;y+=gap){let run=-1;for(let x=0;x<=w;x+=stp){const v=x<w?f(x,y,w,h,t):-9;const on=v>.12;
+      if(on&&run<0)run=x;if(!on&&run>=0){const tg=((y/gap|0)%9===0)?hot:path;tg.moveTo(run,y);tg.lineTo(x,y);run=-1}}}
+  ctx.lineWidth=1;ctx.strokeStyle=rgba(C.ink,.2);ctx.stroke(path);ctx.strokeStyle=rgba(C.sig,.45);ctx.stroke(hot)}})});
+
+/* lazy video */
+const vio=new IntersectionObserver(es=>{for(const e of es){const v=e.target;if(e.isIntersecting){if(!v.src&&v.dataset.src)v.src=v.dataset.src;const pr=v.play();pr&&pr.catch(()=>{})}else v.pause()}},{rootMargin:'100px 0px'});
+document.querySelectorAll('video.vv').forEach(v=>vio.observe(v));
+
+/* ===== MEMBER : halftone portrait assembles from scattered noise ===== */
+document.querySelectorAll('.mc').forEach((card,ci)=>{const img=card.querySelector('img'),c=card.querySelector('canvas');
+ piece(c,{anyResize:true,init(p){p.dots=null;p.st=-1;p.done=false;
+    const go=()=>{try{const pitch=p.w<220?4.2:5,cols=Math.floor(p.w/pitch),rows=Math.floor(p.h/pitch);const o=document.createElement('canvas');o.width=cols;o.height=rows;const oc=o.getContext('2d');
+        const iw=img.naturalWidth,ih=img.naturalHeight,s=Math.max(cols/iw,rows/ih),dw=iw*s,dh=ih*s;oc.drawImage(img,(cols-dw)/2,(rows-dh)/2,dw,dh);
+        const d=oc.getImageData(0,0,cols,rows).data,r=rng(31+ci),dots=[],L=new Float32Array(cols*rows);let bgL=0,bn=0,mn=1;
+        for(let q=0;q<cols*rows;q++){L[q]=(d[q*4]*.3+d[q*4+1]*.59+d[q*4+2]*.11)/255;mn=Math.min(mn,L[q])}
+        for(let j=0;j<4;j++)for(let i=0;i<cols;i++){bgL+=L[j*cols+i];bn++}bgL=bgL/bn-.03;
+        for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){const l=L[j*cols+i];const dk=clamp((bgL-l)/Math.max(.2,bgL-mn));if(dk<.07)continue;
+          dots.push([i*pitch+pitch/2,j*pitch+pitch/2,Math.pow(dk,.62)*pitch*.5,r()*p.w,r()*p.h,r()*.5])}
+        p.dots=dots;card.classList.add('ht')}catch(e){p.dots=null;card.classList.remove('ht')}};
+    if(img.complete&&img.naturalWidth)go();else{img.loading='eager';img.addEventListener('load',go,{once:true})}},
+  draw(p,t){if(!p.dots||p.done)return;if(p.st<0)p.st=t;const {ctx,w,h}=p,k=REDUCE?2:(t-p.st)/1.8;ctx.clearRect(0,0,w,h);ctx.beginPath();
+    for(const d of p.dots){const e=ss(d[5],d[5]+.5,k),x=mix(d[3],d[0],e),y=mix(d[4],d[1],e),r=mix(.8,d[2],e);ctx.moveTo(x+r,y);ctx.arc(x,y,r,0,TAU)}
+    ctx.fillStyle=rgba(C.ink,.92);ctx.fill();if(k>1.05)p.done=true}})});
+
+/* ===== CONTACT : oscilloscope, typing sends pulses ===== */
+const pulses=[];let lastIdle=0;
+const osc=piece(document.getElementById('osc'),{anyResize:true,
+ draw(p,t){const {ctx,w,h}=p;ctx.clearRect(0,0,w,h);if(t-lastIdle>2.6){pulses.push({t0:t,a:.5});lastIdle=t}
+  ctx.strokeStyle=rgba(C.line,1);ctx.lineWidth=1;ctx.beginPath();for(let x=0;x<=w;x+=w/12){ctx.moveTo(x,0);ctx.lineTo(x,h)}for(let y=0;y<=h;y+=h/4){ctx.moveTo(0,y);ctx.lineTo(w,y)}ctx.stroke();
+  const speed=w*.55;for(let i=pulses.length-1;i>=0;i--)if((t-pulses[i].t0)*speed>w+80)pulses.splice(i,1);
+  const ys=[],cy=h*.5;let hotA=[];
+  for(let x=0;x<=w;x+=2){let y=N3(x*.05,t*2.4,0)*h*.07,hv=0;for(const q of pulses){const px=(t-q.t0)*speed,dd=x-px;if(Math.abs(dd)<60){const env=Math.exp(-dd*dd/220);y+=Math.sin(dd*.35)*env*h*.36*q.a;hv=Math.max(hv,env)}}ys.push([x,cy+y,hv])}
+  ctx.beginPath();ctx.strokeStyle=rgba(C.ink,.55);ctx.lineWidth=1;ys.forEach((q,i)=>i?ctx.lineTo(q[0],q[1]):ctx.moveTo(q[0],q[1]));ctx.stroke();
+  ctx.beginPath();ctx.strokeStyle=rgba(C.sig,1);ctx.lineWidth=1.8;let on=false;for(const q of ys){if(q[2]>.08){on?ctx.lineTo(q[0],q[1]):ctx.moveTo(q[0],q[1]);on=true}else on=false}ctx.stroke()}});
+document.getElementById('form').addEventListener('input',()=>{const n=performance.now()/1000;pulses.push({t0:n,a:1});lastIdle=n});
+document.getElementById('form').addEventListener('submit',e=>e.preventDefault());
+
+/* ===== FOOTER : CONTACT drawn as scanlines that snap into alignment ===== */
+const big=document.querySelector('.big'),bigB=big.querySelector('b');let bigHov=0;
+big.addEventListener('mouseenter',()=>bigHov=1);big.addEventListener('mouseleave',()=>bigHov=0);
+const ft=piece(document.getElementById('ftc'),{anyResize:true,
+ init(p){p.runs=null;const build=()=>{const cs=getComputedStyle(bigB),fs=parseFloat(cs.fontSize);const o=document.createElement('canvas');o.width=Math.ceil(p.w);o.height=Math.ceil(p.h);const oc=o.getContext('2d');
+    oc.font=`700 ${fs}px "Space Grotesk"`;oc.letterSpacing=cs.letterSpacing;oc.textBaseline='alphabetic';oc.fillStyle='#000';
+    const m=oc.measureText('CONTACT'),asc=m.actualBoundingBoxAscent||fs*.7,desc=m.actualBoundingBoxDescent||0;oc.fillText('CONTACT',0,(p.h+asc-desc)/2);
+    const d=oc.getImageData(0,0,o.width,o.height).data,gap=p.w<600?4:6,runs=[];
+    for(let y=Math.floor(gap/2);y<o.height;y+=gap){let s=-1;for(let x=0;x<=o.width;x++){const on=x<o.width&&d[(y*o.width+x)*4+3]>110;if(on&&s<0)s=x;if(!on&&s>=0){runs.push([s,x,y]);s=-1}}}
+    p.runs=runs;p.al=0};
+  (document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(build)},
+ draw(p,t){if(!p.runs)return;const {ctx,w,h}=p;ctx.clearRect(0,0,w,h);p.al=mix(p.al,bigHov?1:0,.08);const J=(1-p.al)*(w<600?5:9);
+  ctx.lineWidth=w<600?2:2.6;ctx.lineCap='butt';ctx.strokeStyle=rgbMix(C.ink,C.sig,p.al,1);ctx.beginPath();
+  for(const r of p.runs){const n=N3(r[2]*.02,t*.45,r[0]*.0015);const dx=n*J;ctx.moveTo(r[0]+dx,r[2]);ctx.lineTo(r[1]+dx,r[2])}ctx.stroke()}});
+
+/* ===== scroll state ===== */
+function onScroll(){const vh=innerHeight;
+ const r=fvSec.getBoundingClientRect();fvP=clamp(-r.top/Math.max(1,r.height-vh)/.82);fvSec.style.setProperty('--p',fvP.toFixed(3));
+ const sp=innerWidth<=1080;const art=document.querySelector('.st-art').getBoundingClientRect();
+ const vc=sp?(art.bottom+vh)/2:vh/2;const cs=steps.map(s=>{const b=s.getBoundingClientRect();return b.top+b.height/2});
+ let s=0;if(vc<=cs[0])s=0;else if(vc>=cs[cs.length-1])s=cs.length-1;else for(let i=0;i<cs.length-1;i++){if(vc>=cs[i]&&vc<cs[i+1]){s=i+(vc-cs[i])/(cs[i+1]-cs[i]);break}}
+ stS=s;const ai=Math.round(s);ix.forEach((e,i)=>e.classList.toggle('on',i===ai));}
+addEventListener('scroll',onScroll,{passive:true});onScroll();
+
+/* ===== loop ===== */
+let T=0,prev=performance.now();
+function loop(now){const dt=Math.min(.05,(now-prev)/1000);prev=now;if(!REDUCE)T+=dt;
+ onScroll();for(const p of pieces)if(p.vis&&p.ready)p.draw(p,T,dt);requestAnimationFrame(loop)}
+requestAnimationFrame(loop);
+
+/* menu */
+document.querySelector('.burger').addEventListener('click',()=>document.body.classList.toggle('menu'));
+document.querySelectorAll('.ov a').forEach(a=>a.addEventListener('click',()=>document.body.classList.remove('menu')));
+})();
+</script>
+</body>
+</html>
