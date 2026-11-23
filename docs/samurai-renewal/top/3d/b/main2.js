@@ -871,7 +871,7 @@ const _n5 = scene.children.length;   // 旧案（下の塊）は隠し、「人�
 }
 
 s5.old = scene.children.slice(_n5); s5.old.forEach((o) => { o.visible = false; });
-let sc5 = null, s5T = 0;
+let sc5 = null, s5T = 0, s5cam = null;
 const s4root = document.createElement('div'); s4root.className = 's4root'; s4root.style.cssText = 'position:fixed;inset:0;z-index:7;pointer-events:none'; document.body.appendChild(s4root);
 const s4 = createScene4({ THREE, scene, center: T[4].clone(), camera, quality: SP ? 'sp' : 'pc', root: s4root, renderer, layer: FX, onNext: () => snapTo(5.55) });
 document.querySelector('.tx.q[data-i="4"]')?.style.setProperty('display', 'none');   // 場面4の文は部品が中央に出す
@@ -1306,6 +1306,8 @@ function frame() {
   const drift = Math.sin(Math.PI * clamp((x - 0.05) / 0.95)) * 1.4 * (k < 7 ? 1 : 0);
   const tgtA = T[Math.floor(s)], tgtB = T[Math.min(6, Math.ceil(s))];
   look.copy(tgtA).lerp(tgtB, ease(sf));
+  { const w5 = (Math.floor(s) === 5 ? 1 - ease(sf) : 0) + (Math.ceil(s) === 5 && Math.floor(s) !== 5 ? ease(sf) : 0);
+    if (s5cam && w5 > 0) { look.y += ((s5cam.lookY ?? 5) - 5) * w5; pos.y += ((s5cam.camHeight ?? 3) - 3) * w5; } }
   { const w4 = (Math.floor(s) === 4 ? 1 - ease(sf) : 0) + (Math.ceil(s) === 4 && Math.floor(s) !== 4 ? ease(sf) : 0); if (s4.lookTarget && w4 > 0) look.add(tmpV.copy(s4.lookTarget).sub(T[4]).multiplyScalar(w4)); }
   pos.add(tmpV.copy(T[kk]).sub(pos).normalize().multiplyScalar(drift * (1 - dawn)));
   const tan = camCurve.getTangent(clamp(s / 6, 0, 1));
@@ -1427,7 +1429,7 @@ function frame() {
     const d5 = Math.abs(Ps - 5.55), at5 = d5 < 0.32;
     sc5.group.visible = Math.abs(Ps - 5.2) < 1.3;
     if (at5) s5T = Math.min(1, s5T + dt / 16); else if (d5 > 0.95) s5T = 0;
-    if (sc5.group.visible) sc5.update(t, dt, Math.max(s5T, 0.02));
+    if (sc5.group.visible) s5cam = sc5.update(t, dt, Math.max(s5T, 0.02)) || null;
     sc5.audio(SND.out(), sc5.group.visible ? 1 - sstep(0.25, 0.6, d5) : 0);
   }
   s5.old.forEach((o) => { o.visible = false; });

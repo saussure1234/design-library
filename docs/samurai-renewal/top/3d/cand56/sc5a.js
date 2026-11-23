@@ -1,4 +1,4 @@
-// 場面5 案A「人の山」（単体確認用）。中身は本線用の部品 3d/b/sc5.js をそのまま使う
+// 場面5 案A「人の塔」（単体確認用）。中身は本線用の部品 3d/b/sc5.js をそのまま使う
 import { THREE, sstep, lerp } from './base.js';
 import { createScene5 } from '../b/sc5.js';
 
@@ -12,19 +12,20 @@ export default {
     S.bloom.strength = 0.55; S.bloom.threshold = 0.85;
     s.c = await createScene5({ THREE, scene, center: new THREE.Vector3(0, 0, 0), quality: SP ? 'sp' : 'pc', renderer });
     s.c.setCamera(S.camera);
+    if (!SP) { S.camera.fov = 46; S.camera.updateProjectionMatrix(); }   // 本線と同じ画角
     s.look = new THREE.Vector3();
   },
   frame(S) {
     const { camera, t, dt, p, SP } = S;
-    s.c.update(t, dt, p);
-    // カメラ：中心から約17。山を見上げる → 上から輪を見下ろす
-    const k = sstep(0.42, 0.8, p);
+    const v = s.c.update(t, dt, p);
+    // カメラ：本線と同じく中心から約16.5。高さと注視点は部品が返す目安（輪の段で輪が画面の中ほどに来る）
+    const k = sstep(0.5, 0.85, p);
     const orb = 0.25 + t * 0.03;
-    const dist = SP ? lerp(20, 22, k) : 17, h = lerp(3.2, 11, k);
-    camera.position.set(Math.sin(orb) * dist, h, Math.cos(orb) * dist);
-    s.look.set(0, lerp(3.6, 0.4, k), 0); camera.lookAt(s.look);
-    if (SP) camera.setViewOffset(innerWidth, innerHeight, 0, innerHeight * lerp(0.2, 0.16, k), innerWidth, innerHeight);
-    else camera.setViewOffset(innerWidth, innerHeight, -innerWidth * 0.17, 0, innerWidth, innerHeight);
+    const dist = SP ? lerp(19.5, 21, k) : 16.5;
+    camera.position.set(Math.sin(orb) * dist, v.camHeight, Math.cos(orb) * dist);
+    s.look.set(0, v.lookY, 0); camera.lookAt(s.look);
+    if (SP) camera.setViewOffset(innerWidth, innerHeight, 0, innerHeight * 0.2, innerWidth, innerHeight);
+    else camera.setViewOffset(innerWidth, innerHeight, -innerWidth * lerp(0.17, 0.14, k), 0, innerWidth, innerHeight);
   },
   sound: {
     init() {},
