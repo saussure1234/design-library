@@ -883,7 +883,7 @@ const _n5 = scene.children.length;   // 旧案（下の塊）は隠し、「人�
 
 s5.old = scene.children.slice(_n5); s5.old.forEach((o) => { o.visible = false; });
 let sc5 = null, s5T = 0, s5cam = null;
-const s4root = document.createElement('div'); s4root.className = 's4root'; s4root.style.cssText = 'position:fixed;inset:0;z-index:7;pointer-events:none'; document.body.appendChild(s4root);
+const s4root = document.createElement('div'); s4root.className = 's4root'; s4root.style.cssText = 'position:fixed;inset:0;z-index:7;pointer-events:none;visibility:hidden'; document.body.appendChild(s4root);
 const s4 = createScene4({ THREE, scene, center: T[4].clone(), camera, quality: SP ? 'sp' : 'pc', root: s4root, renderer, layer: FX, onNext: () => snapTo(5.55) });
 document.querySelector('.tx.q[data-i="4"]')?.style.setProperty('display', 'none');   // 場面4の文は部品が中央に出す
 createScene5({ THREE, scene, center: V(T[5].x, T[5].y - 5.2, T[5].z - 1), quality: SP ? 'sp' : 'pc', renderer, lineDir: (() => { let bu = 0, bd = 1e9; for (let i = 0; i <= 400; i++) { const d = lineCurve.getPoint(i / 400).distanceTo(T[5]); if (d < bd) { bd = d; bu = i / 400; } } return lineCurve.getTangent(bu).normalize(); })() }).then((o) => { sc5 = o; sc5.setCamera?.(camera); prewarm(); sc5.group.visible = false; }).catch((e) => console.warn('sc5', e));
@@ -1065,12 +1065,26 @@ function fvFrame(dt, t, Ps) {
 const gate = document.getElementById('gate');
 let gateDone = false;
 root.style.overflow = 'hidden';
-function enter(withSound) {
+// 入口は最初の1回だけ。2回目からは前回の選択を使う（音ありだった人は、最初に触れた時に鳴り始める）（So 11/24）
+const GATE_KEY = 'samurai-b-gate';
+const gateSeen = (() => { try { return localStorage.getItem(GATE_KEY); } catch (e) { return null; } })();
+function enter(withSound, remember = true) {
   if (gateDone) return; gateDone = true;
   SND.set(withSound);
+  if (remember) { try { localStorage.setItem(GATE_KEY, withSound ? '1' : '0'); } catch (e) { /* 保存できない環境は毎回聞く */ } }
   gate.classList.add('out'); root.style.overflow = '';
   setTimeout(() => fvx.classList.add('ready'), 250);
 }
+function skipGate() {
+  if (gateDone) return; gateDone = true;
+  gate.style.display = 'none'; root.style.overflow = '';
+  setTimeout(() => fvx.classList.add('ready'), 250);
+  if (gateSeen === '1') {
+    const first = () => { removeEventListener('pointerdown', first, true); removeEventListener('keydown', first, true); removeEventListener('touchstart', first, true); if (!SND.on) SND.set(true); };
+    addEventListener('pointerdown', first, true); addEventListener('keydown', first, true); addEventListener('touchstart', first, true);
+  }
+}
+if (gateSeen !== null || location.hash) skipGate();   // 2回目以降・ページ内リンクで来た時は入口を出さない
 gate.querySelectorAll('button').forEach((b) => b.addEventListener('click', () => enter(b.dataset.s === '1')));
 // ---------- STORY：1回のスクロールで次の場面まで進む（途中で止まらない） ----------
 const STOPS = [0.5, 1.55, 2.55, 3.55, 4.55, 5.55, 6.55];
@@ -1299,6 +1313,7 @@ function frame() {
   requestAnimationFrame(frame);
   const dt = Math.min(clock.getDelta(), 0.05); const t = clock.elapsedTime;
   U.time.value = t;
+  if (Math.abs(P - Ps) > 1.2) { Ps = P; lastPs = P; }   // 大きく飛んだ時は場面を早送りでなぞらない
   Ps += (P - Ps) * (1 - Math.pow(0.0009, dt));
   if (Math.abs(P - Ps) < 1e-4) Ps = P;
   vel = (Ps - lastPs) / Math.max(dt, 1e-3); lastPs = Ps;
@@ -1309,7 +1324,7 @@ function frame() {
   const hidden = Ps > 7.8;
   canvas.style.visibility = hidden ? 'hidden' : 'visible';
   hud.style.opacity = 1 - sstep(0.05, 0.5, dawn);
-  if (hidden) { SND.update({ noise: 0, travel: 0, vel: 0, dawn: 1, fv: 0, day: 1, tv: 0 }); shows.forEach((sh) => sh.show.setLevel(0)); talk1.stop(); SND.people(hands.map(() => ({ mode: 'quiet' })), 0); if (sc5) sc5.audio(SND.out(), 0); return; }
+  if (hidden) { s4root.style.visibility = 'hidden'; fvx.style.visibility = 'hidden'; fvv.style.visibility = 'hidden'; hint.style.opacity = 0; skip3.classList.remove('show'); SND.update({ noise: 0, travel: 0, vel: 0, dawn: 1, fv: 0, day: 1, tv: 0 }); shows.forEach((sh) => sh.show.setLevel(0)); talk1.stop(); SND.people(hands.map(() => ({ mode: 'quiet' })), 0); if (sc5) sc5.audio(SND.out(), 0); return; }
 
   // カメラ
   const s = camS(Ps); const sf = s - Math.floor(s); const travel = Math.sin(Math.PI * clamp(sf)) * (s < 6 ? 1 : 0);
@@ -1546,6 +1561,8 @@ requestAnimationFrame(frame);
 setTimeout(() => {
   ld.classList.add('out');
   if (RM) enter(false);
+  // ページ内リンク（例：下層ページの CONTACT → #contact）で来た時は、その位置へ。カメラも一気に合わせる
+  if (location.hash) { const el = document.querySelector(location.hash); if (el) { measure(); scrollTo(0, el.getBoundingClientRect().top + scrollY); readScroll(); Ps = P; lastPs = P; } }
 }, 250);
 window.__b = {
   get P() { return Ps; }, setP(v) { P = v; Ps = v; lastPs = v; }, toY, measure, renderer, used,
