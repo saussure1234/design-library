@@ -38,9 +38,12 @@ const meas=document.getElementById('meas');
 const natural=(text,fvs,ls)=>{meas.style.fontVariationSettings=fvs;meas.style.letterSpacing=ls;meas.textContent=text;return meas.getBoundingClientRect().width};
 const giants=[...document.querySelectorAll('[data-wd]')];
 const GFIN='"wdth" 151,"wght" 900,"opsz" 144';
-function fitGiants(){if(!giants.length)return;const W=giants[0].parentElement.clientWidth,ratio=innerWidth<820?.8:.6;let fs=96;
-  giants.forEach(g=>{const t=g.dataset.fitText||g.textContent.trim();fs=Math.min(fs,100*W*ratio/natural(t,GFIN,'-0.02em'))});
-  giants.forEach(g=>g.style.fontSize=fs.toFixed(2)+'px')}
+/* ページ名（h1）は大きく、節の見出し（h2）はそれより一段小さく（どれがページの題か分かるように・So 11/24） */
+function fitGiants(){if(!giants.length)return;const W=giants[0].parentElement.clientWidth,ratio=innerWidth<820?.8:.6;
+  const fit=(list)=>list.reduce((fs,g)=>{const t=g.dataset.fitText||g.textContent.trim();return Math.min(fs,100*W*ratio/natural(t,GFIN,'-0.02em'))},96);
+  const h1=giants.filter(g=>g.tagName==='H1'),h2=giants.filter(g=>g.tagName!=='H1');
+  const f1=fit(h1),f2=fit(h2)*(h1.length?0.58:1);
+  h1.forEach(g=>g.style.fontSize=f1.toFixed(2)+'px');h2.forEach(g=>g.style.fontSize=f2.toFixed(2)+'px')}
 function drawGiants(){const vh=innerHeight;giants.forEach(g=>{const r=g.getBoundingClientRect();const t=REDUCE?1:clamp((vh-r.top)/(vh*.62));g._p=Math.max(g._p||0,t);const e=ease3(g._p);
   if(g._e===e)return;g._e=e;g.style.fontVariationSettings=`"wdth" ${(25+126*e).toFixed(1)},"wght" ${(100+800*e).toFixed(0)},"opsz" 144`})}
 

@@ -291,9 +291,10 @@ export async function createScene5({ THREE, scene, center, quality = 'pc', rende
     fragmentShader: 'uniform float uR,uY,uA;varying float vY;void main(){float d=abs(vY-uY);float g=smoothstep(uR,uR-.8,d)*(1.+exp(-pow(d-uR,2.)*4.)*2.);gl_FragColor=vec4(vec3(1.,.36,.13)*g*uA,1.);}' }));
   mats.push(coreBeam.material); group.add(coreBeam);
   // 輪の中心から立ち上がり、線の向きへ曲がってつながる朱
+  // 本線の線にぴったり合流して終わる（線と平行に二重に走らない・So 11/24）
   const riseCurve = new THREE.CatmullRomCurve3([
-    new THREE.Vector3(0, 0.15, 0), new THREE.Vector3(0, LP.y * 0.45, 0), new THREE.Vector3(0, LP.y * 0.85, 0).addScaledVector(LD, 0.6),
-    LP.clone().addScaledVector(LD, 3), LP.clone().addScaledVector(LD, 10), LP.clone().addScaledVector(LD, 30),
+    new THREE.Vector3(0, 0.15, 0), new THREE.Vector3(0, LP.y * 0.45, 0), new THREE.Vector3(0, LP.y * 0.8, 0),
+    LP.clone().addScaledVector(LD, -2.2), LP.clone(), LP.clone().addScaledVector(LD, 0.8),
   ], false, 'catmullrom', 0.5);
   const riseG = new THREE.TubeGeometry(riseCurve, 220, 0.07, 10, false), riseG2 = new THREE.TubeGeometry(riseCurve, 220, 0.3, 12, false); geos.push(riseG, riseG2);
   const riseMat = (a) => new THREE.ShaderMaterial({ transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, uniforms: { uG: { value: 0 }, uA: { value: a } },

@@ -28,7 +28,7 @@ const MOODS = [
 ];
 
 export const SND = (() => {
-  let ctx = null, on = false, want = false, lastSwap = 0, nature = null, nextBird = 0, peopleV = null, peopleBus = null, hiss, radioN = null, radioO = null, radioG = null, master, music, sfx, verb, padF, voices = [], sub, wind, windF, whoosh, whooshF, sig, sigG, nbuf;
+  let ctx = null, on = false, want = false, lastSwap = 0, verbOut = null, nature = null, nextBird = 0, peopleV = null, peopleBus = null, hiss, radioN = null, radioO = null, radioG = null, master, music, sfx, verb, padF, voices = [], sub, wind, windF, whoosh, whooshF, sig, sigG, nbuf;
   let chord = -1, mood = MOODS[0], nextBeat = 0, beat = 0, padG, lastTick = 0, nextPing = 0, st = { noise: 1, travel: 0, vel: 0, dawn: 0, fv: 1, day: 0, tv: 0 };
   const btn = document.getElementById('snd');
   const lab = btn && btn.querySelector('.st');
@@ -55,7 +55,7 @@ export const SND = (() => {
     const comp = ctx.createDynamicsCompressor(); comp.threshold.value = -18; comp.ratio.value = 3;
     master.connect(comp); comp.connect(ctx.destination);
     verb = ctx.createConvolver(); verb.buffer = impulse(5, 2.4);
-    const vg = ctx.createGain(); vg.gain.value = 0.6; verb.connect(vg); vg.connect(master);
+    const vg = ctx.createGain(); vg.gain.value = 0.6; verb.connect(vg); vg.connect(master); verbOut = vg;
     music = ctx.createGain(); music.gain.value = 0.9; music.connect(master); music.connect(verb);
     sfx = ctx.createGain(); sfx.gain.value = 0.75; sfx.connect(master);
     const sv = ctx.createGain(); sv.gain.value = 0.3; sfx.connect(sv); sv.connect(verb);
@@ -239,7 +239,9 @@ export const SND = (() => {
       hiss.g.gain.setTargetAtTime(0.05 * st.tv, t, 0.3);
       sigG.gain.setTargetAtTime(0.018 * (1 - st.noise) * st.fv, t, 0.4);
       padF.frequency.setTargetAtTime(mood.f + 1400 * st.dawn, t, 0.8);
-      music.gain.setTargetAtTime(0.9 - 0.8 * st.day, t, 0.8);   // 紙の節では宇宙の音楽を小さく（自然の音はやめた・So 11/24）
+      // 夜明け〜FEATURES：残響を足しながら曲をだんだん小さくし、紙の節では鳴らさない（効果音は残す）（So 11/24）
+      { const f = Math.max(st.dawn || 0, st.day || 0); music.gain.setTargetAtTime(0.9 * Math.pow(1 - f, 1.6), t, f > 0.95 ? 1.6 : 0.6);
+        if (verbOut) verbOut.gain.setTargetAtTime(0.6 + 1.4 * Math.min(1, f * 1.5) * (1 - (st.day || 0) * 0.3), t, 0.8); }
       // 紙の節（特徴から下）：地球の音＝風・小川・ときどき鳥（かすかに）
       if (false && st.day > 0.02 && !nature) {
         nature = ctx.createGain(); nature.gain.value = 0; nature.connect(master);

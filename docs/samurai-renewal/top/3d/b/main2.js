@@ -894,7 +894,8 @@ let sc5 = null, s5T = 0, s5cam = null;
 const s4root = document.createElement('div'); s4root.className = 's4root'; s4root.style.cssText = 'position:fixed;inset:0;z-index:7;pointer-events:none;visibility:hidden'; document.body.appendChild(s4root);
 const s4 = createScene4({ THREE, scene, center: T[4].clone(), camera, quality: SP ? 'sp' : 'pc', root: s4root, renderer, layer: FX, onNext: () => snapTo(5.55) });
 document.querySelector('.tx.q[data-i="4"]')?.style.setProperty('display', 'none');   // 場面4の文は部品が中央に出す
-createScene5({ THREE, scene, center: V(T[5].x, T[5].y - 5.2, T[5].z - 1), quality: SP ? 'sp' : 'pc', renderer, lineDir: (() => { let bu = 0, bd = 1e9; for (let i = 0; i <= 400; i++) { const d = lineCurve.getPoint(i / 400).distanceTo(T[5]); if (d < bd) { bd = d; bu = i / 400; } } return lineCurve.getTangent(bu).normalize(); })() }).then((o) => { sc5 = o; sc5.setCamera?.(camera); prewarm(); sc5.group.visible = false; }).catch((e) => console.warn('sc5', e));
+(() => { const c5 = V(T[5].x, T[5].y - 5.2, T[5].z - 1); let bu = 0, bd = 1e9; for (let i = 0; i <= 2000; i++) { const d = lineCurve.getPoint(i / 2000).distanceTo(T[5]); if (d < bd) { bd = d; bu = i / 2000; } }
+  return createScene5({ THREE, scene, center: c5, quality: SP ? 'sp' : 'pc', renderer, lineDir: lineCurve.getTangent(bu).normalize(), linePoint: lineCurve.getPoint(bu).sub(c5) }); })().then((o) => { sc5 = o; sc5.setCamera?.(camera); prewarm(); sc5.group.visible = false; }).catch((e) => console.warn('sc5', e));
 
 // ---------- 場面6：ばらばらの短い板（個別最適）が、1本の長い橋（全体最適）に揃い、遠い光へ ----------
 const s6 = { planks: null, items: [] };
@@ -1353,6 +1354,9 @@ function frame() {
   camera.position.copy(pos).add(tmpV.set(mouse.sx * 0.9, -mouse.sy * 0.6, 0));
   lookS.lerp(look, 0.12);
   camera.lookAt(lookS);
+  // スマホの場面2は寄って大きく見せる（枝が細かすぎて何が広がるか分からないため・So 11/24）
+  if (SP) { const w2 = ease(clamp(1 - Math.abs(Ps - 2.55) / 0.7)), fv = 62 - 24 * w2;
+    if (Math.abs(camera.fov - fv) > 0.05) { camera.fov = fv; camera.updateProjectionMatrix(); U.px.value = innerHeight * DPR * 0.5 / Math.tan(THREE.MathUtils.degToRad(fv / 2)); } }
   camera.rotateZ(Math.sin(t * 0.21) * 0.012 + travel * 0.05 * Math.sign(vel || 1));
   const sideT = (innerWidth < 820) ? 0 : sideOf[k] * (1 - travel) * sstep(0.1, 0.4, x) * (1 - dawn);
   viewShift += (sideT - viewShift) * 0.06;
