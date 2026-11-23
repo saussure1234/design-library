@@ -28,7 +28,7 @@ const MOODS = [
 ];
 
 export const SND = (() => {
-  let ctx = null, on = false, want = false, hiss, master, music, sfx, verb, padF, voices = [], sub, wind, windF, whoosh, whooshF, sig, sigG, nbuf;
+  let ctx = null, on = false, want = false, hiss, radioN = null, radioO = null, radioG = null, master, music, sfx, verb, padF, voices = [], sub, wind, windF, whoosh, whooshF, sig, sigG, nbuf;
   let chord = -1, mood = MOODS[0], nextBeat = 0, beat = 0, padG, lastTick = 0, nextPing = 0, st = { noise: 1, travel: 0, vel: 0, dawn: 0, fv: 1, day: 0, tv: 0 };
   const btn = document.getElementById('snd');
   const lab = btn && btn.querySelector('.st');
@@ -125,6 +125,21 @@ export const SND = (() => {
     hover() { if (!on) return; tone(1320, 'sine', 0.025, 0.003, 0.08); },
     // 手が1本 AI に置き換わる：奥から手前へ音程が上がる
     swap(k) { if (!on) return; tone(mtof(69 + Math.round(k * 12)), 'triangle', 0.03, 0.003, 0.35, music); burst(0.025, 0.05, 'highpass', 5000, 1); },
+    // 場面4：ラジオの同調（目盛りの位置で帯域を絞った雑音 → 合うと澄んだ正弦波）
+    radio(r) {
+      if (!ctx || !on) return;
+      const t = ctx.currentTime;
+      if (!radioN) {
+        radioN = loopNoise(0, 'bandpass', 900, 4); radioN.g.connect(sfx);
+        radioO = ctx.createOscillator(); radioO.type = 'sine'; radioO.frequency.value = mtof(81); radioG = ctx.createGain(); radioG.gain.value = 0; radioO.connect(radioG); radioG.connect(music); radioO.start();
+      }
+      const v = r.on || 0, lock = r.lock || 0, near = r.near || 0;
+      radioN.g.gain.setTargetAtTime(0.2 * (1 - lock * 0.9) * v, t, 0.08);
+      radioN.fl.frequency.setTargetAtTime(300 + (r.x || 0) * 2800, t, 0.05);
+      radioO.detune.setTargetAtTime((1 - lock) * (1 - near) * 300 * Math.sin(r.t * 3), t, 0.05);
+      radioG.gain.setTargetAtTime(0.06 * Math.max(near * 0.5 * (1 - lock), lock) * v, t, 0.15);
+      if (v > 0.3 && Math.random() < 0.3 * (1 - lock)) burst(0.02 + Math.random() * 0.04, 0.008, 'highpass', 2500 + Math.random() * 4000, 1);
+    },
     // テレビの壁を光の波が走る
     wave() { if (!on || st.tv < 0.3) return; tone(220, 'sine', 0.05, 0.25, 1.4, music, 440); burst(0.04, 0.9, 'bandpass', 1200, 0.6); },
     scene(i) { if (ctx) setChord(i); },

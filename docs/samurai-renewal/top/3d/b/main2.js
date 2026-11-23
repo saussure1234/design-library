@@ -665,7 +665,7 @@ const convU = { uTime: U.time, uConv: { value: 0 }, uC: { value: T[4] }, uPx: U.
         vC=mix(vec3(.50,.58,.74),vec3(.92,.95,1.),k); vA=(.42+.58*k)*(1.-fogF(-mv.z)); }`,
     fragmentShader: `varying vec3 vC; varying float vA; void main(){ float r=length(gl_PointCoord-.5); gl_FragColor=vec4(vC*smoothstep(.5,0.,r)*vA,1.); }`,
   });
-  const p = new THREE.Points(g, m); p.frustumCulled = false; scene.add(fx(p));
+  const p = new THREE.Points(g, m); p.frustumCulled = false; p.visible = false; scene.add(fx(p));   // 旧案（チューニング案に差し替え）
 }
 const beam = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 1, 12, 1, true).translate(0, 0.5, 0), new THREE.ShaderMaterial({
   transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, uniforms: { uA: { value: 0 } },
@@ -675,6 +675,69 @@ const beam = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 1, 12, 1, tru
 beam.position.copy(T[4]); beam.scale.set(1, 0.001, 1); scene.add(fx(beam));
 const core = mkGlow(1, 0xff7a4a, 1); core.position.copy(T[4]); scene.add(core);
 const coreW = mkGlow(1, 0xffffff, 1); coreW.position.copy(T[4]); scene.add(coreW);
+
+// ---------- 場面4（差し替え・案B）：ノイズの海のチューニング ----------
+// 奥から手前へ流れる波形の列。目盛りが左右に探り、合うとノイズが静まり、ずっとそこにあった朱い稜線（Signal）が立つ
+const tuneU = { uT: { value: 0 }, uR: { value: 0 }, uSpd: { value: 5.5 }, uXc: { value: -6 }, uBw: { value: 0.9 }, uLock: { value: 0 }, uNear: { value: 0 }, uX0: { value: 0 }, uVis: { value: 0 } };
+const tune = { group: new THREE.Group(), cur: null, curV: null, T: 0, locked: false };
+{
+  const R = SP ? 64 : 96, NS = SP ? 170 : 260, X0 = 0.15, XW = 7.5, Z0 = -40, Z1 = 3;   // 稜線をシグナルの線にそろえる
+  tuneU.uR.value = R; tuneU.uX0.value = X0; tune.X0 = X0; tune.XW = XW;
+  const COMMON = `
+uniform float uT, uR, uSpd, uXc, uBw, uLock, uNear, uX0, uVis;
+float hh(vec2 p){ return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453); }
+float vn(vec2 p){ vec2 i=floor(p), f=fract(p); f=f*f*(3.-2.*f); return mix(mix(hh(i),hh(i+vec2(1,0)),f.x),mix(hh(i+vec2(0,1)),hh(i+vec2(1,1)),f.x),f.y); }
+void rowOf(float k, out float u, out float id){ float s=uT*uSpd; u=k+fract(s); float i=mod(k-floor(s),uR); id=i+uR*floor((i+s)/uR); }
+float zOf(float u){ return mix(${Z0.toFixed(1)}, ${Z1.toFixed(1)}, u/uR); }
+float band(float x){ return exp(-pow((x-uXc)/uBw,2.)); }
+float sigAmp(){ return .14+.7*uNear*(1.-uLock)+1.45*uLock; }
+float height(float x, float si, float id){
+  float n=pow(hh(vec2(si,id)),3.)*1.5 + vn(vec2(x*1.3,id*.35))*.55 + vn(vec2(x*5.,id*.9))*.25;
+  float att=mix(1., mix(.07,.22,band(x)), uLock);
+  float s=exp(-pow((x-uX0)/.16,2.))*sigAmp()*(.85+.15*sin(id*.7));
+  return n*.42*att + s;
+}
+float fade(float u){ return smoothstep(0.,uR*.18,u)*(1.-smoothstep(uR*.86,uR,u)); }`;
+  const pos = [], row = [], si = [], fill = [], frow = [], fsi = [], top = [];
+  for (let k = 0; k < R; k++) {
+    for (let j = 0; j < NS - 1; j++) {
+      const xa = -XW + (2 * XW) * j / (NS - 1), xb = -XW + (2 * XW) * (j + 1) / (NS - 1);
+      pos.push(xa, 0, 0, xb, 0, 0); row.push(k, k); si.push(j, j + 1);
+      for (const q of [[xa, 1, j], [xb, 1, j + 1], [xa, 0, j], [xb, 1, j + 1], [xb, 0, j + 1], [xa, 0, j]]) { fill.push(q[0], 0, 0); top.push(q[1]); fsi.push(q[2]); frow.push(k); }
+    }
+  }
+  const lg = new THREE.BufferGeometry();
+  lg.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); lg.setAttribute('aK', new THREE.Float32BufferAttribute(row, 1)); lg.setAttribute('aS', new THREE.Float32BufferAttribute(si, 1));
+  const lm = new THREE.ShaderMaterial({ uniforms: tuneU,
+    vertexShader: `${COMMON} attribute float aK; attribute float aS; varying vec3 vC;
+      void main(){ float u,id; rowOf(aK,u,id); float x=position.x; float y=height(x,aS,id);
+        vec3 p=vec3(x,y,zOf(u)); vec4 mv=modelViewMatrix*vec4(p,1.); gl_Position=projectionMatrix*mv;
+        float fd=fade(u)*(1.-smoothstep(20.,46.,-mv.z))*uVis;
+        vec3 g=vec3(.50,.53,.58)*(.55+.9*band(x)*(1.-uLock*.6))*.7;
+        float sw=exp(-pow((x-uX0)/.32,2.))*clamp(uLock+uNear*.35,0.,1.);
+        vC=mix(g,vec3(1.,.30,.09)*2.2,sw)*fd; }`,
+    fragmentShader: 'varying vec3 vC; void main(){ gl_FragColor=vec4(vC,1.); }' });
+  const lines = new THREE.LineSegments(lg, lm); lines.frustumCulled = false; lines.renderOrder = 2; tune.group.add(fx(lines));
+  const fg = new THREE.BufferGeometry();
+  fg.setAttribute('position', new THREE.Float32BufferAttribute(fill, 3)); fg.setAttribute('aK', new THREE.Float32BufferAttribute(frow, 1)); fg.setAttribute('aS', new THREE.Float32BufferAttribute(fsi, 1)); fg.setAttribute('aTop', new THREE.Float32BufferAttribute(top, 1));
+  const fm = new THREE.ShaderMaterial({ uniforms: tuneU, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 2, side: THREE.DoubleSide,
+    vertexShader: `${COMMON} attribute float aK; attribute float aS; attribute float aTop;
+      void main(){ float u,id; rowOf(aK,u,id); float x=position.x; float y=aTop>.5?height(x,aS,id):-.2;
+        gl_Position=projectionMatrix*modelViewMatrix*vec4(x,y,zOf(u),1.); }`,
+    fragmentShader: 'void main(){ gl_FragColor=vec4(0.,0.,0.,1.); }' });
+  const fillM = new THREE.Mesh(fg, fm); fillM.frustumCulled = false; fillM.renderOrder = 1; tune.group.add(fillM);
+  tune.cur = new THREE.Line(new THREE.BufferGeometry().setFromPoints([V(0, -0.15, Z0 + 4), V(0, -0.15, Z1 - 2)]), new THREE.LineBasicMaterial({ color: 0xd9dde3, transparent: true, opacity: 0.6, fog: false }));
+  tune.curV = new THREE.Line(new THREE.BufferGeometry().setFromPoints([V(0, -0.15, -9), V(0, 3.4, -9)]), new THREE.LineBasicMaterial({ color: 0xd9dde3, transparent: true, opacity: 0.35, fog: false }));
+  tune.group.add(fx(tune.cur), fx(tune.curV));
+  // 置き方：候補のカメラ（0,3,7.2 → 0.4,0.2,-12 を見る）が、本線の場面4のカメラ位置に重なるように
+  const eye4 = camCurve.getPoint(4 / 6), camL = V(0, SP ? 3.6 : 3.0, SP ? 9 : 7.2), lookL = V(0.4, 0.2, -12);
+  const dirL = lookL.clone().sub(camL).normalize(), dirW = T[4].clone().sub(eye4).normalize();
+  const yaw = Math.atan2(dirW.x, -dirW.z) - Math.atan2(dirL.x, -dirL.z);
+  tune.group.rotation.y = -yaw;
+  tune.group.position.copy(eye4).sub(camL.clone().applyAxisAngle(V(0, 1, 0), -yaw));
+  tune.group.position.y += (T[4].y - eye4.y) - (lookL.y - camL.y) * (eye4.distanceTo(T[4]) / camL.distanceTo(lookL));
+  scene.add(tune.group);
+}
 
 // ---------- 場面5：ゼロサム（決まった円を奪い合う）とプラスサム（輪そのものが育つ） ----------
 const s5 = {};
@@ -1152,15 +1215,28 @@ function frame() {
     tvShow.setLevel(near3 ? 1 - sstep(0.35, 0.75, Math.abs(Ps - 3)) : 0);
     if (near3) { tvShow.update(t, dt); tvTex.needsUpdate = true; } }
   tvs.scrU.uOn.value = 0.25 + 0.75 * sstep(-0.4, 0.3, Ps - 3);
-  // 場面4：収束
-  const conv = sstep(0.05, 0.72, Ps - 4);
+  // 場面4（案B）：着いたら時間で目盛りが探り、約4.5秒で合う
+  { const at4 = Math.abs(Ps - 4.55) < 0.32; const vis4 = 1 - sstep(0.55, 0.95, Math.abs(Ps - 4.5));
+    tune.group.visible = vis4 > 0.01; tuneU.uVis.value = vis4; tuneU.uT.value = t;
+    if (at4) tune.T = Math.min(1, tune.T + dt / 4.5); else if (Math.abs(Ps - 4.5) > 0.9) tune.T = 0;
+    const keys = [-6.2, 3.8, -2.2, tune.X0 + 1.1, tune.X0 - 0.35, tune.X0];
+    const uu = clamp(tune.T / 0.74) * (keys.length - 1), ki = Math.min(keys.length - 2, Math.floor(uu)), kf = uu - ki, ke = kf * kf * (3 - 2 * kf);
+    const xc = keys[ki] + (keys[ki + 1] - keys[ki]) * ke + mouse.sx * 1.2 * (1 - sstep(0.74, 0.86, tune.T));
+    const lock = sstep(0.74, 0.88, tune.T);
+    tuneU.uXc.value = xc; tuneU.uLock.value = lock; tuneU.uNear.value = Math.exp(-Math.pow((xc - tune.X0) / 0.9, 2)); tuneU.uBw.value = 0.9 + (0.45 - 0.9) * lock;
+    tune.cur.position.x = tune.curV.position.x = xc;
+    tune.cur.material.opacity = 0.55 * (1 - lock * 0.7) * vis4; tune.curV.material.opacity = 0.3 * (1 - lock) * vis4;
+    if (!tune.locked && lock > 0.6) { tune.locked = true; SND.lock(); } else if (tune.locked && lock < 0.2) tune.locked = false;
+    SND.radio({ on: vis4 * (at4 ? 1 : 0.4), x: (xc + tune.XW) / (2 * tune.XW), lock, near: tuneU.uNear.value, t }); }
+  // 場面4：収束（旧案は隠す）
+  const conv = 0;
   convU.uConv.value = conv;
   const rise = sstep(0.72, 0.95, Ps - 4);
   beam.scale.y = 0.001 + rise * 60; beam.material.uniforms.uA.value = rise;
   core.scale.setScalar(0.4 + conv * 4.2 + Math.sin(t * 8) * 0.2 * conv); core.material.opacity = conv;
   coreW.scale.setScalar(0.2 + conv * 1.6); coreW.material.opacity = conv;
   const gv = Math.abs(Ps - 4.5) < 0.5 ? 1 : 0; gauge.style.opacity = gv;
-  if (gv) { const pct = Math.round(conv * 100); pc.textContent = String(pct).padStart(3, '0'); tk.style.left = pct * 1.4 * (innerWidth < 820 ? 80 / 140 : 1) + 'px'; }
+  if (gv) { const pct = Math.round(Math.max(tuneU.uNear.value * 0.7 * (1 - tuneU.uLock.value), tuneU.uLock.value) * 100); pc.textContent = String(pct).padStart(3, '0'); tk.style.left = pct * 1.4 * (innerWidth < 820 ? 80 / 140 : 1) + 'px'; }
   // 場面5
   if (Math.abs(Ps - 5) < 1.6) {
     const l5 = sstep(-0.1, 0.7, Ps - 5);
