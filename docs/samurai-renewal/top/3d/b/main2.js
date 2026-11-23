@@ -8,6 +8,7 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { SND } from './sound.js';
 import { createTVShow } from './tvshow.js';
 import { createScene5 } from './sc5.js';
+import { createScene4 } from './sc4.js';
 
 const root = document.documentElement;
 const ld = document.getElementById('ld'), ldt = document.getElementById('ldt');
@@ -762,7 +763,7 @@ const convU = { uTime: U.time, uConv: { value: 0 }, uC: { value: T[4] }, uPx: U.
         vC=mix(vec3(.50,.58,.74),vec3(.92,.95,1.),k); vA=(.42+.58*k)*(1.-fogF(-mv.z)); }`,
     fragmentShader: `varying vec3 vC; varying float vA; void main(){ float r=length(gl_PointCoord-.5); gl_FragColor=vec4(vC*smoothstep(.5,0.,r)*vA,1.); }`,
   });
-  const p = new THREE.Points(g, m); p.frustumCulled = false; scene.add(fx(p));
+  const p = new THREE.Points(g, m); p.frustumCulled = false; p.visible = false; scene.add(fx(p));   // 旧案（sc4.js の「芯を押す」に差し替え）
 }
 const beam = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 1, 12, 1, true).translate(0, 0.5, 0), new THREE.ShaderMaterial({
   transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, uniforms: { uA: { value: 0 } },
@@ -871,6 +872,9 @@ const _n5 = scene.children.length;   // 旧案（下の塊）は隠し、「人�
 
 s5.old = scene.children.slice(_n5); s5.old.forEach((o) => { o.visible = false; });
 let sc5 = null, s5T = 0;
+const s4root = document.createElement('div'); s4root.className = 's4root'; s4root.style.cssText = 'position:fixed;inset:0;z-index:7;pointer-events:none'; document.body.appendChild(s4root);
+const s4 = createScene4({ THREE, scene, center: T[4].clone(), camera, quality: SP ? 'sp' : 'pc', root: s4root, renderer, layer: FX, onNext: () => snapTo(5.55) });
+document.querySelector('.tx.q[data-i="4"]')?.style.setProperty('display', 'none');   // 場面4の文は部品が中央に出す
 createScene5({ THREE, scene, center: V(T[5].x, T[5].y - 5.2, T[5].z - 1), quality: SP ? 'sp' : 'pc', renderer }).then((o) => { sc5 = o; sc5.setCamera?.(camera); sc5.group.visible = false; }).catch((e) => console.warn('sc5', e));
 
 // ---------- 場面6：ばらばらの短い板（個別最適）が、1本の長い橋（全体最適）に揃い、遠い光へ ----------
@@ -1302,6 +1306,7 @@ function frame() {
   const drift = Math.sin(Math.PI * clamp((x - 0.05) / 0.95)) * 1.4 * (k < 7 ? 1 : 0);
   const tgtA = T[Math.floor(s)], tgtB = T[Math.min(6, Math.ceil(s))];
   look.copy(tgtA).lerp(tgtB, ease(sf));
+  { const w4 = (Math.floor(s) === 4 ? 1 - ease(sf) : 0) + (Math.ceil(s) === 4 && Math.floor(s) !== 4 ? ease(sf) : 0); if (s4.lookTarget && w4 > 0) look.add(tmpV.copy(s4.lookTarget).sub(T[4]).multiplyScalar(w4)); }
   pos.add(tmpV.copy(T[kk]).sub(pos).normalize().multiplyScalar(drift * (1 - dawn)));
   const tan = camCurve.getTangent(clamp(s / 6, 0, 1));
   look.lerp(tmpV.copy(pos).add(tan.multiplyScalar(20)), travel * 0.65);
@@ -1408,13 +1413,14 @@ function frame() {
     SND.radio({ on: 0 * vis4 * (at4 ? 1 : 0.4), x: (xc + tune.XW) / (2 * tune.XW), lock, near: tuneU.uNear.value, t }); }
   // 場面4：収束（旧案は隠す）
   // 止まる位置に着いてから時間で集まり、打ち上がる（約4.5秒）
-  const conv = Math.max(sstep(0.0, 0.7, tune.T), sstep(-0.3, 0.5, Ps - 4) * 0.35);
+  const conv = 0;   // 旧案の集まる粒・柱は使わない（sc4.js に差し替え）
   convU.uConv.value = conv;
-  const rise = sstep(0.72, 0.95, tune.T);
+  const rise = 0;
   beam.scale.y = 0.001 + rise * 60; beam.material.uniforms.uA.value = rise;
   core.scale.setScalar(0.4 + conv * 4.2 + Math.sin(t * 8) * 0.2 * conv); core.material.opacity = conv;
   coreW.scale.setScalar(0.2 + conv * 1.6); coreW.material.opacity = conv;
-  const gv = Math.abs(Ps - 4.5) < 0.5 ? 1 : 0; gauge.style.opacity = gv;
+  const gv = 0; gauge.style.opacity = 0;   // 場面4のゲージは出さない（問いと PRESS だけ）
+  { const d4 = Math.abs(Ps - 4.55); s4.update(t, dt, d4 < 0.32); s4.group.visible = d4 < 1.2; s4root.style.visibility = d4 < 0.6 ? 'visible' : 'hidden'; s4.audio(SND.out(), 1 - sstep(0.25, 0.6, d4)); }
   if (gv) { const pct = Math.round(conv * 100); pc.textContent = String(pct).padStart(3, '0'); tk.style.left = pct * 1.4 * (innerWidth < 820 ? 80 / 140 : 1) + 'px'; }
   // 場面5（人の山）：着いてから時間で進む（約16秒）
   if (sc5) {

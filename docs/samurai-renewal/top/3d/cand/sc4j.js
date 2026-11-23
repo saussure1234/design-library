@@ -1,31 +1,43 @@
-// 場面4・案J「芯を押す」（ボタン版・土台＝案G「空に届く合図」）
-// 問いの下、芯の位置に小さな丸いボタン（朱い点＝まだ見つかっていない Signal）。
-// 触れる：周りのノイズが少しボタンへ寄り、輪が縮む。押す：ノイズがそこへ一気に集まり、光の柱が問いの後ろを貫いて打ち上がる。
-// 先端が上空のノイズの層に届いて朱い波紋が広がり、そのまま画面が上へ流れて場面5の頭が入ってくる。
-import { stage, SP, sstep, mtof, sfx } from './base.js';
-import { snd } from './sc4k.js';
-import { press } from './sc4btn.js';
-import { mkSky, skySound, RISE } from './sc4gscene.js';
+// 場面4・案J「芯を押す」の単体確認ページ：本線用の部品 3d/b/sc4.js をそのまま使う
+// 本線の代わりにこのページがやること：カメラ（芯から約17・芯の上を見る）、本線のつなぎの朱い線、遠くの塵、
+// onNext の後に画面を上へ流して場面5の頭を見せる（本線ではここが「場面5へスクロール」になる）
+import { THREE, stage, SP, sstep, clamp } from './base.js';
+import { mkLine, mkDust } from './sc4k.js';
+import { createScene4 } from '../b/sc4.js';
 
-const S = stage({ fov: 42, fovSp: 62, bloom: [0.85, 0.5, 0.6], exposure: 0.95, grain: 0.04 });
+const S = stage({ fov: 46, fovSp: 62, bloom: [0.85, 0.5, 0.6], exposure: 0.95, grain: 0.04 });
 if (SP) S.bloom.strength = 0.55;
-const L = 1.3, GO = L + RISE + 1.0;
-const G = mkSky(S);
-const out = () => window.SND?.out?.();
-const C = press({
-  btn: document.getElementById('go'), GO,
-  onHover: () => { const o = out(); if (!o) return; snd.whoosh(o, 500, 1400, 0.7, 0.05); sfx.tone(o, mtof(76), 0.03, 0.03, 0.9, 'sine', o.music, mtof(81)); },
-  onPress: () => { const o = out(); if (!o) return; sfx.burst(o, 0.12, 0.03, 'highpass', 3000, 0.8); sfx.tone(o, mtof(88), 0.05, 0.002, 0.25, 'sine'); snd.kick(o, 90, 50, 0.25, 0.18); },
-});
-const q = document.querySelector('.qw .t');
+const { scene, camera, renderer } = S;
+camera.layers.enableAll();
+mkLine(scene, 0.6); mkDust(scene);
+const center = new THREE.Vector3(0, 0, 0);
+let nextAt = null;
+const s4 = createScene4({ THREE, scene, center, camera, quality: SP ? 'sp' : 'pc', root: document.getElementById('s4root'), renderer, onNext: () => { nextAt = s4.tau; } });
+window.__s4 = s4;   // 確認・撮影用
+const body = document.body, next = document.getElementById('next'), hint = document.getElementById('hint');
+addEventListener('pointerdown', (e) => { if (body.classList.contains('went') && !e.target.closest('a,button')) { s4.reset(); nextAt = null; } });
+
+const look = new THREE.Vector3();
+let lastPT;
 S.run((st) => {
-  const tau = C.tau(st); st.tau = tau; st.ep = C.ep;
-  const c = Math.max(0.12 * C.hovS, sstep(0, 1.2, tau));
-  G.update(st, { tau, c, L, sy0: 0.17, sy1: 0 });
-  q.style.opacity = (1 - 0.5 * sstep(L, L + 0.3, tau)).toFixed(3);
-  st.c = c;
+  // 撮影用：window.__PT（押した時刻）・window.__HOV
+  if (window.__HOV != null) s4.setHover(window.__HOV);
+  if (window.__PT !== undefined && window.__PT !== lastPT) { lastPT = window.__PT; s4.reset(); nextAt = null; if (lastPT !== null) { s4.update(lastPT, 0, true); s4.press(); } }
+  s4.update(st.t, st.dt, true);
+  // 本線のカメラの代わり：芯から約17、芯の上（lookTarget）を見る。打ち上げの後は少しだけ見上げる
+  const yaw = st.mx * 0.08 + Math.sin(st.t * 0.05) * 0.03, d = SP ? 19 : 17;
+  camera.position.set(Math.sin(yaw) * d, 1.2 - st.my * 0.6, Math.cos(yaw) * d);
+  look.copy(s4.lookTarget).y += s4.lookUp * 0.8; camera.lookAt(look);
+  // onNext の後：画面が上へ流れて場面5の頭が入る
+  const f = s4.tau < 0 || nextAt == null && s4.tau < s4.NEXT ? 0 : sstep(s4.NEXT, s4.NEXT + 1.5, s4.tau);
+  body.style.setProperty('--fy', (f * innerHeight * 0.72).toFixed(1) + 'px');
+  body.style.setProperty('--fo', (1 - f * 0.75).toFixed(3));
+  next.style.opacity = clamp(f * 1.6).toFixed(3);
+  body.classList.toggle('went', f > 0.98); hint.textContent = f > 0.98 ? 'CLICK TO REPLAY' : '';
 }, {
   chord: 4,
-  base: (s) => ({ noise: 1 - (s.c || 0) * 0.8, travel: 0, vel: 0, dawn: 0, fv: 1, day: 0, tv: 0 }),
-  init(o) { const u = skySound(o, { L, GO }); return { update(s, x) { u(s, x, s.c || 0); } }; },
+  base: () => ({ noise: s4.tau < 0 ? 1 : 0.3, travel: 0, vel: 0, dawn: 0, fv: 1, day: 0, tv: 0 }),
+  init() { return { update(s, out) { s4.audio(out, 1); } }; },
 });
+// 音がオフの時も、部品に「音なし」を伝える
+setInterval(() => { if (!window.SND?.out?.()) s4.audio(null, 1); }, 500);

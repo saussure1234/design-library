@@ -918,7 +918,7 @@ function storyDraw(now){
   for(const k in SC){const i=+k,s=SC[k];if(!sOn(i)||!s.w)continue;try{s.fn(s,Math.max(0,(now-sStart[i])/1000))}catch(e){console.warn(e)}}
   if(sOn(3)){const pr=sCur===3?sF:(sCur>3?1:0);drawQ(REDUCE?1:clamp((pr-.04)/.66))}}
 
-/* ===== FEATURES：画面に入ると線が描かれていく（描く道具の絵は出さない）。触って（スマホはタップ）反応するのは 01 と 04 だけ：絵がわずかに歪み、その間だけ音が鳴る =====
+/* ===== FEATURES：画面に入ると線が描かれていく（描く道具の絵は出さない）。触って（スマホはタップ）反応するのは 01 と 04 だけ：01＝梢が風に揺れる、04＝速くなる。その間だけ音が鳴る =====
    1つの絵＝1つの関数 drawFeatureN(p,t,D,H)。D＝描き進み 0→1、H＝歪みの強さ 0→1（触れている間 1）。朱で光る反応は無し */
 const PEN_DUR={1:3.0,2:3.2,3:5.6,4:2.8};
 const penIO=new IntersectionObserver(es=>{for(const e of es){const p=e.target.__p;if(p&&e.isIntersecting&&p.d0==null){p.d0=T;penIO.unobserve(e.target)}}},{threshold:.4});
@@ -932,26 +932,27 @@ function resample(pts,M){const L=[0];for(let i=1;i<pts.length;i++)L.push(L[i-1]+
   for(let j=0;j<M;j++){const d=tot*j/(M-1);while(k<pts.length-1&&L[k]<d)k++;const a=pts[k-1],b=pts[k],f=clamp((d-L[k-1])/((L[k]-L[k-1])||1));out.push([a[0]+(b[0]-a[0])*f,a[1]+(b[1]-a[1])*f])}
   return out}
 
-/* 触れた時のわずかな歪み（最大で数px）。wt＝場所ごとの効き（0〜1） */
-const warp=(x,y,t,H,wt=1)=>{const k=H*wt;if(k<.003)return[x,y];return[x+N3(x*.012,y*.012,t*1.9)*5*k,y+N3(x*.012+7.31,y*.012+2.9,t*1.9)*3.8*k]};
-
-/* 01 コミットメント：1つの種から枝が育つ。触れると梢がそよぐ程度に歪み、葉ずれの音 */
-function drawFeature1(p,t,D,H){const {ctx,w,h}=p;
+/* 01 コミットメント：1つの種から枝が育つ。触れている間（H）だけ梢が風に揺れる（根元は動かず、先ほど大きく）。
+   カーソルを動かすと（p.kick）ひと吹き強まり、動かした向きに少し傾く。揺れの速さを p.mot に出し、葉ずれの音をそれに合わせる */
+const gust1=(t,d,id)=>Math.sin(t*2.3+d*.55+id*.071)*.7+N3(id*.113,t*1.15,d*.31)*.9;
+function drawFeature1(p,t,D,H,dt){const {ctx,w,h}=p;
   if(!p.f1){const r=rng(5);let id=0,maxB=0;const mk=(rel,len,d,b)=>{const n={rel,len,d,b,id:id++,kids:[]};maxB=Math.max(maxB,b);if(d<8&&len>=4){const k=d<2?2:(r()<.82?2:3);
         for(let i=0;i<k;i++)n.kids.push(mk((r()-.5)*1.25+(i-(k-1)/2)*.38,len*(.7+r()*.16),d+1,b+(.09+r()*.04)))}return n};
     p.f1={root:mk(0,h*.185,0,0),max:0};p.f1.max=maxB+.1}
+  const K=p.kick||0,amp=H*(.9+.9*K),lean=(p.lean||0)*K*H*.4;
   ctx.clearRect(0,0,w,h);const G=p.f1,grow=D*G.max,segs=[],tips=[],y0=h*.97;
-  const walk=(n,x,y,pa)=>{const sw=Math.sin(t*.9+n.d*.7+n.id*.13)*.025*n.d;
+  const walk=(n,x,y,pa)=>{let sw=Math.sin(t*.9+n.d*.7+n.id*.13)*.025*n.d;if(amp>.002){sw+=(gust1(t,n.d,n.id)*amp+lean)*.016*n.d;if(n.d>5)sw+=Math.sin(t*8.5+n.id*1.7)*.05*amp*(n.d-5)}
     const a=pa+n.rel+sw,len=n.len,k=clamp((grow-n.b)/.12);if(k<=0)return;
     const x2=x+Math.cos(a)*len*k,y2=y+Math.sin(a)*len*k;segs.push(x,y,x2,y2);if(k<1){tips.push([x2,y2]);return}
     for(const c of n.kids)walk(c,x2,y2,a)};
-  walk(G.root,w*.5,y0,-Math.PI/2);
-  /* 根元は動かさず、梢ほど歪む */
-  const wv=(x,y)=>warp(x,y,t,H,clamp((y0-y)/(h*.75)));
+  walk(G.root,w*.5,y0,-Math.PI/2);p.segs=segs;
   ctx.lineCap='round';ctx.strokeStyle=rgba(C.ink,.55);ctx.lineWidth=1;ctx.beginPath();
-  for(let i=0;i<segs.length;i+=4){const a=wv(segs[i],segs[i+1]),b=wv(segs[i+2],segs[i+3]);ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1])}ctx.stroke();
+  for(let i=0;i<segs.length;i+=4){ctx.moveTo(segs[i],segs[i+1]);ctx.lineTo(segs[i+2],segs[i+3])}ctx.stroke();
   if(D<1){ctx.fillStyle=rgba(C.ink,.8);for(const q of tips)ctx.fillRect(q[0]-1.2,q[1]-1.2,2.4,2.4)}
-  ctx.fillStyle=rgba(C.sig,1);ctx.fillRect(w*.5-4,y0-4,8,8)}
+  ctx.fillStyle=rgba(C.sig,1);ctx.fillRect(w*.5-4,y0-4,8,8);
+  /* 揺れの速さ（梢の数か所の角度の変化）→ 0〜1。先の細かい震え（葉）も入れる */
+  let r=0;for(const id of [40,90,150,210,260])r+=(gust1(t,7,id)*amp+lean)*.016*28+Math.sin(t*8.5+id*1.7)*.05*amp*2;
+  const v=dt?Math.abs(r-(p.r1??r))/dt:0;p.r1=r;p.mot=H>0?clamp(H*.25+v/2.4):0}
 
 /* 02 多言語対応：3つの波紋。線は少なく薄く（外ほど消える）。触れても何も起きない */
 function drawFeature2(p,t,D){const {ctx,w,h}=p;ctx.clearRect(0,0,w,h);
@@ -1003,25 +1004,26 @@ function drawFeature3(p,t,D){const {ctx,w,h}=p;
     for(let i=0;i<G.nL;i++){const q=paths[i][G.M-1];ctx.fillStyle=rgba(C.card,a);ctx.strokeStyle=rgba(C.ink,.75*a);ctx.fillRect(q[0]-3.5,q[1]-3.5,7,7);ctx.strokeRect(q[0]-3.5,q[1]-3.5,7,7)}}
   ctx.fillStyle=rgba(C.sig,1);ctx.fillRect(rx-4,ry-4,8,8)}
 
-const WARP4=4.6;
-/* 04 スピード感：4本の筋をペンが左から引き、描き終わると点が筋を走る。触れると筋がわずかに歪み、風切りの音 */
-function drawFeature4(p,t,D,H){const {ctx,w,h}=p;
+/* 04 スピード感：4本の筋を左から引き、描き終わると点が筋を走る。触れている間（H）だけ速くなる：
+   筋の流れ・走る点・背景の流れが最大で約4倍速になり、点の尾と背景の筋が伸びる。速さを p.mot に出し、風切りの音をそれに合わせる */
+function drawFeature4(p,t,D,H,dt){const {ctx,w,h}=p;
   if(!p.f4){const r=rng(9);p.f4={bg:[]};for(let i=0;i<70;i++)p.f4.bg.push([r()*w,r()*h,12+r()*40,.3+r()*.6])}
-  ctx.clearRect(0,0,w,h);
-  const lane=(k,x)=>{const y=h*(.26+.16*k)+Math.sin(x*.012+k*1.3+t*.35)*h*.08;return H<.003?y:y+N3(x*.018,k*3.7,t*2.6)*WARP4*H};
-  /* 遅い流れ（背景） */
-  const bga=ss(.25,.8,D);if(bga>0){ctx.lineWidth=1;ctx.strokeStyle=rgba(C.ink,.2*bga);ctx.beginPath();
-    for(const b of p.f4.bg){if(D>=1)b[0]-=b[3];if(b[0]+b[2]<0)b[0]=w+Math.random()*40;const q0=warp(b[0],b[1],t,H,.7),q1=warp(b[0]+b[2],b[1],t,H,.7);ctx.moveTo(q0[0],q0[1]);ctx.lineTo(q1[0],q1[1])}ctx.stroke()}
+  ctx.clearRect(0,0,w,h);dt=Math.min(.05,dt||0);
+  const V=1+3.2*H;if(p.ph==null)p.ph=t*.35;p.ph+=dt*.35*V;const ph=p.ph;
+  const lane=(k,x)=>h*(.26+.16*k)+Math.sin(x*.012+k*1.3+ph)*h*.08;
+  /* 背景の流れ（速くなるほど長く・濃く） */
+  const bga=ss(.25,.8,D);if(bga>0){ctx.lineWidth=1;ctx.strokeStyle=rgba(C.ink,(.2+.14*H)*bga);ctx.beginPath();const L=1+2.2*H;
+    for(const b of p.f4.bg){if(D>=1)b[0]-=b[3]*V*dt*60;if(b[0]+b[2]*L<0)b[0]=w+Math.random()*40;ctx.moveTo(b[0],b[1]);ctx.lineTo(b[0]+b[2]*L,b[1])}ctx.stroke()}
   if(!p.run){p.run={x:[0,0,0,0]}}
-  const dt=Math.min(.05,t-(p.lt||t));p.lt=t;
   for(let k=0;k<4;k++){const kk=D>=1?1:clamp((D*1.3-k*.1)/.75),xe=-10+(w+20)*kk;if(kk<=0)continue;
     ctx.beginPath();ctx.strokeStyle=rgba(C.ink,k===0?.5:.32);ctx.lineWidth=1;for(let x=-10;x<=xe;x+=6){const y=lane(k,x);x===-10?ctx.moveTo(x,y):ctx.lineTo(x,y)}ctx.stroke();
-    if(D>=1){const sp=k===0?w*.34:w*.17+k*w*.03;p.run.x[k]=(p.run.x[k]+sp*dt)%(w+160);const x=p.run.x[k]-80,y=lane(k,x),tl=40+(k===0?30:0);
+    if(D>=1){const sp=(k===0?w*.34:w*.17+k*w*.03)*V,tl=(40+(k===0?30:0))*(1+2.4*H);p.run.x[k]=(p.run.x[k]+sp*dt)%(w+160+tl);const x=p.run.x[k]-80,y=lane(k,x);
       for(let i=0;i<10;i++){const xa=x-tl*(1-i/10),xb=x-tl*(1-(i+1)/10);ctx.strokeStyle=k===0?rgba(C.sig,.95*(i+1)/10):rgba(C.ink,.75*(i+1)/10);ctx.lineWidth=k===0?1.8:1.2;ctx.beginPath();ctx.moveTo(xa,lane(k,xa));ctx.lineTo(xb,lane(k,xb));ctx.stroke()}
-      ctx.fillStyle=k===0?rgba(C.sig,1):rgba(C.ink,.9);ctx.fillRect(x-3,y-3,6,6)}}}
+      ctx.fillStyle=k===0?rgba(C.sig,1):rgba(C.ink,.9);ctx.fillRect(x-3,y-3,6,6)}}
+  p.mot=H}
 
 /* ===== 触れた時の音（3D版だけ鳴る）：絵の動きと同期 =====
-   音は「歪みが起きている間だけ・その強さに合わせて」鳴る。毎フレーム、絵と同じ H（歪みの強さ）× 揺れの速さ から強さ I を出し、
+   音は「揺れ・速さが出ている間だけ・その強さに合わせて」鳴る。毎フレーム、絵が出す動きの強さ p.mot から強さ I を出し、
    葉ずれ＝粒の数と音量、風切り＝音量と高さ を I に合わせる。動きが止まれば（I→0）音も止む。
    window.SND.out() は音がオンの時だけ { ctx, sfx, music, verb, nbuf } を返す。null なら鳴らさない（鳴っていれば止める） */
 const sndOut=()=>window.SND&&typeof window.SND.out==='function'?window.SND.out():null;
@@ -1058,28 +1060,24 @@ function sndEngine(kind){
     /* 絵が描かれなくなった（画面外へ出た等）ら止める */
     watch(){const f=()=>{if(!E.st)return;if(performance.now()-E.lastUpd>150){E.close();return}requestAnimationFrame(f)};requestAnimationFrame(f)}};
   return E}
-/* 揺れの速さ（歪みの量の1秒あたりの変化、H=1 換算）：絵の中の数点で測る。0〜1 に丸める */
-const warpSpeed=(pts,t,dt,f)=>{if(!dt)return 0;let s=0;for(const [x,y] of pts){const a=f(x,y,t),b=f(x,y,t-dt);s+=Math.hypot(a[0]-b[0],a[1]-b[1])/dt}return s/pts.length};
-
 const FEATURE_ART={1:drawFeature1,2:drawFeature2,3:drawFeature3,4:drawFeature4};
 /* 触って反応するのは 01（葉ずれ）と 04（風切り）だけ。02・03 は何も起きない */
 const FEAT_TOUCH={1:'leaf',4:'whoosh'};
-/* 揺れの速さの物差し（その絵の歪みの式を H=1 で測る） */
-const FEAT_SPEED={1:(p,t,dt)=>warpSpeed([[p.w*.3,p.h*.25],[p.w*.5,p.h*.18],[p.w*.7,p.h*.3]],t,dt,(x,y,tt)=>warp(x,y,tt,1,1)),
-  4:(p,t,dt)=>warpSpeed([[p.w*.2,0],[p.w*.5,1],[p.w*.8,2]],t,dt,(x,k,tt)=>[0,N3(x*.018,k*3.7,tt*2.6)*WARP4])};
 document.querySelectorAll('canvas[data-feat]').forEach(c=>{const n=+c.dataset.feat,fn=FEATURE_ART[n],art=c.parentElement,snd=FEAT_TOUCH[n];
   const eng=snd?sndEngine(snd):null;
   const p=piece(c,{anyResize:true,hov:0,H:0,tapUntil:-1,d0:null,I:0,
     init(p){p.f1=p.g3=p.f4=p.run=null},
     draw(p,t,dt){const D=REDUCE?1:(p.d0==null?0:clamp((t-p.d0)/PEN_DUR[n]));if(D>=1&&p.dDone==null)p.dDone=t;
-      const tgt=snd&&D>=1&&(p.hov||t<p.tapUntil)?1:0;p.H+=(tgt-p.H)*Math.min(1,(dt||.016)*(tgt?4:2));if(p.H<.002)p.H=0;fn(p,t,D,p.H);
-      if(eng){/* 音の強さ＝歪みの強さ H × 揺れの速さ（H=0 なら無音） */
-        const sp=p.H>0?clamp(FEAT_SPEED[n](p,t,dt||.016)/(n===1?9:11)):0,I=p.H*(.4+.6*sp);p.I+=(I-p.I)*Math.min(1,(dt||.016)*14);if(p.I<.003)p.I=0;eng.upd(p.I,dt||.016)}}});
+      const tgt=snd&&D>=1&&(p.hov||t<p.tapUntil)?1:0;p.H+=(tgt-p.H)*Math.min(1,(dt||.016)*(tgt?4:2));if(p.H<.002)p.H=0;if(p.kick)p.kick=Math.max(0,p.kick-(dt||.016)*.9);fn(p,t,D,p.H,dt||.016);
+      if(eng){/* 音の強さ＝絵が出す動きの強さ p.mot（コミットメント＝梢の揺れの速さ、スピード感＝速さ）。H=0 なら無音 */
+        const I=p.H>0?(p.mot||0):0;p.I+=(I-p.I)*Math.min(1,(dt||.016)*14);if(p.I<.003)p.I=0;eng.upd(p.I,dt||.016)}}});
   penIO.observe(c);
   if(!snd)return;
   art.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse')p.hov=1});
   art.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse')p.hov=0});
-  art.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse')p.tapUntil=T+1.6})});
+  /* カーソルを動かすと、動かした量だけ風が強まる（コミットメント） */
+  art.addEventListener('pointermove',e=>{if(e.pointerType!=='mouse')return;const m=Math.hypot(e.movementX||0,e.movementY||0);p.kick=Math.min(1,(p.kick||0)+m/140);if(e.movementX)p.lean=mix(p.lean||0,Math.sign(e.movementX),.3)});
+  art.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse'){p.tapUntil=T+1.6;p.kick=1}})});
 window.__feat=()=>[...document.querySelectorAll('canvas[data-feat]')].map(c=>{const p=c.__p;return{d0:p.d0,dDone:p.dDone,H:+p.H.toFixed(3),I:+(p.I||0).toFixed(3)}});
 
 /* ===== MEMBER：最初は散らばった粒子のまま。スクロールして来ると粒子が集まって人になり、くっきりした白黒の写真に（乗せるとカラー） ===== */

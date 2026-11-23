@@ -1,0 +1,16 @@
+<!doctype html><html><head><script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script></head><body>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+const g = await new GLTFLoader().loadAsync('human.glb');
+const out = {};
+g.scene.updateMatrixWorld(true);
+const box = new THREE.Box3().setFromObject(g.scene); out.box=[box.min.toArray().map(v=>+v.toFixed(3)),box.max.toArray().map(v=>+v.toFixed(3))];
+const names=['root','spine05','spine03','spine01','neck01','head','clavicleL','shoulder01L','upperarm01L','upperarm02L','lowerarm01L','lowerarm02L','wristL','upperleg01L','lowerleg01L','footL','upperarm01R','lowerarm01R','wristR'];
+g.scene.traverse(o=>{ if(o.isBone && names.includes(o.name)){ const p=new THREE.Vector3(); o.getWorldPosition(p); const q=new THREE.Quaternion(); o.getWorldQuaternion(q);
+ const y=new THREE.Vector3(0,1,0).applyQuaternion(q), x=new THREE.Vector3(1,0,0).applyQuaternion(q), z=new THREE.Vector3(0,0,1).applyQuaternion(q);
+ out[o.name]={p:p.toArray().map(v=>+v.toFixed(3)),Y:y.toArray().map(v=>+v.toFixed(2)),X:x.toArray().map(v=>+v.toFixed(2)),Z:z.toArray().map(v=>+v.toFixed(2)),parent:o.parent.name}; }
+ if(o.isSkinnedMesh) out.mesh={name:o.name,verts:o.geometry.attributes.position.count,bones:o.skeleton.bones.length};
+});
+window.__out=out;
+</script></body></html>
