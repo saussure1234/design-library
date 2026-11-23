@@ -1332,7 +1332,7 @@ function frame() {
   const hidden = Ps > 7.8;
   canvas.style.visibility = hidden ? 'hidden' : 'visible';
   hud.style.opacity = 1 - sstep(0.05, 0.5, dawn);
-  if (hidden) { s4root.style.visibility = 'hidden'; fvx.style.visibility = 'hidden'; fvv.style.visibility = 'hidden'; hint.style.opacity = 0; skip3.classList.remove('show'); SND.update({ noise: 0, travel: 0, vel: 0, dawn: 1, fv: 0, day: 1, tv: 0 }); shows.forEach((sh) => sh.show.setLevel(0)); talk1.stop(); SND.people(hands.map(() => ({ mode: 'quiet' })), 0); if (sc5) sc5.audio(SND.out(), 0); return; }
+  if (hidden) { panels.forEach((pn) => { pn.el.style.opacity = 0; pn.el.style.pointerEvents = 'none'; if (pn.shown) hide(pn); }); s4root.style.visibility = 'hidden'; fvx.style.visibility = 'hidden'; fvv.style.visibility = 'hidden'; hint.style.opacity = 0; skip3.classList.remove('show'); SND.update({ noise: 0, travel: 0, vel: 0, dawn: 1, fv: 0, day: 1, tv: 0 }); shows.forEach((sh) => sh.show.setLevel(0)); talk1.stop(); SND.people(hands.map(() => ({ mode: 'quiet' })), 0); if (sc5) sc5.audio(SND.out(), 0); return; }
 
   // カメラ
   const s = camS(Ps); const sf = s - Math.floor(s); const travel = Math.sin(Math.PI * clamp(sf)) * (s < 6 ? 1 : 0);
