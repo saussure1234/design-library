@@ -1096,10 +1096,10 @@ if (gateSeen !== null || location.hash) skipGate();   // 2回目以降・ペー�
 gate.querySelectorAll('button').forEach((b) => b.addEventListener('click', () => enter(b.dataset.s === '1')));
 // ---------- STORY：1回のスクロールで次の場面まで進む（途中で止まらない） ----------
 const STOPS = [0.5, 1.55, 2.55, 3.55, 4.55, 5.55, 6.55];
-let snapBusy = false, snapRaf = 0, wheelAcc = 0, wheelT = 0, lastSnap = 0;
+let snapBusy = false, snapRaf = 0, wheelAcc = 0, wheelT = 0, lastSnap = 0, gestureLock = false;
 function snapTo(pT) {
   const y0 = scrollY, y1 = toY(pT), t0 = performance.now(), dur = 4200;   // 場面の切り替えはゆっくり（So 11/24）
-  snapBusy = true; lastSnap = t0; cancelAnimationFrame(snapRaf);
+  snapBusy = true; gestureLock = true; lastSnap = t0; cancelAnimationFrame(snapRaf);
   const step = (now) => { const k = Math.min(1, (now - t0) / dur), e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
     scrollTo(0, y0 + (y1 - y0) * e); if (k < 1) snapRaf = requestAnimationFrame(step); else setTimeout(() => { snapBusy = false; }, 120); };
   snapRaf = requestAnimationFrame(step);
@@ -1122,7 +1122,9 @@ addEventListener('wheel', (e) => {
   if (!inStory && !snapBusy) return;
   e.preventDefault();
   const now = performance.now();
-  if (snapBusy || now - lastSnap < 4500 && now - wheelT < 220) { wheelT = now; return; }  // 慣性の続きは捨てる
+  // 1回の操作（慣性で届き続けるスクロール）では1場面だけ。操作が一度止まる（0.3秒途切れる）まで次を受け付けない
+  if (gestureLock && !snapBusy && now - wheelT > 300) gestureLock = false;
+  if (snapBusy || gestureLock) { wheelT = now; wheelAcc = 0; return; }
   wheelT = now; wheelAcc += e.deltaY;
   if (Math.abs(wheelAcc) > 18) { const d = Math.sign(wheelAcc); wheelAcc = 0; if (!snapDir(d)) { scrollBy(0, d * 60); } }
 }, { passive: false });
