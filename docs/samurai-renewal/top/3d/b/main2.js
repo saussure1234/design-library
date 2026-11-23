@@ -18,6 +18,7 @@ const SP = matchMedia('(max-width: 820px)').matches || /iPhone|Android.+Mobile/.
 const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const QS = new URLSearchParams(location.search);
 const QLOCK = QS.has('q') ? +QS.get('q') : -1;
+const SCN_MARK = [];
 const TR = (QS.get('tr') || 'b').toLowerCase();   // FV→場面1 のつなぎ方（既定は b：So 11/24 選定）
 const Q = SP
   ? { rocks: 150, shards: 600, dustN: 160, dustM: 2600, dustF: 4000, conv: 4200, tvs: 36, trees: 7, depth: 7, planks: 70, haze: 10, warpTaps: 4, intro: 3200 }
@@ -31,7 +32,7 @@ const TIERS_SP = [
   { dpr: 1, taps: 1, dof: 0 },
 ];
 const TIERS_PC = [
-  { dpr: 1.5, taps: 24, dof: 1 },
+  { dpr: 1.5, taps: 16, dof: 1 },
   { dpr: 1.25, taps: 16, dof: 1 },
   { dpr: 1, taps: 10, dof: 1 },
   { dpr: 0.85, taps: 1, dof: 0 },
@@ -398,6 +399,7 @@ const head = mkGlow(3.2, 0xffb08a); scene.add(head);
 const headCore = mkGlow(0.9, 0xffffff); scene.add(headCore);
 const origin = mkGlow(5, 0xff6a3a); origin.position.copy(lineCurve.getPoint(0)); scene.add(origin);
 
+SCN_MARK[1] = scene.children.length;   // 場面ごとの物をまとめて、遠い場面は描かない（軽くするため）
 // ---------- 場面1：石膏の手とクロームの手が並ぶ彫刻の間 ----------
 const hands = [];
 {
@@ -544,6 +546,7 @@ const H1SEQ = [600, 1150, 1650, 2100, 2500, 2850, 3150, 3420, 3660, 3880, 4080, 
 let h1T0 = -1, h1Idx = 0, h1Cyc = -1;
 const h1vp = mkGlow(9, 0xdfe8ff, 0); h1vp.position.set(6 - 1.9, 1.2, -58 - (SP ? 11 : 14) * 3.1 - 2); scene.add(h1vp);
 
+SCN_MARK[2] = scene.children.length;   // 場面ごとの物をまとめて、遠い場面は描かない（軽くするため）
 // ---------- 場面2：無数に枝分かれする光の線の森（青灰の線） ----------
 const forestU = { uTime: U.time, uGrow: { value: 0 }, uVis: { value: 1 }, uFogC: U.fogCol, uFogD: U.fogD };
 let fGrowT = 0;
@@ -597,6 +600,7 @@ let fGrowT = 0;
   const tpt = new THREE.Points(tg, tm); tpt.frustumCulled = false; scene.add(fx(tpt));
 }
 
+SCN_MARK[3] = scene.children.length;   // 場面ごとの物をまとめて、遠い場面は描かない（軽くするため）
 // ---------- 場面3：砂嵐のモニターが漂う宇宙（ガラスの映り込み） ----------
 const tvs = { list: [], parts: [], scrU: null };
 {
@@ -724,6 +728,7 @@ const shows = tvs.list.filter((v) => v.show).map((v, i) => {
   return { v, show, tex, mat, mesh, hero, gl: 0, next: 1 + Math.random() * 3, lvl: hero ? 1 : 0.38 };
 });
 const tvShowMesh = shows[0].mesh;
+let tvFrameNo = 0;
 const tmpQ = new THREE.Quaternion(), tmpM = new THREE.Matrix4(), tmpS = new THREE.Vector3(), tmpP = new THREE.Vector3();
 const TV_KINDS = [...Array(23).fill(0), 1, 1, 1, 1, 2, 2, 3, 3, 4, 5];
 const tvPick = () => TV_KINDS[(Math.random() * TV_KINDS.length) | 0];
@@ -755,6 +760,7 @@ function updateTVs(t, Ps = 3) {
 }
 updateTVs(0);
 
+SCN_MARK[4] = scene.children.length;   // 場面ごとの物をまとめて、遠い場面は描かない（軽くするため）
 // ---------- 場面4：ノイズの粒子が1点に収束して Signal が立ち上がる ----------
 const convU = { uTime: U.time, uConv: { value: 0 }, uC: { value: T[4] }, uPx: U.px, uFogC: U.fogCol, uFogD: U.fogD };
 {
@@ -856,6 +862,7 @@ float fade(float u){ return smoothstep(0.,uR*.18,u)*(1.-smoothstep(uR*.86,uR,u))
   scene.add(tune.group);
 }
 
+SCN_MARK[5] = scene.children.length;   // 場面ごとの物をまとめて、遠い場面は描かない（軽くするため）
 // ---------- 場面5：ゼロサム（決まった円を奪い合う）とプラスサム（輪そのものが育つ） ----------
 const s5 = {};
 const _n5 = scene.children.length;   // 旧案（下の塊）は隠し、「人の山」（sc5.js）に差し替え（So 11/24）
@@ -897,6 +904,7 @@ document.querySelector('.tx.q[data-i="4"]')?.style.setProperty('display', 'none'
 (() => { const c5 = V(T[5].x, T[5].y - 5.2, T[5].z - 1); let bu = 0, bd = 1e9; for (let i = 0; i <= 2000; i++) { const d = lineCurve.getPoint(i / 2000).distanceTo(T[5]); if (d < bd) { bd = d; bu = i / 2000; } }
   return createScene5({ THREE, scene, center: c5, quality: SP ? 'sp' : 'pc', renderer, lineDir: lineCurve.getTangent(bu).normalize(), linePoint: lineCurve.getPoint(bu).sub(c5) }); })().then((o) => { sc5 = o; sc5.setCamera?.(camera); prewarm(); sc5.group.visible = false; }).catch((e) => console.warn('sc5', e));
 
+SCN_MARK[6] = scene.children.length;   // 場面ごとの物をまとめて、遠い場面は描かない（軽くするため）
 // ---------- 場面6：ばらばらの短い板（個別最適）が、1本の長い橋（全体最適）に揃い、遠い光へ ----------
 const s6 = { planks: null, items: [] };
 const farStar = mkGlow(70, 0xe9eeff, 1); farStar.position.copy(lineCurve.getPoint(1)); scene.add(farStar);
@@ -936,6 +944,18 @@ function updatePlanks(l6, t) {
   m.instanceMatrix.needsUpdate = true;
 }
 updatePlanks(0, 0);
+
+SCN_MARK[7] = scene.children.length;
+// 場面1〜6の物を場面ごとの箱にまとめる（光源は箱に入れない＝光の数が変わると描画の準備がやり直しになるため）
+const SCN_G = [];
+{ const all = scene.children.slice();
+  for (let k = 1; k <= 6; k++) {
+    const g = new THREE.Group(); g.name = 'scene' + k;
+    all.slice(SCN_MARK[k], SCN_MARK[k + 1]).forEach((o) => { if (!o.isLight && !o.isCamera) g.add(o); });
+    scene.add(g); SCN_G[k] = g;
+  }
+  scene.add(s4.group);   // 場面4の部品は自分で表示を切り替える
+}
 
 // ---------- FV：今のサイトの粒の来方をコードで再現（真っ黒に白い粒）→ 文字がそろうと粒が止まり波紋 → 宇宙へ ----------
 // 速さ・数・形は今のサイトの映像（home-hero.mp4）を実測して合わせた：中心から外へ半径に比例して広がる（毎秒 約22%）、
@@ -1076,18 +1096,20 @@ let gateDone = false;
 root.style.overflow = 'hidden';
 // 入口は最初の1回だけ。2回目からは前回の選択を使う（音ありだった人は、最初に触れた時に鳴り始める）（So 11/24）
 const GATE_KEY = 'samurai-b-gate';
+const fvReady = (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => { fvLayout(); });
+const showWords = () => fvReady.then(() => setTimeout(() => fvx.classList.add('ready'), 250));
 const gateSeen = (() => { try { return localStorage.getItem(GATE_KEY); } catch (e) { return null; } })();
 function enter(withSound, remember = true) {
   if (gateDone) return; gateDone = true;
   SND.set(withSound);
   if (remember) { try { localStorage.setItem(GATE_KEY, withSound ? '1' : '0'); } catch (e) { /* 保存できない環境は毎回聞く */ } }
   gate.classList.add('out'); root.style.overflow = '';
-  setTimeout(() => fvx.classList.add('ready'), 250);
+  showWords();
 }
 function skipGate() {
   if (gateDone) return; gateDone = true;
   gate.style.display = 'none'; root.style.overflow = '';
-  setTimeout(() => fvx.classList.add('ready'), 250);
+  showWords();
   if (gateSeen === '1') {
     const first = () => { removeEventListener('pointerdown', first, true); removeEventListener('keydown', first, true); removeEventListener('touchstart', first, true); if (!SND.on) SND.set(true); };
     addEventListener('pointerdown', first, true); addEventListener('keydown', first, true); addEventListener('touchstart', first, true);
@@ -1383,6 +1405,7 @@ function frame() {
   // もや：近すぎ・遠すぎは消す
   for (const hz of hazes) { const d = hz.s.position.distanceTo(camera.position); hz.s.material.opacity = hz.base * sstep(6, 26, d) * (1 - sstep(150, 230, d)) * (1 - dawn); }
 
+  for (let k = 1; k <= 6; k++) SCN_G[k].visible = Math.abs(Ps - (k + 0.55)) < 1.35;   // 遠い場面は描かない
   // 場面1：大勢の人が、奥から手前へ波のように一気に AI に変わる（声なし・進みは一方通行）
   const vis1 = Ps > 0.35 && Ps < 2.7;
   if (!vis1) { h1T0 = -1; hands.forEach((h) => { h.u.value = 0; h.lit = false; }); }
@@ -1394,6 +1417,7 @@ function frame() {
     const at = 1.3 + h.depthN * -2.6 + 2.6 + (i % 7) * 0.05;          // 奥（depthN＝1）が先、手前が後。約2.6秒で全員
     if (h1T0 >= 0 && e1 >= at && !h.lit) { h.lit = true; h.fl = t; h.lt = t; SND.swap(1 - h.depthN); }
     h.u.value = h.lit ? Math.min(1, (t - h.lt) / 0.9) : Math.max(0, h.u.value - dt * 0.6);
+    if (h.g.children.length > 1) { h.g.children[0].visible = h.u.value < 0.999; h.g.children[1].visible = h.u.value > 0.001; }
     const ai = h.u.value > 0.5;
     const live = ai ? 0 : 1;
     h.g.rotation.y = h.baseRY + live * Math.sin(t * 1.1 + h.ph) * 0.12 + (ai ? (Math.sin(t * 0.8 + h.ph) > 0.985 ? 0.1 : 0) : 0);
@@ -1410,11 +1434,12 @@ function frame() {
     forestU.uGrow.value = Math.min(1.02, base * 2.2 + fGrowT * 0.32) * (Ps > 1.2 ? 1 : 0); forestU.uVis.value = 1 - sstep(0.75, 1.05, Math.abs(Ps - 2.3)); }
   // 場面3：テレビ
   if (Math.abs(Ps - 3) < 1.6) updateTVs(t, Ps);
+  tvFrameNo++;
   { const near3 = Math.abs(Ps - 3.55) < 0.75, d3 = Math.abs(Ps - 3.55), lv = near3 ? Math.max(1 - sstep(0.12, 0.4, d3), 0.06 * (1 - sstep(0.6, 1.1, d3))) : 0;
     for (const sh of shows) {
       sh.mesh.visible = near3; sh.show.setLevel(lv * sh.lvl);
       if (!near3) continue;
-      sh.acc = (sh.acc || 0) + dt; if (!sh.hero && sh.acc < (SP ? 1 / 12 : 1 / 24)) continue;   // 小さい画面は描き直しを間引く
+      sh.acc = (sh.acc || 0) + dt; if (!sh.hero && (sh.acc < (SP ? 1 / 12 : 1 / 20) || (tvFrameNo + shows.indexOf(sh)) % 3)) continue;   // 小さい画面は順番に少しずつ描く（一斉に描くと詰まる）
       sh.show.update(t + sh.v.ph * 7, sh.acc); sh.acc = 0; sh.tex.needsUpdate = true;
       // ときどき乱れる：砂嵐に切り替わり、横にずれ、「プシュッ」
       sh.next -= dt; if (sh.next < 0) { sh.next = 4 + Math.random() * 7; sh.gl = 0.1 + Math.random() * 0.18; if (lv > 0.3) SND.psh(sh.hero ? 1 : 0.5); }
@@ -1559,10 +1584,16 @@ function frame() {
 }
 
 // ---------- 描画の準備を先に済ませる（初めて画面に出る瞬間の引っかかりを無くす） ----------
+const warmRT = new THREE.WebGLRenderTarget(32, 32);
 function prewarm() {
-  const hid = []; scene.traverse((o) => { if (!o.visible) { hid.push(o); o.visible = true; } });
-  try { renderer.compile(scene, camera); camera.layers.set(FX); renderer.compile(scene, camera); camera.layers.enableAll(); } catch (e) { console.warn(e); }
-  hid.forEach((o) => { o.visible = false; });
+  // 見えていない物も含めて、描画の準備（シェーダー）と形・画像のデータ送りを起動時に済ませる（初めて出る瞬間に止まらないように）
+  const hid = [], cul = [];
+  scene.traverse((o) => { if (!o.visible) { hid.push(o); o.visible = true; } if (o.frustumCulled) { cul.push(o); o.frustumCulled = false; } });
+  try {
+    renderer.compile(scene, camera); camera.layers.set(FX); renderer.compile(scene, camera); camera.layers.enableAll();
+    const prev = renderer.getRenderTarget(); renderer.setRenderTarget(warmRT); renderer.render(scene, camera); renderer.setRenderTarget(prev);
+  } catch (e) { console.warn(e); }
+  hid.forEach((o) => { o.visible = false; }); cul.forEach((o) => { o.frustumCulled = true; });
 }
 // ---------- 起動 ----------
 onResize();
