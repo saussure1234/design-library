@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>上流の図・風船</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=IBM+Plex+Sans+JP:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pad:clamp(18px,3.4vw,52px);--m:48px;
+  --paper:#f6f4ee;--card:#fbfaf6;--ink:#151513;--ink2:#3b3a36;--mute:#6f6d69;--line:#dcd8cd;--line2:#e9e5db;--sig:#ff5a24;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --jp:"IBM Plex Sans JP","Hiragino Sans",sans-serif;
+}
+@media (max-width:820px){:root{--m:16px}}
+*{box-sizing:border-box}
+html,body{margin:0}
+html{-webkit-text-size-adjust:100%;overflow-x:clip}
+html.lock{overflow:hidden}
+body{background:var(--paper);color:var(--ink);font-family:var(--jp);font-size:16px;line-height:1.9;-webkit-font-smoothing:antialiased;line-break:strict;overflow-x:clip}
+a{color:inherit;text-decoration:none}
+img{display:block}
+button{font:inherit;color:inherit}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.wrap{padding:0 var(--m);position:relative}
+.nb{white-space:nowrap}
+
+/* ===== 見出し・リード・CTA（文言は元の図のまま） ===== */
+.sec{padding:clamp(72px,12vh,128px) 0 clamp(96px,14vh,160px)}
+.md-h{max-width:1240px;margin:0 auto clamp(48px,7vh,80px);border-top:1px solid var(--ink);padding-top:clamp(36px,5vh,56px);text-align:center}
+.md-t{margin:0 0 30px;font:500 clamp(26px,3vw,40px)/1.4 var(--jp);letter-spacing:.06em}
+.md-lead{margin:0 auto;font-size:15px;line-height:2.05;color:var(--ink2);letter-spacing:.02em}
+.md-cta{margin:30px 0 0}
+.md-cta a{display:inline-flex;align-items:center;gap:12px;padding:0 0 7px;border-bottom:1px solid var(--ink);font:500 15px/1.6 var(--jp);letter-spacing:.04em;transition:color .2s,border-color .2s}
+.md-cta a::after{content:"\2192";font-family:var(--mono)}
+.md-cta a:hover{color:var(--sig);border-color:var(--sig)}
+@media (max-width:820px){
+  .md-h{text-align:left}
+  .md-lead br{display:none}
+  .md-lead{font-size:14.5px;line-height:2}
+  .md-cta a{align-items:flex-start}
+}
+
+/* ===== 図（共通の箱） ===== */
+.stage{position:relative;max-width:1240px;margin:0 auto}
+.bx{position:relative;display:flex;align-items:center;justify-content:center;text-align:center;border:1px solid var(--ink);background:var(--card);color:var(--ink);font-weight:500;letter-spacing:.08em;line-height:1.2;padding:0}
+.bx .bt{position:relative;z-index:1;transition:transform .25s}
+.bx.mk{background:var(--ink);color:var(--paper)}
+.bx.fut{border-style:dashed;border-color:var(--mute);background:transparent;color:var(--mute);opacity:.55}
+.bx.tr{font-weight:600;letter-spacing:.04em}
+.ax{display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid var(--line);background:var(--card);color:var(--ink2);line-height:1.22;letter-spacing:.04em;text-align:center}
+.ax.dk{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.dots{display:flex;align-items:center;justify-content:center;color:var(--mute);letter-spacing:.5em}
+button.bx{cursor:pointer;-webkit-tap-highlight-color:transparent}
+button.bx:focus{outline:none}
+button.bx:focus-visible{outline:2px solid var(--sig);outline-offset:4px}
+
+/* ===== PC：元の図の配置そのまま（座標は 1380×600 の枠に対する値） ===== */
+@media (min-width:1180px){
+  .stage{aspect-ratio:1380/600;container-type:inline-size;--s:calc(100cqw / 1380);
+    background-image:linear-gradient(rgba(21,21,19,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(21,21,19,.045) 1px,transparent 1px);background-size:calc(100% / 23) calc(100% / 10)}
+  .pyr-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+  .pyr,.tier,.axs,.tb,.tree,.br,.lv{display:contents}
+  .bx,.ax,.dots,.axline{position:absolute;left:calc(var(--x) * var(--s));top:calc(var(--y) * var(--s));width:calc(var(--w) * var(--s));height:calc(var(--h) * var(--s))}
+  .bx{font-size:calc(var(--f) * var(--s))}
+  .ax{font-size:max(11px,calc(12.5 * var(--s)))}
+  .dots{font-size:calc(20 * var(--s))}
+  .axline{display:none}
+}
+
+/* ===== スマホ・タブレット：縦積み（左＝軸、右＝ピラミッドの段。木は3列） ===== */
+@media (max-width:1179.98px){
+  .pyr-svg{display:none}
+  .stage{max-width:560px}
+  .pyr{position:relative}
+  .axline{position:absolute;left:91px;top:6px;bottom:6px;width:1px;background:var(--mute)}
+  .axline::after{content:"";position:absolute;left:-4px;bottom:-2px;border:4.5px solid transparent;border-top:7px solid var(--mute);border-bottom:0}
+  .tier{display:grid;grid-template-columns:82px minmax(0,1fr);column-gap:18px;margin-top:3px}
+  .axs{display:flex;flex-direction:column;justify-content:center;gap:5px;padding:6px 0}
+  .ax{font-size:10.5px;padding:4px 2px;min-height:34px}
+  .tb{position:relative;isolation:isolate;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px 8px;padding:16px 14px}
+  .tb::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--bg)}
+  .t1 .tb{--bg:#ece8de;align-items:flex-end;padding-bottom:16px}
+  .t1 .tb::before{clip-path:polygon(50% 0,74% 100%,26% 100%)}
+  .t2 .tb{--bg:#e2ddd0}
+  .t2 .tb::before{clip-path:polygon(26% 0,74% 0,87% 100%,13% 100%)}
+  .t3 .tb{--bg:#d7d1c2;display:grid;grid-template-columns:1fr 1fr;grid-template-areas:"bu bu" "pr se" "hr dt" "mk mk";gap:12px 8px;padding:16px 10px 18px}
+  .t3 .tb::before{clip-path:polygon(13% 0,87% 0,100% 100%,0 100%)}
+  .g-bu{grid-area:bu;justify-self:center;min-width:72%;white-space:nowrap}.g-pr{grid-area:pr}.g-se{grid-area:se}.g-hr{grid-area:hr}.g-dt{grid-area:dt}.g-mk{grid-area:mk;justify-self:center;min-width:72%;white-space:nowrap}
+  .bx{font-size:13.5px;min-height:38px;padding:6px 10px;letter-spacing:.04em}
+  .t1 .bx,.t2 .bx:not(.fut){min-width:108px}
+  .t2 .fut{min-width:76px}
+  .dots{font-size:13px;letter-spacing:.3em}
+  .t2 .dots{width:auto}
+  /* 木：マーケティング戦略から下へ。3列 */
+  .tree{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 8px;padding-top:36px;margin-top:0}
+  .tree::before{content:"";position:absolute;left:calc(100% / 6);right:calc(100% / 6);top:18px;height:1px;background:var(--ink)}
+  .tree::after{content:"";position:absolute;left:calc(100px + (100% - 100px) / 2);top:0;height:18px;width:1px;background:var(--ink)}
+  .br{position:relative;display:flex;flex-direction:column;align-items:stretch}
+  .br::before{content:"";position:absolute;left:50%;top:-18px;height:18px;width:1px;background:var(--ink)}
+  .bx.hd{min-height:40px;font-size:14px}
+  .lv{display:flex;flex-direction:column;gap:8px;margin:10px 0 0 10px;padding:0 0 0 12px;border-left:1px solid var(--ink)}
+  .lv .bx{font-size:12.5px;min-height:36px;padding:6px 2px;letter-spacing:0;white-space:nowrap}
+  .lv .bx::before{content:"";position:absolute;left:-13px;top:50%;width:12px;height:1px;background:var(--ink)}
+}
+@media (max-width:400px){
+  .tier{grid-template-columns:76px minmax(0,1fr);column-gap:14px}
+  .axline{left:83px}
+  .ax{font-size:10px}
+  .tree::after{left:calc(90px + (100% - 90px) / 2)}
+}
+
+/* ===== 記事・動画のカード（共通） ===== */
+.cd{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);color:var(--ink);transition:border-color .2s,transform .25s}
+a.cd:hover,a.cd:focus-visible{border-color:var(--ink)}
+a.cd:focus-visible{outline:2px solid var(--sig);outline-offset:3px}
+.cd .th{position:relative;display:block;aspect-ratio:16/9;overflow:hidden;background:#e9e5db;border-bottom:1px solid var(--line2)}
+.cd .th img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.2,.6,.2,1)}
+a.cd:hover .th img{transform:scale(1.03)}
+.cd .meta{display:flex;flex-direction:column;gap:10px;padding:14px 16px 18px}
+.cd .lb{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;padding:3px 8px 3px 7px;border:1px solid var(--ink);font:500 11.5px/1.2 var(--jp);letter-spacing:.1em}
+.cd .lb i{width:6px;height:6px;background:var(--ink)}
+.cd .lb.v i{width:0;height:0;background:none;border-left:6px solid var(--ink);border-top:4px solid transparent;border-bottom:4px solid transparent}
+.cd .tt{font-size:14.5px;line-height:1.75;font-weight:500;letter-spacing:.02em}
+.cd .go{margin-top:auto;align-self:flex-end;font:400 13px/1 var(--mono);color:var(--mute)}
+a.cd:hover .go{color:var(--sig)}
+.cd.dm{border-style:dashed;border-color:var(--mute)}
+.cd.dm .th{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--mute);font:500 13px/1 var(--jp);letter-spacing:.1em;
+  background:repeating-linear-gradient(135deg,transparent 0 9px,rgba(21,21,19,.06) 9px 10px),#efece4}
+.cd.dm .th svg{width:40px;height:40px}
+.cd.dm .lb{border-color:var(--mute);color:var(--mute)}
+.cd.dm .lb.v i{border-left-color:var(--mute)}
+.cd.dm .tt{color:var(--mute)}
+.pn-h{display:flex;align-items:baseline;gap:14px}
+.pn-k{margin:0;font:500 22px/1.4 var(--jp);letter-spacing:.06em}
+.pn-n{font:400 12.5px/1 var(--mono);color:var(--mute);letter-spacing:.04em}
+.x{margin-left:auto;display:inline-flex;align-items:center;gap:8px;background:none;border:0;border-bottom:1px solid var(--ink);padding:4px 0 5px;cursor:pointer;font:500 13px/1 var(--jp);letter-spacing:.06em}
+.x::after{content:"\00d7";font:400 16px/1 var(--mono);margin-top:-1px}
+.x:hover{color:var(--sig);border-color:var(--sig)}
+.x:focus-visible{outline:2px solid var(--sig);outline-offset:3px}
+
+
+/* 案3：製図の風船（朱の丸い番号＋引き出し線）。押すと画面中央に大きな面 */
+button.bx .bl{position:absolute;z-index:2;left:calc(var(--cx) * var(--s));top:calc(var(--cy) * var(--s));width:calc(28 * var(--s));height:calc(28 * var(--s));transform:translate(-50%,-50%);border-radius:50%;background:var(--sig);color:#fff;display:flex;align-items:center;justify-content:center;font:500 calc(14 * var(--s))/1 var(--mono);transition:transform .25s;pointer-events:auto}
+button.bx .ld{position:absolute;z-index:1;left:calc(var(--lx) * var(--s));top:calc(var(--ly) * var(--s));width:calc(var(--ll) * var(--s));height:1px;background:var(--sig);transform-origin:0 50%;transform:rotate(var(--la))}
+button.bx{transition:box-shadow .2s,background .2s}
+button.bx:hover,button.bx:focus-visible{box-shadow:0 0 0 1px var(--sig);border-color:var(--sig)}
+button.bx:hover .bl,button.bx:focus-visible .bl{transform:translate(-50%,-50%) scale(1.18)}
+@media (max-width:1179.98px){
+  button.bx{padding-right:40px;justify-content:flex-start;padding-left:12px;text-align:left}
+  .t1 button.bx,.t2 button.bx,.g-bu.has,.g-mk.has{justify-content:center;padding-left:14px}
+  button.bx .bl{left:auto;right:6px;top:50%;width:22px;height:22px;transform:translateY(-50%);font:500 11px/1 var(--mono)}
+  button.bx:hover .bl,button.bx:focus-visible .bl{transform:translateY(-50%) scale(1.12)}
+  button.bx .ld{left:auto;right:28px;top:50%;width:10px;transform:none}
+  .lv button.bx{padding-right:36px;padding-left:8px}
+}
+/* 中央の面 */
+.mo{width:min(1040px,calc(100vw - 48px));max-height:min(86dvh,820px);max-width:none;padding:0;border:1px solid var(--ink);background:var(--paper);color:var(--ink);
+  opacity:0;transform:translateY(14px) scale(.985);transition:opacity .3s,transform .35s cubic-bezier(.2,.6,.2,1)}
+.mo.in{opacity:1;transform:none}
+.mo::backdrop{background:rgba(21,21,19,0);transition:background .3s}
+.mo.in::backdrop{background:rgba(21,21,19,.5)}
+.mo-in{display:flex;flex-direction:column;max-height:inherit}
+.mo .pn-h{align-items:center;padding:26px 34px 22px;border-bottom:1px solid var(--ink)}
+.mo .no3{flex:none;width:34px;height:34px;border-radius:50%;background:var(--sig);color:#fff;display:flex;align-items:center;justify-content:center;font:500 15px/1 var(--mono)}
+.mo .pn-k{font-size:clamp(22px,2.4vw,30px)}
+.mo-list{list-style:none;margin:0;padding:28px 34px 36px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;overflow:auto;overscroll-behavior:contain}
+.mo-list:has(> li:nth-child(2):last-child){grid-template-columns:repeat(2,minmax(0,1fr))}
+.mo-list:has(> li:only-child){grid-template-columns:minmax(0,.62fr)}
+.mo .cd .tt{font-size:15.5px}
+@media (max-width:640px){
+  .mo{width:calc(100vw - 24px);max-height:88dvh}
+  .mo .pn-h{padding:16px 16px 14px;gap:10px}
+  .mo .no3{width:26px;height:26px;font-size:12px}
+  .mo .pn-k{font-size:19px}
+  .mo-list,.mo-list:has(> li:nth-child(2):last-child),.mo-list:has(> li:only-child){grid-template-columns:1fr;padding:16px;gap:14px}
+  .mo .cd .tt{font-size:14px}
+}
+
+</style>
+</head>
+<body>
+<main>
+<section class="sec" id="upstream"><div class="wrap">
+  <header class="md-h">
+    <h1 class="md-t">“マーケティングの上流”について考察</h1>
+    <p class="md-lead">日々のマーケティングの業務においては、広告管理画面を見たり、クリエイティブやLPを改修したり、<br>SEOやメルマガの記事コンテンツを制作したりといった施策と数値を見て分析・改善を繰り返します。<br>一方、上流とは、その実務の前段で考えることが必要な論点で、どの施策においても、事業におけるターゲットは同一であり、<br>「誰に」「何を」提供するかの共通認識がなければ、<br>ユーザーから見た際に一貫性を欠き、投下したリソース（お金と時間）に対して期待するリターンが効率的に得られません。<br>このページでは、上流から実務までに必要な論点をレイヤーごとに記事と動画でまとめたので、ぜひ日々の業務にお役立ていただければ幸いです。</p>
+    <p class="md-cta"><a href="#" data-todo="リンク先は要確認">行き詰った時に前進するヒントが見つかる「状況別の問い」リスト</a></p>
+  </header>
+
+<div class="stage" id="stage">
+  <svg class="pyr-svg" viewBox="0 0 1380 600" aria-hidden="true" focusable="false">
+    <defs><marker id="ah" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" fill="#151513"/></marker>
+    <marker id="ah2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" fill="#6f6d69"/></marker></defs>
+    <polygon points="636,5 776.5,133 495.5,133" fill="#ece8de"/>
+    <polygon points="495.5,133 776.5,133 919.3,263 352.7,263" fill="#e2ddd0"/>
+    <polygon points="352.7,263 919.3,263 1062,393 210,393" fill="#d7d1c2"/>
+    <polygon points="636,5 1062,393 210,393" fill="none" stroke="rgba(21,21,19,.32)" stroke-width="1"/>
+    <path d="M430 133H842M300 263H972" stroke="#f6f4ee" stroke-width="3"/>
+    <path d="M185 10V396" stroke="#6f6d69" stroke-width="1" marker-end="url(#ah2)"/>
+    <g fill="none" stroke="#151513" stroke-width="1.3">
+      <path d="M636 350V385M426 385H846"/>
+      <path d="M426 385V416M636 385V416M846 385V416" marker-end="url(#ah)"/>
+      <path d="M426 458V485M126 485H460"/>
+      <path d="M126 485V510M226.5 485V510M338 485V510M460 485V510" marker-end="url(#ah)"/>
+      <path d="M636 458V485M589 485H721.5"/>
+      <path d="M589 485V510M721.5 485V510" marker-end="url(#ah)"/>
+      <path d="M846 458V485H1115.5"/>
+      <path d="M903.5 485V510M1115.5 485V510" marker-end="url(#ah)"/>
+    </g>
+  </svg>
+  <div class="pyr">
+    <i class="axline" aria-hidden="true" style="--x:184;--y:10;--w:2;--h:386"></i>
+    <div class="tier t1">
+      <div class="axs"><div class="ax" style="--x:9;--y:12;--w:148;--h:34"><span>なぜ</span><span>（理念）</span></div><div class="ax" style="--x:9;--y:55;--w:148;--h:34"><span>何を</span><span>（アセット）</span></div><div class="ax" style="--x:9;--y:97;--w:148;--h:34"><span>誰に</span><span>（市場）</span></div></div>
+      <div class="tb"><div class="bx pb" data-k="経営戦略" style="--x:529;--y:53;--w:214;--h:34;--f:20"><span class="bt">経営戦略</span></div></div>
+    </div>
+    <div class="tier t2">
+      <div class="axs"><div class="ax" style="--x:9;--y:158;--w:148;--h:34"><span>何を</span><span>（提供価値）</span></div><div class="ax" style="--x:9;--y:215;--w:148;--h:34"><span>誰に</span><span>（ターゲット）</span></div></div>
+      <div class="tb"><div class="bx pb" data-k="事業戦略" style="--x:529;--y:188;--w:214;--h:34;--f:20"><span class="bt">事業戦略</span></div><div class="bx pb fut" data-k="事業B" style="--x:803;--y:188;--w:157;--h:34;--f:20"><span class="bt">事業B</span></div><div class="dots" data-a="d1" style="--x:995;--y:188;--w:70;--h:34" aria-hidden="true">・・・</div></div>
+    </div>
+    <div class="tier t3">
+      <div class="axs"><div class="ax dk" style="--x:9;--y:277;--w:148;--h:34"><span>いつ</span><span>（時間軸）</span></div><div class="ax dk" style="--x:9;--y:318;--w:148;--h:34"><span>どこで</span><span>（施策）</span></div><div class="ax dk" style="--x:9;--y:359;--w:148;--h:34"><span>どのように</span><span>（クリエイティブ）</span></div></div>
+      <div class="tb"><div class="bx pb g-bu" data-k="部門間合意形成" style="--x:636;--y:272;--w:259;--h:34;--f:20"><span class="bt">部門間合意形成</span></div><div class="bx pb g-pr" data-k="プロダクト戦略" style="--x:228;--y:316;--w:259;--h:34;--f:20"><span class="bt">プロダクト戦略</span></div><div class="bx pb mk g-mk" data-k="マーケティング戦略" style="--x:506;--y:316;--w:259;--h:34;--f:20"><span class="bt">マーケティング戦略</span></div><div class="bx pb g-se" data-k="セールス戦略" style="--x:784;--y:316;--w:259;--h:34;--f:20"><span class="bt">セールス戦略</span></div><div class="bx pb fut g-hr" data-k="人事戦略" style="--x:1064;--y:316;--w:189;--h:34;--f:20"><span class="bt">人事戦略</span></div><div class="dots" data-a="g-dt" style="--x:1285;--y:316;--w:70;--h:34" aria-hidden="true">・・・</div></div>
+    </div>
+  </div>
+  <div class="tree">
+    <div class="br b1"><div class="bx tr hd" data-k="集客" style="--x:354;--y:418;--w:144;--h:40;--f:21"><span class="bt">集客</span></div><div class="lv"><div class="bx tr" data-k="SNS" style="--x:82;--y:512;--w:88;--h:40;--f:21"><span class="bt">SNS</span></div><div class="bx tr" data-k="SEO" style="--x:182;--y:512;--w:89;--h:40;--f:21"><span class="bt">SEO</span></div><div class="bx tr" data-k="LLMO" style="--x:283;--y:512;--w:110;--h:40;--f:21"><span class="bt">LLMO</span></div><div class="bx tr" data-k="広告" style="--x:405;--y:512;--w:110;--h:40;--f:21"><span class="bt">広告</span></div></div></div>
+    <div class="br b2"><div class="bx tr hd" data-k="接客" style="--x:565;--y:418;--w:143;--h:40;--f:21"><span class="bt">接客</span></div><div class="lv"><div class="bx tr" data-k="LP改修" style="--x:531;--y:512;--w:116;--h:40;--f:21"><span class="bt">LP改修</span></div><div class="bx tr" data-k="WP制作" style="--x:663;--y:512;--w:117;--h:40;--f:21"><span class="bt">WP制作</span></div></div></div>
+    <div class="br b3"><div class="bx tr hd" data-k="育成" style="--x:775;--y:418;--w:143;--h:40;--f:21"><span class="bt">育成</span></div><div class="lv"><div class="bx tr" data-k="メルマガ" style="--x:806;--y:512;--w:195;--h:40;--f:21"><span class="bt">メルマガ</span></div><div class="bx tr" data-k="スコアリング" style="--x:1018;--y:512;--w:195;--h:40;--f:21"><span class="bt">スコアリング</span></div></div></div>
+  </div>
+</div>
+<dialog class="mo" id="mo" aria-labelledby="mo-k"><div class="mo-in"><div class="pn-h"><span class="no3" id="mo-no" aria-hidden="true"></span><p class="pn-k" id="mo-k"></p><span class="pn-n" id="mo-n"></span><button type="button" class="x" id="mo-x">閉じる</button></div><ul class="mo-list" id="mo-list"></ul></div></dialog>
+</div></section>
+</main>
+<script>
+(()=>{
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const PLAY='<svg viewBox="0 0 40 40" aria-hidden="true"><rect x="1" y="1" width="38" height="38" fill="none" stroke="currentColor"/><path d="M16 13L28 20L16 27Z" fill="none" stroke="currentColor"/></svg>';
+function card(it){
+  if(it.type==='video'&&it.dummy){
+    return `<li><div class="cd dm" aria-label="動画（準備中）"><span class="th">${PLAY}<span>動画（準備中）</span></span><span class="meta"><span class="lb v"><i></i>動画</span><span class="tt">準備中</span></span></div></li>`;
+  }
+  const lb=it.type==='video'?'<span class="lb v"><i></i>動画</span>':'<span class="lb"><i></i>記事</span>';
+  const img=it.img?`<img src="${esc(it.img)}?w=720" alt="" loading="lazy" decoding="async">`:'';
+  return `<li><a class="cd" href="${esc(it.url)}" target="_blank" rel="noopener"><span class="th">${img}</span><span class="meta">${lb}<span class="tt">${esc(it.title)}</span><span class="go" aria-hidden="true">↗</span><span class="sr">（新しいタブで開きます）</span></span></a></li>`;
+}
+window.MEDIA={card,esc};
+fetch('media/data.json',{cache:'no-store'}).then(r=>r.json()).then(D=>{
+  const B=D.boxes||{};
+  document.querySelectorAll('.bx[data-k]').forEach(el=>{
+    const k=el.dataset.k, items=(B[k]||[]).filter(Boolean);
+    if(!items.length) return;
+    const b=document.createElement('button');
+    b.type='button'; b.className=el.className+' has'; b.setAttribute('style',el.getAttribute('style')); b.dataset.k=k;
+    b.innerHTML=el.innerHTML; b.dataset.n=items.length;
+    b.setAttribute('aria-label',`${k}（記事・動画 ${items.length}件）`);
+    el.replaceWith(b);
+    V.mark(b,items.length);
+    b.addEventListener('click',()=>V.toggle(b,k,items));
+  });
+  document.documentElement.classList.add('ready');
+  if(location.hash.startsWith('#open=')){const k=decodeURIComponent(location.hash.slice(6));const b=document.querySelector(`button.bx[data-k="${k}"]`);b&&b.click()}
+}).catch(e=>console.error('data.json',e));
+
+const CO={"経営戦略": [246, -20], "事業戦略": [244, -20], "部門間合意形成": [287, -20], "マーケティング戦略": [14, -28], "LP改修": [58, 68]};
+const mo=document.getElementById('mo');let cur=null,busy=false;
+function mark(b,n){
+  b.setAttribute('aria-haspopup','dialog');b.setAttribute('aria-expanded','false');
+  const w=+b.style.getPropertyValue('--w'),h=+b.style.getPropertyValue('--h');
+  const [cx,cy]=CO[b.dataset.k]||[w+24,-20];
+  const sx=Math.max(0,Math.min(w,cx)),sy=Math.max(0,Math.min(h,cy));
+  const dx=cx-sx,dy=cy-sy,L=Math.hypot(dx,dy),r=14,ll=Math.max(0,L-r),ang=Math.atan2(dy,dx);
+  b.insertAdjacentHTML('beforeend',`<span class="ld" aria-hidden="true" style="--lx:${sx};--ly:${sy};--ll:${ll.toFixed(1)};--la:${ang.toFixed(4)}rad"></span><span class="bl" aria-hidden="true" style="--cx:${cx};--cy:${cy}">${n}</span>`);
+}
+function open(b,k,items){
+  cur=b;document.getElementById('mo-k').textContent=k;document.getElementById('mo-n').textContent=items.length+'件';document.getElementById('mo-no').textContent=items.length;
+  document.getElementById('mo-list').innerHTML=items.map(MEDIA.card).join('');
+  b.setAttribute('aria-expanded','true');document.documentElement.classList.add('lock');
+  mo.showModal();requestAnimationFrame(()=>requestAnimationFrame(()=>mo.classList.add('in')));
+  document.getElementById('mo-x').focus();
+}
+function close(){
+  if(!mo.open||busy)return;busy=true;mo.classList.remove('in');
+  setTimeout(()=>{mo.close();busy=false;document.documentElement.classList.remove('lock');if(cur){cur.setAttribute('aria-expanded','false');cur.focus();}},320);
+}
+mo.addEventListener('cancel',e=>{e.preventDefault();close()});
+mo.addEventListener('click',e=>{if(e.target===mo)close()});
+document.getElementById('mo-x').addEventListener('click',close);
+const V={mark,toggle:(b,k,items)=>open(b,k,items),close};
+
+})();
+</script>
+</body>
+</html>
