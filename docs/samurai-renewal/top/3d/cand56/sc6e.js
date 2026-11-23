@@ -40,7 +40,7 @@ export default {
             h += s.w * exp(-x * x / (w * w)) * cos(x * P.w) * exp(-age * P.z);
             fl += exp(-d * d * 10.) * exp(-age * 7.) * s.w * 10.;
           }
-          return h;
+          return .55 * tanh(h / .55);
         }
         void main(){
           vec2 q = position.xz; float fl, f2, f3;
@@ -85,7 +85,13 @@ export default {
       const P = s.uP[i];
       const onBeat = rnd() < k * 1.15;
       let t0 = t;
-      if (onBeat) { t0 = (beat + 1) * BEAT; }
+      if (onBeat) {
+        t0 = (beat + 1) * BEAT;
+        // 1拍に重なる滴の数を抑える（重なりすぎると水面が塔のように立つ）
+        const cap = Math.max(2, Math.round(lerp(10, 4, k)));
+        s.cnt = s.cnt || {}; const key = t0.toFixed(2); s.cnt[key] = (s.cnt[key] || 0) + 1;
+        if (s.cnt[key] > cap) { s.next[i] = t0 + rr(0.2, BEAT); return; }
+      }
       // 場所：ばらばら → 中心のまわりへ寄る（そろい切ると中心1点）
       const rx = rr(s.box[0], s.box[1]), rz = rr(s.box[2], s.box[3]);
       const pull = Math.pow(k, 0.8), spread = lerp(1, 0.03, k);

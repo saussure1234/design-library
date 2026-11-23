@@ -642,7 +642,7 @@ const noiseTex = (() => { const c = document.createElement('canvas'); c.width = 
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.wrapS = t.wrapT = THREE.RepeatWrapping; return t; })();
 const shows = tvs.list.filter((v) => v.show).map((v, i) => {
   const hero = v === tvs.list[0];
-  const show = createTVShow(hero ? { width: 640, height: 480 } : { width: 320, height: 240 });
+  const show = createTVShow({ width: hero ? 640 : 320, height: hero ? 480 : 240, genre: ['cartoon', 'color', 'modern', 'anime', 'news'][i % 5] });   // 全部別の番組（So 11/24）
   const tex = new THREE.CanvasTexture(show.canvas); tex.colorSpace = THREE.SRGBColorSpace; tex.flipY = false;   // 画面の UV が上下逆なので戻す
   const mat = new THREE.MeshBasicMaterial({ map: tex, toneMapped: false, fog: false, polygonOffset: true, polygonOffsetFactor: -4, polygonOffsetUnits: -4 });
   const mesh = new THREE.Mesh(tvs.scrGeo[v.v], mat); mesh.matrixAutoUpdate = false; mesh.frustumCulled = false; scene.add(mesh);
@@ -927,8 +927,8 @@ const FVP = (() => {
       return true; });
     // 開く輪：穴の縁と同じ楕円を、太く明るく
     if (openR > 1) {
-      ctx.save(); ctx.shadowColor = 'rgba(167,228,255,.95)'; ctx.shadowBlur = 26;
-      ctx.strokeStyle = 'rgba(214,243,255,.95)'; ctx.lineWidth = 3 + openR * .006;
+      ctx.save(); ctx.shadowColor = 'rgba(143,220,255,.6)'; ctx.shadowBlur = 10;
+      ctx.strokeStyle = 'rgba(167,228,255,.7)'; ctx.lineWidth = 1.6;
       ctx.beginPath(); ctx.ellipse(rx, ry, openR, openR * .62, 0, 0, 6.283); ctx.stroke(); ctx.restore();
     }
     ctx.globalCompositeOperation = 'source-over';
@@ -966,7 +966,7 @@ function fvFrame(dt, t, Ps) {
   if (!FV.locked && e > 0.985) { FV.locked = true; SND.lock(); } else if (FV.locked && e < 0.6) FV.locked = false;
   // 粒の層と、場面1へのつなぎ（案 a〜d）
   const k = sstep(0.55, 0.95, Ps);          // つなぎの進み
-  let vo = 1 - k, boost = 1, opaque = 1, mask = '', flash = 0, scale = 1, wob = 0, openR = 0;
+  let vo = 1 - k, boost = 1, opaque = 1, mask = '', flash = 0, scale = 1, wob = 0, openR = 0, fvDarkB = 0;
   if (TR === 'a') {          // a 光へ飛び込む：止まっていた粒が再び加速して手前へ流れ、白い光を抜けると宇宙
     boost = 1 + 7 * sstep(0.55, 0.85, Ps); scale = 1 + 0.5 * k * k; vo = 1 - sstep(0.8, 0.95, Ps); flash = Math.sin(Math.PI * sstep(0.78, 0.98, Ps)) * 0.85;
   } else if (TR === 'b') {   // b 波紋がひらく：波紋がうねる → 輪がパカッと開く → 白い光の世界 → 抜けると宇宙
@@ -975,7 +975,7 @@ function fvFrame(dt, t, Ps) {
     openR = ko > 0 ? Math.max(4, Math.hypot(innerWidth, innerHeight / 0.62) * 0.62 * back) : 0;
     vo = Ps < 0.79 ? 1 : 0;
     mask = openR > 1 ? `radial-gradient(ellipse ${openR}px ${openR * 0.62}px at 50% 42%, transparent 98%, #000 100%)` : '';
-    flash = ko > 0 ? 1 - sstep(0.84, 1.0, Ps) : 0;             // 開いた中は白い光 → 抜けると消える
+    flash = 0; fvDarkB = ko > 0 ? 1 - sstep(0.8, 1.02, Ps) : 0;   // 開いた先は真っ暗 → 闇の奥から宇宙が明けてくる（白はやめた・So 11/24）
     scale = 1 + 0.08 * sstep(0.62, 0.75, Ps);
     if (ko > 0.02 && !fvOpened) { fvOpened = true; SND.open(); } else if (ko <= 0 && fvOpened) fvOpened = false;
   } else if (TR === 'c') {   // c 粒が星になる：粒はその場で止まって残り、黒い地だけが溶けて宇宙が現れる
@@ -990,7 +990,7 @@ function fvFrame(dt, t, Ps) {
   if (vo > 0.01) FVP.draw(dt, RM ? 0 : 1 - e, boost, opaque, wob, openR);
   // 3D 側：FV の間は朱を出さない。d は闇から明ける
   { const oa = sstep(1.0, 1.35, Ps); origin.visible = head.visible = headCore.visible = oa > 0.01; origin.material.opacity = head.material.opacity = headCore.material.opacity = oa; sigLight.intensity = 26 * oa; }
-  fvDark = TR === 'd' ? 1 - sstep(0.72, 1.05, Ps) : 0;
+  fvDark = TR === 'd' ? 1 - sstep(0.72, 1.05, Ps) : TR === 'b' ? fvDarkB : 0;
 }
 // ---------- 入口の画面：音あり／音なしを選んでから始まる ----------
 const gate = document.getElementById('gate');

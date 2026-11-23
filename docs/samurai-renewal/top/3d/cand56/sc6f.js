@@ -27,7 +27,7 @@ export default {
     S.bloom.strength = 0.5; S.bloom.threshold = 0.7;
     scene.fog = new THREE.FogExp2(0x020203, SP ? 0.026 : 0.028);
     scene.add(new THREE.HemisphereLight(0x3c4352, 0x000000, 0.25));
-    const key = new THREE.DirectionalLight(0xdfe4ec, 1.7); key.position.set(-7, 9, 7); scene.add(key);
+    const key = new THREE.DirectionalLight(0xdfe4ec, 1.25); key.position.set(-7, 9, 7); scene.add(key);
     const rim = new THREE.DirectionalLight(0x8e98ab, 1.4); rim.position.set(9, 4, -5); scene.add(rim);
     // 石垣の形：幅 W・高さ H、下ほど手前へ張り出し、上は垂直に立つ（扇の勾配）
     const W = SP ? 6.4 : 10.5, H = SP ? 6.2 : 6.0, X0 = SP ? -3.2 : 0.2, Y0 = SP ? -1.5 : -3.0;
