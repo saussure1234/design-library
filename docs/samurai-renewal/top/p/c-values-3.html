@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+JP:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;700&family=Roboto+Flex:opsz,slnt,wdth,wght@8..144,-10..0,25..151,100..1000&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_paper.css">
+<title>VALUES 案3：一枚の製図台・交点にFUN</title>
+<style>
+
+.q canvas,.hub canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.vsec{padding-bottom:clamp(120px,18vh,180px)}
+.board{position:relative;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:minmax(400px,auto) minmax(400px,auto);
+  grid-template-areas:"tl tr" "bl br";background-color:var(--card);border:1px solid var(--line);
+  background-image:linear-gradient(rgba(21,21,19,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(21,21,19,.05) 1px,transparent 1px),
+  linear-gradient(rgba(21,21,19,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(21,21,19,.025) 1px,transparent 1px);
+  background-size:80px 80px,80px 80px,16px 16px,16px 16px;background-position:-1px -1px}
+.board::before,.board::after{content:"+";position:absolute;font:300 14px/1 var(--mono);color:var(--mute);z-index:2}
+.board::before{left:-5px;top:-8px}.board::after{right:-5px;bottom:-9px}
+.q{position:relative;min-width:0}
+.q.tl{grid-area:tl;border-right:1px solid var(--ink);border-bottom:1px solid var(--ink)}
+.q.tr{grid-area:tr;border-bottom:1px solid var(--ink)}
+.q.bl{grid-area:bl;border-right:1px solid var(--ink)}
+.q.br{grid-area:br}
+.q .qa{position:absolute;width:58%}
+.q.tl .qa,.q.tr .qa{top:118px;bottom:16px}
+.q.bl .qa,.q.br .qa{top:16px;bottom:118px}
+.q.tl .qa,.q.bl .qa{left:16px}
+.q.tr .qa,.q.br .qa{right:16px}
+.q .qt{position:absolute;max-width:min(380px,62%);background:var(--card);padding:6px 8px}
+.q.tl .qt{left:22px;top:22px}.q.tr .qt{right:22px;top:22px;text-align:right}
+.q.bl .qt{left:22px;bottom:22px}.q.br .qt{right:22px;bottom:22px;text-align:right}
+.qt .vw{display:block;margin:8px 0 6px;font:500 clamp(24px,2.3vw,32px)/1.2 var(--disp)}
+.qt .vd{margin:0;font-size:14.5px;line-height:1.85;color:var(--ink2)}
+.hub{position:absolute;left:50%;top:50%;width:440px;height:440px;transform:translate(-50%,-50%);border-radius:50%;border:1px solid var(--ink);background:var(--card);
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;z-index:3;overflow:hidden}
+.hub .ha{position:relative;width:64%;height:47%;margin-top:8%;flex:none}
+.hub .vw{display:block;margin:6px 0 6px;font:500 clamp(34px,3.4vw,48px)/1.05 var(--disp)}
+.hub .vd{margin:0;max-width:16em;font-size:15px;line-height:1.8;color:var(--ink2)}
+.hub .no{margin-top:4px}
+@media (max-width:1080px){.hub{width:340px;height:340px}.q .qa{width:52%}}
+@media (max-width:760px){
+  .board{grid-template-columns:1fr 1fr;grid-template-rows:auto;grid-template-areas:"hub hub" "tl tr" "bl br"}
+  .hub{grid-area:hub;position:relative;left:auto;top:auto;transform:none;justify-self:center;width:min(310px,84vw);height:min(310px,84vw);margin:22px 0}
+  .hub .vw{font-size:32px}.hub .vd{font-size:13.5px;max-width:15em}
+  .q.tl{border-top:1px solid var(--ink)}.q.tr{border-top:1px solid var(--ink)}
+  .q{display:flex;flex-direction:column}
+  .board .q .qa{position:relative;inset:auto;width:auto;height:130px;margin:10px 10px 0}
+  .q .qt,.q.tr .qt,.q.br .qt,.q.bl .qt,.q.tl .qt{position:static;max-width:none;text-align:left;padding:8px 14px 18px;background:transparent}
+  .q.bl .qa,.q.br .qa{order:0}
+  .qt .vw{font-size:19px;margin:6px 0 4px}
+  .qt .vd{font-size:13px;line-height:1.8}
+}
+
+</style>
+</head>
+<body>
+<header class="ghd">
+  <a class="logo" href="../c-3d-b2.html" aria-label="SAMURAI STYLE"><img src="../img/logo.svg" alt="SAMURAI STYLE"></a>
+  <nav class="nav"><a href="../c-3d-b2.html">HOME</a><a href="service.html">SERVICE</a><a href="media.html">MEDIA</a><a href="company.html" aria-current="page">COMPANY</a><a href="recruit.html">RECRUIT</a><a class="cta" href="../c-3d-b2.html#contact">CONTACT</a><div class="lang"><span>ID</span><span>EN</span><b>JA</b></div></nav>
+  <button class="burger" type="button" aria-label="Menu" aria-expanded="false"><i></i><i></i></button>
+</header>
+<div class="gov"><a href="../c-3d-b2.html">HOME</a><a href="service.html">SERVICE</a><a href="media.html">MEDIA</a><a href="company.html">COMPANY</a><a href="recruit.html">RECRUIT</a><a href="../c-3d-b2.html#contact">CONTACT</a><div class="lang"><span>ID</span><span>EN</span><b>JA</b></div></div>
+
+<main id="top">
+<section class="sec first vsec" id="values"><div class="wrap">
+  <div class="sh"><div class="lbl"><span>02</span><p class="jp2">サムライスタイルの5つの行動指針</p><span class="end">01—05</span></div><h2 class="giant" data-wd>VALUES</h2></div>
+  <div class="board" data-vgroup><div class="q tl"><div class="qa"><canvas data-v="free" data-o="1" aria-hidden="true"></canvas></div><div class="qt"><div class="no">02 / 05</div><h3 class="vw">Free</h3><p class="vd">各自の責任感の下、場所や時間に捉われず自由に裁量を持って働く</p></div></div><div class="q tr"><div class="qa"><canvas data-v="flat" data-o="2" aria-hidden="true"></canvas></div><div class="qt"><div class="no">03 / 05</div><h3 class="vw">Flat</h3><p class="vd">年齢や役職などの上下関係なく接する</p></div></div><div class="q bl"><div class="qa"><canvas data-v="open" data-o="3" aria-hidden="true"></canvas></div><div class="qt"><div class="no">04 / 05</div><h3 class="vw">Open</h3><p class="vd">チーム内では本音で向き合い、人格は否定しない</p></div></div><div class="q br"><div class="qa"><canvas data-v="opt" data-o="4" aria-hidden="true"></canvas></div><div class="qt"><div class="no">05 / 05</div><h3 class="vw">Optimization</h3><p class="vd">全体最適視点で判断する</p></div></div><div class="hub"><div class="ha"><canvas data-v="fun" data-o="0" aria-hidden="true"></canvas></div><div class="no">01 / 05</div><h3 class="vw">FUN (PLAY)</h3><p class="vd">世界で1番楽しそうに働くチームを目指す</p></div></div>
+</div></section>
+</main>
+<span id="meas" aria-hidden="true"></span>
+<script src="_paper.js"></script>
+<script src="_values.js"></script>
+</body>
+</html>
