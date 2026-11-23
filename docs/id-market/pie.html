@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>インドネシア市場パイ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4f2ec; --dot:#dcd7cb; --panel:#ffffff; --ink:#1d1d1b; --muted:#6b6a65; --line:#d9d5cc; --edge:#b3ac9e;
+  --paid:#1f8a5b; --free:#6fa8dc; --none:#e6e1d6; --none-stroke:#c9c2b3; --other:#aeaaa1;
+  --accent:#e0701f; --chip:#f1eee7; --hatch:rgba(0,0,0,.28); --halo:#f4f2ec; --sel:#1d1d1b;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#141412; --dot:#2a2925; --panel:#1e1e1b; --ink:#eeece6; --muted:#a3a097; --line:#3a3934; --edge:#5f5b52;
+    --paid:#34b37a; --free:#5d93c7; --none:#3b3934; --none-stroke:#57544b; --other:#77736a;
+    --accent:#f08a3a; --chip:#2a2925; --hatch:rgba(255,255,255,.32); --halo:#141412; --sel:#ffffff;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#141412; --dot:#2a2925; --panel:#1e1e1b; --ink:#eeece6; --muted:#a3a097; --line:#3a3934; --edge:#5f5b52;
+  --paid:#34b37a; --free:#5d93c7; --none:#3b3934; --none-stroke:#57544b; --other:#77736a;
+  --accent:#f08a3a; --chip:#2a2925; --hatch:rgba(255,255,255,.32); --halo:#141412; --sel:#ffffff;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:"Noto Sans JP",system-ui,sans-serif;-webkit-font-smoothing:antialiased;overscroll-behavior:none}
+body{display:flex;flex-direction:column;overflow:hidden}
+header{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;padding:10px 16px;border-bottom:1px solid var(--line);background:var(--panel);z-index:2}
+header h1{font-size:16px;margin:0;font-weight:700;letter-spacing:.02em}
+header .sub{font-size:12px;color:var(--muted)}
+.btns{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+button{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--chip);color:var(--ink);border-radius:999px;padding:6px 12px;cursor:pointer;touch-action:manipulation}
+button:hover{border-color:var(--ink)}
+button.accent{border-color:var(--accent);color:var(--accent);font-weight:700}
+main{flex:1;display:flex;min-height:0;position:relative}
+#stage{flex:1;min-width:0;position:relative;overflow:hidden;background-color:var(--bg);background-image:radial-gradient(var(--dot) 1.2px, transparent 1.2px)}
+svg{width:100%;height:100%;display:block;touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none}
+svg.panning{cursor:grabbing}
+.n{cursor:pointer}
+.n text{paint-order:stroke;stroke:var(--halo);stroke-width:3.5px;stroke-linejoin:round}
+.e text{paint-order:stroke;stroke:var(--halo);stroke-width:4px;stroke-linejoin:round}
+aside{width:380px;max-width:42vw;border-left:1px solid var(--line);background:var(--panel);overflow:auto;padding:16px 18px 28px;z-index:2}
+.crumbs{font-size:12px;color:var(--muted);margin-bottom:8px;line-height:1.8}
+.crumbs a{color:var(--muted);cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+aside h2{font-size:18px;margin:0 0 4px;line-height:1.4}
+.total{font-size:26px;font-weight:700;margin:2px 0 2px;letter-spacing:.01em}
+.meta{font-size:12px;color:var(--muted);margin-bottom:10px}
+.badge{display:inline-block;font-size:11px;padding:1px 7px;border-radius:999px;border:1px solid var(--line);margin-left:6px;vertical-align:1px;color:var(--muted)}
+.badge.kari{border-color:var(--accent);color:var(--accent)}
+.note{font-size:13px;line-height:1.7;margin:8px 0 12px}
+.jp{font-size:12.5px;line-height:1.7;background:var(--chip);border-radius:8px;padding:8px 10px;margin:8px 0 12px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+td{padding:7px 4px;border-top:1px solid var(--line);vertical-align:top;line-height:1.5}
+tr.go{cursor:pointer}
+tr.go:hover td{background:var(--chip)}
+tr.hl td{background:var(--chip)}
+.sw{width:12px;height:12px;border-radius:3px;display:inline-block;vertical-align:-1px}
+.num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.pct{color:var(--muted);font-size:12px}
+.small{font-size:11.5px;color:var(--muted);line-height:1.6;margin-top:3px}
+.go-tag{font-size:11px;color:var(--accent);white-space:nowrap}
+.src{font-size:11.5px;word-break:break-all;color:var(--muted)}
+.src a{color:var(--muted)}
+.legend{position:absolute;left:12px;bottom:12px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:11.5px;line-height:1.9;max-width:min(560px,calc(100% - 200px))}
+.legend span{display:inline-flex;align-items:center;gap:5px;margin-right:10px;white-space:nowrap}
+.legend .foot{color:var(--muted);font-size:11px;line-height:1.5}
+.legend.min > :not(.lg-t){display:none}
+.lg-t{float:right;padding:0 8px;font-size:11px;margin-left:8px}
+.zoomctl{position:absolute;right:12px;bottom:12px;display:flex;align-items:center;gap:2px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:4px;box-shadow:0 2px 10px rgba(0,0,0,.08)}
+.zoomctl button{border:0;background:transparent;border-radius:7px;padding:5px 9px;font-size:15px;line-height:1}
+.zoomctl button:hover{background:var(--chip)}
+.zoomctl .pc{font-size:12px;min-width:46px;text-align:center;color:var(--muted);font-variant-numeric:tabular-nums}
+.tip{position:absolute;pointer-events:none;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px 9px;font-size:12.5px;box-shadow:0 4px 14px rgba(0,0,0,.12);display:none;max-width:260px;line-height:1.5;z-index:3}
+.hint{position:absolute;top:10px;left:12px;font-size:12px;color:var(--muted);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:4px 10px;transition:opacity .4s}
+@media (max-width:760px){
+  main{flex-direction:column}
+  aside{width:100%;max-width:none;border-left:0;border-top:1px solid var(--line);max-height:42vh;padding:12px 16px 20px}
+  .legend{display:none}
+  header h1{font-size:15px}
+  .btns{margin-left:0}
+  .hint{font-size:11px;right:12px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>インドネシアの市場パイ</h1>
+    <div class="sub">全事業者 → ネットで売る店 → 狙いの層 → ソフトを使う店 → 会社ごとの客の数（POS まわりの SaaS 5分野だけ）。<span id="updated"></span></div>
+  </div>
+  <div class="btns">
+    <button id="b-all">全体を見る</button>
+    <button id="b-root">真ん中のパイ</button>
+    <button id="b-target" class="accent">Satu Inbox の狙い</button>
+  </div>
+</header>
+<main>
+  <div id="stage">
+    <svg id="svg" role="img" aria-label="インドネシアの市場をパイで分けた図"></svg>
+    <div class="hint" id="hint">ドラッグ・2本指スクロールで移動　ピンチ・ホイールで拡大縮小　押すと右に中身　ダブルクリックでそのパイへ</div>
+    <div class="legend" id="legend"><button class="lg-t" id="lg-t">たたむ</button>
+      <span><i class="sw" style="background:var(--paid)"></i>有料のソフトを使う</span>
+      <span><i class="sw" style="background:var(--free)"></i>無料の道具だけ</span>
+      <span><i class="sw" style="background:var(--none);border:1px solid var(--none-stroke)"></i>使っていない（白地）</span>
+      <span><svg width="14" height="14"><rect width="14" height="14" fill="var(--other)"/><rect width="14" height="14" fill="url(#hatch)"/></svg>斜線＝仮の数字</span>
+      <span><i class="sw" style="border:2px dashed var(--accent)"></i>Satu Inbox の狙い</span>
+      <div class="foot">パイの大きさは数の桁（対数）で決めています。細すぎる切れは見やすく少し太くしています。各社の客の数は多くが自称です。</div>
+    </div>
+    <div class="zoomctl">
+      <button id="z-out" aria-label="縮小">−</button><span class="pc" id="z-pc">100%</span><button id="z-in" aria-label="拡大">＋</button><button id="z-fit" aria-label="全体" title="全体（キー 0）">⤢</button>
+    </div>
+    <div class="tip" id="tip"></div>
+  </div>
+  <aside id="panel"></aside>
+</main>
+<script id="data" type="application/json">{"updated": "2026-11-23", "nodes": [{"id": "root", "title_ja": "インドネシアの全事業者", "total": 56730269, "total_display_ja": "約5,673万", "year": "2025-08", "basis": "確か", "note_ja": "1人で商売する人も1事業者として数えた国の推計で、農業も入っています。記事の見出しは5,637万ですが、4つを足すと5,673万になり、記事の割合（零細96.63%など）もこちらに合うので5,673万にしました。", "source": "https://databoks.katadata.co.id/ekonomi-makro/statistik/6acf639d12f03/jumlah-usaha-mikro-kecil-menengah-dan-besar-di-indonesia-pada-2025", "parent_node": "none", "parent_slice": null, "edge_label_ja": "", "slices": [{"id": "root_micro", "label_ja": "零細", "value": 54817720, "display_ja": "5,481.8万", "basis": "確か", "kind": "区分", "note_ja": "年商 Rp20億（約1,740万円）以下で、全体の96.63%です。ほとんどが1人〜数人の店です。", "source": "https://databoks.katadata.co.id/ekonomi-makro/statistik/6acf639d12f03/jumlah-usaha-mikro-kecil-menengah-dan-besar-di-indonesia-pada-2025"}, {"id": "root_small", "label_ja": "小", "value": 1053171, "display_ja": "105.3万", "basis": "確か", "kind": "区分", "note_ja": "年商 Rp20億〜150億（約1,740万〜1.3億円）で、全体の1.86%です。政府の名簿（農業以外）では小は7.4万しかなく、資料で約14倍違います。", "source": "https://databoks.katadata.co.id/ekonomi-makro/statistik/6acf639d12f03/jumlah-usaha-mikro-kecil-menengah-dan-besar-di-indonesia-pada-2025"}, {"id": "root_medium", "label_ja": "中", "value": 809344, "display_ja": "80.9万", "basis": "確か", "kind": "区分", "note_ja": "年商 Rp150億〜500億（約1.3億〜4.4億円）で、全体の1.43%です。政府の名簿（農業以外）では中は1.5万しかなく、資料で約53倍違います。", "source": "https://databoks.katadata.co.id/ekonomi-makro/statistik/6acf639d12f03/jumlah-usaha-mikro-kecil-menengah-dan-besar-di-indonesia-pada-2025"}, {"id": "root_large", "label_ja": "大", "value": 50034, "display_ja": "5.0万", "basis": "確か", "kind": "区分", "note_ja": "年商 Rp500億（約4.4億円）を超える会社です。事業者番号（NIB）での大企業5.2万、労働保険の大企業5.0万とほぼ同じです。", "source": "https://databoks.katadata.co.id/ekonomi-makro/statistik/6acf639d12f03/jumlah-usaha-mikro-kecil-menengah-dan-besar-di-indonesia-pada-2025"}]}, {"id": "cut_online", "title_ja": "農業以外の事業者", "total": 30209069, "total_display_ja": "3,021万", "year": "2025-12（ネットは2024）", "basis": "確か", "note_ja": "農業以外の小さな事業者（零細・小・中）の国の名簿で、2025年末の暫定値です。大企業は入っていません。", "source": "https://databoks.katadata.co.id/ekonomi-makro/statistik/6aac8d44ec7e0/hampir-seluruh-umkm-indonesia-masuk-kategori-usaha-mikro-pada-2025", "parent_node": "root", "parent_slice": null, "edge_label_ja": "売り方で分けると", "slices": [{"id": "s_online", "label_ja": "ネットで売る", "value": 4400000, "display_ja": "440万", "basis": "確か", "kind": "区分", "note_ja": "BPS のネット販売の調査（2024年）の数で、前の年より15.3%増えました。名簿とは別の調査で、大企業も少し入るので、足しても正確には合いません。", "source": "https://data.goodstats.id/statistic/jumlah-usaha-e-commerce-indonesia-tembus-4-juta-pada-2024-SJrOt"}, {"id": "s_offline", "label_ja": "ネットで売らない", "value": 25809069, "display_ja": "約2,581万", "basis": "推計", "kind": "区分", "note_ja": "3,021万から440万を引いた数です。BPS の調査では対象の42.02%がネットで売りますが、その対象は約1,050万（計算）しかなく、名簿と数え方が違うので目安です。", "source": "https://data.goodstats.id/statistic/jumlah-usaha-e-commerce-indonesia-tembus-4-juta-pada-2024-SJrOt"}]}, {"id": "online", "title_ja": "ネットで売る事業者", "total": 4400000, "total_display_ja": "440万", "year": "2024", "basis": "確か", "note_ja": "BPS の数で、299万（2022）→382万（2023）→440万（2024）と増えています。規模の割合は北スマトラ州の BPS 資料から取りました。同じ資料の売り方の割合（94.76%など）は全国の値だと確かめられたので、規模も全国の値の可能性が高いですが、※要確認です。", "source": "https://data.goodstats.id/statistic/jumlah-usaha-e-commerce-indonesia-tembus-4-juta-pada-2024-SJrOt", "parent_node": "cut_online", "parent_slice": "s_online", "edge_label_ja": "ネットで売る店を規模で", "slices": [{"id": "online_micro", "label_ja": "零細", "value": 4249960, "display_ja": "約425万", "basis": "推計", "kind": "区分", "note_ja": "440万×96.59%の計算です。資料の値は96.58%ですが、合計を440万に合わせるため、零細でない3.41%の残りを使いました。年商 Rp20億（約1,740万円）以下の店です。", "source": "https://www.unsiap.or.jp/sites/default/files/doc/2026-04/09_E-Commerce-the%20Economy%20of%20North%20Sumatra.pdf"}, {"id": "online_small", "label_ja": "小", "value": 119240, "display_ja": "約11.9万", "basis": "推計", "kind": "区分", "note_ja": "440万×2.71%の計算です。全国の値か※要確認です。", "source": "https://www.unsiap.or.jp/sites/default/files/doc/2026-04/09_E-Commerce-the%20Economy%20of%20North%20Sumatra.pdf"}, {"id": "online_medium", "label_ja": "中", "value": 21560, "display_ja": "約2.2万", "basis": "推計", "kind": "区分", "note_ja": "440万×0.49%の計算です。全国の値か※要確認です。", "source": "https://www.unsiap.or.jp/sites/default/files/doc/2026-04/09_E-Commerce-the%20Economy%20of%20North%20Sumatra.pdf"}, {"id": "online_large", "label_ja": "大", "value": 9240, "display_ja": "約0.9万", "basis": "推計", "kind": "区分", "note_ja": "440万×0.21%の計算です。全国の値か※要確認です。", "source": "https://www.unsiap.or.jp/sites/default/files/doc/2026-04/09_E-Commerce-the%20Economy%20of%20North%20Sumatra.pdf"}]}, {"id": "target", "title_ja": "狙い：払える規模の店", "total": 328969, "total_display_ja": "32.9万", "year": "2024", "basis": "推計", "note_ja": "チャットで売る417万店のうち、担当を置ける従業員6人以上（6〜20人6.7%＋21人以上1.19%＝7.89%）の店。7.89%の出典は北スマトラについての資料なので、全国でも同じかは要確認。", "source": "https://www.unsiap.or.jp/sites/default/files/doc/2026-04/09_E-Commerce-the%20Economy%20of%20North%20Sumatra.pdf", "parent_node": "chat", "parent_slice": "chat_6plus", "edge_label_ja": "従業員6人以上に絞ると", "slices": [{"id": "t_inbox_yes", "label_ja": "受信箱を使う", "value": 32018, "display_ja": "約3.2万", "basis": "仮", "kind": "有料", "note_ja": "有料の受信箱を使う約4.6万のうち、7割をこの規模の店とした（仮）。銀行や学校などネットで売らない客も混ざるので、本当の店の数はこれより少ない見込み。", "source": "/Users/sohayashi/llmohack/id/pos-research/stage4_whitespace.json"}, {"id": "t_inbox_no", "label_ja": "まだ使わない", "value": 296951, "display_ja": "約29.7万", "basis": "仮", "kind": "使っていない", "note_ja": "残りの店（約9割）。無料の WhatsApp Business アプリだけで回している店もここに入る。Satu Inbox の一番の狙い。", "source": "/Users/sohayashi/llmohack/id/pos-research/stage4_whitespace.json"}]}, {"id": "chat", "title_ja": "チャットで売る店", "total": 4169440, "total_display_ja": "約417万", "year": "2024", "basis": "推計", "note_ja": "440万×94.76%（WhatsApp などのチャットで売る割合、2024年の全国の値）の計算です。SNS・モールと重なる複数回答なので、3つを足すと440万を超えます（2023年は95.33%）。", "source": "https://databoks.katadata.co.id/en/technology-telecommunications/statistics/692fe011736e4/instant-messaging-main-channel-for-e-commerce-businesses-in-indonesia", "parent_node": "online", "parent_slice": null, "edge_label_ja": "チャットで売るのは", "slices": [{"id": "chat_6plus", "label_ja": "6人以上の店", "value": 328969, "display_ja": "約32.9万", "basis": "推計", "kind": "区分", "note_ja": "417万×7.89%（働く人6人以上）の計算で、狙いの規模です。ネットで売る店全体の割合をそのまま当てました。チャットで売る店はネットで売る店のほぼ全部なので、ずれは小さいとみました。7.89%は全国の値か※要確認です。", "source": "https://www.unsiap.or.jp/sites/default/files/doc/2026-04/09_E-Commerce-the%20Economy%20of%20North%20Sumatra.pdf"}, {"id": "chat_under6", "label_ja": "5人以下の店", "value": 3840471, "display_ja": "約384万", "basis": "推計", "kind": "区分", "note_ja": "417万から6人以上の店を引いた数です。", "source": "https://www.unsiap.or.jp/sites/default/files/doc/2026-04/09_E-Commerce-the%20Economy%20of%20North%20Sumatra.pdf"}]}, {"id": "sns", "title_ja": "SNS で売る店", "total": 1305040, "total_display_ja": "約130.5万", "year": "2024", "basis": "推計", "note_ja": "440万×29.66%（Instagram・TikTok などの SNS で売る割合、2024年の全国の値）の計算です。チャット・モールと重なる複数回答です（2023年は33.29%で、少し減りました）。", "source": "https://databoks.katadata.co.id/en/technology-telecommunications/statistics/692fe011736e4/instant-messaging-main-channel-for-e-commerce-businesses-in-indonesia", "parent_node": "online", "parent_slice": null, "edge_label_ja": "SNS で売るのは", "slices": [{"id": "sns_6plus", "label_ja": "6人以上の店", "value": 102968, "display_ja": "約10.3万", "basis": "仮", "kind": "区分", "note_ja": "130.5万×7.89%で、ネットで売る店全体の「6人以上」の割合をそのまま当てた仮の数です。SNS で売る店だけの割合は分かりません（※要確認）。", "source": "https://www.unsiap.or.jp/sites/default/files/doc/2026-04/09_E-Commerce-the%20Economy%20of%20North%20Sumatra.pdf"}, {"id": "sns_under6", "label_ja": "5人以下の店", "value": 1202072, "display_ja": "約120.2万", "basis": "仮", "kind": "区分", "note_ja": "130.5万から6人以上の店（仮）を引いた数です。", "source": "https://www.unsiap.or.jp/sites/default/files/doc/2026-04/09_E-Commerce-the%20Economy%20of%20North%20Sumatra.pdf"}]}, {"id": "mall", "title_ja": "モールで売る店", "total": 758120, "total_display_ja": "約75.8万", "year": "2024", "basis": "推計", "note_ja": "440万×17.23%（Shopee・Tokopedia などのモールで売る割合、2024年の全国の値）の計算です。チャット・SNS と重なる複数回答です（2023年は17.80%）。", "source": "https://databoks.katadata.co.id/en/technology-telecommunications/statistics/692fe011736e4/instant-messaging-main-channel-for-e-commerce-businesses-in-indonesia", "parent_node": "online", "parent_slice": null, "edge_label_ja": "モールで売るのは", "slices": [{"id": "mall_6plus", "label_ja": "6人以上の店", "value": 59816, "display_ja": "約6.0万", "basis": "仮", "kind": "区分", "note_ja": "75.8万×7.89%で、ネットで売る店全体の「6人以上」の割合をそのまま当てた仮の数です。モールで売る店では実際はもっと多い可能性があります（※要確認）。", "source": "https://www.unsiap.or.jp/sites/default/files/doc/2026-04/09_E-Commerce-the%20Economy%20of%20North%20Sumatra.pdf"}, {"id": "mall_under6", "label_ja": "5人以下の店", "value": 698304, "display_ja": "約69.8万", "basis": "仮", "kind": "区分", "note_ja": "75.8万から6人以上の店（仮）を引いた数です。", "source": "https://www.unsiap.or.jp/sites/default/files/doc/2026-04/09_E-Commerce-the%20Economy%20of%20North%20Sumatra.pdf"}]}, {"id": "inbox_usage", "title_ja": "受信箱ツールの使い方", "total": 4169440, "total_display_ja": "417万", "year": "2024（店の数）／2023〜2026（各社の数）", "basis": "推計", "note_ja": "チャットで売る417万店（440万×94.76%、BPS 2024の全国の値）を、受信箱ツールの使い方で3つに分けた。有料は各社の数の足し算、無料と道具なしは仮の割合。", "source": "https://databoks.katadata.co.id/en/technology-telecommunications/statistics/692fe011736e4/instant-messaging-main-channel-for-e-commerce-businesses-in-indonesia", "parent_node": "chat", "parent_slice": null, "edge_label_ja": "受信箱の使い方で分けると", "slices": [{"id": "iu_paid", "label_ja": "有料の受信箱", "value": 45740, "display_ja": "約4.6万", "basis": "仮", "kind": "有料", "note_ja": "下の会社ごとの数を足したもの（417万の約1.1%）。銀行・病院・学校などネットで売らない客も入っている（割合は不明）。", "source": "/Users/sohayashi/llmohack/id/pos-research/stage4_whitespace.json"}, {"id": "iu_free", "label_ja": "無料の道具だけ", "value": 2501664, "display_ja": "約250万", "basis": "仮", "kind": "無料", "note_ja": "国の調べが無いので、6割の店が無料の WhatsApp Business アプリなどを使うとした（仮）。BCG と Meta の調べ（2024）では、中小の83%が客とメッセージでやり取りしている。", "source": "https://ukmindonesia.id/baca-deskripsi-posts/perpesanan-bisnis-bikin-penjualan-naik-tiga-kali-lipat-riset-bcg-dan-meta-ungkap-fakta-menarik-ini"}, {"id": "iu_none", "label_ja": "個人のWAだけ", "value": 1622036, "display_ja": "約162万", "basis": "仮", "kind": "使っていない", "note_ja": "残りの店。ふつうの WhatsApp を1台のスマホで使い、道具なしで返信している（仮）。", "source": "/Users/sohayashi/llmohack/id/pos-research/stage4_whitespace.json"}], "jp_note_ja": "日本では LINE 公式アカウントを動かす145万のうち、受信箱・拡張ツールを有料で使うのは約8.1万（5.6%）。無料を含めると最大17.8%で、インドネシアの約1.1%の5倍以上（stage4_whitespace.json）。"}, {"id": "inbox_players", "title_ja": "有料の受信箱の会社", "total": 45740, "total_display_ja": "約4.6万", "year": "2023〜2026（各社の発表）", "basis": "仮", "note_ja": "有料の受信箱を使う会社を、ツールの会社ごとに分けた。約6割は会社の自称の数、約4割は仮に決めた数（海外の会社は世界の客の1割をインドネシア分とした）。", "source": "/Users/sohayashi/llmohack/id/pos-research/stage4_whitespace.json", "parent_node": "inbox_usage", "parent_slice": "iu_paid", "edge_label_ja": "有料はどの会社か", "slices": [{"id": "ip_wablas", "label_ja": "Wablas", "value": 20000, "display_ja": "2万", "basis": "確か", "kind": "有料", "note_ja": "『2万社以上が利用』（自称・時点なし。今の数か累計かも不明）。本業は通知や一斉送信の送り口で、受信箱を使わない会社も入るので多めの数。", "source": "https://wablas.com/"}, {"id": "ip_qontak", "label_ja": "Qontak（Mekari）", "value": 3500, "display_ja": "3,500", "basis": "確か", "kind": "有料", "note_ja": "インドネシアで3,500社以上（自称、2026-07の報道）。Mekari 全体の5.5万社は会計や人事も入るので使っていない。", "source": "https://goodstats.id/article/mekari-qontak-platform-ai-customer-engagement-untuk-bisnis-di-indonesia-nCZDg"}, {"id": "ip_haloai", "label_ja": "HaloAI", "value": 3000, "display_ja": "3,000", "basis": "仮", "kind": "有料", "note_ja": "『数千の会社が信頼』とだけ書いてある→3,000とした（仮）。", "source": "https://haloai.co.id/"}, {"id": "ip_cekat", "label_ja": "Cekat AI", "value": 2700, "display_ja": "2,700", "basis": "仮", "kind": "有料", "note_ja": "3,000社以上（自称。『アジアで』という書き方もある）。インドネシアの会社なので、9割の2,700とした（仮）。", "source": "https://www.cekat.ai/"}, {"id": "ip_wati", "label_ja": "Wati（海外）", "value": 1600, "display_ja": "1,600", "basis": "仮", "kind": "有料", "note_ja": "世界で1.6万社（自称）。インドネシア分は不明なので、1割の1,600とした（仮）。", "source": "https://www.wati.io/about-us/"}, {"id": "ip_desty", "label_ja": "Desty Chat", "value": 1500, "display_ja": "1,500", "basis": "仮", "kind": "有料", "note_ja": "Desty は『数千の店』とだけ発表→3,000とし、チャットを有料で使う店をその半分の1,500とした（仮）。2025年に Mekari が買収。", "source": "https://mekari.com/en/news/mekari-acquires-desty/"}, {"id": "ip_jubelio", "label_ja": "Jubelio Chat", "value": 1500, "display_ja": "1,500", "basis": "仮", "kind": "有料", "note_ja": "Jubelio 全体で『数千の会社』→3,000とし、チャットも使う店をその半分の1,500とした（仮）。", "source": "https://www.jubelio.com/"}, {"id": "ip_watzap", "label_ja": "Watzap", "value": 1200, "display_ja": "1,200", "basis": "確か", "kind": "有料", "note_ja": "『1,200以上の会社』（自称。2026年1〜6月の利用者の平均の説明に出てくる数）。1つの番号を何人もの担当で使える受信箱がある。", "source": "https://watzap.id/"}, {"id": "ip_maxchat", "label_ja": "Maxchat", "value": 1000, "display_ja": "1,000", "basis": "確か", "kind": "有料", "note_ja": "『1,000以上の業界・機関が信頼』（自称・時点なし）。Meta の公式パートナー。", "source": "https://maxchat.id/"}, {"id": "ip_respondio", "label_ja": "respond.io（海外）", "value": 1000, "display_ja": "1,000", "basis": "仮", "kind": "有料", "note_ja": "世界で1万社（自称）。インドネシア分は不明なので、1割の1,000とした（仮）。", "source": "https://respond.io/id/careers"}, {"id": "ip_qiscus", "label_ja": "Qiscus", "value": 700, "display_ja": "700", "basis": "仮", "kind": "有料", "note_ja": "19か国で1,000社以上（自称）。インドネシアの会社なので、7割の700とした（仮）。", "source": "https://qiscus.com/id/about-us"}, {"id": "ip_sleekflow", "label_ja": "SleekFlow（海外）", "value": 700, "display_ja": "700", "basis": "仮", "kind": "有料", "note_ja": "世界で7,000社（自称。別の発表では2,000社）。インドネシア分は1割の700とした（仮）。", "source": "https://sleekflow.io/en-us/about"}, {"id": "ip_barantum", "label_ja": "Barantum", "value": 600, "display_ja": "600", "basis": "仮", "kind": "有料", "note_ja": "『数千人の利用者』（人の数）→3,000人とし、1社5人として600社とした（仮）。", "source": "https://swa.co.id/swa/trends/target-barantum-crm-untuk-meningkatkan-kinerja-bisnis-pelanggan"}, {"id": "ip_bitbybit", "label_ja": "bitbybit", "value": 500, "display_ja": "500", "basis": "仮", "kind": "有料", "note_ja": "50か国以上で1,000ブランド（自称）。ジャカルタの会社なので、半分の500とした（仮）。", "source": "https://www.bitbybit.studio/llms.txt"}, {"id": "ip_majoo", "label_ja": "majoo の WA", "value": 450, "display_ja": "450", "basis": "仮", "kind": "有料", "note_ja": "レジの追加機能（月 Rp49.9万）。majoo の客4.5万超（自称）の1%が付けているとして450とした（仮）。", "source": "https://majoo.id/harga"}, {"id": "ip_kata", "label_ja": "Kata.ai", "value": 300, "display_ja": "300", "basis": "確か", "kind": "有料", "note_ja": "大企業300社以上（自称・時点なし）。チャットボットが中心で、客は銀行や通信会社など。", "source": "https://kata.ai/"}, {"id": "ip_halosis", "label_ja": "Halosis", "value": 300, "display_ja": "300", "basis": "仮", "kind": "有料", "note_ja": "客の数の公表なし。月 Rp500万〜の大きい会社向けなので、300とした（仮）。", "source": "https://www.halosis.co.id/en"}, {"id": "ip_telkom", "label_ja": "Telkom OCA", "value": 190, "display_ja": "190", "basis": "確か", "kind": "有料", "note_ja": "認証済みの WA アカウント190（2023-09。古い数字）。大きい会社向け。", "source": "https://www.telkom.co.id/sites/news-resources/en_US/news/telkom-omni-communication-assistant-continues-to-support-digitalization-in-the-enterprise-sector-2093"}, {"id": "ip_other", "label_ja": "ほか・不明", "value": 5000, "display_ja": "5,000", "basis": "仮", "kind": "有料", "note_ja": "数を出していない会社（Sociomile・Damcorp・Zaapi・Woowa・Ginee のチャット・Fonnte など）の分。Woowa の拡張機能の利用者1万人などから、まとめて5,000とした（仮）。", "source": "/Users/sohayashi/llmohack/id/pos-research/stage4_whitespace.json"}]}, {"id": "inbox_free", "title_ja": "無料の道具の内訳", "total": 2501664, "total_display_ja": "約250万", "year": "2026", "basis": "仮", "note_ja": "無料の道具だけで回す店を、道具ごとに分けた。ほとんどが Meta の WhatsApp Business アプリ。", "source": "https://whatsappbusiness.com/blog/introducing-meta-business-agent-ai/", "parent_node": "inbox_usage", "parent_slice": "iu_free", "edge_label_ja": "無料は何を使うか", "slices": [{"id": "if_wab", "label_ja": "WA Business アプリ", "value": 2498164, "display_ja": "約250万", "basis": "仮", "kind": "無料", "note_ja": "Meta の無料アプリ（FB・IG もまとめて見られる Meta Business Suite を含む）。2026年から AI の自動返信も無料。ほかの2つを引いた残りを全部ここに入れた（仮）。", "source": "https://whatsappbusiness.com/blog/introducing-meta-business-agent-ai/"}, {"id": "if_duoke", "label_ja": "Duoke 無料版", "value": 2000, "display_ja": "2,000", "basis": "仮", "kind": "無料", "note_ja": "世界で2万の売り手（自称。5店まで無料）。インドネシア分を1割の2,000とし、多くは無料版とみた（仮）。BigSeller のチャットもこれを使う。", "source": "https://www.duoke.com/"}, {"id": "if_desty", "label_ja": "Desty 無料版", "value": 1500, "display_ja": "1,500", "basis": "仮", "kind": "無料", "note_ja": "Desty の『数千の店』を3,000とし、有料の1,500を除いた残りを無料プランとした（仮）。", "source": "https://desty.mekari.com/chat"}]}, {"id": "orderlink_usage", "title_ja": "注文リンクの使い方", "total": 1305040, "total_display_ja": "約130万", "year": "2024（店の数）／2026-11（道具の数）", "basis": "推計", "note_ja": "SNS で売る店 約130万（BPS 2024年の『ネットで売る440万』×29.66%）を、注文を受ける道具で3つに分けた。分け方は各社の自称に仮の割合をかけて足したもの。店を数えた調査は無い。", "source": "https://data.goodstats.id/statistic/jumlah-usaha-e-commerce-indonesia-tembus-4-juta-pada-2024-SJrOt", "parent_node": "sns", "parent_slice": null, "edge_label_ja": "注文の受け方で分けると", "slices": [{"id": "ol_paid", "label_ja": "有料の注文リンク", "value": 50000, "display_ja": "約5万（約4%）", "basis": "仮", "kind": "有料", "note_ja": "月額を払って注文フォームやネット店の道具を使う店。数の出た会社の仮の数（計約4.3万）に、数の出ていない会社の分を足して約5万とした。数が確かなのは Shopify の約4,700だけ。", "source": "https://storeleads.app/reports/shopify/ID/top-stores"}, {"id": "ol_free", "label_ja": "無料の道具だけ", "value": 420450, "display_ja": "約42万（約32%）", "basis": "仮", "kind": "無料", "note_ja": "WhatsApp カタログ・Scalev や Lynk.id の無料プランなどだけを使う店。ここで言う無料は『月額0円』のことで、売れた分の手数料（Lynk.id 5% など）を取る道具も入る。1つの店が2つ使う重なりは引いていないので多めに出ている。", "source": "https://www.microsave.net/wp-content/uploads/2025/09/Social-Commerce-Initiatives_Report_Indonesia.pdf"}, {"id": "ol_none", "label_ja": "使っていない", "value": 834590, "display_ja": "約83万（約64%）", "basis": "仮", "kind": "使っていない", "note_ja": "全体から上の2つを引いた残り。チャットで写真と値段を送り、注文を手で受けている店と考えた。Shopee などの商品ページに客を送る店もここに入る（モールは別のパイ）。", "source": "https://data.goodstats.id/statistic/jumlah-usaha-e-commerce-indonesia-tembus-4-juta-pada-2024-SJrOt"}], "jp_note_ja": "日本で有料のネットショップを使う店は約15.4万（BASE・Shopify・カラーミー・ショップサーブ、2025〜2026年）で、全企業367万の約4.2%、小売の事業所88万の約17.5%。インドネシアの仮の5万は全 UMKM 3,020万の約0.2%。"}, {"id": "orderlink_players", "title_ja": "有料で使う店の会社別", "total": 50000, "total_display_ja": "約5万", "year": "2026-11（OrderOnline は2022年の数）", "basis": "仮", "note_ja": "有料で使う店 約5万（仮）を会社ごとに分けた。確かな数は Shopify だけで、ほかは会社の自称の数に仮の割合をかけた。1つの店が2社を使う重なりは引いていない。", "source": "https://orderonline.id/harga", "parent_node": "orderlink_usage", "parent_slice": "ol_paid", "edge_label_ja": "有料の店を会社ごとに", "slices": [{"id": "p_orderonline", "label_ja": "OrderOnline", "value": 20000, "display_ja": "2万", "basis": "仮", "kind": "有料", "note_ja": "無料プランもお試しも無い有料だけの会社（月 Rp14.9万〜49.9万）。『2万超の UMKM を支援』は2022年の自称で、新しい数は見つからなかった。その後に増えた店とやめた店が打ち消し合うとみて2万のままにしたが、この図でいちばん当てにならない数。", "source": "https://www.industry.co.id/read/111887/bisnis-20000-sektor-umkm-sudah-terbantu-hadirnya-orderonlineid"}, {"id": "p_scalev", "label_ja": "Scalev（有料）", "value": 10000, "display_ja": "1万", "basis": "仮", "kind": "有料", "note_ja": "『稼働中の売り手10万+』は自称で、ずっと無料のプランの人も入る。有料の割合は出ていないので、1割の1万とした。", "source": "https://scalev.id/"}, {"id": "p_shopify", "label_ja": "Shopify", "value": 4653, "display_ja": "4,653", "basis": "推計", "kind": "有料", "note_ja": "StoreLeads が数えたインドネシアの稼働中の店（2026-11-20）。月額制なので有料。SNS 以外で売る店や、TIKI と組んで最初だけ無料で始めた店（2025-10〜）も少し入っているかもしれない。", "source": "https://storeleads.app/reports/shopify/ID/top-stores"}, {"id": "p_mayar", "label_ja": "Mayar（有料）", "value": 4500, "display_ja": "4,500", "basis": "仮", "kind": "有料", "note_ja": "『14万9,969の事業者が参加』は自称の累計で、無料の Starter も入る。有料の Business（月 Rp34.9万）の割合は不明なので3%の4,500とした。講座や電子書籍の売り手が中心。", "source": "https://mayar.id/pricing"}, {"id": "p_everpro", "label_ja": "Everpro", "value": 3000, "display_ja": "3,000", "basis": "仮", "kind": "有料", "note_ja": "『3万++ の売り手』は自称で、配送だけ使う客も入る。LP 作成（Web Builder）は月額制で無料で試せるが、払う割合は出ていないので1割の3,000とした。", "source": "https://everpro.id/web-builder/"}, {"id": "p_takeapp", "label_ja": "Take App（有料）", "value": 300, "display_ja": "300", "basis": "仮", "kind": "有料", "note_ja": "インドネシアで『3,000+ の店』（自称）。無料（月50件まで）が多いとみて、有料（月 Rp29.9万〜）は1割の300とした。世界の30万は数えていない。", "source": "https://www.take.app/countries/indonesia"}, {"id": "p_berdu", "label_ja": "Berdu", "value": 300, "display_ja": "300", "basis": "仮", "kind": "有料", "note_ja": "公式は『数百のサイト』とだけ書いているので300とした。無料プランは無く14日のお試しだけなので、全部有料とした。", "source": "https://berdu.id"}, {"id": "p_other", "label_ja": "ほか・不明", "value": 7247, "display_ja": "約7,200", "basis": "仮", "kind": "その他", "note_ja": "Wix（StoreLeads で1,004店、2026-11-20）、majoo・iSeller のネット店、Lynk.id Pro（月 Rp9.9万）など。Wix 以外は数が出ていないので、合計が約5万になるように置いた仮の数。", "source": "https://storeleads.app/reports/wix/ID/top-stores"}]}, {"id": "orderlink_free", "title_ja": "無料で使う店の道具別", "total": 420450, "total_display_ja": "約42万", "year": "2025〜2026-11", "basis": "仮", "note_ja": "無料の道具だけを使う店 約42万（仮）を道具ごとに分けた。一番大きい WhatsApp カタログも調査の割合からの仮の数で、重なりは引いていないので多めに出ている。", "source": "https://www.microsave.net/wp-content/uploads/2025/09/Social-Commerce-Initiatives_Report_Indonesia.pdf", "parent_node": "orderlink_usage", "parent_slice": "ol_free", "edge_label_ja": "無料の店を道具ごとに", "slices": [{"id": "f_wacatalog", "label_ja": "WhatsAppカタログ", "value": 195756, "display_ja": "約19.6万", "basis": "仮", "kind": "無料", "note_ja": "SNS で売る人の30%が WhatsApp Business を使う（MSC の2025年の調査、n=428）。『カタログを知らなかった』という声もあるので、カタログまで使うのはその半分とみて、130万×30%×50%とした。", "source": "https://www.microsave.net/wp-content/uploads/2025/09/Social-Commerce-Initiatives_Report_Indonesia.pdf"}, {"id": "f_scalev", "label_ja": "Scalev（無料）", "value": 90000, "display_ja": "9万", "basis": "仮", "kind": "無料", "note_ja": "『稼働中の売り手10万+』（自称）から、有料と仮においた1万を引いた。", "source": "https://scalev.id/"}, {"id": "f_mayar", "label_ja": "Mayar（無料）", "value": 40000, "display_ja": "4万", "basis": "仮", "kind": "無料", "note_ja": "累計15万（自称）から有料の仮4,500を引くと約14.5万。休眠が多いとみて、今も使う店を4万とした。無料でも売れた分の1.5〜4%を手数料で払う。", "source": "https://mayar.id/pricing"}, {"id": "f_lynk", "label_ja": "Lynk.id", "value": 39151, "display_ja": "約3.9万", "basis": "仮", "kind": "無料", "note_ja": "『500万超の creator』（自称、2026-09）は個人のリンクページがほとんど。物を売る店は SNS で売る店の3%（500万の約0.8%）とみて約3.9万とした。無料プランは売れた分の5%が手数料。", "source": "https://momsmoney.kontan.co.id/news/platfrom-lynkid-bidik-babak-baru-ekonomi-kreator"}, {"id": "f_woo", "label_ja": "WooCommerce", "value": 19843, "display_ja": "19,843", "basis": "推計", "kind": "無料", "note_ja": "StoreLeads が数えたインドネシアの稼働中の店（2026-11-20）。ソフトは無料（サーバー代は別）。SNS 以外で売る店も入っている。", "source": "https://storeleads.app/reports/woocommerce/ID/top-stores"}, {"id": "f_desty", "label_ja": "Desty Store", "value": 3000, "display_ja": "3,000", "basis": "仮", "kind": "無料", "note_ja": "Mekari の買収発表（2025-08）で『数千の店』とだけ書かれているので、3,000とした。Mekari 全体の3.5万社は入れていない。店ページは無料。", "source": "https://mekari.com/en/news/mekari-acquires-desty/"}, {"id": "f_takeapp", "label_ja": "Take App（無料）", "value": 2700, "display_ja": "2,700", "basis": "仮", "kind": "無料", "note_ja": "インドネシアで『3,000+』（自称）から、有料と仮においた300を引いた。", "source": "https://www.take.app/countries/indonesia"}, {"id": "f_other", "label_ja": "ほか・不明", "value": 30000, "display_ja": "3万", "basis": "仮", "kind": "その他", "note_ja": "GoStore・Livin' Merchant のネット店・Olshopin・KiriminAja の注文リンク・Instagram や Facebook のショップ機能・Google フォームなど。どれも数の発表が無いので、合わせて3万と仮に置いた。", "source": "https://bankmandiri.co.id/livin-merchant"}]}, {"id": "oms_usage", "title_ja": "モールの店の道具の使い方", "total": 758120, "total_display_ja": "約76万", "year": "2024〜2026", "basis": "推計", "note_ja": "モールで売る約76万店（440万×17.23%＝75万8,120）が、在庫や注文をまとめる道具をどう使っているか。全体を数えた調査は無いので、会社ごとの数を足して作った仮の数。", "source": "https://data.goodstats.id/statistic/jumlah-usaha-e-commerce-indonesia-tembus-4-juta-pada-2024-SJrOt ; https://www.unsiap.or.jp/sites/default/files/doc/2026-04/09_E-Commerce-the%20Economy%20of%20North%20Sumatra.pdf", "parent_node": "mall", "parent_slice": null, "edge_label_ja": "道具の使い方で分けると", "slices": [{"id": "oms_paid", "label_ja": "有料で使う", "value": 24100, "display_ja": "約2.4万（3%）", "basis": "仮", "kind": "有料", "note_ja": "下の『会社ごと』を足した約2.4万（仮を含む）。モールの店のおよそ3%。1つの店が2つの道具に払っていると重なるが、引いていない。", "source": "下の oms_players の合計"}, {"id": "oms_free", "label_ja": "無料の道具だけ", "value": 203800, "display_ja": "約20.4万（27%）", "basis": "仮", "kind": "無料", "note_ja": "BigSeller・EasyBoss などの無料プランだけを使う店。会社ごとの仮の数を足した約20.4万。", "source": "下の oms_free の合計"}, {"id": "oms_none", "label_ja": "使っていない", "value": 530220, "display_ja": "約53万（70%）", "basis": "仮", "kind": "使っていない", "note_ja": "約76万から上の2つを引いた残り。Excel や手で在庫を合わせる店、モール1つだけの店、Tokopedia と TikTok Shop の共通の管理画面（無料）だけの店がここに入る。", "source": "758,120−24,100−203,800（計算）"}], "jp_note_ja": "日本はお金を払って一元管理を使う会社が約1.0万〜1.4万社（1位ネクストエンジン6,764社）で、楽天に出す約5.5万店で割ると18〜25%。インドネシアの有料は仮で約2.3万、モールの店の約3%。"}, {"id": "oms_players", "title_ja": "有料の道具を会社ごとに", "total": 24100, "total_display_ja": "約2.4万（仮）", "year": "2026（日付なしの自称を含む）", "basis": "仮", "note_ja": "お金を払って使う店を会社ごとに分けた。払っている店の数を出している会社はほぼ無く、多くは自称の数から作った仮の数。", "source": "https://www.bigseller.com/m/id/aboutUs.htm ; https://jubelio.com/harga/ ; https://mekari.com/en/news/mekari-acquires-desty/ ; https://crewdible.com/ ; https://www.sirclo.com/ ; https://ginee.com/id/pricing ; https://ginee.com/id/insights/intro-to-genie", "parent_node": "oms_usage", "parent_slice": "oms_paid", "edge_label_ja": "有料の店を会社で分けると", "slices": [{"id": "p_bigseller", "label_ja": "BigSeller", "value": 10200, "display_ja": "約1万", "basis": "仮", "kind": "有料", "note_ja": "東南アジアの『130万以上の Merchant』（自称）×インドネシアの人口の比47%×今も使う3人に1人（直近2年の登録の分）＝約20.4万。そのうち無料の上限（月3,000件・5店）を超えて払う店を5%とした。", "source": "https://www.bigseller.com/m/id/aboutUs.htm ; https://www.bigseller.com/blog/articleDetails/what-is-bigseller-is-bigseller-easy-to-use-how-does-bigseller-charge.728.htm"}, {"id": "p_jubelio", "label_ja": "Jubelio", "value": 3000, "display_ja": "3,000", "basis": "仮", "kind": "有料", "note_ja": "料金ページは『3.5万以上』、トップは『数千』（どちらも自称）。無料プランが無く1件 Rp150 を払う形なので、今払っている店は『数千』→3,000とした。", "source": "https://jubelio.com/harga/ ; https://jubelio.com/"}, {"id": "p_desty", "label_ja": "Mekari Desty", "value": 3000, "display_ja": "3,000", "basis": "仮", "kind": "有料", "note_ja": "2025-08 の買収発表で『数千の店』とだけ発表→3,000とした。モール管理に Rp0 のプランは無く（Rp0 は Desty Chat だけ）、お試しの後は1件ごとか月額で払う。", "source": "https://mekari.com/en/news/mekari-acquires-desty/ ; https://desty.mekari.com/harga"}, {"id": "p_crewdible", "label_ja": "Crewdible（倉庫）", "value": 2300, "display_ja": "2,300", "basis": "確か", "kind": "有料", "note_ja": "『2,300以上の売り手』（自称、ページは2023年。累計か今の数かは書いていない）。倉庫ごと預かる代行で、ほかの道具と両方使う店もいる。", "source": "https://crewdible.com/"}, {"id": "p_sirclo", "label_ja": "SIRCLO（大手）", "value": 1000, "display_ja": "1,000", "basis": "確か", "kind": "有料", "note_ja": "『大企業のブランド1,000』（自称、日付なし）。ソフトだけでなく運用の代行まで請け負う。", "source": "https://www.sirclo.com/"}, {"id": "p_ginee", "label_ja": "Ginee", "value": 1600, "display_ja": "約1,600", "basis": "仮", "kind": "有料", "note_ja": "今の料金ページは有料の4プラン（Pro・Business・Plus・Enterprise、最低6か月）だけで無料が無い。無料だった2021年の登録4.7万（自称）×今も使う3人に1人×払って残る1割＝約1,600とした。", "source": "https://ginee.com/id/pricing ; https://ginee.com/id/insights/intro-to-genie"}, {"id": "p_other", "label_ja": "ほか・不明", "value": 3000, "display_ja": "3,000", "basis": "仮", "kind": "その他", "note_ja": "Forstok・Sellercraft・Anchanto、EasyBoss の有料、レジ会社（iSeller・majoo など）のモール連携など。どこも数を出していないので、10社×300店＝3,000とした。", "source": "https://new.forstok.com/ ; https://www.sellercraft.co/id/ ; https://www.easyboss.com/id/"}]}, {"id": "oms_free", "title_ja": "無料の道具を会社ごとに", "total": 203800, "total_display_ja": "約20.4万（仮）", "year": "2026", "basis": "仮", "note_ja": "無料プランだけで使う店を道具ごとに分けた。登録の数（自称）から仮に出した数で、BigSeller の登録には統計に入らない個人の転売も混ざるので、多めに出ている可能性がある。", "source": "https://www.bigseller.com/m/id/aboutUs.htm ; https://www.easyboss.com/id/ ; https://www.kledo.com/harga/", "parent_node": "oms_usage", "parent_slice": "oms_free", "edge_label_ja": "無料の店を道具で分けると", "slices": [{"id": "f_bigseller", "label_ja": "BigSeller 無料", "value": 193800, "display_ja": "約19.4万", "basis": "仮", "kind": "無料", "note_ja": "今も使う約20.4万（仮）のうち、払わない95%。東南アジアで一番大きい無料の道具で、期限のない無料プラン（月3,000件・5店まで）がある。", "source": "https://www.bigseller.com/m/id/aboutUs.htm ; https://www.bigseller.com/blog/articleDetails/what-is-bigseller-is-bigseller-easy-to-use-how-does-bigseller-charge.728.htm"}, {"id": "f_other", "label_ja": "ほか・不明", "value": 10000, "display_ja": "1万", "basis": "仮", "kind": "その他", "note_ja": "EasyBoss（5,000件まで無料・店の数は無制限）や Kledo（2つのモールまで無料）など。数が出ていないので、BigSeller の約20分の1の1万とした。", "source": "https://www.easyboss.com/id/ ; https://www.kledo.com/harga/"}]}, {"id": "payment_usage", "title_ja": "ネット店の受け取り方", "total": 4400000, "total_display_ja": "440万", "year": "2024", "basis": "推計", "note_ja": "ネットで売る事業者440万を「いちばん多いお金の受け取り方」（BPS 2024年）で分けた。5つの割合を足すとちょうど100%になるので、1店につき1つの答えとして掛け算した。", "source": "BPS『Statistik E-Commerce 2024』（2025-11-28 公開）。BPS のページは403で読めないため GoodStats の引用を使った: https://data.goodstats.id/statistic/metode-pembayaran-tunai-dominasi-transaksi-e-commerce-2024-smjEM / 440万: https://data.goodstats.id/statistic/jumlah-usaha-e-commerce-indonesia-tembus-4-juta-pada-2024-SJrOt / https://www.bps.go.id/id/publication/2025/11/28/647323224ecc656c2933571b/statistik-e-commerce-2024.html", "parent_node": "online", "parent_slice": null, "edge_label_ja": "お金の受け取り方で", "slices": [{"id": "s_pay_gw", "label_ja": "決済代行を使う", "value": 286000, "display_ja": "約28.6万", "basis": "仮", "kind": "有料", "note_ja": "主に電子マネー（5.92%）かカード（0.58%）で受け取る店を「決済代行を使う店」とみなした（440万×6.50%）。GoPay・DANA・OVO の自分の口座で直接受け取る店（無料）も混じるので、多めに出ている。", "source": "BPS 2024 を GoodStats が引用: https://data.goodstats.id/statistic/metode-pembayaran-tunai-dominasi-transaksi-e-commerce-2024-smjEM"}, {"id": "s_pay_qris", "label_ja": "QRISで受ける", "value": 92400, "display_ja": "約9.2万", "basis": "推計", "kind": "無料", "note_ja": "主に QRIS で受け取る店（2.10%）。銀行や電子マネー会社の QR は無料で作れ、零細の店は Rp50万以下の支払いなら手数料0%（決済代行が出す QRIS を使う店も少し混じる）。QRIS を受け付ける店は全国で4,486万（2026年6月、中央銀行）で、ほとんどは店頭の店。", "source": "BPS 2024（GoodStats 引用）: https://data.goodstats.id/statistic/metode-pembayaran-tunai-dominasi-transaksi-e-commerce-2024-smjEM / QRIS の店の数: https://www.bi.go.id/en/publikasi/ruang-media/news-release/Pages/sp_2815926.aspx / 手数料の決まり: /Users/sohayashi/llmohack/id/pos-research/stage2_result.json（cross.items[7]）"}, {"id": "s_pay_transfer", "label_ja": "銀行振込だけ", "value": 730840, "display_ja": "約73.1万", "basis": "推計", "kind": "使っていない", "note_ja": "主に銀行振込で受け取る店（16.61%）で、振込の写真をチャットで1件ずつ確かめる手間が残る、Satu Inbox の振込写真の読み取りがいちばん役に立つ層。仮想口座（VA）で決済代行を通す店や、振込の確認を自動にする Moota（自称「1万以上の事業者」、有料プランあり）を使う店も少し混じる。", "source": "BPS 2024（GoodStats 引用）: https://data.goodstats.id/statistic/metode-pembayaran-tunai-dominasi-transaksi-e-commerce-2024-smjEM / Moota: https://moota.co/（2026-11-23 に確認）"}, {"id": "s_pay_cod", "label_ja": "現金・代引き", "value": 3290760, "display_ja": "約329.1万", "basis": "推計", "kind": "使っていない", "note_ja": "主に現金・代引きで受け取る店（74.79%）。ネットで売る店のおよそ4店に3店がこれで、決済代行は使っていない。", "source": "BPS 2024（GoodStats 引用）: https://data.goodstats.id/statistic/metode-pembayaran-tunai-dominasi-transaksi-e-commerce-2024-smjEM"}], "jp_note_ja": "日本では全企業368万のうち5.2%以上がネットの決済代行を使っている。GMO-PG の動いている店17.3万（2026年9月）にゼウスの2万を足した数で、Stripe などは数を出していないので、実際はもっと多い。ID の数で数えると24.3%。この図のインドネシアは、ネットで売る店440万の6.5%、全事業者3,021万の約0.9%。"}, {"id": "payment_players", "title_ja": "決済代行の会社別", "total": 286000, "total_display_ja": "約28.6万", "year": "2020〜2026（各社の自称の時点）", "basis": "仮", "note_ja": "各社の自称は「登録した数」が多く、そのまま足すと28.6万を大きく超えるので、無料で登録できて数の大きい DOKU・iPaymu・Mayar は2割だけ数えた（会社向けで数の小さい Faspay・OY!・Durianpay は自称のまま）。2割は、日本の GMO-PG で「動いている店」が「ID の数」の約2割なのに合わせた目安で、ID は1店で何個も持つので、ぴったりの物差しではない。", "source": "各社の公式ページと報道（各切れの source）。2割の目安: https://www.gmo-pg.com/news/pdf/20261113_gmo-pg_data.pdf（稼動店舗 173,158 ÷ 加盟店ID 875,441 ≒ 19.8%）", "parent_node": "payment_usage", "parent_slice": "s_pay_gw", "edge_label_ja": "どの会社を使う？", "slices": [{"id": "p_doku", "label_ja": "DOKU", "value": 60000, "display_ja": "約6万", "basis": "仮", "kind": "有料", "note_ja": "自称「30万以上の加盟店」（2024年10月と2026年の報道。公式トップの表示は15万+）を、登録だけの店や店頭の店も入るとみて2割の6万とした。Midtrans とは数え方が違うので、DOKU が1位という意味ではない。", "source": "https://teknologi.bisnis.com/read/20241118/266/1816925/doku-punya-300000-mitra-bisnis-oktober-2024-perluas-jangkauan-lewat-dtf / https://katadata.co.id/digital/fintech/6ab4bcbdce85d/ant-international-perkuat-investasi-doku-tunjuk-ceo-baru / https://www.dealstreetasia.com/stories/ant-doku-rebrand-496118/ / https://www.doku.com/"}, {"id": "p_ipaymu", "label_ja": "iPaymu", "value": 50300, "display_ja": "約5万", "basis": "仮", "kind": "有料", "note_ja": "自称「251,276 の加盟店」（日付の記載なし）。店頭に置く QRIS の音の箱の店も入っているかもしれないので、2割の約5万とした。", "source": "https://ipaymu.com/（2026-11-23 に確認）"}, {"id": "p_mayar", "label_ja": "Mayar", "value": 30000, "display_ja": "約3万", "basis": "仮", "kind": "有料", "note_ja": "自称「149,969 のビジネスが参加」（登録した数の累計で、月額0円のプランも入る）を2割の3万とした。電子書籍や講座などデジタル商品の売り手が多い。", "source": "https://mayar.id/（ページ更新 2026-11-10）"}, {"id": "p_midtrans", "label_ja": "Midtrans", "value": 18500, "display_ja": "約1.85万", "basis": "仮", "kind": "有料", "note_ja": "2020年10月の報道では「50万以上のうち、ネットで売る会社は8,000」（自称）。今の数は公式にも GoTo の決算にも出ていないので、ネットで売る事業者と同じ年+15%で6年分増えたとみなし、約1.85万とした。", "source": "https://keuangan.kontan.co.id/news/payment-gateway-midtrans-sudah-layani-500000-pebisnis-di-indonesia / 伸び率: /Users/sohayashi/llmohack/id/pos-research/stage4_whitespace.json（rows[6].assess.id_growth_ja）"}, {"id": "p_xendit", "label_ja": "Xendit", "value": 9300, "display_ja": "約9,300", "basis": "仮", "kind": "有料", "note_ja": "2024年2月の報道の「インドネシアで直接の加盟店4,500以上」（自称）を、同じ記事の「動いている店が年+30%」で2026年11月まで伸ばして約9,300とした。東南アジア全体の「1.52万社」は使わず、子アカウントの店は数が出ていないので「ほか・不明」に入れた。", "source": "https://gizmologi.id/news/fintech/xendit-group-tren-pembayaran-digital/（2024-02-03）"}, {"id": "p_faspay", "label_ja": "Faspay", "value": 5000, "display_ja": "5,000", "basis": "確か", "kind": "有料", "note_ja": "自称「5,000以上のビジネス」（2024年10月の報道と公式ページ）を、そのまま入れた。21の業種で使われている。", "source": "https://faspay.co.id/ / https://tirto.id/peran-payment-gateway-tak-hanya-sekadar-kemudahan-pembayaran-g4My"}, {"id": "p_oy", "label_ja": "OY!", "value": 1000, "display_ja": "1,000", "basis": "確か", "kind": "有料", "note_ja": "自称「1,000以上のビジネス」（ページの表記は©2023）。お金を払い出すだけに使う会社も入っているかもしれない。", "source": "https://www.oyindonesia.com/"}, {"id": "p_durianpay", "label_ja": "Durianpay", "value": 400, "display_ja": "400", "basis": "確か", "kind": "有料", "note_ja": "自称「400以上の加盟店」（2026年8月）。中くらい〜大きい会社向け。", "source": "https://durianpay.id/"}, {"id": "p_other", "label_ja": "ほか・不明", "value": 111500, "display_ja": "約11.2万", "basis": "仮", "kind": "その他", "note_ja": "28.6万から名前の分かる会社を引いた残りで、Duitku・NICEPAY（自称1,000以上）・Winpay・Espay・TriPay・Flip、Xendit の子アカウントの店、GoPay・DANA・OVO の店用口座で直接受け取る店（本当は無料）が入る。Lynk.id（自称500万人、2026年9月）はほとんどが個人のクリエイターで、事業者の数え方と合わないので別にしていない。", "source": "計算値（286,000 − 174,500）。Duitku・Winpay の数は※要確認: /Users/sohayashi/llmohack/id/pos-research/stage4_whitespace.json（rows[6].verify.missed_players_ja） / NICEPAY: https://nicepay.co.id/en / Lynk.id: https://momsmoney.kontan.co.id/news/platfrom-lynkid-bidik-babak-baru-ekonomi-kreator（2026-09-16）"}]}, {"id": "pos_base", "title_ja": "レジを使う業種の店", "total": 19720000, "total_display_ja": "約1,972万", "year": "2024〜2025", "basis": "推計", "note_ja": "飲食店528万（BPS 2024年）と卸・小売1,444万（政府の名簿 2025年末）を足した数。屋台や家の中の小さな店も入り、宿泊（ホテル）は外したが、卸売と車の修理は入っている。", "source": "https://www.bps.go.id/id/publication/2025/12/31/e46a55af756331ede8016b91/statistik-penyediaan-makanan-minuman-2024.html ; https://databoks.katadata.co.id/ekonomi-makro/statistik/69e8550c3162d/ada-30-juta-umkm-non-pertanian-di-indonesia-pada-2025-ini-sektor-usahanya", "parent_node": "root", "parent_slice": null, "edge_label_ja": "店を構える業種（飲食・卸小売）", "slices": [{"id": "pb_food", "label_ja": "飲食店", "value": 5280000, "display_ja": "528万", "basis": "確か", "kind": "区分", "note_ja": "食べ物・飲み物を出す事業者（2024年、BPS）。屋台（移動販売）も約15%入る。", "source": "https://www.bps.go.id/id/publication/2025/12/31/e46a55af756331ede8016b91/statistik-penyediaan-makanan-minuman-2024.html"}, {"id": "pb_trade", "label_ja": "卸・小売", "value": 14440000, "display_ja": "1,444万", "basis": "確か", "kind": "区分", "note_ja": "卸売・小売・車の修理をまとめた数（2025年末の暫定値、政府の名簿 SIDT）。小売だけの数は※要確認。", "source": "https://databoks.katadata.co.id/ekonomi-makro/statistik/69e8550c3162d/ada-30-juta-umkm-non-pertanian-di-indonesia-pada-2025-ini-sektor-usahanya"}]}, {"id": "pos_usage", "title_ja": "レジの使い方", "total": 19720000, "total_display_ja": "約1,972万", "year": "2020〜2026（各社の発表の時点）", "basis": "仮", "note_ja": "分母はレジを使う業種の店1,972万（屋台を含む）で、有料と無料は各社の発表を足した仮の数。無料は登録の数なので、実際にレジとして使う店は BI の調査（9.24%）から見て約182万以下とみられる。払える規模の会社（小＋中 82万〜186万社・全業種）だけで割ると、有料は1〜3割。", "source": "https://www.bi.go.id/en/publikasi/kajian/Documents/RP-MON-09-2024.pdf ; https://ukmindonesia.id/uploads/attachment/doc/data_sandingan_UMKM_kemenkop_UKM-20162017.pdf ; https://databoks.katadata.co.id/ekonomi-makro/statistik/6ab089685dc68/jumlah-dan-rasio-ukm-di-indonesia-meningkat-pada-2025 ; /Users/sohayashi/llmohack/id/pos-research/stage4_whitespace.json", "parent_node": "pos_base", "parent_slice": null, "edge_label_ja": "レジの使い方で分けると", "slices": [{"id": "pu_paid", "label_ja": "有料のレジアプリ", "value": 231500, "display_ja": "約23万（1.2%）", "basis": "仮", "kind": "有料", "note_ja": "下の会社ごとの数を足した仮の数。はっきりしているのは無料プランの無い Moka と有料の majoo の計9万で、自称を全部足すと26.5万、BI の調査の割合から出すと約9万と幅が大きい。", "source": "https://mokapos.com/en/about ; https://www.fortuneidn.com/tech/incar-pengguna-skala-besar-majoo-hadirkan-fitur-prime-plus-00-ccw2k-6zvb47 ; https://www.bi.go.id/en/publikasi/kajian/Documents/RP-MON-09-2024.pdf"}, {"id": "pu_free", "label_ja": "無料のレジ（登録）", "value": 5676700, "display_ja": "約568万（29%）", "basis": "仮", "kind": "無料", "note_ja": "銀行や GoTo などが無料で配るレジつきアプリに登録した店の数を足した。BI の調査ではレジアプリを使う小さな店は9.24%（この分母なら約182万）だけなので、多くは代金の受け取りだけの店や使っていない店で、2つに登録した店の重なりも入る。", "source": "https://wartaekonomi.co.id/read578524/bank-mandiri-klaim-livin-merchant-digunakan-27-juta-pedagang ; https://www.bi.go.id/en/publikasi/kajian/Documents/RP-MON-09-2024.pdf"}, {"id": "pu_none", "label_ja": "使っていない", "value": 13811800, "display_ja": "約1,381万（70%）", "basis": "仮", "kind": "使っていない", "note_ja": "全体から有料と無料の登録を引いた残り。BI の調査では9割以上の店がレジアプリを使っていないので、本当はもっと多い（9割なら約1,790万）とみられる。", "source": "https://www.bi.go.id/en/publikasi/kajian/Documents/RP-MON-09-2024.pdf"}], "jp_note_ja": "日本は、タブレットのレジ（無料の Airレジ 78.9万を含む）を持つ店が約88万。店のある小売・飲食134万〜166万の約53〜66%にあたる。有料だけ（スマレジ4.8万＋ユビレジ4.2万）で見ると3〜7%で、チェーンの据え置き型レジは入っていない。"}, {"id": "pos_players", "title_ja": "有料レジの会社別", "total": 231500, "total_display_ja": "約23万", "year": "2021〜2026", "basis": "仮", "note_ja": "お金を払ってレジアプリを使う店を会社ごとに分けた。各社の数はほぼ自称で時点もばらばらで、BI の調査の割合では majoo は Moka の1/3なのに自称は同じ数なので、自称は多めに出やすい。", "source": "/Users/sohayashi/llmohack/id/pos-research/stage4_whitespace.json ; https://www.bi.go.id/en/publikasi/kajian/Documents/RP-MON-09-2024.pdf", "parent_node": "pos_usage", "parent_slice": "pu_paid", "edge_label_ja": "有料を会社ごとに", "slices": [{"id": "pp_moka", "label_ja": "Moka（GoTo）", "value": 45000, "display_ja": "4.5万", "basis": "確か", "kind": "有料", "note_ja": "自称「4.5万+の事業者」。無料プランが無いので全部有料と見た。2020年の4万からほぼ横ばい。", "source": "https://mokapos.com/en/about"}, {"id": "pp_majoo", "label_ja": "majoo", "value": 45000, "display_ja": "4.5万", "basis": "確か", "kind": "有料", "note_ja": "自称「有料の客4.5万+」（2024年1月。2025年9月も同じ数）。無料の majoolite は入れていない。", "source": "https://www.fortuneidn.com/tech/incar-pengguna-skala-besar-majoo-hadirkan-fitur-prime-plus-00-ccw2k-6zvb47"}, {"id": "pp_kasirpintar", "label_ja": "Kasir Pintar Pro", "value": 47000, "display_ja": "約4.7万", "basis": "仮", "kind": "有料", "note_ja": "自称「150万の店が使った」（2023年ごろの累計）に、Qasir の有料の割合3.1%をかけた仮の数。Qasir の有料には1回だけ買う追加機能の客も入るので多めの可能性があり、この中でいちばん根拠が弱い。", "source": "https://beritajatim.com/?p=1059576"}, {"id": "pp_qasir", "label_ja": "Qasir Pro", "value": 22000, "display_ja": "約2.2万", "basis": "仮", "kind": "有料", "note_ja": "2021年春に「登録70万のうち有料2.2万」と発表（自称。1回払いの追加機能の客も入る）。新しい数が無いので、そのまま今の数とした。", "source": "https://en.dailysocial.id/post/qasir-pos-startup-plans-to-expand-its-business-to-Southeast-Asia-this-year"}, {"id": "pp_olsera", "label_ja": "Olsera", "value": 18000, "display_ja": "1.8万", "basis": "確か", "kind": "有料", "note_ja": "自称「有料の店1.8万+」（2023年9月）。サイトの「8.5万+」はこれまでの累計。", "source": "https://gizmologi.id/news/olsera-teken-mou-astrapay/"}, {"id": "pp_iseller", "label_ja": "iSeller", "value": 13000, "display_ja": "約1.3万", "basis": "仮", "kind": "有料", "note_ja": "自称「6万+の店が使った」は累計。Olsera の有料÷累計（1.8万÷8.5万＝約2割）をかけた仮の数。", "source": "https://www.isellercommerce.com/id"}, {"id": "pp_mekari", "label_ja": "Mekari POS", "value": 11500, "display_ja": "約1.2万", "basis": "推計", "kind": "有料", "note_ja": "BI の調査の割合（Jurnal POS 12.82%、Moka 50.11%）で、Moka 4.5万から割り戻した計算値。同じ計算だと majoo は1.5万で自称の1/3になるので、少なめの可能性がある。", "source": "https://www.bi.go.id/en/publikasi/kajian/Documents/RP-MON-09-2024.pdf"}, {"id": "pp_esb", "label_ja": "ESB", "value": 6000, "display_ja": "約0.6万", "basis": "仮", "kind": "有料", "note_ja": "自称「3万+のレストラン」はインドネシア・東南アジア・欧州の合計で、無料の POSLite が入るかは不明。iSeller と同じく約2割とした仮の数。", "source": "https://www.esb.id/en"}, {"id": "pp_pawoon", "label_ja": "Pawoon", "value": 4000, "display_ja": "約0.4万", "basis": "推計", "kind": "有料", "note_ja": "BI の調査の割合（4.62%）で Moka から割り戻した計算値（約4,100）。Mekari と同じく少なめの可能性があり、2019年の「10万+」は無料も入った古い数。", "source": "https://www.bi.go.id/en/publikasi/kajian/Documents/RP-MON-09-2024.pdf"}, {"id": "pp_other", "label_ja": "ほか・不明", "value": 20000, "display_ja": "約2万", "basis": "仮", "kind": "その他", "note_ja": "iREAP Pro・Loyverse の有料機能・Jubelio・Accurate・HashMicro など、数が出ていない会社をまとめて仮に2万とした。", "source": "https://www.ireappos.com/"}]}, {"id": "pos_free", "title_ja": "無料レジの道具別", "total": 5676700, "total_display_ja": "約568万", "year": "2020〜2026", "basis": "仮", "note_ja": "無料のレジつきアプリに登録した店を道具ごとに分けた。登録や発表の数なので、使っていない店や代金の受け取りだけの店、重なりも入る。", "source": "/Users/sohayashi/llmohack/id/pos-research/stage4_whitespace.json", "parent_node": "pos_usage", "parent_slice": "pu_free", "edge_label_ja": "無料を道具ごとに", "slices": [{"id": "pf_livin", "label_ja": "Livin' Merchant", "value": 2700000, "display_ja": "270万", "basis": "確か", "kind": "無料", "note_ja": "Mandiri 銀行の発表「270万+の商人」（2025年8月、自称）。QRIS の受け取りだけの店も入り、6か月使っていない口座を消したので今は減っている可能性。", "source": "https://wartaekonomi.co.id/read578524/bank-mandiri-klaim-livin-merchant-digunakan-27-juta-pedagang"}, {"id": "pf_kasirpintar", "label_ja": "Kasir Pintar 無料", "value": 1453000, "display_ja": "約145万", "basis": "仮", "kind": "無料", "note_ja": "自称の累計150万（2023年ごろ）から、有料の仮4.7万を引いた。やめた店も入る。", "source": "https://beritajatim.com/?p=1059576"}, {"id": "pf_gokasir", "label_ja": "GoKasir（GoTo）", "value": 1000000, "display_ja": "約100万", "basis": "仮", "kind": "無料", "note_ja": "GoKasir だけの数は非公開なので、レジが入った GoFood の店用アプリを持つ店（2022年・自称100万）を全部数えた。実際にレジとして使う店はずっと少ないはず。", "source": "https://teknologi.bisnis.com/read/20220131/266/1495410/punya-1-juta-mitra-gofood-"}, {"id": "pf_bri", "label_ja": "BRImerchant", "value": 323700, "display_ja": "約32万", "basis": "仮", "kind": "無料", "note_ja": "BRImerchant だけの数は非公開。BRI の加盟店32.37万（2026年1〜3月）を全部数えた。", "source": "https://www.metrotvnews.com/read/NQAC0jz7-transformasi-digital-bri-pacu-pertumbuhan-merchant-dan-transaksi-qris-tingkatkan-akses-keuangan-ekosistem-danantara"}, {"id": "pf_youtap", "label_ja": "Youtap", "value": 150000, "display_ja": "約15万", "basis": "仮", "kind": "無料", "note_ja": "2020年ごろの自称「15万の店」をそのまま今の数とした。新しい数は見つからない。", "source": "https://en.dailysocial.id/post/youtap-Indonesia-focuses-on-merchants/"}, {"id": "pf_other", "label_ja": "ほか（無料）", "value": 50000, "display_ja": "約5万", "basis": "仮", "kind": "その他", "note_ja": "Loyverse（世界35万を人口の比3.5%で約1.2万）と iREAP（国内分約1.3万・2016年の数）に、数の無い majoolite・ESB POSLite を足して仮に5万とした。BNI の wondr Merchant（2026年8月開始）や GrabMerchant など数の出ていない無料アプリは入れていない。", "source": "https://loyverse.com/ ; https://www.ireappos.com/news/?p=331 ; https://finansial.bisnis.com/read/20260824/90/1998611/bni-luncurkan-wondr-merchant-settlement-dana-hingga-lima-kali-sehari"}]}], "satu_ids": ["target", "chat", "inbox_usage", "inbox_players"], "target_id": "target"}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script>
+(function(){
+const DATA = JSON.parse(document.getElementById('data').textContent);
+document.getElementById('updated').textContent = '（' + DATA.updated + ' 時点・仮の数字を含む）';
+const nodes = DATA.nodes;
+const byId = new Map(nodes.map(n => [n.id, n]));
+nodes.forEach(n => { if (n.id !== 'root' && !byId.has(n.parent_node)) n.parent_node = 'root'; });
+const H = d3.stratify().id(d => d.id).parentId(d => d.id === 'root' ? null : d.parent_node)(nodes);
+const ALL = H.descendants();
+const SATU = new Set(DATA.satu_ids || []);
+const rOf = v => 18 + 20 * Math.log10(Math.max(v || 1, 1000) / 1000);
+ALL.forEach(d => { d.r = rOf(d.data.total); });
+
+// ---- 配置：放射状に置いてから、重ならないように押し広げる（マインドマップ風） ----
+d3.tree().size([2 * Math.PI, 1]).separation((a, b) => (a.parent === b.parent ? 1 : 1.5) / Math.max(1, a.depth))(H);
+const RING = 300;
+ALL.forEach(d => { const rad = d.depth * RING; d.x0 = rad * Math.cos(d.x - Math.PI / 2); d.y0 = rad * Math.sin(d.x - Math.PI / 2); d.x = d.x0; d.y = d.y0; });
+H.fx = 0; H.fy = 0;
+const sim = d3.forceSimulation(ALL)
+  .force('link', d3.forceLink(H.links()).distance(l => l.source.r + l.target.r + 150).strength(0.9))
+  .force('collide', d3.forceCollide(d => d.r + 78).strength(1).iterations(4))
+  .force('charge', d3.forceManyBody().strength(-260).distanceMax(900))
+  .force('x', d3.forceX(d => d.x0).strength(0.04))
+  .force('y', d3.forceY(d => d.y0).strength(0.04))
+  .stop();
+for (let i = 0; i < 700; i++) sim.tick();
+ALL.forEach(d => { d.px = d.x; d.py = d.y; });
+
+// ---- 色 ----
+const css = getComputedStyle(document.documentElement);
+const cv = n => css.getPropertyValue(n).trim();
+const CAT = ['#2f6f8f', '#c98a2b', '#8a5a9e', '#3f8f6a', '#b5525a', '#5b7bb8', '#8c7a4b', '#4f9aa0', '#a86a3d', '#6d7f3b', '#7c6bc4', '#9b4f7a'];
+function sliceColor(node, s, i) {
+  const multiPaid = node.slices.filter(x => x.kind === '有料').length >= 3;
+  if (s.kind === '使っていない') return cv('--none');
+  if (s.kind === 'その他' || /ほか|不明|その他/.test(s.label_ja)) return cv('--other');
+  if (s.kind === '無料' && !multiPaid && node.slices.filter(x => x.kind === '無料').length < 3) return cv('--free');
+  if (s.kind === '有料' && !multiPaid) return cv('--paid');
+  return CAT[i % CAT.length];
+}
+const short = v => {
+  if (v == null) return '?';
+  if (v >= 1e8) return (v / 1e8).toFixed(1).replace(/\.0$/, '') + '億';
+  if (v >= 1e4) { const m = v / 1e4; return (m >= 100 ? Math.round(m).toLocaleString() : m.toFixed(1).replace(/\.0$/, '')) + '万'; }
+  return Math.round(v).toLocaleString();
+};
+const fmtPct = p => p >= 10 ? p.toFixed(0) + '%' : p >= 1 ? p.toFixed(1) + '%' : p >= 0.1 ? p.toFixed(2) + '%' : '0.1%未満';
+const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+// ---- svg ----
+const svg = d3.select('#svg');
+const defs = svg.append('defs');
+defs.append('pattern').attr('id', 'hatch').attr('width', 6).attr('height', 6).attr('patternUnits', 'userSpaceOnUse').attr('patternTransform', 'rotate(45)')
+  .append('rect').attr('width', 2).attr('height', 6).attr('fill', cv('--hatch'));
+const world = svg.append('g');
+const gEdges = world.append('g');
+const gNodes = world.append('g');
+
+const pie = d3.pie().sort(null).value(d => d._vis).startAngle(Math.PI / 2).endAngle(Math.PI * 2.5);
+ALL.forEach(d => {
+  const tot = d3.sum(d.data.slices, s => Math.max(0, s.value)) || 1;
+  d.data.slices.forEach(s => { s._vis = s.value > 0 ? Math.max(s.value, tot * 0.004) : 0; s._pct = s.value / (d.data.total || tot) * 100; });
+  d._arcs = pie(d.data.slices);
+});
+const childOfSlice = new Map();
+ALL.forEach(d => { if (d.parent && d.data.parent_slice) childOfSlice.set(d.parent.id + '|' + d.data.parent_slice, d); });
+
+// 線：親の切れ（無ければ親のパイの縁）から子のパイへ
+function edgePath(d) {
+  const p = d.parent;
+  const a = d.data.parent_slice ? p._arcs.find(x => x.data.id === d.data.parent_slice) : null;
+  let ax, ay, ang;
+  if (a) { ang = (a.startAngle + a.endAngle) / 2 - Math.PI / 2; ax = p.px + Math.cos(ang) * p.r; ay = p.py + Math.sin(ang) * p.r; }
+  else { ang = Math.atan2(d.py - p.py, d.px - p.px); ax = p.px + Math.cos(ang) * p.r; ay = p.py + Math.sin(ang) * p.r; }
+  const dx = d.px - ax, dy = d.py - ay, L = Math.hypot(dx, dy) || 1;
+  const ex = d.px - dx / L * (d.r + 6), ey = d.py - dy / L * (d.r + 6);
+  const c1x = ax + Math.cos(ang) * L * 0.33, c1y = ay + Math.sin(ang) * L * 0.33;
+  d._mid = [(ax + 2 * c1x + ex) / 4, (ay + 2 * c1y + ey) / 4];
+  return `M${ax},${ay} Q${c1x},${c1y} ${ex},${ey}`;
+}
+const links = ALL.filter(d => d.parent);
+const edge = gEdges.selectAll('g').data(links).join('g').attr('class', 'e');
+edge.append('path').attr('fill', 'none').attr('stroke', cv('--edge')).attr('stroke-width', 1.8)
+  .attr('stroke-dasharray', d => d.data.parent_slice ? null : '6 5').attr('d', edgePath);
+edge.append('text').attr('font-size', 13).attr('fill', cv('--muted')).attr('text-anchor', 'middle')
+  .attr('x', d => d._mid[0]).attr('y', d => d._mid[1] - 4).text(d => d.data.edge_label_ja || '');
+
+// パイ
+const g = gNodes.selectAll('g.n').data(ALL).join('g').attr('class', 'n').attr('transform', d => `translate(${d.px},${d.py})`);
+g.append('circle').attr('class', 'selring').attr('r', d => d.r + 5).attr('fill', 'none').attr('stroke', cv('--sel')).attr('stroke-width', 3).attr('opacity', 0);
+g.filter(d => SATU.has(d.id)).append('circle').attr('r', d => d.r + 11).attr('fill', 'none')
+  .attr('stroke', cv('--accent')).attr('stroke-width', 2.5).attr('stroke-dasharray', '7 5');
+g.each(function (d) {
+  const sel = d3.select(this);
+  const arc = d3.arc().innerRadius(d.r * 0.52).outerRadius(d.r).padAngle(0.006).cornerRadius(2);
+  const gs = sel.append('g').selectAll('g').data(d._arcs).join('g');
+  gs.append('path').attr('d', arc).attr('fill', (a, i) => sliceColor(d.data, a.data, i))
+    .attr('stroke', a => a.data.kind === '使っていない' ? cv('--none-stroke') : cv('--panel')).attr('stroke-width', 1);
+  gs.filter(a => a.data.basis === '仮').append('path').attr('d', arc).attr('fill', 'url(#hatch)').attr('pointer-events', 'none');
+  gs.on('pointermove', (e, a) => showTip(e, d, a.data)).on('pointerleave', hideTip)
+    .on('click', (e, a) => { e.stopPropagation(); select(d, a.data.id); })
+    .on('dblclick', (e, a) => { e.stopPropagation(); const c = childOfSlice.get(d.id + '|' + a.data.id); flyTo(c || d); select(c || d); });
+  sel.append('circle').attr('r', d.r * 0.5).attr('fill', cv('--panel'))
+    .on('click', e => { e.stopPropagation(); select(d); })
+    .on('dblclick', e => { e.stopPropagation(); flyTo(d); select(d); });
+  sel.append('text').attr('text-anchor', 'middle').attr('dy', '0.35em').attr('font-weight', 700)
+    .attr('font-size', Math.max(11, d.r * 0.24)).attr('fill', cv('--ink')).attr('pointer-events', 'none').style('stroke-width', '0px')
+    .text(short(d.data.total));
+  const fsz = Math.max(10, d.r * 0.12);
+  const lab = d._arcs.filter(a => a.value > 0 && a.data._pct < 55).sort((a, b) => b.data.value - a.data.value).slice(0, 7).map(a => {
+    const m = ((a.startAngle + a.endAngle) / 2) % (2 * Math.PI), t = m - Math.PI / 2;
+    return { a, side: m < Math.PI ? 1 : -1, x: Math.cos(t) * (d.r + 8), y: Math.sin(t) * (d.r + 8) };
+  });
+  [1, -1].forEach(side => {
+    const L = lab.filter(o => o.side === side).sort((p, q) => p.y - q.y);
+    for (let i = 1; i < L.length; i++) if (L[i].y < L[i - 1].y + fsz * 1.25) L[i].y = L[i - 1].y + fsz * 1.25;
+  });
+  sel.append('g').selectAll('text').data(lab).join('text')
+    .attr('x', o => o.x + o.side * 2).attr('y', o => o.y).attr('text-anchor', o => o.side > 0 ? 'start' : 'end')
+    .attr('dy', '0.35em').attr('font-size', fsz).attr('fill', cv('--muted')).attr('pointer-events', 'none')
+    .text(o => o.a.data.label_ja + ' ' + fmtPct(o.a.data._pct));
+  const below = lab.filter(o => Math.abs(o.x) < d.r * 0.95 && o.y > 0).map(o => o.y);
+  const ty = Math.max(d.r + 20, below.length ? d3.max(below) + fsz + 12 : 0);
+  const t = sel.append('text').attr('text-anchor', 'middle').attr('y', ty).attr('pointer-events', 'none');
+  t.append('tspan').attr('font-size', Math.max(13, d.r * 0.17)).attr('font-weight', 700).attr('fill', cv('--ink')).text(d.data.title_ja);
+  t.append('tspan').attr('x', 0).attr('dy', Math.max(16, d.r * 0.2)).attr('font-size', Math.max(11.5, d.r * 0.14)).attr('fill', cv('--muted'))
+    .text(d.data.total_display_ja + (d.data.basis === '仮' ? '（仮）' : ''));
+});
+
+// ---- 動かし方（Miro 風） ----
+const K_MIN = 0.06, K_MAX = 5;
+const zoom = d3.zoom().scaleExtent([K_MIN, K_MAX])
+  .filter(e => e.type !== 'wheel' && e.type !== 'dblclick' && !e.button)
+  .on('start', e => { if (e.sourceEvent && e.sourceEvent.type !== 'wheel') svg.classed('panning', true); hideTip(); })
+  .on('zoom', e => { world.attr('transform', e.transform); pc.textContent = Math.round(e.transform.k * 100) + '%'; })
+  .on('end', () => svg.classed('panning', false));
+svg.call(zoom).on('dblclick.zoom', null);
+const pc = document.getElementById('z-pc');
+const clampK = k => Math.max(K_MIN, Math.min(K_MAX, k));
+let lastWheel = 0, wheelKind = null;
+svg.node().addEventListener('wheel', e => {
+  e.preventDefault();
+  hideTip();
+  const t = d3.zoomTransform(svg.node());
+  const [mx, my] = d3.pointer(e, svg.node());
+  const now = performance.now();
+  // マウスのホイール＝拡大縮小、トラックパッドの2本指＝移動、ピンチ（ctrl）＝拡大縮小
+  if (now - lastWheel > 220) wheelKind = (e.deltaMode === 1 || (e.deltaX === 0 && Math.abs(e.deltaY) >= 50 && Number.isInteger(e.deltaY))) ? 'mouse' : 'pad';
+  lastWheel = now;
+  if (e.ctrlKey || e.metaKey || wheelKind === 'mouse') {
+    const dy = e.deltaMode === 1 ? e.deltaY * 20 : e.deltaY;
+    const k = clampK(t.k * Math.pow(2, -dy * (e.ctrlKey ? 0.012 : 0.0025)));
+    svg.call(zoom.transform, d3.zoomIdentity.translate(mx - (mx - t.x) * k / t.k, my - (my - t.y) * k / t.k).scale(k));
+  } else {
+    svg.call(zoom.transform, d3.zoomIdentity.translate(t.x - e.deltaX, t.y - e.deltaY).scale(t.k));
+  }
+}, { passive: false });
+svg.on('click', () => select(null));
+function size() { const r = svg.node().getBoundingClientRect(); return [r.width, r.height]; }
+function flyTo(d, k) {
+  const [w, h] = size();
+  k = k || clampK(Math.min(w, h) / (d.r * 2 + 340));
+  svg.transition().duration(750).ease(d3.easeCubicInOut).call(zoom.transform, d3.zoomIdentity.translate(w / 2 - d.px * k, h / 2 - d.py * k).scale(k));
+}
+function fitAll(dur) {
+  const [w, h] = size();
+  const x0 = d3.min(ALL, d => d.px - d.r - 120), x1 = d3.max(ALL, d => d.px + d.r + 120);
+  const y0 = d3.min(ALL, d => d.py - d.r - 60), y1 = d3.max(ALL, d => d.py + d.r + 90);
+  const k = clampK(Math.min(w / (x1 - x0), h / (y1 - y0)) * 0.96);
+  const T = d3.zoomIdentity.translate(w / 2 - (x0 + x1) / 2 * k, h / 2 - (y0 + y1) / 2 * k).scale(k);
+  (dur === 0 ? svg : svg.transition().duration(750).ease(d3.easeCubicInOut)).call(zoom.transform, T);
+}
+function zoomBy(f) {
+  const [w, h] = size(), t = d3.zoomTransform(svg.node()), k = clampK(t.k * f);
+  svg.transition().duration(250).call(zoom.transform, d3.zoomIdentity.translate(w / 2 - (w / 2 - t.x) * k / t.k, h / 2 - (h / 2 - t.y) * k / t.k).scale(k));
+}
+document.getElementById('z-in').onclick = () => zoomBy(1.4);
+document.getElementById('z-out').onclick = () => zoomBy(1 / 1.4);
+document.getElementById('z-fit').onclick = () => fitAll();
+document.getElementById('b-all').onclick = () => fitAll();
+document.getElementById('b-root').onclick = () => { flyTo(H, rootK()); select(H); };
+document.getElementById('b-target').onclick = () => { const d = ALL.find(x => x.id === (DATA.target_id || 'target')) || H; flyTo(d); select(d); };
+document.getElementById('lg-t').onclick = () => { const L = document.getElementById('legend'); L.classList.toggle('min'); document.getElementById('lg-t').textContent = L.classList.contains('min') ? '凡例' : 'たたむ'; };
+window.addEventListener('keydown', e => {
+  if (e.target.closest('input,textarea')) return;
+  const t = d3.zoomTransform(svg.node()), step = 80;
+  const pan = (dx, dy) => svg.transition().duration(150).call(zoom.transform, d3.zoomIdentity.translate(t.x + dx, t.y + dy).scale(t.k));
+  if (e.key === '+' || e.key === '=') zoomBy(1.4);
+  else if (e.key === '-') zoomBy(1 / 1.4);
+  else if (e.key === '0') fitAll();
+  else if (e.key === 'ArrowLeft') pan(step, 0);
+  else if (e.key === 'ArrowRight') pan(-step, 0);
+  else if (e.key === 'ArrowUp') pan(0, step);
+  else if (e.key === 'ArrowDown') pan(0, -step);
+  else return;
+  e.preventDefault();
+});
+let inited = false;
+// 画面の大きさが変わっても、見ている真ん中は動かさない
+let lastSize = size();
+new ResizeObserver(() => {
+  const [w, h] = size(), [w0, h0] = lastSize; lastSize = [w, h];
+  if (!inited || w0 < 80 || h0 < 80) { initView(); return; }
+  const t = d3.zoomTransform(svg.node());
+  svg.call(zoom.transform, d3.zoomIdentity.translate(t.x + (w - w0) / 2, t.y + (h - h0) / 2).scale(t.k));
+}).observe(svg.node());
+
+// ---- 選ぶ（カメラは動かさない） ----
+let current = null;
+function select(d, hlSlice) {
+  current = d;
+  g.select('.selring').attr('opacity', x => x === d ? 1 : 0);
+  edge.select('path').attr('stroke', x => d && (x === d || x.parent === d) ? cv('--sel') : cv('--edge'))
+    .attr('stroke-width', x => d && (x === d || x.parent === d) ? 2.6 : 1.8);
+  render(d || H, hlSlice);
+}
+
+// ---- ツールチップ ----
+const tip = document.getElementById('tip');
+function showTip(e, d, s) {
+  if (e.pointerType === 'touch' || svg.classed('panning')) return;
+  const box = document.getElementById('stage').getBoundingClientRect();
+  const c = childOfSlice.get(d.id + '|' + s.id);
+  tip.innerHTML = `<b>${esc(s.label_ja)}</b><br>${esc(s.display_ja)}　<span class="pct">${fmtPct(s._pct)}</span>${s.basis === '仮' ? ' <span class="badge kari">仮</span>' : ''}`
+    + (c ? '<br><span class="go-tag">ダブルクリックで中のパイへ →</span>' : '');
+  tip.style.display = 'block';
+  tip.style.left = Math.min(e.clientX - box.left + 14, box.width - 270) + 'px';
+  tip.style.top = Math.min(e.clientY - box.top + 14, box.height - 80) + 'px';
+}
+function hideTip() { tip.style.display = 'none'; }
+
+// ---- 右の説明 ----
+const panel = document.getElementById('panel');
+function linkify(s) { return esc(s).replace(/(https?:\/\/[^\s、，,）)]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>'); }
+function render(d, hlSlice) {
+  const n = d.data;
+  const crumbs = d.ancestors().reverse().map((a, i, arr) => i === arr.length - 1 ? `<b>${esc(a.data.title_ja)}</b>` : `<a data-go="${a.id}">${esc(a.data.title_ja)}</a>`).join(' › ');
+  const kids = (d.children || []).filter(c => !c.data.parent_slice);
+  const rows = d._arcs.map((a, i) => {
+    const s = a.data, c = childOfSlice.get(d.id + '|' + s.id);
+    return `<tr class="${c ? 'go' : ''} ${hlSlice === s.id ? 'hl' : ''}" ${c ? `data-go="${c.id}"` : ''}>
+      <td style="width:18px"><i class="sw" style="background:${sliceColor(n, s, i)}"></i></td>
+      <td>${esc(s.label_ja)}${s.basis === '仮' ? '<span class="badge kari">仮</span>' : s.basis === '推計' ? '<span class="badge">推計</span>' : ''}
+        ${c ? '<span class="go-tag">　中を見る →</span>' : ''}
+        ${s.note_ja ? `<div class="small">${esc(s.note_ja)}</div>` : ''}</td>
+      <td class="num">${esc(s.display_ja)}<div class="pct">${fmtPct(s._pct)}</div></td></tr>`;
+  }).join('');
+  const more = kids.length ? `<div class="meta" style="margin-top:14px">ここから分かれるパイ：</div>` + kids.map(c => `<button data-go="${c.id}" style="margin:0 6px 6px 0">${esc(c.data.title_ja)} →</button>`).join('') : '';
+  panel.innerHTML = `<div class="crumbs">${crumbs}</div>
+    <h2>${esc(n.title_ja)}${SATU.has(d.id) ? '<span class="badge kari">Satu Inbox の狙い</span>' : ''}</h2>
+    <div class="total">${esc(n.total_display_ja)}</div>
+    <div class="meta">${esc(n.year)}<span class="badge ${n.basis === '仮' ? 'kari' : ''}">${esc(n.basis)}</span>　<a href="#" data-fly="${d.id}" style="color:var(--accent)">図でこのパイへ</a></div>
+    ${n.note_ja ? `<div class="note">${esc(n.note_ja)}</div>` : ''}
+    ${n.jp_note_ja ? `<div class="jp"><b>日本だと：</b>${esc(n.jp_note_ja)}</div>` : ''}
+    <table>${rows}</table>${more}
+    ${n.source ? `<div class="src" style="margin-top:14px">出典：${linkify(n.source)}</div>` : ''}`;
+  panel.querySelectorAll('[data-go]').forEach(el => el.addEventListener('click', () => { const t = ALL.find(x => x.id === el.dataset.go); flyTo(t); select(t); }));
+  panel.querySelectorAll('[data-fly]').forEach(el => el.addEventListener('click', ev => { ev.preventDefault(); flyTo(d); }));
+  panel.scrollTop = 0;
+}
+
+// ---- 最初：真ん中のパイと、そのまわりのパイ ----
+function rootK() {
+  const [w, h] = size();
+  const R = d3.max(H.children || [], c => Math.hypot(c.px, c.py) + c.r + 120) || 500;
+  return clampK(Math.min(w, h) / (2 * R));
+}
+function initView() {             // 画面の大きさが決まってから最初の位置を決める
+  const [w, h] = size();
+  if (w < 80 || h < 80) { requestAnimationFrame(initView); return; }
+  inited = true;
+  svg.call(zoom.transform, d3.zoomIdentity.translate(w / 2, h / 2).scale(rootK()));
+}
+initView();
+select(H);
+setTimeout(() => { const h = document.getElementById('hint'); h.style.opacity = '0'; setTimeout(() => h.remove(), 500); }, 7000);
+})();
+</script>
+</body>
+</html>
