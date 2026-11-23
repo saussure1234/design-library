@@ -204,17 +204,23 @@ body.mopen .hd .logo img{filter:invert(1)}
 .fc h3 small{display:block;font-size:14px;line-height:1.6;color:var(--mute);font-weight:400}
 .fc h3 .w{display:block;font-size:clamp(24px,2.3vw,32px);line-height:1.35;letter-spacing:.02em}
 .fc p{margin:0;font-size:15px;line-height:1.95;color:var(--ink2)}
-/* SERVICE（c-svc3-1 の案1：製図の枠に実物の画面・映像。S2A は 3C の図 → 画面） */
-#service .cat{margin:0;display:flex;gap:14px;font:400 12px/1.6 var(--mono);color:var(--mute);min-height:1.6em}
-#service .cat b{color:var(--sig);font-weight:500}
-#service .cat span{font-family:var(--jp)}
-#service .more{font:500 14px/1 var(--jp);text-decoration:none;display:inline-flex;gap:10px;align-items:center;padding-bottom:6px;border-bottom:1px solid var(--ink)}
+/* SERVICE（c-svc4-1：FEATURES と同じ札。製図の枠に実物の画面・映像。S2A は 3C → 戦略 → 実行・伴走 → 画面） */
+#service .sv-g{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+#service .sv-c{background:var(--card);border:1px solid var(--line);display:flex;flex-direction:column;min-width:0}
+#service .sv-c>.fig{border-bottom:1px solid var(--line2)}
+#service .sv-tx,#service .sv-otx{display:flex;flex-direction:column;align-items:flex-start;flex:1}
+#service .sv-tx{padding:26px 32px 36px}
+#service h3{margin:16px 0 14px;font-weight:500}
+#service h3 small{display:block;min-height:1.6em;font-size:14px;line-height:1.6;color:var(--mute);font-weight:400}
+#service h3 .w{display:block;font:500 clamp(24px,2.3vw,32px)/1.35 var(--disp);letter-spacing:0}
+#service h3 .w.ja{font-family:var(--jp);letter-spacing:.02em}
+#service .d{margin:0 0 24px;font-size:15px;line-height:1.95;color:var(--ink2)}
+#service .more{margin-top:auto;font:500 14px/1 var(--jp);text-decoration:none;display:inline-flex;gap:10px;align-items:center;padding-bottom:6px;border-bottom:1px solid var(--ink)}
 #service .more::after{content:"\2192";font-family:var(--mono)}
 #service .more:hover{color:var(--sig);border-color:var(--sig)}
-#service .cap{font:400 11px/1 var(--mono);letter-spacing:.06em;color:var(--mute)}
-#service .fig{position:relative;display:block;aspect-ratio:var(--far);background-color:#fbfaf6;
-  background-image:linear-gradient(rgba(21,21,19,.075) 1px,transparent 1px),linear-gradient(90deg,rgba(21,21,19,.075) 1px,transparent 1px),
-  linear-gradient(rgba(21,21,19,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(21,21,19,.035) 1px,transparent 1px);
+#service .fig{position:relative;display:block;aspect-ratio:var(--far);background-color:var(--card);
+  background-image:linear-gradient(rgba(21,21,19,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(21,21,19,.06) 1px,transparent 1px),
+  linear-gradient(rgba(21,21,19,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(21,21,19,.03) 1px,transparent 1px);
   background-size:80px 80px,80px 80px,16px 16px,16px 16px;background-position:-1px -1px}
 #service .fig>canvas.pen{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3}
 #service .scr{position:absolute;left:calc(var(--x)*1%);top:calc(var(--y)*1%);width:calc(var(--w)*1%);aspect-ratio:var(--ar);overflow:hidden;background:#eceae3;z-index:2;
@@ -225,28 +231,10 @@ body.mopen .hd .logo img{filter:invert(1)}
   left:calc(var(--cx) / var(--cw) * -100%);top:calc(var(--cy) / var(--ch) * -100%)}
 #service .scr video{transition:opacity .35s}
 #service .scr video.wait{opacity:0}
-#service .c3{position:absolute;left:calc(var(--x)*1%);top:calc(var(--y)*1%);width:calc(var(--w)*1%);aspect-ratio:1/1;z-index:4;pointer-events:none}
-#service .c3l{position:absolute;left:0;top:0;padding:3px 5px;background:var(--card);font:400 11px/1 var(--mono);letter-spacing:.04em;color:var(--ink);white-space:nowrap;opacity:0;transition:opacity .5s}
-#service .c3l.on{opacity:1}
-#service .sheet{border:1px solid var(--ink);padding:9px;background:var(--card);position:relative}
-#service .sheet::before,#service .sheet::after{content:"";position:absolute;pointer-events:none}
-#service .sheet::before{left:9px;right:9px;top:0;height:9px;background:repeating-linear-gradient(90deg,transparent 0 calc(25% - 1px),var(--ink) calc(25% - 1px) 25%)}
-#service .sheet::after{left:9px;right:9px;bottom:0;height:9px;background:repeating-linear-gradient(90deg,transparent 0 calc(25% - 1px),var(--ink) calc(25% - 1px) 25%)}
-#service .sh-in{border:1px solid var(--ink);display:grid;grid-template-columns:1fr 1fr}
-#service .cell{position:relative;padding:22px 26px 30px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);display:flex;flex-direction:column}
-#service .cell:nth-child(2n){border-right:0}
-#service .cell:nth-child(n+3){border-bottom:0}
-#service .cell .fig{margin:12px 0 22px;border:1px solid var(--line)}
-#service .cell .hdr{display:flex;justify-content:space-between;align-items:center;border-bottom:1px dashed var(--line);padding-bottom:10px}
-#service .cell h3{margin:0 0 10px;font:500 clamp(28px,2.6vw,38px)/1.15 var(--disp);letter-spacing:-.02em}
-#service .cell h3.ja{font-family:var(--jp);letter-spacing:.02em;font-weight:500}
-#service .cell .d{margin:0 0 18px;font-size:15px;line-height:1.9;color:var(--ink2);max-width:34em}
-#service .tb{display:grid;grid-template-columns:auto auto 1fr;border:1px solid var(--ink);border-top:0;margin-left:auto;width:min(520px,100%);font:400 12px/1 var(--mono)}
-#service .tb>*{padding:12px 16px;border-right:1px solid var(--ink);display:flex;align-items:center}
-#service .tb>*:last-child{border-right:0}
-#service .tb img{width:84px}
-#service .tb .t2{font-family:var(--jp);letter-spacing:.14em}
-#service .tb .t1{letter-spacing:.08em}
+#service .s2f{position:absolute;inset:0;z-index:4;pointer-events:none}
+#service .c3l,#service .s2l{position:absolute;left:0;top:0;padding:3px 5px;background:var(--card);font:400 11px/1 var(--mono);letter-spacing:.04em;color:var(--ink);white-space:nowrap;opacity:0;transition:opacity .5s}
+#service .s2l{font:500 12px/1.2 var(--jp);letter-spacing:.08em;padding:3px 6px}
+#service .c3l.on,#service .s2l.on{opacity:1}
 /* MEMBER */
 .mem-lead{margin:0 0 64px;max-width:46em;font-size:17px;line-height:2.05;color:var(--ink2)}
 .mg{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
@@ -344,20 +332,13 @@ body.mopen .hd .logo img{filter:invert(1)}
   .fg{grid-template-columns:1fr}
   .fc-art{height:220px}
   .fc-tx{padding:22px 22px 28px}
+  #service .sv-g{grid-template-columns:1fr;gap:16px}
+  #service .sv-tx{padding:22px 22px 28px}
   #service .fig{aspect-ratio:var(--fars);background-size:64px 64px,64px 64px,16px 16px,16px 16px}
-  #service .scr,#service .c3{left:calc(var(--xs)*1%);top:calc(var(--ys)*1%);width:calc(var(--ws)*1%)}
+  #service .scr{left:calc(var(--xs)*1%);top:calc(var(--ys)*1%);width:calc(var(--ws)*1%)}
   #service .c3l{font-size:10px;padding:2px 4px}
-  #service .sheet{padding:6px}
-  #service .sheet::before,#service .sheet::after{left:6px;right:6px;height:6px}
-  #service .sh-in{grid-template-columns:1fr}
-  #service .cell{border-right:0;padding:18px 14px 26px}
-  #service .cell:nth-child(n+3){border-bottom:1px solid var(--line)}
-  #service .cell:last-child{border-bottom:0}
-  #service .cell .fig{margin:10px -4px 18px}
-  #service .cell .d{font-size:14.5px}
-  #service .tb{width:100%}
-  #service .tb>*{padding:10px 12px}
-  #service .tb img{width:70px}
+  #service .s2l{font-size:11px;padding:2px 5px}
+  #service .d{font-size:14.5px}
   .mem-lead{font-size:15.5px;margin-bottom:40px}
   .mc h3{font-size:17px}
   .mc .bio{font-size:13px}
@@ -435,16 +416,15 @@ body.mopen .hd .logo img{filter:invert(1)}
   </div>
 </div></section>
 
-<!-- ===== SERVICE（c-svc3-1 の案1：製図の枠に実物の画面・映像。S2A は 3C の図 → 画面） ===== -->
+<!-- ===== SERVICE（c-svc4-1：FEATURES と同じ札に、製図の枠と実物の画面・映像。S2A は 3C → 戦略 → 実行・伴走 → 画面） ===== -->
 <section class="sec" id="service"><div class="wrap">
   <div class="sh"><div class="lbl"><span>03</span><p class="jp2">事業内容</p><span class="end">01—04</span></div><h2 class="giant" data-wd>SERVICE</h2></div>
-  <div class="sheet"><div class="sh-in">
-    <article class="cell"><div class="hdr"><span class="cap">FIG. 01</span><p class="cat"><b>01</b><span></span></p></div><a class="fig" href="https://samurai-style.tokyo/strategy2action" tabindex="-1" aria-hidden="true" style="--far:3/2;--fars:1/1"><div class="c3" data-to="0" data-flow="e" data-flow-sp="s" data-lab="down" data-lab-sp="diag" style="--x:6;--y:22;--w:27;--xs:29;--ys:5;--ws:36"><span class="c3l" data-k="0">Customer</span><span class="c3l" data-k="2">Competitor</span><span class="c3l" data-k="1">Company</span></div><div class="scr" data-dev="monitor" data-dim="b" data-dim-sp="x" data-lead="0.62,0.19,n" data-lead-sp="" style="--x:41;--y:25;--w:43;--xs:8;--ys:53;--ws:58;--vw:1600;--vh:1000;--cx:0;--cy:40;--cw:1600;--ch:960;--ar:1600/960"><img class="po" src="img/p_s2a_dash.jpg" alt="" loading="lazy"><video data-src="video/s2a_dash.mp4" data-t0="1.0" poster="img/p_s2a_dash.jpg" muted playsinline preload="none"></video></div><div class="scr" data-dev="tablet" data-dim="x" data-dim-sp="x" data-lead="0.5,0.05,n" data-lead-sp="" style="--x:87.5;--y:39;--w:9.5;--xs:74;--ys:57;--ws:19;--vw:1080;--vh:1350;--cx:0;--cy:56;--cw:1080;--ch:1294;--ar:1080/1294"><img class="po" src="img/p_s2a_dash2.jpg" alt="" loading="lazy"><video data-src="video/s2a_dash2_sp.mp4" data-t0="1.2" poster="img/p_s2a_dash2.jpg" muted playsinline preload="none"></video></div></a><div class="cb"><h3>Strategy2Action</h3><p class="d">事業理解に基づいて戦略を考え、実行まで伴走し、ダッシュボード作成による経営層・上長への可視化まで対応。</p><a class="more" href="https://samurai-style.tokyo/strategy2action">詳しく見る</a></div></article>
-    <article class="cell"><div class="hdr"><span class="cap">FIG. 02</span><p class="cat"><b>02</b><span>動画広告の制作ツール</span></p></div><a class="fig" href="https://www.hook-hack.com/" tabindex="-1" aria-hidden="true" style="--far:3/2;--fars:4/3"><div class="scr" data-dev="laptop" data-dim="b" data-dim-sp="b" data-lead="0.28,0.25,nw;0.7,0.3,ne,sig" data-lead-sp="0.28,0.25,nw;0.7,0.3,ne,sig" style="--x:17;--y:15;--w:66;--xs:14;--ys:14;--ws:72;--vw:960;--vh:540;--cx:0;--cy:0;--cw:960;--ch:540;--ar:960/540"><img class="po" src="img/p_hookhack.jpg" alt="" loading="lazy"><video data-src="video/hookhack_sp.mp4" data-t0="0.5" poster="img/p_hookhack.jpg" muted playsinline preload="none"></video></div></a><div class="cb"><h3>HookHack</h3><p class="d">売れる動画広告をLPから5分で制作。<br>検証から成果改善まで、動画広告のPDCAに必要な機能を1ツールで網羅します。</p><a class="more" href="https://www.hook-hack.com/">詳しく見る</a></div></article>
-    <article class="cell"><div class="hdr"><span class="cap">FIG. 03</span><p class="cat"><b>03</b><span>LP・サイト制作の代行</span></p></div><a class="fig" href="https://www.hook-hack.com/hookhacker" tabindex="-1" aria-hidden="true" style="--far:3/2;--fars:4/3"><div class="scr" data-dev="browser" data-dim="b" data-dim-sp="b" data-lead="0.26,0.58,w,sig;0.06,0.05,nw;0.74,0.45,e" data-lead-sp="0.26,0.58,sw,sig;0.06,0.05,nw" style="--x:16;--y:18;--w:66;--xs:12;--ys:20;--ws:76;--vw:960;--vh:540;--cx:68;--cy:57;--cw:823;--ch:483;--ar:823/483"><img class="po" src="img/p_hookhacker.jpg" alt="" loading="lazy"><video data-src="video/hookhacker_sp.mp4" data-t0="2.0" poster="img/p_hookhacker.jpg" muted playsinline preload="none"></video></div></a><div class="cb"><h3>HookHacker</h3><p class="d">自社開発AIツール「HookHack」×インドネシアオフショアチーム×日本人ディレクターでLP・サイト制作を代行。</p><a class="more" href="https://www.hook-hack.com/hookhacker">詳しく見る</a></div></article>
-    <article class="cell"><div class="hdr"><span class="cap">FIG. 04</span><p class="cat"><b>04</b><span></span></p></div><a class="fig" href="https://samurai-style.tokyo/video-production" tabindex="-1" aria-hidden="true" style="--far:3/2;--fars:4/3"><div class="scr" data-dev="film" data-dim="r" data-dim-sp="" data-lead="" data-lead-sp="" style="--x:10;--y:17;--w:72;--xs:6;--ys:16;--ws:88;--vw:768;--vh:432;--cx:0;--cy:0;--cw:768;--ch:432;--ar:768/432"><img class="po" src="img/video-production-poster.webp" alt="" loading="lazy"><video data-src="video/video-production.mp4" data-t0="0" poster="img/video-production-poster.webp" muted playsinline preload="none"></video></div></a><div class="cb"><h3 class="ja">動画制作</h3><p class="d">貴社の顧客理解に基づき、動画を企画・撮影・編集までワンストップで制作します。</p><a class="more" href="https://samurai-style.tokyo/video-production">詳しく見る</a></div></article>
-  </div></div>
-  <div class="tb" aria-hidden="true"><span><img src="img/logo.svg" alt=""></span><span class="t1">SERVICE</span><span class="t2">事業内容</span></div>
+  <div class="sv-g">
+    <article class="sv-c"><a class="fig" href="https://samurai-style.tokyo/strategy2action" tabindex="-1" aria-hidden="true" style="--far:3/2;--fars:3/4"><div class="s2f" data-to="0" data-n0="3,8,31,28" data-n1="40,8,20,28" data-n2="66,8,22,28" data-n0-sp="16,3,68,24" data-n1-sp="6,40,38,11" data-n2-sp="56,40,38,11"><span class="c3l" data-k="0">Customer</span><span class="c3l" data-k="2">Competitor</span><span class="c3l" data-k="1">Company</span><span class="s2l" data-k="0">事業理解</span><span class="s2l" data-k="1">戦略</span><span class="s2l" data-k="2">実行・伴走</span><span class="s2l" data-k="3">可視化</span></div><div class="scr" data-dev="monitor" data-dim="x" data-dim-sp="x" data-lead="" data-lead-sp="" style="--x:33;--y:56;--w:37;--xs:12;--ys:69;--ws:50;--vw:1600;--vh:1000;--cx:0;--cy:40;--cw:1600;--ch:960;--ar:1600/960"><img class="po" src="img/p_s2a_dash.jpg" alt="" loading="lazy"><video data-src="video/s2a_dash.mp4" data-t0="1.0" poster="img/p_s2a_dash.jpg" muted playsinline preload="none"></video></div><div class="scr" data-dev="tablet" data-dim="x" data-dim-sp="x" data-lead="" data-lead-sp="" style="--x:76;--y:62;--w:10;--xs:70;--ys:72;--ws:18;--vw:1080;--vh:1350;--cx:0;--cy:56;--cw:1080;--ch:1294;--ar:1080/1294"><img class="po" src="img/p_s2a_dash2.jpg" alt="" loading="lazy"><video data-src="video/s2a_dash2_sp.mp4" data-t0="1.2" poster="img/p_s2a_dash2.jpg" muted playsinline preload="none"></video></div></a><div class="sv-tx"><div class="no">01 / 04</div><h3><small></small><span class="w">Strategy2Action</span></h3><p class="d">事業理解に基づいて戦略を考え、実行まで伴走し、ダッシュボード作成による経営層・上長への可視化まで対応。</p><a class="more" href="https://samurai-style.tokyo/strategy2action">詳しく見る</a></div></article>
+    <article class="sv-c"><a class="fig" href="https://www.hook-hack.com/" tabindex="-1" aria-hidden="true" style="--far:3/2;--fars:4/3"><div class="scr" data-dev="laptop" data-dim="b" data-dim-sp="b" data-lead="" data-lead-sp="" style="--x:17;--y:15;--w:66;--xs:14;--ys:14;--ws:72;--vw:960;--vh:540;--cx:0;--cy:0;--cw:960;--ch:540;--ar:960/540"><img class="po" src="img/p_hookhack.jpg" alt="" loading="lazy"><video data-src="video/hookhack_sp.mp4" data-t0="0.5" poster="img/p_hookhack.jpg" muted playsinline preload="none"></video></div></a><div class="sv-tx"><div class="no">02 / 04</div><h3><small>動画広告の制作ツール</small><span class="w">HookHack</span></h3><p class="d">売れる動画広告をLPから5分で制作。<br>検証から成果改善まで、動画広告のPDCAに必要な機能を1ツールで網羅します。</p><a class="more" href="https://www.hook-hack.com/">詳しく見る</a></div></article>
+    <article class="sv-c"><a class="fig" href="https://www.hook-hack.com/hookhacker" tabindex="-1" aria-hidden="true" style="--far:3/2;--fars:4/3"><div class="scr" data-dev="browser" data-dim="b" data-dim-sp="b" data-lead="" data-lead-sp="" style="--x:16;--y:18;--w:66;--xs:12;--ys:20;--ws:76;--vw:960;--vh:540;--cx:68;--cy:57;--cw:823;--ch:483;--ar:823/483"><img class="po" src="img/p_hookhacker.jpg" alt="" loading="lazy"><video data-src="video/hookhacker_sp.mp4" data-t0="2.0" poster="img/p_hookhacker.jpg" muted playsinline preload="none"></video></div></a><div class="sv-tx"><div class="no">03 / 04</div><h3><small>LP・サイト制作の代行</small><span class="w">HookHacker</span></h3><p class="d">自社開発AIツール「HookHack」×インドネシアオフショアチーム×日本人ディレクターでLP・サイト制作を代行。</p><a class="more" href="https://www.hook-hack.com/hookhacker">詳しく見る</a></div></article>
+    <article class="sv-c"><a class="fig" href="https://samurai-style.tokyo/video-production" tabindex="-1" aria-hidden="true" style="--far:3/2;--fars:4/3"><div class="scr" data-dev="film" data-dim="r" data-dim-sp="x" data-lead="" data-lead-sp="" style="--x:10;--y:17;--w:72;--xs:6;--ys:16;--ws:88;--vw:768;--vh:432;--cx:0;--cy:0;--cw:768;--ch:432;--ar:768/432"><img class="po" src="img/video-production-poster.webp" alt="" loading="lazy"><video data-src="video/video-production.mp4" data-t0="0" poster="img/video-production-poster.webp" muted playsinline preload="none"></video></div></a><div class="sv-tx"><div class="no">04 / 04</div><h3><small></small><span class="w ja">動画制作</span></h3><p class="d">貴社の顧客理解に基づき、動画を企画・撮影・編集までワンストップで制作します。</p><a class="more" href="https://samurai-style.tokyo/video-production">詳しく見る</a></div></article>
+  </div>
 </div></section>
 <script src="js/svc-real.js"></script>
 
@@ -620,15 +600,14 @@ body.mopen .hd .logo img{filter:invert(1)}
   const hd = document.getElementById('hd');
   addEventListener('scroll', () => hd.classList.toggle('solid', scrollY > innerHeight * .6), { passive: true });
   /* SERVICE の動画（今のトップのまま） */
-  /* ↑目印（build.py が切り出す）。中身は c-svc3-1 の案1：製図の枠をペンで描き、描き終わった画面から映像を流す */
+  /* ↑目印（build.py が切り出す）。中身は c-svc4-1：札の中で製図の線が描かれ、描き終わった画面から映像を流す。描き終えたら線は止まる（動くのは映像だけ） */
   if (window.SvcReal) {
     const SPQ = matchMedia('(max-width:760px)');
     const spSwap = () => document.querySelectorAll('#service .scr').forEach(s => {
       if (s.dataset.leadPc == null) { s.dataset.leadPc = s.dataset.lead; s.dataset.dimPc = s.dataset.dim; }
       s.dataset.lead = SPQ.matches ? s.dataset.leadSp : s.dataset.leadPc; s.dataset.dim = SPQ.matches ? s.dataset.dimSp : s.dataset.dimPc; });
     spSwap(); SPQ.addEventListener('change', spSwap);
-    document.querySelectorAll('#service .fig').forEach(f => { const c = SvcReal.fig(f, { auto: true });
-      f.closest('.cell').addEventListener('mouseenter', () => { if (c.u >= 1) c.restart(); }); });
+    document.querySelectorAll('#service .fig').forEach(f => SvcReal.fig(f, { auto: true }));
     SvcReal.videos(document.getElementById('service'));
   }
   /* 写真に乗せる粒子（今のトップのまま） */
@@ -933,12 +912,10 @@ function storyDraw(now){
   for(const k in SC){const i=+k,s=SC[k];if(!sOn(i)||!s.w)continue;try{s.fn(s,Math.max(0,(now-sStart[i])/1000))}catch(e){console.warn(e)}}
   if(sOn(3)){const pr=sCur===3?sF:(sCur>3?1:0);drawQ(REDUCE?1:clamp((pr-.04)/.66))}}
 
-/* ===== FEATURES：画面に入るとペンで描かれる。触って（スマホはタップ）反応するのは 01 と 04 だけ：絵がわずかに歪み、音が鳴る =====
+/* ===== FEATURES：画面に入ると線が描かれていく（描く道具の絵は出さない）。触って（スマホはタップ）反応するのは 01 と 04 だけ：絵がわずかに歪み、その間だけ音が鳴る =====
    1つの絵＝1つの関数 drawFeatureN(p,t,D,H)。D＝描き進み 0→1、H＝歪みの強さ 0→1（触れている間 1）。朱で光る反応は無し */
 const PEN_DUR={1:3.0,2:3.2,3:5.6,4:2.8};
 const penIO=new IntersectionObserver(es=>{for(const e of es){const p=e.target.__p;if(p&&e.isIntersecting&&p.d0==null){p.d0=T;penIO.unobserve(e.target)}}},{threshold:.4});
-function nib(ctx,x,y){ctx.save();ctx.lineCap='round';ctx.strokeStyle=rgba(C.ink,.5);ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(x+3,y-3);ctx.lineTo(x+18,y-18);ctx.stroke();
-  ctx.fillStyle=rgba(C.sig,1);ctx.fillRect(x-2.5,y-2.5,5,5);ctx.restore()}
 function cumLen(pts){if(pts._L)return pts._L;const L=[0];for(let i=1;i<pts.length;i++)L.push(L[i-1]+Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]));pts._L=L;return L}
 /* 折れ線を長さの割合 k まで描く（ペンの先の位置を返す） */
 function polyPart(ctx,pts,k,L){if(k<=0||pts.length<2)return null;L=L||cumLen(pts);const tot=L[L.length-1],d=tot*Math.min(1,k);ctx.moveTo(pts[0][0],pts[0][1]);
@@ -950,7 +927,7 @@ function resample(pts,M){const L=[0];for(let i=1;i<pts.length;i++)L.push(L[i-1]+
   return out}
 
 /* 触れた時のわずかな歪み（最大で数px）。wt＝場所ごとの効き（0〜1） */
-const warp=(x,y,t,H,wt=1)=>{const k=H*wt;if(k<.003)return[x,y];return[x+N3(x*.012,y*.012,t*1.9)*3.4*k,y+N3(x*.012+7.31,y*.012+2.9,t*1.9)*2.6*k]};
+const warp=(x,y,t,H,wt=1)=>{const k=H*wt;if(k<.003)return[x,y];return[x+N3(x*.012,y*.012,t*1.9)*5*k,y+N3(x*.012+7.31,y*.012+2.9,t*1.9)*3.8*k]};
 
 /* 01 コミットメント：1つの種から枝が育つ。触れると梢がそよぐ程度に歪み、葉ずれの音 */
 function drawFeature1(p,t,D,H){const {ctx,w,h}=p;
@@ -967,22 +944,19 @@ function drawFeature1(p,t,D,H){const {ctx,w,h}=p;
   const wv=(x,y)=>warp(x,y,t,H,clamp((y0-y)/(h*.75)));
   ctx.lineCap='round';ctx.strokeStyle=rgba(C.ink,.55);ctx.lineWidth=1;ctx.beginPath();
   for(let i=0;i<segs.length;i+=4){const a=wv(segs[i],segs[i+1]),b=wv(segs[i+2],segs[i+3]);ctx.moveTo(a[0],a[1]);ctx.lineTo(b[0],b[1])}ctx.stroke();
-  if(D<1){ctx.fillStyle=rgba(C.ink,.8);for(const q of tips)ctx.fillRect(q[0]-1.2,q[1]-1.2,2.4,2.4);const st=Math.max(1,Math.ceil(tips.length/3));tips.forEach((q,i)=>{if(i%st===0)nib(ctx,q[0],q[1])})}
+  if(D<1){ctx.fillStyle=rgba(C.ink,.8);for(const q of tips)ctx.fillRect(q[0]-1.2,q[1]-1.2,2.4,2.4)}
   ctx.fillStyle=rgba(C.sig,1);ctx.fillRect(w*.5-4,y0-4,8,8)}
 
 /* 02 多言語対応：3つの波紋。線は少なく薄く（外ほど消える）。触れても何も起きない */
 function drawFeature2(p,t,D){const {ctx,w,h}=p;ctx.clearRect(0,0,w,h);
   const S=[[.28+.05*Math.sin(t*.3),.42],[.72,.36+.06*Math.cos(t*.27)],[.5+.06*Math.cos(t*.22),.85]];
   const gap=30,Rm=Math.min(w,h*2)*.36,ph=D<1?0:((t-p.dDone)*5)%gap,K=Math.ceil(Rm/gap)+1;
-  ctx.lineWidth=.8;const nibs=[];
+  ctx.lineWidth=.9;
   S.forEach((s,j)=>{const cx=s[0]*w,cy=s[1]*h,a0=-Math.PI/2+j*2.1;
     for(let k=0;k<K;k++){const r=ph+4+k*gap;if(r>Rm)break;const kk=D>=1?1:clamp((D*1.4-j*.12-k/K)/.22);if(kk<=0)continue;
-      const al=.2*(1-r/Rm)*clamp((r-4)/12);if(al<.005)continue;
-      ctx.strokeStyle=rgba(C.ink,al);ctx.beginPath();ctx.arc(cx,cy,r,a0,a0+TAU*kk);ctx.stroke();
-      if(kk<1&&k%2===0&&x0in(cx,cy,r,a0+TAU*kk,w,h))nibs.push([cx+Math.cos(a0+TAU*kk)*r,cy+Math.sin(a0+TAU*kk)*r])}});
-  if(D<1)nibs.slice(0,3).forEach(q=>nib(ctx,q[0],q[1]));
+      const al=.36*(1-r/Rm)*clamp((r-4)/12);if(al<.005)continue;
+      ctx.strokeStyle=rgba(C.ink,al);ctx.beginPath();ctx.arc(cx,cy,r,a0,a0+TAU*kk);ctx.stroke()}});
   ctx.fillStyle=rgba(C.sig,1);S.forEach(s=>ctx.fillRect(s[0]*w-4,s[1]*h-4,8,8))}
-const x0in=(cx,cy,r,th,w,h)=>{const x=cx+Math.cos(th)*r,y=cy+Math.sin(th)*r;return x>8&&x<w-8&&y>8&&y<h-8};
 
 /* 03 構造理解力：絡まった線の塊がほどけて系統図になる（c-feat-gen-alt.html の案A）。触れても何も起きない */
 function geoStructure(w,h){
@@ -1009,26 +983,26 @@ function drawFeature3(p,t,D){const {ctx,w,h}=p;
   const u=clamp((g-1.5)/3.5),done=ss(4.7,5.5,g);
   if(done>0){ctx.save();ctx.setLineDash([2,4]);ctx.strokeStyle=rgba(C.ink,.22*done);ctx.lineWidth=.8;ctx.beginPath();
     for(const y of [G.yR,G.yG,G.yL]){ctx.moveTo(w*.03,y);ctx.lineTo(w*.97,y)}ctx.stroke();ctx.restore()}
-  ctx.lineWidth=1;ctx.lineJoin='round';ctx.lineCap='round';const nibs=[],paths=[];
+  ctx.lineWidth=1;ctx.lineJoin='round';ctx.lineCap='round';const paths=[];
   G.S.forEach((s,i)=>{const ki=ss(s.d,s.d+.62,u),pts=[];
     for(let j=0;j<G.M;j++){const q=j/(G.M-1),k=ss(0,1,ki*1.4-q*.4),wo=1-ss(0,.35,q),n=(1-k)*2.4*ss(0,.1,q);
       const tx=s.tan[j][0]+ox*wo+Math.sin(t*1.3+j*.37+s.ph)*n,ty=s.tan[j][1]+oy*wo+Math.cos(t*1.1+j*.29+s.ph)*n;
       pts.push([mix(tx,s.tgt[j][0],k),mix(ty,s.tgt[j][1],k)])}
     paths.push(pts)});
   ctx.strokeStyle=rgba(C.ink,.52);ctx.beginPath();
-  paths.forEach((pts,i)=>{const k=pen>=1?1:clamp((pen-i*.07)/.5);const tip=polyPart(ctx,pts,k,cumLen(pts.slice()));if(k<1&&tip)nibs.push(tip)});
+  paths.forEach((pts,i)=>{const k=pen>=1?1:clamp((pen-i*.07)/.5);polyPart(ctx,pts,k,cumLen(pts.slice()))});
   ctx.stroke();
   if(done>0){const a=done;ctx.lineWidth=1;
     G.gx.forEach((x,gi)=>{const s=G.S.findIndex(s=>s.gi===gi),q=paths[s][G.S[s].jG];ctx.fillStyle=rgba(C.card,a);ctx.strokeStyle=rgba(C.ink,.75*a);ctx.fillRect(q[0]-4.5,G.yG-4.5,9,9);ctx.strokeRect(q[0]-4.5,G.yG-4.5,9,9)});
     for(let i=0;i<G.nL;i++){const q=paths[i][G.M-1];ctx.fillStyle=rgba(C.card,a);ctx.strokeStyle=rgba(C.ink,.75*a);ctx.fillRect(q[0]-3.5,q[1]-3.5,7,7);ctx.strokeRect(q[0]-3.5,q[1]-3.5,7,7)}}
-  nibs.forEach(q=>nib(ctx,q[0],q[1]));
   ctx.fillStyle=rgba(C.sig,1);ctx.fillRect(rx-4,ry-4,8,8)}
 
+const WARP4=4.6;
 /* 04 スピード感：4本の筋をペンが左から引き、描き終わると点が筋を走る。触れると筋がわずかに歪み、風切りの音 */
 function drawFeature4(p,t,D,H){const {ctx,w,h}=p;
   if(!p.f4){const r=rng(9);p.f4={bg:[]};for(let i=0;i<70;i++)p.f4.bg.push([r()*w,r()*h,12+r()*40,.3+r()*.6])}
   ctx.clearRect(0,0,w,h);
-  const lane=(k,x)=>{const y=h*(.26+.16*k)+Math.sin(x*.012+k*1.3+t*.35)*h*.08;return H<.003?y:y+N3(x*.018,k*3.7,t*2.6)*3.2*H};
+  const lane=(k,x)=>{const y=h*(.26+.16*k)+Math.sin(x*.012+k*1.3+t*.35)*h*.08;return H<.003?y:y+N3(x*.018,k*3.7,t*2.6)*WARP4*H};
   /* 遅い流れ（背景） */
   const bga=ss(.25,.8,D);if(bga>0){ctx.lineWidth=1;ctx.strokeStyle=rgba(C.ink,.2*bga);ctx.beginPath();
     for(const b of p.f4.bg){if(D>=1)b[0]-=b[3];if(b[0]+b[2]<0)b[0]=w+Math.random()*40;const q0=warp(b[0],b[1],t,H,.7),q1=warp(b[0]+b[2],b[1],t,H,.7);ctx.moveTo(q0[0],q0[1]);ctx.lineTo(q1[0],q1[1])}ctx.stroke()}
@@ -1036,63 +1010,71 @@ function drawFeature4(p,t,D,H){const {ctx,w,h}=p;
   const dt=Math.min(.05,t-(p.lt||t));p.lt=t;
   for(let k=0;k<4;k++){const kk=D>=1?1:clamp((D*1.3-k*.1)/.75),xe=-10+(w+20)*kk;if(kk<=0)continue;
     ctx.beginPath();ctx.strokeStyle=rgba(C.ink,k===0?.5:.32);ctx.lineWidth=1;for(let x=-10;x<=xe;x+=6){const y=lane(k,x);x===-10?ctx.moveTo(x,y):ctx.lineTo(x,y)}ctx.stroke();
-    if(kk<1)nib(ctx,xe,lane(k,xe));
     if(D>=1){const sp=k===0?w*.34:w*.17+k*w*.03;p.run.x[k]=(p.run.x[k]+sp*dt)%(w+160);const x=p.run.x[k]-80,y=lane(k,x),tl=40+(k===0?30:0);
       for(let i=0;i<10;i++){const xa=x-tl*(1-i/10),xb=x-tl*(1-(i+1)/10);ctx.strokeStyle=k===0?rgba(C.sig,.95*(i+1)/10):rgba(C.ink,.75*(i+1)/10);ctx.lineWidth=k===0?1.8:1.2;ctx.beginPath();ctx.moveTo(xa,lane(k,xa));ctx.lineTo(xb,lane(k,xb));ctx.stroke()}
       ctx.fillStyle=k===0?rgba(C.sig,1):rgba(C.ink,.9);ctx.fillRect(x-3,y-3,6,6)}}}
 
-/* ===== 触れた時の音（3D版だけ鳴る）=====
-   window.SND.out() は音がオンの時だけ { ctx, sfx, music, verb, nbuf } を返す。null なら鳴らさない。すべて WebAudio で合成 */
-const FSND={
-  /* 葉ずれ：ごく短いノイズの粒を房（1〜5粒）にして重ねる。粒の高さ・長さ・左右はばらばら。全体は「ひと吹きの風」の山に沿う */
-  leaf(o){const {ctx:a,sfx,verb,nbuf}=o,t0=a.currentTime+.02,dur=1.7;
-    const out=a.createGain();out.gain.value=1.7;out.connect(sfx);const vs=a.createGain();vs.gain.value=.35;out.connect(vs);vs.connect(verb);
-    const gust=u=>u<.22?Math.sin(u/.22*Math.PI/2):Math.exp(-(u-.22)*2.6);
-    const nC=54;for(let c=0;c<nC;c++){const u=Math.pow(Math.random(),1.35),tc=t0+u*dur,g0=gust(u),m=1+(Math.random()*4|0),pan=Math.random()*1.4-.7,fc=2200+Math.random()*4800;
-      for(let i=0;i<m;i++){const tt=tc+i*(.006+Math.random()*.02),L=.005+Math.random()*.028,pk=(.035+Math.random()*.075)*g0*(1-i*.12);if(pk<.003)continue;
-        const s=a.createBufferSource();s.buffer=nbuf;s.playbackRate.value=.7+Math.random()*.7;
-        const f=a.createBiquadFilter();f.type='bandpass';f.frequency.value=fc*(.8+Math.random()*.45);f.Q.value=.8+Math.random()*1.4;
-        const g=a.createGain();g.gain.setValueAtTime(0,tt);g.gain.linearRampToValueAtTime(pk,tt+.0015);g.gain.exponentialRampToValueAtTime(.0001,tt+L);
-        s.connect(f);f.connect(g);
-        if(a.createStereoPanner){const pn=a.createStereoPanner();pn.pan.value=pan;g.connect(pn);pn.connect(out)}else g.connect(out);
-        s.start(tt,Math.random()*1.5,L+.02)}}
-    /* 下地のさらさら */
-    const b=a.createBufferSource();b.buffer=nbuf;b.loop=true;const hp=a.createBiquadFilter();hp.type='highpass';hp.frequency.value=2600;const lp=a.createBiquadFilter();lp.type='lowpass';lp.frequency.value=8500;
-    const bg=a.createGain();bg.gain.setValueAtTime(0,t0);bg.gain.linearRampToValueAtTime(.028,t0+dur*.22);bg.gain.exponentialRampToValueAtTime(.0001,t0+dur);
-    b.connect(hp);hp.connect(lp);lp.connect(bg);bg.connect(out);b.start(t0,Math.random());b.stop(t0+dur+.05);
-    /* ごく薄い澄んだ響き（不思議な余韻） */
-    [1568,2349].forEach((fq,i)=>{const s=a.createOscillator();s.type='sine';s.frequency.value=fq;const g=a.createGain();const ts=t0+.18+i*.12;
-      g.gain.setValueAtTime(0,ts);g.gain.linearRampToValueAtTime(.007,ts+.35);g.gain.exponentialRampToValueAtTime(.0001,ts+2.2);s.connect(g);g.connect(verb);s.start(ts);s.stop(ts+2.3)})},
-  /* ビュー：帯域を絞ったノイズの高さを上げて下ろし、左から右へ流す。かすかに音程のある笛の音を重ねる */
-  whoosh(o){const {ctx:a,sfx,verb,nbuf}=o,t0=a.currentTime+.02,dur=.8;
-    const pn=a.createStereoPanner?a.createStereoPanner():null,out=a.createGain();out.gain.value=1.8;
-    if(pn){pn.pan.setValueAtTime(-.8,t0);pn.pan.linearRampToValueAtTime(.8,t0+dur);out.connect(pn);pn.connect(sfx)}else out.connect(sfx);
-    const vs=a.createGain();vs.gain.value=.3;out.connect(vs);vs.connect(verb);
-    [[2.4,.17,1],[5,.05,2.1]].forEach(([q,pk,mul])=>{const s=a.createBufferSource();s.buffer=nbuf;s.loop=true;const f=a.createBiquadFilter();f.type='bandpass';f.Q.value=q;
-      f.frequency.setValueAtTime(360*mul,t0);f.frequency.exponentialRampToValueAtTime(2500*mul,t0+dur*.42);f.frequency.exponentialRampToValueAtTime(650*mul,t0+dur);
-      const g=a.createGain();g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(pk,t0+dur*.4);g.gain.exponentialRampToValueAtTime(.0001,t0+dur);
-      s.connect(f);f.connect(g);g.connect(out);s.start(t0,Math.random());s.stop(t0+dur+.05)});
-    const w=a.createOscillator();w.type='sine';w.frequency.setValueAtTime(520,t0);w.frequency.exponentialRampToValueAtTime(1180,t0+dur*.42);w.frequency.exponentialRampToValueAtTime(430,t0+dur);
-    const wg=a.createGain();wg.gain.setValueAtTime(0,t0);wg.gain.linearRampToValueAtTime(.012,t0+dur*.4);wg.gain.exponentialRampToValueAtTime(.0001,t0+dur);w.connect(wg);wg.connect(out);w.start(t0);w.stop(t0+dur+.05)}
-};
-const fSnd=k=>{const o=window.SND&&typeof window.SND.out==='function'?window.SND.out():null;if(!o)return;try{FSND[k](o)}catch(e){console.warn(e)}};
-window.__fsnd=FSND;
+/* ===== 触れた時の音（3D版だけ鳴る）：絵の動きと同期 =====
+   音は「歪みが起きている間だけ・その強さに合わせて」鳴る。毎フレーム、絵と同じ H（歪みの強さ）× 揺れの速さ から強さ I を出し、
+   葉ずれ＝粒の数と音量、風切り＝音量と高さ を I に合わせる。動きが止まれば（I→0）音も止む。
+   window.SND.out() は音がオンの時だけ { ctx, sfx, music, verb, nbuf } を返す。null なら鳴らさない（鳴っていれば止める） */
+const sndOut=()=>window.SND&&typeof window.SND.out==='function'?window.SND.out():null;
+function sndEngine(kind){
+  const E={kind,st:null,lastUpd:0,I:0,
+    open(o){const a=o.ctx,out=a.createGain();out.gain.value=kind==='leaf'?1.4:1;out.connect(o.sfx);const vs=a.createGain();vs.gain.value=kind==='leaf'?.35:.3;out.connect(vs);vs.connect(o.verb);
+      const s={o,a,out,src:[]};
+      if(kind==='leaf'){/* 下地のさらさら（I に合わせて上下） */
+        const b=a.createBufferSource();b.buffer=o.nbuf;b.loop=true;const hp=a.createBiquadFilter();hp.type='highpass';hp.frequency.value=2600;const lp=a.createBiquadFilter();lp.type='lowpass';lp.frequency.value=8500;
+        const g=a.createGain();g.gain.value=0;b.connect(hp);hp.connect(lp);lp.connect(g);g.connect(out);b.start(a.currentTime,Math.random());s.src.push(b);s.bed=g}
+      else{/* 帯域を絞ったノイズ2本＋かすかな笛。音量と高さを I に合わせる */
+        s.bands=[[2.4,.2,1],[5,.06,2.1]].map(([q,pk,mul])=>{const b=a.createBufferSource();b.buffer=o.nbuf;b.loop=true;const f=a.createBiquadFilter();f.type='bandpass';f.Q.value=q;f.frequency.value=380*mul;
+          const g=a.createGain();g.gain.value=0;b.connect(f);f.connect(g);g.connect(out);b.start(a.currentTime,Math.random());s.src.push(b);return{f,g,pk,mul}});
+        const w=a.createOscillator();w.type='sine';w.frequency.value=520;const wg=a.createGain();wg.gain.value=0;w.connect(wg);wg.connect(out);w.start();s.src.push(w);s.wh={w,wg}}
+      E.st=s;window.__fsndOut=window.__fsndOut||{};window.__fsndOut[kind]=out},
+    close(){const s=E.st;if(!s)return;E.st=null;const t=s.a.currentTime;try{s.out.gain.setTargetAtTime(0,t,.02);s.src.forEach(n=>n.stop(t+.15))}catch(e){}setTimeout(()=>{try{s.out.disconnect()}catch(e){}},400)},
+    /* I：0〜1、dt：秒。毎フレーム呼ぶ */
+    upd(I,dt){E.I=I;E.lastUpd=performance.now();const o=I>.004||E.st?sndOut():null;
+      if(!o){if(E.st)E.close();return}
+      if(E.st&&E.st.o.ctx!==o.ctx)E.close();
+      if(!E.st){if(I<=.004)return;E.open(o);E.idle=0;E.watch()}
+      const s=E.st,a=s.a,t=a.currentTime,tc=.035;
+      if(kind==='leaf'){s.bed.gain.setTargetAtTime(.034*I,t,tc);
+        /* 葉ずれの粒：この1フレームの間に I に比例した数だけ（房で1〜3粒） */
+        let n=I*150*dt;while(n>0){if(n<1&&Math.random()>n)break;n-=1;
+          const tc0=t+.01+Math.random()*dt,m=1+(Math.random()*3|0),pan=Math.random()*1.4-.7,fc=2200+Math.random()*4800;
+          for(let i=0;i<m;i++){const tt=tc0+i*(.006+Math.random()*.018),L=.005+Math.random()*.026,pk=(.05+Math.random()*.09)*I*(1-i*.15);if(pk<.003)continue;
+            const b=a.createBufferSource();b.buffer=s.o.nbuf;b.playbackRate.value=.7+Math.random()*.7;const f=a.createBiquadFilter();f.type='bandpass';f.frequency.value=fc*(.8+Math.random()*.45);f.Q.value=.8+Math.random()*1.4;
+            const g=a.createGain();g.gain.setValueAtTime(0,tt);g.gain.linearRampToValueAtTime(pk,tt+.0015);g.gain.exponentialRampToValueAtTime(.0001,tt+L);b.connect(f);f.connect(g);
+            if(a.createStereoPanner){const pn=a.createStereoPanner();pn.pan.value=pan;g.connect(pn);pn.connect(s.out)}else g.connect(s.out);b.start(tt,Math.random()*1.5,L+.02)}}}
+      else{s.bands.forEach(b=>{b.g.gain.setTargetAtTime(b.pk*I,t,tc);b.f.frequency.setTargetAtTime((380+2100*I)*b.mul,t,.06)});
+        s.wh.w.frequency.setTargetAtTime(480+700*I,t,.06);s.wh.wg.gain.setTargetAtTime(.014*I,t,tc)}
+      E.idle=I>.004?0:E.idle+dt;if(E.idle>.6)E.close()},
+    /* 絵が描かれなくなった（画面外へ出た等）ら止める */
+    watch(){const f=()=>{if(!E.st)return;if(performance.now()-E.lastUpd>150){E.close();return}requestAnimationFrame(f)};requestAnimationFrame(f)}};
+  return E}
+/* 揺れの速さ（歪みの量の1秒あたりの変化、H=1 換算）：絵の中の数点で測る。0〜1 に丸める */
+const warpSpeed=(pts,t,dt,f)=>{if(!dt)return 0;let s=0;for(const [x,y] of pts){const a=f(x,y,t),b=f(x,y,t-dt);s+=Math.hypot(a[0]-b[0],a[1]-b[1])/dt}return s/pts.length};
 
 const FEATURE_ART={1:drawFeature1,2:drawFeature2,3:drawFeature3,4:drawFeature4};
 /* 触って反応するのは 01（葉ずれ）と 04（風切り）だけ。02・03 は何も起きない */
 const FEAT_TOUCH={1:'leaf',4:'whoosh'};
+/* 揺れの速さの物差し（その絵の歪みの式を H=1 で測る） */
+const FEAT_SPEED={1:(p,t,dt)=>warpSpeed([[p.w*.3,p.h*.25],[p.w*.5,p.h*.18],[p.w*.7,p.h*.3]],t,dt,(x,y,tt)=>warp(x,y,tt,1,1)),
+  4:(p,t,dt)=>warpSpeed([[p.w*.2,0],[p.w*.5,1],[p.w*.8,2]],t,dt,(x,k,tt)=>[0,N3(x*.018,k*3.7,tt*2.6)*WARP4])};
 document.querySelectorAll('canvas[data-feat]').forEach(c=>{const n=+c.dataset.feat,fn=FEATURE_ART[n],art=c.parentElement,snd=FEAT_TOUCH[n];
-  const p=piece(c,{anyResize:true,hov:0,H:0,tapUntil:-1,d0:null,lastSnd:-9,
+  const eng=snd?sndEngine(snd):null;
+  const p=piece(c,{anyResize:true,hov:0,H:0,tapUntil:-1,d0:null,I:0,
     init(p){p.f1=p.g3=p.f4=p.run=null},
     draw(p,t,dt){const D=REDUCE?1:(p.d0==null?0:clamp((t-p.d0)/PEN_DUR[n]));if(D>=1&&p.dDone==null)p.dDone=t;
-      const tgt=snd&&D>=1&&(p.hov||t<p.tapUntil)?1:0;p.H+=(tgt-p.H)*Math.min(1,(dt||.016)*(tgt?4:2));if(p.H<.002)p.H=0;fn(p,t,D,p.H)}});
+      const tgt=snd&&D>=1&&(p.hov||t<p.tapUntil)?1:0;p.H+=(tgt-p.H)*Math.min(1,(dt||.016)*(tgt?4:2));if(p.H<.002)p.H=0;fn(p,t,D,p.H);
+      if(eng){/* 音の強さ＝歪みの強さ H × 揺れの速さ（H=0 なら無音） */
+        const sp=p.H>0?clamp(FEAT_SPEED[n](p,t,dt||.016)/(n===1?9:11)):0,I=p.H*(.4+.6*sp);p.I+=(I-p.I)*Math.min(1,(dt||.016)*14);if(p.I<.003)p.I=0;eng.upd(p.I,dt||.016)}}});
   penIO.observe(c);
   if(!snd)return;
-  const touch=()=>{if(p.dDone==null&&!REDUCE)return;if(T-p.lastSnd<1.1)return;p.lastSnd=T;fSnd(snd)};
-  art.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse'){p.hov=1;touch()}});
+  art.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse')p.hov=1});
   art.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse')p.hov=0});
-  art.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse'){p.tapUntil=T+1.6;touch()}})});
-window.__feat=()=>[...document.querySelectorAll('canvas[data-feat]')].map(c=>{const p=c.__p;return{d0:p.d0,dDone:p.dDone,H:+p.H.toFixed(2)}});
+  art.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse')p.tapUntil=T+1.6})});
+window.__feat=()=>[...document.querySelectorAll('canvas[data-feat]')].map(c=>{const p=c.__p;return{d0:p.d0,dDone:p.dDone,H:+p.H.toFixed(3),I:+(p.I||0).toFixed(3)}});
 
 /* ===== MEMBER：最初は散らばった粒子のまま。スクロールして来ると粒子が集まって人になり、くっきりした白黒の写真に（乗せるとカラー） ===== */
 const mcs=[...document.querySelectorAll('.mc')];

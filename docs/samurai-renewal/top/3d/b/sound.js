@@ -184,6 +184,14 @@ export const SND = (() => {
       radioG.gain.setTargetAtTime(0.06 * Math.max(near * 0.5 * (1 - lock), lock) * v, t, 0.15);
       if (v > 0.3 && Math.random() < 0.3 * (1 - lock)) burst(0.02 + Math.random() * 0.04, 0.008, 'highpass', 2500 + Math.random() * 4000, 1);
     },
+    // FV の輪がパカッと開く：「フュー」と上がる風＋低い響き＋きらめき
+    open() { if (!on) return; const t = ctx.currentTime;
+      const s = ctx.createBufferSource(); s.buffer = nbuf; const fl = ctx.createBiquadFilter(); fl.type = 'bandpass'; fl.Q.value = 2.2;
+      fl.frequency.setValueAtTime(300, t); fl.frequency.exponentialRampToValueAtTime(5200, t + 1.1);
+      const g = ctx.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.16, t + 0.5); g.gain.exponentialRampToValueAtTime(0.0001, t + 1.6);
+      s.connect(fl); fl.connect(g); g.connect(sfx); s.start(t); s.stop(t + 1.7);
+      tone(55, 'sine', 0.14, 0.02, 1.8, music, 38);
+      [81, 88, 93].forEach((m, i) => setTimeout(() => on && tone(mtof(m), 'sine', 0.035, 0.01, 1.6, music), 350 + i * 90)); },
     // テレビが乱れる「プシュッ」：短い雑音が下へ落ちる
     psh(k = 1) { if (!on) return; const s = ctx.createBufferSource(); s.buffer = nbuf; s.playbackRate.setValueAtTime(1.6, ctx.currentTime); s.playbackRate.exponentialRampToValueAtTime(0.35, ctx.currentTime + 0.22);
       const fl = ctx.createBiquadFilter(); fl.type = 'bandpass'; fl.Q.value = 1.4; fl.frequency.setValueAtTime(3200, ctx.currentTime); fl.frequency.exponentialRampToValueAtTime(500, ctx.currentTime + 0.25);

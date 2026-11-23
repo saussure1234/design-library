@@ -24,7 +24,8 @@
     faint: { c: 'ink', a: .32, w: .8 },
     dash: { c: 'ink', a: .42, w: .8, d: [3, 3] },
     cl: { c: 'ink', a: .42, w: .8, d: [10, 3, 2, 3] },
-    sig: { c: 'sig', a: 1, w: 1.3 }
+    sig: { c: 'sig', a: 1, w: 1.3 },
+    sigd: { c: 'sig', a: 1, w: 1.3, d: [4, 3] }
   };
 
   /* ---------- 線の部品（px 座標の折れ線の列を作る） ---------- */
@@ -112,13 +113,16 @@
   const SPQ = matchMedia('(max-width:760px)');
   function venn(P, c, fr, Bs) {
     const rc = c.getBoundingClientRect();
-    const bx = rc.left - fr.left, by = rc.top - fr.top, s = rc.width;
+    vennAt(P, c, rc.left - fr.left, rc.top - fr.top, rc.width, rc.left - fr.left, rc.top - fr.top, Bs, { arrow: true, core: 'sig' });
+  }
+  /* bx,by,s＝円の置き場（正方形）、ox,oy＝ラベルの親（c）の位置。o.core＝中心の印の色、o.arrow＝画面への矢印を引くか */
+  function vennAt(P, c, bx, by, s, ox, oy, Bs, o) {
     const r = s * .25, d = s * .15, cx = bx + s * .5, cy = by + s * .55;
     const C = [[cx, cy - d], [cx - d * .866, cy + d * .5], [cx + d * .866, cy + d * .5]];
     const a0 = [-Math.PI / 2, Math.PI * .75, Math.PI * .25];
     C.forEach(([x, y], k) => { const pts = []; for (let i = 0; i <= 64; i++) { const a = a0[k] + i / 64 * TAU; pts.push([x + Math.cos(a) * r, y + Math.sin(a) * r]); } P.pl(pts, 'ink'); });
     const lab = k => c.querySelector('.c3l[data-k="' + k + '"]');
-    const put = (k, x, y, tf) => { const e = lab(k); if (!e) return null; e.style.left = (x - bx).toFixed(1) + 'px'; e.style.top = (y - by).toFixed(1) + 'px'; e.style.transform = tf; return e; };
+    const put = (k, x, y, tf) => { const e = lab(k); if (!e) return null; e.style.left = (x - ox).toFixed(1) + 'px'; e.style.top = (y - oy).toFixed(1) + 'px'; e.style.transform = tf; return e; };
     /* 引出線：上は真上へ、左下・右下は斜めに出して棚を付ける */
     { const x = C[0][0], y = C[0][1] - r, L = 14; P.dot(x, y, 2.2, 'ink'); P.ln(x, y, x, y - L, 'ink', { done: put(0, x, y - L - 5, 'translate(-50%,-100%)') }); }
     /* 下の2つ：diag＝斜めに出して棚（横に余裕がある時）／down＝真下に下ろしてラベルを中央に（右に画面がある時） */
@@ -133,7 +137,8 @@
       P.dot(x, y, 2.2, 'ink'); P.ln(x, y, x + sg * q, y + q, 'ink');
       P.ln(x + sg * q, y + q, x + sg * (q + sh), y + q, 'ink', { done: put(k, x + sg * (q + sh + 5), y + q, sg < 0 ? 'translate(-100%,-50%)' : 'translate(0,-50%)') });
     });
-    P.dot(cx, cy, 3.2, 'sig', true);
+    P.dot(cx, cy, 3.2, o.core, true);
+    if (!o.arrow) return { cx, cy, r, C };
     /* 矢印：3C → 画面 */
     const B = Bs[+(c.dataset.to || 0)]; if (!B) return;
     const flow = (SPQ.matches && c.dataset.flowSp) || c.dataset.flow || 'e', h = 6;
@@ -146,6 +151,55 @@
       P.pl(Math.abs(y1 - y0) < 1 ? [[x0, y0], [x1, y1]] : [[x0, y0], [(x0 + x1) / 2, y0], [(x0 + x1) / 2, y1], [x1, y1]], 'ink');
       P.pl([[x1 - h, y1 - h * .7], [x1, y1], [x1 - h, y1 + h * .7]], 'ink');
     }
+  }
+
+  /* ---------- S2A の流れ：3C（事業理解）→ 戦略 → 実行・伴走 → 画面（可視化） ----------
+     <div class="s2f" data-n0="x,y,w,h" data-n0-sp="…" data-n1 … data-n2 … data-to="0">（.fig いっぱいに敷く）の中に
+     .c3l[data-k=0..2]（3C の名前）と .s2l[data-k=0..3]（事業理解／戦略／実行・伴走／可視化）。箱は .fig に対する ％。
+     各段の名前は描き終えたら出す。朱は「伴走」の1本だけ */
+  function s2flow(P, f, fr, Bs) {
+    const W = fr.width, H = fr.height, sp = SPQ.matches;
+    const N = [0, 1, 2].map(k => { const v = ((sp && f.dataset['n' + k + 'Sp']) || f.dataset['n' + k] || '0,0,10,10').split(',').map(Number); return { x: v[0] / 100 * W, y: v[1] / 100 * H, w: v[2] / 100 * W, h: v[3] / 100 * H }; });
+    const sl = k => f.querySelector('.s2l[data-k="' + k + '"]');
+    const put = (e, x, y, tf) => { if (!e) return null; e.style.left = x.toFixed(1) + 'px'; e.style.top = y.toFixed(1) + 'px'; e.style.transform = tf; return e; };
+    const head = (k, B) => put(sl(k), B.x + B.w / 2, B.y + B.h + 6, 'translate(-50%,0)');
+    const ah = 6, LBL = 22;
+    /* 段の名前は、その段の最後の線を描き終えた時に出す（点には付けない） */
+    const lastLine = () => { for (let i = P.L.length - 1; i >= 0; i--) if (!P.L[i].dot) return P.L[i]; };
+    /* 箱と箱をつなぐ矢印（右にあれば横、下にあれば段の名前の下から縦に下ろす） */
+    const link = (A, B) => {
+      if (B.x >= A.x + A.w - 1 && B.y < A.y + A.h) {
+        const x0 = A.x + A.w + 8, y0 = A.y + A.h / 2, x1 = B.x - 10, y1 = clamp(y0, B.y + 8, B.y + B.h - 8);
+        P.pl(Math.abs(y1 - y0) < 1 ? [[x0, y0], [x1, y1]] : [[x0, y0], [(x0 + x1) / 2, y0], [(x0 + x1) / 2, y1], [x1, y1]], 'ink');
+        return P.pl([[x1 - ah, y1 - ah * .7], [x1, y1], [x1 - ah, y1 + ah * .7]], 'ink');
+      }
+      const x0 = A.x + A.w / 2, y0 = A.y + A.h + LBL + 12, x1 = clamp(x0, B.x + 12, B.x + B.w - 12), y1 = B.y - 12;
+      P.pl(Math.abs(x1 - x0) < 1 ? [[x0, y0], [x1, y1]] : [[x0, y0], [x0, (y0 + y1) / 2], [x1, (y0 + y1) / 2], [x1, y1]], 'ink');
+      const it = P.pl([[x1 - ah * .7, y1 - ah], [x1, y1], [x1 + ah * .7, y1 - ah]], 'ink');
+      it.tip = [x1, y1]; return it;
+    };
+    /* 1. 事業理解＝3C */
+    { const B = N[0], s = Math.min(B.w * .62, B.h * .95), n = P.L.length;
+      vennAt(P, f, B.x + (B.w - s) / 2, B.y + (B.h - s) / 2 + s * .04, s, 0, 0, Bs, { core: 'ink' });
+      P.L[n + 2].done = head(0, B); }
+    link(N[0], N[1]);
+    /* 2. 戦略＝いくつもの道筋から1本を選び、的へ（選ばなかった道は点線で止める） */
+    { const B = N[1], x0 = B.x + 4, cy = B.y + B.h / 2, x1 = B.x + B.w - 8, xm = mix(x0, x1, .42), tr = Math.min(6, B.h * .08);
+      P.dot(x0, cy, 2.6, 'ink');
+      [B.y + B.h * .2, B.y + B.h * .8].forEach(y => { const xe = x1 - tr * 3; P.pl([[x0, cy], [xm, y], [xe, y]], 'dash'); P.ln(xe + 2, y - 3, xe + 8, y + 3, 'thin'); P.ln(xe + 2, y + 3, xe + 8, y - 3, 'thin'); });
+      P.ln(x0, cy, x1 - tr * 2 - 4, cy, 'ink'); P.pl([[x1 - tr * 2 - 4 - ah, cy - ah * .7], [x1 - tr * 2 - 4, cy], [x1 - tr * 2 - 4 - ah, cy + ah * .7]], 'ink');
+      P.circ(x1 - tr, cy, tr, 'ink'); P.dot(x1 - tr, cy, 1.8, 'ink');
+      lastLine().done = head(1, B); }
+    link(N[1], N[2]);
+    /* 3. 実行・伴走＝一段ずつ上がる階段と、その横を最後まで並んで進む朱の点線 */
+    { const B = N[2], n = 4, x0 = B.x + 4, x1 = B.x + B.w - 8, yb = B.y + B.h - 8, yt = B.y + 10, sw = (x1 - x0) / n, sh = (yb - yt) / n, g = 7;
+      const st = (dx, dy) => { const pts = [[x0 + dx, yb + dy]]; for (let i = 0; i < n; i++) { pts.push([x0 + dx + sw * (i + 1), yb + dy - sh * i]); if (i < n - 1) pts.push([x0 + dx + sw * (i + 1), yb + dy - sh * (i + 1)]); } return pts; };
+      P.dot(x0, yb, 2.4, 'ink'); P.pl(st(0, 0), 'ink'); P.dot(x1, yb - sh * (n - 1), 2.4, 'ink');
+      P.pl(st(g * .5, g), 'sigd');
+      lastLine().done = head(2, B); }
+    /* 4. 画面へ＝可視化 */
+    const S = Bs[+(f.dataset.to || 0)];
+    if (S) { const it = link(N[2], S); it.done = put(sl(3), it.tip[0] - 10, it.tip[1] - 12, 'translate(-100%,-50%)'); }
   }
 
   /* ---------- 1つの図：計測 → 線の列 → 時間で描き進む ---------- */
@@ -194,6 +248,9 @@
       /* 3C の図（.c3）：先に描く（事業理解 → 画面の順に読めるように） */
       const c3s = [...el.querySelectorAll('.c3')];
       if (c3s.length) { const Q = Plan(); c3s.forEach(c => venn(Q, c, fr, Bs)); P.L.splice(n0, 0, ...Q.L); }
+      /* S2A の流れ（.s2f）：これも画面より先に描く */
+      const s2s = [...el.querySelectorAll('.s2f')];
+      if (s2s.length) { const Q = Plan(); s2s.forEach(f => s2flow(Q, f, fr, Bs)); P.L.splice(n0, 0, ...Q.L); }
       let tot = 0;
       P.L.forEach(it => {
         let l = 0; for (let i = 1; i < it.pts.length; i++) l += Math.hypot(it.pts[i][0] - it.pts[i - 1][0], it.pts[i][1] - it.pts[i - 1][1]);

@@ -16,6 +16,7 @@ const SP = matchMedia('(max-width: 820px)').matches || /iPhone|Android.+Mobile/.
 const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const QS = new URLSearchParams(location.search);
 const QLOCK = QS.has('q') ? +QS.get('q') : -1;
+const TR = (QS.get('tr') || 'b').toLowerCase();   // FV→場面1 のつなぎ方（既定は b：So 11/24 選定）
 const Q = SP
   ? { rocks: 150, shards: 600, dustN: 160, dustM: 2600, dustF: 4000, conv: 4200, tvs: 36, trees: 7, depth: 7, planks: 70, haze: 10, warpTaps: 4, intro: 3200 }
   : { rocks: 380, shards: 1700, dustN: 420, dustM: 7600, dustF: 12000, conv: 14000, tvs: 84, trees: 14, depth: 8, planks: 130, haze: 22, warpTaps: 8, intro: 9000 };
@@ -839,11 +840,10 @@ updatePlanks(0, 0);
 // 見えている粒は1コマ 15〜30 個、短い光の粒と細く長い筋が混ざる。
 const fvx = document.getElementById('fvx'), fvSum = document.getElementById('fsum'), fvv = document.getElementById('fvv');
 const tmpFv = new THREE.Vector3();
-let fvDark = 0;
-const fvFlash = (() => { const d = document.createElement('div'); d.setAttribute('aria-hidden', 'true'); d.style.cssText = 'position:fixed;inset:0;z-index:5;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 50%,rgba(235,248,255,1) 0%,rgba(167,228,255,.55) 30%,rgba(0,0,0,0) 70%)'; document.body.appendChild(d); return d; })();
+let fvDark = 0, fvOpened = false;
+const fvFlash = (() => { const d = document.createElement('div'); d.setAttribute('aria-hidden', 'true'); d.style.cssText = TR === 'b' ? 'position:fixed;inset:0;z-index:3;pointer-events:none;opacity:0;background:radial-gradient(ellipse at 50% 42%,#ffffff 0%,#eef9ff 45%,#cfe9fb 100%)' : 'position:fixed;inset:0;z-index:5;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 50%,rgba(235,248,255,1) 0%,rgba(167,228,255,.55) 30%,rgba(0,0,0,0) 70%)'; document.body.appendChild(d); return d; })();
 // 本線（初期の FV：top-v2）と同じ粒：中心から放射状に手前へ、手前ほど大きく尾を引く。紫〜桃の混ざる色。
 // 文字がそろうと急に遅くなり、水色の波紋が広がる。背景は真っ黒（So 11/24「初期の FV が良かった」）
-const TR = (new URLSearchParams(location.search).get('tr') || 'a').toLowerCase();   // FV→場面1 のつなぎ方の案
 const FVP = (() => {
   const cv = document.getElementById('fvc'), ctx = cv.getContext('2d');
   const PAL = [[255,255,255],[255,255,255],[205,224,255],[160,200,255],[188,170,255],[214,198,255],[255,150,214],[255,214,160]];
@@ -862,7 +862,7 @@ const FVP = (() => {
   fit(); addEventListener('resize', fit);
   let nz = 1, tt = 0, gx = .5, gy = .5, RG = [], lastR = -9999;
   const st = { cx: 0, cy: 0 };
-  function draw(dtS, NOISE, boost, opaque) {
+  function draw(dtS, NOISE, boost, opaque, wob = 0, openR = 0) {
     const dt = dtS * 1000; nz += (NOISE - nz) * (1 - Math.pow(1 - .08, dt / 33)); tt += dt;
     gx += (.5 + FV.mx - gx) * .04; gy += (.5 + FV.my - gy) * .04;
     ctx.globalCompositeOperation = 'source-over';
@@ -897,10 +897,16 @@ const FVP = (() => {
     else if (tt - lastR > 1500) { lastR = tt; RG.push({ r: 0 }); }
     const rx = W * .5, ry = H * .42, M = Math.hypot(W, H) * .6, n = W < 820 ? 110 : 160;
     RG = RG.filter(o => { o.r += 2.2 * dt / 33; const a = (1 - o.r / M) * .7 * S; if (a <= 0) return false;
-      for (let i = 0; i < n; i++) { const th = i / n * 6.283, jr = o.r + (Math.random() - .5) * 26 * nz * nz;
+      for (let i = 0; i < n; i++) { const th = i / n * 6.283, jr = o.r + (Math.random() - .5) * 26 * nz * nz + wob * (10 + o.r * .05) * Math.sin(th * 5 + tt * .006 + o.r * .03);
         ctx.fillStyle = i % 7 ? `rgba(167,228,255,${a})` : `rgba(214,243,255,${a})`;
         ctx.fillRect(rx + Math.cos(th) * jr, ry + Math.sin(th) * jr * .62, 2, 2); }
       return true; });
+    // 開く輪：穴の縁と同じ楕円を、太く明るく
+    if (openR > 1) {
+      ctx.save(); ctx.shadowColor = 'rgba(167,228,255,.95)'; ctx.shadowBlur = 26;
+      ctx.strokeStyle = 'rgba(214,243,255,.95)'; ctx.lineWidth = 3 + openR * .006;
+      ctx.beginPath(); ctx.ellipse(rx, ry, openR, openR * .62, 0, 0, 6.283); ctx.stroke(); ctx.restore();
+    }
     ctx.globalCompositeOperation = 'source-over';
   }
   return { draw, st, get nz() { return nz; } };
@@ -921,6 +927,7 @@ function fvLayout() {
     : [{ x: W * 0.16, y: H * 0.17, s: 1.15 }, { x: W * 0.36, y: H * 0.39, s: 1.15 }, { x: W * 0.84 - wsF[2] * 1.15, y: H * 0.6, s: 1.15 }];
   fvSum.style.top = (yB + FV.F * 1.25) + 'px';
 }
+if (TR === 'b') fvv.parentNode.insertBefore(fvFlash, fvv);   // 白い光は粒の層のすぐ下（穴の向こう）に
 function fvFrame(dt, t, Ps) {
   // 文字：散らばった3語がスクロールで1列にそろう → 副題
   const p = RM ? 1 : clamp(Ps / 0.45), e = ease(p);
@@ -935,13 +942,18 @@ function fvFrame(dt, t, Ps) {
   if (!FV.locked && e > 0.985) { FV.locked = true; SND.lock(); } else if (FV.locked && e < 0.6) FV.locked = false;
   // 粒の層と、場面1へのつなぎ（案 a〜d）
   const k = sstep(0.55, 0.95, Ps);          // つなぎの進み
-  let vo = 1 - k, boost = 1, opaque = 1, mask = '', flash = 0, scale = 1;
+  let vo = 1 - k, boost = 1, opaque = 1, mask = '', flash = 0, scale = 1, wob = 0, openR = 0;
   if (TR === 'a') {          // a 光へ飛び込む：止まっていた粒が再び加速して手前へ流れ、白い光を抜けると宇宙
     boost = 1 + 7 * sstep(0.55, 0.85, Ps); scale = 1 + 0.5 * k * k; vo = 1 - sstep(0.8, 0.95, Ps); flash = Math.sin(Math.PI * sstep(0.78, 0.98, Ps)) * 0.85;
-  } else if (TR === 'b') {   // b 波紋がひらく：水色の輪が広がり、輪の内側から宇宙が見えてくる
-    const R = Math.hypot(innerWidth, innerHeight) * 0.75 * sstep(0.58, 0.95, Ps);
-    vo = 1; mask = R > 1 ? `radial-gradient(circle at 50% 42%, transparent ${R}px, #000 ${R + 60}px)` : '';
-    if (Ps > 0.97) vo = 0;
+  } else if (TR === 'b') {   // b 波紋がひらく：波紋がうねる → 輪がパカッと開く → 白い光の世界 → 抜けると宇宙
+    wob = sstep(0.5, 0.62, Ps) * (1 - sstep(0.62, 0.66, Ps));
+    const ko = clamp((Ps - 0.62) / 0.16), kq = ko * ko, back = ko < 1 ? kq * (2.2 * ko - 1.2) * 1 + (1 - Math.pow(1 - ko, 3)) * 0 : 1;   // 溜めてからパカッ（終わりに少し行き過ぎ）   // パカッ（少し行き過ぎて戻る）
+    openR = ko > 0 ? Math.max(4, Math.hypot(innerWidth, innerHeight / 0.62) * 0.62 * back) : 0;
+    vo = Ps < 0.79 ? 1 : 0;
+    mask = openR > 1 ? `radial-gradient(ellipse ${openR}px ${openR * 0.62}px at 50% 42%, transparent 98%, #000 100%)` : '';
+    flash = ko > 0 ? 1 - sstep(0.84, 1.0, Ps) : 0;             // 開いた中は白い光 → 抜けると消える
+    scale = 1 + 0.08 * sstep(0.62, 0.75, Ps);
+    if (ko > 0.02 && !fvOpened) { fvOpened = true; SND.open(); } else if (ko <= 0 && fvOpened) fvOpened = false;
   } else if (TR === 'c') {   // c 粒が星になる：粒はその場で止まって残り、黒い地だけが溶けて宇宙が現れる
     opaque = 1 - sstep(0.55, 0.85, Ps); vo = 1 - sstep(0.85, 1.05, Ps);
   } else {                   // d ゆっくり暗転：粒と文字がゆっくり闇に沈み、闇の奥から宇宙が明けてくる
@@ -951,7 +963,7 @@ function fvFrame(dt, t, Ps) {
   fvv.style.transform = scale !== 1 ? `scale(${scale})` : '';
   fvv.style.webkitMaskImage = fvv.style.maskImage = mask;
   fvFlash.style.opacity = flash;
-  if (vo > 0.01) FVP.draw(dt, RM ? 0 : 1 - e, boost, opaque);
+  if (vo > 0.01) FVP.draw(dt, RM ? 0 : 1 - e, boost, opaque, wob, openR);
   // 3D 側：FV の間は朱を出さない。d は闇から明ける
   { const oa = sstep(1.0, 1.35, Ps); origin.visible = head.visible = headCore.visible = oa > 0.01; origin.material.opacity = head.material.opacity = headCore.material.opacity = oa; sigLight.intensity = 26 * oa; }
   fvDark = TR === 'd' ? 1 - sstep(0.72, 1.05, Ps) : 0;
