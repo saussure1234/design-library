@@ -129,7 +129,7 @@
         P.dot(x, y, 2.2, 'ink'); P.ln(x, y, x, y + L, 'ink', { done: put(k, x, y + L + 5, 'translate(-50%,0)') });
         return;
       }
-      const a = Math.PI / 2 - sg * Math.PI / 4, x = C[k][0] + Math.cos(a) * r, y = C[k][1] + Math.sin(a) * r, q = 13, sh = 14;
+      const a = Math.PI / 2 - sg * Math.PI / 4, x = C[k][0] + Math.cos(a) * r, y = C[k][1] + Math.sin(a) * r, q = 10, sh = 9;
       P.dot(x, y, 2.2, 'ink'); P.ln(x, y, x + sg * q, y + q, 'ink');
       P.ln(x + sg * q, y + q, x + sg * (q + sh), y + q, 'ink', { done: put(k, x + sg * (q + sh + 5), y + q, sg < 0 ? 'translate(-100%,-50%)' : 'translate(0,-50%)') });
     });

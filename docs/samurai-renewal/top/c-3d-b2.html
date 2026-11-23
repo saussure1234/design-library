@@ -66,7 +66,7 @@ html.day body:not(.mopen) .burger i{background:#151513}
 /* FV */
 .fvx{position:fixed;inset:0;z-index:6;pointer-events:none}
 .fvv{position:fixed;inset:0;z-index:4;background:#000;pointer-events:none}
-.fvv video{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.44) contrast(2)}
+.fvv canvas{width:100%;height:100%;display:block}
 .gate{position:fixed;inset:0;z-index:45;display:grid;place-items:center;background:#000;transition:opacity .9s ease,visibility .9s}
 .gate.out{opacity:0;visibility:hidden}
 .gate .gin{display:flex;flex-direction:column;align-items:center;gap:34px}
@@ -337,6 +337,7 @@ html.nogl .gate,html.nogl .fvv,html.nogl .skip3{display:none}
   .paper .fc-tx{padding:22px 22px 28px}
   .paper #service .fig{aspect-ratio:var(--fars);background-size:64px 64px,64px 64px,16px 16px,16px 16px}
   .paper #service .scr,.paper #service .c3{left:calc(var(--xs)*1%);top:calc(var(--ys)*1%);width:calc(var(--ws)*1%)}
+  .paper #service .c3l{font-size:10px;padding:2px 4px}
   .paper #service .sheet{padding:6px}
   .paper #service .sheet::before,.paper #service .sheet::after{left:6px;right:6px;height:6px}
   .paper #service .sh-in{grid-template-columns:1fr}
@@ -378,7 +379,7 @@ html.nogl .gate,html.nogl .fvv,html.nogl .skip3{display:none}
 <div class="ov"><a href="#top">HOME</a><a href="#service">SERVICE</a><a href="https://samurai-style.tokyo/media">MEDIA</a><a href="https://samurai-style.tokyo/company">COMPANY</a><a href="https://samurai-style.tokyo/recruit">RECRUIT</a><a href="#contact">CONTACT</a><div class="lang"><span>ID</span><span>EN</span><b>JA</b></div></div>
 
 <canvas id="gl" aria-hidden="true"></canvas>
-<div class="gate" id="gate"><div class="gin"><img src="img/logo.svg" alt="SAMURAI STYLE" style="filter:brightness(0) invert(1)"><div class="gb"><button class="main" type="button" data-s="1">ENTER WITH SOUND</button><button type="button" data-s="0">ENTER WITHOUT SOUND</button></div></div></div>
+<div class="gate" id="gate"><div class="gin"><img src="img/logo.svg" alt="SAMURAI STYLE" style="filter:brightness(0) invert(1)"><div class="gb"><button class="main" type="button" data-s="1">ENTER WITH SOUND（音あり）</button><button type="button" data-s="0">ENTER WITHOUT SOUND（音なし）</button></div></div></div>
 <a class="skip3" id="skip3" href="#paper"><span>STORYをスキップ</span><i aria-hidden="true"></i></a>
 <div class="ld" id="ld"><p id="ldt">[······················] 000</p></div>
 
@@ -393,7 +394,7 @@ html.nogl .gate,html.nogl .fvv,html.nogl .skip3{display:none}
 <main id="top">
 <div id="scroller">
   <section class="sc fv" data-s="0">
-    <div class="fvv" id="fvv" aria-hidden="true"><video src="video/home-hero.mp4" muted loop playsinline preload="auto"></video></div>
+    <div class="fvv" id="fvv" aria-hidden="true"><canvas id="fvc"></canvas></div>
     <div class="fvx" id="fvx">
       <h1 class="sr">find the signal.</h1>
       <span class="wd" aria-hidden="true">find</span><span class="wd" aria-hidden="true">the</span><span class="wd sig" aria-hidden="true">signal.</span>
@@ -436,7 +437,7 @@ html.nogl .gate,html.nogl .fvv,html.nogl .skip3{display:none}
 <section class="sec" id="service"><div class="wrap">
   <div class="sh"><div class="lbl"><span>03</span><p class="jp2">事業内容</p><span class="end">01—04</span></div><h2 class="giant" data-wd>SERVICE</h2></div>
   <div class="sheet"><div class="sh-in">
-    <article class="cell"><div class="hdr"><span class="cap">FIG. 01</span><p class="cat"><b>01</b><span></span></p></div><a class="fig" href="https://samurai-style.tokyo/strategy2action" tabindex="-1" aria-hidden="true" style="--far:3/2;--fars:1/1"><div class="c3" data-to="0" data-flow="e" data-flow-sp="s" data-lab="down" data-lab-sp="diag" style="--x:6;--y:22;--w:27;--xs:30;--ys:5;--ws:40"><span class="c3l" data-k="0">Customer</span><span class="c3l" data-k="2">Competitor</span><span class="c3l" data-k="1">Company</span></div><div class="scr" data-dev="monitor" data-dim="b" data-dim-sp="x" data-lead="0.62,0.19,n" data-lead-sp="" style="--x:41;--y:25;--w:43;--xs:8;--ys:53;--ws:58;--vw:1600;--vh:1000;--cx:0;--cy:40;--cw:1600;--ch:960;--ar:1600/960"><img class="po" src="img/p_s2a_dash.jpg" alt="" loading="lazy"><video data-src="video/s2a_dash.mp4" data-t0="1.0" poster="img/p_s2a_dash.jpg" muted playsinline preload="none"></video></div><div class="scr" data-dev="tablet" data-dim="x" data-dim-sp="x" data-lead="0.5,0.05,n" data-lead-sp="" style="--x:87.5;--y:39;--w:9.5;--xs:74;--ys:57;--ws:19;--vw:1080;--vh:1350;--cx:0;--cy:56;--cw:1080;--ch:1294;--ar:1080/1294"><img class="po" src="img/p_s2a_dash2.jpg" alt="" loading="lazy"><video data-src="video/s2a_dash2_sp.mp4" data-t0="1.2" poster="img/p_s2a_dash2.jpg" muted playsinline preload="none"></video></div></a><div class="cb"><h3>Strategy2Action</h3><p class="d">事業理解に基づいて戦略を考え、実行まで伴走し、ダッシュボード作成による経営層・上長への可視化まで対応。</p><a class="more" href="https://samurai-style.tokyo/strategy2action">詳しく見る</a></div></article>
+    <article class="cell"><div class="hdr"><span class="cap">FIG. 01</span><p class="cat"><b>01</b><span></span></p></div><a class="fig" href="https://samurai-style.tokyo/strategy2action" tabindex="-1" aria-hidden="true" style="--far:3/2;--fars:1/1"><div class="c3" data-to="0" data-flow="e" data-flow-sp="s" data-lab="down" data-lab-sp="diag" style="--x:6;--y:22;--w:27;--xs:29;--ys:5;--ws:36"><span class="c3l" data-k="0">Customer</span><span class="c3l" data-k="2">Competitor</span><span class="c3l" data-k="1">Company</span></div><div class="scr" data-dev="monitor" data-dim="b" data-dim-sp="x" data-lead="0.62,0.19,n" data-lead-sp="" style="--x:41;--y:25;--w:43;--xs:8;--ys:53;--ws:58;--vw:1600;--vh:1000;--cx:0;--cy:40;--cw:1600;--ch:960;--ar:1600/960"><img class="po" src="img/p_s2a_dash.jpg" alt="" loading="lazy"><video data-src="video/s2a_dash.mp4" data-t0="1.0" poster="img/p_s2a_dash.jpg" muted playsinline preload="none"></video></div><div class="scr" data-dev="tablet" data-dim="x" data-dim-sp="x" data-lead="0.5,0.05,n" data-lead-sp="" style="--x:87.5;--y:39;--w:9.5;--xs:74;--ys:57;--ws:19;--vw:1080;--vh:1350;--cx:0;--cy:56;--cw:1080;--ch:1294;--ar:1080/1294"><img class="po" src="img/p_s2a_dash2.jpg" alt="" loading="lazy"><video data-src="video/s2a_dash2_sp.mp4" data-t0="1.2" poster="img/p_s2a_dash2.jpg" muted playsinline preload="none"></video></div></a><div class="cb"><h3>Strategy2Action</h3><p class="d">事業理解に基づいて戦略を考え、実行まで伴走し、ダッシュボード作成による経営層・上長への可視化まで対応。</p><a class="more" href="https://samurai-style.tokyo/strategy2action">詳しく見る</a></div></article>
     <article class="cell"><div class="hdr"><span class="cap">FIG. 02</span><p class="cat"><b>02</b><span>動画広告の制作ツール</span></p></div><a class="fig" href="https://www.hook-hack.com/" tabindex="-1" aria-hidden="true" style="--far:3/2;--fars:4/3"><div class="scr" data-dev="laptop" data-dim="b" data-dim-sp="b" data-lead="0.28,0.25,nw;0.7,0.3,ne,sig" data-lead-sp="0.28,0.25,nw;0.7,0.3,ne,sig" style="--x:17;--y:15;--w:66;--xs:14;--ys:14;--ws:72;--vw:960;--vh:540;--cx:0;--cy:0;--cw:960;--ch:540;--ar:960/540"><img class="po" src="img/p_hookhack.jpg" alt="" loading="lazy"><video data-src="video/hookhack_sp.mp4" data-t0="0.5" poster="img/p_hookhack.jpg" muted playsinline preload="none"></video></div></a><div class="cb"><h3>HookHack</h3><p class="d">売れる動画広告をLPから5分で制作。<br>検証から成果改善まで、動画広告のPDCAに必要な機能を1ツールで網羅します。</p><a class="more" href="https://www.hook-hack.com/">詳しく見る</a></div></article>
     <article class="cell"><div class="hdr"><span class="cap">FIG. 03</span><p class="cat"><b>03</b><span>LP・サイト制作の代行</span></p></div><a class="fig" href="https://www.hook-hack.com/hookhacker" tabindex="-1" aria-hidden="true" style="--far:3/2;--fars:4/3"><div class="scr" data-dev="browser" data-dim="b" data-dim-sp="b" data-lead="0.26,0.58,w,sig;0.06,0.05,nw;0.74,0.45,e" data-lead-sp="0.26,0.58,sw,sig;0.06,0.05,nw" style="--x:16;--y:18;--w:66;--xs:12;--ys:20;--ws:76;--vw:960;--vh:540;--cx:68;--cy:57;--cw:823;--ch:483;--ar:823/483"><img class="po" src="img/p_hookhacker.jpg" alt="" loading="lazy"><video data-src="video/hookhacker_sp.mp4" data-t0="2.0" poster="img/p_hookhacker.jpg" muted playsinline preload="none"></video></div></a><div class="cb"><h3>HookHacker</h3><p class="d">自社開発AIツール「HookHack」×インドネシアオフショアチーム×日本人ディレクターでLP・サイト制作を代行。</p><a class="more" href="https://www.hook-hack.com/hookhacker">詳しく見る</a></div></article>
     <article class="cell"><div class="hdr"><span class="cap">FIG. 04</span><p class="cat"><b>04</b><span></span></p></div><a class="fig" href="https://samurai-style.tokyo/video-production" tabindex="-1" aria-hidden="true" style="--far:3/2;--fars:4/3"><div class="scr" data-dev="film" data-dim="r" data-dim-sp="" data-lead="" data-lead-sp="" style="--x:10;--y:17;--w:72;--xs:6;--ys:16;--ws:88;--vw:768;--vh:432;--cx:0;--cy:0;--cw:768;--ch:432;--ar:768/432"><img class="po" src="img/video-production-poster.webp" alt="" loading="lazy"><video data-src="video/video-production.mp4" data-t0="0" poster="img/video-production-poster.webp" muted playsinline preload="none"></video></div></a><div class="cb"><h3 class="ja">動画制作</h3><p class="d">貴社の顧客理解に基づき、動画を企画・撮影・編集までワンストップで制作します。</p><a class="more" href="https://samurai-style.tokyo/video-production">詳しく見る</a></div></article>
@@ -607,7 +608,7 @@ function drawFeature2(p,t,D){const {ctx,w,h}=p;ctx.clearRect(0,0,w,h);
   ctx.lineWidth=.8;const nibs=[];
   S.forEach((s,j)=>{const cx=s[0]*w,cy=s[1]*h,a0=-Math.PI/2+j*2.1;
     for(let k=0;k<K;k++){const r=ph+4+k*gap;if(r>Rm)break;const kk=D>=1?1:clamp((D*1.4-j*.12-k/K)/.22);if(kk<=0)continue;
-      const al=.22*(1-r/Rm)*clamp((r-4)/12);if(al<.005)continue;
+      const al=.2*(1-r/Rm)*clamp((r-4)/12);if(al<.005)continue;
       ctx.strokeStyle=rgba(C.ink,al);ctx.beginPath();ctx.arc(cx,cy,r,a0,a0+TAU*kk);ctx.stroke();
       if(kk<1&&k%2===0&&x0in(cx,cy,r,a0+TAU*kk,w,h))nibs.push([cx+Math.cos(a0+TAU*kk)*r,cy+Math.sin(a0+TAU*kk)*r])}});
   if(D<1)nibs.slice(0,3).forEach(q=>nib(ctx,q[0],q[1]));
@@ -676,7 +677,7 @@ function drawFeature4(p,t,D,H){const {ctx,w,h}=p;
 const FSND={
   /* 葉ずれ：ごく短いノイズの粒を房（1〜5粒）にして重ねる。粒の高さ・長さ・左右はばらばら。全体は「ひと吹きの風」の山に沿う */
   leaf(o){const {ctx:a,sfx,verb,nbuf}=o,t0=a.currentTime+.02,dur=1.7;
-    const out=a.createGain();out.gain.value=.9;out.connect(sfx);const vs=a.createGain();vs.gain.value=.35;out.connect(vs);vs.connect(verb);
+    const out=a.createGain();out.gain.value=1.7;out.connect(sfx);const vs=a.createGain();vs.gain.value=.35;out.connect(vs);vs.connect(verb);
     const gust=u=>u<.22?Math.sin(u/.22*Math.PI/2):Math.exp(-(u-.22)*2.6);
     const nC=54;for(let c=0;c<nC;c++){const u=Math.pow(Math.random(),1.35),tc=t0+u*dur,g0=gust(u),m=1+(Math.random()*4|0),pan=Math.random()*1.4-.7,fc=2200+Math.random()*4800;
       for(let i=0;i<m;i++){const tt=tc+i*(.006+Math.random()*.02),L=.005+Math.random()*.028,pk=(.035+Math.random()*.075)*g0*(1-i*.12);if(pk<.003)continue;
@@ -695,7 +696,7 @@ const FSND={
       g.gain.setValueAtTime(0,ts);g.gain.linearRampToValueAtTime(.007,ts+.35);g.gain.exponentialRampToValueAtTime(.0001,ts+2.2);s.connect(g);g.connect(verb);s.start(ts);s.stop(ts+2.3)})},
   /* ビュー：帯域を絞ったノイズの高さを上げて下ろし、左から右へ流す。かすかに音程のある笛の音を重ねる */
   whoosh(o){const {ctx:a,sfx,verb,nbuf}=o,t0=a.currentTime+.02,dur=.8;
-    const pn=a.createStereoPanner?a.createStereoPanner():null,out=a.createGain();out.gain.value=1;
+    const pn=a.createStereoPanner?a.createStereoPanner():null,out=a.createGain();out.gain.value=1.8;
     if(pn){pn.pan.setValueAtTime(-.8,t0);pn.pan.linearRampToValueAtTime(.8,t0+dur);out.connect(pn);pn.connect(sfx)}else out.connect(sfx);
     const vs=a.createGain();vs.gain.value=.3;out.connect(vs);vs.connect(verb);
     [[2.4,.17,1],[5,.05,2.1]].forEach(([q,pk,mul])=>{const s=a.createBufferSource();s.buffer=nbuf;s.loop=true;const f=a.createBiquadFilter();f.type='bandpass';f.Q.value=q;

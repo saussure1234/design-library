@@ -743,8 +743,58 @@ function updatePlanks(l6, t) {
 }
 updatePlanks(0, 0);
 
-// ---------- FV：今のサイトの映像（home-hero.mp4）をそのまま。真っ黒に白い粒が飛ぶ → 文字がそろう → 宇宙へ ----------
-const fvx = document.getElementById('fvx'), fvSum = document.getElementById('fsum'), fvv = document.getElementById('fvv'), fvVideo = fvv.querySelector('video');
+// ---------- FV：今のサイトの粒の来方をコードで再現（真っ黒に白い粒）→ 文字がそろうと粒が止まり波紋 → 宇宙へ ----------
+// 速さ・数・形は今のサイトの映像（home-hero.mp4）を実測して合わせた：中心から外へ半径に比例して広がる（毎秒 約22%）、
+// 見えている粒は1コマ 15〜30 個、短い光の粒と細く長い筋が混ざる。
+const fvx = document.getElementById('fvx'), fvSum = document.getElementById('fsum'), fvv = document.getElementById('fvv');
+const FVP = (() => {
+  const cv = document.getElementById('fvc'), c = cv.getContext('2d');
+  const K = 0.22;                       // 外へ広がる速さ（1秒あたりの割合・実測）
+  let W = 0, H = 0, D = 1, P = [], rings = [], lastR = -99;
+  const SPR = (() => { const o = document.createElement('canvas'); o.width = o.height = 64; const g = o.getContext('2d');
+    const r = g.createRadialGradient(32, 32, 0, 32, 32, 32); r.addColorStop(0, 'rgba(255,255,255,1)'); r.addColorStop(.25, 'rgba(255,255,255,.85)'); r.addColorStop(.55, 'rgba(255,255,255,.18)'); r.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = r; g.fillRect(0, 0, 64, 64); return o; })();
+  const spawn = (q, fresh) => {
+    const a = Math.random() * 6.283; q.ux = Math.cos(a); q.uy = Math.sin(a);
+    q.r = fresh ? Math.pow(Math.random(), 0.7) : 0.02 + Math.random() * 0.06;     // 画面の短辺に対する半径
+    q.streak = Math.random() < 0.55;                                               // 細く長い筋
+    q.b = 0.12 + 0.88 * Math.pow(Math.random(), 2.6);                              // 明るさ（多くは暗く、一部だけ明るい）
+    q.s = 0.7 + Math.random() * 0.8; q.tw = Math.random() * 6.3; return q;
+  };
+  const fit = () => { D = Math.min(1.5, devicePixelRatio || 1); W = innerWidth; H = innerHeight; cv.width = Math.round(W * D); cv.height = Math.round(H * D); c.setTransform(D, 0, 0, D, 0, 0);
+    const n = W < 820 ? 220 : 380; P = Array.from({ length: n }, () => spawn({}, true)); };
+  fit(); addEventListener('resize', fit);
+  function draw(dt, t, nz, vis) {
+    if (vis <= 0.01) return;
+    c.globalCompositeOperation = 'source-over'; c.fillStyle = '#000'; c.fillRect(0, 0, W, H);
+    c.globalCompositeOperation = 'lighter';
+    const cx = W * (0.5 - FV.cx * 0.06), cy = H * (0.5 - FV.cy * 0.06), S = Math.min(W, H), M = Math.hypot(W, H) * 0.55 / S;
+    const g = Math.exp(K * nz * dt);
+    for (const q of P) {
+      q.r *= g; if (q.r > M) { spawn(q, false); continue; }
+      const sx = cx + q.ux * q.r * S, sy = cy + q.uy * q.r * S;
+      const near = Math.min(1, q.r / 0.9), tw = 0.8 + 0.2 * Math.sin(t * 1.7 * q.s + q.tw);
+      const al = Math.min(1, q.b * (0.35 + 0.9 * near) * tw) * vis;
+      const rad = (0.7 + 3.6 * Math.pow(near, 1.4)) * q.s * (W < 820 ? 0.8 : 1);
+      // 尾：筋は長く、粒は短く（止まると尾も縮む）
+      const tl = (q.streak ? 2.4 : 0.55) * (0.25 + 0.75 * nz), rb = q.r * Math.exp(-K * tl), bx = cx + q.ux * rb * S, by = cy + q.uy * rb * S;
+      const lg = c.createLinearGradient(bx, by, sx, sy); lg.addColorStop(0, 'rgba(255,255,255,0)'); lg.addColorStop(1, `rgba(255,255,255,${al * (q.streak ? 0.55 : 0.4)})`);
+      c.strokeStyle = lg; c.lineWidth = q.streak ? Math.max(0.6, rad * 0.35) : rad * 0.9; c.lineCap = 'round';
+      c.beginPath(); c.moveTo(bx, by); c.lineTo(sx, sy); c.stroke();
+      if (!q.streak ? q.b > 0.25 : q.b > 0.75) { c.globalAlpha = al; const d = rad * 3.4; c.drawImage(SPR, sx - d / 2, sy - d / 2, d, d); c.globalAlpha = 1; }
+    }
+    // 波紋：文字がそろうと中心から水の輪が広がる
+    const Sg = 1 - nz;
+    if (Sg < 0.02) rings = [];
+    else if (t - lastR > 1.5) { lastR = t; rings.push({ r: 0 }); }
+    const rx = W * 0.5, ry = H * 0.42, RM_ = Math.hypot(W, H) * 0.6, n = W < 820 ? 110 : 160;
+    rings = rings.filter((o) => { o.r += 66 * dt; const a = (1 - o.r / RM_) * 0.7 * Sg * vis; if (a <= 0) return false;
+      for (let i = 0; i < n; i++) { const th = i / n * 6.283, jr = o.r + (Math.random() - 0.5) * 26 * nz * nz;
+        c.fillStyle = i % 7 ? `rgba(167,228,255,${a})` : `rgba(214,243,255,${a})`; c.fillRect(rx + Math.cos(th) * jr, ry + Math.sin(th) * jr * 0.62, 2, 2); }
+      return true; });
+  }
+  return { draw };
+})();
 const fvWords = [...fvx.querySelectorAll('.wd')];
 fvWords.forEach((w) => { const tx = w.textContent; w.textContent = ''; [...tx].forEach((c) => { const sp = document.createElement('span'); sp.className = 'ch'; sp.textContent = c; w.appendChild(sp); }); });
 const FV = { nz: 1, A: [], B: [], F: 100, mx: 0, my: 0, cx: 0, cy: 0, locked: false };
@@ -773,10 +823,10 @@ function fvFrame(dt, t, Ps) {
   hint.style.opacity = 1 - clamp(p / 0.2);
   FV.nz = 1 - e;
   if (!FV.locked && e > 0.985) { FV.locked = true; SND.lock(); } else if (FV.locked && e < 0.6) FV.locked = false;
-  // 映像：そろった後、宇宙へ抜けるところで消える
+  // 粒の層：そろうと止まり、宇宙へ抜けるところで消える
   const vo = 1 - sstep(0.58, 0.86, Ps);
   fvv.style.opacity = vo; fvv.style.visibility = vo < 0.01 ? 'hidden' : 'visible';
-  if (vo < 0.01 && !fvVideo.paused) fvVideo.pause(); else if (vo > 0.01 && fvVideo.paused && gateDone) fvVideo.play().catch(() => {});
+  FVP.draw(dt, t, RM ? 0 : FV.nz, vo);
 }
 // ---------- 入口の画面：音あり／音なしを選んでから始まる ----------
 const gate = document.getElementById('gate');
@@ -786,7 +836,6 @@ function enter(withSound) {
   if (gateDone) return; gateDone = true;
   SND.set(withSound);
   gate.classList.add('out'); root.style.overflow = '';
-  fvVideo.play().catch(() => {});
   setTimeout(() => fvx.classList.add('ready'), 250);
 }
 gate.querySelectorAll('button').forEach((b) => b.addEventListener('click', () => enter(b.dataset.s === '1')));
@@ -794,7 +843,7 @@ gate.querySelectorAll('button').forEach((b) => b.addEventListener('click', () =>
 const STOPS = [0.5, 1.55, 2.55, 3.55, 4.55, 5.55, 6.55];
 let snapBusy = false, snapRaf = 0, wheelAcc = 0, wheelT = 0, lastSnap = 0;
 function snapTo(pT) {
-  const y0 = scrollY, y1 = toY(pT), t0 = performance.now(), dur = 1250;
+  const y0 = scrollY, y1 = toY(pT), t0 = performance.now(), dur = 2600;
   snapBusy = true; lastSnap = t0; cancelAnimationFrame(snapRaf);
   const step = (now) => { const k = Math.min(1, (now - t0) / dur), e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
     scrollTo(0, y0 + (y1 - y0) * e); if (k < 1) snapRaf = requestAnimationFrame(step); else setTimeout(() => { snapBusy = false; }, 120); };
@@ -818,7 +867,7 @@ addEventListener('wheel', (e) => {
   if (!inStory && !snapBusy) return;
   e.preventDefault();
   const now = performance.now();
-  if (snapBusy || now - lastSnap < 1500 && now - wheelT < 220) { wheelT = now; return; }  // 慣性の続きは捨てる
+  if (snapBusy || now - lastSnap < 2900 && now - wheelT < 220) { wheelT = now; return; }  // 慣性の続きは捨てる
   wheelT = now; wheelAcc += e.deltaY;
   if (Math.abs(wheelAcc) > 18) { const d = Math.sign(wheelAcc); wheelAcc = 0; if (!snapDir(d)) { scrollBy(0, d * 60); } }
 }, { passive: false });
