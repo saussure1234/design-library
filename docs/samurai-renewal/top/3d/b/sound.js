@@ -28,7 +28,7 @@ const MOODS = [
 ];
 
 export const SND = (() => {
-  let ctx = null, on = false, want = false, nature = null, nextBird = 0, peopleV = null, peopleBus = null, hiss, radioN = null, radioO = null, radioG = null, master, music, sfx, verb, padF, voices = [], sub, wind, windF, whoosh, whooshF, sig, sigG, nbuf;
+  let ctx = null, on = false, want = false, lastSwap = 0, nature = null, nextBird = 0, peopleV = null, peopleBus = null, hiss, radioN = null, radioO = null, radioG = null, master, music, sfx, verb, padF, voices = [], sub, wind, windF, whoosh, whooshF, sig, sigG, nbuf;
   let chord = -1, mood = MOODS[0], nextBeat = 0, beat = 0, padG, lastTick = 0, nextPing = 0, st = { noise: 1, travel: 0, vel: 0, dawn: 0, fv: 1, day: 0, tv: 0 };
   const btn = document.getElementById('snd');
   const lab = btn && btn.querySelector('.st');
@@ -183,7 +183,12 @@ export const SND = (() => {
     lock() { if (!on) return; tone(mtof(81), 'sine', 0.09, 0.005, 2.4, music); setTimeout(() => on && tone(mtof(88), 'sine', 0.05, 0.005, 2.8, music), 140); },
     hover() { if (!on) return; tone(1320, 'sine', 0.025, 0.003, 0.08); },
     // 手が1本 AI に置き換わる：奥から手前へ音程が上がる
-    swap(k) { if (!on) return; tone(mtof(69 + Math.round(k * 12)), 'triangle', 0.03, 0.003, 0.35, music); burst(0.025, 0.05, 'highpass', 5000, 1); },
+    // 人が AI に入れ替わる：足元から頭へ走る光に合わせた「シュイン」（上がる短い音）。重なりすぎないよう間引く
+    swap(k) { if (!on) return; const n = performance.now(); if (n - lastSwap < 45) return; lastSwap = n;
+      const t = ctx.currentTime, o = ctx.createOscillator(), g = ctx.createGain(); o.type = 'sine';
+      const f = mtof(76 + Math.round(k * 10)); o.frequency.setValueAtTime(f * 0.5, t); o.frequency.exponentialRampToValueAtTime(f, t + 0.5);
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(0.03, t + 0.05); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.9);
+      o.connect(g); g.connect(sfx); o.start(t); o.stop(t + 0.95); burst(0.018, 0.4, 'bandpass', 3000 + k * 2500, 2); },
     // 場面1：話し声。list = [{ mode: 'human'|'ai'|'quiet' }, …]、lvl＝場面の近さ
     people(list, lvl) {
       if (!ctx || !on) return;

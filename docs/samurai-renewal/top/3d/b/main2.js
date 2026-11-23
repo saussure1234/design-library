@@ -420,10 +420,10 @@ const hands = [];
       sh.vertexShader = 'varying vec3 vOP;\n' + sh.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\n vOP=position;');
       sh.fragmentShader = 'varying vec3 vOP; uniform float uMix;\n' + NOISE + '\n' + sh.fragmentShader
         .replace('#include <clipping_planes_fragment>', `#include <clipping_planes_fragment>
-          float dv=dfb(vOP+vec3(0.,1.,0.)); float th=uMix*1.25-.12+(vOP.y*-.18);
+          float dv=vOP.y+(dfb(vOP*1.3)-.5)*.05; float th=uMix*1.95-.1;
           ${isChrome ? 'if(dv>th) discard;' : 'if(dv<th) discard;'}`)
         .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
-          totalEmissiveRadiance += vec3(.55,.75,1.15)*smoothstep(.03,.0,abs(dv-th))*step(.001,uMix)*step(uMix,.999);`);
+          totalEmissiveRadiance += vec3(.6,1.,1.4)*2.2*smoothstep(.045,.0,abs(dv-th))*step(.001,uMix)*step(uMix,.999);`);
       prev && prev(sh, r);
     };
     mat.customProgramCacheKey = () => (isChrome ? 'dchrome' : 'dplaster');
@@ -467,7 +467,7 @@ const hands = [];
     const base = eye1.clone().addScaledVector(f1, sd).addScaledVector(r1, sx); base.y = -0.9;
     const u = { value: 0 };
     const pl = humanMat(u, SHIRT_W[j % SHIRT_W.length], [0x3a3d45, 0x5a4f45, 0x2f3646][j % 3]);
-    const rb = new THREE.MeshStandardMaterial({ color: 0xaab4c4, roughness: 0.16, metalness: 0.96, envMap: envTex, envMapIntensity: 3.6, vertexColors: true }); rb.emissive = new THREE.Color(0); dissolve(rb, u, true);
+    const rb = new THREE.MeshStandardMaterial({ color: 0x5d646e, roughness: 0.24, metalness: 0.95, envMap: envTex, envMapIntensity: 1.6, vertexColors: true }); rb.emissive = new THREE.Color(0); dissolve(rb, u, true);
     const hg = new THREE.Group(); let glow = null;
     if (PV.length) {
       const v = PV[j % PV.length];
@@ -1386,8 +1386,8 @@ function frame() {
   const e1 = h1T0 < 0 ? 0 : t - h1T0;
   hands.forEach((h, i) => {
     const at = 1.3 + h.depthN * -2.6 + 2.6 + (i % 7) * 0.05;          // 奥（depthN＝1）が先、手前が後。約2.6秒で全員
-    if (h1T0 >= 0 && e1 >= at && !h.lit) { h.lit = true; h.fl = t; if (i % 6 === 0) SND.swap(1 - h.depthN); }
-    h.u.value += ((h.lit ? 1 : 0) - h.u.value) * (h.lit ? 0.22 : 0.05);
+    if (h1T0 >= 0 && e1 >= at && !h.lit) { h.lit = true; h.fl = t; h.lt = t; SND.swap(1 - h.depthN); }
+    h.u.value = h.lit ? Math.min(1, (t - h.lt) / 0.9) : Math.max(0, h.u.value - dt * 0.6);
     const ai = h.u.value > 0.5;
     const live = ai ? 0 : 1;
     h.g.rotation.y = h.baseRY + live * Math.sin(t * 1.1 + h.ph) * 0.12 + (ai ? (Math.sin(t * 0.8 + h.ph) > 0.985 ? 0.1 : 0) : 0);
@@ -1531,7 +1531,7 @@ function frame() {
   const fTarget = k >= 7 ? 40 : camera.position.distanceTo(T[kk]) * (1 - travel) + 14 * travel;
   U.focus.value += (fTarget - U.focus.value) * 0.1;
   dofPass.uniforms.uFocus.value = U.focus.value;
-  dofPass.uniforms.uAp.value = 1.15 * (1 - dawn);
+  dofPass.uniforms.uAp.value = 1.15 * (1 - dawn) * (1 - 0.7 * (1 - sstep(0.25, 0.7, Math.abs(Ps - 1.55))));
   finalPass.uniforms.uTime.value = t;
   finalPass.uniforms.uGl.value = RM ? 0 : gl;
   finalPass.uniforms.uFade.value = Math.max(finalPass.uniforms.uFade.value * 0, fvDark);
