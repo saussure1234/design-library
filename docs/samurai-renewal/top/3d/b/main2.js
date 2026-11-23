@@ -1426,7 +1426,7 @@ function frame() {
   // HUD：場面番号と引き出し線
   pn.textContent = String(Math.min(6, Math.max(0, Math.round(Ps - 0.3)))).padStart(2, '0');
   pb.style.width = clamp(Ps / 6.9) * 100 + '%';
-  const tagOn = k >= 1 && k <= 6 && x > 0.3 && x < 0.86 && innerWidth >= 820;
+  const tagOn = false;   // 座標の表示は全部消す（So 11/24）
   if (tagOn) {
     tmpV.copy(T[k]).project(camera);
     const sx = (tmpV.x * 0.5 + 0.5) * innerWidth, sy = (-tmpV.y * 0.5 + 0.5) * innerHeight;
