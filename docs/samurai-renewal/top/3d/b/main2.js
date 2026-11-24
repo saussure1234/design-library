@@ -1241,11 +1241,15 @@ composer.addPass(finalPass);
 
 // ---------- 画面の文字（乱数から解ける表示） ----------
 const GL = 'アイウエオカキクケコサシスセソタチツテトナニヌネノ0123456789#%&*+=<>/ABCDEFGHJKLMNPQRSTUVWXYZ';
+const GLL = '0123456789#%&*+=<>/ABCDEFGHJKLMNPQRSTUVWXYZ';
+const LATIN = !!(window.I18N && window.I18N.lang !== 'ja');   // 英語・インドネシア語は単語ごとに出す（文字ごとだと語の途中で折り返す）
 function splitChars(el) {
+  window.I18N?.run?.(el);   // 分ける前に訳を当てる
   const walk = (n) => {
     [...n.childNodes].forEach((c) => {
       if (c.nodeType === 3) {
         const f = document.createDocumentFragment();
+        if (LATIN) { for (const w of c.textContent.split(/(\s+)/)) { if (!w) continue; if (/^\s+$/.test(w)) { f.appendChild(document.createTextNode(' ')); continue; } const s = document.createElement('span'); s.className = 'c'; s.textContent = w; s.dataset.ch = w; f.appendChild(s); } c.replaceWith(f); return; }
         for (const ch of c.textContent) { if (ch === '\n') continue; const s = document.createElement('span'); s.className = 'c'; s.textContent = ch; s.dataset.ch = ch; f.appendChild(s); }
         c.replaceWith(f);
       } else if (c.nodeType === 1 && c.tagName !== 'WBR' && c.tagName !== 'A') walk(c);
@@ -1262,7 +1266,7 @@ function reveal(p) {
     for (let i = 0; i < N; i++) {
       const at = (i / N) * dur * 0.8, c = cs[i];
       if (e >= at + 140) { if (c.textContent !== c.dataset.ch) c.textContent = c.dataset.ch; c.classList.add('on'); }
-      else if (e >= at) { c.classList.add('on'); if (/\S/.test(c.dataset.ch)) { c.textContent = GL[(Math.random() * GL.length) | 0]; SND.tick(); } }
+      else if (e >= at) { c.classList.add('on'); if (/\S/.test(c.dataset.ch)) { c.textContent = LATIN ? c.dataset.ch.replace(/\S/g, () => GLL[(Math.random() * GLL.length) | 0]) : GL[(Math.random() * GL.length) | 0]; SND.tick(); } }
     }
     if (e < dur + 160) p.timer = requestAnimationFrame(step);
   };
@@ -1606,7 +1610,7 @@ fvWords.forEach((w, i) => w.querySelectorAll('.ch').forEach((c, j) => { c.style.
 (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => { fvLayout(); measure(); readScroll(); });
 requestAnimationFrame(frame);
 setTimeout(() => {
-  ld.classList.add('out');
+  ld.classList.add('out'); dispatchEvent(new Event('samurai:ready'));   // 図はここから描き始める（リロードでも裏で描き終わらない）
   if (RM) enter(false);
   // ページ内リンク（例：下層ページの CONTACT → #contact）で来た時は、その位置へ。カメラも一気に合わせる
   if (location.hash) { const el = document.querySelector(location.hash); if (el) { measure(); scrollTo(0, el.getBoundingClientRect().top + scrollY); readScroll(); Ps = P; lastPs = P; } }

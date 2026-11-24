@@ -310,11 +310,13 @@
     figs.forEach(S => { if (!S.run) return; S.u = clamp((now - S.t0) / 1000 / S.dur); S.draw(); if (S.u >= 1) S.run = false; else any = true; });
     if (any) kick();
   }
+  const ldReady = () => { const l = document.getElementById('ld'); return !l || l.classList.contains('out'); };
   const io = new IntersectionObserver(es => es.forEach(e => {
     const S = figs.find(f => f.el === e.target); if (!S) return;
     S.vis = e.isIntersecting;
-    if (e.isIntersecting && !S.started) S.ctl.restart();
+    if (e.isIntersecting && !S.started && ldReady()) S.ctl.restart();   // ローディングの裏では描き始めない
   }), { threshold: .28 });
+  addEventListener('samurai:ready', () => figs.forEach(S => { if (!S.started) { io.unobserve(S.el); io.observe(S.el); } }));
   const ro = new ResizeObserver(es => es.forEach(e => { const S = figs.find(f => f.el === e.target); if (S && e.contentRect.width) S.build(); }));
 
   /* ---------- 動画：画面に入った時だけ再生、画面外で止める ---------- */
