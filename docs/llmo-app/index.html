@@ -437,19 +437,14 @@ mark.flash { animation: flash 1.2s ease; }
 .find { border: 1px solid var(--line); background: #fff; border-radius: 999px; padding: 3px 12px; font-size: 12px; font-weight: 700; }
 .find:hover { background: var(--soft); }
 .aside { display: grid; gap: 12px; }
-/* 11/23 回答に出た画像（AI が答えの中に出した画像と、その出典） */
-.imhead { margin-top: 18px; }
-.imgs { display: grid; grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); gap: 12px; margin-top: 4px; }
-.imc { margin: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: #fff; display: flex; flex-direction: column; min-width: 0; }
-.imc.ad { border-color: #e8c28a; }
-.imth { display: flex; aspect-ratio: 1 / 1; background: var(--soft); align-items: center; justify-content: center; }
-.imth img { width: 100%; height: 100%; object-fit: contain; display: block; }
-.imth.none { font-size: 12px; color: var(--muted); }
-.imc figcaption { padding: 8px 9px 9px; display: grid; gap: 3px; font-size: 12px; line-height: 1.45; min-width: 0; }
-.imk { justify-self: start; font-size: 11px; font-weight: 700; color: var(--ink-2); background: var(--soft); border-radius: 999px; padding: 1px 8px; }
-.imc.ad .imk { color: #8a5300; background: #fdf1de; }
-.imt { color: var(--ink); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
-.imd { color: var(--accent); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* 11/24 画像の引用元：引用元URLと同じリストの形で、左に実際の画像を小さく（So「引用URL・出典の隣に、画像の引用URLと実際の画像」） */
+.ilist li { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 10px; align-items: start; }
+.ith { display: flex; width: 64px; height: 64px; border: 1px solid var(--line); border-radius: 6px; background: var(--soft); align-items: center; justify-content: center; overflow: hidden; }
+.ith img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.ith.none { font-size: 10px; color: var(--muted); text-align: center; line-height: 1.3; padding: 2px; }
+.ilist .iu { display: block; color: var(--muted); }
+.ilist .iu a { font-weight: 400; color: var(--muted); }
+.kind.ad { color: #8a5300; background: #fdf1de; }
 .aside .panel h2 { font-size: 13px; }
 .list { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 8px; }
 .list li { font-size: 12px; line-height: 1.5; overflow-wrap: anywhere; border-top: 1px solid var(--line); padding-top: 8px; }
@@ -572,23 +567,22 @@ function bootApp(D) {
     return s2;
   }
   function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
-  // 11/23 回答に出た画像の並び：画像（押すと出典ページ）・種類（広告など）・題名・出典のサイト
-  function imgGrid(ims) {
-    const g = el("div", "imgs");
+  // 11/24 画像の引用元（引用元URLと同じリストの形）：実際の画像（押すと原寸）・種類・題名（押すと出典ページ）・出典URL・画像URL
+  function imgList(ims) {
+    const ul = el("ul", "list ilist");
     ims.forEach((im) => {
-      const c = el("figure", "imc" + (im.kind === "広告" ? " ad" : ""));
-      const th = el("div", "imth"); const src = im.src || im.orig || "";
-      const none = () => { th.classList.add("none"); th.textContent = "画像を表示できません"; };
-      if (src) { const i = document.createElement("img"); i.src = src; i.loading = "lazy"; i.alt = im.title || ""; i.referrerPolicy = "no-referrer"; i.addEventListener("error", () => { i.remove(); none(); }); th.append(i); } else none();
-      if (im.page) { const a = el("a"); a.href = im.page; a.target = "_blank"; a.rel = "noopener noreferrer"; a.append(th); c.append(a); } else c.append(th);
-      const cap = el("figcaption");
-      if (im.kind && im.kind !== "本文") cap.append(el("span", "imk", im.kind));
-      cap.append(el("span", "imt", im.title || "（題名なし）"));
-      if (im.page) { let d = ""; try { d = new URL(im.page).hostname.replace(/^www\./, ""); } catch (e) {} const a = el("a", "imd", d || "出典"); a.href = im.page; a.target = "_blank"; a.rel = "noopener noreferrer"; cap.append(a); }
-      if (im.query) c.title = `AI が画像を探した言葉：${im.query}`;
-      c.append(cap); g.append(c);
+      const li = el("li"); const src = im.src || im.orig || "";
+      const th = el(src ? "a" : "div", "ith");
+      const none = () => { th.classList.add("none"); th.textContent = "画像なし"; };
+      if (src) { th.href = src; th.target = "_blank"; th.rel = "noopener noreferrer"; const i = document.createElement("img"); i.src = src; i.loading = "lazy"; i.alt = im.title || ""; i.referrerPolicy = "no-referrer"; i.addEventListener("error", () => { i.remove(); none(); }); th.append(i); } else none();
+      const tx = el("div"); tx.append(el("span", "kind" + (im.kind === "広告" ? " ad" : ""), im.kind || "本文"), document.createTextNode(" "));
+      if (im.page && /^https?:\/\//.test(im.page)) { const l = el("a", null, im.title || "（題名なし）"); l.href = im.page; l.target = "_blank"; l.rel = "noopener noreferrer"; tx.append(l, el("span", "u", im.page)); }
+      else tx.append(el("b", null, im.title || "（題名なし）"), el("span", "u", "出典ページの表示なし"));
+      if (im.orig && /^https?:\/\//.test(im.orig)) { const iu = el("span", "iu", "画像URL："); const l = el("a", null, im.orig); l.href = im.orig; l.target = "_blank"; l.rel = "noopener noreferrer"; iu.append(l); tx.append(iu); }
+      if (im.query) li.title = `AI が画像を探した言葉：${im.query}`;
+      li.append(th, tx); ul.append(li);
     });
-    return g;
+    return ul;
   }
   function svg(d) { const s = document.createElementNS("http://www.w3.org/2000/svg", "svg"); s.setAttribute("viewBox", "0 0 24 24"); s.innerHTML = d; return s; }
   const ICON = {
@@ -1356,7 +1350,6 @@ function bootApp(D) {
     }
     box.append(t);
     if ((a.stores || []).length) { box.append(el("h3", null, "回答に出た店舗・カード")); const st = el("div", "rvt"); st.textContent = a.stores.join("\n"); box.append(st); }
-    if ((a.images || []).length) { box.append(el("h3", null, `回答に出た画像（${a.images.length}枚）`)); box.append(imgGrid(a.images)); }
     box.append(el("h3", null, "記録"));
     const rec = el("dl", "rvrec");
     [[`${SUBJ}登場`, q.counted ? (a.appeared ? `○（${a.rank}番目）` : "×") : "—（社名を入れた質問）"], ["選定理由・説明", a.reason || "—"], ["仮説との一致", a.match || "—"],
@@ -1367,6 +1360,7 @@ function bootApp(D) {
     if ((a.sources || []).length) a.sources.forEach((sx) => { const u = sx.url || ""; if (u) { const l = el("a", null, (sx.label ? `${sx.label}｜` : "") + u); l.href = u; l.target = "_blank"; l.rel = "noopener"; src.append(l); } else src.append(el("div", null, sx.domain || sx.label || "")); });
     else src.append(el("div", null, "（引用の表示なし）"));
     box.append(src);
+    if ((a.images || []).length) { box.append(el("h3", null, `画像の引用元（${a.images.length}件）`)); box.append(imgList(a.images)); }
     const go = el("a", "rvgo", "この回答のページを開く（AI・回の切り替え） →"); go.href = `#/prompts/${encodeURIComponent(q.id)}/${a.platform}/${a.round}`; go.addEventListener("click", close);
     box.append(go);
     back.append(box); document.body.append(back); document.addEventListener("keydown", onKey); x.focus();
@@ -1616,7 +1610,6 @@ function bootApp(D) {
       target.append(s.slice(last)); if (bold) box.append(target); }
     if (count) { const f = el("button", "find", `${SUBJ}の出てくる所へ（${count}か所）`); f.type = "button"; let k = 0; f.addEventListener("click", () => { const ms = box.querySelectorAll("mark"); const t = ms[k % ms.length]; k++; t.scrollIntoView({ behavior: "smooth", block: "center" }); t.classList.remove("flash"); void t.offsetWidth; t.classList.add("flash"); }); ah.append(f); }
     left.append(ah, box);
-    if ((a.images || []).length) { const ih = el("div", "ahead imhead"); ih.append(el("h2", null, `回答に出た画像（${a.images.length}枚）`)); left.append(ih, imgGrid(a.images)); }
     const right = el("div", "aside");
     const pn = (title, body) => { const p = el("div", "panel"); p.append(el("h2", null, title), body); return p; };
     const rec = el("dl", "rec");
@@ -1628,6 +1621,7 @@ function bootApp(D) {
     if (a.sources.length) a.sources.forEach((s) => { const li = el("li"); li.append(el("span", "kind", s.kind), document.createTextNode(" "));
       if (s.url && /^https?:\/\//.test(s.url)) { const l = el("a", null, s.label); l.href = s.url; l.target = "_blank"; l.rel = "noopener noreferrer"; li.append(l, el("span", "u", s.url)); } else li.append(el("b", null, s.label), el("span", "u", s.domain)); ul.append(li); });
     right.append(pn(`引用元URL（${a.sources.length}件）`, a.sources.length ? ul : el("p", "empty", "出典の表示はありませんでした。")));
+    if ((a.images || []).length) right.append(pn(`画像の引用元（${a.images.length}件）`, imgList(a.images)));
     if (a.stores && a.stores.length) { const u2 = el("ul", "list"); a.stores.forEach((x) => u2.append(el("li", null, x))); right.append(pn(`回答の上に出た店舗カード（${a.stores.length}件）`, u2)); }
     if (a.cards.length) { const u3 = el("ul", "list"); a.cards.forEach((x) => u3.append(el("li", null, x))); right.append(pn(`商品カード（${a.cards.length}件）`, u3)); }
     det.append(left, right); w.append(det);
