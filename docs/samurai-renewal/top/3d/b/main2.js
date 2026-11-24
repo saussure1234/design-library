@@ -1110,7 +1110,8 @@ function skipGate() {
   if (gateDone) return; gateDone = true;
   gate.style.display = 'none'; root.style.overflow = '';
   showWords();
-  if (gateSeen === '1') {
+  // リロード時は音なしで始める。音が欲しい時は右下の SOUND を押す（So 11/25 選択 B。前回の選択で勝手に鳴らさない）
+  if (false && gateSeen === '1') {
     // 音を出してよいのはクリック・タップ（指を離した時）・キー入力の時だけ（ブラウザの決まり）。SOUND ボタンを押した時はボタン側に任せる（ここでも入れると ON→OFF に戻ってしまう）
     const EV = ['click', 'touchend', 'keydown'];
     const first = (e) => { if (e.target && e.target.closest && e.target.closest('#snd')) { EV.forEach((n) => removeEventListener(n, first, true)); return; } const ua = navigator.userActivation; if (ua && !ua.isActive) return;   // スクロールで指を離しただけ等、音の許可が出ていない時は次の操作を待つ
