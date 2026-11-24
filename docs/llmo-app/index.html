@@ -279,6 +279,8 @@ a.full:hover { text-decoration: underline; }
 .rview dl.rvrec { display: grid; grid-template-columns: 9em 1fr; gap: 6px 12px; font-size: 13px; }
 .rview dl.rvrec dt { color: var(--ink-2); font-weight: 700; }
 .rview dl.rvrec dd { white-space: pre-wrap; overflow-wrap: anywhere; }
+.rview .rvimgs { display: flex; flex-wrap: wrap; gap: 8px; }
+.rview .rvimgs img { width: 120px; height: 120px; object-fit: contain; border: 1px solid var(--line); border-radius: 6px; background: #fff; display: block; }
 .rview .rvsrc a { display: block; overflow-wrap: anywhere; color: var(--accent); font-size: 13px; line-height: 1.7; }
 .rview .rvx { flex: none; border: 1px solid var(--line); background: #fff; border-radius: 8px; width: 34px; height: 34px; font-size: 18px; line-height: 1; cursor: pointer; color: var(--ink-2); }
 .rview .rvx:hover { background: var(--soft); }
@@ -1339,6 +1341,17 @@ function bootApp(D) {
     if ((a.sources || []).length) a.sources.forEach((sx) => { const u = sx.url || ""; if (u) { const l = el("a", null, (sx.label ? `${sx.label}｜` : "") + u); l.href = u; l.target = "_blank"; l.rel = "noopener"; src.append(l); } else src.append(el("div", null, sx.domain || sx.label || "")); });
     else src.append(el("div", null, "（引用の表示なし）"));
     box.append(src);
+    if ((a.images || []).length) {
+      box.append(el("h3", null, "画像の引用URL"));
+      const isrc = el("div", "rvsrc");
+      a.images.forEach((im) => { const u = im.page || im.orig; if (!u) return; const l = el("a", null, (im.title ? `${im.title}｜` : "") + u); l.href = u; l.target = "_blank"; l.rel = "noopener"; isrc.append(l); });
+      box.append(isrc);
+      box.append(el("h3", null, `画像（${a.images.length}枚）`));
+      const ig = el("div", "rvimgs");
+      a.images.forEach((im) => { const s2 = im.src || im.orig; if (!s2) return; const lk = el("a"); lk.href = im.page || s2; lk.target = "_blank"; lk.rel = "noopener"; lk.title = im.title || "";
+        const g = document.createElement("img"); g.src = s2; g.loading = "lazy"; g.alt = im.title || ""; g.referrerPolicy = "no-referrer"; g.addEventListener("error", () => lk.remove()); lk.append(g); ig.append(lk); });
+      box.append(ig);
+    }
     const go = el("a", "rvgo", "この回答のページを開く（AI・回の切り替え） →"); go.href = `#/prompts/${encodeURIComponent(q.id)}/${a.platform}/${a.round}`; go.addEventListener("click", close);
     box.append(go);
     back.append(box); document.body.append(back); document.addEventListener("keydown", onKey); x.focus();
@@ -1360,7 +1373,7 @@ function bootApp(D) {
     ["仮説との一致", 150, (a) => a.match],
     ["引用URL・出典", 200, (a) => (a.sources.length ? a.sources.map((x) => x.url || x.domain).join("\n") : "（引用の表示なし）"), null, 3],
     ["画像の引用URL", 200, (a) => (a.images || []).map((x) => x.page || x.orig || "").filter(Boolean).join("\n"), null, 3],
-    ["画像", 210, (a) => ((a.images || []).length ? `${a.images.length}枚` : "")],
+    ["画像", 300, (a) => ((a.images || []).length ? `${a.images.length}枚` : ""), null, 0, (a) => (a.images || []).map((x) => x.orig || x.src || "").filter(Boolean).join("\n")],   // 6番目＝CSV に書く値
     ["競合", 170, (a) => a.competitors.join(" / "), null, 3],
     ["イメージ要約", 200, (a) => a.image, null, 4],
     ["施策示唆", 112, () => ""],
@@ -1512,7 +1525,7 @@ function bootApp(D) {
           if (cols[i][0] === "取得日時" && x.includes("T")) { const [d, t2] = x.split("T"); c.append(`${d}T`, el("wbr"), t2); }
           else if (cols[i][0] === "AI") c.append(aiMark(a.platform), x);
           else if (cols[i][0] === "画像" && x) {
-            const th = el("div", "thumbs"); const ims = a.images || []; const n = sheetFull ? ims.length : 4;
+            const th = el("div", "thumbs"); const ims = a.images || []; const n = sheetFull ? ims.length : 6;
             ims.slice(0, n).forEach((im) => { const src = im.src || im.orig; if (!src) return; const g = document.createElement("img"); g.src = src; g.loading = "lazy"; g.alt = im.title || ""; g.referrerPolicy = "no-referrer"; g.addEventListener("error", () => g.remove()); th.append(g); });
             if (ims.length > n) th.append(el("span", "more", `ほか${ims.length - n}枚`));
             c.append(th);
@@ -1548,7 +1561,7 @@ function bootApp(D) {
     clearF.addEventListener("click", () => { colFilters.clear(); featFilter = null; closeFilter(); draw(); });
     fullBtn.addEventListener("click", () => { sheetFull = !sheetFull; fullBtn.setAttribute("aria-pressed", String(sheetFull)); fullBtn.textContent = sheetFull ? "切って表示" : "全文で表示"; draw(); });
     if (sheetFull) fullBtn.textContent = "切って表示";
-    dl.addEventListener("click", () => downloadCsv(cols.map((c) => c[0]), shown.map((r) => r.v)));
+    dl.addEventListener("click", () => downloadCsv(cols.map((c) => c[0]), shown.map((r) => r.v.map((x, i) => (cols[i][5] ? cols[i][5](r.a, qByNo.get(r.a.q)) : x)))));
     s.addEventListener("input", draw); draw();
     return w;
   }
