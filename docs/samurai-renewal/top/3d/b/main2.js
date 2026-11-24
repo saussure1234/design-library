@@ -1127,6 +1127,7 @@ function snapTo(pT) {
     scrollTo(0, y0 + (y1 - y0) * e); if (k < 1) snapRaf = requestAnimationFrame(step); else setTimeout(() => { snapBusy = false; }, 120); };
   snapRaf = requestAnimationFrame(step);
 }
+const inPaper = () => scrollY > toY(8.0) + 4;   // 紙の節の中（P は紙の節で 8 に張り付くので位置で見る）
 function snapDir(dir) {
   const p = P;
   if (dir > 0) {
@@ -1135,13 +1136,13 @@ function snapDir(dir) {
     const nx = STOPS.find((q) => q > p + 0.03); snapTo(nx); return true;
   } else {
     if (p <= STOPS[0] + 0.03) return false;
-    if (p > 8.03) return false;                           // 紙の節の中は普通にスクロール
+    if (inPaper()) return false;                          // 紙の節の中は普通にスクロール
     const pv = [...STOPS].reverse().find((q) => q < p - 0.03); snapTo(pv ?? 0); return true;
   }
 }
 addEventListener('wheel', (e) => {
   if (!gateDone) return;
-  const inStory = P > STOPS[0] - 0.02 && P < 8.03;
+  const inStory = P > STOPS[0] - 0.02 && !inPaper();
   if (!inStory && !snapBusy) return;
   e.preventDefault();
   const now = performance.now();
@@ -1156,13 +1157,14 @@ addEventListener('touchstart', (e) => { tY = e.touches[0].clientY; }, { passive:
 addEventListener('touchmove', (e) => { if (gateDone && (snapBusy || (P > STOPS[0] - 0.02 && P < 7.98))) e.preventDefault(); }, { passive: false });
 addEventListener('touchend', (e) => {
   if (tY == null || snapBusy) return; const dy = tY - (e.changedTouches[0]?.clientY ?? tY); tY = null;
-  if (P > STOPS[0] - 0.02 && P < 8.03 && Math.abs(dy) > 30) snapDir(Math.sign(dy));
+  if (P > STOPS[0] - 0.02 && !inPaper() && Math.abs(dy) > 30) snapDir(Math.sign(dy));
 }, { passive: true });
 addEventListener('keydown', (e) => {
   if (!gateDone || snapBusy && /Arrow|Page|Space/.test(e.code)) { if (snapBusy) e.preventDefault(); return; }
   const d = ['ArrowDown', 'PageDown', 'Space'].includes(e.code) ? 1 : ['ArrowUp', 'PageUp'].includes(e.code) ? -1 : 0;
-  if (d && P > STOPS[0] - 0.02 && P < 8.03 && snapDir(d)) e.preventDefault();
+  if (d && P > STOPS[0] - 0.02 && !inPaper() && snapDir(d)) e.preventDefault();
 });
+{ let wasPaper = false; addEventListener('scroll', () => { const ip = scrollY > toY(8.0) - 8; if (gateDone && !snapBusy && wasPaper && !ip && P < 7.9 && P > STOPS[STOPS.length - 1]) { cancelAnimationFrame(snapRaf); snapTo(STOPS[STOPS.length - 1]); } wasPaper = ip; }, { passive: true }); }
 // ---------- STORY をスキップ ----------
 const skip3 = document.getElementById('skip3');
 skip3.addEventListener('click', (e) => { e.preventDefault(); cancelAnimationFrame(snapRaf); snapBusy = false; const el = document.getElementById('paper'); scrollTo(0, el.getBoundingClientRect().top + scrollY); });
