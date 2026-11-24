@@ -417,6 +417,15 @@ header.hd .nav .lang,header.ghd .nav .lang{font-size:13px;gap:10px}
   header.hd,header.ghd{padding:16px}
   header.hd .logo img,header.ghd .logo img{height:28px}
 }
+
+/* 余白と幅（全ページ共通・So 11/25「横の余白がなさすぎ・広がりすぎ」→一般的な LP の決まりに）
+   ・左右の余白：画面幅に合わせて 20〜80px（PC 1440 で約80・スマホで約21）
+   ・文の帯：最大 1200px で止めて中央に。大きい画面は残りが左右の余白になる
+   ・ヘッダーの左右の端は本文の帯の端にそろえる */
+:root{--m:clamp(20px,5.5vw,80px)}
+.wrap,.paper .wrap{max-width:calc(1200px + 2 * var(--m));margin-left:auto;margin-right:auto;padding-left:var(--m);padding-right:var(--m)}
+header.hd,header.ghd{padding-left:max(var(--m),calc(50% - 600px));padding-right:max(var(--m),calc(50% - 600px))}
+@media (max-width:820px){header.hd,header.ghd{padding-left:var(--m);padding-right:var(--m)}}
 </style>
 <script src="../i18n/i18n.js"></script>
 </head>
