@@ -1111,8 +1111,11 @@ function skipGate() {
   gate.style.display = 'none'; root.style.overflow = '';
   showWords();
   if (gateSeen === '1') {
-    const first = () => { removeEventListener('pointerdown', first, true); removeEventListener('keydown', first, true); removeEventListener('touchstart', first, true); if (!SND.on) SND.set(true); };
-    addEventListener('pointerdown', first, true); addEventListener('keydown', first, true); addEventListener('touchstart', first, true);
+    // 音を出してよいのはクリック・タップ（指を離した時）・キー入力の時だけ（ブラウザの決まり）。SOUND ボタンを押した時はボタン側に任せる（ここでも入れると ON→OFF に戻ってしまう）
+    const EV = ['click', 'touchend', 'keydown'];
+    const first = (e) => { if (e.target && e.target.closest && e.target.closest('#snd')) { EV.forEach((n) => removeEventListener(n, first, true)); return; } const ua = navigator.userActivation; if (ua && !ua.isActive) return;   // スクロールで指を離しただけ等、音の許可が出ていない時は次の操作を待つ
+      EV.forEach((n) => removeEventListener(n, first, true)); if (!SND.on) SND.set(true); };
+    EV.forEach((n) => addEventListener(n, first, true));
   }
 }
 if (gateSeen !== null || location.hash) skipGate();   // 2回目以降・ページ内リンクで来た時は入口を出さない
