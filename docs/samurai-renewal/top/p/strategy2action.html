@@ -349,6 +349,17 @@ html:not([lang=ja]) .cs dd .nb{white-space:normal}
 .ft .big{display:none}
 
 </style>
+<style>/* ヘッダーの大きさ（全ページ共通・So 11/24「全体的に若干ちっちゃい」→一段大きく）。各ビルダーが </head> の直前に差し込む */
+header.hd,header.ghd{padding-top:24px;padding-bottom:24px}
+header.hd .logo img,header.ghd .logo img{height:34px}
+header.hd .nav,header.ghd .nav{gap:30px;font-size:14px}
+header.hd .nav .cta,header.ghd .nav .cta{padding:12px 18px}
+header.hd .nav .lang,header.ghd .nav .lang{font-size:13px;gap:10px}
+@media (max-width:820px){
+  header.hd,header.ghd{padding:16px}
+  header.hd .logo img,header.ghd .logo img{height:28px}
+}
+</style>
 <script src="../i18n/i18n.js"></script>
 </head>
 <body>
