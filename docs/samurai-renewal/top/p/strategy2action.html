@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+JP:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;700&family=Roboto+Flex:opsz,slnt,wdth,wght@8..144,-10..0,25..151,100..1000&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_paper.css">
+<title>Strategy2Action｜戦略立案から実行・可視化まで伴走するマーケティング支援 | サムライスタイル株式会社</title>
+<style>
+/* サービスの下層ページ（Strategy2Action・動画制作）共通：紙の節に、本番ページの文言と節の順番をそのまま載せる */
+/* 節の見出し：giant（英字の節名）＋ 和文の見出し */
+.sh.hs{margin-bottom:clamp(40px,6vh,64px)}
+.hj{margin:clamp(22px,3vh,32px) 0 0;font:500 clamp(26px,2.9vw,42px)/1.45 var(--jp);letter-spacing:.04em}
+.giant.uc{text-transform:uppercase}
+.lead{margin:0;max-width:46em;font-size:17px;line-height:2.05;color:var(--ink2)}
+.hs+.lead,.hs+.lead2{margin-top:-8px}
+.lead2{margin:0 0 clamp(40px,6vh,60px);max-width:46em;font-size:17px;line-height:2.05;color:var(--ink2)}
+
+/* FV：左＝見出しと説明、右＝製図の枠の中の映像 */
+.fv{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(32px,5vw,80px);align-items:center}
+.fv .catch{margin:0 0 28px;font:500 clamp(28px,2.9vw,44px)/1.5 var(--jp);letter-spacing:.04em}
+.fv h1.catch{font-size:clamp(34px,3.8vw,56px);line-height:1.4}
+.fv .hl{background:linear-gradient(transparent 86%,var(--sig) 86%,var(--sig) 96%,transparent 96%)}
+.fv .lead{font-size:16px;line-height:2}
+.lbl.solo{margin-bottom:clamp(40px,6vh,72px)}
+
+/* ボタン（お問い合わせはトップの #contact へ） */
+.btn{display:inline-flex;align-items:center;gap:14px;margin-top:36px;padding:19px 30px;background:var(--ink);color:var(--card);font:500 15px/1 var(--jp);letter-spacing:.06em;transition:background .2s}
+.btn::after{content:"\2192";font-family:var(--mono)}
+.btn:hover,.btn:focus-visible{background:var(--sig)}
+.btn:focus-visible{outline:2px solid var(--sig);outline-offset:3px}
+.btn .free{flex:none;white-space:nowrap;padding:4px 7px;background:var(--card);color:var(--ink);font-size:11.5px;letter-spacing:.08em}
+
+/* 製図の枠（svc-real.js）。FV・ダッシュボードの映像 */
+.rv .fig{border:1px solid var(--line)}
+.rv .scr.v6{--vw:1920;--vh:1080;--cx:0;--cy:0;--cw:1920;--ch:1080;--ar:1920/1080}
+.rv .scr.vd{--vw:1600;--vh:1000;--cx:0;--cy:0;--cw:1600;--ch:1000;--ar:1600/1000}
+.rv .scr.vp{--vw:768;--vh:432;--cx:0;--cy:0;--cw:768;--ch:432;--ar:768/432}
+@media (max-width:760px){.rv .scr.v6{--vw:1080;--vh:1350;--cw:1080;--ch:1350;--ar:1080/1350}}
+
+/* 番号つきの並び（PROBLEM・Problem・Menu） */
+.nl{list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 clamp(20px,2.4vw,36px)}
+.nl>li{border-top:1px solid var(--ink);padding:18px 0 34px}
+.nl .n{display:block;margin:0 0 18px;font:400 clamp(40px,3.6vw,54px)/1 var(--disp);letter-spacing:-.04em;color:var(--ink)}
+.nl .n.d{font:400 22px/1 var(--jp);color:var(--ink)}
+.nl p{margin:0;font-size:17px;line-height:1.95;color:var(--ink)}
+
+/* お問い合わせの箱（PROCESS の STEP 01・PRICE の下） */
+.cb{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px 40px;align-items:center;padding:26px 30px;border-left:3px solid var(--sig)}
+.cb p{margin:0;font-size:14.5px;line-height:1.95;color:var(--ink2)}
+.cb .btn{margin:0;white-space:nowrap}
+
+/* 表の行（その他の対応業界） */
+.rows{margin:0;border-bottom:1px solid var(--line)}
+.rows .row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,5fr);gap:6px 24px;padding:18px 0;border-top:1px solid var(--line)}
+.rows dt{font:500 13px/1.9 var(--mono);color:var(--mute);letter-spacing:.04em}
+.rows dd{margin:0;font-size:15.5px;line-height:1.9}
+
+/* 2列の比較（縦割り／求められること） */
+.vs{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line)}
+.vs>div{padding:26px 30px 28px;background:var(--card)}
+.vs>div+div{border-left:1px solid var(--line)}
+.vs .t{margin:0 0 14px;font:500 16px/1.6 var(--jp);letter-spacing:.04em}
+.vs ul{list-style:none;margin:0}
+.vs li{position:relative;padding:12px 0 12px 28px;border-top:1px solid var(--line2);font-size:15px;line-height:1.85}
+.vs .ng li::before,.vs .ng li::after{content:"";position:absolute;left:4px;top:24px;width:12px;height:1px;background:var(--mute);transform:rotate(45deg)}
+.vs .ng li::after{transform:rotate(-45deg)}
+.vs .ok li::before{content:"";position:absolute;left:2px;top:19px;width:13px;height:13px;border:1px solid var(--sig);background:var(--sig)}
+.vs .ok li::after{content:"";position:absolute;left:6px;top:21px;width:4px;height:7px;border:solid var(--card);border-width:0 1.5px 1.5px 0;transform:rotate(45deg)}
+
+/* チェックボックス（窓口ひとつで…のレ点） */
+.cks{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.ck{position:relative;display:inline-flex;align-items:center;gap:10px;padding:9px 14px 9px 12px;border:1px solid var(--line);background:var(--card);font-size:14px;line-height:1.4;cursor:pointer;transition:border-color .2s}
+.ck input{appearance:none;-webkit-appearance:none;margin:0;width:14px;height:14px;border:1px solid var(--mute);background:var(--card);cursor:pointer;display:grid;place-items:center;flex:none}
+.ck input:checked{background:var(--sig);border-color:var(--sig)}
+.ck input:checked::after{content:"";width:4px;height:7px;border:solid var(--card);border-width:0 1.5px 1.5px 0;transform:translateY(-1px) rotate(45deg)}
+.ck:has(input:checked){border-color:var(--ink)}
+.ck input:focus-visible{outline:2px solid var(--sig);outline-offset:2px}
+
+/* 写真カード（MEMBER の粒子をそのまま使う） */
+.mg.two{grid-template-columns:repeat(4,minmax(0,1fr))}
+
+@media (max-width:1080px){
+  .fv{grid-template-columns:1fr;gap:48px}
+  .nl{grid-template-columns:1fr}
+  .nl>li{display:grid;grid-template-columns:72px minmax(0,1fr);gap:0 16px;padding:18px 0 22px}
+  .nl .n{margin:0;font-size:40px}
+  .nl .n.d{font-size:20px;padding-top:4px}
+  .cb{grid-template-columns:1fr}
+  .mg.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:760px){
+  .hj{font-size:23px;line-height:1.5}
+  .lead,.lead2{font-size:15.5px}
+  .fv h1.catch{font-size:30px}
+  .fv .catch{font-size:25px}
+  .fv .lead{font-size:15px}
+  .btn{padding:17px 22px;font-size:14px}
+  .nl p{font-size:15.5px}
+  .nl>li{grid-template-columns:56px minmax(0,1fr)}
+  .nl .n{font-size:38px}
+  .cb{padding:22px 20px}
+  .cb .btn{white-space:normal;padding:16px 18px;gap:10px;letter-spacing:.02em;line-height:1.5}
+  .rows .row{grid-template-columns:1fr;gap:2px;padding:14px 0}
+  .rows dd{font-size:15px}
+  .vs{grid-template-columns:1fr}
+  .vs>div{padding:22px 20px}
+  .vs>div+div{border-left:0;border-top:1px solid var(--line)}
+}
+/* MEMBER */
+.mem-lead{margin:0 0 64px;max-width:46em;font-size:17px;line-height:2.05;color:var(--ink2)}
+.mg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
+.mc{outline:none;cursor:pointer}
+.mc-pic{aspect-ratio:1/1;overflow:hidden}
+.mc-pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.08);transition:opacity .9s,filter .6s}
+.mc-pic canvas{z-index:1;transition:opacity .9s}
+.mc:not(.fin) .mc-pic img{opacity:0}
+.mc.fin .mc-pic canvas{opacity:0}
+.mc:hover .mc-pic img,.mc:focus-visible .mc-pic img,.mc.on .mc-pic img{opacity:1;filter:none}
+.mc:hover .mc-pic canvas,.mc.on .mc-pic canvas{opacity:0}
+.mc .no{display:block;margin:18px 0 8px}
+.mc h3{margin:0;font-size:20px;font-weight:500;line-height:1.5}
+.mc .role{overflow-wrap:anywhere;margin:2px 0 12px;font-size:13px;color:var(--sig);font-weight:500}
+.mc .bio{margin:0;font-size:14px;line-height:1.9;color:var(--ink2)}
+
+@media (max-width:1080px){
+  .mg{grid-template-columns:repeat(2,minmax(0,1fr));gap:28px 14px}
+}
+@media (max-width:760px){
+  .mem-lead{font-size:15.5px;margin-bottom:40px}
+  .mc h3{font-size:17px}
+  .mc .bio{font-size:13px}
+}
+/* SERVICE（c-svc4-1：FEATURES と同じ札。製図の枠に実物の画面・映像。S2A は 3C → 戦略 → 実行・伴走 → 画面） */
+.rv .sv-g{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.rv .sv-c{background:var(--card);border:1px solid var(--line);display:flex;flex-direction:column;min-width:0}
+.rv .sv-c>.fig{border-bottom:1px solid var(--line2)}
+.rv .sv-tx,.rv .sv-otx{display:flex;flex-direction:column;align-items:flex-start;flex:1}
+.rv .sv-tx{padding:26px 32px 36px}
+.rv h3{margin:16px 0 14px;font-weight:500}
+.rv h3 small{display:block;min-height:1.6em;font-size:14px;line-height:1.6;color:var(--mute);font-weight:400}
+.rv h3 .w{display:block;font:500 clamp(24px,2.3vw,32px)/1.35 var(--disp);letter-spacing:0}
+.rv h3 .w.ja{font-family:var(--jp);letter-spacing:.02em}
+.rv .d{margin:0 0 24px;font-size:15px;line-height:1.95;color:var(--ink2)}
+.rv .more{margin-top:auto;font:500 14px/1 var(--jp);text-decoration:none;display:inline-flex;gap:10px;align-items:center;padding-bottom:6px;border-bottom:1px solid var(--ink)}
+.rv .more::after{content:"\2192";font-family:var(--mono)}
+.rv .more:hover{color:var(--sig);border-color:var(--sig)}
+.rv .fig{position:relative;display:block;aspect-ratio:var(--far);background-color:var(--card);
+  background-image:linear-gradient(rgba(21,21,19,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(21,21,19,.06) 1px,transparent 1px),
+  linear-gradient(rgba(21,21,19,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(21,21,19,.03) 1px,transparent 1px);
+  background-size:80px 80px,80px 80px,16px 16px,16px 16px;background-position:-1px -1px}
+.rv .fig>canvas.pen{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3}
+.rv .scr{position:absolute;left:calc(var(--x)*1%);top:calc(var(--y)*1%);width:calc(var(--w)*1%);aspect-ratio:var(--ar);overflow:hidden;background:#eceae3;z-index:2;
+  clip-path:inset(0 0 100% 0);transition:clip-path 1.1s cubic-bezier(.6,.05,.2,1)}
+.rv .scr.on{clip-path:inset(0 0 0 0)}
+.rv .scr video,.rv .scr .po{position:absolute;max-width:none;display:block;object-fit:fill;
+  width:calc(var(--vw) / var(--cw) * 100%);height:calc(var(--vh) / var(--ch) * 100%);
+  left:calc(var(--cx) / var(--cw) * -100%);top:calc(var(--cy) / var(--ch) * -100%)}
+.rv .scr video{transition:opacity .35s}
+.rv .scr video.wait{opacity:0}
+.rv .s2f{position:absolute;inset:0;z-index:4;pointer-events:none}
+.rv .c3l,.rv .s2l{position:absolute;left:0;top:0;padding:3px 5px;background:var(--card);font:400 11px/1 var(--mono);letter-spacing:.04em;color:var(--ink);white-space:nowrap;opacity:0;transition:opacity .5s}
+.rv .s2l{font:500 12px/1.2 var(--jp);letter-spacing:.08em;padding:3px 6px}
+.rv .c3l.on,.rv .s2l.on{opacity:1}
+
+@media (max-width:760px){
+  .rv .sv-g{grid-template-columns:1fr;gap:16px}
+  .rv .sv-tx{padding:22px 22px 28px}
+  .rv .fig{aspect-ratio:var(--fars);background-size:64px 64px,64px 64px,16px 16px,16px 16px}
+  .rv .scr{left:calc(var(--xs)*1%);top:calc(var(--ys)*1%);width:calc(var(--ws)*1%)}
+  .rv .c3l{font-size:10px;padding:2px 4px}
+  .rv .s2l{font-size:11px;padding:2px 5px}
+  .rv .d{font-size:14.5px}
+}
+@media (prefers-reduced-motion:reduce){
+  .rv .scr{transition:none}
+}
+/* Strategy2Action（p/strategy2action.html）だけの部品 */
+/* REASON：番号＋見出し＋本文の行 */
+.rs{list-style:none;border-bottom:1px solid var(--line)}
+.rs>li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,5fr);gap:12px 32px;padding:36px 0 44px;border-top:1px solid var(--line)}
+.rs .n{font:400 clamp(40px,3.6vw,54px)/1 var(--disp);letter-spacing:-.04em}
+.rs h3{margin:0 0 16px;font:500 clamp(21px,1.9vw,26px)/1.6 var(--jp);letter-spacing:.03em}
+.rs p{margin:0;max-width:48em;font-size:16px;line-height:2;color:var(--ink2)}
+.rs .sub{margin-top:18px;padding-top:14px;border-top:1px solid var(--line2);font-size:14px;color:var(--ink)}
+
+/* 概念図（ベンダー／インハウス／サムライスタイル）：製図の方眼の上に */
+.cg{margin-top:36px;padding:34px clamp(18px,3vw,40px) 26px;background-color:var(--card);
+  background-image:linear-gradient(rgba(21,21,19,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(21,21,19,.05) 1px,transparent 1px);background-size:16px 16px;background-position:-1px -1px}
+.cg .t{margin:0;text-align:center;font:500 19px/1.6 var(--jp);letter-spacing:.04em;color:var(--ink)}
+.cg .t2{margin:4px 0 26px;text-align:center;font-size:13.5px;line-height:1.7;color:var(--mute)}
+.cg ul{list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.cg li{display:flex;flex-direction:column;border:1px solid var(--ink2);background:var(--card)}
+.cg li.me{border:1.5px solid var(--sig)}
+.cg .nm{margin:0;padding:9px 10px;text-align:center;font:500 15px/1.4 var(--jp);letter-spacing:.06em;border-bottom:1px solid var(--line);color:var(--ink)}
+.cg li.me .nm{background:var(--sig);color:var(--card);border-color:var(--sig)}
+.cg .tg{margin:0;padding:8px 10px 2px;text-align:center;font-size:12.5px;line-height:1.5;color:var(--ink2)}
+.cg .mx{position:relative;display:grid;grid-template-columns:42px repeat(4,minmax(0,1fr));grid-template-rows:auto repeat(3,18px);gap:5px 5px;margin:10px 14px 6px;font:400 10.5px/1.3 var(--jp);color:var(--mute);text-align:center}
+.cg .mx .r{text-align:left;align-self:center;white-space:nowrap}
+.cg .mx i{display:block;background:rgba(21,21,19,.07);border:1px solid rgba(21,21,19,.14)}
+.cg .mx i.on{background:rgba(21,21,19,.42);border-color:rgba(21,21,19,.5)}
+.cg li.me .mx i.on{background:var(--sig);border-color:var(--sig)}
+.cg .c1{grid-column:2;grid-row:2/5}.cg .c2{grid-column:3;grid-row:2/5}.cg .c3{grid-column:4;grid-row:2/5}.cg .c4{grid-column:5;grid-row:2/5}
+.cg .rA{grid-column:2/6;grid-row:2}.cg .rB{grid-column:2/6;grid-row:3}.cg .rC{grid-column:2/6;grid-row:4}
+.cg .cap{margin:10px 12px 0;text-align:center;font-size:12.5px;line-height:1.6;color:var(--ink2)}
+.cg strong{display:block;margin:2px 12px 14px;text-align:center;font:500 14px/1.6 var(--jp);color:var(--ink)}
+.cg li.me strong{color:var(--sig)}
+.cg .eq{margin:24px 0 0;text-align:center;font:500 16px/1.7 var(--jp);letter-spacing:.03em;color:var(--ink)}
+.cg .eq b{font-weight:500;color:var(--sig)}
+.cg .nt{margin:6px 0 0;text-align:right;font-size:11.5px;color:var(--mute)}
+
+/* PROCESS：STEP の列 */
+.st{list-style:none;border-bottom:1px solid var(--line)}
+.st>li{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,5fr);gap:12px 32px;padding:36px 0 44px;border-top:1px solid var(--line)}
+.st .sn{margin:0;display:flex;flex-direction:column;gap:6px}
+.st .sn small{font:500 11px/1 var(--mono);letter-spacing:.14em;color:var(--mute)}
+.st .sn b{font:400 clamp(40px,3.6vw,54px)/1 var(--disp);letter-spacing:-.04em;font-weight:400}
+.st>li:last-child .sn b{color:var(--sig)}
+.st h3{margin:0 0 16px;font:500 clamp(21px,1.9vw,26px)/1.6 var(--jp);letter-spacing:.03em}
+.st .bd>p{margin:0;max-width:48em;font-size:16px;line-height:2;color:var(--ink2)}
+.st .bd>p+p{margin-top:14px}
+.st .cb{margin-top:28px}
+.st .km{margin-top:24px;padding:14px 18px;border:1px solid var(--line);background:var(--card);display:flex;flex-direction:column;gap:2px}
+.st .km b{font:500 14.5px/1.6 var(--jp)}
+.st .km span{font-size:13.5px;line-height:1.7;color:var(--ink2)}
+.st .rv{margin-top:20px}
+
+/* PRICE */
+.pr{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);border:1px solid var(--line);background:var(--card)}
+.pr .pl{display:flex;flex-direction:column;justify-content:center;padding:clamp(28px,3.4vw,52px);border-right:1px solid var(--line)}
+.pr .pk{margin:0;font-size:15px;line-height:1.7;color:var(--ink2)}
+.pr .am{margin:10px 0 8px;font:500 20px/1.1 var(--jp);letter-spacing:.02em}
+.pr .am b{font:500 clamp(64px,6.4vw,96px)/1 var(--disp);letter-spacing:-.04em;margin:0 4px}
+.pr .pn{margin:0;font-size:13px;color:var(--mute)}
+/* 英語・インドネシア語は「JPY 300,000」の 30 だけが部品なので、大きくせず1行の大きさで出す */
+html:not([lang=ja]) .pr .am{font:500 clamp(26px,2.4vw,34px)/1.3 var(--disp);letter-spacing:-.01em}
+html:not([lang=ja]) .pr .am b{font:inherit;margin:0}
+.pr .pd{padding:clamp(26px,3vw,44px)}
+.pr .pt{margin:0 0 8px;font:500 15px/1.6 var(--jp);letter-spacing:.06em}
+.pr .pt+ul{margin:0}
+.pr ul{list-style:none}
+.pr li{font-size:14.5px;line-height:1.9;padding-left:1em;text-indent:-1em;color:var(--ink)}
+.pr .pnt{margin:8px 0 0;font-size:12.5px;line-height:1.8;color:var(--mute)}
+.pr .pt2{margin-top:22px;padding-top:20px;border-top:1px solid var(--line2)}
+.pr+.cb{margin-top:20px}
+
+/* CASE */
+.cs{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.cs>li{padding:28px 30px 30px;background:var(--card);border:1px solid var(--line);border-top:2px solid var(--ink)}
+.cs .ix{margin:0 0 12px;display:flex;gap:12px;align-items:baseline;font-size:13.5px;color:var(--ink2)}
+.cs .ix span{font:500 12px/1 var(--mono);color:var(--sig)}
+.cs h3{margin:0;font:500 clamp(19px,1.6vw,22px)/1.65 var(--jp);letter-spacing:.02em}
+.cs dl{margin:20px 0 0;border-bottom:1px solid var(--line2)}
+.cs dl>div{display:grid;grid-template-columns:6.5em minmax(0,1fr);gap:4px 16px;padding:12px 0;border-top:1px solid var(--line2);align-items:baseline}
+.cs dt{font-size:13px;color:var(--mute)}
+.cs dd{margin:0;font-size:14.5px;line-height:1.8}
+.cs dd b{font:500 22px/1.2 var(--disp);letter-spacing:-.01em}
+.cs dd b:nth-of-type(2){color:var(--sig)}
+.cs dd .nb{display:inline-block}
+html:not([lang=ja]) .cs dd .nb{white-space:normal}
+.oi{margin-top:48px}
+.oi .t{margin:0 0 14px;font:500 16px/1.6 var(--jp);letter-spacing:.04em}
+
+/* LLMO の図 */
+.lf{margin:clamp(36px,5vh,52px) 0 0;padding:clamp(28px,3.4vw,48px) clamp(16px,3vw,44px);background-color:var(--card);border:1px solid var(--line);
+  background-image:linear-gradient(rgba(21,21,19,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(21,21,19,.05) 1px,transparent 1px);background-size:16px 16px;background-position:-1px -1px;
+  display:flex;flex-direction:column;align-items:center;text-align:center}
+.lf .bx{margin:0;padding:10px 22px;border:1px solid var(--ink);background:var(--card);font:500 15px/1.5 var(--jp);letter-spacing:.04em}
+.lf .bx.ai{background:var(--ink);color:var(--card)}
+.lf .ar{position:relative;margin:0;padding:34px 0 8px;font-size:12px;line-height:1.5;color:var(--mute)}
+.lf .ar::before{content:"";position:absolute;left:50%;top:4px;height:26px;width:1px;background:var(--ink)}
+.lf .ar::after{content:"";position:absolute;left:calc(50% - 4px);top:2px;width:7px;height:7px;border:solid var(--ink);border-width:1px 0 0 1px;transform:rotate(45deg)}
+.lf ul{list-style:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;width:100%;margin-top:12px}
+.lf li{display:flex;flex-direction:column;border:1px solid var(--line);background:var(--card)}
+.lf li span{padding:12px 8px;font:500 14px/1.5 var(--jp)}
+.lf li span+span{padding:7px 8px;border-top:1px solid var(--line2);font:400 12px/1.5 var(--jp);color:var(--mute);background:var(--paper)}
+.lf .ow{margin:24px 0 0;padding:2px 0 2px 14px;border-left:3px solid var(--sig);font:500 15px/1.7 var(--jp);text-align:left}
+.lt{margin:clamp(32px,4vh,44px) 0 clamp(32px,4vh,44px);max-width:52em;font-size:16px;line-height:2.05;color:var(--ink2)}
+.ex{margin-top:clamp(36px,5vh,52px)}
+.ex h3{margin:0 0 14px;font:500 16px/1.6 var(--jp);letter-spacing:.04em}
+.ex ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.ex li{display:grid;grid-template-columns:minmax(0,1fr) 44px minmax(0,1fr);align-items:stretch}
+.ex li span{display:flex;align-items:center;padding:13px 18px;font-size:14.5px;line-height:1.7}
+.ex li span:first-child{border:1px solid var(--line);background:var(--card)}
+.ex li span.to{justify-content:center;padding:0;font:400 18px/1 var(--mono);color:var(--sig)}
+.ex li span:last-child{background:var(--ink);color:var(--card)}
+
+/* PROFILE（写真は MEMBER と同じ粒子） */
+.pf{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,8fr);gap:clamp(28px,4vw,64px);align-items:start;cursor:pointer}
+.pf .nm{margin:0 0 16px;padding-bottom:14px;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 16px;font-size:13px;color:var(--sig);font-weight:500}
+.pf .nm b{font:500 26px/1.4 var(--jp);color:var(--ink);letter-spacing:.06em}
+.pf .bio{margin:0;max-width:46em;font-size:16px;line-height:2.05;color:var(--ink2)}
+
+/* CONTACT（トップのフォームと同じ見た目。プレビュー版なので送信しない） */
+.ct2{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:64px;align-items:start}
+.ct2 .lead{font-size:16px}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.form>label{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--mute)}
+.form .full{grid-column:1/-1}
+.form input,.form textarea{font:400 16px/1.6 var(--jp);color:var(--ink);background:transparent;border:0;border-bottom:1px solid var(--line);padding:8px 0;border-radius:0;outline:none;transition:border-color .2s}
+.form input:focus,.form textarea:focus{border-color:var(--ink)}
+.form textarea{min-height:150px;resize:vertical;border:1px solid var(--line);padding:12px;background:var(--card)}
+.form .send{grid-column:1/-1;justify-self:start;display:inline-flex;gap:16px;align-items:center;font:500 15px/1 var(--jp);color:var(--card);background:var(--ink);border:0;padding:19px 34px;cursor:pointer}
+.form .send::after{content:"\2192";font-family:var(--mono)}
+.form .send:hover{background:var(--sig)}
+.ct2 .note{grid-column:1/-1;margin:0;font-size:12px;line-height:1.9;color:var(--mute)}
+.ct2 .note a{text-decoration:underline}
+
+@media (max-width:1080px){
+  .cg ul{grid-template-columns:1fr;max-width:420px;margin:0 auto}
+  .pr{grid-template-columns:1fr}
+  .pr .pl{border-right:0;border-bottom:1px solid var(--line)}
+  .cs{grid-template-columns:1fr}
+  .lf ul{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ct2{grid-template-columns:1fr;gap:36px}
+  .pf{grid-template-columns:minmax(0,1fr) minmax(0,2fr)}
+}
+@media (max-width:760px){
+  .rs>li,.st>li{grid-template-columns:1fr;gap:10px;padding:26px 0 32px}
+  .st .sn{flex-direction:row;align-items:baseline;gap:10px}
+  .rs .n,.st .sn b{font-size:40px}
+  .rs h3,.st h3{font-size:19px}
+  .rs p,.st .bd>p{font-size:15px}
+  .cg{padding:26px 14px 20px}
+  .cg .t{font-size:16.5px}
+  .cg .eq{font-size:14.5px}
+  .pr .am b{font-size:64px}
+  .cs>li{padding:22px 20px 24px}
+  .lf .bx{font-size:14px;padding:9px 14px}
+  .lf li span{font-size:13px;padding:10px 6px}
+  .lf .ow{font-size:13.5px}
+  .lt{font-size:15px}
+  .ex li{grid-template-columns:1fr;gap:0}
+  .ex li span.to{padding:6px 0;transform:rotate(90deg)}
+  .ex li span{font-size:14px;padding:12px 14px}
+  .pf{grid-template-columns:1fr}
+  .pf .mc-pic{max-width:260px}
+  .pf .bio{font-size:15px}
+  .form{grid-template-columns:1fr;gap:22px}
+}
+
+.cg .mx .h{grid-row:1}.cg .mx .r{grid-column:1}.cg .mx .ra{grid-row:2}.cg .mx .rb{grid-row:3}.cg .mx .rc{grid-row:4}
+.form .send{margin-top:4px}
+.ct2 .note{margin-top:22px}
+/* すぐ上にお問い合わせのフォームがあるので、フッターの CONTACT は出さない（トップと同じ・So 11/24） */
+.ft .big{display:none}
+
+</style>
+<script src="../i18n/i18n.js"></script>
+</head>
+<body>
+<header class="ghd">
+  <a class="logo" href="../c-3d-b2.html" aria-label="SAMURAI STYLE"><img src="../img/logo.svg" alt="SAMURAI STYLE"></a>
+  <nav class="nav"><a href="../c-3d-b2.html">HOME</a><a href="service.html" aria-current="page">SERVICE</a><a href="media.html">MEDIA</a><a href="company.html">COMPANY</a><a href="recruit.html">RECRUIT</a><a class="cta" href="../c-3d-b2.html#contact">CONTACT</a><div class="lang"><span>ID</span><span>EN</span><b>JA</b></div></nav>
+  <button class="burger" type="button" aria-label="Menu" aria-expanded="false"><i></i><i></i></button>
+</header>
+<div class="gov"><a href="../c-3d-b2.html">HOME</a><a href="service.html">SERVICE</a><a href="media.html">MEDIA</a><a href="company.html">COMPANY</a><a href="recruit.html">RECRUIT</a><a href="../c-3d-b2.html#contact">CONTACT</a><div class="lang"><span>ID</span><span>EN</span><b>JA</b></div></div>
+
+<main id="top">
+<section class="sec first" id="s2a"><div class="wrap">
+  <div class="sh"><div class="lbl"><span></span><span></span><span class="end"></span></div><h1 class="giant" data-wd>Strategy2Action</h1></div>
+  <div class="fv">
+    <div>
+      <p class="catch">事業理解に基づいて<br>戦略を考え、<br>実行まで伴走し、<br>ダッシュボード作成による<br>経営層・上長への<br><span class="hl">可視化</span>まで対応。</p>
+      <p class="lead">20社を超える事業会社でのマーケティング戦略立案・実務経験と、無形商材の営業経験を元に、『数値が停滞しているボトルネックが何か』を明確化し、改善のための広告運用・SEO／LLMO・制作などの実行からダッシュボードによる可視化まで伴走します。</p>
+      <a class="btn" href="../c-3d-b2.html#contact">相談する</a>
+    </div>
+    <div class="rv"><div class="fig" style="--far:4/3;--fars:4/5"><div class="scr v6" data-dev="monitor" data-dim="b" data-dim-sp="b" data-lead="" data-lead-sp="" style="--x:9;--y:9;--w:82;--xs:15;--ys:6;--ws:70"><img class="po" src="../img/s2a_fv6.webp" alt="" loading="lazy"><video data-src="../video/s2a_fv6.mp4" data-t0="0" poster="../img/s2a_fv6.webp" data-src-sp="../video/s2a_fv6_sp.mp4" data-poster-sp="../img/s2a_fv6_sp.webp" muted playsinline preload="none" aria-label="動画：3C分析と施策の現状からボトルネックと改善方針をすり合わせ、タスクの優先順位を整理し、タスクごとに弊社と貴社で役割を分担し、ダッシュボードで可視化して経営層・上長へのレポートにする"></video></div></div></div>
+  </div>
+</div></section>
+
+<section class="sec" id="problem"><div class="wrap">
+  <div class="sh hs"><div class="lbl"><span></span><span></span><span class="end"></span></div><p class="giant" data-wd data-fit-text="PROBLEM">PROBLEM</p><h2 class="hj"><span class="nb">施策は進めているが、</span><br><span class="nb">目標に届かない</span></h2></div>
+  <ol class="nl">
+    <li><span class="n">01</span><p>目標数値に未達だが、何がボトルネックで、どうすれば改善するか分からない</p></li>
+    <li><span class="n">02</span><p>広告、SEO、LLMO・・・<br>進めている施策の優先順位が正しいか、それぞれが最適化できているか自信がない</p></li>
+    <li><span class="n">03</span><p>施策ごとにベンダーからのレポートは届くが、内容を理解しきれないまま次の月に進んでいる</p></li>
+  </ol>
+</div></section>
+
+<section class="sec" id="reason"><div class="wrap">
+  <div class="sh hs"><div class="lbl"><span></span><span></span><span class="end"></span></div><p class="giant" data-wd data-fit-text="REASON">REASON</p><h2 class="hj"><span class="nb">戦略から実行まで</span><span class="nb">お任せいただける理由</span></h2></div>
+  <ol class="rs">
+    <li><span class="n">01</span><div>
+      <h3>事業会社とベンダー、マーケティングと営業双方の経験による一貫支援</h3>
+      <p>代表・橋本が、事業会社とマーケティング支援会社の双方で、戦略立案から施策の意思決定・実行に関わり、リード獲得後の営業まで対応してきた経験を元に、数値のボトルネックが何かをともに解明し、改善に向けて伴走します。</p>
+      <div class="cg pan">
+        <p class="t"><span class="nb">業界を横断する知見と、</span><span class="nb">事業を横断する視点。</span></p>
+        <p class="t2"><span class="nb">ベンダーとインハウス、</span><span class="nb">双方の経験を事業の全体最適へ。</span></p>
+        <ul><li><p class="nm">ベンダー</p><p class="tg">専門領域 × 複数業界</p><div class="mx" aria-hidden="true"><span class="h" style="grid-column:1"></span><span class="h">SEO</span><span class="h">広告</span><span class="h">制作</span><span class="h">CRM</span><span class="r ra">業界A</span><span class="r rb">業界B</span><span class="r rc">業界C</span><i class="c1 on"></i><i class="c2 on"></i><i class="c3 on"></i><i class="c4 on"></i></div><p class="cap">各領域の専門性を活かす</p><strong>施策ごとの最適化</strong></li><li><p class="nm">インハウス</p><p class="tg">業務横断 × 特定業界</p><div class="mx" aria-hidden="true"><span class="h" style="grid-column:1"></span><span class="h">SEO</span><span class="h">広告</span><span class="h">制作</span><span class="h">CRM</span><span class="r ra">業界A</span><span class="r rb">業界B</span><span class="r rc">業界C</span><i class="rA"></i><i class="rB on"></i><i class="rC"></i></div><p class="cap">自社事業を深く理解する</p><strong>業界を超えた再現性が課題</strong></li><li class="me"><p class="nm">サムライスタイル</p><p class="tg">業務横断 × 複数業界</p><div class="mx" aria-hidden="true"><span class="h" style="grid-column:1"></span><span class="h">SEO</span><span class="h">広告</span><span class="h">制作</span><span class="h">CRM</span><span class="r ra">業界A</span><span class="r rb">業界B</span><span class="r rc">業界C</span><i class="rA on"></i><i class="rB on"></i><i class="rC on"></i></div><p class="cap">業界を超えて知見を応用する</p><strong>事業全体から施策を設計</strong></li></ul>
+        <p class="eq"><span class="nb">複数業界の知見 × 事業全体の視点</span><span class="nb">＝<b>サムライスタイルの全体最適</b></span></p>
+        <p class="nt">※経験領域の違いを示した概念図です。</p>
+      </div>
+    </div></li>
+    <li><span class="n">02</span><div>
+      <h3>AI活用による運用・制作・テクニカル領域の効率化</h3>
+      <p>広告運用、制作、SEO／LLMOのテクニカル領域は、AIと自社開発のツールで効率化しています。実務経験のあるエンジニアが社内にいるため、サイトの改修や構造化データなどの技術対応も内製で進められます。</p>
+      <p class="sub">自社プロダクト：HookHack（動画広告生成）、LPHack（LP制作・改修）</p>
+    </div></li>
+    <li><span class="n">03</span><div>
+      <h3>窓口ひとつで、必要な施策を必要な分だけ</h3>
+      <p>戦略策定から実務まで、弊社で一貫して対応します。これまでの20社超の企業様との取り組みの中で、以下のように様々な施策を効率的に実行できる体制を整えてきました。貴社の体制や予算に合わせて、必要な施策をレ点でお選びいただけます。</p>
+      <div class="cks"><label class="ck"><input type="checkbox" checked><span>広告運用</span></label><label class="ck"><input type="checkbox"><span>動画広告制作</span></label><label class="ck"><input type="checkbox"><span>バナー制作</span></label><label class="ck"><input type="checkbox"><span>Web制作</span></label><label class="ck"><input type="checkbox"><span>SEO</span></label><label class="ck"><input type="checkbox" checked><span>LLMO</span></label><label class="ck"><input type="checkbox"><span>ホワイトペーパー制作</span></label><label class="ck"><input type="checkbox"><span>アウトバウンド営業</span></label></div>
+    </div></li>
+  </ol>
+</div></section>
+
+<section class="sec" id="process"><div class="wrap">
+  <div class="sh hs"><div class="lbl"><span></span><span></span><span class="end"></span></div><p class="giant" data-wd data-fit-text="PROCESS">PROCESS</p><h2 class="hj"><span class="nb">現状把握から可視化まで、</span><span class="nb">4つのステップで伴走</span></h2></div>
+  <p class="lead2">現状把握と方針のすり合わせ、優先順位、役割分担、可視化の4段で進めます。可視化した結果は次のすり合わせに戻り、改善を続けます。</p>
+  <ol class="st">
+    <li><p class="sn"><small>STEP</small><b>01</b></p><div class="bd">
+      <h3>3C分析と施策の現状から、ボトルネックと改善方針をすり合わせ</h3>
+      <p>顧客・競合・自社の3C分析と、現状の施策の実施状況を照らし合わせます。Webでのリサーチに加え、貴社の営業・CS担当など顧客接点を持つ方の声をもとにニーズを把握し、競争環境と貴社のアセットを比較。現状の施策や課題をお伺いした上で、ボトルネックと改善の方針を提案し、すり合わせます。</p>
+      <div class="cb pan"><p>まずは初回ミーティングで、これまでのお取り組みや現状課題をお伺いさせてください。<br>弊社側でミーティング前に同業他社様の施策内容を調査・把握した上で、弊社でのこれまでの実践経験も踏まえ、ボトルネックと施策優先順位までを明確化します。</p><a class="btn" href="../c-3d-b2.html#contact">初回ミーティングを申し込む<span class="free">無料</span></a></div>
+    </div></li>
+    <li><p class="sn"><small>STEP</small><b>02</b></p><div class="bd">
+      <h3>すり合わせた方針から、タスクの優先順位を整理</h3>
+      <p>すり合わせた改善方針をもとに、取り組むタスクを洗い出し、事業への重要性も踏まえて着手する順序を整理します。</p>
+    </div></li>
+    <li><p class="sn"><small>STEP</small><b>03</b></p><div class="bd">
+      <h3>タスクごとに役割分担</h3>
+      <p>広告運用、Web制作、SEO／LLMO、ホワイトペーパー制作、アウトバウンド営業など、整理したタスクごとに弊社と貴社の役割を分担します。貴社の体制に合わせて、必要な施策をレ点式でご依頼いただけます。</p>
+    </div></li>
+    <li><p class="sn"><small>STEP</small><b>04</b></p><div class="bd">
+      <h3>ダッシュボードで可視化し、経営層・上長へのレポートもスムーズに</h3>
+      <p>マーケティングの数値をKPIツリーに沿って並べ、どこがボトルネックになっているかを確認できるようにします。施策ごとに分かれていたレポートがひとつにまとまるため、経営層・上長への報告にもそのまま使えます。</p>
+      <p>LLMOにおいては狙うカテゴリ、ポジション、顧客の目的・課題ごとに、AI回答での見え方を確認します。引用率や言及率に加え、「狙った場面で紹介されているか」「意図した強みが伝わっているか」を捉え、戦略と計測をつなぎます。</p>
+      <div class="km"><b>マーケティング数値</b><span>KPIツリーに沿った各施策の数値とボトルネック</span></div>
+      <div class="rv"><div class="fig" style="--far:16/10;--fars:4/3"><div class="scr vd" data-dev="monitor" data-dim="b" data-dim-sp="b" data-lead="" data-lead-sp="" style="--x:8;--y:7;--w:84;--xs:6;--ys:8;--ws:88"><img class="po" src="../img/s2a_dash.webp" alt="" loading="lazy"><video data-src="../video/s2a_dash.mp4" data-t0="0" poster="../img/s2a_dash.webp" muted playsinline preload="none" aria-label="動画：ダッシュボードの画面イメージ。フロー 月次進捗で、アクセス数・新規会員獲得数・注文数・売上の目標と到達率を見て、目標に届いていない注文数を示す。続けて項目ごとの目標到達率と月次推移、経路別流入 月次進捗（経路別流入数・過去4か月推移・自然流入×ページ分類）を順に見せる"></video></div></div></div>
+    </div></li>
+  </ol>
+</div></section>
+
+<section class="sec" id="price"><div class="wrap">
+  <div class="sh hs"><div class="lbl"><span></span><span></span><span class="end"></span></div><p class="giant" data-wd data-fit-text="PRICE">PRICE</p><h2 class="hj">費用</h2></div>
+  <div class="pr">
+    <div class="pl"><p class="pk">コンサルティングおよび実行支援</p><p class="am">月額<b>30</b>万円～</p><p class="pn">※1か月からお請けします</p></div>
+    <div class="pd">
+      <p class="pt">内容</p>
+      <ul><li>・戦略立案（事業理解に基づいて施策優先順位を整理）</li><li>・SEO記事制作、LP制作、広告運用、広告クリエイティブ制作（バナー・動画）、アウトバウンドなど戦略に基づいて実行</li></ul>
+      <p class="pnt">※初回ミーティング時のスコープ内容により、柔軟に対応します</p>
+      <p class="pt pt2">コミュニケーション</p>
+      <ul><li>・同期｜隔週でのミーティング（主に実行・数値状況の振り返りと、ネクストアクションの討議）</li><li>・非同期｜チャットツールでのやり取り（進捗報告や相談などを随時対応）</li></ul>
+    </div>
+  </div>
+  <div class="cb pan"><p>まずは初回ミーティングで、これまでのお取り組みや現状課題をお伺いさせてください。<br>弊社側でミーティング前に同業他社様の施策内容を調査・把握した上で、弊社でのこれまでの実践経験も踏まえ、ボトルネックと施策優先順位までを明確化します。</p><a class="btn" href="../c-3d-b2.html#contact">初回ミーティングを申し込む<span class="free">無料</span></a></div>
+</div></section>
+
+<section class="sec" id="case"><div class="wrap">
+  <div class="sh hs"><div class="lbl"><span></span><span></span><span class="end"></span></div><p class="giant" data-wd data-fit-text="CASE">CASE</p><h2 class="hj">支援事例</h2></div>
+  <ol class="cs">
+    <li><p class="ix"><span>01</span>教育業界</p>
+      <h3><span class="nb">Web領域のCPA改善から</span><span class="nb">面談でのヒアリング項目策定・</span><span class="nb">資料改善まで対応</span></h3>
+      <dl><div><dt>実施内容</dt><dd>広告運用、LP改善、面談フロー改善</dd></div><div><dt>成果</dt><dd><span class="nb">CPA<b>5.5万</b>→<b class="to">3万</b>、</span><span class="nb">面談成約率<b>30%</b>→<b class="to">60%</b></span></dd></div></dl></li>
+    <li><p class="ix"><span>02</span>セキュリティ業界</p>
+      <h3><span class="nb">SEO記事制作、</span><span class="nb">ホワイトペーパー制作、</span><span class="nb">LLMOまで対応</span></h3></li>
+  </ol>
+  <div class="oi"><p class="t">その他の主な対応業界</p>
+    <dl class="rows"><div class="row"><dt>BtoC</dt><dd>民間学童保育事業、人材紹介、化粧品、英語コーチング、エクステリア販売</dd></div><div class="row"><dt>BtoB</dt><dd>医療機器、SaaS、エネルギー、SIer</dd></div></dl></div>
+</div></section>
+
+<section class="sec" id="llmo"><div class="wrap">
+  <div class="sh hs"><div class="lbl"><span></span><span></span><span class="end"></span></div><p class="giant" data-wd data-fit-text="LLMO">LLMO</p><h2 class="hj">LLMOも対応します</h2></div>
+  <p class="lead">3C分析で決めた強みがAIの答えでどう伝わっているかをダッシュボードで確かめ、必要な改善をほかのタスクと同様に、優先順位の下で進めます。</p>
+  <figure class="lf" aria-label="図：顧客（AIに相談して選ぶ）は生成AIの回答からひとつの答えを受け取り、生成AIは自社サイト・LP、検索上位の記事、比較・紹介メディア、SNS・口コミの複数の情報源をまとめて参照する。各社は担当範囲を最適化し、AIの答え全体を見る担当はいない">
+    <p class="bx">顧客（AIに相談して選ぶ）</p>
+    <p class="ar">ひとつの答え</p>
+    <p class="bx ai">生成AIの回答</p>
+    <p class="ar">複数の情報源をまとめて参照</p>
+    <ul><li><span>自社サイト・LP</span><span>制作会社</span></li><li><span>検索上位の記事</span><span>SEO会社</span></li><li><span>比較・紹介メディア</span><span>広告・PR会社</span></li><li><span>SNS・口コミ</span><span>SNS運用会社</span></li></ul>
+    <p class="ow">各社は担当範囲を最適化。AIの答え全体を見る担当はいない</p>
+  </figure>
+  <p class="lt">顧客はAIに相談して候補を絞るようになっています。AIは自社サイト、検索上位の記事、比較・紹介メディア、SNSをまとめて読み、ひとつの答えを返します。LLMOに求められているのは、施策ごとの部分最適ではなく、戦略で決めた強みがすべての接点で同じように伝わっているかを見ることです。</p>
+  <div class="vs">
+    <div class="ng"><p class="t">縦割りで起きること</p><ul><li>自社サイト、LP、外部の記事で説明がそろわず、AIの紹介が狭くなったりぶれたりする</li><li>検索では上位なのに、AIの答えには出てこない場面を誰も見ていない</li><li>改善が必要な場所が他社の担当範囲にあり、手が止まる</li></ul></div>
+    <div class="ok"><p class="t">LLM対応に求められること</p><ul><li>戦略で決めた強みをすべての接点で同じ文脈で伝える</li><li>顧客のパーセプションフローごとにAI回答での見え方を確かめる</li></ul></div>
+  </div>
+  <div class="ex"><h3>改善の例</h3><ul>
+    <li><span>困りごとから始まる質問で登場しない</span><span class="to">→</span><span>課題別の記事制作やFAQを整備</span></li>
+    <li><span>業者選定の質問で登場しない</span><span class="to">→</span><span>引用元となっている媒体をリスト化し、掲載交渉を実施</span></li>
+    <li><span>AIが対応範囲を誤って説明している（ハルシネーション）</span><span class="to">→</span><span>サービスページの記載や外部の紹介情報を見直す</span></li>
+  </ul></div>
+</div></section>
+
+<section class="sec" id="profile"><div class="wrap">
+  <div class="sh hs"><div class="lbl"><span></span><span></span><span class="end"></span></div><p class="giant" data-wd data-fit-text="PROFILE">PROFILE</p><h2 class="hj">代表紹介</h2></div>
+  <article class="mc pf" tabindex="0">
+    <div class="pan mc-pic"><img src="../img/m_hashimoto.webp" alt="橋本 圭司" style="object-position:44.2% 50%"><canvas aria-hidden="true"></canvas></div>
+    <div><p class="nm"><b>橋本 圭司</b><span>代表取締役</span></p>
+      <p class="bio">早稲田大学政治経済学部卒業後、大手通信会社で営業を経験後、社内公募での抜擢を受け、新規事業部門で事業企画を経験。Webコンサル会社へ転職した後、2018年にイラスト世界チャンピオンとともにDT合同会社を設立し、CMO着任。並行して事業会社・ベンダー双方での経験を生かし、20社を超える様々な業種・規模の企業でマーケティング戦略立案からセールスまで伴走し、事業を推進。2024年にサムライスタイル株式会社を設立。AI活用に長けた若手メンバーの加入により、戦略に加えて実行領域まで幅広く対応。</p></div>
+  </article>
+</div></section>
+
+<section class="sec" id="contact"><div class="wrap">
+  <div class="sh hs"><div class="lbl"><span></span><span></span><span class="end"></span></div><p class="giant" data-wd data-fit-text="CONTACT">CONTACT</p><h2 class="hj">お問い合わせ</h2></div>
+  <div class="ct2">
+    <p class="lead">まずは初回ミーティングで、これまでのお取り組みや現状課題をお伺いさせてください。<br>弊社側でミーティング前に同業他社様の施策内容を調査・把握した上で、弊社でのこれまでの実践経験も踏まえ、ボトルネックと施策優先順位までを明確化します。</p>
+    <div>
+      <form class="form" id="form" novalidate>
+        <label>会社名（必須）<input type="text" name="company" autocomplete="organization" required></label>
+        <label>担当者名（必須）<input type="text" name="name" autocomplete="name" required></label>
+        <label>メールアドレス（必須）<input type="email" name="email" autocomplete="email" required></label>
+        <label>電話番号（必須）<input type="tel" name="phone" autocomplete="tel" required></label>
+        <label class="full">本文（必須）<textarea name="message" rows="6" required></textarea></label>
+        <button class="send" type="submit">送信</button>
+      </form>
+      <p class="note">上記ボタンを押すことで、当社の提供するサービス等に関する情報を提供する目的で、サムライスタイル株式会社が上記から送信された個人情報を保管・処理することに同意したものとみなされます。お客様はこれらの情報提供をいつでも停止できます。個人情報の開示や削除依頼等のお問い合わせ先、およびお客様の個人情報を尊重して保護するための弊社の取り組みについては、弊社の<a href="https://samurai-style.tokyo/privacy-policy" target="_blank" rel="noopener">プライバシーポリシー</a>をご覧ください。</p>
+    </div>
+  </div>
+</div></section>
+<div class="page-end"></div>
+</main>
+<footer class="ft"><div class="wrap">
+  <a class="big" href="../c-3d-b2.html#contact"><div class="bw"><b>CONTACT</b><canvas id="ftc" aria-hidden="true"></canvas></div><div class="bl"><span class="jp">お問い合わせはこちらから</span><span class="arr">→</span></div></a>
+  <div class="low">
+    <a class="lg" href="../c-3d-b2.html" aria-label="Samurai-Style"><img src="../img/logo.svg" alt="Samurai-Style"></a>
+    <nav><a href="https://samurai-style.tokyo/privacy-policy">プライバシーポリシー</a><a href="https://samurai-style.tokyo/commercial-transactions">特定商取引法に基づく表記</a></nav>
+    <span>© 2026 samurai-style All Right Reserved.</span>
+  </div>
+</div></footer>
+<span id="meas" aria-hidden="true"></span>
+<script src="_paper.js"></script>
+<script src="../js/svc-real.js"></script>
+<script>
+(() => {
+  if (!window.SvcReal) return;
+  const SPQ = matchMedia('(max-width:760px)');
+  /* スマホは本番と同じ縦長の版に差し替える */
+  if (SPQ.matches) document.querySelectorAll('.rv video[data-src-sp]').forEach(v => {
+    v.dataset.src = v.dataset.srcSp; v.poster = v.dataset.posterSp;
+    const po = v.parentElement.querySelector('.po'); if (po) po.src = v.dataset.posterSp; });
+  const spSwap = () => document.querySelectorAll('.rv .scr').forEach(s => {
+    if (s.dataset.dimPc == null) s.dataset.dimPc = s.dataset.dim;
+    s.dataset.dim = SPQ.matches ? s.dataset.dimSp : s.dataset.dimPc; });
+  spSwap(); SPQ.addEventListener('change', spSwap);
+  document.querySelectorAll('.rv .fig').forEach(f => SvcReal.fig(f, { auto: true }));
+  SvcReal.videos(document.querySelector('main'));
+})();
+</script>
+<script>
+(() => {
+  /* 節の見出し（giant）の大きさは会社概要と同じ段にそろえる（基準＝会社概要の OUR MISSION：幅の6割（スマホ8割）×0.58）。
+     _paper.js はページの単語で大きさを決めるので、ページごとに段がずれる。ここで上書きする */
+  const G = [...document.querySelectorAll('.giant[data-wd]')], H2 = G.filter(g => g.tagName !== 'H1'), meas = document.getElementById('meas');
+  if (!H2.length || !meas) return;
+  const nat = t => { meas.style.fontVariationSettings = '"wdth" 151,"wght" 900,"opsz" 144'; meas.style.letterSpacing = '-0.02em'; meas.textContent = t; return meas.getBoundingClientRect().width; };
+  const fix = () => { if (!H2.some(g => g.style.fontSize && g.style.fontSize !== g._s)) return;
+    const W = G[0].parentElement.clientWidth, r = innerWidth < 820 ? .8 : .6;
+    const base = Math.min(96, 100 * W * r / nat('OUR MISSION')) * .58;
+    H2.forEach(g => { const n = Math.min(base, 100 * W * .98 / nat(g.dataset.fitText || g.textContent.trim())).toFixed(2) + 'px'; g._s = n; g.style.fontSize = n; }); };
+  const mo = new MutationObserver(fix);
+  H2.forEach(g => mo.observe(g, { attributes: true, attributeFilter: ['style'] }));
+  fix();
+})();
+</script>
+<script>
+document.getElementById('form').addEventListener('submit', e => { e.preventDefault(); alert('プレビュー版のため送信しません'); });
+</script>
+</body>
+</html>
