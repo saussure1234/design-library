@@ -440,7 +440,7 @@ mark.flash { animation: flash 1.2s ease; }
 .find:hover { background: var(--soft); }
 .aside { display: grid; gap: 12px; }
 /* 11/24 質問一覧の表：画像の列（実際の画像を小さく並べる。So「引用URL・出典の隣に、画像の引用URLと実際の画像」） */
-.sheet .thumbs { display: grid; grid-template-columns: repeat(6, 44px); gap: 4px; align-items: center; }   /* 11/25 2段：1〜6・7〜10、11番目は「ほか○枚」 */
+.sheet .thumbs { display: grid; grid-template-columns: repeat(6, 44px); gap: 4px; align-items: center; }   /* 11/25 2段×6＝12枠：12枚までは全部、13枚以上は1〜11枚＋12番目に「ほか○枚」 */
 .sheet .thumbs img { width: 44px; height: 44px; object-fit: contain; border: 1px solid var(--line); border-radius: 4px; background: #fff; display: block; }
 .sheet .thumbs .more { font-size: 10.5px; line-height: 1.25; color: var(--muted); text-align: center; }
 .aside .panel h2 { font-size: 13px; }
@@ -1525,7 +1525,7 @@ function bootApp(D) {
           if (cols[i][0] === "取得日時" && x.includes("T")) { const [d, t2] = x.split("T"); c.append(`${d}T`, el("wbr"), t2); }
           else if (cols[i][0] === "AI") c.append(aiMark(a.platform), x);
           else if (cols[i][0] === "画像" && x) {
-            const th = el("div", "thumbs"); const ims = a.images || []; const n = sheetFull ? ims.length : 10;
+            const th = el("div", "thumbs"); const ims = a.images || []; const n = sheetFull || ims.length <= 12 ? ims.length : 11;
             ims.slice(0, n).forEach((im) => { const src = im.src || im.orig; if (!src) return; const g = document.createElement("img"); g.src = src; g.loading = "lazy"; g.alt = im.title || ""; g.referrerPolicy = "no-referrer"; g.addEventListener("error", () => g.remove()); th.append(g); });
             if (ims.length > n) th.append(el("span", "more", `ほか${ims.length - n}枚`));
             c.append(th);
