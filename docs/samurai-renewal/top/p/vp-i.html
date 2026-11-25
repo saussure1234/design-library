@@ -256,9 +256,8 @@
 
 /* Menu：6枚の札を青の濃淡と生成りで塗り分け。番号はグレー */
 .cand-vpi .mn li{border:0}
-.cand-vpi .mn li:nth-child(3n+1){background:var(--t1)}
-.cand-vpi .mn li:nth-child(3n+2){background:var(--t2)}
-.cand-vpi .mn li:nth-child(3n){background:var(--t3)}
+/* 制作できる動画 1〜6 は同じ色（So 11/26） */
+.cand-vpi .mn li:nth-child(n){background:var(--t1)}
 .cand-vpi .mn .n{color:var(--gr)}
 
 /* Strength：左の列＝色の板（見出し＋キャラクター） */
@@ -281,9 +280,10 @@
 .cand-vpi .wf .nc .chw{width:100%;aspect-ratio:4/3}
 
 /* Price：紺の全面帯。中の文は白い箱、ボタンは白 */
-.cand-vpi #price{--paper:#143f57;background:var(--paper);--ink:#fff;--ink2:#e6f4fb;--mute:#a9cfe2;--line:rgba(255,255,255,.3);--line2:rgba(255,255,255,.18);color:var(--ink);padding-bottom:clamp(110px,15vh,160px)}
+.cand-vpi #price{--paper:#143f57;background:var(--paper);margin-top:clamp(96px,12vh,150px);--ink:#fff;--ink2:#e6f4fb;--mute:#a9cfe2;--line:rgba(255,255,255,.3);--line2:rgba(255,255,255,.18);color:var(--ink);padding-bottom:clamp(110px,15vh,160px)}
 .cand-vpi #price+.sec{padding-top:clamp(110px,15vh,160px)}
-.cand-vpi #price .pc{max-width:none;background:#fff;color:#151513;padding:clamp(24px,3vw,40px);border-left:3px solid #1f6f96}
+/* 料金の文は箱にせず、白い文字だけ（So 11/26） */
+.cand-vpi #price .pc{max-width:none;background:none;color:#fff;padding:0;border:0}
 .cand-vpi #price .btn{background:#fff;color:#151513}
 .cand-vpi #price .btn:hover,.cand-vpi #price .btn:focus-visible{background:#c8efff}
 
