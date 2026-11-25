@@ -560,7 +560,7 @@ fg.add(new THREE.Points(fgG, new THREE.ShaderMaterial({ uniforms: UF, transparen
   vertexShader: `uniform float uPx,uSz;attribute float s;varying vec3 vC;varying vec2 vP;void main(){vC=color;vP=position.xy;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);gl_PointSize=uPx*uSz*(.7+s*.7);}`,
   fragmentShader: `uniform vec4 uDim;uniform float uDimA;varying vec3 vC;varying vec2 vP;void main(){float m=smoothstep(.5,.15,length(gl_PointCoord-.5));
  float d=1.;if(uDim.z>0.){vec2 q=max(vec2(0.),max(uDim.xy-vP,vP-(uDim.xy+uDim.zw)));d=mix(1.-uDimA,1.,smoothstep(0.,40.,length(q)));}
- gl_FragColor=vec4(vC,m*d);}` })));
+ float k=max(vC.r,max(vC.g,vC.b));gl_FragColor=vec4(vC,m*d*min(1.,k*1.6));}` })));
 
 const SH = window.PE_SHAPES(N, seed, rnd);
 /* 写真の節：粒は画面全体にまばらに散って、背景として控えめに光るだけ */
@@ -875,7 +875,7 @@ scn.add(new THREE.Points(g, new THREE.ShaderMaterial({ uniforms: US, transparent
   vertexShader: `uniform float uPx,uSz;attribute float s;varying vec3 vC;varying vec2 vP;void main(){vC=color;vP=position.xy;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);gl_PointSize=uPx*uSz*(.75+s*.5);}`,
   fragmentShader: `uniform vec4 uDim;uniform float uDimA;varying vec3 vC;varying vec2 vP;void main(){float m=smoothstep(.5,.15,length(gl_PointCoord-.5));
  float d=1.;if(uDim.z>0.){vec2 q=max(vec2(0.),max(uDim.xy-vP,vP-(uDim.xy+uDim.zw)));d=mix(1.-uDimA,1.,smoothstep(0.,40.,length(q)));}
- gl_FragColor=vec4(vC,m*d);}` })));
+ float k=max(vC.r,max(vC.g,vC.b));gl_FragColor=vec4(vC,m*d*min(1.,k*1.6));}` })));
 
 /* ---- 毎フレーム ---- */
 const SUN = window.FVSUN;
@@ -889,7 +889,7 @@ RT.on((T, dt, t) => {
   E.hz = hz;
   for (const a of A) {
     const wg = a.on(T) * vis, i0 = a.s0, i1 = a.s0 + a.m;
-    if (wg < .004) { if (a._off) continue; for (let i = i0; i < i1; i++) { C3s[i * 3] = C3s[i * 3 + 1] = C3s[i * 3 + 2] = 0; } a._off = 1; continue; }
+    if (wg < .004) { if (a._off) continue; for (let i = i0; i < i1; i++) { C3s[i * 3] = C3s[i * 3 + 1] = C3s[i * 3 + 2] = 0; P3[i * 3] = P3[i * 3 + 1] = -9999; } a._off = 1; continue; }
     a._off = 0;
     let ax, ay, sc;
     if (a.sky) { ay = hz * a.yf; sc = a.sc * G; if (a.k === 'moon') ay = hz - (hz - hz * a.yf) * sm(.58, .8, T) - 10 * G; }
