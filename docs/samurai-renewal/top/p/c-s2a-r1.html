@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+JP:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;700&family=Roboto+Flex:opsz,slnt,wdth,wght@8..144,-10..0,25..151,100..1000&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_paper.css">
+<title>REASON 01 の絵 3案 | Strategy2Action 候補</title>
+<style>
+/* サービスの下層ページ（Strategy2Action・動画制作）共通：紙の節に、本番ページの文言と節の順番をそのまま載せる */
+/* 節の見出し：giant（英字の節名）＋ 和文の見出し */
+.sh.hs{margin-bottom:clamp(40px,6vh,64px)}
+.hj{margin:clamp(22px,3vh,32px) 0 0;font:500 clamp(26px,2.9vw,42px)/1.45 var(--jp);letter-spacing:.04em}
+.giant.uc{text-transform:uppercase}
+.lead{margin:0;max-width:46em;font-size:17px;line-height:2.05;color:var(--ink2)}
+.hs+.lead,.hs+.lead2{margin-top:-8px}
+.lead2{margin:0 0 clamp(40px,6vh,60px);max-width:46em;font-size:17px;line-height:2.05;color:var(--ink2)}
+
+/* FV：左＝見出しと説明、右＝製図の枠の中の映像 */
+.fv{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(32px,5vw,80px);align-items:center}
+.fv .catch{margin:0 0 28px;font:500 clamp(28px,2.9vw,40px)/1.5 var(--jp);letter-spacing:.04em}
+.fv h1.catch{font-size:clamp(34px,3.8vw,56px);line-height:1.4}
+.fv .hl{background:linear-gradient(transparent 86%,var(--sig) 86%,var(--sig) 96%,transparent 96%)}
+.fv .lead{font-size:16px;line-height:2}
+.lbl.solo{margin-bottom:clamp(40px,6vh,72px)}
+
+/* ボタン（お問い合わせはトップの #contact へ） */
+.btn{display:inline-flex;align-items:center;gap:14px;margin-top:36px;padding:19px 30px;background:var(--ink);color:var(--card);font:500 15px/1 var(--jp);letter-spacing:.06em;transition:background .2s}
+.btn::after{content:"\2192";font-family:var(--mono)}
+.btn:hover,.btn:focus-visible{background:var(--sig)}
+.btn:focus-visible{outline:2px solid var(--sig);outline-offset:3px}
+.btn .free{flex:none;white-space:nowrap;padding:4px 7px;background:var(--card);color:var(--ink);font-size:11.5px;letter-spacing:.08em}
+
+/* 製図の枠（svc-real.js）。FV・ダッシュボードの映像 */
+.rv .fig{border:1px solid var(--line)}
+.rv .scr.v6{--vw:1920;--vh:1080;--cx:0;--cy:0;--cw:1920;--ch:1080;--ar:1920/1080}
+.rv .scr.vd{--vw:1600;--vh:1000;--cx:0;--cy:0;--cw:1600;--ch:1000;--ar:1600/1000}
+.rv .scr.vp{--vw:768;--vh:432;--cx:0;--cy:0;--cw:768;--ch:432;--ar:768/432}
+@media (max-width:760px){.rv .scr.v6{--vw:1080;--vh:1350;--cw:1080;--ch:1350;--ar:1080/1350}}
+
+/* 番号つきの並び（PROBLEM・Problem・Menu） */
+.nl{list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 clamp(20px,2.4vw,36px)}
+.nl>li{border-top:1px solid var(--ink);padding:18px 0 34px}
+.nl .n{display:block;margin:0 0 18px;font:400 clamp(40px,3.6vw,54px)/1 var(--disp);letter-spacing:-.04em;color:var(--ink)}
+.nl .n.d{font:400 22px/1 var(--jp);color:var(--ink)}
+.nl p{margin:0;font-size:17px;line-height:1.95;color:var(--ink)}
+
+/* お問い合わせの箱（PROCESS の STEP 01・PRICE の下） */
+.cb{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px 40px;align-items:center;padding:26px 30px;border-left:3px solid var(--sig)}
+.cb p{margin:0;font-size:14.5px;line-height:1.95;color:var(--ink2)}
+.cb .btn{margin:0;white-space:nowrap}
+
+/* 表の行（その他の対応業界） */
+.rows{margin:0;border-bottom:1px solid var(--line)}
+.rows .row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,5fr);gap:6px 24px;padding:18px 0;border-top:1px solid var(--line)}
+.rows dt{font:500 13px/1.9 var(--mono);color:var(--mute);letter-spacing:.04em}
+.rows dd{margin:0;font-size:15.5px;line-height:1.9}
+
+/* 2列の比較（縦割り／求められること） */
+.vs{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line)}
+.vs>div{padding:26px 30px 28px;background:var(--card)}
+.vs>div+div{border-left:1px solid var(--line)}
+.vs .t{margin:0 0 14px;font:500 16px/1.6 var(--jp);letter-spacing:.04em}
+.vs ul{list-style:none;margin:0}
+.vs li{position:relative;padding:12px 0 12px 28px;border-top:1px solid var(--line2);font-size:15px;line-height:1.85}
+.vs .ng li::before,.vs .ng li::after{content:"";position:absolute;left:4px;top:24px;width:12px;height:1px;background:var(--mute);transform:rotate(45deg)}
+.vs .ng li::after{transform:rotate(-45deg)}
+.vs .ok li::before{content:"";position:absolute;left:2px;top:19px;width:13px;height:13px;border:1px solid var(--sig);background:var(--sig)}
+.vs .ok li::after{content:"";position:absolute;left:6px;top:21px;width:4px;height:7px;border:solid var(--card);border-width:0 1.5px 1.5px 0;transform:rotate(45deg)}
+
+/* チェックボックス（窓口ひとつで…のレ点） */
+.cks{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.ck{position:relative;display:inline-flex;align-items:center;gap:10px;padding:9px 14px 9px 12px;border:1px solid var(--line);background:var(--card);font-size:14px;line-height:1.4;cursor:pointer;transition:border-color .2s}
+.ck input{appearance:none;-webkit-appearance:none;margin:0;width:14px;height:14px;border:1px solid var(--mute);background:var(--card);cursor:pointer;display:grid;place-items:center;flex:none}
+.ck input:checked{background:var(--sig);border-color:var(--sig)}
+.ck input:checked::after{content:"";width:4px;height:7px;border:solid var(--card);border-width:0 1.5px 1.5px 0;transform:translateY(-1px) rotate(45deg)}
+.ck:has(input:checked){border-color:var(--ink)}
+.ck input:focus-visible{outline:2px solid var(--sig);outline-offset:2px}
+
+/* 写真カード（MEMBER の粒子をそのまま使う） */
+.mg.two{grid-template-columns:repeat(4,minmax(0,1fr))}
+
+@media (max-width:1080px){
+  .fv{grid-template-columns:1fr;gap:48px}
+  .nl{grid-template-columns:1fr}
+  .nl>li{display:grid;grid-template-columns:72px minmax(0,1fr);gap:0 16px;padding:18px 0 22px}
+  .nl .n{margin:0;font-size:40px}
+  .nl .n.d{font-size:20px;padding-top:4px}
+  .cb{grid-template-columns:1fr}
+  .mg.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:760px){
+  .hj{font-size:23px;line-height:1.5}
+  .lead,.lead2{font-size:15.5px}
+  .fv h1.catch{font-size:30px}
+  .fv .catch{font-size:25px}
+  .fv .lead{font-size:15px}
+  .btn{padding:17px 22px;font-size:14px}
+  .nl p{font-size:15.5px}
+  .nl>li{grid-template-columns:56px minmax(0,1fr)}
+  .nl .n{font-size:38px}
+  .cb{padding:22px 20px}
+  .cb .btn{white-space:normal;padding:16px 18px;gap:10px;letter-spacing:.02em;line-height:1.5}
+  .rows .row{grid-template-columns:1fr;gap:2px;padding:14px 0}
+  .rows dd{font-size:15px}
+  .vs{grid-template-columns:1fr}
+  .vs>div{padding:22px 20px}
+  .vs>div+div{border-left:0;border-top:1px solid var(--line)}
+}
+/* ===== キャラクターの作風 4案（p/c-s2a-chars.html）：作風ごとの節に10場面を格子で並べる ===== */
+.cl-lead{margin:0;max-width:46em;font-size:16px;line-height:2;color:var(--ink2)}
+.cl-sec{padding-top:clamp(56px,8vh,88px)}
+.cl-hd{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 18px;align-items:baseline;margin-bottom:26px;padding-top:18px;border-top:1px solid var(--ink)}
+.cl-no{grid-row:1/3;margin:0;font:500 44px/1 var(--disp);color:var(--sig)}
+.cl-hd h2{margin:0;font:500 clamp(22px,2.2vw,30px)/1.4 var(--jp);letter-spacing:.04em}
+.cl-hd p:last-child{margin:0;font-size:15px;line-height:1.9;color:var(--ink2)}
+.cl-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
+.cl-grid li{min-width:0}
+.cl-grid .cv{position:relative;aspect-ratio:4/3;background:var(--card);border:1px solid var(--line)}
+.cl-grid canvas{position:absolute;inset:0;width:100%;height:100%;display:block;color:var(--ink)}
+.cl-grid .cap{margin:10px 0 0;display:grid;gap:2px;font-size:13px;line-height:1.6}
+.cl-grid .cap b{font:500 11px/1.4 var(--mono);letter-spacing:.08em;color:var(--mute)}
+.cl-grid .cap small{font-size:12px;color:var(--mute);line-height:1.6}
+@media (max-width:1080px){.cl-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:760px){
+  .cl-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .cl-no{font-size:34px}
+  .cl-grid .cap small{display:none}
+}
+.r1-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:28px}.r1-grid .cap small{display:block}@media (max-width:760px){.r1-grid{grid-template-columns:1fr}}
+</style>
+<style>/* ヘッダーの大きさ（全ページ共通・So 11/24「全体的に若干ちっちゃい」→一段大きく）。各ビルダーが </head> の直前に差し込む */
+header.hd,header.ghd{padding-top:24px;padding-bottom:24px}
+header.hd .logo img,header.ghd .logo img{height:34px}
+header.hd .nav,header.ghd .nav{gap:30px;font-size:14px}
+header.hd .nav .cta,header.ghd .nav .cta{padding:12px 18px}
+header.hd .nav .lang,header.ghd .nav .lang{font-size:13px;gap:10px}
+@media (max-width:820px){
+  header.hd,header.ghd{padding:16px}
+  header.hd .logo img,header.ghd .logo img{height:28px}
+}
+
+/* 余白と幅（全ページ共通・So 11/25「横の余白がなさすぎ・広がりすぎ」→一般的な LP の決まりに）
+   ・左右の余白：画面幅に合わせて 20〜80px（PC 1440 で約80・スマホで約21）
+   ・文の帯：最大 1200px で止めて中央に。大きい画面は残りが左右の余白になる
+   ・ヘッダーの左右の端は本文の帯の端にそろえる */
+:root{--m:clamp(20px,5.5vw,80px)}
+.wrap,.paper .wrap{max-width:calc(1200px + 2 * var(--m));margin-left:auto;margin-right:auto;padding-left:var(--m);padding-right:var(--m)}
+header.hd,header.ghd{padding-left:max(var(--m),calc(50% - 600px));padding-right:max(var(--m),calc(50% - 600px))}
+@media (max-width:820px){header.hd,header.ghd{padding-left:var(--m);padding-right:var(--m)}}
+</style>
+<script src="../i18n/i18n.js"></script>
+</head>
+<body data-pal="blue3">
+<header class="ghd">
+  <a class="logo" href="../c-3d-b2.html" aria-label="SAMURAI STYLE"><img src="../img/logo.svg" alt="SAMURAI STYLE"></a>
+  <nav class="nav"><a href="../c-3d-b2.html">HOME</a><a href="service.html" aria-current="page">SERVICE</a><a href="media.html">MEDIA</a><a href="company.html">COMPANY</a><a href="recruit.html">RECRUIT</a><a class="cta" href="../c-3d-b2.html#contact">CONTACT</a><div class="lang"><span>ID</span><span>EN</span><b>JA</b></div></nav>
+  <button class="burger" type="button" aria-label="Menu" aria-expanded="false"><i></i><i></i></button>
+</header>
+<div class="gov"><a href="../c-3d-b2.html">HOME</a><a href="service.html">SERVICE</a><a href="media.html">MEDIA</a><a href="company.html">COMPANY</a><a href="recruit.html">RECRUIT</a><a href="../c-3d-b2.html#contact">CONTACT</a><div class="lang"><span>ID</span><span>EN</span><b>JA</b></div></div>
+
+<main id="top">
+<section class="sec first" id="chars"><div class="wrap">
+  <div class="sh"><div class="lbl"><span></span><span></span><span class="end"></span></div><h1 class="giant" data-wd>REASON 01</h1></div>
+  <p class="cl-lead">「事業会社とベンダー、マーケティングと営業双方の経験による一貫支援」の絵の作り直し 3案。いまの絵は比較用に左上に置いています。どれもコードで描いて動かしています。</p>
+</div></section>
+<section class="sec cl-sec" data-chs="obj"><div class="wrap"><ol class="cl-grid r1-grid"><li><div class="cv"><canvas data-ch="r1" aria-hidden="true"></canvas></div><p class="cap"><b>今</b><span>いまの REASON 01</span><small>ビルとPCの間を往復して、書類とグラフを運ぶ</small></p></li><li><div class="cv"><canvas data-ch="r1a" aria-hidden="true"></canvas></div><p class="cap"><b>A</b><span>橋渡し</span><small>川の両岸に事業会社（ビル）とベンダー（PC）。当社のカバンが橋を渡って両方と握手し、最後に3人で橋の真ん中に並んで手を上げる</small></p></li><li><div class="cv"><canvas data-ch="r1b" aria-hidden="true"></canvas></div><p class="cap"><b>B</b><span>二刀流</span><small>メガホンで呼びかける（マーケ）→ 集まってきた相手と握手（営業）→ 上の2つの札が1本の線でつながり、チェック</small></p></li><li><div class="cv"><canvas data-ch="r1c" aria-hidden="true"></canvas></div><p class="cap"><b>C</b><span>一本の線</span><small>メガホン → 握手 → ビル → グラフの4つの札を、カバンが途切れない1本の線でつなぎながら歩く</small></p></li></ol></div></section>
+<div class="page-end"></div>
+</main>
+<footer class="ft"><div class="wrap">
+  <a class="big" href="../c-3d-b2.html#contact"><div class="bw"><b>CONTACT</b><canvas id="ftc" aria-hidden="true"></canvas></div><div class="bl"><span class="jp">お問い合わせはこちらから</span><span class="arr">→</span></div></a>
+  <div class="low">
+    <a class="lg" href="../c-3d-b2.html" aria-label="Samurai-Style"><img src="../img/logo.svg" alt="Samurai-Style"></a>
+    <nav><a href="https://samurai-style.tokyo/privacy-policy">プライバシーポリシー</a><a href="https://samurai-style.tokyo/commercial-transactions">特定商取引法に基づく表記</a></nav>
+    <span>© 2026 samurai-style All Right Reserved.</span>
+  </div>
+</div></footer>
+<span id="meas" aria-hidden="true"></span>
+<script src="_paper.js"></script>
+<script src="../js/s2a-r1cand.js"></script>
+<script src="../js/s2a-chars.js"></script>
+</body>
+</html>
