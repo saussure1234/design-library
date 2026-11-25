@@ -15,7 +15,7 @@ const W = 240, H = 180, G = 164, DUR = 2.4;
 const C = { ink: [21, 21, 19], navy: [7, 11, 22], sky: [200, 239, 255], lav: [224, 219, 251], paper: [246, 244, 238], card: [255, 253, 248],
   pap: [234, 230, 218], sig: [239, 69, 25], skyD: [126, 196, 226], lavD: [168, 156, 236] };
 /* 色の整理（案 h）：body[data-pal=blue] なら淡紫を青の濃淡に置きかえる。blue2 は朱も青に */
-{ const pal = document.body && document.body.dataset.pal; if (pal === 'blue' || pal === 'blue2') { C.lav = [168, 216, 238]; C.lavD = [74, 150, 190]; if (pal === 'blue2') C.sig = [31, 111, 150] } }
+{ const pal = document.body && document.body.dataset.pal; if (pal === 'blue' || pal === 'blue2') { C.lav = [168, 216, 238]; C.lavD = [74, 150, 190]; if (pal === 'blue2') C.sig = [31, 111, 150] } if (pal === 'blue3') { C.lav = [168, 216, 238]; C.lavD = [74, 150, 190]; window.__S2A_NOTE_W = 1 } }
 const P2 = (a, b, u) => [mix(a[0], b[0], u), mix(a[1], b[1], u)];
 const add = (a, b) => [a[0] + b[0], a[1] + b[1]], mul = (a, k) => [a[0] * k, a[1] * k];
 const rgbOf = s => { const m = String(s).match(/[\d.]+/g); return m ? m.slice(0, 3).map(Number) : null };
@@ -100,6 +100,7 @@ const sig = (S, x, y, s = 5, a = 1) => prim(S, rr(x - s / 2, y - s / 2, s, s), {
 const OBJ = {
   chart: { w: 34, h: 40 }, note: { w: 32, h: 32 }, doc: { w: 28, h: 38 }, case: { w: 40, h: 28 }, pie: { w: 34, h: 34 }, clip: { w: 30, h: 38 }, bot: { w: 30, h: 34 },
 };
+const OBJX = {};   /* ほかのページ（動画制作）が足す物の描き方：OBJX[名前]({ S, J, L, R, w, h, lw, s }) */
 function rigOf(S, p) {
   const r = Object.assign({}, S.st.rig);
   if (S.st.name === 'obj') { const ob = OBJ[p.obj || 'doc']; r.ow = ob.w; r.oh = ob.h; r.sw = ob.w / 2; r.hw = Math.min(ob.w * .2, 6) }
@@ -172,7 +173,7 @@ function objBody(S, J) {
       [[-.24, .12], [-.04, .2], [.16, .28]].forEach(([x, hh], i) => prim(S, R(w * x, h * .06, w * x + w * .13, h * (.06 + hh * .55)), { fill: i === 1 ? 'lav' : 'sky', lw }));
       break;
     case 'note':
-      prim(S, [L(-w / 2, 0), L(w / 2, 0), L(w / 2, h * .78), L(w * .28, h), L(-w / 2, h)], { fill: 'sky' });
+      prim(S, [L(-w / 2, 0), L(w / 2, 0), L(w / 2, h * .78), L(w * .28, h), L(-w / 2, h)], { fill: window.__S2A_NOTE_W ? 'card' : 'sky' });
       prim(S, [L(w / 2, h * .78), L(w * .28, h * .78), L(w * .28, h)], { fill: 'skyD', lw });
       line(S, [L(-w * .3, h * .18), L(w * .3, h * .18)], { lw });
       break;
@@ -202,6 +203,7 @@ function objBody(S, J) {
       prim(S, R(-w / 2, 0, w / 2, h), { fill: 'sky' });
       prim(S, R(-w * .36, h * .42, w * .36, h * .9), { fill: 'navy', lw });
       break;
+    default: if (OBJX[p.obj]) OBJX[p.obj]({ S, J, L, R, w, h, lw, s });
   }
   return { L, w, h };
 }
@@ -560,6 +562,8 @@ const SC = {
     if (th > .3) { const h = B.hands[0]; line(S, [[h[0], h[1]], [h[0], h[1] - 5]], { lw: 1.6, a: th }) }
   } },
 };
+/* ほかのページが場面を足す口（js/vp-chars.js が先に window.__S2A_EXT を置く）。S2A の10場面は変えない */
+if (typeof window.__S2A_EXT === 'function') window.__S2A_EXT({ SC, OBJ, OBJX, U, kf, ss, clamp, mix, add, mul, circ, ell, rr, xf, arcP, prim, line, dot, sig, blend, onHead, arc, P2, G, PI, TAU });
 const ORDER = ['p1', 'p2', 'p3', 'r1', 'r2', 'r3', 's1', 's2', 's3', 's4'];
 
 /* ================= 動かす ================= */
