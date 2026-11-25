@@ -164,7 +164,7 @@ html.nogl .gate,html.nogl .fvv,html.nogl .skip3{display:none}
 
 /* ===== FEATURES 以降（top-v2 から。.paper の中だけに効く） ===== */
 .paper{
-  --pad:clamp(18px,3.4vw,52px);--m:48px;
+  --pad:clamp(18px,3.4vw,52px);
   --paper:#f6f4ee;--card:#fbfaf6;--ink:#151513;--ink2:#3b3a36;--mute:#6f6d69;--line:#dcd8cd;--line2:#e9e5db;--sig:#ef4519;
   --cream:#efe8d8;--navy:#0a1126;
   --sig-core:#c8efff;
@@ -362,6 +362,7 @@ html.nogl .gate,html.nogl .fvv,html.nogl .skip3{display:none}
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 <script>try{var R=document.documentElement;if(/[?&]gate=1/.test(location.search))localStorage.removeItem('samurai-b-gate');if(localStorage.getItem('samurai-b-gate')!==null||location.hash)R.classList.add('quick');if(location.hash)R.classList.add('qhash')}catch(e){}</script>
 <style>html.quick .gate{display:none!important}html.qhash .ld{display:none!important}</style>
+<style>@media (min-width:821px){.tx.L{left:max(var(--m),calc(50vw - 600px))}.tx.R{right:max(var(--m),calc(50vw - 600px))}.hud .prog,.prog{left:max(var(--m),calc(50vw - 600px))}.skip3{right:max(var(--m),calc(50vw - 600px))}.snd{right:max(var(--m),calc(50vw - 600px))}}@media (max-width:820px){.tx.L,.tx.R{left:var(--m);right:var(--m)}.hud .prog,.prog{left:var(--m)}.skip3{right:var(--m)}.snd{right:var(--m)}}</style>
 <style>/* ヘッダーの大きさ（全ページ共通・So 11/24「全体的に若干ちっちゃい」→一段大きく）。各ビルダーが </head> の直前に差し込む */
 header.hd,header.ghd{padding-top:24px;padding-bottom:24px}
 header.hd .logo img,header.ghd .logo img{height:34px}
