@@ -14,6 +14,8 @@ const fr = x => x - Math.floor(x);
 const W = 240, H = 180, G = 164, DUR = 2.4;
 const C = { ink: [21, 21, 19], navy: [7, 11, 22], sky: [200, 239, 255], lav: [224, 219, 251], paper: [246, 244, 238], card: [255, 253, 248],
   pap: [234, 230, 218], sig: [239, 69, 25], skyD: [126, 196, 226], lavD: [168, 156, 236] };
+/* 色の整理（案 h）：body[data-pal=blue] なら淡紫を青の濃淡に置きかえる。blue2 は朱も青に */
+{ const pal = document.body && document.body.dataset.pal; if (pal === 'blue' || pal === 'blue2') { C.lav = [168, 216, 238]; C.lavD = [74, 150, 190]; if (pal === 'blue2') C.sig = [31, 111, 150] } }
 const P2 = (a, b, u) => [mix(a[0], b[0], u), mix(a[1], b[1], u)];
 const add = (a, b) => [a[0] + b[0], a[1] + b[1]], mul = (a, k) => [a[0] * k, a[1] * k];
 const rgbOf = s => { const m = String(s).match(/[\d.]+/g); return m ? m.slice(0, 3).map(Number) : null };
