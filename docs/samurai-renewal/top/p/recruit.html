@@ -900,6 +900,20 @@ html.nogl #stD{display:none}
 .vco .vd,.vco .v-fun .vd{color:#3b3a36}
 @media (max-width:760px){.vco .v-fun .vc-art{border-bottom-color:rgba(21,21,19,.12)}}
 
+/* もっと透かす（So 11/26「もっと透明に。粒子の方もがっつり透明に。じゃないと合わない」）：札の白 45%・粒の枠の紺も半分透かす */
+.vco .vc{background:rgba(251,250,246,.45);border-color:rgba(255,250,240,.35);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.vco .vc-art{background:radial-gradient(ellipse at 50% 62%,rgba(29,43,69,.42),rgba(11,16,32,.55) 72%);border-bottom-color:rgba(255,250,240,.25)}
+.vco .v-fun{border-color:rgba(255,250,240,.35)}
+.vco .v-fun .vc-art{border-right-color:rgba(255,250,240,.25)}
+.vco .vc .no{color:#4a4844}
+
+/* 文字は透けさせない（So 11/26「文字は透明にしないで」）：札は透かしたまま、文字は不透明の白でくっきり。札の白は薄いガラス程度に */
+.vco .vc{background:rgba(255,252,246,.14);border-color:rgba(255,250,240,.3)}
+.vco .vc-art{background:radial-gradient(ellipse at 50% 62%,rgba(29,43,69,.38),rgba(11,16,32,.5) 72%)}
+.vco .vw,.vco .v-fun .vw{color:#fff;opacity:1}
+.vco .vd,.vco .v-fun .vd{color:#fff;opacity:1}
+.vco .vc .no{color:#fff;opacity:1}
+
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}</script>
 <style>/* ヘッダーの大きさ（全ページ共通・So 11/24「全体的に若干ちっちゃい」→一段大きく）。各ビルダーが <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
