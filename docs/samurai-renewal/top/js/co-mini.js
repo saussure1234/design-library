@@ -281,7 +281,7 @@ function memFlip() { document.querySelectorAll('.mv2 .mc').forEach(m => { m.addE
 /* ===== 小さな粒のアイコン（2D canvas・形は舞台と同じ定義） ===== */
 window.MINI = function () { const cvs = [...document.querySelectorAll('canvas.mini')]; if (!cvs.length || !window.PE_SHAPES) return;
   const n = 1500, sd = new Float32Array(n); let s0 = 29; const r = () => (s0 = s0 * 16807 % 2147483647) / 2147483647; for (let i = 0; i < n; i++) sd[i] = r();
-  const SHm = window.PE_EXTRA(window.PE_SHAPES(n, sd, r), n, sd, r, { mini: true }), DPR = Math.min(2, devicePixelRatio || 1), tmp = [0, 0, 1];
+  const SHm = window.PE_EXTRA(window.PE_SHAPES(n, sd, r), n, sd, r, { mini: true }), DPR = Math.min(2, devicePixelRatio || 1), tmp = [0, 0, 1], CC = new Map();
   const st = cvs.map(c => ({ c, x: c.getContext('2d'), k: c.dataset.mini, pos: Float32Array.from({ length: n * 2 }, () => r()), vis: false, t0: 0 }));
   const io = new IntersectionObserver(es => es.forEach(e => { const q = st.find(z => z.c === e.target); if (!q) return; if (e.isIntersecting && !q.vis) { for (let i = 0; i < n * 2; i++) q.pos[i] = r(); } q.vis = e.isIntersecting; }), { rootMargin: '60px' });
   st.forEach(q => { io.observe(q.c); q.mx = null; q.c.addEventListener('pointermove', e => { const r = q.c.getBoundingClientRect(); q.mx = e.clientX - r.left; q.my = e.clientY - r.top; }); q.c.addEventListener('pointerleave', () => { q.mx = null; }); });
@@ -293,7 +293,7 @@ window.MINI = function () { const cvs = [...document.querySelectorAll('canvas.mi
       const pad = .08, bw = w * (1 - pad * 2), bh = h * (1 - pad * 2), s = Math.min(bw / sh.a, bh), BW = s * sh.a, bx = (w - BW) / 2, by = (h - s) / 2, f = 1 - Math.exp(-dt * 3.2), ps = Math.max(1.1, Math.min(2, w / 160));
       for (let i = 0; i < n; i++) { tmp[0] = sh.p[i * 2]; tmp[1] = sh.p[i * 2 + 1]; tmp[2] = 1; if (sh.dyn) sh.dyn(i, sd[i], tt, tmp);
         const ff = sh.snap ? 1 : f, px = q.pos[i * 2] += (tmp[0] - q.pos[i * 2]) * ff, py = q.pos[i * 2 + 1] += (tmp[1] - q.pos[i * 2 + 1]) * ff, bb = Math.min(1, tmp[2]); if (bb <= .01) continue;
-        x.fillStyle = `rgba(${sh.c[i * 3] * 255 | 0},${sh.c[i * 3 + 1] * 255 | 0},${sh.c[i * 3 + 2] * 255 | 0},${bb.toFixed(3)})`; let X = bx + px * BW, Y = by + py * s; if (q.mx != null) { const dx = X - q.mx, dy = Y - q.my, d = Math.hypot(dx, dy) || 1, R = Math.min(w, h) * .22; if (d < R) { const k = (1 - d / R) * R * .55; X += dx / d * k; Y += dy / d * k; if (!sh.snap) { q.pos[i * 2] += dx / d * k / BW * .2; q.pos[i * 2 + 1] += dy / d * k / s * .2; } } } x.fillRect(X, Y, ps, ps); } } })(prev);
+        const ck = Math.min(255, sh.c[i * 3] * 255 | 0) << 16 | Math.min(255, sh.c[i * 3 + 1] * 255 | 0) << 8 | Math.min(255, sh.c[i * 3 + 2] * 255 | 0); let cs = CC.get(ck); if (cs === undefined) { cs = `rgb(${ck >> 16},${ck >> 8 & 255},${ck & 255})`; CC.set(ck, cs); } x.globalAlpha = bb; x.fillStyle = cs; let X = bx + px * BW, Y = by + py * s; if (q.mx != null) { const dx = X - q.mx, dy = Y - q.my, d = Math.hypot(dx, dy) || 1, R = Math.min(w, h) * .22; if (d < R) { const k = (1 - d / R) * R * .55; X += dx / d * k; Y += dy / d * k; if (!sh.snap) { q.pos[i * 2] += dx / d * k / BW * .2; q.pos[i * 2 + 1] += dy / d * k / s * .2; } } } x.fillRect(X, Y, ps, ps); } } })(prev);
 };
 
 /* 案1の帯：写真がゆっくり逆へ流れる（視差） */
