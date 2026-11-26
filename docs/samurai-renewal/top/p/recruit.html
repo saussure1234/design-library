@@ -889,6 +889,17 @@ html.nogl #stD{display:none}
   .vco .v1-g .vd{font-size:13px;line-height:1.8}
 }
 
+/* 色は会社概要のまま（So 11/26「会社概要の方が色がいい。そのままの色で。ただ箱の真っ白は若干透明に」）
+   粒の枠＝紺のグラデーション、札＝生成りの白を 86% に透かす、文字＝墨。FUN も会社概要と同じ墨の文字 */
+.vco .vc{background:rgba(251,250,246,.86);border:1px solid rgba(220,216,205,.75);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.vco .vc-art{background:radial-gradient(ellipse at 50% 62%,#1d2b45,#0b1020 72%);border-bottom-color:rgba(21,21,19,.12)}
+.vco .v-fun{border-color:rgba(220,216,205,.75)}
+.vco .v-fun .vc-art{border-right-color:rgba(21,21,19,.12)}
+.vco .vc .no{color:#6f6d69}
+.vco .vw,.vco .v-fun .vw{color:#151513}
+.vco .vd,.vco .v-fun .vd{color:#3b3a36}
+@media (max-width:760px){.vco .v-fun .vc-art{border-bottom-color:rgba(21,21,19,.12)}}
+
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}</script>
 <style>/* ヘッダーの大きさ（全ページ共通・So 11/24「全体的に若干ちっちゃい」→一段大きく）。各ビルダーが <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
