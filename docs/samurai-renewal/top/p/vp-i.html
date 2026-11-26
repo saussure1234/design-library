@@ -305,9 +305,10 @@
   .cand-vpi .wf .nc .chw{max-width:300px}
 }
 .cand-vpi .fv .catch{font-size:clamp(28px,2.9vw,40px)}
+.cand-vpi .btn .free{background:#ef4519;color:#fff}   /* 無料の札は朱に白文字（S2A とそろえる） */
 
 </style>
-<style>/* ヘッダーの大きさ（全ページ共通・So 11/24「全体的に若干ちっちゃい」→一段大きく）。各ビルダーが </head> の直前に差し込む */
+<style>/* ヘッダーの大きさ（全ページ共通・So 11/24「全体的に若干ちっちゃい」→一段大きく）。各ビルダーが head の終わりの直前に差し込む（ここに閉じタグの文字を書かないこと：置き換えで誤爆するため） */
 header.hd,header.ghd{padding-top:24px;padding-bottom:24px}
 header.hd .logo img,header.ghd .logo img{height:34px}
 header.hd .nav,header.ghd .nav{gap:30px;font-size:14px}
@@ -326,8 +327,12 @@ header.hd .nav .lang,header.ghd .nav .lang{font-size:13px;gap:10px}
 .wrap,.paper .wrap{max-width:calc(1200px + 2 * var(--m));margin-left:auto;margin-right:auto;padding-left:var(--m);padding-right:var(--m)}
 header.hd,header.ghd{padding-left:max(var(--m),calc(50% - 600px));padding-right:max(var(--m),calc(50% - 600px))}
 @media (max-width:820px){header.hd,header.ghd{padding-left:var(--m);padding-right:var(--m)}}
+
+/* 英語のときは、大見出しの上の小さなラベル（日本語の小見出しを訳したもの＝大見出しと同じことの繰り返し）を出さない。行の高さは残す（So 11/26） */
+html[lang=en] .lbl .jp2{visibility:hidden}
 </style>
 <script src="../i18n/i18n.js"></script>
+<style>.mc{position:relative}.mc .prof{position:absolute;z-index:3;top:10px;right:10px;width:34px;height:34px;display:grid;place-items:center;background:var(--card,#fbfaf6);border:1px solid var(--line,#dcd8cd);color:var(--ink,#151513);transition:color .2s,border-color .2s}.mc .prof svg{width:16px;height:16px}.mc .prof:hover,.mc .prof:focus-visible{color:var(--sig,#ef4519);border-color:var(--sig,#ef4519)}.pf .mc-pic{position:relative}.mc .prof{z-index:20}</style>
 </head>
 <body class="cand cand-vpi" data-chs="obj" data-pal="blue3">
 <header class="ghd">
@@ -399,7 +404,7 @@ header.hd,header.ghd{padding-left:max(var(--m),calc(50% - 600px));padding-right:
   <div class="sh hs"><div class="lbl"><span></span><span></span><span class="end"></span></div><p class="giant uc" data-wd data-fit-text="MEMBER">Member</p><h2 class="hj">動画制作を担うメンバー</h2></div>
   <p class="mem-lead">事業づくりとマーケティングの経験を持つ代表と、映像ディレクターの経験を持つメンバーが、企画から撮影・編集まで担当します。</p>
   <div class="mg two">
-    <article class="mc" tabindex="0"><div class="pan mc-pic"><img src="../img/m_hashimoto.webp" alt="橋本 圭司" style="object-position:44.2% 50%"><canvas aria-hidden="true"></canvas></div><p class="role top"><span class="nb">代表取締役</span></p><h3><span class="nb">橋本 圭司</span></h3><p class="bio">大手通信会社の営業、事業企画、およびWebコンサル会社での経験を生かし、様々な業種・規模の企業でBizDev・マーケティングのコンサルとして事業を推進。</p></article>
+    <article class="mc" tabindex="0"><div class="pan mc-pic"><img src="../img/m_hashimoto.webp" alt="橋本 圭司" style="object-position:44.2% 50%"><canvas aria-hidden="true"></canvas></div><a class="prof" href="hashimoto.html" aria-label="橋本 圭司のプロフィール"><svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor"><path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"></path></svg></a><p class="role top"><span class="nb">代表取締役</span></p><h3><span class="nb">橋本 圭司</span></h3><p class="bio">大手通信会社の営業、事業企画、およびWebコンサル会社での経験を生かし、様々な業種・規模の企業でBizDev・マーケティングのコンサルとして事業を推進。</p></article>
     <article class="mc" tabindex="0"><div class="pan mc-pic"><img src="../img/m_hayashi.webp" alt="林 壮" style="object-position:44.8% 50%"><canvas aria-hidden="true"></canvas></div><p class="role top"><span class="nb">映像ディレクター</span></p><h3><span class="nb">林 壮</span></h3><p class="bio">東京生まれ、イギリス・シンガポール育ち。<br>映像ディレクターの経験を生かし、動画制作の企画・撮影・編集を担当。</p></article>
   </div>
 </div></section>

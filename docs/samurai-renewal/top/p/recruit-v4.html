@@ -941,8 +941,7 @@ html.nogl #stD{display:none}
 
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}</script>
-<style>/* ヘッダーの大きさ（全ページ共通・So 11/24「全体的に若干ちっちゃい」→一段大きく）。各ビルダーが <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
-</head> の直前に差し込む */
+<style>/* ヘッダーの大きさ（全ページ共通・So 11/24「全体的に若干ちっちゃい」→一段大きく）。各ビルダーが head の終わりの直前に差し込む（ここに閉じタグの文字を書かないこと：置き換えで誤爆するため） */
 header.hd,header.ghd{padding-top:24px;padding-bottom:24px}
 header.hd .logo img,header.ghd .logo img{height:34px}
 header.hd .nav,header.ghd .nav{gap:30px;font-size:14px}
@@ -966,6 +965,7 @@ header.hd,header.ghd{padding-left:max(var(--m),calc(50% - 600px));padding-right:
 html[lang=en] .lbl .jp2{visibility:hidden}
 </style>
 <script src="../i18n/i18n.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
 </head>
 <body class="v2 v3 u r4 r4c v4 v4n">
 <div id="stDs" aria-hidden="true"></div><canvas id="stD" aria-hidden="true"></canvas>
