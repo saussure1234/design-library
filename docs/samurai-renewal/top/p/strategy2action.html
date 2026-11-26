@@ -348,6 +348,188 @@ html:not([lang=ja]) .cs dd .nb{white-space:normal}
 /* すぐ上にお問い合わせのフォームがあるので、フッターの CONTACT は出さない（トップと同じ・So 11/24） */
 .ft .big{display:none}
 
+/* ===== 候補共通：動く絵の置き場所（色は各案で上書き） ===== */
+.cand .ic{position:relative;color:var(--ink)}
+.cand .ic canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+/* PROBLEM：番号の上に絵 */
+.cand .nl .ic{height:170px;margin:0 0 18px}
+/* REASON・PROCESS：左の列＝番号＋絵 */
+.cand .nc{display:flex;flex-direction:column;gap:18px}
+.cand .nc .ic{width:100%;max-width:220px;aspect-ratio:5/4}
+/* LLMO：リードの横に大きい絵 */
+.cand .lh{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(28px,4vw,64px);align-items:center}
+.cand .lh .lead{margin-top:0}
+.cand .ic-l{height:clamp(260px,26vw,360px)}
+@media (max-width:1080px){
+  .cand .nl .ic{grid-column:1/-1;height:150px;margin:0 0 14px}
+  .cand .lh{grid-template-columns:1fr}
+}
+@media (max-width:760px){
+  .cand .nc{flex-direction:row;align-items:center;justify-content:space-between}
+  .cand .nc .ic{width:150px;flex:none}
+  .cand .ic-l{height:260px}
+}
+
+/* ===== 案 e・f 共通：B（色の全面帯）＋D（札の塗り分け）＋本番の人物キャラクター（2026-11-25） =====
+   札の色は 水色／淡紫／生成りの濃 の3色だけ（朱・桃の札は使わない）。朱は Signal として線・点・数字だけ。
+   キャラクターは背景が透過の平塗り（紺・山吹・生成り）。札の上に置き、彩度を少しだけ落として紙になじませる */
+.cand-ef{--t1:#e2f4fc;--t2:#ecebfb;--t3:#efeadf;--d1:#1f6f96;--d2:#4a3fc9;--d3:#151513;--acc:#ef4519}
+
+/* ---- キャラクター ---- */
+.cand-ef .chw{position:relative;display:flex;align-items:flex-end;justify-content:center;overflow:visible}
+.cand-ef .ch{display:block;height:100%;width:auto;max-width:100%;object-fit:contain;object-position:50% 100%;transform-origin:50% 100%;filter:saturate(.86)}
+/* 息づかい：足元を軸にごく小さく伸び縮みするだけ（画面に入っている間だけ） */
+@keyframes chb{0%,100%{transform:none}50%{transform:scaleY(1.022)}}
+.cand-ef .chw.on .ch{animation:chb 5.6s ease-in-out var(--dl,0s) infinite}
+@media (prefers-reduced-motion:reduce){.cand-ef .chw .ch{animation:none!important}}
+
+/* FV：映像の左下に1体（本番と同じ置き方） */
+.cand-ef .fvw{position:relative}
+.cand-ef .ch-fv{position:absolute;z-index:3;left:-7%;bottom:-9%;height:48%;pointer-events:none}
+
+/* PROBLEM：3枚の札。上に窓（キャラクター）、下に番号と文 */
+.cand-ef .nl{gap:16px}
+.cand-ef .nl>li{border:0;border-top:3px solid var(--acc);padding:0 0 28px;background:var(--t);display:flex;flex-direction:column}
+.cand-ef .nl>li:nth-child(1){--t:var(--t1);--acc:var(--d1)}
+.cand-ef .nl>li:nth-child(2){--t:var(--t2);--acc:var(--d2)}
+.cand-ef .nl>li:nth-child(3){--t:var(--t3);--acc:var(--d3)}
+.cand-ef .nl .chw{height:200px;padding:22px 0 0;border-bottom:1px solid rgba(21,21,19,.12)}
+.cand-ef .nl .n,.cand-ef .nl p{padding:0 26px}
+.cand-ef .nl .n{color:var(--acc);margin-top:18px}
+
+/* REASON・PROCESS：左の列＝色の板（番号＋キャラクター） */
+.cand-ef .rs>li,.cand-ef .st>li{grid-template-columns:minmax(0,1.35fr) minmax(0,5fr)}
+.cand-ef .rs{border-bottom:0}
+.cand-ef .rs>li{border-top:0;padding:16px 0 40px}
+.cand-ef .rs>li:nth-child(1){--t:var(--t2);--acc:var(--d2)}
+.cand-ef .rs>li:nth-child(2){--t:var(--t1);--acc:var(--d1)}
+.cand-ef .rs>li:nth-child(3){--t:var(--t3);--acc:var(--d3)}
+.cand-ef .rs .nc,.cand-ef .st .nc{background:var(--t);padding:18px 18px 0;align-self:start}
+.cand-ef .rs .n{color:var(--acc)}
+.cand-ef .nc .chw{width:100%;aspect-ratio:1/1;padding-top:6px}
+.cand-ef .st{border-bottom:0}
+.cand-ef .st>li{border-top:0;padding:16px 0 30px}
+.cand-ef .st>li:nth-child(1){--t:var(--t1);--acc:var(--d1)}
+.cand-ef .st>li:nth-child(2){--t:var(--t2);--acc:var(--d2)}
+.cand-ef .st>li:nth-child(3){--t:var(--t3);--acc:var(--d3)}
+.cand-ef .st>li:nth-child(4){--t:var(--t1);--acc:var(--d1)}
+.cand-ef .st .bd{background:var(--card);border:1px solid var(--line);padding:clamp(22px,2.6vw,36px);align-self:start}
+.cand-ef .st .sn b{color:var(--acc)}
+.cand-ef .st>li:last-child .sn b{color:var(--sig)}
+
+/* CASE：札の色＋上にキャラクター（白地の絵なので乗算で札の色になじませる） */
+.cand-ef .cs>li{border-top-width:3px}
+.cand-ef .cs>li:nth-child(1){background:var(--t1);border-color:var(--t1);border-top-color:var(--d1)}
+.cand-ef .cs>li:nth-child(2){background:var(--t2);border-color:var(--t2);border-top-color:var(--d2)}
+.cand-ef .cs>li .ix span{color:inherit}
+.cand-ef .chc{height:210px;margin:-6px 0 18px;border-bottom:1px solid rgba(21,21,19,.12)}
+.cand-ef .chc .ch{mix-blend-mode:multiply}
+
+/* LLMO：線の動く絵はここだけ（キャラクターの居ない節）。図の箱を淡色で塗り分け */
+.cand-ef #llmo .ic-l{background:var(--t2);--acc:var(--d2)}
+.cand-ef .lf li:nth-child(1){background:var(--t1);border-color:var(--t1)}
+.cand-ef .lf li:nth-child(2){background:var(--t2);border-color:var(--t2)}
+.cand-ef .lf li:nth-child(3){background:var(--t3);border-color:var(--t3)}
+.cand-ef .lf li:nth-child(4){background:#e6f1e9;border-color:#e6f1e9}
+.cand-ef .lf li span+span{background:rgba(255,255,255,.55)}
+.cand-ef .vs .ok{background:var(--t1)}
+.cand-ef .vs .ok li::before{background:var(--d1);border-color:var(--d1)}
+
+@media (max-width:1080px){
+  .cand-ef .nl{grid-template-columns:1fr}
+  .cand-ef .nl>li{display:grid;grid-template-columns:72px minmax(0,1fr)}
+  .cand-ef .nl .chw{grid-column:1/-1;height:170px}
+  .cand-ef .nl .n{padding:0 0 0 20px}.cand-ef .nl p{padding:18px 20px 0 0}
+  .cand-ef .rs>li,.cand-ef .st>li{grid-template-columns:minmax(0,1.6fr) minmax(0,5fr)}
+}
+@media (max-width:760px){
+  .cand-ef .ch-fv{left:-2%;bottom:-12%;height:42%}
+  .cand-ef .nl .chw{height:150px;padding-top:16px}
+  .cand-ef .nl>li{grid-template-columns:60px minmax(0,1fr)}
+  .cand-ef .rs>li,.cand-ef .st>li{grid-template-columns:1fr}
+  .cand-ef .rs .nc,.cand-ef .st .nc{padding:12px 16px 0;align-items:flex-end}
+  .cand-ef .nc .chw{width:120px;flex:none;aspect-ratio:1/1}
+  .cand-ef .rs .n,.cand-ef .st .sn{padding-bottom:14px}
+  .cand-ef .chc{height:170px}
+  .cand-ef .lh .ic-l{height:240px}
+}
+
+/* ===== 案 e：水色と淡い紫の全面帯（PROBLEM 水色・PRICE 淡紫・LLMO 水色）＋帯の外は札の淡色 =====
+   帯の中の札は白に近い色にして、帯の色と札の色がぶつからないようにする。朱の全面は使わない */
+.cand-e :is(#problem,#price,#llmo){background:var(--paper);padding-bottom:clamp(110px,15vh,160px)}
+.cand-e :is(#problem,#price,#llmo)+.sec{padding-top:clamp(110px,15vh,160px)}
+/* PROBLEM：水色の全面。札は白、上の線と番号だけ札ごとの色 */
+.cand-e #problem{--paper:#c8efff;--card:#f6fcff;--line:#8fcbe6;--line2:#b4e2f5;--ink2:#22313a;--mute:#3f5866}
+.cand-e #problem .nl>li{--t:#f6fcff}
+/* PRICE：淡い紫の全面。30 は紫、札は白 */
+.cand-e #price{--paper:#e6e3fb;--card:#fcfbff;--line:#c9c3ef;--line2:#dcd8f6;--ink2:#2e2a4a;--mute:#5d5880}
+.cand-e #price .pr .am b{color:var(--d2);font-size:clamp(96px,10vw,150px)}
+/* LLMO：水色の全面。絵の板は抜く、図の主役（生成AIの回答）は紫 */
+.cand-e #llmo{--paper:#c8efff;--card:#f6fcff;--line:#8fcbe6;--line2:#b4e2f5;--ink2:#22313a;--mute:#3f5866}
+.cand-e #llmo .ic-l{background:transparent}
+.cand-e #llmo .lf{background-image:linear-gradient(rgba(21,21,19,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(21,21,19,.06) 1px,transparent 1px)}
+.cand-e #llmo .lf li:nth-child(1){background:var(--card);border-color:var(--line)}
+.cand-e #llmo .lf .bx.ai{background:var(--d2);border-color:var(--d2);color:#fff}
+.cand-e #llmo .vs .ok{background:var(--card)}
+.cand-e #llmo .ex li span:last-child{background:var(--d2)}
+@media (max-width:760px){
+  .cand-e :is(#problem,#price,#llmo){padding-bottom:96px}
+  .cand-e :is(#problem,#price,#llmo)+.sec{padding-top:96px}
+  .cand-e #price .pr .am b{font-size:88px}
+}
+/* ===== 案 g：e の帯と札に、コードで描いて動かすキャラクター（s2a-chars.js）を置く。人物イラストの webp は使わない ===== */
+.cand-g .chw canvas{position:absolute;inset:0;width:100%;height:100%;display:block;color:var(--ink)}
+.cand-g .nl .chw{height:230px;padding:0}
+.cand-g .nc .chw{aspect-ratio:4/3;padding:0}
+@media (max-width:1080px){.cand-g .nl .chw{height:200px}}
+@media (max-width:760px){
+  .cand-g .nl .chw{height:180px}
+  .cand-g .nc .chw{width:150px;aspect-ratio:4/3}
+}
+/* ===== 案 h：色を整理（So 11/26「何色あるのってくらいある」）=====
+   色は 生成り（地）・墨（文字）・青1系統（淡／中／濃）の3つだけ。紫と緑はやめる。
+   札の塗り分けは 淡い青／やや濃い青／生成りの濃 の3つ（同じ系統の濃淡）。番号の色は全部 濃い青。
+   h1：朱は「成果の数字」（CASE の 3万・60%）だけに残す。h2：朱もやめて青だけ */
+.cand-h{--t1:#e2f4fc;--t2:#cfe9f5;--t3:#efeadf;--d1:#1f6f96;--d2:#1f6f96;--d3:#151513}
+.cand-h :is(#s2a,#problem,#reason,#process,#price,#llmo,#profile,#contact){--sig:#1f6f96}
+/* PRICE：淡紫の帯 → 濃い青の帯（白い文字）。30 は淡い水色 */
+.cand-h.cand-e #price{--paper:#143f57;--card:#1c4d68;--ink:#fff;--ink2:#e6f4fb;--mute:#a9cfe2;--line:rgba(255,255,255,.3);--line2:rgba(255,255,255,.18);--sig:#c8efff;color:var(--ink)}
+.cand-h.cand-e #price .pr .am b{color:#c8efff}
+/* LLMO：紫の箱 → 濃い青、緑の箱 → 生成りの濃 */
+.cand-h.cand-e #llmo .lf .bx.ai{background:var(--d1);border-color:var(--d1)}
+.cand-h.cand-e #llmo .ex li span:last-child{background:var(--d1)}
+.cand-h .lf li:nth-child(4){background:var(--t3);border-color:var(--t3)}
+/* h2：朱を全部やめる */
+.cand-h2{--sig:#1f6f96}
+.cand-h2 #case{--sig:#1f6f96}
+/* ===== 案 i：h1 に So の指摘7点（11/26）=====
+   ① 代表の写真は最初からカラー ② PROBLEM の水色の帯は「相談する」ボタンから十分あけて始める
+   ③ REASON・PROCESS の番号は全部グレー ④ PROBLEM 02 の擬人化の紙は白（s2a-chars.js の data-pal）
+   ⑤ PRICE は濃い青の帯のまま、中の箱は白 ⑥ CASE の2枚は紺の箱に白い文字 ⑦ LLMO は帯をやめて普通の生成り */
+.cand-i .pf .mc-pic img{filter:none!important;opacity:1!important}
+.cand-i .pf .mc-pic canvas{display:none}
+.cand-i.cand-e #problem{margin-top:clamp(96px,12vh,150px)}
+.cand-i.cand-ef :is(.rs,.st)>li:nth-child(n){--acc:#8a8780}
+.cand-i .st>li:last-child .sn b{color:#8a8780}
+/* PRICE の箱：白地に墨の文字。30 は濃い青 */
+.cand-i.cand-e #price :is(.pr,.cb){background:#fff;border-color:#fff;--ink:#151513;--ink2:#3b3a36;--mute:#6f6d69;--line:#dcd8cd;--line2:#e9e5db;color:var(--ink)}
+.cand-i.cand-e #price .cb{border-left:3px solid #1f6f96}
+.cand-i.cand-e #price .pr .am b{color:#1f6f96}
+.cand-i.cand-e #price .cb .btn{background:#151513;color:#fff}
+/* CASE：紺の箱・白い文字。成果の数字は明るい朱 */
+.cand-i.cand-ef .cs>li:is(:nth-child(1),:nth-child(2)){background:#1f6f96;border-color:#1f6f96;border-top-color:#1f6f96;color:#fff;--ink:#fff;--ink2:#e6f4fb;--mute:#d3eaf5;--line:rgba(255,255,255,.3);--line2:rgba(255,255,255,.18)}
+.cand-i .cs>li :is(h3,dd,.ix){color:var(--ink)}
+.cand-i .cs>li dt{color:var(--mute)}
+.cand-i .cs>li .ix span{color:#c8efff}
+.cand-i .cs dd b:nth-of-type(2){color:#ff8a5c}
+.cand-i .cs .chc{border-bottom-color:rgba(255,255,255,.2)}
+/* LLMO：帯をやめてページの地のまま */
+.cand-i.cand-e #llmo{--paper:inherit;--card:inherit;--line:inherit;--line2:inherit;--ink2:inherit;--mute:inherit;background:transparent}
+.cand-i.cand-e #llmo .lf li:nth-child(1){background:var(--t1);border-color:var(--t1)}
+.cand-i.cand-e #llmo .vs .ok{background:var(--t1)}
+/* REASON・PROCESS の番号の箱は全部 ③ と同じ生成りの濃（So 11/26「01〜03・01〜04 の箱はすべて丸3の色」） */
+.cand-i.cand-ef :is(.rs,.st)>li:nth-child(n){--t:var(--t3)}
+
 </style>
 <style>/* ヘッダーの大きさ（全ページ共通・So 11/24「全体的に若干ちっちゃい」→一段大きく）。各ビルダーが </head> の直前に差し込む */
 header.hd,header.ghd{padding-top:24px;padding-bottom:24px}
@@ -371,7 +553,7 @@ header.hd,header.ghd{padding-left:max(var(--m),calc(50% - 600px));padding-right:
 </style>
 <script src="../i18n/i18n.js"></script>
 </head>
-<body>
+<body class="cand cand-ef cand-e cand-g cand-h cand-i" data-art="con" data-chs="obj" data-pal="blue3">
 <header class="ghd">
   <a class="logo" href="../c-3d-b2.html" aria-label="SAMURAI STYLE"><img src="../img/logo.svg" alt="SAMURAI STYLE"></a>
   <nav class="nav"><a href="../c-3d-b2.html">HOME</a><a href="service.html" aria-current="page">SERVICE</a><a href="media.html">MEDIA</a><a href="company.html">COMPANY</a><a href="recruit.html">RECRUIT</a><a class="cta" href="../c-3d-b2.html#contact">CONTACT</a><div class="lang"><span>ID</span><span>EN</span><b>JA</b></div></nav>
@@ -395,16 +577,16 @@ header.hd,header.ghd{padding-left:max(var(--m),calc(50% - 600px));padding-right:
 <section class="sec" id="problem"><div class="wrap">
   <div class="sh hs"><div class="lbl"><span></span><span></span><span class="end"></span></div><p class="giant" data-wd data-fit-text="PROBLEM">PROBLEM</p><h2 class="hj"><span class="nb">施策は進めているが、</span><br><span class="nb">目標に届かない</span></h2></div>
   <ol class="nl">
-    <li><span class="n">01</span><p>目標数値に未達だが、何がボトルネックで、どうすれば改善するか分からない</p></li>
-    <li><span class="n">02</span><p>広告、SEO、LLMO・・・<br>進めている施策の優先順位が正しいか、それぞれが最適化できているか自信がない</p></li>
-    <li><span class="n">03</span><p>施策ごとにベンダーからのレポートは届くが、内容を理解しきれないまま次の月に進んでいる</p></li>
+    <li><div class="chw"><canvas data-ch="p1" aria-hidden="true"></canvas></div><span class="n">01</span><p>目標数値に未達だが、何がボトルネックで、どうすれば改善するか分からない</p></li>
+    <li><div class="chw"><canvas data-ch="p2" aria-hidden="true"></canvas></div><span class="n">02</span><p>広告、SEO、LLMO・・・<br>進めている施策の優先順位が正しいか、それぞれが最適化できているか自信がない</p></li>
+    <li><div class="chw"><canvas data-ch="p3" aria-hidden="true"></canvas></div><span class="n">03</span><p>施策ごとにベンダーからのレポートは届くが、内容を理解しきれないまま次の月に進んでいる</p></li>
   </ol>
 </div></section>
 
 <section class="sec" id="reason"><div class="wrap">
   <div class="sh hs"><div class="lbl"><span></span><span></span><span class="end"></span></div><p class="giant" data-wd data-fit-text="REASON">REASON</p><h2 class="hj"><span class="nb">戦略から実行まで</span><span class="nb">お任せいただける理由</span></h2></div>
   <ol class="rs">
-    <li><span class="n">01</span><div>
+    <li><div class="nc"><span class="n">01</span><div class="chw"><canvas data-ch="r1" aria-hidden="true"></canvas></div></div><div>
       <h3>事業会社とベンダー、マーケティングと営業双方の経験による一貫支援</h3>
       <p>代表・橋本が、事業会社とマーケティング支援会社の双方で、戦略立案から施策の意思決定・実行に関わり、リード獲得後の営業まで対応してきた経験を元に、数値のボトルネックが何かをともに解明し、改善に向けて伴走します。</p>
       <div class="cg pan">
@@ -415,12 +597,12 @@ header.hd,header.ghd{padding-left:max(var(--m),calc(50% - 600px));padding-right:
         <p class="nt">※経験領域の違いを示した概念図です。</p>
       </div>
     </div></li>
-    <li><span class="n">02</span><div>
+    <li><div class="nc"><span class="n">02</span><div class="chw"><canvas data-ch="r2" aria-hidden="true"></canvas></div></div><div>
       <h3>AI活用による運用・制作・テクニカル領域の効率化</h3>
       <p>広告運用、制作、SEO／LLMOのテクニカル領域は、AIと自社開発のツールで効率化しています。実務経験のあるエンジニアが社内にいるため、サイトの改修や構造化データなどの技術対応も内製で進められます。</p>
       <p class="sub">自社プロダクト：HookHack（動画広告生成）、LPHack（LP制作・改修）</p>
     </div></li>
-    <li><span class="n">03</span><div>
+    <li><div class="nc"><span class="n">03</span><div class="chw"><canvas data-ch="r3" aria-hidden="true"></canvas></div></div><div>
       <h3>窓口ひとつで、必要な施策を必要な分だけ</h3>
       <p>戦略策定から実務まで、弊社で一貫して対応します。これまでの20社超の企業様との取り組みの中で、以下のように様々な施策を効率的に実行できる体制を整えてきました。貴社の体制や予算に合わせて、必要な施策をレ点でお選びいただけます。</p>
       <div class="cks"><label class="ck"><input type="checkbox" checked><span>広告運用</span></label><label class="ck"><input type="checkbox"><span>動画広告制作</span></label><label class="ck"><input type="checkbox"><span>バナー制作</span></label><label class="ck"><input type="checkbox"><span>Web制作</span></label><label class="ck"><input type="checkbox"><span>SEO</span></label><label class="ck"><input type="checkbox" checked><span>LLMO</span></label><label class="ck"><input type="checkbox"><span>ホワイトペーパー制作</span></label><label class="ck"><input type="checkbox"><span>アウトバウンド営業</span></label></div>
@@ -432,20 +614,20 @@ header.hd,header.ghd{padding-left:max(var(--m),calc(50% - 600px));padding-right:
   <div class="sh hs"><div class="lbl"><span></span><span></span><span class="end"></span></div><p class="giant" data-wd data-fit-text="PROCESS">PROCESS</p><h2 class="hj"><span class="nb">現状把握から可視化まで、</span><span class="nb">4つのステップで伴走</span></h2></div>
   <p class="lead2">現状把握と方針のすり合わせ、優先順位、役割分担、可視化の4段で進めます。可視化した結果は次のすり合わせに戻り、改善を続けます。</p>
   <ol class="st">
-    <li><p class="sn"><small>STEP</small><b>01</b></p><div class="bd">
+    <li><div class="nc"><p class="sn"><small>STEP</small><b>01</b></p><div class="chw"><canvas data-ch="s1" aria-hidden="true"></canvas></div></div><div class="bd">
       <h3>3C分析と施策の現状から、ボトルネックと改善方針をすり合わせ</h3>
       <p>顧客・競合・自社の3C分析と、現状の施策の実施状況を照らし合わせます。Webでのリサーチに加え、貴社の営業・CS担当など顧客接点を持つ方の声をもとにニーズを把握し、競争環境と貴社のアセットを比較。現状の施策や課題をお伺いした上で、ボトルネックと改善の方針を提案し、すり合わせます。</p>
       <div class="cb pan"><p>まずは初回ミーティングで、これまでのお取り組みや現状課題をお伺いさせてください。<br>弊社側でミーティング前に同業他社様の施策内容を調査・把握した上で、弊社でのこれまでの実践経験も踏まえ、ボトルネックと施策優先順位までを明確化します。</p><a class="btn" href="../c-3d-b2.html#contact">初回ミーティングを申し込む<span class="free">無料</span></a></div>
     </div></li>
-    <li><p class="sn"><small>STEP</small><b>02</b></p><div class="bd">
+    <li><div class="nc"><p class="sn"><small>STEP</small><b>02</b></p><div class="chw"><canvas data-ch="s2" aria-hidden="true"></canvas></div></div><div class="bd">
       <h3>すり合わせた方針から、タスクの優先順位を整理</h3>
       <p>すり合わせた改善方針をもとに、取り組むタスクを洗い出し、事業への重要性も踏まえて着手する順序を整理します。</p>
     </div></li>
-    <li><p class="sn"><small>STEP</small><b>03</b></p><div class="bd">
+    <li><div class="nc"><p class="sn"><small>STEP</small><b>03</b></p><div class="chw"><canvas data-ch="s3" aria-hidden="true"></canvas></div></div><div class="bd">
       <h3>タスクごとに役割分担</h3>
       <p>広告運用、Web制作、SEO／LLMO、ホワイトペーパー制作、アウトバウンド営業など、整理したタスクごとに弊社と貴社の役割を分担します。貴社の体制に合わせて、必要な施策をレ点式でご依頼いただけます。</p>
     </div></li>
-    <li><p class="sn"><small>STEP</small><b>04</b></p><div class="bd">
+    <li><div class="nc"><p class="sn"><small>STEP</small><b>04</b></p><div class="chw"><canvas data-ch="s4" aria-hidden="true"></canvas></div></div><div class="bd">
       <h3>ダッシュボードで可視化し、経営層・上長へのレポートもスムーズに</h3>
       <p>マーケティングの数値をKPIツリーに沿って並べ、どこがボトルネックになっているかを確認できるようにします。施策ごとに分かれていたレポートがひとつにまとまるため、経営層・上長への報告にもそのまま使えます。</p>
       <p>LLMOにおいては狙うカテゴリ、ポジション、顧客の目的・課題ごとに、AI回答での見え方を確認します。引用率や言及率に加え、「狙った場面で紹介されているか」「意図した強みが伝わっているか」を捉え、戦略と計測をつなぎます。</p>
@@ -485,7 +667,7 @@ header.hd,header.ghd{padding-left:max(var(--m),calc(50% - 600px));padding-right:
 
 <section class="sec" id="llmo"><div class="wrap">
   <div class="sh hs"><div class="lbl"><span></span><span></span><span class="end"></span></div><p class="giant" data-wd data-fit-text="LLMO">LLMO</p><h2 class="hj">LLMOも対応します</h2></div>
-  <p class="lead">3C分析で決めた強みがAIの答えでどう伝わっているかをダッシュボードで確かめ、必要な改善をほかのタスクと同様に、優先順位の下で進めます。</p>
+  <div class="lh"><p class="lead">3C分析で決めた強みがAIの答えでどう伝わっているかをダッシュボードで確かめ、必要な改善をほかのタスクと同様に、優先順位の下で進めます。</p><div class="ic ic-l"><canvas data-art="llmo" aria-hidden="true"></canvas></div></div>
   <figure class="lf" aria-label="図：顧客（AIに相談して選ぶ）は生成AIの回答からひとつの答えを受け取り、生成AIは自社サイト・LP、検索上位の記事、比較・紹介メディア、SNS・口コミの複数の情報源をまとめて参照する。各社は担当範囲を最適化し、AIの答え全体を見る担当はいない">
     <p class="bx">顧客（AIに相談して選ぶ）</p>
     <p class="ar">ひとつの答え</p>
@@ -580,5 +762,7 @@ header.hd,header.ghd{padding-left:max(var(--m),calc(50% - 600px));padding-right:
 <script>
 document.getElementById('form').addEventListener('submit', e => { e.preventDefault(); alert('プレビュー版のため送信しません'); });
 </script>
+<script src="../js/s2a-art.js"></script>
+<script src="../js/s2a-chars.js"></script>
 </body>
 </html>

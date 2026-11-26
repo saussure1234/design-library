@@ -236,6 +236,75 @@
   .wf .n{font-size:40px;margin-bottom:12px}
   .pc{font-size:15.5px}
 }
+/* ===== 動画制作 案 i：Strategy2Action 版 i と同じトーン（11/26 So「キャラクターのトーン・セクション・色、全部 S2A と同じように」）=====
+   色＝生成り・墨・青1系統（淡 #e2f4fc／やや濃 #cfe9f5／濃 #1f6f96・帯の水色 #c8efff・紺 #143f57）。紫・緑・朱は使わない（成果の数字が無いページ）
+   帯＝Problem 水色（FV のボタンから十分あける）・Price 紺（中の箱は白）。番号＝Problem は青、Menu・Work Flow はグレー。代表の写真は最初からカラー
+   キャラクター＝js/vp-chars.js（S2A の D＝道具の擬人化と同じ作風・場面は動画制作用に新しく10） */
+.cand-vpi{--t1:#e2f4fc;--t2:#cfe9f5;--t3:#efeadf;--d1:#1f6f96;--gr:#8a8780}
+.cand-vpi :is(#vp,#problem,#about,#menu,#strength,#workflow,#member){--sig:#1f6f96}
+.cand-vpi .chw{position:relative;overflow:visible}
+.cand-vpi .chw canvas{position:absolute;inset:0;width:100%;height:100%;display:block;color:var(--ink)}
+
+/* Problem：水色の全面帯。札は白、上の線と番号は濃い青、札の上にキャラクター */
+.cand-vpi #problem{--paper:#c8efff;--card:#f6fcff;--line:#8fcbe6;--line2:#b4e2f5;--ink2:#22313a;--mute:#3f5866;background:var(--paper);margin-top:clamp(96px,12vh,150px);padding-bottom:clamp(110px,15vh,160px)}
+.cand-vpi #problem+.sec{padding-top:clamp(110px,15vh,160px)}
+.cand-vpi #problem .nl{gap:16px}
+.cand-vpi #problem .nl>li{border:0;border-top:3px solid var(--d1);padding:0 0 28px;background:#f6fcff;display:flex;flex-direction:column}
+.cand-vpi #problem .nl .chw{height:230px;border-bottom:1px solid rgba(21,21,19,.12)}
+.cand-vpi #problem .nl .n,.cand-vpi #problem .nl p{padding:0 26px}
+.cand-vpi #problem .nl .n{color:var(--d1);margin-top:18px}
+
+/* Menu：6枚の札を青の濃淡と生成りで塗り分け。番号はグレー */
+.cand-vpi .mn li{border:0}
+/* 制作できる動画 1〜6 は同じ色（So 11/26） */
+.cand-vpi .mn li:nth-child(n){background:var(--t3)}
+.cand-vpi .mn .n{color:var(--gr)}
+
+/* Strength：左の列＝色の板（見出し＋キャラクター） */
+.cand-vpi .sg{border-bottom:0}
+.cand-vpi .sg>li{border-top:0;padding:16px 0 36px}
+.cand-vpi .sg .hc{background:var(--t);padding:20px 20px 0;align-self:start}
+.cand-vpi .sg>li:nth-child(1){--t:var(--t3)}
+.cand-vpi .sg>li:nth-child(2){--t:var(--t3)}
+.cand-vpi .sg>li:nth-child(3){--t:var(--t3)}
+.cand-vpi .sg .hc .chw{width:100%;aspect-ratio:4/3;margin-top:8px}
+
+/* Work Flow：各段の上に色の板（番号＋キャラクター）。番号はグレー */
+.cand-vpi .wf li{border-top:0;padding:0}
+.cand-vpi .wf .nc{background:var(--t);padding:16px 16px 0;margin-bottom:18px}
+.cand-vpi .wf li:nth-child(1){--t:var(--t3)}
+.cand-vpi .wf li:nth-child(2){--t:var(--t3)}
+.cand-vpi .wf li:nth-child(3){--t:var(--t3)}
+.cand-vpi .wf li:nth-child(4){--t:var(--t3)}
+.cand-vpi .wf .n{color:var(--gr);margin:0}
+.cand-vpi .wf .nc .chw{width:100%;aspect-ratio:4/3}
+
+/* Price：紺の全面帯。中の文は白い箱、ボタンは白 */
+.cand-vpi #price{--paper:#143f57;background:var(--paper);margin-top:clamp(96px,12vh,150px);--ink:#fff;--ink2:#e6f4fb;--mute:#a9cfe2;--line:rgba(255,255,255,.3);--line2:rgba(255,255,255,.18);color:var(--ink);padding-bottom:clamp(110px,15vh,160px)}
+.cand-vpi #price+.sec{padding-top:clamp(110px,15vh,160px)}
+/* 料金の文は箱にせず、白い文字だけ（So 11/26） */
+.cand-vpi #price .pc{max-width:none;background:none;color:#fff;padding:0;border:0}
+.cand-vpi #price .btn{background:#fff;color:#151513}
+.cand-vpi #price .btn:hover,.cand-vpi #price .btn:focus-visible{background:#c8efff}
+
+/* Member：写真は最初からカラー */
+.cand-vpi .mc-pic img{filter:none}
+
+@media (max-width:1080px){
+  .cand-vpi #problem .nl{grid-template-columns:1fr}
+  .cand-vpi #problem .nl>li{display:grid;grid-template-columns:72px minmax(0,1fr)}
+  .cand-vpi #problem .nl .chw{grid-column:1/-1;height:200px}
+  .cand-vpi #problem .nl .n{padding:0 0 0 20px}.cand-vpi #problem .nl p{padding:18px 20px 0 0}
+}
+@media (max-width:760px){
+  .cand-vpi #problem{padding-bottom:96px}.cand-vpi #problem+.sec,.cand-vpi #price+.sec{padding-top:96px}.cand-vpi #price{padding-bottom:96px}
+  .cand-vpi #problem .nl .chw{height:180px}
+  .cand-vpi #problem .nl>li{grid-template-columns:60px minmax(0,1fr)}
+  .cand-vpi .sg .hc{padding:14px 16px 0}
+  .cand-vpi .sg .hc .chw{max-width:300px}
+  .cand-vpi .wf .nc .chw{max-width:300px}
+}
+.cand-vpi .fv .catch{font-size:clamp(28px,2.9vw,40px)}
 
 </style>
 <style>/* ヘッダーの大きさ（全ページ共通・So 11/24「全体的に若干ちっちゃい」→一段大きく）。各ビルダーが </head> の直前に差し込む */
@@ -260,7 +329,7 @@ header.hd,header.ghd{padding-left:max(var(--m),calc(50% - 600px));padding-right:
 </style>
 <script src="../i18n/i18n.js"></script>
 </head>
-<body>
+<body class="cand cand-vpi" data-chs="obj" data-pal="blue3">
 <header class="ghd">
   <a class="logo" href="../c-3d-b2.html" aria-label="SAMURAI STYLE"><img src="../img/logo.svg" alt="SAMURAI STYLE"></a>
   <nav class="nav"><a href="../c-3d-b2.html">HOME</a><a href="service.html" aria-current="page">SERVICE</a><a href="media.html">MEDIA</a><a href="company.html">COMPANY</a><a href="recruit.html">RECRUIT</a><a class="cta" href="../c-3d-b2.html#contact">CONTACT</a><div class="lang"><span>ID</span><span>EN</span><b>JA</b></div></nav>
@@ -270,10 +339,10 @@ header.hd,header.ghd{padding-left:max(var(--m),calc(50% - 600px));padding-right:
 
 <main id="top">
 <section class="sec first" id="vp"><div class="wrap">
-  <div class="lbl solo"><span></span><span></span><span class="end"></span></div>
+  <div class="sh"><div class="lbl"><span></span><p class="jp2">動画制作</p><span class="end"></span></div><h1 class="giant" data-wd>Video Production</h1></div>
   <div class="fv">
     <div>
-      <h1 class="catch">事業理解から、<br>伝わる動画をつくる。</h1>
+      <p class="catch">事業理解から、<br>伝わる動画をつくる。</p>
       <p class="lead">会社紹介・サービス紹介・採用・SNSなどの実写動画を、事業理解に基づく企画から撮影・編集までワンストップで制作します。</p>
     </div>
     <div class="rv"><div class="fig" style="--far:3/2;--fars:4/3"><div class="scr vp" data-dev="film" data-dim="r" data-dim-sp="x" data-lead="" data-lead-sp="" style="--x:8;--y:16;--w:84;--xs:6;--ys:16;--ws:88"><img class="po" src="../img/video-production-poster.webp" alt="" loading="lazy"><video data-src="../video/video-production.mp4" data-t0="0" poster="../img/video-production-poster.webp" muted playsinline preload="none" aria-hidden="true"></video></div></div></div>
@@ -283,9 +352,9 @@ header.hd,header.ghd{padding-left:max(var(--m),calc(50% - 600px));padding-right:
 <section class="sec" id="problem"><div class="wrap">
   <div class="sh hs"><div class="lbl"><span></span><span></span><span class="end"></span></div><p class="giant uc" data-wd data-fit-text="PROBLEM">Problem</p><h2 class="hj">こんなお悩みはありませんか</h2></div>
   <ol class="nl">
-    <li><span class="n d">❶</span><p>企画から撮影・編集まで、まとめて任せられる制作先がない</p></li>
-    <li><span class="n d">❷</span><p>撮影はできても、事業や顧客に合った企画にならない</p></li>
-    <li><span class="n d">❸</span><p>動画で何をどう伝えればよいか、社内で決めきれていない</p></li>
+    <li><div class="chw"><canvas data-ch="vp1" aria-hidden="true"></canvas></div><span class="n d">❶</span><p>企画から撮影・編集まで、まとめて任せられる制作先がない</p></li>
+    <li><div class="chw"><canvas data-ch="vp2" aria-hidden="true"></canvas></div><span class="n d">❷</span><p>撮影はできても、事業や顧客に合った企画にならない</p></li>
+    <li><div class="chw"><canvas data-ch="vp3" aria-hidden="true"></canvas></div><span class="n d">❸</span><p>動画で何をどう伝えればよいか、社内で決めきれていない</p></li>
   </ol>
 </div></section>
 
@@ -306,17 +375,17 @@ header.hd,header.ghd{padding-left:max(var(--m),calc(50% - 600px));padding-right:
 <section class="sec" id="strength"><div class="wrap">
   <div class="sh hs"><div class="lbl"><span></span><span></span><span class="end"></span></div><p class="giant uc" data-wd data-fit-text="STRENGTH">Strength</p><h2 class="hj">動画制作を成功に導く3つの強み</h2></div>
   <ol class="sg">
-    <li><h3><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="4" y="5" width="16" height="11"/><path d="M2 19h20"/></svg><span>事業理解に基づく企画</span></h3><div><p>顧客・競合・自社の3つの視点で事業を整理し、誰に何を伝える動画かを決めてから企画します。戦略から実行まで伴走する「<a href="strategy2action.html">Strategy2Action</a>」の進め方を、動画の企画にも生かしています。</p></div></li>
-    <li><h3><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 8h4l2-3h6l2 3h4v11H3z"/><circle cx="12" cy="13" r="3.6"/></svg><span>企画から撮影・編集まで自社で一貫</span></h3><div><p>社内クリエイティブチームが、企画から撮影・編集・仕上げまで一貫して対応します。ブランドの世界観を反映した、質の高い実写動画を制作します。</p>
+    <li><div class="hc"><h3><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="4" y="5" width="16" height="11"/><path d="M2 19h20"/></svg><span>事業理解に基づく企画</span></h3><div class="chw"><canvas data-ch="vs1" aria-hidden="true"></canvas></div></div><div><p>顧客・競合・自社の3つの視点で事業を整理し、誰に何を伝える動画かを決めてから企画します。戦略から実行まで伴走する「<a href="strategy2action.html">Strategy2Action</a>」の進め方を、動画の企画にも生かしています。</p></div></li>
+    <li><div class="hc"><h3><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 8h4l2-3h6l2 3h4v11H3z"/><circle cx="12" cy="13" r="3.6"/></svg><span>企画から撮影・編集まで自社で一貫</span></h3><div class="chw"><canvas data-ch="vs2" aria-hidden="true"></canvas></div></div><div><p>社内クリエイティブチームが、企画から撮影・編集・仕上げまで一貫して対応します。ブランドの世界観を反映した、質の高い実写動画を制作します。</p>
       <div class="wk"><div class="pan"><img src="../img/vp_work1.webp" alt="商品撮影の制作例：オレンジを背景にした美容液ボトル" loading="lazy"></div><div class="pan"><img src="../img/vp_work2.webp" alt="商品撮影の制作例：水滴をまとった洗顔料のチューブ" loading="lazy"></div></div></div></li>
-    <li><h3><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 8h4l2-3h6l2 3h4v11H3z"/><circle cx="12" cy="13" r="3.6"/></svg><span>国内への出張撮影に対応</span></h3><div><p>撮影は、ご指定の場所に出張して行います。最短翌日から対応します（交通費・宿泊費は実費）。</p></div></li>
+    <li><div class="hc"><h3><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 8h4l2-3h6l2 3h4v11H3z"/><circle cx="12" cy="13" r="3.6"/></svg><span>国内への出張撮影に対応</span></h3><div class="chw"><canvas data-ch="vs3" aria-hidden="true"></canvas></div></div><div><p>撮影は、ご指定の場所に出張して行います。最短翌日から対応します（交通費・宿泊費は実費）。</p></div></li>
   </ol>
 </div></section>
 
 <section class="sec" id="workflow"><div class="wrap">
   <div class="sh hs"><div class="lbl"><span></span><span></span><span class="end"></span></div><p class="giant uc" data-wd data-fit-text="WORK FLOW">Work Flow</p><h2 class="hj">企画から撮影・編集まで、一貫して制作</h2></div>
   <p class="lead2">ヒアリングと企画から、撮影・編集、納品まで、社内チームが一貫して対応します。</p>
-  <ol class="wf"><li><p class="n">1</p><h3>ヒアリング・企画</h3><p>事業や顧客、動画の用途をお伺いし、伝える内容と構成を企画します。</p></li><li><p class="n">2</p><h3>撮影</h3><p>ご指定の場所に出張して撮影します。最短翌日から対応します。</p></li><li><p class="n">3</p><h3>編集</h3><p>撮影した素材を、用途に合った長さと形式に編集します。</p></li><li><p class="n">4</p><h3>納品</h3><p>ご確認いただいた内容を反映し、完成した動画を納品します。</p></li></ol>
+  <ol class="wf"><li><div class="nc"><p class="n">1</p><div class="chw"><canvas data-ch="vw1" aria-hidden="true"></canvas></div></div><h3>ヒアリング・企画</h3><p>事業や顧客、動画の用途をお伺いし、伝える内容と構成を企画します。</p></li><li><div class="nc"><p class="n">2</p><div class="chw"><canvas data-ch="vw2" aria-hidden="true"></canvas></div></div><h3>撮影</h3><p>ご指定の場所に出張して撮影します。最短翌日から対応します。</p></li><li><div class="nc"><p class="n">3</p><div class="chw"><canvas data-ch="vw3" aria-hidden="true"></canvas></div></div><h3>編集</h3><p>撮影した素材を、用途に合った長さと形式に編集します。</p></li><li><div class="nc"><p class="n">4</p><div class="chw"><canvas data-ch="vw4" aria-hidden="true"></canvas></div></div><h3>納品</h3><p>ご確認いただいた内容を反映し、完成した動画を納品します。</p></li></ol>
   <a class="btn" href="../c-3d-b2.html#contact">お問い合わせ</a>
 </div></section>
 
@@ -379,5 +448,7 @@ header.hd,header.ghd{padding-left:max(var(--m),calc(50% - 600px));padding-right:
   fix();
 })();
 </script>
+<script src="../js/vp-chars.js"></script>
+<script src="../js/s2a-chars.js"></script>
 </body>
 </html>
