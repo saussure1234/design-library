@@ -928,6 +928,11 @@ html.nogl #stD{display:none}
 .vco .v1-g .vc{height:100%}
 .vco .v1-g .vc-tx{flex:1}
 
+/* 文字とアイコンを分ける線（So 11/26）：枠と同じ線。PC の FUN は左右に並ぶので縦の線、ほかとスマホは横の線 */
+.vco .vc .vc-art{border-bottom:1px solid rgba(255,250,240,.4)!important}
+.vco .vc.v-fun .vc-art{border-bottom:0!important;border-right:1px solid rgba(255,250,240,.4)!important}
+@media (max-width:760px){.vco .vc.v-fun .vc-art{border-right:0!important;border-bottom:1px solid rgba(255,250,240,.4)!important}}
+
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}</script>
 <style>/* ヘッダーの大きさ（全ページ共通・So 11/24「全体的に若干ちっちゃい」→一段大きく）。各ビルダーが <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
