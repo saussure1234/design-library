@@ -1124,8 +1124,10 @@ gate.querySelectorAll('button').forEach((b) => b.addEventListener('click', () =>
 // ---------- STORY：1回のスクロールで次の場面まで進む（途中で止まらない） ----------
 const STOPS = [0.5, 1.55, 2.55, 3.55, 4.55, 5.55, 6.55];
 let snapBusy = false, snapRaf = 0, wheelAcc = 0, wheelT = 0, lastSnap = 0, gestureLock = false;
+let snapFrom = null, snapSign = 0, revAcc = 0;
 function snapTo(pT) {
-  const y0 = scrollY, y1 = toY(pT), t0 = performance.now(), dur = 4200;   // 場面の切り替えはゆっくり（So 11/24）
+  const y0 = scrollY, y1 = toY(pT), t0 = performance.now(), dur = 4200;
+  snapSign = Math.sign(y1 - y0); snapFrom = STOPS.reduce((a, q) => Math.abs(q - P) < Math.abs(a - P) ? q : a, STOPS[0]); revAcc = 0;   // 引き返し用：どの場面から動き出したか   // 場面の切り替えはゆっくり（So 11/24）
   snapBusy = true; gestureLock = true; lastSnap = t0; cancelAnimationFrame(snapRaf);
   const step = (now) => { const k = Math.min(1, (now - t0) / dur), e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
     scrollTo(0, y0 + (y1 - y0) * e); if (k < 1) snapRaf = requestAnimationFrame(step); else setTimeout(() => { snapBusy = false; }, 120); };
@@ -1152,6 +1154,8 @@ addEventListener('wheel', (e) => {
   const now = performance.now();
   // 1回の操作（慣性で届き続けるスクロール）では1場面だけ。操作が一度止まる（0.3秒途切れる）まで次を受け付けない
   if (gestureLock && !snapBusy && now - wheelT > 300) gestureLock = false;
+  // 場面が動いている最中に逆向きのスクロールが来たら、すぐに元の場面へ引き返す（So 11/26「戻る時は2回スクロールしないと戻らない」）
+  if (snapBusy && snapSign && Math.sign(e.deltaY) === -snapSign) { revAcc += e.deltaY; if (Math.abs(revAcc) > 24 && snapFrom != null) { const back = snapFrom; cancelAnimationFrame(snapRaf); snapBusy = false; snapTo(back); } wheelT = now; wheelAcc = 0; return; }
   if (snapBusy || gestureLock) { wheelT = now; wheelAcc = 0; return; }
   wheelT = now; wheelAcc += e.deltaY;
   if (Math.abs(wheelAcc) > 18) { const d = Math.sign(wheelAcc); wheelAcc = 0; if (!snapDir(d)) { scrollBy(0, d * 60); } }
@@ -1175,7 +1179,8 @@ addEventListener('touchcancel', () => { touching = false; }, { passive: true });
 addEventListener('touchmove', (e) => { if (gateDone && (snapBusy || (P > STOPS[0] - 0.02 && P < 7.98))) e.preventDefault(); }, { passive: false });
 addEventListener('touchend', (e) => {
   touching = false;
-  if (tY == null || snapBusy) return; const dy = tY - (e.changedTouches[0]?.clientY ?? tY); tY = null;
+  if (tY == null) return; const dy = tY - (e.changedTouches[0]?.clientY ?? tY); tY = null;
+  if (snapBusy) { if (snapSign && Math.abs(dy) > 30 && Math.sign(dy) === -snapSign && snapFrom != null) { const back = snapFrom; cancelAnimationFrame(snapRaf); snapBusy = false; snapTo(back); } return; }   // 動いている最中の逆向きのスワイプは引き返す
   if (P > STOPS[0] - 0.02 && !inPaper() && Math.abs(dy) > 30) snapDir(Math.sign(dy));
 }, { passive: true });
 addEventListener('keydown', (e) => {
