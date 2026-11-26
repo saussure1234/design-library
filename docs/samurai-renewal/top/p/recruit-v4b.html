@@ -840,6 +840,9 @@ html.nogl #stD{display:none}
 /* 楽しく働くことの意義：節が 1200px の帯で中央に寄ったので、文の左は節の内側の余白だけ（二重にずらさない） */
 @media (min-width:821px){.u.v4 .jx1>.l{left:var(--m)}}
 
+/* ギャラリーの節は帯の高さだけに詰め、帯を節のまん中に（So の確認前に気づいた点：帯が上の端だけで下が大きく空いていた） */
+.v4 .sec.gal.g4{min-height:auto;display:flex;flex-direction:column;justify-content:center;padding-top:clamp(72px,12vh,140px);padding-bottom:clamp(72px,12vh,140px)}
+
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}</script>
 <style>/* ヘッダーの大きさ（全ページ共通・So 11/24「全体的に若干ちっちゃい」→一段大きく）。各ビルダーが <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..1000&family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
