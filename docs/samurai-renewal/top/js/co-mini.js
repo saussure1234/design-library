@@ -339,3 +339,126 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
     return SH;
   };
 })();
+
+/* VALUES の粒のアイコン 新しい候補（So 11/26「Flat は案2（円卓）で良い。Free と Open はどれも良くないので、もうちょっと候補を」）
+   Free：free_d 紙飛行機／free_e 渡り鳥／free_f 地図の点を光が行き来／free_g それぞれの速さの時計
+   Open：open_d 向き合う吹き出し／open_e 手のひらが開いて光／open_f 向き合う2人の間を粒が行き来／open_g 幕が開いて光が差す
+   すべて snap（粒をその場に置く）＋ o[2]＝明るさ（0〜1）。co-mini.js の MINI（build.py の _co_mini 差し込み済み）で描く */
+(() => {
+  const prev = window.PE_EXTRA;
+  window.PE_EXTRA = function (SH, N, seed, rnd, opt) {
+    SH = prev ? prev(SH, N, seed, rnd, opt) : SH;
+    const TAU = Math.PI * 2, A = 1.6;
+    const hex = h => [parseInt(h.slice(1, 3), 16) / 255, parseInt(h.slice(3, 5), 16) / 255, parseInt(h.slice(5, 7), 16) / 255];
+    const WARM = hex('#ffae6e'), EMBER = hex('#ff7a45'), PALE = hex('#ffe2c2'), COOL = hex('#cfdcff'), GOLD = hex('#ffc66b');
+    const tint = (b, s, k = .25) => b.map(v => Math.min(1, v * (1 - k + s * k * 2)));
+    const fr = x => x - Math.floor(x), cl = (v, a = 0, b = 1) => v < a ? a : v > b ? b : v, ss = t => t * t * (3 - 2 * t);
+    const lerp = (p, q, u) => [p[0] + (q[0] - p[0]) * u, p[1] + (q[1] - p[1]) * u];
+    const bez = (p, c, q, u) => { const v = 1 - u; return [v * v * p[0] + 2 * v * u * c[0] + u * u * q[0], v * v * p[1] + 2 * v * u * c[1] + u * u * q[1]]; };
+    const set = (o, x, y, b) => { o[0] = x; o[1] = y; o[2] = b; };
+    /* x を y と同じ長さの単位で書くための換算（枠は横 1.6：縦 1） */
+    const X = d => d / A;
+    function mk(col, dyn) { const p = new Float32Array(N * 2).fill(.5), c = new Float32Array(N * 3);
+      for (let i = 0; i < N; i++) { const cc = col(i, seed[i]); c[i * 3] = cc[0]; c[i * 3 + 1] = cc[1]; c[i * 3 + 2] = cc[2]; }
+      return { a: A, p, c, fit: 'contain', snap: true, dyn }; }
+
+    /* ===== Free ===== */
+    /* 紙飛行機：4機がそれぞれの向きへ、ゆらぎながら飛ぶ。後ろに点線の航跡 */
+    { const PL = [[.12, .78, -.55, .05], [.35, .3, .18, .042], [.7, .85, -1.25, .046], [.88, .4, 2.75, .04]];
+      const P = [[1, 0], [-.6, .5], [-.35, 0], [-.6, -.5], [1, 0]], SEG = [[0, 1], [1, 2], [2, 3], [3, 4], [0, 2]], L = .085;
+      SH.free_d = mk((i, s) => tint(Math.floor(s * 4) % 2 ? GOLD : PALE, s), (i, s, t, o) => {
+        const k = Math.min(3, Math.floor(s * 4)), u = (s * 4) % 1, [x0, y0, th0, sp] = PL[k], th = th0 + .22 * Math.sin(t * .55 + k * 1.7);
+        const dx = Math.cos(th0) * sp * t, dy = Math.sin(th0) * sp * t, px = fr((x0 + dx + .15) / 1.3) * 1.3 - .15, py = fr((y0 + dy + .15) / 1.3) * 1.3 - .15;
+        const c = Math.cos(th), sn = Math.sin(th);
+        if (u < .16) { const d = (u / .16) * .3; const on = fr(d * 26) < .45; set(o, px - X(c * d), py - sn * d, on ? .45 * (1 - u / .16) : 0); return; }
+        const v = (u - .16) / .84 * 5, g = Math.min(4, Math.floor(v)), w = v - g, q = lerp(P[SEG[g][0]], P[SEG[g][1]], w);
+        const lx = q[0] * L, ly = q[1] * L; set(o, px + X(lx * c - ly * sn), py + lx * sn + ly * c, g === 4 ? .55 : 1);
+      }); }
+    /* 渡り鳥：高さも羽ばたきもばらばらの7羽が、同じ方向（右上）へ */
+    { const B = 7, L = .07;
+      SH.free_e = mk((i, s) => tint(PALE, s), (i, s, t, o) => {
+        const k = Math.min(B - 1, Math.floor(s * B)), u = (s * B) % 1, sp = .035 + (k * .37 % 1) * .025, sz = .75 + (k * .53 % 1) * .5;
+        const px = fr(k * .29 + t * sp) * 1.3 - .15, py = .22 + (k * .41 % 1) * .58 - (px - .5) * .18 + Math.sin(t * .7 + k * 2.1) * .025;
+        const side = u < .5 ? -1 : 1, w = (u % .5) * 2, flap = Math.sin(t * (4.2 + k * .55) + k * 2.3);
+        const dy = -(w * (1 - w) * 2 * .32 + w * .3 * flap) * L * sz; set(o, px + X(side * w * L * sz), py + dy, .6 + .4 * (1 - w * .5));
+      }); }
+    /* 地図の点を光が行き来：6か所の点（ゆっくり脈打つ）を弧でつなぎ、光の粒がその上を渡る */
+    { const PN = [[.14, .62], [.3, .3], [.47, .7], [.62, .36], [.8, .64], [.88, .24]], AR = [[0, 1], [1, 3], [0, 2], [2, 4], [3, 5], [3, 4], [1, 2]];
+      const arc = (j, u) => { const [a, b] = AR[j], p = PN[a], q = PN[b], m = [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2 - .16]; return bez(p, m, q, u); };
+      SH.free_f = mk((i, s) => s < .2 ? tint(GOLD, s) : s < .55 ? tint(PALE, s) : tint(WARM, s), (i, s, t, o) => {
+        if (s < .2) { const k = Math.min(5, Math.floor(s / .2 * 6)), p = PN[k], ring = fr(s * 91.3) > .45, a = fr(s * 57.1) * TAU;
+          if (!ring) { const r = Math.sqrt(fr(s * 23.7)) * .018; set(o, p[0] + X(Math.cos(a) * r), p[1] + Math.sin(a) * r, 1); return; }
+          const pu = fr(t * .45 + k * .3), r = .025 + pu * .05; set(o, p[0] + X(Math.cos(a) * r), p[1] + Math.sin(a) * r, .7 * (1 - pu)); return; }
+        if (s < .55) { const j = Math.min(AR.length - 1, Math.floor((s - .2) / .35 * AR.length)), u = fr((s - .2) / .35 * AR.length), q = arc(j, u); set(o, q[0], q[1], fr(u * 34) < .4 ? .3 : 0); return; }
+        const j = Math.floor(fr(s * 17.3) * AR.length), back = fr(s * 53.9) * .14, dir = j % 2 ? -1 : 1, u0 = fr(t * .2 + j * .31), u = cl(u0 - back), uu = dir > 0 ? u : 1 - u, q = arc(j, uu);
+        set(o, q[0], q[1], u0 - back < 0 ? 0 : (1 - back / .14) * 1.1);
+      }); }
+    /* それぞれの速さの時計：大きさの違う4つの時計の針が、それぞれの速さ・向きで回る */
+    { const CK = [[.2, .36, .17, 1.1], [.5, .62, .22, -.45], [.79, .32, .14, 2.2], [.8, .76, .1, .7]];
+      SH.free_g = mk((i, s) => { const u = (s * 4) % 1; return u < .6 ? tint(PALE, s) : tint(GOLD, s); }, (i, s, t, o) => {
+        const k = Math.min(3, Math.floor(s * 4)), u = (s * 4) % 1, [cx, cy, r, sp] = CK[k];
+        if (u < .5) { const a = u / .5 * TAU; set(o, cx + X(Math.cos(a) * r), cy + Math.sin(a) * r, .75); return; }
+        if (u < .58) { const m = Math.floor((u - .5) / .08 * 12), a = m / 12 * TAU, d = r * (.82 + fr(s * 77.1) * .1); set(o, cx + X(Math.cos(a) * d), cy + Math.sin(a) * d, .7); return; }
+        const am = -Math.PI / 2 + t * sp, ah = -Math.PI / 2 + t * sp / 12 + k;
+        if (u < .82) { const d = (u - .58) / .24 * r * .78; set(o, cx + X(Math.cos(am) * d), cy + Math.sin(am) * d, 1.1); return; }
+        if (u < .96) { const d = (u - .82) / .14 * r * .5; set(o, cx + X(Math.cos(ah) * d), cy + Math.sin(ah) * d, 1.1); return; }
+        const a = fr(s * 33.1) * TAU, d = fr(s * 71.3) * .012; set(o, cx + X(Math.cos(a) * d), cy + Math.sin(a) * d, 1.2);
+      }); }
+
+    /* ===== Open ===== */
+    /* 向き合う吹き出し：2つの吹き出しが向き合い、話す側の中で点が弾み、言葉の粒が相手へ渡る（交互に） */
+    { const BL = { c: [.3, .4], rx: .27, ry: .17, tail: [[.2, .52], [.47, .7], [.33, .56]] }, BR = { c: [.7, .6], rx: .27, ry: .17, tail: [[.8, .72], [.53, .9], [.67, .76]] };
+      const ell = (b, a) => [b.c[0] + X(Math.cos(a) * b.rx), b.c[1] + Math.sin(a) * b.ry];
+      SH.open_d = mk((i, s) => s < .5 ? tint(PALE, s) : s < .62 ? tint(GOLD, s) : tint(WARM, s), (i, s, t, o) => {
+        const turn = Math.floor(t * .35) % 2, ph = fr(t * .35), sp = turn ? BR : BL, li = turn ? BL : BR;
+        if (s < .5) { const b = s < .25 ? BL : BR, u = (s % .25) / .25;
+          if (u < .82) { const a = u / .82 * TAU, q = ell(b, a); set(o, q[0], q[1], .85); return; }
+          const v = (u - .82) / .18 * 2, g = Math.min(1, Math.floor(v)), w = v - g, q = lerp(b.tail[g], b.tail[g + 1], w), tb = b === BL ? [BL.c[0] + X(-.04), BL.c[1] + BL.ry * .98] : [BR.c[0] + X(.04), BR.c[1] + BR.ry * .98];
+          const pp = g === 0 ? lerp(tb, b.tail[1], w) : lerp(b.tail[1], [b.c[0] + X(b === BL ? .08 : -.08), b.c[1] + b.ry * .95], w); set(o, pp[0], pp[1], .85); return; }
+        if (s < .62) { const m = Math.min(2, Math.floor((s - .5) / .12 * 3)), a = fr(s * 61.7) * TAU, r = Math.sqrt(fr(s * 29.3)) * .018, bob = Math.sin(t * 7 - m * 1.1) * .02;
+          const b = sp; set(o, b.c[0] + X((m - 1) * .08 + Math.cos(a) * r), b.c[1] + bob + Math.sin(a) * r, 1); return; }
+        const p0 = turn ? [BR.c[0] - X(BR.rx), BR.c[1]] : [BL.c[0] + X(BL.rx), BL.c[1]], p1 = turn ? [BL.c[0] + X(BL.rx * .6), BL.c[1] + .05] : [BR.c[0] - X(BR.rx * .6), BR.c[1] - .05];
+        const lag = fr(s * 31.7) * .45, u = ph * 1.4 - lag; if (u < 0 || u > 1) { set(o, 0, 0, 0); return; }
+        const m = [(p0[0] + p1[0]) / 2, Math.min(p0[1], p1[1]) - .14], q = bez(p0, m, p1, ss(u)), j = (fr(s * 13.1) - .5) * .03; set(o, q[0] + X(j), q[1] + j, 1 - lag);
+      }); }
+    /* 手のひらが開いて光：握った手（指が縮んだ輪郭）がゆっくり開き、開くと手のひらから光の粒がまっすぐ上へ昇る */
+    { const OPEN = [[-.11, .24], [-.13, .03], [-.15, -.01], [-.28, -.11], [-.25, -.16], [-.12, -.08], [-.115, -.12], [-.105, -.33], [-.055, -.34], [-.048, -.13],
+        [-.036, -.14], [-.03, -.38], [.022, -.38], [.026, -.14], [.038, -.14], [.044, -.35], [.092, -.35], [.094, -.13], [.104, -.12], [.112, -.27], [.152, -.27], [.152, -.07],
+        [.145, .05], [.11, .24]];
+      const THUMB = new Set([2, 3, 4, 5]), CX = .5, CY = .72;
+      const shape = op => OPEN.map(([x, y], k) => { if (THUMB.has(k)) { const cx = -.13, cy = -.03; return [cx + (x - cx) * (.3 + .7 * op), cy + (y - cy) * (.3 + .7 * op)]; }
+        if (y < -.13) return [x, -.13 + (y + .13) * (.14 + .86 * op)]; return [x, y]; });
+      SH.open_e = mk((i, s) => s < .62 ? tint(PALE, s) : tint(GOLD, s), (i, s, t, o) => {
+        const op = ss(cl((Math.sin(t * .55) + 1) / 2 * 1.5 - .25));
+        if (s < .62) { const P = shape(op), L = [], n = P.length; let tot = 0;
+          for (let k = 0; k < n - 1; k++) { const d = Math.hypot(P[k + 1][0] - P[k][0], P[k + 1][1] - P[k][1]); L.push(d); tot += d; }
+          let d = (s / .62) * tot, k = 0; while (k < L.length - 1 && d > L[k]) { d -= L[k]; k++; } const q = lerp(P[k], P[k + 1], L[k] ? d / L[k] : 0);
+          set(o, CX + X(q[0]), CY + q[1], .9); return; }
+        const lit = cl((op - .4) / .6); if (lit <= 0) { set(o, CX, CY, 0); return; }
+        const u = fr(t * (.12 + fr(s * 7.3) * .1) + fr(s * 3.1)), x = (fr(s * 19.7) - .5) * .22 * (1 + u * .6) + Math.sin(t * 1.3 + s * 40) * .01, y = -.1 - u * .55;
+        set(o, CX + X(x), CY + y, lit * (1 - u) * (fr(s * 91.1) < .25 ? 1.2 : .7));
+      }); }
+    /* 向き合う2人：2人の間を、上の流れは左から右、下の流れは右から左へ粒が行き来する */
+    { const PP = [[.27, 1], [.73, -1]];
+      SH.open_f = mk((i, s) => s < .5 ? tint(PALE, s) : (fr(s * 7.7) < .5 ? tint(GOLD, s) : tint(WARM, s)), (i, s, t, o) => {
+        if (s < .5) { const k = s < .25 ? 0 : 1, u = (s % .25) / .25, [cx, f] = PP[k];
+          if (u < .4) { const a = u / .4 * TAU; set(o, cx + X(f * .02 + Math.cos(a) * .075), .36 + Math.sin(a) * .075, .9); return; }
+          const a = Math.PI + (u - .4) / .6 * Math.PI; set(o, cx + X(Math.cos(a) * .16), .78 + Math.sin(a) * .26, .85); return; }
+        const up = fr(s * 11.3) < .5, lag = fr(s * 29.1), u = fr(t * .18 + lag), w = up ? u : 1 - u;
+        const p0 = [.27 + X(.1), up ? .42 : .55], p1 = [.73 - X(.1), up ? .42 : .55], m = [.5, up ? .26 : .7], q = bez(p0, m, p1, w), j = (fr(s * 53.3) - .5) * .025;
+        set(o, q[0] + X(j), q[1] + j, Math.sin(Math.PI * u) * 1.1);
+      }); }
+    /* 幕が開いて光が差す：左右の幕のひだが中央から開き、すき間から光の帯が降りる */
+    { SH.open_g = mk((i, s) => s < .08 ? tint(PALE, s) : s < .6 ? tint(EMBER, s, .15).map(v => v * .9) : tint(GOLD, s), (i, s, t, o) => {
+        const op = ss(cl((Math.sin(t * .5) + 1) / 2 * 1.4 - .2)), gap = .62 * op, top = .12, bot = .88;
+        if (s < .08) { set(o, .08 + (s / .08) * .84, top - .02, .8); return; }
+        if (s < .6) { const right = s >= .34, u = ((s - .08) % .26) / .26, fold = Math.floor(u * 7), y = top + fr(u * 7) * (bot - top);
+          const x0 = right ? .5 + gap / 2 : .08, x1 = right ? .92 : .5 - gap / 2, wv = Math.sin(y * 9 + t * 1.1 + fold) * .006 * (1 + (y - top) * 2);
+          const x = x0 + (fold + .5) / 7 * (x1 - x0) + wv; set(o, x, y, fold % 2 ? .55 : .8); return; }
+        if (gap < .02) { set(o, .5, .5, 0); return; }
+        const u = fr(s * 37.1), y = top + fr(u + t * .06 * (.5 + fr(s * 5.3))) * (bot - top), half = gap / 2 * (.35 + .65 * (y - top) / (bot - top));
+        set(o, .5 + (fr(s * 71.9) - .5) * 2 * half, y, .25 + .6 * op * (1 - Math.abs(fr(s * 71.9) - .5) * 1.6));
+      }); }
+    return SH;
+  };
+})();
