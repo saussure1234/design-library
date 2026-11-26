@@ -2145,7 +2145,6 @@ if (K === 'A') {
   /* 4 夜：月がのぼり、沖でクジラが潮を吹く（月は最後まで残る） */
   add('whale', 240, { x: .4, d: .04, sc: .85, c0: 4, c1: 4, on: s4, bob: 0 });
   /* 5 夜更け：砂州の焚き火を囲む人と、灯りの船、流れ星 */
-  add('fire', 660, { x: .64, d: .22, sc: 1.3, on: s5, bob: 0 });
   add('lboat', 330, { x: .24, d: .22, sp: 1, c0: 4, on: s5 });
   add('shoot', 60, { sky: 1, x: .2, yf: .12, per: 6.5, on: sShoot, bob: 0 });
   add('shoot', 60, { sky: 1, x: .55, yf: .2, per: 8.5, ph: 3, on: sShoot, bob: 0 });
@@ -2157,53 +2156,54 @@ if (window.VJ_FW) { const F = window.VJ_FW;
   F.xs.forEach((x, i) => add('fw', SP ? 800 : 1150, { x, d: F.d || .012, sc: (F.sc || 1) * (F.scs ? F.scs[i] : 1), hb: F.hb || 300, R: F.R || 110, jx: F.jx || 60,
     per: (F.per || 3.4) * (1 + i * .13), ph: i * 1.37, on: jw, bob: 0, br: 1.7 })); }
 
-/* ===== 採用 v4：意義の節の遊覧船（So 11/26「遊覧船で人が花火を見ている演出。でかめじゃなくていい」）=====
-   屋根つきの船室・窓の灯り・甲板の手すり・甲板の人影（花火を見上げ、ときどき指を差す・腕を上げる）・水面に映る灯り。
-   ゆっくり揺れる。意義の節（#joy）が画面に入っている間だけ出す。座標は役者の基準点（喫水線の中央）から、上がマイナス */
-KD.pboat = function (u, v, w, z, t, a) {
-  const tilt = Math.sin(t * .8 + a.ph) * .025;
+/* ===== 採用 v4：意義の節の小型ボート（So 11/26「ボートを何隻か置くだけ。遊覧船はやめて」「もっと詳細に・もっと手前に」）=====
+   手前寄りの海に5隻、遠近をつけて（いちばん手前は PC で画面幅の約10%、奥ほど小さく）。船体の反り・喫水線・ランタン・オールか小さなマスト、
+   乗っている人1〜2人（花火を見上げる・ときどき指を差す）、ゆっくり揺れ、灯りが水面に映る。花火が開くと、ほのかに明るくなる。
+   意義の節（#joy）が画面に入っている間だけ出す。座標は喫水線の中央が原点、上がマイナス、右が船首 */
+{
+const fwGlow = t => { let g = 0; for (const a of A) { if (a.k !== 'fw') continue; const P = a.per, p = ((t + a.ph) % P) / P; if (p >= .22) g = Math.max(g, Math.max(0, 1 - (p - .22) / .32)); } return g; };
+const sheer = x => -5 - Math.pow(Math.max(0, x - 6) / 10, 2) * 3 - Math.pow(Math.max(0, -x - 10) / 6, 2) * 1.2;
+const seg = (x0, y0, x1, y1, q) => [x0 + (x1 - x0) * q, y0 + (y1 - y0) * q];
+KD.sboat = function (u, v, w, z, t, a) {
+  const tilt = Math.sin(t * 1.05 + a.ph) * .045, g = fwGlow(t), L = 1 + g * .85, n = a.ppl || 1;
   const put = (x, y, b, c) => set(x, y + x * tilt, b, c);
-  if (u < .26) {   /* 船体：甲板の線と船底の線、舳先と艫を斜めに結ぶ */
-    const q = v;
-    if (w < .45) put(-62 + q * 124, -8, .62, 0);
-    else if (w < .8) put(-50 + q * 104, 0, .5, 0);
-    else if (w < .9) put(54 + q * 8, -8 * q, .55, 0);
-    else put(-50 - q * 12, -8 * q, .55, 0);
+  if (u < .3) {   /* 船体の線：舷（船首が反りあがる）・喫水線・船首の立ち上がり・艫 */
+    if (w < .42) { const x = -17 + v * 34; put(x, sheer(x), .66 * L, 0); }
+    else if (w < .74) put(-14 + v * 28, 0, .5 * L, 0);
+    else if (w < .88) { const p = seg(17, sheer(17), 14, 0, Math.pow(v, 1.4)); put(p[0], p[1], .58 * L, 0); }
+    else { const p = seg(-17, sheer(-17), -14, 0, v); put(p[0], p[1], .5 * L, 0); }
     return;
   }
-  if (u < .44) {   /* 船室：四角の枠と、少し張り出した屋根 */
-    const q = v, sd = Math.floor(w * 4);
-    if (sd === 0) put(-42 + q * 70, -29, .6, 0);
-    else if (sd === 1) put(-36, -8 - q * 19, .48, 0);
-    else if (sd === 2) put(22, -8 - q * 19, .48, 0);
-    else put(-36 + q * 58, -27, .48, 0);
+  if (u < .36) { const x = -14 + v * 29; put(x, -2.2 + (w - .5) * .8, .45 * L, 1); return; }   /* 船体の帯 */
+  if (u < .41) { const x = -14 + v * 28; put(x, sheer(x) * w, .14 * L, 0); return; }   /* 船体の面（まばら） */
+  if (u < .5) {   /* ランタン：艫の短い竿の先 */
+    if (w < .4) put(-12, -5 - v * 11, .42 * L, 0);
+    else { const r = 1.7 * Math.sqrt(z), an = v * 6.283, fl = .85 + .15 * Math.sin(t * 6 + a.ph); put(-12 + Math.cos(an) * r, -17.5 + Math.sin(an) * r * 1.2, .98 * fl, 3); }
     return;
   }
-  if (u < .56) {   /* 窓の灯り：6つ */
-    const k = Math.floor(v * 6), fl = .85 + .15 * Math.sin(t * 7 + k * 2.1);
-    put(-31 + k * 9.4 + (w - .5) * 4.2, -18 + (z - .5) * 5, .95 * fl, 3);
+  if (u < .58) {   /* オール（漕ぎ舟）か小さなマストと畳んだ帆 */
+    if (a.mast) { if (w < .55) put(3, -5 - v * 22, .48 * L, 0); else { const p = seg(3, -26, 3 - 8 + v * 2, -9, (w - .55) / .45); put(p[0] + (z - .5) * 1.6 * (1 - (w - .55) / .45), p[1], .4 * L, 0); } }
+    else { const sd = w < .5 ? -1 : 1, oa = Math.sin(t * .9 + a.ph) * .15; const p = seg(sd * 2, -6, sd * 2 + 15 * Math.cos(.55 + oa) * (sd < 0 ? -1 : 1) * .4 + 9, 3, v); put(p[0], p[1], .4 * L, 0); }
     return;
   }
-  if (u < .62) {   /* 甲板の手すり：前甲板に1本の線と柱 */
-    if (w < .7) put(24 + v * 34, -14, .42, 0); else { const k = Math.floor(v * 6); put(25 + k * 6.4, -8 - z * 6, .4, 0); }
+  if (u < .88) {   /* 1〜2人：腰を下ろして花火を見上げる。1人はときどき指を差す */
+    const k = n > 1 && v > .5 ? 1 : 0, px = k ? 9 : 1, base = sheer(px) + 1, h = k ? 9.5 : 10.5, q = (w * 11.3) % 1, act = Math.max(0, Math.sin(t * .7 + a.ph + k * 2) * 1.6 - .6);
+    if (w < .32) { const an = q * 6.283, r = 1.45 * Math.sqrt(z); put(px + .6 + Math.cos(an) * r, base - h - .4 + Math.sin(an) * r, .82 * L, 5); }   /* 頭（少し上を向く） */
+    else if (w < .62) put(px - q * .6, base - h + 1.7 + q * (h - 2.4), .74 * L, 5);   /* 胴 */
+    else if (w < .74) { const p = seg(px - .6, base - 1.2, px + 3.2, base - 2.6, q); put(p[0], p[1], .6 * L, 5); }   /* 膝 */
+    else { const sh = [px, base - h + 3], hand = act > 0 && (k || n === 1) ? [px + 3.5 + act * 2, base - h - 1.5 - act * 3] : [px + 2.6, base - h * .45]; const p = seg(sh[0], sh[1], hand[0], hand[1], q); put(p[0], p[1], .66 * L, 5); }   /* 腕 */
     return;
   }
-  if (u < .9) {   /* 人影：前甲板に4人。花火（右上）を見上げ、ときどき指を差す・腕を上げる */
-    const k = Math.floor(v * 4), px = 29 + k * 8, ph = a.ph + k * 1.9;
-    const act = Math.max(0, Math.sin(t * .55 + ph) * 1.6 - .6), sway = Math.sin(t * 1.1 + ph) * .5;
-    const part = (w * 10) % 1;
-    if (w < .35) { const an = part * 6.283, r = 2.3 * Math.sqrt(z); put(px + sway + .6 + Math.cos(an) * r, -27.5 + Math.sin(an) * r, .78, 5); }   /* 頭（少し上を向く） */
-    else if (w < .7) put(px + sway * (1 - part), -24 + part * 15, .7, 5);   /* 胴と脚 */
-    else { const s = [px + sway, -21], h = act > 0 ? [px + 4 + act * 2.5, -21 - 7 - act * 3] : [px + 2.2, -13];   /* 腕：下ろす ↔ 花火へ伸ばす */
-      put(s[0] + (h[0] - s[0]) * part, s[1] + (h[1] - s[1]) * part, .68, 5); }
-    return;
-  }
-  /* 水面に映る窓の灯り：縦に伸びて揺れる */
-  const k = Math.floor(v * 6), yy = 3 + w * 22, rip = Math.sin(yy * .5 - t * 3 + k);
-  set(-31 + k * 9.4 + rip * (1.2 + yy * .06), yy, .32 * (1 - w) * (.6 + .4 * Math.sin(t * 5 + yy)), 3);
+  /* 水面に映るランタンの灯り・船の影 */
+  if (w < .75) { const yy = 2 + (w / .75) * 20, rip = Math.sin(yy * .6 - t * 3 + a.ph); set(-12 + rip * (1 + yy * .08), yy, .36 * (1 - w / .75) * (.6 + .4 * Math.sin(t * 5 + yy)) * (1 + g * .5), 3); }
+  else set(-14 + v * 28 + Math.sin(t * 2 + v * 9) * .8, 1.5 + (z - .5) * 1.4, .18 * L, 0);
 };
-{ const jwb = () => { const e = document.getElementById('joy'); if (!e) return 0; const r = e.getBoundingClientRect(), h = innerHeight, ov = (Math.min(r.bottom, h) - Math.max(r.top, 0)) / h; return sm(.18, .5, ov); };
-  add('pboat', SP ? 520 : 820, { x: SP ? .6 : .63, d: SP ? .14 : .27, sc: SP ? 1 : 1.8, on: jwb, bob: 1, br: 1.15 }); }
+const jwb = () => { const e = document.getElementById('joy'); if (!e) return 0; const r = e.getBoundingClientRect(), h = innerHeight, ov = (Math.min(r.bottom, h) - Math.max(r.top, 0)) / h; return sm(.18, .5, ov); };
+/* [x, 奥行き d（0＝水平線 1＝手前）, 人数, 向き, マスト] 。文（左下）に重ならないよう右寄り。手前ほど大きい */
+(SP ? [[.66, .12, 1, 1, 1], [.88, .28, 2, -1, 0], [.72, .5, 1, 1, 0], [.9, .72, 2, -1, 1], [.62, .9, 2, 1, 0]]
+    : [[.6, .14, 1, 1, 1], [.83, .3, 2, -1, 0], [.94, .52, 1, -1, 1], [.7, .7, 2, 1, 0], [.88, .9, 2, -1, 0]]).forEach(([x, d, ppl, f, mast], i) =>
+  add('sboat', 420, { x, d, sc: SP ? 1.45 : 2, ppl, f, mast, on: jwb, bob: 1, br: 1, ph: i * 2.3 }));
+}
 
 /* ---- 粒の確保 ---- */
 let M = 0; for (const a of A) { a.m = Math.max(8, Math.round(a.n * (SP ? .7 : 1))); a.s0 = M; M += a.m; }
