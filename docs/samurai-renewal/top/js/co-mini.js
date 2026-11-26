@@ -281,7 +281,7 @@ function memFlip() { document.querySelectorAll('.mv2 .mc').forEach(m => { m.addE
 /* ===== 小さな粒のアイコン（2D canvas・形は舞台と同じ定義） ===== */
 window.MINI = function () { const cvs = [...document.querySelectorAll('canvas.mini')]; if (!cvs.length || !window.PE_SHAPES) return;
   const n = 1500, sd = new Float32Array(n); let s0 = 29; const r = () => (s0 = s0 * 16807 % 2147483647) / 2147483647; for (let i = 0; i < n; i++) sd[i] = r();
-  const SHm = window.PE_EXTRA(window.PE_SHAPES(n, sd, r), n, sd, r, { mini: true }), DPR = Math.min(2, devicePixelRatio || 1), tmp = [0, 0];
+  const SHm = window.PE_EXTRA(window.PE_SHAPES(n, sd, r), n, sd, r, { mini: true }), DPR = Math.min(2, devicePixelRatio || 1), tmp = [0, 0, 1];
   const st = cvs.map(c => ({ c, x: c.getContext('2d'), k: c.dataset.mini, pos: Float32Array.from({ length: n * 2 }, () => r()), vis: false, t0: 0 }));
   const io = new IntersectionObserver(es => es.forEach(e => { const q = st.find(z => z.c === e.target); if (!q) return; if (e.isIntersecting && !q.vis) { for (let i = 0; i < n * 2; i++) q.pos[i] = r(); } q.vis = e.isIntersecting; }), { rootMargin: '60px' });
   st.forEach(q => io.observe(q.c));
@@ -291,9 +291,9 @@ window.MINI = function () { const cvs = [...document.querySelectorAll('canvas.mi
       if (c.width !== Math.round(w * DPR)) { c.width = Math.round(w * DPR); c.height = Math.round(h * DPR); }
       const x = q.x; x.setTransform(DPR, 0, 0, DPR, 0, 0); x.clearRect(0, 0, w, h); x.globalCompositeOperation = 'lighter';
       const pad = .08, bw = w * (1 - pad * 2), bh = h * (1 - pad * 2), s = Math.min(bw / sh.a, bh), BW = s * sh.a, bx = (w - BW) / 2, by = (h - s) / 2, f = 1 - Math.exp(-dt * 3.2), ps = Math.max(1.1, Math.min(2, w / 160));
-      for (let i = 0; i < n; i++) { tmp[0] = sh.p[i * 2]; tmp[1] = sh.p[i * 2 + 1]; if (sh.dyn) sh.dyn(i, sd[i], tt, tmp);
-        const px = q.pos[i * 2] += (tmp[0] - q.pos[i * 2]) * f, py = q.pos[i * 2 + 1] += (tmp[1] - q.pos[i * 2 + 1]) * f;
-        x.fillStyle = `rgb(${sh.c[i * 3] * 255 | 0},${sh.c[i * 3 + 1] * 255 | 0},${sh.c[i * 3 + 2] * 255 | 0})`; x.fillRect(bx + px * BW, by + py * s, ps, ps); } } })(prev);
+      for (let i = 0; i < n; i++) { tmp[0] = sh.p[i * 2]; tmp[1] = sh.p[i * 2 + 1]; tmp[2] = 1; if (sh.dyn) sh.dyn(i, sd[i], tt, tmp);
+        const ff = sh.snap ? 1 : f, px = q.pos[i * 2] += (tmp[0] - q.pos[i * 2]) * ff, py = q.pos[i * 2 + 1] += (tmp[1] - q.pos[i * 2 + 1]) * ff, bb = Math.min(1, tmp[2]); if (bb <= .01) continue;
+        x.fillStyle = `rgba(${sh.c[i * 3] * 255 | 0},${sh.c[i * 3 + 1] * 255 | 0},${sh.c[i * 3 + 2] * 255 | 0},${bb.toFixed(3)})`; x.fillRect(bx + px * BW, by + py * s, ps, ps); } } })(prev);
 };
 
 /* 案1の帯：写真がゆっくり逆へ流れる（視差） */
@@ -303,4 +303,39 @@ function bandPar() { const ims = [...document.querySelectorAll('.bph img')]; if 
 const init = () => { fitFrames(); addEventListener('resize', fitFrames); document.querySelectorAll('.slot').forEach(s => new ResizeObserver(fitFrames).observe(s));
   phReveal(); bandPar(); if (window.RT) { gallery(); wantPin(); } memFlip(); window.MINI(); };
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+
+/* 会社概要 VALUES 案B：FUN の花火（So 11/26「もっと花火っぽく」）
+   1発＝下から光の筋が上がる → 放射状にはじける → 重さで垂れながら、まばらに消える。5発を時間をずらして繰り返す。
+   粒の位置はそのまま置く（snap）。明るさは tmp[2]（0〜1）で粒ごとに変える。co-mini.js の MINI を build.py がこの形に合わせて差し込む */
+(() => {
+  const prev = window.PE_EXTRA;
+  window.PE_EXTRA = function (SH, N, seed, rnd, opt) {
+    SH = prev ? prev(SH, N, seed, rnd, opt) : SH;
+    const TAU = Math.PI * 2, A = 1.6, K = 5;
+    const PAL = [[1, .78, .38], [1, .42, .2], [1, .55, .62], [1, .93, .8], [.62, .8, 1]];
+    const CX = [.24, .62, .44, .8, .33], CY = [.34, .26, .44, .4, .22], PER = [3.3, 3.3, 3.3, 3.3, 3.3], OFF = [0, 1.98, .66, 2.64, 1.32];
+    const hs = x => { const v = Math.sin(x * 127.1 + 311.7) * 43758.5453; return v - Math.floor(v); };
+    const p = new Float32Array(N * 2), c = new Float32Array(N * 3);
+    for (let i = 0; i < N; i++) { const k = Math.min(K - 1, Math.floor(seed[i] * K)), u = (seed[i] * K) % 1, col = u < .1 ? [1, .86, .6] : PAL[k], j = .85 + .3 * hs(i * 1.7);
+      c[i * 3] = Math.min(1, col[0] * j); c[i * 3 + 1] = Math.min(1, col[1] * j); c[i * 3 + 2] = Math.min(1, col[2] * j); p[i * 2] = CX[k]; p[i * 2 + 1] = 1.1; }
+    SH.fun_fw = { a: A, p, c, fit: 'contain', snap: true, dyn: (i, s, t, o) => {
+      const k = Math.min(K - 1, Math.floor(s * K)), u = (s * K) % 1, ph = ((t + OFF[k]) / PER[k]) % 1, L = .24, cx = CX[k] + (hs(Math.floor((t + OFF[k]) / PER[k]) * 7 + k) - .5) * .1, cy = CY[k];
+      if (ph < L) {                                   /* 打ち上げ：光の筋 */
+        if (u >= .1) { o[0] = cx; o[1] = 1.2; o[2] = 0; return; }
+        const q = ph / L, head = 1.02 - (1.02 - cy) * (1 - Math.pow(1 - q, 2.2)), back = (u / .1);
+        o[0] = cx + Math.sin(back * 9 + t * 12) * .003; o[1] = head + back * .14 * (1 - q * .5); o[2] = (1 - back) * (.5 + .5 * q); return; }
+      if (u < .1) { o[0] = cx; o[1] = 1.2; o[2] = 0; return; }
+      /* 星：球の表面を平らに見た分布（中まで詰まる）。同じ星に3〜4粒が少し遅れてついて尾になる。k=0 の金は長く垂れる柳 */
+      const e = (ph - L) / (1 - L), u2 = (u - .1) / .9, sid = Math.floor(u2 * 90) / 90, lag = Math.floor(hs(i * 9.7) * 4),
+        z = 2 * hs(sid * 91.7 + k * 3.3) - 1, th = hs(sid * 37.3 + k * 1.9) * TAU, sq = Math.sqrt(1 - z * z), wil = k === 0,
+        v = (wil ? .2 : .24) * (.92 + .16 * hs(sid * 13.1 + k)), el = e - lag * (wil ? .035 : .022);
+      if (el <= 0) { o[0] = cx; o[1] = cy; o[2] = 0; return; }
+      const rr = v * (1 - Math.exp(-el * 7)) / (1 - Math.exp(-7)), drop = el * el * (wil ? .42 : .2);
+      o[0] = cx + Math.cos(th) * sq * rr / A; o[1] = cy + Math.sin(th) * sq * rr + drop;
+      const life = wil ? 1 : .62 + .38 * hs(sid * 5.7 + k), fade = el > life ? 0 : Math.pow(1 - el / life, wil ? .8 : 1.15),
+        flick = el > .5 ? (.35 + .65 * (Math.sin(t * 40 + i * 1.3) > -.2 ? 1 : 0)) : 1;
+      o[2] = fade * flick * (1 - lag * .26) * (wil ? .95 : 1.1); } };
+    return SH;
+  };
 })();
