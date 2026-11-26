@@ -1164,7 +1164,7 @@ addEventListener('touchcancel', () => { touching = false; }, { passive: true });
 { let lastY = scrollY;
   addEventListener('scroll', () => {
     const y = scrollY, dir = Math.sign(y - lastY); lastY = y;
-    if (!gateDone || snapBusy || touching || !dir) return;
+    if (!gateDone || snapBusy || touching || !dir || performance.now() - skipping < 1600) return;
     const p = P; if (p <= STOPS[0] + 0.06 || p >= STOPS[STOPS.length - 1] - 0.02 || inPaper()) return;
     if (Math.min(...STOPS.map((q) => Math.abs(q - p))) < 0.05) return;   // 場面にほぼ止まっている時の小さな揺れでは送らない
     const tgt = dir > 0 ? STOPS.find((q) => q > p) : [...STOPS].reverse().find((q) => q < p);
@@ -1183,10 +1183,13 @@ addEventListener('keydown', (e) => {
   const d = ['ArrowDown', 'PageDown', 'Space'].includes(e.code) ? 1 : ['ArrowUp', 'PageUp'].includes(e.code) ? -1 : 0;
   if (d && P > STOPS[0] - 0.02 && !inPaper() && snapDir(d)) e.preventDefault();
 });
-{ let wasPaper = false; addEventListener('scroll', () => { const ip = scrollY > toY(8.0) - 8; if (gateDone && !snapBusy && wasPaper && !ip && P < 7.9 && P > STOPS[STOPS.length - 1]) { cancelAnimationFrame(snapRaf); snapTo(STOPS[STOPS.length - 1]); } wasPaper = ip; }, { passive: true }); }
+{ let wasPaper = false; addEventListener('scroll', () => { const ip = scrollY > toY(8.0) - 8; if (gateDone && !snapBusy && performance.now() - skipping > 1600 && wasPaper && !ip && P < 7.9 && P > STOPS[STOPS.length - 1]) { cancelAnimationFrame(snapRaf); snapTo(STOPS[STOPS.length - 1]); } wasPaper = ip; }, { passive: true }); }
 // ---------- STORY をスキップ ----------
 const skip3 = document.getElementById('skip3');
-skip3.addEventListener('click', (e) => { e.preventDefault(); cancelAnimationFrame(snapRaf); snapBusy = false; const el = document.getElementById('paper'); scrollTo(0, el.getBoundingClientRect().top + scrollY); });
+let skipping = 0;   // スキップで飛んでいる間は、場面へ引き戻す仕組み（慣性の送り・紙の節から戻る時の戻し）を止める（So 11/26「スキップしても戻る時がある」）
+skip3.addEventListener('click', (e) => { e.preventDefault(); cancelAnimationFrame(snapRaf); snapBusy = false; skipping = performance.now();
+  const go = () => { const el = document.getElementById('paper'); scrollTo({ top: el.getBoundingClientRect().top + scrollY, behavior: 'instant' }); };
+  go(); setTimeout(() => { measure(); go(); }, 400); setTimeout(() => { measure(); go(); }, 1100); });
 
 // ---------- 仕上げ：自前の被写界深度＋光の層の合成 → ブルーム → 色調 → 壊して繋ぐ ----------
 const mkRT = () => new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, depthBuffer: true });
