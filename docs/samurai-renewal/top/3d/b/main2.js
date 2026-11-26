@@ -1157,9 +1157,24 @@ addEventListener('wheel', (e) => {
   if (Math.abs(wheelAcc) > 18) { const d = Math.sign(wheelAcc); wheelAcc = 0; if (!snapDir(d)) { scrollBy(0, d * 60); } }
 }, { passive: false });
 let tY = null;
-addEventListener('touchstart', (e) => { tY = e.touches[0].clientY; }, { passive: true });
+let touching = false;
+addEventListener('touchstart', (e) => { tY = e.touches[0].clientY; touching = true; }, { passive: true });
+addEventListener('touchcancel', () => { touching = false; }, { passive: true });
+// 指を離した後の勢い（慣性）で STORY の中に滑り込んだ時は、その場で勢いを止めて、進んでいた向きの次の場面へ送る（So 11/26「思いきりスクロールすると 01 の手前の文が出ていない所で止まる」）
+{ let lastY = scrollY;
+  addEventListener('scroll', () => {
+    const y = scrollY, dir = Math.sign(y - lastY); lastY = y;
+    if (!gateDone || snapBusy || touching || !dir) return;
+    const p = P; if (p <= STOPS[0] + 0.06 || p >= STOPS[STOPS.length - 1] - 0.02 || inPaper()) return;
+    if (Math.min(...STOPS.map((q) => Math.abs(q - p))) < 0.05) return;   // 場面にほぼ止まっている時の小さな揺れでは送らない
+    const tgt = dir > 0 ? STOPS.find((q) => q > p) : [...STOPS].reverse().find((q) => q < p);
+    if (tgt == null) return;
+    const de = document.documentElement, ov = de.style.overflow; de.style.overflow = 'hidden';   // 慣性を止める
+    snapBusy = true; requestAnimationFrame(() => { de.style.overflow = ov; snapBusy = false; snapTo(tgt); });
+  }, { passive: true }); }
 addEventListener('touchmove', (e) => { if (gateDone && (snapBusy || (P > STOPS[0] - 0.02 && P < 7.98))) e.preventDefault(); }, { passive: false });
 addEventListener('touchend', (e) => {
+  touching = false;
   if (tY == null || snapBusy) return; const dy = tY - (e.changedTouches[0]?.clientY ?? tY); tY = null;
   if (P > STOPS[0] - 0.02 && !inPaper() && Math.abs(dy) > 30) snapDir(Math.sign(dy));
 }, { passive: true });
