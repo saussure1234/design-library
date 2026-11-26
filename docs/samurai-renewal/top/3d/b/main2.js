@@ -1034,7 +1034,7 @@ const FVP = (() => {
   return { draw, st, get nz() { return nz; } };
 })();
 const fvWords = [...fvx.querySelectorAll('.wd')];
-fvWords.forEach((w) => { const tx = w.textContent; w.textContent = ''; [...tx].forEach((c) => { const sp = document.createElement('span'); sp.className = 'ch'; sp.textContent = c; w.appendChild(sp); }); });
+fvWords.forEach((w) => { const tx = w.textContent; w.textContent = ''; [...tx].forEach((c, k) => { const sp = document.createElement('span'); sp.className = 'ch' + (c === 'i' && tx[k - 1] === 'f' ? ' fi' : ''); sp.textContent = c; w.appendChild(sp); }); });   // f の曲がりの先と i の点がくっつくので、i だけ少し離す（So 11/26）
 const FV = { nz: 1, A: [], B: [], F: 100, mx: 0, my: 0, cx: 0, cy: 0, locked: false };
 // FV はカーソルで動かさない（So 11/24）
 function fvLayout() {
