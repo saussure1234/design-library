@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=IBM+Plex+Sans+JP:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;700&family=Roboto+Flex:opsz,slnt,wdth,wght@8..144,-10..0,25..151,100..1000&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="_paper.css">
+<title>施策の優先順位はどう決まるのかー定量と定性、2つの軸で考える判断構造ー</title>
+<style>
+/* ===== 残りのページ（代表プロフィール・プライバシーポリシー・特商法・メディア記事）：会社概要・S2A と同じ紙の節の作り（So 11/26） ===== */
+.rx p{margin:0}
+.rx-lead{max-width:46em;font-size:16px;line-height:2;color:var(--ink2)}
+/* 代表プロフィール */
+.pf-hero{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,7fr);gap:clamp(32px,5vw,80px);align-items:center}
+.pf-pic{aspect-ratio:1/1;overflow:hidden;background:var(--card)}
+.pf-pic img{display:block;width:100%;height:100%;object-fit:cover}
+.pf-en{font:500 13px/1.5 var(--mono);letter-spacing:.12em;color:var(--mute);margin:0 0 10px}
+.pf-name{margin:0 0 26px;font:500 clamp(30px,3.4vw,46px)/1.3 var(--jp);letter-spacing:.08em}
+.pf-cards{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:clamp(56px,8vh,96px)}
+.pf-card{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:0;background:var(--card);border:1px solid var(--line);color:inherit;text-decoration:none;transition:border-color .2s}
+.pf-card:hover{border-color:var(--ink)}
+.pf-card .im{aspect-ratio:4/3;overflow:hidden;border-right:1px solid var(--line)}
+.pf-card .im img{display:block;width:100%;height:100%;object-fit:cover}
+.pf-card .tx{padding:22px 24px;display:flex;flex-direction:column;gap:10px}
+.pf-card .t{font:600 16px/1.6 var(--jp);white-space:pre-line}
+.pf-card .s{font-size:13.5px;color:var(--mute);margin-top:auto}
+.pf-card .s::after{content:" \2197";font-family:var(--mono)}
+.tl{list-style:none;margin:0;padding:0;position:relative}
+.tl::before{content:"";position:absolute;left:7px;top:10px;bottom:10px;width:1px;background:var(--line)}
+.tl li{position:relative;display:grid;grid-template-columns:minmax(0,3fr) minmax(0,8fr);gap:12px clamp(24px,4vw,64px);padding:0 0 clamp(40px,6vh,64px) 40px}
+.tl li::before{content:"";position:absolute;left:2px;top:9px;width:11px;height:11px;border-radius:50%;background:var(--paper);border:1.5px solid var(--ink)}
+.tl li:first-child::before{background:var(--sig);border-color:var(--sig)}
+.tl h2{margin:0;font:500 clamp(19px,1.7vw,23px)/1.5 var(--jp);letter-spacing:.06em}
+.tl p{font-size:16px;line-height:2.05;color:var(--ink2)}
+/* プライバシーポリシー・特商法 */
+.lg-title{margin:0 0 30px;font:500 clamp(22px,2.2vw,30px)/1.5 var(--jp);letter-spacing:.06em}
+.pp{max-width:52em}
+.pp .lead{font-size:16px;line-height:2;color:var(--ink2);margin-bottom:12px}
+.pp h2{margin:44px 0 12px;padding-top:20px;border-top:1px solid var(--line);font:500 19px/1.6 var(--jp);letter-spacing:.06em}
+.pp p{font-size:15.5px;line-height:2;color:var(--ink2)}
+.pp p.bl{padding-left:1em;text-indent:-1em}
+.ab{max-width:52em}
+.ab dl{margin:0;border-bottom:1px solid var(--line)}
+.ab .row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.6fr);gap:8px 24px;padding:20px 0;border-top:1px solid var(--line)}
+.ab dt{font-size:14px;color:var(--mute);line-height:1.9}
+.ab dd{margin:0;font-size:15.5px;line-height:1.9;color:var(--ink)}
+/* メディア記事 */
+.art{max-width:820px}
+.art .dt{font:400 13px/1.6 var(--mono);letter-spacing:.06em;color:var(--mute);margin:0 0 14px}
+.art h1{margin:0 0 30px;font:500 clamp(24px,2.6vw,36px)/1.5 var(--jp);letter-spacing:.04em}
+.art .cov{margin:0 0 clamp(36px,5vh,56px);background:var(--card);border:1px solid var(--line)}
+.art .cov img{display:block;width:100%;height:auto}
+.ab-body{font-size:17px;line-height:2.05;color:var(--ink2)}
+.ab-body>*{margin:0 0 1.2em}
+.ab-body h2{margin:2.4em 0 .9em;padding-top:22px;border-top:1px solid var(--ink);font:500 clamp(21px,2vw,26px)/1.55 var(--jp);color:var(--ink);letter-spacing:.04em}
+.ab-body h3{margin:1.9em 0 .7em;font:500 19px/1.6 var(--jp);color:var(--ink);padding-left:12px;border-left:3px solid var(--ink)}
+.ab-body h4{margin:1.6em 0 .6em;font:500 17px/1.6 var(--jp);color:var(--ink)}
+.ab-body img{display:block;width:100%;height:auto;border:1px solid var(--line);background:var(--card)}
+.ab-body figure{margin:1.6em 0}
+.ab-body figcaption{font-size:13px;color:var(--mute);margin-top:8px}
+.ab-body ul,.ab-body ol{padding-left:1.4em}
+.ab-body li{margin:.3em 0}
+.ab-body a{text-decoration:underline;text-underline-offset:3px}
+.ab-body a:hover{color:var(--sig)}
+.ab-body blockquote{margin:1.4em 0;padding:4px 0 4px 18px;border-left:2px solid var(--line);color:var(--ink)}
+.ab-body table{width:100%;border-collapse:collapse;font-size:15px}
+.ab-body th,.ab-body td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}
+.ab-body th{background:var(--card);font-weight:500}
+.sup{margin-top:clamp(56px,8vh,88px);display:grid;grid-template-columns:96px minmax(0,1fr);gap:16px 24px;padding:26px;background:var(--card);border:1px solid var(--line)}
+.sup h2{grid-column:1/-1;margin:0;font:500 13px/1 var(--mono);letter-spacing:.1em;color:var(--mute)}
+.sup .av{width:96px;height:96px;overflow:hidden}
+.sup .av img{display:block;width:100%;height:100%;object-fit:cover}
+.sup .nm{font:500 15px/1.6 var(--jp);margin-bottom:8px}
+.sup .bio{font-size:14px;line-height:1.9;color:var(--ink2);margin-bottom:12px}
+.sup a{font:500 14px/1 var(--jp);border-bottom:1px solid var(--ink);padding-bottom:4px;text-decoration:none;color:inherit}
+.sup a:hover{color:var(--sig);border-color:var(--sig)}
+.rel{margin-top:clamp(56px,8vh,88px)}
+.rel h2{margin:0 0 6px;font:500 13px/1 var(--mono);letter-spacing:.1em;color:var(--mute)}
+.rel ul{list-style:none;margin:0;padding:0;border-bottom:1px solid var(--line)}
+.rel li a{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 24px;align-items:baseline;padding:18px 0;border-top:1px solid var(--line);color:inherit;text-decoration:none}
+.rel li a:hover .t{color:var(--sig)}
+.rel .t{font:500 15.5px/1.7 var(--jp)}
+.rel .d{font:400 12.5px/1 var(--mono);color:var(--mute);letter-spacing:.06em}
+.svl{display:flex;flex-wrap:wrap;gap:10px;list-style:none;margin:14px 0 0;padding:0}
+.svl a{display:inline-block;padding:10px 16px;border:1px solid var(--line);background:var(--card);font:500 14px/1 var(--jp);text-decoration:none;color:inherit}
+.svl a:hover{border-color:var(--ink)}
+@media (max-width:1080px){.pf-cards{grid-template-columns:1fr}}
+@media (max-width:820px){
+  .pf-hero{grid-template-columns:1fr}.pf-pic{max-width:320px}
+  .pf-card{grid-template-columns:1fr}.pf-card .im{border-right:0;border-bottom:1px solid var(--line);aspect-ratio:16/9}
+  .tl li{grid-template-columns:1fr;padding-left:32px}
+  .ab .row{grid-template-columns:1fr;gap:2px;padding:16px 0}
+  .ab-body{font-size:16px}
+  .sup{grid-template-columns:72px minmax(0,1fr);padding:20px}.sup .av{width:72px;height:72px}
+  .rel li a{grid-template-columns:1fr}
+}
+.crumb{margin-top:clamp(48px,7vh,72px);padding-top:16px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px 10px;font:400 12.5px/1.6 var(--mono);letter-spacing:.04em;color:var(--mute)}
+.crumb a{color:inherit;text-decoration:none}.crumb a:hover{color:var(--ink)}
+
+/* 記事の本文の段落の間（.rx p の margin:0 に勝たせる） */
+.rx .ab-body>p,.rx .ab-body>ul,.rx .ab-body>ol,.rx .ab-body>blockquote,.rx .ab-body>table{margin:0 0 1.15em}
+.rx .tl div>p+p{margin-top:1em}
+
+</style>
+<style>/* ヘッダーの大きさ（全ページ共通・So 11/24「全体的に若干ちっちゃい」→一段大きく）。各ビルダーが </head> の直前に差し込む */
+header.hd,header.ghd{padding-top:24px;padding-bottom:24px}
+header.hd .logo img,header.ghd .logo img{height:34px}
+header.hd .nav,header.ghd .nav{gap:30px;font-size:14px}
+header.hd .nav .cta,header.ghd .nav .cta{padding:12px 18px}
+header.hd .nav .lang,header.ghd .nav .lang{font-size:13px;gap:10px}
+@media (max-width:820px){
+  header.hd,header.ghd{padding:16px}
+  header.hd .logo img,header.ghd .logo img{height:28px}
+}
+
+/* 余白と幅（全ページ共通・So 11/25「横の余白がなさすぎ・広がりすぎ」→一般的な LP の決まりに）
+   ・左右の余白：画面幅に合わせて 20〜80px（PC 1440 で約80・スマホで約21）
+   ・文の帯：最大 1200px で止めて中央に。大きい画面は残りが左右の余白になる
+   ・ヘッダーの左右の端は本文の帯の端にそろえる */
+:root{--m:clamp(20px,5.5vw,80px)}
+.wrap,.paper .wrap{max-width:calc(1200px + 2 * var(--m));margin-left:auto;margin-right:auto;padding-left:var(--m);padding-right:var(--m)}
+header.hd,header.ghd{padding-left:max(var(--m),calc(50% - 600px));padding-right:max(var(--m),calc(50% - 600px))}
+@media (max-width:820px){header.hd,header.ghd{padding-left:var(--m);padding-right:var(--m)}}
+</style>
+<script src="../i18n/i18n.js"></script>
+</head>
+<body>
+<header class="ghd">
+  <a class="logo" href="../c-3d-b2.html" aria-label="SAMURAI STYLE"><img src="../img/logo.svg" alt="SAMURAI STYLE"></a>
+  <nav class="nav"><a href="../c-3d-b2.html">HOME</a><a href="service.html">SERVICE</a><a href="media.html" aria-current="page">MEDIA</a><a href="company.html">COMPANY</a><a href="recruit.html">RECRUIT</a><a class="cta" href="../c-3d-b2.html#contact">CONTACT</a><div class="lang"><span>ID</span><span>EN</span><b>JA</b></div></nav>
+  <button class="burger" type="button" aria-label="Menu" aria-expanded="false"><i></i><i></i></button>
+</header>
+<div class="gov"><a href="../c-3d-b2.html">HOME</a><a href="service.html">SERVICE</a><a href="media.html">MEDIA</a><a href="company.html">COMPANY</a><a href="recruit.html">RECRUIT</a><a href="../c-3d-b2.html#contact">CONTACT</a><div class="lang"><span>ID</span><span>EN</span><b>JA</b></div></div>
+
+<main id="top">
+<section class="sec first rx" id="article"><div class="wrap">
+  <div class="sh"><div class="lbl"><span></span><p class="jp2">メディア</p><span class="end"></span></div><p class="giant" data-wd>MEDIA</p></div>
+  <article class="art">
+    <h1>施策の優先順位はどう決まるのかー定量と定性、2つの軸で考える判断構造ー</h1>
+    <p class="dt">2026.08.10　最終更新 2026.11.12</p>
+    <figure class="cov"><img src="https://images.ctfassets.net/4pab4ccjvs20/6aC3FxbhmVmuhfn9tbQaSd/4d8594f51fb86068bcf6374bdd23cf70/initiative-priority-cover-motion.webp" alt="施策の優先順位はどう決まるのかー定量と定性、2つの軸で考える判断構造ー" width="1174" height="660"></figure>
+    <div class="ab-body"><h2>やれることは無限にあり、リソースは有限であるという当たり前</h2><p>Webマーケティングの現場で戦略立案から施策実行までに携わっていると、やるべきことは無数にあるのに、時間もお金も有限だという当たり前の事実に突き当たります。</p><p>SEO、リスティング広告、SNS運用、LP改修、メール施策、フォーム最適化・・</p><p>施策は挙げればきりがありません。一方で、それらすべてを同時に、全力で進めることはできないため、どこから着手するのかという優先順位の判断が重要になります。</p><p>ところが、この優先順位を、明確な根拠を持って決められているケースは意外に多くはないように感じています。直近で目立った成果を上げた施策、社内で声の大きい人の主張、前年踏襲の慣習などにより決まっていくといった経験をされた方もいらっしゃるのではないでしょうか。</p><p>この記事では、施策の優先順位を、①KPIという定量の軸と、②顧客・市場理解という定性の軸、そして③時間軸の3つを重ねて、構造的に判断していく方法を整理します。結論を先に言えば、優先順位は構造を可視化することで結果として見えてくるものだと考えています。</p><h2>このような方に向けて書いています</h2><p>次のいずれかに心当たりがあれば、この記事はお役に立てるかもしれません。</p><p>施策の優先順位を、根拠をもって決められていない</p><p>今進めている施策の優先順位が、本当に合っているのか自信が持てない</p><p>事業責任者と現場で、優先順位の認識がずれている</p><p>短期的な数値は追えているものの、中長期の視点を持てていない</p><h2>なぜ優先順位の判断は難しいのか</h2><h3>そもそも、なぜ優先順位が要るのか</h3><p>冒頭に記載したように、施策に投下できる人の時間とお金は有限であり、この前提が優先順位の必要性を生んでいます。現実には、マーケティング担当者の稼働時間にも、広告予算にも上限があります。限られたリソースを、どの施策に、どの順番で、どれだけ配分するか。これが優先順位策定の本質だと考えています。</p><h3>判断を難しくしているのは、Returnが見えないという構造</h3><p>優先順位に限らず、事業において意思決定する際、普遍的な基準はROI、つまり投資対効果です。投じたコストに対して、どれだけのリターンが返ってくるかが判断の土台になります。</p><p>一方、ROIには構造的な難しさがあります。ROIはReturnをInvestmentで割ったものですが、この2つの見通しやすさが、まったく異なるのです。</p><p>Investmentは、事前にある程度見立てられます。広告費、制作費、人の稼働時間。これらは着手前に一定以上の精度で見積もりが可能です。ところがReturnは、ある程度の試算まではできても、やってみないと分からないことも多く、ある施策にいくら投じれば、どれだけの成果が返ってくるか。これを事前に正確に見通すことは、現場感覚として難しいケースが多いと感じています。</p><p>この非対称性こそが、優先順位の判断を難しくしている原因の一つだと考えています。分母は見えるのに、分子が見えない。その状態で、どの施策から着手するかを決めなければならないため、検討が難航するのは自然です。</p><h3>だからこそ、伸びしろと時間軸で見立てる</h3><p>Returnが事前に見通せない以上、別のアプローチが要ります。それが、定量と定性の両面から伸びしろを見定め、時間軸を踏まえて検討するという方法です。</p><p>具体的には、まず売上・利益をKPIに分解して現状を把握する。次に、各KPIに対応する施策を、顧客・市場から逆算して洗い出す。そして、それらを時間軸ごとに整理し、投入コストと即効性のバランスから着手順を決めていく。</p><p>以下、この3つのステップを順に見ていきます。</p><h2>判断の起点は、KPIを分解して現状を把握することから</h2><h3>売上を構成要素に分解する</h3><p>優先順位判断の第一歩は、売上・利益を構成要素であるKPIに分解し、現状を把握することです。</p><p>売上は、業態などにより詳細は異なりますが、おおまかに次のように分解できます。</p><p>売上 ＝ IMP（インプレッション）× CTR（クリック率）× CVR（コンバージョン率）× 単価 × 継続率</p><p>IMPは、どれだけの人に見られたか。CTRは、そのうちどれだけがクリックしたか。CVRは、クリックした人のうちどれだけが購入・問い合わせに至ったか。単価は、1回あたりの取引額。継続は、リピート・継続利用の度合いです。</p><p>この分解によって、売上がどのように構成されているかが見えてくるため、どこにボトルネックがあり、どこに伸びしろがあるのかを考える土台になります。</p><h3>数字を並べるだけでは、優先順位は決まらない</h3><p>ただ、ここで一度立ち止まる必要があります。KPIを分解して数字を並べただけでは、優先順位は決まりません。なぜなら、各KPIが高いのか低いのかという判断そのものに、主観が入ってしまうからです。</p><p>たとえばCVRを例に考えてみます。CVRが2%だったとして、これは高いのでしょうか、低いのでしょうか。この問いに答えるのは意外に難しいですが、理由は2つあります。</p><p>まず、外部要因によって、施策をしていなくてもCVRは日々変動します。時期、季節性、競合の動向、市場全体のトレンド。こうした要因でCVRは上下します。次に、内部要因として、例として、広告におけるターゲティングによってもCVRは変わります。リスティング広告のキーワードの選び方、ディスプレイ広告のオーディエンス設定。ターゲットを広げれば出稿機会は増やせるが、一方で、CVRの期待値は絞る時より相対的に下がります。</p><p>そのため、数字を見ただけでは、それが伸びしろを残しているのか、すでに限界に近いのかは判断することは難しく、どこまで伸ばせるかの見立てには、数字の外にある情報が必要になります。</p><h3>まずはIMP、CTR、CVRの3つに絞る</h3><p>売上の分解式のうち、単価と継続率は、製品・サービスそのものに関わる論点を多く含みます。価格設定、商品力、顧客体験。これらはマーケティング施策だけでは動かしにくい領域です。</p><p>そこで、マーケティング施策のスコープをまずIMP、CTR、CVRの3つに絞ります。この3つは、マーケティングの打ち手で比較的動かしやすく、短期から中期で成果計測もしやすい指標です。</p><p>以降では、この3つのKPIそれぞれに対応する施策を見ていきます。</p><h2>KPIに対応する施策を、顧客・市場から逆算する</h2><h3>IMPを増やす施策</h3><p>IMP、つまりどこで顧客とのタッチポイントを得るかは、まずオンラインとオフラインに分けられます。オフラインには、OOH（屋外広告）、マス広告、展示会などがあります。この記事では一連の成果を計測しやすいことも踏まえ、オンラインにフォーカスします。</p><p>オンラインのタッチポイントは、顧客の行動によって受動と能動に分けられます。受動は、顧客が情報を探していない状態で接触する面で、主にSNS（Instagram、YouTube、TikTok、X）が該当します。能動は、顧客が自ら情報を探しに来る面で、検索エンジンやLLM（生成AI経由の情報探索）が該当します。</p><p>さらに、それぞれの面は、オーガニックか広告かで施策が分かれます。これを整理すると、受動・能動 × オーガニック・広告の4象限になります。</p><figure><img src="https://images.ctfassets.net/4pab4ccjvs20/3qEtcOGp8isY12iCjg0pN5/90e71f4926650c05536d93a5353c77b3/initiative-priority-figure-1-pc.png" alt="施策の優先順位 図1" width="759" height="570" loading="lazy"></figure><p>この4象限で自社のタッチポイントを俯瞰すると、どの面が手薄で、どの面に伸びしろがあるのかが見えてきます。</p><h3>CTRを改善する施策</h3><p>CTR、つまりユーザーに見られたもののうちクリックされる割合は、施策の対象が媒体によって異なります。</p><p>ディスプレイ広告では、主にオーディエンス（誰に見せるか）と、バナー・動画クリエイティブ（何を見せるか）が対象になります。リスティング広告では、キーワード（どの検索に対して表示するか）と、広告クリエイティブ（見出し・説明文）が対象です。SEOにおいては、検索順位そのもの以外の施策レバーとして、タイトルとディスクリプションが、クリック率に影響します。</p><p>CTRの改善は、比較的短期で効果が測定しやすい領域が多く、広告のクリエイティブ改修など着手のハードルが低い物が多いという特徴があります。</p><h3>CVRを改善する施策</h3><p>CVR、つまりクリックした人のうち購入・問い合わせに至る割合の改善は、主にLP・サイト改修が施策になります。加えて、流入からCVに至るまでのコミュニケーションフローに、顧客のニーズに沿った一貫性があるかも重要です。</p><p>広告で訴えたことと、遷移先のLPで語られることがずれていると、顧客は離脱します。この一貫性の設計は、CVR改善において意外と見落としやすいものの、本質的な論点です。</p><p>そしてCVR改善は、後で触れるように、単なる技術的な改修に留まらず、ポジショニングという上流の論点にまでつながっていきます。</p><h2>優先順位は、時間軸によって変わる</h2><p>ここまでKPIと施策を見てきましたが、同じ施策でも優先順位は時間軸によって変わります。</p><figure><img src="https://images.ctfassets.net/4pab4ccjvs20/fnLLMOlYy0zl4M6ejp94R/e4de63a5acf11ee97f10ed6846758c5a/initiative-priority-figure-2-pc.png" alt="施策の優先順位 図2" width="759" height="570" loading="lazy"></figure><h3>短期：週次の視点では、即効性のある顕在層獲得から</h3><p>現場で施策を動かすマーケターは、週次、月次、四半期、年次と、複数の時間軸で目標を追います。実務では、週次ペースで数値進捗と施策報告を行うケースが多いと思います。</p><p>この週次の短期視点では、多くの場合、顧客を検討フェーズごとにファネル化した際、潜在層から顕在層のうち、顕在層の獲得効率を改善することの即効性が高くなりやすい傾向があります。すでに購入意欲が高い層に対して、獲得の取りこぼしを減らす施策は、成果が出るまでの時間が短いからです。</p><p>ROIの観点でも、所要コストと時間がともに少なく済む施策から着手するのが合理的です。具体的には、リスティング広告の調整や、短期的に成果改善が見込めるフォーム改善など、見るべき項目から順に押さえていきます。</p><p>週次で確認したい項目を、いくつか挙げます。</p><p>・リスティング広告</p><p>IMPシェア損失率（予算）：入札戦略の見直しなどで比較的短期に改善できる可能性があります。特に予算が少ない（月額100万円前後未満程度）のケースでは、予算制約によるIMPシェアの損失が高止まりしていることが多いため、確認したい項目です。ここを改善できれば、クリック単価を下げつつ、同じ予算でより多くのクリックを獲得できる可能性があります。</p><p>検索語句：すでに定期的に確認している方も多いと思いますが、今一度見直したい項目です。意図しない検索語句で広告費を消費していないか、獲得につながる語句を取りこぼしていないか。</p><p>・入力フォーム</p><p>入力項目に削れるものがないかを改めて確認します。ただし、ここには注意点があります。CVポイントが問い合わせなどで、CV後に営業やオペレーションが続く場合、入力項目を減らすことはCVRを上げる一方で、その後の業務フローの効率を下げるというトレードオフがあるため、フォームを削る際は、必要に応じて問い合わせ対応の担当者ともすり合わせすることが必要です。</p><h3>中期：月次から四半期では、ポジショニングの整理がCVR改善の土台になる</h3><p>月次から四半期の時間軸では、IMP × CTR × CVRという枠組みで、より踏み込んだ改善を考えます。</p><p>短期的にCVを増やす直接的な方法は、広告費を増やすことです。ただし、それにはROAS（おおよそLTV ÷ CPA）が最低限100%を超えている必要があります。もしくは、事業上設定している許容範囲内にCPA（顧客獲得単価）が収まっている必要があります。広告費を増やしても採算が合わなければ、増額は赤字を拡大することになってしまいます。</p><p>事業収益の拡大と広告費の増額を両立するには、CVR改善が重要です。そして、CVR改善を突き詰めていくと、ポジショニングという上流の論点にたどり着きます。この部分が、私自身、現場で何度も立ち返ってきた地点です。</p><p>CVR改善では、ターゲット顧客が最初に接触してから、購入・問い合わせといったCVに至るまでの訴求を検討します。この訴求の土台になるのが、市場でのポジショニングです。ポジショニングとは、自社の製品・サービスの提供価値と、他社との違いと、顧客ニーズ。この3つが重なる部分は何か、という問いに答えることだと捉えています。</p><figure><img src="https://images.ctfassets.net/4pab4ccjvs20/7GbrAtIMpX6jvYUeuMQIYR/b6b3815ccaff4c6c25d7485f269711c8/initiative-priority-figure-3-pc.png" alt="施策の優先順位 図3" width="759" height="570" loading="lazy"></figure><p>手順の一例を示します。まず、自社の製品・サービスにあって、他社にないものを列挙します。人・モノ・情報それぞれの機能レベルから、その機能を証明する数値・実績まで、定性・定量の両面で洗い出します。次に、列挙した項目を、顧客視点での価値、つまり顧客の目的達成や課題解決に置き換えます。自社の強みを、顧客の言葉で語り直す作業です。</p><p>この整理を踏まえて、現状のLP・サイトとギャップがある部分を置き換えていきます。ただし、ここで導いたものはあくまで仮説になるため、テストによる検証を実施することが望ましいです。ポジショニングの仮説を立て、LPに反映し、数値で確かめる。このサイクルを回していきます。</p><p>こうしてCVR、そしてROAS（広告費に対する収益率）の土台が整ってくると、打ち手の選択肢が広がります。広告費の増額に加えて、オーガニック（SNS運用やSEO）も、中期的な投資として視野に入れられるようになります。</p><h3>中長期：半期から年次では、リテンションと事業構造まで視野に入る</h3><p>これまでは、初回CVまでをスコープとして、IMP・CTR・CVRについて確認しました。しかし、半期から年次の中期視点では、継続率、つまりリテンションも重要な論点になってきます。</p><p>リテンションの具体施策は、メールやLINEなどが中心になります。ただし、これらは配信して、開封され、再訪・再購入につながるまでに時間を要するため、施策効果の検証に一定のリードタイムがかかります。そのため、リテンション施策は中期的な取り組みとして計画する必要があります。</p><p>さらに、事業責任者のレイヤーから見ると、スコープはより広がります。マーケティングのKPIであるIMP、CTR、CVRに加えて、単価、継続率といった製品・サービスに関わる論点まで、網羅する必要が出てきます。ここでは、先述のポジショニング（3C分析（顧客・競合・自社））のフレームワークで顧客・市場のニーズをより満たすために、製品・サービス自体をアップデートする余地も検討対象になります。</p><figure><img src="https://images.ctfassets.net/4pab4ccjvs20/4xfqxb8CzAVxE1DQRkY3TW/2f5bc57e1d03b74e4bd7bab04fd0368c/initiative-priority-figure-4-pc.png" alt="施策の優先順位 図4" width="759" height="570" loading="lazy"></figure><p>つまり、時間軸が長くなるほど、マーケティング施策の枠を超えて、事業構造そのものが判断のスコープに入ってくる。この階層構造を意識できているかどうかが、現場で施策を回すマーケターと事業責任者の視点の違いを生んでいるケースもあるように感じます。</p><h2>おわりにー優先順位は、決めるものではなく、見えるようにするもの</h2><p>これまで述べたように、マーケティング施策における優先順位は定量（KPI）と定性（施策・ポジショニング）を、時間軸ごとに構造的に並べていくことにより導いていくことができると考えています。</p><p>まずKPIを分解して現状を把握し、各KPIに対応する施策を顧客・市場から逆算し、それらを時間軸で整理する。短期では投入コストが小さく即効性の高いものから着手し、中期以降を見据えた視点ではポジショニングや事業構造まで踏み込んでいきます。</p><p>優先順位を決められない、もしくは、優先順位に自信が持てないと感じる時、足りないのは構造の可視化なのだと実務経験を重ねるほどに感じています。KPI、施策、時間軸という3つの軸で現状を並べてみると、どこから着手すべきかは、浮かび上がってくることが多いです。</p><p>事業責任者と現場で優先順位の認識がずれるケースにおいても、突き詰めていくと同じ構造にいきつくことも多いと感じています。両者は見ている時間軸やレイヤーが違うだけで、構造を並べて同じ土台に乗せると、ROIを最大化するという目的に向けた認識は揃いやすくなります。そのように考えながら日々の現場に向き合っています。</p><p>マーケティング施策の優先順位についてお悩みがありましたら、お気軽にご相談ください。</p></div>
+    <aside class="sup"><h2>監修者情報</h2><div class="av"><img src="https://images.ctfassets.net/4pab4ccjvs20/2hQHA7JDfzl1LwGwW4BfU6/5b4eff8bd0bba4b3e06522a85e1088ed/hashimoto.png" alt="橋本　圭司" loading="lazy"></div><div><p class="nm">サムライスタイル株式会社　代表取締役　橋本　圭司</p><p class="bio">事業会社・Web系ベンダー双方での経験とBtoC・BtoBで多様な業界30社以上のインハウス支援を経験。マクロでの業界理解に基づく戦略立案からミクロでの施策立案・実行まで伴走し、特に獲得領域におけるリスティング・動画広告運用からLP改善、CRMへの接続までを得意とする。</p><a href="hashimoto.html">詳細のプロフィールはこちら→</a></div></aside><section class="rel"><h2>関連記事</h2><ul><li><a href="media-decision-misalignment.html"><span class="t">会議で議論が噛み合わないとき、原因は3つに分けられるー目的・手段・判断軸で見る意思決定のずれー</span><span class="d">2026.11.06</span></a></li><li><a href="media-marketing-sales-consensus.html"><span class="t">なぜマーケティングの意思決定が営業部門と円滑に進まないのかーROIの不確実性から考える部門間の合意形成が難しい構造ー</span><span class="d">2026.11.06</span></a></li><li><a href="media-human-roles.html"><span class="t">なぜAI時代でも問いが人に残るのかー2026年現在地点での考察ー</span><span class="d">2026.08.10</span></a></li></ul></section><section class="rel"><h2>サムライスタイルのサービス</h2><ul class="svl"><li><a href="strategy2action.html">Strategy2Action</a></li><li><a href="video-production.html">動画制作</a></li><li><a href="https://samurai-style.tokyo/marketing-support" target="_blank" rel="noopener">マーケティング支援</a></li><li><a href="https://samurai-style.tokyo/indonesia-offshore" target="_blank" rel="noopener">オフショア開発</a></li><li><a href="https://samurai-style.tokyo/newbusiness-pmo" target="_blank" rel="noopener">新規事業開発PMO</a></li></ul></section>
+    <nav class="crumb" aria-label="パンくず"><a href="../index.html">HOME</a><span>/</span><a href="media.html">MEDIA</a><span>/</span><span>施策の優先順位はどう決まるのかー定量と定性、2つの軸で考える判断構造ー</span></nav>
+  </article>
+</div></section>
+</main>
+<footer class="ft"><div class="wrap">
+  <a class="big" href="../c-3d-b2.html#contact"><div class="bw"><b>CONTACT</b><canvas id="ftc" aria-hidden="true"></canvas></div><div class="bl"><span class="jp">お問い合わせはこちらから</span><span class="arr">→</span></div></a>
+  <div class="low">
+    <a class="lg" href="../c-3d-b2.html" aria-label="Samurai-Style"><img src="../img/logo.svg" alt="Samurai-Style"></a>
+    <nav><a href="privacy-policy.html">プライバシーポリシー</a><a href="commercial-transactions.html">特定商取引法に基づく表記</a></nav>
+    <span>© 2026 samurai-style All Right Reserved.</span>
+  </div>
+</div></footer>
+<span id="meas" aria-hidden="true"></span>
+<script src="_paper.js"></script>
+
+</body>
+</html>
