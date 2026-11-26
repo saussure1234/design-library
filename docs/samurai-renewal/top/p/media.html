@@ -161,6 +161,16 @@ button.bx.mk[aria-expanded="true"] .mk1{background:var(--sig)}
 }
 
 
+/* ===== スマホ・タブレットの図（So 11/26「いびつ→綺麗な三角形・線をきれいにつなぐ」）
+   三角形は段ごとの台形の切り抜きをやめ、JS が段の実寸から頂点〜底辺まで1本のまっすぐな辺で描く（#pyr-sp）。
+   木の線も擬似要素をやめ、箱の実寸から SVG で引く（#tree-sp）。PC（1180px 以上）は触らない */
+@media (max-width:1179.98px){
+  .tb::before{display:none}
+  .pyr-sp,.tree-sp{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
+  .tree::before,.tree::after,.br::before,.lv .bx::before{display:none}
+  .lv{border-left:0}
+}
+
 /* 図（c-media-1 をそのまま組み込み）：朱は図の元の色のまま */
 #upstream{--sig:#ff5a24}
 /* 見出しの線はページの MEDIA の見出しが持つので、図の上の線は外す */
@@ -390,6 +400,49 @@ dr.addEventListener('click',e=>{if(e.target===dr)close()});
 document.getElementById('dr-x').addEventListener('click',close);
 const V={mark,toggle:(b,k,items)=>open(b,k,items),close};
 
+})();
+</script>
+
+<script>
+/* スマホ・タブレット（1179px 以下）の図：三角形と木の線を、箱の実寸から描く。PC は SVG の図をそのまま使う */
+(()=>{
+const NS='http://www.w3.org/2000/svg',MQ=matchMedia('(max-width:1179.98px)');
+const st=document.getElementById('stage');if(!st)return;
+const pyr=st.querySelector('.pyr'),tree=st.querySelector('.tree');
+function mk(tag,a){const e=document.createElementNS(NS,tag);for(const k in a)e.setAttribute(k,a[k]);return e}
+function svgIn(host,cls){let s=host.querySelector(':scope>svg.'+cls);if(!s){s=mk('svg',{class:cls,'aria-hidden':'true',focusable:'false'});host.prepend(s)}return s}
+const r1=v=>Math.round(v*10)/10;
+function draw(){
+  const a=pyr.querySelector(':scope>svg.pyr-sp'),b=tree.querySelector(':scope>svg.tree-sp');
+  if(!MQ.matches){a&&a.remove();b&&b.remove();return}
+  /* 三角形：頂点＝1段目の帯の上端の中央、底辺＝3段目の帯の下端（帯の幅いっぱい）。段の境目で色を変え、白い線で区切る */
+  const P=pyr.getBoundingClientRect(),T=[...pyr.querySelectorAll('.tier .tb')].map(e=>e.getBoundingClientRect());
+  if(T.length<3)return;
+  const s=svgIn(pyr,'pyr-sp');s.innerHTML='';s.setAttribute('width',r1(P.width));s.setAttribute('height',r1(P.height));
+  const x0=T[2].left-P.left,x1=T[2].right-P.left,cx=(x0+x1)/2,ay=T[0].top-P.top,by=T[2].bottom-P.top,H=by-ay,W=x1-x0;
+  const hw=y=>W/2*(y-ay)/H, b1=(T[0].bottom+T[1].top)/2-P.top, b2=(T[1].bottom+T[2].top)/2-P.top;
+  const band=(ya,yb,f)=>s.append(mk('polygon',{points:[[cx-hw(ya),ya],[cx+hw(ya),ya],[cx+hw(yb),yb],[cx-hw(yb),yb]].map(q=>q.map(r1).join(',')).join(' '),fill:f}));
+  band(ay,b1,'#ece8de');band(b1,b2,'#e2ddd0');band(b2,by,'#d7d1c2');
+  for(const y of [b1,b2])s.append(mk('path',{d:`M${r1(cx-hw(y))} ${r1(y)}H${r1(cx+hw(y))}`,stroke:'#f6f4ee','stroke-width':3}));
+  s.append(mk('polygon',{points:`${r1(cx)},${r1(ay)} ${r1(x1)},${r1(by)} ${r1(x0)},${r1(by)}`,fill:'none',stroke:'rgba(21,21,19,.32)','stroke-width':1}));
+  /* 木：マーケティング戦略 → 横の線 → 集客・接客・育成（矢印）→ 各列の背骨 → 小さな箱（矢印） */
+  const R=tree.getBoundingClientRect(),q=e=>{const r=e.getBoundingClientRect();return{l:r.left-R.left,r:r.right-R.left,t:r.top-R.top,b:r.bottom-R.top,cx:(r.left+r.right)/2-R.left,cy:(r.top+r.bottom)/2-R.top}};
+  const t=svgIn(tree,'tree-sp');t.innerHTML='';t.setAttribute('width',r1(R.width));t.setAttribute('height',r1(R.height));
+  t.innerHTML='<defs><marker id="ahs" viewBox="0 0 8 8" refX="8" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L8 4L0 8z" fill="#151513"/></marker></defs>';
+  const g=mk('g',{fill:'none',stroke:'#151513','stroke-width':1.2});t.append(g);
+  const line=(d,ar)=>g.append(mk('path',ar?{d,'marker-end':'url(#ahs)'}:{d}));
+  const mkt=pyr.querySelector('.bx[data-k="マーケティング戦略"]'),hs=[...tree.querySelectorAll('.br>.bx.hd')].map(q);
+  if(mkt&&hs.length){const m=q(mkt),top=Math.min(...hs.map(h=>h.t)),yb=r1((m.b+top)/2);
+    line(`M${r1(m.cx)} ${r1(m.b)}V${yb}`);line(`M${r1(hs[0].cx)} ${yb}H${r1(hs[hs.length-1].cx)}`);
+    hs.forEach(h=>line(`M${r1(h.cx)} ${yb}V${r1(h.t)}`,1));}
+  tree.querySelectorAll('.br').forEach(br=>{const hd=br.querySelector(':scope>.bx.hd'),lv=[...br.querySelectorAll('.lv .bx')].map(q);if(!hd||!lv.length)return;
+    const h=q(hd),xs=r1(h.l+Math.min(16,(lv[0].l-h.l)/2));
+    line(`M${xs} ${r1(h.b)}V${r1(lv[lv.length-1].cy)}`);lv.forEach(v=>line(`M${xs} ${r1(v.cy)}H${r1(v.l)}`,1));});
+}
+let raf=0;const req=()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(draw)};
+addEventListener('resize',req);MQ.addEventListener('change',req);new ResizeObserver(req).observe(st);
+document.fonts&&document.fonts.ready.then(req);new MutationObserver(ms=>{if(ms.some(m=>!(m.target.closest&&m.target.closest('svg'))&&![...m.addedNodes].every(n=>n.nodeName==='svg')))req()}).observe(st,{childList:true,subtree:true});
+window.__mediaTri=draw;req();
 })();
 </script>
 <script>
