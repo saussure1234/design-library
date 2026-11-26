@@ -856,6 +856,38 @@ html.nogl #stD{display:none}
 /* So 11/26：スマホでは VALUE の写真を出さない（行だけ）。求める人間像の粒の演出と、その枠も出さない。MEMBER の点7つの枠は PC・スマホとも外す */
 @media (max-width:820px){.v4 .vph{display:none!important}.v4 #want>.slot{display:none}}
 .v4 #member>.slot{display:none}
+/* ===== 採用 VALUE＝会社概要の VALUES（案B）と同じ作り（So 11/26「カンパニーのバリューとリクルートは全く一緒に。トーンは採用に合わせて」）=====
+   FUN の大きな札（花火の粒）＋ Free・Flat・Open・Optimization を 2×2（粒の形）。札は夜の半透明の面、文字は白系、FUN だけ夕焼けの差し色 */
+.v4 .sec.val.vco{display:block;min-height:auto;max-width:calc(1200px + 2 * var(--m));margin:0 auto;padding-top:calc(76px + 8vh);padding-bottom:12vh}
+.vco .v1{display:grid;gap:20px}
+.vco .vc{background:rgba(14,10,30,.55);border:1px solid rgba(255,247,238,.16);display:flex;flex-direction:column;min-width:0;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.vco .vc-art{position:relative;border-bottom:1px solid rgba(255,247,238,.12);overflow:hidden;background:radial-gradient(ellipse at 50% 62%,rgba(62,36,98,.7),rgba(8,6,20,.92) 72%)}
+.vco .vc-art canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.vco .vc-tx{padding:24px 28px 30px}
+.vco .vc .no{display:block;font:400 12px/1 var(--mono);letter-spacing:.08em;color:rgba(255,247,238,.55)}
+.vco .vw{display:block;margin:14px 0 10px;font:500 clamp(24px,2.3vw,32px)/1.25 var(--disp);letter-spacing:0;color:#fff7ee}
+.vco .vd{margin:0;font-size:15px;line-height:1.9;color:rgba(255,247,238,.8)}
+.vco .v-fun{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);border-color:rgba(255,155,94,.42)}
+.vco .v-fun .vc-art{height:440px;border-bottom:0;border-right:1px solid rgba(255,247,238,.12)}
+.vco .v-fun .vc-tx{display:flex;flex-direction:column;justify-content:center;padding:40px 48px}
+.vco .v-fun .vw{font-size:clamp(44px,5vw,76px);line-height:1.05;margin:18px 0 20px;color:#ff9b5e}
+.vco .v-fun .vd{font-size:17px;color:#fff7ee}
+.vco .v1-g{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.vco .v1-g .vc-art{height:240px}
+@media (max-width:760px){
+  .v4 .sec.val.vco{padding-top:calc(64px + 4vh);padding-bottom:8vh}
+  .vco .v1{gap:12px}
+  .vco .v-fun{grid-template-columns:1fr}
+  .vco .v-fun .vc-art{height:300px;border-right:0;border-bottom:1px solid rgba(255,247,238,.12)}
+  .vco .v-fun .vc-tx{padding:22px 20px 26px}
+  .vco .v-fun .vw{font-size:40px;margin:12px 0 10px}
+  .vco .v-fun .vd{font-size:15px}
+  .vco .v1-g{gap:12px}
+  .vco .v1-g .vc-art{height:140px}
+  .vco .v1-g .vc-tx{padding:14px 14px 18px}
+  .vco .v1-g .vw{font-size:19px;margin:8px 0 6px}
+  .vco .v1-g .vd{font-size:13px;line-height:1.8}
+}
 
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}</script>
@@ -903,7 +935,7 @@ html[lang=en] .lbl .jp2{visibility:hidden}
   <div class="phs one"><figure class="ph "><img src="../img/recruit/about.webp" alt="足湯を囲んで笑う4人のメンバー" width="1920" height="1080" loading="lazy"></figure></div>
 </section>
 <section class="sec core rc rc3" id="core" data-t=".28" data-idx="1" data-shape="dust"><div class="slot"></div><div class="in"><div class="stack"><figure class="ph t"><img src="../img/recruit/cv_tree.webp" alt="見上げた大きな木" width="800" height="1200" loading="lazy"></figure><figure class="ph s"><img src="../img/recruit/cv_sofa.webp" alt="ソファでくつろぐ3人のメンバー" width="1288" height="1500" loading="lazy"></figure></div><div class="ct"><header class="sh"><div class="lbl"><span></span><p class="jp2">大切にする価値観</p><span class="end"></span></div><h2 class="h giant" data-wd>CORE VALUE</h2></header><div class="tx"><p><span class="nb">会社の</span><wbr><span class="nb">価値観の</span><wbr><span class="nb">根幹には、</span><wbr><span class="nb">代表の</span><wbr><span class="nb">橋本が</span><wbr><span class="nb">大学時代に</span><wbr><span class="nb">友人が</span><wbr><span class="nb">起こした</span><wbr><span class="nb">会社を</span><wbr><span class="nb">見ながら</span><wbr><span class="nb">感じていた</span><wbr><span class="nb">「仲間同士で</span><wbr><span class="nb">楽しみながら、</span><wbr><span class="nb">同じ</span><wbr><span class="nb">目的に</span><wbr><span class="nb">向かって</span><wbr><span class="nb">働きたい」と</span><wbr><span class="nb">いう</span><wbr><span class="nb">思いが</span><wbr><span class="nb">あります。</span><wbr></p><p><span class="nb">労働の</span><wbr><span class="nb">対価とは</span><wbr><span class="nb">金銭だけでなく、</span><wbr><span class="nb">誰かの</span><wbr><span class="nb">役に</span><wbr><span class="nb">立つことで</span><wbr><span class="nb">受け取る</span><wbr><span class="nb">「ありがとう」と</span><wbr><span class="nb">いった</span><wbr><span class="nb">言葉や、</span><wbr><span class="nb">そこに</span><wbr><span class="nb">向かって</span><wbr><span class="nb">仲間とともに</span><wbr><span class="nb">価値を</span><wbr><span class="nb">作る</span><wbr><span class="nb">過程での</span><wbr><span class="nb">高揚感が</span><wbr><span class="nb">あると</span><wbr><span class="nb">考えています。</span><wbr></p><p><span class="nb">会社の</span><wbr><span class="nb">ミッションと</span><wbr><span class="nb">して</span><wbr><span class="nb">掲げている</span><wbr><span class="nb">「パイの</span><wbr><span class="nb">最大化」も、</span><wbr><span class="nb">パイの</span><wbr><span class="nb">定義を</span><wbr><span class="nb">金銭と</span><wbr><span class="nb">すると</span><wbr><span class="nb">目の前の</span><wbr><span class="nb">パイを</span><wbr><span class="nb">奪い合う</span><wbr><span class="nb">ゼロサムの</span><wbr><span class="nb">世界観に</span><wbr><span class="nb">なりますが、</span><wbr><span class="nb">感謝や</span><wbr><span class="nb">高揚感、</span><wbr><span class="nb">そして笑顔が</span><wbr><span class="nb">加わる</span><wbr><span class="nb">ことで</span><wbr><span class="nb">プラスサムに</span><wbr><span class="nb">なり、</span><wbr><span class="nb">この</span><wbr><span class="nb">プラスサムの</span><wbr><span class="nb">世界観が</span><wbr><span class="nb">広がる</span><wbr><span class="nb">ことを</span><wbr><span class="nb">目指しています。</span><wbr></p></div></div></div></section>
-<section class="sec val vr vr3" id="value" data-t=".42" data-idx="2" data-shape="dust" data-cycle="dust,dust,dust,dust,opt" data-cyc="main"><div class="vph"><div class="vs" data-i="0"><figure class="ph q1" data-r="0.5710"><img src="../img/recruit/g7.webp" alt="ビリヤード台のあるテラス" width="571" height="1000" loading="lazy"></figure><figure class="ph q2" data-r="0.7500"><img src="../img/recruit/g5.webp" alt="テニスをするメンバー" width="750" height="1000" loading="lazy"></figure></div><div class="vs" data-i="1"><figure class="ph q1" data-r="0.5730"><img src="../img/recruit/g2.webp" alt="海の見えるテラスでPC作業をするメンバー" width="573" height="1000" loading="lazy"></figure><figure class="ph q2" data-r="0.7500"><img src="../img/recruit/g9.webp" alt="プールサイドに置かれたノートPC" width="750" height="1000" loading="lazy"></figure></div><div class="vs" data-i="2"><figure class="ph q1" data-r="0.7500"><img src="../img/recruit/g4.webp" alt="並んで歩くメンバー" width="750" height="1000" loading="lazy"></figure><figure class="ph q2" data-r="0.7500"><img src="../img/recruit/g8.webp" alt="廊下で写真を撮り合うメンバー" width="750" height="1000" loading="lazy"></figure></div><div class="vs one" data-i="3"><figure class="ph q1" data-r="1.7773"><img src="../img/recruit/g6.webp" alt="足湯を囲んで話すメンバー" width="1500" height="844" loading="lazy"></figure></div><div class="vs" data-i="4"></div></div><div class="l"><header class="sh"><div class="lbl"><span></span><p class="jp2">行動指針</p><span class="end"></span></div><h2 class="h giant" data-wd>+VALUE</h2></header></div><ol class="vl"><li class="ci v-1" data-i="0"><span class="vw">Fun</span><p class="vd"><span class="nb">世界一楽しく</span><wbr><span class="nb">働く</span><wbr><span class="nb">会社を</span><wbr><span class="nb">目指す</span><wbr></p></li><li class="ci v-2" data-i="1"><span class="vw">Free</span><p class="vd"><span class="nb">各自の</span><wbr><span class="nb">責任感の</span><wbr><span class="nb">下、</span><wbr><span class="nb">場所や</span><wbr><span class="nb">時間に</span><wbr><span class="nb">捉われず</span><wbr><span class="nb">自由に</span><wbr><span class="nb">裁量を</span><wbr><span class="nb">持って働く</span><wbr></p></li><li class="ci v-3" data-i="2"><span class="vw">Flat</span><p class="vd"><span class="nb">年齢や</span><wbr><span class="nb">役職などの</span><wbr><span class="nb">上下関係なく</span><wbr><span class="nb">接する</span><wbr></p></li><li class="ci v-4" data-i="3"><span class="vw">Open</span><p class="vd"><span class="nb">チーム内では</span><wbr><span class="nb">本音で</span><wbr><span class="nb">向き合い、</span><wbr><span class="nb">人格は</span><wbr><span class="nb">否定しない</span><wbr></p></li><li class="ci v-5" data-i="4"><span class="vw">Optimization</span><p class="vd"><span class="nb">全体</span><wbr><span class="nb">最適視点で</span><wbr><span class="nb">判断する</span><wbr></p></li></ol><div class="slot"></div></section>
+<section class="sec val vco" id="value" data-t=".42" data-idx="2" data-shape="dust"><div class="l"><header class="sh"><div class="lbl"><span></span><p class="jp2">行動指針</p><span class="end"></span></div><h2 class="h giant" data-wd>+VALUE</h2></header></div><div class="v1"><article class="vc v-fun"><div class="vc-art"><canvas class="mini" data-mini="fun_fw" aria-hidden="true"></canvas></div><div class="vc-tx"><span class="no">01 / 05</span><h3 class="vw">Fun</h3><p class="vd"><span class="nb">世界一楽しく</span><wbr><span class="nb">働く</span><wbr><span class="nb">会社を</span><wbr><span class="nb">目指す</span><wbr></p></div></article><div class="v1-g"><article class="vc v-free"><div class="vc-art"><canvas class="mini" data-mini="free" aria-hidden="true"></canvas></div><div class="vc-tx"><span class="no">02 / 05</span><h3 class="vw">Free</h3><p class="vd"><span class="nb">各自の</span><wbr><span class="nb">責任感の</span><wbr><span class="nb">下、</span><wbr><span class="nb">場所や</span><wbr><span class="nb">時間に</span><wbr><span class="nb">捉われず</span><wbr><span class="nb">自由に</span><wbr><span class="nb">裁量を</span><wbr><span class="nb">持って働く</span><wbr></p></div></article><article class="vc v-flat"><div class="vc-art"><canvas class="mini" data-mini="flat" aria-hidden="true"></canvas></div><div class="vc-tx"><span class="no">03 / 05</span><h3 class="vw">Flat</h3><p class="vd"><span class="nb">年齢や</span><wbr><span class="nb">役職などの</span><wbr><span class="nb">上下関係なく</span><wbr><span class="nb">接する</span><wbr></p></div></article><article class="vc v-open"><div class="vc-art"><canvas class="mini" data-mini="open" aria-hidden="true"></canvas></div><div class="vc-tx"><span class="no">04 / 05</span><h3 class="vw">Open</h3><p class="vd"><span class="nb">チーム内では</span><wbr><span class="nb">本音で</span><wbr><span class="nb">向き合い、</span><wbr><span class="nb">人格は</span><wbr><span class="nb">否定しない</span><wbr></p></div></article><article class="vc v-opt"><div class="vc-art"><canvas class="mini" data-mini="opt" aria-hidden="true"></canvas></div><div class="vc-tx"><span class="no">05 / 05</span><h3 class="vw">Optimization</h3><p class="vd"><span class="nb">全体</span><wbr><span class="nb">最適視点で</span><wbr><span class="nb">判断する</span><wbr></p></div></article></div></div></section>
 <section class="sec joy jx1" id="joy" data-t=".7" data-idx="4" data-shape="stars">
   <div class="l"><header class="sh"><div class="lbl"><span></span><p class="jp2">The significance of working joyfully</p><span class="end"></span></div><h2 class="h giant ja" data-wd>楽しく働くことの意義</h2></header><div class="tx"><p><span class="nb">今後、</span><wbr><span class="nb">外部</span><wbr><span class="nb">環境の</span><wbr><span class="nb">変化が</span><wbr><span class="nb">より</span><wbr><span class="nb">激しくなっていく</span><wbr><span class="nb">中で</span><wbr><span class="nb">生き残る</span><wbr><span class="nb">ためには、</span><wbr><span class="nb">能力や</span><wbr><span class="nb">成果を</span><wbr><span class="nb">高め続ける</span><wbr><span class="nb">必要が</span><wbr><span class="nb">あり、</span><wbr><span class="nb">その</span><wbr><span class="nb">土台には、</span><wbr><span class="nb">日々の</span><wbr><span class="nb">地道な</span><wbr><span class="nb">取り組みの</span><wbr><span class="nb">積み重ねが</span><wbr><span class="nb">あると</span><wbr><span class="nb">考えています。</span><wbr></p><p><span class="nb">その</span><wbr><span class="nb">ため、</span><wbr><span class="nb">楽しく</span><wbr><span class="nb">働く</span><wbr><span class="nb">ことは、</span><wbr><span class="nb">各メンバーの</span><wbr><span class="nb">幸福度に</span><wbr><span class="nb">直結するだけでなく、</span><wbr><span class="nb">日々の</span><wbr><span class="nb">生産性を</span><wbr><span class="nb">高める</span><wbr><span class="nb">ことに</span><wbr><span class="nb">よる</span><wbr><span class="nb">会社と</span><wbr><span class="nb">しての</span><wbr><span class="nb">生存戦略、</span><wbr><span class="nb">そして、</span><wbr><span class="nb">個人・</span><wbr><span class="nb">会社が</span><wbr><span class="nb">成長して</span><wbr><span class="nb">社会に</span><wbr><span class="nb">還元していく</span><wbr><span class="nb">ことにまで</span><wbr><span class="nb">繋がっていきます。</span><wbr></p></div><p class="q"><span class="nb">「パイ</span><wbr><span class="nb">（笑</span><wbr><span class="nb">顔の</span><wbr><span class="nb">総量）の</span><wbr><span class="nb">最大化」</span><wbr><span class="nb">（利他）を</span><wbr><span class="nb">追求する</span><wbr><span class="nb">ことと、</span><wbr><span class="nb">個人の</span><wbr><span class="nb">　幸福度</span><wbr><span class="nb">（利己）も</span><wbr><span class="nb">本質的には</span><wbr><span class="nb">繋がっているのではないかと</span><wbr><span class="nb">感じています。</span><wbr></p></div>
   <div class="slot"></div>
@@ -1215,19 +1247,19 @@ function memFlip() { document.querySelectorAll('.mv2 .mc').forEach(m => { m.addE
 /* ===== 小さな粒のアイコン（2D canvas・形は舞台と同じ定義） ===== */
 window.MINI = function () { const cvs = [...document.querySelectorAll('canvas.mini')]; if (!cvs.length || !window.PE_SHAPES) return;
   const n = 1500, sd = new Float32Array(n); let s0 = 29; const r = () => (s0 = s0 * 16807 % 2147483647) / 2147483647; for (let i = 0; i < n; i++) sd[i] = r();
-  const SHm = window.PE_EXTRA(window.PE_SHAPES(n, sd, r), n, sd, r, { mini: true }), DPR = Math.min(2, devicePixelRatio || 1), tmp = [0, 0];
+  const SHm = window.PE_EXTRA(window.PE_SHAPES(n, sd, r), n, sd, r, { mini: true }), DPR = Math.min(2, devicePixelRatio || 1), tmp = [0, 0, 1];
   const st = cvs.map(c => ({ c, x: c.getContext('2d'), k: c.dataset.mini, pos: Float32Array.from({ length: n * 2 }, () => r()), vis: false, t0: 0 }));
   const io = new IntersectionObserver(es => es.forEach(e => { const q = st.find(z => z.c === e.target); if (!q) return; if (e.isIntersecting && !q.vis) { for (let i = 0; i < n * 2; i++) q.pos[i] = r(); } q.vis = e.isIntersecting; }), { rootMargin: '60px' });
-  st.forEach(q => io.observe(q.c));
+  st.forEach(q => { io.observe(q.c); q.mx = null; q.c.addEventListener('pointermove', e => { const r = q.c.getBoundingClientRect(); q.mx = e.clientX - r.left; q.my = e.clientY - r.top; }); q.c.addEventListener('pointerleave', () => { q.mx = null; }); });
   let prev = performance.now(), tt = 0;
   (function loop(now) { requestAnimationFrame(loop); const dt = Math.min(.05, (now - prev) / 1000); prev = now; tt += dt;
     for (const q of st) { if (!q.vis) continue; const sh = SHm[q.k]; if (!sh || !sh.p) continue; const c = q.c, w = c.clientWidth, h = c.clientHeight; if (!w || !h) continue;
       if (c.width !== Math.round(w * DPR)) { c.width = Math.round(w * DPR); c.height = Math.round(h * DPR); }
       const x = q.x; x.setTransform(DPR, 0, 0, DPR, 0, 0); x.clearRect(0, 0, w, h); x.globalCompositeOperation = 'lighter';
       const pad = .08, bw = w * (1 - pad * 2), bh = h * (1 - pad * 2), s = Math.min(bw / sh.a, bh), BW = s * sh.a, bx = (w - BW) / 2, by = (h - s) / 2, f = 1 - Math.exp(-dt * 3.2), ps = Math.max(1.1, Math.min(2, w / 160));
-      for (let i = 0; i < n; i++) { tmp[0] = sh.p[i * 2]; tmp[1] = sh.p[i * 2 + 1]; if (sh.dyn) sh.dyn(i, sd[i], tt, tmp);
-        const px = q.pos[i * 2] += (tmp[0] - q.pos[i * 2]) * f, py = q.pos[i * 2 + 1] += (tmp[1] - q.pos[i * 2 + 1]) * f;
-        x.fillStyle = `rgb(${sh.c[i * 3] * 255 | 0},${sh.c[i * 3 + 1] * 255 | 0},${sh.c[i * 3 + 2] * 255 | 0})`; x.fillRect(bx + px * BW, by + py * s, ps, ps); } } })(prev);
+      for (let i = 0; i < n; i++) { tmp[0] = sh.p[i * 2]; tmp[1] = sh.p[i * 2 + 1]; tmp[2] = 1; if (sh.dyn) sh.dyn(i, sd[i], tt, tmp);
+        const ff = sh.snap ? 1 : f, px = q.pos[i * 2] += (tmp[0] - q.pos[i * 2]) * ff, py = q.pos[i * 2 + 1] += (tmp[1] - q.pos[i * 2 + 1]) * ff, bb = Math.min(1, tmp[2]); if (bb <= .01) continue;
+        x.fillStyle = `rgba(${sh.c[i * 3] * 255 | 0},${sh.c[i * 3 + 1] * 255 | 0},${sh.c[i * 3 + 2] * 255 | 0},${bb.toFixed(3)})`; let X = bx + px * BW, Y = by + py * s; if (q.mx != null) { const dx = X - q.mx, dy = Y - q.my, d = Math.hypot(dx, dy) || 1, R = Math.min(w, h) * .22; if (d < R) { const k = (1 - d / R) * R * .55; X += dx / d * k; Y += dy / d * k; if (!sh.snap) { q.pos[i * 2] += dx / d * k / BW * .2; q.pos[i * 2 + 1] += dy / d * k / s * .2; } } } x.fillRect(X, Y, ps, ps); } } })(prev);
 };
 
 /* 案1の帯：写真がゆっくり逆へ流れる（視差） */
@@ -1237,6 +1269,41 @@ function bandPar() { const ims = [...document.querySelectorAll('.bph img')]; if 
 const init = () => { fitFrames(); addEventListener('resize', fitFrames); document.querySelectorAll('.slot').forEach(s => new ResizeObserver(fitFrames).observe(s));
   phReveal(); bandPar(); if (window.RT) { gallery(); wantPin(); } memFlip(); window.MINI(); };
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+
+/* 会社概要 VALUES 案B：FUN の花火（So 11/26「もっと花火っぽく」）
+   1発＝下から光の筋が上がる → 放射状にはじける → 重さで垂れながら、まばらに消える。5発を時間をずらして繰り返す。
+   粒の位置はそのまま置く（snap）。明るさは tmp[2]（0〜1）で粒ごとに変える。co-mini.js の MINI を build.py がこの形に合わせて差し込む */
+(() => {
+  const prev = window.PE_EXTRA;
+  window.PE_EXTRA = function (SH, N, seed, rnd, opt) {
+    SH = prev ? prev(SH, N, seed, rnd, opt) : SH;
+    const TAU = Math.PI * 2, A = 1.6, K = 5;
+    const PAL = [[1, .78, .38], [1, .42, .2], [1, .55, .62], [1, .93, .8], [.62, .8, 1]];
+    const CX = [.24, .62, .44, .8, .33], CY = [.46, .36, .58, .52, .3]   /* So 11/26「上すぎ、もう少し下にも」 */, PER = [3.3, 3.3, 3.3, 3.3, 3.3], OFF = [0, 1.98, .66, 2.64, 1.32];
+    const hs = x => { const v = Math.sin(x * 127.1 + 311.7) * 43758.5453; return v - Math.floor(v); };
+    const p = new Float32Array(N * 2), c = new Float32Array(N * 3);
+    for (let i = 0; i < N; i++) { const k = Math.min(K - 1, Math.floor(seed[i] * K)), u = (seed[i] * K) % 1, col = u < .1 ? [1, .86, .6] : PAL[k], j = .85 + .3 * hs(i * 1.7);
+      c[i * 3] = Math.min(1, col[0] * j); c[i * 3 + 1] = Math.min(1, col[1] * j); c[i * 3 + 2] = Math.min(1, col[2] * j); p[i * 2] = CX[k]; p[i * 2 + 1] = 1.1; }
+    SH.fun_fw = { a: A, p, c, fit: 'contain', snap: true, dyn: (i, s, t, o) => {
+      const k = Math.min(K - 1, Math.floor(s * K)), u = (s * K) % 1, ph = ((t + OFF[k]) / PER[k]) % 1, L = .24, cx = CX[k] + (hs(Math.floor((t + OFF[k]) / PER[k]) * 7 + k) - .5) * .1, cy = CY[k];
+      if (ph < L) {                                   /* 打ち上げ：光の筋 */
+        if (u >= .1) { o[0] = cx; o[1] = 1.2; o[2] = 0; return; }
+        const q = ph / L, head = 1.02 - (1.02 - cy) * (1 - Math.pow(1 - q, 2.2)), back = (u / .1);
+        o[0] = cx + Math.sin(back * 9 + t * 12) * .003; o[1] = head + back * .14 * (1 - q * .5); o[2] = (1 - back) * (.5 + .5 * q); return; }
+      if (u < .1) { o[0] = cx; o[1] = 1.2; o[2] = 0; return; }
+      /* 星：球の表面を平らに見た分布（中まで詰まる）。同じ星に3〜4粒が少し遅れてついて尾になる。k=0 の金は長く垂れる柳 */
+      const e = (ph - L) / (1 - L), u2 = (u - .1) / .9, sid = Math.floor(u2 * 90) / 90, lag = Math.floor(hs(i * 9.7) * 4),
+        z = 2 * hs(sid * 91.7 + k * 3.3) - 1, th = hs(sid * 37.3 + k * 1.9) * TAU, sq = Math.sqrt(1 - z * z), wil = k === 0,
+        v = (wil ? .2 : .24) * (.92 + .16 * hs(sid * 13.1 + k)), el = e - lag * (wil ? .035 : .022);
+      if (el <= 0) { o[0] = cx; o[1] = cy; o[2] = 0; return; }
+      const rr = v * (1 - Math.exp(-el * 7)) / (1 - Math.exp(-7)), drop = el * el * (wil ? .42 : .2);
+      o[0] = cx + Math.cos(th) * sq * rr / A; o[1] = cy + Math.sin(th) * sq * rr + drop;
+      const life = wil ? 1 : .62 + .38 * hs(sid * 5.7 + k), fade = el > life ? 0 : Math.pow(1 - el / life, wil ? .8 : 1.15),
+        flick = el > .5 ? (.35 + .65 * (Math.sin(t * 40 + i * 1.3) > -.2 ? 1 : 0)) : 1;
+      o[2] = fade * flick * (1 - lag * .26) * (wil ? .95 : 1.1); } };
+    return SH;
+  };
 })();
 
 window.FVC='C';window.VJ_FW={"xs": [0.6, 0.73, 0.86, 0.66], "scs": [1.15, 1.3, 0.95, 0.8], "hb": 330, "R": 150, "per": 3.0};
