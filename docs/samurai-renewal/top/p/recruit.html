@@ -2183,7 +2183,7 @@ function back(xc, rim, s, lean, point, w, z, t, ph) {
   const side = z < .5 ? -1 : 1; const p = seg(xc + side * sw * .95 + lean * .6 * s, sh + .8 * s, xc + side * sw * .85, rim - .5 * s, q); return [p[0] + ((z * 2) % 1 - .5) * .8 * s, p[1]];   /* 下ろした腕 */
 }
 KD.sboat = function (u, v, w, z, t, a) {
-  const tilt = Math.sin(t * 1.05 + a.ph) * .035, g = fwGlow(t), L = 1 + g * .9, n = a.ppl || 1;
+  const tilt = Math.sin(t * 1.05 + a.ph) * .035, g = 0, L = .72, n = a.ppl || 1;   // 明るさは一定・やや低め（花火で照らさない・ちらつかせない／So 11/26）
   const put = (x, y, b, c) => set(x, y + x * tilt, b, c);
   if (u < .26) {   /* 船：後ろから少し斜め。縁の楕円と U 字の船底、船首が少し奥に見える */
     if (w < .5) { const an = v * 6.283; put(Math.cos(an) * 17 + Math.sin(an) * 1.5, -7 + Math.sin(an) * 3.6, (Math.sin(an) > 0 ? .7 : .45) * L, 0); }   /* 縁（手前が明るい） */
@@ -2194,7 +2194,7 @@ KD.sboat = function (u, v, w, z, t, a) {
   if (u < .31) { const x = -16 + v * 32, ytop = -7 + 3.6 * Math.sqrt(Math.max(0, 1 - Math.pow(x / 17, 2))), ybot = -7 + 8.5 * (1 - Math.pow(x / 17, 2)); put(x, ytop + (ybot - ytop) * w, .14 * L, 0); return; }   /* 船体の面（まばら） */
   if (u < .4) {   /* ランタン：右の縁から短い竿 */
     if (w < .4) put(15, -7 - v * 12, .42 * L, 0);
-    else { const r = 1.7 * Math.sqrt(z), an = v * 6.283, fl = .85 + .15 * Math.sin(t * 6 + a.ph); put(15 + Math.cos(an) * r, -19.5 + Math.sin(an) * r * 1.2, .98 * fl, 3); }
+    else { const r = 1.7 * Math.sqrt(z), an = v * 6.283, fl = 1; put(15 + Math.cos(an) * r, -19.5 + Math.sin(an) * r * 1.2, .6 * fl, 3); }
     return;
   }
   if (u < .86) {   /* 人：後ろ姿で花火を見上げる */
@@ -2204,13 +2204,13 @@ KD.sboat = function (u, v, w, z, t, a) {
     put(p[0], p[1], .62 * L, 5); return;
   }
   /* 水面に映るランタンの灯り・船の影 */
-  if (w < .75) { const yy = 3 + (w / .75) * 22, rip = Math.sin(yy * .6 - t * 3 + a.ph); set(15 + rip * (1 + yy * .08), yy, .36 * (1 - w / .75) * (.6 + .4 * Math.sin(t * 5 + yy)) * (1 + g * .5), 3); }
+  if (w < .75) { const yy = 3 + (w / .75) * 22, rip = Math.sin(yy * .6 - t * 3 + a.ph); set(15 + rip * (1 + yy * .08), yy, .22 * (1 - w / .75), 3); }
   else set(-16 + v * 32 + Math.sin(t * 2 + v * 9) * .8, 2.2 + (z - .5) * 1.4, .18 * L, 0);
 };
 const jwb = () => { const e = document.getElementById('joy'); if (!e) return 0; const r = e.getBoundingClientRect(), h = innerHeight, ov = (Math.min(r.bottom, h) - Math.max(r.top, 0)) / h; return sm(.18, .5, ov); };
 /* [x, 奥行き d（0＝水平線 1＝手前）, 人数]：奥・中・手前の三角形。文（左下）に重ならないよう右寄り */
 (SP ? [[.6, .16, 1], [.86, .46, 2], [.68, .82, 2]] : [[.64, .18, 1], [.9, .48, 2], [.72, .84, 2]]).forEach(([x, d, ppl], i) =>
-  add('sboat', 700, { x, d, sc: SP ? 1.45 : 2, ppl, on: jwb, bob: 1, br: 1, ph: i * 2.3 }));
+  add('sboat', 700, { x, d, sc: SP ? 1.45 : 2, ppl, on: jwb, bob: 1, br: Math.pow((.62 + d * 1.75) / (.62 + .84 * 1.75), .6), ph: i * 2.3 }));   // 小さく描かれる奥の船ほど粒が詰まって明るく見えるので、大きさに比例して明るさを下げて3隻をそろえる
 }
 
 /* ---- 粒の確保 ---- */
