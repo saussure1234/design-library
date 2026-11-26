@@ -13,7 +13,8 @@
     const cur = () => { const p = S.P; let k = 0; for (let i = 0; i < ST.length; i++) if (ST[i] <= p + 0.03) k = i; return k; };   // 0＝FV・1〜6＝場面
     const inStory = () => S.gate && !S.inPaper() && S.P < 7.3;
     // 場面4で PRESS の演出が走っている間（押してから次の場面へ動き出すまで）も「動いている」扱いにする
-    const busy = () => S.busy || (!!S.s4 && cur() === 4 && S.s4.tau >= 0 && S.s4.tau < (S.s4.NEXT || 3) + .4);
+    let fvPend = false;
+    const busy = () => S.busy || fvPend || (!!S.s4 && cur() === 4 && S.s4.tau >= 0 && S.s4.tau < (S.s4.NEXT || 3) + .4);
     window.__navBusy = busy;
     let tgt = null, tgtT = 0;
     const shown = () => (tgt != null && performance.now() - tgtT < 4600) ? tgt : cur();
@@ -23,6 +24,7 @@
     let pc = null, parts = [], praf = 0;
     if (V === 'c') { pc = $('<canvas class="nvpc" aria-hidden="true"></canvas>'); document.body.appendChild(pc); }
     function effect(dir, x, y) {
+      if (V === 'd') { fx.style.setProperty('--y', (y ?? innerHeight / 2) + 'px'); fx.className = 'nvfx'; void fx.offsetWidth; fx.className = 'nvfx streak2 ' + (dir > 0 ? 'fwd' : 'back'); return; }
       if (V === 'a') { fx.className = 'nvfx'; void fx.offsetWidth; fx.className = 'nvfx streak ' + (dir > 0 ? 'fwd' : 'back'); }
       else if (V === 'b') { fx.className = 'nvfx'; void fx.offsetWidth; fx.className = 'nvfx flash'; }
       else burst(dir, x ?? innerWidth / 2, y ?? innerHeight / 2);
@@ -57,7 +59,7 @@
     const prev = (x, y) => { const c = cur(); if (c <= 1 && S.P <= ST[1] + 0.03) return go(0, -1, x, y); return go(c - 1, -1, x, y); };
 
     /* ---- 部品 ---- */
-    let root;
+    let root, dPairs = [], fvBox = null;
     if (V === 'a') {
       root = $(`<div class="nv nv-a" role="group" aria-label="STORY の場面送り">
         <button type="button" class="nvb nvp" aria-label="前の場面へ"><span aria-hidden="true">←</span><span class="lb">前へ</span></button>
@@ -74,6 +76,24 @@
       root.querySelectorAll('.nvi').forEach((b) => b.addEventListener('click', () => { const k = +b.dataset.k, c = cur(); go(k, k >= c ? 1 : -1); }));
       root.querySelector('.nvp').addEventListener('click', () => prev());
       root.querySelector('.nvx').addEventListener('click', () => next());
+    } else if (V === 'd') {
+      root = $('<div class="nv nv-d" aria-hidden="true"></div>');
+      const SVG = (d) => `<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="${d}"/></svg>`;
+      const pair = () => $(`<div class="nvr" role="group" aria-label="場面の送り"><button type="button" class="nvc nvcp" aria-label="前の場面へ">${SVG('M14.5 5.5 8 12l6.5 6.5')}</button><button type="button" class="nvc nvcx" aria-label="次の場面へ">${SVG('M9.5 5.5 16 12l-6.5 6.5')}</button></div>`);
+      const hook = (w) => { w.querySelector('.nvcp').addEventListener('click', (e) => { const r = e.currentTarget.getBoundingClientRect(); prev(r.left, r.top + r.height / 2); });
+        w.querySelector('.nvcx').addEventListener('click', (e) => { const r = e.currentTarget.getBoundingClientRect(); next(r.right, r.top + r.height / 2); }); return w; };
+      // 場面1〜3・5・6：文の中、文の下に（文の左端にそろう）
+      document.querySelectorAll('.tx[data-i]').forEach((tx) => { const i = +tx.dataset.i; if (i < 1 || i > 6 || i === 4) return; tx.appendChild(hook(pair())); });
+      // 場面4：文は真ん中の問いと PRESS なので、PRESS の下にそろえて置く
+      const p4 = hook(pair()); p4.classList.add('nvr4'); document.body.appendChild(p4);
+      dPairs = [...document.querySelectorAll('.nvr')];
+      // 任意：FV に PRESS と同じ見た目の「押す」ボタン。押すと同じ演出で 01 へ
+      if (window.STORY_FV_PRESS) {
+        fvBox = $('<div class="s4 nvfv"><button class="s4-btn" type="button" aria-label="PRESS（STORY を始める）"><span class="rg2"></span><span class="rg"></span><span class="dt"></span><span class="lb">PRESS</span></button></div>');
+        document.body.appendChild(fvBox);
+        fvBox.querySelector('button').addEventListener('click', (e) => { e.stopPropagation(); if (!S.gate || busy() || fvBox.classList.contains('pressed')) return;
+          fvBox.classList.add('pressed'); fvPend = true; tgt = 1; tgtT = performance.now(); setTimeout(() => { S.snapTo(ST[1]); fvPend = false; }, 900); setTimeout(() => fvBox.classList.remove('pressed'), 6000); });
+      }
     } else {
       root = $(`<div class="nv nv-c" aria-live="polite"><p class="toast"><span class="pc">クリックで次へ</span><span class="sp">タップで次へ</span><i>／</i><span class="pc">左の端で戻る</span><span class="sp">左の端で戻る</span></p><span class="edge l" aria-hidden="true">‹ 前へ</span></div>`);
       document.addEventListener('click', (e) => {
@@ -86,17 +106,19 @@
     }
     document.body.appendChild(root);
     document.documentElement.classList.add('nvh-' + V);
+    if (window.STORY_FV_PRESS) document.documentElement.classList.add('nvh-fvp');
 
     /* ---- キー（←→）・横のスワイプ。縦の操作（↑↓・Space・縦スワイプ）は本線のまま ---- */
     addEventListener('keydown', (e) => {
       if (!inStory() || e.target.closest && e.target.closest('input,textarea,select')) return;
+      if (V === 'd' && cur() === 0) return;   // d：FV は今まで通りスクロールで進む
       if (e.code === 'ArrowRight') { if (next()) e.preventDefault(); }
       else if (e.code === 'ArrowLeft') { if (prev()) e.preventDefault(); }
       else if (V === 'c' && e.code === 'Enter' && !e.target.closest('a,button')) { if (next()) e.preventDefault(); }
     });
     let tx0 = null, ty0 = null;
     addEventListener('touchstart', (e) => { tx0 = e.touches[0].clientX; ty0 = e.touches[0].clientY; }, { passive: true });
-    addEventListener('touchend', (e) => { if (tx0 == null || !inStory()) return; const t = e.changedTouches[0], dx = t.clientX - tx0, dy = t.clientY - ty0; tx0 = null;
+    addEventListener('touchend', (e) => { if (tx0 == null || !inStory() || (V === 'd' && cur() === 0)) return; const t = e.changedTouches[0], dx = t.clientX - tx0, dy = t.clientY - ty0; tx0 = null;
       if (Math.abs(dx) > 44 && Math.abs(dx) > Math.abs(dy) * 1.3) { dx < 0 ? next() : prev(); } }, { passive: true });
 
     /* ---- 表示の更新 ---- */
@@ -113,6 +135,17 @@
       if (pBtn) pBtn.disabled = k <= 0 || busy();
       if (xBtn) xBtn.disabled = busy();
       root.classList.toggle('busy', busy());
+      if (V === 'd') {
+        const c = cur(), b4 = document.querySelector('.s4:not(.nvfv) .s4-btn'), lb = b4 && b4.querySelector('.lb');
+        dPairs.forEach((w) => { let vis;
+          if (w.classList.contains('nvr4')) { vis = on && c === 4 && !busy() && Math.abs(S.P - ST[4]) < .05 && !!lb;
+            if (vis) { const r = lb.getBoundingClientRect(); w.style.left = (r.left + r.width / 2) + 'px'; w.style.top = (r.bottom + 22) + 'px'; } }
+          else { const tx = w.parentElement; vis = on && +getComputedStyle(tx).opacity > .6;
+            tx.querySelectorAll('a').forEach((x) => { x.style.pointerEvents = vis ? '' : 'none'; }); }   // 見えていない場面の文のリンク（場面6の CONTACT）が、ほかの場面のボタンにかぶさらないように
+          w.classList.toggle('show', !!vis); w.style.pointerEvents = vis ? 'auto' : 'none';
+          w.querySelectorAll('button').forEach((x) => { x.disabled = busy(); x.tabIndex = vis ? 0 : -1; }); });
+        if (fvBox) { const v = S.gate && ldOut() && S.P < .62 && !S.busy; fvBox.classList.toggle('show', v || fvBox.classList.contains('pressed')); }
+      }
       if (V === 'c' && on && !firstHint && ldOut()) { firstHint = true; setTimeout(() => window.__navHint(4200), 900); }   // 読み込みの幕が上がってから最初の案内
     })();
   }
