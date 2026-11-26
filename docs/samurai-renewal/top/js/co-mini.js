@@ -284,7 +284,7 @@ window.MINI = function () { const cvs = [...document.querySelectorAll('canvas.mi
   const SHm = window.PE_EXTRA(window.PE_SHAPES(n, sd, r), n, sd, r, { mini: true }), DPR = Math.min(2, devicePixelRatio || 1), tmp = [0, 0, 1];
   const st = cvs.map(c => ({ c, x: c.getContext('2d'), k: c.dataset.mini, pos: Float32Array.from({ length: n * 2 }, () => r()), vis: false, t0: 0 }));
   const io = new IntersectionObserver(es => es.forEach(e => { const q = st.find(z => z.c === e.target); if (!q) return; if (e.isIntersecting && !q.vis) { for (let i = 0; i < n * 2; i++) q.pos[i] = r(); } q.vis = e.isIntersecting; }), { rootMargin: '60px' });
-  st.forEach(q => io.observe(q.c));
+  st.forEach(q => { io.observe(q.c); q.mx = null; q.c.addEventListener('pointermove', e => { const r = q.c.getBoundingClientRect(); q.mx = e.clientX - r.left; q.my = e.clientY - r.top; }); q.c.addEventListener('pointerleave', () => { q.mx = null; }); });
   let prev = performance.now(), tt = 0;
   (function loop(now) { requestAnimationFrame(loop); const dt = Math.min(.05, (now - prev) / 1000); prev = now; tt += dt;
     for (const q of st) { if (!q.vis) continue; const sh = SHm[q.k]; if (!sh || !sh.p) continue; const c = q.c, w = c.clientWidth, h = c.clientHeight; if (!w || !h) continue;
@@ -293,7 +293,7 @@ window.MINI = function () { const cvs = [...document.querySelectorAll('canvas.mi
       const pad = .08, bw = w * (1 - pad * 2), bh = h * (1 - pad * 2), s = Math.min(bw / sh.a, bh), BW = s * sh.a, bx = (w - BW) / 2, by = (h - s) / 2, f = 1 - Math.exp(-dt * 3.2), ps = Math.max(1.1, Math.min(2, w / 160));
       for (let i = 0; i < n; i++) { tmp[0] = sh.p[i * 2]; tmp[1] = sh.p[i * 2 + 1]; tmp[2] = 1; if (sh.dyn) sh.dyn(i, sd[i], tt, tmp);
         const ff = sh.snap ? 1 : f, px = q.pos[i * 2] += (tmp[0] - q.pos[i * 2]) * ff, py = q.pos[i * 2 + 1] += (tmp[1] - q.pos[i * 2 + 1]) * ff, bb = Math.min(1, tmp[2]); if (bb <= .01) continue;
-        x.fillStyle = `rgba(${sh.c[i * 3] * 255 | 0},${sh.c[i * 3 + 1] * 255 | 0},${sh.c[i * 3 + 2] * 255 | 0},${bb.toFixed(3)})`; x.fillRect(bx + px * BW, by + py * s, ps, ps); } } })(prev);
+        x.fillStyle = `rgba(${sh.c[i * 3] * 255 | 0},${sh.c[i * 3 + 1] * 255 | 0},${sh.c[i * 3 + 2] * 255 | 0},${bb.toFixed(3)})`; let X = bx + px * BW, Y = by + py * s; if (q.mx != null) { const dx = X - q.mx, dy = Y - q.my, d = Math.hypot(dx, dy) || 1, R = Math.min(w, h) * .22; if (d < R) { const k = (1 - d / R) * R * .55; X += dx / d * k; Y += dy / d * k; if (!sh.snap) { q.pos[i * 2] += dx / d * k / BW * .2; q.pos[i * 2 + 1] += dy / d * k / s * .2; } } } x.fillRect(X, Y, ps, ps); } } })(prev);
 };
 
 /* 案1の帯：写真がゆっくり逆へ流れる（視差） */
@@ -314,7 +314,7 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
     SH = prev ? prev(SH, N, seed, rnd, opt) : SH;
     const TAU = Math.PI * 2, A = 1.6, K = 5;
     const PAL = [[1, .78, .38], [1, .42, .2], [1, .55, .62], [1, .93, .8], [.62, .8, 1]];
-    const CX = [.24, .62, .44, .8, .33], CY = [.34, .26, .44, .4, .22], PER = [3.3, 3.3, 3.3, 3.3, 3.3], OFF = [0, 1.98, .66, 2.64, 1.32];
+    const CX = [.24, .62, .44, .8, .33], CY = [.46, .36, .58, .52, .3]   /* So 11/26「上すぎ、もう少し下にも」 */, PER = [3.3, 3.3, 3.3, 3.3, 3.3], OFF = [0, 1.98, .66, 2.64, 1.32];
     const hs = x => { const v = Math.sin(x * 127.1 + 311.7) * 43758.5453; return v - Math.floor(v); };
     const p = new Float32Array(N * 2), c = new Float32Array(N * 3);
     for (let i = 0; i < N; i++) { const k = Math.min(K - 1, Math.floor(seed[i] * K)), u = (seed[i] * K) % 1, col = u < .1 ? [1, .86, .6] : PAL[k], j = .85 + .3 * hs(i * 1.7);
