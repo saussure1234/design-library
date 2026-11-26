@@ -1098,11 +1098,11 @@ root.style.overflow = 'hidden';
 const GATE_KEY = 'samurai-b-gate';
 const fvReady = (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => { fvLayout(); });
 const showWords = () => fvReady.then(() => setTimeout(() => fvx.classList.add('ready'), 250));
-const gateSeen = (() => { try { return localStorage.getItem(GATE_KEY); } catch (e) { return null; } })();
+const gateSeen = (() => { try { return sessionStorage.getItem(GATE_KEY); } catch (e) { return null; } })();   // 開いているあいだだけ覚える：ブラウザを開いて最初の1回は入口を出し、ほかのページから戻った時は出さない（So 11/26）
 function enter(withSound, remember = true) {
   if (gateDone) return; gateDone = true;
   SND.set(withSound);
-  if (remember) { try { localStorage.setItem(GATE_KEY, withSound ? '1' : '0'); } catch (e) { /* 保存できない環境は毎回聞く */ } }
+  if (remember) { try { sessionStorage.setItem(GATE_KEY, withSound ? '1' : '0'); } catch (e) { /* 保存できない環境は毎回聞く */ } }
   gate.classList.add('out'); root.style.overflow = '';
   showWords();
 }
@@ -1618,6 +1618,7 @@ setTimeout(() => {
   if (RM) enter(false);
   // ページ内リンク（例：下層ページの CONTACT → #contact）で来た時は、その位置へ。カメラも一気に合わせる
   if (location.hash) { const el = document.querySelector(location.hash); if (el) { measure(); scrollTo(0, el.getBoundingClientRect().top + scrollY); readScroll(); Ps = P; lastPs = P; } }
+  requestAnimationFrame(() => requestAnimationFrame(() => document.documentElement.classList.add('hashdone')));   // 位置が合ってから紙の覆いを外す（So 11/26「CONTACT に行くと黒から始まる」）
 }, 250);
 window.__b = {
   get P() { return Ps; }, setP(v) { P = v; Ps = v; lastPs = v; }, toY, measure, renderer, used,

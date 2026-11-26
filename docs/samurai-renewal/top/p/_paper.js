@@ -63,8 +63,8 @@ mcs.forEach((card,ci)=>{const img=card.querySelector('img'),c=card.querySelector
         p.dots=dots;p.k=0;card.classList.add('ht')}catch(e){p.dots=null;card.classList.remove('ht');card.classList.add('fin')}};
     if(img.complete&&img.naturalWidth)go();else img.addEventListener('load',go,{once:true})},
    draw(p,t,dt){if(!p.dots||p.done)return;const {ctx,w,h}=p;
-    const r=card.getBoundingClientRect(),vh=innerHeight,g=REDUCE?2:clamp((vh*.9-r.top)/(vh*.5))*1.15;
-    p.k=Math.max(p.k||0,Math.min(g,(p.k||0)+(dt||.016)/1.1));const k=p.k;ctx.clearRect(0,0,w,h);ctx.beginPath();
+    const r=card.getBoundingClientRect(),vh=innerHeight,g=REDUCE||(r.top<vh*.96&&r.bottom>0)?2:0;   // 画面に入ったら一気に写真まで（スクロール量に連動させない・So 11/26）
+    p.k=Math.max(p.k||0,Math.min(g,(p.k||0)+(dt||.016)/.75));const k=p.k;ctx.clearRect(0,0,w,h);ctx.beginPath();
     for(const d of p.dots){const e=ss(d[5],d[5]+.5,k),x=mix(d[3],d[0],e),y=mix(d[4],d[1],e),rr=mix(.8,d[2],e);ctx.moveTo(x+rr,y);ctx.arc(x,y,rr,0,TAU)}
     ctx.fillStyle=rgba(C.ink,.92);ctx.fill();if(k>=1.12){p.done=true;card.classList.add('fin')}}})});
 

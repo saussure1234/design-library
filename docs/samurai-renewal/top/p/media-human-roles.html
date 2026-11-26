@@ -124,6 +124,9 @@ header.hd .nav .lang,header.ghd .nav .lang{font-size:13px;gap:10px}
 .wrap,.paper .wrap{max-width:calc(1200px + 2 * var(--m));margin-left:auto;margin-right:auto;padding-left:var(--m);padding-right:var(--m)}
 header.hd,header.ghd{padding-left:max(var(--m),calc(50% - 600px));padding-right:max(var(--m),calc(50% - 600px))}
 @media (max-width:820px){header.hd,header.ghd{padding-left:var(--m);padding-right:var(--m)}}
+
+/* 英語のときは、大見出しの上の小さなラベル（日本語の小見出しを訳したもの＝大見出しと同じことの繰り返し）を出さない。行の高さは残す（So 11/26） */
+html[lang=en] .lbl .jp2{visibility:hidden}
 </style>
 <script src="../i18n/i18n.js"></script>
 </head>

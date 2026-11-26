@@ -360,9 +360,9 @@ html.nogl .gate,html.nogl .fvv,html.nogl .skip3{display:none}
 .nav{margin-left:auto}
 </style>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
-<script>try{var R=document.documentElement;if(/[?&]gate=1/.test(location.search))localStorage.removeItem('samurai-b-gate');if(localStorage.getItem('samurai-b-gate')!==null||location.hash)R.classList.add('quick');if(location.hash)R.classList.add('qhash')}catch(e){}</script>
-<style>html.quick .gate{display:none!important}html.qhash .ld{display:none!important}</style>
-<style>.fvx .wd .ch.fi{margin-left:.05em}@media (min-width:821px){.tx.L{left:max(var(--m),calc(50vw - 600px))}.tx.R{right:max(var(--m),calc(50vw - 600px))}.hud .prog,.prog{left:max(var(--m),calc(50vw - 600px))}.skip3{right:max(var(--m),calc(50vw - 600px))}.snd{right:max(var(--m),calc(50vw - 600px))}}@media (max-width:820px){.tx.L,.tx.R{left:var(--m);right:var(--m)}.hud .prog,.prog{left:var(--m)}.skip3{right:var(--m)}.snd{right:var(--m)}}</style>
+<script>try{var R=document.documentElement;if(/[?&]gate=1/.test(location.search))sessionStorage.removeItem('samurai-b-gate');if(sessionStorage.getItem('samurai-b-gate')!==null||location.hash)R.classList.add('quick');if(location.hash)R.classList.add('qhash')}catch(e){}</script>
+<style>html.quick .gate{display:none!important}html.qhash .ld{display:none!important}html.qhash body::before{content:'';position:fixed;inset:0;z-index:9998;background:#f6f4ee;pointer-events:none;transition:opacity .45s ease}html.qhash.hashdone body::before{opacity:0}</style>
+<style>.fvx .wd .ch.fi{margin-left:.05em}@media (min-width:821px){.tx.L{left:max(var(--m),calc(50vw - 600px))}.tx.R{right:max(var(--m),calc(50vw - 600px))}.hud .prog,.prog{left:max(var(--m),calc(50vw - 600px))}.skip3{right:max(var(--m),calc(50vw - 600px))}.snd{right:max(var(--m),calc(50vw - 600px))}}@media (max-width:820px){.tx::before{left:calc(var(--m) * -1);right:calc(var(--m) * -1)}.tx.L,.tx.R{left:var(--m);right:var(--m)}.hud .prog,.prog{left:var(--m)}.skip3{right:var(--m)}.snd{right:var(--m)}}</style>
 <style>/* ヘッダーの大きさ（全ページ共通・So 11/24「全体的に若干ちっちゃい」→一段大きく）。各ビルダーが </head> の直前に差し込む */
 header.hd,header.ghd{padding-top:24px;padding-bottom:24px}
 header.hd .logo img,header.ghd .logo img{height:34px}
@@ -382,6 +382,9 @@ header.hd .nav .lang,header.ghd .nav .lang{font-size:13px;gap:10px}
 .wrap,.paper .wrap{max-width:calc(1200px + 2 * var(--m));margin-left:auto;margin-right:auto;padding-left:var(--m);padding-right:var(--m)}
 header.hd,header.ghd{padding-left:max(var(--m),calc(50% - 600px));padding-right:max(var(--m),calc(50% - 600px))}
 @media (max-width:820px){header.hd,header.ghd{padding-left:var(--m);padding-right:var(--m)}}
+
+/* 英語のときは、大見出しの上の小さなラベル（日本語の小見出しを訳したもの＝大見出しと同じことの繰り返し）を出さない。行の高さは残す（So 11/26） */
+html[lang=en] .lbl .jp2{visibility:hidden}
 </style>
 <script src="i18n/i18n.js"></script>
 </head>
@@ -759,8 +762,8 @@ mcs.forEach((card,ci)=>{const img=card.querySelector('img'),c=card.querySelector
     if(img.complete&&img.naturalWidth)go();else img.addEventListener('load',go,{once:true})},
    draw(p,t,dt){if(!p.dots||p.done||(window.__ldReady&&!__ldReady()))return;const {ctx,w,h}=p;
     /* 集まり具合 k：カードが画面の下から上がって来るほど進む（戻らない）。速くスクロールしても 1.1 秒はかけて集まる */
-    const r=card.getBoundingClientRect(),vh=innerHeight,g=REDUCE?2:clamp((vh*.9-r.top)/(vh*.5))*1.15;
-    p.k=Math.max(p.k||0,Math.min(g,(p.k||0)+(dt||.016)/1.1));const k=p.k;ctx.clearRect(0,0,w,h);ctx.beginPath();
+    const r=card.getBoundingClientRect(),vh=innerHeight,g=REDUCE||(r.top<vh*.96&&r.bottom>0)?2:0;   // 画面に入ったら一気に写真まで（スクロール量に連動させない・So 11/26）
+    p.k=Math.max(p.k||0,Math.min(g,(p.k||0)+(dt||.016)/.75));const k=p.k;ctx.clearRect(0,0,w,h);ctx.beginPath();
     for(const d of p.dots){const e=ss(d[5],d[5]+.5,k),x=mix(d[3],d[0],e),y=mix(d[4],d[1],e),r=mix(.8,d[2],e);ctx.moveTo(x+r,y);ctx.arc(x,y,r,0,TAU)}
     ctx.fillStyle=rgba(C.ink,.92);ctx.fill();if(k>=1.12){p.done=true;card.classList.add('fin')}}})});
 
