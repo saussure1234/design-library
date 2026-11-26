@@ -928,10 +928,12 @@ piece(document.getElementById('ftc'),{anyResize:true,
 
 /* ===== 回す（紙の節だけ） ===== */
 let T=0,prev=performance.now();
+/* 見出しの伸びは、画面が動いた時（と0.5秒おき）だけ測り直す。毎フレーム位置を測ると、STORY の3Dの間も配置計算が走って重くなる */
+let gDirty=true,gN=0;addEventListener('scroll',()=>{gDirty=true},{passive:true});
 function loop(now){requestAnimationFrame(loop);const dt=Math.max(0,Math.min(.05,(now-prev)/1000));prev=now;if(!REDUCE)T+=dt;
-  drawGiants();
+  if(gDirty||++gN>30){if(!window.__ldReady||__ldReady()){gDirty=false;gN=0}drawGiants()}
   for(const p of pieces)if(p.vis&&p.ready){try{p.draw(p,T,dt)}catch(e){console.warn(e)}}}
-const start=()=>{fitGiants();giants.forEach(g=>g._e=-1);drawGiants()};
+const start=()=>{fitGiants();giants.forEach(g=>g._e=-1);gDirty=true;drawGiants()};
 start();requestAnimationFrame(loop);
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(start);
 addEventListener('load',start);

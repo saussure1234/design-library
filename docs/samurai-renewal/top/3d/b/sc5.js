@@ -41,16 +41,21 @@ export async function createScene5({ THREE, scene, center, quality = 'pc', rende
   }
   const ORDER = ['spine03', 'spine01', 'neck01', 'head', 'upperarm01L', 'lowerarm01L', 'upperarm01R', 'lowerarm01R', 'upperleg01L', 'lowerleg01L', 'upperleg01R', 'lowerleg01R'];
   const _q = new THREE.Quaternion(), _q2 = new THREE.Quaternion(), _pq = new THREE.Quaternion(), _rq = new THREE.Quaternion(), _v = new THREE.Vector3(), _d = new THREE.Vector3(), _m = new THREE.Vector3(), _m2 = new THREE.Vector3();
+  // 世界での向き：向ける骨から上（親たち）だけを最新にして分解する。骨1本ごとに指先まで全部を計算し直さない
+  // （結果は元の getWorldQuaternion＋updateMatrixWorld(true) と同じ。骨の先の行列は描画の直前にまとめて更新される）
+  const _wp = new THREE.Vector3(), _ws = new THREE.Vector3();
+  const wq = (o, out) => { o.matrixWorld.decompose(_wp, out, _ws); return out; };
   function aim(b, name, d) {
     const bone = b.bones[name]; if (!bone || !d) return;
-    bone.getWorldQuaternion(_q); _v.set(0, 1, 0).applyQuaternion(_q);
-    b.o.getWorldQuaternion(_rq); _d.copy(d).normalize().applyQuaternion(_rq);
+    bone.updateWorldMatrix(true, false);
+    wq(bone, _q); _v.set(0, 1, 0).applyQuaternion(_q);
+    wq(b.o, _rq); _d.copy(d).normalize().applyQuaternion(_rq);
     _q2.setFromUnitVectors(_v, _d).multiply(_q);
-    bone.parent.getWorldQuaternion(_pq); bone.quaternion.copy(_pq.invert().multiply(_q2)); bone.updateMatrixWorld(true);
+    wq(bone.parent, _pq); bone.quaternion.copy(_pq.invert().multiply(_q2));
   }
+  // 元に戻すのは向ける12本だけ（ほかの骨は誰も動かさないので、ずっと元の向きのまま。結果は全部戻すのと同じ）
   function pose(b, A, B, k = 0) {
-    for (const n in b.rest) b.bones[n].quaternion.copy(b.rest[n]);
-    b.root.updateMatrixWorld(true);
+    for (const n of ORDER) if (b.rest[n]) b.bones[n].quaternion.copy(b.rest[n]);
     for (const n of ORDER) {
       const a = A ? A[n] : null, c = B ? B[n] : null; if (!a && !c) continue;
       if (a && c) _m.copy(a).normalize().lerp(_m2.copy(c).normalize(), k); else _m.copy(a || c);

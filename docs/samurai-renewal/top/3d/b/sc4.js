@@ -17,6 +17,8 @@
 //        問いは「芯の画面位置の 27%（スマホ 31%）上」に置くので、カメラが別の所を見ていても問いはボタンの上に来る
 // root：画面全体を覆う DOM（position:fixed; inset:0 を想定）。中に問いとボタンを作る。ボタンは芯の位置を毎フレーム画面に投影して追従する
 // layer：描画する層（本線は光の層 FX=1）。既定 1
+// 画面の幅・高さは大きさが変わった時だけ読み直す（毎フレーム読むと配置計算が走る）
+let VW = innerWidth, VH = innerHeight; addEventListener('resize', () => { VW = innerWidth; VH = innerHeight; });
 export function createScene4({ THREE, scene, center, camera, quality = 'pc', root, onNext = () => {}, renderer = null, layer = 1 }) {
   const SP = quality === 'sp';
   const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
@@ -190,7 +192,7 @@ export function createScene4({ THREE, scene, center, camera, quality = 'pc', roo
     const tau = S.pT == null ? -1 : t - S.pT; api.tau = tau;
     S.hovS += (S.hov - S.hovS) * Math.min(1, dt * 5);
     btn.classList.toggle('hov', S.hov > 0 && tau < 0);
-    PX.value = (renderer ? renderer.getPixelRatio() : Math.min(devicePixelRatio || 1, 1.5)) * innerHeight * 0.5 / Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+    PX.value = (renderer ? renderer.getPixelRatio() : Math.min(devicePixelRatio || 1, 1.5)) * VH * 0.5 / Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
     // 集まる → 打ち上げ
     const c = Math.max(0.12 * S.hovS, sstep(0, 1.2, tau));
     CU.uTime.value = t; CU.uConv.value = c; CU.uRise.value = sstep(L - 0.5, L + 0.4, tau);
@@ -219,9 +221,9 @@ export function createScene4({ THREE, scene, center, camera, quality = 'pc', roo
     dot.style.opacity = (1 - sstep(0.7, 1.05, tau)).toFixed(3);   // 押した点は、粒が集まりきる頃に3Dの芯へ溶ける
     // ボタンを芯の位置へ（画面に投影）
     _v.set(0, CORE_Y, 0).add(group.position).project(camera);
-    const bx = (_v.x + 1) / 2 * innerWidth, by = (1 - _v.y) / 2 * innerHeight;
+    const bx = (_v.x + 1) / 2 * VW, by = (1 - _v.y) / 2 * VH;
     btn.style.transform = `translate(${bx.toFixed(1)}px,${by.toFixed(1)}px)`;
-    qEl.style.top = Math.max(innerHeight * 0.16, by - innerHeight * (SP ? 0.31 : 0.27)).toFixed(1) + 'px';
+    qEl.style.top = Math.max(VH * 0.16, by - VH * (SP ? 0.31 : 0.27)).toFixed(1) + 'px';
     if (!S.nextDone && tau >= NEXT) { S.nextDone = true; onNext(); }
     S.c = c; S.tau = tau;
   }

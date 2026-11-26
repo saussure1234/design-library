@@ -15,6 +15,8 @@ const ld = document.getElementById('ld'), ldt = document.getElementById('ldt');
 if (root.classList.contains('nogl')) { ld?.remove(); throw new Error('no webgl'); }
 
 const SP = matchMedia('(max-width: 820px)').matches || /iPhone|Android.+Mobile/.test(navigator.userAgent);
+// 画面の幅・高さは大きさが変わった時だけ読み直す（毎フレーム innerWidth を読むと、その場で配置計算が走って重くなる）
+let VW = innerWidth, VH = innerHeight; addEventListener('resize', () => { VW = innerWidth; VH = innerHeight; });
 const RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const QS = new URLSearchParams(location.search);
 const QLOCK = QS.has('q') ? +QS.get('q') : -1;
@@ -1070,7 +1072,7 @@ function fvFrame(dt, t, Ps) {
   } else if (TR === 'b') {   // b 波紋がひらく：波紋がうねる → 輪がパカッと開く → 白い光の世界 → 抜けると宇宙
     wob = sstep(0.5, 0.62, Ps) * (1 - sstep(0.62, 0.66, Ps));
     const ko = clamp((Ps - 0.62) / 0.16), kq = ko * ko, back = ko < 1 ? kq * (2.2 * ko - 1.2) * 1 + (1 - Math.pow(1 - ko, 3)) * 0 : 1;   // 溜めてからパカッ（終わりに少し行き過ぎ）   // パカッ（少し行き過ぎて戻る）
-    openR = ko > 0 ? Math.max(4, Math.hypot(innerWidth, innerHeight / 0.62) * 0.62 * back) : 0;
+    openR = ko > 0 ? Math.max(4, Math.hypot(VW, VH / 0.62) * 0.62 * back) : 0;
     vo = Ps < 0.79 ? 1 : 0;
     mask = openR > 1 ? `radial-gradient(ellipse ${openR}px ${openR * 0.62}px at 50% 42%, transparent 98%, #000 100%)` : '';
     flash = 0; fvDarkB = ko > 0 ? 1 - sstep(0.8, 1.02, Ps) : 0;   // 開いた先は真っ暗 → 闇の奥から宇宙が明けてくる（白はやめた・So 11/24）
@@ -1323,7 +1325,7 @@ const readScroll = () => {
 const toY = (p) => { const i = Math.min(secs.length - 1, Math.floor(p)); return secTop[i] + (p - i) * secH[i]; };
 measure(); addEventListener('scroll', readScroll, { passive: true }); readScroll(); Ps = P;
 const mouse = { x: 0, y: 0, sx: 0, sy: 0 };
-addEventListener('pointermove', (e) => { mouse.x = e.clientX / innerWidth - 0.5; mouse.y = e.clientY / innerHeight - 0.5; }, { passive: true });
+addEventListener('pointermove', (e) => { mouse.x = e.clientX / VW - 0.5; mouse.y = e.clientY / VH - 0.5; }, { passive: true });
 
 function camS(P) {
   const k = Math.floor(P), x = P - k;
@@ -1363,12 +1365,27 @@ function applyTier() {
   onResize();
 }
 
+// 同じ場面を2回（地の層・光の層）描く。位置の計算は1回だけにし、2回目は光の層の物を含まない箱を辿らない（見た目は同じ・手間だけ減る）
+// 光源は光の層にも入れておく（光の層の素材は光源を使わないので見た目は同じ。2回の描画で光源の数が変わると、毎フレーム全部の素材の準備をやり直してしまうため）
+const FXM = 1 << FX, noFx = []; let noFxN = -1, noFxAge = 0;
+function needFx(o) { let has = false; o.traverse((c) => { if (c.isLight || (c.layers.mask & FXM)) has = true; }); return has; }
+function collectNoFx(o) { if (!needFx(o)) { noFx.push(o); return; } if (!o.isLight && !(o.layers.mask & FXM)) for (const c of o.children) collectNoFx(c); }
+function scanNoFx() {
+  noFx.length = 0;
+  scene.traverse((o) => { if (o.isLight) o.layers.enable(FX); });
+  for (const c of scene.children) { if (c.isCamera) continue; collectNoFx(c); }
+  noFxN = scene.children.length; noFxAge = 0;
+}
 function renderScene() {
+  if (scene.children.length !== noFxN || ++noFxAge > 30) scanNoFx();
+  scene.updateMatrixWorld(); scene.matrixWorldAutoUpdate = false;
   renderer.setRenderTarget(rtS); renderer.setClearColor(0x000000, 1); renderer.clear(true, true, false);
   camera.layers.set(0); renderer.render(scene, camera);
   renderer.setRenderTarget(rtF); renderer.clear(true, false, false);
+  const was = noFx.map((c) => c.visible); noFx.forEach((c) => { c.visible = false; });
   camera.layers.set(FX); renderer.render(scene, camera);
-  camera.layers.enableAll();
+  noFx.forEach((c, i) => { c.visible = was[i]; });
+  camera.layers.enableAll(); scene.matrixWorldAutoUpdate = true;
   renderer.setRenderTarget(null);
 }
 
@@ -1411,12 +1428,12 @@ function frame() {
   camera.lookAt(lookS);
   // スマホの場面2は寄って大きく見せる（枝が細かすぎて何が広がるか分からないため・So 11/24）
   if (SP) { const w2 = ease(clamp(1 - Math.abs(Ps - 2.55) / 0.7)), fv = 62 - 24 * w2;
-    if (Math.abs(camera.fov - fv) > 0.05) { camera.fov = fv; camera.updateProjectionMatrix(); U.px.value = innerHeight * DPR * 0.5 / Math.tan(THREE.MathUtils.degToRad(fv / 2)); } }
+    if (Math.abs(camera.fov - fv) > 0.05) { camera.fov = fv; camera.updateProjectionMatrix(); U.px.value = VH * DPR * 0.5 / Math.tan(THREE.MathUtils.degToRad(fv / 2)); } }
   camera.rotateZ(Math.sin(t * 0.21) * 0.012 + travel * 0.05 * Math.sign(vel || 1));
-  const sideT = (innerWidth < 820) ? 0 : sideOf[k] * (1 - travel) * sstep(0.1, 0.4, x) * (1 - dawn);
+  const sideT = (VW < 820) ? 0 : sideOf[k] * (1 - travel) * sstep(0.1, 0.4, x) * (1 - dawn);
   viewShift += (sideT - viewShift) * 0.06;
-  if (innerWidth < 820) camera.setViewOffset(innerWidth, innerHeight, 0, innerHeight * spOff[k] * (1 - travel) * (1 - dawn), innerWidth, innerHeight);
-  else camera.setViewOffset(innerWidth, innerHeight, viewShift * innerWidth * 0.15, innerHeight * pcOffY[k] * (1 - travel) * (1 - dawn), innerWidth, innerHeight);
+  if (VW < 820) camera.setViewOffset(VW, VH, 0, VH * spOff[k] * (1 - travel) * (1 - dawn), VW, VH);
+  else camera.setViewOffset(VW, VH, viewShift * VW * 0.15, VH * pcOffY[k] * (1 - travel) * (1 - dawn), VW, VH);
   U.camPos.value.copy(camera.position);
 
   // 場面の切り替え＝壊して繋ぐ（短く・強く）
@@ -1503,7 +1520,7 @@ function frame() {
   coreW.scale.setScalar(0.2 + conv * 1.6); coreW.material.opacity = conv;
   const gv = 0; gauge.style.opacity = 0;   // 場面4のゲージは出さない（問いと PRESS だけ）
   { const d4 = Math.abs(Ps - 4.55); s4.update(t, dt, d4 < 0.32); s4.group.visible = d4 < 1.2; s4root.style.visibility = d4 < 0.6 ? 'visible' : 'hidden'; s4.audio(SND.out(), 1 - sstep(0.25, 0.6, d4)); }
-  if (gv) { const pct = Math.round(conv * 100); pc.textContent = String(pct).padStart(3, '0'); tk.style.left = pct * 1.4 * (innerWidth < 820 ? 80 / 140 : 1) + 'px'; }
+  if (gv) { const pct = Math.round(conv * 100); pc.textContent = String(pct).padStart(3, '0'); tk.style.left = pct * 1.4 * (VW < 820 ? 80 / 140 : 1) + 'px'; }
   // 場面5（人の山）：着いてから時間で進む（約16秒）
   if (sc5) {
     const d5 = Math.abs(Ps - 5.55), at5 = d5 < 0.32;
@@ -1569,7 +1586,7 @@ function frame() {
     const v = sstep(p.i + 0.2, 0.34 + p.i, Ps) * (1 - sstep(p.i + 0.84, p.i + 0.97, Ps));
     p.el.style.opacity = v;
     const off = (1 - v) * 18;
-    p.el.style.transform = innerWidth < 820 ? `translateY(${off}px)` : `translateY(calc(-50% + ${off}px))`;
+    p.el.style.transform = VW < 820 ? `translateY(${off}px)` : `translateY(calc(-50% + ${off}px))`;
     p.el.style.filter = v < 0.99 ? `blur(${(1 - v) * 6}px)` : 'none';
     p.el.style.pointerEvents = v > 0.6 ? 'auto' : 'none';
     if (v > 0.35 && !p.shown) reveal(p); if (v < 0.02 && p.shown) hide(p);
@@ -1580,7 +1597,7 @@ function frame() {
   const tagOn = false;   // 座標の表示は全部消す（So 11/24）
   if (tagOn) {
     tmpV.copy(T[k]).project(camera);
-    const sx = (tmpV.x * 0.5 + 0.5) * innerWidth, sy = (-tmpV.y * 0.5 + 0.5) * innerHeight;
+    const sx = (tmpV.x * 0.5 + 0.5) * VW, sy = (-tmpV.y * 0.5 + 0.5) * VH;
     const lx = sx + (sideOf[k] > 0 ? -190 : 130), ly = sy - 140;
     if (tagScene !== k) { tagScene = k; tagT0 = t; }
     const raw = `${String(k).padStart(2, '0')} / 06\n x ${T[k].x.toFixed(2)}  y ${T[k].y.toFixed(2)}\n z ${T[k].z.toFixed(2)}  d ${camera.position.distanceTo(T[k]).toFixed(2)}`;
